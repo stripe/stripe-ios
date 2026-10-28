@@ -109,22 +109,13 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         checkoutItems = decodedCheckoutItems
 
         livemode = try container.decode(Bool.self, forKey: .livemode)
-        let decodedPaymentStatus = try container.decode(String.self, forKey: .paymentStatus)
-        guard let paymentStatus = CheckoutController.Session.Status.PaymentStatus.paymentStatus(
-            from: decodedPaymentStatus
-        ) else {
-            throw decoder.dataCorrupted("Unsupported payment_status: \(decodedPaymentStatus)")
-        }
-        self.paymentStatus = paymentStatus
+        paymentStatus = try container.decode(CheckoutController.Session.Status.PaymentStatus.self, forKey: .paymentStatus)
 
-        let decodedStatus = try container.decode(String.self, forKey: .status)
-        guard let status = CheckoutController.Session.Status.status(
-            from: decodedStatus,
+        status = try CheckoutController.Session.Status.decode(
+            from: container,
+            forKey: .status,
             paymentStatus: paymentStatus
-        ) else {
-            throw decoder.dataCorrupted("Unsupported Checkout Session status: \(decodedStatus)")
-        }
-        self.status = status
+        )
 
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         let savedOptions = try container.decodeIfPresent(SavedPaymentMethodOptions.self, forKey: .savedPaymentMethodOptions)

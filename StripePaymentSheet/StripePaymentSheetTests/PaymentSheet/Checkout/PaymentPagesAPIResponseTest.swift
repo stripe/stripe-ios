@@ -103,7 +103,12 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
         json["status"] = "future_status"
 
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json)) { error in
+            guard case DecodingError.dataCorrupted(let context) = error else {
+                return XCTFail("Expected dataCorrupted, got \(error)")
+            }
+            XCTAssertEqual(context.codingPath.last?.stringValue, "status")
+        }
     }
 
     func testDecodedObjectFromAPIResponseRejectsUnknownPaymentStatus() {
