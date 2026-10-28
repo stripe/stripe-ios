@@ -723,7 +723,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     // MARK: - Cancellation during tax updates
 
     func testDidFinish_notStarted_waitsForBillingTaxUpdateBeforeCanceling() async {
-        // Given an active Apple Pay presentation with a billing tax update that is suspended
+        // Given Apple Pay presented by ECE with a billing tax update that is suspended
         let updatedSession = CheckoutTestHelpers.makeOpenSession().makePublicSession()
         let updater = MockCheckoutSessionWalletUpdater(
             sessionToReturn: updatedSession,
@@ -731,7 +731,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
         )
         let (context, mockController) = makeContext(
             collectsTaxFromBillingAddress: true,
-            checkoutWalletUpdater: updater
+            checkoutWalletUpdater: updater,
+            confirmationSource: .expressCheckoutElement
         )
         var didReturnResult = false
         let resultTask = Task {
