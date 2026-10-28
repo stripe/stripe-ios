@@ -209,8 +209,7 @@ import UIKit
         case .card(let card):
             return STPImageLibrary.cardBrandImage(for: card.stpBrand)
         case .bankAccount(let bankAccount):
-            let iconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.name)
-            return PaymentSheetImageLibrary.bankIcon(for: iconCode, iconStyle: .filled)
+            return PaymentSheetImageLibrary.bankIcon(for: bankAccount.resolvedIconCode, iconStyle: .filled)
         case .generic:
             return Self.linkIcon
         }

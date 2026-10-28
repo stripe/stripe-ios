@@ -176,7 +176,7 @@ extension LinkPaymentMethodFormElementSnapshotTests {
             details: .bankAccount(
                 bankAccount: .init(
                     iconCode: nil,
-                    name: "Stripe Bank",
+                    bankName: "Stripe Bank",
                     last4: "6789",
                     country: "COUNTRY_US"
                 )
