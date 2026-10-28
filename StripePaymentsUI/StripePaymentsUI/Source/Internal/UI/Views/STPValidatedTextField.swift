@@ -12,12 +12,12 @@ import UIKit
 /// its contents.
 /// This does *not* (currently?) have any logic or hooks for determining whether
 /// the contents are valid, that must be done by something else.
-@_spi(STP) public class STPValidatedTextField: UITextField {
+@_spi(InternalOnlyAPI) public class STPValidatedTextField: UITextField {
 
     // MARK: - Property Overrides
     private var _defaultColor: UIColor?
     /// color to use for `text` when `validText` is YES
-    @_spi(STP) public var defaultColor: UIColor? {
+    @_spi(InternalOnlyAPI) public var defaultColor: UIColor? {
         get {
             _defaultColor
         }
@@ -29,7 +29,7 @@ import UIKit
 
     private var _errorColor: UIColor?
     /// color to use for `text` when `validText` is NO
-    @_spi(STP) public var errorColor: UIColor? {
+    @_spi(InternalOnlyAPI) public var errorColor: UIColor? {
         get {
             _errorColor
         }
@@ -41,7 +41,7 @@ import UIKit
 
     private var _placeholderColor: UIColor?
     /// color to use for `placeholderText`, displayed when `text` is empty
-    @objc @_spi(STP) public var placeholderColor: UIColor? {
+    @objc @_spi(InternalOnlyAPI) public var placeholderColor: UIColor? {
         get {
             _placeholderColor
         }
@@ -53,7 +53,7 @@ import UIKit
 
     private var _validText = false
     /// flag to indicate whether the contents are valid or not.
-    @objc @_spi(STP) public var validText: Bool {
+    @objc @_spi(InternalOnlyAPI) public var validText: Bool {
         get {
             _validText
         }

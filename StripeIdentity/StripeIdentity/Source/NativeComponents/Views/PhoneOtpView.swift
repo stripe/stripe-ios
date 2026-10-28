@@ -4,7 +4,7 @@
 //
 //  Created by Chen Cen on 6/14/23.
 //
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol PhoneOtpViewDelegate: AnyObject {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController.Session {
     /// The tax computation status for a checkout session.

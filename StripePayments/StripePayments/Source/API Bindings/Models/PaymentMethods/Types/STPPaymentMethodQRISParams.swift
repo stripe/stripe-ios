@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An object representing parameters used to create a QRIS Payment Method.
 public class STPPaymentMethodQRISParams: NSObject, STPFormEncodable {

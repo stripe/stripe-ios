@@ -3,8 +3,8 @@
 //  StripeFinancialConnectionsLiteTests
 //
 
-@_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeFinancialConnectionsLite
+@_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeFinancialConnectionsLite
 import XCTest
 
 private extension URLRequest {

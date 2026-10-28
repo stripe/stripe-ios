@@ -5,7 +5,7 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.
@@ -21,7 +21,7 @@ protocol ExpressCheckoutElementDelegate: AnyObject {
 ///
 /// Obtain an instance from ``Checkout/getExpressCheckoutElement()`` and use
 /// ``view`` in SwiftUI or ``uiView`` in UIKit.
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 @MainActor
 public final class ExpressCheckoutElement {
@@ -57,6 +57,6 @@ public final class ExpressCheckoutElement {
 
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
-@_spi(STP) extension ExpressCheckoutElement: STPAnalyticsProtocol {
-    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "ExpressCheckoutElement"
+@_spi(InternalOnlyAPI) extension ExpressCheckoutElement: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public nonisolated static let stp_analyticsIdentifier: String = "ExpressCheckoutElement"
 }

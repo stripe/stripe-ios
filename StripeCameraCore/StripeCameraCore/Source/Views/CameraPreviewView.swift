@@ -9,7 +9,7 @@
 import AVFoundation
 import UIKit
 
-@_spi(STP) public class CameraPreviewView: UIView {
+@_spi(InternalOnlyAPI) public class CameraPreviewView: UIView {
     var videoPreviewLayer: AVCaptureVideoPreviewLayer {
         return layer as! AVCaptureVideoPreviewLayer
     }

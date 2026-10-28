@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 3/26/23.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 class SimpleMandateElement: PaymentMethodElement {

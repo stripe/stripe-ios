@@ -3,8 +3,8 @@
 //  PaymentSheet Example
 //
 
-@_spi(STP) @_spi(SharedPaymentToken) import StripePayments
-@_spi(STP) @_spi(SharedPaymentToken) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
+@_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) import StripePayments
+@_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleWalletButtonsContainerView: View {

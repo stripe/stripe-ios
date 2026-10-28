@@ -4,8 +4,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 @MainActor
 enum CheckoutControllerLoader {
@@ -35,9 +35,10 @@ enum CheckoutControllerLoader {
         // 1b. Call the /init endpoint
         let response = try await configuration.apiClient.initCheckoutSession(
             checkoutSessionId: CheckoutController.extractSessionId(from: configuration.clientSecret),
+            clientSecret: configuration.clientSecret,
             adaptivePricingAllowed: configuration.currencySelectorElement != nil
         )
-        let session = CheckoutController.Session(apiResponse: response, localState: .empty, configuration: configuration)
+        let session = CheckoutController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
         await resources.value
 
         // 2. Load Link
@@ -53,7 +54,7 @@ enum CheckoutControllerLoader {
                 elementsSession: session.elementsSession,
                 configuration: flowControllerConfiguration,
                 customerProvider: customerProvider,
-                // Checkout session email precedes merchant defaults; Elements Session email remains a fallback.
+                // Checkout session email precedes merchant defaults.
                 email: customerProvider.linkEmail() ?? configuration.defaults.email,
                 analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .checkoutElements),
                 prefetchedLinkEmailTask: Task { nil },
@@ -124,13 +125,21 @@ enum CheckoutControllerLoader {
         )
         // Create/reuse and update FC analytics helper
         let flowControllerAnalyticsHelper = checkout.paymentElement?.paymentSheetFlowController.analyticsHelper
-            ?? PaymentSheetAnalyticsHelper(integrationShape: .flowController, configuration: fcConfiguration)
+            ?? PaymentSheetAnalyticsHelper(
+                integrationShape: .flowController,
+                configuration: fcConfiguration,
+                checkoutSessionID: session.id
+            )
         let orientation = fcConfiguration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
         flowControllerAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
         flowControllerAnalyticsHelper.paymentMethodOrientation = orientation
         // Create/reuse and update Embedded analytics helper
         let embeddedAnalyticsHelper = checkout.paymentElement?.embeddedPaymentElement.analyticsHelper
-        ?? PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: embeddedConfiguration)
+        ?? PaymentSheetAnalyticsHelper(
+            integrationShape: .embedded,
+            configuration: embeddedConfiguration,
+            checkoutSessionID: session.id
+        )
         embeddedAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
         embeddedAnalyticsHelper.paymentMethodOrientation = .vertical
         // Deal with PMM Promotions Helper

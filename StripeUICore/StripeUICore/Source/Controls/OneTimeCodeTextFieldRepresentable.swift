@@ -8,21 +8,21 @@
 import SwiftUI
 
 // Controller to hold a reference to the underlying `OneTimeCodeTextField`
-@_spi(STP) public final class OneTimeCodeTextFieldController {
+@_spi(InternalOnlyAPI) public final class OneTimeCodeTextFieldController {
     private weak var textField: OneTimeCodeTextField?
 
-    @_spi(STP) public init() {}
+    @_spi(InternalOnlyAPI) public init() {}
 
     fileprivate func setTextField(_ textField: OneTimeCodeTextField) {
         self.textField = textField
     }
 
-    @_spi(STP) public func performInvalidCodeAnimation() {
+    @_spi(InternalOnlyAPI) public func performInvalidCodeAnimation() {
         textField?.performInvalidCodeAnimation()
     }
 }
 
-@_spi(STP) public struct OneTimeCodeTextFieldRepresentable: UIViewRepresentable {
+@_spi(InternalOnlyAPI) public struct OneTimeCodeTextFieldRepresentable: UIViewRepresentable {
     @Binding private var text: String
     private var configuration: OneTimeCodeTextField.Configuration
     private var controller: OneTimeCodeTextFieldController?
@@ -30,7 +30,7 @@ import SwiftUI
     private var isEnabled: Bool = true
     private var onComplete: ((String) -> Void)?
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         text: Binding<String>,
         configuration: OneTimeCodeTextField.Configuration = OneTimeCodeTextField.Configuration(),
         controller: OneTimeCodeTextFieldController?,
@@ -46,7 +46,7 @@ import SwiftUI
         self.onComplete = onComplete
     }
 
-    @_spi(STP) public func makeUIView(context: Context) -> OneTimeCodeTextField {
+    @_spi(InternalOnlyAPI) public func makeUIView(context: Context) -> OneTimeCodeTextField {
         let textField = OneTimeCodeTextField(configuration: configuration, theme: theme)
         textField.isEnabled = isEnabled
         textField.addTarget(
@@ -58,18 +58,18 @@ import SwiftUI
         return textField
     }
 
-    @_spi(STP) public func updateUIView(_ uiView: OneTimeCodeTextField, context: Context) {
+    @_spi(InternalOnlyAPI) public func updateUIView(_ uiView: OneTimeCodeTextField, context: Context) {
         if uiView.value != text {
             uiView.value = text
         }
         uiView.isEnabled = isEnabled
     }
 
-    @_spi(STP) public func makeCoordinator() -> Coordinator {
+    @_spi(InternalOnlyAPI) public func makeCoordinator() -> Coordinator {
         Coordinator(parent: self)
     }
 
-    @_spi(STP) public class Coordinator: NSObject {
+    @_spi(InternalOnlyAPI) public class Coordinator: NSObject {
         var parent: OneTimeCodeTextFieldRepresentable
 
         init(parent: OneTimeCodeTextFieldRepresentable) {

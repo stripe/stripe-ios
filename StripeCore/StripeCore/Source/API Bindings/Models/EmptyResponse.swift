@@ -9,6 +9,6 @@
 import Foundation
 
 /// This is an object representing an empty response from a request.
-@_spi(STP) public struct EmptyResponse: UnknownFieldsDecodable {
+@_spi(InternalOnlyAPI) public struct EmptyResponse: UnknownFieldsDecodable {
     public var _allResponseFieldsStorage: NonEncodableParameters?
 }

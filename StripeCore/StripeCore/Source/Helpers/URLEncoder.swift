@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) public final class URLEncoder {
+@_spi(InternalOnlyAPI) public final class URLEncoder {
     public static func string(byURLEncoding string: String) -> String {
         return escape(string)
     }

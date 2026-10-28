@@ -5,8 +5,8 @@
 //  Created by Mat Schmid on 2024-06-20.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 class TestModeAutofillBannerView: UIView {

@@ -3,12 +3,12 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) @testable import StripeCore
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import StripePaymentsObjcTestUtils
 import XCTest
 
@@ -679,19 +679,18 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             ("session@example.com", "customer@example.com", "default@example.com", ("session@example.com", "customer_email")),
             (nil, "customer@example.com", "default@example.com", ("customer@example.com", "customer_email")),
             (nil, nil, "default@example.com", ("default@example.com", "customer_email")),
-            (nil, nil, nil, ("elements@example.com", "customer_object")),
         ]
         for testCase in cases {
             // Given distinct emails from each Checkout source
-            var elementsJSON = STPElementsSession._testValue(paymentMethodTypes: ["card", "link"], customerSessionData: [:]).allResponseFields
-            elementsJSON[jsonDict: "customer"]?["email"] = "elements@example.com"
+            let elementsJSON = STPElementsSession._testValue(paymentMethodTypes: ["card", "link"], customerSessionData: [:]).allResponseFields
             var sessionJSON = CheckoutTestHelpers.openSessionJSON
-            sessionJSON["elements_session"] = elementsJSON
+            sessionJSON["ordered_payment_method_types_and_wallets"] = ["card", "link"]
+            sessionJSON["link_settings"] = elementsJSON["link_settings"]
             sessionJSON["customer_email"] = testCase.sessionEmail
             if let customerEmail = testCase.customerEmail {
                 sessionJSON["customer"] = ["id": "cus_checkout", "email": customerEmail]
             }
-            stub { $0.url?.path == "/v1/payment_pages/cs_test_123/init" } response: { _ in
+            stub { $0.url?.path == "/v1/checkout_client/cs_test_123/init" } response: { _ in
                 HTTPStubsResponse(jsonObject: sessionJSON, statusCode: 200, headers: nil)
             }
             var lookupRequestCount = 0
@@ -710,7 +709,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             // When initializing Checkout's Link account
             _ = try await CheckoutControllerLoader.load(configuration: configuration)
 
-            // Then Checkout session email precedes defaults, followed by Elements Session email
+            // Then Checkout session email precedes merchant defaults
             XCTAssertEqual(lookupRequestCount, 1)
         }
     }

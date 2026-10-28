@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-@_spi(STP) public final class CheckboxElement {
+@_spi(InternalOnlyAPI) public final class CheckboxElement {
     public weak var delegate: ElementDelegate?
     public private(set) lazy var checkboxButton: CheckboxButton = {
         let checkbox = CheckboxButton(
@@ -24,7 +24,7 @@ import UIKit
     let isSelectedByDefault: Bool
     let theme: ElementsAppearance
     var didToggle: (Bool) -> Void
-    @_spi(STP) public var isSelected: Bool {
+    @_spi(InternalOnlyAPI) public var isSelected: Bool {
         get {
             return checkboxButton.isSelected
         }

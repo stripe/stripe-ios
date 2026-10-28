@@ -9,7 +9,7 @@
 import CoreGraphics
 import CoreML
 import Foundation
-@_spi(STP) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
 import Vision
 
 /// Represents the output from the FaceDetector ML model.

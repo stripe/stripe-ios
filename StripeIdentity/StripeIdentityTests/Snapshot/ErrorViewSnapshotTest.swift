@@ -7,9 +7,9 @@
 //
 
 import iOSSnapshotTestCase
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 @testable import StripeIdentity

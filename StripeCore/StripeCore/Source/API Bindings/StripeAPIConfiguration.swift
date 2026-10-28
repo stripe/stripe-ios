@@ -9,13 +9,13 @@
 import Foundation
 
 /// Shared configurations across all Stripe frameworks.
-@_spi(STP) public struct StripeAPIConfiguration {
+@_spi(InternalOnlyAPI) public struct StripeAPIConfiguration {
 
     public static let sharedUrlSessionConfiguration = URLSessionConfiguration.default
 
     #if DEBUG
     /// If true, embed the params in an X-Stripe-Mock-Request header for network mocking.
-    @_spi(STP) public static var includeDebugParamsHeader = false
+    @_spi(InternalOnlyAPI) public static var includeDebugParamsHeader = false
     #endif
 
 }

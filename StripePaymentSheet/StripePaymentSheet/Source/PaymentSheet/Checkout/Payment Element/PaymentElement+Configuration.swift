@@ -6,8 +6,8 @@
 //
 
 import PassKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension PaymentElement {
     /// Configuration for PaymentElement

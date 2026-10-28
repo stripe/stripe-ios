@@ -7,8 +7,8 @@ import Foundation
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) @testable import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentsUI
+@_spi(InternalOnlyAPI) @testable import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) @testable import StripePaymentsUI
 import XCTest
 
 class CardElementConfigServiceTests: APIStubbedTestCase {
@@ -21,9 +21,9 @@ class CardElementConfigServiceTests: APIStubbedTestCase {
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/mobile-card-element-config") ?? false
         } response: { _ in
-            let responseData = """
+            let responseData = Data("""
             {"card_brand_choice":{"eligible":true}}
-            """.data(using: .utf8)!
+            """.utf8)
             defer {
                 exp.fulfill()
             }
@@ -50,9 +50,9 @@ class CardElementConfigServiceTests: APIStubbedTestCase {
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/mobile-card-element-config?on_behalf_of=acct_abc123") ?? false
         } response: { _ in
-            let responseData = """
+            let responseData = Data("""
             {"card_brand_choice":{"eligible":true}}
-            """.data(using: .utf8)!
+            """.utf8)
             defer {
                 exp.fulfill()
             }
@@ -79,9 +79,9 @@ class CardElementConfigServiceTests: APIStubbedTestCase {
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/mobile-card-element-config") ?? false
         } response: { _ in
-            let responseData = """
+            let responseData = Data("""
             {"card_brand_choice":{"eligible":"chicken"}}
-            """.data(using: .utf8)!
+            """.utf8)
             defer {
                 exp.fulfill()
             }

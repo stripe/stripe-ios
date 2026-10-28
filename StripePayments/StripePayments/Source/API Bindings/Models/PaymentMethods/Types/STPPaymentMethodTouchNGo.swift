@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// A Touch 'n Go Payment Method.
 /// - seealso: https://docs.stripe.com/payments/touch-n-go/accept-a-payment?payment-ui=direct-api

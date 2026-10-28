@@ -5,10 +5,10 @@
 //  Created by Yuki Tokuhiro on 5/16/23.
 //
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 import XCTest
 
 final class PaymentSheetDeferredValidatorTests: XCTestCase {

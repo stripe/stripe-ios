@@ -6,10 +6,10 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@_spi(STP) public protocol STPGenericInputPickerFieldDataSource {
+@_spi(InternalOnlyAPI) public protocol STPGenericInputPickerFieldDataSource {
     func numberOfRows() -> Int
     func inputPickerField(
         _ pickerField: STPGenericInputPickerField,
@@ -23,7 +23,7 @@ import UIKit
         -> String?
 }
 
-@_spi(STP) public class STPGenericInputPickerField: STPInputTextField {
+@_spi(InternalOnlyAPI) public class STPGenericInputPickerField: STPInputTextField {
     /// Basic validator that sets `validationState` to `.valid` if there's an inputValue
     class Validator: STPInputTextFieldValidator {
         override var inputValue: String? {
@@ -53,9 +53,9 @@ import UIKit
     }
 
     internal let wrappedDataSource: DataSourceWrapper
-    @_spi(STP) public let pickerView = UIPickerView()
+    @_spi(InternalOnlyAPI) public let pickerView = UIPickerView()
 
-    @_spi(STP) public var dataSource: STPGenericInputPickerFieldDataSource {
+    @_spi(InternalOnlyAPI) public var dataSource: STPGenericInputPickerFieldDataSource {
         return wrappedDataSource.inputDataSource
     }
 
@@ -117,13 +117,13 @@ import UIKit
         autocorrectionType = .no
     }
 
-    @_spi(STP) public override func resignFirstResponder() -> Bool {
+    @_spi(InternalOnlyAPI) public override func resignFirstResponder() -> Bool {
         // Update value right before resigning first responder (dismissing input view)
         updateValue()
         return super.resignFirstResponder()
     }
 
-    @_spi(STP) public override func caretRect(for position: UITextPosition) -> CGRect {
+    @_spi(InternalOnlyAPI) public override func caretRect(for position: UITextPosition) -> CGRect {
         // hide the caret
         return .zero
     }
@@ -144,7 +144,7 @@ import UIKit
         //    data source.
     }
 
-    @_spi(STP) public func updateValue() {
+    @_spi(InternalOnlyAPI) public func updateValue() {
         let selectedRow = pickerView.selectedRow(inComponent: 0)
 
         text = dataSource.inputPickerField(self, titleForRow: selectedRow)
@@ -161,7 +161,7 @@ import UIKit
 
 /// :nodoc:
 extension STPGenericInputPickerField: UIPickerViewDelegate {
-    @_spi(STP) public func pickerView(
+    @_spi(InternalOnlyAPI) public func pickerView(
         _ pickerView: UIPickerView,
         attributedTitleForRow row: Int,
         forComponent component: Int
@@ -204,7 +204,7 @@ extension STPGenericInputPickerField.Formatter {
 
 /// :nodoc:
 extension STPGenericInputPickerField: DoneButtonToolbarDelegate {
-    @_spi(STP) public func didTapDone(_ toolbar: DoneButtonToolbar) {
+    @_spi(InternalOnlyAPI) public func didTapDone(_ toolbar: DoneButtonToolbar) {
         _ = resignFirstResponder()
     }
 }
