@@ -115,6 +115,7 @@ import UIKit
     private let configuration: LinkConfiguration?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let requestSurface: LinkRequestSurface
+    let nativeSheetPresentation: SheetImplementationResolver
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
         LinkAccountService(apiClient: apiClient, elementsSession: elementsSession)
@@ -155,7 +156,7 @@ import UIKit
     /// Completion handler for full consent screen
     private var fullConsentCompletion: ((Result<AuthorizationResult, Error>) -> Void)?
 
-    private init(
+    init(
         apiClient: STPAPIClient = .shared,
         mode: Mode,
         elementsSession: STPElementsSession,
@@ -177,6 +178,7 @@ import UIKit
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
         self.requestSurface = requestSurface
+        self.nativeSheetPresentation = SheetImplementationResolver(elementsSession: elementsSession)
 
         LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange))
     }
@@ -529,6 +531,7 @@ import UIKit
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
             configuration: paymentElementConfiguration,
+            nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
@@ -589,6 +592,7 @@ import UIKit
             presentingViewController.presentNativeLink(
                 selectedPaymentDetailsID: nil,
                 configuration: paymentElementConfiguration,
+                nativeSheetPresentation: self.nativeSheetPresentation,
                 intent: self.intent,
                 elementsSession: self.elementsSession,
                 analyticsHelper: self.analyticsHelper,
@@ -833,7 +837,11 @@ import UIKit
         from viewController: UIViewController,
         onConfirm: @escaping (() async throws -> Void)
     ) async throws -> VerifyKYCResult {
-        let verifyKYCViewController = VerifyKYCViewController(info: info, appearance: appearance)
+        let verifyKYCViewController = VerifyKYCViewController(
+            info: info,
+            appearance: appearance,
+            nativeSheetPresentation: nativeSheetPresentation
+        )
         // The coordinator is used again for dismissal, so this operation owns it while awaiting user input.
         let result: VerifyKYCResult = await withCheckedContinuation { continuation in
             verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
@@ -980,7 +988,8 @@ import UIKit
             html: html,
             confirmationButtonTitle: confirmationButtonTitle,
             appearance: appearance,
-            brand: resolvedLinkBrand
+            brand: resolvedLinkBrand,
+            nativeSheetPresentation: nativeSheetPresentation
         )
         // The coordinator is used again for dismissal, so this operation owns it while awaiting user input.
         let result: HTMLConfirmationResult = await withCheckedContinuation { continuation in
@@ -1293,6 +1302,7 @@ import UIKit
         let bottomSheetViewController = PaymentSheetContainerFactory.make(
             contentViewController: fullConsentViewController,
             appearance: paymentElementConfiguration.appearance,
+            usesNativeSheet: nativeSheetPresentation.usesNativeSheet,
             didCancelNative3DS2: {}
         )
 
