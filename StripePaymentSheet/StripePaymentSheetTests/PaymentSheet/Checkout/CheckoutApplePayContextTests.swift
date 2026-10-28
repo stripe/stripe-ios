@@ -732,7 +732,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let (context, mockController) = makeContext(
             collectsTaxFromBillingAddress: true,
             checkoutWalletUpdater: updater,
-            confirmationSource: .expressCheckoutElement
+            attribution: .init(confirmingElement: .expressCheckoutElement, configuredElements: [.expressCheckout])
         )
         var didReturnResult = false
         let resultTask = Task {

@@ -113,7 +113,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
     func testCheckoutBankCollectionIncludesClientAttributionMetadata() throws {
         // Given a bank-account form in Checkout's Payment Element
         let session = CheckoutTestHelpers.makeSession([
-            "elements_options": ["__checkout_config_id": "config_checkout"],
+            "checkout_session_config_id": "config_checkout",
         ]).makePublicSession()
         let configuration = PaymentSheet.Configuration()
         let sut = PaymentMethodFormViewController(

@@ -145,7 +145,7 @@ class LinkURLGeneratorTests: XCTestCase {
         let config = PaymentSheet.Configuration()
         config.apiClient.publishableKey = "pk_123"
         let session = CheckoutTestHelpers.makeSession([
-            "elements_options": ["__checkout_config_id": "config_checkout"],
+            "checkout_session_config_id": "config_checkout",
         ]).makePublicSession()
         let intent = Intent.checkout(session)
 

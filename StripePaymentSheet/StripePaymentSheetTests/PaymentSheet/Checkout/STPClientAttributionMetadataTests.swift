@@ -3,9 +3,9 @@
 //  StripePaymentSheetTests
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 @MainActor
@@ -24,8 +24,8 @@ class STPClientAttributionMetadataTests: XCTestCase {
             configuration.shippingAddressElement = .init()
             configuration.currencySelectorElement = .init()
             var responseFields: [String: Any] = [
-                "elements_options": ["__checkout_config_id": "config_test"],
-                "elements_session": CheckoutTestHelpers.minimalElementsSessionJSON.merging(["config_id": "es_config_test"]) { _, new in new },
+                "checkout_session_config_id": "config_test",
+                "elements_session_config_id": "es_config_test",
             ]
             responseFields["automatic_payment_method_types"] = automaticPaymentMethodTypes
             let response = CheckoutTestHelpers.makeSession(responseFields)
@@ -36,7 +36,7 @@ class STPClientAttributionMetadataTests: XCTestCase {
                 configuration.shippingAddressElement = nil
                 configuration.currencySelectorElement = nil
             }
-            let session = CheckoutController.Session(apiResponse: response, localState: .empty, configuration: configuration)
+            let session = CheckoutController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
             let attribution = CheckoutAttributionContext(confirmingElement: confirmingElement, configuredElements: configuration.configuredElements)
             let metadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
                 intent: .checkout(session),

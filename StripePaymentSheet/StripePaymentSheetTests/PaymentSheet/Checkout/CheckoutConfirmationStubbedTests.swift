@@ -1060,7 +1060,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             analyticsHelper: ._testValue(),
             authenticationContext: self,
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
-            confirmationSource: .paymentElement
+            attribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
             )
         )
 
