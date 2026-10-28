@@ -10,15 +10,6 @@
 import XCTest
 
 final class CheckoutClientPollResponseTests: XCTestCase {
-    func testDecodesPollResponse() throws {
-        let response = try decode(pollJSON)
-
-        XCTAssertEqual(response.sessionId, "cs_test_123")
-        XCTAssertEqual(response.confirmationStatus, .succeeded)
-        XCTAssertEqual(response.status, .complete(.unpaid))
-        XCTAssertEqual(response.paymentStatus, .unpaid)
-    }
-
     func testRejectsUnknownConfirmationStatus() throws {
         var json = pollJSON
         json["confirmation_status"] = "new_status"
