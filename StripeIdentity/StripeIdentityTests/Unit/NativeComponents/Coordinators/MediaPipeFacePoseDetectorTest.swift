@@ -8,7 +8,7 @@
 
 import XCTest
 
-@_spi(STP) @testable import StripeIdentity
+@_spi(InternalOnlyAPI) @testable import StripeIdentity
 
 final class MediaPipeFacePoseDetectorTest: XCTestCase {
     func testDefaultDetectorInitializes() {

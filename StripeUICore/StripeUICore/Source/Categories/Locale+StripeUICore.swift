@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public extension Locale {
+@_spi(InternalOnlyAPI) public extension Locale {
     /// Returns the given array of country/region codes sorted alphabetically by their localized display names
     func sortedByTheirLocalizedNames<T: RegionCodeProvider>(
         _ regionCollection: [T],

@@ -4,9 +4,9 @@
 //
 //  Created by George Birch on 8/4/26.
 
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension ShippingAddressElement {
     /// Configuration for ``ShippingAddressElement``.

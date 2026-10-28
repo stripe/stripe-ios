@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) extension NSError {
+@_spi(InternalOnlyAPI) extension NSError {
     public class func stp_unexpectedErrorMessage() -> String {
         return STPLocalizedString(
             "There was an unexpected error -- try again in a few seconds",

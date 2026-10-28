@@ -7,7 +7,7 @@
 
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 
 final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
     let items: [SegmentedSelectorItem] = {

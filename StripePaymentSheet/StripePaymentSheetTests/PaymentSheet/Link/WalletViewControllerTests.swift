@@ -6,7 +6,7 @@
 
 import XCTest
 
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 
 final class WalletViewControllerTests: XCTestCase {
     @MainActor

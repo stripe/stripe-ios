@@ -7,7 +7,7 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
 class STPFPXBankBrandTest: XCTestCase {
     /// Expected API identifier and display name for every bank brand.

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// A TrueMoney Payment Method.
 /// - seealso: https://docs.stripe.com/payments/truemoney/accept-a-payment?payment-ui=direct-api

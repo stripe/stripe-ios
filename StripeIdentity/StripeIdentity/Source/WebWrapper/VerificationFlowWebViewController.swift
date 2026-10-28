@@ -7,7 +7,7 @@
 //
 
 import AVKit
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 import WebKit
 

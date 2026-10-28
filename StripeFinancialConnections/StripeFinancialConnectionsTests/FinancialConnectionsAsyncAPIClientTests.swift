@@ -7,9 +7,9 @@
 
 import XCTest
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripeFinancialConnections
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripeFinancialConnections
 
 class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
     private enum TestError: Error {

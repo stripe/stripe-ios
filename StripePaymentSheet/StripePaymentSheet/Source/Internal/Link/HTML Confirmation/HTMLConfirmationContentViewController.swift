@@ -6,8 +6,8 @@
 //
 
 import SafariServices
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Displays HTML content with a configurable heading and confirmation button.

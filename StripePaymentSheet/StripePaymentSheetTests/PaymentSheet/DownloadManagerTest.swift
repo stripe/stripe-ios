@@ -1,8 +1,8 @@
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP)@testable import StripeCore
+@_spi(InternalOnlyAPI)@testable import StripeCore
 import StripeCoreTestUtils
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable import StripePaymentSheet
 //
 //  DownloadManagerTest.swift
 //  StripeCoreTests

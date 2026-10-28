@@ -5,11 +5,11 @@
 //  Created by Nick Porter on 6/13/25.
 //
 
-@_spi(STP) @testable import StripeCore
-@testable @_spi(STP) import StripePayments
-@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsTestUtils
-@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 @MainActor

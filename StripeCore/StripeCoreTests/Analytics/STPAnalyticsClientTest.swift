@@ -9,7 +9,7 @@
 import Foundation
 import XCTest
 
-@testable@_spi(STP) @_spi(MobilePaymentElementAnalyticEventBeta) @_spi(ReactNativeSDK) import StripeCore
+@testable@_spi(InternalOnlyAPI) @_spi(MobilePaymentElementAnalyticEventBeta) @_spi(ReactNativeSDK) import StripeCore
 
 class STPAnalyticsClientTest: XCTestCase {
 

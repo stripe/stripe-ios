@@ -3,11 +3,11 @@
 //  StripePaymentSheetTests
 //
 
-@testable@_spi(STP) import StripeCore
-@_spi(STP)@testable import StripeCoreTestUtils
-@_spi(STP)@testable import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
-@_spi(STP)@testable import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI)@testable import StripeCoreTestUtils
+@_spi(InternalOnlyAPI)@testable import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable import StripePaymentsTestUtils
 import XCTest
 
 @MainActor

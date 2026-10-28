@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An event awaiting the canonical session identifier before publication.
 struct FinancialConnectionsEventPayload {

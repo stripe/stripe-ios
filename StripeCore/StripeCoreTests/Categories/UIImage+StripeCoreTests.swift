@@ -9,7 +9,7 @@
 import XCTest
 
 // swift-format-ignore
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 
 class UIImageStripeCoreTests: XCTestCase {
     static let testJpegImageResizingKBiggerSize = 50000

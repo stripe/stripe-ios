@@ -5,8 +5,8 @@
 //  Created by Michael Liberatore on 9/28/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
 import SwiftUI
 import UIKit
 

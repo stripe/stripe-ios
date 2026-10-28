@@ -8,8 +8,8 @@
 
 import Foundation
 
-@_spi(STP) import StripeCore
-@_exported @_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_exported @_spi(InternalOnlyAPI) import StripePayments
 
 /// Provides a method for looking up Link accounts by email.
 protocol LinkAccountServiceProtocol {

@@ -5,7 +5,7 @@
 //  Created by Michael Liberatore on 10/14/26.
 //
 
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 final class LinkCardFormattingTests: XCTestCase {

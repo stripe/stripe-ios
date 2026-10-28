@@ -5,9 +5,9 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) @testable import StripePaymentsUI
 import UIKit
 import XCTest
 

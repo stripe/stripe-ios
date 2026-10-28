@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Details from an uncategorized backend API error, enriched with SDK-local diagnostic context.
 @_spi(CryptoOnrampAlpha)

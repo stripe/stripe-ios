@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 final class PaymentSheetAnalyticsHelper {
 
@@ -15,6 +15,9 @@ final class PaymentSheetAnalyticsHelper {
     let integrationShape: IntegrationShape
     let configuration: PaymentElementConfiguration
     private var customerProvider: CustomerProvider
+    // Checkout-specific context lives here because Checkout's PaymentElement reuses MPE UI analytics.
+    // Nil for all other integrations.
+    let checkoutSessionID: String?
 
     /// Logs analytics to `r.stripe.com`.
     let analyticsClientV2: AnalyticsClientV2Protocol
@@ -58,6 +61,7 @@ final class PaymentSheetAnalyticsHelper {
     init(
         integrationShape: IntegrationShape,
         configuration: PaymentElementConfiguration,
+        checkoutSessionID: String? = nil,
         analyticsClient: STPAnalyticsClient = .sharedClient,
         analyticsClientV2: AnalyticsClientV2Protocol = AnalyticsClientV2(
             clientId: "stripe-mobile-sdk",
@@ -67,6 +71,7 @@ final class PaymentSheetAnalyticsHelper {
         self.integrationShape = integrationShape
         self.configuration = configuration
         self.customerProvider = CustomerProvider(customer: configuration.customer)
+        self.checkoutSessionID = checkoutSessionID
         self.analyticsClient = analyticsClient
         self.analyticsClientV2 = analyticsClientV2
     }
@@ -531,6 +536,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["link_ui"] = linkUI
         additionalParams["setup_future_usage"] = intent?.setupFutureUsageString
         additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
+        additionalParams["checkout_session_id"] = checkoutSessionID
         additionalParams["elements_session_config_id"] = elementsSession?.configID
         additionalParams["is_confirmation_tokens"] = intent?.intentConfig?.confirmationTokenConfirmHandler != nil
         additionalParams["payment_method_orientation"] = paymentMethodOrientation?.rawValue

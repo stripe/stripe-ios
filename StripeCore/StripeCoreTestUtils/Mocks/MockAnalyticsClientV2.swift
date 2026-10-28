@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public final class MockAnalyticsClientV2: AnalyticsClientV2Protocol {
+@_spi(InternalOnlyAPI) public final class MockAnalyticsClientV2: AnalyticsClientV2Protocol {
     public let clientId: String = "MockAnalyticsClient"
 
     public private(set) var loggedAnalyticsPayloads: [[String: Any]] = []

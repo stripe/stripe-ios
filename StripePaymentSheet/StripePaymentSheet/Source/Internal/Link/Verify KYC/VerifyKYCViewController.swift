@@ -28,10 +28,14 @@ final class VerifyKYCViewController {
     /// - Parameters:
     ///   - info: The KYC information to display.
     ///   - appearance: Determines the colors, corner radius, and height of the "Confirm" button and the user interface style (i.e. light, dark, or system).
-    init(info: VerifyKYCInfo, appearance: LinkAppearance) {
+    ///   - nativeSheetPresentation: Decides whether to present in the native sheet.
+    init(info: VerifyKYCInfo, appearance: LinkAppearance, nativeSheetPresentation: SheetImplementationResolver? = nil) {
         let contentViewController = VerifyKYCContentViewController(info: info, appearance: appearance)
         self.contentViewController = contentViewController
-        sheetContainer = LinkSheetContainerFactory.make(contentViewController: contentViewController)
+        sheetContainer = LinkSheetContainerFactory.make(
+            contentViewController: contentViewController,
+            usesNativeSheet: nativeSheetPresentation?.usesNativeSheet ?? false
+        )
         appearance.style.configure(sheetContainer)
     }
 

@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// STPPaymentCardTextField is a text field with similar properties to UITextField,
@@ -738,7 +738,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     @objc internal var internalBillingDetails: STPPaymentMethodBillingDetails?
     @objc internal var internalMetadata: [String: String]?
 
-    @objc @_spi(STP) public var allFields: [STPFormTextField] = []
+    @objc @_spi(InternalOnlyAPI) public var allFields: [STPFormTextField] = []
     private lazy var sizingField: STPFormTextField = {
         let field = build()
         field.formDelegate = nil
@@ -2305,7 +2305,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     // MARK: Card brand choice
     // For internal testing
-    @_spi(STP) public var cbcEnabledOverride: Bool? {
+    @_spi(InternalOnlyAPI) public var cbcEnabledOverride: Bool? {
         get {
             viewModel.cbcController.cbcEnabledOverride
         }
@@ -2498,6 +2498,6 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 private let kCardLoadingAnimationDelay: TimeInterval = 0.1
 
 /// :nodoc:
-@_spi(STP) extension STPPaymentCardTextField: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "STPPaymentCardTextField"
+@_spi(InternalOnlyAPI) extension STPPaymentCardTextField: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier = "STPPaymentCardTextField"
 }

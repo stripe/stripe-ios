@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Analytic that contains a `financial connections session id` payload param.
 /// **Note:** Avoid logging the client secret.

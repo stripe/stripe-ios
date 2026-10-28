@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 extension PaymentSheet {
 
@@ -18,7 +18,7 @@ extension PaymentSheet {
     /// Modifying this property in a production app can lead to unexpected behavior.
     ///
     /// :nodoc:
-    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [
+    @_spi(InternalOnlyAPI) public static var supportedPaymentMethods: [STPPaymentMethodType] = [
         .card, .payPal,
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .SEPADebit, .EPS, .przelewy24,
@@ -386,7 +386,7 @@ extension PaymentSheet {
 
 // MARK: - STPPaymentMethodType Mandate Data Helpers
 
-@_spi(STP) extension STPPaymentMethodType {
+@_spi(InternalOnlyAPI) extension STPPaymentMethodType {
 
     /// Payment method types that require mandate data for PaymentIntents when `setup_future_usage` is set
     static var requiresMandateDataForPaymentIntent: Set<STPPaymentMethodType> {

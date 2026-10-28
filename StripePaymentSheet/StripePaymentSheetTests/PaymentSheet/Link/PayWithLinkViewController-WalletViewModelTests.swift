@@ -9,11 +9,11 @@
 import StripeCoreTestUtils
 import XCTest
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 import StripePaymentsTestUtils
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 @MainActor
 class PayWithLinkViewController_WalletViewModelTests: XCTestCase {

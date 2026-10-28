@@ -7,12 +7,12 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeCoreTestUtils
-@testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {

@@ -5,10 +5,10 @@
 //  Created by George Birch on 10/27/25.
 //
 
-@_spi(STP)@testable import StripeCore
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI)@testable import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @_spi(PaymentMethodMessagingElementPreview)@testable import StripePaymentSheet
-@_spi(STP)@testable import StripeUICore
+@_spi(InternalOnlyAPI)@testable import StripeUICore
 import UIKit
 import XCTest
 

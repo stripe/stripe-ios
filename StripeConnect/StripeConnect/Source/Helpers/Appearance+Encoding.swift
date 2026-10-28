@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 9/4/24.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 typealias Appearance = EmbeddedComponentManager.Appearance

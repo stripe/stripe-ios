@@ -5,7 +5,7 @@
 //  Created by Joyce Qin on 3/4/26.
 //
 
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 import XCTest
 
 final class SegmentedSelectorElementTest: XCTestCase {

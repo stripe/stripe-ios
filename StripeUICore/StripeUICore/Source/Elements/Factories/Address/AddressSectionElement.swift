@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /**
@@ -15,7 +15,7 @@ import UIKit
 
  In addition to the physical address, it can collect other related fields like name.
  */
-@_spi(STP) public class AddressSectionElement: ContainerElement {
+@_spi(InternalOnlyAPI) public class AddressSectionElement: ContainerElement {
     public typealias DidUpdateAddress = (AddressDetails) -> Void
 
     /// Countries that Stripe has audited to ensure a good autocomplete experience.
@@ -23,7 +23,7 @@ import UIKit
 
     /// Describes an address to use as a default for AddressSectionElement
     public struct AddressDetails: Equatable {
-        @_spi(STP) public static let empty = AddressDetails()
+        @_spi(InternalOnlyAPI) public static let empty = AddressDetails()
         public var name: String?
         public var phone: String?
         public var email: String?
@@ -157,7 +157,7 @@ import UIKit
     private(set) var defaults: AddressDetails
     private let disableAutocomplete: Bool
     private var hasExpandedToManualEntry = false
-    @_spi(STP) public var didTapAutocompleteButton: () -> Void
+    @_spi(InternalOnlyAPI) public var didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
 
     // MARK: - Implementation
@@ -570,7 +570,7 @@ extension AddressSectionElement: ElementDelegate {
     }
 }
 
-@_spi(STP) public extension AddressSectionElement.AddressDetails {
+@_spi(InternalOnlyAPI) public extension AddressSectionElement.AddressDetails {
     init(
         billingAddress: BillingAddress,
         phone: String?,

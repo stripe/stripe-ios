@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 2025-03-10.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 func CreateRoundedLogoView(urlString: String) -> UIView {

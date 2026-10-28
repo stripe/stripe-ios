@@ -5,7 +5,7 @@
 //  Created by Michael Liberatore on 9/24/26.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 /// An inline error message paired with an exclamation icon.

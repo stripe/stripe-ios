@@ -57,7 +57,7 @@ public class STPPaymentMethodUSBankAccountParams: NSObject {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Internal-only option to create directly from a link_account_session ID
-    @objc @_spi(STP) public var linkAccountSessionID: String?
+    @objc @_spi(InternalOnlyAPI) public var linkAccountSessionID: String?
 
 }
 

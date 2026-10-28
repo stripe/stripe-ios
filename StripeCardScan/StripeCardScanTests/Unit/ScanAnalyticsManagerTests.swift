@@ -9,7 +9,7 @@ import OHHTTPStubs
 import StripeCoreTestUtils
 import XCTest
 
-@testable@_spi(STP) import StripeCardScan
+@testable@_spi(InternalOnlyAPI) import StripeCardScan
 
 class ScanAnalyticsManagerTests: XCTestCase {
     private var scanAnalyticsManager: ScanAnalyticsManager!

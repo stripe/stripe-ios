@@ -9,7 +9,7 @@
 import Foundation
 import ObjectiveC
 import PassKit
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// :nodoc:
 @objc public protocol _stpinternal_STPApplePayContextDelegateBase: NSObjectProtocol {
@@ -60,7 +60,7 @@ import PassKit
     /// Use the partial billing address on `paymentMethod` to recalculate tax, then call the handler.
     /// - Note: Apple only exposes postal code/city/state/country here; the full street address
     /// arrives in `paymentInformation` at authorization time.
-    @_spi(STP) @MainActor @preconcurrency
+    @_spi(InternalOnlyAPI) @MainActor @preconcurrency
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
@@ -68,7 +68,7 @@ import PassKit
     )
 
     /// Async variant of `didSelectPaymentMethod`. Implement one or the other, not both.
-    @_spi(STP)
+    @_spi(InternalOnlyAPI)
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
         didSelectPaymentMethod paymentMethod: PKPaymentMethod
@@ -173,7 +173,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// A special string that can be passed in place of a intent client secret to force showing success and return a PaymentState of `success`.
     /// - Note: ⚠️ If provided, the SDK performs no action to complete the payment or setup - it doesn't confirm a PaymentIntent or SetupIntent or handle next actions.
     ///   You should only use this if your integration can't create a PaymentIntent or SetupIntent. It is your responsibility to ensure that you only pass this value if the payment or set up is successful. 
-    @_spi(STP) public static let COMPLETE_WITHOUT_CONFIRMING_INTENT = "COMPLETE_WITHOUT_CONFIRMING_INTENT"
+    @_spi(InternalOnlyAPI) public static let COMPLETE_WITHOUT_CONFIRMING_INTENT = "COMPLETE_WITHOUT_CONFIRMING_INTENT"
 
     internal var analyticsClient: STPAnalyticsClient = .sharedClient
     /// Initializes this class.
@@ -329,23 +329,23 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @objc public var apiClient: STPAPIClient = STPAPIClient.shared
     /// ApplePayContext passes this to the /confirm endpoint for PaymentIntents if it did not collect shipping details itself.
     /// :nodoc:
-    @_spi(STP) public var shippingDetails: StripeAPI.ShippingDetails?
+    @_spi(InternalOnlyAPI) public var shippingDetails: StripeAPI.ShippingDetails?
     weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
     @objc var authorizationController: PKPaymentAuthorizationController
-    @_spi(STP) public var returnUrl: String?
+    @_spi(InternalOnlyAPI) public var returnUrl: String?
 
-    @_spi(STP) @frozen public enum ConfirmType {
+    @_spi(InternalOnlyAPI) @frozen public enum ConfirmType {
         case client
         case server
         /// The merchant backend used the special string instead of a intent client secret, so we completed the payment without confirming an intent.
         case none
     }
     /// Tracks where the call to confirm the PaymentIntent or SetupIntent happened.
-    @_spi(STP) public var confirmType: ConfirmType?
+    @_spi(InternalOnlyAPI) public var confirmType: ConfirmType?
     /// Contains metadata with identifiers for the session and information about the integration
-    @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @_spi(InternalOnlyAPI) public var clientAttributionMetadata: STPClientAttributionMetadata?
     /// Billing details used as fallbacks when Apple Pay's contact info doesn't include a field.
-    @_spi(STP) public var fallbackBillingDetails: StripeAPI.BillingDetails?
+    @_spi(InternalOnlyAPI) public var fallbackBillingDetails: StripeAPI.BillingDetails?
 
     // Internal state
     private var startTime: Date?
@@ -566,7 +566,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     @objc
-    @_spi(STP) public func paymentAuthorizationController(
+    @_spi(InternalOnlyAPI) public func paymentAuthorizationController(
         _ controller: PKPaymentAuthorizationController,
         didSelectPaymentMethod paymentMethod: PKPaymentMethod,
         handler completion: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
@@ -905,7 +905,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
     }
 
-    @_spi(STP) public static func makeUnknownError(message: String) -> NSError {
+    @_spi(InternalOnlyAPI) public static func makeUnknownError(message: String) -> NSError {
         let userInfo = [
             NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(),
             STPError.errorMessageKey: message,
@@ -939,8 +939,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 }
 
 /// :nodoc:
-@_spi(STP) extension STPApplePayContext: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier: String {
+@_spi(InternalOnlyAPI) extension STPApplePayContext: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier: String {
         return "STPApplePayContext"
     }
 }

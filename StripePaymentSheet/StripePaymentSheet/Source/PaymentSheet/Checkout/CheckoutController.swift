@@ -8,14 +8,14 @@
 
 import Combine
 import Foundation
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 /// Use this class to build a [Checkout elements](todo) integration.
 /// It manages a CheckoutSession object and UI elements (e.g. PaymentElement, ShippingAddressElement).
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 @MainActor
 public final class CheckoutController: ObservableObject {
@@ -285,20 +285,8 @@ public final class CheckoutController: ObservableObject {
         }
         do {
             guard session.shouldSendTaxRegion(for: "billing") else { return }
-            let taxRegion: Address
-            if let address {
-                taxRegion = address
-            } else {
-                guard let country = session.paymentOption?.billingDetails?.address?.country?.nonEmpty else {
-                    return
-                }
-                // The Checkout Session update endpoint requires tax_region[country] and does not
-                // support clearing tax_region, so keep the previous country.
-                // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
-                taxRegion = Address(country: country)
-            }
             try await performQueuedUpdate(
-                .setTaxRegion(taxRegion),
+                .setTaxRegion(address),
                 canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
                 onRequest: { didRequestTaxUpdate = true }
             )
@@ -351,13 +339,9 @@ public final class CheckoutController: ObservableObject {
     }
 
     private func clearShippingAddress(onRequest: @escaping @MainActor () -> Void) async throws {
-        guard let shippingAddress = session.shippingAddress else { return }
+        guard session.shippingAddress != nil else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
-            // The Checkout Session update endpoint requires tax_region[country] and does not
-            // support clearing tax_region, so keep the previous country.
-            // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
-            let countryOnlyAddress = Address(country: shippingAddress.address.country)
-            try await performQueuedUpdate(.setTaxRegion(countryOnlyAddress), onRequest: onRequest) {
+            try await performQueuedUpdate(.setTaxRegion(nil), onRequest: onRequest) {
                 $0.shippingAddress = nil
             }
         } else {
@@ -398,6 +382,7 @@ public final class CheckoutController: ObservableObject {
                     defer { analyticsParams["refresh_duration"] = ProcessInfo.processInfo.systemUptime - refreshStart }
                     refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
                         checkoutSessionId: sessionId,
+                        clientSecret: self.clientSecret,
                         adaptivePricingAllowed: self.configuration.currencySelectorElement != nil
                     )
                 } catch {
@@ -512,6 +497,7 @@ extension CheckoutController {
                     didRequestTaxUpdate = true
                     let response = try await apiClient.updateCheckoutSession(
                         checkoutSessionId: Self.extractSessionId(from: clientSecret),
+                        clientSecret: clientSecret,
                         parameters: SessionUpdate.setTaxRegion(address).parameters
                     )
                     currentTaxRegion = address
@@ -546,6 +532,7 @@ extension CheckoutController {
                     didRequestTaxUpdate = true
                     let response = try await apiClient.updateCheckoutSession(
                         checkoutSessionId: Self.extractSessionId(from: clientSecret),
+                        clientSecret: clientSecret,
                         parameters: SessionUpdate.setTaxRegion(shippingAddress.address).parameters
                     )
                     currentTaxRegion = shippingAddress.address
@@ -584,6 +571,7 @@ extension CheckoutController {
             let checkoutConfigID = apiResponse.checkoutConfigID ?? session.checkoutConfigID
             var updatedSession = Session(
                 apiResponse: apiResponse,
+                clientSecret: clientSecret,
                 localState: localState,
                 configuration: configuration
             )

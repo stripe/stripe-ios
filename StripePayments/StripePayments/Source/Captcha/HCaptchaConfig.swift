@@ -13,7 +13,7 @@ import WebKit
 /** Widget display mode
  */
 @objc
-@_spi(STP) public enum HCaptchaSize: Int, RawRepresentable {
+@_spi(InternalOnlyAPI) public enum HCaptchaSize: Int, RawRepresentable {
     case invisible
     case compact
     case normal
@@ -48,7 +48,7 @@ import WebKit
 /** Widget orientation mode
  */
 @objc
-@_spi(STP) public enum HCaptchaOrientation: Int, RawRepresentable {
+@_spi(InternalOnlyAPI) public enum HCaptchaOrientation: Int, RawRepresentable {
     case portrait
     case landscape
 

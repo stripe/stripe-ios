@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController {
     /// A postal address.

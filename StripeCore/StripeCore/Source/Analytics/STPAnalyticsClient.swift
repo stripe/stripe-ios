@@ -9,26 +9,26 @@
 import Foundation
 import UIKit
 
-@_spi(STP) public protocol STPAnalyticsProtocol {
+@_spi(InternalOnlyAPI) public protocol STPAnalyticsProtocol {
     static var stp_analyticsIdentifier: String { get }
 }
 
-@_spi(STP) public protocol STPAnalyticsClientProtocol {
+@_spi(InternalOnlyAPI) public protocol STPAnalyticsClientProtocol {
     func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type)
     func log(analytic: Analytic, apiClient: STPAPIClient)
 }
 
 /// This exists so our example/test apps can hook into when STPAnalyticsClient.sharedClient sends events.
-@_spi(STP) public protocol STPAnalyticsClientDelegate: AnyObject {
+@_spi(InternalOnlyAPI) public protocol STPAnalyticsClientDelegate: AnyObject {
     func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any])
 }
 
-@_spi(STP) public class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
+@_spi(InternalOnlyAPI) public class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
     @objc public static let sharedClient = STPAnalyticsClient()
 
     /// When `true`, sends analytics directly to r.stripe.com via POST.
     /// When `false`, sends to q.stripe.com via GET (legacy path).
-    @_spi(STP) public static var sendAnalyticsToRStripe: Bool = false
+    @_spi(InternalOnlyAPI) public static var sendAnalyticsToRStripe: Bool = false
 
     private static let rStripeUrl = URL(string: "https://r.stripe.com/0")!
     private static let qStripeUrl = URL(string: "https://q.stripe.com")!

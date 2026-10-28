@@ -7,8 +7,8 @@
 
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// Displays an individual KYC detail (e.g. name) with an optional edit button.
 final class VerifyKYCInfoRowView: UIView {

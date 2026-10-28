@@ -11,7 +11,7 @@ import Foundation
 import ImageIO
 
 /// A helper to extract properties from an EXIF metadata dictionary
-@_spi(STP) public struct CameraExifMetadata: Equatable {
+@_spi(InternalOnlyAPI) public struct CameraExifMetadata: Equatable {
     public let brightnessValue: Double?
     public let focalLength: Double?
     public let lensModel: String?

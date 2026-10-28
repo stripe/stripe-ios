@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 3/1/25.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 extension PaymentSheet.FlowController {

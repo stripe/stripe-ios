@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// PaymentMethod objects represent your customer's payment instruments. They can be used with PaymentIntents to collect payments.
@@ -146,18 +146,18 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var customerId: String?
 
     /// The payment details of a PaymentMethod that was created using Link.
-    @_spi(STP) public var linkPaymentDetails: LinkPaymentDetails?
+    @_spi(InternalOnlyAPI) public var linkPaymentDetails: LinkPaymentDetails?
 
     /// Whether this payment method originated from Link.
-    @_spi(STP) public var isLinkOrigin: Bool = false
+    @_spi(InternalOnlyAPI) public var isLinkOrigin: Bool = false
 
     /// Whether this payment method is coming from Link in payment method mode.
-    @_spi(STP) public var isLinkPaymentMethod: Bool {
+    @_spi(InternalOnlyAPI) public var isLinkPaymentMethod: Bool {
         linkPaymentDetails != nil
     }
 
     /// Whether this payment method is coming from Link in passthrough mode.
-    @_spi(STP) public var isLinkPassthroughMode: Bool {
+    @_spi(InternalOnlyAPI) public var isLinkPassthroughMode: Bool {
         isLinkOrigin || card?.wallet?.type == .link
     }
 
@@ -240,21 +240,21 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPPaymentMethodType
 
-    @_spi(STP) public class func string(from type: STPPaymentMethodType) -> String? {
+    @_spi(InternalOnlyAPI) public class func string(from type: STPPaymentMethodType) -> String? {
         guard type != .unknown else {
             return nil
         }
         return type.identifier
     }
 
-    @_spi(STP) public class func type(from string: String) -> STPPaymentMethodType {
+    @_spi(InternalOnlyAPI) public class func type(from string: String) -> STPPaymentMethodType {
         let key = string.lowercased()
         return STPPaymentMethodType.allCases.first(where: { type in
             type.identifier == key
         }) ?? .unknown
     }
 
-    @_spi(STP) public class func allowRedisplay(from string: String) -> STPPaymentMethodAllowRedisplay {
+    @_spi(InternalOnlyAPI) public class func allowRedisplay(from string: String) -> STPPaymentMethodAllowRedisplay {
         let key = string.lowercased()
         return STPPaymentMethodAllowRedisplay.allCases.first(where: { type in
             type.stringValue == key
@@ -279,7 +279,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPAPIResponseDecodable
     /// :nodoc:
-    @objc @_spi(STP) public required init(
+    @objc @_spi(InternalOnlyAPI) public required init(
         stripeId: String,
         created: Date,
         type: STPPaymentMethodType,

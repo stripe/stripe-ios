@@ -5,8 +5,8 @@
 //  Created by Michael Liberatore on 9/16/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 /// A file row displaying upload progress, completion, or an error.

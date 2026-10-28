@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 6/20/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A view that displays a caption label with an optional expandable detail section.

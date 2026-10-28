@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeConnect
+@_spi(InternalOnlyAPI) import StripeConnect
 import UIKit
 
 extension AppSettings {

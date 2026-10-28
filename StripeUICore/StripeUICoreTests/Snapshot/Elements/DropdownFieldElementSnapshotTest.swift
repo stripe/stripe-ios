@@ -8,7 +8,7 @@
 
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 
 final class DropdownFieldElementSnapshotTest: STPSnapshotTestCase {
     let items = ["A", "B", "C", "D"].map { DropdownFieldElement.DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityValue: $0, rawData: $0) }

@@ -86,7 +86,7 @@ public class STPMandateCustomerAcceptanceParams: NSObject, STPFormEncodable {
 
 extension STPMandateCustomerAcceptanceParams: STPAPIResponseDecodable {
     @objc
-    @_spi(STP) public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    @_spi(InternalOnlyAPI) public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil
         }

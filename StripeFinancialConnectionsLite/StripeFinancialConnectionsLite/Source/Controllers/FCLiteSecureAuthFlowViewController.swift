@@ -6,7 +6,7 @@
 //
 
 import AuthenticationServices
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 class FCLiteSecureAuthFlowViewController: UIViewController {

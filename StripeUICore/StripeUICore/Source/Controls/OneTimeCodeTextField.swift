@@ -11,7 +11,7 @@ import UIKit
 /// A field for collecting one-time codes (OTCs).
 /// For internal SDK use only
 @objc(STP_Internal_OneTimeCodeTextField)
-@_spi(STP) public final class OneTimeCodeTextField: UIControl {
+@_spi(InternalOnlyAPI) public final class OneTimeCodeTextField: UIControl {
 
     public struct Configuration {
         /// Total number of digits of the one-time code.
@@ -36,6 +36,9 @@ import UIKit
         /// The height of each digit item.
         let itemHeight: CGFloat
 
+        /// The maximum width of each digit item. When set, the digits are centered if the field is wider than they need.
+        let itemMaxWidth: CGFloat?
+
         /// The width of the focused ring's border.
         let itemFocusRingThickness: CGFloat
 
@@ -49,6 +52,7 @@ import UIKit
             font: UIFont = .systemFont(ofSize: 20),
             itemCornerRadius: CGFloat = 8,
             itemHeight: CGFloat = 60,
+            itemMaxWidth: CGFloat? = nil,
             itemFocusRingThickness: CGFloat = 2,
             itemFocusBackgroundColor: UIColor? = nil
         ) {
@@ -58,6 +62,7 @@ import UIKit
             self.font = font
             self.itemCornerRadius = itemCornerRadius
             self.itemHeight = itemHeight
+            self.itemMaxWidth = itemMaxWidth
             self.itemFocusRingThickness = itemFocusRingThickness
             self.itemFocusBackgroundColor = itemFocusBackgroundColor
         }
@@ -237,7 +242,28 @@ private extension OneTimeCodeTextField {
         stackView.alignment = .center
         stackView.distribution = .fillEqually
         stackView.semanticContentAttribute = .forceLeftToRight
-        addAndPinSubview(stackView)
+
+        guard let itemMaxWidth = configuration.itemMaxWidth else {
+            addAndPinSubview(stackView)
+            return
+        }
+
+        for digitView in digitViews {
+            digitView.widthAnchor.constraint(lessThanOrEqualToConstant: itemMaxWidth).isActive = true
+        }
+
+        // Fill the field until the digits reach their maximum width, then center them.
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(stackView)
+        let fillWidthConstraint = stackView.widthAnchor.constraint(equalTo: widthAnchor)
+        fillWidthConstraint.priority = .defaultHigh
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor),
+            fillWidthConstraint,
+        ])
     }
 
     func arrangedDigitViews() -> [UIView] {

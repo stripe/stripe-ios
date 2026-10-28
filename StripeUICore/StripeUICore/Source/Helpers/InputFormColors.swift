@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) public enum InputFormColors {
+@_spi(InternalOnlyAPI) public enum InputFormColors {
 
     public static var textColor: UIColor {
         return .label

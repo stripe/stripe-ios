@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController.Session {
     /// Details about the currency presented to the customer when adaptive pricing is active.

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 /// Provides shared implementations of common operations for managing saved payment methods in PaymentSheet
 @MainActor
@@ -52,6 +52,7 @@ final class SavedPaymentMethodManager {
             let updatedSession = try await configuration.apiClient.updatePaymentMethod(
                 paymentMethod.stripeId,
                 inCheckoutSession: session.id,
+                clientSecret: session.clientSecret,
                 billingDetails: billing,
                 expiryDetails: expiry
             )
@@ -82,7 +83,8 @@ final class SavedPaymentMethodManager {
             Task {
                 try? await configuration.apiClient.detachPaymentMethod(
                     paymentMethod.stripeId,
-                    fromCheckoutSession: session.id
+                    fromCheckoutSession: session.id,
+                    clientSecret: session.clientSecret
                 )
             }
         case .paymentIntent, .setupIntent, .deferredIntent:

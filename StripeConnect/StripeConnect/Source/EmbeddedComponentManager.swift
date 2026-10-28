@@ -6,7 +6,7 @@
 //
 
 import JavaScriptCore
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// Manages Connect embedded components

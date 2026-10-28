@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 3/3/26.
 //
 
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutCartContentView: View {

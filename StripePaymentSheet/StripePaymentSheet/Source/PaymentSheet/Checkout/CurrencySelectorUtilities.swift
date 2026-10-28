@@ -5,9 +5,9 @@
 //  Created by Nick Porter on 4/23/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Shared utilities for currency selector components (standalone and in-form).
@@ -92,53 +92,15 @@ enum CurrencySelectorUtilities {
     ) -> String {
         let isIntegrationCurrencySelected = selectedCurrency == CurrencyCode(meta.integrationCurrency).apiValue
         if isIntegrationCurrencySelected {
-            return String.Localized.bankExchangeRateDisclaimer
+            return meta.integrationCaption ?? String.Localized.bankExchangeRateDisclaimer
         }
 
-        return formatExchangeRate(from: meta)
-    }
-
-    private static let exchangeRateFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 4
-        return formatter
-    }()
-
-    static func formatExchangeRate(from meta: CheckoutController.Session.ExchangeRateMeta) -> String {
-        let localCurrency = CurrencyCode(meta.localizedCurrency).displayValue
-        let integrationCurrency = CurrencyCode(meta.integrationCurrency).displayValue
-
-        let formattedRate: String
-        if let rateDouble = Double(meta.exchangeRate) {
-            let inverse = 1.0 / rateDouble
-            formattedRate = exchangeRateFormatter.string(from: NSNumber(value: inverse)) ?? meta.exchangeRate
-        } else {
-            formattedRate = meta.exchangeRate
-        }
-
-        if let conversionMarkupBps = meta.conversionMarkupBps, conversionMarkupBps > 0 {
-            let feePercent = String(format: "%g", Double(conversionMarkupBps) / 100.0)
-            return .Localized.exchangeRateWithConversionFee(
-                localCurrency: localCurrency,
-                rate: formattedRate,
-                integrationCurrency: integrationCurrency,
-                feePercent: feePercent
-            )
-        }
-
-        return .Localized.exchangeRate(
-            localCurrency: localCurrency,
-            rate: formattedRate,
-            integrationCurrency: integrationCurrency
-        )
+        return meta.caption ?? ""
     }
 
     /// Returns the expandable detail text for the exchange rate, or nil if not applicable.
-    /// This will be replaced by a server-provided string from the translation layer in the future.
     static func detailText(exchangeRateMeta meta: CheckoutController.Session.ExchangeRateMeta) -> String? {
-        guard let conversionMarkupBps = meta.conversionMarkupBps, conversionMarkupBps > 0 else { return nil }
-        return "This string will come from the translation layer in the future"
+        return meta.details
     }
 
     // MARK: - Availability

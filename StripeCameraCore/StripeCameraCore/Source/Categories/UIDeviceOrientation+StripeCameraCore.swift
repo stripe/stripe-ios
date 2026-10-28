@@ -10,7 +10,7 @@ import AVKit
 import Foundation
 import UIKit
 
-@_spi(STP) extension UIDeviceOrientation {
+@_spi(InternalOnlyAPI) extension UIDeviceOrientation {
     public var videoOrientation: AVCaptureVideoOrientation {
         switch UIDevice.current.orientation {
         case .portraitUpsideDown:

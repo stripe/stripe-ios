@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 9/3/25.
 //
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
 import XCTest
 
 class STPConfirmationTokenParamsTest: XCTestCase {

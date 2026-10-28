@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An object representing parameters used to confirm a PaymentIntent object.
 /// A PaymentIntent must have a PaymentMethod or Source associated in order to successfully confirm it.
@@ -83,7 +83,7 @@ public class STPPaymentIntentConfirmParams: NSObject {
 
     /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
-    @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
+    @objc @_spi(InternalOnlyAPI) public var setAsDefaultPM: NSNumber?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
@@ -131,7 +131,7 @@ public class STPPaymentIntentConfirmParams: NSObject {
     public var useStripeSDK: Bool?
 
     internal var _paymentMethodType: STPPaymentMethodType?
-    @_spi(STP) public var paymentMethodType: STPPaymentMethodType? {
+    @_spi(InternalOnlyAPI) public var paymentMethodType: STPPaymentMethodType? {
         if let type = _paymentMethodType {
             return type
         }
@@ -164,16 +164,16 @@ public class STPPaymentIntentConfirmParams: NSObject {
     @objc public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
 
     /// Radar options that may contain HCaptcha token
-    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
+    @objc @_spi(InternalOnlyAPI) public var radarOptions: STPRadarOptions?
 
     /// Shipping information.
     @objc public var shipping: STPPaymentIntentShippingDetailsParams?
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @objc @_spi(InternalOnlyAPI) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     /// ID of an existing ConfirmationToken to use for this PaymentIntent confirmation.
-    @objc @_spi(STP) public var confirmationToken: String?
+    @objc @_spi(InternalOnlyAPI) public var confirmationToken: String?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
@@ -236,7 +236,7 @@ public class STPPaymentIntentConfirmParams: NSObject {
         options: []
     )
 
-    @_spi(STP) public class func isClientSecretValid(_ clientSecret: String) -> Bool {
+    @_spi(InternalOnlyAPI) public class func isClientSecretValid(_ clientSecret: String) -> Bool {
 
         return
             (isClientSecretValidRegex?.numberOfMatches(
@@ -314,7 +314,7 @@ extension STPPaymentIntentConfirmParams: NSCopying {
     /// Returns mandate data for the specified payment method type, if required.
     /// - Parameter paymentMethodType: The payment method type to check
     /// - Returns: STPMandateDataParams with inferred values if mandate is required for the payment method type, nil otherwise
-    @_spi(STP) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
+    @_spi(InternalOnlyAPI) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
         switch paymentMethodType {
         case .gcash, .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .link, .USBankAccount:
             return .makeWithInferredValues()

@@ -9,7 +9,7 @@ import Foundation
 import QuartzCore
 import UIKit
 
-@_spi(STP) public extension CALayer {
+@_spi(InternalOnlyAPI) public extension CALayer {
 
     func applyShadow(shadow: ElementsAppearance.Shadow?) {
         guard let shadow = shadow else {

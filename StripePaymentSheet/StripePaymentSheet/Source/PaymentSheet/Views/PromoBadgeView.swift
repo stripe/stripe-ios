@@ -7,7 +7,7 @@
 
 import UIKit
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 class PromoBadgeView: UIView {
 

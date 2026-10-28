@@ -7,7 +7,7 @@
 
 import Combine
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Protocol representing a type capable of uploading a document. Used for mocking upload behavior in tests.
 protocol DocumentUploading {

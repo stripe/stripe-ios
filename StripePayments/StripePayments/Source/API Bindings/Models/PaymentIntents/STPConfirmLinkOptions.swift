@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - STPConfirmLinkOptions
 /// Options to update a Link PaymentMethod during PaymentIntent confirmation.
-@_spi(STP) public class STPConfirmLinkOptions: NSObject {
+@_spi(InternalOnlyAPI) public class STPConfirmLinkOptions: NSObject {
     /// Indicates that you intend to make future payments with this payment method.
     /// Providing this parameter will attach the payment method to the PaymentIntent’s Customer, if present, after the Intent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be attached to a Customer after the transaction completes.
     ///

@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public struct FinancialConnectionsLinkedBank: Equatable {
+@_spi(InternalOnlyAPI) public struct FinancialConnectionsLinkedBank: Equatable {
     public let sessionId: String
     public let accountId: String
     public let displayName: String?

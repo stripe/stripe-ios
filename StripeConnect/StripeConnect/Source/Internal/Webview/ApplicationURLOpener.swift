@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 8/14/24.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// Error thrown when the system can't open a URL.

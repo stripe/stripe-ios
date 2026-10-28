@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkBadgeView)

@@ -5,8 +5,8 @@
 //  Created by Yuki Tokuhiro on 7/10/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
     enum ErrorCode: String {

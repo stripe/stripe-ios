@@ -5,11 +5,11 @@
 //  Created by George Birch on 8/27/26.
 //
 
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 @MainActor
@@ -232,7 +232,8 @@ final class CustomerProviderTests: XCTestCase {
     func testCheckoutPermissionsUseTheCheckoutSession() {
         for canDetach in [true, false] {
             let session = CheckoutTestHelpers.makeSession([
-                "customer": ["id": "cus_checkout", "can_detach_payment_method": canDetach],
+                "customer": ["id": "cus_checkout"],
+                "saved_payment_method_options": ["payment_method_remove": canDetach ? "enabled" : "disabled"],
             ]).makePublicSession()
             let provider = CustomerProvider(checkoutSession: session)
 

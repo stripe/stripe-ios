@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
 
 public extension STPFixtures {
     static func paymentMethodBillingDetails() -> STPPaymentMethodBillingDetails {

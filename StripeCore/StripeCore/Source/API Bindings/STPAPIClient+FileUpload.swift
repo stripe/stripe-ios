@@ -28,18 +28,18 @@ extension StripeFile.Purpose {
 
 /// STPAPIClient extensions to upload files.
 extension STPAPIClient {
-    @_spi(STP) public typealias FileAndUploadMetrics = (
+    @_spi(InternalOnlyAPI) public typealias FileAndUploadMetrics = (
         file: StripeFile,
         metrics: ImageUploadMetrics
     )
 
     /// Metrics returned in callback after image is uploaded to track performance.
-    @_spi(STP) public struct ImageUploadMetrics {
+    @_spi(InternalOnlyAPI) public struct ImageUploadMetrics {
         public let timeToUpload: TimeInterval
         public let fileSizeBytes: Int
     }
 
-    @_spi(STP) public static let defaultImageFileName = "image"
+    @_spi(InternalOnlyAPI) public static let defaultImageFileName = "image"
 
     func data(
         forUploadedImage image: UIImage,
@@ -77,7 +77,7 @@ extension STPAPIClient {
     ///   match a value in `StripeFile.Purpose`, but can be specified by any string
     ///   when forwarding the value from a Stripe server response in situations
     ///   where the purpose is not yet encoded in the client SDK.
-    @_spi(STP) public func uploadImage(
+    @_spi(InternalOnlyAPI) public func uploadImage(
         _ image: UIImage,
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
         purpose: String,
@@ -98,7 +98,7 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(STP) public func uploadImageAndGetMetrics(
+    @_spi(InternalOnlyAPI) public func uploadImageAndGetMetrics(
         _ image: UIImage,
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
         purpose: String,
@@ -191,7 +191,7 @@ extension STPAPIClient {
     ///   `StripeFile.Purpose`, but can be specified by any string for instances
     ///   where a Stripe endpoint needs to specify a newer purpose that the client
     ///   SDK does not recognize.
-    @_spi(STP) public func uploadImageAndGetMetrics(
+    @_spi(InternalOnlyAPI) public func uploadImageAndGetMetrics(
         _ image: UIImage,
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
         purpose: String,
@@ -214,7 +214,7 @@ extension STPAPIClient {
     }
 
     /// Errors returned by `uploadFile`.
-    @_spi(STP) public enum FileUploadError: Error {
+    @_spi(InternalOnlyAPI) public enum FileUploadError: Error {
 
         /// The authorization secret is empty.
         case missingAuthorizationSecret
@@ -249,7 +249,7 @@ extension STPAPIClient {
     ///   - progress: Upload progress from zero to one, delivered on the session's delegate queue.
     /// - Returns: The uploaded Stripe file. Canceling the calling task cancels the upload.
     /// - Throws: `FileUploadError` for all failures, including cancellation.
-    @_spi(STP) public func uploadFile(
+    @_spi(InternalOnlyAPI) public func uploadFile(
         at fileURL: URL,
         purpose: String,
         authorizationSecret: String,

@@ -6,7 +6,7 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-@_spi(AppearanceAPIAdditionsPreview)@_spi(STP) import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview)@_spi(InternalOnlyAPI) import StripePaymentSheet
 import SwiftUI
 
 struct AppearancePlaygroundView: View {

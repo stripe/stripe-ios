@@ -8,10 +8,10 @@
 import AVFoundation
 import UIKit
 
-@_spi(STP) public typealias ImageDataAndSize = (imageData: Data, imageSize: CGSize)
+@_spi(InternalOnlyAPI) public typealias ImageDataAndSize = (imageData: Data, imageSize: CGSize)
 
 extension UIImage {
-    @_spi(STP) public static let defaultCompressionQuality: CGFloat = 0.5
+    @_spi(InternalOnlyAPI) public static let defaultCompressionQuality: CGFloat = 0.5
 
     /// Encodes the image to jpeg at the specified compression quality.
     ///
@@ -26,7 +26,7 @@ extension UIImage {
     ///   - `imageSize`: The dimensions of the the image that was encoded.
     ///      This size may be smaller than the original image size if the image
     ///      needed to be scaled down to fit the specified `maxBytes`.
-    @_spi(STP) public func jpegDataAndDimensions(
+    @_spi(InternalOnlyAPI) public func jpegDataAndDimensions(
         maxBytes: Int? = nil,
         compressionQuality: CGFloat = defaultCompressionQuality
     ) -> ImageDataAndSize {
@@ -51,7 +51,7 @@ extension UIImage {
     ///   - `imageSize`: The dimensions of the the image that was encoded.
     ///      This size may be smaller than the original image size if the image
     ///      needed to be scaled down to fit the specified `maxBytes`.
-    @_spi(STP) public func heicDataAndDimensions(
+    @_spi(InternalOnlyAPI) public func heicDataAndDimensions(
         maxBytes: Int? = nil,
         compressionQuality: CGFloat = defaultCompressionQuality
     ) -> ImageDataAndSize {
@@ -63,7 +63,7 @@ extension UIImage {
         }
     }
 
-    @_spi(STP) public func resized(to size: CGSize) -> UIImage? {
+    @_spi(InternalOnlyAPI) public func resized(to size: CGSize) -> UIImage? {
         let renderingMode = renderingMode
         UIGraphicsBeginImageContextWithOptions(size, false, self.scale)
         defer {
@@ -74,7 +74,7 @@ extension UIImage {
         return resizedImage?.withRenderingMode(renderingMode)
     }
 
-    @_spi(STP) public func resized(to scale: CGFloat) -> UIImage? {
+    @_spi(InternalOnlyAPI) public func resized(to scale: CGFloat) -> UIImage? {
         let newImageSize = CGSize(
             width: CGFloat(floor(size.width * scale)),
             height: CGFloat(floor(size.height * scale))
@@ -93,7 +93,7 @@ extension UIImage {
     // For example, a font with a higher or lower pointSize or using dynamic type will result in a
     //      proportionally larger or smaller image size
     // `additionalScale` determines the ratio between the returned height and the font height
-    @_spi(STP) public func sizeMatchingFont(_ font: UIFont, additionalScale: CGFloat) -> CGSize {
+    @_spi(InternalOnlyAPI) public func sizeMatchingFont(_ font: UIFont, additionalScale: CGFloat) -> CGSize {
         let fontScale = font.capHeight / size.height
         let totalScale = fontScale * additionalScale
         return CGSize(width: size.width * totalScale, height: size.height * totalScale)
@@ -148,7 +148,7 @@ extension UIImage {
 }
 
 extension Array where Element: UIImage {
-    @_spi(STP) public func heicData(
+    @_spi(InternalOnlyAPI) public func heicData(
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality
     ) -> Data? {
         guard let mutableData = CFDataCreateMutable(nil, 0) else {

@@ -9,8 +9,8 @@ import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePayments
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(InternalOnlyAPI)@testable import StripePaymentSheet
 import XCTest
 
 @MainActor
@@ -125,6 +125,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 5.0)
 
         let body = try XCTUnwrap(capturedBody.value)
+        XCTAssertTrue(body.contains("client_secret=\(checkoutSessionId)_secret_abc"))
         XCTAssertTrue(body.contains("payment_method_to_update%5Bpayment_method_id%5D=\(paymentMethod.stripeId)"))
         XCTAssertTrue(body.contains("payment_method_to_update%5Bbilling_details%5D%5Bname%5D=Jane%20Doe"))
         XCTAssertTrue(body.contains("payment_method_to_update%5Bbilling_details%5D%5Bemail%5D=jane%40example.com"))
@@ -157,6 +158,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 5.0)
 
         let body = try XCTUnwrap(capturedBody.value)
+        XCTAssertTrue(body.contains("client_secret=\(checkoutSessionId)_secret_abc"))
         XCTAssertTrue(body.contains("payment_method_to_update%5Bexpiry_details%5D%5Bexp_month%5D=1"))
         XCTAssertTrue(body.contains("payment_method_to_update%5Bexpiry_details%5D%5Bexp_year%5D=2040"))
         XCTAssertFalse(body.contains("payment_method_to_update%5Bbilling_details%5D"))
@@ -293,7 +295,7 @@ extension SavedPaymentMethodManagerTests {
         checkoutSessionId: String,
         paymentMethodId: String
     ) -> (XCTestExpectation, CapturedBody) {
-        let exp = expectation(description: "POST payment_pages/\(checkoutSessionId) updates payment method")
+        let exp = expectation(description: "POST checkout_client/\(checkoutSessionId)/update updates payment method")
         let captured = CapturedBody()
 
         let responseJSON = CheckoutTestHelpers.makeSessionJSON([
@@ -305,7 +307,7 @@ extension SavedPaymentMethodManagerTests {
         ])
 
         stub { urlRequest in
-            guard urlRequest.url?.absoluteString.contains("/payment_pages/\(checkoutSessionId)") == true,
+            guard urlRequest.url?.path == "/v1/checkout_client/\(checkoutSessionId)/update",
                   urlRequest.httpMethod == "POST",
                   let body = urlRequest.httpBodyOrBodyStream,
                   let bodyString = String(data: body, encoding: .utf8),
@@ -319,7 +321,11 @@ extension SavedPaymentMethodManagerTests {
             DispatchQueue.main.async {
                 exp.fulfill()
             }
-            return HTTPStubsResponse(jsonObject: responseJSON, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(
+                jsonObject: (responseJSON),
+                statusCode: 200,
+                headers: nil
+            )
         }
 
         return (exp, captured)
@@ -329,10 +335,10 @@ extension SavedPaymentMethodManagerTests {
         checkoutSessionId: String,
         paymentMethodId: String
     ) -> XCTestExpectation {
-        let exp = expectation(description: "POST payment_pages/\(checkoutSessionId) detaches payment method")
+        let exp = expectation(description: "POST checkout_client/\(checkoutSessionId)/update detaches payment method")
 
         stub { urlRequest in
-            guard urlRequest.url?.absoluteString.contains("/payment_pages/\(checkoutSessionId)") == true,
+            guard urlRequest.url?.path == "/v1/checkout_client/\(checkoutSessionId)/update",
                   urlRequest.httpMethod == "POST",
                   let body = urlRequest.httpBodyOrBodyStream,
                   let bodyString = String(data: body, encoding: .utf8)
@@ -341,14 +347,13 @@ extension SavedPaymentMethodManagerTests {
             }
 
             return bodyString.contains("payment_method_to_detach=\(paymentMethodId)")
-        } response: { _ in
+        } response: { request in
+            XCTAssertEqual(RequestBodyTestHelpers.formEncodedBodyParams(from: request)["client_secret"], "\(checkoutSessionId)_secret_abc")
             DispatchQueue.main.async {
                 exp.fulfill()
             }
             return HTTPStubsResponse(
-                jsonObject: CheckoutTestHelpers.makeSessionJSON([
-                    "session_id": checkoutSessionId,
-                ]),
+                jsonObject: (CheckoutTestHelpers.makeSessionJSON(["session_id": checkoutSessionId])),
                 statusCode: 200,
                 headers: nil
             )

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 import UIKit
 
 /// Represents the payment method currently selected by the user.

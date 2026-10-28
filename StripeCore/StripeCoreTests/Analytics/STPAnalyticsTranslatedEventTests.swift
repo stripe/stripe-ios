@@ -6,7 +6,7 @@
 import Foundation
 import XCTest
 
-@testable @_spi(STP) @_spi(MobilePaymentElementAnalyticEventBeta) import StripeCore
+@testable @_spi(InternalOnlyAPI) @_spi(MobilePaymentElementAnalyticEventBeta) import StripeCore
 
 class STPAnalyticsTranslatedEventTests: XCTestCase {
     let payloadWithLPM: [String: Any] = ["selected_lpm": "card"]

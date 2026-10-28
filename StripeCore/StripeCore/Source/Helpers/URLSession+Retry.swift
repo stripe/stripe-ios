@@ -9,7 +9,7 @@
 import Foundation
 
 extension URLSession {
-    @_spi(STP) public func stp_performDataTask(
+    @_spi(InternalOnlyAPI) public func stp_performDataTask(
         with request: URLRequest,
         completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void,
         retryCount: Int = StripeAPI.maxRetries

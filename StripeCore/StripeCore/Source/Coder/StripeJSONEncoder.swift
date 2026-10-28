@@ -9,12 +9,12 @@
 
 import Foundation
 
-@_spi(STP) public class StripeJSONEncoder {
-    @_spi(STP) public var userInfo: [CodingUserInfoKey: Any] = [:]
+@_spi(InternalOnlyAPI) public class StripeJSONEncoder {
+    @_spi(InternalOnlyAPI) public var userInfo: [CodingUserInfoKey: Any] = [:]
 
-    @_spi(STP) public var outputFormatting: JSONSerialization.WritingOptions = []
+    @_spi(InternalOnlyAPI) public var outputFormatting: JSONSerialization.WritingOptions = []
 
-    @_spi(STP) public func encode<T>(_ value: T, includingUnknownFields: Bool = true) throws -> Data
+    @_spi(InternalOnlyAPI) public func encode<T>(_ value: T, includingUnknownFields: Bool = true) throws -> Data
     where T: Encodable {
         var outputFormatting = self.outputFormatting
         outputFormatting.insert(.fragmentsAllowed)
@@ -36,7 +36,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public func encodeJSONDictionary<T>(
+    @_spi(InternalOnlyAPI) public func encodeJSONDictionary<T>(
         _ value: T,
         includingUnknownFields: Bool = true
     ) throws -> [String: Any] where T: Encodable {

@@ -32,7 +32,7 @@ import CoreMedia
 import UIKit
 
 extension UIImage {
-    @_spi(STP) public func convertToPixelBuffer() -> CVPixelBuffer? {
+    @_spi(InternalOnlyAPI) public func convertToPixelBuffer() -> CVPixelBuffer? {
 
         let attributes =
             [
@@ -82,7 +82,7 @@ extension UIImage {
         return pixelBuffer
     }
 
-    @_spi(STP) public func convertToSampleBuffer() -> CMSampleBuffer? {
+    @_spi(InternalOnlyAPI) public func convertToSampleBuffer() -> CMSampleBuffer? {
         guard let pixelBuffer = convertToPixelBuffer() else {
             return nil
         }

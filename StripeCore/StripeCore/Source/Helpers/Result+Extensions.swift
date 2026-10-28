@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public extension Result {
+@_spi(InternalOnlyAPI) public extension Result {
     /// Whether or not the result is a success.
     var success: Bool {
         switch self {

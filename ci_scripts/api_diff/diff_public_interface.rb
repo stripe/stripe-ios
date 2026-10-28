@@ -7,9 +7,11 @@ SPI_SEVERITY = 'spi'.freeze
 NO_SEVERITY = 'none'.freeze
 DIFF_OUTPUT_PATH = 'diff_result.txt'.freeze
 SEVERITY_OUTPUT_PATH = 'api_change_severity.txt'.freeze
-IGNORED_SPI_NAMES = %w[STP ReactNativeSDK].freeze
+IGNORED_SPI_NAMES = %w[InternalOnlyAPI ReactNativeSDK].freeze
 
 def normalize_line(line)
+  # Older baseline interfaces use STP for the same internal SPI.
+  line = line.gsub('@_spi(STP)', '@_spi(InternalOnlyAPI)')
   spi_attrs = line.scan(/@_spi\([^)]+\)/).sort
   result = line.gsub(/@_spi\([^)]+\)/, 'SPI_PLACEHOLDER')
   spi_attrs.each { |attr| result = result.sub('SPI_PLACEHOLDER', attr) }

@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public extension DropdownFieldElement {
+@_spi(InternalOnlyAPI) public extension DropdownFieldElement {
     // MARK: - Address
 
     enum Address {

@@ -5,11 +5,11 @@
 //  Created by Nick Porter on 2/16/23.
 //
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeCoreTestUtils
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP)@_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI)@_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 import XCTest
 
 class STPElementsSessionTest: XCTestCase {

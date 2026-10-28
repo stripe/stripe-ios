@@ -7,16 +7,16 @@
 
 import Foundation
 
-@_spi(STP) public struct BillingAddress: Codable {
-    @_spi(STP) public let name: String?
-    @_spi(STP) public let line1: String?
-    @_spi(STP) public let line2: String?
-    @_spi(STP) public let city: String?
-    @_spi(STP) public let state: String?
-    @_spi(STP) public let postalCode: String?
-    @_spi(STP) public let countryCode: String?
+@_spi(InternalOnlyAPI) public struct BillingAddress: Codable {
+    @_spi(InternalOnlyAPI) public let name: String?
+    @_spi(InternalOnlyAPI) public let line1: String?
+    @_spi(InternalOnlyAPI) public let line2: String?
+    @_spi(InternalOnlyAPI) public let city: String?
+    @_spi(InternalOnlyAPI) public let state: String?
+    @_spi(InternalOnlyAPI) public let postalCode: String?
+    @_spi(InternalOnlyAPI) public let countryCode: String?
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         name: String? = nil,
         line1: String? = nil,
         line2: String? = nil,
@@ -34,7 +34,7 @@ import Foundation
         self.countryCode = countryCode
     }
 
-    @_spi(STP) public init(from billingDetails: ElementsSessionContext.BillingDetails?) {
+    @_spi(InternalOnlyAPI) public init(from billingDetails: ElementsSessionContext.BillingDetails?) {
         self.init(
             name: billingDetails?.name,
             line1: billingDetails?.address?.line1,
@@ -57,7 +57,7 @@ import Foundation
     }
 
     // Custom encoder to only encode non-nil & non-empty properties.
-    @_spi(STP) public func encode(to encoder: Encoder) throws {
+    @_spi(InternalOnlyAPI) public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfNotEmpty(name, forKey: .name)
         try container.encodeIfNotEmpty(line1, forKey: .line1)

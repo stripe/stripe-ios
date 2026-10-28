@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - Animation utilities
 
-@_spi(STP) public extension UIStackView {
+@_spi(InternalOnlyAPI) public extension UIStackView {
 
     /// Hides an arranged subview with optional animation.
     ///

@@ -19,7 +19,7 @@ public class STPMandateOnlineParams: NSObject {
 
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc @_spi(STP) public var inferFromClient: NSNumber?
+    @objc @_spi(InternalOnlyAPI) public var inferFromClient: NSNumber?
 
     /// :nodoc:
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
@@ -85,7 +85,7 @@ extension STPMandateOnlineParams: STPFormEncodable {
 
 extension STPMandateOnlineParams: STPAPIResponseDecodable {
     @objc
-    @_spi(STP) public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    @_spi(InternalOnlyAPI) public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil
         }

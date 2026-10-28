@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
-@_spi(STP) public enum STPFormTextFieldAutoFormattingBehavior: Int {
+@_spi(InternalOnlyAPI) public enum STPFormTextFieldAutoFormattingBehavior: Int {
     case none
     case phoneNumbers
     case cardNumbers
@@ -39,10 +39,10 @@ import UIKit
     @objc optional func formTextFieldTextDidChange(_ textField: STPFormTextField)
 }
 
-@objc @_spi(STP) public class STPFormTextField: STPValidatedTextField {
+@objc @_spi(InternalOnlyAPI) public class STPFormTextField: STPValidatedTextField {
 
     private var _selectionEnabled = false
-    @_spi(STP) public var selectionEnabled: Bool {
+    @_spi(InternalOnlyAPI) public var selectionEnabled: Bool {
         get {
             _selectionEnabled
         }
@@ -52,7 +52,7 @@ import UIKit
         }
     }
     // defaults to NO
-    @_spi(STP) public var preservesContentsOnPaste = false
+    @_spi(InternalOnlyAPI) public var preservesContentsOnPaste = false
     // defaults to NO
     private var _compressed = false
     var compressed: Bool {
@@ -70,7 +70,7 @@ import UIKit
     }
     // defaults to NO
     private var _autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior = .none
-    @_spi(STP) public var autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior {
+    @_spi(InternalOnlyAPI) public var autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior {
         get {
             _autoFormattingBehavior
         }
@@ -377,8 +377,8 @@ import UIKit
 
 class STPTextFieldDelegateProxy: NSObject, UITextFieldDelegate {
     internal var inShouldChangeCharactersInRange = false
-    @_spi(STP) public var autoformattingBehavior: STPFormTextFieldAutoFormattingBehavior = .none
-    @_spi(STP) public var selectionEnabled = false
+    @_spi(InternalOnlyAPI) public var autoformattingBehavior: STPFormTextFieldAutoFormattingBehavior = .none
+    @_spi(InternalOnlyAPI) public var selectionEnabled = false
 
     func textField(
         _ textField: UITextField,

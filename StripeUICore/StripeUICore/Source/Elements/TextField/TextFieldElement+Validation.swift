@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) public extension TextFieldElement {
+@_spi(InternalOnlyAPI) public extension TextFieldElement {
     @frozen enum ValidationState {
         case valid
         case invalid(_ error: TextFieldValidationError)
@@ -49,7 +49,7 @@ import Foundation
  - Seealso: `ElementValidation.swift`
  - Seealso: `SectionElement` uses this to determine whether it should show the error or not.
  */
-@_spi(STP) public protocol TextFieldValidationError: ElementValidationError {
+@_spi(InternalOnlyAPI) public protocol TextFieldValidationError: ElementValidationError {
     /**
      Some TextFieldElement validation errors should only be displayed to the user if they're finished typing, while others should
      always be shown.

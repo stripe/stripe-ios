@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public protocol ImageMaker {
+@_spi(InternalOnlyAPI) public protocol ImageMaker {
     associatedtype BundleLocator: BundleLocatorProtocol
 }
 
-@_spi(STP) public extension ImageMaker {
+@_spi(InternalOnlyAPI) public extension ImageMaker {
     private static func imageNamed(
       _ imageName: String,
       templateIfAvailable: Bool,
@@ -53,7 +53,7 @@ import UIKit
     }
 }
 
-@_spi(STP) public extension ImageMaker where Self: RawRepresentable, RawValue == String {
+@_spi(InternalOnlyAPI) public extension ImageMaker where Self: RawRepresentable, RawValue == String {
     func makeImage(template: Bool = false, overrideUserInterfaceStyle: UIUserInterfaceStyle? = nil) -> UIImage {
         return Self.safeImageNamed(
             self.rawValue,

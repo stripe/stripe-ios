@@ -9,7 +9,7 @@ import CoreServices
 import UniformTypeIdentifiers
 import XCTest
 
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 
 class StringResourceTests: XCTestCase {
     let privacyLinkExpectedSha = "lv51crZ0rBIUPUOnQm9zFlMPCrUEI+GVsa4QyHifTw0="

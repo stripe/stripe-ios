@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 import StripeCore
 
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 import StripePaymentSheet
 
 /// A view used to collect KYC (Know Your Customer) data and exercise the `CryptoOnrampCoordinator's` `attachKYCInfo(info:)` functionality.

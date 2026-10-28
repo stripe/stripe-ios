@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Billing information associated with a `STPPaymentMethod` that may be used or required by particular types of payment methods.
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-billing_details
@@ -132,7 +132,7 @@ extension STPPaymentMethodBillingDetails {
     }
 
     /// Convenience initializer for creating an `STPPaymentMethodBillingDetails` instance with a Link BillingDetails
-    @_spi(STP) public convenience init?(
+    @_spi(InternalOnlyAPI) public convenience init?(
         billingAddress: BillingAddress?,
         email: String?
     ) {

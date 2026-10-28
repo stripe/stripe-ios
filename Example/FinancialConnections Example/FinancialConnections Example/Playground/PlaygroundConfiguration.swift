@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeFinancialConnections
+@_spi(InternalOnlyAPI) import StripeFinancialConnections
 
 /// Provides an interface to customize the playground configuration
 /// (which is stored as a JSON in NSUserDefaults).

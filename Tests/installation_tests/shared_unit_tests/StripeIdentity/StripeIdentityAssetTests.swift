@@ -3,11 +3,11 @@
 //  StripeIdentityAssetTests
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest
 
-@_spi(STP) import StripeIdentity
+@_spi(InternalOnlyAPI) import StripeIdentity
 
 class StripeIdentityAssetTests: XCTestCase {
 

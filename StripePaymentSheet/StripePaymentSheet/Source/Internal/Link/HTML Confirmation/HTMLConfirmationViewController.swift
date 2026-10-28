@@ -5,7 +5,7 @@
 //  Created by Michael Liberatore on 8/27/26.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// Displays an HTML confirmation screen in a Link-styled bottom sheet.
@@ -30,12 +30,14 @@ final class HTMLConfirmationViewController {
     ///   - confirmationButtonTitle: The title of the confirmation button.
     ///   - appearance: Determines the colors, corner radius, button height, and user interface style.
     ///   - brand: The Link brand displayed in the navigation bar.
+    ///   - nativeSheetPresentation: Decides whether to present in the native sheet.
     init(
         heading: String,
         html: String,
         confirmationButtonTitle: String,
         appearance: LinkAppearance,
-        brand: LinkBrand
+        brand: LinkBrand,
+        nativeSheetPresentation: SheetImplementationResolver? = nil
     ) {
         let contentViewController = HTMLConfirmationContentViewController(
             heading: heading,
@@ -45,7 +47,10 @@ final class HTMLConfirmationViewController {
             brand: brand
         )
         self.contentViewController = contentViewController
-        sheetContainer = LinkSheetContainerFactory.make(contentViewController: contentViewController)
+        sheetContainer = LinkSheetContainerFactory.make(
+            contentViewController: contentViewController,
+            usesNativeSheet: nativeSheetPresentation?.usesNativeSheet ?? false
+        )
         appearance.style.configure(sheetContainer)
     }
 

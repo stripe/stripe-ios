@@ -8,8 +8,8 @@
 import Foundation
 import StripePaymentsTestUtils
 
-@testable @_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePayments
 
 class STPPaymentMethodSwishTests: STPNetworkStubbingTestCase {
 

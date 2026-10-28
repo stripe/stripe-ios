@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI {
     /// Billing information associated with a `STPPaymentMethod` that may be used or required by particular types of payment methods.
@@ -39,7 +39,7 @@ extension StripeAPI {
             public var _additionalParametersStorage: NonEncodableParameters?
             public var _allResponseFieldsStorage: NonEncodableParameters?
 
-            @_spi(STP) public init(
+            @_spi(InternalOnlyAPI) public init(
                 city: String? = nil,
                 country: String? = nil,
                 line1: String? = nil,
@@ -66,7 +66,7 @@ extension StripeAPI {
         public var _additionalParametersStorage: NonEncodableParameters?
         public var _allResponseFieldsStorage: NonEncodableParameters?
 
-        @_spi(STP) public init(
+        @_spi(InternalOnlyAPI) public init(
             address: Address? = nil,
             email: String? = nil,
             name: String? = nil,

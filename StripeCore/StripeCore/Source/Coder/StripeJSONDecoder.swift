@@ -9,17 +9,17 @@
 
 import Foundation
 
-@_spi(STP) public class StripeJSONDecoder {
+@_spi(InternalOnlyAPI) public class StripeJSONDecoder {
     /// The Stripe request ID associated with the decoded response.
-    @_spi(STP) public static let requestIDKey = CodingUserInfoKey(rawValue: "stripe_request_id")!
+    @_spi(InternalOnlyAPI) public static let requestIDKey = CodingUserInfoKey(rawValue: "stripe_request_id")!
 
-    @_spi(STP) public init() {}
+    @_spi(InternalOnlyAPI) public init() {}
 
-    @_spi(STP) public var userInfo: [CodingUserInfoKey: Any] = [:]
+    @_spi(InternalOnlyAPI) public var userInfo: [CodingUserInfoKey: Any] = [:]
 
-    @_spi(STP) public var inputFormatting: JSONSerialization.ReadingOptions = []
+    @_spi(InternalOnlyAPI) public var inputFormatting: JSONSerialization.ReadingOptions = []
 
-    @_spi(STP) public func decode<T>(_ type: T.Type, from data: Data) throws -> T
+    @_spi(InternalOnlyAPI) public func decode<T>(_ type: T.Type, from data: Data) throws -> T
     where T: Decodable {
         var inputFormatting = self.inputFormatting
         // We always allow fragments. (Though we mostly only use these for tests.)
@@ -68,7 +68,7 @@ extension Decoder {
     ///     throw DecodingError.dataCorrupted(...)
     /// }
     /// ```
-    @_spi(STP) public var stripeJSONDictionary: [AnyHashable: Any] {
+    @_spi(InternalOnlyAPI) public var stripeJSONDictionary: [AnyHashable: Any] {
         get throws {
             guard let decoder = self as? _stpinternal_JSONDecoder,
                   let dictionary = decoder.jsonObject as? [AnyHashable: Any] else {

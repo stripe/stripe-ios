@@ -5,8 +5,8 @@
 //  Created by Chris Mays on 8/28/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension EmbeddedComponentManager {
@@ -38,7 +38,7 @@ extension EmbeddedComponentManager {
                 }
             }
 
-            @_spi(STP)
+            @_spi(InternalOnlyAPI)
             public init?(rawValue: String) {
                 switch rawValue {
                 case "none":

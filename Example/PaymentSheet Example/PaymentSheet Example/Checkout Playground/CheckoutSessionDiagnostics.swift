@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 8/11/26.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import SwiftUI
 
 @MainActor

@@ -5,7 +5,7 @@
 //  Created by Till Hellmund on 5/14/25.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 extension STPElementsSession {

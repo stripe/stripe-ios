@@ -6,8 +6,8 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 final class VerticalPaymentMethodListViewControllerTest: XCTestCase {

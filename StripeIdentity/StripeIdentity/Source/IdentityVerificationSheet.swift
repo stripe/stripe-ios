@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A drop-in class that presents a sheet for a user to verify their identity.
@@ -26,7 +26,7 @@ final public class IdentityVerificationSheet {
     /// Configuration for an IdentityVerificationSheet
     public struct Configuration {
         /// The appearance of primary action buttons throughout the native verification flow.
-        @_spi(STP) public enum PrimaryButtonStyle {
+        @_spi(InternalOnlyAPI) public enum PrimaryButtonStyle {
             /// Uses the app's tint color.
             case `default`
             /// Uses the supplied background and text colors, and an optional minimum height.
@@ -35,7 +35,7 @@ final public class IdentityVerificationSheet {
         }
 
         /// The appearance of secondary action buttons throughout the native verification flow.
-        @_spi(STP) public enum SecondaryButtonStyle {
+        @_spi(InternalOnlyAPI) public enum SecondaryButtonStyle {
             /// Uses the default secondary button appearance.
             case `default`
             /// Uses the supplied background and text colors, and an optional minimum height.
@@ -44,7 +44,7 @@ final public class IdentityVerificationSheet {
         }
 
         /// Configuration for the biometric consent screen.
-        @_spi(STP) public struct BiometricConsentConfiguration {
+        @_spi(InternalOnlyAPI) public struct BiometricConsentConfiguration {
             /// Whether to hide the branding header above the consent title.
             public var hideBrandingHeader: Bool
 
@@ -76,16 +76,16 @@ final public class IdentityVerificationSheet {
 
         /// The style of primary action buttons throughout the native verification flow.
         /// Disabled buttons retain the default disabled appearance. Secondary buttons are unaffected.
-        @_spi(STP) public var primaryButtonStyle: PrimaryButtonStyle = .default
+        @_spi(InternalOnlyAPI) public var primaryButtonStyle: PrimaryButtonStyle = .default
 
         /// The style of secondary action buttons throughout the native verification flow.
         /// Disabled buttons retain the default disabled appearance. Primary buttons are unaffected.
-        @_spi(STP) public var secondaryButtonStyle: SecondaryButtonStyle = .default
+        @_spi(InternalOnlyAPI) public var secondaryButtonStyle: SecondaryButtonStyle = .default
 
         /// Configuration for the biometric consent screen.
         ///
         /// When `nil`, the biometric consent screen uses its default layout.
-        @_spi(STP) public var biometricConsent: BiometricConsentConfiguration?
+        @_spi(InternalOnlyAPI) public var biometricConsent: BiometricConsentConfiguration?
 
         /// Initializes a Configuration.
         /// - Parameters:
@@ -336,6 +336,6 @@ extension IdentityVerificationSheet: VerificationSheetControllerDelegate {
 // MARK: - STPAnalyticsProtocol
 
 /// :nodoc:
-@_spi(STP) extension IdentityVerificationSheet: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "IdentityVerificationSheet"
+@_spi(InternalOnlyAPI) extension IdentityVerificationSheet: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier = "IdentityVerificationSheet"
 }

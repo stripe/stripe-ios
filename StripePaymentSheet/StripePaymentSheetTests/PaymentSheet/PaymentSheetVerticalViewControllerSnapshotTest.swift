@@ -5,10 +5,10 @@
 //  Created by Yuki Tokuhiro on 5/20/24.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 @MainActor

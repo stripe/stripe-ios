@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 9/26/25.
 //
 
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP)@_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI)@_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 import XCTest
 
 class IntentConfigurationClientContextTest: XCTestCase {

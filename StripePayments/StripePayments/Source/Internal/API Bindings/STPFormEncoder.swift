@@ -8,8 +8,8 @@
 
 import Foundation
 
-@_spi(STP) public class STPFormEncoder: NSObject {
-    @objc @_spi(STP) public class func dictionary(
+@_spi(InternalOnlyAPI) public class STPFormEncoder: NSObject {
+    @objc @_spi(InternalOnlyAPI) public class func dictionary(
         forObject object: (NSObject & STPFormEncodable)
     ) -> [String: Any] {
         // returns [object root name : object.coded (eg [property name strings: property values)]

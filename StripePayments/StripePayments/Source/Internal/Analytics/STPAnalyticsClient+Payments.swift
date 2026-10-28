@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 // MARK: - Creation
 extension STPAnalyticsClient {
@@ -240,7 +240,7 @@ extension STPAnalyticsClient {
 
 // MARK: - Card Metadata
 extension STPAnalyticsClient {
-    @_spi(STP) public func logUserEnteredCompletePANBeforeMetadataLoaded() {
+    @_spi(InternalOnlyAPI) public func logUserEnteredCompletePANBeforeMetadataLoaded() {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .cardMetadataLoadedTooSlow,
@@ -270,7 +270,7 @@ extension STPAnalyticsClient {
 
 // MARK: - Card Scanning
 extension STPAnalyticsClient {
-    @_spi(STP) public func logCardScanSucceeded(withDuration duration: TimeInterval) {
+    @_spi(InternalOnlyAPI) public func logCardScanSucceeded(withDuration duration: TimeInterval) {
         log(
             analytic: GenericAnalytic(
                 event: .cardScanSucceeded,
@@ -281,7 +281,7 @@ extension STPAnalyticsClient {
         )
     }
 
-    @_spi(STP) public func logCardScanCancelled(withDuration duration: TimeInterval) {
+    @_spi(InternalOnlyAPI) public func logCardScanCancelled(withDuration duration: TimeInterval) {
         log(
             analytic: GenericAnalytic(
                 event: .cardScanCancelled,
@@ -295,7 +295,7 @@ extension STPAnalyticsClient {
 
 // MARK: - Card Element Config
 extension STPAnalyticsClient {
-    @_spi(STP) public func logCardElementConfigLoadFailed() {
+    @_spi(InternalOnlyAPI) public func logCardElementConfigLoadFailed() {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .cardElementConfigLoadFailure,
@@ -307,11 +307,11 @@ extension STPAnalyticsClient {
 
 /// An analytic specific to payments that serializes payment-specific
 /// information into its params.
-@_spi(STP) public protocol PaymentAnalytic: Analytic {
+@_spi(InternalOnlyAPI) public protocol PaymentAnalytic: Analytic {
     var additionalParams: [String: Any] { get }
 }
 
-@_spi(STP) extension PaymentAnalytic {
+@_spi(InternalOnlyAPI) extension PaymentAnalytic {
     public var params: [String: Any] {
         var params = additionalParams
 

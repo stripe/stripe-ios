@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// A Naira bank transfer Payment Method.
 /// - seealso: https://docs.stripe.com/payments/ng-bank-transfer/accept-a-payment?payment-ui=direct-api

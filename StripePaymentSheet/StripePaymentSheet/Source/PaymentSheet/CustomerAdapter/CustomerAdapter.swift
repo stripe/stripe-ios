@@ -8,9 +8,9 @@
 import Foundation
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 /// A "bridge" from wallet mode to your backend to fetch Customer-related information.
 /// Typically, you will not need to implement this protocol yourself. You
@@ -245,8 +245,8 @@ open class StripeCustomerAdapter: CustomerAdapter {
     }
 }
 
-@_spi(STP) extension StripeCustomerAdapter: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "StripeCustomerAdapter"
+@_spi(InternalOnlyAPI) extension StripeCustomerAdapter: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier = "StripeCustomerAdapter"
 }
 
 /// Stores the key we use in NSUserDefaults to save a dictionary of Customer id to their last selected payment method ID

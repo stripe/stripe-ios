@@ -5,13 +5,13 @@
 //  Created by Vardges Avetisyan on 2/24/22.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /**
  NOTE: If you change the name of this class, make sure to also change it FinancialConnectionsSDKAvailability file
  */
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInterface {
 
     required public init() {}

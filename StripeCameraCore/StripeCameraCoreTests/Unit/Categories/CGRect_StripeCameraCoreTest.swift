@@ -7,7 +7,7 @@
 //
 
 import CoreGraphics
-@_spi(STP) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
 import XCTest
 
 class CGRect_StripeCameraCoreTest: XCTestCase {

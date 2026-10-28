@@ -11,7 +11,7 @@ import SwiftUI
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 import StripePaymentSheet
 
 /// A view used to collect additional account registration information.
