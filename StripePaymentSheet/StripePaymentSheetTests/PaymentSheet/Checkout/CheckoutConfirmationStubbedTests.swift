@@ -956,6 +956,92 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
     }
 
+    func testLinkWalletDeclineThenCloseReturnsCanceledAndCommitsSession() async throws {
+        try await assertLinkWalletAfterDecline(retry: false)
+    }
+
+    func testLinkWalletDeclineThenRetryReturnsCompletedAndCommitsLatestSession() async throws {
+        try await assertLinkWalletAfterDecline(retry: true)
+    }
+
+    private func assertLinkWalletAfterDecline(retry: Bool) async throws {
+        // Given a native Link wallet opened by Checkout confirmation
+        let previousOverride = PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride
+        let previousAccount = LinkAccountContext.shared.account
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
+        LinkAccountContext.shared.account = nil
+        defer {
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = previousOverride
+            LinkAccountContext.shared.account = previousAccount
+        }
+        let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let flow = try checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: window)
+        var finalCheckoutResult: CheckoutController.ConfirmResult?
+        let confirmation = Task {
+            finalCheckoutResult = await checkout.confirm(flow)
+        }
+        try await waitUntil { presenter.presentedViewController != nil }
+        try await waitUntil { presenter.presentedViewController?.isBeingPresented == false }
+        let sheet = try XCTUnwrap(presenter.presentedViewController as? any PaymentSheetContainer)
+        let content = try XCTUnwrap(sheet.contentStack.first as? PayWithLinkViewController.BaseViewController)
+        let wallet = try XCTUnwrap(content.coordinator as? PayWithLinkViewController)
+
+        // When a payment attempt fails, the wallet stays open for another attempt
+        var declinedResponse = makeConfirmedSessionJSON(paymentIntentStatus: "requires_payment_method", status: "open", paymentStatus: "unpaid")
+        declinedResponse["customer_email"] = "after-decline@example.com"
+        stubConfirmation(responseJSON: declinedResponse)
+        let attemptResult = await confirmLinkWalletAttempt(wallet)
+        guard case .failed = attemptResult else { return XCTFail("Expected the first attempt to fail") }
+        XCTAssertNil(finalCheckoutResult)
+
+        if retry {
+            // ...and a second attempt succeeds before the wallet finishes
+            var successfulResponse = makeConfirmedSessionJSON()
+            successfulResponse["customer_email"] = "after-success@example.com"
+            stubConfirmation(responseJSON: successfulResponse)
+            let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
+            let retryResult = await confirmLinkWalletAttempt(wallet)
+            guard case .completed = retryResult else { return XCTFail("Expected the retry to succeed") }
+            await fulfillment(of: [logout], timeout: 5)
+            wallet.finish(withResult: retryResult, deferredIntentConfirmationType: nil)
+        } else {
+            // ...and the customer closes the wallet without retrying
+            wallet.cancel(shouldReturnToPaymentSheet: false)
+        }
+        try await waitUntil { finalCheckoutResult != nil }
+        await confirmation.value
+
+        // Then Checkout reports the wallet's final outcome and retains its latest session response
+        let result = try XCTUnwrap(finalCheckoutResult)
+        if retry {
+            assertSucceeded(result)
+            XCTAssertEqual(checkout.session.email, "after-success@example.com")
+            XCTAssertEqual(checkout.session.status, .complete(.paid))
+        } else {
+            guard case .canceled = result else { return XCTFail("Expected cancellation, got \(result)") }
+            XCTAssertEqual(checkout.session.email, "after-decline@example.com")
+        }
+    }
+
+    private func confirmLinkWalletAttempt(_ wallet: PayWithLinkViewController) async -> PaymentSheetResult {
+        guard case let .withPaymentDetails(_, account, paymentDetails, confirmationExtras, _) = makeLinkConfirmOption() else {
+            preconditionFailure("Expected Link payment details fixture")
+        }
+        return await withCheckedContinuation { continuation in
+            wallet.confirm(with: account, paymentDetails: paymentDetails, confirmationExtras: confirmationExtras) { result, _ in
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
     func testLinkPaymentDetailsConfirmsCheckoutSessionWithPaymentMethodData() async throws {
         // Given Link payment details in non-passthrough mode
         // When Checkout confirms with Link

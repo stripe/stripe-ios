@@ -47,20 +47,25 @@ extension CheckoutController {
             }
             // TODO: Have the Link confirmation callback return InternalConfirmResult for Checkout so the
             // confirmed session doesn't need to be passed through this side channel.
-            var linkCompletionResult: InternalConfirmResult?
+            // An attempt can fail while the wallet stays open. Keep its session update, but let
+            // the wallet's final result determine whether Checkout completed, canceled, or failed.
+            var latestSessionResponse: PaymentPagesAPIResponse?
 
-            func resultWithoutSessionResponse(_ result: PaymentSheetResult) -> InternalConfirmResult {
+            func resultWithSessionResponse(_ result: PaymentSheetResult) -> InternalConfirmResult {
                 switch result {
                 case .completed:
+                    if let latestSessionResponse {
+                        return .completed(latestSessionResponse)
+                    }
                     let error = CheckoutError.unknown(
                         debugDescription: "Link completed Checkout confirmation without returning the confirmed session."
                     )
                     stpAssertionFailure(error.nonGenericDescription)
                     return .failed(error)
                 case .canceled:
-                    return .canceled()
+                    return .canceled(sessionResponse: latestSessionResponse)
                 case .failed(let error):
-                    return .failed(error)
+                    return .failed(error, sessionResponse: latestSessionResponse)
                 }
             }
 
@@ -156,7 +161,9 @@ extension CheckoutController {
                             attribution: parameters.attribution
                         )
                     )
-                    linkCompletionResult = result
+                    if let response = result.checkoutSessionResponse {
+                        latestSessionResponse = response
+                    }
                     linkCompletion(result.paymentSheetResult, nil)
                 }
             }
@@ -179,14 +186,10 @@ extension CheckoutController {
                 confirmWithPaymentMethod: confirmWithPaymentMethod(paymentMethod:linkAccount:saveForFutureUseCheckboxState:linkClientAttributionMetadata:),
                 confirmHandler: confirmHandler(linkAuthenticationContext:intent:elementsSession:linkPaymentOption:linkCompletion:),
                 paymentHandlerCompletion: { status, error in
-                    completion(resultWithoutSessionResponse(PaymentSheet.makePaymentSheetResult(for: status, error: error)), nil)
+                    completion(resultWithSessionResponse(PaymentSheet.makePaymentSheetResult(for: status, error: error)), nil)
                 },
                 completion: { result, confirmationType in
-                    if let internalResult = linkCompletionResult {
-                        completion(internalResult, confirmationType)
-                    } else {
-                        completion(resultWithoutSessionResponse(result), confirmationType)
-                    }
+                    completion(resultWithSessionResponse(result), confirmationType)
                 }
             )
         }
