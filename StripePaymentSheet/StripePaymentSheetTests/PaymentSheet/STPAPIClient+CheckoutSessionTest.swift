@@ -128,7 +128,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // 5. Verify response
         XCTAssertEqual(response.makePublicSession().status, .complete(.paid))
-        XCTAssertNotNil(response.paymentIntent)
+        XCTAssertNotNil(response.paymentResponse?.paymentIntent)
     }
 
     // MARK: - Adaptive Pricing
@@ -340,6 +340,6 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // 5. Verify response
         XCTAssertEqual(response.makePublicSession().status, .complete(.noPaymentRequired))
-        XCTAssertNotNil(response.setupIntent)
+        XCTAssertNotNil(response.paymentResponse?.setupIntent)
     }
 }

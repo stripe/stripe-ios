@@ -28,7 +28,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(result.paymentSheetResult, .completed)
             if case .completed(let response) = result {
                 XCTAssertEqual(response.status, .complete(.paid))
-                XCTAssertEqual(response.paymentIntent?.status, .succeeded)
+                XCTAssertEqual(response.paymentResponse?.status, "succeeded")
             }
             didComplete.fulfill()
         }
@@ -46,7 +46,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(result.paymentSheetResult, .completed)
             if case .completed(let response) = result {
                 XCTAssertEqual(response.status, .complete(.noPaymentRequired))
-                XCTAssertEqual(response.setupIntent?.status, .succeeded)
+                XCTAssertEqual(response.paymentResponse?.status, "succeeded")
             }
             didComplete.fulfill()
         }
@@ -100,11 +100,11 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             return XCTFail("Expected a completed Checkout Session")
         }
         let paymentMethod: STPPaymentMethod?
-        if let paymentIntent = response.paymentIntent {
+        if let paymentIntent = response.paymentResponse?.paymentIntent {
             let intent = try await apiClient.retrievePaymentIntent(clientSecret: paymentIntent.clientSecret, expand: ["payment_method"])
             paymentMethod = intent.paymentMethod
         } else {
-            let setupIntent = try XCTUnwrap(response.setupIntent)
+            let setupIntent = try XCTUnwrap(response.paymentResponse?.setupIntent)
             let intent = try await apiClient.retrieveSetupIntent(clientSecret: setupIntent.clientSecret, expand: ["payment_method"])
             paymentMethod = intent.paymentMethod
         }
