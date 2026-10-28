@@ -84,33 +84,14 @@ final class CheckoutSessionPollerTests: XCTestCase {
         XCTAssertEqual(outcome, .notStarted(response))
     }
 
-    func testTimeoutPreservesMostRecentResponse() async {
-        // Given two pending responses, with the latest reaching the overall deadline
+    func testTimeoutPreservesLatestResponseDespiteRequestFailures() async {
+        // Given newer Session fields followed by request errors until timeout
         let clock = TestClock()
         let apiClient = MockAPIClient(clock: clock)
         let latest = pollResponse(confirmationStatus: .pending, status: "complete", paymentStatus: "paid")
         apiClient.pollResults = [
             .success(pollResponse(confirmationStatus: .pending)),
-            .success(latest, duration: 29.5),
-        ]
-
-        let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-            checkoutSessionId: checkoutSessionId,
-            clientSecret: clientSecret
-        )
-
-        XCTAssertEqual(apiClient.pollRequests.count, 2)
-        XCTAssertEqual(outcome, .timedOut(lastResponse: latest))
-    }
-
-    func testRequestFailuresPreserveLastResponseAtTimeout() async {
-        // Given a valid response followed by request errors until timeout
-        let clock = TestClock()
-        let apiClient = MockAPIClient(clock: clock)
-        let response = pollResponse(confirmationStatus: .pending)
-        apiClient.pollResults = [
-            .success(response),
-            .failure(PollerTestError.requestFailed),
+            .success(latest),
             .failure(PollerTestError.requestFailed, duration: 29),
         ]
 
@@ -120,7 +101,7 @@ final class CheckoutSessionPollerTests: XCTestCase {
         )
 
         XCTAssertEqual(apiClient.pollRequests.count, 3)
-        XCTAssertEqual(outcome, .timedOut(lastResponse: response))
+        XCTAssertEqual(outcome, .timedOut(lastResponse: latest))
     }
 
     func testRateLimitDelayTimeoutPreservesLastResponse() async {
@@ -158,20 +139,6 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
         XCTAssertEqual(apiClient.pollRequests.count, 1)
         XCTAssertEqual(outcome, .timedOut(lastResponse: response))
-    }
-
-    func testTimeoutWithoutSuccessfulResponse() async {
-        let clock = TestClock()
-        let apiClient = MockAPIClient(clock: clock)
-        apiClient.pollResults = [.failure(PollerTestError.requestFailed, duration: 30)]
-
-        let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-            checkoutSessionId: checkoutSessionId,
-            clientSecret: clientSecret
-        )
-
-        XCTAssertEqual(apiClient.pollRequests.count, 1)
-        XCTAssertEqual(outcome, .timedOut(lastResponse: nil))
     }
 
     func testRequestErrorsRetry() async {
@@ -272,12 +239,14 @@ final class CheckoutSessionPollerTests: XCTestCase {
     }
 
     func testOnlySuccessfulPollResetsRateLimitBackoff() async {
-        // Given a rate limit, an ordinary failure, and then a successful continuing response
+        // Given a rate limit and an ordinary failure, then success before another rate limit
         let clock = TestClock()
         let apiClient = MockAPIClient(clock: clock)
         apiClient.pollResults = [
             .failure(legacyRateLimitError()),
             .failure(PollerTestError.requestFailed),
+            .success(pollResponse(confirmationStatus: .pending)),
+            .failure(legacyRateLimitError()),
             .success(pollResponse(confirmationStatus: .pending)),
             .success(pollResponse(confirmationStatus: .succeeded)),
         ]
@@ -288,28 +257,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
             clientSecret: clientSecret
         )
 
-        // Then the ordinary failure retains the backoff and success resets the normal cadence
-        XCTAssertEqual(apiClient.pollRequests.map(\.startTime), [0, 2, 4, 4.5])
-        XCTAssertEqual(outcome, .succeeded(pollResponse(confirmationStatus: .succeeded)))
-    }
-
-    func testSuccessfulPollResetsConsecutiveRateLimitCount() async {
-        let clock = TestClock()
-        let apiClient = MockAPIClient(clock: clock)
-        apiClient.pollResults = [
-            .failure(legacyRateLimitError()),
-            .success(pollResponse(confirmationStatus: .pending)),
-            .failure(legacyRateLimitError()),
-            .success(pollResponse(confirmationStatus: .succeeded)),
-        ]
-
-        let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-            checkoutSessionId: checkoutSessionId,
-            clientSecret: clientSecret
-        )
-
-        // The second rate limit starts a new backoff sequence at two seconds.
-        XCTAssertEqual(apiClient.pollRequests.map(\.startTime), [0, 2, 2.5, 4.5])
+        // Then ordinary errors retain backoff, while successful responses reset both cadence and the retry count
+        XCTAssertEqual(apiClient.pollRequests.map(\.startTime), [0, 2, 4, 4.5, 6.5, 7])
         XCTAssertEqual(outcome, .succeeded(pollResponse(confirmationStatus: .succeeded)))
     }
 

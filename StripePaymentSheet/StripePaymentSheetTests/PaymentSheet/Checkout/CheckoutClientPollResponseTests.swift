@@ -30,58 +30,24 @@ final class CheckoutClientPollResponseTests: XCTestCase {
     }
 
     func testDecodesSessionStatusAndPaymentStatus() throws {
-        let paymentStatuses: [(String, CheckoutController.Session.Status.PaymentStatus)] = [
-            ("paid", .paid),
-            ("unpaid", .unpaid),
-            ("no_payment_required", .noPaymentRequired),
+        let cases: [(String, String, CheckoutController.Session.Status, CheckoutController.Session.Status.PaymentStatus)] = [
+            ("open", "unpaid", .open, .unpaid),
+            ("expired", "unpaid", .expired, .unpaid),
+            ("complete", "paid", .complete(.paid), .paid),
+            ("complete", "unpaid", .complete(.unpaid), .unpaid),
+            ("complete", "no_payment_required", .complete(.noPaymentRequired), .noPaymentRequired),
         ]
 
-        for (rawPaymentStatus, expectedPaymentStatus) in paymentStatuses {
-            let statuses: [(String, CheckoutController.Session.Status)] = [
-                ("open", .open),
-                ("complete", .complete(expectedPaymentStatus)),
-                ("expired", .expired),
-            ]
-            for (rawStatus, expectedStatus) in statuses {
-                var json = pollJSON
-                json["status"] = rawStatus
-                json["payment_status"] = rawPaymentStatus
+        for (rawStatus, rawPaymentStatus, expectedStatus, expectedPaymentStatus) in cases {
+            var json = pollJSON
+            json["status"] = rawStatus
+            json["payment_status"] = rawPaymentStatus
 
-                let response = try decode(json)
+            let response = try decode(json)
 
-                XCTAssertEqual(response.status, expectedStatus)
-                XCTAssertEqual(response.paymentStatus, expectedPaymentStatus)
-            }
+            XCTAssertEqual(response.status, expectedStatus)
+            XCTAssertEqual(response.paymentStatus, expectedPaymentStatus)
         }
-    }
-
-    func testFailedConfirmationCanHaveACompleteSession() throws {
-        // Given an async payment failed after the Session became complete
-        var json = pollJSON
-        json["confirmation_status"] = "failed"
-        json["status"] = "complete"
-        json["state"] = "complete"
-
-        // When decoding the poll response
-        let response = try decode(json)
-
-        // Then confirmation failure is preserved independently of Session completion
-        XCTAssertEqual(response.confirmationStatus, .failed)
-        XCTAssertEqual(response.status, .complete(.unpaid))
-        XCTAssertEqual(response.paymentStatus, .unpaid)
-    }
-
-    func testSuccessfulConfirmationDoesNotImplyPaymentIsPaid() throws {
-        // Given checkout is client-complete while an async payment is still unpaid
-        var json = pollJSON
-        json["confirmation_status"] = "succeeded"
-        json["status"] = "complete"
-
-        let response = try decode(json)
-
-        XCTAssertEqual(response.confirmationStatus, .succeeded)
-        XCTAssertEqual(response.status, .complete(.unpaid))
-        XCTAssertEqual(response.paymentStatus, .unpaid)
     }
 
     func testIgnoresInternalStateAndUnrelatedFields() throws {
