@@ -7,6 +7,7 @@
 //
 
 @_spi(InternalOnlyAPI) @testable import StripeUICore
+import UIKit
 import XCTest
 
 final class DropdownFieldElementTest: XCTestCase {
@@ -116,6 +117,199 @@ final class DropdownFieldElementTest: XCTestCase {
         element.didFinish(element.pickerFieldView, shouldAutoAdvance: true)
         // Should stay selected on previous selection
         XCTAssertEqual(index, 2)
+    }
+
+    // MARK: - Menu tests
+
+    func testDefaultPresentationUsesWheel() {
+        let element = DropdownFieldElement(items: items, label: "Label")
+        XCTAssertNil(element.menuButton)
+        let picker: UIPickerView = element.pickerView
+        XCTAssertEqual(picker.numberOfComponents, 1)
+    }
+
+    func testMenuCommitsOnceAndReselectDoesNotNotify() throws {
+        var updates: [Int] = []
+        let element = DropdownFieldElement(items: items, label: "Label", presentation: .menu, didUpdate: { updates.append($0) })
+        let delegate = MenuDelegate()
+        element.delegate = delegate
+        let button = try XCTUnwrap(element.menuButton)
+        let action = try XCTUnwrap(button.menu?.children[2] as? UIAction)
+
+        // When the actual menu action is invoked
+        (button as? PickerFieldView.MenuButton)?.willDisplayMenu?()
+        button.sendAction(action)
+        (button as? PickerFieldView.MenuButton)?.didDismissMenu?()
+
+        // Then the new selection is committed exactly once
+        XCTAssertEqual(updates, [2])
+        XCTAssertEqual(delegate.updates, 1)
+        XCTAssertEqual(delegate.advances, 1)
+        XCTAssertEqual(element.selectedItem.rawData, "C")
+        XCTAssertEqual(button.accessibilityLabel, "Label")
+        XCTAssertEqual(button.accessibilityValue, "C")
+        XCTAssertEqual((button.menu?.children[2] as? UIAction)?.state, .on)
+
+        button.sendAction(try XCTUnwrap(button.menu?.children[2] as? UIAction))
+        XCTAssertEqual(updates, [2])
+        XCTAssertEqual(delegate.updates, 1)
+    }
+
+    func testMenuDismissalDoesNotCommitOrAdvance() throws {
+        let element = DropdownFieldElement(items: items, label: "Label", presentation: .menu)
+        let delegate = MenuDelegate()
+        element.delegate = delegate
+        let button = try XCTUnwrap(element.menuButton as? PickerFieldView.MenuButton)
+
+        button.willDisplayMenu?()
+        XCTAssertTrue(element.isEditing)
+        button.didDismissMenu?()
+
+        XCTAssertFalse(element.isEditing)
+        XCTAssertEqual(element.selectedIndex, 0)
+        XCTAssertEqual(delegate.updates, 0)
+        XCTAssertEqual(delegate.advances, 0)
+    }
+
+    func testMenuDisabledActionsAndFieldCannotCommit() throws {
+        let disabledItem = DropdownFieldElement.DropdownItem(pickerDisplayName: "Disabled", labelDisplayName: "Disabled", accessibilityValue: "Disabled", rawData: "Disabled", isDisabled: true)
+        let element = DropdownFieldElement(items: items + [disabledItem], label: "Label", presentation: .menu)
+        let button = try XCTUnwrap(element.menuButton)
+        let disabledAction = try XCTUnwrap(button.menu?.children.last as? UIAction)
+        XCTAssertTrue(disabledAction.attributes.contains(.disabled))
+        button.sendAction(disabledAction)
+        XCTAssertEqual(element.selectedIndex, 0)
+
+        element.view.isUserInteractionEnabled = false
+        XCTAssertFalse(button.isEnabled)
+        XCTAssertFalse(element.beginEditing())
+        button.sendAction(try XCTUnwrap(button.menu?.children[1] as? UIAction))
+        XCTAssertEqual(element.selectedIndex, 0)
+    }
+
+    func testMenuPlaceholderKeepsOriginalIndices() throws {
+        let element = DropdownFieldElement(items: items, label: "Label", startsEmpty: true, presentation: .menu)
+        let button = try XCTUnwrap(element.menuButton)
+        let actions = try XCTUnwrap(button.menu).children.compactMap { $0 as? UIAction }
+        XCTAssertEqual(actions.map { $0.title }, ["A", "B", "C", "D"])
+        XCTAssertEqual(actions.map { $0.identifier.rawValue }, ["1", "2", "3", "4"])
+        XCTAssertTrue(actions.allSatisfy { $0.state == .off })
+        XCTAssertFalse(element.validationState.isValid)
+
+        button.sendAction(actions[0])
+        XCTAssertEqual(element.selectedIndex, 1)
+        XCTAssertEqual(element.selectedItem.rawData, "A")
+        XCTAssertTrue(element.validationState.isValid)
+    }
+
+    func testEmptyMenuRefreshesWithoutExposingPlaceholder() throws {
+        let element = DropdownFieldElement(items: items, label: "Label", startsEmpty: true, presentation: .menu)
+        let button = try XCTUnwrap(element.menuButton)
+        element.select(index: 2, shouldAutoAdvance: false)
+
+        element.update(items: [items[2]])
+
+        XCTAssertEqual(element.selectedIndex, 0)
+        XCTAssertFalse(element.validationState.isValid)
+        let actions = try XCTUnwrap(button.menu).children.compactMap { $0 as? UIAction }
+        XCTAssertEqual(actions.map { $0.title }, ["C"])
+        XCTAssertEqual(actions.first?.identifier.rawValue, "1")
+        XCTAssertEqual(actions.first?.state, .off)
+        button.sendAction(try XCTUnwrap(actions.first))
+        XCTAssertEqual(element.selectedIndex, 1)
+        XCTAssertTrue(element.validationState.isValid)
+    }
+
+    func testMenuActionsDoNotRetainElement() throws {
+        var element: DropdownFieldElement? = DropdownFieldElement(items: items, label: "Label", presentation: .menu)
+        weak var weakElement = element
+        let button = try XCTUnwrap(element?.menuButton)
+        let action = try XCTUnwrap(button.menu?.children[1] as? UIAction)
+
+        element = nil
+
+        XCTAssertNil(weakElement)
+        button.sendAction(action)
+    }
+
+    func testMenuUpdatesContentsAndProgrammaticCheckmarks() throws {
+        var updates: [Int] = []
+        let element = DropdownFieldElement(items: items, label: "Label", presentation: .menu, didUpdate: { updates.append($0) })
+        let button = try XCTUnwrap(element.menuButton)
+        let staleAction = try XCTUnwrap(button.menu?.children[0] as? UIAction)
+
+        element.selectedIndex = 2
+        XCTAssertEqual((button.menu?.children[0] as? UIAction)?.state, .off)
+        XCTAssertEqual((button.menu?.children[2] as? UIAction)?.state, .on)
+        button.sendAction(try XCTUnwrap(button.menu?.children[2] as? UIAction))
+        XCTAssertTrue(updates.isEmpty)
+
+        element.update(items: Array(items.reversed()))
+        let actions = try XCTUnwrap(button.menu).children.compactMap { $0 as? UIAction }
+        XCTAssertEqual(actions.map { $0.title }, ["D", "C", "B", "A"])
+        XCTAssertEqual(element.selectedIndex, 1)
+        XCTAssertEqual(actions[1].state, .on)
+        button.sendAction(staleAction)
+        XCTAssertEqual(element.selectedIndex, 1)
+    }
+
+    func testMenuRechecksDisabledStatusAfterItemsChange() throws {
+        let element = DropdownFieldElement(items: items, label: "Label", presentation: .menu)
+        let button = try XCTUnwrap(element.menuButton)
+        let staleAction = try XCTUnwrap(button.menu?.children[1] as? UIAction)
+        let disabledItem = DropdownFieldElement.DropdownItem(pickerDisplayName: "B", labelDisplayName: "B", accessibilityValue: "B", rawData: "B", isDisabled: true)
+        element.update(items: [items[0], disabledItem])
+
+        button.sendAction(staleAction)
+
+        XCTAssertEqual(element.selectedIndex, 0)
+        XCTAssertTrue((button.menu?.children[1] as? UIAction)?.attributes.contains(.disabled) == true)
+    }
+
+    func testMenuProgrammaticFocusDoesNotShowKeyboardOrOpenMenu() throws {
+        let element = DropdownFieldElement(items: items, label: "Label", presentation: .menu)
+        let button = try XCTUnwrap(element.menuButton)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 600))
+        let controller = UIViewController()
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        controller.view.addSubview(element.view)
+        element.view.frame = CGRect(x: 0, y: 0, width: 300, height: 60)
+
+        XCTAssertTrue(element.beginEditing())
+        XCTAssertTrue(button.isFirstResponder)
+        XCTAssertFalse(element.isEditing)
+        XCTAssertNil(button.inputView)
+        XCTAssertNil(button.inputAccessoryView)
+        XCTAssertTrue(element.pickerFieldView.resignFirstResponder())
+        XCTAssertFalse(button.isFirstResponder)
+    }
+
+    func testMenuUsesOneAccessibleControlAndNoKeyboardInput() throws {
+        let element = DropdownFieldElement(items: items, label: "Label", presentation: .menu)
+        let button = try XCTUnwrap(element.menuButton)
+        let field = element.pickerFieldView
+        XCTAssertEqual(field.accessibilityElements?.count, 1)
+        XCTAssertTrue(field.accessibilityElements?.first as? UIButton === button)
+        field.frame = CGRect(x: 0, y: 0, width: 300, height: 60)
+        field.layoutIfNeeded()
+        XCTAssertTrue(field.hitTest(CGPoint(x: 20, y: 20), with: nil) === button)
+        let stack = try XCTUnwrap(field.subviews.first as? UIStackView)
+        let placeholder = try XCTUnwrap(stack.arrangedSubviews.first)
+        let textField = try XCTUnwrap(placeholder.subviews.compactMap { $0 as? UITextField }.first)
+        XCTAssertNil(textField.inputView)
+        XCTAssertNil(textField.inputAccessoryView)
+        XCTAssertFalse(field.textFieldShouldBeginEditing(textField))
+        field.setCanBecomeFirstResponder(false)
+        XCTAssertFalse(field.becomeFirstResponder())
+    }
+
+    private class MenuDelegate: ElementDelegate {
+        var updates = 0
+        var advances = 0
+        func didUpdate(element: Element) { updates += 1 }
+        func continueToNextField(element: Element) { advances += 1 }
     }
 
     // MARK: - startsEmpty tests

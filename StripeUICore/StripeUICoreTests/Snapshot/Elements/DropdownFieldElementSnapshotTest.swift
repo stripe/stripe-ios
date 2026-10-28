@@ -51,8 +51,17 @@ private extension DropdownFieldElementSnapshotTest {
     func verify(_ dropdownFieldElement: DropdownFieldElement,
                 file: StaticString = #filePath,
                 line: UInt = #line) {
-        let view = dropdownFieldElement.view
-        view.autosizeHeight(width: 200)
-        STPSnapshotVerifyView(view, file: file, line: line)
+        let menuElement = DropdownFieldElement(
+            items: dropdownFieldElement.items,
+            defaultIndex: dropdownFieldElement.selectedIndex,
+            label: dropdownFieldElement.label,
+            presentation: .menu
+        )
+        // Both presentations use the same closed-field snapshot baseline.
+        for element in [dropdownFieldElement, menuElement] {
+            let view = element.view
+            view.autosizeHeight(width: 200)
+            STPSnapshotVerifyView(view, file: file, line: line)
+        }
     }
 }

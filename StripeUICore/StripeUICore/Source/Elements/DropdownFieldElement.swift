@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 /**
- A textfield whose input view is a `UIPickerView` (on iOS) or a `UIMenu` (on Catalyst) with a list of the strings.
+ A dropdown field backed by a `UIPickerView` or an anchored `UIMenu`.
  
  For internal SDK use only
  */
@@ -68,12 +68,17 @@ import UIKit
     }
     public var selectedIndex: Int {
         didSet {
+            if menuButton != nil && !isSelecting {
+                previouslySelectedIndex = selectedIndex
+            }
             updatePickerField()
         }
     }
     public private(set) var isEditing: Bool = false {
         didSet {
-            delegate?.didUpdate(element: self)
+            if menuButton == nil {
+                delegate?.didUpdate(element: self)
+            }
         }
     }
     public var didUpdate: DidUpdateSelectedIndex?
@@ -82,6 +87,24 @@ import UIKit
 
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
+
+    enum Presentation {
+        case picker
+        case menu
+    }
+    private let presentation: Presentation
+
+    private(set) lazy var menuButton: UIButton? = {
+        #if targetEnvironment(macCatalyst) || canImport(visionOS)
+        return nil
+        #else
+        guard presentation == .menu else { return nil }
+        let button = PickerFieldView.MenuButton()
+        button.showsMenuAsPrimaryAction = true
+        return button
+        #endif
+    }()
+
 #if targetEnvironment(macCatalyst) || canImport(visionOS)
     private(set) lazy var pickerView: UIButton = {
         let button = UIButton()
@@ -120,7 +143,8 @@ import UIKit
             delegate: self,
             theme: theme,
             hasPadding: hasPadding,
-            isOptional: isOptional
+            isOptional: isOptional,
+            menuButton: menuButton
         )
         if disableDropdownWithSingleElement && items.count == 1 {
             pickerFieldView.isUserInteractionEnabled = false
@@ -130,6 +154,7 @@ import UIKit
 
     // MARK: - Private properties
     private var previouslySelectedIndex: Int
+    private var isSelecting = false
     private let disableDropdownWithSingleElement: Bool
     private let isOptional: Bool
     // Indicates if this dropdown should start with no selection. When true, a placeholder item is automatically
@@ -164,7 +189,7 @@ import UIKit
      - If `defaultIndex` is outside of the bounds of the `items` array, then a default of `0` is used.
      - `didUpdate` is not called if the user does not change their input before hitting "Done"
      */
-    public init(
+    public convenience init(
         items: [DropdownItem],
         defaultIndex: Int? = nil,
         label: String?,
@@ -175,8 +200,35 @@ import UIKit
         startsEmpty: Bool = false,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
+        self.init(
+            items: items,
+            defaultIndex: defaultIndex,
+            label: label,
+            theme: theme,
+            hasPadding: hasPadding,
+            disableDropdownWithSingleElement: disableDropdownWithSingleElement,
+            isOptional: isOptional,
+            startsEmpty: startsEmpty,
+            presentation: .picker,
+            didUpdate: didUpdate
+        )
+    }
+
+    init(
+        items: [DropdownItem],
+        defaultIndex: Int? = nil,
+        label: String?,
+        theme: ElementsAppearance = .default,
+        hasPadding: Bool = true,
+        disableDropdownWithSingleElement: Bool = false,
+        isOptional: Bool = false,
+        startsEmpty: Bool = false,
+        presentation: Presentation,
+        didUpdate: DidUpdateSelectedIndex? = nil
+    ) {
         stpAssert(!items.filter { !$0.isDisabled }.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
 
+        self.presentation = presentation
         self.label = label
         self.theme = theme
         self.disableDropdownWithSingleElement = disableDropdownWithSingleElement
@@ -221,7 +273,9 @@ import UIKit
     }
 
     public func select(index: Int, shouldAutoAdvance: Bool = true) {
+        isSelecting = true
         selectedIndex = index
+        isSelecting = false
         didFinish(pickerFieldView, shouldAutoAdvance: shouldAutoAdvance)
     }
 
@@ -239,6 +293,24 @@ import UIKit
 private extension DropdownFieldElement {
 
     func updatePickerField() {
+        if let menuButton {
+            menuButton.menu = UIMenu(children: items.enumerated().compactMap { index, item in
+                guard !(startsEmpty && index == 0) else { return nil }
+                return UIAction(
+                    title: item.pickerDisplayName.string,
+                    identifier: .init(rawValue: String(index)),
+                    attributes: item.isDisabled ? .disabled : [],
+                    state: index == selectedIndex ? .on : .off
+                ) { [weak self] _ in
+                    guard let self,
+                          self.pickerFieldView.isUserInteractionEnabled,
+                          self.items.indices.contains(index),
+                          self.items[index].rawData == item.rawData,
+                          !self.items[index].isDisabled else { return }
+                    self.select(index: index, shouldAutoAdvance: true)
+                }
+            })
+        }
         #if targetEnvironment(macCatalyst) || canImport(visionOS)
         if #available(macCatalyst 14.0, *) {
             // Mark the enabled menu item as selected
@@ -247,7 +319,7 @@ private extension DropdownFieldElement {
         }
         #else
         // Update picker view selection directly using selectedIndex
-        if pickerView.selectedRow(inComponent: 0) != selectedIndex {
+        if menuButton == nil && pickerView.selectedRow(inComponent: 0) != selectedIndex {
             pickerView.reloadComponent(0)
             pickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
         }
@@ -292,7 +364,7 @@ extension DropdownFieldElement: Element {
     }
 
     public func beginEditing() -> Bool {
-        return pickerFieldView.becomeFirstResponder()
+        return pickerFieldView.beginEditing()
     }
 }
 
@@ -358,18 +430,28 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
 
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
         isEditing = false
-        if previouslySelectedIndex != selectedIndex {
+        let didChange = previouslySelectedIndex != selectedIndex
+        if didChange {
             didUpdate?(selectedIndex)
         }
         previouslySelectedIndex = selectedIndex
 
-        if shouldAutoAdvance {
+        let shouldNotifyDelegate = menuButton != nil ? didChange : shouldAutoAdvance
+        if shouldNotifyDelegate {
             delegate?.didUpdate(element: self)
+        }
+        if shouldAutoAdvance {
             delegate?.continueToNextField(element: self)
             // If the picker field view is still selected (e.g. if someone tapped "Done"), dismiss it on the next runloop
             DispatchQueue.main.async {
                 _ = pickerFieldView.resignFirstResponder()
             }
+        }
+    }
+
+    func didDismissMenu(_ pickerFieldView: PickerFieldView) {
+        if isEditing {
+            isEditing = false
         }
     }
 
