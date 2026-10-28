@@ -513,9 +513,6 @@ extension CheckoutController {
 
     // MARK: - Confirm Response Handling
 
-    // TODO(CC migration): [1] Verify the deployed CC poll contract.
-    // Timeout succeeds with the last server-reported Session state; not_started is an integration error.
-    // Phase numbers follow CHECKOUT_CONFIRM_MIGRATION.md; update fixtures and tests alongside phases 2–5.
     /// Confirms a Checkout Session, handles any next action, and waits for confirmation to settle.
     @MainActor
     static func confirmCheckoutSession(
