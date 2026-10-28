@@ -31,7 +31,6 @@ struct FoldAvoidingScrollView<Content: View>: View {
                 width: max(0, geometry.size.width - insets.leading - insets.trailing),
                 height: max(0, geometry.size.height - insets.top - insets.bottom)
             )
-            .clipped()
             .padding(insets)
         }
     }
