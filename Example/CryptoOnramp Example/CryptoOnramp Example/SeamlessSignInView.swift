@@ -85,8 +85,7 @@ struct SeamlessSignInView: View {
                 .opacity(shouldDisableButtons ? 0.5 : 1)
             }
             .padding(.vertical, isCompact ? 12 : 16)
-            .frame(maxWidth: LayoutConstants.contentMaxWidth)
-            .frame(maxWidth: .infinity)
+            .horizontallyCenteredContent()
             .padding(.horizontal)
         }
     }
