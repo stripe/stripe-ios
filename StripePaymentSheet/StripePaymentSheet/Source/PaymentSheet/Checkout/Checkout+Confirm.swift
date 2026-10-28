@@ -302,9 +302,9 @@ extension CheckoutController {
                 let result: InternalConfirmResult
                 switch flow {
                 case .withoutPaymentMethod(let authenticationContext):
-                    // TODO(CC migration): [2] Pass self.clientSecret to the CC confirmation request.
                     let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithoutPaymentMethod(
                         sessionId: self.session.id,
+                        clientSecret: self.clientSecret,
                         // .withoutPaymentMethod only ever comes from makeConfirmationFlow(for: paymentElement:)
                         // — ExpressCheckoutElement's flow builder has no such case — so this is always PaymentElement.
                         confirmationSource: .paymentElement,
@@ -478,9 +478,9 @@ extension CheckoutController {
             case .selected:
                 savePaymentMethod = true
             }
-            // TODO(CC migration): [2] Pass checkoutSession.clientSecret to the CC confirmation request.
             return .createWithPaymentMethodData(
                 sessionId: checkoutSession.id,
+                clientSecret: checkoutSession.clientSecret,
                 paymentMethodData: confirmParams.paymentMethodParams,
                 confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
@@ -495,9 +495,9 @@ extension CheckoutController {
             // MARK: - Saved PM
             let paymentMethodOptions = preconfirmedIntentParams?.confirmPaymentMethodOptions
                 ?? confirmParams?.confirmPaymentMethodOptions
-            // TODO(CC migration): [2] Pass checkoutSession.clientSecret to the CC confirmation request.
             return .createWithPaymentMethodID(
                 sessionId: checkoutSession.id,
+                clientSecret: checkoutSession.clientSecret,
                 paymentMethodId: savedPaymentMethod.stripeId,
                 confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
