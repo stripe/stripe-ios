@@ -11,7 +11,7 @@ import Foundation
 /// Conform your Error to this protocol to override the parameters that get logged when you either:
 /// 1. Use `ErrorAnalytic` to send error analytics.
 /// 2. Build your own `Analytic` and use `serializeForV1Analytics`.
-@_spi(STP) public protocol AnalyticLoggableError: Error {
+@_spi(InternalOnlyAPI) public protocol AnalyticLoggableError: Error {
     /// The value used for `"error_type"` in the analytics payload.
     /// The default implementation uses `Error.extractErrorType`
     var analyticsErrorType: String { get }
@@ -26,7 +26,7 @@ import Foundation
 }
 
 // MARK: Default implementation
-@_spi(STP) extension AnalyticLoggableError {
+@_spi(InternalOnlyAPI) extension AnalyticLoggableError {
     var analyticsErrorType: String {
         Self.extractErrorType(from: self)
     }
@@ -43,7 +43,7 @@ import Foundation
 extension AnalyticLoggableError where Self: Error {}
 
 // MARK: - Error extension methods that serialize errors for analytics logging
-@_spi(STP) extension Error {
+@_spi(InternalOnlyAPI) extension Error {
     /// Serialize an Error for logging to q.stripe.com and the `sdk.analytics_events` table
     ///
     /// It sends the following fields:

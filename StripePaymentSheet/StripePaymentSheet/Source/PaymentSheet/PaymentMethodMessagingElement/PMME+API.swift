@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 private let pmmeApiEndpoint = URL(string: "https://ppm.stripe.com/config")!
 

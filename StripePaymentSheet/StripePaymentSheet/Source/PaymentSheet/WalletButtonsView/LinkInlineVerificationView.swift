@@ -5,8 +5,8 @@
 //  Created by Mat Schmid on 6/4/25.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 @available(iOS 16.0, *)
@@ -102,6 +102,7 @@ struct LinkInlineVerificationView: View {
                             font: LinkUI.font(forTextStyle: .title),
                             // TODO(iOS 26): Is this supposed to apply a Liquid Glass style?
                             itemCornerRadius: viewModel.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
+                            itemMaxWidth: LinkUI.oneTimeCodeItemMaxWidth,
                             itemFocusBackgroundColor: viewModel.appearance.colors.background
                         ),
                         controller: viewModel.textFieldController,

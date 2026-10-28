@@ -10,11 +10,11 @@ import StripeCoreTestUtils
 import UIKit
 import XCTest
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 
 class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
     func testHeader_usesProvidedBrandForAccessibilityLabel() {

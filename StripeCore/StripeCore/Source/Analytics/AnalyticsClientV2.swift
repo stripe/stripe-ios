@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Dependency-injectable protocol for `AnalyticsClientV2`.
-@_spi(STP) public protocol AnalyticsClientV2Protocol {
+@_spi(InternalOnlyAPI) public protocol AnalyticsClientV2Protocol {
     var clientId: String { get }
 
     func log(eventName: String, parameters: [String: Any])
@@ -19,7 +19,7 @@ import UIKit
 /// Logs analytics to `r.stripe.com`.
 ///
 /// To log analytics to the legacy `q.stripe.com`, use `STPAnalyticsClient`.
-@_spi(STP) public class AnalyticsClientV2: AnalyticsClientV2Protocol {
+@_spi(InternalOnlyAPI) public class AnalyticsClientV2: AnalyticsClientV2Protocol {
 
     static let loggerUrl = URL(string: "https://r.stripe.com/0")!
 

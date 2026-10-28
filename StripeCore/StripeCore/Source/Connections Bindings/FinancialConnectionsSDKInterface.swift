@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) public protocol FinancialConnectionsSDKInterface {
+@_spi(InternalOnlyAPI) public protocol FinancialConnectionsSDKInterface {
     init()
     func presentFinancialConnectionsSheet(
         apiClient: STPAPIClient,

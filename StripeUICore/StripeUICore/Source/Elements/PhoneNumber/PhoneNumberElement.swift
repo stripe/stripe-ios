@@ -6,13 +6,13 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /**
     A simple hstack of  [🇺🇸 + 1] `DropdownElement` and [ Phone number ] `TextFieldElement`
  */
-@_spi(STP) public class PhoneNumberElement: ContainerElement {
+@_spi(InternalOnlyAPI) public class PhoneNumberElement: ContainerElement {
     // MARK: - ContainerElement protocol
     public lazy var elements: [Element] = { [countryDropdownElement, textFieldElement] }()
     private(set) public var lastUpdatedElement: Element?
@@ -120,7 +120,7 @@ import UIKit
     }
 
     /// Sets the phone number text programmatically. Country code will remain unchanged.
-    @_spi(STP) public func setPhoneNumber(_ phoneNumber: String?) {
+    @_spi(InternalOnlyAPI) public func setPhoneNumber(_ phoneNumber: String?) {
         textFieldElement.setText(phoneNumber ?? "")
     }
 

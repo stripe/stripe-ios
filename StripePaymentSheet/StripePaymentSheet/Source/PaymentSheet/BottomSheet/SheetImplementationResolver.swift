@@ -48,18 +48,22 @@ final class SheetImplementationResolver {
         // Capture playground overrides per flow so changing the setting cannot switch an existing presentation.
         isEnabled = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride ?? elementsSession.isNativeSheetEnabled
     }
+
+    init(isEnabled: Bool) {
+        self.isEnabled = isEnabled
+    }
 }
 
 extension PaymentSheet {
 
-    @_spi(STP) public enum NativeSheetFeatureFlags {
+    @_spi(InternalOnlyAPI) public enum NativeSheetFeatureFlags {
 
         /// Whether the current device requires native sheets, regardless of the feature flag.
-        @_spi(STP) public static var isNativeSheetRequiredForDevice: Bool {
+        @_spi(InternalOnlyAPI) public static var isNativeSheetRequiredForDevice: Bool {
             SheetImplementationResolver.isRequiredForDevice
         }
 
         /// Overrides the native-sheet feature flag. Intended for test playgrounds only.
-        @_spi(STP) public static var nativeSheetEnabledOverride: Bool?
+        @_spi(InternalOnlyAPI) public static var nativeSheetEnabledOverride: Bool?
     }
 }

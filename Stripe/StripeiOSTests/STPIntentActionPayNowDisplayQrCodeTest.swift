@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 9/11/23.
 //
 
-@testable@_spi(STP) import Stripe
+@testable@_spi(InternalOnlyAPI) import Stripe
 
 class STPIntentActionPayNowDisplayQrCodeTest: XCTestCase {
     func testActionHostedUrl() throws {

@@ -9,10 +9,10 @@ import SwiftUI
 typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
 
 @available(iOS 16.0, *)
-@_spi(STP) public struct WalletButtonsView: View {
+@_spi(InternalOnlyAPI) public struct WalletButtonsView: View {
     /// Handler called when a wallet button is tapped. Return `true` to proceed with checkout, `false` to cancel.
     /// The parameter is the wallet type as a string: "apple_pay" or "link"
-    @_spi(STP) public typealias WalletButtonClickHandler = (String) -> Bool
+    @_spi(InternalOnlyAPI) public typealias WalletButtonClickHandler = (String) -> Bool
 
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (PaymentSheetResult) -> Void
@@ -20,9 +20,9 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
     @State var orderedWallets: [ExpressType]
     @StateObject private var linkButtonViewModel = LinkButtonViewModel()
 
-    @_spi(STP) public init(flowController: PaymentSheet.FlowController,
-                           confirmHandler: @escaping (PaymentSheetResult) -> Void,
-                           clickHandler: WalletButtonClickHandler? = nil) {
+    @_spi(InternalOnlyAPI) public init(flowController: PaymentSheet.FlowController,
+                                       confirmHandler: @escaping (PaymentSheetResult) -> Void,
+                                       clickHandler: WalletButtonClickHandler? = nil) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
         self.clickHandler = clickHandler
@@ -42,7 +42,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
         self._orderedWallets = State(initialValue: orderedWallets)
     }
 
-    @_spi(STP) public var body: some View {
+    @_spi(InternalOnlyAPI) public var body: some View {
         if !orderedWallets.isEmpty {
             VStack(spacing: 8) {
                 ForEach(orderedWallets, id: \.self) { wallet in
@@ -207,7 +207,7 @@ class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
 }
 
 extension PaymentSheetLinkAccount: Hashable {
-    @_spi(STP) public func hash(into hasher: inout Hasher) {
+    @_spi(InternalOnlyAPI) public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
 }

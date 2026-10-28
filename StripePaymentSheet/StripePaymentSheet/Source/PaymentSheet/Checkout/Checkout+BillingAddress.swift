@@ -7,8 +7,8 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension CheckoutSessionBillingAddressUpdater {
     /// Syncs the payment method's billing address to Checkout tax calculation when needed.

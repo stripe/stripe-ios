@@ -6,10 +6,10 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
 import XCTest
 
@@ -28,14 +28,17 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
         // Fields required by the SDK for the supported mobile response profile.
         let requiredFields = [
-            "session_id",
-            "currency",
-            "mode",
-            "checkout_items",
+            "id",
+            "presentment_currency",
+            "integration_currency",
+            "ui_mode",
+            "items",
             "livemode",
             "status",
             "payment_status",
-            "elements_session",
+            "elements_session_id",
+            "merchant_info",
+            "ordered_payment_method_types_and_wallets",
         ]
 
         for field in requiredFields {
@@ -49,18 +52,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
 
         var emptyCurrencyJson = fullJson
-        emptyCurrencyJson["currency"] = ""
+        emptyCurrencyJson["presentment_currency"] = ""
         XCTAssertThrowsError(
             try PaymentPagesAPIResponse.decode(fromAPIResponse: emptyCurrencyJson),
             "should fail to decode with an empty currency"
         )
-    }
-
-    func testDecodedObjectFromAPIResponseDoesNotRequireUnusedFields() throws {
-        var json = CheckoutTestHelpers.makeSessionJSON()
-        json.removeValue(forKey: "payment_method_types")
-
-        XCTAssertNoThrow(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testDecodedObjectFromAPIResponseMapsSessionStatus() throws {
@@ -83,47 +79,24 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
     }
 
-    func testDecodesSubmissionAttemptStates() throws {
-        let testCases: [(String, PaymentPagesAPIResponse.SubmissionAttempt.State)] = [
-            ("processing", .processing),
-            ("requires_approval", .requiresApproval),
-            ("complete", .complete),
-            ("failed", .failed),
-        ]
-
-        for (rawValue, expectedState) in testCases {
+    func testDecodesCheckoutClientPaymentStatuses() throws {
+        for status in [
+            "requires_payment_method", "requires_action", "processing", "requires_capture", "succeeded", "canceled",
+        ] {
             var json = CheckoutTestHelpers.makeSessionJSON()
-            json["submission_attempt"] = [
-                "id": "ca_test_123",
-                "state": rawValue,
-            ]
+            json["payment_response"] = ["status": status]
 
             let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
 
-            let state = try XCTUnwrap(response.submissionAttempt?.state)
-            XCTAssertEqual(state, expectedState)
+            XCTAssertEqual(response.paymentResponse?.status, status)
         }
     }
 
-    func testRejectsUnknownSubmissionAttemptState() {
+    func testRejectsCheckoutClientPaymentResponseWithoutStatus() {
         var json = CheckoutTestHelpers.makeSessionJSON()
-        json["submission_attempt"] = [
-            "id": "ca_test_123",
-            "state": "future_state",
-        ]
+        json["payment_response"] = [:]
 
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
-    }
-
-    func testDecodesRouteToOrchestrationInterface() throws {
-        var json = CheckoutTestHelpers.makeSessionJSON()
-        json["route_to_orchestration_interface"] = true
-
-        let routedResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
-        let responseWithoutRouting = CheckoutTestHelpers.makeSession()
-
-        XCTAssertEqual(routedResponse.routeToOrchestrationInterface, true)
-        XCTAssertNil(responseWithoutRouting.routeToOrchestrationInterface)
     }
 
     func testDecodedObjectFromAPIResponseRejectsUnknownSessionStatus() {
@@ -142,19 +115,30 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testDecodedObjectFromAPIResponseMalformedElementsSession() {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
-        // Invalid elements_session - missing payment_method_preference
-        json["elements_session"] = ["garbage": true]
+        // Invalid ordered payment method types
+        json["ordered_payment_method_types_and_wallets"] = ["garbage": true]
 
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json)) { error in
+            guard case .dataCorrupted(let context) = error as? DecodingError else {
+                return XCTFail("Expected dataCorrupted, got \(error)")
+            }
+            XCTAssertEqual(context.codingPath.map(\.stringValue), ["orderedPaymentMethodTypesAndWallets"])
+        }
     }
 
     func testDecodedObjectFromAPIResponseRequiresMerchantCountry() {
         var json = STPTestUtils.jsonNamed("CheckoutSession")!
-        var elementsSession = json["elements_session"] as! [String: Any]
-        elementsSession.removeValue(forKey: "merchant_country")
-        json["elements_session"] = elementsSession
+        var merchant = json["merchant_info"] as! [String: Any]
+        merchant.removeValue(forKey: "country")
+        json["merchant_info"] = merchant
 
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json)) { error in
+            guard case .keyNotFound(let key, let context) = error as? DecodingError else {
+                return XCTFail("Expected keyNotFound, got \(error)")
+            }
+            XCTAssertEqual(key.stringValue, "country")
+            XCTAssertEqual(context.codingPath.map(\.stringValue), ["merchantInfo"])
+        }
     }
 
     func testDecodingErrorIncludesNestedFieldPath() throws {
@@ -169,7 +153,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             XCTAssertEqual(key.stringValue, "quantity")
             XCTAssertEqual(
                 context.codingPath.map(\.stringValue),
-                ["checkoutItems", "0", "oneTimePrice", "items", "0"]
+                ["items", "0", "oneTimePrice", "items", "0"]
             )
         }
     }
@@ -212,7 +196,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertTrue(analytic?.errorMessage.contains("Invalid customer") == true)
     }
 
-    func testDecodedObjectFromAPIResponseMapping() {
+    func testDecodedObjectFromAPIResponseMapping() throws {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
         let apiResponse = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         let session = apiResponse.makePublicSession()
@@ -223,13 +207,11 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(apiResponse.paymentStatus, .unpaid)
         XCTAssertEqual(apiResponse.checkoutItems.first?.key, "ci_1abc")
         XCTAssertEqual(apiResponse.checkoutItems.first?.oneTimePrice.items.first?.innerItemKey, "cii_1abc")
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.activePresentmentCurrency, "eur")
+        XCTAssertEqual(apiResponse.currency, "eur")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationAmount, 12000)
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.integrationCurrency, "usd")
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.amount, 10839)
         XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.currency, "eur")
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.conversionMarkupBps, 400)
-        XCTAssertEqual(apiResponse.adaptivePricingInfo?.localCurrencyOptions.first?.presentmentExchangeRate, "0.90325")
 
         XCTAssertEqual(session.id, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 2149)
@@ -238,15 +220,12 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.minorUnitsAmountDivisor, 100)
         XCTAssertEqual(session.paymentStatus, .unpaid)
         XCTAssertEqual(session.status, .open)
-        XCTAssertEqual(apiResponse.paymentIntentId, "pi_test123456789")
-        XCTAssertNil(apiResponse.setupIntentId)
+        XCTAssertEqual(apiResponse.paymentResponse?.paymentIntent?.id, "pi_test123456789")
+        XCTAssertNil(apiResponse.paymentResponse?.setupIntent?.id)
         XCTAssertFalse(session.livemode)
         XCTAssertNotNil(session.customer)
         XCTAssertEqual(session.customer?.id, "cus_test123456")
-        XCTAssertEqual(session.customer?.email, "customer@example.com")
-        XCTAssertEqual(session.customer?.name, "Test Customer")
-        XCTAssertEqual(session.customer?.phone, "+15555555555")
-        XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
+        XCTAssertFalse(session.canDetachPaymentMethod)
         XCTAssertEqual(session.customer?.paymentMethods.count, 2)
         XCTAssertEqual(session.customer?.paymentMethods[0].stripeId, "pm_1Sxae3Lu5o3P18Zpt5YuRRoG")
         XCTAssertEqual(session.customer?.paymentMethods[0].type, .card)
@@ -257,13 +236,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.elementsSession.sessionID, "elements_session_test123")
         XCTAssertEqual(session.email, "test@example.com")
         XCTAssertEqual(session.serverEmail, "test@example.com")
-        XCTAssertEqual(apiResponse.url, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
 
         // Verify saved payment methods offer save
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
         XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
-        XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
-        XCTAssertNil(session.setupFutureUsage)
 
         XCTAssertNotNil(session.paymentMethodOptions)
 
@@ -302,7 +278,6 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNotNil(session.exchangeRateMeta)
         XCTAssertEqual(session.exchangeRateMeta?.localizedCurrency, "eur")
         XCTAssertEqual(session.exchangeRateMeta?.integrationCurrency, "usd")
-        XCTAssertEqual(session.exchangeRateMeta?.exchangeRate, "0.90325")
 
         // Presentment details (derived from adaptive pricing)
         XCTAssertEqual(session.currency, "usd")
@@ -312,14 +287,27 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             apiResponse.allResponseFields as NSDictionary,
             json as NSDictionary
         )
+
+        var checkoutClientJSON = json as! [String: Any]
+        checkoutClientJSON["flags"] = ["elements_enable_passive_captcha": true]
+        checkoutClientJSON["passive_captcha"] = [
+            "site_key": "site_key", "rqdata": "rqdata", "token_refresh_after_seconds": 21570,
+        ]
+        let data = try JSONSerialization.data(withJSONObject: checkoutClientJSON)
+        let checkoutClient = try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
+        XCTAssertEqual(
+            checkoutClient.makePublicSession().elementsSession.passiveCaptchaData,
+            PassiveCaptchaData(siteKey: "site_key", rqdata: "rqdata", tokenTimeoutSeconds: 21570)
+        )
     }
 
     func testDecodedObjectWithOnlySDKRequiredFields() throws {
         let json: [String: Any] = [
-            "session_id": "cs_test_minimal",
-            "currency": "usd",
-            "mode": "modeless",
-            "checkout_items": [
+            "livemode": true,
+            "status": "open",
+            "payment_status": "unpaid",
+            "id": "cs_test_minimal",
+            "items": [
                 [
                     "key": "checkout_item_test",
                     "type": "one_time_price",
@@ -351,14 +339,13 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                     ],
                 ],
             ],
-            "livemode": true,
-            "status": "open",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "elements_session": [
-                "session_id": "es_test",
-                "merchant_country": "US",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            "ui_mode": "mobile_elements",
+            "integration_currency": "usd",
+            "presentment_currency": "usd",
+            "ordered_payment_method_types_and_wallets": ["card"],
+            "elements_session_id": "es_test",
+            "merchant_info": [
+                "country": "US"
             ],
         ]
 
@@ -373,20 +360,16 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 1000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertNil(session.presentmentDetails)
-        XCTAssertNil(apiResponse.paymentIntentId)
-        XCTAssertNil(apiResponse.setupIntentId)
+        XCTAssertNil(apiResponse.paymentResponse?.paymentIntent?.id)
+        XCTAssertNil(apiResponse.paymentResponse?.setupIntent?.id)
         XCTAssertNil(session.customer)
         XCTAssertNil(session.email)
-        XCTAssertNil(apiResponse.url)
         XCTAssertNil(session.savedPaymentMethodsOfferSave)
-        XCTAssertNil(session.setupFutureUsage)
     }
 
     func testAdaptivePricingInfoRejectsMissingRequiredFields() {
         let adaptivePricingInfo: [String: Any] = [
-            "active_presentment_currency": "eur",
-            "integration_amount": 1200,
-            "integration_currency": "usd",
+            "integration_currency_option": ["amount": 1200, "currency": "usd"],
             "local_currency_options": [
                 [
                     "amount": 1080,
@@ -398,9 +381,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         ]
 
         for field in [
-            "active_presentment_currency",
-            "integration_amount",
-            "integration_currency",
+            "integration_currency_option",
             "local_currency_options",
         ] {
             var invalidAdaptivePricingInfo = adaptivePricingInfo
@@ -423,14 +404,12 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "presentment_exchange_rate": "0.9",
         ]
 
-        for field in ["amount", "currency", "presentment_exchange_rate"] {
+        for field in ["amount", "currency"] {
             var invalidLocalCurrencyOption = localCurrencyOption
             invalidLocalCurrencyOption.removeValue(forKey: field)
             var json = CheckoutTestHelpers.baseSessionJSON
             json["adaptive_pricing_info"] = [
-                "active_presentment_currency": "eur",
-                "integration_amount": 1200,
-                "integration_currency": "usd",
+                "integration_currency_option": ["amount": 1200, "currency": "usd"],
                 "local_currency_options": [invalidLocalCurrencyOption],
             ]
 
@@ -441,22 +420,20 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         }
     }
 
-    func testAdaptivePricingLocalCurrencyOptionAllowsMissingOrNullConversionMarkup() throws {
-        let conversionMarkups: [Any?] = [nil, NSNull()]
+    func testAdaptivePricingLocalCurrencyOptionAllowsMissingOrNullDisclosure() throws {
+        let disclosures: [Any?] = [nil, NSNull()]
 
-        for conversionMarkup in conversionMarkups {
+        for disclosure in disclosures {
             var localCurrencyOption: [String: Any] = [
                 "amount": 1080,
                 "currency": "eur",
                 "presentment_exchange_rate": "0.9",
             ]
-            localCurrencyOption["conversion_markup_bps"] = conversionMarkup
+            localCurrencyOption["disclosure"] = disclosure
 
             var json = CheckoutTestHelpers.baseSessionJSON
             json["adaptive_pricing_info"] = [
-                "active_presentment_currency": "eur",
-                "integration_amount": 1200,
-                "integration_currency": "usd",
+                "integration_currency_option": ["amount": 1200, "currency": "usd"],
                 "local_currency_options": [localCurrencyOption],
             ]
 
@@ -464,58 +441,39 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             let session = response.makePublicSession()
             let exchangeRateMeta = try XCTUnwrap(session.exchangeRateMeta)
 
-            XCTAssertNil(response.adaptivePricingInfo?.localCurrencyOptions.first?.conversionMarkupBps)
             XCTAssertTrue(session.adaptivePricingActive)
-            XCTAssertNil(exchangeRateMeta.conversionMarkupBps)
             XCTAssertNotNil(CurrencySelectorUtilities.adaptivePricingData(from: session))
             XCTAssertNil(CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta))
         }
     }
 
-    func testExpandedIntentsDecodeLegacyModels() throws {
-        var paymentIntentJSON = CheckoutTestHelpers.baseSessionJSON
-        paymentIntentJSON["payment_intent"] = STPTestUtils.jsonNamed("PaymentIntent")!
-        let paymentIntentResponse = try PaymentPagesAPIResponse.decode(
-            fromAPIResponse: paymentIntentJSON
-        )
-
-        var setupIntentJSON = CheckoutTestHelpers.baseSessionJSON
-        setupIntentJSON["setup_intent"] = STPTestUtils.jsonNamed("SetupIntent")!
-        let setupIntentResponse = try PaymentPagesAPIResponse.decode(
-            fromAPIResponse: setupIntentJSON
-        )
-
-        XCTAssertEqual(
-            paymentIntentResponse.paymentIntent?.stripeId,
-            "pi_1Cl15wIl4IdHmuTbCWrpJXN6"
-        )
-        XCTAssertEqual(
-            setupIntentResponse.setupIntent?.stripeID,
-            "seti_123456789"
-        )
+    func testIntentReferencesDecode() throws {
+        var json = CheckoutTestHelpers.baseSessionJSON
+        json["payment_response"] = [
+            "status": "succeeded",
+            "payment_intent": ["id": "pi_123", "client_secret": "pi_123_secret_abc"],
+            "setup_intent": ["id": "seti_123", "client_secret": "seti_123_secret_abc"],
+        ]
+        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        XCTAssertEqual(response.paymentResponse?.paymentIntent?.id, "pi_123")
+        XCTAssertEqual(response.paymentResponse?.setupIntent?.id, "seti_123")
     }
 
-    func testExpandedIntentsRejectMalformedObjects() {
-        var paymentIntentJSON = CheckoutTestHelpers.baseSessionJSON
-        paymentIntentJSON["payment_intent"] = ["id": "pi_invalid"]
-        XCTAssertThrowsError(
-            try PaymentPagesAPIResponse.decode(fromAPIResponse: paymentIntentJSON)
-        )
-
-        var setupIntentJSON = CheckoutTestHelpers.baseSessionJSON
-        setupIntentJSON["setup_intent"] = ["id": "seti_invalid"]
-        XCTAssertThrowsError(
-            try PaymentPagesAPIResponse.decode(fromAPIResponse: setupIntentJSON)
-        )
+    func testIntentReferencesRequireClientSecrets() {
+        for key in ["payment_intent", "setup_intent"] {
+            var json = CheckoutTestHelpers.baseSessionJSON
+            json["payment_response"] = ["status": "requires_action", key: ["id": "intent_123"]]
+            XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        }
     }
 
     func testDecodedObjectRejectsSetupMode() {
         let json = CheckoutTestHelpers.makeSessionJSON([
-            "session_id": "cs_test_setup",
             "status": "open",
-            "mode": "setup",
             "payment_status": "no_payment_required",
             "setup_intent": "seti_test123456",
+            "id": "cs_test_setup",
+            "ui_mode": "setup",
         ])
 
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
@@ -523,26 +481,30 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testModelessPaymentUsesSessionTotal() {
         let session = CheckoutTestHelpers.makeSession([
-            "mode": "modeless",
             "payment_status": "unpaid",
-            "checkout_items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2345),
+            "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2345),
+            "ui_mode": "mobile_elements",
+            "integration_currency": "usd",
         ]).makePublicSession()
 
         XCTAssertFalse(session.noPaymentRequired)
         XCTAssertEqual(session.amount, 2345)
     }
 
-    func testDecodedObjectParsesTopLevelSetupFutureUsage() {
+    func testDecodedObjectParsesResolvedSetupFutureUsage() {
         let session = CheckoutTestHelpers.makeSession([
-            "setup_future_usage": "off_session",
+            "setup_future_usage_for_payment_method_type": [
+                "card": "off_session",
+                "link": "off_session",
+            ],
         ]).withCustomer()
 
-        XCTAssertEqual(session.setupFutureUsage, "off_session")
+        XCTAssertEqual(session.makePublicSession().setupFutureUsage(for: .card), "off_session")
     }
 
     func testDecodedObjectParsesPerPaymentMethodSetupFutureUsage() {
         let session = CheckoutTestHelpers.makeSession([
-            "payment_method_types": ["card", "us_bank_account"],
+            "ordered_payment_method_types_and_wallets": ["card", "us_bank_account"],
             "setup_future_usage_for_payment_method_type": [
                 "card": "off_session",
                 "us_bank_account": "none",
@@ -563,11 +525,14 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "customer": [
                 "id": "cus_test_123",
                 "payment_methods": [],
-                "can_detach_payment_method": true,
+            ],
+            "saved_payment_method_options": [
+                "payment_method_remove": "enabled",
+                "payment_method_save": "disabled",
             ],
         ]).makePublicSession()
 
-        XCTAssertTrue(session.customer?.canDetachPaymentMethod ?? false)
+        XCTAssertTrue(session.canDetachPaymentMethod)
     }
 
     func testDecodedObjectParsesCanDetachPaymentMethodFalse() {
@@ -575,11 +540,14 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             "customer": [
                 "id": "cus_test_123",
                 "payment_methods": [],
-                "can_detach_payment_method": false,
+            ],
+            "saved_payment_method_options": [
+                "payment_method_remove": "disabled",
+                "payment_method_save": "disabled",
             ],
         ]).makePublicSession()
 
-        XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
+        XCTAssertFalse(session.canDetachPaymentMethod)
     }
 
     func testDecodedObjectDefaultsCanDetachPaymentMethodToFalse() {
@@ -590,18 +558,32 @@ class PaymentPagesAPIResponseTest: XCTestCase {
             ],
         ]).makePublicSession()
 
-        XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
+        XCTAssertFalse(session.canDetachPaymentMethod)
+    }
+
+    func testRemovalPermissionUsesSessionConfigurationWithoutCustomer() {
+        let session = CheckoutTestHelpers.makeSession([
+            "customer": NSNull(),
+            "saved_payment_method_options": ["payment_method_remove": "enabled"],
+        ]).makePublicSession()
+
+        XCTAssertTrue(session.canDetachPaymentMethod)
+        XCTAssertNil(session.customer)
+        XCTAssertTrue(Intent.checkout(session).allowsPaymentMethodRemoval(elementsSession: session.elementsSession))
     }
 
     func testAggregateTaxAmountsRemainSeparateFromTotals() {
         let session = CheckoutTestHelpers.makeSession([
-            "mode": "modeless",
             "total_summary": [
                 "total_tax_amounts": [
-                    ["amount": 186, "inclusive": false, "taxable_amount": 2000,
-                     "tax_rate": ["percentage": 7.45, "display_name": "Sales Tax"], ],
+                    [
+                        "amount": 186, "inclusive": false, "taxable_amount": 2000,
+                        "percentage": 7.45, "display_name": "Sales Tax",
+                    ],
                 ],
             ],
+            "ui_mode": "mobile_elements",
+            "integration_currency": "usd",
         ]).makePublicSession()
 
         XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 0)
@@ -614,27 +596,20 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.taxAmounts?[0].displayName, "Sales Tax")
     }
 
-    func testUnifiedModeSessionParsesCheckoutItemsTaxAndDiscounts() {
+    func testUnifiedModeSessionParsesCheckoutItemsAndTax() {
         let session = CheckoutTestHelpers.makeSession([
-            "mode": "modeless",
-            "recurring_details": [
-                "total_summary": [
-                    "total_discount_amounts": [
-                        ["amount": 332, "coupon": ["code": "co_test", "name": "Welcome"]],
-                    ],
-                ],
-            ],
+
             "total_summary": [
                 "total_tax_amounts": [
                     [
                         "amount": 148,
                         "inclusive": false,
                         "taxable_amount": 2000,
-                        "tax_rate": ["percentage": 7.4, "display_name": "Sales Tax"],
+                        "percentage": 7.4, "display_name": "Sales Tax",
                     ],
                 ],
             ],
-            "checkout_items": [
+            "items": [
                 [
                     "key": "checkout_item_abc123",
                     "type": "one_time_price",
@@ -669,6 +644,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
                     ],
                 ],
             ],
+            "ui_mode": "mobile_elements",
+            "integration_currency": "usd",
         ]).makePublicSession()
 
         XCTAssertEqual(session.orderSummaryItems.count, 1)
@@ -697,9 +674,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.taxAmounts?[0].minorUnitsAmount, 148)
         XCTAssertEqual(session.taxAmounts?[0].displayName, "Sales Tax")
 
-        XCTAssertEqual(session.discountAmounts.count, 1)
-        XCTAssertEqual(session.discountAmounts[0].minorUnitsAmount, 332)
-        XCTAssertEqual(session.discountAmounts[0].displayName, "Welcome")
+        XCTAssertTrue(session.discountAmounts.isEmpty)
 
         XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 148)
         XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
@@ -762,7 +737,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testTotalsSumOneTimePriceItems() {
         let session = CheckoutTestHelpers.makeSession([
-            "checkout_items": [
+            "items": [
                 makeOneTimePriceCheckoutItem(
                     key: "one_time_price_1",
                     subtotal: 1000,
@@ -793,8 +768,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testUnifiedModeSessionRejectsUnsupportedCheckoutItemTypes() {
         let json = CheckoutTestHelpers.makeSessionJSON([
-            "checkout_items": [
-                ["key": "checkout_item_abc123", "type": "rate_card_subscription_item"],
+            "items": [
+                ["key": "checkout_item_abc123", "type": "rate_card_subscription_item"]
             ],
         ])
 
@@ -803,7 +778,7 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testUnifiedModeSessionRejectsMalformedOneTimePriceItems() {
         let json = CheckoutTestHelpers.makeSessionJSON([
-            "checkout_items": [
+            "items": [
                 [
                     "key": "checkout_item_abc123",
                     "type": "one_time_price",
@@ -825,15 +800,24 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     }
 
     func testUnifiedModeSessionRejectsEmptyCheckoutItems() {
-        let json = CheckoutTestHelpers.makeSessionJSON(["checkout_items": []])
+        let json = CheckoutTestHelpers.makeSessionJSON([
+            "items": []
+        ])
 
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
-    func testUnifiedModeSessionRejectsNonModelessMode() {
-        let json = CheckoutTestHelpers.makeSessionJSON(["mode": "payment"])
+    func testUnifiedModeSessionRejectsNonMobileElementsMode() {
+        for uiMode in ["hosted", "embedded", "custom", "elements", "form", "payment"] {
+            let json = CheckoutTestHelpers.makeSessionJSON([
+                "ui_mode": uiMode
+            ])
 
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+            XCTAssertThrowsError(
+                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                "Expected ui_mode \(uiMode) to fail decoding"
+            )
+        }
     }
 
     func testUnifiedModeSessionRejectsMissingRequiredOneTimePriceFields() {
@@ -1056,7 +1040,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsage() {
         let session = CheckoutTestHelpers.makeSession([
-            "setup_future_usage": "off_session",
+            "setup_future_usage_for_payment_method_type": [
+                "card": "off_session",
+                "link": "off_session",
+            ],
         ]).withCustomer()
 
         XCTAssertTrue(session.makePublicSession().merchantWillSavePaymentMethod(.card))
@@ -1064,16 +1051,19 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsageNone() {
         let session = CheckoutTestHelpers.makeSession([
-            "setup_future_usage": "none",
+            "setup_future_usage_for_payment_method_type": [
+                "card": "none",
+                "link": "none",
+            ],
         ]).withCustomer()
 
-        XCTAssertEqual(session.setupFutureUsage, "none")
+        XCTAssertEqual(session.makePublicSession().setupFutureUsage(for: .card), "none")
         XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithPerPaymentMethodSetupFutureUsage() {
         let session = CheckoutTestHelpers.makeSession([
-            "payment_method_types": ["card", "us_bank_account"],
+            "ordered_payment_method_types_and_wallets": ["card", "us_bank_account"],
             "setup_future_usage_for_payment_method_type": [
                 "card": "off_session",
                 "us_bank_account": "none",
@@ -1086,56 +1076,69 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testMerchantWillSavePaymentMethod_paymentModeWithoutCustomer() {
         let session = CheckoutTestHelpers.makeSession([
-            "setup_future_usage": "off_session",
+            "setup_future_usage_for_payment_method_type": [
+                "card": "off_session",
+                "link": "off_session",
+            ],
         ])
 
         XCTAssertFalse(session.makePublicSession().merchantWillSavePaymentMethod(.card))
     }
 
-    func testCheckoutSessionIntent_setupFutureUsageString() {
+    func testCheckoutSessionIntent_hasNoGlobalSetupFutureUsage() {
         let session = CheckoutTestHelpers.makeSession([
-            "setup_future_usage": "off_session",
+            "setup_future_usage_for_payment_method_type": [
+                "card": "off_session",
+                "link": "off_session",
+            ],
         ]).withCustomer()
 
-        XCTAssertEqual(Intent.checkout(session.makePublicSession()).setupFutureUsageString, "off_session")
+        XCTAssertNil(Intent.checkout(session.makePublicSession()).setupFutureUsageString)
+        XCTAssertEqual(session.makePublicSession().setupFutureUsage(for: .link), "off_session")
     }
 
     func testCheckoutSessionIntent_isPaymentMethodOptionsSetupFutureUsageSet() {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage_for_payment_method_type": [
-                "paypal": "off_session",
+                "paypal": "off_session"
             ],
-            "payment_method_types": ["paypal"],
+            "ordered_payment_method_types_and_wallets": ["paypal"],
         ]).withCustomer()
 
         XCTAssertEqual(Intent.checkout(session.makePublicSession()).isPaymentMethodOptionsSetupFutureUsageSet, true)
     }
 
-    func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevel() {
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_resolved() {
         let session = CheckoutTestHelpers.makeSession([
-            "setup_future_usage": "off_session",
-            "payment_method_types": ["paypal"],
+            "ordered_payment_method_types_and_wallets": ["paypal"],
+            "setup_future_usage_for_payment_method_type": [
+                "paypal": "off_session",
+                "link": "off_session",
+            ],
         ]).withCustomer()
 
         XCTAssertTrue(Intent.checkout(session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
     }
 
-    func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevelNone() {
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_resolvedNone() {
         let session = CheckoutTestHelpers.makeSession([
-            "setup_future_usage": "none",
-            "payment_method_types": ["paypal"],
+            "ordered_payment_method_types_and_wallets": ["paypal"],
+            "setup_future_usage_for_payment_method_type": [
+                "paypal": "none",
+                "link": "none",
+            ],
         ]).withCustomer()
 
-        XCTAssertEqual(Intent.checkout(session.makePublicSession()).setupFutureUsageString, "none")
+        XCTAssertEqual(session.makePublicSession().setupFutureUsage(for: .link), "none")
         XCTAssertFalse(Intent.checkout(session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
     }
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethod() {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage_for_payment_method_type": [
-                "paypal": "off_session",
+                "paypal": "off_session"
             ],
-            "payment_method_types": ["paypal"],
+            "ordered_payment_method_types_and_wallets": ["paypal"],
         ]).withCustomer()
 
         XCTAssertTrue(Intent.checkout(session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
@@ -1143,11 +1146,10 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethodNoneOverridesTopLevel() {
         let session = CheckoutTestHelpers.makeSession([
-            "setup_future_usage": "off_session",
             "setup_future_usage_for_payment_method_type": [
-                "paypal": "none",
+                "paypal": "none"
             ],
-            "payment_method_types": ["paypal"],
+            "ordered_payment_method_types_and_wallets": ["paypal"],
         ]).withCustomer()
 
         XCTAssertFalse(Intent.checkout(session.makePublicSession()).isSetupFutureUsageSet(for: .payPal))
@@ -1158,9 +1160,9 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     func testTax_automaticComplete_isReady() {
         // Given automatic tax completed
         let response = CheckoutTestHelpers.makeSession([
-            "tax_meta": [
-                "computation_type": "automatic",
-                "status": "complete",
+            "automatic_tax": [
+                "enabled": true,
+                "status": "ready",
             ],
         ]).withCustomer()
 
@@ -1171,41 +1173,27 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.tax?.status, .ready)
     }
 
-    func testTaxStatus_automaticRequiresLocationInputs_usesTaxContextAddressSource() {
-        // Given automatic tax requires location inputs
-        let taxMeta: [String: Any] = [
-            "computation_type": "automatic",
-            "status": "requires_location_inputs",
-        ]
-
-        // When decoding sessions that use shipping, billing, and no address source
-        let shipping = CheckoutTestHelpers.makeSession([
-            "tax_meta": taxMeta,
-            "tax_context": [
-                "automatic_tax_enabled": true,
-                "automatic_tax_address_source": "session.shipping",
-            ],
-        ]).withCustomer().makePublicSession()
-        let billing = CheckoutTestHelpers.makeSession([
-            "tax_meta": taxMeta,
-            "tax_context": [
-                "automatic_tax_enabled": true,
-                "automatic_tax_address_source": "session.billing",
-            ],
-        ]).withCustomer().makePublicSession()
-        let missingSource = CheckoutTestHelpers.makeSession(["tax_meta": taxMeta]).withCustomer().makePublicSession()
-
-        // Then each Session reflects the address requirement, or has no tax state without a source
-        XCTAssertEqual(shipping.tax?.status, .requiresShippingAddress)
-        XCTAssertEqual(billing.tax?.status, .requiresBillingAddress)
-        XCTAssertNil(missingSource.tax)
+    func testTaxStatus_requiresAddress_usesAddressSource() {
+        for (source, expected) in [
+            ("shipping", CheckoutController.Session.Tax.Status.requiresShippingAddress),
+            ("billing", .requiresBillingAddress),
+        ] {
+            let session = CheckoutTestHelpers.makeSession([
+                "automatic_tax": ["enabled": true, "status": "requires_address", "address_source": source]
+            ]).makePublicSession()
+            XCTAssertEqual(session.tax?.status, expected)
+        }
+        let session = CheckoutTestHelpers.makeSession([
+            "automatic_tax": ["enabled": true, "status": "requires_address"]
+        ]).makePublicSession()
+        XCTAssertNil(session.tax)
     }
 
     func testTax_automaticFailed_isNil() {
         // Given automatic tax failed
         let response = CheckoutTestHelpers.makeSession([
-            "tax_meta": [
-                "computation_type": "automatic",
+            "automatic_tax": [
+                "enabled": true,
                 "status": "failed",
             ],
         ]).withCustomer()
@@ -1220,8 +1208,8 @@ class PaymentPagesAPIResponseTest: XCTestCase {
     func testTax_automaticUnsupportedStatus_isNil() {
         // Given automatic tax returns an unsupported status
         let response = CheckoutTestHelpers.makeSession([
-            "tax_meta": [
-                "computation_type": "automatic",
+            "automatic_tax": [
+                "enabled": true,
                 "status": "future_status",
             ],
         ]).withCustomer()
@@ -1244,22 +1232,17 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertNil(session.tax)
     }
 
-    func testTax_missingComputationType_isRejected() {
-        // Given tax metadata without a computation type
-        let json = CheckoutTestHelpers.makeSessionJSON([
-            "tax_meta": ["status": "complete"],
-        ])
-
-        // Then decoding fails instead of silently dropping tax state
+    func testTax_missingEnabled_isRejected() {
+        let json = CheckoutTestHelpers.makeSessionJSON(["automatic_tax": ["status": "ready"]])
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
-    func testTax_nonAutomaticComputationType_isReady() {
-        // Given a non-automatic tax computation
+    func testDisabledAutomaticTax_isReady() {
+        // Given automatic tax is disabled
         let response = CheckoutTestHelpers.makeSession([
-            "tax_meta": [
-                "computation_type": "manual",
-                "status": "requires_location_inputs",
+            "automatic_tax": [
+                "enabled": false,
+                "status": "ready",
             ],
         ]).withCustomer()
 
@@ -1270,33 +1253,30 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.tax?.status, .ready)
     }
 
-    func testTaxMetaUnknownComputationType_isReady() {
-        // Given a computation type added after this SDK version shipped
+    func testUnknownAutomaticTaxStatus_isNil() {
+        // Given a tax status added after this SDK version shipped
         let response = CheckoutTestHelpers.makeSession([
-            "tax_meta": [
-                "computation_type": "future_type",
-                "status": "complete",
+            "automatic_tax": [
+                "enabled": true,
+                "status": "future_status",
             ],
         ]).withCustomer()
 
         // When creating the public Session
         let session = response.makePublicSession()
 
-        // Then it behaves like the other non-automatic computation types
-        XCTAssertEqual(session.tax?.status, .ready)
+        // Then the SDK does not assume the tax calculation is ready
+        XCTAssertNil(session.tax)
     }
 
-    func testTaxContextRejectsMissingAutomaticTaxEnabled() {
-        let json = CheckoutTestHelpers.makeSessionJSON([
-            "tax_context": ["automatic_tax_address_source": "session.billing"],
-        ])
-
+    func testAutomaticTaxRejectsMalformedEnabled() {
+        let json = CheckoutTestHelpers.makeSessionJSON(["automatic_tax": ["enabled": "invalid", "status": "ready"]])
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testShippingAddressCollectionRejectsMissingAllowedCountries() {
         let json = CheckoutTestHelpers.makeSessionJSON([
-            "shipping_address_collection": [:] as [String: Any],
+            "shipping_address_collection": [:] as [String: Any]
         ])
 
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
@@ -1304,31 +1284,64 @@ class PaymentPagesAPIResponseTest: XCTestCase {
 
     // MARK: - Elements Session Tests
 
+    func testElementsSessionDecodesResolvedMobileLinkSettings() throws {
+        for enabled in [true, false] {
+            let popupOption: LinkSettings.PopupWebviewOption = enabled ? .ephemeral : .shared
+            let json = CheckoutTestHelpers.makeSessionJSON([
+                "link_settings": [
+                    "link_funding_sources": ["CARD"],
+                    "link_mode": "LINK_PAYMENT_METHOD",
+                    "link_mobile_use_attestation_endpoints": enabled,
+                    "link_mobile_attestation_state_sync_enabled": enabled,
+                    "link_mobile_disable_signup": enabled,
+                    "link_mobile_disable_rux_in_flow_controller": enabled,
+                    "link_popup_webview_option": popupOption.rawValue,
+                    "link_enable_displayable_default_values_in_ece": enabled,
+                ],
+            ])
+
+            let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+            let settings = try XCTUnwrap(response.makePublicSession().elementsSession.linkSettings)
+
+            XCTAssertEqual(settings.useAttestationEndpoints, enabled)
+            XCTAssertEqual(settings.attestationStateSyncEnabled, enabled)
+            XCTAssertEqual(settings.disableSignup, enabled)
+            XCTAssertEqual(settings.disableFlowControllerRUX, enabled)
+            XCTAssertEqual(settings.popupWebviewOption, popupOption)
+            XCTAssertEqual(settings.linkEnableDisplayableDefaultValuesInECE, enabled)
+            XCTAssertEqual(settings.linkMode, .linkPaymentMethod)
+        }
+    }
+
     func testElementsSessionDecoding() {
         let session = CheckoutTestHelpers.makeSession([
-            "elements_session": [
-                "session_id": "es_123",
-                "merchant_country": "US",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            "checkout_session_config_id": "csc_123",
+            "ordered_payment_method_types_and_wallets": ["card"],
+            "elements_session_id": "es_123",
+            "merchant_info": [
+                "country": "US"
             ],
-            "tax_context": [
-                "automatic_tax_enabled": true,
-                "automatic_tax_address_source": "session.billing",
+            "automatic_tax": [
+                "enabled": true,
+                "status": "ready",
+                "address_source": "billing",
             ],
         ]).withCustomer().makePublicSession()
+        XCTAssertEqual(session.checkoutConfigID, "csc_123")
         XCTAssertTrue(session.elementsSession.disableLinkForAutomaticTaxBilling)
 
         let sessionWithoutTax = CheckoutTestHelpers.makeSession([
-            "elements_session": [
-                "session_id": "es_123",
-                "merchant_country": "US",
-                "payment_method_preference": ["ordered_payment_method_types": ["card"]],
+            "ordered_payment_method_types_and_wallets": ["card"],
+            "elements_session_id": "es_123",
+            "merchant_info": [
+                "country": "US"
             ],
         ]).withCustomer().makePublicSession()
+        XCTAssertNil(sessionWithoutTax.checkoutConfigID)
         XCTAssertFalse(sessionWithoutTax.elementsSession.disableLinkForAutomaticTaxBilling)
 
         var jsonWithoutES = CheckoutTestHelpers.baseSessionJSON
-        jsonWithoutES.removeValue(forKey: "elements_session")
+        jsonWithoutES.removeValue(forKey: "elements_session_id")
         XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: jsonWithoutES))
     }
 
@@ -1336,9 +1349,9 @@ class PaymentPagesAPIResponseTest: XCTestCase {
         _ mutation: (inout [String: Any]) -> Void
     ) -> [String: Any] {
         var json = CheckoutTestHelpers.makeSessionJSON()
-        var checkoutItems = json["checkout_items"] as! [[String: Any]]
+        var checkoutItems = json["items"] as! [[String: Any]]
         mutation(&checkoutItems[0])
-        json["checkout_items"] = checkoutItems
+        json["items"] = checkoutItems
         return json
     }
 

@@ -8,8 +8,8 @@
 
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// :nodoc:
 protocol LinkVerificationViewDelegate: AnyObject {
@@ -107,6 +107,7 @@ final class LinkVerificationView: UIView {
                 font: LinkUI.font(forTextStyle: .title).bold,
                 itemCornerRadius: LinkUI.oneTimeCodeTextFieldCornerRadius,
                 itemHeight: 56,
+                itemMaxWidth: LinkUI.oneTimeCodeItemMaxWidth,
                 itemFocusRingThickness: LinkUI.borderWidth,
                 itemFocusBackgroundColor: LinkUI.appearance.colors.background
             ),

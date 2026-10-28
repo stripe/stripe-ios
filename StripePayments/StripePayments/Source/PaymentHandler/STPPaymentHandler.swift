@@ -10,7 +10,7 @@ import AuthenticationServices
 import Foundation
 import PassKit
 import SafariServices
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 #if canImport(Stripe3DS2)
 import Stripe3DS2
@@ -129,7 +129,7 @@ public class STPPaymentHandler: NSObject {
         return STPPaymentHandler.sharedHandler
     }
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         apiClient: STPAPIClient = .shared,
         threeDSCustomizationSettings: STPThreeDSCustomizationSettings =
             STPThreeDSCustomizationSettings()
@@ -436,7 +436,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    @_spi(STP) public func handleNextAction(
+    @_spi(InternalOnlyAPI) public func handleNextAction(
         for paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
@@ -727,7 +727,7 @@ public class STPPaymentHandler: NSObject {
     ///   - shouldSendStartAnalytic: Tracks whether STPPaymentHandler has already sent a start analytic for `handleNextAction` because this method was called from the other `handleNextAction`
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
     /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
-    @_spi(STP) public func handleNextAction(
+    @_spi(InternalOnlyAPI) public func handleNextAction(
         for setupIntent: STPSetupIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
@@ -1555,7 +1555,7 @@ public class STPPaymentHandler: NSObject {
     }
 
     // Follow the first redirect for a url, but not any subsequent redirects
-    @_spi(STP) public func followRedirect(to url: URL) -> URL {
+    @_spi(InternalOnlyAPI) public func followRedirect(to url: URL) -> URL {
         let urlSession = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration, delegate: UnredirectableSessionDelegate(), delegateQueue: nil)
         let urlRequest = URLRequest(url: url)
         let blockingDataTaskSemaphore = DispatchSemaphore(value: 0)
@@ -1832,7 +1832,7 @@ public class STPPaymentHandler: NSObject {
         _retrieveAndCheckIntentForCurrentAction()
     }
 
-    @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?, useWebAuthSession: Bool) {
+    @_spi(InternalOnlyAPI) public func _handleRedirect(to url: URL, withReturn returnURL: URL?, useWebAuthSession: Bool) {
         _handleRedirect(to: url, fallbackURL: url, return: returnURL, useWebAuthSession: useWebAuthSession)
     }
 
@@ -2352,7 +2352,7 @@ public class STPPaymentHandler: NSObject {
 
     // MARK: - Errors
     /// - Parameter loggingSafeErrorMessage: Error details that are safe to log i.e. don't contain PII/PDE or secrets.
-    @_spi(STP) public func _error(
+    @_spi(InternalOnlyAPI) public func _error(
         for errorCode: STPPaymentHandlerErrorCode,
         apiErrorCode: String? = nil,
         loggingSafeErrorMessage: String? = nil,
@@ -2501,9 +2501,9 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
 #endif
 
 /// :nodoc:
-@_spi(STP) extension STPPaymentHandler: STPURLCallbackListener {
+@_spi(InternalOnlyAPI) extension STPPaymentHandler: STPURLCallbackListener {
     /// :nodoc:
-    @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
+    @_spi(InternalOnlyAPI) public func handleURLCallback(_ url: URL) -> Bool {
         if currentAction?.nextAction()?.redirectToURL?.useWebAuthSession ?? false {
             // Don't handle the URL — If a user clicks the URL in ASWebAuthenticationSession, ASWebAuthenticationSession will handle it internally.
             // If we're returning from another app via a URL while ASWebAuthenticationSession is open, it's likely that the PM initiated a redirect to another app
@@ -2747,7 +2747,7 @@ extension STPPaymentHandler {
         }
     }
 
-    @_spi(STP) public func cancel3DS2ChallengeFlow() {
+    @_spi(InternalOnlyAPI) public func cancel3DS2ChallengeFlow() {
         guard let currentAction else {
             stpAssertionFailure("Calling cancel3DS2ChallengeFlow without currentAction.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling cancel3DS2ChallengeFlow without currentAction."])
@@ -2767,7 +2767,7 @@ extension STPPaymentHandler {
 }
 
 /// Internal authentication context for PaymentSheet magic
-@_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
+@_spi(InternalOnlyAPI) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
     func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)

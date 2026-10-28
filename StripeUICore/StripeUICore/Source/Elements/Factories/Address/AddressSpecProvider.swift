@@ -7,17 +7,17 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 // This file was adapted from https://git.corp.stripe.com/stripe-internal/stripe-js-v3/blob/bdc2eeed/src/elements/inner/shared/address/addressData.ts
 let addressDataFilename = "localized_address_data"
 
-@_spi(STP) public class AddressSpecProvider {
+@_spi(InternalOnlyAPI) public class AddressSpecProvider {
     enum Error: Swift.Error {
         case loadSpecsFailure
     }
 
-    @_spi(STP) public static var shared: AddressSpecProvider = AddressSpecProvider()
+    @_spi(InternalOnlyAPI) public static var shared: AddressSpecProvider = AddressSpecProvider()
     var addressSpecs: [String: AddressSpec] = [:]
     public var countries: [String] {
         return addressSpecs.map { $0.key }
@@ -55,7 +55,7 @@ let addressDataFilename = "localized_address_data"
             }
         }
     }
-    
+
     public func loadAddressSpecs() async {
         await withCheckedContinuation { continuation in
             loadAddressSpecs {

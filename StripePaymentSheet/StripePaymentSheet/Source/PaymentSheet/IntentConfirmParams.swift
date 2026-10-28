@@ -7,9 +7,9 @@
 
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 /// An internal type representing both `STPPaymentIntentConfirmParams` and `STPSetupIntentConfirmParams`
 /// - Note: Assumes you're confirming with a new payment method, unless a payment method ID is provided

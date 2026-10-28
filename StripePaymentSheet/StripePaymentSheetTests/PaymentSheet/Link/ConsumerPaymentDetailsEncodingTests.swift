@@ -3,8 +3,8 @@
 //  StripePaymentSheetTests
 //
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 class ConsumerPaymentDetailsEncodingTests: XCTestCase {

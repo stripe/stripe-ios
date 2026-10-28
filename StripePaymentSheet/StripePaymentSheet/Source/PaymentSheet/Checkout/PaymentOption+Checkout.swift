@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension PaymentOption {
     /// The billing details used to sync a CheckoutSession's billing address for tax calculation.

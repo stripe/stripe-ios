@@ -7,20 +7,20 @@
 
 import Foundation
 
-@_spi(STP) @frozen public enum LinkPaymentDetails {
+@_spi(InternalOnlyAPI) @frozen public enum LinkPaymentDetails {
     case card(Card)
     case bankAccount(BankDetails)
     case generic(Generic)
 
-    @_spi(STP) public struct Card {
-        @_spi(STP) public let id: String
-        @_spi(STP) public let displayName: String?
-        @_spi(STP) public let expMonth: Int
-        @_spi(STP) public let expYear: Int
-        @_spi(STP) public let last4: String
-        @_spi(STP) public let brand: STPCardBrand
+    @_spi(InternalOnlyAPI) public struct Card {
+        @_spi(InternalOnlyAPI) public let id: String
+        @_spi(InternalOnlyAPI) public let displayName: String?
+        @_spi(InternalOnlyAPI) public let expMonth: Int
+        @_spi(InternalOnlyAPI) public let expYear: Int
+        @_spi(InternalOnlyAPI) public let last4: String
+        @_spi(InternalOnlyAPI) public let brand: STPCardBrand
 
-        @_spi(STP) public init(
+        @_spi(InternalOnlyAPI) public init(
             id: String,
             displayName: String?,
             expMonth: Int,
@@ -37,12 +37,12 @@ import Foundation
         }
     }
 
-    @_spi(STP) public struct BankDetails {
-        @_spi(STP) public let id: String
-        @_spi(STP) public let bankName: String
-        @_spi(STP) public let last4: String
+    @_spi(InternalOnlyAPI) public struct BankDetails {
+        @_spi(InternalOnlyAPI) public let id: String
+        @_spi(InternalOnlyAPI) public let bankName: String
+        @_spi(InternalOnlyAPI) public let last4: String
 
-        @_spi(STP) public init(
+        @_spi(InternalOnlyAPI) public init(
             id: String,
             bankName: String,
             last4: String
@@ -53,12 +53,12 @@ import Foundation
         }
     }
 
-    @_spi(STP) public struct Generic {
-        @_spi(STP) public let id: String
-        @_spi(STP) public let label: String
-        @_spi(STP) public let sublabel: String?
+    @_spi(InternalOnlyAPI) public struct Generic {
+        @_spi(InternalOnlyAPI) public let id: String
+        @_spi(InternalOnlyAPI) public let label: String
+        @_spi(InternalOnlyAPI) public let sublabel: String?
 
-        @_spi(STP) public init(
+        @_spi(InternalOnlyAPI) public init(
             id: String,
             label: String,
             sublabel: String?
@@ -68,7 +68,7 @@ import Foundation
             self.sublabel = sublabel
         }
 
-        @_spi(STP) public var formattedDisplayText: String {
+        @_spi(InternalOnlyAPI) public var formattedDisplayText: String {
             return [label, sublabel]
                 .compactMap { $0 }
                 .filter { !$0.isEmpty }
@@ -76,7 +76,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public var id: String {
+    @_spi(InternalOnlyAPI) public var id: String {
         switch self {
         case .card(let card):
             return card.id
@@ -87,7 +87,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public var label: String {
+    @_spi(InternalOnlyAPI) public var label: String {
         switch self {
         case .card(let cardDetails):
             return cardDetails.displayName ?? formattedLast4
@@ -98,7 +98,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public var sublabel: String? {
+    @_spi(InternalOnlyAPI) public var sublabel: String? {
         switch self {
         case .card(let cardDetails):
             return cardDetails.displayName != nil ? formattedLast4 : nil
@@ -109,7 +109,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public var formattedLast4: String {
+    @_spi(InternalOnlyAPI) public var formattedLast4: String {
         switch self {
         case .card(let cardDetails):
             return "•••• \(cardDetails.last4)"

@@ -9,7 +9,7 @@
 import Foundation
 
 /// Defines a common loggable error to our analytics service for Identity and FinancialConnections SDKs.
-@_spi(STP) public protocol AnalyticLoggableErrorV2: Error {
+@_spi(InternalOnlyAPI) public protocol AnalyticLoggableErrorV2: Error {
 
     /// Serializes this error for analytics logging.
     ///
@@ -19,18 +19,18 @@ import Foundation
 
 /// Error types that conform to this protocol and String-based RawRepresentable
 /// will automatically serialize the rawValue for analytics logging.
-@_spi(STP) public protocol AnalyticLoggableStringErrorV2: Error {
+@_spi(InternalOnlyAPI) public protocol AnalyticLoggableStringErrorV2: Error {
     var loggableType: String { get }
 }
 
-@_spi(STP) extension AnalyticLoggableStringErrorV2
+@_spi(InternalOnlyAPI) extension AnalyticLoggableStringErrorV2
 where Self: RawRepresentable, Self.RawValue == String {
     public var loggableType: String {
         return rawValue
     }
 }
 
-@_spi(STP) extension Error {
+@_spi(InternalOnlyAPI) extension Error {
     /// Serialize an Error for logging, suitable for the Identity and Financial Connections SDK.
     public func serializeForV2Logging() -> [String: Any] {
         if let loggableError = self as? AnalyticLoggableErrorV2 {

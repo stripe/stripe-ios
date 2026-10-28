@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An object representing parameters used to create a Scalapay Payment Method.
 public class STPPaymentMethodScalapayParams: NSObject, STPFormEncodable {

@@ -5,8 +5,8 @@
 //  Created by George Birch on 11/24/25.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension UIButton {

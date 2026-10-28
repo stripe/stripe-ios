@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 enum ExternalPaymentOptionConfirmHandler {
     case custom(PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod, PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodConfirmHandler)

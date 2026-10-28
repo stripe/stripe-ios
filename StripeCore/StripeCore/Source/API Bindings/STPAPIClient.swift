@@ -43,7 +43,7 @@ import UIKit
     /// A publishable key that only contains publishable keys and not secret keys.
     ///
     /// If a secret key is found, returns "[REDACTED_LIVE_KEY]".
-    @_spi(STP) public var sanitizedPublishableKey: String? {
+    @_spi(InternalOnlyAPI) public var sanitizedPublishableKey: String? {
         guard let publishableKey = publishableKey else {
             return nil
         }
@@ -53,7 +53,7 @@ import UIKit
 
     // Stored STPPaymentConfiguration: Type checking handled in STPAPIClient+Payments.swift.
     // TODO: Delete this, dead code
-    @_spi(STP) public var _stored_configuration: NSObject?
+    @_spi(InternalOnlyAPI) public var _stored_configuration: NSObject?
 
     /// In order to perform API requests on behalf of a connected account, e.g. to
     /// create a Source or Payment Method on a connected account, set this property to the ID of the
@@ -72,8 +72,8 @@ import UIKit
     @objc public static let apiVersion = APIVersion
 
     // MARK: Internal/private properties
-    @_spi(STP) public var apiURL: URL! = URL(string: APIBaseURL)
-    @_spi(STP) public var urlSession = URLSession(
+    @_spi(InternalOnlyAPI) public var apiURL: URL! = URL(string: APIBaseURL)
+    @_spi(InternalOnlyAPI) public var urlSession = URLSession(
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
 
@@ -81,14 +81,14 @@ import UIKit
     public var betas: Set<String> = []
 
     /// Returns `true` if `publishableKey` is actually a user key, `false` otherwise.
-    @_spi(STP) public var publishableKeyIsUserKey: Bool {
+    @_spi(InternalOnlyAPI) public var publishableKeyIsUserKey: Bool {
         return publishableKey?.hasPrefix("uk_") ?? false
     }
 
     /// Determines the `Stripe-Livemode` header value when the publishable key is a user key
     @_spi(DashboardOnly) public var userKeyLiveMode = true
 
-    @_spi(STP) public lazy var stripeAttest: StripeAttest = StripeAttest(apiClient: self)
+    @_spi(InternalOnlyAPI) public lazy var stripeAttest: StripeAttest = StripeAttest(apiClient: self)
 
     private static var didSendTelemetryDataOnInit: Bool = false
 
@@ -112,7 +112,7 @@ import UIKit
         self.publishableKey = publishableKey
     }
 
-    @_spi(STP) public func configuredRequest(
+    @_spi(InternalOnlyAPI) public func configuredRequest(
         for url: URL,
         using ephemeralKeySecret: String? = nil,
         apiVersionOverride: String? = nil,
@@ -160,7 +160,7 @@ import UIKit
     // MARK: Helpers
 
     static var didShowTestmodeKeyWarning = false
-    @_spi(STP) public class func validateKey(_ publishableKey: String?) {
+    @_spi(InternalOnlyAPI) public class func validateKey(_ publishableKey: String?) {
         guard NSClassFromString("XCTest") == nil else {
             return  // no asserts in unit tests
         }
@@ -231,7 +231,7 @@ import UIKit
         return String(data: data ?? Data(), encoding: .utf8) ?? ""
     }
 
-    @_spi(STP) public func authorizationHeader(
+    @_spi(InternalOnlyAPI) public func authorizationHeader(
         using substituteAuthorizationBearer: String? = nil
     ) -> [String: String] {
         let authorizationBearer = substituteAuthorizationBearer ?? publishableKey ?? ""
@@ -243,7 +243,7 @@ import UIKit
         return headers
     }
 
-    @_spi(STP) public var isTestmode: Bool {
+    @_spi(InternalOnlyAPI) public var isTestmode: Bool {
         guard let publishableKey = publishableKey, !publishableKey.isEmpty else {
             return false
         }
@@ -252,7 +252,7 @@ import UIKit
 
     /// Includes request IDs in error descriptions only when the client's mode is known to be live.
     /// Clients using ephemeral keys, such as Identity, keep their existing descriptions.
-    @_spi(STP) public var shouldIncludeRequestIDInErrorDescription: Bool {
+    @_spi(InternalOnlyAPI) public var shouldIncludeRequestIDInErrorDescription: Bool {
         if publishableKeyIsUserKey {
             return userKeyLiveMode
         }
@@ -265,7 +265,7 @@ import UIKit
      using the same configuration as a given STPAPIClient , but need to make a
      modification such as overriding beta headers or `stripeAccount`.
      */
-    @_spi(STP) public func makeCopy() -> STPAPIClient {
+    @_spi(InternalOnlyAPI) public func makeCopy() -> STPAPIClient {
         let client = STPAPIClient()
         client._publishableKey = _publishableKey
         client._stored_configuration = _stored_configuration
@@ -290,7 +290,7 @@ extension STPAPIClient {
     ///   - additionalHeaders: Additional HTTP headers, overriding default values for matching fields.
     ///   - timeout: Optional timeout for each request attempt. The total request duration can be longer when retries are enabled.
     ///   - retriesEnabled: Whether to retry HTTP 429 responses using the standard retry policy.
-    @_spi(STP) public func get<T: Decodable>(
+    @_spi(InternalOnlyAPI) public func get<T: Decodable>(
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
@@ -318,7 +318,7 @@ extension STPAPIClient {
     }
 
     /// Make a GET request using the passed parameters.
-    @_spi(STP) public func get<T: Decodable>(
+    @_spi(InternalOnlyAPI) public func get<T: Decodable>(
         url: URL,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
@@ -344,7 +344,7 @@ extension STPAPIClient {
     /// Make a GET request using the passed parameters.
     ///
     /// - Returns: a promise that is fullfilled when the request is complete.
-    @_spi(STP) public func get<T: Decodable>(
+    @_spi(InternalOnlyAPI) public func get<T: Decodable>(
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
@@ -364,7 +364,7 @@ extension STPAPIClient {
     }
 
     /// Make a POST request using the passed parameters.
-    @_spi(STP) public func post<T: Decodable>(
+    @_spi(InternalOnlyAPI) public func post<T: Decodable>(
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
@@ -388,7 +388,7 @@ extension STPAPIClient {
     /// Make a POST request using the passed parameters.
     ///
     /// - Returns: a promise that is fullfilled when the request is complete.
-    @_spi(STP) public func post<T: Decodable>(
+    @_spi(InternalOnlyAPI) public func post<T: Decodable>(
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
@@ -409,7 +409,7 @@ extension STPAPIClient {
 
     /// Make a DELETE request using the passed parameters.
     /// - Parameter additionalHeaders: Additional HTTP headers, overriding default values for matching fields.
-    @_spi(STP) public func delete<T: Decodable>(
+    @_spi(InternalOnlyAPI) public func delete<T: Decodable>(
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
@@ -547,7 +547,7 @@ extension STPAPIClient {
     /// - Parameter additionalHeaders: Additional HTTP headers, overriding default values for matching fields.
     ///
     /// - Returns: a promise that is fullfilled when the request is complete.
-    @_spi(STP) public func post<I: Encodable, O: Decodable>(
+    @_spi(InternalOnlyAPI) public func post<I: Encodable, O: Decodable>(
         resource: String,
         object: I,
         ephemeralKeySecret: String? = nil,
@@ -569,7 +569,7 @@ extension STPAPIClient {
 
     /// Make a POST request using the passed Encodable object.
     /// - Parameter additionalHeaders: Additional HTTP headers, overriding default values for matching fields.
-    @_spi(STP) public func post<I: Encodable, O: Decodable>(
+    @_spi(InternalOnlyAPI) public func post<I: Encodable, O: Decodable>(
         resource: String,
         object: I,
         ephemeralKeySecret: String? = nil,
@@ -590,7 +590,7 @@ extension STPAPIClient {
 
     /// Make a POST request using the passed Encodable object.
     /// - Parameter additionalHeaders: Additional HTTP headers, overriding default values for matching fields.
-    @_spi(STP) public func post<I: Encodable, O: Decodable>(
+    @_spi(InternalOnlyAPI) public func post<I: Encodable, O: Decodable>(
         url: URL,
         object: I,
         ephemeralKeySecret: String? = nil,
@@ -649,7 +649,7 @@ extension STPAPIClient {
         )
     }
 
-    @_spi(STP) public static func decodeResponse<T: Decodable>(
+    @_spi(InternalOnlyAPI) public static func decodeResponse<T: Decodable>(
         data: Data?,
         error: Error?,
         response: URLResponse?,

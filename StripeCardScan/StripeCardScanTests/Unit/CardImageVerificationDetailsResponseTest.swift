@@ -7,8 +7,8 @@
 
 import XCTest
 
-@testable@_spi(STP) import StripeCardScan
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCardScan
+@testable@_spi(InternalOnlyAPI) import StripeCore
 
 class CardImageVerificationDetailsResponseTest: XCTestCase {
 

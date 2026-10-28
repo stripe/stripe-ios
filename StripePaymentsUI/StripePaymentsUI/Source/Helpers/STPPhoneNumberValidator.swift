@@ -7,10 +7,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
-@_spi(STP) public class STPPhoneNumberValidator: NSObject {
+@_spi(InternalOnlyAPI) public class STPPhoneNumberValidator: NSObject {
 
     @objc(formattedSanitizedPhoneNumberForString:) class func formattedSanitizedPhoneNumber(
         for string: String

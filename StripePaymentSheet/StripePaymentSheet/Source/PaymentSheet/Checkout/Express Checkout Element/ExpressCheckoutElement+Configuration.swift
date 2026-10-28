@@ -6,9 +6,9 @@
 //
 
 import PassKit
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension ExpressCheckoutElement {
     /// Configuration options for ``ExpressCheckoutElement``.

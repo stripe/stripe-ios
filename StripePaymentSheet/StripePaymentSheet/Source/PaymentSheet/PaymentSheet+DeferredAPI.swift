@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension PaymentSheet {
     /// Routes deferred intent confirmation to either the regular flow or confirmation token flow based on available handlers

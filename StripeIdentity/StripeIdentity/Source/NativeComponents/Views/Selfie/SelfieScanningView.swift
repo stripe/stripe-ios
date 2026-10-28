@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Displays instructional text and either a camera preview or scanned selfie

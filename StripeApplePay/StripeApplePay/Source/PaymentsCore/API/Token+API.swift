@@ -8,7 +8,7 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI.Token {
     /// A callback to be run with a token response from the Stripe API.

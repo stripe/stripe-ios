@@ -7,8 +7,8 @@
 
 import Contacts
 import PassKit
-@_spi(STP) @testable import StripeApplePay
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 final class BillingDetailsApplePayTest: XCTestCase {

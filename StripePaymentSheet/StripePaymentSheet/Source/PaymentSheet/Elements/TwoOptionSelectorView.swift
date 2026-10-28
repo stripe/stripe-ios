@@ -4,8 +4,8 @@
 //
 //  Created by Nick Porter on 3/20/26.
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A single item in a `TwoOptionSelectorView`.

@@ -8,7 +8,7 @@
 
 import XCTest
 
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 
 class PhoneNumberTests: XCTestCase {
 

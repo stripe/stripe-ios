@@ -6,10 +6,10 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-@_spi(STP) public extension UIButton {
+@_spi(InternalOnlyAPI) public extension UIButton {
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)
 
     class var doneButtonTitle: String {

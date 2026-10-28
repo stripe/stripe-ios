@@ -5,7 +5,7 @@
 //  Created by Michael Liberatore on 9/16/26.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import SwiftUI
 
 /// Opens the document subtype picker, displaying its label and committed selection.

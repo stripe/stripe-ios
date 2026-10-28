@@ -9,7 +9,7 @@
 import CoreGraphics
 import Foundation
 
-@_spi(STP) extension CGRect {
+@_spi(InternalOnlyAPI) extension CGRect {
 
     /// Represents the bounds of a normalized coordinate system with range from (0,0) to (1,1)
     public static let normalizedBounds = CGRect(x: 0, y: 0, width: 1, height: 1)

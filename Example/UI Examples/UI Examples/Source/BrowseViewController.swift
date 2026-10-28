@@ -11,7 +11,7 @@ import SwiftUI
 import UIKit
 
 @testable import Stripe
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 class BrowseViewController: UITableViewController
 {

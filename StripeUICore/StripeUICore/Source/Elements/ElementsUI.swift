@@ -7,10 +7,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-@_spi(STP) public enum ElementsUI {
+@_spi(InternalOnlyAPI) public enum ElementsUI {
 
     /// The distances between an Element's content and its containing view
     public static let contentViewInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 11, bottom: 4, trailing: 11)
@@ -82,7 +82,7 @@ import UIKit
 
 /// Describes the appearance of an Element
 /// A superset of `StripePaymentSheet.PaymentSheetAppearance`. This exists b/c we can't see that type from `StripeUICore`, and we don't want to the public StripePaymentSheet API to be a typealias of this.
-@_spi(STP) public struct ElementsAppearance {
+@_spi(InternalOnlyAPI) public struct ElementsAppearance {
 
     /// The default appearance used for Elements
     public static let `default` = ElementsAppearance()

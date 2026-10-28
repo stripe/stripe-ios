@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 protocol NativeFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }

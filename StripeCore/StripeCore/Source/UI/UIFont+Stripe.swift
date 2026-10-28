@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-@_spi(STP) extension UIFont {
+@_spi(InternalOnlyAPI) extension UIFont {
     /// The default size category used to compute font size prior to scaling it.
     ///
     /// - seealso:

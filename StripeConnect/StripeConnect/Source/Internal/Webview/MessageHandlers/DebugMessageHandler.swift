@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 // Emitted when the SDK should print to the console in debug mode.
 class DebugMessageHandler: ScriptMessageHandler<String> {

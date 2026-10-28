@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 
 @MainActor
 final class PaymentSheetFormFactoryTaxTest: XCTestCase {
@@ -82,7 +82,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         let cases: [(intent: Intent, expectsAddress: Bool)] = [
             (._testValue(), false),
             (makeCheckoutIntent(automaticTaxEnabled: false), false),
-            (makeCheckoutIntent(addressSource: "session.shipping"), false),
+            (makeCheckoutIntent(addressSource: "shipping"), false),
             (makeCheckoutIntent(), true),
         ]
 
@@ -144,7 +144,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
 
     private func makeCheckoutIntent(
         automaticTaxEnabled: Bool = true,
-        addressSource: String = "session.billing"
+        addressSource: String = "billing"
     ) -> Intent {
         ._testCheckoutSession(
             automaticTaxEnabled: automaticTaxEnabled,

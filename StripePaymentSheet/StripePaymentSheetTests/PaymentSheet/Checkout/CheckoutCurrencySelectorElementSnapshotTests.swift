@@ -6,9 +6,9 @@
 //
 
 import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
-@_spi(STP) @testable import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 import SwiftUI
 import UIKit
 import XCTest

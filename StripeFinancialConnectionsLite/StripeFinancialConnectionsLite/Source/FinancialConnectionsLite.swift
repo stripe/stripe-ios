@@ -5,10 +5,10 @@
 //  Created by Mat Schmid on 2025-03-19.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-@_spi(STP) public final class FinancialConnectionsLite {
+@_spi(InternalOnlyAPI) public final class FinancialConnectionsLite {
     /// The client secret of a Stripe `FinancialConnectionsSession` object.
     let clientSecret: String
 
@@ -18,17 +18,17 @@ import UIKit
     let returnUrl: URL?
 
     /// Any additional Elements context useful for the Financial Connections SDK.
-    @_spi(STP) public var elementsSessionContext: ElementsSessionContext?
+    @_spi(InternalOnlyAPI) public var elementsSessionContext: ElementsSessionContext?
 
     /// A existing consumer, if avaialble.
-    @_spi(STP) public var existingConsumer: FinancialConnectionsConsumer?
+    @_spi(InternalOnlyAPI) public var existingConsumer: FinancialConnectionsConsumer?
 
     /// Whether the Link Account Session requests merchant data permissions.
-    @_spi(STP) public var hasRequestedDataPermissions: Bool = false
+    @_spi(InternalOnlyAPI) public var hasRequestedDataPermissions: Bool = false
 
     /// Evidence that the customer already accepted Financial Connections consent text
     /// collected by the merchant's own UI.
-    @_spi(STP) public var preCollectedConsent: FinancialConnectionsPreCollectedConsent?
+    @_spi(InternalOnlyAPI) public var preCollectedConsent: FinancialConnectionsPreCollectedConsent?
 
     private var navigationController: UINavigationController?
     private var wrapperViewController: FCLiteModalPresentationWrapper?
@@ -41,7 +41,7 @@ import UIKit
     /// - Parameters:
     ///   - clientSecret: The client secret of a Stripe `FinancialConnectionsSession` object.
     ///   - returnUrl: A URL that that `FinancialConnectionsLite` can use to redirect back to your app after completing authentication in another app (such as a bank's app or Safari).
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         clientSecret: String,
         returnUrl: URL?
     ) {
@@ -53,7 +53,7 @@ import UIKit
     /// - Parameters:
     ///   - viewController: The view controller from which the pay by bank flow will be presented.
     ///   - completion: A closure that gets called with the result of the Financial Connections flow.
-    @_spi(STP) public func present(
+    @_spi(InternalOnlyAPI) public func present(
         from viewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {

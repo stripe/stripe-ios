@@ -5,7 +5,7 @@
 //  Created by Kenneth Ackerson on 7/24/25.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension String {
     func uiIDType() -> String? {

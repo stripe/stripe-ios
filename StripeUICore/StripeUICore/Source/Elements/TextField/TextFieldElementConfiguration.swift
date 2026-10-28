@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /**
@@ -15,7 +15,7 @@ import UIKit
  
  - Seealso: `TextFieldElement+Factory.swift`
  */
-@_spi(STP) public protocol TextFieldElementConfiguration {
+@_spi(InternalOnlyAPI) public protocol TextFieldElementConfiguration {
     var label: String { get }
 
     /**
@@ -162,7 +162,7 @@ public extension TextFieldElementConfiguration {
     }
 }
 
-@_spi(STP) public enum EditConfiguration {
+@_spi(InternalOnlyAPI) public enum EditConfiguration {
     // Text can be modified
     case editable
 
@@ -172,7 +172,7 @@ public extension TextFieldElementConfiguration {
     // Text can not be modified, without disabled appearance
     case readOnlyWithoutDisabledAppearance
 
-    @_spi(STP) public var isEditable: Bool {
+    @_spi(InternalOnlyAPI) public var isEditable: Bool {
         return self == .editable
     }
 }

@@ -9,7 +9,7 @@
 import AVKit
 import Foundation
 
-@_spi(STP) public protocol CameraPermissionsManagerProtocol {
+@_spi(InternalOnlyAPI) public protocol CameraPermissionsManagerProtocol {
     /// Completion block called when done requesting permissions.
     ///
     /// - Parameter granted: If camera permissions are granted for the app.
@@ -24,7 +24,7 @@ import Foundation
 }
 
 /// Dependency-injectable class to assist with accessing and requesting camera authorization
-@_spi(STP) public final class CameraPermissionsManager: CameraPermissionsManagerProtocol {
+@_spi(InternalOnlyAPI) public final class CameraPermissionsManager: CameraPermissionsManagerProtocol {
 
     public static let shared = CameraPermissionsManager()
 

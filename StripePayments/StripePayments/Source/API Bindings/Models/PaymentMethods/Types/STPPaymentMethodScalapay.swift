@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// A Scalapay Payment Method.
 /// - seealso: https://docs.stripe.com/payments/scalapay/accept-a-payment?payment-ui=direct-api

@@ -13,7 +13,7 @@ import Foundation
  This may contain the validation token on success, or an error that may have occurred.
  */
 @objc
-@_spi(STP) public class HCaptchaResult: NSObject {
+@_spi(InternalOnlyAPI) public class HCaptchaResult: NSObject {
 
     /// Result token
     let token: String?

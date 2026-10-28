@@ -102,7 +102,7 @@ import PassKit
         return paymentRequest.paymentSummaryItems.last?.amount.floatValue ?? 0.0 >= 0
     }
 
-    @_spi(STP) public class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
+    @_spi(InternalOnlyAPI) public class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
         return additionalEnabledApplePayNetworks + [
             .amex,
             .masterCard,

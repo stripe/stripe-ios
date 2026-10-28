@@ -9,7 +9,7 @@
 import Foundation
 
 extension URLRequest {
-    @_spi(STP) public mutating func stp_addParameters(toURL parameters: [String: Any]) {
+    @_spi(InternalOnlyAPI) public mutating func stp_addParameters(toURL parameters: [String: Any]) {
         guard let url else {
             assertionFailure()
             return
@@ -23,7 +23,7 @@ extension URLRequest {
         self.url = CFURLCreateWithString(nil, urlString as CFString, nil) as URL?
     }
 
-    @_spi(STP) public mutating func stp_setFormPayload(_ formPayload: [String: Any]) {
+    @_spi(InternalOnlyAPI) public mutating func stp_setFormPayload(_ formPayload: [String: Any]) {
         let formData = URLEncoder.queryString(from: formPayload).data(using: .utf8)
         httpBody = formData
         setValue(
@@ -39,7 +39,7 @@ extension URLRequest {
         #endif
     }
 
-    @_spi(STP) public mutating func stp_setMultipartForm(_ data: Data?, boundary: String?) {
+    @_spi(InternalOnlyAPI) public mutating func stp_setMultipartForm(_ data: Data?, boundary: String?) {
         httpBody = data
         setValue(
             String(format: "%lu", UInt(data?.count ?? 0)),

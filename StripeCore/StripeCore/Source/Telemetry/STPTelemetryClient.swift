@@ -11,19 +11,19 @@ import UIKit
 
 private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
-@_spi(STP) public final class STPTelemetryClient: NSObject {
-    @_spi(STP) public static var shared: STPTelemetryClient = STPTelemetryClient(
+@_spi(InternalOnlyAPI) public final class STPTelemetryClient: NSObject {
+    @_spi(InternalOnlyAPI) public static var shared: STPTelemetryClient = STPTelemetryClient(
         sessionConfiguration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
 
-    @_spi(STP) public func addTelemetryFields(toParams params: inout [String: Any]) {
+    @_spi(InternalOnlyAPI) public func addTelemetryFields(toParams params: inout [String: Any]) {
         params["muid"] = fraudDetectionData.muid
         params["guid"] = fraudDetectionData.guid
         fraudDetectionData.resetSIDIfExpired()
         params["sid"] = fraudDetectionData.sid
     }
 
-    @_spi(STP) public func paramsByAddingTelemetryFields(
+    @_spi(InternalOnlyAPI) public func paramsByAddingTelemetryFields(
         toParams params: [String: Any]
     ) -> [String: Any] {
         var mutableParams = params
@@ -38,7 +38,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     ///
     /// - Parameters:
     ///   - completion: Called with the result of the telemetry network request.
-    @_spi(STP) public func sendTelemetryData(
+    @_spi(InternalOnlyAPI) public func sendTelemetryData(
         completion: ((Result<[String: Any], Error>) -> Void)? = nil
     ) {
         let wrappedCompletion: ((Result<[String: Any], Error>) -> Void) = { result in
@@ -56,7 +56,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         sendTelemetryRequest(jsonPayload: payload, completion: wrappedCompletion)
     }
 
-    @_spi(STP) public func updateFraudDetectionIfNecessary(
+    @_spi(InternalOnlyAPI) public func updateFraudDetectionIfNecessary(
         completion: @escaping ((Result<FraudDetectionData, Error>) -> Void)
     ) {
         fraudDetectionData.resetSIDIfExpired()
@@ -82,11 +82,11 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     private let urlSession: URLSession
     static var _forceShouldSendTelemetryInTests: Bool = false
 
-    @_spi(STP) public static func shouldSendTelemetry() -> Bool {
+    @_spi(InternalOnlyAPI) public static func shouldSendTelemetry() -> Bool {
         return StripeAPI.advancedFraudSignalsEnabled && (NSClassFromString("XCTest") == nil || _forceShouldSendTelemetryInTests)
     }
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         sessionConfiguration config: URLSessionConfiguration
     ) {
         urlSession = URLSession(configuration: config)

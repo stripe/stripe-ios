@@ -11,7 +11,7 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 import XCTest
 
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 
 /// A test case offering a custom STPAPIClient with manual JSON stubbing.
 /// To automatically record requests, try STPNetworkStubbingTestCase instead.

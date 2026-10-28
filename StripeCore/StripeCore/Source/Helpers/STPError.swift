@@ -74,7 +74,7 @@ import Foundation
     @objc public static let stripeRequestIDKey = "com.stripe.lib:StripeRequestIDKey"
 
     /// Whether the SDK appended a live-mode request ID to the localized description.
-    @_spi(STP) public static let requestIDInDescriptionKey = "com.stripe.lib:RequestIDInDescriptionKey"
+    @_spi(InternalOnlyAPI) public static let requestIDInDescriptionKey = "com.stripe.lib:RequestIDInDescriptionKey"
 
     /// The HTTP status code of the failed request as an Int e.g. 400.
     @objc public static let httpStatusCodeKey = "com.stripe.lib:HTTPStatusCodeKey"
@@ -91,7 +91,7 @@ import Foundation
 }
 
 extension NSError {
-    @_spi(STP) public class Utils {
+    @_spi(InternalOnlyAPI) public class Utils {
         private static let apiErrorCodeToMessage: [String: String] = [
             "incorrect_number": NSError.stp_cardErrorInvalidNumberUserMessage(),
             "invalid_number": NSError.stp_cardErrorInvalidNumberUserMessage(),
@@ -122,7 +122,7 @@ extension NSError {
 
         private init() {}
 
-        @_spi(STP) public static func localizedMessage(
+        @_spi(InternalOnlyAPI) public static func localizedMessage(
             fromAPIErrorCode errorCode: String,
             declineCode: String? = nil
         ) -> String? {
@@ -131,7 +131,7 @@ extension NSError {
                 ?? apiErrorCodeToMessage[errorCode])
         }
 
-        @_spi(STP) public static func cardErrorCode(
+        @_spi(InternalOnlyAPI) public static func cardErrorCode(
             fromAPIErrorCode errorCode: String
         ) -> STPCardErrorCode? {
             return apiErrorCodeToCardErrorCode[errorCode]
@@ -141,7 +141,7 @@ extension NSError {
 
 /// NSError extensions for creating error objects from Stripe API responses.
 extension NSError {
-    @_spi(STP) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
+    @_spi(InternalOnlyAPI) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
         switch modernStripeError {
         case .apiError(let stripeAPIError):
             // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-3965 We're dropping some info in this conversion w/o http response
@@ -161,7 +161,7 @@ extension NSError {
         }
     }
 
-    @_spi(STP) public static func stp_error(
+    @_spi(InternalOnlyAPI) public static func stp_error(
         errorType: String?,
         stripeErrorCode: String?,
         stripeErrorMessage: String?,
@@ -269,7 +269,7 @@ extension NSError {
     /// - Parameter useServerErrorMessage: Whether to use the server's optional message without a localized fallback.
     /// - Returns: An NSError object with the error information from the JSON response.
     @objc
-    @_spi(STP) public static func stp_error(
+    @_spi(InternalOnlyAPI) public static func stp_error(
         fromStripeResponse jsonDictionary: [AnyHashable: Any]?,
         httpResponse: HTTPURLResponse?,
         requestID: String? = nil,

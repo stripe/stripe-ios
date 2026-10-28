@@ -6,9 +6,9 @@
 //
 
 import AVFoundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 @_spi(CryptoOnrampAlpha) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 /// The picker presentation, pending import, and error messages owned by a document collection screen.

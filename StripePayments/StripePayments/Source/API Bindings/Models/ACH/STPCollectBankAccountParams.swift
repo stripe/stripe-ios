@@ -41,7 +41,7 @@ public class STPCollectBankAccountParams: NSObject {
     /// - Parameters:
     ///     - email: The customer's email.
     @objc(collectInstantDebitsParamsWithEmail:)
-    @_spi(STP) public class func collectInstantDebitsParams(
+    @_spi(InternalOnlyAPI) public class func collectInstantDebitsParams(
         email: String?
     ) -> STPCollectBankAccountParams {
         let billingDetails = STPPaymentMethodBillingDetails()

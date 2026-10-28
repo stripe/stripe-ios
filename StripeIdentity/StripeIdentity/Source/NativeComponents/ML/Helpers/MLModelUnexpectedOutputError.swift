@@ -8,7 +8,7 @@
 
 import CoreML
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import Vision
 
 /// Error thrown when parsing output from an ML model if the output does

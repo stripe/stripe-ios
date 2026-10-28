@@ -6,8 +6,8 @@
 //
 
 @testable import StripeConnect
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import XCTest
 
 class ComponentAnalyticsClientTests: XCTestCase {
@@ -99,7 +99,7 @@ class ComponentAnalyticsClientTests: XCTestCase {
         client.logComponentLoaded(loadEnd: .now)
         XCTAssertEqual(mockClient.loggedAnalyticsPayloads.count, 1)
     }
-    
+
     func testLogAccountSessionClaimed() throws {
         client.pageViewId = "1234"
 

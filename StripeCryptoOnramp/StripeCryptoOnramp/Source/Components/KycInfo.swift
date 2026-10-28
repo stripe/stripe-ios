@@ -7,8 +7,8 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// Represents KYC information required for crypto operations.
 @_spi(CryptoOnrampAlpha)

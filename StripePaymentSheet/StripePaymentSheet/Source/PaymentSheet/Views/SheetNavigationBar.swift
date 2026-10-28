@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 @MainActor
@@ -74,6 +74,8 @@ class SheetNavigationBar: UIView {
 
     let appearance: PaymentSheet.Appearance
     let shouldLogPaymentSheetAnalyticsOnDismissal: Bool
+    // Supplied by the sheet container when this screen becomes visible.
+    var checkoutSessionID: String?
 
     var usesSystemNavigationBar: Bool { systemNavigationItem != nil }
     private var currentStyle: Style = .close(showAdditionalButton: false)
@@ -210,7 +212,7 @@ class SheetNavigationBar: UIView {
     @objc
     private func didTapCloseButton() {
         if shouldLogPaymentSheetAnalyticsOnDismissal {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed, checkoutSessionID: checkoutSessionID)
         }
         delegate?.sheetNavigationBarDidClose(self)
     }

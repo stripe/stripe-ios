@@ -11,7 +11,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 
 @testable import StripePaymentSheet
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 
 // @iOS26
 class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {

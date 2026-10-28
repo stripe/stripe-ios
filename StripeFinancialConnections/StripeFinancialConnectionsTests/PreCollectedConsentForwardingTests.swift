@@ -3,8 +3,8 @@
 //  StripeFinancialConnectionsTests
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 import XCTest
 

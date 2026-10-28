@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public extension URL {
+@_spi(InternalOnlyAPI) public extension URL {
     enum LinkBankPaymentMethodError: Error {
         case failedToBase64Decode
     }

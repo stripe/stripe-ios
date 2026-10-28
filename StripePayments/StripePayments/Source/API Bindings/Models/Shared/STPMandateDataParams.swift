@@ -38,7 +38,7 @@ public class STPMandateDataParams: NSObject {
     }
 
     /// Create mandate data by inferring its values from the client
-    @_spi(STP) public static func makeWithInferredValues() -> STPMandateDataParams {
+    @_spi(InternalOnlyAPI) public static func makeWithInferredValues() -> STPMandateDataParams {
         let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
         onlineParams.inferFromClient = NSNumber(value: true)
 
@@ -66,7 +66,7 @@ extension STPMandateDataParams: STPFormEncodable {
 
 extension STPMandateDataParams: STPAPIResponseDecodable {
     @objc
-    @_spi(STP) public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    @_spi(InternalOnlyAPI) public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response else {
             return nil
         }

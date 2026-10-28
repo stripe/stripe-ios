@@ -4,10 +4,6 @@
 
 "+ Add" = "+ Tambah";
 
-"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (termasuk %4$@%% yuran penukaran).";
-
-"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
-
 "Accept" = "Terima";
 
 "Add US bank account" = "Tambah akaun bank AS";

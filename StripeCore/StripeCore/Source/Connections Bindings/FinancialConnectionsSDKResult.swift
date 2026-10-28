@@ -7,12 +7,12 @@
 
 import Foundation
 
-@_spi(STP) @frozen public enum FinancialConnectionsSDKResult {
+@_spi(InternalOnlyAPI) @frozen public enum FinancialConnectionsSDKResult {
     case completed(Completed)
     case cancelled
     case failed(error: Error)
 
-    @_spi(STP) public enum Completed {
+    @_spi(InternalOnlyAPI) public enum Completed {
         case financialConnections(FinancialConnectionsLinkedBank)
         case instantDebits(InstantDebitsLinkedBank)
         case linkedAccount(id: String)

@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) public class STPEmailAddressValidator: NSObject {
+@_spi(InternalOnlyAPI) public class STPEmailAddressValidator: NSObject {
     public class func stringIsValidPartialEmailAddress(_ string: String?) -> Bool {
         guard let string = string else {
             return true  // an empty string isn't *invalid*

@@ -5,8 +5,8 @@
 //  Created by Till Hellmund on 5/26/25.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol LinkDefaultOptInViewDelegate: AnyObject {

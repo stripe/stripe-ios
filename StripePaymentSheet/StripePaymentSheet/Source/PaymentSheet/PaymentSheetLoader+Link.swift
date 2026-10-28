@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 7/19/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension PaymentSheetLoader {
 

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-@_spi(STP) @testable import StripeIdentity
+@_spi(InternalOnlyAPI) @testable import StripeIdentity
 
 /// Mock to help us test behavior that relies on  VerificationSheetFlowController
 final class VerificationSheetFlowControllerMock: VerificationSheetFlowControllerProtocol {

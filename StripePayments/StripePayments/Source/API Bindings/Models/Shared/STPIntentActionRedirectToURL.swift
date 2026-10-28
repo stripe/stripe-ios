@@ -20,14 +20,14 @@ public class STPIntentActionRedirectToURL: NSObject {
     @objc public let returnURL: URL?
 
     /// If true, we'll follow one 30x redirect and open the webview using the resulting URL.
-    @_spi(STP) public var followRedirects: Bool {
+    @_spi(InternalOnlyAPI) public var followRedirects: Bool {
         return stripeFlagValue("followRedirectsInSDK")
     }
 
     /// If true, we'll use ASWebAuthenticationSession instead of SFSafariViewController.
     /// Some payment methods benefit from sharing cookies with Safari and
     /// using URL protocol handlers to return to the merchant's app.
-    @_spi(STP) public var useWebAuthSession: Bool {
+    @_spi(InternalOnlyAPI) public var useWebAuthSession: Bool {
         return stripeFlagValue("useWebAuthSession")
     }
 

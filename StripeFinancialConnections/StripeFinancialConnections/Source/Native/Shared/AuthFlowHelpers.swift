@@ -7,7 +7,7 @@
 
 import Foundation
 import SafariServices
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 final class AuthFlowHelpers {
 

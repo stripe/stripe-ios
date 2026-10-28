@@ -4,7 +4,7 @@
 //
 //  Created by George Birch on 8/4/26.
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension ShippingAddressElement.Configuration {
     func makeAddressViewControllerConfiguration(

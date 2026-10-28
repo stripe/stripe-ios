@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// The type of the PaymentMethod.
 @objc public enum STPPaymentMethodType: Int {
@@ -144,7 +144,7 @@ import Foundation
     case unknown
 
     /// Localized display name for this payment method type
-    @_spi(STP) public var displayName: String {
+    @_spi(InternalOnlyAPI) public var displayName: String {
         switch self {
         case .alipay:
             return STPLocalizedString("Alipay", "Payment Method type brand name")
@@ -287,7 +287,7 @@ import Foundation
     }
 
     /// The identifier for the payment method type as it is represented on an intent, e.g. "afterpay_clearpay" for Afterpay
-    @_spi(STP) public var identifier: String {
+    @_spi(InternalOnlyAPI) public var identifier: String {
         switch self {
         case .card:
             return "card"
@@ -422,7 +422,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
+    @_spi(InternalOnlyAPI) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
         return allCases.first(where: { $0.identifier == identifier }) ?? .unknown
     }
 

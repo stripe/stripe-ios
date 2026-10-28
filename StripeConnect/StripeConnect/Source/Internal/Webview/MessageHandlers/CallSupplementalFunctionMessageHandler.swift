@@ -1,4 +1,4 @@
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 class CallSupplementalFunctionMessageHandler: ScriptMessageHandler<CallSupplementalFunctionMessageHandler.Payload> {
     struct Payload: Decodable {

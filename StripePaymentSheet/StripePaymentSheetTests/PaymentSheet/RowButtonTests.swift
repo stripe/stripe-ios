@@ -6,8 +6,8 @@
 import UIKit
 import XCTest
 
-@_spi(STP) @testable import StripePaymentSheet
-@testable @_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 
 @MainActor
 final class RowButtonTests: XCTestCase {

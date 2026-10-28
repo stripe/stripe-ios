@@ -7,13 +7,13 @@
 
 import Foundation
 
-@_spi(STP) @frozen public enum LinkBrand: String, SafeEnumCodable, Equatable {
+@_spi(InternalOnlyAPI) @frozen public enum LinkBrand: String, SafeEnumCodable, Equatable {
     case link = "link"
     case onelink = "onelink"
     case unparsable
 
     /// Brand names are proper nouns, so keep the source-of-truth user-facing value here.
-    @_spi(STP) public var displayName: String {
+    @_spi(InternalOnlyAPI) public var displayName: String {
         switch self {
         case .link, .unparsable:
             return "Link"
@@ -22,7 +22,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public var accessibilityDisplayName: String {
+    @_spi(InternalOnlyAPI) public var accessibilityDisplayName: String {
         switch self {
         case .link, .unparsable:
             return "Link"
@@ -31,7 +31,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public func accessibilityText(from text: String) -> String {
+    @_spi(InternalOnlyAPI) public func accessibilityText(from text: String) -> String {
         guard self == .onelink else {
             return text
         }
@@ -40,7 +40,7 @@ import Foundation
             .replacingOccurrences(of: displayName.lowercased(), with: accessibilityDisplayName)
     }
 
-    @_spi(STP) public var websiteURL: URL {
+    @_spi(InternalOnlyAPI) public var websiteURL: URL {
         switch self {
         case .link, .unparsable:
             return URL(string: "https://link.com")!
@@ -49,7 +49,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public var termsURL: URL {
+    @_spi(InternalOnlyAPI) public var termsURL: URL {
         switch self {
         case .link, .unparsable:
             return URL(string: "https://link.co/terms")!
@@ -58,7 +58,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public var privacyURL: URL {
+    @_spi(InternalOnlyAPI) public var privacyURL: URL {
         switch self {
         case .link, .unparsable:
             return URL(string: "https://link.co/privacy")!
@@ -67,7 +67,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public var achAuthorizationURL: URL {
+    @_spi(InternalOnlyAPI) public var achAuthorizationURL: URL {
         switch self {
         case .link, .unparsable:
             return URL(string: "https://link.com/terms/ach-authorization")!
@@ -76,7 +76,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public var promotionTermsURL: URL {
+    @_spi(InternalOnlyAPI) public var promotionTermsURL: URL {
         switch self {
         case .link, .unparsable:
             return URL(string: "https://link.com/promotion-terms")!
@@ -85,7 +85,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public var supportContactURL: URL {
+    @_spi(InternalOnlyAPI) public var supportContactURL: URL {
         switch self {
         case .link, .unparsable:
             return URL(string: "https://support.link.co/contact/email?skipVerification=true")!
@@ -94,7 +94,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public func brandAwareLegalSupportURL(for url: URL) -> URL {
+    @_spi(InternalOnlyAPI) public func brandAwareLegalSupportURL(for url: URL) -> URL {
         guard self == .onelink, var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return url
         }

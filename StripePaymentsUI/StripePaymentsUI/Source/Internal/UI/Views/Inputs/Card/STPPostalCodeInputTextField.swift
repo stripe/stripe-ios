@@ -6,11 +6,11 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@_spi(STP) public class STPPostalCodeInputTextField: STPInputTextField {
+@_spi(InternalOnlyAPI) public class STPPostalCodeInputTextField: STPInputTextField {
 
     var countryCode: String? = Locale.autoupdatingCurrent.stp_regionCode {
         didSet {

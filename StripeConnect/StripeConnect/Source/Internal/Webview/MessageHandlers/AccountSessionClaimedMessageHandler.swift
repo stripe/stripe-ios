@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Emitted when the claim response is available
 class AccountSessionClaimedMessageHandler: ScriptMessageHandler<AccountSessionClaimedMessageHandler.Payload> {

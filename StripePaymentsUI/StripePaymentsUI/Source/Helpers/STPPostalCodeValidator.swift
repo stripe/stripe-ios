@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
 @objc enum STPPostalCodeIntendedUsage: Int {
     case billingAddress
@@ -17,13 +17,13 @@ import Foundation
     case cardField
 }
 
-@objc @_spi(STP) public enum STPPostalCodeRequirement: Int {
+@objc @_spi(InternalOnlyAPI) public enum STPPostalCodeRequirement: Int {
     case standard
     case upe
 }
 
-@_spi(STP) public class STPPostalCodeValidator: NSObject {
-    @_spi(STP) public class func postalCodeIsRequired(forCountryCode countryCode: String?) -> Bool {
+@_spi(InternalOnlyAPI) public class STPPostalCodeValidator: NSObject {
+    @_spi(InternalOnlyAPI) public class func postalCodeIsRequired(forCountryCode countryCode: String?) -> Bool {
         if countryCode == nil {
             return true
         } else {
@@ -50,7 +50,7 @@ import Foundation
         }
     }
 
-    @_spi(STP) public class func validationState(
+    @_spi(InternalOnlyAPI) public class func validationState(
         forPostalCode postalCode: String?,
         countryCode: String?,
         with postalRequirement: STPPostalCodeRequirement = .standard

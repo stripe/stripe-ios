@@ -6,7 +6,7 @@
 //
 // This is an example of an integration using PaymentSheet.FlowController where you collect payment details before creating an Intent.
 
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 import UIKit
 
 // View and fork the backend code  here: https://codesandbox.io/p/devbox/dr4lkg

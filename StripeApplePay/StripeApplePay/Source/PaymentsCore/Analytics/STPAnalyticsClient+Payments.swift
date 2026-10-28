@@ -7,15 +7,15 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An analytic specific to payments that serializes payment-specific
 /// information into its params.
-@_spi(STP) public protocol PaymentAnalytic: Analytic {
+@_spi(InternalOnlyAPI) public protocol PaymentAnalytic: Analytic {
     var additionalParams: [String: Any] { get }
 }
 
-@_spi(STP) extension PaymentAnalytic {
+@_spi(InternalOnlyAPI) extension PaymentAnalytic {
     public var params: [String: Any] {
         var params = additionalParams
 

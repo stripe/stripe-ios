@@ -10,7 +10,7 @@ import UIKit
 
 extension AddressSectionElement {
     /// Looks like a "Address" text field but with the text field disabled
-    @_spi(STP) public class DummyAddressLine: NSObject, Element, TextFieldViewDelegate, UIGestureRecognizerDelegate {
+    @_spi(InternalOnlyAPI) public class DummyAddressLine: NSObject, Element, TextFieldViewDelegate, UIGestureRecognizerDelegate {
         public let collectsUserInput: Bool = false
 
         public weak var delegate: ElementDelegate?

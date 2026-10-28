@@ -8,13 +8,13 @@
 import Foundation
 
 /// Contains elements session context useful for the Financial Connections SDK.
-@_spi(STP) public struct ElementsSessionContext {
-    @_spi(STP) @frozen public enum IntentID {
+@_spi(InternalOnlyAPI) public struct ElementsSessionContext {
+    @_spi(InternalOnlyAPI) @frozen public enum IntentID {
         case payment(String)
         case setup(String)
         case deferred(String)
 
-        @_spi(STP) public var id: String {
+        @_spi(InternalOnlyAPI) public var id: String {
             switch self {
             case let .payment(id), let .setup(id), let .deferred(id):
                 return id
@@ -22,11 +22,11 @@ import Foundation
         }
     }
 
-    @_spi(STP) public struct LinkSettings {
-        @_spi(STP) public let useAttestationEndpoints: Bool?
-        @_spi(STP) public let brand: LinkBrand?
+    @_spi(InternalOnlyAPI) public struct LinkSettings {
+        @_spi(InternalOnlyAPI) public let useAttestationEndpoints: Bool?
+        @_spi(InternalOnlyAPI) public let brand: LinkBrand?
 
-        @_spi(STP) public init(useAttestationEndpoints: Bool?, brand: LinkBrand? = nil) {
+        @_spi(InternalOnlyAPI) public init(useAttestationEndpoints: Bool?, brand: LinkBrand? = nil) {
             self.useAttestationEndpoints = useAttestationEndpoints
             self.brand = brand
         }
@@ -35,13 +35,13 @@ import Foundation
     /// These fields will be used to prefill the Financial Connections Link Login pane.
     /// An unformatted phone number + country code will be passed to the web flow,
     /// and a formatted phone number will be passed to the native flow.
-    @_spi(STP) public struct PrefillDetails {
-        @_spi(STP) public let email: String?
-        @_spi(STP) public let formattedPhoneNumber: String?
-        @_spi(STP) public let unformattedPhoneNumber: String?
-        @_spi(STP) public let countryCode: String?
+    @_spi(InternalOnlyAPI) public struct PrefillDetails {
+        @_spi(InternalOnlyAPI) public let email: String?
+        @_spi(InternalOnlyAPI) public let formattedPhoneNumber: String?
+        @_spi(InternalOnlyAPI) public let unformattedPhoneNumber: String?
+        @_spi(InternalOnlyAPI) public let countryCode: String?
 
-        @_spi(STP) public init(
+        @_spi(InternalOnlyAPI) public init(
             email: String?,
             formattedPhoneNumber: String?,
             unformattedPhoneNumber: String?,
@@ -54,29 +54,29 @@ import Foundation
         }
     }
 
-    @_spi(STP) public let amount: Int?
-    @_spi(STP) public let currency: String?
-    @_spi(STP) public let prefillDetails: PrefillDetails?
-    @_spi(STP) public let intentId: IntentID?
-    @_spi(STP) public let linkMode: LinkMode?
-    @_spi(STP) public let billingDetails: BillingDetails?
-    @_spi(STP) public let eligibleForIncentive: Bool
-    @_spi(STP) public let allowRedisplay: String?
-    @_spi(STP) public let linkSettings: LinkSettings?
-    @_spi(STP) public let clientAttributionMetadata: STPClientAttributionMetadata?
+    @_spi(InternalOnlyAPI) public let amount: Int?
+    @_spi(InternalOnlyAPI) public let currency: String?
+    @_spi(InternalOnlyAPI) public let prefillDetails: PrefillDetails?
+    @_spi(InternalOnlyAPI) public let intentId: IntentID?
+    @_spi(InternalOnlyAPI) public let linkMode: LinkMode?
+    @_spi(InternalOnlyAPI) public let billingDetails: BillingDetails?
+    @_spi(InternalOnlyAPI) public let eligibleForIncentive: Bool
+    @_spi(InternalOnlyAPI) public let allowRedisplay: String?
+    @_spi(InternalOnlyAPI) public let linkSettings: LinkSettings?
+    @_spi(InternalOnlyAPI) public let clientAttributionMetadata: STPClientAttributionMetadata?
 
-    @_spi(STP) public var billingAddress: BillingAddress? {
+    @_spi(InternalOnlyAPI) public var billingAddress: BillingAddress? {
         BillingAddress(from: billingDetails)
     }
 
-    @_spi(STP) public var incentiveEligibilitySession: IntentID? {
+    @_spi(InternalOnlyAPI) public var incentiveEligibilitySession: IntentID? {
         guard eligibleForIncentive else {
             return nil
         }
         return intentId
     }
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         amount: Int? = nil,
         currency: String? = nil,
         prefillDetails: PrefillDetails? = nil,
@@ -101,18 +101,18 @@ import Foundation
     }
 }
 
-@_spi(STP) public extension ElementsSessionContext {
+@_spi(InternalOnlyAPI) public extension ElementsSessionContext {
     /// https://docs.stripe.com/api/payment_methods/create#create_payment_method-billing_details
     struct BillingDetails: Encodable {
-        @_spi(STP) public struct Address: Encodable {
-            @_spi(STP) public let city: String?
-            @_spi(STP) public let country: String?
-            @_spi(STP) public let line1: String?
-            @_spi(STP) public let line2: String?
-            @_spi(STP) public let postalCode: String?
-            @_spi(STP) public let state: String?
+        @_spi(InternalOnlyAPI) public struct Address: Encodable {
+            @_spi(InternalOnlyAPI) public let city: String?
+            @_spi(InternalOnlyAPI) public let country: String?
+            @_spi(InternalOnlyAPI) public let line1: String?
+            @_spi(InternalOnlyAPI) public let line2: String?
+            @_spi(InternalOnlyAPI) public let postalCode: String?
+            @_spi(InternalOnlyAPI) public let state: String?
 
-            @_spi(STP) public init?(
+            @_spi(InternalOnlyAPI) public init?(
                 city: String?,
                 country: String?,
                 line1: String?,
@@ -141,7 +141,7 @@ import Foundation
                 case state
             }
 
-            @_spi(STP) public func encode(to encoder: any Encoder) throws {
+            @_spi(InternalOnlyAPI) public func encode(to encoder: any Encoder) throws {
                 var container: KeyedEncodingContainer<CodingKeys> = encoder.container(keyedBy: CodingKeys.self)
                 try container.encodeIfNotEmpty(self.city, forKey: .city)
                 try container.encodeIfNotEmpty(self.country, forKey: .country)
@@ -152,12 +152,12 @@ import Foundation
             }
         }
 
-        @_spi(STP) public let name: String?
-        @_spi(STP) public let email: String?
-        @_spi(STP) public let phone: String?
-        @_spi(STP) public let address: Address?
+        @_spi(InternalOnlyAPI) public let name: String?
+        @_spi(InternalOnlyAPI) public let email: String?
+        @_spi(InternalOnlyAPI) public let phone: String?
+        @_spi(InternalOnlyAPI) public let address: Address?
 
-        @_spi(STP) public init(name: String?, email: String?, phone: String?, address: Address?) {
+        @_spi(InternalOnlyAPI) public init(name: String?, email: String?, phone: String?, address: Address?) {
             self.name = name
             self.email = email
             self.phone = phone
@@ -171,7 +171,7 @@ import Foundation
             case address
         }
 
-        @_spi(STP) public func encode(to encoder: any Encoder) throws {
+        @_spi(InternalOnlyAPI) public func encode(to encoder: any Encoder) throws {
             var container: KeyedEncodingContainer<CodingKeys> = encoder.container(keyedBy: CodingKeys.self)
             try container.encodeIfNotEmpty(self.name, forKey: .name)
             try container.encodeIfNotEmpty(self.email, forKey: .email)

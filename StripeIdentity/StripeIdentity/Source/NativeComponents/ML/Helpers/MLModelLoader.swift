@@ -8,7 +8,7 @@
 
 import CoreML
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import Vision
 
 /// Loads and compiles CoreML models from a remote URL. The compiled model is saved

@@ -13,7 +13,7 @@ import Foundation
 /// Known values: `value` is non-nil, `rawValue` matches the enum's raw value.
 /// Unknown values: `value` is nil, `rawValue` contains the unrecognized API string.
 /// :nodoc:
-@_spi(STP) public struct ParsedEnum<E: SafeParsedEnumCodable>: Hashable {
+@_spi(InternalOnlyAPI) public struct ParsedEnum<E: SafeParsedEnumCodable>: Hashable {
     /// The parsed enum value, or nil if the API string was unrecognized.
     public let value: E?
     /// The raw API string, always preserved.
@@ -69,13 +69,13 @@ extension ParsedEnum {
 }
 
 extension Set {
-    @_spi(STP) public func contains<E: SafeParsedEnumCodable>(_ enumValue: E) -> Bool
+    @_spi(InternalOnlyAPI) public func contains<E: SafeParsedEnumCodable>(_ enumValue: E) -> Bool
         where Element == ParsedEnum<E>
     {
         contains(ParsedEnum(enumValue))
     }
 
-    @_spi(STP) @discardableResult
+    @_spi(InternalOnlyAPI) @discardableResult
     public mutating func insert<E: SafeParsedEnumCodable>(_ enumValue: E) -> (inserted: Bool, memberAfterInsert: ParsedEnum<E>)
         where Element == ParsedEnum<E>
     {

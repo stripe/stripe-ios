@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Reusable view that separates panes into two parts:

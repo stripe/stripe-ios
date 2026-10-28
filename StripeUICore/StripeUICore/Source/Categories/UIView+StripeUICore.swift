@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-@_spi(STP) public extension UIView {
+@_spi(InternalOnlyAPI) public extension UIView {
     /// - Note: This variant of `addAndPinSubview` respects the view's `directionalLayoutMargins` property.
     /// This is useful if your margins can change dynamically.
     func addAndPinSubview(_ view: UIView, directionalLayoutMargins: NSDirectionalEdgeInsets) {

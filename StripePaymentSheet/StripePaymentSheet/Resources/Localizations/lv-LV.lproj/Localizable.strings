@@ -4,10 +4,6 @@
 
 "+ Add" = "+ Pievienot";
 
-"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (ietver %4$@%% konvertēšanas maksu).";
-
-"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
-
 "Accept" = "Piekrītu";
 
 "Add US bank account" = "Pievienot ASV bankas kontu";

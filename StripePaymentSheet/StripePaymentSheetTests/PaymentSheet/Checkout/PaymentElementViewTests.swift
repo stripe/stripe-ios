@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/13/26.
 //
 
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import SwiftUI
 import UIKit
 import XCTest

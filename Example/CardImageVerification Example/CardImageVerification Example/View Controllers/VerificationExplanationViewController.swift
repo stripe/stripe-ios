@@ -5,7 +5,7 @@
 //  Created by Jaime Park on 11/17/21.
 //
 
-@_spi(STP) import StripeCardScan
+@_spi(InternalOnlyAPI) import StripeCardScan
 import UIKit
 
 /// TODO(jaimepark) Internal structs. Find better place 

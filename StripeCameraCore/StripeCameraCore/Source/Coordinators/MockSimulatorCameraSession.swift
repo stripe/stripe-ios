@@ -14,10 +14,10 @@
 
 import AVKit
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Mocks a CameraSession on the simulator.
-@_spi(STP) public final class MockSimulatorCameraSession: CameraSessionProtocol {
+@_spi(InternalOnlyAPI) public final class MockSimulatorCameraSession: CameraSessionProtocol {
 
     enum Error: Swift.Error {
         case sessionNotConfigured

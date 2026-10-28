@@ -6,7 +6,7 @@
 //
 
 import Combine
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import SwiftUI
 
 /// A view model that manages an `EmbeddedPaymentElement`.
@@ -170,7 +170,7 @@ extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
 
 // MARK: STPAnalyticsProtocol
 
-@_spi(STP) extension EmbeddedPaymentElementViewModel: STPAnalyticsProtocol {
+@_spi(InternalOnlyAPI) extension EmbeddedPaymentElementViewModel: STPAnalyticsProtocol {
     nonisolated public static let stp_analyticsIdentifier = "EmbeddedPaymentElementViewModel"
 }
 

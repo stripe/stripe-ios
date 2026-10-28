@@ -5,7 +5,7 @@
 //  Created by Scott Grant on 9/25/22.
 //
 
-@testable @_spi(STP) import StripeCardScan
+@testable @_spi(InternalOnlyAPI) import StripeCardScan
 import XCTest
 
 #if targetEnvironment(simulator)
