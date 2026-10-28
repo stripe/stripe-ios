@@ -48,6 +48,10 @@ final class SheetImplementationResolver {
         // Capture playground overrides per flow so changing the setting cannot switch an existing presentation.
         isEnabled = PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride ?? elementsSession.isNativeSheetEnabled
     }
+
+    init(isEnabled: Bool) {
+        self.isEnabled = isEnabled
+    }
 }
 
 extension PaymentSheet {

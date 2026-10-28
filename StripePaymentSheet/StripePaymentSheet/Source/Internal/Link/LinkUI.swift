@@ -44,6 +44,10 @@ enum LinkUI {
     static let oneTimeCodeTextFieldCornerRadius: CGFloat = 12
     static let nestedInlineSignupSectionCornerRadius: CGFloat = 16
 
+    // MARK: - Size
+
+    static let oneTimeCodeItemMaxWidth: CGFloat = 48
+
     // MARK: - Border
 
     static let borderWidth: CGFloat = 1.5

@@ -235,7 +235,7 @@ private final class DismissalContentViewController: UIViewController, BottomShee
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {}
 }
 
-private struct StubKYCInfo: VerifyKYCInfo {
+struct StubKYCInfo: VerifyKYCInfo {
 
     let firstName = "Jane"
     let lastName: String? = "Doe"
