@@ -509,12 +509,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     func testCancelWaitsForShippingTaxUpdateAndRestoresTaxRegion() async {
         let existingTaxRegion = CheckoutController.Address(country: "US", postalCode: "10001")
-        let defaultTaxRegion = CheckoutController.Address(country: "US")
 
-        for (initialTaxRegion, expectedTaxRegion) in [
-            (existingTaxRegion, existingTaxRegion),
-            (nil, defaultTaxRegion),
-        ] {
+        for initialTaxRegion in [existingTaxRegion, nil] {
             // Given an in-flight shipping tax update
             let returnedSession = CheckoutTestHelpers.makeSession().makePublicSession()
             let updater = MockCheckoutSessionWalletUpdater(
@@ -546,14 +542,14 @@ final class CheckoutApplePayContextTests: XCTestCase {
             context.paymentAuthorizationControllerDidFinish(controller)
             await Task.yield()
 
-            // Then cancellation waits for the update and restores the previous or default region
+            // Then cancellation waits for the update and restores the previous region, including nil
             XCTAssertFalse(didReturnResult)
             updater.resume()
             let result = await resultTask.value
             XCTAssertEqual(result.paymentSheetResult, .canceled)
             XCTAssertEqual(updater.updateCallCount, 2)
-            XCTAssertEqual(updater.lastAddress, expectedTaxRegion)
-            XCTAssertEqual(updater.currentTaxRegion, expectedTaxRegion)
+            XCTAssertEqual(updater.lastAddress, initialTaxRegion)
+            XCTAssertEqual(updater.currentTaxRegion, initialTaxRegion)
         }
     }
 
@@ -727,7 +723,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     // MARK: - Cancellation during tax updates
 
     func testDidFinish_notStarted_waitsForBillingTaxUpdateBeforeCanceling() async {
-        // Given an active Apple Pay presentation with a billing tax update that is suspended
+        // Given Apple Pay presented by ECE with a billing tax update that is suspended
         let updatedSession = CheckoutTestHelpers.makeOpenSession().makePublicSession()
         let updater = MockCheckoutSessionWalletUpdater(
             sessionToReturn: updatedSession,
@@ -735,7 +731,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
         )
         let (context, mockController) = makeContext(
             collectsTaxFromBillingAddress: true,
-            checkoutWalletUpdater: updater
+            checkoutWalletUpdater: updater,
+            confirmationSource: .expressCheckoutElement
         )
         var didReturnResult = false
         let resultTask = Task {
@@ -760,6 +757,9 @@ final class CheckoutApplePayContextTests: XCTestCase {
         updater.resume()
         let result = await resultTask.value
         XCTAssertEqual(result.paymentSheetResult, .canceled)
+        XCTAssertEqual(updater.updateCallCount, 2)
+        XCTAssertNil(updater.lastAddress)
+        XCTAssertNil(updater.currentTaxRegion)
     }
 
     // MARK: - Authorization
