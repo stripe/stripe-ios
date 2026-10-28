@@ -14,8 +14,7 @@ struct CheckoutAttributionContext {
 }
 
 protocol CheckoutSessionPolling {
-    // TODO(CC migration): [2] Thread the Checkout Session client secret through polling and its test doubles.
-    func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome
+    func poll(checkoutSessionId: String, clientSecret: String) async -> CheckoutSessionPoller.Outcome
 }
 
 extension CheckoutSessionPoller: CheckoutSessionPolling {}
@@ -630,12 +629,15 @@ extension CheckoutController {
         }
 
         // 3. Poll if the Checkout Session is still in progress.
-        // TODO(CC migration): [5] Pass requestParameters.clientSecret and consume the CC outcomes implemented in [4].
+        // TODO(CC migration): [5] Consume the CC outcomes implemented in [4].
         // Keep this gate based on the original /confirm status, after successful next-action handling.
         var didPollToCompletion = false
         switch response.status {
         case .open:
-            let pollOutcome = await poller.poll(checkoutSessionId: response.sessionId)
+            let pollOutcome = await poller.poll(
+                checkoutSessionId: response.sessionId,
+                clientSecret: requestParameters.clientSecret
+            )
             switch pollOutcome {
             case .completed:
                 didPollToCompletion = true

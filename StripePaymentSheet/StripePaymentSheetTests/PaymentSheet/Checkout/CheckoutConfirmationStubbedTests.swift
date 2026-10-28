@@ -413,6 +413,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             return XCTFail("Expected confirmation to complete, got \(result)")
         }
         XCTAssertEqual(poller.checkoutSessionIds, [checkout.session.id])
+        XCTAssertEqual(poller.clientSecrets, [checkout.clientSecret])
         XCTAssertEqual(response.status, .complete(.paid))
         XCTAssertEqual(response.paymentStatus, .paid)
     }
@@ -1015,7 +1016,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             responseJSON: confirmResponseJSON,
             expectedPaymentMethodType: "link"
         )
-        let poll = stubPollCheckoutSession(sessionId: checkout.session.id)
+        let poll = stubPollCheckoutSession(sessionId: checkout.session.id, clientSecret: checkout.clientSecret)
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
@@ -1531,18 +1532,21 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         return expectation
     }
 
-    private func stubPollCheckoutSession(sessionId: String) -> XCTestExpectation {
+    private func stubPollCheckoutSession(sessionId: String, clientSecret: String) -> XCTestExpectation {
         let expectation = expectation(description: "Checkout Session polled")
         stub { request in
             request.httpMethod == "GET"
-                && request.url?.path.hasSuffix("/payment_pages/\(sessionId)/poll") == true
-        } response: { _ in
+                && request.url?.path.hasSuffix("/checkout_client/\(sessionId)/poll") == true
+        } response: { request in
+            let query = request.url.flatMap { URLComponents(url: $0, resolvingAgainstBaseURL: false)?.queryItems }
+            XCTAssertEqual(query?.first(where: { $0.name == "client_secret" })?.value, clientSecret)
             expectation.fulfill()
             return HTTPStubsResponse(
                 jsonObject: [
-                    "session_id": sessionId,
-                    "state": "succeeded",
-                    "payment_object_status": NSNull(),
+                    "id": sessionId,
+                    "confirmation_status": "succeeded",
+                    "status": "complete",
+                    "payment_status": "paid",
                 ],
                 statusCode: 200,
                 headers: nil
@@ -1623,13 +1627,15 @@ private struct CheckoutConfirmationTestTimeoutError: Error {}
 private final class TestCheckoutSessionPoller: CheckoutSessionPolling {
     let outcome: CheckoutSessionPoller.Outcome
     private(set) var checkoutSessionIds: [String] = []
+    private(set) var clientSecrets: [String] = []
 
     init(outcome: CheckoutSessionPoller.Outcome) {
         self.outcome = outcome
     }
 
-    func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome {
+    func poll(checkoutSessionId: String, clientSecret: String) async -> CheckoutSessionPoller.Outcome {
         checkoutSessionIds.append(checkoutSessionId)
+        clientSecrets.append(clientSecret)
         return outcome
     }
 }

@@ -85,7 +85,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     struct CompletedCheckoutSessionPoller: CheckoutSessionPolling {
-        func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome {
+        func poll(checkoutSessionId: String, clientSecret: String) async -> CheckoutSessionPoller.Outcome {
             return .completed
         }
     }

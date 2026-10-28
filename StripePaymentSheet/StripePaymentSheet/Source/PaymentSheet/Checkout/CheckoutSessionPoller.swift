@@ -10,9 +10,9 @@ import Foundation
 
 // MARK: - Dependencies
 protocol CheckoutSessionPollingAPIClient {
-    // TODO(CC migration): [2] Accept the Checkout Session client secret here and in API-client test doubles.
     func pollCheckoutSession(
         checkoutSessionId: String,
+        clientSecret: String,
         timeout: TimeInterval
     ) async throws -> CheckoutClientPollResponse
 }
@@ -73,9 +73,8 @@ struct CheckoutSessionPoller {
         self.clock = clock
     }
 
-    // TODO(CC migration): [2] Accept and forward the client secret; preserve the existing timeout, retries, and backoff.
     /// Returns the reason polling stopped. Request failures are retried until timeout.
-    func poll(checkoutSessionId: String) async -> Outcome {
+    func poll(checkoutSessionId: String, clientSecret: String) async -> Outcome {
         let startTime = clock.now()
         var lastPollStartElapsedTime: TimeInterval?
         var minimumTimeIntervalBetweenPolls = Self.minimumTimeInterval
@@ -122,6 +121,7 @@ struct CheckoutSessionPoller {
                 lastPollStartElapsedTime = elapsedTime()
                 pollResponse = try await apiClient.pollCheckoutSession(
                     checkoutSessionId: checkoutSessionId,
+                    clientSecret: clientSecret,
                     timeout: remainingTime
                 )
             } catch {

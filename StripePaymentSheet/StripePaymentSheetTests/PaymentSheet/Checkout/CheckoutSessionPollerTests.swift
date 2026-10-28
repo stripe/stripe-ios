@@ -11,6 +11,7 @@ import XCTest
 
 final class CheckoutSessionPollerTests: XCTestCase {
     private let checkoutSessionId = "cs_test_123"
+    private let clientSecret = "cs_test_123_secret_abc"
 
     func testPollStatesControlWhetherPollingContinues() async {
         let continuingStates: [CheckoutClientPollResponse.State] = [
@@ -29,7 +30,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
             // When polling
             let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-                checkoutSessionId: checkoutSessionId
+                checkoutSessionId: checkoutSessionId,
+                clientSecret: clientSecret
             )
 
             // Then another request is made before polling completes
@@ -50,7 +52,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
             // When polling
             let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-                checkoutSessionId: checkoutSessionId
+                checkoutSessionId: checkoutSessionId,
+                clientSecret: clientSecret
             )
 
             // Then no further request is made and polling completes
@@ -68,7 +71,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
             // When polling
             let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-                checkoutSessionId: checkoutSessionId
+                checkoutSessionId: checkoutSessionId,
+                clientSecret: clientSecret
             )
 
             // Then the unexpected state is returned for the caller to handle
@@ -86,7 +90,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
         // When polling
         let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-            checkoutSessionId: checkoutSessionId
+            checkoutSessionId: checkoutSessionId,
+            clientSecret: clientSecret
         )
 
         // Then the failed-payment outcome is returned for the caller to handle
@@ -101,7 +106,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
         // When polling
         let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-            checkoutSessionId: checkoutSessionId
+            checkoutSessionId: checkoutSessionId,
+            clientSecret: clientSecret
         )
 
         // Then the failed asynchronous payment outcome is returned for the caller to handle
@@ -119,7 +125,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
         // When polling
         let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-            checkoutSessionId: checkoutSessionId
+            checkoutSessionId: checkoutSessionId,
+            clientSecret: clientSecret
         )
 
         // Then the failure is retried using the normal cadence
@@ -139,7 +146,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
         // When polling
         let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-            checkoutSessionId: checkoutSessionId
+            checkoutSessionId: checkoutSessionId,
+            clientSecret: clientSecret
         )
 
         // Then the fast request is followed by a delay, while the slow request is not
@@ -148,6 +156,7 @@ final class CheckoutSessionPollerTests: XCTestCase {
             checkoutSessionId,
             checkoutSessionId,
         ])
+        XCTAssertEqual(apiClient.pollRequests.map(\.clientSecret), [clientSecret, clientSecret, clientSecret])
         XCTAssertEqual(apiClient.pollRequests.map(\.startTime), [0, 0.5, 1.2])
         XCTAssertEqual(apiClient.pollRequests.map(\.timeout), [30, 29.5, 28.8])
         XCTAssertEqual(clock.sleepDurations, [0.4])
@@ -165,7 +174,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
         // When polling
         let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-            checkoutSessionId: checkoutSessionId
+            checkoutSessionId: checkoutSessionId,
+            clientSecret: clientSecret
         )
 
         // Then requests back off by 2, 4, 8, and 8 seconds, and no request starts at timeout
@@ -191,7 +201,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
             // When polling
             let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-                checkoutSessionId: checkoutSessionId
+                checkoutSessionId: checkoutSessionId,
+                clientSecret: clientSecret
             )
 
             // Then the retry uses the rate-limit interval
@@ -213,7 +224,8 @@ final class CheckoutSessionPollerTests: XCTestCase {
 
         // When polling
         let outcome = await makePoller(apiClient: apiClient, clock: clock).poll(
-            checkoutSessionId: checkoutSessionId
+            checkoutSessionId: checkoutSessionId,
+            clientSecret: clientSecret
         )
 
         // Then the ordinary failure retains the backoff and success resets the normal cadence
@@ -280,6 +292,7 @@ private final class TestClock: CheckoutSessionPollingClock {
 private final class MockAPIClient: CheckoutSessionPollingAPIClient {
     struct PollRequest {
         let checkoutSessionId: String
+        let clientSecret: String
         let timeout: TimeInterval
         let startTime: TimeInterval
     }
@@ -299,10 +312,12 @@ private final class MockAPIClient: CheckoutSessionPollingAPIClient {
 
     func pollCheckoutSession(
         checkoutSessionId: String,
+        clientSecret: String,
         timeout: TimeInterval
     ) async throws -> CheckoutClientPollResponse {
         pollRequests.append(PollRequest(
             checkoutSessionId: checkoutSessionId,
+            clientSecret: clientSecret,
             timeout: timeout,
             startTime: clock.now()
         ))
