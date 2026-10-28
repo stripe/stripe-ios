@@ -14,6 +14,7 @@ struct CheckoutAttributionContext {
 }
 
 protocol CheckoutSessionPolling {
+    // TODO(CC migration): [2] Thread the Checkout Session client secret through polling and its test doubles.
     func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome
 }
 
@@ -302,9 +303,9 @@ extension CheckoutController {
                 let result: InternalConfirmResult
                 switch flow {
                 case .withoutPaymentMethod(let authenticationContext):
+                    // TODO(CC migration): [2] Pass self.clientSecret to the CC confirmation request.
                     let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithoutPaymentMethod(
                         sessionId: self.session.id,
-                        clientSecret: self.clientSecret,
                         // .withoutPaymentMethod only ever comes from makeConfirmationFlow(for: paymentElement:)
                         // — ExpressCheckoutElement's flow builder has no such case — so this is always PaymentElement.
                         confirmationSource: .paymentElement,
@@ -478,9 +479,9 @@ extension CheckoutController {
             case .selected:
                 savePaymentMethod = true
             }
+            // TODO(CC migration): [2] Pass checkoutSession.clientSecret to the CC confirmation request.
             return .createWithPaymentMethodData(
                 sessionId: checkoutSession.id,
-                clientSecret: checkoutSession.clientSecret,
                 paymentMethodData: confirmParams.paymentMethodParams,
                 confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
@@ -495,9 +496,9 @@ extension CheckoutController {
             // MARK: - Saved PM
             let paymentMethodOptions = preconfirmedIntentParams?.confirmPaymentMethodOptions
                 ?? confirmParams?.confirmPaymentMethodOptions
+            // TODO(CC migration): [2] Pass checkoutSession.clientSecret to the CC confirmation request.
             return .createWithPaymentMethodID(
                 sessionId: checkoutSession.id,
-                clientSecret: checkoutSession.clientSecret,
                 paymentMethodId: savedPaymentMethod.stripeId,
                 confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
@@ -513,6 +514,9 @@ extension CheckoutController {
 
     // MARK: - Confirm Response Handling
 
+    // TODO(CC migration): [1] Verify the deployed CC poll contract; the removed-field guards below need no replacement.
+    // Timeout succeeds with the last server-reported Session state; not_started is an integration error.
+    // Phase numbers follow CHECKOUT_CONFIRM_MIGRATION.md; update fixtures and tests alongside phases 2–5.
     /// Confirms a Checkout Session, handles any next action, and waits for confirmation to settle.
     @MainActor
     static func confirmCheckoutSession(
@@ -523,13 +527,12 @@ extension CheckoutController {
         confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil,
         poller injectedPoller: (any CheckoutSessionPolling)? = nil
     ) async -> InternalConfirmResult {
-        // TODO(porter) polling: Restore the poller setup when polling uses CheckoutClient.
-        // let poller: any CheckoutSessionPolling
-        // if let injectedPoller {
-        //     poller = injectedPoller
-        // } else {
-        //     poller = CheckoutSessionPoller(apiClient: apiClient)
-        // }
+        let poller: any CheckoutSessionPolling
+        if let injectedPoller {
+            poller = injectedPoller
+        } else {
+            poller = CheckoutSessionPoller(apiClient: apiClient)
+        }
 
         // 1. Call /confirm
         // TODO: Scope Radar option creation and this request with confirmationChallenge.withRadarOptions(for:).
@@ -544,24 +547,42 @@ extension CheckoutController {
         // Release the assertion only after the request using it has finished, before handling next actions.
         await confirmationChallenge?.complete()
 
-        if response.paymentResponse?.status == "requires_payment_method" {
+        // TODO(CC migration): [3] Remove this guard without reconstructing submission-attempt state.
+        // PP only exposes submission_attempt for manual approval; CC does not expose it.
+        // Ordinary card/CVC confirmation failures are API errors handled by the catch above.
+        if response.submissionAttempt?.state == .failed {
             return .failed(paymentError(from: response), sessionResponse: response)
         }
 
-        if response.paymentResponse?.status == "requires_action",
-           response.paymentResponse?.paymentIntent == nil, response.paymentResponse?.setupIntent == nil {
-            let error = CheckoutError.unknown(debugDescription: "CheckoutClient requires an action without a supported Intent.")
+        // Manual approval isn't supported yet
+        // TODO(CC migration): [3] Remove this guard; CC does not expose manual-approval submission state.
+        if response.submissionAttempt?.state == .requiresApproval {
+            let error = CheckoutError.unknown(debugDescription: "Checkout Session confirmation unexpectedly requires manual approval.")
             return .failed(error, sessionResponse: response)
         }
 
-        // 2. Retrieve the referenced Intent and handle any next action.
+        // Orchestration isn't supported yet
+        // TODO(CC migration): [3] Remove this guard; CC normalizes orchestration into payment_response.
+        // Handle supported next actions without trying to infer the internal routing choice.
+        if response.routeToOrchestrationInterface == true {
+            let error = CheckoutError.unknown(debugDescription: "Checkout Session confirmation unexpectedly requires orchestration.")
+            return .failed(error, sessionResponse: response)
+        }
+
+        // 2. Handle any next action required by the Intent.
+        // TODO(CC migration): [3] Use paymentResponse's PI/SI client-secret references with PaymentHandler, as in #7500.
+        // Keep retrieved Intents local and preserve this Session response on retrieval/action failure or cancellation.
         let clientCompletedIntent: PaymentOrSetupIntent?
-        if let reference = response.paymentResponse?.paymentIntent {
-            let result = await paymentHandler.handleNextAction(
-                paymentIntentClientSecret: reference.clientSecret,
-                authenticationContext: authenticationContext,
-                returnURL: requestParameters.returnURL
-            )
+        if let paymentIntent = response.paymentIntent {
+            let result: (STPPaymentHandlerActionStatus, STPPaymentIntent?, Error?) = await withCheckedContinuation { continuation in
+                paymentHandler.handleNextAction(
+                    for: paymentIntent,
+                    with: authenticationContext,
+                    returnURL: requestParameters.returnURL
+                ) { status, paymentIntent, error in
+                    continuation.resume(returning: (status, paymentIntent, error))
+                }
+            }
             switch result.0 {
             case .succeeded:
                 guard let paymentIntent = result.1 else {
@@ -572,18 +593,22 @@ extension CheckoutController {
             case .canceled:
                 return .canceled(sessionResponse: response)
             case .failed:
-                let error: Error = result.2 ?? PaymentSheetError.errorHandlingNextAction
+                let error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
                 let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a PaymentIntent.")
                 return .failed(error, sessionResponse: response)
             }
-        } else if let reference = response.paymentResponse?.setupIntent {
-            let result = await paymentHandler.handleNextAction(
-                setupIntentClientSecret: reference.clientSecret,
-                authenticationContext: authenticationContext,
-                returnURL: requestParameters.returnURL
-            )
+        } else if let setupIntent = response.setupIntent {
+            let result: (STPPaymentHandlerActionStatus, STPSetupIntent?, Error?) = await withCheckedContinuation { continuation in
+                paymentHandler.handleNextAction(
+                    for: setupIntent,
+                    with: authenticationContext,
+                    returnURL: requestParameters.returnURL
+                ) { status, setupIntent, error in
+                    continuation.resume(returning: (status, setupIntent, error))
+                }
+            }
             switch result.0 {
             case .succeeded:
                 guard let setupIntent = result.1 else {
@@ -605,10 +630,10 @@ extension CheckoutController {
         }
 
         // 3. Poll if the Checkout Session is still in progress.
-        // TODO(porter) polling: Re-enable polling once it uses CheckoutClient.
-        // var didPollToCompletion = false
+        // TODO(CC migration): [5] Pass requestParameters.clientSecret and consume the CC outcomes implemented in [4].
+        // Keep this gate based on the original /confirm status, after successful next-action handling.
+        var didPollToCompletion = false
         switch response.status {
-        /*
         case .open:
             let pollOutcome = await poller.poll(checkoutSessionId: response.sessionId)
             switch pollOutcome {
@@ -616,15 +641,22 @@ extension CheckoutController {
                 didPollToCompletion = true
                 // Continue to step 4.
             case .timedOut:
+                // TODO(CC migration): [5] Return success with status/payment_status from the last successful poll.
+                // If no poll succeeded, preserve /confirm fields. Never infer Session completion from the Intent.
+                // Retain this explanation in the implementation: Like EwCS, we optimistically succeed on timeout.
+                // We preserve the last server-reported Session state rather than calculate it from the Intent,
+                // intentionally allowing Session status/payment_status to be stale in this edge case.
                 // Continue to step 4.
                 break
             case .requiresPaymentMethod,
                  .failedAsyncPayment:
+                // TODO(CC migration): [5] Handle CC confirmation_status == failed and apply poll Session fields.
+                // Poll has no confirmation_error; retrieve details best-effort with requestParameters.clientSecret.
+                // If retrieval is rejected, retain the polled Session state and return a confirmation failure.
                 let latestSession: PaymentPagesAPIResponse
                 do {
                     latestSession = try await apiClient.retrieveCheckoutSession(
-                        checkoutSessionId: response.sessionId,
-                        clientSecret: requestParameters.clientSecret
+                        checkoutSessionId: response.sessionId
                     )
                 } catch {
                     return .failed(error, sessionResponse: response)
@@ -634,11 +666,12 @@ extension CheckoutController {
                 let error = paymentError(from: latestSession)
                 return .failed(error, sessionResponse: latestSession)
             case .invalidOrExpired:
+                // TODO(CC migration): [5] Fold this into CC's failed outcome, using poll status to identify expiration.
+                // If retrieving details, pass requestParameters.clientSecret; failure must not lose polled state.
                 let latestSession: PaymentPagesAPIResponse
                 do {
                     latestSession = try await apiClient.retrieveCheckoutSession(
-                        checkoutSessionId: response.sessionId,
-                        clientSecret: requestParameters.clientSecret
+                        checkoutSessionId: response.sessionId
                     )
                 } catch {
                     return .failed(error, sessionResponse: response)
@@ -648,8 +681,7 @@ extension CheckoutController {
                 let error = CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly became invalid or expired during polling.")
                 return .failed(error, sessionResponse: latestSession)
             }
-        */
-        case .open, .complete:
+        case .complete:
             // Continue to step 4 without polling.
             break
         case .expired:
@@ -657,35 +689,54 @@ extension CheckoutController {
             return .failed(CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly expired after confirmation."), sessionResponse: response)
         }
 
-        // Preserve the status derived from client-completed authentication. Completed sessions cannot be retrieved.
-        var updatedResponse = response
-        switch clientCompletedIntent {
-        case nil:
-            // TODO(porter) polling: Restore the polled completion status when polling uses CheckoutClient.
-            // if didPollToCompletion {
-            //     updatedResponse.status = .complete(response.paymentStatus)
-            // }
-            break
-        case .paymentIntent(let paymentIntent):
-            switch paymentIntent.status {
-            case .succeeded:
-                updatedResponse.status = .complete(.paid)
-                updatedResponse.paymentStatus = .paid
-            case .processing:
-                updatedResponse.status = .complete(response.paymentStatus)
-            default:
-                break
+        // 4. Hackily update the PaymentPages response `status` and `payment_status` based on the `/confirm` response and client-completed Intent.
+        // Unfortunately, this logic has to live on the client today. The /retrieve endpoint 400s for completed Checkout Sessions.
+        // TODO(CC migration): [5] Use the last server-reported status/payment_status, including on timeout.
+        // Update both typed fields consistently (Status embeds PaymentStatus); stop adding expanded Intent fields.
+        // Preserve /confirm fields when no poll succeeded; remove all Intent-based Session status inference.
+        do {
+            var responseFields = response.allResponseFields
+
+            // PaymentHandler already verified that the Intent is client-complete. Only update
+            // Session fields we can derive from the newer Intent; otherwise preserve `/confirm`.
+            switch clientCompletedIntent {
+            case nil:
+                if didPollToCompletion {
+                    responseFields["status"] = "complete"
+                }
+            case .paymentIntent(let paymentIntent):
+                responseFields["payment_intent"] = paymentIntent.allResponseFields
+                switch paymentIntent.status {
+                case .succeeded:
+                    responseFields["status"] = "complete"
+                    responseFields["payment_status"] = "paid"
+                case .processing:
+                    responseFields["status"] = "complete"
+                default:
+                    break
+                }
+            case .setupIntent(let setupIntent):
+                responseFields["setup_intent"] = setupIntent.allResponseFields
+                switch setupIntent.status {
+                case .succeeded:
+                    responseFields["status"] = "complete"
+                default:
+                    break
+                }
             }
-        case .setupIntent(let setupIntent):
-            if setupIntent.status == .succeeded {
-                updatedResponse.status = .complete(response.paymentStatus)
-            }
+
+            let data = try JSONSerialization.data(withJSONObject: responseFields)
+            let updatedResponse = try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
+            return .completed(updatedResponse)
+        } catch {
+            return .failed(error, sessionResponse: response)
         }
-        return .completed(updatedResponse)
     }
 
     private static func paymentError(from session: PaymentPagesAPIResponse) -> Error {
-        let lastErrorFields = session.paymentResponse?.lastPaymentError?.allResponseFields
+        // TODO(CC migration): [3] Read paymentResponse.lastPaymentError for either PI or SI; keep the generic fallback.
+        let lastErrorFields = session.paymentIntent?.lastPaymentError?.allResponseFields
+            ?? session.setupIntent?.lastSetupError?.allResponseFields
         return NSError.stp_error(fromStripeResponse: lastErrorFields.map { ["error": $0] })
             ?? PaymentSheetError.errorHandlingNextAction
     }

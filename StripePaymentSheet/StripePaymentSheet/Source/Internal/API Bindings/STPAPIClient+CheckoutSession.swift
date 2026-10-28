@@ -231,6 +231,8 @@ extension STPAPIClient {
         )
     }
 
+    // TODO(CC migration): [2] GET checkout_client/{id}/poll with client_secret and decode the CC poll response.
+    // Preserve the caller's remaining timeout and disabled automatic retries; the poller owns the retry budget.
     /// Retrieves the small state object used to determine whether a Checkout
     /// Session transition is still in progress.
     func pollCheckoutSession(

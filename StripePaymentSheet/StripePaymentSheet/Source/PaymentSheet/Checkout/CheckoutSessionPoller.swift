@@ -10,6 +10,7 @@ import Foundation
 
 // MARK: - Dependencies
 protocol CheckoutSessionPollingAPIClient {
+    // TODO(CC migration): [2] Accept the Checkout Session client secret here and in API-client test doubles.
     func pollCheckoutSession(
         checkoutSessionId: String,
         timeout: TimeInterval
@@ -32,6 +33,10 @@ class CheckoutSessionPollingClock {
 
 /// Polls a Checkout Session until confirmation can continue or polling times out.
 struct CheckoutSessionPoller {
+    // TODO(CC migration): [4] Return CC succeeded/failed outcomes with poll Session fields, rather than PP reasons.
+    // Surface unexpected not_started as an integration error, distinct from a payment failure.
+    // Every timeout exit must carry the last successfully decoded poll response, or nil if none succeeded.
+    // Request failures must not discard the last response; the caller returns success with that Session state.
     enum Outcome: Equatable {
         /// Polling observed a state where confirmation can continue.
         case completed
@@ -68,6 +73,7 @@ struct CheckoutSessionPoller {
         self.clock = clock
     }
 
+    // TODO(CC migration): [2] Accept and forward the client secret; preserve the existing timeout, retries, and backoff.
     /// Returns the reason polling stopped. Request failures are retried until timeout.
     func poll(checkoutSessionId: String) async -> Outcome {
         let startTime = clock.now()
@@ -134,6 +140,9 @@ struct CheckoutSessionPoller {
             consecutiveRateLimitCount = 0
 
             // 3. Check the /poll status
+            // TODO(CC migration): [4] Switch on confirmation_status: pending continues; succeeded/failed stop.
+            // not_started should never occur after accepted confirmation: stop and return an integration error.
+            // Do not infer the outcome from CC state.
             if pollResponse.paymentObjectStatus == .requiresPaymentMethod {
                 return .requiresPaymentMethod
             }
