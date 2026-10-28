@@ -32,17 +32,16 @@ final class PickerFieldView: UIView {
     final class MenuButton: UIButton {
         override var canBecomeFirstResponder: Bool { true }
 
-        var prepareForMenu: (() -> Void)?
         var willDisplayMenu: (() -> Void)?
         var didDismissMenu: (() -> Void)?
 
         override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-            prepareForMenu?()
+            window?.endEditing(true)
             return super.beginTracking(touch, with: event)
         }
 
         override func accessibilityActivate() -> Bool {
-            prepareForMenu?()
+            window?.endEditing(true)
             return super.accessibilityActivate()
         }
 
@@ -65,7 +64,7 @@ final class PickerFieldView: UIView {
         }
     }
 
-    private let menuButton: UIButton?
+    private let menuButton: MenuButton?
 
     // MARK: - Views
     private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: true, theme: theme)
@@ -177,7 +176,7 @@ final class PickerFieldView: UIView {
         theme: ElementsAppearance,
         hasPadding: Bool = true,
         isOptional: Bool = false,
-        menuButton: UIButton? = nil
+        menuButton: MenuButton? = nil
     ) {
         self.label = label
         self.shouldShowChevron = shouldShowChevron
@@ -194,19 +193,14 @@ final class PickerFieldView: UIView {
             menuButton.accessibilityLabel = label
             menuButton.isAccessibilityElement = true
             accessibilityElements = [menuButton]
-            if let menuButton = menuButton as? MenuButton {
-                menuButton.prepareForMenu = { [weak self] in
-                    self?.window?.endEditing(true)
-                }
-                menuButton.willDisplayMenu = { [weak self] in
-                    guard let self else { return }
-                    self.window?.endEditing(true)
-                    self.delegate?.didBeginEditing(self)
-                }
-                menuButton.didDismissMenu = { [weak self] in
-                    guard let self else { return }
-                    self.delegate?.didDismissMenu(self)
-                }
+            menuButton.willDisplayMenu = { [weak self] in
+                guard let self else { return }
+                self.window?.endEditing(true)
+                self.delegate?.didBeginEditing(self)
+            }
+            menuButton.didDismissMenu = { [weak self] in
+                guard let self else { return }
+                self.delegate?.didDismissMenu(self)
             }
         }
 //      On Catalyst/visionOS, add the picker view as a subview instead of an input view.
@@ -283,24 +277,19 @@ final class PickerFieldView: UIView {
         }
 
         if let menuButton {
-            window?.endEditing(true)
-            return menuButton.becomeFirstResponder()
+            guard let window else { return false }
+            window.endEditing(true)
+            // Programmatic navigation focuses the control; only user activation opens the menu.
+            let didFocus = menuButton.becomeFirstResponder()
+            if didFocus {
+                UIAccessibility.post(notification: .layoutChanged, argument: menuButton)
+            }
+            return didFocus
         }
         if super.becomeFirstResponder() {
             return true
         }
         return textField.becomeFirstResponder()
-    }
-
-    func beginEditing() -> Bool {
-        guard let menuButton else { return becomeFirstResponder() }
-        guard _canBecomeFirstResponder, isUserInteractionEnabled, window != nil else { return false }
-        // Programmatic navigation focuses the control; only user activation opens the menu.
-        let didFocus = becomeFirstResponder()
-        if didFocus {
-            UIAccessibility.post(notification: .layoutChanged, argument: menuButton)
-        }
-        return didFocus
     }
 
     func setCanBecomeFirstResponder(_ value: Bool) {

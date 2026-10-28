@@ -182,9 +182,8 @@ class AddressSectionElementTest: XCTestCase {
 
         // Reselecting or dismissing the country menu preserves the existing region.
         button.sendAction(try XCTUnwrap(button.menu?.children[index] as? UIAction))
-        let countryButton = try XCTUnwrap(button as? PickerFieldView.MenuButton)
-        countryButton.willDisplayMenu?()
-        countryButton.didDismissMenu?()
+        button.willDisplayMenu?()
+        button.didDismissMenu?()
         XCTAssertTrue(sut.state === state)
         XCTAssertEqual(sut.addressDetails.address.state, "ON")
         XCTAssertEqual(updates, 2)

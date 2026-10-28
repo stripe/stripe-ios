@@ -88,13 +88,13 @@ import UIKit
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
 
-    enum Presentation {
+    public enum Presentation {
         case picker
         case menu
     }
     private let presentation: Presentation
 
-    private(set) lazy var menuButton: UIButton? = {
+    private(set) lazy var menuButton: PickerFieldView.MenuButton? = {
         #if targetEnvironment(macCatalyst) || canImport(visionOS)
         return nil
         #else
@@ -139,7 +139,7 @@ import UIKit
         let pickerFieldView = PickerFieldView(
             label: label,
             shouldShowChevron: disableDropdownWithSingleElement ? items.count != 1 : true,
-            pickerView: pickerView,
+            pickerView: menuButton ?? pickerView,
             delegate: self,
             theme: theme,
             hasPadding: hasPadding,
@@ -189,7 +189,7 @@ import UIKit
      - If `defaultIndex` is outside of the bounds of the `items` array, then a default of `0` is used.
      - `didUpdate` is not called if the user does not change their input before hitting "Done"
      */
-    public convenience init(
+    public init(
         items: [DropdownItem],
         defaultIndex: Int? = nil,
         label: String?,
@@ -198,32 +198,7 @@ import UIKit
         disableDropdownWithSingleElement: Bool = false,
         isOptional: Bool = false,
         startsEmpty: Bool = false,
-        didUpdate: DidUpdateSelectedIndex? = nil
-    ) {
-        self.init(
-            items: items,
-            defaultIndex: defaultIndex,
-            label: label,
-            theme: theme,
-            hasPadding: hasPadding,
-            disableDropdownWithSingleElement: disableDropdownWithSingleElement,
-            isOptional: isOptional,
-            startsEmpty: startsEmpty,
-            presentation: .picker,
-            didUpdate: didUpdate
-        )
-    }
-
-    init(
-        items: [DropdownItem],
-        defaultIndex: Int? = nil,
-        label: String?,
-        theme: ElementsAppearance = .default,
-        hasPadding: Bool = true,
-        disableDropdownWithSingleElement: Bool = false,
-        isOptional: Bool = false,
-        startsEmpty: Bool = false,
-        presentation: Presentation,
+        presentation: Presentation = .picker,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
         stpAssert(!items.filter { !$0.isDisabled }.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
@@ -307,7 +282,7 @@ private extension DropdownFieldElement {
                           self.items.indices.contains(index),
                           self.items[index].rawData == item.rawData,
                           !self.items[index].isDisabled else { return }
-                    self.select(index: index, shouldAutoAdvance: true)
+                    self.select(index: index)
                 }
             })
         }
@@ -364,7 +339,7 @@ extension DropdownFieldElement: Element {
     }
 
     public func beginEditing() -> Bool {
-        return pickerFieldView.beginEditing()
+        return pickerFieldView.becomeFirstResponder()
     }
 }
 
@@ -450,9 +425,7 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
     }
 
     func didDismissMenu(_ pickerFieldView: PickerFieldView) {
-        if isEditing {
-            isEditing = false
-        }
+        isEditing = false
     }
 
     func didCancel(_ pickerFieldView: PickerFieldView) {
