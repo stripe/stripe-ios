@@ -8,9 +8,9 @@
 
 import UIKit
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public struct PhoneNumber {
+@_spi(InternalOnlyAPI) public struct PhoneNumber {
     public enum Format {
         /// Formatted according to e164 standard, e.g. +15555555555
         case e164
@@ -117,7 +117,7 @@ import UIKit
 
 }
 
-@_spi(STP) public extension PhoneNumber {
+@_spi(InternalOnlyAPI) public extension PhoneNumber {
     struct Metadata: RegionCodeProvider {
 
         private static var metadataByCountryCodeCache: [String: Metadata] = [:]

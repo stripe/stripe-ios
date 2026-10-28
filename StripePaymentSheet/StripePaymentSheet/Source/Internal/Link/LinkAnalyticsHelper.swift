@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 /// Analytics for one Link flow. Checkout context stays with the flow, not the shared Link account.
 struct LinkAnalyticsHelper {

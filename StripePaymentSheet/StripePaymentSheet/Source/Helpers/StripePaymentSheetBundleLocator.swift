@@ -6,10 +6,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// :nodoc:
-@_spi(STP) public final class StripePaymentSheetBundleLocator: BundleLocatorProtocol {
+@_spi(InternalOnlyAPI) public final class StripePaymentSheetBundleLocator: BundleLocatorProtocol {
     public static let internalClass: AnyClass = StripePaymentSheetBundleLocator.self
     public static let bundleName = "StripePaymentSheetBundle"
     #if SWIFT_PACKAGE

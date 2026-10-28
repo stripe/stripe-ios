@@ -6,12 +6,12 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A `UITextField` subclass that moves the placeholder text to the top leading side of the field
 /// instead of hiding it upon text entry or editing.
-@_spi(STP) public class STPFloatingPlaceholderTextField: UITextField {
+@_spi(InternalOnlyAPI) public class STPFloatingPlaceholderTextField: UITextField {
 
     struct LayoutConstants {
         static let defaultHeight: CGFloat = 40

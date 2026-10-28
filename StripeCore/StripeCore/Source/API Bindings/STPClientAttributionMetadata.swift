@@ -8,7 +8,7 @@
 import Foundation
 
 // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
-@_spi(STP) public class STPClientAttributionMetadata: NSObject {
+@_spi(InternalOnlyAPI) public class STPClientAttributionMetadata: NSObject {
 
     public enum AdditionalElement: String {
         case payment

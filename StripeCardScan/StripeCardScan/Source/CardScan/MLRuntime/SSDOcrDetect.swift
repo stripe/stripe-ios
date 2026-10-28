@@ -11,7 +11,7 @@ import UIKit
 
 /// Documentation for SSD OCR
 
-@_spi(STP) public class SSDOcrDetect {
+@_spi(InternalOnlyAPI) public class SSDOcrDetect {
     @AtomicProperty var ssdOcrModel: SSDOcr?
     static var priors: [CGRect]?
 
@@ -66,7 +66,7 @@ import UIKit
         }
     }
 
-    @_spi(STP) public static func loadModelFromBundle() -> SSDOcr? {
+    @_spi(InternalOnlyAPI) public static func loadModelFromBundle() -> SSDOcr? {
         guard
             let ssdOcrUrl = StripeCardScanBundleLocator.resourcesBundle.url(
                 forResource: SSDOcrDetect.ssdOcrResource,

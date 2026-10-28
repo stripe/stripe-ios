@@ -5,11 +5,11 @@
 //  Created by Yuki Tokuhiro on 8/2/24.
 //
 
-@testable@_spi(STP) import StripeCore
-@_spi(STP)@testable import StripeCoreTestUtils
-@_spi(STP)@testable import StripePayments
-@testable @_spi(STP) @_spi(SharedPaymentToken) import StripePaymentSheet
-@_spi(STP)@testable import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI)@testable import StripeCoreTestUtils
+@_spi(InternalOnlyAPI)@testable import StripePayments
+@testable @_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable import StripePaymentsTestUtils
 import XCTest
 
 @MainActor

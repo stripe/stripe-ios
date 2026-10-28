@@ -4,7 +4,7 @@
 //
 
 import Foundation
-@testable@_spi(STP) import Stripe
+@testable@_spi(InternalOnlyAPI) import Stripe
 
 final class STPIntentActionPixDisplayQrCodeTest: XCTestCase {
     func testDecodesPixDisplayQrCode() throws {

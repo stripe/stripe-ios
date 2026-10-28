@@ -5,11 +5,11 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 13117b06a39d0815e0933009fed71b54
+x-cloud-trace-context: cc7f36509c266cdd916705dc05fed9b7
 Via: 1.1 google
-Date: Mon, 26 Oct 2026 22:42:27 GMT
+Date: Wed, 28 Oct 2026 20:58:21 GMT
+Alt-Svc: h3=":443"; ma=2592000
 Content-Length: 129
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Etag: W/"81-rG6NjLVBd7xgaXIAP6hWc5HlsxM"
 
 {

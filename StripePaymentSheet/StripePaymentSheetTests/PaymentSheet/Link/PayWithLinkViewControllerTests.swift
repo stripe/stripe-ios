@@ -6,10 +6,10 @@
 //
 
 import Foundation
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 #if !os(visionOS)
 class PayWithLinkViewControllerTests: XCTestCase {

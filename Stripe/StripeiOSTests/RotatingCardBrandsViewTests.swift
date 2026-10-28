@@ -6,11 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 import XCTest
 
 @testable import Stripe
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 
 class RotatingCardBrandsViewTests: XCTestCase {
 

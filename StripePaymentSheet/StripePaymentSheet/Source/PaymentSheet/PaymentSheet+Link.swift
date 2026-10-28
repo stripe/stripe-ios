@@ -4,8 +4,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 // MARK: - Webview Link
@@ -72,7 +72,7 @@ extension PaymentSheet {
         shouldFinishOnClose: Bool,
         onClose: (() -> Void)? = nil
     ) {
-        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
+        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, nativeSheetPresentation: nativeSheetPresentation, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
 
         payWithNativeLink.presentAsSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
             if case let .failed(error) = result {
@@ -124,13 +124,13 @@ func deviceCanUseNativeLink(elementsSession: STPElementsSession, apiClient: STPA
 
 extension PaymentSheet {
 
-    @_spi(STP) public enum LinkFeatureFlags {
+    @_spi(InternalOnlyAPI) public enum LinkFeatureFlags {
 
         /// Decides whether Link inline verification is shown in the `WalletButtonsView`.
-        @_spi(STP) public static var enableLinkInlineVerification: Bool = false
+        @_spi(InternalOnlyAPI) public static var enableLinkInlineVerification: Bool = false
 
         /// Overrides whether native Link is available. Intended for test playgrounds only.
-        @_spi(STP) public static var nativeLinkEnabledOverride: Bool?
+        @_spi(InternalOnlyAPI) public static var nativeLinkEnabledOverride: Bool?
     }
 }
 

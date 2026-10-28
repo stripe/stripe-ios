@@ -8,8 +8,8 @@
 import MapKit
 import SwiftUI
 
-@_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 
 class ExampleLinkStandaloneComponentViewModel: ObservableObject {
     @Published var linkController: LinkController?

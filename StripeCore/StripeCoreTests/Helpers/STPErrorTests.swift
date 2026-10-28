@@ -3,7 +3,7 @@
 //  StripeCoreTests
 //
 
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 class STPErrorTests: XCTestCase {

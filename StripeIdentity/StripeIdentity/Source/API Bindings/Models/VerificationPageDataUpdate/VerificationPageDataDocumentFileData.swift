@@ -6,7 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI {
     struct VerificationPageDataDocumentFileData: Encodable, Equatable {

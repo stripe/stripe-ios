@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 public extension StripeAPI {
 
@@ -53,5 +53,5 @@ public extension StripeAPI {
 
 // MARK: - Codable & Equatable
 
-@_spi(STP) extension StripeAPI.BankAccountToken: Codable, Equatable {}
-@_spi(STP) extension StripeAPI.BankAccountToken.BankAccount: Codable, Equatable {}
+@_spi(InternalOnlyAPI) extension StripeAPI.BankAccountToken: Codable, Equatable {}
+@_spi(InternalOnlyAPI) extension StripeAPI.BankAccountToken.BankAccount: Codable, Equatable {}

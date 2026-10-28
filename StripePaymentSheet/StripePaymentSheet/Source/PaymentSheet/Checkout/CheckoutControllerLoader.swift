@@ -4,8 +4,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 @MainActor
 enum CheckoutControllerLoader {
@@ -35,9 +35,10 @@ enum CheckoutControllerLoader {
         // 1b. Call the /init endpoint
         let response = try await configuration.apiClient.initCheckoutSession(
             checkoutSessionId: CheckoutController.extractSessionId(from: configuration.clientSecret),
+            clientSecret: configuration.clientSecret,
             adaptivePricingAllowed: configuration.currencySelectorElement != nil
         )
-        let session = CheckoutController.Session(apiResponse: response, localState: .empty, configuration: configuration)
+        let session = CheckoutController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
         await resources.value
 
         STPTelemetryClient.shared.sendTelemetryData() // see https://docs.google.com/document/d/18Aamx_KxPZLHOc1x-9MJriEoTiX7l0N-x0cj8Nk_IYM

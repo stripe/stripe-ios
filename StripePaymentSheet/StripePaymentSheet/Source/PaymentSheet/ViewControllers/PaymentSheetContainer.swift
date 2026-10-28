@@ -6,7 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 /// The presentation-independent interface used by PaymentSheet content.

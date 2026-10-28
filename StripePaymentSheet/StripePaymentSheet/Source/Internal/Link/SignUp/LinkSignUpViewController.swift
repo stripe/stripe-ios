@@ -8,9 +8,9 @@
 import SafariServices
 import UIKit
 
-@_spi(STP) import StripeCore
-@_exported @_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_exported @_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
 protocol LinkSignUpViewControllerDelegate: AnyObject {
     func signUpController(

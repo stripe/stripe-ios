@@ -7,10 +7,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
 extension STPAnalyticsClient {
     /// ⚠️ Deprecated - use `PaymentSheetAnalyticsHelper` if you are actually a PaymentSheet analytic so that you can send all the params common to PaymentSheet analytics. 

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
 
 /// Consolidated output from all ML models / detectors that make up document
 /// scanning. The combination of this output will determine if the image captured

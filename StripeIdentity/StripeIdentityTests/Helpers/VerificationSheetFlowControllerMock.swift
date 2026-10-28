@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import XCTest
 
-@_spi(STP) @testable import StripeIdentity
+@_spi(InternalOnlyAPI) @testable import StripeIdentity
 
 /// Mock to help us test behavior that relies on  VerificationSheetFlowController
 final class VerificationSheetFlowControllerMock: VerificationSheetFlowControllerProtocol {
@@ -75,7 +75,8 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
 
     func transitionToSelfieCaptureScreen(
         staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
-        sheetController: StripeIdentity.VerificationSheetControllerProtocol
+        sheetController: StripeIdentity.VerificationSheetControllerProtocol,
+        trainingConsent: Bool?
     ) {
         // no-op
     }

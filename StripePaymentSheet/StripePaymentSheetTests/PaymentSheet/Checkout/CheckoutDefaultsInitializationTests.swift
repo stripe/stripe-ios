@@ -1,7 +1,7 @@
 import OHHTTPStubs
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 @MainActor
@@ -66,6 +66,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
 
         XCTAssertNotNil(checkout.paymentElement)
         XCTAssertEqual(requests.map(\.kind), [.initSession, .updateSession])
+        XCTAssertEqual(requests.map { $0.params["client_secret"] }, [clientSecret, clientSecret])
         XCTAssertEqual(requests[1].params["tax_region[country]"], "US")
         XCTAssertEqual(requests[1].params["tax_region[line1]"], "123 Billing St")
         XCTAssertEqual(requests[1].params["tax_region[city]"], "San Francisco")
@@ -363,7 +364,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
             analyticsClient._testLogHistory = []
             LinkAccountContext.shared.account = nil
             let response = CheckoutTestHelpers.makeSessionWithWalletTypes(
-                ["link"],
+                ["card", "link"],
                 customerEmail: "foo@bar.com"
             )
             var configuration = CheckoutTestHelpers.makeConfiguration(
@@ -401,17 +402,17 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         LinkAccountContext.shared.account = nil
 
         // Given Link becomes available in the response to the default shipping address update
-        let initialSession = CheckoutTestHelpers.makeSessionWithWalletTypes([], automaticTaxAddressSource: "session.shipping")
+        let initialSession = CheckoutTestHelpers.makeSessionWithWalletTypes([], automaticTaxAddressSource: "shipping")
         let updatedSession = CheckoutTestHelpers.makeSessionWithWalletTypes(
             ["link"],
-            automaticTaxAddressSource: "session.shipping",
+            automaticTaxAddressSource: "shipping",
             customerEmail: "foo@bar.com"
         )
         var configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: initialSession, paymentElementConfiguration: nil)
         var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.address = .init(country: "US", postalCode: "94105")
         configuration.defaults.shippingDetails = shippingDetails
-        HTTPStubs.stubRequests(passingTest: { $0.url?.path == "/v1/payment_pages/cs_test" }) { _ in
+        HTTPStubs.stubRequests(passingTest: { $0.url?.path == "/v1/checkout_client/cs_test/update" }) { _ in
             HTTPStubsResponse(jsonObject: updatedSession.allResponseFields, statusCode: 200, headers: nil)
         }
         let lookup = expectation(description: "Link lookup using updated session")
@@ -432,7 +433,7 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
 
     func testInitSkipsLinkLookupWhenBothElementsDisableLink() async throws {
         // Given Link is supported by the session but disabled in both elements
-        let response = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"], customerEmail: "foo@bar.com")
+        let response = CheckoutTestHelpers.makeSessionWithWalletTypes(["card", "link"], customerEmail: "foo@bar.com")
         var configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: response)
         configuration.paymentElement?.linkConfiguration = .init(display: .never)
         configuration.expressCheckoutElement?.linkConfiguration.display = .never
@@ -473,10 +474,11 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         allowedShippingCountries: [String] = ["US", "CA"]
     ) -> [AnyHashable: Any] {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["session_id"] = sessionId
-        json["tax_context"] = [
-            "automatic_tax_enabled": true,
-            "automatic_tax_address_source": "session.\(automaticTaxAddressSource)",
+        json["id"] = sessionId
+        json["automatic_tax"] = [
+            "enabled": true,
+            "status": "requires_address",
+            "address_source": automaticTaxAddressSource,
         ]
         json["shipping_address_collection"] = ["allowed_countries": allowedShippingCountries]
         return json

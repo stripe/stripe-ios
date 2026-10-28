@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 // MARK: - PaymentMethodElement protocol
 /**

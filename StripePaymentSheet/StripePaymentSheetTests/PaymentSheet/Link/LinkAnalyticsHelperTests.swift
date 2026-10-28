@@ -3,9 +3,9 @@
 //  StripePaymentSheetTests
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 final class LinkAnalyticsHelperTests: XCTestCase {

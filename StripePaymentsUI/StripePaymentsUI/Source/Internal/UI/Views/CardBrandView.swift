@@ -6,15 +6,15 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A view that displays a card brand icon/logo, or an icon to help the user locate the CVC
 /// for a specific card brand.
 /// For internal SDK use only
 @objc(STP_Internal_CardBrandView)
-@_spi(STP) public final class CardBrandView: UIView {
+@_spi(InternalOnlyAPI) public final class CardBrandView: UIView {
 
     // TODO(ramont): unify icon sizes.
 
@@ -23,7 +23,7 @@ import UIKit
 
     /// The target size of the rectangular part of the icon.
     /// internal so we can reuse size with other icon views (see LinkPaymentMethodPicker-CellContentView)
-    @_spi(STP) public static let targetIconSize = CGSize(width: 24, height: 16)
+    @_spi(InternalOnlyAPI) public static let targetIconSize = CGSize(width: 24, height: 16)
 
     /// Padding built in to the icon.
     ///
@@ -87,11 +87,11 @@ import UIKit
         }
     }
 
-    @_spi(STP) public override var intrinsicContentSize: CGSize {
+    @_spi(InternalOnlyAPI) public override var intrinsicContentSize: CGSize {
         return size(for: Self.targetIconSize)
     }
 
-    @_spi(STP) public func size(for targetSize: CGSize) -> CGSize {
+    @_spi(InternalOnlyAPI) public func size(for targetSize: CGSize) -> CGSize {
         let padding = centeringPadding
 
         // The way this scaling works isn't perfect since the returned size has to map to a valid point value
@@ -127,7 +127,7 @@ import UIKit
 
     /// Creates and returns an initialized card brand view.
     /// - Parameter showCVC: Whether or not to show the CVC hint icon instead of the card brand image.
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         showCVC: Bool = false,
         centerHorizontally: Bool = false
     ) {
@@ -182,7 +182,7 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
 
-    @_spi(STP) public func setCardBrand(_ brand: STPCardBrand) {
+    @_spi(InternalOnlyAPI) public func setCardBrand(_ brand: STPCardBrand) {
         setCardBrand(.brand(brand), animated: false)
     }
 
@@ -252,7 +252,7 @@ import UIKit
 
     // MARK: - Callbacks
 #if !os(visionOS)
-    @_spi(STP) public override func traitCollectionDidChange(
+    @_spi(InternalOnlyAPI) public override func traitCollectionDidChange(
         _ previousTraitCollection: UITraitCollection?
     ) {
         super.traitCollectionDidChange(previousTraitCollection)

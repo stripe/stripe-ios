@@ -6,10 +6,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
 import XCTest
 
-@_spi(STP) public class MockCameraPermissionsManager: CameraPermissionsManagerProtocol {
+@_spi(InternalOnlyAPI) public class MockCameraPermissionsManager: CameraPermissionsManagerProtocol {
 
     public var hasCameraAccess = false
 

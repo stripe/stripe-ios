@@ -8,8 +8,8 @@
 //
 
 import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentsUI
 import UIKit
 import XCTest
 

@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 2025-01-24.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 struct FinancialConnectionsAppearance: Equatable {

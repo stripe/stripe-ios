@@ -5,9 +5,9 @@
 
 import Foundation
 
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripePayments
-@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -145,7 +145,7 @@ class LinkURLGeneratorTests: XCTestCase {
         let config = PaymentSheet.Configuration()
         config.apiClient.publishableKey = "pk_123"
         let session = CheckoutTestHelpers.makeSession([
-            "elements_options": ["__checkout_config_id": "config_checkout"],
+            "checkout_session_config_id": "config_checkout",
         ]).makePublicSession()
         let intent = Intent.checkout(session)
 

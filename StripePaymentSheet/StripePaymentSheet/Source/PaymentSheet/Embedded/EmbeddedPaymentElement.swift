@@ -5,10 +5,10 @@
 //  Created by Yuki Tokuhiro on 9/25/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// An object that manages a view that displays payment methods and completes a checkout.
@@ -47,7 +47,7 @@ public final class EmbeddedPaymentElement {
         /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
         public let mandateText: NSAttributedString?
         /// The shipping details associated with the current customer.
-        @_spi(STP) public let shippingDetails: AddressViewController.Configuration.DefaultAddressDetails?
+        @_spi(InternalOnlyAPI) public let shippingDetails: AddressViewController.Configuration.DefaultAddressDetails?
     }
 
     /// Contains information about the customer's selected payment option.
@@ -488,8 +488,8 @@ extension EmbeddedPaymentElement {
 
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
-@_spi(STP) extension EmbeddedPaymentElement: STPAnalyticsProtocol {
-    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "EmbeddedPaymentElement"
+@_spi(InternalOnlyAPI) extension EmbeddedPaymentElement: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public nonisolated static let stp_analyticsIdentifier: String = "EmbeddedPaymentElement"
 }
 
 // MARK: - Completion-block based APIs

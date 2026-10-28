@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 // Called when the client secret is needed for embedded components
 class FetchClientSecretMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, String?> {

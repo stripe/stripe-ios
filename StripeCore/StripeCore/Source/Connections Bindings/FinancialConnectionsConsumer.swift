@@ -7,15 +7,15 @@
 
 import Foundation
 
-@_spi(STP) public struct FinancialConnectionsConsumer {
-    @_spi(STP) public let publishableKey: String?
-    @_spi(STP) public let clientSecret: String
-    @_spi(STP) public let emailAddress: String
-    @_spi(STP) public let redactedFormattedPhoneNumber: String
-    @_spi(STP) public let verificationSessions: [VerificationSession]
-    @_spi(STP) public let linkBrand: LinkBrand?
+@_spi(InternalOnlyAPI) public struct FinancialConnectionsConsumer {
+    @_spi(InternalOnlyAPI) public let publishableKey: String?
+    @_spi(InternalOnlyAPI) public let clientSecret: String
+    @_spi(InternalOnlyAPI) public let emailAddress: String
+    @_spi(InternalOnlyAPI) public let redactedFormattedPhoneNumber: String
+    @_spi(InternalOnlyAPI) public let verificationSessions: [VerificationSession]
+    @_spi(InternalOnlyAPI) public let linkBrand: LinkBrand?
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         publishableKey: String?,
         clientSecret: String,
         emailAddress: String,
@@ -32,15 +32,15 @@ import Foundation
     }
 }
 
-@_spi(STP) public struct VerificationSession: Decodable {
-    @_spi(STP) public enum SessionType: String, SafeEnumDecodable, Equatable {
+@_spi(InternalOnlyAPI) public struct VerificationSession: Decodable {
+    @_spi(InternalOnlyAPI) public enum SessionType: String, SafeEnumDecodable, Equatable {
         case signUp = "SIGNUP"
         case email = "EMAIL"
         case sms = "SMS"
         case unparsable
     }
 
-    @_spi(STP) public enum SessionState: String, SafeEnumDecodable, Equatable {
+    @_spi(InternalOnlyAPI) public enum SessionState: String, SafeEnumDecodable, Equatable {
         case started = "STARTED"
         case failed = "FAILED"
         case verified = "VERIFIED"
@@ -49,10 +49,10 @@ import Foundation
         case unparsable
     }
 
-    @_spi(STP) public let type: SessionType
-    @_spi(STP) public let state: SessionState
+    @_spi(InternalOnlyAPI) public let type: SessionType
+    @_spi(InternalOnlyAPI) public let state: SessionState
 
-    @_spi(STP) public init(type: SessionType, state: SessionState) {
+    @_spi(InternalOnlyAPI) public init(type: SessionType, state: SessionState) {
         self.type = type
         self.state = state
     }

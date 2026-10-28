@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public extension Locale {
+@_spi(InternalOnlyAPI) public extension Locale {
     /// Returns the regionCode, for visionOS compatibility
     /// We can remove this once we drop iOS 16
     var stp_regionCode: String? {

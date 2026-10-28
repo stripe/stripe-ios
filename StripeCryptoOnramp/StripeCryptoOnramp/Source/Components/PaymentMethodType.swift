@@ -6,7 +6,7 @@
 //
 
 import PassKit
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 /// Represents possible payment types that can be collected for checkout.
 @_spi(CryptoOnrampAlpha)

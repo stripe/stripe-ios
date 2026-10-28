@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Details from a local app attestation availability failure.
 @_spi(CryptoOnrampAlpha)

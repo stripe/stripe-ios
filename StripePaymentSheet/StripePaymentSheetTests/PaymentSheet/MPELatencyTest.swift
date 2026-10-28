@@ -8,10 +8,10 @@
 //  Instead, they measure MPE load times under various configurations and report the results under the `mpe.synthetic_latency` analytic
 //  Seealso: The `StripePaymentSheet-LatencyTests` scheme.
 
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) @testable import StripePaymentsTestUtils
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentsTestUtils
 import XCTest
 
 /// Captures URLSession task metrics for a single request, including timing breakdown for DNS lookup, TCP/TLS connection, request send, and response receive.

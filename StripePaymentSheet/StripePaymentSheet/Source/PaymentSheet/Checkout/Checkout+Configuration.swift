@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController {
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
@@ -131,7 +131,7 @@ extension CheckoutController {
     }
 }
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController.Configuration {
     /// Default customer details used to pre-populate Checkout integrations.

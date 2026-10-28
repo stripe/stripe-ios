@@ -9,7 +9,7 @@
 
 import iOSSnapshotTestCaseCore
 import StripeCoreTestUtils
-@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(InternalOnlyAPI) import StripePaymentsUI
 
 class STPLabeledFormTextFieldViewSnapshotTests: STPSnapshotTestCase {
     func testAppearance() {

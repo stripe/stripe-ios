@@ -6,18 +6,18 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@_spi(STP) public protocol PaymentSheetLinkAccountInfoProtocol {
-    @_spi(STP) var email: String { get }
-    @_spi(STP) var redactedPhoneNumber: String? { get }
-    @_spi(STP) var isRegistered: Bool { get }
-    @_spi(STP) var sessionState: PaymentSheetLinkAccount.SessionState { get }
-    @_spi(STP) var consumerSessionClientSecret: String? { get }
-    @_spi(STP) var linkSessionKey: String? { get }
+@_spi(InternalOnlyAPI) public protocol PaymentSheetLinkAccountInfoProtocol {
+    @_spi(InternalOnlyAPI) var email: String { get }
+    @_spi(InternalOnlyAPI) var redactedPhoneNumber: String? { get }
+    @_spi(InternalOnlyAPI) var isRegistered: Bool { get }
+    @_spi(InternalOnlyAPI) var sessionState: PaymentSheetLinkAccount.SessionState { get }
+    @_spi(InternalOnlyAPI) var consumerSessionClientSecret: String? { get }
+    @_spi(InternalOnlyAPI) var linkSessionKey: String? { get }
 }
 
 struct LinkPMDisplayDetails {
@@ -25,17 +25,17 @@ struct LinkPMDisplayDetails {
     let brand: STPCardBrand
 }
 
-@_spi(STP) public class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
-    @_spi(STP) public static var forcedConsumerLinkBrandForTesting: LinkBrand?
+@_spi(InternalOnlyAPI) public class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
+    @_spi(InternalOnlyAPI) public static var forcedConsumerLinkBrandForTesting: LinkBrand?
 
-    @_spi(STP) public enum SessionState: String {
+    @_spi(InternalOnlyAPI) public enum SessionState: String {
         case requiresSignUp
         case requiresVerification
         case verified
     }
 
     // More information: go/link-signup-consent-action-log
-    @_spi(STP) public enum ConsentAction: String {
+    @_spi(InternalOnlyAPI) public enum ConsentAction: String {
         // Checkbox, no fields prefilled
         case checkbox_v0 = "clicked_checkbox_nospm_mobile_v0"
 
@@ -98,17 +98,17 @@ struct LinkPMDisplayDetails {
     var nameUsedInSignup: String?
     var suggestedEmail: String?
 
-    @_spi(STP) public let email: String
+    @_spi(InternalOnlyAPI) public let email: String
 
-    @_spi(STP) public var redactedPhoneNumber: String? {
+    @_spi(InternalOnlyAPI) public var redactedPhoneNumber: String? {
         return currentSession?.redactedFormattedPhoneNumber.replacingOccurrences(of: "*", with: "•")
     }
 
-    @_spi(STP) public var isRegistered: Bool {
+    @_spi(InternalOnlyAPI) public var isRegistered: Bool {
         return currentSession != nil
     }
 
-    @_spi(STP) public var sessionState: SessionState {
+    @_spi(InternalOnlyAPI) public var sessionState: SessionState {
         if let currentSession {
             // OTP verification is not required if we are in the signup flow or are using seamless sign-in
             return currentSession.meetsMinimumAuthenticationLevel || currentSession.isVerifiedForSignup || currentSession.isVerifiedWithLinkAuthToken
@@ -118,11 +118,11 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    @_spi(STP) public var consumerSessionClientSecret: String? {
+    @_spi(InternalOnlyAPI) public var consumerSessionClientSecret: String? {
         currentSession?.clientSecret
     }
 
-    @_spi(STP) public var linkSessionKey: String? {
+    @_spi(InternalOnlyAPI) public var linkSessionKey: String? {
         currentSession?.linkSessionKey
     }
 
@@ -671,7 +671,7 @@ extension PaymentSheetLinkAccount: LinkAuthAccount {
 
 extension PaymentSheetLinkAccount: Equatable {
 
-    @_spi(STP) public static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
+    @_spi(InternalOnlyAPI) public static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
         return
             (lhs.email == rhs.email && lhs.currentSession == rhs.currentSession
             && lhs.publishableKey == rhs.publishableKey)

@@ -6,7 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension STPElementsSession {
     var supportsLink: Bool {

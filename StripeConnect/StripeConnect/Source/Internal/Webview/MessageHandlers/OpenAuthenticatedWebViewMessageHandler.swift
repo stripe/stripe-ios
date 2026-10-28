@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Indicates to open the provided URL in an `ASWebAuthenticationSession`.
 class OpenAuthenticatedWebViewMessageHandler: ScriptMessageHandler<OpenAuthenticatedWebViewMessageHandler.Payload> {

@@ -5,10 +5,10 @@
 //  Created by Yuki Tokuhiro on 5/24/24.
 //
 
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 import XCTest
 
 @MainActor
@@ -113,7 +113,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
     func testCheckoutBankCollectionIncludesClientAttributionMetadata() throws {
         // Given a bank-account form in Checkout's Payment Element
         let session = CheckoutTestHelpers.makeSession([
-            "elements_options": ["__checkout_config_id": "config_checkout"],
+            "checkout_session_config_id": "config_checkout",
         ]).makePublicSession()
         let configuration = PaymentSheet.Configuration()
         let sut = PaymentMethodFormViewController(
