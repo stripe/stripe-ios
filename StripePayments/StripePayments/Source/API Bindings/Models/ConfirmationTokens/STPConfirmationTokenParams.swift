@@ -6,11 +6,11 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An object representing parameters used to create a ConfirmationToken object.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens
-@_spi(STP) public class STPConfirmationTokenParams: NSObject, STPFormEncodable {
+@_spi(InternalOnlyAPI) public class STPConfirmationTokenParams: NSObject, STPFormEncodable {
     private var _additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// ID of an existing PaymentMethod to use for this ConfirmationToken.
@@ -36,13 +36,13 @@ import Foundation
 
     /// `@YES` to set this ConfirmationToken's PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
-    @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
+    @objc @_spi(InternalOnlyAPI) public var setAsDefaultPM: NSNumber?
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @objc @_spi(InternalOnlyAPI) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     /// Client context for the ConfirmationToken, containing information about the payment flow context
-    @objc @_spi(STP) public var clientContext: STPConfirmationTokenClientContext?
+    @objc @_spi(InternalOnlyAPI) public var clientContext: STPConfirmationTokenClientContext?
 
     /// :nodoc:
     @objc public override var description: String {

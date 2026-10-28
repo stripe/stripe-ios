@@ -9,10 +9,10 @@ import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import XCTest
 
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsTestUtils
-@testable @_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 
 #if !os(visionOS)
 final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {

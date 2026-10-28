@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 /// KYC information common to the KYC-refresh-related APIs:
 /// - /v1/crypto/internal/kyc_data_retrieve

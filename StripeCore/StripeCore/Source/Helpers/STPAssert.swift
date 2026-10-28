@@ -9,7 +9,7 @@ import Foundation
 
 #if ENABLE_STPASSERTIONFAILURE
 /// A very barebones way to test stpasserts in XCTest.
-@_spi(STP) public class STPAssertTestUtil {
+@_spi(InternalOnlyAPI) public class STPAssertTestUtil {
     /// If set to `true` in an XCTest, the next assertion that fires populates `lastAssertMessage` instead of crashing and resets this flag to `false`.
     /// After each test finishes, an auto-registered XCTestObservation observer resets this flag
     /// to prevent state from leaking between tests (e.g. if the expected assertion never fires).
@@ -69,7 +69,7 @@ private class _STPAssertTestObserver: NSObject {
 
 /// A wrapper that only calls `assertionFailure` when the `ENABLE_STPASSERTIONFAILURE` compiler flag is set.
 /// Use this for assertions that should not trigger in merchant apps.
-@inlinable @_spi(STP) public func stpAssertionFailure(_ message: @autoclosure () -> String = String(), file: StaticString = #file, line: UInt = #line) {
+@inlinable @_spi(InternalOnlyAPI) public func stpAssertionFailure(_ message: @autoclosure () -> String = String(), file: StaticString = #file, line: UInt = #line) {
     #if ENABLE_STPASSERTIONFAILURE
     if NSClassFromString("XCTest") != nil && STPAssertTestUtil.shouldSuppressNextSTPAlert {
         STPAssertTestUtil.shouldSuppressNextSTPAlert = false
@@ -84,7 +84,7 @@ private class _STPAssertTestObserver: NSObject {
 
 /// A wrapper that only calls `assert` when the `ENABLE_STPASSERTIONFAILURE` compiler flag is set.
 /// Use this for assertions that should not trigger in merchant apps.
-@inlinable @_spi(STP) public func stpAssert(_ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String = String(), file: StaticString = #file, line: UInt = #line) {
+@inlinable @_spi(InternalOnlyAPI) public func stpAssert(_ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String = String(), file: StaticString = #file, line: UInt = #line) {
     #if ENABLE_STPASSERTIONFAILURE
     assert(condition(), message(), file: file, line: line)
     #else

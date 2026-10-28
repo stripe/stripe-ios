@@ -8,7 +8,7 @@
 
 import AVKit
 import Foundation
-@_spi(STP) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
 
 protocol ImageScanningSessionDelegate: AnyObject {
 

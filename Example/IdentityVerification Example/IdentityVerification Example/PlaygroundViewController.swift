@@ -6,7 +6,7 @@
 //
 
 import StripeIdentity
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 class PlaygroundViewController: UIViewController {

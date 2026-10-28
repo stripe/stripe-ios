@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
@@ -829,26 +829,6 @@ extension String.Localized {
         STPLocalizedString(
             "Exchange rate and fees of your bank may apply.",
             "Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion"
-        )
-    }
-
-    static func exchangeRate(localCurrency: String, rate: String, integrationCurrency: String) -> String {
-        String(
-            format: STPLocalizedString(
-                "1 %@ = %@ %@",
-                "Exchange rate caption, e.g. '1 GBP = 1.2871 USD'"
-            ),
-            localCurrency, rate, integrationCurrency
-        )
-    }
-
-    static func exchangeRateWithConversionFee(localCurrency: String, rate: String, integrationCurrency: String, feePercent: String) -> String {
-        String(
-            format: STPLocalizedString(
-                "1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee).",
-                "Exchange rate with conversion fee disclosure, e.g. '1 GBP = 1.2871 USD (includes 4% conversion fee).'"
-            ),
-            localCurrency, rate, integrationCurrency, feePercent
         )
     }
 

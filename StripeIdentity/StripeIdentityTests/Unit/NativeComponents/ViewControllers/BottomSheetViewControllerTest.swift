@@ -5,12 +5,12 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest
 
 // swift-format-ignore
-@_spi(STP) @testable import StripeIdentity
+@_spi(InternalOnlyAPI) @testable import StripeIdentity
 
 final class BottomSheetViewControllerTest: XCTestCase {
     func testPresentationConfiguration() throws {

@@ -6,11 +6,11 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 /// The response returned by v1/elements/sessions
-@_spi(STP) public final class STPElementsSession: NSObject {
+@_spi(InternalOnlyAPI) public final class STPElementsSession: NSObject {
     #if DEBUG && targetEnvironment(simulator)
     public static let countryCodeOverride: String? = nil
     #endif

@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 2/12/25.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Indicates to close the webview
 class CloseWebViewMessageHandler: ScriptMessageHandler<VoidPayload> {

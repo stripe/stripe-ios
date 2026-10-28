@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 struct PaymentMethodIncentive: Equatable {
 
@@ -25,7 +25,7 @@ extension PaymentMethodIncentive {
         guard let displayText = incentive.incentiveDisplayText else {
             return nil
         }
-        
+
         self.identifier = incentive.incentiveParams.paymentMethod
         self.displayText = displayText
     }

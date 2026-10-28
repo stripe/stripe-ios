@@ -9,8 +9,8 @@
 
 import Stripe
 import StripeCoreTestUtils
-@_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 
 class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {

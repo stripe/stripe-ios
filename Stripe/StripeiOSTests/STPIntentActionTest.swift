@@ -7,7 +7,7 @@
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
 class STPIntentActionTest: XCTestCase {
     func testDecodedObjectFromAPIResponseRedirectToURL() {

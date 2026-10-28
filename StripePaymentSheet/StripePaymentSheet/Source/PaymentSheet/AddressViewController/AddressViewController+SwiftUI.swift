@@ -6,7 +6,7 @@
 //  Copyright © 2025 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import SwiftUI
 import UIKit
 
@@ -158,6 +158,6 @@ public struct AddressElement: View {
 
 // MARK: - Analytics Integration
 
-@_spi(STP) extension AddressElement: STPAnalyticsProtocol {
+@_spi(InternalOnlyAPI) extension AddressElement: STPAnalyticsProtocol {
     public static let stp_analyticsIdentifier = "AddressElement"
 }

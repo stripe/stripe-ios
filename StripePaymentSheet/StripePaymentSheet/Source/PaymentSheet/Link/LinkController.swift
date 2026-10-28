@@ -8,19 +8,19 @@
 import Combine
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// A controller that presents the Link flow to collect and create a customer's payment method.
-@MainActor @_spi(STP) @_spi(LinkControllerPreview) public class LinkController: ObservableObject {
+@MainActor @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public class LinkController: ObservableObject {
 
     /// Represents the payment method currently selected by the user.
-    @_spi(STP) @_spi(LinkControllerPreview) public struct PaymentMethodPreview {
+    @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public struct PaymentMethodPreview {
 
         /// Represents the type of selected payment method.
-        @_spi(STP) public enum PaymentMethodType {
+        @_spi(InternalOnlyAPI) public enum PaymentMethodType {
 
             /// The user chose a card-based payment method, such as a debit or credit card.
             case card
@@ -30,19 +30,19 @@ import UIKit
         }
 
         /// The type of the selected payment method.
-        @_spi(STP) public let paymentMethodType: PaymentMethodType
+        @_spi(InternalOnlyAPI) public let paymentMethodType: PaymentMethodType
 
         /// The Link icon to render in your screen.
-        @_spi(STP) @_spi(LinkControllerPreview) public let icon: UIImage
+        @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public let icon: UIImage
 
         /// The Link label to render in your screen.
-        @_spi(STP) @_spi(LinkControllerPreview) public let label: String
+        @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public let label: String
 
         /// Details about the selected Link payment method. This will typically render the display name of the payment method followed by the last four digits, e.g. `Visa Credit •••• 4242`.
-        @_spi(STP) @_spi(LinkControllerPreview) public let sublabel: String?
+        @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public let sublabel: String?
     }
 
-    @frozen @_spi(STP) public enum VerificationResult {
+    @frozen @_spi(InternalOnlyAPI) public enum VerificationResult {
         /// Verification was completed successfully.
         case completed
         /// Verification was canceled by the user.
@@ -50,14 +50,14 @@ import UIKit
     }
 
     /// The result of presenting Link to collect a payment method.
-    @frozen @_spi(STP) @_spi(LinkControllerPreview) public enum PaymentMethodResult {
+    @frozen @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public enum PaymentMethodResult {
         /// The user selected a payment method. The associated value is the resulting `STPPaymentMethod`.
         case completed(STPPaymentMethod)
         /// The user dismissed the flow without selecting a payment method.
         case canceled
     }
 
-    @frozen @_spi(STP) public enum AuthorizationResult {
+    @frozen @_spi(InternalOnlyAPI) public enum AuthorizationResult {
         /// Authorization was consented by the user.
         case consented
         /// Authorization was denied by the user.
@@ -66,14 +66,14 @@ import UIKit
         case canceled
     }
 
-    @frozen @_spi(STP) public enum UserAttestationResult {
+    @frozen @_spi(InternalOnlyAPI) public enum UserAttestationResult {
         /// The user accepted the attestation.
         case confirmed
         /// The user dismissed the attestation without accepting.
         case canceled
     }
 
-    @frozen @_spi(STP) public enum PartnerTermsResult {
+    @frozen @_spi(InternalOnlyAPI) public enum PartnerTermsResult {
         /// The user accepted the partner terms.
         case accepted
         /// The user dismissed the partner terms without accepting.
@@ -81,12 +81,12 @@ import UIKit
     }
 
     /// Errors specific incorrect integrations with LinkController
-    @_spi(STP) public enum IntegrationError: LocalizedError {
+    @_spi(InternalOnlyAPI) public enum IntegrationError: LocalizedError {
         case noPaymentMethodSelected
         case noActiveLinkConsumer
         case missingAppAttestation
 
-        @_spi(STP) public var errorDescription: String? {
+        @_spi(InternalOnlyAPI) public var errorDescription: String? {
             switch self {
             case .noPaymentMethodSelected:
                 return "No payment method has been selected."
@@ -99,7 +99,7 @@ import UIKit
     }
 
     /// The intent for which the `LinkController` collects a payment method.
-    @_spi(STP) public enum Mode {
+    @_spi(InternalOnlyAPI) public enum Mode {
         case payment
         case paymentAndSetupFutureUse
         case setup
@@ -115,6 +115,7 @@ import UIKit
     private let configuration: LinkConfiguration?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let requestSurface: LinkRequestSurface
+    let nativeSheetPresentation: SheetImplementationResolver
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
         LinkAccountService(apiClient: apiClient, elementsSession: elementsSession)
@@ -139,23 +140,23 @@ import UIKit
     private var lastCreatedPaymentMethod: STPPaymentMethod?
 
     /// Details on the current Link account.
-    @Published @_spi(STP) public private(set) var linkAccount: PaymentSheetLinkAccount?
+    @Published @_spi(InternalOnlyAPI) public private(set) var linkAccount: PaymentSheetLinkAccount?
 
     /// A preview of the currently selected Link payment method.
-    @Published @_spi(STP) @_spi(LinkControllerPreview) public private(set) var paymentMethodPreview: PaymentMethodPreview?
+    @Published @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
     private var resolvedLinkBrand: LinkBrand {
         linkAccount?.linkBrand ?? LinkAccountContext.shared.account?.linkBrand ?? initialLinkBrand
     }
 
-    @_spi(STP) public var elementsSessionID: String {
+    @_spi(InternalOnlyAPI) public var elementsSessionID: String {
         elementsSession.sessionID
     }
 
     /// Completion handler for full consent screen
     private var fullConsentCompletion: ((Result<AuthorizationResult, Error>) -> Void)?
 
-    private init(
+    init(
         apiClient: STPAPIClient = .shared,
         mode: Mode,
         elementsSession: STPElementsSession,
@@ -177,6 +178,7 @@ import UIKit
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
         self.requestSurface = requestSurface
+        self.nativeSheetPresentation = SheetImplementationResolver(elementsSession: elementsSession)
 
         LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange))
     }
@@ -186,14 +188,14 @@ import UIKit
         LinkAccountContext.shared.removeObserver(self)
     }
 
-    @_spi(STP) public static var linkIcon: UIImage = Image.link_icon.makeImage()
+    @_spi(InternalOnlyAPI) public static var linkIcon: UIImage = Image.link_icon.makeImage()
 
     /// Formats card details using the same localized funding description and masking as a selected Link card.
     /// - Parameters:
     ///   - brand: The card brand.
     ///   - funding: The card funding value returned by the PaymentMethod API, such as `credit` or `debit`.
     ///   - last4: The last four digits of the card.
-    @_spi(STP) public nonisolated static func formattedCardDetails(brand: STPCardBrand, funding: String?, last4: String) -> String {
+    @_spi(InternalOnlyAPI) public nonisolated static func formattedCardDetails(brand: STPCardBrand, funding: String?, last4: String) -> String {
         let linkFunding = ConsumerPaymentDetails.Details.Card.Funding(rawValue: funding?.uppercased() ?? "") ?? .unparsable
         return ConsumerPaymentDetails.Details.Card.formattedString(brand: brand, funding: linkFunding, last4: last4)
     }
@@ -259,7 +261,7 @@ import UIKit
     /// - Parameter linkConfiguration: Configuration for Link behavior and content. If not specified, default behavior is used.
     /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_payment_element`.
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
-    @_spi(STP) public static func create(
+    @_spi(InternalOnlyAPI) public static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         appearance: LinkAppearance? = nil,
@@ -389,7 +391,7 @@ import UIKit
     ///
     /// - Parameter email: The email address to look up.
     /// - Parameter completion: A closure that is called with the result of the lookup. It returns `true` if the email is associated with a registered Link consumer, or `false` otherwise.
-    @_spi(STP) public func lookupConsumer(with email: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    @_spi(InternalOnlyAPI) public func lookupConsumer(with email: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         Self.lookupConsumer(
             email: email,
             linkAccountService: linkAccountService,
@@ -409,7 +411,7 @@ import UIKit
     ///
     /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful call to this API, logs the Link user in without displaying UI for authentication / one time passcodes.
     /// - Parameter completion: A closure that is called when the lookup completes or fails.
-    @_spi(STP) public func lookupLinkAuthToken(
+    @_spi(InternalOnlyAPI) public func lookupLinkAuthToken(
         _ linkAuthTokenClientSecret: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
@@ -440,7 +442,7 @@ import UIKit
     /// - Parameter country: The country code of the user.
     /// - Parameter consentAction: The action taken by the user in order to register for Link.
     /// - Parameter completion: A closure that is called with the result of the sign up.
-    @_spi(STP) public func registerLinkUser(
+    @_spi(InternalOnlyAPI) public func registerLinkUser(
         fullName: String?,
         phone: String,
         country: String,
@@ -469,7 +471,7 @@ import UIKit
     ///
     /// - Parameter viewController: The view controller from which to present the verification flow.
     /// - Parameter completion: A closure that is called with the result of the verification. It returns a `VerificationResult` if successful, or an error if the verification failed.
-    @_spi(STP) public func presentForVerification(
+    @_spi(InternalOnlyAPI) public func presentForVerification(
         from viewController: UIViewController,
         completion: @escaping (Result<VerificationResult, Error>) -> Void
     ) {
@@ -506,7 +508,7 @@ import UIKit
     /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil` or empty, all available types are supported.
     /// - Parameter collectName: Whether or not we should collect the user's name and attach it to the billing details.
     /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. If the user selects a payment method, the `paymentMethodPreview` will be updated accordingly.
-    @_spi(STP) public func collectPaymentMethod(
+    @_spi(InternalOnlyAPI) public func collectPaymentMethod(
         from presentingViewController: UIViewController,
         with email: String?,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
@@ -529,6 +531,7 @@ import UIKit
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
             configuration: paymentElementConfiguration,
+            nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
@@ -566,7 +569,7 @@ import UIKit
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter completion: A closure called with `.success(.completed(paymentMethod))` on selection,
     ///   `.success(.canceled)` if the user dismisses the flow, or `.failure(error)` on API or network errors.
-    @_spi(STP) @_spi(LinkControllerPreview) public func present(
+    @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public func present(
         email: String,
         phoneNumber: String? = nil,
         from presentingViewController: UIViewController,
@@ -589,6 +592,7 @@ import UIKit
             presentingViewController.presentNativeLink(
                 selectedPaymentDetailsID: nil,
                 configuration: paymentElementConfiguration,
+                nativeSheetPresentation: self.nativeSheetPresentation,
                 intent: self.intent,
                 elementsSession: self.elementsSession,
                 analyticsHelper: self.analyticsHelper,
@@ -667,7 +671,7 @@ import UIKit
     /// - Parameters:
     ///   - overridePublishableKey: Optional publishable key to use for the API request.
     ///   - completion: A closure that is called with the result of the payment method creation. It returns a `STPPaymentMethod` if successful, or an error if the payment method could not be created.
-    @_spi(STP) public func createPaymentMethod(
+    @_spi(InternalOnlyAPI) public func createPaymentMethod(
         overridePublishableKey: String? = nil,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
@@ -708,7 +712,7 @@ import UIKit
     /// - Returns: The result of the authorization. Either the user consented / rejected OAuth consent, or canceled the flow.
     ///   If authorization completes, a crypto customer ID will be included in the result.
     /// - Throws: An error if no Link account associated with the Link auth intent is found, or an API error occurs.
-    @_spi(STP) public func authorize(
+    @_spi(InternalOnlyAPI) public func authorize(
         linkAuthIntentId: String,
         from viewController: UIViewController,
         completion: @escaping (Result<AuthorizationResult, Error>) -> Void
@@ -791,7 +795,7 @@ import UIKit
     ///
     /// - Parameter phoneNumber: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234).
     /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
-    @_spi(STP) public func updatePhoneNumber(
+    @_spi(InternalOnlyAPI) public func updatePhoneNumber(
         to phoneNumber: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
@@ -827,13 +831,17 @@ import UIKit
     ///   - onConfirm: An async closure called when the user confirms. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
     /// - Returns: A `VerifyKYCResult` indicating whether the user confirmed, requested an address update, or canceled.
     /// Throws any error thrown by the `onConfirm` handler.
-    @_spi(STP) public func presentKYCVerification(
+    @_spi(InternalOnlyAPI) public func presentKYCVerification(
         info: VerifyKYCInfo,
         appearance: LinkAppearance,
         from viewController: UIViewController,
         onConfirm: @escaping (() async throws -> Void)
     ) async throws -> VerifyKYCResult {
-        let verifyKYCViewController = VerifyKYCViewController(info: info, appearance: appearance)
+        let verifyKYCViewController = VerifyKYCViewController(
+            info: info,
+            appearance: appearance,
+            nativeSheetPresentation: nativeSheetPresentation
+        )
         // The coordinator is used again for dismissal, so this operation owns it while awaiting user input.
         let result: VerifyKYCResult = await withCheckedContinuation { continuation in
             verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
@@ -874,7 +882,7 @@ import UIKit
     ///   - onConfirm: An async closure called when the user confirms. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
     /// - Returns: A `UserAttestationResult` indicating whether the user confirmed or canceled.
     /// Throws any error thrown by the `onConfirm` handler.
-    @_spi(STP) public func presentUserAttestation(
+    @_spi(InternalOnlyAPI) public func presentUserAttestation(
         html: String,
         appearance: LinkAppearance,
         from viewController: UIViewController,
@@ -909,7 +917,7 @@ import UIKit
     ///   - onAccept: An async closure called when the user accepts. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
     /// - Returns: A `PartnerTermsResult` indicating whether the user accepted or canceled.
     /// Throws any error thrown by the `onAccept` handler.
-    @_spi(STP) public func presentTermsAndConditions(
+    @_spi(InternalOnlyAPI) public func presentTermsAndConditions(
         html: String,
         appearance: LinkAppearance,
         from viewController: UIViewController,
@@ -944,7 +952,7 @@ import UIKit
     ///   - onAccept: An async closure called when the user accepts. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
     /// - Returns: A `PartnerTermsResult` indicating whether the user accepted or canceled.
     /// Throws any error thrown by the `onAccept` handler.
-    @_spi(STP) public func presentTermsOfService(
+    @_spi(InternalOnlyAPI) public func presentTermsOfService(
         html: String,
         appearance: LinkAppearance,
         from viewController: UIViewController,
@@ -980,7 +988,8 @@ import UIKit
             html: html,
             confirmationButtonTitle: confirmationButtonTitle,
             appearance: appearance,
-            brand: resolvedLinkBrand
+            brand: resolvedLinkBrand,
+            nativeSheetPresentation: nativeSheetPresentation
         )
         // The coordinator is used again for dismissal, so this operation owns it while awaiting user input.
         let result: HTMLConfirmationResult = await withCheckedContinuation { continuation in
@@ -1010,7 +1019,7 @@ import UIKit
     }
 
     /// Logs out the current Link user, if any.
-    @_spi(STP) public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
+    @_spi(InternalOnlyAPI) public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
         func clearLinkAccountContextAndComplete() {
             LinkAccountContext.shared.account = nil
             completion(.success(()))
@@ -1293,6 +1302,7 @@ import UIKit
         let bottomSheetViewController = PaymentSheetContainerFactory.make(
             contentViewController: fullConsentViewController,
             appearance: paymentElementConfiguration.appearance,
+            usesNativeSheet: nativeSheetPresentation.usesNativeSheet,
             didCancelNative3DS2: {}
         )
 
@@ -1326,7 +1336,7 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     }
 }
 
-@_spi(STP) public extension LinkController {
+@_spi(InternalOnlyAPI) public extension LinkController {
 
     /// Creates a `LinkController` for the specified `mode`.
     ///
@@ -1580,7 +1590,7 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
 
 }
 
-@_spi(STP) @_spi(LinkControllerPreview) public extension LinkController {
+@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public extension LinkController {
 
     /// Presents the full Link payment method selection flow, handling lookup, authentication or signup,
     /// wallet display, and payment method creation in a single call.

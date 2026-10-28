@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 
 // swift-format-ignore
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 
 @testable import StripeIdentity
 
@@ -53,9 +53,7 @@ extension TruncatedDecimalTest {
         )
 
         // Verify we can decode the number
-        guard let jsonDataToDecode = "{\"number\":\(string)}".data(using: .utf8) else {
-            return XCTFail("Could not encode string to json", file: file, line: line)
-        }
+        let jsonDataToDecode = Data("{\"number\":\(string)}".utf8)
         _ = try jsonDecoder.decode(Container<T>.self, from: jsonDataToDecode)
     }
 }

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// The purpose of the uploaded file.
 /// - seealso: https://stripe.com/docs/file-upload

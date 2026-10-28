@@ -8,8 +8,8 @@
 import WebKit
 import XCTest
 
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripePayments
 
 class IntentConfirmationChallengeViewControllerTests: XCTestCase {
 

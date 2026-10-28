@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Sends the event down the view hierarchy
-@_spi(STP) public func sendEventToSubviews(_ event: STPEvent, from view: UIView) {
+@_spi(InternalOnlyAPI) public func sendEventToSubviews(_ event: STPEvent, from view: UIView) {
     if let view = view as? EventHandler {
         view.handleEvent(event)
     }
@@ -19,12 +19,12 @@ import UIKit
     }
 }
 
-@frozen @_spi(STP) public enum STPEvent {
+@frozen @_spi(InternalOnlyAPI) public enum STPEvent {
     case shouldEnableUserInteraction
     case shouldDisableUserInteraction
     case viewDidAppear
 }
 
-@_spi(STP) public protocol EventHandler {
+@_spi(InternalOnlyAPI) public protocol EventHandler {
     func handleEvent(_ event: STPEvent)
 }

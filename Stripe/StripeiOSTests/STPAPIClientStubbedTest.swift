@@ -10,11 +10,11 @@ import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import XCTest
 
-@testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeApplePay
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) @_spi(KlarnaSDKPrivatePreview) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import Stripe
+@testable@_spi(InternalOnlyAPI) import StripeApplePay
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) @_spi(KlarnaSDKPrivatePreview) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 class STPAPIClientStubbedTest: APIStubbedTestCase {
     private func stubRadarOptions(base: String? = nil,
