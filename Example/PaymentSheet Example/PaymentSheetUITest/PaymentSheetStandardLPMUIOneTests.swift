@@ -104,7 +104,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
             XCTFail()
             return
         }
-        cashApp.waitForExistenceAndTap()
+        cashApp.tap()
 
         // Attempt payment
         payButton.waitForExistenceAndTap()
@@ -114,7 +114,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
 
         // Close the webview, to simulate cancel
         _ = app.otherElements["TopBrowserBar"].waitForExistence(timeout: 5.0)
-        app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap(timeout: 15.0)
+        app.otherElements["TopBrowserBar"].buttons["Close"].firstMatch.waitForExistenceAndTap(timeout: 15.0)
 
         // Tap to attempt a payment, but fail it
         payButton.waitForExistenceAndTap()
