@@ -233,9 +233,8 @@ class PayWithLinkViewControllerTests: XCTestCase {
         // Given a mocked attestation service that always fails key generation
         let apiClient = STPAPIClient(publishableKey: "pk_live_abc123")
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
-        let mockAttestBackend = MockAttestBackend()
         let mockAttestService = MockAppAttestService()
-        let mockStripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend, apiClient: apiClient)
+        let mockStripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: MockAttestBackend(), apiClient: apiClient)
         apiClient.stripeAttest = mockStripeAttest
         config.apiClient = apiClient
         await mockStripeAttest.resetKey()
@@ -267,16 +266,18 @@ class PayWithLinkViewControllerTests: XCTestCase {
             LinkAccountContext.shared.account = previousAccount
         }
 
+        let intent = Intent._testValue()
+        let elementsSession = STPElementsSession._testValue(intent: intent)
         let payWithNativeLinkController = PayWithNativeLinkController(
             mode: .full,
-            intent: ._testValue(),
-            elementsSession: ._testValue(intent: ._testValue()),
+            intent: intent,
+            elementsSession: elementsSession,
             configuration: config,
             analyticsHelper: ._testValue()
         )
 
         // When the native sheet is presented, finish presentation before attestation can fail.
-        let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
+        let vc = PayWithLinkViewController(intent: intent, linkAccount: nil, elementsSession: elementsSession, configuration: config, analyticsHelper: ._testValue())
         vc.payWithLinkDelegate = payWithNativeLinkController
         hostVC.present(vc.sheetContainer, animated: false)
 
