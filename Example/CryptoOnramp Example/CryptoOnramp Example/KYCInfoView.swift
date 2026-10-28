@@ -358,6 +358,8 @@ struct KYCInfoView: View {
                     }
                 }
 
+                Spacer(minLength: 0)
+
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
                 }

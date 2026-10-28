@@ -97,6 +97,8 @@ struct RegistrationView: View {
                         .focused($isCountryFieldFocused)
                 }
 
+                Spacer(minLength: 0)
+
                 if isRegistrationComplete {
                     Button("Authenticate") {
                         resetFocusState()
