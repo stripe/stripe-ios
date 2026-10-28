@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCameraCore
 import UIKit
 
 extension IdentityImageUploader.Configuration {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) public extension UIColor {
+@_spi(InternalOnlyAPI) public extension UIColor {
 
     /// Increases the brightness of the color by the given `amount`.
     ///

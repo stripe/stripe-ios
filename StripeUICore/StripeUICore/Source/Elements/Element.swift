@@ -16,7 +16,7 @@ import UIKit
  
  Think of this as a light-weight, specialized view controller.
  */
-@_spi(STP) public protocol Element: AnyObject, CustomDebugStringConvertible {
+@_spi(InternalOnlyAPI) public protocol Element: AnyObject, CustomDebugStringConvertible {
     /// - Note: This is set by your parent.
     var delegate: ElementDelegate? { get set }
 
@@ -62,7 +62,7 @@ public extension Element {
 /**
   An Element uses this delegate to communicate events to its owner, which is typically also an Element.
  */
-@_spi(STP) public protocol ElementDelegate: AnyObject {
+@_spi(InternalOnlyAPI) public protocol ElementDelegate: AnyObject {
     /**
      This method is called whenever your public/internally visable state changes.
      Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
@@ -79,14 +79,14 @@ public extension Element {
 /**
   An Element uses this delegate to present a view controller
  */
-@_spi(STP) public protocol PresentingViewControllerDelegate: ElementDelegate {
+@_spi(InternalOnlyAPI) public protocol PresentingViewControllerDelegate: ElementDelegate {
     /**
      Elements will call this function to delegate presentation of a view controller
      */
     func presentViewController(viewController: UIViewController, completion: (() -> Void)?)
 }
 
-@_spi(STP) @frozen public enum ElementValidationState {
+@_spi(InternalOnlyAPI) @frozen public enum ElementValidationState {
     case valid
     case invalid(error: ElementValidationError, shouldDisplay: Bool)
 
@@ -99,7 +99,7 @@ public extension Element {
     }
 }
 
-@_spi(STP) public protocol ElementValidationError: Error {
+@_spi(InternalOnlyAPI) public protocol ElementValidationError: Error {
     var localizedDescription: String { get }
 }
 

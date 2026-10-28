@@ -30,7 +30,7 @@ public class STPConfirmPaymentMethodOptions: NSObject {
     @objc public var usBankAccountOptions: STPConfirmUSBankAccountOptions?
 
     /// Options for a Link Payment Method.
-    @_spi(STP) @objc public var linkOptions: STPConfirmLinkOptions?
+    @_spi(InternalOnlyAPI) @objc public var linkOptions: STPConfirmLinkOptions?
 
     /// Options for a Konbini Payment Method.
     @objc public var konbiniOptions: STPConfirmKonbiniOptions?

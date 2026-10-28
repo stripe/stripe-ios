@@ -12,9 +12,9 @@ import StripeCoreTestUtils
 import UIKit
 import XCTest
 
-@_spi(STP)@testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
-@_spi(STP)@testable import StripeUICore
+@_spi(InternalOnlyAPI)@testable import StripeCore
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
@@ -894,7 +894,10 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         appearance.formInsets = NSDirectionalEdgeInsets(top: 20, leading: 25, bottom: 20, trailing: 25)
 
         preparePaymentSheet(appearance: appearance)
+        // A bottom safe area larger than the form inset must not cause a layout loop when loading finishes.
+        paymentSheet.bottomSheetViewController.additionalSafeAreaInsets.bottom = 34
         presentPaymentSheet(darkMode: false)
+        XCTAssertGreaterThan(paymentSheet.bottomSheetViewController.view.safeAreaInsets.bottom, appearance.formInsets.bottom)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 

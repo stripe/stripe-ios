@@ -7,7 +7,7 @@
 
 import AuthenticationServices
 // `@preconcurrency` suppresses Sendable-related warnings from WebKit.
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 @preconcurrency import WebKit
 

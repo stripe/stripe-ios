@@ -9,7 +9,7 @@ import Foundation
 
 import SafariServices
 @testable import StripeConnect
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import WebKit
 import XCTest
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public class STPBlikCodeValidator {
+@_spi(InternalOnlyAPI) public class STPBlikCodeValidator {
     public class func stringIsValidBlikCode(_ string: String?) -> Bool {
         if string == nil || (string?.count ?? 0) > 6 {
             return false

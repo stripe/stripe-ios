@@ -3,12 +3,12 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) @testable import StripeCore
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import StripePaymentsObjcTestUtils
 import XCTest
 

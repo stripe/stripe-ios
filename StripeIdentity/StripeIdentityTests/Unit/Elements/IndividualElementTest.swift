@@ -5,7 +5,7 @@
 //  Created by Chen Cen on 2/6/23.
 //
 
-@_spi(STP)@testable import StripeIdentity
+@_spi(InternalOnlyAPI)@testable import StripeIdentity
 import XCTest
 
 final class IndividualElementTest: XCTestCase {

@@ -8,7 +8,7 @@
 import XCTest
 
 @testable import StripeCardScan
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 
 /// This test will check that the json and url encoding of the scan stats payload is structured as expected
 class ScanStatsPayloadAPIBindingsTests: XCTestCase {

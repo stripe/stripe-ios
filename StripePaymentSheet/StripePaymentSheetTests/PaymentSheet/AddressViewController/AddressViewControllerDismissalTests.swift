@@ -3,11 +3,11 @@
 //  StripePaymentSheet Unit Tests
 //
 
-@_spi(STP)@testable import StripeCore
+@_spi(InternalOnlyAPI)@testable import StripeCore
 import StripeCoreTestUtils
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
-@_spi(STP)@testable import StripeUICore
+@_spi(InternalOnlyAPI)@testable import StripeUICore
 import XCTest
 
 final class AddressViewControllerDismissalTests: XCTestCase {

@@ -8,7 +8,7 @@
 import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 import XCTest
 

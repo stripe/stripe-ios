@@ -5,7 +5,7 @@
 //  Created by Vardges Avetisyan on 11/10/21.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /**
@@ -73,7 +73,7 @@ final public class FinancialConnectionsSheet {
         }
 
         public var style: UserInterfaceStyle
-        @_spi(STP) public var linkBrand: LinkBrand?
+        @_spi(InternalOnlyAPI) public var linkBrand: LinkBrand?
 
         public init(style: UserInterfaceStyle = .automatic) {
             self.style = style
@@ -123,20 +123,20 @@ final public class FinancialConnectionsSheet {
     private var wrapperViewController: ModalPresentationWrapperViewController?
 
     /// Any additional Elements context useful for the Financial Connections SDK.
-    @_spi(STP) public var elementsSessionContext: StripeCore.ElementsSessionContext?
+    @_spi(InternalOnlyAPI) public var elementsSessionContext: StripeCore.ElementsSessionContext?
 
     /// An existing consumer, if available.
-    @_spi(STP) public var existingConsumer: StripeCore.FinancialConnectionsConsumer?
+    @_spi(InternalOnlyAPI) public var existingConsumer: StripeCore.FinancialConnectionsConsumer?
 
     /// Whether the Link Account Session requests merchant data permissions.
-    @_spi(STP) public var hasRequestedDataPermissions: Bool = false
+    @_spi(InternalOnlyAPI) public var hasRequestedDataPermissions: Bool = false
 
     /// Evidence that the customer already accepted Financial Connections consent text
     /// collected by the merchant's own UI.
     var preCollectedConsent: FinancialConnectionsPreCollectedConsent?
 
     /// Analytics client to use for logging analytics
-    @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
+    @_spi(InternalOnlyAPI) public let analyticsClient: STPAnalyticsClientProtocol
 
     // MARK: - Init
 
@@ -351,7 +351,7 @@ final public class FinancialConnectionsSheet {
         return await present(from: presentingViewController)
     }
 
-    @_spi(STP) public func present(
+    @_spi(InternalOnlyAPI) public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (HostControllerResult) -> Void
     ) {
@@ -505,7 +505,7 @@ extension FinancialConnectionsSheet: HostControllerDelegate {
 // MARK: - STPAnalyticsProtocol
 
 /// :nodoc:
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 extension FinancialConnectionsSheet: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "FinancialConnectionsSheet"
+    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier = "FinancialConnectionsSheet"
 }

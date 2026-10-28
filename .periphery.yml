@@ -13,7 +13,8 @@ retain_objc_accessible: false
 retain_objc_annotated: false
 exclude_tests: true
 verbose: true
-no_retain_spi: ["STP"]
+# Keep STP for scans of older baseline revisions.
+no_retain_spi: ["InternalOnlyAPI", "STP"]
 
 build_arguments:
   - -destination

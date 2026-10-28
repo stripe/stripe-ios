@@ -9,10 +9,10 @@ import Foundation
 import XCTest
 
 // swift-format-ignore
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 
 // swift-format-ignore
-@_spi(STP) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePayments
 
 class STPAnalyticsClientPaymentsUITest: XCTestCase {
     func testPaymentsSDKVariantPayload() throws {

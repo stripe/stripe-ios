@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
 // MARK: - PaymentSheet IntentConfiguration to Client Context Mapping
 extension PaymentSheet.IntentConfiguration {

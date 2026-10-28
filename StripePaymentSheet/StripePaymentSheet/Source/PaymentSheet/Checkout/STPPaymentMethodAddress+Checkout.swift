@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension STPPaymentMethodAddress {
     /// Converts to a `CheckoutController.Address`, used for Checkout tax region calculation.

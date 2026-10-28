@@ -9,11 +9,11 @@ import StripeCoreTestUtils
 import UIKit
 import XCTest
 
-@_spi(STP)@testable import StripeCore
-@_spi(STP) @testable import StripePayments
-@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) @testable import StripePaymentsUI
-@_spi(STP)@testable import StripeUICore
+@_spi(InternalOnlyAPI)@testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentsUI
+@_spi(InternalOnlyAPI)@testable import StripeUICore
 
 // For backend example
 class StubCustomerAdapter: CustomerAdapter {

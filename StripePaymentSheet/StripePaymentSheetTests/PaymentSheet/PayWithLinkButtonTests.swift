@@ -3,8 +3,8 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 final class PayWithLinkButtonTests: XCTestCase {

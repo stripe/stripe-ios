@@ -9,10 +9,10 @@
 import XCTest
 
 // swift-format-ignore
-@_spi(STP) @testable import StripeIdentity
+@_spi(InternalOnlyAPI) @testable import StripeIdentity
 
 // swift-format-ignore
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 
 final class IdentityElementsFactoryTest: XCTestCase {
 

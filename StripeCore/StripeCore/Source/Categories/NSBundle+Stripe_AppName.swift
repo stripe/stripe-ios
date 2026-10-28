@@ -9,28 +9,28 @@
 import Foundation
 
 extension Bundle {
-    @_spi(STP) public class func stp_applicationName() -> String? {
+    @_spi(InternalOnlyAPI) public class func stp_applicationName() -> String? {
         return self.main.infoDictionary?[kCFBundleNameKey as String] as? String
     }
 
-    @_spi(STP) public class func stp_applicationVersion() -> String? {
+    @_spi(InternalOnlyAPI) public class func stp_applicationVersion() -> String? {
         return self.main.infoDictionary?["CFBundleShortVersionString"] as? String
     }
 
-    @_spi(STP) public class func stp_applicationBundleId() -> String? {
+    @_spi(InternalOnlyAPI) public class func stp_applicationBundleId() -> String? {
         return self.main.bundleIdentifier
     }
 
-    @_spi(STP) public class func buildVersion() -> String? {
+    @_spi(InternalOnlyAPI) public class func buildVersion() -> String? {
         return self.main.infoDictionary?["CFBundleVersion"] as? String
     }
 
-    @_spi(STP) public class var displayName: String? {
+    @_spi(InternalOnlyAPI) public class var displayName: String? {
         return self.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? self.main
             .object(forInfoDictionaryKey: "CFBundleName") as? String
     }
 
-    @_spi(STP) public class func stp_minimumOSVersion() -> String? {
+    @_spi(InternalOnlyAPI) public class func stp_minimumOSVersion() -> String? {
         return self.main.infoDictionary?["MinimumOSVersion"] as? String
     }
 }

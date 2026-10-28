@@ -4,8 +4,8 @@
 //
 
 import Combine
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {

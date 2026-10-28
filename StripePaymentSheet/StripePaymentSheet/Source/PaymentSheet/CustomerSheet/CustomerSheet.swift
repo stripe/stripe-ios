@@ -4,9 +4,9 @@
 //
 //
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 // For internal use
@@ -328,8 +328,8 @@ extension CustomerSheet: LoadingViewControllerDelegate {
     }
 }
 
-@_spi(STP) extension CustomerSheet: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "CustomerSheet"
+@_spi(InternalOnlyAPI) extension CustomerSheet: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier = "CustomerSheet"
 }
 
 extension StripeCustomerAdapter {

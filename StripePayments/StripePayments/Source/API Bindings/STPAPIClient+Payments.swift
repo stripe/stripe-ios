@@ -8,7 +8,7 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 #if canImport(Stripe3DS2)
@@ -507,7 +507,7 @@ extension STPAPIClient {
 
     // Internal helper to pass timeout
     @objc(retrievePaymentIntentWithClientSecret:expand:timeout:completion:)
-    @_spi(STP) public func retrievePaymentIntent(
+    @_spi(InternalOnlyAPI) public func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
         timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
@@ -551,7 +551,7 @@ extension STPAPIClient {
     }
 
     /// Async helper version of `retrievePaymentIntent`
-    @_spi(STP) public func retrievePaymentIntent(
+    @_spi(InternalOnlyAPI) public func retrievePaymentIntent(
         clientSecret: String,
         expand: [String] = []
     ) async throws -> STPPaymentIntent {
@@ -566,8 +566,8 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(STP) @objc public func refreshPaymentIntent(withClientSecret secret: String,
-                                                      completion: @escaping STPPaymentIntentCompletionBlock) {
+    @_spi(InternalOnlyAPI) @objc public func refreshPaymentIntent(withClientSecret secret: String,
+                                                                  completion: @escaping STPPaymentIntentCompletionBlock) {
         let endpoint = "\(paymentIntentEndpoint(from: secret))/refresh"
         var parameters: [String: Any] = ["expand": ["payment_method"]]
 
@@ -840,7 +840,7 @@ extension STPAPIClient {
     }
 
     /// Async helper version of `retrieveSetupIntent`
-    @_spi(STP) public func retrieveSetupIntent(
+    @_spi(InternalOnlyAPI) public func retrieveSetupIntent(
         clientSecret: String,
         expand: [String] = []
     ) async throws -> STPSetupIntent {
@@ -976,8 +976,8 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(STP) @objc public func refreshSetupIntent(withClientSecret secret: String,
-                                                    completion: @escaping STPSetupIntentCompletionBlock) {
+    @_spi(InternalOnlyAPI) @objc public func refreshSetupIntent(withClientSecret secret: String,
+                                                                completion: @escaping STPSetupIntentCompletionBlock) {
         let endpoint = "\(setupIntentEndpoint(from: secret))/refresh"
         var parameters: [String: Any] = ["expand": ["payment_method"]]
 
@@ -1077,7 +1077,7 @@ extension STPAPIClient {
     ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     ///   - overridePublishableKey: Optional publishable key to use for this request instead of the default key.
     /// - Returns: the returned PaymentMethod object.
-    @_spi(STP) public func createPaymentMethod(
+    @_spi(InternalOnlyAPI) public func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         additionalPaymentUserAgentValues: [String] = [],
         overridePublishableKey: String? = nil
@@ -1457,7 +1457,7 @@ extension STPAPIClient {
 
 extension STPAPIClient {
     /// Returns the 100 most recently created PMs attached to the given Customer
-    @_spi(STP) public func listPaymentMethods(
+    @_spi(InternalOnlyAPI) public func listPaymentMethods(
         customerID: String,
         ephemeralKeySecret: String
     ) async throws -> [STPPaymentMethod] {
@@ -1475,7 +1475,7 @@ extension STPAPIClient {
         return response.paymentMethods ?? []
     }
 
-    @_spi(STP) public func listPaymentMethods(
+    @_spi(InternalOnlyAPI) public func listPaymentMethods(
         forCustomer customerID: String,
         using ephemeralKeySecret: String,
         types: [STPPaymentMethodType] = [.card],
@@ -1532,7 +1532,7 @@ extension STPAPIClient {
     }
 
     // TODO: Remove this logic when we stand up an endpoint to do this
-    @_spi(STP) public func detachPaymentMethodRemoveDuplicates(
+    @_spi(InternalOnlyAPI) public func detachPaymentMethodRemoveDuplicates(
         _ paymentMethodID: String,
         customerId: String,
         fromCustomerUsing ephemeralKeySecret: String,
@@ -1618,7 +1618,7 @@ extension STPAPIClient {
     }
 
     // TODO: Remove this logic when we stand up an endpoint to do this
-    @_spi(STP) public func detachPaymentMethodRemoveDuplicates(
+    @_spi(InternalOnlyAPI) public func detachPaymentMethodRemoveDuplicates(
         _ paymentMethodID: String,
         customerId: String,
         fromCustomerUsing ephemeralKeySecret: String,
@@ -1638,7 +1638,7 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(STP) public func detachPaymentMethod(
+    @_spi(InternalOnlyAPI) public func detachPaymentMethod(
         _ paymentMethodID: String,
         fromCustomerUsing ephemeralKeySecret: String,
         withCustomerSessionClientSecret customerSessionClientSecret: String,
@@ -1654,7 +1654,7 @@ extension STPAPIClient {
             completion(error)
         }
     }
-    @_spi(STP) public func detachPaymentMethod(
+    @_spi(InternalOnlyAPI) public func detachPaymentMethod(
         _ paymentMethodID: String,
         fromCustomerUsing ephemeralKeySecret: String,
         withCustomerSessionClientSecret customerSessionClientSecret: String
@@ -1670,7 +1670,7 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(STP) public func detachPaymentMethod(
+    @_spi(InternalOnlyAPI) public func detachPaymentMethod(
         _ paymentMethodID: String,
         fromCustomerUsing ephemeralKeySecret: String,
         completion: @escaping STPErrorBlock
@@ -1686,7 +1686,7 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(STP) public func detachPaymentMethod(
+    @_spi(InternalOnlyAPI) public func detachPaymentMethod(
         _ paymentMethodID: String,
         fromCustomerUsing ephemeralKeySecret: String
     ) async throws {
@@ -1701,7 +1701,7 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(STP) public func attachPaymentMethod(
+    @_spi(InternalOnlyAPI) public func attachPaymentMethod(
         _ paymentMethodID: String,
         customerID: String,
         ephemeralKeySecret: String,
@@ -1720,7 +1720,7 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(STP) public func attachPaymentMethod(
+    @_spi(InternalOnlyAPI) public func attachPaymentMethod(
         _ paymentMethodID: String,
         customerID: String,
         ephemeralKeySecret: String) async throws {
@@ -1737,7 +1737,7 @@ extension STPAPIClient {
 
     /// Retrieve a customer
     /// - seealso: https://stripe.com/docs/api#retrieve_customer
-    @_spi(STP) public func retrieveCustomer(
+    @_spi(InternalOnlyAPI) public func retrieveCustomer(
         _ customerID: String,
         using ephemeralKey: String,
         completion: @escaping STPCustomerCompletionBlock
@@ -1755,7 +1755,7 @@ extension STPAPIClient {
 
     /// Retrieve a customer
     /// - seealso: https://stripe.com/docs/api#retrieve_customer
-    @_spi(STP) public func retrieveCustomer(
+    @_spi(InternalOnlyAPI) public func retrieveCustomer(
         _ customerID: String,
         using ephemeralKey: String
     ) async throws -> STPCustomer {
@@ -1776,7 +1776,7 @@ extension STPAPIClient {
     ///   - customerID: Identifier of the customer whose default payment method is being set
     ///   - ephemeralKey: The Customer Ephemeral Key secret to be used
     ///   - completion: The callback to run with the returned `STPCustomer` object, or an error.
-    @_spi(STP) public func setAsDefaultPaymentMethod(
+    @_spi(InternalOnlyAPI) public func setAsDefaultPaymentMethod(
         _ paymentMethodID: String,
         for customerID: String,
         using ephemeralKey: String,
@@ -1800,7 +1800,7 @@ extension STPAPIClient {
     ///   - customerID: Identifier of the customer whose default payment method is being set
     ///   - ephemeralKey: The Customer Ephemeral Key secret to be used
     /// - Returns: Returns the updated `STPCustomer` or throws an error if the operation failed.
-    @_spi(STP) public func setAsDefaultPaymentMethod(
+    @_spi(InternalOnlyAPI) public func setAsDefaultPaymentMethod(
         _ paymentMethodID: String,
         for customerID: String,
         using ephemeralKey: String
@@ -1828,7 +1828,7 @@ extension STPAPIClient {
     ///   - ephemeralKeySecret: The ephemeral key secret to use for authentication if working with customer-scoped objects.
     ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     /// - Returns: The created ConfirmationToken object.
-   @_spi(STP) public func createConfirmationToken(
+   @_spi(InternalOnlyAPI) public func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
         ephemeralKeySecret: String? = nil,
         additionalPaymentUserAgentValues: [String] = []
@@ -1884,7 +1884,7 @@ extension STPAPIClient {
     ///   - paymentIntentId: The ID of the PaymentIntent.
     ///   - clientSecret: The client secret of the PaymentIntent.
     ///   - completion: The callback to run with the updated PaymentIntent object, or an error.
-    @_spi(STP) public func cancelPaymentIntentCaptchaChallenge(
+    @_spi(InternalOnlyAPI) public func cancelPaymentIntentCaptchaChallenge(
         paymentIntentId: String,
         clientSecret: String,
         completion: @escaping STPPaymentIntentCompletionBlock
@@ -1910,7 +1910,7 @@ extension STPAPIClient {
     ///   - setupIntentId: The ID of the SetupIntent.
     ///   - clientSecret: The client secret of the SetupIntent.
     ///   - completion: The callback to run with the updated SetupIntent object, or an error.
-    @_spi(STP) public func cancelSetupIntentCaptchaChallenge(
+    @_spi(InternalOnlyAPI) public func cancelSetupIntentCaptchaChallenge(
         setupIntentId: String,
         clientSecret: String,
         completion: @escaping STPSetupIntentCompletionBlock
@@ -1934,10 +1934,10 @@ extension STPAPIClient {
 
 private let APIEndpointToken = "tokens"
 private let APIEndpointSources = "sources"
-@_spi(STP) public let APIEndpointCustomers = "customers"
+@_spi(InternalOnlyAPI) public let APIEndpointCustomers = "customers"
 private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
-@_spi(STP) public let APIEndpointPaymentMethods = "payment_methods"
+@_spi(InternalOnlyAPI) public let APIEndpointPaymentMethods = "payment_methods"
 private let APIEndpointConfirmationTokens = "confirmation_tokens"
 private let APIEndpointElementsCustomers = "elements/customers"
 private let APIEndpointElementsPaymentMethods = "elements/payment_methods"

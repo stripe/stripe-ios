@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 9/15/25.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 internal extension PaymentSheet.Appearance {

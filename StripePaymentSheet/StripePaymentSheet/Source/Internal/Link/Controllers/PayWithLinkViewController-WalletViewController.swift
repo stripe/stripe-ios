@@ -10,8 +10,8 @@ import PassKit
 import SafariServices
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 extension PayWithLinkViewController {
 
