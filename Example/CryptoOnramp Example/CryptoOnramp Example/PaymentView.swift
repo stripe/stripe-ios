@@ -195,10 +195,6 @@ struct PaymentView: View {
     @Environment(\.isLoading) private var isLoading
     @Environment(\.locale) private var locale
 
-    // When there's more than enough horizontal space, limit to a reasonable width
-    // so that the contents aren't spread too wide.
-    private let contentMaxWidth: CGFloat = 420
-
     @State private var amountText: String = "0"
     @State private var shouldShowPaymentMethodSheet: Bool = false
     @State private var kycRecoveryLevels: KYCRecoveryFlowView.Levels?
@@ -372,8 +368,7 @@ struct PaymentView: View {
                         }
                     }
                 }
-                .frame(maxWidth: contentMaxWidth)
-                .frame(maxWidth: .infinity)
+                .horizontallyCenteredContent()
                 .padding()
             }
         }
@@ -472,15 +467,13 @@ struct PaymentView: View {
             ArrangementView {
                 FoldAvoidingScrollView {
                     makeSplitPaymentDetails(metrics: .standard)
-                        .frame(maxWidth: contentMaxWidth)
-                        .frame(maxWidth: .infinity)
+                        .horizontallyCenteredContent()
                         .padding(.horizontal)
                 }
             } secondary: {
                 FoldAvoidingScrollView(alignment: .bottom) {
                     makeAmountEntryControls(metrics: .compact)
-                        .frame(maxWidth: contentMaxWidth)
-                        .frame(maxWidth: .infinity)
+                        .horizontallyCenteredContent()
                         .padding(.horizontal)
                 }
             }
@@ -531,8 +524,7 @@ struct PaymentView: View {
             paymentContinueButton
                 .padding(.vertical, metrics.continueVerticalPadding)
         }
-        .frame(maxWidth: contentMaxWidth)
-        .frame(maxWidth: .infinity)
+        .horizontallyCenteredContent()
         .padding(.horizontal)
     }
 
@@ -540,8 +532,7 @@ struct PaymentView: View {
         HStack(spacing: 16) {
             FoldAvoidingScrollView {
                 makeSplitPaymentDetails(metrics: .compact)
-                    .frame(maxWidth: contentMaxWidth)
-                    .frame(maxWidth: .infinity)
+                    .horizontallyCenteredContent()
                     .padding()
             }
 
@@ -557,8 +548,7 @@ struct PaymentView: View {
                 paymentContinueButton
                     .padding(.vertical, 8)
             }
-            .frame(maxWidth: contentMaxWidth)
-            .frame(maxWidth: .infinity)
+            .horizontallyCenteredContent()
             .padding(.horizontal)
         }
         .padding(.vertical, 8)
@@ -587,8 +577,7 @@ struct PaymentView: View {
                 .buttonStyle(PrimaryButtonStyle())
             }
         }
-        .frame(maxWidth: contentMaxWidth)
-        .frame(maxWidth: .infinity)
+        .horizontallyCenteredContent()
         .disabled(shouldDisableContinueButton)
         .opacity(shouldDisableContinueButton ? 0.5 : 1)
     }

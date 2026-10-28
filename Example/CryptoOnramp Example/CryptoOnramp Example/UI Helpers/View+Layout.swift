@@ -1,5 +1,5 @@
 //
-//  View+FoldAvoidance.swift
+//  View+Layout.swift
 //  CryptoOnramp Example
 //
 //  Created by Michael Liberatore on 10/21/26.
@@ -8,6 +8,14 @@
 import SwiftUI
 
 extension View {
+
+    /// Limits the content width and centers it horizontally within the available space.
+    /// - Parameter maxWidth: The maximum content width. Defaults to `LayoutConstants.contentMaxWidth`.
+    /// - Returns: The width-constrained content in a horizontally expanding frame.
+    func horizontallyCenteredContent(maxWidth: CGFloat = LayoutConstants.contentMaxWidth) -> some View {
+        frame(maxWidth: maxWidth)
+            .frame(maxWidth: .infinity)
+    }
 
     /// Keeps controls clear of an active fold.
     ///
