@@ -6,7 +6,7 @@
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
-import Stripe
+@testable@_spi(InternalOnlyAPI) import Stripe
 
 import OHHTTPStubs
 import OHHTTPStubsSwift

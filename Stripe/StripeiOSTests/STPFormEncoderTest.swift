@@ -6,7 +6,7 @@
 //  Copyright © 2015 Stripe, Inc. All rights reserved.
 //
 
-@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import Stripe

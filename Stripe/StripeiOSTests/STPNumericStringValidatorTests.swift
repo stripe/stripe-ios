@@ -6,7 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 
 @testable@_spi(InternalOnlyAPI) import Stripe
 @testable@_spi(InternalOnlyAPI) import StripePayments
