@@ -33,41 +33,14 @@ struct UserAttestationPresentingView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Image(systemName: "doc.plaintext")
-                    .font(.largeTitle)
-                    .padding()
-                    .background {
-                        Color(.systemGroupedBackground)
-                            .cornerRadius(16)
-                    }
-
-                VStack(spacing: 6) {
-                    Text("Accept user attestation")
-                        .font(.title)
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Text("Before continuing, Link needs you to review and accept the user attestation.")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-            .padding()
-        }
-        .safeAreaInset(edge: .bottom) {
-            Button("Review Attestation") {
-                presentAttestation()
-            }
-            .buttonStyle(PrimaryButtonStyle())
-            .disabled(isLoading.wrappedValue)
-            .opacity(isLoading.wrappedValue ? 0.5 : 1)
-            .padding()
-        }
-        .navigationTitle("User Attestation")
-        .navigationBarTitleDisplayMode(.inline)
+        FlowStepContainerView(
+            navigationTitle: "User Attestation",
+            systemImageName: "doc.plaintext",
+            title: "Accept user attestation",
+            message: "Before continuing, Link needs you to review and accept the user attestation.",
+            buttonTitle: "Review Attestation",
+            action: presentAttestation
+        )
         .alert(
             alert?.title ?? "Error",
             isPresented: isPresentingAlert,
