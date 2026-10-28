@@ -46,6 +46,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let analytic = try XCTUnwrap(analyticsClient.loggedAnalytics.first)
         XCTAssertEqual(analyticsClient.loggedAnalytics.count, 1)
         XCTAssertEqual(analytic.event, .expressCheckoutElementInit)
+        XCTAssertEqual(analytic.params["checkout_session_id"] as? String, session.id)
         XCTAssertEqual(analytic.params["ordered_lpms"] as? String, "link")
         XCTAssertEqual(analytic.params["apple_pay_enabled"] as? Bool, StripeAPI.deviceSupportsApplePay())
         XCTAssertEqual(analytic.params["ocr_type"] as? String, PaymentsSDKVariant.ocrTypeString)

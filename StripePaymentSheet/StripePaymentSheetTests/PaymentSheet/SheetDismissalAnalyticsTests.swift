@@ -103,6 +103,7 @@ final class SheetDismissalAnalyticsTests: XCTestCase {
                 // ...and the close button follows the same policy without duplicate events
                 STPAnalyticsClient.sharedClient._testLogHistory = []
                 content.navigationBar.closeButtonRight.sendActions(for: .touchUpInside)
+                XCTAssertNil(STPAnalyticsClient.sharedClient._testLogHistory.last?["checkout_session_id"])
                 XCTAssertEqual(content.dismissalCount, 2)
                 XCTAssertEqual(
                     STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String },
@@ -119,7 +120,7 @@ final class SheetDismissalAnalyticsTests: XCTestCase {
                 // Given cancellation that replaces the screen with a different analytics policy
                 let content = DismissalContentViewController(shouldLogDismissal: shouldLogDismissal)
                 let replacement = DismissalContentViewController(shouldLogDismissal: !shouldLogDismissal)
-                let sheet = makeSheet(content: content, usesNativeSheet: usesNativeSheet)
+                let sheet = makeSheet(content: content, usesNativeSheet: usesNativeSheet, checkoutSessionID: "cs_test_123")
                 content.onDismiss = { [weak sheet] in
                     sheet?.setViewControllers([replacement])
                 }
@@ -135,6 +136,17 @@ final class SheetDismissalAnalyticsTests: XCTestCase {
                     STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String },
                     shouldLogDismissal ? ["mc_dismiss"] : []
                 )
+                XCTAssertEqual(STPAnalyticsClient.sharedClient._testLogHistory.last?["checkout_session_id"] as? String, shouldLogDismissal ? "cs_test_123" : nil)
+
+                // ...and the replacement screen's close button inherits the same Checkout context.
+                STPAnalyticsClient.sharedClient._testLogHistory = []
+                replacement.navigationBar.closeButtonRight.sendActions(for: .touchUpInside)
+                XCTAssertEqual(replacement.dismissalCount, 1)
+                XCTAssertEqual(
+                    STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String },
+                    shouldLogDismissal ? [] : ["mc_dismiss"]
+                )
+                XCTAssertEqual(STPAnalyticsClient.sharedClient._testLogHistory.last?["checkout_session_id"] as? String, shouldLogDismissal ? nil : "cs_test_123")
             }
         }
     }
@@ -189,18 +201,20 @@ final class SheetDismissalAnalyticsTests: XCTestCase {
         XCTAssertTrue(STPAnalyticsClient.sharedClient._testLogHistory.isEmpty)
     }
 
-    private func makeSheet(content: BottomSheetContentViewController, usesNativeSheet: Bool) -> any PaymentSheetContainer {
+    private func makeSheet(content: BottomSheetContentViewController, usesNativeSheet: Bool, checkoutSessionID: String? = nil) -> any PaymentSheetContainer {
         // Construct both implementations directly so Duo's required rollout cannot hide legacy coverage.
         if usesNativeSheet {
             return NativeSheetContainerViewController(
                 contentViewController: content,
                 appearance: .default,
+                checkoutSessionID: checkoutSessionID,
                 didCancelNative3DS2: {}
             )
         }
         return BottomSheetViewController(
             contentViewController: content,
             appearance: .default,
+            checkoutSessionID: checkoutSessionID,
             didCancelNative3DS2: {}
         )
     }

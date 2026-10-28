@@ -224,7 +224,8 @@ class PaymentMethodFormViewController: UIViewController {
             selectedCountry: addressSectionElement.selectedCountryCode,
             addressSpecProvider: AddressSpecProvider.shared,
             verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance),
-            useAutocompleteEndpoints: elementsSession.shouldUseAutocompleteProxyEndpoints
+            useAutocompleteEndpoints: elementsSession.shouldUseAutocompleteProxyEndpoints,
+            checkoutSessionID: analyticsHelper.checkoutSessionID
         )
         autoCompleteViewController.delegate = self
 
@@ -763,6 +764,6 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
         if let autoCompleteAddress = selectedAutoCompleteAddress {
             editDistance = submittedAddress.editDistance(from: autoCompleteAddress)
         }
-        STPAnalyticsClient.sharedClient.logBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, apiClient: configuration.apiClient)
+        STPAnalyticsClient.sharedClient.logBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, checkoutSessionID: analyticsHelper.checkoutSessionID, apiClient: configuration.apiClient)
     }
 }

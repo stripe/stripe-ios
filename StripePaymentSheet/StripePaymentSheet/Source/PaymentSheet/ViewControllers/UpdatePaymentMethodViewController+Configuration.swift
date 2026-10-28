@@ -16,6 +16,7 @@ extension UpdatePaymentMethodViewController {
         let appearance: PaymentSheet.Appearance
         let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
         let hostedSurface: HostedSurface
+        let checkoutSessionID: String?
         let cardBrandFilter: CardBrandFilter
         let canRemove: Bool
         let canUpdate: Bool
@@ -91,7 +92,7 @@ extension UpdatePaymentMethodViewController {
             }
         }
 
-        init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdate: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+        init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration, hostedSurface: HostedSurface, checkoutSessionID: String? = nil, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdate: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
             if !PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) {
                 assertionFailure("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
             }
@@ -99,6 +100,7 @@ extension UpdatePaymentMethodViewController {
             self.appearance = appearance
             self.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
             self.hostedSurface = hostedSurface
+            self.checkoutSessionID = checkoutSessionID
             self.cardBrandFilter = cardBrandFilter
             self.canRemove = canRemove
             self.canUpdate = canUpdate

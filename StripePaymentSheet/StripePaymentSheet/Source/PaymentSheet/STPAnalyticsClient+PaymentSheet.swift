@@ -16,6 +16,7 @@ extension STPAnalyticsClient {
     /// ⚠️ Deprecated - use `PaymentSheetAnalyticsHelper` if you are actually a PaymentSheet analytic so that you can send all the params common to PaymentSheet analytics. 
     func logPaymentSheetEvent(
         event: STPAnalyticEvent,
+        checkoutSessionID: String? = nil,
         duration: TimeInterval? = nil,
         linkSessionType: LinkSettings.PopupWebviewOption? = nil,
         error: Error? = nil,
@@ -25,6 +26,7 @@ extension STPAnalyticsClient {
     ) {
         var additionalParams = [:] as [String: Any]
         additionalParams["duration"] = duration
+        additionalParams["checkout_session_id"] = checkoutSessionID
         if let linkSessionType {
             additionalParams["link_session_type"] = linkSessionType.rawValue
         }

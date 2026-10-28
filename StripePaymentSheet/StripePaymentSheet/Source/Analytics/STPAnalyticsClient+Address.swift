@@ -15,9 +15,13 @@ extension STPAnalyticsClient {
         event: STPAnalyticEvent,
         addressAnalyticData: AddressAnalyticData,
         additionalParams: [String: Any] = [:],
+        checkoutSessionID: String? = nil,
         apiClient: STPAPIClient
     ) {
         var params = additionalParams
+        if let checkoutSessionID {
+            params["checkout_session_id"] = checkoutSessionID
+        }
         params["address_data_blob"] = addressAnalyticData.analyticsPayload
         log(analytic: AddressAnalytic(event: event, params: params), apiClient: apiClient)
     }
@@ -44,13 +48,13 @@ extension STPAnalyticsClient {
                                   apiClient: apiClient)
     }
 
-    func logBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
+    func logBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, checkoutSessionID: String? = nil, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
                                                editDistance: editDistance)
 
-        self.logAddressControllerEvent(event: .mcbillingAddressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
+        self.logAddressControllerEvent(event: .mcbillingAddressCompleted, addressAnalyticData: analyticData, checkoutSessionID: checkoutSessionID, apiClient: apiClient)
     }
 
     func logCustomerSheetBillingAddressCompleted(addressCountryCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
@@ -84,16 +88,17 @@ extension STPAnalyticsClient {
 
     // MARK: - Autocomplete
 
-    func logAddressAutocompleteStart(addressCountryCode: String, sessionToken: String, apiClient: STPAPIClient) {
+    func logAddressAutocompleteStart(addressCountryCode: String, sessionToken: String, checkoutSessionID: String? = nil, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode, autoCompleteResultedSelected: nil, editDistance: nil)
         logAddressControllerEvent(event: .addressAutocompleteStart,
                                   addressAnalyticData: analyticData,
                                   additionalParams: ["autocomplete_session_token": sessionToken],
+                                  checkoutSessionID: checkoutSessionID,
                                   apiClient: apiClient)
     }
 
-    func logAddressAutocompleteSuggestions(addressCountryCode: String, resultCount: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, msToFetch: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressAutocompleteSuggestions(addressCountryCode: String, resultCount: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, msToFetch: TimeInterval?, checkoutSessionID: String? = nil, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode, autoCompleteResultedSelected: nil, editDistance: nil)
         var params: [String: Any] = [
@@ -106,10 +111,11 @@ extension STPAnalyticsClient {
         logAddressControllerEvent(event: .addressAutocompleteSuggestions,
                                   addressAnalyticData: analyticData,
                                   additionalParams: params,
+                                  checkoutSessionID: checkoutSessionID,
                                   apiClient: apiClient)
     }
 
-    func logAddressAutocompleteSelected(addressCountryCode: String, queryLength: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, placeId: String?, msToFetch: TimeInterval?, apiClient: STPAPIClient) {
+    func logAddressAutocompleteSelected(addressCountryCode: String, queryLength: Int, sessionToken: String, source: String, sessionElapsed: TimeInterval, placeId: String?, msToFetch: TimeInterval?, checkoutSessionID: String? = nil, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode, autoCompleteResultedSelected: nil, editDistance: nil)
         var params: [String: Any] = [
@@ -123,10 +129,11 @@ extension STPAnalyticsClient {
         logAddressControllerEvent(event: .addressAutocompleteSelected,
                                   addressAnalyticData: analyticData,
                                   additionalParams: params,
+                                  checkoutSessionID: checkoutSessionID,
                                   apiClient: apiClient)
     }
 
-    func logAddressAutocompleteError(addressCountryCode: String, error: Error, sessionToken: String, sessionElapsed: TimeInterval, apiClient: STPAPIClient) {
+    func logAddressAutocompleteError(addressCountryCode: String, error: Error, sessionToken: String, sessionElapsed: TimeInterval, checkoutSessionID: String? = nil, apiClient: STPAPIClient) {
         assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountryCode, autoCompleteResultedSelected: nil, editDistance: nil)
         var params = error.serializeForV1Analytics()
@@ -135,6 +142,7 @@ extension STPAnalyticsClient {
         logAddressControllerEvent(event: .addressAutocompleteError,
                                   addressAnalyticData: analyticData,
                                   additionalParams: params,
+                                  checkoutSessionID: checkoutSessionID,
                                   apiClient: apiClient)
     }
 }
