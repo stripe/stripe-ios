@@ -86,7 +86,13 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
 
     struct CompletedCheckoutSessionPoller: CheckoutSessionPolling {
         func poll(checkoutSessionId: String, clientSecret: String) async -> CheckoutSessionPoller.Outcome {
-            return .completed
+            let data = try! JSONSerialization.data(withJSONObject: [
+                "id": checkoutSessionId,
+                "confirmation_status": "succeeded",
+                "status": "complete",
+                "payment_status": "unpaid",
+            ])
+            return .succeeded(try! StripeJSONDecoder().decode(CheckoutClientPollResponse.self, from: data))
         }
     }
 
