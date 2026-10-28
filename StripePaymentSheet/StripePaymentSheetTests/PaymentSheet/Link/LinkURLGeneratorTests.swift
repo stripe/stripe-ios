@@ -161,7 +161,7 @@ class LinkURLGeneratorTests: XCTestCase {
         // Then paymentUserAgent is built fresh for the confirming element, not the global one
         XCTAssertEqual(params.paymentUserAgent, confirmationSource.paymentUserAgent)
         XCTAssertNotEqual(params.paymentUserAgent, PaymentsSDKVariant.paymentUserAgent)
-        XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSource, "checkout")
+        XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSource, "mobile-checkout")
         XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSubtype, confirmationSource.rawValue)
         XCTAssertEqual(params.clientAttributionMetadata.checkoutConfigId, "config_checkout")
         XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationAdditionalElements, ["payment", "expressCheckout"])

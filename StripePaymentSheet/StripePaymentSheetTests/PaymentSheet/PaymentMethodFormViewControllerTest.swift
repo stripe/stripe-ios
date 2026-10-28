@@ -137,8 +137,8 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         let metadata = try XCTUnwrap(sut.elementsSessionContext.clientAttributionMetadata)
 
         // Then collection receives Checkout attribution before confirmation
-        XCTAssertEqual(metadata.merchantIntegrationSource, "checkout")
-        XCTAssertEqual(metadata.merchantIntegrationSubtype, "payment-element")
+        XCTAssertEqual(metadata.merchantIntegrationSource, "mobile-checkout")
+        XCTAssertEqual(metadata.merchantIntegrationSubtype, "mobile-payment-element")
         XCTAssertEqual(metadata.checkoutSessionId, session.id)
         XCTAssertEqual(metadata.checkoutConfigId, "config_checkout")
         XCTAssertEqual(metadata.merchantIntegrationAdditionalElements, ["payment", "address"])

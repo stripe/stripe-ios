@@ -91,8 +91,8 @@ extension CheckoutController {
     /// and `makeExpressCheckoutConfirmationFlow`), so `PaymentElement` and `ExpressCheckoutElement`
     /// never appear together in a single request's `payment_user_agent`.
     enum ConfirmingElement: String {
-        case paymentElement = "payment-element"
-        case expressCheckoutElement = "express-checkout-element"
+        case paymentElement = "mobile-payment-element"
+        case expressCheckoutElement = "mobile-express-checkout-element"
 
         private var identifier: String {
             switch self {

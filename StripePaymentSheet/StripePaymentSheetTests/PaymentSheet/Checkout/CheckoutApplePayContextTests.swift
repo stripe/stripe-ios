@@ -837,7 +837,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             // payment_method_data[payment_user_agent] can be built for the right one downstream
             XCTAssertEqual(parameters.confirmationSource, confirmationSource, file: file, line: line)
             for metadata in [parameters.clientAttributionMetadata, parameters.paymentMethodData?.clientAttributionMetadata] {
-                XCTAssertEqual(metadata?.merchantIntegrationSource, "checkout", file: file, line: line)
+                XCTAssertEqual(metadata?.merchantIntegrationSource, "mobile-checkout", file: file, line: line)
                 XCTAssertEqual(metadata?.merchantIntegrationSubtype, confirmationSource.rawValue, file: file, line: line)
                 XCTAssertEqual(metadata?.merchantIntegrationAdditionalElements, ["payment", "expressCheckout"], file: file, line: line)
             }
