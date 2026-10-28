@@ -58,7 +58,7 @@ struct RegistrationView: View {
     // MARK: - View
 
     var body: some View {
-        ScrollView {
+        FoldAvoidingScrollView(alignment: .top, avoidsHorizontalFolds: false) { _ in
             VStack(spacing: 20) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Finish setting up your new account")
@@ -131,6 +131,7 @@ struct RegistrationView: View {
                 }
 
             }
+            .horizontallyCenteredContent()
             .padding()
         }
         .navigationTitle("Registration")
