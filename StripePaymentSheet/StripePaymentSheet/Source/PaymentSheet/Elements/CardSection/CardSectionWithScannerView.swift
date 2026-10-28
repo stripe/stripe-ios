@@ -8,10 +8,10 @@
 
 #if !os(visionOS)
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /**
@@ -79,30 +79,39 @@ final class CardSectionWithScannerView: UIView {
 
     @objc func didTapCardScanButton() {
         analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
-        showCardScanner()
+        animateScannerVisibility(true)
         cardScanningView.startScanner()
         becomeFirstResponder()
     }
 
     private func hideCardScanner() {
         self.cardScanningView.prepDismissAnimation()
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
-            self.cardScanButton.alpha = 1
-            self.cardScanningView.alpha = 0
-            self.cardScanningView.setHiddenIfNecessary(true)
-            self.layoutIfNeeded()
-        } completion: { _ in
+        animateScannerVisibility(false) { _ in
             self.cardScanningView.completeDismissAnimation()
         }
     }
 
-    private func showCardScanner() {
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
-            self.cardScanButton.alpha = 0
-            self.cardScanningView.alpha = 1
-            self.cardScanningView.setHiddenIfNecessary(false)
-            self.layoutIfNeeded()
-        }
+    private func animateScannerVisibility(_ isVisible: Bool, completion: ((Bool) -> Void)? = nil) {
+        let nativeSheet = findViewController(for: self)?.bottomSheetController as? NativeSheetContainerViewController
+        let targetHeight = nativeSheet?.fittedContentHeight(with: cardScanningView, isHidden: !isVisible)
+
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0,
+            usingSpringWithDamping: 1.0,
+            initialSpringVelocity: 0.3,
+            options: [.curveEaseInOut],
+            animations: {
+                self.cardScanButton.alpha = isVisible ? 0 : 1
+                self.cardScanningView.alpha = isVisible ? 1 : 0
+                self.cardScanningView.setHiddenIfNecessary(!isVisible)
+                self.layoutIfNeeded()
+                if let nativeSheet, let targetHeight {
+                    nativeSheet.invalidateContentDetent(to: targetHeight)
+                }
+            },
+            completion: completion
+        )
     }
 
     override var canBecomeFirstResponder: Bool {

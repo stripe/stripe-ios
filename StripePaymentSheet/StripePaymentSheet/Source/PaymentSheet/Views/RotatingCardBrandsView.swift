@@ -8,9 +8,9 @@
 
 import UIKit
 
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// A view that displays a horizontal collection of card brand images.
 ///
@@ -107,10 +107,6 @@ class RotatingCardBrandsView: UIView {
 
     func rotateCardBrand() {
         isAnimating = true
-        var nextIndex = self.rotatingIndex + 1
-        if nextIndex >= self.rotatingCardBrands.count {
-            nextIndex = 0
-        }
         let animation = UIViewPropertyAnimator(duration: Self.AnimationDuration,
                                                controlPoint1: CGPoint(x: 0.19, y: 0.22),
                                                controlPoint2: CGPoint(x: 1, y: 1))
@@ -119,12 +115,19 @@ class RotatingCardBrandsView: UIView {
                               duration: Self.AnimationDuration,
                               options: [.transitionCrossDissolve],
                               animations: {
+                guard !self.rotatingCardBrands.isEmpty else {
+                    return
+                }
+                var nextIndex = self.rotatingIndex + 1
+                if nextIndex >= self.rotatingCardBrands.count {
+                    nextIndex = 0
+                }
                 self.rotatingCardBrandView.image = STPImageLibrary.cardBrandImage(for: self.rotatingCardBrands[nextIndex])
-
+                self.rotatingIndex = nextIndex
             })
         }
         animation.addCompletion { _ in
-            guard !self.stopAfterNextTransition else {
+            guard !self.stopAfterNextTransition, !self.rotatingCardBrands.isEmpty else {
                 self.stopAfterNextTransition = false
                 self.isAnimating = false
                 return
@@ -132,7 +135,6 @@ class RotatingCardBrandsView: UIView {
             self.rotateCardBrand()
         }
         animation.startAnimation(afterDelay: Self.RotationInterval)
-        self.rotatingIndex = nextIndex
     }
 
     func startAnimating() {

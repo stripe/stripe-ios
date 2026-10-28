@@ -6,19 +6,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 final class BiometricConsentViewController: IdentityFlowViewController {
-
-    private let contentStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.spacing = 24
-        return stackView
-    }()
 
     private let multilineContent = MultilineIconLabelHTMLView()
     private let privacyPolicyView = HTMLTextView()
@@ -26,6 +18,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     let brandLogo: UIImage
     let showsStripeLogo: Bool
     let consentContent: StripeAPI.VerificationPageStaticContentConsentPage
+    let configuration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration?
 
     struct Style {
         static let contentHorizontalPadding: CGFloat = 32
@@ -48,6 +41,16 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     }
 
     private var scrolledToBottomYOffset: CGFloat?
+
+    private var privacyPolicyViewModel: HTMLTextView.ViewModel {
+        return .init(
+            text: consentContent.privacyPolicy,
+            style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
+            didOpenURL: { [weak self] url in
+                self?.openInSafariViewController(url: url)
+            }
+        )
+    }
 
     var flowViewModel: IdentityFlowView.ViewModel {
 
@@ -87,23 +90,26 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 )
             )
         }
-        buttons.append(
-            .init(
-                text: consentContent.declineButtonText,
-                state: declineButtonState,
-                isPrimary: false,
-                didTap: { [weak self] in
-                    self?.didTapButton(consentValue: false)
-                }
+        if configuration?.hideDeclineButton != true {
+            buttons.append(
+                .init(
+                    text: consentContent.declineButtonText,
+                    state: declineButtonState,
+                    isPrimary: false,
+                    didTap: { [weak self] in
+                        self?.didTapButton(consentValue: false)
+                    }
+                )
             )
-        )
+        }
 
         return .init(
             headerViewModel: .init(
                 backgroundColor: .systemBackground,
                 headerType: {
-                    if sheetController?.flowController.visitedIndividualWelcomePage == true {
-                        // If visited individual page, this is a fallback. Don't show icons
+                    if configuration?.hideBrandingHeader == true
+                        || sheetController?.flowController.visitedIndividualWelcomePage == true
+                    {
                         return .plain
                     } else {
                         // Otherwise this is the first screen, show icons
@@ -117,13 +123,15 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                         )
                     }
                 }(),
-                titleText: consentContent.title
+                titleText: consentContent.title,
+                subtitleText: consentContent.subtitle
             ),
             contentViewModel: .init(
-                view: contentStackView,
+                view: multilineContent,
                 inset: .init(top: Style.contentTopPadding, leading: Style.contentHorizontalPadding, bottom: Style.contentBottomPadding, trailing: Style.contentHorizontalPadding)
             ),
             buttons: buttons,
+            buttonBottomContentView: privacyPolicyView,
             scrollViewDelegate: self,
             flowViewDelegate: self
         )
@@ -133,15 +141,14 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         brandLogo: UIImage,
         showsStripeLogo: Bool,
         consentContent: StripeAPI.VerificationPageStaticContentConsentPage,
+        configuration: IdentityVerificationSheet.Configuration.BiometricConsentConfiguration? = nil,
         sheetController: VerificationSheetControllerProtocol
     ) throws {
         self.brandLogo = brandLogo
         self.showsStripeLogo = showsStripeLogo
         self.consentContent = consentContent
+        self.configuration = configuration
         super.init(sheetController: sheetController, analyticsScreenName: .biometricConsent)
-
-        // Set up the content stack view with both main content and privacy policy
-        setupContentStackView()
 
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy
@@ -149,22 +156,15 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             with: .init(
                 lines: consentContent.lines.map {
                     return ($0.icon, $0.content)
-                }
+                },
+                textColor: .label
             ) { [weak self] url in
                 self?.presentBottomsheet(withUrl: url)
             }
         )
 
-        // Configure privacy policy content to be part of scrollable content
-        try privacyPolicyView.configure(
-            with: .init(
-                text: consentContent.privacyPolicy,
-                style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
-                didOpenURL: { [weak self] url in
-                    self?.openInSafariViewController(url: url)
-                }
-            )
-        )
+        // Validate and configure the privacy policy displayed below the consent buttons.
+        try privacyPolicyView.configure(with: privacyPolicyViewModel)
 
         updateUI()
     }
@@ -175,24 +175,6 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setupContentStackView() {
-        contentStackView.addArrangedSubview(multilineContent)
-
-        // Create a container for the privacy policy with centered alignment
-        let privacyPolicyContainer = UIView()
-        privacyPolicyContainer.addSubview(privacyPolicyView)
-        privacyPolicyView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            privacyPolicyView.topAnchor.constraint(equalTo: privacyPolicyContainer.topAnchor),
-            privacyPolicyView.leadingAnchor.constraint(greaterThanOrEqualTo: privacyPolicyContainer.leadingAnchor),
-            privacyPolicyView.trailingAnchor.constraint(lessThanOrEqualTo: privacyPolicyContainer.trailingAnchor),
-            privacyPolicyView.centerXAnchor.constraint(equalTo: privacyPolicyContainer.centerXAnchor),
-            privacyPolicyView.bottomAnchor.constraint(equalTo: privacyPolicyContainer.bottomAnchor),
-        ])
-
-        contentStackView.addArrangedSubview(privacyPolicyContainer)
-    }
 }
 
 // MARK: - Private Helpers
@@ -244,7 +226,7 @@ extension BiometricConsentViewController: UIScrollViewDelegate {
 
 // MARK: - IdentityFlowViewDelegate
 extension BiometricConsentViewController: IdentityFlowViewDelegate {
-    func scrollViewFullyLaiedOut(_ scrollView: UIScrollView) {
+    func scrollViewFullyLaidOut(_ scrollView: UIScrollView) {
         guard scrolledToBottomYOffset == nil else {
             return
         }

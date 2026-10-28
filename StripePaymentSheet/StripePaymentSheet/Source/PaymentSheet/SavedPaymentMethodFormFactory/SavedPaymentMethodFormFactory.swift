@@ -5,8 +5,9 @@
 //  Created by Joyce Qin on 11/20/24.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
+@MainActor
 class SavedPaymentMethodFormFactory {
     func makePaymentMethodForm(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {
         switch configuration.paymentMethod.type {

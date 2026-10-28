@@ -6,13 +6,14 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 
 class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     var backingAPIClient: STPAPIClient = .shared
     var isLinkWithStripe: Bool = false
+    var hasRequestedDataPermissions: Bool = false
     var consumerPublishableKey: String?
     var consumerSession: StripeFinancialConnections.ConsumerSessionData?
     var authenticatedLinkBrand: LinkBrand?
@@ -38,7 +39,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func synchronize(
         clientSecret: String,
         returnURL: String?,
-        initialSynchronize: Bool
+        initialSynchronize: Bool,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?
     ) -> Future<FinancialConnectionsSynchronize> {
         return Promise<FinancialConnectionsSynchronize>()
     }

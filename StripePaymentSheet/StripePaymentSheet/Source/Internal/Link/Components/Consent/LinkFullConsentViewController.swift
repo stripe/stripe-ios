@@ -5,8 +5,8 @@
 //  Created by Mat Schmid on 8/23/25.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol LinkFullConsentViewControllerDelegate: AnyObject {
@@ -135,7 +135,6 @@ final class LinkFullConsentViewController: UIViewController, BottomSheetContentV
 extension LinkFullConsentViewController {
     var navigationBar: SheetNavigationBar {
         let navBar = LinkSheetNavigationBar(
-            isTestMode: false,
             appearance: LinkUI.appearance,
             brand: .link,
             shouldLogPaymentSheetAnalyticsOnDismissal: false

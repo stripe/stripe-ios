@@ -7,10 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 private let APIEndpointRadarSession = "radar/session"
-private let APIEndpointSavedPaymentMethodRadarSession = "radar/saved_payment_method_session"
 
 extension STPAPIClient {
 
@@ -65,44 +64,6 @@ extension STPAPIClient {
                     return
                 }
                 continuation.resume(returning: radarSession)
-            }
-        }
-    }
-
-    /// Creates a Radar Session for a saved payment method.
-    ///
-    /// - Note: See https://stripe.com/docs/radar/radar-session
-    /// - Note: `StripeAPI.advancedFraudSignalsEnabled` must be `true` to use this method.
-    /// - Note: See `STPRadarSession`
-    ///
-    /// - Parameters:
-    ///    - paymentMethodId: The ID of the payment method to create a radar session for.
-    ///    - completion: The callback to run with the returned `STPRadarSession` (and any errors that may have occurred).
-    @_spi(STP) public func createSavedPaymentMethodRadarSession(
-        paymentMethodId: String,
-        completion: @escaping STPRadarSessionCompletionBlock
-    ) {
-        STPTelemetryClient.shared.updateFraudDetectionIfNecessary { result in
-            switch result {
-            case .failure(let error):
-                completion(nil, error)
-                return
-            case .success(let fraudDetectionDataData):
-                let paymentUserAgent = PaymentsSDKVariant.paymentUserAgent
-                let parameters = [
-                    "muid": fraudDetectionDataData.muid ?? "",
-                    "sid": fraudDetectionDataData.sid ?? "",
-                    "guid": fraudDetectionDataData.guid ?? "",
-                    "payment_user_agent": paymentUserAgent,
-                    "payment_method": paymentMethodId,
-                ]
-                APIRequest<STPRadarSession>.post(
-                    with: self,
-                    endpoint: APIEndpointSavedPaymentMethodRadarSession,
-                    parameters: parameters
-                ) { (radarSession, _, error) in
-                    completion(radarSession, error)
-                }
             }
         }
     }

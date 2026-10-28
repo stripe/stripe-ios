@@ -6,7 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 protocol PickerFieldViewDelegate: AnyObject {
@@ -154,7 +154,12 @@ final class PickerFieldView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        updateTextAlignment()
         floatingPlaceholderTextFieldView?.updatePlaceholder(animated: false)
+    }
+
+    private func updateTextAlignment() {
+        textField.textAlignment = effectiveUserInterfaceLayoutDirection == .rightToLeft ? .right : .natural
     }
 
     override var isUserInteractionEnabled: Bool {

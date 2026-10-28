@@ -20,28 +20,40 @@ app:
     FASTLANE_LANE: ios integration_all
 trigger_map:
 - push_branch: master
-  pipeline: main-trigger-pipeline
+  pipeline: master-trigger-pipeline
 - pull_request_source_branch: releases/*
   pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
 pipelines:
   main-trigger-pipeline:
-    workflows:
+    workflows: &main_workflows
       lint-tests:
         abort_on_fail: true
-      update-snapshots: {}
-      framework-tests: {}
-      framework-tests-ios-26: {}
-      test-builds-xcode-26-1: {}
-      install-tests: {}
+      record-all-snapshots-and-lokalise: {}
+      framework-unit-tests:
+        uses: framework-tests
+        inputs:
+        - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "true"
+      paymentsheet-unit-tests:
+        uses: framework-tests-paymentsheet
+        inputs:
+        - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "true"
+      lpm-confirm-flow-tests:
+        parallel: 2
+      framework-tests-and-builds-xcode-26-1: {}
+      installation-tests: {}
+      integration-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
         parallel: 4
-      ui-tests-connect: {}
-      ui-tests-crypto: {}
-      integration-all: {}
-      lokalise-upload: {}
+      ui-tests-connect-crypto: {}
+
+  master-trigger-pipeline:
+    workflows:
+      <<: *main_workflows
+      size-report:
+        parallel: 3
 
   releases-trigger-pipeline:
     workflows:
@@ -49,19 +61,19 @@ pipelines:
       lint-tests:
         abort_on_fail: true
       framework-tests-no-mocks: {}
-      framework-tests-ios-26: {}
-      test-builds-xcode-26-1: {}
+      framework-tests-and-builds-xcode-26-1: {}
       deploy-docs: {}
-      install-tests: {}
-      size-report: {}
+      installation-tests-cocoapods: {}
+      installation-tests-spm: {}
+      integration-tests: {}
+      size-report:
+        parallel: 3
       ui-tests-paymentsheet:
         parallel: 4
-      ui-tests-connect: {}
-      ui-tests-crypto: {}
+      ui-tests-connect-crypto: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
       pod-lint-tests: {}
-      integration-all: {}
 
   nightly-pipeline:
     workflows:
@@ -72,7 +84,8 @@ pipelines:
       deploy-dry-run: {}
       pod-lint-tests: {}
 workflows:
-  update-snapshots:
+  record-all-snapshots-and-lokalise:
+    description: Standalone recorder for both runtimes, including artifact upload, one snapshot push, and localization updates.
     steps:
     - activate-ssh-key@4: {}
     - script@1:
@@ -88,11 +101,16 @@ workflows:
         title: Push snapshot changes
         inputs:
         - content: ruby ci_scripts/push_snapshots.rb
+    - script@1:
+        inputs:
+        - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
+        title: Upload strings to lokalise
     before_run:
     - install-runtime-16
     - prep_all
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - LOKALISE_API_KEY: $LOKALISE_API_KEY
   check-docs:
     steps:
     - script@1:
@@ -295,7 +313,17 @@ workflows:
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   framework-tests:
+    envs:
+    - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "false"
     steps:
+    - script@1:
+        title: Delegate snapshots to the dedicated workflow
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            options="$(ruby ci_scripts/framework_test_options.rb)"
+            envman add --key FRAMEWORK_TEST_OPTIONS --value "$options"
     - fastlane@3:
         inputs:
         - lane: preflight
@@ -312,55 +340,15 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeiOS
+        - xcodebuild_options: $FRAMEWORK_TEST_OPTIONS
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: StripePayments
-        is_always_run: true
-    - xcode-test@6:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripePaymentsUI
-        is_always_run: true
-    - xcode-test@6:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripePaymentSheet
-        is_always_run: true
-    - xcode-test@6:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeCameraCore
-        is_always_run: true
-    - xcode-test@6:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeCore
-        is_always_run: true
-    - xcode-test@6:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeConnect
-        is_always_run: true
-    - xcode-test@6:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeIdentity
+        - scheme: FrameworkTests-CI
+        - xcodebuild_options: $FRAMEWORK_TEST_OPTIONS
         is_always_run: true
     - xcode-test@6:
         inputs:
@@ -368,34 +356,6 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeIssuing
-        is_always_run: true
-    - xcode-test@6:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeFinancialConnections
-        is_always_run: true
-    - xcode-test@6:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeCardScan
-        is_always_run: true
-    - xcode-test@6:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeApplePay
-        is_always_run: true
-    - xcode-test@6:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeUICore
         is_always_run: true
     - xcode-test@6:
         inputs:
@@ -414,7 +374,82 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  framework-tests-ios-26:
+  framework-tests-paymentsheet:
+    envs:
+    - CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: "false"
+    steps:
+    - script@1:
+        title: Delegate snapshots to the dedicated workflow
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            options="$(ruby ci_scripts/framework_test_options.rb)"
+            envman add --key FRAMEWORK_TEST_OPTIONS --value "$options"
+    - xcode-test@6:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripePaymentSheet
+        - xcodebuild_options: $FRAMEWORK_TEST_OPTIONS -skip-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests
+        is_always_run: true
+    - deploy-to-bitrise-io@2: {}
+    - save-spm-cache@1: {}
+    before_run:
+    - install-runtime-16
+    - prep_all
+    after_run: []
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  lpm-confirm-flow-tests:
+    steps:
+    - script@1:
+        title: Select LPM confirmation shard
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            test_class="StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests"
+            # These two methods take about half the suite's execution time.
+            dedicated_methods=(testAmazonPayConfirmFlows testTwintConfirmFlows)
+            options=("-only-testing:$test_class")
+            case "${BITRISE_IO_PARALLEL_TOTAL:-1}:${BITRISE_IO_PARALLEL_INDEX:-0}" in
+              1:0) ;; # Standalone runs retain the entire class.
+              2:0)
+                options=()
+                for method in "${dedicated_methods[@]}"; do
+                  options+=("-only-testing:$test_class/$method")
+                done
+                ;;
+              2:1)
+                for method in "${dedicated_methods[@]}"; do
+                  options+=("-skip-testing:$test_class/$method")
+                done
+                ;;
+              *) echo "Unsupported LPM shard index or count" >&2; exit 1 ;;
+            esac
+            envman add --key LPM_TEST_OPTIONS --value "${options[*]}"
+    - xcode-test@6:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripePaymentSheet
+        - xcodebuild_options: $LPM_TEST_OPTIONS
+    - deploy-to-bitrise-io@2: {}
+    - save-spm-cache@1: {}
+    before_run:
+    - install-runtime-16
+    - prep_all
+    after_run: []
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  framework-tests-and-builds-xcode-26-1:
     steps:
     - script@1:
         inputs:
@@ -427,6 +462,12 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: AllStripeFrameworks-iOS26
+    - xcode-build-for-test@2:
+        is_always_run: true
+        inputs:
+        - scheme: AllStripeFrameworks
+        - destination: generic/platform=iOS Simulator
+        - xcodebuild_options: ARCHS=arm64
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
@@ -485,21 +526,37 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  test-builds-xcode-26-1:
-    steps:
-    - xcode-build-for-test@2:
-        inputs:
-        - scheme: AllStripeFrameworks
-        - destination: generic/platform=iOS Simulator
-    - deploy-to-bitrise-io@2: {}
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.1
+  installation-tests:
+    description: Run all five package installation variants with one simulator and dependency setup.
     before_run:
+    - install-runtime-16
     - prep_all
+    - installation-cocoapods-steps
+    - installation-spm-steps
+    steps:
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
-  install-tests:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  installation-tests-cocoapods:
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - installation-cocoapods-steps
+    steps:
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  installation-cocoapods-steps:
     steps:
     - fastlane@3:
         inputs:
@@ -513,6 +570,22 @@ workflows:
         inputs:
         - lane: installation_cocoapods_frameworks_swift
         title: fastlane installation_cocoapods_frameworks_swift
+  installation-tests-spm:
+    before_run:
+    - install-runtime-16
+    - prep_all
+    - installation-spm-steps
+    steps:
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  installation-spm-steps:
+    steps:
     - fastlane@3:
         inputs:
         - lane: installation_spm_objc
@@ -521,14 +594,14 @@ workflows:
         inputs:
         - lane: installation_spm_swift
         title: fastlane installation_spm_swift
-    before_run:
-    - install-runtime-16
-    - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
-  integration-all:
+    - fastlane@3:
+        inputs:
+        - lane: installation_spm_identity_trait
+        title: fastlane installation_spm_identity_trait
+  integration-tests:
     steps:
     - xcode-test@6:
+        is_always_run: true
         is_skippable: true
         inputs: &integration_all_inputs
         - destination: $DEFAULT_TEST_DEVICE
@@ -542,26 +615,40 @@ workflows:
         inputs:
         - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
     - xcode-test@6:
+        is_always_run: true
         run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
         inputs: *integration_all_inputs
-    - deploy-to-bitrise-io@2: {}
+    - deploy-to-bitrise-io@2:
+        is_always_run: true
     before_run:
     - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
-  install-runtime-15:
+  install-xcodes:
     steps:
     - script@1:
-        title: Upgrade xcodes
+        title: Install pinned xcodes binary
         inputs:
         - content: |-
             #!/usr/bin/env bash
             set -euo pipefail
-            brew upgrade xcodesorg/made/xcodes || brew install xcodesorg/made/xcodes
+            xcodes_dir="$(mktemp -d)"
+            curl --fail --location --silent --show-error --retry 3 \
+              https://github.com/XcodesOrg/xcodes/releases/download/2.1.0/xcodes.zip \
+              --output "$xcodes_dir/xcodes.zip"
+            echo "f1519afe934a513e85dd9b32fc872394becbbb6a41db15d9ac3926a09a891888  $xcodes_dir/xcodes.zip" | shasum -a 256 --check
+            unzip -oq "$xcodes_dir/xcodes.zip" -d "$xcodes_dir"
+            chmod +x "$xcodes_dir/xcodes"
+            "$xcodes_dir/xcodes" version
+            envman add --key STRIPE_XCODES_PATH --value "$xcodes_dir/xcodes"
+  install-runtime-15:
+    before_run:
+    - install-xcodes
+    steps:
     - script@1:
         title: Install iOS 15.5 simulator runtime
         inputs:
@@ -572,7 +659,7 @@ workflows:
               echo "iOS 15.5 runtime already installed"
             else
               echo "Installing iOS 15.5 runtime..."
-              sudo xcodes runtimes install "iOS 15.5"
+              sudo "$STRIPE_XCODES_PATH" runtimes install "iOS 15.5"
             fi
   legacy-tests-15:
     steps:
@@ -611,18 +698,21 @@ workflows:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
   lint-tests:
+    before_run:
+    - prep_source
     steps:
-    - git-clone@8.2:
-        inputs:
-        - merge_pr: "no"
-        - clone_depth: -1
     - script@1:
         inputs:
-        - content: git fetch origin master
-        title: Fetch origin/master
-    - script@1:
-        inputs:
-        - content: ./ci_scripts/lint_modified_files.sh
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            # Push builds only run on master, which was already linted in its PR.
+            if [ -z "${BITRISE_PULL_REQUEST:-}" ]; then
+              echo "Not a pull request; skipping swiftlint."
+              exit 0
+            fi
+            # prep_source fetched origin/master with enough history to find the merge base.
+            ./ci_scripts/lint_modified_files.sh
         title: Run swiftlint
     - script@1:
         inputs:
@@ -632,6 +722,10 @@ workflows:
         inputs:
         - content: ./ci_scripts/check_image_format.sh
         title: Check png image format is 8-bit
+    - script@1:
+        inputs:
+        - content: ruby ci_scripts/tests/framework_architecture_validator_test.rb
+        title: Test release build scripts
     - fastlane@3:
         inputs:
         - lane: build_extras
@@ -652,21 +746,6 @@ workflows:
         title: Send notification if failed
         is_always_run: true
         run_if: .IsBuildFailed
-  lokalise-upload:
-    steps:
-    - script@1:
-        inputs:
-        - content: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
-        title: Upload strings to lokalise
-    before_run:
-    - install-runtime-16
-    - prep_all
-    envs:
-      - LOKALISE_API_KEY: $LOKALISE_API_KEY
-    meta:
-      bitrise.io:
-        stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
   pod-lint-tests:
     steps:
     - script@1:
@@ -679,14 +758,9 @@ workflows:
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   install-runtime-16:
+    before_run:
+    - install-xcodes
     steps:
-    - script@1:
-        title: Upgrade xcodes
-        inputs:
-        - content: |-
-            #!/usr/bin/env bash
-            set -euo pipefail
-            brew upgrade xcodesorg/made/xcodes || brew install xcodesorg/made/xcodes
     - script@1:
         title: Install iOS 16.4 simulator runtime
         inputs:
@@ -697,9 +771,15 @@ workflows:
               echo "iOS 16.4 runtime already installed"
             else
               echo "Installing iOS 16.4 runtime..."
-              sudo xcodes runtimes install "iOS 16.4"
+              sudo "$STRIPE_XCODES_PATH" runtimes install "iOS 16.4"
             fi
   prep_all:
+    before_run:
+    - prep_simulator
+    - prep_source
+    steps:
+    - restore-spm-cache@2.1: {}
+  prep_simulator:
     steps:
     - xcode-start-simulator@0:
         inputs:
@@ -720,14 +800,27 @@ workflows:
         - destination_keys: CONFIGURATION_TEMP_DIR
         - value: $BITRISE_SOURCE_DIR/stpbuild/intermediates
         title: Set CONFIGURATION_TEMP_DIR
+  prep_source:
+    steps:
     - script@1:
         inputs:
         - content: bundle config set path 'vendor/bundle'
         is_always_run: true
         title: Set Bundler to use local vendor directory
-    - git-clone@8.2:
+    - git-clone@8.5.1:
+        is_always_run: true
         inputs:
         - clone_depth: "1"
+        - merge_pr: "no"
+        - ignore_branch_for_commit_fetch: "yes"
+        # Force commit checkout: PR-head checkout ignores the option above.
+        # GitHub makes fork PR commits fetchable from the destination repository.
+        - pull_request_head_branch: ""
+        - pull_request_repository_url: ""
+    - script@1:
+        title: Merge PR with destination using scoped history
+        inputs:
+        - content: ruby ci_scripts/prepare_ci_branch.rb
     - restore-cache@2.4:
         inputs:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}
@@ -737,7 +830,6 @@ workflows:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}
         - paths: |
             vendor
-    - restore-spm-cache@2.1: {}
   size-report:
     steps:
     - script@1:
@@ -745,10 +837,15 @@ workflows:
         - content: bundle config set path 'vendor/bundle'
         is_always_run: true
         title: Set Bundler to use local vendor directory
-    - git-clone@8.2:
+    - git-clone@8.5.1:
         inputs:
         - merge_pr: "no"
-        - clone_depth: -1
+        - clone_depth: "1"
+        - ignore_branch_for_commit_fetch: "yes"
+        # Force commit checkout: PR-head checkout ignores the option above.
+        # GitHub makes fork PR commits fetchable from the destination repository.
+        - pull_request_head_branch: ""
+        - pull_request_repository_url: ""
     - restore-cache@2.4:
         inputs:
         - key: bundle-cache-{{ checksum "Gemfile.lock" }}
@@ -759,13 +856,32 @@ workflows:
         - paths: |
             vendor
     - script@1:
+        title: Prepare exact size baseline cache keys
         inputs:
-        - content: git fetch origin
-        title: Fetch full branch history
+        - content: ruby ci_scripts/size_report_cache.rb
+    - restore-cache@2.4.1:
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_BASE_KEY-0
+    - restore-cache@2.4.1:
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_BASE_KEY-1
+    - restore-cache@2.4.1:
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_BASE_KEY-2
     - script@1:
         inputs:
         - content: bundle exec fastlane size_report
         title: Generate size report
+    - save-cache@1.5.2:
+        run_if: '{{enveq "SIZE_REPORT_PUBLISH" "true"}}'
+        is_skippable: true
+        inputs:
+        - key: $SIZE_REPORT_HEAD_KEY
+        - paths: $SIZE_REPORT_SAVE_PATH
+        - compression_level: "1"
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
@@ -775,14 +891,26 @@ workflows:
     - script@1:
         inputs:
         - content: |
+            if [ "${BITRISE_IO_PARALLEL_TOTAL:-}" != 4 ]; then
+              echo "PaymentSheet UI tests require four shards, including the catch-all shard." >&2
+              exit 1
+            fi
+            UI_TEST_WORKERS="${UI_TEST_WORKERS:-4}"
+            case "$UI_TEST_WORKERS" in
+              [1-8]) ;;
+              *) echo "UI_TEST_WORKERS must be an integer from 1 to 8" >&2; exit 1 ;;
+            esac
+            envman add --key UI_TEST_WORKERS --value "$UI_TEST_WORKERS"
             # Convert 0-indexed parallel index to 1-indexed shard number
             SHARD_NUM=$((BITRISE_IO_PARALLEL_INDEX + 1))
             envman add --key TEST_PLAN_SHARD --value "PaymentSheet Example-Shard${SHARD_NUM}"
-            echo "Running shard ${SHARD_NUM} of ${BITRISE_IO_PARALLEL_TOTAL}"
+            echo "Running shard ${SHARD_NUM} of ${BITRISE_IO_PARALLEL_TOTAL} with ${UI_TEST_WORKERS} test workers"
+            sysctl machdep.cpu.brand_string hw.ncpu hw.memsize
         title: Set test plan based on parallel index
     - script@1:
+        is_skippable: true
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "$(xcode-select -p)/Applications/Simulator.app" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
     # First attempt is is_skippable so the runner-hang flake does not
     # immediately fail the build; the gate script decides retry-vs-fail.
@@ -796,7 +924,7 @@ workflows:
         - scheme: PaymentSheet Example
         - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+        - xcodebuild_options: -parallel-testing-enabled YES -parallel-testing-worker-count $UI_TEST_WORKERS
     - script@1:
         is_always_run: true
         title: Retry gate for test-runner hang
@@ -813,13 +941,18 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
-  ui-tests-connect:
+        machine_type_id: g2.mac.4x-large
+  ui-tests-connect-crypto:
     steps:
     - script@1:
+        is_skippable: true
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "$(xcode-select -p)/Applications/Simulator.app" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
+    - script@1:
+        inputs:
+        - content: envman add --key STRIPE_RETRY_XCODE_TEST --value no
+        title: Reset Connect retry state
     - xcode-test@6:
         is_skippable: true
         inputs: &ui_tests_connect_inputs
@@ -840,20 +973,13 @@ workflows:
         inputs: *ui_tests_connect_inputs
     - deploy-to-bitrise-io@2:
         is_always_run: true
-    before_run:
-    - install-runtime-16
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
-  ui-tests-crypto:
-    steps:
     - script@1:
+        is_always_run: true
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)
+        - content: envman add --key STRIPE_RETRY_XCODE_TEST --value no
+        title: Reset Crypto retry state
     - xcode-test@6:
+        is_always_run: true
         is_skippable: true
         inputs: &ui_tests_crypto_inputs
         - destination: $DEFAULT_TEST_DEVICE
@@ -862,13 +988,14 @@ workflows:
         - scheme: CryptoOnramp Example
         - test_plan: CryptoOnrampExampleUITests
         - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+        - xcodebuild_options: -parallel-testing-enabled YES -parallel-testing-worker-count 4
     - script@1:
         is_always_run: true
         title: Retry gate for test-runner hang
         inputs:
         - content: ./ci_scripts/xcode_test_runner_hang_gate.sh
     - xcode-test@6:
+        is_always_run: true
         run_if: '{{enveq "STRIPE_RETRY_XCODE_TEST" "yes"}}'
         inputs: *ui_tests_crypto_inputs
     - deploy-to-bitrise-io@2:
@@ -879,7 +1006,7 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
+        machine_type_id: g2.mac.x-large
   upload_logs:
     steps:
     - deploy-to-bitrise-io@2:

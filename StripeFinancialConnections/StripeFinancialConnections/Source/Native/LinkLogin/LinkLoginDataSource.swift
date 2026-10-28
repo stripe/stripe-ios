@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 protocol LinkLoginDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
@@ -60,7 +60,8 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
         apiClient.synchronize(
             clientSecret: clientSecret,
             returnURL: returnURL,
-            initialSynchronize: false
+            initialSynchronize: false,
+            preCollectedConsent: nil
         )
         .chained { synchronize in
             if let linkLoginPane = synchronize.text?.linkLoginPane {
@@ -114,7 +115,8 @@ final class LinkLoginDataSourceImplementation: LinkLoginDataSource {
             return apiClient.synchronize(
                 clientSecret: self.clientSecret,
                 returnURL: self.returnURL,
-                initialSynchronize: false
+                initialSynchronize: false,
+                preCollectedConsent: nil
             )
         }
     }

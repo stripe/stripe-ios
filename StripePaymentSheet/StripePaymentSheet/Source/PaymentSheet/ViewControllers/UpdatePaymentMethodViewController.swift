@@ -5,10 +5,10 @@
 //  Created by Nick Porter on 10/27/23.
 //
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 @MainActor
@@ -34,7 +34,6 @@ enum SetAsDefaultCheckboxState {
 @objc(STP_Internal_UpdatePaymentMethodViewController)
 final class UpdatePaymentMethodViewController: UIViewController {
     private let removeSavedPaymentMethodMessage: String?
-    private let isTestMode: Bool
 
     private var hasChangedDefaultPaymentMethodCheckbox: Bool = false
 
@@ -77,8 +76,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Navigation bar
     internal lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: isTestMode,
-                                        appearance: configuration.appearance)
+        let navBar = SheetNavigationBar(appearance: configuration.appearance)
         navBar.delegate = self
         navBar.setStyle(navigationBarStyle())
         return navBar
@@ -175,10 +173,8 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     // MARK: Overrides
     init(removeSavedPaymentMethodMessage: String?,
-         isTestMode: Bool,
          configuration: UpdatePaymentMethodViewController.Configuration) {
         self.removeSavedPaymentMethodMessage = removeSavedPaymentMethodMessage
-        self.isTestMode = isTestMode
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
     }
@@ -197,13 +193,13 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .openEditScreen), params: ["payment_method_type": configuration.paymentMethod.type.identifier])
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .openEditScreen), checkoutSessionID: configuration.checkoutSessionID, params: ["payment_method_type": configuration.paymentMethod.type.identifier])
     }
 
     // MARK: Private helpers
     private func dismiss() {
-        guard let bottomVc = parent as? BottomSheetViewController else { return }
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .closeEditScreen))
+        guard let bottomVc = parent as? any PaymentSheetContainer else { return }
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .closeEditScreen), checkoutSessionID: configuration.checkoutSessionID)
         _ = bottomVc.popContentViewController()
         delegate?.shouldCloseSheet(_: self)
     }
@@ -250,11 +246,11 @@ final class UpdatePaymentMethodViewController: UIViewController {
                 if let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
                     params["selected_card_brand"] = selectedCardBrand
                 }
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard),
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCard), checkoutSessionID: configuration.checkoutSessionID,
                                                                      params: params)
             }
             if shouldSetAsDefault {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethod),
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethod), checkoutSessionID: configuration.checkoutSessionID,
                                                                      params: ["payment_method_type": configuration.paymentMethod.type.identifier])
             }
         case .failure(let errors):
@@ -266,13 +262,13 @@ final class UpdatePaymentMethodViewController: UIViewController {
                     if let selectedCardBrand = paymentMethodCardParams.networks?.preferred {
                         params["selected_card_brand"] = selectedCardBrand
                     }
-                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed),
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .updateCardFailed), checkoutSessionID: configuration.checkoutSessionID,
                                                                          error: latestError,
                                                                          params: params)
                 }
             }
             if errors.contains(where: { ($0 as NSError) == NSError.stp_defaultPaymentMethodNotUpdatedError() }) {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethodFailed),
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .setDefaultPaymentMethodFailed), checkoutSessionID: configuration.checkoutSessionID,
                                                                      error: latestError,
                                                                      params: ["payment_method_type": configuration.paymentMethod.type.identifier])
             }
@@ -345,7 +341,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }
         let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
         if self.lastCardBrandLogSelectedEventSent != preferredNetworkAPIValue {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .cardBrandSelected),
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .cardBrandSelected), checkoutSessionID: configuration.checkoutSessionID,
                                                                  params: ["selected_card_brand": preferredNetworkAPIValue,
                                                                           "cbc_event_source": "edit", ])
             self.lastCardBrandLogSelectedEventSent = preferredNetworkAPIValue
@@ -383,8 +379,8 @@ extension UpdatePaymentMethodViewController: SheetNavigationBarDelegate {
     }
 
     func sheetNavigationBarDidBack(_: SheetNavigationBar) {
-        guard let bottomVc = parent as? BottomSheetViewController else { return }
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .closeEditScreen))
+        guard let bottomVc = parent as? any PaymentSheetContainer else { return }
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: configuration.hostedSurface.analyticEvent(for: .closeEditScreen), checkoutSessionID: configuration.checkoutSessionID)
         _ = bottomVc.popContentViewController()
     }
 

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 class AnalyticLoggableErrorTest: XCTestCase {
@@ -55,7 +55,12 @@ class AnalyticLoggableErrorTest: XCTestCase {
             withJSONObject: stripeAPIErrorJSON,
             options: [.prettyPrinted]
         )
-        let stripeCoreStripeError = STPAPIClient.decodeStripeErrorResponse(data: stripeAPIErrorJSONData, response: stripeAPIErrorHTTPResponse)!
+        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+            data: stripeAPIErrorJSONData, error: nil, response: stripeAPIErrorHTTPResponse
+        )
+        guard case .failure(let stripeCoreStripeError) = result else {
+            return XCTFail("Expected an API error")
+        }
         XCTAssertEqual(
             stripeCoreStripeError.serializeForV1Analytics() as? [String: String],
             [
@@ -66,7 +71,7 @@ class AnalyticLoggableErrorTest: XCTestCase {
         )
 
         // Decoding Error from an iOS library
-        let decodingError = DecodingError.keyNotFound(STPCodingKey(intValue: 0)!, .init(codingPath: [], debugDescription: "PII"))
+        let decodingError = DecodingError.keyNotFound(STPCodingKey(intValue: 0), .init(codingPath: [], debugDescription: "PII"))
         XCTAssertEqual(
             decodingError.serializeForV1Analytics() as? [String: String],
             [

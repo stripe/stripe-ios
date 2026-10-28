@@ -6,9 +6,9 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 
 // ☠️ WARNING: These snapshots are missing selected borders at the corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
 // @iOS26
@@ -30,6 +30,17 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_UpdatePaymentMethodViewControllerLightMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true)
+    }
+
+    func test_UpdateAndRemovePaymentMethodViewControllerRightToLeft() {
+        _test_UpdatePaymentMethodViewController(
+            paymentMethodType: .card,
+            darkMode: false,
+            canUpdate: true,
+            isCBCEligible: true,
+            canSetAsDefaultPM: true,
+            rightToLeft: true
+        )
     }
 
     // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
@@ -175,7 +186,8 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                  expired: Bool = false,
                                                  canSetAsDefaultPM: Bool = false,
                                                  isDefault: Bool = false,
-                                                 cardBrandFilter: CardBrandFilter = .default) {
+                                                 cardBrandFilter: CardBrandFilter = .default,
+                                                 rightToLeft: Bool = false) {
         let paymentMethod: STPPaymentMethod = {
             switch paymentMethodType {
             case .card:
@@ -215,12 +227,14 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         )
         let sut = UpdatePaymentMethodViewController(
             removeSavedPaymentMethodMessage: "Test removal string",
-            isTestMode: false,
             configuration: updateConfig
         )
         let stubViewController = StubBottomSheetContentViewController()
-        let bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+        let bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, didCancelNative3DS2: {})
         bottomSheet.pushContentViewController(sut)
+        if rightToLeft {
+            bottomSheet.view.forceRightToLeftLayout()
+        }
         bottomSheet.view.autosizeHeight(width: 375)
 
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: bottomSheet.view.frame.size.height + sut.view.frame.size.height))

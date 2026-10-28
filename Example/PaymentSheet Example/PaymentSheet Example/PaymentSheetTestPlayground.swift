@@ -5,7 +5,7 @@
 //  Created by David Estes on 5/31/23.
 //
 
-import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 import SwiftUI
 
 // MARK: - PaymentSheetTestPlayground
@@ -29,9 +29,32 @@ struct PaymentSheetTestPlayground: View {
     func clientSettings(searchText: Binding<String>) -> some View {
         SearchableSettingView(
             setting: uiStyleBinding,
-            disabledSettings: playgroundController.settings.integrationType == .checkoutSession ? [.paymentSheet] : [],
+            disabledSettings: [],
             searchText: searchText
         )
+        let requiresNativeSheet = PaymentSheet.NativeSheetFeatureFlags.isNativeSheetRequiredForDevice
+        // Display the device's required behavior without overwriting the saved playground override.
+        SearchableSettingView(
+            setting: requiresNativeSheet ? .constant(.on) : nativeSheetOverrideBinding,
+            searchText: searchText
+        )
+        .disabled(requiresNativeSheet)
+        .opacity(requiresNativeSheet ? 0.5 : 1)
+        if requiresNativeSheet || playgroundController.settings.uiStyle == .paymentSheet {
+            SearchableView(searchableName: "Native sheets", searchText: searchText) {
+                VStack(alignment: .leading, spacing: 4) {
+                    if requiresNativeSheet {
+                        Text("Native sheets are always enabled on iPhone Duo.")
+                    }
+                    if playgroundController.settings.uiStyle == .paymentSheet {
+                        Text("The native sheets feature flag doesn't apply to PaymentSheet. Select On to enable native sheets for testing.")
+                    }
+                }
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
         if playgroundController.settings.uiStyle != .embedded {
             SearchableSettingView(setting: $playgroundController.settings.layout, searchText: searchText)
         }
@@ -78,7 +101,6 @@ struct PaymentSheetTestPlayground: View {
         SearchableSettingView(setting: $playgroundController.settings.fcLiteEnabled, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.opensCardScannerAutomatically, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.termsDisplay, searchText: searchText)
-        SearchableSettingView(setting: $playgroundController.settings.useAutocompleteEndpoints, searchText: searchText)
     }
 
     var body: some View {
@@ -214,24 +236,6 @@ struct PaymentSheetTestPlayground: View {
                                             playgroundController.customerSessionSettingsTapped()
                                         } label: {
                                             Text("CSSettings")
-                                                .font(.callout.smallCaps())
-                                        }.buttonStyle(.bordered)
-                                    }
-                                }
-                            }
-                        }
-
-                        if playgroundController.settings.integrationType == .checkoutSession {
-                            SearchableView(searchableName: "Checkout Session", searchText: $searchText) {
-                                VStack {
-                                    HStack {
-                                        Text("Checkout Session")
-                                            .font(.subheadline)
-                                        Spacer()
-                                        Button {
-                                            playgroundController.checkoutSessionSettingsTapped()
-                                        } label: {
-                                            Text("CS Settings")
                                                 .font(.callout.smallCaps())
                                         }.buttonStyle(.bordered)
                                     }
@@ -443,6 +447,15 @@ struct PaymentSheetTestPlayground: View {
         }
     }
 
+    var nativeSheetOverrideBinding: Binding<PaymentSheetTestPlaygroundSettings.NativeSheetOverride> {
+        Binding<PaymentSheetTestPlaygroundSettings.NativeSheetOverride> {
+            return playgroundController.settings.resolvedNativeSheetOverride
+        } set: { newOverride in
+            // Store Automatic explicitly so it doesn't resolve to the launch default.
+            playgroundController.settings.nativeSheetOverride = newOverride
+        }
+    }
+
     var integrationTypeBinding: Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
         Binding<PaymentSheetTestPlaygroundSettings.IntegrationType> {
             return playgroundController.settings.integrationType
@@ -450,10 +463,6 @@ struct PaymentSheetTestPlayground: View {
             // If switching to CSC and embedded is selected, reset to PaymentSheet
             if newIntegrationType == .normal && playgroundController.settings.uiStyle == .embedded {
                 playgroundController.settings.uiStyle = .paymentSheet
-            }
-            // PaymentSheet does not support checkout session; switch to flow controller
-            if newIntegrationType == .checkoutSession && playgroundController.settings.uiStyle == .paymentSheet {
-                playgroundController.settings.uiStyle = .flowController
             }
             playgroundController.settings.integrationType = newIntegrationType
         }
@@ -509,7 +518,6 @@ struct PaymentSheetButtons: View {
     @State private var embeddedIsPresented: Bool = false
     @State private var psFCOptionsIsPresented: Bool = false
     @State private var psFCIsConfirming: Bool = false
-    @State private var showingCart: Bool = false
 
     func reloadPlaygroundController() {
         playgroundController.load(reinitializeControllers: true)
@@ -520,19 +528,6 @@ struct PaymentSheetButtons: View {
     @ViewBuilder
     var embeddedSettingsView: some View {
         EmbeddedSettingsView()
-    }
-
-    @ViewBuilder
-    var cartButton: some View {
-        if playgroundController.checkout != nil {
-            Button {
-                showingCart = true
-            } label: {
-                Label("Cart", systemImage: "cart.fill")
-                    .font(.callout.smallCaps())
-            }
-            .buttonStyle(.bordered)
-        }
     }
 
     var titleAndReloadView: some View {
@@ -573,7 +568,6 @@ struct PaymentSheetButtons: View {
                             }
                             .paymentSheet(isPresented: $psIsPresented, paymentSheet: ps, onCompletion: playgroundController.onPSCompletion)
                             Spacer()
-                            cartButton
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -604,7 +598,6 @@ struct PaymentSheetButtons: View {
                             }
                             .disabled(playgroundController.paymentSheetFlowController == nil)
                             .padding()
-                            cartButton
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -646,7 +639,6 @@ struct PaymentSheetButtons: View {
                                 Text("Present embedded payment element")
                             }
                             Spacer()
-                            cartButton
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -664,11 +656,6 @@ struct PaymentSheetButtons: View {
                         ExamplePaymentStatusView(result: result)
                     }
                 }
-            }
-        }
-        .sheet(isPresented: $showingCart) {
-            if let checkout = playgroundController.checkout {
-                CheckoutCartSheet(checkout: checkout)
             }
         }
     }

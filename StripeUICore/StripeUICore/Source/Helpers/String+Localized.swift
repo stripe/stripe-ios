@@ -7,11 +7,11 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
-@_spi(STP) public extension String.Localized {
+@_spi(InternalOnlyAPI) public extension String.Localized {
 
     static var address: String {
         STPLocalizedString(
@@ -295,6 +295,18 @@ import Foundation
 
     static var ok: String {
         STPLocalizedString("OK", "ok button")
+    }
+
+    static var submit: String {
+        STPLocalizedString("Submit", "Button that submits the information entered on a screen")
+    }
+
+    static var something_went_wrong: String {
+        STPLocalizedString("Something went wrong", "Heading for a generic error when an operation fails")
+    }
+
+    static var processing: String {
+        STPLocalizedString("Processing...", "Label of a disabled button while its action is processing")
     }
 
     static var `continue`: String {

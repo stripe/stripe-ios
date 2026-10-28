@@ -5,10 +5,10 @@
 //  Created by Krisjanis Gaidis on 4/11/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 final class InstantDebitsPaymentMethodElement: ContainerElement {
@@ -391,7 +391,7 @@ private extension PaymentMethodIncentive {
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
 
         let style = NSMutableParagraphStyle()
-        style.alignment = .left
+        style.alignment = .natural
         formattedString.addAttributes(
             [
                 .paragraphStyle: style,

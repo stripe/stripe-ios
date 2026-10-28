@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import UIKit
 import XCTest
 
@@ -57,6 +57,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var missingType: StripeIdentity.IndividualFormElement.MissingType?
     var transitionedToIndividual: Bool = false
     var transitionedToSelfieCapture: Bool = false
+    var transitionedToSelfieCaptureTrainingConsent: Bool?
     var transitionedToDocumentCapture: Bool = false
 
     var completeOption: CompleteOptionView.CompleteOption?
@@ -190,12 +191,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         self.transitionedToIndividual = true
     }
 
-    func transitionToSelfieCapture() {
+    func transitionToSelfieCapture(
+        trainingConsent: Bool?
+    ) {
         self.transitionedToSelfieCapture = true
+        self.transitionedToSelfieCaptureTrainingConsent = trainingConsent
     }
 
     func transitionToDocumentCapture() {
         self.transitionedToDocumentCapture = true
     }
-
 }

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable@_spi(STP) import Stripe
+@testable@_spi(InternalOnlyAPI) import Stripe
 
 class STPIntentActionPromptPayDisplayQrCodeTest: XCTestCase {
     func testActionHostedUrl() throws {

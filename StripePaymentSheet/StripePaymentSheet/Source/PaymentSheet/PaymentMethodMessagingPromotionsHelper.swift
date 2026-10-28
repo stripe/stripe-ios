@@ -6,9 +6,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
+@MainActor
 class PaymentMethodMessagingPromotionsHelper {
 
     static let supportedPaymentMethods: [PaymentSheet.PaymentMethodType] = [
@@ -27,7 +28,11 @@ class PaymentMethodMessagingPromotionsHelper {
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
     private let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-    private let analyticsHelper: PaymentSheetAnalyticsHelper
+    // TODO: Experiment exposure layout attribution is broken for Checkout; the UI used is unknown at load time.
+    private let experimentAnalyticsHelper: ExperimentAnalyticsHelper
+    // TODO: Resolve Checkout promotions analytics ownership. Temporarily optional because shared
+    // Checkout loading has no UI-specific PSAHelper; nil skips fetch/display events.
+    private let analyticsHelper: PaymentSheetAnalyticsHelper?
     /// The time when the fetch was initiated; used to compute the duration between fetch start and display attempt.
     private var fetchStartDate: Date?
 
@@ -37,7 +42,7 @@ class PaymentMethodMessagingPromotionsHelper {
     private var exposureLogged = false
     private var experiment: PaymentMethodMessagingPromotionsExperiment {
         if !exposureLogged {
-            analyticsHelper.logExposure(experiment: _experiment)
+            experimentAnalyticsHelper.logExposure(experiment: _experiment)
             exposureLogged = true
         }
         return _experiment
@@ -69,8 +74,11 @@ class PaymentMethodMessagingPromotionsHelper {
         intent: Intent,
         configuration: PaymentElementConfiguration,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        experimentAnalyticsHelper: ExperimentAnalyticsHelper,
+        analyticsHelper: PaymentSheetAnalyticsHelper? = nil
     ) {
+        // TODO: Checkout supplies the sheet configuration before knowing whether the merchant will
+        // use the sheet, Embedded (always vertical), or neither. This exposure layout can be wrong.
         let layout = configuration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
         guard let experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession, layout: layout.rawValue) else {
             return nil
@@ -81,6 +89,7 @@ class PaymentMethodMessagingPromotionsHelper {
         self.paymentMethodTypes = paymentMethodTypes
         self._experiment = experiment
         self.analyticsHelper = analyticsHelper
+        self.experimentAnalyticsHelper = experimentAnalyticsHelper
     }
 
     func fetchData() {
@@ -129,7 +138,7 @@ class PaymentMethodMessagingPromotionsHelper {
 
         // Record fetch start time (used to measure duration until display attempt) and log that fetch began
         fetchStartDate = Date()
-        analyticsHelper.logPaymentMethodMessagingFetchBegin()
+        analyticsHelper?.logPaymentMethodMessagingFetchBegin()
 
         // Fetch data
         fetchTask = Task { @MainActor in
@@ -137,14 +146,18 @@ class PaymentMethodMessagingPromotionsHelper {
                 let response = try await PaymentMethodMessagingElement.get(configuration: pmmeConfig)
                 promotions = response.paymentSheetPromotionContents(apiClient: configuration.apiClient)
             } catch {
-                logUnexpectedPMMEError(
-                    error: error,
-                    apiClient: configuration.apiClient,
-                    analyticsClient: STPAnalyticsClient.sharedClient,
-                    additionalNonPIIParams: [
-                        "failure_reason": "promotion_prefetch_request_failed",
-                    ]
-                )
+                // PMM availability is narrower than PaymentSheet availability, so the country from
+                // Elements Session can legitimately be unsupported by the PMM endpoint.
+                if !error.isUnsupportedCountryError {
+                    logUnexpectedPMMEError(
+                        error: error,
+                        apiClient: configuration.apiClient,
+                        analyticsClient: STPAnalyticsClient.sharedClient,
+                        additionalNonPIIParams: [
+                            "failure_reason": "promotion_prefetch_request_failed",
+                        ]
+                    )
+                }
                 promotions = [:]
             }
         }
@@ -163,8 +176,28 @@ class PaymentMethodMessagingPromotionsHelper {
     ///   We could theoretically derive this from whether or not we have promotions data, but for safety/redundancy we require it to be explicitly passed.
     /// The duration reported is the time between when the fetch was initiated and when this display attempt occurs.
     func logDisplayedAnalytic(displayedSuccessfully: Bool) {
+        // A helper also exists in control so those call sites can render their existing fallback UI.
+        // Only treatment represents an attempt to display PMM content.
+        guard experiment.group == .treatment else {
+            return
+        }
         let duration = fetchStartDate.map { Date().timeIntervalSince($0) } ?? 0
-        analyticsHelper.logPaymentMethodMessagingDisplayed(duration: duration, displayedSuccessfully: displayedSuccessfully)
+        analyticsHelper?.logPaymentMethodMessagingDisplayed(duration: duration, displayedSuccessfully: displayedSuccessfully)
+    }
+}
+
+private extension Error {
+    /// Matches the expected error returned when PaymentSheet supports the country but PMM does not.
+    /// Keep this narrow so other invalid requests continue to use the unexpected-error path.
+    var isUnsupportedCountryError: Bool {
+        guard let stripeError = self as? StripeError,
+              case let .apiError(apiError) = stripeError else {
+            return false
+        }
+        return apiError.httpStatusCode == 400
+            && apiError.type == .invalidRequestError
+            && apiError.param == "country"
+            && apiError.message?.hasPrefix("unsupported_country:") == true
     }
 }
 

@@ -1,17 +1,162 @@
 POST
-https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
+https:\/\/stp-mobile-playground-backend-v7\.stripedemos\.com\/create_checkout_session$
 200
-text/html
-x-content-type-options: nosniff
-x-cloud-trace-context: 16bdd502d21c8f7b3874effb2f517c46
-Content-Type: text/html;charset=utf-8
-Set-Cookie: rack.session=W7OpyvCejm%2FZNNbJobx1zsMcE5NE%2F1%2BY6vhVEtWCz0n%2B87bJ3QhZ7Ub0rA2tuvsyG7OLCFfU7b5wHbhR32UIrocyfkloBc27kH2kpOIE36Tc2IUAEPdRtQffj4gWGRHhjAa%2BV%2FF4i1A9e%2BPnVEB66gAVTGr4VwUuLjQIZ0EO1HUUdjWs5B7jsmDzMPgM34MlYtNglcs859XEd3VnViGVlL%2F56YbhyXhmBraJkxveLhQ%3D; path=/
+application/json
 Server: Google Frontend
+Content-Type: application/json; charset=utf-8
+x-powered-by: Express
+x-cloud-trace-context: 2b698a9e55cb667947c6cad294daab35;o=1
 Via: 1.1 google
-Date: Wed, 01 Jul 2026 11:59:55 GMT
-x-frame-options: SAMEORIGIN
-x-xss-protection: 1; mode=block
-Content-Length: 293
+Date: Fri, 23 Oct 2026 18:21:37 GMT
+Content-Length: 2641
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"a51-rKF7XEQi6Rb5YQZ1thCjb3cBP44"
 
-{"id":"cs_test_a12S8uixpxVFRr1vx8AZFZJE5ip2aFzIPEriabtzBYW9QM6WckJA9Tdo3g","client_secret":"cs_test_a12S8uixpxVFRr1vx8AZFZJE5ip2aFzIPEriabtzBYW9QM6WckJA9Tdo3g_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}
+{
+  "billing_address_collection" : null,
+  "id" : "cs_test_a1dNZlzwcJK2AutL2irhdaZcyPeJkRRVumDltEK6gk4t8dMRhGzZJPQ6m4",
+  "client_secret" : "cs_test_a1dNZlzwcJK2AutL2irhdaZcyPeJkRRVumDltEK6gk4t8dMRhGzZJPQ6m4_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "discounts" : [
+
+  ],
+  "custom_text" : {
+    "shipping_address" : null,
+    "terms_of_service_acceptance" : null,
+    "submit" : null,
+    "after_submit" : null
+  },
+  "customer" : null,
+  "metadata" : {
+
+  },
+  "payment_method_configuration_details" : null,
+  "payment_method_options" : null,
+  "ui_mode" : "mobile_elements",
+  "created" : 1792779697,
+  "client_reference_id" : null,
+  "allowed_payment_method_types" : [
+    "afterpay_clearpay"
+  ],
+  "mode" : "none",
+  "allow_promotion_codes" : null,
+  "items" : [
+    {
+      "key" : "checkout_item_VUmf5Lkb",
+      "one_time_price" : {
+        "items" : [
+          {
+            "quantity" : 1,
+            "adjustable_quantity" : null,
+            "price" : "price_1UTn5xLu5o3P18ZpCprlETca",
+            "tax_rates" : null
+          }
+        ],
+        "metadata" : {
+
+        }
+      },
+      "type" : "one_time_price"
+    }
+  ],
+  "after_expiration" : null,
+  "saved_payment_method_options" : {
+    "payment_method_save" : null,
+    "allow_redisplay_filters" : [
+      "always"
+    ],
+    "payment_method_remove" : "disabled"
+  },
+  "payment_link" : null,
+  "currency" : "usd",
+  "status" : "open",
+  "url" : null,
+  "branding_settings" : {
+    "button_color" : "#0074d4",
+    "border_style" : "rounded",
+    "background_color" : "#ffffff",
+    "display_name" : "Mobile Example Account",
+    "font_family" : "default",
+    "icon" : null,
+    "logo" : null
+  },
+  "customer_details" : null,
+  "wallet_options" : null,
+  "adaptive_pricing" : {
+    "enabled" : true
+  },
+  "consent" : null,
+  "shipping_options" : [
+
+  ],
+  "amount_subtotal" : 2000,
+  "submit_type" : null,
+  "locale" : null,
+  "permissions" : null,
+  "subscription" : null,
+  "success_url" : null,
+  "custom_components" : [
+
+  ],
+  "setup_intent" : null,
+  "payment_intent" : null,
+  "phone_number_collection" : {
+    "enabled" : false
+  },
+  "origin_context" : null,
+  "amount_total" : 2000,
+  "consent_collection" : null,
+  "payment_method_types" : [
+    "afterpay_clearpay"
+  ],
+  "recovered_from" : null,
+  "customer_creation" : "always",
+  "payment_record" : null,
+  "object" : "checkout.session",
+  "checkout_items" : [
+
+  ],
+  "invoice" : null,
+  "customer_account" : null,
+  "managed_payments" : null,
+  "shipping_cost" : null,
+  "cancel_url" : null,
+  "automatic_tax" : {
+    "status" : null,
+    "address_collection_precision" : null,
+    "enabled" : false,
+    "liability" : null,
+    "provider" : null
+  },
+  "custom_fields" : [
+
+  ],
+  "collected_information" : null,
+  "integration_identifier" : null,
+  "invoice_creation" : {
+    "enabled" : false,
+    "invoice_data" : {
+      "footer" : null,
+      "issuer" : null,
+      "custom_fields" : null,
+      "rendering_options" : null,
+      "account_tax_ids" : null,
+      "description" : null,
+      "metadata" : {
+
+      }
+    }
+  },
+  "shipping_address_collection" : null,
+  "payment_method_collection" : "auto",
+  "currency_conversion" : null,
+  "payment_status" : "unpaid",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_shipping" : 0,
+    "amount_tax" : 0
+  },
+  "livemode" : false,
+  "customer_email" : null,
+  "expires_at" : 1792866097,
+  "marketing_attributions" : null
+}

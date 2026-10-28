@@ -8,8 +8,8 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 enum PaymentSheetUI {
@@ -108,6 +108,7 @@ extension UIViewController {
                     toVC.view.alpha = 1
                 },
                 postLayoutAnimations: {
+                    self.bottomSheetController?.invalidateContentDetent()
                     if let contentOffsetPercentage {
                         self.bottomSheetController?.contentOffsetPercentage = contentOffsetPercentage
                     }

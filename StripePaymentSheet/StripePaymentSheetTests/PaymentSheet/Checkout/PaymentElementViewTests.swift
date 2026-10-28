@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/13/26.
 //
 
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import SwiftUI
 import UIKit
 import XCTest
@@ -15,9 +15,11 @@ final class PaymentElementViewTests: XCTestCase {
 
     func testSwiftUIViewUpdatesHeightWhenEmbeddedPaymentElementHeightChanges() async throws {
         // Given a PaymentElement SwiftUI view hosted in a window
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        configuration.paymentElement.displaysMandateText = true
-        let checkout = try await Checkout(configuration: CheckoutTestHelpers.makeConfiguration(configuration: configuration))
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.displaysMandateText = true
+        configuration.paymentElement = paymentElementConfiguration
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(configuration: configuration))
         let paymentElement = checkout.getPaymentElement()
 
         let hostingController = UIHostingController(

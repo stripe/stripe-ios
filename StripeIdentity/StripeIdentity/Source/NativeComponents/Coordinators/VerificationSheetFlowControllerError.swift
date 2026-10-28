@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An error that prevents the user from finishing the verification flow
 enum VerificationSheetFlowControllerError: Error {

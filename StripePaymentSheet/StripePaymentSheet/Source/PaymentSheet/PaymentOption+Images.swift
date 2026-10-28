@@ -6,10 +6,10 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension PaymentOption {
@@ -288,28 +288,68 @@ extension STPPaymentMethodType {
                 }
             case .FPX:
                 return .pm_type_fpx
+            case .momo:
+                return .pm_type_momo
+            case .shopeePay:
+                return .pm_type_shopeepay
+            case .qris:
+                return .pm_type_qris
+            case .gcash:
+                return .pm_type_gcash
+            case .ngCard:
+                return .pm_type_ng_card
+            case .ngBankTransfer:
+                return .pm_type_ng_bank_transfer
+            case .touchNGo:
+                return .pm_type_touch_n_go
+            case .trueMoney:
+                return .pm_type_truemoney
+            case .ngUSSD:
+                return .pm_type_ng_ussd
+            case .ngWallet:
+                return .pm_type_ng_wallet
+            case .mondu:
+                return .pm_type_mondu
+            case .goPay:
+                return .pm_type_gopay
             case .grabPay:
                 return .pm_type_grabpay
             case .konbini:
                 return .pm_type_konbini
+            case .kakaoPay:
+                return .pm_type_kakaopay
+            case .krCard:
+                return .pm_type_kr_card
             case .mobilePay:
                 return .pm_type_mobilepay
+            case .vipps:
+                return .pm_type_vipps
             case .mbWay:
                 return .pm_type_mbway
             case .multibanco:
                 return .pm_type_multibanco
+            case .naverPay:
+                return .pm_type_naverpay
             case .OXXO:
                 return .pm_type_oxxo
             case .payByBank:
                 return .pm_type_paybybank
+            case .payco:
+                return .pm_type_payco
             case .paynow:
                 return .pm_type_paynow
             case .payPay:
                 return .pm_type_paypay
             case .promptPay:
                 return .pm_type_promptpay
+            case .pix:
+                return .pm_type_pix
             case .satispay:
                 return .pm_type_satispay
+            case .scalapay:
+                return .pm_type_scalapay
+            case .sequra:
+                return .pm_type_sequra
             case .wero:
                 return .pm_type_wero
             case .sunbit:

@@ -7,8 +7,8 @@
 
 import Foundation
 import SafariServices
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol AccountPickerViewControllerDelegate: AnyObject {
@@ -27,7 +27,11 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
     )
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
+        didReceiveError error: Error
+    )
+    func accountPickerViewController(
+        _ viewController: AccountPickerViewController,
+        didReceiveEvent event: FinancialConnectionsEventPayload
     )
 }
 
@@ -88,7 +92,7 @@ final class AccountPickerViewController: UIViewController {
                     )
                 self.delegate?.accountPickerViewController(
                     self,
-                    didReceiveEvent: FinancialConnectionsEvent(name: .accountsSelected)
+                    didReceiveEvent: FinancialConnectionsEventPayload(name: .accountsSelected)
                 )
                 self.didSelectLinkAccounts(isSkipAccountSelection: false)
             },
@@ -240,7 +244,11 @@ final class AccountPickerViewController: UIViewController {
                         self.displayAccounts(enabledAccounts, disabledAccounts)
                     }
                 case .failure(let error):
-                    if let error = error as? StripeError,
+                    if FinancialConnectionsGenericErrorPane.from(error: error) != nil {
+                        // the server described an error screen for us, so hand off to the
+                        // flow controller to present it in place of this pane
+                        self.delegate?.accountPickerViewController(self, didReceiveError: error)
+                    } else if let error = error as? StripeError,
                         case .apiError(let apiError) = error,
                         let extraFields = apiError.allResponseFields["extra_fields"] as? [String: Any],
                         let reason = extraFields["reason"] as? String,

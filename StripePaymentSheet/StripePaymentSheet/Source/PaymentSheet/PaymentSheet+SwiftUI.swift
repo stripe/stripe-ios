@@ -9,7 +9,7 @@
 //  https://github.com/stleamist/BetterSafariView
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import SwiftUI
 
 extension View {
@@ -333,6 +333,7 @@ extension PaymentSheet {
             context.coordinator.presented = presented
         }
 
+        @MainActor
         class Coordinator {
             var parent: PaymentSheetFlowControllerPresenter
             let view = UIView()

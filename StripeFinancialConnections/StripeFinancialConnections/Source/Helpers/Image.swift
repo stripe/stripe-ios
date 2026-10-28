@@ -5,7 +5,7 @@
 //  Created by Vardges Avetisyan on 11/22/21.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// The canonical set of all image files in the `StripeFinancialConnections` module.
@@ -29,7 +29,6 @@ enum Image: String, ImageMaker {
     case search
     case stripe_logo
     case spinner
-    case testmode
     case warning_triangle
     case bullet
 }

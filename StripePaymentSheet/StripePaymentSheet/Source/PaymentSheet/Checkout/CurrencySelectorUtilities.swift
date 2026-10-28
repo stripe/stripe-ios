@@ -5,9 +5,9 @@
 //  Created by Nick Porter on 4/23/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Shared utilities for currency selector components (standalone and in-form).
@@ -33,7 +33,7 @@ enum CurrencySelectorUtilities {
     ///
     /// - Parameter flagPrefixProvider: Returns an attributed flag icon for each currency code.
     static func buildSelectorItems(
-        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
+        exchangeRateMeta: CheckoutController.Session.ExchangeRateMeta,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
         labelContent: CurrencySelectorElement.Appearance.LabelContent = .currencyCode,
         flagPrefixProvider: (String) -> NSAttributedString = { _ in NSAttributedString() }
@@ -88,57 +88,19 @@ enum CurrencySelectorUtilities {
     /// or a bank-fees disclaimer when the merchant's currency is selected.
     static func caption(
         forSelectedCurrency selectedCurrency: String,
-        exchangeRateMeta meta: STPCheckoutSessionExchangeRateMeta
+        exchangeRateMeta meta: CheckoutController.Session.ExchangeRateMeta
     ) -> String {
         let isIntegrationCurrencySelected = selectedCurrency == CurrencyCode(meta.integrationCurrency).apiValue
         if isIntegrationCurrencySelected {
-            return String.Localized.bankExchangeRateDisclaimer
+            return meta.integrationCaption ?? String.Localized.bankExchangeRateDisclaimer
         }
 
-        return formatExchangeRate(from: meta)
-    }
-
-    private static let exchangeRateFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 4
-        return formatter
-    }()
-
-    static func formatExchangeRate(from meta: STPCheckoutSessionExchangeRateMeta) -> String {
-        let localCurrency = CurrencyCode(meta.localizedCurrency).displayValue
-        let integrationCurrency = CurrencyCode(meta.integrationCurrency).displayValue
-
-        let formattedRate: String
-        if let rateDouble = Double(meta.exchangeRate) {
-            let inverse = 1.0 / rateDouble
-            formattedRate = exchangeRateFormatter.string(from: NSNumber(value: inverse)) ?? meta.exchangeRate
-        } else {
-            formattedRate = meta.exchangeRate
-        }
-
-        if meta.conversionMarkupBps > 0 {
-            let feePercent = String(format: "%g", Double(meta.conversionMarkupBps) / 100.0)
-            return .Localized.exchangeRateWithConversionFee(
-                localCurrency: localCurrency,
-                rate: formattedRate,
-                integrationCurrency: integrationCurrency,
-                feePercent: feePercent
-            )
-        }
-
-        return .Localized.exchangeRate(
-            localCurrency: localCurrency,
-            rate: formattedRate,
-            integrationCurrency: integrationCurrency
-        )
+        return meta.caption ?? ""
     }
 
     /// Returns the expandable detail text for the exchange rate, or nil if not applicable.
-    /// This will be replaced by a server-provided string from the translation layer in the future.
-    static func detailText(exchangeRateMeta meta: STPCheckoutSessionExchangeRateMeta) -> String? {
-        guard meta.conversionMarkupBps > 0 else { return nil }
-        return "This string will come from the translation layer in the future"
+    static func detailText(exchangeRateMeta meta: CheckoutController.Session.ExchangeRateMeta) -> String? {
+        return meta.details
     }
 
     // MARK: - Availability
@@ -146,13 +108,13 @@ enum CurrencySelectorUtilities {
     /// Returns the adaptive pricing data needed to show a currency selector,
     /// or `nil` if adaptive pricing is not available for the given session.
     static func adaptivePricingData(
-        from session: Checkout.Session?
-    ) -> (session: Checkout.Session, exchangeRateMeta: STPCheckoutSessionExchangeRateMeta, currency: String)? {
+        from session: CheckoutController.Session?
+    ) -> (session: CheckoutController.Session, exchangeRateMeta: CheckoutController.Session.ExchangeRateMeta, currency: String)? {
         guard let session,
               session.adaptivePricingActive,
               !session.localizedPricesMetas.isEmpty,
               let exchangeRateMeta = session.exchangeRateMeta,
-              let currency = session.currency
+              let currency = session.activePresentmentCurrency
         else { return nil }
         return (session, exchangeRateMeta, currency)
     }

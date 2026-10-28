@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 import UIKit
@@ -75,6 +75,27 @@ final class FinancialConnectionsSessionTests: XCTestCase {
 
         XCTAssertEqual(synchronize.manifest.linkBrand, .unparsable)
         XCTAssertEqual(synchronize.manifest.appearance.logo, .stripe_logo)
+    }
+
+    func testPaymentAccountResourceDecodesGeneratedPaymentDetailIDs() throws {
+        // Given
+        let response =
+            """
+            {
+              "id": "fcsess_123",
+              "generated_payment_detail_ids": ["csmrpd_123"],
+              "networking_successful": true,
+              "next_pane": "success"
+            }
+            """
+
+        // When
+        let resource: FinancialConnectionsPaymentAccountResource = try StripeJSONDecoder.decode(
+            jsonData: Data(response.utf8)
+        )
+
+        // Then
+        XCTAssertEqual(resource.generatedPaymentDetailIds, ["csmrpd_123"])
     }
 
     func testLinkThemeWithoutBrandPreservesExistingLinkBranding() {

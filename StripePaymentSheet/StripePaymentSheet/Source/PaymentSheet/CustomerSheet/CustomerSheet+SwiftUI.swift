@@ -4,7 +4,7 @@
 //
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import SwiftUI
 
 extension View {
@@ -111,7 +111,7 @@ extension CustomerSheet {
             }
 
             func forciblyDismissSheet(from controller: UIViewController) {
-                if let bsvc = controller.presentedViewController as? BottomSheetViewController {
+                if let bsvc = controller.presentedViewController?.bottomSheetController {
                     bsvc.didTapOrSwipeToDismiss()
                 }
             }

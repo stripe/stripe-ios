@@ -4,7 +4,7 @@
 //
 
 import StripeCoreTestUtils
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import UIKit
 
 @MainActor
@@ -15,6 +15,7 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         let isRegistered: Bool
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     func testLoggedOutLink() {
@@ -73,7 +74,8 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
                 redactedPhoneNumber: nil,
                 isRegistered: true,
                 sessionState: .verified,
-                consumerSessionClientSecret: nil
+                consumerSessionClientSecret: nil,
+                linkSessionKey: nil
             )
         }
 

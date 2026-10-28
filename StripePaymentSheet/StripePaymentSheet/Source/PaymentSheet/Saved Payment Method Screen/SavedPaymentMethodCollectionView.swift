@@ -7,10 +7,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 // MARK: - Constants
@@ -26,7 +26,7 @@ private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
 @objc(STP_Internal_SavedPaymentMethodCollectionView)
 class SavedPaymentMethodCollectionView: UICollectionView {
     init(appearance: PaymentSheet.Appearance, needsVerticalPaddingForBadge: Bool = false) {
-        let layout = UICollectionViewFlowLayout()
+        let layout = RightToLeftCollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
             top: -6, left: appearance.formInsets.leading, bottom: 0,
@@ -485,7 +485,9 @@ extension SavedPaymentMethodCollectionView {
                     paymentMethodLogo.alpha = 1
                     plus.alpha = 1
                     selectedIcon.isHidden = false
-                    selectedIcon.backgroundColor = appearance.colors.primary
+                    // Resolve semantic colors so native sheets don't blend the badge with the
+                    // card's border. The cell updates this color again when its traits change.
+                    selectedIcon.backgroundColor = appearance.colors.primary.resolvedColor(with: traitCollection)
 
                     // Draw a border with primary color
                     selectableRectangle.isSelected = true

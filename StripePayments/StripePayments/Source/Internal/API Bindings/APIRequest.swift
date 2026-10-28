@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 let HTTPMethodPOST = "POST"
 let HTTPMethodGET = "GET"
@@ -16,11 +16,11 @@ let JSONKeyObject = "object"
 
 /// - Note: The shape of this class is only for backwards compatibility with `STPAPIResponseDecodable` public API bindings.
 ///         If you're not dealing with `STPAPIResponseDecodable` objects, use STPAPIClient's `get`, `post`, etc. methods.
-@_spi(STP) public class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
-    @_spi(STP) public typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) ->
+@_spi(InternalOnlyAPI) public class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
+    @_spi(InternalOnlyAPI) public typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) ->
         Void
 
-    @_spi(STP) public class func post(
+    @_spi(InternalOnlyAPI) public class func post(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -38,14 +38,14 @@ let JSONKeyObject = "object"
         // Perform request
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
-            completionHandler: { body, response, error in
-                self.parseResponse(response, method: "POST", body: body, error: error, completion: completion)
+            completionHandler: { [includeRequestIDInDescription = apiClient.shouldIncludeRequestIDInErrorDescription] body, response, error in
+                self.parseResponse(response, method: "POST", body: body, error: error, includeRequestIDInDescription: includeRequestIDInDescription, completion: completion)
             }
         )
     }
 
     /// Async version
-    @_spi(STP) public class func post(
+    @_spi(InternalOnlyAPI) public class func post(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -62,7 +62,7 @@ let JSONKeyObject = "object"
         }
     }
 
-    @_spi(STP) public class func getWith(
+    @_spi(InternalOnlyAPI) public class func getWith(
         _ apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -85,14 +85,14 @@ let JSONKeyObject = "object"
         // Perform request
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
-            completionHandler: { body, response, error in
-                self.parseResponse(response, method: "GET", body: body, error: error, completion: completion)
+            completionHandler: { [includeRequestIDInDescription = apiClient.shouldIncludeRequestIDInErrorDescription] body, response, error in
+                self.parseResponse(response, method: "GET", body: body, error: error, includeRequestIDInDescription: includeRequestIDInDescription, completion: completion)
             }
         )
     }
 
     /// Async version
-    @_spi(STP) public class func getWith(
+    @_spi(InternalOnlyAPI) public class func getWith(
         _ apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -110,7 +110,7 @@ let JSONKeyObject = "object"
         }
     }
 
-    @_spi(STP) public class func delete(
+    @_spi(InternalOnlyAPI) public class func delete(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -128,8 +128,8 @@ let JSONKeyObject = "object"
         // Perform request
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
-            completionHandler: { body, response, error in
-                self.parseResponse(response, method: "DELETE", body: body, error: error, completion: completion)
+            completionHandler: { [includeRequestIDInDescription = apiClient.shouldIncludeRequestIDInErrorDescription] body, response, error in
+                self.parseResponse(response, method: "DELETE", body: body, error: error, includeRequestIDInDescription: includeRequestIDInDescription, completion: completion)
             }
         )
     }
@@ -139,6 +139,7 @@ let JSONKeyObject = "object"
         method: String,
         body: Data?,
         error: Error?,
+        includeRequestIDInDescription: Bool = false,
         completion: @escaping (ResponseType?, HTTPURLResponse?, Error?) -> Void
     ) {
         // Derive HTTP URL response
@@ -180,7 +181,11 @@ let JSONKeyObject = "object"
         {
             safeCompletion(responseObject, nil)
         } else {
-            let error = NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
+            let error = NSError.stp_error(
+                fromStripeResponse: jsonDictionary,
+                httpResponse: httpResponse,
+                includeRequestIDInDescription: includeRequestIDInDescription
+            )
             safeCompletion(nil, error)
         }
     }

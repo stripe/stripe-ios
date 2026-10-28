@@ -5,7 +5,7 @@
 //  Created by Till Hellmund on 5/14/25.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 extension STPElementsSession {
@@ -22,6 +22,7 @@ extension UIViewController {
     func presentNativeLink(
         selectedPaymentDetailsID: String?,
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         intent: Intent,
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
@@ -29,13 +30,14 @@ extension UIViewController {
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         canContinueWithoutLink: Bool = true,
-        callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
+        callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool, _ error: Error?) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
             mode: .paymentMethodSelection,
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             logPayment: false,
             analyticsHelper: analyticsHelper,
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
@@ -46,8 +48,9 @@ extension UIViewController {
         payWithLinkController.presentForPaymentMethodSelection(
             from: self,
             initiallySelectedPaymentDetailsID: selectedPaymentDetailsID,
-            canContinueWithoutLink: canContinueWithoutLink,
-            completion: callback
-        )
+            canContinueWithoutLink: canContinueWithoutLink
+        ) { confirmOption, shouldReturnToPaymentSheet, error in
+            callback(confirmOption, shouldReturnToPaymentSheet, error)
+        }
     }
 }

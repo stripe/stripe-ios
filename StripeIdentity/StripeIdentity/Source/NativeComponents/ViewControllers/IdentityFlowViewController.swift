@@ -6,8 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 class IdentityFlowViewController: UIViewController {
@@ -40,8 +40,7 @@ class IdentityFlowViewController: UIViewController {
 
         if shouldShowCancelButton {
             navigationItem.rightBarButtonItem = UIBarButtonItem(
-                title: String.Localized.cancel,
-                style: .plain,
+                barButtonSystemItem: .close,
                 target: self,
                 action: #selector(didTapCancelButton)
             )
@@ -104,7 +103,11 @@ class IdentityFlowViewController: UIViewController {
         ) {
         navigationItem.backButtonTitle = backButtonTitle
         do {
-            try flowView.configure(with: viewModel)
+            try flowView.configure(
+                with: viewModel,
+                primaryButtonStyle: sheetController?.flowController.primaryButtonStyle ?? .default,
+                secondaryButtonStyle: sheetController?.flowController.secondaryButtonStyle ?? .default
+            )
         } catch {
             if let sheetController = sheetController {
                 sheetController.analyticsClient.logGenericError(
@@ -225,11 +228,10 @@ extension IdentityFlowViewController {
     func presentBottomsheet(
         withContent content: BottomSheetViewController.BottomSheetContent
     ) throws {
-        let consentBottomSheetViewController = try BottomSheetViewController(
-            content: content
+        let bottomSheetViewController = try BottomSheetViewController.makeForPresentation(
+            content: content,
+            primaryButtonStyle: sheetController?.flowController.primaryButtonStyle ?? .default
         )
-        consentBottomSheetViewController.modalTransitionStyle = .coverVertical
-        consentBottomSheetViewController.modalPresentationStyle = .pageSheet
-        self.present(consentBottomSheetViewController, animated: true, completion: nil)
+        self.present(bottomSheetViewController, animated: true, completion: nil)
     }
 }

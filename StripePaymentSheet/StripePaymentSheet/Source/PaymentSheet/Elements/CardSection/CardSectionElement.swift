@@ -7,10 +7,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A Element that contains a SectionElement for card details, whose view depends on the availability of card scanning:
@@ -206,7 +206,7 @@ final class CardSectionElement: ContainerElement {
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
             lastPanElementValidationState = panElement.validationState
             if case .valid = panElement.validationState {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted, checkoutSessionID: analyticsHelper?.checkoutSessionID)
             }
         }
 
@@ -219,7 +219,7 @@ final class CardSectionElement: ContainerElement {
            !panElement.isEditing,
            !hasLoggedExpectedExtraDigitsButUserEntered16 {
             if panElement.text.count == 16 {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .cardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .cardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields, checkoutSessionID: analyticsHelper?.checkoutSessionID)
                 hasLoggedExpectedExtraDigitsButUserEntered16 = true
             }
         }
@@ -231,7 +231,7 @@ final class CardSectionElement: ContainerElement {
            lastDisallowedCardBrandLogged != brand {
 
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
-                event: .paymentSheetDisallowedCardBrand,
+                event: .paymentSheetDisallowedCardBrand, checkoutSessionID: analyticsHelper?.checkoutSessionID,
                 params: ["brand": STPCardBrandUtilities.apiValue(from: brand)]
             )
             lastDisallowedCardBrandLogged = brand
@@ -252,6 +252,7 @@ final class CardSectionElement: ContainerElement {
             return
         }
 
+        let previousWarning = panElement.warningLabelText
         // TODO: BIN retrieval is broken if you don't use STPAPIClient.shared (https://jira.corp.stripe.com/browse/MOBILESDK-4322)
         fundingBinController.retrieveBINRanges(
             apiClient: STPAPIClient.shared,
@@ -260,8 +261,13 @@ final class CardSectionElement: ContainerElement {
             onlyFetchForVariableLengthBINs: false
         ) { [weak self] _ in
             guard let self = self else { return }
-            // Trigger re-validation so warningLabel can read the now-cached funding data
-            delegate?.didUpdate(element: self)
+            // Only refresh the section when the warning changes to avoid an update loop.
+            if panElement.warningLabelText != previousWarning {
+                // This calls back into didUpdate(element:), which notifies our delegate.
+                cardSection.didUpdate(element: panElement)
+            } else {
+                delegate?.didUpdate(element: self)
+            }
         }
     }
 
@@ -294,7 +300,7 @@ final class CardSectionElement: ContainerElement {
 
             // If we had no brands but now have selectable brands the CBC indicator will appear, log the analytic
             if !hadBrands, fetchedCardBrands.filter({ self.cardBrandFilter.isAccepted(cardBrand: $0) }).count > 1 {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandChoiceIndicator))
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandChoiceIndicator), checkoutSessionID: analyticsHelper?.checkoutSessionID)
             }
 
             if self.cardBrands != fetchedCardBrands {

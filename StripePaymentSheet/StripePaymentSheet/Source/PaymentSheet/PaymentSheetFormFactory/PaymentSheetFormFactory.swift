@@ -6,10 +6,10 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 import UIKit
 
@@ -17,6 +17,7 @@ import UIKit
  This class creates a FormElement for a given payment method type and binds the FormElement's field values to an
  `IntentConfirmParams`.
  */
+@MainActor
 class PaymentSheetFormFactory {
     enum Error: Swift.Error {
         case unexpectedPaymentMethodType
@@ -276,19 +277,62 @@ class PaymentSheetFormFactory {
                 return makeiDEAL()
             case .wero:
                 return makeWero()
+            case .naverPay:
+                return makeNaverPay()
             case .SEPADebit:
                 return makeSepaDebit()
-            case .grabPay, .alipay, .paynow, .payPay, .mobilePay, .zip, .crypto,
-                 .billie, .sunbit, .alma, .payByBank:
+            case .shopeePay, .qris:
+                return makeContactInformationAndBillingAddressForm(allowedBillingCountries: ["US", "ID"])
+            case .ngCard, .ngBankTransfer, .ngUSSD:
+                return makeContactInformationAndBillingAddressForm(
+                    defaultBillingCountry: "NG",
+                    additionalElements: [makeNigerianPaymentMethodMandate()]
+                )
+            case .gcash:
+                return makeContactInformationAndBillingAddressForm(
+                    allowedBillingCountries: ["PH"],
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
+            case .touchNGo:
+                return makeContactInformationAndBillingAddressForm(
+                    allowedBillingCountries: ["MY"],
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
+            case .trueMoney:
+                return makeContactInformationAndBillingAddressForm(
+                    allowedBillingCountries: ["TH"],
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
+            case .ngWallet:
+                return makeContactInformationAndBillingAddressForm(
+                    defaultBillingCountry: "NG",
+                    additionalElements: [makeNigerianPaymentMethodMandate(terms: String.Localized.nigerian_wallet_terms)]
+                )
+            case .mondu:
+                return makeMondu()
+            case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
+                 .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
+            case .pix:
+                return makePix()
+            case .alipay:
+                return makeContactInformationAndBillingAddressForm(
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
             case .promptPay, .multibanco:
                 return makeContactInformationAndBillingAddressForm(
                     emailRequired: true,
                     emailAPIPath: "billing_details[email]"
                 )
+            case .kakaoPay:
+                return makeContactInformationAndBillingAddressForm(
+                    emailRequired: true,
+                    emailAPIPath: "billing_details[email]",
+                    additionalElements: makeSetupMandateElements(for: paymentMethod)
+                )
             case .mbWay, .bizum:
                 return makeContactInformationAndBillingAddressForm(phoneRequired: true)
-            case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint:
+            case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint, .krCard:
                 return makeContactInformationAndBillingAddressForm(
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
@@ -321,6 +365,14 @@ class PaymentSheetFormFactory {
     private func makeSetupMandateElements(for paymentMethod: STPPaymentMethodType) -> [Element] {
         guard isSettingUp else { return [] }
         switch paymentMethod {
+        case .trueMoney:
+            return [makeTrueMoneyMandate()]
+        case .touchNGo:
+            return [makeTouchNGoMandate()]
+        case .gcash:
+            return [makeGCashMandate()]
+        case .alipay:
+            return [makeAlipayMandate()]
         case .cashApp:
             return [makeCashAppMandate()]
         case .payPal:
@@ -333,6 +385,12 @@ class PaymentSheetFormFactory {
             return [makeSatispayMandate()]
         case .twint:
             return [makeTwintMandate()]
+        case .naverPay:
+            return [makeKoreanPaymentMethodMandate()]
+        case .krCard:
+            return [makeKoreanPaymentMethodMandate()]
+        case .kakaoPay:
+            return [makeKoreanPaymentMethodMandate()]
         default:
             return []
         }
@@ -395,6 +453,39 @@ extension PaymentSheetFormFactory {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
             } else {
                 params.paymentMethodParams.nonnil_billingDetails.email = textField.text
+            }
+            return params
+        }
+    }
+
+    func makeDropdown(
+        label: String,
+        apiPath: String,
+        options: [(name: String, value: String)],
+        defaultValue: String? = nil,
+        paramsUpdater: ((String, IntentConfirmParams) -> Void)? = nil
+    ) -> PaymentMethodElementWrapper<DropdownFieldElement> {
+        let items = options.map {
+            DropdownFieldElement.DropdownItem(
+                pickerDisplayName: $0.name,
+                labelDisplayName: $0.name,
+                accessibilityValue: $0.name,
+                rawData: $0.value
+            )
+        }
+        let previousValue = defaultValue ?? getPreviousCustomerInput(for: apiPath)
+        let defaultIndex = items.firstIndex { $0.rawData == previousValue } ?? 0
+        let dropdown = DropdownFieldElement(
+            items: items,
+            defaultIndex: defaultIndex,
+            label: label,
+            theme: theme
+        )
+        return PaymentMethodElementWrapper(dropdown) { dropdown, params in
+            if let paramsUpdater {
+                paramsUpdater(dropdown.selectedItem.rawData, params)
+            } else {
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = dropdown.selectedItem.rawData
             }
             return params
         }
@@ -520,6 +611,7 @@ extension PaymentSheetFormFactory {
         defaultFieldsToCollect: AddressSectionElement.FieldsToCollect = .all,
         minimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [:],
         countries: [String]? = nil,
+        defaultCountry: String? = nil,
         countryAPIPath: String? = nil,
         includeEmail: Bool = false,
         includePhone: Bool = false
@@ -535,6 +627,10 @@ extension PaymentSheetFormFactory {
         } else {
             displayBillingSameAsShippingCheckbox = false
             defaultAddress = defaultBillingDetails().address.addressSectionDefaults
+        }
+
+        if defaultAddress.address.country == nil {
+            defaultAddress.address.country = defaultCountry
         }
 
         if includePhone {
@@ -610,7 +706,7 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    static func makeBankMandateText(
+    nonisolated static func makeBankMandateText(
         isSettingUp: Bool,
         merchantName: String,
         sellerName: String?,
@@ -801,6 +897,8 @@ extension PaymentSheetFormFactory {
         emailRequired: Bool = false,
         emailAPIPath: String? = nil,
         phoneRequired: Bool = false,
+        allowedBillingCountries: [String]? = nil,
+        defaultBillingCountry: String? = nil,
         additionalElements: [Element] = []
     ) -> PaymentMethodElement {
         let contactInfoSection = makeContactInformationSection(
@@ -809,8 +907,46 @@ extension PaymentSheetFormFactory {
             phoneRequiredByPaymentMethod: phoneRequired,
             emailAPIPath: emailAPIPath
         )
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let billingDetails = makeBillingAddressSectionIfNecessary(
+            requiredByPaymentMethod: false,
+            allowedCountries: allowedBillingCountries,
+            defaultCountry: defaultBillingCountry
+        )
         let elements = [contactInfoSection, billingDetails].compactMap { $0 } + additionalElements
+        return makeDefaultsApplierWrapper(
+            for: FormElement(autoSectioningElements: elements, theme: theme)
+        )
+    }
+
+    func makeMondu() -> PaymentMethodElement {
+        let description = makeSectionTitleLabelWith(
+            text: String.Localized.mondu_buyer_message
+        )
+        return makeContactInformationAndBillingAddressForm(
+            additionalElements: [description]
+        )
+    }
+    func makeNaverPay() -> PaymentMethodElement {
+        let funding = makeDropdown(
+            label: String.Localized.naver_pay_funding_label,
+            apiPath: "naver_pay[funding]",
+            options: [
+                (String.Localized.naver_pay_card, "card"),
+                (String.Localized.naver_pay_money_point, "points"),
+            ],
+            defaultValue: previousCustomerInput?.paymentMethodParams.naverPay?.funding.stringValue,
+            paramsUpdater: { funding, params in
+                params.paymentMethodParams.naverPay?.funding = STPPaymentMethodNaverPayFunding(string: funding)
+            }
+        )
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let elements = ([funding, contactInfoSection, billingDetails] as [Element?]).compactMap { $0 }
+            + makeSetupMandateElements(for: .naverPay)
         return makeDefaultsApplierWrapper(
             for: FormElement(autoSectioningElements: elements, theme: theme)
         )
@@ -1017,7 +1153,9 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBillingAddressSectionIfNecessary(
-        requiredByPaymentMethod: Bool
+        requiredByPaymentMethod: Bool,
+        allowedCountries: [String]? = nil,
+        defaultCountry: String? = nil
     ) -> Element? {
         let defaultFieldsToCollect: AddressSectionElement.FieldsToCollect? = {
             switch (configuration.billingDetailsCollectionConfiguration.address, requiredByPaymentMethod) {
@@ -1034,10 +1172,28 @@ extension PaymentSheetFormFactory {
         }()
         guard let defaultFieldsToCollect else { return nil }
 
+        let countries = billingCountries(allowedByPaymentMethod: allowedCountries)
         return makeBillingAddressSection(
             defaultFieldsToCollect: defaultFieldsToCollect,
-            countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+            countries: countries,
+            defaultCountry: defaultCountry
         )
+    }
+
+    /// Prefers countries allowed by both lists, falling back to merchant restrictions when there is no overlap.
+    private func billingCountries(allowedByPaymentMethod paymentMethodCountries: [String]?) -> [String]? {
+        let merchantCountries = configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+        guard let paymentMethodCountries else {
+            return merchantCountries
+        }
+        guard !paymentMethodCountries.isEmpty else { return merchantCountries }
+        guard let merchantCountries else { return paymentMethodCountries }
+        let countries = paymentMethodCountries.filter { merchantCountries.contains($0.uppercased()) }
+        guard !countries.isEmpty else {
+            stpAssertionFailure("Merchant billing countries do not overlap with the payment method's supported countries.")
+            return merchantCountries
+        }
+        return countries // Both the merchant and the payment method allow these countries.
     }
 
     func makeDefaultsApplierWrapper<T: PaymentMethodElement>(for element: T) -> PaymentMethodElementWrapper<T> {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
     let paymentMethod: STPPaymentMethod

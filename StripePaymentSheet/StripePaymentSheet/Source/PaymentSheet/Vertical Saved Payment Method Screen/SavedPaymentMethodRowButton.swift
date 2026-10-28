@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol SavedPaymentMethodRowButtonDelegate: AnyObject {
@@ -79,6 +79,7 @@ final class SavedPaymentMethodRowButton: UIView {
         let button: RowButton = .makeForSavedPaymentMethod(
             paymentMethod: paymentMethod,
             appearance: appearance,
+            subtext: paymentMethod.cardArtProgramName,
             badgeText: badgeText,
             accessoryView: chevronButton,
             linkBrand: linkBrand,

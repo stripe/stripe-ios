@@ -143,6 +143,33 @@ extension XCUIApplication {
         return buttons["networking_link_signup_footer_view.not_now_button"]
     }
 
+    func fc_skipNetworkingSignupIfNeeded(timeout: TimeInterval = 10.0) {
+        let notNowButton = fc_nativeNetworkingNotNowButton
+        let successDoneButton = buttons["success_done_button"]
+
+        // Account selection can lead directly to Success or show the optional Link signup pane.
+        XCTAssertTrue(
+            notNowButton.wait(
+                until: { $0.exists || successDoneButton.exists },
+                timeout: timeout
+            ),
+            "Failed to open either the networking Link signup pane or Success pane"
+        )
+
+        if notNowButton.exists {
+            // The email field can become focused shortly after this pane appears. Wait for
+            // that transition so the keyboard cannot race the tap on the footer button.
+            if keyboards.firstMatch.waitForExistence(timeout: 2.0) {
+                fc_dismissKeyboard()
+            }
+            XCTAssertTrue(
+                notNowButton.wait(until: { $0.isHittable }, timeout: 10.0),
+                "Networking Link signup Not now button failed to become hittable"
+            )
+            notNowButton.tap()
+        }
+    }
+
     var fc_nativeSuccessDoneButton: XCUIElement {
         let successDoneButton = buttons["success_done_button"]
         XCTAssertTrue(successDoneButton.waitForExistence(timeout: 120.0), "Failed to open Success pane - \(#function) waiting failed")  // wait for accounts to link
@@ -184,13 +211,19 @@ extension XCUIApplication {
     }
 
     func fc_dismissKeyboard() {
+        let keyboard = keyboards.firstMatch
+
         // Try the toolbar Done button first (iOS 18 and earlier)
         let doneButtonByLabel = toolbars.buttons["Done"]
         if doneButtonByLabel.waitForExistence(timeout: 1) {
             doneButtonByLabel.tap()
-            return
         }
         // iOS 26 fallback: tap on the title label to dismiss the keyboard
         otherElements["fc_pane_title_label"].tap()
+
+        XCTAssertTrue(
+            keyboard.wait(until: { !$0.exists }, timeout: 5.0),
+            "Keyboard failed to dismiss"
+        )
     }
 }

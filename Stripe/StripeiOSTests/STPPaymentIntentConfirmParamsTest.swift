@@ -6,11 +6,11 @@
 //  Copyright © 2018 Stripe, Inc. All rights reserved.
 //
 
-@testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(InternalOnlyAPI) import Stripe
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 class STPPaymentIntentConfirmParamsTest: XCTestCase {
     func testInit() {
@@ -94,6 +94,27 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
             XCTAssertNotNil(params.mandateData)
             XCTAssertNil(params.mandateData!.customerAcceptance.onlineParams)
         }
+    }
+
+    func testAlipayFutureUsageFormEncoding() {
+        // Given
+        let params = STPPaymentIntentConfirmParams(
+            clientSecret: "pi_123_secret_456",
+            paymentMethodType: .alipay
+        )
+        let alipayOptions = STPConfirmAlipayOptions()
+        alipayOptions.setupFutureUsage = .offSession
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        paymentMethodOptions.alipayOptions = alipayOptions
+        params.paymentMethodOptions = paymentMethodOptions
+
+        // When
+        let encoded = STPFormEncoder.dictionary(forObject: params)
+
+        // Then
+        let encodedPaymentMethodOptions = encoded["payment_method_options"] as? [String: Any]
+        let encodedAlipayOptions = encodedPaymentMethodOptions?["alipay"] as? [String: Any]
+        XCTAssertEqual(encodedAlipayOptions?["setup_future_usage"] as? String, "off_session")
     }
 
     // #pragma clang diagnostic pop

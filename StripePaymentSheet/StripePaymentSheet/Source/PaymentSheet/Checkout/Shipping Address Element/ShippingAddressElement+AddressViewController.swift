@@ -4,14 +4,13 @@
 //
 //  Created by George Birch on 8/4/26.
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension ShippingAddressElement.Configuration {
     func makeAddressViewControllerConfiguration(
-        shippingAddress: Checkout.Session.ShippingAddress?,
+        shippingAddress: CheckoutController.Session.ShippingAddress?,
         allowedCountries: [String]?,
-        apiClient: STPAPIClient,
-        useAutocompleteEndpoints: Bool
+        apiClient: STPAPIClient
     ) -> AddressViewController.Configuration {
         let allowedCountries = allowedCountries ?? []
         let defaultValues: AddressViewController.Configuration.DefaultAddressDetails
@@ -40,7 +39,6 @@ extension ShippingAddressElement.Configuration {
             title: title
         )
         configuration.apiClient = apiClient
-        configuration.useAutocompleteEndpoints = useAutocompleteEndpoints
         return configuration
     }
 }

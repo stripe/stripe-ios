@@ -7,11 +7,11 @@
 
 import Foundation
 
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripeCoreTestUtils
-@_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) @testable import StripePaymentsObjcTestUtils
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentsObjcTestUtils
 import XCTest
 
 class ConfirmationChallengeTests: XCTestCase {
@@ -192,6 +192,21 @@ class ConfirmationChallengeTests: XCTestCase {
         XCTAssertNotNil(radarOptions)
         XCTAssertNotNil(radarOptions?.hcaptchaToken)
         XCTAssertNotNil(radarOptions?.iosVerificationObject)
+        await confirmationChallenge.complete()
+    }
+
+    func testMakeRadarOptionsConsumesPassiveCaptchaTask() async {
+        // Given a challenge whose captcha creation fails deterministically
+        let counter = PassiveCaptchaCreateCounter()
+        let factory = CountingFailingPassiveCaptchaFactory(counter: counter)
+        let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: factory)
+
+        // When radar options are requested twice
+        _ = await confirmationChallenge.makeRadarOptions(for: .card)
+        _ = await confirmationChallenge.makeRadarOptions(for: .card)
+
+        // Then each request should execute its own captcha challenge
+        XCTAssertEqual(counter.count, 2)
         await confirmationChallenge.complete()
     }
 

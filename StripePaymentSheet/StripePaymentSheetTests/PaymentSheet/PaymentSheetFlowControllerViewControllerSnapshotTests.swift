@@ -5,13 +5,14 @@
 //  Created by Yuki Tokuhiro on 9/7/23.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 
 import XCTest
 
+@MainActor
 // @iOS26
 final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTestCase {
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
@@ -21,19 +22,20 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(customer: nil)
         )
     }
 
     func testSavedScreen_card() {
-        let paymentMethods = [
-            STPPaymentMethod._testCard(),
-        ]
-        let sut = PaymentSheetFlowControllerViewController(
-            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
-            loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
-            analyticsHelper: ._testValue()
-        )
+        let sut = makeSavedCardSUT()
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
+
+    func testSavedScreen_cardRightToLeft() {
+        let sut = makeSavedCardSUT()
+        sut.view.forceRightToLeftLayout()
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
@@ -98,6 +100,20 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     }
 
     func testDirectToCardScan() {
+        let sut = makeDirectToCardScanSUT()
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
+
+    func testDirectToCardScanRightToLeft() {
+        let sut = makeDirectToCardScanSUT()
+        sut.view.forceRightToLeftLayout()
+        sut.view.autosizeHeight(width: 375)
+
+        STPSnapshotVerifyView(sut.view)
+    }
+
+    private func makeDirectToCardScanSUT() -> PaymentSheetFlowControllerViewController {
         let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
             expectation.fulfill()
@@ -118,7 +134,8 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .horizontal
+            paymentMethodOrientation: .horizontal,
+            customerProvider: CustomerProvider(customer: nil)
         )
 
         let sut = PaymentSheetFlowControllerViewController(
@@ -126,7 +143,15 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             loadResult: loadResult,
             analyticsHelper: ._testValue()
         )
-        sut.view.autosizeHeight(width: 375)
-        STPSnapshotVerifyView(sut.view)
+        return sut
     }
+
+    private func makeSavedCardSUT() -> PaymentSheetFlowControllerViewController {
+        return PaymentSheetFlowControllerViewController(
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
+            loadResult: makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod._testCard()]),
+            analyticsHelper: ._testValue()
+        )
+    }
+
 }

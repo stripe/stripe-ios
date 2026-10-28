@@ -6,12 +6,152 @@
 //
 
 import Foundation
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
-@testable @_spi(STP) import StripePaymentSheet
+import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
+
+    func testKYCRegionChangedErrorHasSafeRecoveryDiagnosticsAndPassesThroughMapping() throws {
+        let apiClient = STPAPIClient(publishableKey: "pk_test_private_partner_key")
+        let error = CryptoOnrampCoordinator.paymentMethodKYCRegionChangedError(
+            apiClient: apiClient,
+            additionalSDKVersions: [SDKVersion(name: "stripe-react-native", version: "1.2.3")]
+        )
+        let richError: StripeCryptoOnrampError = error
+        XCTAssertEqual(richError.code, "payment_method_kyc_region_changed")
+        XCTAssertEqual(richError.userMessage, "Please select your Apple Pay payment method again to continue.")
+        XCTAssertEqual(error.errorDescription, richError.userMessage)
+        XCTAssertEqual(error.localizedDescription, richError.userMessage)
+        XCTAssertEqual(error.debugDescription, richError.developerMessage)
+        XCTAssertNil(richError.underlyingError)
+        XCTAssertNil(richError.docURL)
+        XCTAssertFalse(richError is StripeCryptoOnrampAPIError)
+
+        let appIdentifier = try XCTUnwrap(Bundle.main.bundleIdentifier)
+        XCTAssertEqual(error.developerMessage, """
+        This Apple Pay payment method can no longer be used to create a crypto payment token because the customer's KYC region changed after it was collected.
+        In the crypto onramp flow, a collected Apple Pay payment method is bound to the customer's region at collection time and can't be reused if that region changes.
+        This happens when Apple Pay is collected before the customer's region is final: the region in effect came from your countryHint or a default, and the customer's authenticated KYC region (country of residence) turned out to be different.
+
+        Request Context:
+          operation: create_crypto_payment_token
+          app_id: \(appIdentifier)
+          mode: test
+
+        Code: payment_method_kyc_region_changed
+        Next step: Collect Apple Pay again with collectPaymentMethod(type: .applePay(paymentRequest:), from:), then call createCryptoPaymentToken() only after it succeeds.
+        To avoid this:
+        Ensure your countryHint matches the customer's KYC region before collecting Apple Pay pre-authentication, or
+        Authenticate the customer first - so their KYC region is final - and then collect Apple Pay.
+        SDK: stripe-ios@\(STPAPIClient.STPSDKVersion), stripe-react-native@1.2.3
+        """)
+        for message in [error.userMessage, error.developerMessage] {
+            for sensitiveField in ["pk_test_", "pk_live_", "crypto_customer_", "request_id:", "email", "phone", "billing", "shipping"] {
+                XCTAssertFalse(message.contains(sensitiveField))
+            }
+            for internalDetail in ["merchant", "mor", "platform", "resolved for this customer"] {
+                XCTAssertFalse(message.lowercased().contains(internalDetail))
+            }
+        }
+
+        // Mapping a local error must preserve its original diagnostics and concrete type.
+        let mappedError = CryptoOnrampCoordinator.mappedError(error, during: .collectPaymentMethod, apiClient: apiClient)
+        let preservedError = try XCTUnwrap(mappedError as? PaymentMethodKYCRegionChangedError)
+        XCTAssertEqual(preservedError.code, error.code)
+        XCTAssertEqual(preservedError.userMessage, error.userMessage)
+        XCTAssertEqual(preservedError.developerMessage, error.developerMessage)
+    }
+
+    func testCheckoutErrorPreservesLastPaymentErrorDetails() throws {
+        // Given a PaymentIntent declined after authentication and a generic payment handler error
+        let paymentIntent = try XCTUnwrap(STPPaymentIntent.decodedObject(fromAPIResponse: [
+            "id": "pi_123",
+            "client_secret": "pi_123_secret_123",
+            "amount": 2345,
+            "currency": "usd",
+            "status": "requires_payment_method",
+            "livemode": false,
+            "created": 1_652_736_692.0,
+            "payment_method_types": ["card"],
+            "last_payment_error": [
+                "code": "card_declined",
+                "decline_code": "do_not_honor",
+                "message": "Your card was declined.",
+                "type": "card_error",
+            ],
+        ]))
+        let originalError = NSError(
+            domain: STPError.STPPaymentHandlerErrorDomain,
+            code: 1,
+            userInfo: [
+                STPError.errorMessageKey: "There was an error confirming the Intent.",
+                NSLocalizedDescriptionKey: "The payment handler selected this localized message.",
+                STPError.stripeRequestIDKey: "req_123",
+            ]
+        )
+
+        // When Crypto Onramp maps the failed next action
+        let checkoutError = CryptoOnrampCoordinator.checkoutError(
+            originalError,
+            paymentIntent: paymentIntent
+        ) as NSError
+
+        // Then the original error metadata and structured PaymentIntent error details are preserved
+        XCTAssertEqual(checkoutError.domain, originalError.domain)
+        XCTAssertEqual(checkoutError.code, originalError.code)
+        XCTAssertEqual(checkoutError.userInfo[STPError.stripeRequestIDKey] as? String, "req_123")
+        XCTAssertEqual(checkoutError.userInfo[STPError.errorMessageKey] as? String, "Your card was declined.")
+        XCTAssertEqual(checkoutError.localizedDescription, "The payment handler selected this localized message.")
+        XCTAssertEqual(checkoutError.userInfo[STPError.stripeErrorCodeKey] as? String, "card_declined")
+        XCTAssertEqual(checkoutError.userInfo[STPError.stripeDeclineCodeKey] as? String, "do_not_honor")
+        XCTAssertEqual(checkoutError.userInfo[STPError.stripeErrorTypeKey] as? String, "card_error")
+    }
+
+    func testCheckoutErrorDoesNotExposeNonCardMessageAsLocalizedDescription() throws {
+        // Given a non-card PaymentIntent error with developer-facing API details
+        let paymentIntent = try XCTUnwrap(STPPaymentIntent.decodedObject(fromAPIResponse: [
+            "id": "pi_123",
+            "client_secret": "pi_123_secret_123",
+            "amount": 2345,
+            "currency": "usd",
+            "status": "requires_payment_method",
+            "livemode": false,
+            "created": 1_652_736_692.0,
+            "payment_method_types": ["card"],
+            "last_payment_error": [
+                "code": "parameter_invalid_integer",
+                "message": "Developer-facing API details.",
+                "type": "invalid_request_error",
+            ],
+        ]))
+        let originalError = NSError(
+            domain: STPError.STPPaymentHandlerErrorDomain,
+            code: 1,
+            userInfo: [
+                NSLocalizedDescriptionKey: "We couldn't complete your payment.",
+            ]
+        )
+
+        // When Crypto Onramp maps the failed next action
+        let checkoutError = CryptoOnrampCoordinator.checkoutError(
+            originalError,
+            paymentIntent: paymentIntent
+        ) as NSError
+
+        // Then the API message is preserved as metadata without replacing user-safe copy
+        XCTAssertEqual(
+            checkoutError.userInfo[STPError.errorMessageKey] as? String,
+            "Developer-facing API details."
+        )
+        XCTAssertEqual(checkoutError.localizedDescription, "We couldn't complete your payment.")
+        XCTAssertEqual(
+            checkoutError.userInfo[STPError.stripeErrorTypeKey] as? String,
+            "invalid_request_error"
+        )
+    }
 
     func testMappedErrorMapsAttestationErrorDecodedFromStripeAPIResponse() throws {
         let responseData = try StripeAPIErrorResponseMock.appAttestationFailure.data()
@@ -21,7 +161,12 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             httpVersion: nil,
             headerFields: ["request-id": "req_attestation_test"]
         )
-        let stripeError = try XCTUnwrap(STPAPIClient.decodeStripeErrorResponse(data: responseData, response: response))
+        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+            data: responseData, error: nil, response: response
+        )
+        guard case .failure(let stripeError) = result else {
+            return XCTFail("Expected an API error")
+        }
         let apiClient = STPAPIClient(publishableKey: "pk_test_123")
 
         let mappedError = CryptoOnrampCoordinator.mappedError(

@@ -9,10 +9,11 @@
 import UIKit
 
 import AuthenticationServices
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
+@MainActor
 protocol PayWithLinkWebControllerDelegate: AnyObject {
 
     func payWithLinkWebControllerDidComplete(
@@ -32,6 +33,7 @@ protocol PayWithLinkWebControllerDelegate: AnyObject {
 /// For internal SDK use only
 
 @objc(STP_Internal_PayWithLinkWebController)
+@MainActor
 final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationContextProviding, STPAuthenticationContext {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return bestWindowForPresentation
@@ -58,6 +60,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     }
     var presentationVC: UIViewController?
 
+    @MainActor
     final class Context {
         let intent: Intent
         let elementsSession: STPElementsSession
@@ -66,6 +69,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         let alwaysUseEphemeralSession: Bool
+        let confirmationSource: CheckoutController.ConfirmingElement?
 
         /// Creates a new Context object.
         /// - Parameters:
@@ -74,13 +78,16 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         ///   - configuration: PaymentElementConfiguration configuration.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
         ///   - alwaysUseEphemeralSession: If `true`, always use an ephemeral session. If `false`, we'll follow our existing ephemeral session logic.
+        ///   - confirmationSource: Set when this Link web popup is confirming a Checkout Session, so
+        ///     its payment_user_agent can be built for the right Checkout Elements component.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
             configuration: PaymentElementConfiguration,
             linkBrand: LinkBrand,
             callToAction: ConfirmButton.CallToActionType?,
-            alwaysUseEphemeralSession: Bool
+            alwaysUseEphemeralSession: Bool,
+            confirmationSource: CheckoutController.ConfirmingElement? = nil
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -88,6 +95,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             self.linkBrand = linkBrand
             self.callToAction = callToAction ?? .makeDefaultType(intent: intent)
             self.alwaysUseEphemeralSession = alwaysUseEphemeralSession
+            self.confirmationSource = confirmationSource
         }
     }
 
@@ -101,7 +109,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
-        alwaysUseEphemeralSession: Bool = false
+        alwaysUseEphemeralSession: Bool = false,
+        confirmationSource: CheckoutController.ConfirmingElement? = nil
     ) {
         self.init(
             context: Context(
@@ -110,7 +119,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 configuration: configuration,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
                 callToAction: callToAction,
-                alwaysUseEphemeralSession: alwaysUseEphemeralSession
+                alwaysUseEphemeralSession: alwaysUseEphemeralSession,
+                confirmationSource: confirmationSource
             )
         )
     }
@@ -130,7 +140,12 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         STPAnalyticsClient.sharedClient.logLinkPopupShow(sessionType: self.context.elementsSession.linkPopupWebviewOption)
         do {
             // Generate Link URL, fetching the customer if needed
-            let linkPopupParams = try LinkURLGenerator.linkParams(configuration: self.context.configuration, intent: self.context.intent, elementsSession: self.context.elementsSession)
+            let linkPopupParams = try LinkURLGenerator.linkParams(
+                configuration: self.context.configuration,
+                intent: self.context.intent,
+                elementsSession: self.context.elementsSession,
+                confirmationSource: self.context.confirmationSource
+            )
             let linkPopupUrl = try LinkURLGenerator.url(params: linkPopupParams)
 
             let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in

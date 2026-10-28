@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 protocol NetworkingLinkVerificationDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
@@ -94,7 +94,8 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
             return self.apiClient.synchronize(
                 clientSecret: self.clientSecret,
                 returnURL: self.returnURL,
-                initialSynchronize: false
+                initialSynchronize: false,
+                preCollectedConsent: nil
             )
         }
     }

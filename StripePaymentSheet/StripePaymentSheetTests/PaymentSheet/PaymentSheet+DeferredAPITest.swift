@@ -5,12 +5,12 @@
 //  Created by Nick Porter on 10/11/23.
 //
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeCoreTestUtils
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(SharedPaymentToken) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
@@ -211,6 +211,41 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         // ...both should be set to match
         XCTAssertEqual(STPFormEncoder.dictionary(forObject: paymentIntentParams3)[jsonDict: "payment_method_options"]?[jsonDict: "card"]?["setup_future_usage"] as? String, "none")
         XCTAssertEqual(paymentIntentParams3.setupFutureUsage, STPPaymentIntentSetupFutureUsage.offSession)
+    }
+
+    func testSetMandateDataIfNecessaryForAlipay() {
+        // Given
+        let regularParams = STPPaymentIntentParams(clientSecret: "pi_test_regular_secret_abc")
+
+        // When
+        PaymentSheet.setMandateDataIfNecessary(for: .alipay, on: regularParams)
+
+        // Then
+        XCTAssertNil(regularParams.mandateData)
+
+        // Given
+        let topLevelSFUParams = STPPaymentIntentParams(clientSecret: "pi_test_sfu_secret_abc")
+        topLevelSFUParams.setupFutureUsage = .offSession
+
+        // When
+        PaymentSheet.setMandateDataIfNecessary(for: .alipay, on: topLevelSFUParams)
+
+        // Then
+        XCTAssertNotNil(topLevelSFUParams.mandateData)
+
+        // Given
+        let pmoSFUParams = STPPaymentIntentParams(clientSecret: "pi_test_pmo_sfu_secret_abc")
+        let alipayOptions = STPConfirmAlipayOptions()
+        alipayOptions.setupFutureUsage = .offSession
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        paymentMethodOptions.alipayOptions = alipayOptions
+        pmoSFUParams.paymentMethodOptions = paymentMethodOptions
+
+        // When
+        PaymentSheet.setMandateDataIfNecessary(for: .alipay, on: pmoSFUParams)
+
+        // Then
+        XCTAssertNotNil(pmoSFUParams.mandateData)
     }
 
     // MARK: - Shared Payment Token Session Tests

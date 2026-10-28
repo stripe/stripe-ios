@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 extension STPPaymentMethod {
     var paymentSheetLabel: String {
@@ -32,6 +32,16 @@ extension STPPaymentMethod {
         default:
             return type.displayName
         }
+    }
+
+    /// The card's program name (eg "Chase Sapphire Preferred"), only present when the card has card art.
+    var cardArtProgramName: String? {
+        guard type == .card, card?.cardArt?.artImage?.url != nil,
+              let programName = card?.cardArt?.programName,
+              !programName.isEmpty else {
+            return nil
+        }
+        return programName
     }
 
     var paymentSheetAccessibilityLabel: String? {
@@ -81,6 +91,8 @@ extension STPPaymentMethod {
         // The update endpoint returns a plain PaymentMethod, so preserve Link presentation state.
         linkPaymentDetails = original.linkPaymentDetails
         isLinkOrigin = original.isLinkOrigin
+        // Card art only comes from v1/elements/sessions, so it's absent from the update response.
+        card?.cardArt = original.card?.cardArt
     }
 
     func hasUpdatedCardParams(_ updatedParams: STPPaymentMethodCardParams?) -> Bool {

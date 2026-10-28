@@ -8,9 +8,9 @@
 
 import Foundation
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 // Please do not attempt to modify the Stripe SDK or call private APIs directly.
 // See the Stripe Services Agreement (https://stripe.com/legal/ssa) for more details.
@@ -22,6 +22,7 @@ extension STPAPIClient {
         customerID: String?,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
@@ -52,6 +53,7 @@ extension STPAPIClient {
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
                 canSyncAttestationState: canSyncAttestationState,
+                supportedVerificationTypes: supportedVerificationTypes,
                 completion: completion
             )
         }
@@ -63,6 +65,7 @@ extension STPAPIClient {
         customerID: String?,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -79,6 +82,7 @@ extension STPAPIClient {
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
                 canSyncAttestationState: canSyncAttestationState,
+                supportedVerificationTypes: supportedVerificationTypes,
                 completion: completion
             )
         }
@@ -90,6 +94,7 @@ extension STPAPIClient {
         customerID: String?,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -105,6 +110,7 @@ extension STPAPIClient {
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
                 canSyncAttestationState: canSyncAttestationState,
+                supportedVerificationTypes: supportedVerificationTypes,
                 completion: completion
             )
         }
@@ -114,6 +120,7 @@ extension STPAPIClient {
         parameters: [String: Any],
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) async {
         let legacyEndpoint = "consumers/sessions/lookup"
@@ -122,7 +129,7 @@ extension STPAPIClient {
         var mutableParameters = parameters
 
         if useMobileEndpoints {
-            mutableParameters["supported_verification_types"] = SupportedVerificationType.allCases.map(\.rawValue)
+            mutableParameters["supported_verification_types"] = supportedVerificationTypes.map(\.rawValue)
         }
 
         let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
@@ -380,6 +387,8 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
+        permissions: [String]? = nil,
+        merchantToken: String? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
@@ -393,6 +402,10 @@ extension STPAPIClient {
         ]
         parameters["link_mode"] = linkMode?.rawValue
         parameters["intent_token"] = intentToken
+        parameters["permissions"] = permissions
+        if permissions?.isEmpty == false {
+            parameters["merchant_token"] = merchantToken
+        }
 
         APIRequest<LinkAccountSession>.post(
             with: self,
@@ -627,6 +640,7 @@ extension STPAPIClient {
 
     func refreshSession(
         consumerSessionClientSecret: String,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -637,7 +651,7 @@ extension STPAPIClient {
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
             "request_surface": requestSurface.rawValue,
-            "supported_verification_types": SupportedVerificationType.allCases.map(\.rawValue),
+            "supported_verification_types": supportedVerificationTypes.map(\.rawValue),
         ]
 
         makeConsumerSessionRequest(
@@ -645,6 +659,51 @@ extension STPAPIClient {
             parameters: parameters,
             completion: completion
         )
+    }
+
+    func startLinkVerification(
+        for consumerSessionClientSecret: String,
+        type: SupportedVerificationType,
+        emailAddress: String?,
+        accountPhoneNumber: String?,
+        isResending: Bool,
+        locale: Locale = .autoupdatingCurrent,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        var parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "type": type.rawValue,
+            "locale": locale.toLanguageTag(),
+            "request_surface": requestSurface.rawValue,
+        ]
+        // Resolve SMS/email factors by type rather than pinning a lookup response's factor ID.
+        parameters["email_address"] = emailAddress?.lowercased()
+        if type == .email {
+            parameters["account_phone_number"] = accountPhoneNumber
+        }
+        if type == .sms && isResending {
+            parameters["is_resend_sms_code"] = true
+        }
+        post(resource: "consumers/sessions/start_verification", parameters: parameters, completion: completion)
+    }
+
+    func confirmLinkVerification(
+        for consumerSessionClientSecret: String,
+        type: SupportedVerificationType,
+        code: String,
+        consentGranted: Bool?,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void
+    ) {
+        var parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "type": type.rawValue,
+            "code": code,
+            "request_surface": requestSurface.rawValue,
+        ]
+        parameters["consent_granted"] = consentGranted
+        post(resource: "consumers/sessions/confirm_verification", parameters: parameters, completion: completion)
     }
 
     func startVerification(
@@ -735,6 +794,31 @@ extension STPAPIClient {
             }
         )
     }
+
+    func recordConnectionsConsentAcquired(
+        for consumerSessionClientSecret: String,
+        localizedConsentText: String,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<EmptyResponse, Error>) -> Void
+    ) {
+        let endpoint = "consumers/connections_consent_acquired"
+
+        guard
+            let consentData = try? JSONEncoder().encode(ConnectionsConsentPayload(localizedConsent: localizedConsentText)),
+            let consentJSONString = String(data: consentData, encoding: .utf8)
+        else {
+            completion(.failure(NSError.stp_genericFailedToParseResponseError()))
+            return
+        }
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": requestSurface.rawValue,
+            "consent": consentJSONString,
+        ]
+
+        post(resource: endpoint, parameters: parameters, completion: completion)
+    }
 }
 
 // TODO(ramont): Remove this after switching to modern bindings.
@@ -788,10 +872,14 @@ private extension APIRequest {
 
 }
 
-// MARK: - Decodable helper wrappers
+// MARK: - Decodable/Encodable helper wrappers
 private extension STPAPIClient {
     struct DetailsResponse: Decodable {
         let redactedPaymentDetails: ConsumerPaymentDetails
+    }
+
+    struct ConnectionsConsentPayload: Encodable {
+        let localizedConsent: String
     }
 
     struct DetailsListResponse: Decodable {

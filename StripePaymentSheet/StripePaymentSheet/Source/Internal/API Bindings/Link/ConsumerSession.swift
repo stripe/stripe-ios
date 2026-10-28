@@ -8,15 +8,17 @@
 
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// For internal SDK use only
 final class ConsumerSession: Decodable {
     let clientSecret: String
     let emailAddress: String
     let redactedFormattedPhoneNumber: String
+    let redactedPhoneNumber: String?
+    let availableVerificationFactors: [VerificationFactor]?
     let unredactedPhoneNumber: String?
     let phoneNumberCountry: String?
     let verificationSessions: [VerificationSession]
@@ -25,11 +27,14 @@ final class ConsumerSession: Decodable {
     let currentAuthenticationLevel: AuthenticationLevel?
     let minimumAuthenticationLevel: AuthenticationLevel?
     var linkBrand: LinkBrand?
+    var linkSessionKey: String?
 
     private enum CodingKeys: String, CodingKey {
         case clientSecret
         case emailAddress
         case redactedFormattedPhoneNumber
+        case redactedPhoneNumber
+        case availableVerificationFactors
         case unredactedPhoneNumber
         case phoneNumberCountry
         case verificationSessions
@@ -38,6 +43,7 @@ final class ConsumerSession: Decodable {
         case currentAuthenticationLevel
         case minimumAuthenticationLevel
         case linkBrand = "link_brand"
+        case linkSessionKey = "link_session_key"
     }
 
     init(from decoder: Decoder) throws {
@@ -45,6 +51,8 @@ final class ConsumerSession: Decodable {
         self.clientSecret = try container.decode(String.self, forKey: .clientSecret)
         self.emailAddress = try container.decode(String.self, forKey: .emailAddress)
         self.redactedFormattedPhoneNumber = try container.decode(String.self, forKey: .redactedFormattedPhoneNumber)
+        self.redactedPhoneNumber = try container.decodeIfPresent(String.self, forKey: .redactedPhoneNumber)
+        self.availableVerificationFactors = try container.decodeIfPresent([VerificationFactor].self, forKey: .availableVerificationFactors)
         self.unredactedPhoneNumber = try container.decodeIfPresent(String.self, forKey: .unredactedPhoneNumber)
         self.phoneNumberCountry = try container.decodeIfPresent(String.self, forKey: .phoneNumberCountry)
         self.verificationSessions = try container.decodeIfPresent([ConsumerSession.VerificationSession].self, forKey: .verificationSessions) ?? []
@@ -53,6 +61,7 @@ final class ConsumerSession: Decodable {
         self.currentAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .currentAuthenticationLevel)
         self.minimumAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .minimumAuthenticationLevel)
         self.linkBrand = try container.decodeIfPresent(LinkBrand.self, forKey: .linkBrand)
+        self.linkSessionKey = try container.decodeIfPresent(String.self, forKey: .linkSessionKey)
     }
 
 }
@@ -122,14 +131,11 @@ extension ConsumerSession {
 // MARK: - Helpers
 extension ConsumerSession {
     var meetsMinimumAuthenticationLevel: Bool {
-        guard let currentAuthenticationLevel, let minimumAuthenticationLevel else {
+        guard let currentAuthenticationLevel, let minimumAuthenticationLevel,
+              currentAuthenticationLevel != .unparsable, minimumAuthenticationLevel != .unparsable else {
             return false
         }
         return currentAuthenticationLevel >= minimumAuthenticationLevel
-    }
-
-    var hasVerifiedSMSSession: Bool {
-        verificationSessions.containsVerifiedSMSSession
     }
 
     var isVerifiedWithLinkAuthToken: Bool {
@@ -138,6 +144,14 @@ extension ConsumerSession {
 
     var hasStartedSMSVerification: Bool {
         verificationSessions.contains( where: { $0.type == .sms && $0.state == .started })
+    }
+
+    var hasStartedOTPVerification: Bool {
+        verificationSessions.contains { ($0.type == .sms || $0.type == .email) && $0.state == .started }
+    }
+
+    var hasVerifiedOTPVerification: Bool {
+        verificationSessions.contains { ($0.type == .sms || $0.type == .email) && $0.state == .verified }
     }
 
     var isVerifiedForSignup: Bool {
@@ -164,6 +178,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
@@ -175,6 +190,7 @@ extension ConsumerSession {
             customerID: customerID,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
             requestSurface: requestSurface,
             completion: completion
@@ -188,6 +204,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -197,6 +214,7 @@ extension ConsumerSession {
             customerID: customerID,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             requestSurface: requestSurface,
             completion: completion
         )
@@ -209,6 +227,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -218,6 +237,7 @@ extension ConsumerSession {
             customerID: customerID,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
+            supportedVerificationTypes: supportedVerificationTypes,
             requestSurface: requestSurface,
             completion: completion
         )
@@ -338,6 +358,8 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
+        permissions: [String]? = nil,
+        merchantToken: String? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
@@ -345,6 +367,8 @@ extension ConsumerSession {
             for: clientSecret,
             linkMode: linkMode,
             intentToken: intentToken,
+            permissions: permissions,
+            merchantToken: merchantToken,
             requestSurface: requestSurface,
             completion: completion)
     }
@@ -425,6 +449,20 @@ extension ConsumerSession {
             completion: completion)
     }
 
+    func recordConnectionsConsentAcquired(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        localizedConsentText: String,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<EmptyResponse, Error>) -> Void
+    ) {
+        apiClient.recordConnectionsConsentAcquired(
+            for: clientSecret,
+            localizedConsentText: localizedConsentText,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         requestSurface: LinkRequestSurface = .default,
@@ -438,11 +476,13 @@ extension ConsumerSession {
 
     func refreshSession(
         with apiClient: STPAPIClient = STPAPIClient.shared,
+        supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         apiClient.refreshSession(
             consumerSessionClientSecret: clientSecret,
+            supportedVerificationTypes: supportedVerificationTypes,
             requestSurface: requestSurface,
             completion: completion
         )

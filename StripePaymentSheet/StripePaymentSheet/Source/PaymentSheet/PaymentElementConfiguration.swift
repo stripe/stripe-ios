@@ -6,15 +6,17 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
+// TODO: Rework - it's super confusing that PaymentElement.Configuration dooesn't conform to this
 /// Represents shared configuration properties between integration surfaces in mobile payment element.
 /// - Note: See the concrete implementations of `PaymentElementConfiguration` for detailed doc comments.
 /// - Note: Not currently used by CustomerSheet.
 protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
+
     var allowsDelayedPaymentMethods: Bool { get set }
     var allowsPaymentMethodsRequiringShippingAddress: Bool { get set }
     var apiClient: STPAPIClient { get set }
@@ -44,7 +46,6 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
     var opensCardScannerAutomatically: Bool { get set }
-    var useAutocompleteEndpoints: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
     func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
 }
@@ -57,6 +58,16 @@ extension PaymentElementConfiguration {
         return linkAccount?.linkBrand ?? elementsSession.linkBrand ?? .link
     }
 
+    var financialConnectionsLinkBrandOverride: LinkBrand? {
+        // Only Onelink should be treated as an explicit client override for Financial Connections.
+        // Link should behave like no override so backend and authenticated consumer updates can still win.
+        return link.brand == .onelink ? .onelink : nil
+    }
+
+    func financialConnectionsLinkBrandOverride(linkAccount: PaymentSheetLinkAccount?) -> LinkBrand? {
+        return financialConnectionsLinkBrandOverride ?? (linkAccount?.linkBrand == .onelink ? .onelink : nil)
+    }
+
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
     func requiresBillingDetailCollection() -> Bool {
         return billingDetailsCollectionConfiguration.name == .always
@@ -65,6 +76,7 @@ extension PaymentElementConfiguration {
         || billingDetailsCollectionConfiguration.address == .full
     }
 
+    @MainActor
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         var reqs = [PaymentMethodTypeRequirement]()
         if returnURL != nil { reqs.append(.returnURL) }

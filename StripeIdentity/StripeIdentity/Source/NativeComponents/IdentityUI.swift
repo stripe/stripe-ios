@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Stores common UI values used throughout Identity
@@ -19,8 +19,28 @@ struct IdentityUI {
         preferredFont(forTextStyle: .title1, weight: .bold)
     }
 
+    private static let bodyFontSize: CGFloat = 16
+
+    static var bodyFont: UIFont {
+        bodyFont(withWeight: .regular)
+    }
+
+    static func bodyFont(withWeight weight: UIFont.Weight) -> UIFont {
+        let font: UIFont
+        if let customFont = UILabel.appearance().font {
+            let descriptor = customFont.fontDescriptor.addingAttributes([
+                .traits: [UIFontDescriptor.TraitKey.weight: weight],
+            ])
+            font = UIFont(descriptor: descriptor, size: bodyFontSize)
+        } else {
+            font = UIFont.systemFont(ofSize: bodyFontSize, weight: weight)
+        }
+
+        return UIFontMetrics(forTextStyle: .body).scaledFont(for: font)
+    }
+
     static var instructionsFont: UIFont {
-        preferredFont(forTextStyle: .subheadline)
+        bodyFont
     }
 
     static func preferredFont(

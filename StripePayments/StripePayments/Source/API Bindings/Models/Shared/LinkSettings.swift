@@ -7,51 +7,53 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkSettings)
-@_spi(STP) public final class LinkSettings: NSObject, STPAPIResponseDecodable {
-    @_spi(STP) public enum FundingSource: String, SafeParsedEnumCodable {
+@_spi(InternalOnlyAPI) public final class LinkSettings: NSObject, STPAPIResponseDecodable {
+    @_spi(InternalOnlyAPI) public enum FundingSource: String, SafeParsedEnumCodable {
         case card = "CARD"
         case bankAccount = "BANK_ACCOUNT"
     }
 
-    @_spi(STP) @frozen public enum PopupWebviewOption: String {
+    @_spi(InternalOnlyAPI) @frozen public enum PopupWebviewOption: String {
         case shared
         case ephemeral
     }
 
-    @_spi(STP) @frozen public enum LinkDefaultOptIn: String {
+    @_spi(InternalOnlyAPI) @frozen public enum LinkDefaultOptIn: String {
         case full = "FULL"
         case optional = "OPTIONAL"
         case none = "NONE"
     }
 
-    @_spi(STP) public let brand: LinkBrand
-    @_spi(STP) public let fundingSources: Set<ParsedEnum<FundingSource>>
-    @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
-    @_spi(STP) public let passthroughModeEnabled: Bool?
-    @_spi(STP) public let disableSignup: Bool?
-    @_spi(STP) public let suppress2FAModal: Bool?
-    @_spi(STP) public let disableFlowControllerRUX: Bool?
-    @_spi(STP) public let useAttestationEndpoints: Bool?
-    @_spi(STP) public let linkMode: LinkMode?
-    @_spi(STP) public let linkFlags: [String: Bool]?
-    @_spi(STP) public let linkConsumerIncentive: LinkConsumerIncentive?
-    @_spi(STP) public let linkDefaultOptIn: LinkDefaultOptIn?
-    @_spi(STP) public let linkEnableDisplayableDefaultValuesInECE: Bool?
-    @_spi(STP) public let linkShowPreferDebitCardHint: Bool?
-    @_spi(STP) public let attestationStateSyncEnabled: Bool?
-    @_spi(STP) public let linkSupportedPaymentMethodsOnboardingEnabled: [String]
+    @_spi(InternalOnlyAPI) public let brand: LinkBrand
+    @_spi(InternalOnlyAPI) public let fundingSources: Set<ParsedEnum<FundingSource>>
+    @_spi(InternalOnlyAPI) public let popupWebviewOption: PopupWebviewOption?
+    @_spi(InternalOnlyAPI) public let passthroughModeEnabled: Bool?
+    @_spi(InternalOnlyAPI) public let disableSignup: Bool?
+    @_spi(InternalOnlyAPI) public let suppress2FAModal: Bool?
+    @_spi(InternalOnlyAPI) public let disableFlowControllerRUX: Bool?
+    @_spi(InternalOnlyAPI) public let useAttestationEndpoints: Bool?
+    @_spi(InternalOnlyAPI) public let linkMode: LinkMode?
+    @_spi(InternalOnlyAPI) public let linkFlags: [String: Bool]?
+    @_spi(InternalOnlyAPI) public let linkConsumerIncentive: LinkConsumerIncentive?
+    @_spi(InternalOnlyAPI) public let linkDefaultOptIn: LinkDefaultOptIn?
+    @_spi(InternalOnlyAPI) public let linkEnableDisplayableDefaultValuesInECE: Bool?
+    @_spi(InternalOnlyAPI) public let linkShowPreferDebitCardHint: Bool?
+    @_spi(InternalOnlyAPI) public let mfaAuthFlowEnabled: Bool?
+    @_spi(InternalOnlyAPI) public let attestationStateSyncEnabled: Bool?
+    @_spi(InternalOnlyAPI) public let linkSupportedPaymentMethodsOnboardingEnabled: [String]
+    @_spi(InternalOnlyAPI) public let linkPaymentMethodBankAccountDataConsent: String?
 
-    @_spi(STP) public let allResponseFields: [AnyHashable: Any]
+    @_spi(InternalOnlyAPI) public let allResponseFields: [AnyHashable: Any]
 
-    @_spi(STP) public var instantDebitsOnboardingEnabled: Bool {
+    @_spi(InternalOnlyAPI) public var instantDebitsOnboardingEnabled: Bool {
         linkSupportedPaymentMethodsOnboardingEnabled.contains("INSTANT_DEBITS")
     }
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         brand: LinkBrand,
         fundingSources: Set<ParsedEnum<FundingSource>>,
         popupWebviewOption: PopupWebviewOption?,
@@ -66,8 +68,10 @@ import Foundation
         linkDefaultOptIn: LinkDefaultOptIn?,
         linkEnableDisplayableDefaultValuesInECE: Bool?,
         linkShowPreferDebitCardHint: Bool?,
+        mfaAuthFlowEnabled: Bool?,
         attestationStateSyncEnabled: Bool?,
         linkSupportedPaymentMethodsOnboardingEnabled: [String],
+        linkPaymentMethodBankAccountDataConsent: String?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.brand = brand
@@ -84,12 +88,14 @@ import Foundation
         self.linkDefaultOptIn = linkDefaultOptIn
         self.linkEnableDisplayableDefaultValuesInECE = linkEnableDisplayableDefaultValuesInECE
         self.linkShowPreferDebitCardHint = linkShowPreferDebitCardHint
+        self.mfaAuthFlowEnabled = mfaAuthFlowEnabled
         self.attestationStateSyncEnabled = attestationStateSyncEnabled
         self.linkSupportedPaymentMethodsOnboardingEnabled = linkSupportedPaymentMethodsOnboardingEnabled
+        self.linkPaymentMethodBankAccountDataConsent = linkPaymentMethodBankAccountDataConsent
         self.allResponseFields = allResponseFields
     }
 
-    @_spi(STP) public static func decodedObject(
+    @_spi(InternalOnlyAPI) public static func decodedObject(
         fromAPIResponse response: [AnyHashable: Any]?
     ) -> Self? {
         guard
@@ -114,6 +120,7 @@ import Foundation
         let linkDefaultOptIn = (response["link_default_opt_in"] as? String).flatMap { LinkDefaultOptIn(rawValue: $0) }
         let linkEnableDisplayableDefaultValuesInECE = response["link_enable_displayable_default_values_in_ece"] as? Bool ?? false
         let linkShowPreferDebitCardHint = response["link_show_prefer_debit_card_hint"] as? Bool ?? false
+        let mfaAuthFlowEnabled = response["link_mobile_enable_mfa_auth_flow"] as? Bool ?? false
         let attestationStateSyncEnabled = response["link_mobile_attestation_state_sync_enabled"] as? Bool
 
         let linkIncentivesEnabled = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
@@ -126,6 +133,9 @@ import Foundation
         }
 
         let linkSupportedPaymentMethodsOnboardingEnabled = response["link_supported_payment_methods_onboarding_enabled"] as? [String] ?? []
+
+        let linkPaymentSessionContext = response["link_payment_session_context"] as? [AnyHashable: Any]
+        let linkPaymentMethodBankAccountDataConsent = linkPaymentSessionContext?["link_payment_method_bank_account_data_consent"] as? String
 
         // Collect the flags for the URL generator
         let linkFlags = response.reduce(into: [String: Bool]()) { partialResult, element in
@@ -149,8 +159,10 @@ import Foundation
             linkDefaultOptIn: linkDefaultOptIn,
             linkEnableDisplayableDefaultValuesInECE: linkEnableDisplayableDefaultValuesInECE,
             linkShowPreferDebitCardHint: linkShowPreferDebitCardHint,
+            mfaAuthFlowEnabled: mfaAuthFlowEnabled,
             attestationStateSyncEnabled: attestationStateSyncEnabled,
             linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
+            linkPaymentMethodBankAccountDataConsent: linkPaymentMethodBankAccountDataConsent,
             allResponseFields: response
         ) as? Self
     }

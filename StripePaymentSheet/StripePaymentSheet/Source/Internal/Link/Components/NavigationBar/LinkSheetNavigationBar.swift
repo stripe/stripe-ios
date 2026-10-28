@@ -8,14 +8,44 @@
 
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkSheetNavigationBar)
 class LinkSheetNavigationBar: SheetNavigationBar {
+
     private let brand: LinkBrand
+
+    // The native bar needs its own fixed-height logo; the legacy bar retains its existing layout.
+    private lazy var systemLogoView: UIImageView = {
+        let image = brand.paymentSheetLogoImage
+        let size = CGSize(width: image.size.width * 24 / max(image.size.height, 1), height: 24)
+        let logoView = UIImageView(image: image.resized(to: size))
+        logoView.tintColor = .linkIconBrand
+        logoView.isAccessibilityElement = true
+        logoView.accessibilityTraits = .header
+        logoView.accessibilityLabel = brand.accessibilityDisplayName
+        return logoView
+    }()
+
+    override var systemNavigationTitle: String? { title }
+
+    override func updateSystemNavigationBar() {
+        super.updateSystemNavigationBar()
+        guard let systemNavigationItem, !logoView.isHidden else { return }
+
+        // Match the legacy bar's leading logo instead of centering it as a navigation title.
+        let logoItem = UIBarButtonItem(customView: systemLogoView)
+        #if !os(visionOS) && compiler(>=6.2)
+        if #available(iOS 26.0, *) {
+            // Branding should not receive the glass background used by interactive controls.
+            logoItem.hidesSharedBackground = true
+        }
+        #endif
+        systemNavigationItem.leftBarButtonItems = (systemNavigationItem.leftBarButtonItems ?? []) + [logoItem]
+    }
 
     private lazy var logoView: UIImageView = {
         let imageView = UIImageView(image: brand.paymentSheetLogoImage)
@@ -38,10 +68,8 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return label
     }()
 
-    // Store constraint references so they can be updated as the content changes
-    private var titleLeadingConstraint: NSLayoutConstraint?
     private var titleCenterXConstraint: NSLayoutConstraint?
-    private var titleTrailingConstraint: NSLayoutConstraint?
+    private var titleBoundaryConstraints: [NSLayoutConstraint] = []
 
     var title: String? {
         didSet {
@@ -51,17 +79,16 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         }
     }
 
-    override var leftmostElement: UIView {
+    override var leadingElement: UIView {
         if !logoView.isHidden {
             return logoView
         }
-        return super.leftmostElement
+        return super.leadingElement
     }
 
-    init(isTestMode: Bool, appearance: PaymentSheet.Appearance, brand: LinkBrand, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
+    init(appearance: PaymentSheet.Appearance, brand: LinkBrand, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
         self.brand = brand
         super.init(
-            isTestMode: isTestMode,
             appearance: appearance,
             shouldLogPaymentSheetAnalyticsOnDismissal: shouldLogPaymentSheetAnalyticsOnDismissal
         )
@@ -70,29 +97,21 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         addSubview(logoView)
 
         NSLayoutConstraint.activate([
-            logoView.leftAnchor.constraint(equalTo: leftAnchor, constant: LinkUI.contentMargins.leading),
+            logoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: LinkUI.contentMargins.leading),
             logoView.centerYAnchor.constraint(equalTo: centerYAnchor),
             logoView.heightAnchor.constraint(equalToConstant: 24),
         ])
 
         addSubview(titleLabel)
 
-        titleCenterXConstraint = titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
-        titleLeadingConstraint = titleLabel.leadingAnchor.constraint(
-            greaterThanOrEqualTo: leftmostElement.trailingAnchor,
-            constant: LinkUI.contentSpacing
-        )
-        titleTrailingConstraint = titleLabel.trailingAnchor.constraint(
-            lessThanOrEqualTo: rightmostElement?.leadingAnchor ?? trailingAnchor,
-            constant: -LinkUI.contentSpacing
-        )
+        let titleCenterXConstraint = titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
+        self.titleCenterXConstraint = titleCenterXConstraint
+        titleBoundaryConstraints = makeTitleBoundaryConstraints()
 
         NSLayoutConstraint.activate([
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            titleCenterXConstraint!,
-            titleLeadingConstraint!,
-            titleTrailingConstraint!,
-        ])
+            titleCenterXConstraint,
+        ] + titleBoundaryConstraints)
         titleLabel.isHidden = true
     }
 
@@ -105,11 +124,22 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     }
 
     override func createBackButton() -> UIButton {
+        return Self.createBackButton(
+            accessibilityIdentifier: "UIButton.Back",
+            appearance: appearance
+        )
+    }
+
+    static func createBackButton(
+        accessibilityIdentifier: String,
+        appearance: PaymentSheet.Appearance
+    ) -> UIButton {
         let image = Image.icon_chevron_left_standalone.makeImage(template: true)
-        return Self.createButton(
+            .imageFlippedForRightToLeftLayoutDirection()
+        return createButton(
             with: image,
             accessibilityLabel: String.Localized.back,
-            accessibilityIdentifier: "UIButton.Back",
+            accessibilityIdentifier: accessibilityIdentifier,
             appearance: appearance
         )
     }
@@ -182,26 +212,16 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     }
 
     private func updateTitleConstraints() {
-        guard !titleLabel.isHidden,
-                let centerXConstraint = titleCenterXConstraint,
-              let trailingConstraint = titleTrailingConstraint,
-              let leadingConstraint = titleLeadingConstraint else { return }
+        if usesSystemNavigationBar {
+            updateSystemNavigationBar()
+            return
+        }
+        guard let titleCenterXConstraint, !titleLabel.isHidden else { return }
 
-        // Update leading constraint to latest leftmostElement
-        leadingConstraint.isActive = false
-        titleLeadingConstraint = titleLabel.leadingAnchor.constraint(
-            greaterThanOrEqualTo: leftmostElement.trailingAnchor,
-            constant: LinkUI.contentSpacing
-        )
-        titleLeadingConstraint?.isActive = true
-
-        // Update trailing constraint to latest rightmostElement
-        trailingConstraint.isActive = false
-        titleTrailingConstraint = titleLabel.trailingAnchor.constraint(
-            lessThanOrEqualTo: rightmostElement?.leadingAnchor ?? trailingAnchor,
-            constant: -LinkUI.contentSpacing
-        )
-        titleTrailingConstraint?.isActive = true
+        // Update boundary constraints to the latest buttons and layout direction.
+        NSLayoutConstraint.deactivate(titleBoundaryConstraints)
+        titleBoundaryConstraints = makeTitleBoundaryConstraints()
+        NSLayoutConstraint.activate(titleBoundaryConstraints)
 
         // Check if title fits with center constraint, otherwise remove it to prevent layout conflicts.
         //
@@ -209,7 +229,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         // [Button]        [Title]        [Button]
         //
         // When title is too long, centering would conflict with leading/trailing constraints,
-        // so we remove the center constraint and let it align left:
+        // so we remove the center constraint and let it align to the leading edge:
         // [Button] [ Very Long Title Message .. ]
 
         // This method is called initially the width of the view is 0.
@@ -228,20 +248,42 @@ class LinkSheetNavigationBar: SheetNavigationBar {
 
         if titleSize.width > availableWidth {
             // Title is too long - remove center constraint to prevent conflicts
-            centerXConstraint.isActive = false
-            titleLabel.textAlignment = .left
+            titleCenterXConstraint.isActive = false
+            titleLabel.textAlignment = .natural
         } else {
             // Title fits - keep it centered for better visual balance
-            centerXConstraint.isActive = true
+            titleCenterXConstraint.isActive = true
             titleLabel.textAlignment = .center
         }
     }
 
     private func calculateAvailableWidthForTitle() -> CGFloat {
-        let leftBoundary = leftmostElement.frame.maxX + LinkUI.contentSpacing
-        let rightBoundary = rightmostElement?.frame.minX ?? bounds.maxX
-        let rightSpacing = rightmostElement != nil ? LinkUI.contentSpacing : 0
-        return max(0, rightBoundary - leftBoundary - rightSpacing)
+        let elements = titleBoundaryElements
+        let leftBoundary = (elements.left?.frame.maxX ?? bounds.minX)
+            + (elements.left == nil ? 0 : LinkUI.contentSpacing)
+        let rightBoundary = (elements.right?.frame.minX ?? bounds.maxX)
+            - (elements.right == nil ? 0 : LinkUI.contentSpacing)
+        return max(0, rightBoundary - leftBoundary)
+    }
+
+    private func makeTitleBoundaryConstraints() -> [NSLayoutConstraint] {
+        let elements = titleBoundaryElements
+        let leftBoundary = titleLabel.leftAnchor.constraint(
+            greaterThanOrEqualTo: elements.left?.rightAnchor ?? leftAnchor,
+            constant: elements.left == nil ? 0 : LinkUI.contentSpacing
+        )
+        let rightBoundary = titleLabel.rightAnchor.constraint(
+            lessThanOrEqualTo: elements.right?.leftAnchor ?? rightAnchor,
+            constant: elements.right == nil ? 0 : -LinkUI.contentSpacing
+        )
+        return [leftBoundary, rightBoundary]
+    }
+
+    private var titleBoundaryElements: (left: UIView?, right: UIView?) {
+        if effectiveUserInterfaceLayoutDirection == .rightToLeft {
+            return (trailingElement, leadingElement)
+        }
+        return (leadingElement, trailingElement)
     }
 
     override func layoutSubviews() {

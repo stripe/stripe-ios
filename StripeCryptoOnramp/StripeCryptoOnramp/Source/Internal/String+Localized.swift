@@ -6,12 +6,20 @@
 //
 
 import Foundation
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 
 extension String.Localized {
+    static var cryptoOnrampErrorPaymentMethodKYCRegionChanged: String {
+        return STPLocalizedString(
+            "Please select your Apple Pay payment method again to continue.",
+            "Error message shown when an Apple Pay payment method must be collected again because the customer's KYC region changed"
+        )
+    }
+
     static var cryptoOnrampErrorAppAttestationUnavailable: String {
         return STPLocalizedString(
             "This app couldn't be verified. Contact the app developer for help.",
@@ -68,6 +76,154 @@ extension String.Localized {
         )
     }
 
+    static var uploadProofOfAddress: String {
+        STPLocalizedString("Upload your proof of address", "Heading introducing proof of address collection")
+    }
+
+    static var proofOfAddressExplanation: String {
+        STPLocalizedString(
+            "We may request proof of address for larger transactions.",
+            "Explanation introducing proof of address collection."
+        )
+    }
+
+    static var tellUsAboutYourSourceOfFunds: String {
+        STPLocalizedString("Tell us about your source of funds", "Heading introducing source of funds collection")
+    }
+
+    static var sourceOfFundsExplanation: String {
+        STPLocalizedString(
+            "We may request source of funds for larger transactions.",
+            "Explanation introducing source of funds collection."
+        )
+    }
+
+    static var sourceOfFundsDocumentsExplanation: String {
+        STPLocalizedString(
+            "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc.",
+            "Explanation above the summary of source-of-funds documents."
+        )
+    }
+
+    static var fundsSource: String {
+        STPLocalizedString("Funds source", "Label for the selected source of funds in the document editor")
+    }
+
+    /// The label and placeholder for a questionnaire answer field.
+    static var questionnaireAnswer: String {
+        STPLocalizedString("Answer", "Label and placeholder for a questionnaire answer field")
+    }
+
+    static var documentType: String {
+        STPLocalizedString("Document type", "Label and picker title for a document's category")
+    }
+
+    static var documentRequirementsExplanation: String {
+        STPLocalizedString("Make sure your document meets following requirements.", "Explanation above the document upload control")
+    }
+
+    static var chooseDocumentFile: String {
+        STPLocalizedString("Choose File…", "Action to open the system document picker to select a file")
+    }
+
+    static var chooseDocumentPhoto: String {
+        STPLocalizedString("Choose Photo…", "Action to open the system photo picker to select a photo")
+    }
+
+    static var takeDocumentPhoto: String {
+        STPLocalizedString("Take Photo…", "Action to open the system camera to take a photo of a document")
+    }
+
+    static var documentCameraAccessRequired: String {
+        STPLocalizedString("Allow camera access in Settings to take a photo.", "Error when camera access is denied or restricted during document collection")
+    }
+
+    static func unsupportedDocumentFormat(formats: [String]) -> String {
+        guard !formats.isEmpty else {
+            return STPLocalizedString("This file type isn’t supported.", "Validation error when no document formats are available")
+        }
+        let acceptedFormats = formats.map { $0.uppercased() }.formatted(.list(type: .or))
+        return String(
+            format: STPLocalizedString("This file type isn’t supported. Upload a %@ file.", "Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats."),
+            acceptedFormats
+        )
+    }
+
+    static var unableToOpenDocument: String {
+        STPLocalizedString("We couldn’t open this document. Please choose it again.", "Error when a file provider cannot supply a document")
+    }
+
+    static func documentTooLarge(size: String) -> String {
+        String(format: STPLocalizedString("This file is larger than %@. Choose a file that is %@ or smaller.", "Validation error for a document exceeding the size limit"), size, size)
+    }
+
+    static var documentUploadFailed: String {
+        STPLocalizedString("We couldn’t upload this file. Please try again.", "Error after a document upload fails")
+    }
+
+    static var previousDocumentIssue: String {
+        STPLocalizedString("There was a problem with your previous document. Please upload a new one.", "Message shown when a previous document has a requirement error")
+    }
+
+    static var uploadDocument: String {
+        STPLocalizedString("Upload document", "Action to select an existing document for upload")
+    }
+
+    /// The action that opens document collection for a new funds source.
+    static var addDocuments: String {
+        STPLocalizedString("Add documents", "Action to add documents for another source of funds")
+    }
+
+    /// The action that saves the selected number of documents to a funds source.
+    /// - Parameter count: The number of documents being added to the source.
+    /// - Returns: A localized title with the appropriate plural form.
+    static func addDocuments(count: Int) -> String {
+        if count == 1 {
+            return STPLocalizedString("Add 1 document", "Action to add exactly one uploaded document to a source of funds")
+        } else {
+            return String(
+                format: STPLocalizedString("Add %ld documents", "Action to add multiple uploaded documents to a source of funds. The placeholder is the document count."),
+                count
+            )
+        }
+    }
+
+    /// The status shown while a document is uploading.
+    static var uploadingDocument: String {
+        STPLocalizedString("Uploading…", "Status while a document is uploading")
+    }
+
+    /// The status shown after a document uploads successfully.
+    static var documentUploaded: String {
+        STPLocalizedString("Uploaded", "Status after a document has uploaded successfully")
+    }
+
+    static var documentUploadedSuccessfully: String {
+        STPLocalizedString("Document uploaded successfully", "Heading confirming a document was uploaded successfully")
+    }
+
+    static var documentVerificationInBackground: String {
+        STPLocalizedString(
+            "You can continue while we verify your document in the background.",
+            "Message confirming the document was uploaded and the user can continue while verification happens in the background."
+        )
+    }
+
+    static var submittedForReview: String {
+        STPLocalizedString("Submitted for review", "Heading confirming documents were submitted for review")
+    }
+
+    static var documentsUnderReview: String {
+        STPLocalizedString(
+            "We’re reviewing your documents. We’ll let you know when verification is complete.",
+            "Message confirming documents are being reviewed and the user will be notified when verification is complete."
+        )
+    }
+
+    static var tryAgainLater: String {
+        STPLocalizedString("Please try again later.", "Instruction after an unavailable operation")
+    }
+
     static func redactedCardDetails(using card: StripeAPI.PaymentMethod.Card) -> String? {
         let brand = stpCardBrand(from: card.brand)
         let brandString = STPCard.string(from: brand)
@@ -75,7 +231,7 @@ extension String.Localized {
             return nil
         }
 
-        return String(format: card_details_xxxx, brandString, last4)
+        return LinkController.formattedCardDetails(brand: brand, funding: card.funding, last4: last4)
     }
 
     private static func stpCardBrand(from brand: StripeAPI.PaymentMethod.Card.Brand) -> STPCardBrand {

@@ -5,12 +5,117 @@
 //  Created by Joyce Qin on 7/22/26.
 //
 
-@_spi(STP)
+import PassKit
+@_spi(InternalOnlyAPI) import StripeCore
+
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension ExpressCheckoutElement {
     /// Configuration options for ``ExpressCheckoutElement``.
     public struct Configuration {
-        /// Creates a configuration with default values.
+        /// Sets the configuration for Apple Pay.
+        public var applePayConfiguration: ApplePayConfiguration?
+        /// Sets the configuration for Link.
+        public var linkConfiguration: LinkConfiguration = .init()
+        /// Controls appearance of Express Checkout Element.
+        public var appearance: Appearance = .init()
+        /// Called after a wallet payment confirmation completes.
+        public var completion: CompletionHandler
+
+        /// Creates an Express Checkout Element configuration with default values.
+        /// - Parameters:
+        ///   - completion: A handler called after a wallet payment confirmation completes.
+        public init(completion: @escaping CompletionHandler) {
+            self.completion = completion
+        }
+    }
+}
+
+extension ExpressCheckoutElement.Configuration {
+    /// Configuration for Apple Pay.
+    public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
+        /// The Apple Pay merchant identifier.
+        public let merchantId: String
+
+        /// The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+        public var buttonType: PKPaymentButtonType?
+
+        /// Creates an Apple Pay configuration.
+        /// - Parameters:
+        ///   - merchantId: The Apple Pay merchant identifier.
+        ///   - buttonType: The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+        public init(
+            merchantId: String,
+            buttonType: PKPaymentButtonType? = nil
+        ) {
+            self.merchantId = merchantId
+            self.buttonType = buttonType
+        }
+    }
+
+    /// Configuration for Link.
+    public struct LinkConfiguration {
+        /// Controls whether Link is displayed.
+        public enum Display: String {
+            /// Show Link when it is available.
+            case automatic
+            /// Never show Link.
+            case never
+        }
+
+        /// Controls whether Link is displayed.
+        public var display: Display = .automatic
+
+        /// Creates a Link configuration.
+        public init(display: Display = .automatic) {
+            self.display = display
+        }
+    }
+
+    public struct Appearance {
+        /// Controls the theme of Apple Pay buttons. Link buttons retain Link's required brand styling.
+        public enum ButtonTheme: String {
+            /// Light theme which contrasts with a dark background.
+            case light
+            /// Dark theme which contrasts with a light background.
+            case dark
+            /// Automatic theme.
+            case automatic
+        }
+
+        /// Controls the layout of express payment buttons.
+        public struct ButtonLayout {
+            /// Sets the maximum number of columns the Express Checkout Element can use to render. Must be between 1 and 10, inclusive.
+            public var maxColumns: Int? {
+                didSet {
+                    guard let maxColumns, maxColumns < 1 || maxColumns > 10 else { return }
+                    assertionFailure("maxColumns must be between 1 and 10.")
+                    self.maxColumns = oldValue
+                }
+            }
+            /// Sets the maximum number of rows the Express Checkout Element can use to render. Must be between 1 and 10, inclusive.
+            public var maxRows: Int? {
+                didSet {
+                    guard let maxRows, maxRows < 1 || maxRows > 10 else { return }
+                    assertionFailure("maxRows must be between 1 and 10.")
+                    self.maxRows = oldValue
+                }
+            }
+            public init() {}
+        }
+
+        /// Theme of Apple Pay buttons. Link buttons retain Link's required brand styling.
+        public var buttonTheme: ButtonTheme = .automatic
+
+        /// Layout of the express payment buttons.
+        public var buttonLayout: ButtonLayout = .init()
+
+        /// Corner radius of the express payment buttons.
+        public var cornerRadius: CGFloat?
+
         public init() {}
     }
+
+    /// A closure called after a wallet payment confirmation completes.
+    public typealias CompletionHandler = (_ result: CheckoutController.ConfirmResult) -> Void
 }

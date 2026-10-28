@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI {
 
@@ -15,6 +15,7 @@ extension StripeAPI {
         let declineButtonText: String
         let privacyPolicy: String
         let title: String?
+        let subtitle: String?
         let scrollToContinueButtonText: String
         let lines: [VerificationPageStaticConsentLineContent]
     }

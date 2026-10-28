@@ -22,6 +22,9 @@ struct SeamlessSignInView: View {
     /// The email address associated with the user capable of signing in seamlessly.
     let email: String
 
+    /// Whether to use level 0 KYC collection mode from the KYC info screen.
+    let isL0KYCModeEnabled: Bool
+
     /// Specifies an alert originating from this view to display by the parent.
     @Binding var alert: Alert?
 
@@ -37,6 +40,10 @@ struct SeamlessSignInView: View {
             attributedString[emailRange].foregroundColor = .secondary
         }
         return attributedString
+    }
+
+    private var kycInfoCollectionMode: KYCInfoView.CollectionMode {
+        isL0KYCModeEnabled ? .kycLevel0 : .original
     }
 
     // MARK: - View
@@ -83,7 +90,10 @@ struct SeamlessSignInView: View {
                 try await coordinator.authenticateUserWithToken(result.linkAuthTokenClientSecret)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    flowCoordinator.startForExistingUser(coordinator: coordinator)
+                    flowCoordinator.startForExistingUser(
+                        kycInfoCollectionMode: kycInfoCollectionMode,
+                        coordinator: coordinator
+                    )
                 }
             } catch {
                 await MainActor.run {
@@ -120,6 +130,7 @@ struct SeamlessSignInView: View {
             coordinator: coordinator,
             flowCoordinator: .init(),
             email: "demo@example.com",
+            isL0KYCModeEnabled: false,
             alert: .constant(nil)
         )
     }

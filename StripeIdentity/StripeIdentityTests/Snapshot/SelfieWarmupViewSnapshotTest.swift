@@ -6,10 +6,10 @@
 //
 
 import iOSSnapshotTestCase
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 @testable import StripeIdentity
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 class SelfieWarmupViewSnapshotTest: STPSnapshotTestCase {
 

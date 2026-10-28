@@ -5,11 +5,11 @@
 //  Created by Yuki Tokuhiro on 8/2/24.
 //
 
-@testable@_spi(STP) import StripeCore
-@_spi(STP)@testable import StripeCoreTestUtils
-@_spi(STP)@testable import StripePayments
-@testable @_spi(STP) @_spi(SharedPaymentToken) import StripePaymentSheet
-@_spi(STP)@testable import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI)@testable import StripeCoreTestUtils
+@_spi(InternalOnlyAPI)@testable import StripePayments
+@testable @_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable import StripePaymentsTestUtils
 import XCTest
 
 @MainActor
@@ -72,6 +72,18 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         // Extract and separately validate timestamp, since that will always be different
         XCTAssertNotNil(payload.removeValue(forKey: "timestamp"))
         XCTAssertNotNil(expectedPayload.removeValue(forKey: "timestamp"))
+
+        // If analytics are being sent to R:
+        if STPAnalyticsClient.sendAnalyticsToRStripe {
+            // Add in the additional parameter
+            expectedPayload["event_name"] = analytic.event.rawValue
+
+            // Remove parameters that will be different.
+            XCTAssertNotNil(payload.removeValue(forKey: "event_id"))
+            XCTAssertNotNil(expectedPayload.removeValue(forKey: "event_id"))
+            XCTAssertNotNil(payload.removeValue(forKey: "created"))
+            XCTAssertNotNil(expectedPayload.removeValue(forKey: "created"))
+        }
         XCTAssertTrue((payload as NSDictionary).isEqual(to: expectedPayload))
     }
 
@@ -137,6 +149,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(analyticsClient._testLogHistory[1]["event"] as? String, "mc_load_failed")
             XCTAssertLessThan(analyticsClient._testLogHistory[1]["duration"] as! Double, 1.0)
             XCTAssertEqual(analyticsClient._testLogHistory[1]["integration_shape"] as? String, shapeString)
+            XCTAssertNil(analyticsClient._testLogHistory[0]["checkout_session_id"])
+            XCTAssertNil(analyticsClient._testLogHistory[1]["checkout_session_id"])
         }
     }
 

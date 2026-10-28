@@ -8,7 +8,7 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// STPAPIClient extensions to create Stripe Tokens, Sources, or PaymentMethods from Apple Pay PKPayment objects.
 extension STPAPIClient {
@@ -89,7 +89,7 @@ extension STPAPIClient {
         }
     }
 
-    class func billingDetails(from payment: PKPayment) -> STPPaymentMethodBillingDetails? {
+    @_spi(InternalOnlyAPI) public class func billingDetails(from payment: PKPayment) -> STPPaymentMethodBillingDetails? {
         var billingDetails: STPPaymentMethodBillingDetails?
         if payment.billingContact != nil {
             billingDetails = STPPaymentMethodBillingDetails()
@@ -172,7 +172,7 @@ extension PKPayment {
     }
 }
 extension PKContact {
-    @_spi(STP) public var addressParams: [AnyHashable: Any] {
+    @_spi(InternalOnlyAPI) public var addressParams: [AnyHashable: Any] {
         var params: [AnyHashable: Any] = [:]
         let stpAddress = STPAddress(pkContact: self)
 
@@ -189,12 +189,12 @@ extension PKContact {
 
 extension PKPayment {
     /// Returns true if the instance is a payment from the simulator.
-    @_spi(STP) public func stp_isSimulated() -> Bool {
+    @_spi(InternalOnlyAPI) public func stp_isSimulated() -> Bool {
         return token.transactionIdentifier == "Simulated Identifier"
     }
 
     /// Returns a fake transaction identifier with the expected ~-separated format.
-    @_spi(STP) public class func stp_testTransactionIdentifier() -> String {
+    @_spi(InternalOnlyAPI) public class func stp_testTransactionIdentifier() -> String {
         var uuid = UUID().uuidString
         uuid = uuid.replacingOccurrences(of: "~", with: "")
 

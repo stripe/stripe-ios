@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol ManualEntryViewControllerDelegate: AnyObject {
@@ -51,10 +51,7 @@ final class ManualEntryViewController: UIViewController {
 
         let footerView = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                title: STPLocalizedString(
-                    "Submit",
-                    "The submit button for a screen that allows a user to manually enter their bank account information."
-                ),
+                title: String.Localized.submit,
                 accessibilityIdentifier: "manual_entry_continue_button",
                 action: didSelectContinue
             ),

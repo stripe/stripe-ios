@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 import UIKit
 
 typealias ConsumerSessionWithPaymentDetails = (session: ConsumerSession, paymentDetails: [ConsumerPaymentDetails])
@@ -106,7 +106,7 @@ extension ConsumerPaymentDetails {
         }
 
         switch details {
-        case .card, .unparsable:
+        case .card, .generic:
             // If the merchant is filtering, only allow cards with a billing country
             if let country = billingAddress?.countryCode {
                 return allowedCountries.contains(country)
@@ -154,7 +154,7 @@ extension ConsumerPaymentDetails {
     enum Details: Decodable {
         case card(card: Card)
         case bankAccount(bankAccount: BankAccount)
-        case unparsable(rawValue: String)
+        case generic(rawValue: String)
 
         private enum CodingKeys: String, CodingKey {
             case type
@@ -172,7 +172,7 @@ extension ConsumerPaymentDetails {
             case .bankAccount:
                 self = .bankAccount(bankAccount: try container.decode(BankAccount.self, forKey: CodingKeys.bankAccount))
             case nil:
-                self = .unparsable(rawValue: parsedType.rawValue)
+                self = .generic(rawValue: parsedType.rawValue)
             }
         }
     }
@@ -183,7 +183,7 @@ extension ConsumerPaymentDetails {
             return ParsedEnum(.card)
         case .bankAccount:
             return ParsedEnum(.bankAccount)
-        case .unparsable(let rawValue):
+        case .generic(let rawValue):
             return ParsedEnum(rawValue: rawValue)
         }
     }
@@ -306,15 +306,23 @@ extension ConsumerPaymentDetails.Details.Card {
     }
 
     var secondaryName: String {
+        Self.last4WithMask(last4)
+    }
+
+    private static func last4WithMask(_ last4: String) -> String {
         "•••• \(last4)"
     }
 
     func displayName(with nickname: String?) -> String? {
+        Self.displayName(brand: stpBrand, funding: funding, nickname: nickname)
+    }
+
+    private static func displayName(brand: STPCardBrand, funding: Funding, nickname: String?) -> String? {
         if let nickname {
             return nickname
         }
 
-        guard let formattedBrandName = STPCardBrandUtilities.stringFrom(stpBrand) else {
+        guard let formattedBrandName = STPCardBrandUtilities.stringFrom(brand) else {
             return nil
         }
 
@@ -322,6 +330,12 @@ extension ConsumerPaymentDetails.Details.Card {
             format: funding.displayNameWithBrand,
             formattedBrandName
         )
+    }
+
+    static func formattedString(brand: STPCardBrand, funding: Funding, last4: String, nickname: String? = nil) -> String {
+        let secondaryName = last4WithMask(last4)
+        let label = displayName(brand: brand, funding: funding, nickname: nickname) ?? secondaryName
+        return [label, secondaryName].joined(separator: " ")
     }
 }
 
@@ -376,7 +390,7 @@ extension ConsumerPaymentDetails {
             return card.displayName(with: nickname) ?? card.secondaryName
         case .bankAccount(let bank):
             return bank.displayName(with: nickname)
-        case .unparsable:
+        case .generic:
             return display?.label ?? ""
         }
     }
@@ -384,15 +398,17 @@ extension ConsumerPaymentDetails {
     var linkPaymentDetailsFormattedString: String? {
         switch details {
         case .card(let card):
-            let label = card.displayName(with: nickname) ?? card.secondaryName
-            let sublabel = card.secondaryName
-            let components = [label, sublabel].compactMap { $0 }
-            return components.joined(separator: " ")
+            return ConsumerPaymentDetails.Details.Card.formattedString(
+                brand: card.stpBrand,
+                funding: card.funding,
+                last4: card.last4,
+                nickname: nickname
+            )
         case .bankAccount(let bankAccount):
             let label = bankAccount.displayName(with: nickname)
             let sublabel = "•••• \(bankAccount.last4)"
             return [label, sublabel].joined(separator: " ")
-        case .unparsable:
+        case .generic:
             guard let display else { return nil }
             let components = [display.label, display.sublabel].compactMap { $0 }
             return components.joined(separator: " ")
@@ -405,7 +421,7 @@ extension ConsumerPaymentDetails {
             return card.cvc
         case .bankAccount:
             return nil
-        case .unparsable:
+        case .generic:
             return nil
         }
     }
@@ -428,7 +444,7 @@ extension ConsumerPaymentDetails {
                 bank.name,
                 digits
             )
-        case .unparsable:
+        case .generic:
             guard let display else { return "" }
             let components = [display.label, display.sublabel].compactMap { $0 }
             return components.joined(separator: " ")

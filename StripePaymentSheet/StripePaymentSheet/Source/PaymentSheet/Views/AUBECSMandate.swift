@@ -7,8 +7,8 @@
 //
 import Foundation
 import SafariServices
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 @objc(STP_Internal_AUBECSLegalTermsView)
@@ -36,7 +36,7 @@ final class AUBECSLegalTermsView: UIView {
         return textView
     }()
 
-    init(configuration: PaymentSheetFormFactoryConfig, textAlignment: NSTextAlignment = .left) {
+    init(configuration: PaymentSheetFormFactoryConfig, textAlignment: NSTextAlignment = .natural) {
         self.configuration = configuration
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment

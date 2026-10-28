@@ -10,11 +10,11 @@ import StripeCoreTestUtils
 import UIKit
 import XCTest
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
-@testable@_spi(STP) import StripeUICore
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
+@testable@_spi(InternalOnlyAPI) import StripeUICore
 
 class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
     func testHeader_usesProvidedBrandForAccessibilityLabel() {
@@ -93,6 +93,7 @@ extension LinkVerificationViewSnapshotTests {
         let isRegistered: Bool
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     func makeSUT(
@@ -108,7 +109,8 @@ extension LinkVerificationViewSnapshotTests {
                 redactedPhoneNumber: "(•••) ••• ••55",
                 isRegistered: true,
                 sessionState: .verified,
-                consumerSessionClientSecret: nil
+                consumerSessionClientSecret: nil,
+                linkSessionKey: nil
             ),
             brand: brand,
             appearance: appearance,

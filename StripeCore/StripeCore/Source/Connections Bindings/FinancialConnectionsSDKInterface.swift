@@ -8,15 +8,17 @@
 
 import UIKit
 
-@_spi(STP) public protocol FinancialConnectionsSDKInterface {
+@_spi(InternalOnlyAPI) public protocol FinancialConnectionsSDKInterface {
     init()
     func presentFinancialConnectionsSheet(
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
         existingConsumer: FinancialConnectionsConsumer?,
+        hasRequestedDataPermissions: Bool,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?,
         linkBrand: LinkBrand?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,

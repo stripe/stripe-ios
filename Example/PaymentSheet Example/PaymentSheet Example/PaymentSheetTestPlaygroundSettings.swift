@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
@@ -16,6 +16,26 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case paymentSheet
         case flowController
         case embedded
+    }
+
+    enum NativeSheetOverride: String, PickerEnum {
+
+        static var enumName: String { "Native sheets" }
+
+        case automatic
+        case on
+        case off
+
+        var value: Bool? {
+            switch self {
+            case .automatic:
+                return nil
+            case .on:
+                return true
+            case .off:
+                return false
+            }
+        }
     }
 
     enum Mode: String, PickerEnum {
@@ -57,9 +77,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case deferred_mc
         /// Def MP: Deferred multiprocessor flow
         case deferred_mp
-        /// CheckoutSession: Uses Stripe CheckoutSession APIs
-        case checkoutSession
-
         var displayName: String {
             switch self {
             case .normal:
@@ -72,14 +89,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "Deferred server side confirmation with manual confirmation"
             case .deferred_mp:
                 return "Deferred multiprocessor flow"
-            case .checkoutSession:
-                return "CheckoutSession"
             }
         }
 
         var isIntentFirst: Bool {
             switch self {
-            case .normal, .checkoutSession:
+            case .normal:
                 return true
             case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
                 return false
@@ -115,6 +130,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case _100 = 100
         case _5099 = 5099
         case _10000 = 10000
+        case _1000000 = 1000000
 
         var displayName: String {
             switch self {
@@ -124,11 +140,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "50.99"
             case ._10000:
                 return "100.00"
+            case ._1000000:
+                return "10000.00"
             }
         }
         func customDisplayName(currency: Currency) -> String {
             switch currency {
-            case .jpy:
+            case .jpy, .krw, .vnd:
                 return displayName.replacingOccurrences(of: ".", with: "")
             default:
                 return displayName
@@ -139,43 +157,53 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
 
-        case usd
-        case eur
         case aud
-        case gbp
-        case inr
-        case pln
-        case sgd
-        case myr
-        case mxn
-        case jpy
-        case cny
         case brl
-        case thb
-        case sek
         case chf
+        case cny
+        case eur
+        case gbp
+        case idr
+        case inr
+        case jpy
+        case krw
+        case mxn
+        case myr
+        case ngn
+        case nok
+        case php
+        case pln
+        case sek
+        case sgd
+        case thb
+        case usd
+        case vnd
     }
 
     enum MerchantCountry: String, PickerEnum {
         static var enumName: String { "Merchant" }
 
-        case US
-        case GB
         case AU
-        case FR
-        case IN
-        case SG
-        case MY
-        case MX
-        case JP
-        case CN
         case BR
-        case TH
-        case DE
-        case IT
-        case usTax = "us_tax"
-        case stripeShop = "stripe_shop_test"
+        case CN
         case custom
+        case DE
+        case ES
+        case FR
+        case GB
+        case IN
+        case IT
+        case JP
+        case mondu
+        case MX
+        case MY
+        case NG = "ng"
+        case ngWallet = "ng_wallet"
+        case SG
+        case stripeShop = "stripe_shop_test"
+        case TH
+        case US
+        case usTax = "us_tax"
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -320,6 +348,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case automatic
         case never
+        case walletButtonHidden
     }
 
     enum ForceOnelink: String, PickerEnum {
@@ -733,13 +762,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on, off
     }
 
-    enum UseAutocompleteEndpoints: String, PickerEnum {
-        static var enumName: String { "Autocomplete Endpoints" }
-        case on
-        case off
-    }
-
     var uiStyle: UIStyle
+    // Keep this optional so saved settings and QR payloads from older builds remain decodable.
+    var nativeSheetOverride: NativeSheetOverride?
     var layout: Layout
     var mode: Mode
     var style: ConfigurationStyle
@@ -815,11 +840,17 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var cardFundingAcceptance: CardFundingAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
     var termsDisplay: PaymentMethodTermsDisplay
-    var useAutocompleteEndpoints: UseAutocompleteEndpoints
+
+    /// Defaults to native sheets for developers and custom sheets during UI tests.
+    /// Explicit settings from saved configurations and test payloads take precedence.
+    var resolvedNativeSheetOverride: NativeSheetOverride {
+        nativeSheetOverride ?? (ProcessInfo.processInfo.environment["UITesting"] == nil ? .on : .off)
+    }
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
+            nativeSheetOverride: nil,
             layout: .automatic,
             mode: .payment,
             style: .automatic,
@@ -885,8 +916,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             cardBrandAcceptance: .all,
             cardFundingAcceptance: .all,
             opensCardScannerAutomatically: .off,
-            termsDisplay: .unset,
-            useAutocompleteEndpoints: .off
+            termsDisplay: .unset
         )
     }
 

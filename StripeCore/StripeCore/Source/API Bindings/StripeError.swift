@@ -9,7 +9,7 @@
 import Foundation
 
 /// Error codes returned from STPAPIClient.
-@_spi(STP) public enum StripeError: Error {
+@_spi(InternalOnlyAPI) public enum StripeError: Error {
     /// The server returned an API error.
     case apiError(StripeAPIError)
 
@@ -48,7 +48,8 @@ extension StripeError: AnalyticLoggableError {
 // MARK: - LocalizedError
 
 extension StripeError: LocalizedError {
-    @_spi(STP) public var errorDescription: String? {
+
+    @_spi(InternalOnlyAPI) public var errorDescription: String? {
         switch self {
         case .apiError(let apiError):
             return apiError.errorUserInfoString(key: NSLocalizedDescriptionKey)
@@ -57,7 +58,7 @@ extension StripeError: LocalizedError {
         }
     }
 
-    @_spi(STP) public var failureReason: String? {
+    @_spi(InternalOnlyAPI) public var failureReason: String? {
         switch self {
         case .apiError(let apiError):
             return apiError.errorUserInfoString(key: NSLocalizedFailureReasonErrorKey)
@@ -66,7 +67,7 @@ extension StripeError: LocalizedError {
         }
     }
 
-    @_spi(STP) public var recoverySuggestion: String? {
+    @_spi(InternalOnlyAPI) public var recoverySuggestion: String? {
         switch self {
         case .apiError(let apiError):
             return apiError.errorUserInfoString(key: NSLocalizedRecoverySuggestionErrorKey)
@@ -75,7 +76,7 @@ extension StripeError: LocalizedError {
         }
     }
 
-    @_spi(STP) public var helpAnchor: String? {
+    @_spi(InternalOnlyAPI) public var helpAnchor: String? {
         switch self {
         case .apiError(let apiError):
             return apiError.errorUserInfoString(key: NSHelpAnchorErrorKey)
@@ -86,8 +87,18 @@ extension StripeError: LocalizedError {
 }
 
 extension Error {
+    /// Whether this API error's localized description includes a live-mode request ID.
+    @_spi(InternalOnlyAPI) public var _stp_hasRequestIDInDescription: Bool {
+        if let stripeError = self as? StripeError, case .apiError(let apiError) = stripeError {
+            // The formatter only appends a request ID when a description is available.
+            return apiError.includeRequestIDInDescription && apiError.requestID?.nonEmpty != nil
+                && (!apiError.useServerErrorMessage || apiError.message?.nonEmpty != nil)
+        }
+        return (self as NSError).userInfo[STPError.requestIDInDescriptionKey] as? Bool == true
+    }
+
     /// Returns the Stripe error code, if available. Works with modern and legacy Stripe API errors.
-    @_spi(STP) public var _stp_error_code: String? {
+    @_spi(InternalOnlyAPI) public var _stp_error_code: String? {
         if let stripeError = self as? StripeError,
               case let .apiError(stripeAPIError) = stripeError {
             return stripeAPIError.code

@@ -73,6 +73,9 @@ import Foundation
     /// The Stripe API request ID, if available. Looks like `req_123`.
     @objc public static let stripeRequestIDKey = "com.stripe.lib:StripeRequestIDKey"
 
+    /// Whether the SDK appended a live-mode request ID to the localized description.
+    @_spi(InternalOnlyAPI) public static let requestIDInDescriptionKey = "com.stripe.lib:RequestIDInDescriptionKey"
+
     /// The HTTP status code of the failed request as an Int e.g. 400.
     @objc public static let httpStatusCodeKey = "com.stripe.lib:HTTPStatusCodeKey"
 
@@ -88,7 +91,7 @@ import Foundation
 }
 
 extension NSError {
-    @_spi(STP) public class Utils {
+    @_spi(InternalOnlyAPI) public class Utils {
         private static let apiErrorCodeToMessage: [String: String] = [
             "incorrect_number": NSError.stp_cardErrorInvalidNumberUserMessage(),
             "invalid_number": NSError.stp_cardErrorInvalidNumberUserMessage(),
@@ -119,7 +122,7 @@ extension NSError {
 
         private init() {}
 
-        @_spi(STP) public static func localizedMessage(
+        @_spi(InternalOnlyAPI) public static func localizedMessage(
             fromAPIErrorCode errorCode: String,
             declineCode: String? = nil
         ) -> String? {
@@ -128,7 +131,7 @@ extension NSError {
                 ?? apiErrorCodeToMessage[errorCode])
         }
 
-        @_spi(STP) public static func cardErrorCode(
+        @_spi(InternalOnlyAPI) public static func cardErrorCode(
             fromAPIErrorCode errorCode: String
         ) -> STPCardErrorCode? {
             return apiErrorCodeToCardErrorCode[errorCode]
@@ -138,11 +141,17 @@ extension NSError {
 
 /// NSError extensions for creating error objects from Stripe API responses.
 extension NSError {
-    @_spi(STP) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
+    @_spi(InternalOnlyAPI) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
         switch modernStripeError {
         case .apiError(let stripeAPIError):
             // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-3965 We're dropping some info in this conversion w/o http response
-            return stp_error(fromStripeResponse: ["error": stripeAPIError.allResponseFields], httpResponse: nil)
+            return stp_error(
+                fromStripeResponse: ["error": stripeAPIError.allResponseFields],
+                httpResponse: nil,
+                requestID: stripeAPIError.requestID,
+                includeRequestIDInDescription: stripeAPIError.includeRequestIDInDescription,
+                useServerErrorMessage: stripeAPIError.useServerErrorMessage
+            )
         case .invalidRequest:
             return NSError(
                 domain: STPError.stripeDomain,
@@ -152,14 +161,17 @@ extension NSError {
         }
     }
 
-    @_spi(STP) public static func stp_error(
+    @_spi(InternalOnlyAPI) public static func stp_error(
         errorType: String?,
         stripeErrorCode: String?,
         stripeErrorMessage: String?,
         errorParam: String?,
         declineCode: Any?,
         intent: [String: Any]?,
-        httpResponse: HTTPURLResponse?
+        httpResponse: HTTPURLResponse?,
+        requestID: String? = nil,
+        includeRequestIDInDescription: Bool = false,
+        useServerErrorMessage: Bool = false
     ) -> NSError {
         var userInfo = [AnyHashable: Any]()
 
@@ -194,7 +206,10 @@ extension NSError {
         }
 
         // localized description
-        userInfo[NSLocalizedDescriptionKey] = if errorType == "card_error", let stripeErrorMessage {
+        let message: String? = if useServerErrorMessage {
+            // Checkout treats an empty server message as absent.
+            stripeErrorMessage?.nonEmpty
+        } else if errorType == "card_error", let stripeErrorMessage {
             // see https://stripe.com/docs/api/errors#errors-message
             stripeErrorMessage
         } else if let localizedMessage = Utils.localizedMessage(fromAPIErrorCode: stripeErrorCode ?? "", declineCode: declineCode as? String) {
@@ -203,10 +218,16 @@ extension NSError {
             stp_unexpectedErrorMessage()
         }
 
-        // stripeRequestIDKey
-        if let requestId = httpResponse?.value(forHTTPHeaderField: "request-id") {
-            userInfo[STPError.stripeRequestIDKey] = requestId
+        let requestID = requestID ?? httpResponse?.value(forHTTPHeaderField: "request-id")
+        if includeRequestIDInDescription, let requestID = requestID?.nonEmpty, let message {
+            userInfo[NSLocalizedDescriptionKey] = message + " (\(requestID))"
+            userInfo[STPError.requestIDInDescriptionKey] = true
+        } else {
+            userInfo[NSLocalizedDescriptionKey] = message
         }
+
+        // Preserve request IDs as metadata in both test and live mode.
+        userInfo[STPError.stripeRequestIDKey] = requestID
 
         // httpStatusCodeKey
         if let httpResponse {
@@ -243,11 +264,17 @@ extension NSError {
     /// Creates an NSError object from a given Stripe API response.
     /// - Parameter jsonDictionary: The body of the response.
     /// - Parameter httpResponse: The HTTP URL response containing headers, the status code, etc.
+    /// - Parameter requestID: The request ID when converting an error without its HTTP response.
+    /// - Parameter includeRequestIDInDescription: Whether to append a nonempty request ID to the description.
+    /// - Parameter useServerErrorMessage: Whether to use the server's optional message without a localized fallback.
     /// - Returns: An NSError object with the error information from the JSON response.
     @objc
-    @_spi(STP) public static func stp_error(
+    @_spi(InternalOnlyAPI) public static func stp_error(
         fromStripeResponse jsonDictionary: [AnyHashable: Any]?,
-        httpResponse: HTTPURLResponse?
+        httpResponse: HTTPURLResponse?,
+        requestID: String? = nil,
+        includeRequestIDInDescription: Bool = false,
+        useServerErrorMessage: Bool = false
     ) -> NSError {
         // TODO: Refactor. A lot of this can be replaced by a lookup/decision table. Check Android implementation for cues.
         let dict = jsonDictionary as NSDictionary?
@@ -274,7 +301,10 @@ extension NSError {
             errorParam: errorParam,
             declineCode: declineCode,
             intent: intent,
-            httpResponse: httpResponse
+            httpResponse: httpResponse,
+            requestID: requestID,
+            includeRequestIDInDescription: includeRequestIDInDescription,
+            useServerErrorMessage: useServerErrorMessage
         )
     }
 

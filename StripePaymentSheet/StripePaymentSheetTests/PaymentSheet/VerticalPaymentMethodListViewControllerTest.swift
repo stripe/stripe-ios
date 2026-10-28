@@ -6,8 +6,8 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
@@ -109,6 +109,32 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
 
         // The card button should say "Card"
         XCTAssert(sut.rowButtons.contains { $0.accessibilityIdentifier == "Card" })
+    }
+
+    func testSavedCardShowsCardArtProgramName() {
+        let savedPaymentMethod = STPPaymentMethod._testCardWithCardArt()
+        // Given a list view with a saved card that has card art...
+        let sut = VerticalPaymentMethodListViewController(
+            initialSelection: .saved(
+                paymentMethod: savedPaymentMethod
+            ),
+            savedPaymentMethods: [savedPaymentMethod],
+            paymentMethodTypes: [.stripe(.card)],
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "USD",
+            amount: 1099,
+            incentive: nil,
+            delegate: self
+        )
+
+        // ...the saved PM row shows the program name beneath the last four
+        let savedPMButton = sut.getRowButton(accessibilityIdentifier: "•••• 4242")
+        let sublabel = savedPMButton.sublabel as! RowButton.PlainSublabelView
+        XCTAssertEqual(sublabel.textLabel.text, "Test Program")
     }
 
     func testApplePayAndLinkOrdering() {

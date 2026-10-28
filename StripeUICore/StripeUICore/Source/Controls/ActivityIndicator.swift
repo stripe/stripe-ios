@@ -11,7 +11,7 @@ import UIKit
 /// A custom replacement for `UIActivityIndicatorView`.
 /// For internal SDK use only
 @objc(STP_Internal_ActivityIndicator)
-@_spi(STP) public final class ActivityIndicator: UIView {
+@_spi(InternalOnlyAPI) public final class ActivityIndicator: UIView {
 
     #if DEBUG
     /// Disables animation. This should be only be modified for snapshot tests.

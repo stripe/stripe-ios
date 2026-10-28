@@ -6,8 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
+@MainActor
 class LinkBillingDetailsValidator {
 
     enum ValidationResult {

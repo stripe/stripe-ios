@@ -8,12 +8,12 @@
 
 import AVKit
 import Foundation
-@_spi(STP) import StripeCameraCoreTestUtils
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCameraCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import XCTest
 
-@testable@_spi(STP) import StripeCameraCore
+@testable@_spi(InternalOnlyAPI) import StripeCameraCore
 @testable import StripeIdentity
 
 final class DocumentCaptureViewControllerTest: XCTestCase {

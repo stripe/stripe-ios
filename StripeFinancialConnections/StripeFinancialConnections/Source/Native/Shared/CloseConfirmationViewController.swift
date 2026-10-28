@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 final class CloseConfirmationViewController: SheetViewController {
@@ -32,7 +32,8 @@ final class CloseConfirmationViewController: SheetViewController {
                 iconView: RoundedIconView(
                     image: .image(.panel_arrow_right),
                     style: .circle,
-                    appearance: appearance
+                    appearance: appearance,
+                    imageFlipsForRightToLeftLayoutDirection: true
                 ),
                 title: STPLocalizedString(
                     "Exit without connecting?",

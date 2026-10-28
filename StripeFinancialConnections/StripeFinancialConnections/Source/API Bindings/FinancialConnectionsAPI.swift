@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 protocol FinancialConnectionsAPI {
     typealias SaveAccountsToNetworkAndLinkResponse = (
@@ -17,6 +17,7 @@ protocol FinancialConnectionsAPI {
     var backingAPIClient: STPAPIClient { get }
 
     var isLinkWithStripe: Bool { get set }
+    var hasRequestedDataPermissions: Bool { get set }
     var consumerPublishableKey: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
     var authenticatedLinkBrand: LinkBrand? { get set }
@@ -30,7 +31,8 @@ protocol FinancialConnectionsAPI {
     func synchronize(
         clientSecret: String,
         returnURL: String?,
-        initialSynchronize: Bool
+        initialSynchronize: Bool,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?
     ) -> Future<FinancialConnectionsSynchronize>
 
     func fetchFinancialConnectionsAccounts(

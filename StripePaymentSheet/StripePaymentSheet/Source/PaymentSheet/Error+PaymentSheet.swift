@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension Error {
 
@@ -22,7 +22,8 @@ extension Error {
         // into the underlying error for the API message.
         if localizedDescription == "The operation couldn’t be completed. (STPPaymentHandlerErrorDomain error 2.)",
            let underlyingError = (self as NSError).userInfo["NSUnderlyingError"] as? NSError {
-            return underlyingError.userSafeErrorMessage
+            return underlyingError._stp_hasRequestIDInDescription
+                ? underlyingError.localizedDescription : underlyingError.userSafeErrorMessage
         }
         // If the `localizedDescription` is not generic, return the `localizedDescription`
         if localizedDescription != NSError.stp_unexpectedErrorMessage() { return localizedDescription }

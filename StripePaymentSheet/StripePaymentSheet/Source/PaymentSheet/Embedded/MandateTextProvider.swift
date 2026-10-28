@@ -6,15 +6,17 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
+@MainActor
 protocol MandateTextProvider {
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString?) -> NSAttributedString?
 }
 
 /// A class that can provide the attributed string for a given payment method type and configuration for the vertical list of PMs.
+@MainActor
 class VerticalListMandateProvider: MandateTextProvider {
     private let configuration: PaymentElementConfiguration
     private let elementsSession: STPElementsSession

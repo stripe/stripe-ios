@@ -18,12 +18,13 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     /// Represents the possible steps in the flow.
     enum Route: Hashable {
         case registration(email: String, oAuthScopes: [OAuthScopes])
-        case kycInfo(collectionMode: KYCInfoView.CollectionMode)
+        case kycInfo(collectionMode: KYCInfoView.CollectionMode, initialResidence: KYCResidence)
+        case termsOfService
         case complianceIdentifiers(requirements: ComplianceIdentifierRequirements)
         case userAttestation
         case identity
         case wallets
-        case payment(wallet: CustomerWalletsResponse.Wallet, isEUCustomer: Bool)
+        case payment(wallet: CustomerWalletsResponse.Wallet, kycResidence: KYCResidence)
         case paymentSummary(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String, settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed)
         case checkoutSuccess(message: String)
     }
@@ -38,7 +39,9 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private var kycLevel: KYCLevel = .none
     private var isKycVerified = false
     private var isIdDocumentVerified = false
-    private var isEUCustomer = false
+    private var kycResidence: KYCResidence = .unitedStates
+    private var hasKYCRegion = false
+    private var hasHandledTermsOfService = false
     private var hasSubmittedIdentifiers = false
     private var hasAcceptedUserAttestation = false
     private var identifierRequirements: ComplianceIdentifierRequirements?
@@ -47,6 +50,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private var selectedPaymentMethodDescription: String?
     private var settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed?
     private var successfulCheckoutMessage: String?
+
+    private var isEUCustomer: Bool {
+        kycResidence.followsEUFlow
+    }
 
     /// Creates a new `CryptoOnrampFlowCoordinator`.
     init() {
@@ -94,15 +101,17 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     /// Advances to the next step of the flow post-KYC info collection.
     /// - Parameters:
     ///   - collectedKYCLevel: The KYC level collected by the KYC info view.
-    ///   - isEUCustomer: Whether the user's region is EU.
+    ///   - kycResidence: The residence selected in the KYC info view.
     ///   - coordinator: The CryptoOnramp coordinator to use when retrieving compliance identifier requirements.
     func advanceAfterKyc(
         collectedKYCLevel: KYCLevel,
-        isEUCustomer: Bool,
+        kycResidence: KYCResidence,
         coordinator: CryptoOnrampCoordinator
     ) {
         kycLevel = collectedKYCLevel
-        self.isEUCustomer = isEUCustomer
+        self.kycResidence = kycResidence
+        hasKYCRegion = true
+        hasHandledTermsOfService = false
         hasSubmittedIdentifiers = false
         hasAcceptedUserAttestation = false
         identifierRequirements = nil
@@ -116,6 +125,12 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         } else {
             advanceToNextStep()
         }
+    }
+
+    /// Advances after the partner terms of service have been accepted or determined not to be required.
+    func advanceAfterTermsOfService() {
+        hasHandledTermsOfService = true
+        advanceToNextStep()
     }
 
     /// Advances after submitting required compliance identifiers.
@@ -171,7 +186,16 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             kycLevel = info.kycLevel
             isKycVerified = info.isKycVerified
             isIdDocumentVerified = info.isIdDocumentVerified
-            isEUCustomer = info.isEUCustomer
+            if let kycResidence = info.kycResidence {
+                self.kycResidence = kycResidence
+                hasKYCRegion = true
+            } else {
+                kycResidence = .unitedStates
+                hasKYCRegion = false
+            }
+            if !kycResidence.supportsLevel0KYC {
+                kycInfoCollectionMode = .original
+            }
             hasSubmittedIdentifiers = info.hasSubmittedIdentifiers
             hasAcceptedUserAttestation = info.hasAcceptedUserAttestation
             if shouldRetrieveIdentifierRequirements && hasCollectedInitialKYCInfo {
@@ -233,7 +257,11 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         let shouldShowIdentity = (kycInfoCollectionMode == .original || isEUCustomer) && !isIdDocumentVerified
 
         if shouldShowKYCInfo {
-            path.append(.kycInfo(collectionMode: kycInfoCollectionMode))
+            path.append(.kycInfo(collectionMode: kycInfoCollectionMode, initialResidence: kycResidence))
+        } else if hasKYCRegion,
+            kycResidence.requiresTermsOfServiceCheck,
+            !hasHandledTermsOfService {
+            path.append(.termsOfService)
         } else if
             isEUCustomer,
             !hasSubmittedIdentifiers,
@@ -249,7 +277,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription, let settlementSpeed {
             path.append(.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription, settlementSpeed: settlementSpeed))
         } else if let selectedWallet {
-            path.append(.payment(wallet: selectedWallet, isEUCustomer: isEUCustomer))
+            path.append(.payment(wallet: selectedWallet, kycResidence: kycResidence))
         } else {
             path.append(.wallets)
         }
@@ -266,7 +294,9 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         kycLevel = .none
         isKycVerified = false
         isIdDocumentVerified = false
-        isEUCustomer = false
+        kycResidence = .unitedStates
+        hasKYCRegion = false
+        hasHandledTermsOfService = false
         hasSubmittedIdentifiers = false
         hasAcceptedUserAttestation = false
         identifierRequirements = nil
@@ -286,7 +316,7 @@ extension CryptoOnrampFlowCoordinator.Route {
         switch self {
         case .registration, .payment, .paymentSummary:
             true
-        case .wallets, .kycInfo, .complianceIdentifiers, .userAttestation, .identity, .checkoutSuccess:
+        case .wallets, .kycInfo, .termsOfService, .complianceIdentifiers, .userAttestation, .identity, .checkoutSuccess:
             false
         }
     }
@@ -294,7 +324,7 @@ extension CryptoOnrampFlowCoordinator.Route {
     /// Whether to display the toolbar item for authenticated user actions, such as logging out.
     var showsAuthenticatedUserToolbarItem: Bool {
         switch self {
-        case .wallets, .kycInfo, .complianceIdentifiers, .userAttestation, .identity, .payment, .paymentSummary, .checkoutSuccess:
+        case .wallets, .kycInfo, .termsOfService, .complianceIdentifiers, .userAttestation, .identity, .payment, .paymentSummary, .checkoutSuccess:
             true
         case .registration:
             false

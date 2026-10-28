@@ -8,9 +8,9 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 import UIKit
 
 /// The result of an attempt to confirm a PaymentIntent or SetupIntent
@@ -48,7 +48,7 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkout(Checkout)
+        case checkout(CheckoutController)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
@@ -190,7 +190,7 @@ public class PaymentSheet {
                 }
             }
             self.bottomSheetViewController.setViewControllers([self.loadingViewController])
-            presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
+            presentingViewController.presentAsSheet(bottomSheetViewController)
         }
     }
 
@@ -277,21 +277,29 @@ public class PaymentSheet {
     /// Loading View Controller
     lazy var loadingViewController = LoadingViewController(
         delegate: self,
-        appearance: configuration.appearance,
-        isTestMode: configuration.apiClient.isTestmode
+        appearance: configuration.appearance
     )
 
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
 
-    /// The parent view controller to present
-    lazy var bottomSheetViewController: BottomSheetViewController = {
-        let isTestMode = configuration.apiClient.isTestmode
+    /// Shared with Link so that its sheets match the PaymentSheet container.
+    lazy var nativeSheetPresentation = SheetImplementationResolver(
+        // The playground can opt in while complete PaymentSheet remains outside the server-controlled rollout.
+        isEnabled: NativeSheetFeatureFlags.nativeSheetEnabledOverride == true
+    )
 
-        let vc = BottomSheetViewController(
+    /// The parent view controller to present
+    lazy var bottomSheetViewController: any PaymentSheetContainer = {
+        // PaymentSheet's presentation APIs require the main thread but are not yet actor-isolated.
+        let usesNativeSheet = MainActor.assumeIsolated {
+            nativeSheetPresentation.usesNativeSheet
+        }
+
+        let vc = PaymentSheetContainerFactory.make(
             contentViewController: loadingViewController,
             appearance: configuration.appearance,
-            isTestMode: isTestMode,
+            usesNativeSheet: usesNativeSheet,
             didCancelNative3DS2: { [weak self] in
                 self?.paymentHandler.cancel3DS2ChallengeFlow()
             }
@@ -311,14 +319,14 @@ public class PaymentSheet {
         loadResult: PaymentSheetLoader.LoadResult,
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
-        let checkout: Checkout? = {
+        let checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = {
             guard case .checkout(let checkout) = mode else {
                 return nil
             }
             return checkout
         }()
         persistedSelectionSnapshotBeforePresentation = .init(
-            customerID: configuration.customer?.id,
+            customerID: loadResult.customerProvider.customerID,
             availableSavedPaymentMethods: loadResult.savedPaymentMethods
         )
         switch loadResult.paymentMethodOrientation {
@@ -337,7 +345,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 isFlowController: false,
                 analyticsHelper: analyticsHelper,
-                checkout: checkout,
+                checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self
@@ -358,6 +366,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         let confirm: (@escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
             PaymentSheet.confirm(
                 configuration: self.configuration,
+                nativeSheetPresentation: self.nativeSheetPresentation,
                 authenticationContext: self.bottomSheetViewController,
                 intent: paymentSheetViewController.intent,
                 elementsSession: paymentSheetViewController.elementsSession,
@@ -397,8 +406,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
-                        presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
-                                                                       appearance: self.configuration.appearance)
+                        presentingViewController?.presentAsSheet(self.bottomSheetViewController)
                     }
                     completion(result, deferredIntentConfirmationType)
                 }
@@ -460,8 +468,8 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 }
 
 /// :nodoc:
-@_spi(STP) extension PaymentSheet: STPAnalyticsProtocol {
-    @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet"
+@_spi(InternalOnlyAPI) extension PaymentSheet: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static let stp_analyticsIdentifier: String = "PaymentSheet"
 }
 
 // MARK: - PaymentSheetViewControllerProtocol
@@ -475,6 +483,7 @@ internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSh
     func clearTextFields()
 }
 
+@MainActor
 protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,

@@ -4,7 +4,7 @@
 //
 //  ⚠️🏗 This is a playground for internal Stripe engineers to help us test things, and isn't
 //  an example of what you should do in a real app!
-//  Note: Do not import Stripe using `@_spi(STP)` in production.
+//  Note: Do not import Stripe using `@_spi(InternalOnlyAPI)` in production.
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 
 import Contacts
@@ -106,7 +106,6 @@ struct CustomerSheetTestPlayground: View {
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
                         SettingView(setting: $playgroundController.settings.opensCardScannerAutomatically)
-                        SettingView(setting: $playgroundController.settings.useAutocompleteEndpoints)
                         HStack {
                             Text("Macros").font(.headline)
                             Spacer()

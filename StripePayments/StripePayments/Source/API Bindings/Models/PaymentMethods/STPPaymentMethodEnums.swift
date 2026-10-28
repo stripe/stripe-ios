@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// The type of the PaymentMethod.
 @objc public enum STPPaymentMethodType: Int {
@@ -80,6 +80,8 @@ import Foundation
     case crypto
     /// A MobilePay payment method
     case mobilePay
+    /// A Vipps payment method
+    case vipps
     /// A Konbini payment method
     case konbini
     /// A PromptPay payment method
@@ -100,11 +102,49 @@ import Foundation
     case mbWay
     /// A Bizum payment method
     case bizum
+    /// A Kakao Pay payment method
+    case kakaoPay
+    /// A Korean cards payment method
+    case krCard
+    /// A Naver Pay payment method
+    case naverPay
+    /// A PAYCO payment method
+    case payco
+    /// A SeQura payment method
+    case sequra
+    /// A Scalapay payment method
+    case scalapay
+    /// A Pix payment method
+    case pix
+    /// A GoPay payment method
+    case goPay
+    /// A MoMo payment method
+    case momo
+    /// A ShopeePay payment method
+    case shopeePay
+    /// A QRIS payment method
+    case qris
+    /// A GCash payment method
+    case gcash
+    /// A Naira card payment method
+    case ngCard
+    /// A Naira bank transfer payment method
+    case ngBankTransfer
+    /// A Touch 'n Go payment method
+    case touchNGo
+    /// A TrueMoney payment method
+    case trueMoney
+    /// A Naira USSD payment method
+    case ngUSSD
+    /// A Naira Wallet payment method
+    case ngWallet
+    /// A Mondu payment method
+    case mondu
     /// An unknown type.
     case unknown
 
     /// Localized display name for this payment method type
-    @_spi(STP) public var displayName: String {
+    @_spi(InternalOnlyAPI) public var displayName: String {
         switch self {
         case .alipay:
             return STPLocalizedString("Alipay", "Payment Method type brand name")
@@ -178,6 +218,8 @@ import Foundation
             return "Crypto"
         case .mobilePay:
             return "MobilePay"
+        case .vipps:
+            return "Vipps"
         case .konbini:
             return STPLocalizedString("Konbini", "Payment Method type brand name")
         case .promptPay:
@@ -198,6 +240,44 @@ import Foundation
             return "MB WAY"
         case .bizum:
             return "Bizum"
+        case .kakaoPay:
+            return "Kakao Pay"
+        case .krCard:
+            return "Korean cards"
+        case .naverPay:
+            return "Naver Pay"
+        case .payco:
+            return "PAYCO"
+        case .sequra:
+            return "SeQura"
+        case .scalapay:
+            return "Scalapay"
+        case .pix:
+            return "Pix"
+        case .momo:
+            return "MoMo"
+        case .shopeePay:
+            return "ShopeePay"
+        case .qris:
+            return "QRIS"
+        case .gcash:
+            return "GCash"
+        case .ngCard:
+            return "Naira card"
+        case .ngBankTransfer:
+            return "Naira bank transfer"
+        case .touchNGo:
+            return "Touch 'n Go"
+        case .trueMoney:
+            return "TrueMoney"
+        case .ngUSSD:
+            return "Naira USSD"
+        case .ngWallet:
+            return "Naira Wallet"
+        case .mondu:
+            return "Mondu"
+        case .goPay:
+            return "GoPay"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -207,7 +287,7 @@ import Foundation
     }
 
     /// The identifier for the payment method type as it is represented on an intent, e.g. "afterpay_clearpay" for Afterpay
-    @_spi(STP) public var identifier: String {
+    @_spi(InternalOnlyAPI) public var identifier: String {
         switch self {
         case .card:
             return "card"
@@ -279,6 +359,8 @@ import Foundation
             return "crypto"
         case .mobilePay:
             return "mobilepay"
+        case .vipps:
+            return "vipps"
         case .konbini:
             return "konbini"
         case .promptPay:
@@ -299,10 +381,48 @@ import Foundation
             return "mb_way"
         case .bizum:
             return "bizum"
+        case .kakaoPay:
+            return "kakao_pay"
+        case .krCard:
+            return "kr_card"
+        case .naverPay:
+            return "naver_pay"
+        case .payco:
+            return "payco"
+        case .sequra:
+            return "sequra"
+        case .scalapay:
+            return "scalapay"
+        case .pix:
+            return "pix"
+        case .momo:
+            return "momo"
+        case .shopeePay:
+            return "shopeepay"
+        case .qris:
+            return "qris"
+        case .gcash:
+            return "gcash"
+        case .ngCard:
+            return "ng_card"
+        case .ngBankTransfer:
+            return "ng_bank_transfer"
+        case .touchNGo:
+            return "touch_n_go"
+        case .trueMoney:
+            return "truemoney"
+        case .ngUSSD:
+            return "ng_ussd"
+        case .ngWallet:
+            return "ng_wallet"
+        case .mondu:
+            return "mondu"
+        case .goPay:
+            return "gopay"
         }
     }
 
-    @_spi(STP) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
+    @_spi(InternalOnlyAPI) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
         return allCases.first(where: { $0.identifier == identifier }) ?? .unknown
     }
 

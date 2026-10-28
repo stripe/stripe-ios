@@ -8,11 +8,12 @@
 
 import StripeCoreTestUtils
 import UIKit
+import XCTest
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 // @iOS26
 class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
@@ -62,15 +63,23 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
     }
 
     func testTruncatingTitle() {
-        let sut = makeSUT(title: "Test title that is pretty long and should wrap")
+        let sut = makeSUT(title: "Test title that is pretty long and should truncate")
         sut.setStyle(.back(showAdditionalButton: false))
         verify(sut)
     }
 
     func testBackStyleThenTruncatingTitle() {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance, brand: .link)
+        let sut = LinkSheetNavigationBar(appearance: LinkUI.appearance, brand: .link)
         sut.setStyle(.back(showAdditionalButton: false))
         sut.title = "Test title that is pretty long and should wrap"
+        verify(sut)
+    }
+
+    func testRightToLeft() {
+        let sut = makeSUT(title: "Test title that is pretty long and should truncate")
+        sut.semanticContentAttribute = .forceRightToLeft
+        sut.setStyle(.back(showAdditionalButton: true))
+
         verify(sut)
     }
 
@@ -95,11 +104,49 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCloseStyleThenTruncatingTitle() {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance, brand: .link)
+        let sut = LinkSheetNavigationBar(appearance: LinkUI.appearance, brand: .link)
         sut.setStyle(.close(showAdditionalButton: false))
         sut.title = "Test title that is pretty long and should wrap"
         verify(sut)
     }
+
+    #if !os(visionOS)
+    @MainActor
+    func testNativeLogoIsLeadingAndHiddenOnBackScreens() throws {
+        for brand in [LinkBrand.link, .onelink] {
+            // Given a Link header hosted by UIKit's navigation bar
+            let sut = makeSUT(brand: brand)
+            let content = UIViewController()
+            sut.systemNavigationItem = content.navigationItem
+            let navigationController = UINavigationController(rootViewController: content)
+            let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 800))
+            window.rootViewController = navigationController
+            window.makeKeyAndVisible()
+            defer { window.isHidden = true }
+            navigationController.view.layoutIfNeeded()
+
+            // Then the rendered logo is on the leading side, with Close on the trailing side
+            let logo = try XCTUnwrap(content.navigationItem.leftBarButtonItem?.customView as? UIImageView)
+            let logoFrame = logo.convert(logo.bounds, to: navigationController.view)
+            XCTAssertGreaterThan(logoFrame.width, 0)
+            XCTAssertLessThan(logoFrame.maxX, navigationController.view.bounds.midX)
+            XCTAssertNil(content.navigationItem.titleView)
+            XCTAssertEqual(content.navigationItem.rightBarButtonItem?.accessibilityIdentifier, "UIButton.Close")
+
+            // When a title is set, branding remains separate from the centered screen title
+            sut.title = "Confirm payment"
+            XCTAssertEqual(content.navigationItem.title, "Confirm payment")
+            XCTAssertIdentical(content.navigationItem.leftBarButtonItem?.customView, logo)
+
+            // When navigating forward and back, the logo gives way to Back and is then restored
+            sut.setStyle(.back(showAdditionalButton: false))
+            XCTAssertEqual(content.navigationItem.leftBarButtonItem?.accessibilityIdentifier, "UIButton.Back")
+            XCTAssertNil(content.navigationItem.titleView)
+            sut.setStyle(.close(showAdditionalButton: false))
+            XCTAssertIdentical(content.navigationItem.leftBarButtonItem?.customView, logo)
+        }
+    }
+    #endif
 
     // MARK: Utilities
 
@@ -128,6 +175,7 @@ extension LinkNavigationBarSnapshotTests {
         let isRegistered: Bool
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     fileprivate func makeAccountStub() -> LinkAccountStub {
@@ -136,12 +184,13 @@ extension LinkNavigationBarSnapshotTests {
             redactedPhoneNumber: "+1********55",
             isRegistered: true,
             sessionState: .verified,
-            consumerSessionClientSecret: nil
+            consumerSessionClientSecret: nil,
+            linkSessionKey: nil
         )
     }
 
     fileprivate func makeSUT(title: String? = nil, brand: LinkBrand = .link) -> LinkSheetNavigationBar {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance, brand: brand)
+        let sut = LinkSheetNavigationBar(appearance: LinkUI.appearance, brand: brand)
         sut.title = title
         return sut
     }

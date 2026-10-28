@@ -8,11 +8,11 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import XCTest
 
 // swift-format-ignore
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 
 @testable import StripeIdentity
 
@@ -264,7 +264,7 @@ private func verifyHeaders(
     )
     XCTAssertEqual(
         urlRequest.allHTTPHeaderFields?["Stripe-Version"],
-        "2020-08-27; identity_client_api=v7",
+        "2020-08-27; identity_client_api=v8",
         file: file,
         line: line
     )

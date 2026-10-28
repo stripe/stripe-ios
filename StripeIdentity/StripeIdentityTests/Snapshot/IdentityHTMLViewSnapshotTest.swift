@@ -9,9 +9,9 @@
 import Foundation
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
-@testable @_spi(STP) import StripeIdentity
+@testable @_spi(InternalOnlyAPI) import StripeIdentity
 
 final class IdentityHTMLViewSnapshotTest: STPSnapshotTestCase {
 

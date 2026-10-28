@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 extension PaymentSheet {
 
@@ -18,7 +18,7 @@ extension PaymentSheet {
     /// Modifying this property in a production app can lead to unexpected behavior.
     ///
     /// :nodoc:
-    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [
+    @_spi(InternalOnlyAPI) public static var supportedPaymentMethods: [STPPaymentMethodType] = [
         .card, .payPal,
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .SEPADebit, .EPS, .przelewy24,
@@ -30,7 +30,7 @@ extension PaymentSheet {
         .FPX,
         .bacsDebit,
         .alipay,
-        .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
+        .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .paynow, .promptPay,
         .sunbit,
         .billie,
         .satispay,
@@ -44,6 +44,25 @@ extension PaymentSheet {
         .payByBank,
         .mbWay,
         .bizum,
+        .kakaoPay,
+        .naverPay,
+        .krCard,
+        .payco,
+        .sequra,
+        .scalapay,
+        .pix,
+        .goPay,
+        .mondu,
+        .ngUSSD,
+        .qris,
+        .ngWallet,
+        .shopeePay,
+        .touchNGo,
+        .trueMoney,
+        .gcash,
+        .momo,
+        .ngBankTransfer,
+        .ngCard,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
@@ -81,6 +100,24 @@ extension PaymentSheet {
     /// Canonical source of truth for whether Link is enabled
     static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
         return linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
+    }
+
+    /// Canonical source of truth for whether the Link button/row should be rendered in the payment element UI.
+    /// Link may remain functionally enabled (see `isLinkEnabled`) even when its button is hidden, e.g. to support automatic Link verification without a visible entry point.
+    /// When `.walletButtonHidden` is configured, the button is still shown if the load-time lookup found an existing Link user.
+    static func shouldShowLinkButton(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+        guard isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
+            return false
+        }
+
+        switch configuration.link.display {
+        case .automatic:
+            return true
+        case .walletButtonHidden:
+            return LinkAccountContext.shared.account?.isRegistered == true
+        case .never:
+            return false
+        }
     }
 
     /// Canonical source of truth for reasons why Link is disabled
@@ -168,6 +205,7 @@ private extension STPElementsSession {
 // MARK: - PaymentMethodRequirementProvider
 
 /// Defines an instance type who provides a set of `PaymentMethodTypeRequirement` it satisfies
+@MainActor
 protocol PaymentMethodRequirementProvider {
 
     /// The set of payment requirements provided by this instance
@@ -175,6 +213,7 @@ protocol PaymentMethodRequirementProvider {
 }
 
 extension Intent: PaymentMethodRequirementProvider {
+    @MainActor
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
         case let .paymentIntent(paymentIntent):
@@ -329,7 +368,7 @@ extension PaymentSheet {
             }
         }
 
-        static func ==(lhs: PaymentMethodAvailabilityStatus, rhs: PaymentMethodAvailabilityStatus) -> Bool {
+        static func == (lhs: PaymentMethodAvailabilityStatus, rhs: PaymentMethodAvailabilityStatus) -> Bool {
             switch (lhs, rhs) {
             case (.notSupported, .notSupported),
                  (.supported, .supported),
@@ -347,15 +386,15 @@ extension PaymentSheet {
 
 // MARK: - STPPaymentMethodType Mandate Data Helpers
 
-@_spi(STP) extension STPPaymentMethodType {
+@_spi(InternalOnlyAPI) extension STPPaymentMethodType {
 
     /// Payment method types that require mandate data for PaymentIntents when `setup_future_usage` is set
     static var requiresMandateDataForPaymentIntent: Set<STPPaymentMethodType> {
-        [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint]
+        [.gcash, .touchNGo, .trueMoney, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard, .pix]
     }
 
     /// Payment method types that require mandate data for SetupIntents
     static var requiresMandateDataForSetupIntent: Set<STPPaymentMethodType> {
-        [.payPal, .revolutPay, .satispay, .twint]
+        [.gcash, .touchNGo, .trueMoney, .alipay, .payPal, .revolutPay, .satispay, .twint, .kakaoPay, .naverPay, .krCard, .pix]
     }
 }

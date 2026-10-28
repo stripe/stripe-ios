@@ -5,9 +5,9 @@
 //  Created by Yuki Tokuhiro on 5/16/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol PaymentMethodFormViewControllerDelegate: AnyObject {
@@ -217,14 +217,15 @@ class PaymentMethodFormViewController: UIViewController {
             appearance: configuration.appearance
         )
         addressConfiguration.apiClient = configuration.apiClient
-        addressConfiguration.useAutocompleteEndpoints = configuration.useAutocompleteEndpoints && elementsSession.shouldUseAutocompleteProxyEndpoints
 
         let autoCompleteViewController = AutoCompleteViewController(
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
             selectedCountry: addressSectionElement.selectedCountryCode,
             addressSpecProvider: AddressSpecProvider.shared,
-            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
+            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance),
+            useAutocompleteEndpoints: elementsSession.shouldUseAutocompleteProxyEndpoints,
+            checkoutSessionID: analyticsHelper.checkoutSessionID
         )
         autoCompleteViewController.delegate = self
 
@@ -561,8 +562,8 @@ extension PaymentMethodFormViewController {
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: session.expectedAmount(),
-                currency: session.currency,
+                amount: session.amount,
+                currency: session.activePresentmentCurrency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
@@ -625,6 +626,10 @@ extension PaymentMethodFormViewController {
             break
         }
 
+        let linkBrand = configuration.financialConnectionsLinkBrandOverride(
+            linkAccount: LinkAccountContext.shared.account
+        )
+
         switch intent {
         case .paymentIntent(let paymentIntent):
             client.collectBankAccountForPayment(
@@ -632,6 +637,7 @@ extension PaymentMethodFormViewController {
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
+                linkBrand: linkBrand,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -643,6 +649,7 @@ extension PaymentMethodFormViewController {
                 returnURL: configuration.returnURL,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
+                linkBrand: linkBrand,
                 onEvent: nil,
                 params: params,
                 from: viewController,
@@ -668,6 +675,7 @@ extension PaymentMethodFormViewController {
                 onBehalfOf: intentConfig.onBehalfOf,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
+                linkBrand: linkBrand,
                 from: viewController,
                 intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
@@ -677,11 +685,12 @@ extension PaymentMethodFormViewController {
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: session.expectedAmount(),
-                currency: session.currency,
+                amount: session.amount,
+                currency: session.activePresentmentCurrency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
+                linkBrand: linkBrand,
                 from: viewController,
                 intentType: .checkoutSession,
                 financialConnectionsCompletion: financialConnectionsCompletion
@@ -755,6 +764,6 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
         if let autoCompleteAddress = selectedAutoCompleteAddress {
             editDistance = submittedAddress.editDistance(from: autoCompleteAddress)
         }
-        STPAnalyticsClient.sharedClient.logBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, apiClient: configuration.apiClient)
+        STPAnalyticsClient.sharedClient.logBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, checkoutSessionID: analyticsHelper.checkoutSessionID, apiClient: configuration.apiClient)
     }
 }

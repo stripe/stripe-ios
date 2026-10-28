@@ -4,9 +4,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension CustomerSheet {
@@ -72,7 +72,7 @@ extension CustomerSheet {
         /// This is an experimental feature that may be removed at any time.
         /// If true (the default), the customer can delete all saved payment methods.
         /// If false, the customer can't delete if they only have one saved payment method remaining.
-        @_spi(STP) public var allowsRemovalOfLastSavedPaymentMethod = true
+        @_spi(InternalOnlyAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
 
         /// By default, CustomerSheet will accept all supported cards by Stripe.
         /// You can specify card brands CustomerSheet should block disallow or allow payment for by providing an array of those card brands.
@@ -84,9 +84,6 @@ extension CustomerSheet {
         /// By default, the card form will provide a button to open the card scanner.
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
-
-        /// When true, uses the Stripe autocomplete endpoints for billing address autocomplete instead of Apple MapKit.
-        @_spi(STP) public var useAutocompleteEndpoints: Bool = false
 
         public init () {
         }

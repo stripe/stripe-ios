@@ -5,12 +5,12 @@
 //  Created by Nick Porter on 7/23/26.
 //
 
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripePaymentsTestUtils
-@_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 @MainActor
@@ -32,6 +32,62 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
 
     func testCancelingHorizontalPaymentOptionsRestoresPreviousSavedPaymentMethod() {
         assertCancelingPaymentOptionsRestoresPreviousSavedPaymentMethod(orientation: .horizontal)
+    }
+
+    func testCancelAfterFailedSavedPaymentMethodTaxUpdatePreservesAcceptedPaymentOption() async throws {
+        // Given a FlowController with an accepted saved card
+        let acceptedPaymentMethod = STPPaymentMethod._testCard(id: "pm_accepted", country: "US")
+        let rejectedPaymentMethod = STPPaymentMethod._testCard(id: "pm_rejected", country: "US")
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(acceptedPaymentMethod.stripeId), forCustomer: nil)
+        let flowController = makeFlowController(
+            savedPaymentMethods: [acceptedPaymentMethod, rejectedPaymentMethod],
+            orientation: .horizontal
+        )
+        let viewController = try XCTUnwrap(
+            flowController.viewController as? PaymentSheetFlowControllerViewController
+        )
+        let updater = FailingCheckoutSessionBillingAddressUpdater()
+        viewController.checkoutBillingAddressUpdater = updater
+        viewController.loadViewIfNeeded()
+        let completion = present(flowController, expectedDidCancel: true)
+
+        // When selecting another card fails its tax update and the sheet is dismissed
+        let savedPaymentOptions = viewController.savedPaymentOptionsViewController
+        savedPaymentOptions.collectionView(
+            savedPaymentOptions.collectionView,
+            didSelectItemAt: IndexPath(item: 2, section: 0)
+        )
+        await fulfillment(of: [updater.updateStarted])
+        await fulfillment(
+            of: [
+                expectation(
+                    for: viewController.view,
+                    keyPath: \.isUserInteractionEnabled,
+                    equalsToValue: true
+                ),
+            ]
+        )
+        XCTAssertEqual(
+            savedPaymentMethodID(viewController.selectedPaymentOption),
+            acceptedPaymentMethod.stripeId
+        )
+        XCTAssertNotNil(viewController.error)
+        XCTAssertEqual(
+            viewController.error?.localizedDescription,
+            NSError.stp_genericErrorOccurredMessage()
+        )
+        flowController.flowControllerViewControllerShouldClose(viewController, didCancel: true)
+        await fulfillment(of: [completion])
+
+        // Then the previously accepted card remains usable by the merchant
+        XCTAssertEqual(flowController.paymentOption?.labels.sublabel, "•••• 4242")
+        XCTAssertEqual(
+            savedPaymentMethodID(flowController.internalPaymentOption),
+            acceptedPaymentMethod.stripeId
+        )
+        XCTAssertIdentical(flowController.viewController, viewController)
+        XCTAssertNil(viewController.error)
+        XCTAssertIdentical(flowController.viewController.checkoutBillingAddressUpdater, updater)
     }
 
     func testExternalRestorationParamsPreserveBillingDetails() throws {
@@ -99,7 +155,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         configuration.customer = .init(id: customerID, ephemeralKeySecret: "ek_test")
         configuration.defaultBillingDetails.email = "test@example.com"
-        let loadResult = makeLoadResult()
+        let loadResult = makeLoadResult(customerProvider: CustomerProvider(customer: configuration.customer))
         let flowController = PaymentSheet.FlowController(
             configuration: configuration,
             loadResult: loadResult,
@@ -144,7 +200,10 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         // When the horizontal controller is rebuilt after cancellation
         let viewController = PaymentSheetFlowControllerViewController(
             configuration: configuration,
-            loadResult: makeLoadResult(orientation: .horizontal),
+            loadResult: makeLoadResult(
+                orientation: .horizontal,
+                customerProvider: CustomerProvider(customer: configuration.customer)
+            ),
             analyticsHelper: ._testValue(),
             initialState: .restoringAfterCancellation(
                 .init(
@@ -162,6 +221,37 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         XCTAssertEqual(restoredConfirmParams?.instantDebitsLinkedBank?.last4, "6789")
     }
 
+    func testHorizontalRebuildPreservesCardSelectionOverLinkCustomerDefault() {
+        // Given Link is the customer's default, but the customer completed the card form
+        let customerID = "cus_fc_card_over_link_default"
+        defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID) }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customerID)
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.customer = .init(id: customerID, ephemeralKeySecret: "ek_test")
+        configuration.defaultBillingDetails.address.country = "US"
+        configuration.defaultBillingDetails.address.postalCode = "12345"
+        let confirmParams = IntentConfirmParams(
+            params: ._testCardValue(),
+            type: .stripe(.card)
+        )
+        confirmParams.setDefaultBillingDetailsIfNecessary(for: configuration)
+
+        // When an ordinary session update rebuilds the horizontal controller
+        let viewController = PaymentSheetFlowControllerViewController(
+            configuration: configuration,
+            loadResult: makeLoadResult(
+                orientation: .horizontal,
+                customerProvider: CustomerProvider(customer: configuration.customer)
+            ),
+            analyticsHelper: ._testValue(),
+            initialState: .preservingFormInput(from: .new(confirmParams: confirmParams))
+        )
+
+        // Then the customer's card selection wins over the default Link selection
+        XCTAssertEqual(viewController.selectedPaymentOption?.paymentMethodType, .stripe(.card))
+    }
+
     private func makeFlowController(
         savedPaymentMethods: [STPPaymentMethod],
         orientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical
@@ -172,7 +262,8 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: orientation
+            paymentMethodOrientation: orientation,
+            customerProvider: CustomerProvider(customer: nil)
         )
         return PaymentSheet.FlowController(
             configuration: PaymentSheet.Configuration(),
@@ -196,6 +287,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         let reorderedPaymentMethods = [paymentMethod] + paymentMethods.filter { $0.stripeId != paymentMethod.stripeId }
         let manageViewController = VerticalSavedPaymentMethodsViewController(
             configuration: viewController.configuration,
+            customerProvider: CustomerProvider(customer: viewController.configuration.customer),
             intent: viewController.intent,
             selectedPaymentMethod: paymentMethod,
             paymentMethods: reorderedPaymentMethods,
@@ -249,7 +341,8 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
     }
 
     private func makeLoadResult(
-        orientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical
+        orientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical,
+        customerProvider: CustomerProvider
     ) -> PaymentSheetLoader.LoadResult {
         return PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -257,7 +350,8 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .instantDebits],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: orientation
+            paymentMethodOrientation: orientation,
+            customerProvider: customerProvider
         )
     }
 
@@ -295,5 +389,20 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             "No row button of type \(type)"
         )
         viewController.paymentMethodListViewController?.didTap(rowButton: row, selection: row.type)
+    }
+}
+
+@MainActor
+private final class FailingCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
+    let updateStarted = XCTestExpectation(description: "Billing tax region update started")
+
+    func updateBillingTaxRegionIfNecessaryForPaymentSheet(
+        address: CheckoutController.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> CheckoutController.Session {
+        updateStarted.fulfill()
+        throw CheckoutError.apiError(
+            message: NSError.stp_genericErrorOccurredMessage()
+        )
     }
 }

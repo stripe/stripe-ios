@@ -6,10 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 fileprivate extension ConsumerPaymentDetails {
@@ -19,7 +19,7 @@ fileprivate extension ConsumerPaymentDetails {
             return details
         case .bankAccount:
             return nil
-        case .unparsable:
+        case .generic:
             return nil
         }
     }

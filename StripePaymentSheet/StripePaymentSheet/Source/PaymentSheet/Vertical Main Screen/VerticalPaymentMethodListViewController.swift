@@ -5,9 +5,9 @@
 //  Created by Yuki Tokuhiro on 5/20/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 // MARK: - VerticalPaymentMethodListViewController
@@ -118,6 +118,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
                 paymentMethod: firstSavedPaymentMethod,
                 appearance: appearance,
+                subtext: firstSavedPaymentMethod.cardArtProgramName,
                 accessoryView: accessoryButton,
                 linkBrand: linkBrand
             ) { [weak self] in

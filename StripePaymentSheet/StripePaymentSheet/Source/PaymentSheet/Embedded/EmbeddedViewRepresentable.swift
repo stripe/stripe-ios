@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 1/30/25.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 struct EmbeddedViewRepresentable: UIViewRepresentable {
@@ -53,7 +53,7 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
             return
         }
 
-        if !(visibleVC is StripePaymentSheet.BottomSheetViewController) {
+        if !(visibleVC is any StripePaymentSheet.PaymentSheetContainer) {
             viewModel.embeddedPaymentElement?.presentingViewController = visibleVC
         }
     }

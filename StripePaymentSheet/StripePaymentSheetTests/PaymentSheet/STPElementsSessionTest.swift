@@ -5,11 +5,11 @@
 //  Created by Nick Porter on 2/16/23.
 //
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripeCoreTestUtils
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP)@_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI)@_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 import XCTest
 
 class STPElementsSessionTest: XCTestCase {
@@ -68,6 +68,22 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertFalse(elementsSession.shouldAttestOnConfirmation)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_analyticsToR() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["flags"] = ["ocs_mobile_enable_analytics_to_r": true]
+
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertTrue(elementsSession.isAnalyticsToRStripeEnabled)
+
+        elementsSessionJson["flags"] = ["ocs_mobile_enable_analytics_to_r": false]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertFalse(elementsSession.isAnalyticsToRStripeEnabled)
+
+        elementsSessionJson["flags"] = [:]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertFalse(elementsSession.isAnalyticsToRStripeEnabled)
+    }
+
     func testDecodedObjectFromAPIResponseMapping_linkBrandLink() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = "link"
@@ -107,6 +123,30 @@ class STPElementsSessionTest: XCTestCase {
 
         XCTAssertEqual(elementsSession.linkSettings?.brand, .link)
         XCTAssertEqual(elementsSession.linkBrand, .link)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_linkPaymentMethodBankAccountDataConsent() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson[jsonDict: "link_settings"]?["link_payment_session_context"] = [
+            "link_payment_method_bank_account_data_consent": "carlosmuvi-us can access account and ownership details, balances, and transactions. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)",
+        ]
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertEqual(
+            elementsSession.linkSettings?.linkPaymentMethodBankAccountDataConsent,
+            "carlosmuvi-us can access account and ownership details, balances, and transactions. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
+        )
+        XCTAssertEqual(elementsSession.linkPaymentMethodBankAccountDataConsent, elementsSession.linkSettings?.linkPaymentMethodBankAccountDataConsent)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_linkPaymentMethodBankAccountDataConsent_missing() {
+        let elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertNil(elementsSession.linkSettings?.linkPaymentMethodBankAccountDataConsent)
+        XCTAssertNil(elementsSession.linkPaymentMethodBankAccountDataConsent)
     }
 
     func testDecodedObjectFromAPIResponseMapping_passiveCaptcha() {
@@ -156,6 +196,19 @@ class STPElementsSessionTest: XCTestCase {
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
         XCTAssertNotNil(elementsSession.merchantLogoUrl)
         XCTAssertEqual(elementsSession.merchantLogoUrl?.absoluteString, "https://example.com/valid-logo.png")
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_accountID() {
+        // nil account_id
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["account_id"] = nil
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNil(elementsSession.accountID)
+
+        // valid account_id
+        elementsSessionJson["account_id"] = "acct_1HvTI7Lu5o3P18Zp"
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertEqual(elementsSession.accountID, "acct_1HvTI7Lu5o3P18Zp")
     }
 
     func testMissingEPMResponseDoesntFireAnalytic() {

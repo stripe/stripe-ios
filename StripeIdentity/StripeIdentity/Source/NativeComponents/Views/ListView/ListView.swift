@@ -6,8 +6,8 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A reusable view that can display a short list of items.
@@ -18,7 +18,7 @@ final class ListView: UIView {
 
     struct Styling {
         static var font: UIFont {
-            IdentityUI.preferredFont(forTextStyle: .body)
+            IdentityUI.bodyFont
         }
 
         static let itemInsets = NSDirectionalEdgeInsets(

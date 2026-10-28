@@ -8,8 +8,12 @@
 import UIKit
 
 /// Container view controller that displays a list of KYC fields with the optional ability to initiate editing of the address.
-final class VerifyKYCViewController: BottomSheetViewController {
+@MainActor
+final class VerifyKYCViewController {
+
     private weak var contentViewController: VerifyKYCContentViewController?
+
+    let sheetContainer: any PaymentSheetContainer
 
     /// Closure called when a user takes action (confirm, cancel, or initiate editing of the address).
     var onResult: ((VerifyKYCResult) -> Void)? {
@@ -18,44 +22,25 @@ final class VerifyKYCViewController: BottomSheetViewController {
         }
     }
 
-    // MARK: - BottomSheetViewController
-
-    override var sheetCornerRadius: CGFloat? {
-        LinkUI.largeCornerRadius
-    }
-
     // MARK: - VerifyKYCViewController
 
     /// Creates a new instance of `VerifyKYCViewController`.
     /// - Parameters:
     ///   - info: The KYC information to display.
     ///   - appearance: Determines the colors, corner radius, and height of the "Confirm" button and the user interface style (i.e. light, dark, or system).
-    init(info: VerifyKYCInfo, appearance: LinkAppearance) {
+    ///   - nativeSheetPresentation: Decides whether to present in the native sheet.
+    init(info: VerifyKYCInfo, appearance: LinkAppearance, nativeSheetPresentation: SheetImplementationResolver? = nil) {
         let contentViewController = VerifyKYCContentViewController(info: info, appearance: appearance)
         self.contentViewController = contentViewController
-
-        super.init(
+        sheetContainer = LinkSheetContainerFactory.make(
             contentViewController: contentViewController,
-            appearance: LinkUI.appearance,
-            isTestMode: false,
-            didCancelNative3DS2: {}
+            usesNativeSheet: nativeSheetPresentation?.usesNativeSheet ?? false
         )
-
-        appearance.style.configure(self)
+        appearance.style.configure(sheetContainer)
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    required init(contentViewController: any BottomSheetContentViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool, didCancelNative3DS2: @escaping () -> Void) {
-        fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
-    }
-
-    // MARK: - BottomSheetViewController
-
-    override func didTapOrSwipeToDismiss() {
-        contentViewController?.didTapOrSwipeToDismiss()
+    func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
+        sheetContainer.dismiss(animated: animated, completion: completion)
     }
 }
 

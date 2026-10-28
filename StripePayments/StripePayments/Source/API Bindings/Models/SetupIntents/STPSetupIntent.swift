@@ -44,9 +44,9 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     /// The setup error encountered in the previous SetupIntent confirmation.
     @objc public let lastSetupError: STPSetupIntentLastSetupError?
     /// Payment-method-specific configuration for this SetupIntent.
-    @_spi(STP) public let paymentMethodOptions: STPPaymentMethodOptions?
+    @_spi(InternalOnlyAPI) public let paymentMethodOptions: STPPaymentMethodOptions?
     /// Automatic payment methods configuration for this SetupIntent
-    @_spi(STP) public let automaticPaymentMethods: STPIntentAutomaticPaymentMethods?
+    @_spi(InternalOnlyAPI) public let automaticPaymentMethods: STPIntentAutomaticPaymentMethods?
 
     // MARK: - Deprecated
 
@@ -157,7 +157,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         return (STPSetupIntentUsage(rawValue: statusNumber.intValue))!
     }
 
-    @objc @_spi(STP) public class func id(fromClientSecret clientSecret: String) -> String? {
+    @objc @_spi(InternalOnlyAPI) public class func id(fromClientSecret clientSecret: String) -> String? {
         // see parseClientSecret from stripe-js-v3
         let components = clientSecret.components(separatedBy: "_secret_")
         if components.count >= 2 && components[0].hasPrefix("seti_") {

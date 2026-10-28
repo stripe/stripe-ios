@@ -208,7 +208,9 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["Save"].waitForExistenceAndTap()
         app.buttons["Done"].waitForExistenceAndTap()
         // Check that the card ending in 4242 has a default badge and is selected
-        XCTAssertTrue(app.buttons["Visa ending in 4 2 4 2, Default"].isSelected)
+        let cardButton = app.buttons["•••• 4242"]
+        XCTAssertTrue(cardButton.isSelected)
+        XCTAssertTrue(cardButton.label.hasSuffix(", Default"))
         XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_set_default_payment_method")
         XCTAssertEqual(analyticsLog.last?[string: "payment_method_type"], "card")
         app.buttons["Back"].waitForExistenceAndTap()
@@ -228,7 +230,9 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
         // Check that the card ending in 4242 still has the default badge
-        XCTAssertTrue(app.buttons["Visa ending in 4 2 4 2, Default"].waitForExistenceAndTap())
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 3))
+        XCTAssertTrue(cardButton.label.hasSuffix(", Default"))
+        XCTAssertTrue(cardButton.waitForExistenceAndTap())
         // Ensure checkbox is not enabled if it's already the default
         let setDefaultToggle = app.switches["Default payment method"]
         XCTAssertTrue(setDefaultToggle.waitForExistence(timeout: 3))

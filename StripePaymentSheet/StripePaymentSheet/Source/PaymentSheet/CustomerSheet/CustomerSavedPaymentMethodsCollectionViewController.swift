@@ -6,9 +6,9 @@
 import Foundation
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
 protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject {
     func didUpdateSelection(
@@ -85,7 +85,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let paymentMethodRemoveIsPartial: Bool
         let paymentMethodUpdate: Bool
         let paymentMethodSyncDefault: Bool
-        let isTestMode: Bool
     }
 
     /// Whether or not you can edit save payment methods by removing or updating them.
@@ -458,7 +457,6 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
             paymentMethodRemoveIsPartial: configuration.paymentMethodRemoveIsPartial,
             merchantName: savedPaymentMethodsConfiguration.merchantDisplayName)
         let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
-                                                       isTestMode: configuration.isTestMode,
                                                        configuration: updateConfig)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)

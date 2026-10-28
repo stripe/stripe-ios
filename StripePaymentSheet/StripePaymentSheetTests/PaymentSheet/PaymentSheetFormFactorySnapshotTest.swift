@@ -6,11 +6,12 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 import XCTest
 
+@MainActor
 final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()

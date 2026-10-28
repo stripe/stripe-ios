@@ -7,7 +7,7 @@
 
 import SafariServices
 @testable import StripeConnect
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import WebKit
 import XCTest
 
@@ -39,6 +39,7 @@ class PayoutsViewControllerTests: XCTestCase {
     @MainActor
     func testPayoutsViewControllerDelegate() async throws {
         let vc = componentManager.createPayoutsViewController()
+        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
         let payoutsDelegate = PayoutViewControllerDelegatePassThrough()
         vc.delegate = payoutsDelegate
 

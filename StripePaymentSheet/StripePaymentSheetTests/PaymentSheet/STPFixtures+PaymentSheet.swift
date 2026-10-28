@@ -8,12 +8,12 @@
 import Contacts
 import Foundation
 import PassKit
-@_spi(STP) @testable import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
@@ -73,6 +73,7 @@ extension STPElementsSession {
         countryCode: String? = nil,
         merchantCountryCode: String? = nil,
         merchantLogoUrl: URL? = nil,
+        accountID: String? = nil,
         linkSettings: LinkSettings? = nil,
         experimentsData: ExperimentsData? = nil,
         flags: [String: Bool] = [:],
@@ -93,6 +94,7 @@ extension STPElementsSession {
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
             merchantLogoUrl: merchantLogoUrl,
+            accountID: accountID,
             linkSettings: linkSettings,
             experimentsData: experimentsData,
             flags: flags,
@@ -136,6 +138,7 @@ extension STPElementsSession {
         paymentMethods: [[AnyHashable: Any]]? = nil,
         linkUseAttestation: Bool? = nil,
         linkSuppress2FA: Bool? = nil,
+        linkEnableMFAAuthFlow: Bool? = nil,
         hasLinkConsumerIncentive: Bool = false,
         linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> STPElementsSession {
@@ -188,6 +191,10 @@ extension STPElementsSession {
             json[jsonDict: "link_settings"]!["link_mobile_suppress_2fa_modal"] = linkSuppress2FA
         }
 
+        if let linkEnableMFAAuthFlow {
+            json[jsonDict: "link_settings"]!["link_mobile_enable_mfa_auth_flow"] = linkEnableMFAAuthFlow
+        }
+
         if hasLinkConsumerIncentive {
             json[jsonDict: "link_settings"]!["link_consumer_incentive"] = [
                 "campaign": "bankaccountsignup",
@@ -212,6 +219,7 @@ extension STPElementsSession {
         return elementsSession
     }
 
+    @MainActor
     static func _testValue(
         intent: Intent,
         isLinkPassthroughModeEnabled: Bool? = nil,
@@ -263,6 +271,13 @@ extension STPElementsSession {
 }
 
 extension Intent {
+    struct CheckoutOneTimePriceItemFixture {
+        let key: String
+        let displayName: String
+        let quantity: Int
+        let unitAmount: Int
+    }
+
     static func _testPaymentIntent(
         paymentMethodTypes: [STPPaymentMethodType],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
@@ -299,86 +314,91 @@ extension Intent {
         amount: Int? = 2345,
         currency: String = "USD",
         email: String? = nil,
-        lineItems: [Checkout.LineItem] = [],
+        oneTimePriceItems: [CheckoutOneTimePriceItemFixture]? = nil,
         subtotal: Int? = nil,
-        shippingAmount: Int = 0,
         taxAmount: Int = 0,
         automaticTaxEnabled: Bool? = nil,
-        automaticTaxAddressSource: String? = nil,
-        discountAmount: Int = 0
+        automaticTaxAddressSource: String? = nil
     ) -> Intent {
         var json = CheckoutTestHelpers.makeSessionJSON([
             "status": "open",
             "payment_status": hasPaymentDue ? "unpaid" : "no_payment_required",
-            "currency": currency.lowercased(),
+            "presentment_currency": currency.lowercased(),
+            "integration_currency": currency.lowercased(),
         ])
         if let email {
             json["customer_email"] = email
         }
-        if let amount {
-            json["total_summary"] = [
-                "due": amount,
-                "subtotal": subtotal ?? amount,
-                "total": amount,
-            ]
-        }
         if automaticTaxEnabled != nil || automaticTaxAddressSource != nil {
-            var taxContext: [String: Any] = [:]
-            if let automaticTaxEnabled {
-                taxContext["automatic_tax_enabled"] = automaticTaxEnabled
-            }
+            var automaticTax: [String: Any] = [
+                "enabled": automaticTaxEnabled ?? false,
+            ]
             if let automaticTaxAddressSource {
-                taxContext["automatic_tax_address_source"] = automaticTaxAddressSource
+                automaticTax["address_source"] = automaticTaxAddressSource
             }
-            json["tax_context"] = taxContext
+            json["automatic_tax"] = automaticTax
         }
 
-        if !lineItems.isEmpty {
-            json["checkout_items"] = lineItems.map { item -> [String: Any] in
-                return [
-                    "key": item.id,
-                    "type": "one_time_price_item",
-                    "one_time_price_item": [
-                        "quantity": item.quantity,
-                        "price": [
-                            "id": "price_\(item.id)",
-                            "currency": currency.lowercased(),
-                            "unit_amount": item.unitAmount?.minorUnitsAmount ?? 0,
-                            "product": ["name": item.name],
-                        ],
-                    ],
-                ]
-            }
-        }
-        if shippingAmount != 0 {
-            json["shipping_rate"] = [
-                "id": "shr_test",
-                "display_name": "Standard",
-                "amount": shippingAmount,
-                "currency": currency.lowercased(),
+        let oneTimePriceItems = oneTimePriceItems ?? [
+            CheckoutOneTimePriceItemFixture(
+                key: "default",
+                displayName: "Test product",
+                quantity: 1,
+                unitAmount: subtotal ?? amount ?? 0
+            ),
+        ]
+        var rawOneTimePriceItems = oneTimePriceItems.enumerated().map { index, item -> [String: Any] in
+            return [
+                "inner_item_key": "checkout_item_inner_\(index)",
+                "quantity": item.quantity,
+                "amount_details": [
+                    "subtotal": item.unitAmount * item.quantity,
+                    "total": item.unitAmount * item.quantity,
+                    "tax_amounts": [],
+                    "tax_inclusive": 0,
+                    "tax_exclusive": 0,
+                ],
+                "price": [
+                    "id": "price_\(item.key)",
+                    "currency": currency.lowercased(),
+                    "unit_amount": item.unitAmount,
+                    "product": ["name": item.displayName, "images": []],
+                ],
             ]
         }
-        var recurringDetails: [String: Any] = [:]
+        let oneTimePriceSubtotal = rawOneTimePriceItems.reduce(0) {
+            $0 + (($1["amount_details"] as? [String: Any])?["subtotal"] as? Int ?? 0)
+        }
         if taxAmount != 0 {
-            recurringDetails["total_tax_amounts"] = [[
-                "amount": taxAmount,
-                "inclusive": false,
-                "taxable_amount": (subtotal ?? amount ?? 0),
-            ], ]
+            var amountDetails = rawOneTimePriceItems[0]["amount_details"] as! [String: Any]
+            amountDetails["tax_exclusive"] = taxAmount
+            amountDetails["total"] = (amountDetails["total"] as? Int ?? 0) + taxAmount
+            rawOneTimePriceItems[0]["amount_details"] = amountDetails
         }
-        if discountAmount != 0 {
-            recurringDetails["total_discount_amounts"] = [[
-                "amount": discountAmount,
-                "coupon": [
-                    "id": "coupon_test",
+        json["items"] = [
+            [
+                "key": "checkout_item_test",
+                "type": "one_time_price",
+                "one_time_price": [
+                    "items": rawOneTimePriceItems,
+                    "subtotal": subtotal ?? oneTimePriceSubtotal,
+                    "total": amount ?? oneTimePriceSubtotal + taxAmount,
                 ],
-            ], ]
+            ],
+        ]
+        if taxAmount != 0 {
+            json["total_summary"] = [
+                "total_tax_amounts": [
+                    [
+                        "amount": taxAmount,
+                        "inclusive": false,
+                        "display_name": "Tax",
+                        "percentage": 0.0,
+                    ],
+                ],
+            ]
         }
-        if !recurringDetails.isEmpty {
-            json["recurring_details"] = recurringDetails
-        }
-
-        let checkoutSession = PaymentPagesAPIResponse.decodedObject(fromAPIResponse: json)!
+        let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
         return .checkout(checkoutSession.makePublicSession())
     }
 }
@@ -438,6 +458,7 @@ extension PaymentSheet.Appearance {
 }
 
 extension PaymentSheetLoader.LoadResult {
+    @MainActor
     static func _testValue(paymentMethodTypes: [String], savedPaymentMethods: [STPPaymentMethod]) -> Self {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(
@@ -451,6 +472,7 @@ extension PaymentSheetLoader.LoadResult {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: pmTypes,
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         )
         return PaymentSheetLoader.LoadResult(
@@ -459,12 +481,14 @@ extension PaymentSheetLoader.LoadResult {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: pmTypes,
             paymentMethodMessagingPromotionsHelper: promotionsHelper,
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
         )
     }
 }
 
 extension PaymentMethodMessagingPromotionsHelper {
+    @MainActor
     static func _testValue() -> PaymentMethodMessagingPromotionsHelper? {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
@@ -474,11 +498,12 @@ extension PaymentMethodMessagingPromotionsHelper {
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )
     }
 
-    static func _testValueInTreatment() -> PaymentMethodMessagingPromotionsHelper {
+    static func _testValueInTreatment(promotionText: String? = nil) -> PaymentMethodMessagingPromotionsHelper {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let experimentsData = ExperimentsData(
             arbId: "test_arb_id",
@@ -487,19 +512,27 @@ extension PaymentMethodMessagingPromotionsHelper {
         )
         let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        return MockPromotionsHelper(
+        let helper = MockPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )!
+        if let promotionText {
+            helper.promotionText = promotionText
+        }
+        return helper
     }
 
     class MockPromotionsHelper: PaymentMethodMessagingPromotionsHelper {
+
+        var promotionText = "Pay in 4 interest-free payments of $12.50."
+
         override func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
             return PromotionContent(
-                promotion: "Pay in 4 interest-free payments of $12.50.",
+                promotion: promotionText,
                 learnMoreText: "See if you qualify",
                 infoUrl: Self.infoUrl
             )

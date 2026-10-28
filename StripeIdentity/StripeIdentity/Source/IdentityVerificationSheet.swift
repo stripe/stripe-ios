@@ -6,13 +6,13 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A drop-in class that presents a sheet for a user to verify their identity.
 /// This class is in beta; see https://stripe.com/docs/identity for access
 final public class IdentityVerificationSheet {
-
     /// The result of an attempt to finish an identity verification flow
     @frozen public enum VerificationFlowResult {
         /// User completed the verification flow
@@ -25,22 +25,109 @@ final public class IdentityVerificationSheet {
 
     /// Configuration for an IdentityVerificationSheet
     public struct Configuration {
+        /// The appearance of primary action buttons throughout the native verification flow.
+        @_spi(InternalOnlyAPI) public enum PrimaryButtonStyle {
+            /// Uses the app's tint color.
+            case `default`
+            /// Uses the supplied background and text colors, and an optional minimum height.
+            /// Provide dynamic colors to support different colors in light and dark mode.
+            case custom(backgroundColor: UIColor, textColor: UIColor, height: CGFloat? = nil)
+        }
+
+        /// The appearance of secondary action buttons throughout the native verification flow.
+        @_spi(InternalOnlyAPI) public enum SecondaryButtonStyle {
+            /// Uses the default secondary button appearance.
+            case `default`
+            /// Uses the supplied background and text colors, and an optional minimum height.
+            /// Provide dynamic colors to support different colors in light and dark mode.
+            case custom(backgroundColor: UIColor, textColor: UIColor, height: CGFloat? = nil)
+        }
+
+        /// Configuration for the biometric consent screen.
+        @_spi(InternalOnlyAPI) public struct BiometricConsentConfiguration {
+            /// Whether to hide the branding header above the consent title.
+            public var hideBrandingHeader: Bool
+
+            /// Whether to hide the decline button on the consent welcome screen.
+            public var hideDeclineButton: Bool
+
+            /// Initializes a biometric consent configuration.
+            /// - Parameters:
+            ///   - hideBrandingHeader: Whether to hide the branding header above the consent title.
+            ///   - hideDeclineButton: Whether to hide the decline button on the consent welcome screen.
+            public init(
+                hideBrandingHeader: Bool,
+                hideDeclineButton: Bool = false
+            ) {
+                self.hideBrandingHeader = hideBrandingHeader
+                self.hideDeclineButton = hideDeclineButton
+            }
+        }
+
         /// An image of your customer-facing business logo.
         ///
         /// - Note: The recommended image size is 32 x 32 points. The image will be
         /// displayed in both light and dark modes, if the app supports it. Use a
         /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
+        /// Optional background color for the native flow's primary action buttons.
+        /// Their text is black or white, whichever contrasts more with this color.
+        public var brandColor: UIColor?
+
+        /// The style of primary action buttons throughout the native verification flow.
+        /// Disabled buttons retain the default disabled appearance. Secondary buttons are unaffected.
+        @_spi(InternalOnlyAPI) public var primaryButtonStyle: PrimaryButtonStyle = .default
+
+        /// The style of secondary action buttons throughout the native verification flow.
+        /// Disabled buttons retain the default disabled appearance. Primary buttons are unaffected.
+        @_spi(InternalOnlyAPI) public var secondaryButtonStyle: SecondaryButtonStyle = .default
+
+        /// Configuration for the biometric consent screen.
+        ///
+        /// When `nil`, the biometric consent screen uses its default layout.
+        @_spi(InternalOnlyAPI) public var biometricConsent: BiometricConsentConfiguration?
 
         /// Initializes a Configuration.
         /// - Parameters:
         ///   - brandLogo: An image of your customer-facing business logo.
         ///     The recommended image size is 32 x 32 points. The image will be
         ///     displayed in both light and dark modes, if the app supports it.
+        public init(brandLogo: UIImage) {
+            self.init(brandLogo: brandLogo, brandColor: nil)
+        }
+
+        /// Initializes a Configuration with a primary action button color.
+        /// - Parameters:
+        ///   - brandLogo: An image of your customer-facing business logo.
+        ///     The recommended image size is 32 x 32 points. The image will be
+        ///     displayed in both light and dark modes, if the app supports it.
+        ///   - brandColor: Optional background color for the native flow's primary action buttons.
         public init(
-            brandLogo: UIImage
+            brandLogo: UIImage,
+            brandColor: UIColor?
         ) {
             self.brandLogo = brandLogo
+            self.brandColor = brandColor
+            self.biometricConsent = nil
+        }
+
+        /// The primary button style the native flow uses. `brandColor`, when set, replaces the
+        /// colors of `primaryButtonStyle` and keeps its height.
+        var resolvedPrimaryButtonStyle: PrimaryButtonStyle {
+            guard let brandColor else {
+                return primaryButtonStyle
+            }
+            var height: CGFloat?
+            if case let .custom(_, _, customHeight) = primaryButtonStyle {
+                height = customHeight
+            }
+            let textColor = UIColor { traitCollection in
+                let backgroundColor = brandColor.resolvedColor(with: traitCollection)
+                return backgroundColor.contrastRatio(to: .black) > backgroundColor.contrastRatio(to: .white)
+                    ? .black
+                    : .white
+            }
+            return .custom(backgroundColor: brandColor, textColor: textColor, height: height)
         }
     }
 
@@ -91,7 +178,7 @@ final public class IdentityVerificationSheet {
                     ephemeralKeySecret: ephemeralKeySecret
                 ),
                 flowController: VerificationSheetFlowController(
-                    brandLogo: configuration.brandLogo
+                    configuration: configuration
                 ),
                 mlModelLoader: IdentityMLModelLoader(),
                 analyticsClient: IdentityAnalyticsClient(
@@ -249,6 +336,6 @@ extension IdentityVerificationSheet: VerificationSheetControllerDelegate {
 // MARK: - STPAnalyticsProtocol
 
 /// :nodoc:
-@_spi(STP) extension IdentityVerificationSheet: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier = "IdentityVerificationSheet"
+@_spi(InternalOnlyAPI) extension IdentityVerificationSheet: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier = "IdentityVerificationSheet"
 }

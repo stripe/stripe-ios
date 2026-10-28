@@ -7,15 +7,15 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension PaymentSheetFormFactory {
 
-    static let cardMinimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [
+    nonisolated static let cardMinimumFieldsToCollectByCountry: [String: AddressSectionElement.FieldsToCollect] = [
         "US": .countryAndPostal,
         "GB": .countryAndPostal,
         "CA": .countryAndPostal,

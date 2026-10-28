@@ -1,30 +1,30 @@
 GET
-https:\/\/ppm\.stripe\.com\/config\?amount=5000&currency=usd&key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&locale=en-US$
+https:\/\/ppm\.stripe\.com\/config\?amount=5000&currency=usd&key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&locale=.*$
 200
 application/json
 access-control-allow-methods: DELETE, GET, HEAD, PATCH, POST, PUT
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=xpiGJgCWnRMZ1kJ-QI6J1_VN7zdVtoXhI0NaRF2aVZAw0kT-D7Fwge6yHtBYw8y4RBDlUPIKhpm8insv_iilLSniT8c%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=zQBSceVgV8kde_qzAHvveydOwh96KdJANT4C1gHBrOLCmN7ooZzCn_TusUJlKwEqvQd-QCufKoFHPypKnJx6lIozy5c%3D; report-to csp
 Server: nginx
 Cache-Control: max-age=300, public
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
+reporting-endpoints: coop="https://q.stripe.com/coop-report", csp="https://q.stripe.com/csp-report-v2?q=zQBSceVgV8kde_qzAHvveydOwh96KdJANT4C1gHBrOLCmN7ooZzCn_TusUJlKwEqvQd-QCufKoFHPypKnJx6lIozy5c%3D&t=1"
 x-robots-tag: none
-x-wc: ABCDEFGHIJ
+x-wc: 3ff
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 referrer-policy: strict-origin-when-cross-origin
 x-stripe-proxy-response: upstream
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}, {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=zQBSceVgV8kde_qzAHvveydOwh96KdJANT4C1gHBrOLCmN7ooZzCn_TusUJlKwEqvQd-QCufKoFHPypKnJx6lIozy5c%3D&t=1"}],"include_subdomains":true}
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 17408
+Content-Length: 17846
 Vary: Origin
-Date: Thu, 08 Jan 2026 17:25:38 GMT
+Date: Mon, 17 Aug 2026 18:43:57 GMT
 Expires: 0
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-stripe-server-rpc-duration-micros: 235505
+x-stripe-server-rpc-duration-micros: 197939
 x-content-type-options: nosniff
 
 {
@@ -62,7 +62,7 @@ x-content-type-options: nosniff
         },
         "role" : "logo",
         "payment_method_type" : "afterpay_clearpay",
-        "text" : "Cash App Afterpay",
+        "text" : "Afterpay",
         "flat_theme_png" : {
           "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/cashapp-afterpay-logo-flat.png",
           "width" : 144,
@@ -97,7 +97,7 @@ x-content-type-options: nosniff
         },
         "role" : "icon",
         "payment_method_type" : "afterpay_clearpay",
-        "text" : "Cash App Afterpay",
+        "text" : "Afterpay",
         "flat_theme_png" : {
           "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/cashapp-afterpay-icon-flat.png",
           "width" : 16,
@@ -251,7 +251,7 @@ x-content-type-options: nosniff
       }
     ],
     "summary" : {
-      "message" : "Pay now, or in 4 interest-free payments of $12.50.",
+      "message" : "Pay now, in 4 interest-free payments of $12.50, or over 3 months.",
       "url" : null
     }
   },
@@ -301,7 +301,7 @@ x-content-type-options: nosniff
             },
             "role" : "logo",
             "payment_method_type" : "afterpay_clearpay",
-            "text" : "Cash App Afterpay",
+            "text" : "Afterpay",
             "flat_theme_png" : {
               "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/cashapp-afterpay-logo-flat.png",
               "width" : 144,
@@ -336,7 +336,7 @@ x-content-type-options: nosniff
             },
             "role" : "icon",
             "payment_method_type" : "afterpay_clearpay",
-            "text" : "Cash App Afterpay",
+            "text" : "Afterpay",
             "flat_theme_png" : {
               "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/cashapp-afterpay-icon-flat.png",
               "width" : 16,
@@ -358,13 +358,13 @@ x-content-type-options: nosniff
       "payment_plans" : [
         {
           "installment_amount" : 1250,
-          "id" : "573375b5-ec9b-4066-b6ac-6088207faa25",
+          "id" : "acb06c52-2cce-4dde-b504-693b35e26568",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : null,
           "number_of_installments" : 4,
           "type" : "INSTALLMENTS",
-          "terms" : "For Cash App Afterpay in 4 users, you must be over 18, a resident of the U.S. and meet additional eligibility criteria to qualify. Late fees may apply. Estimated payment amounts shown on product pages exclude taxes and shipping charges, which are added at checkout. Click [here](https:\/\/www.afterpay.com\/en-US\/installment-agreement) for complete terms. Loans to California residents made or arranged pursuant to a California Finance Lenders Law license.",
+          "terms" : "For Afterpay in 4 users, you must be over 18, a resident of the U.S. and meet additional eligibility criteria to qualify. Late fees may apply. Estimated payment amounts shown on product pages exclude taxes and shipping charges, which are added at checkout. Click [here](https:\/\/www.afterpay.com\/en-US\/installment-agreement) for complete terms. Loans to California residents made or arranged pursuant to a California Finance Lenders Law license.",
           "interval" : {
             "unit" : "week",
             "frequency" : 2
@@ -468,7 +468,7 @@ x-content-type-options: nosniff
       "payment_plans" : [
         {
           "installment_amount" : 1250,
-          "id" : "457dafa2-16b3-4d9c-91b2-e7094f06113c",
+          "id" : "b5fb8122-89fa-4359-a7eb-aad86ff46828",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : null,
@@ -570,37 +570,15 @@ x-content-type-options: nosniff
           }
         ],
         "summary" : {
-          "message" : "Pay now, or in 4 interest-free payments of $12.50.",
+          "message" : "Pay now, in 4 interest-free payments of $12.50, or over 3 months.",
           "url" : null
         }
       },
       "type" : "KLARNA",
       "payment_plans" : [
         {
-          "installment_amount" : null,
-          "id" : "16ba9b98-1257-46a8-b530-5a914cdcd017",
-          "interest_rate" : 0,
-          "total_amount" : 5000,
-          "due_days" : null,
-          "number_of_installments" : null,
-          "type" : "PAY_NOW",
-          "terms" : "[Terms](https:\/\/www.klarna.com\/us\/legal\/).",
-          "interval" : null
-        },
-        {
-          "installment_amount" : null,
-          "id" : "f16dd598-59ac-4efd-a857-3c2583efeaeb",
-          "interest_rate" : 0,
-          "total_amount" : 5000,
-          "due_days" : null,
-          "number_of_installments" : null,
-          "type" : "PAY_NOW",
-          "terms" : "[Terms](https:\/\/www.klarna.com\/us\/legal\/).",
-          "interval" : null
-        },
-        {
           "installment_amount" : 1250,
-          "id" : "5abf17c2-d5b3-4381-9c04-d07c886d5500",
+          "id" : "f819521b-09a3-47b9-8d7b-10d823d350bc",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : null,
@@ -611,15 +589,47 @@ x-content-type-options: nosniff
             "unit" : "week",
             "frequency" : 2
           }
+        },
+        {
+          "installment_amount" : null,
+          "id" : "b670e5b5-3ec8-4803-ac1b-06e045c19391",
+          "interest_rate" : 0,
+          "total_amount" : 5000,
+          "due_days" : null,
+          "number_of_installments" : null,
+          "type" : "PAY_NOW",
+          "terms" : "[Terms](https:\/\/www.klarna.com\/us\/legal\/).",
+          "interval" : null
+        },
+        {
+          "installment_amount" : 1706,
+          "id" : "0f308617-284c-49fd-a432-7391584a05ea",
+          "interest_rate" : 1399,
+          "total_amount" : 5117,
+          "due_days" : null,
+          "number_of_installments" : 3,
+          "type" : "FINANCING",
+          "terms" : "Pay monthly financing available through Klarna, Inc. is issued by WebBank. It’s available to eligible US residents in most states. Rates (7.99-33.99% APR) are based on your credit. Missed payments are subject to late fees. [Klarna's terms](https:\/\/www.klarna.com\/us\/legal\/).",
+          "interval" : {
+            "unit" : "month",
+            "frequency" : 1
+          }
+        },
+        {
+          "installment_amount" : null,
+          "id" : "eafa73c9-be3e-443f-bfd3-4224df617fb6",
+          "interest_rate" : 0,
+          "total_amount" : 5000,
+          "due_days" : null,
+          "number_of_installments" : null,
+          "type" : "PAY_NOW",
+          "terms" : "[Terms](https:\/\/www.klarna.com\/us\/legal\/).",
+          "interval" : null
         }
       ]
     }
   ],
   "api_feature_flags" : [
-    {
-      "key" : "affirm_enable_ca_shell_url",
-      "result" : true
-    },
     {
       "key" : "pmme_backend_powered_ui",
       "result" : false

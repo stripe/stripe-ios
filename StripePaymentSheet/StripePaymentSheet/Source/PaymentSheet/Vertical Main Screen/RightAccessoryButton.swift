@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension RowButton {
@@ -39,7 +39,9 @@ extension RowButton {
                 case .edit, .viewMore, .change:
                     return nil
                 case .viewMoreChevron, .update, .changeWithChevron:
-                    return Image.icon_chevron_right.makeImage(template: true).withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
+                    return Image.icon_chevron_right.makeImage(template: true)
+                        .imageFlippedForRightToLeftLayoutDirection()
+                        .withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
                 }
             }
         }

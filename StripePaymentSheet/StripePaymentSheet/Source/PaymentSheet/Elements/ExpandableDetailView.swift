@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 6/20/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A view that displays a caption label with an optional expandable detail section.
@@ -14,6 +14,8 @@ import UIKit
 /// Add as an arranged subview to a stack view. Update content via
 /// `update(caption:detail:)` and toggle expansion via `toggleExpansion()`.
 final class ExpandableDetailView: UIView {
+
+    private let needsUpdateSuperviewHeight: () -> Void
 
     private let appearance: TwoOptionSelectorViewAppearance
     private let captionLabel = TappableAttributedLabel()
@@ -32,8 +34,12 @@ final class ExpandableDetailView: UIView {
     private var isAnimating = false
     private var detailHeightConstraint: NSLayoutConstraint?
 
-    init(appearance: TwoOptionSelectorViewAppearance) {
+    init(
+        appearance: TwoOptionSelectorViewAppearance,
+        needsUpdateSuperviewHeight: @escaping () -> Void
+    ) {
         self.appearance = appearance
+        self.needsUpdateSuperviewHeight = needsUpdateSuperviewHeight
         super.init(frame: .zero)
         setupViews()
     }
@@ -111,20 +117,16 @@ final class ExpandableDetailView: UIView {
         isExpanded.toggle()
         rebuildCaptionLabelText()
 
-        let layoutContainer = Self.layoutAnimationContainer(for: self)
         let targetHeight = expandedDetailHeight()
 
         if isExpanded {
             detailHeightConstraint?.constant = 0
             expandedContentLabel.setHiddenIfNecessary(false)
             expandedContentLabel.alpha = 0
-            invalidateLayoutUpHierarchy()
-            layoutContainer.layoutIfNeeded()
         } else {
             detailHeightConstraint?.constant = expandedContentLabel.bounds.height
-            invalidateLayoutUpHierarchy()
-            layoutContainer.layoutIfNeeded()
         }
+        layoutIfNeeded()
 
         isAnimating = true
         UIView.animate(
@@ -136,8 +138,7 @@ final class ExpandableDetailView: UIView {
         ) {
             self.detailHeightConstraint?.constant = self.isExpanded ? targetHeight : 0
             self.expandedContentLabel.alpha = self.isExpanded ? 1.0 : 0.0
-            self.invalidateLayoutUpHierarchy()
-            layoutContainer.layoutIfNeeded()
+            self.needsUpdateSuperviewHeight()
         } completion: { _ in
             self.isAnimating = false
             UIAccessibility.post(notification: .layoutChanged, argument: self.captionLabel)
@@ -181,7 +182,6 @@ final class ExpandableDetailView: UIView {
         detailHeightConstraint?.constant = 0
         expandedContentLabel.setHiddenIfNecessary(true)
         expandedContentLabel.alpha = 0
-        invalidateLayoutUpHierarchy()
     }
 
     private func expandedDetailHeight() -> CGFloat {
@@ -192,20 +192,4 @@ final class ExpandableDetailView: UIView {
         return ceil(expandedContentLabel.sizeThatFits(CGSize(width: fittingWidth, height: .greatestFiniteMagnitude)).height)
     }
 
-    private func invalidateLayoutUpHierarchy() {
-        var view: UIView? = self
-        while let current = view {
-            current.invalidateIntrinsicContentSize()
-            current.setNeedsLayout()
-            view = current.superview
-        }
-    }
-
-    private static func layoutAnimationContainer(for view: UIView) -> UIView {
-        var container = view
-        while let superview = container.superview, !(superview is UIWindow) {
-            container = superview
-        }
-        return container
-    }
 }

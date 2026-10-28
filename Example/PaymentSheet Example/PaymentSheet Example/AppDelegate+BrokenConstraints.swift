@@ -4,7 +4,7 @@
 //
 //  Created by Yuki Tokuhiro on 8/13/25.
 //
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension AppDelegate {
@@ -44,6 +44,8 @@ extension AppDelegate {
             "_UIModernBarButton:", // iOS 26+ keyboard toolbar issue
             "_UIRemoteKeyboardPlaceholderView:", // iOS 26+ keyboard toolbar issue
             "TUIKeyplane", // iOS 26+ keyboard issue
+            "TUIKB-SplitGuide_", // UIKit split-keyboard guides can conflict during Duo folding transitions
+            "TUICandidateGradientContentLabel", // iOS 26+ keyboard predictive text (QuickType) issue
         ]
         guard !ignoredBrokenConstraints.contains(where: { constraint.debugDescription.contains($0) }) else {
             return

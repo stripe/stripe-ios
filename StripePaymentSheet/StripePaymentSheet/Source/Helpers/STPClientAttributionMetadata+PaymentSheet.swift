@@ -5,17 +5,19 @@
 //  Created by Joyce Qin on 10/14/25.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension STPClientAttributionMetadata {
+    @MainActor
     static func makeClientAttributionMetadataIfNecessary(analyticsHelper: PaymentSheetAnalyticsHelper, intent: Intent, elementsSession: STPElementsSession) -> STPClientAttributionMetadata? {
-        if analyticsHelper.integrationShape.isMPE {
+        if analyticsHelper.integrationShape.shouldMakeClientAttributionMetadata {
             return makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
         }
         return nil
     }
 
+    @MainActor
     static func makeClientAttributionMetadata(intent: Intent, elementsSession: STPElementsSession) -> STPClientAttributionMetadata {
         let elementsSessionConfigId = elementsSession.configID
         switch intent {

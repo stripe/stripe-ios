@@ -10,11 +10,11 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 import UIKit
 
-@testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(InternalOnlyAPI) import Stripe
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
 
@@ -96,6 +96,7 @@ extension PayWithLinkButtonSnapshotTests {
         var redactedPhoneNumber: String?
         let sessionState: PaymentSheetLinkAccount.SessionState
         let consumerSessionClientSecret: String?
+        let linkSessionKey: String?
     }
 
     fileprivate func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
@@ -104,7 +105,8 @@ extension PayWithLinkButtonSnapshotTests {
             isRegistered: isRegistered,
             redactedPhoneNumber: "+1********55",
             sessionState: .verified,
-            consumerSessionClientSecret: nil
+            consumerSessionClientSecret: nil,
+            linkSessionKey: nil
         )
     }
 

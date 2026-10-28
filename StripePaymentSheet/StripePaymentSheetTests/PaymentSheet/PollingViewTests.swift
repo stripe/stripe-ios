@@ -7,9 +7,9 @@
 
 import Foundation
 
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 
 import XCTest
 
@@ -36,5 +36,14 @@ class PollingViewTests: XCTestCase {
         XCTAssertEqual(pollingViewModel.CTA, .Localized.bizum_confirm_payment)
         XCTAssertEqual(pollingViewModel.retryInterval, 1)
         XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 70 * 60, accuracy: 0.5)
+    }
+
+    func testPollingViewModelPix() {
+        let pollingViewModel = PollingViewModel(paymentMethodType: .pix)
+
+        XCTAssertEqual(pollingViewModel.CTA, .Localized.pix_confirm_payment)
+        XCTAssertFalse(pollingViewModel.showsCountdown)
+        XCTAssertEqual(pollingViewModel.retryInterval, 2)
+        XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 24 * 60 * 60, accuracy: 0.5)
     }
 }

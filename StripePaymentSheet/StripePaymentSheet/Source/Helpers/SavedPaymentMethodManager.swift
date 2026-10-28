@@ -6,10 +6,11 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 /// Provides shared implementations of common operations for managing saved payment methods in PaymentSheet
+@MainActor
 final class SavedPaymentMethodManager {
 
     enum Error: Swift.Error {
@@ -43,14 +44,15 @@ final class SavedPaymentMethodManager {
                 with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
         switch intent {
         case .checkout(let session):
-            let billing = Checkout.PaymentMethodBillingDetails(updateParams.billingDetails)
-            let expiry = Checkout.PaymentMethodExpiryDetails(updateParams.card)
+            let billing = CheckoutController.PaymentMethodBillingDetails(updateParams.billingDetails)
+            let expiry = CheckoutController.PaymentMethodExpiryDetails(updateParams.card)
             guard billing != nil || expiry != nil else {
                 throw PaymentSheetError.unknown(debugDescription: "Tried to update a payment method without billing details or expiry details.")
             }
             let updatedSession = try await configuration.apiClient.updatePaymentMethod(
                 paymentMethod.stripeId,
                 inCheckoutSession: session.id,
+                clientSecret: session.clientSecret,
                 billingDetails: billing,
                 expiryDetails: expiry
             )
@@ -81,7 +83,8 @@ final class SavedPaymentMethodManager {
             Task {
                 try? await configuration.apiClient.detachPaymentMethod(
                     paymentMethod.stripeId,
-                    fromCheckoutSession: session.id
+                    fromCheckoutSession: session.id,
+                    clientSecret: session.clientSecret
                 )
             }
         case .paymentIntent, .setupIntent, .deferredIntent:

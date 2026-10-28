@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension SavedPaymentMethodFormFactory {
@@ -99,7 +99,10 @@ extension SavedPaymentMethodFormFactory {
                 panElement,
                 SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
             ]
-            return SectionElement(title: billingAddressSection != nil ? String.Localized.card_information : nil,
+            // When the card has a program name, it replaces "Card information" as the section header.
+            let title = configuration.paymentMethod.cardArtProgramName
+                ?? (billingAddressSection != nil ? String.Localized.card_information : nil)
+            return SectionElement(title: title,
                                   elements: allSubElements.compactMap { $0 },
                                   theme: theme)
         }()

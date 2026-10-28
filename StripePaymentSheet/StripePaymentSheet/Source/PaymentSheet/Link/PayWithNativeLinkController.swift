@@ -6,15 +6,17 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Standalone Link controller
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
+@MainActor
 final class PayWithNativeLinkController {
+
     typealias ConfirmHandler = (STPAuthenticationContext, Intent, STPElementsSession, PaymentOption, @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void
 
     enum Mode {
@@ -53,6 +55,7 @@ final class PayWithNativeLinkController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentElementConfiguration
+    private let nativeSheetPresentation: SheetImplementationResolver?
     let logPayment: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
@@ -62,25 +65,29 @@ final class PayWithNativeLinkController {
     private let confirmationChallenge: ConfirmationChallenge?
     // If you pass a confirmHandler, it's used to confirm the payment. Otherwise, PaymentSheet.confirm is used.
     private let confirmHandler: ConfirmHandler?
+    private let confirmationSource: CheckoutController.ConfirmingElement?
 
     init(
         mode: Mode,
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         logPayment: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil,
-        confirmHandler: ConfirmHandler? = nil
+        confirmHandler: ConfirmHandler? = nil,
+        confirmationSource: CheckoutController.ConfirmingElement? = nil
     ) {
         self.mode = mode
         self.intent = intent
         self.logPayment = logPayment
         self.elementsSession = elementsSession
         self.configuration = configuration
+        self.nativeSheetPresentation = nativeSheetPresentation
         self.analyticsHelper = analyticsHelper
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
         self.paymentHandler = .init(apiClient: configuration.apiClient)
@@ -88,16 +95,17 @@ final class PayWithNativeLinkController {
         self.linkConfiguration = linkConfiguration
         self.confirmationChallenge = confirmationChallenge
         self.confirmHandler = confirmHandler
+        self.confirmationSource = confirmationSource
     }
 
-    func presentAsBottomSheet(
+    func presentAsSheet(
         from presentingController: UIViewController,
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
         shouldFinishOnClose: Bool,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?, _ didFinish: Bool) -> Void
     ) {
-        presentAsBottomSheetInternal(
+        presentAsSheetInternal(
             from: presentingController,
             shouldOfferApplePay: shouldOfferApplePay,
             hidingUnderlyingBottomSheet: hidingUnderlyingBottomSheet,
@@ -115,9 +123,9 @@ final class PayWithNativeLinkController {
         from presentingController: UIViewController,
         initiallySelectedPaymentDetailsID: String?,
         canContinueWithoutLink: Bool = true,
-        completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
+        completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool, _ error: Error?) -> Void
     ) {
-        presentAsBottomSheetInternal(
+        presentAsSheetInternal(
             from: presentingController,
             shouldOfferApplePay: false,
             hidingUnderlyingBottomSheet: true,
@@ -127,15 +135,18 @@ final class PayWithNativeLinkController {
             shouldFinishOnClose: false,
             canContinueWithoutLink: canContinueWithoutLink
         ) { completionResult in
-            guard case .paymentMethodSelection(let confirmOption, let shouldReturnToPaymentSheet) = completionResult else {
-                return
+            switch completionResult {
+            case .paymentMethodSelection(let confirmOption, let shouldReturnToPaymentSheet):
+                completion(confirmOption, shouldReturnToPaymentSheet, nil)
+            case .full(let result, _, _):
+                if case .failed(let error) = result {
+                    completion(nil, false, error)
+                }
             }
-
-            completion(confirmOption, shouldReturnToPaymentSheet)
         }
     }
 
-    private func presentAsBottomSheetInternal(
+    private func presentAsSheetInternal(
         from presentingController: UIViewController,
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
@@ -148,7 +159,8 @@ final class PayWithNativeLinkController {
     ) {
         self.selfRetainer = self
 
-        let targetBottomSheet = presentingController as? BottomSheetViewController ?? presentingController.bottomSheetController
+        let targetBottomSheet = (presentingController as? any PaymentSheetContainer)
+            ?? presentingController.bottomSheetController
         let targetPresentationController = targetBottomSheet?.presentingViewController
 
         let presentBottomSheet: (UIViewController) -> Void = { presentingController in
@@ -157,6 +169,7 @@ final class PayWithNativeLinkController {
                 linkAccount: LinkAccountContext.shared.account,
                 elementsSession: self.elementsSession,
                 configuration: self.configuration,
+                nativeSheetPresentation: self.nativeSheetPresentation,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
                 canContinueWithoutLink: canContinueWithoutLink,
@@ -166,13 +179,13 @@ final class PayWithNativeLinkController {
                 analyticsHelper: self.analyticsHelper,
                 supportedPaymentMethodTypes: self.supportedPaymentMethodTypes,
                 linkAppearance: self.linkAppearance,
-                linkConfiguration: self.linkConfiguration
+                linkConfiguration: self.linkConfiguration,
+                confirmationSource: self.confirmationSource
             )
 
             payWithLinkVC.payWithLinkDelegate = self
-            presentingController.presentAsBottomSheet(
-                payWithLinkVC,
-                appearance: self.configuration.appearance,
+            presentingController.presentAsSheet(
+                payWithLinkVC.sheetContainer,
                 completion: {}
             )
 
@@ -185,7 +198,7 @@ final class PayWithNativeLinkController {
                     }
                     // Handle representing the previous bottom sheet
                     if let targetBottomSheet, let targetPresentationController, hidingUnderlyingBottomSheet {
-                        targetPresentationController.presentAsBottomSheet(targetBottomSheet, appearance: self.configuration.appearance)
+                        targetPresentationController.presentAsSheet(targetBottomSheet)
                     }
                 }
             }
@@ -231,13 +244,14 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
 
         // If you pass a confirmHandler, it's used to confirm the payment. Otherwise, PaymentSheet.confirm is used.
         if let confirmHandler {
-            confirmHandler(payWithLinkViewController, intent, elementsSession, paymentOption, wrappedCompletion)
+            confirmHandler(payWithLinkViewController.sheetContainer, intent, elementsSession, paymentOption, wrappedCompletion)
             return
         }
 
         PaymentSheet.confirm(
             configuration: configuration,
-            authenticationContext: payWithLinkViewController,
+            nativeSheetPresentation: nativeSheetPresentation,
+            authenticationContext: payWithLinkViewController.sheetContainer,
             intent: intent,
             elementsSession: elementsSession,
             paymentOption: paymentOption,
@@ -302,6 +316,7 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: payWithLinkWebController,
             intent: intent,
             elementsSession: elementsSession,

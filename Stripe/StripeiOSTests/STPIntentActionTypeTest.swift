@@ -8,11 +8,11 @@
 
 import XCTest
 
-@testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(InternalOnlyAPI) import Stripe
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 class STPIntentActionTypeTest: XCTestCase {
 
@@ -42,6 +42,10 @@ class STPIntentActionTypeTest: XCTestCase {
         XCTAssertEqual(
             STPIntentActionType(string: "await_authorization"),
             STPIntentActionType.awaitAuthorization
+        )
+        XCTAssertEqual(
+            STPIntentActionType(string: "pix_display_qr_code"),
+            STPIntentActionType.pixDisplayQrCode
         )
 
         XCTAssertEqual(

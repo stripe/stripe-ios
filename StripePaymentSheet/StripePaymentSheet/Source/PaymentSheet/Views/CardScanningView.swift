@@ -9,10 +9,10 @@
 #if !os(visionOS)
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// For internal SDK use only
@@ -231,7 +231,7 @@ class CardScanningView: UIView {
                     equalTo: cardOutlineView.rightAnchor, constant: -Self.errorLabelInset),
                 errorLabel.centerYAnchor.constraint(equalTo: cardOutlineView.centerYAnchor),
 
-                closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -closeButtonInset),
+                closeButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -closeButtonInset),
                 closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: closeButtonInset),
 
                 cardOutlineView.heightAnchor.constraint(

@@ -6,10 +6,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension PaymentSheet {
@@ -101,6 +101,7 @@ extension PaymentSheet {
         /// - Parameters:
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
+        @MainActor
         static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
             func logIfNecessary(_ message: String) {
@@ -245,6 +246,7 @@ extension PaymentSheet {
         ///   - intent: a intent object
         ///   - supportedPaymentMethods: the payment methods that PaymentSheet can display UI for
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
+        @MainActor
         static func supportsAdding(
             paymentMethod: STPPaymentMethodType,
             configuration: PaymentElementConfiguration,
@@ -252,15 +254,21 @@ extension PaymentSheet {
             elementsSession: STPElementsSession,
             supportedPaymentMethods: [STPPaymentMethodType] = PaymentSheet.supportedPaymentMethods
         ) -> PaymentMethodAvailabilityStatus {
+            // TODO(porter) Vipps: CheckoutClient rejects inline Vipps confirmation.
+            // TODO(porter) BLIK: CheckoutClient does not support BLIK codes yet.
+            if case .checkout = intent, paymentMethod == .vipps || paymentMethod == .blik {
+                return .notSupported
+            }
+
             let requirements: [PaymentMethodTypeRequirement]
 
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use
             if intent.isSetupFutureUsageSet(for: paymentMethod) {
                 requirements = {
                     switch paymentMethod {
-                    case .card:
+                    case .card, .pix:
                         return []
-                    case .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint:
+                    case .gcash, .touchNGo, .trueMoney, .alipay, .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay, .twint, .kakaoPay, .naverPay, .krCard:
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
@@ -271,10 +279,11 @@ extension PaymentSheet {
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .przelewy24, .EPS,
+                    case .momo, .shopeePay, .qris, .ngCard, .ngBankTransfer, .ngUSSD, .ngWallet, .mondu, .goPay, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .link, .affirm, .paynow, .zip, .alma,
-                        .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .multibanco,
-                        .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum:
+                        .mobilePay, .vipps, .unknown, .konbini, .promptPay, .swish, .multibanco,
+                        .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum,
+                        .payco, .sequra, .scalapay:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -283,12 +292,12 @@ extension PaymentSheet {
             } else {
                 requirements = {
                     switch paymentMethod {
-                    case .blik, .card, .cardPresent, .weChatPay, .paynow, .promptPay, .mbWay, .bizum:
+                    case .blik, .card, .cardPresent, .weChatPay, .paynow, .promptPay, .mbWay, .bizum, .pix:
                         return []
-                    case .alipay, .EPS, .FPX, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
+                    case .momo, .shopeePay, .qris, .gcash, .ngCard, .ngBankTransfer, .ngUSSD, .ngWallet, .mondu, .touchNGo, .trueMoney, .goPay, .alipay, .EPS, .FPX, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
-                            .mobilePay, .swish, .twint, .sunbit, .billie, .satispay, .crypto, .afterpayClearpay, .payPay,
-                            .wero, .payByBank:
+                            .mobilePay, .vipps, .swish, .twint, .sunbit, .billie, .satispay, .crypto, .afterpayClearpay, .payPay,
+                            .wero, .payByBank, .kakaoPay, .krCard, .naverPay, .payco, .sequra, .scalapay:
                         return [.returnURL]
                     case .USBankAccount:
                         return [
@@ -323,6 +332,7 @@ extension PaymentSheet {
         /// - US Bank Account is *not* an available payment method.
         /// - Link Funding Sources contains Bank Account.
         /// - We collect an email, or a default non-empty email has been provided.
+        @MainActor
         static func supportsInstantBankPayments(
             configuration: PaymentElementConfiguration,
             intent: Intent,
@@ -367,6 +377,7 @@ extension PaymentSheet {
         /// - Link Funding Sources contains Bank Account.
         /// - US Bank Account is *not* an available payment method.
         /// - We collect an email, or a default non-empty email has been provided.
+        @MainActor
         static func supportsLinkCardIntegration(
             configuration: PaymentElementConfiguration,
             intent: Intent,
@@ -431,6 +442,7 @@ extension PaymentSheet {
         ///   - configuration: a configuration to satisfy requirements
         ///   - intent: an intent object
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method can be added
+        @MainActor
         static func configurationSatisfiesRequirements(
             requirements: [PaymentMethodTypeRequirement],
             configuration: PaymentElementConfiguration,
@@ -459,6 +471,7 @@ extension PaymentSheet {
         ///   - intent: an intent object
         ///   - supportedPaymentMethods: a list of supported payment method types
         /// - Returns: a `PaymentMethodAvailabilityStatus` detailing why or why not this payment method is supported
+        @MainActor
         static func configurationSupports(
             paymentMethod: STPPaymentMethodType,
             requirements: [PaymentMethodTypeRequirement],
@@ -503,6 +516,7 @@ extension STPPaymentMethod {
     /// Returns whether or not saved PaymentMethods of this type should be displayed as an option to customers
     /// This should only return true if saved PMs of this type can be successfully used to `/confirm` the given `intent`
     /// - Warning: This doesn't quite work as advertised. We've hardcoded `PaymentSheet+API.swift` to only fetch saved cards and us bank accounts.
+    @MainActor
     func supportsSavedPaymentMethod(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession) -> Bool {
         let requirements: [PaymentMethodTypeRequirement] = {
             switch type {
@@ -542,7 +556,7 @@ extension STPPaymentMethodParams {
             } else {
                 return "FPX"
             }
-        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .payPay, .wero, .payByBank, .mbWay, .bizum:
+        case .momo, .shopeePay, .qris, .gcash, .ngCard, .ngBankTransfer, .ngUSSD, .ngWallet, .mondu, .touchNGo, .trueMoney, .goPay, .paynow, .zip, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .payPay, .wero, .payByBank, .mbWay, .bizum, .kakaoPay, .krCard, .naverPay, .payco, .sequra, .scalapay, .pix:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         case .unknown:

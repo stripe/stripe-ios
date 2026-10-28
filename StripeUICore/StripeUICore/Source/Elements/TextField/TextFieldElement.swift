@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /**
@@ -15,7 +15,7 @@ import UIKit
  
  - Seealso: `TextFieldElementConfiguration`
  */
-@_spi(STP) public final class TextFieldElement {
+@_spi(InternalOnlyAPI) public final class TextFieldElement {
 
     // MARK: - Properties
     weak public var delegate: ElementDelegate?

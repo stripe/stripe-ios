@@ -7,7 +7,7 @@
 //
 
 import OHHTTPStubs
-@testable@_spi(STP) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 /// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run using the `AllStripeFrameworks-NetworkRecordMode` scheme and save it to disk. Otherwise, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
@@ -93,7 +93,7 @@ import XCTest
                     // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
                     let escapedRequest = NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
                     // Then remove any params that may contain UUIDs or other random data
-                    return replaceNondeterministicParams(escapedRequest, componentsToFilter: ["mobile_session_id", "locale", "mobile_app_id"])
+                    return replaceNondeterministicParams(escapedRequest, componentsToFilter: ["mobile_session_id", "locale", "mobile_app_id", "timezone"])
                 }
                 recorder?.postBodyTransformBlock = { _, postBody in
                     // Regex filter these:
@@ -120,6 +120,8 @@ import XCTest
                         "\\[locale]", // Nested locale param varies by machine
                         "\\[mobile_app_id]", // App bundle ID varies by test target
                         "\\[mobile_session_id]", // Session ID varies by run
+                        // CheckoutClient uses top-level mobile metadata and locale/timezone fields.
+                        "mobile_session_id=", "mobile_app_id=", "locale=", "timezone=",
                         "session_token", // Autocomplete session token, random UUID
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
@@ -141,17 +143,7 @@ import XCTest
                 return fileName
             }
 
-            // The goal is for `basePath` to be e.g. `~/stripe-ios/Stripe/StripeiOSTests`
-            // A little gross/hardcoded (but it works fine); feel free to improve this...
-            let testDirectoryName = "stripe-ios/StripePayments/StripePaymentsTestUtils"
-            var basePath = "\(#file)"
-            while !basePath.hasSuffix(testDirectoryName) {
-                assert(
-                    basePath.contains(testDirectoryName),
-                    "Not in a subdirectory of \(testDirectoryName): \(#file)"
-                )
-                basePath = URL(fileURLWithPath: basePath).deletingLastPathComponent().path
-            }
+            let basePath = URL(fileURLWithPath: #filePath).deletingLastPathComponent().path
 
             let recordingPath = URL(fileURLWithPath: basePath)
                 .appendingPathComponent("Resources")

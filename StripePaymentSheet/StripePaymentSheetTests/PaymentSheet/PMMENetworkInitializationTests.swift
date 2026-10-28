@@ -7,10 +7,10 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP)@testable import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@_spi(STP)@_spi(PaymentMethodMessagingElementPreview)@testable import StripePaymentSheet
-@_spi(STP)@testable import StripePaymentsTestUtils
+@_spi(InternalOnlyAPI)@testable import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI)@_spi(PaymentMethodMessagingElementPreview)@testable import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable import StripePaymentsTestUtils
 import XCTest
 
 class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
@@ -109,7 +109,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: loadTestImage("cashapp-afterpay-logo"),
                     dark: loadTestImage("cashapp-afterpay-logo-dark"),
-                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
+                    altText: "Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: loadTestImage("affirm-logo"),
@@ -236,7 +236,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: darkImage1,
                     dark: darkImage1,
-                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
+                    altText: "Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: darkImage2,
@@ -305,7 +305,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: flatImage1,
                     dark: flatImage1,
-                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
+                    altText: "Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: flatImage2,
@@ -754,7 +754,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: loadTestImage("cashapp-afterpay-logo"),
                     dark: loadTestImage("cashapp-afterpay-logo-dark"),
-                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
+                    altText: "Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: loadTestImage("affirm-logo"),

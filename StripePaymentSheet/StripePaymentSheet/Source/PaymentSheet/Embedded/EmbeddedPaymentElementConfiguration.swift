@@ -5,11 +5,12 @@
 //  Created by Yuki Tokuhiro on 9/25/24.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 extension EmbeddedPaymentElement {
     public struct Configuration {
+
         /// If true, allows payment methods that do not move money at the end of the checkout. Defaults to false.
         /// - Description: Some payment methods can't guarantee you will receive funds from your customer at the end of the checkout because they take time to settle (eg. most bank debits, like SEPA or ACH) or require customer action to complete (e.g. OXXO, Konbini, Boleto). If this is set to true, make sure your integration listens to webhooks for notifications on whether a payment has succeeded or not.
         /// - Seealso: https://stripe.com/docs/payments/payment-methods#payment-notification
@@ -101,7 +102,7 @@ extension EmbeddedPaymentElement {
         }
 
         /// Override country for test purposes
-        @_spi(STP) public var userOverrideCountry: String?
+        @_spi(InternalOnlyAPI) public var userOverrideCountry: String?
 
         /// Describes how billing details should be collected.
         /// All values default to `automatic`.
@@ -147,9 +148,6 @@ extension EmbeddedPaymentElement {
         /// By default, the card form will provide a button to open the card scanner.
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
-
-        /// When true, uses the Stripe autocomplete endpoints for billing address autocomplete instead of Apple MapKit.
-        @_spi(STP) public var useAutocompleteEndpoints: Bool = false
 
         /// A map for specifying when legal agreements are displayed for each payment method type.
         /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.

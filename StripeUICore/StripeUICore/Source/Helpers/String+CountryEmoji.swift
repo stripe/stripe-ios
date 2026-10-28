@@ -6,10 +6,10 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-@_spi(STP) public extension String {
+@_spi(InternalOnlyAPI) public extension String {
     /// Flag emoji for a known country code, or `nil` for non-countries like "EU".
     static func countryFlagEmoji(for countryCode: String) -> String? {
         let capitalized = countryCode.uppercased()

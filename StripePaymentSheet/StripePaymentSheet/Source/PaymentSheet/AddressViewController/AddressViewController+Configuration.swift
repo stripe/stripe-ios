@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 
 public extension AddressViewController {
     /// The customer data collected by `AddressViewController`
@@ -157,7 +157,7 @@ public extension AddressViewController {
         public var title: String = .Localized.shipping_address
 
         /// Optionally hide the title label and set a title on the view controller instead.
-        @_spi(STP) public var useNavigationBarTitle: Bool = false
+        @_spi(InternalOnlyAPI) public var useNavigationBarTitle: Bool = false
 
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = .shared
@@ -168,11 +168,7 @@ public extension AddressViewController {
 
         /// The billing address to use for the "Use billing address for shipping" checkbox.
         /// When provided, shows a checkbox that allows customers to populate shipping fields with billing address data.
-        @_spi(STP) public var billingAddress: DefaultAddressDetails?
-
-        /// When true, uses the Stripe autocomplete endpoints for address autocomplete instead of Apple MapKit.
-        /// Defaults to false.
-        @_spi(STP) public var useAutocompleteEndpoints: Bool = false
+        @_spi(InternalOnlyAPI) public var billingAddress: DefaultAddressDetails?
 
     }
 }

@@ -6,9 +6,9 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension LinkPaymentMethodPicker {
@@ -41,7 +41,7 @@ extension LinkPaymentMethodPicker {
                     primaryLabel.text = bankAccount.displayName(with: paymentMethod?.nickname)
                     secondaryLabel.text = "•••• \(bankAccount.last4)"
                     secondaryLabel.isHidden = false
-                case .unparsable:
+                case .generic:
                     guard let display = paymentMethod?.display else {
                         cardBrandView.isHidden = true
                         bankIconView.isHidden = true
@@ -238,7 +238,7 @@ extension LinkPaymentMethodPicker {
         }
 
         private func refreshGenericIconIfNeeded() {
-            guard case .unparsable = paymentMethod?.details else {
+            guard case .generic = paymentMethod?.details else {
                 return
             }
             if let iconUrl = paymentMethod?.display?.icon?.main {

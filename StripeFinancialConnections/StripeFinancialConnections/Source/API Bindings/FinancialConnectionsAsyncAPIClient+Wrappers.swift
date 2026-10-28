@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension FinancialConnectionsAsyncAPIClient {
     /// Wraps an `async` function into returning a `Future`.
@@ -45,13 +45,15 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
     func synchronize(
         clientSecret: String,
         returnURL: String?,
-        initialSynchronize: Bool
+        initialSynchronize: Bool,
+        preCollectedConsent: FinancialConnectionsPreCollectedConsent?
     ) -> Future<FinancialConnectionsSynchronize> {
         wrapAsyncToFuture {
             try await self.synchronize(
                 clientSecret: clientSecret,
                 returnURL: returnURL,
-                initialSynchronize: initialSynchronize
+                initialSynchronize: initialSynchronize,
+                preCollectedConsent: preCollectedConsent
             )
         }
     }

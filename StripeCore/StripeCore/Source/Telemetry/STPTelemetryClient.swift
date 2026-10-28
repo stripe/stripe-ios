@@ -11,19 +11,19 @@ import UIKit
 
 private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
-@_spi(STP) public final class STPTelemetryClient: NSObject {
-    @_spi(STP) public static var shared: STPTelemetryClient = STPTelemetryClient(
+@_spi(InternalOnlyAPI) public final class STPTelemetryClient: NSObject {
+    @_spi(InternalOnlyAPI) public static var shared: STPTelemetryClient = STPTelemetryClient(
         sessionConfiguration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
 
-    @_spi(STP) public func addTelemetryFields(toParams params: inout [String: Any]) {
+    @_spi(InternalOnlyAPI) public func addTelemetryFields(toParams params: inout [String: Any]) {
         params["muid"] = fraudDetectionData.muid
         params["guid"] = fraudDetectionData.guid
         fraudDetectionData.resetSIDIfExpired()
         params["sid"] = fraudDetectionData.sid
     }
 
-    @_spi(STP) public func paramsByAddingTelemetryFields(
+    @_spi(InternalOnlyAPI) public func paramsByAddingTelemetryFields(
         toParams params: [String: Any]
     ) -> [String: Any] {
         var mutableParams = params
@@ -38,7 +38,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     ///
     /// - Parameters:
     ///   - completion: Called with the result of the telemetry network request.
-    @_spi(STP) public func sendTelemetryData(
+    @_spi(InternalOnlyAPI) public func sendTelemetryData(
         completion: ((Result<[String: Any], Error>) -> Void)? = nil
     ) {
         let wrappedCompletion: ((Result<[String: Any], Error>) -> Void) = { result in
@@ -56,7 +56,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         sendTelemetryRequest(jsonPayload: payload, completion: wrappedCompletion)
     }
 
-    @_spi(STP) public func updateFraudDetectionIfNecessary(
+    @_spi(InternalOnlyAPI) public func updateFraudDetectionIfNecessary(
         completion: @escaping ((Result<FraudDetectionData, Error>) -> Void)
     ) {
         fraudDetectionData.resetSIDIfExpired()
@@ -82,11 +82,11 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     private let urlSession: URLSession
     static var _forceShouldSendTelemetryInTests: Bool = false
 
-    @_spi(STP) public static func shouldSendTelemetry() -> Bool {
+    @_spi(InternalOnlyAPI) public static func shouldSendTelemetry() -> Bool {
         return StripeAPI.advancedFraudSignalsEnabled && (NSClassFromString("XCTest") == nil || _forceShouldSendTelemetryInTests)
     }
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         sessionConfiguration config: URLSessionConfiguration
     ) {
         urlSession = URLSession(configuration: config)
@@ -163,12 +163,16 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         // Don't pass expired SIDs to m.stripe.com
         fraudDetectionData.resetSIDIfExpired()
 
+        // Do not collect b.m (iosApplePayEnabled): no downstream consumers have been identified,
+        // and its PassKit check has been observed to block for minutes after a simulator cold boot.
+        // Collecting it here can stall SDK initialization and the initial request for fraud IDs.
+        // See https://github.com/stripe/stripe-ios/issues/1984 and
+        // https://github.com/stripe/stripe-ios/pull/2949.
         let otherData: [String: Any] = [
             "d": fraudDetectionData.muid ?? "",
             "e": fraudDetectionData.sid ?? "",
             "k": Bundle.stp_applicationName() ?? "",
             "l": Bundle.stp_applicationVersion() ?? "",
-            "m": NSNumber(value: StripeAPI.deviceSupportsApplePay()),
             "o": osVersion,
             "s": deviceModel,
         ]

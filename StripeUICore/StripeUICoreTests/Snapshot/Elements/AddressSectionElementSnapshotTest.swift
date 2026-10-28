@@ -8,7 +8,7 @@
 
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 
 class AddressSectionElementSnapshotTest: STPSnapshotTestCase {
     let dummyAddressSpecProvider: AddressSpecProvider = {
@@ -28,6 +28,25 @@ class AddressSectionElementSnapshotTest: STPSnapshotTestCase {
             )
         )
         sut.view.autosizeHeight(width: 300)
+        STPSnapshotVerifyView(sut.view)
+    }
+
+    func testRightToLeftWithLeftToRightValues() {
+        let sut = AddressSectionElement(
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(address: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St.",
+                line2: nil,
+                postalCode: "94102",
+                state: "California"
+            ))
+        )
+        sut.view.forceRightToLeftLayout()
+        sut.view.autosizeHeight(width: 300)
+
+        XCTAssertEqual(sut.view.effectiveUserInterfaceLayoutDirection, .rightToLeft)
         STPSnapshotVerifyView(sut.view)
     }
 }

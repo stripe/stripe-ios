@@ -92,6 +92,8 @@
 
 "Prefecture" = "Prefectuur";
 
+"Processing..." = "Bezig met verwerken…";
+
 "Province" = "Provincie";
 
 "Remove" = "Verwijderen";
@@ -106,9 +108,13 @@
 
 "Selection is empty." = "Selectie is leeg.";
 
+"Something went wrong" = "Er is iets misgegaan";
+
 "Sort code" = "Bankcode";
 
 "State" = "Staat";
+
+"Submit" = "Indienen";
 
 "Suburb" = "Voorstad";
 

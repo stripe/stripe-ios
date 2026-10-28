@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An object representing parameters to confirm a SetupIntent object.
 /// For example, you would confirm a SetupIntent when a customer hits the “Save” button on a payment method management view in your app.
@@ -52,9 +52,11 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// Provide an already created PaymentMethod's id, and it will be used to confirm the SetupIntent.
     /// @note alternative to `paymentMethodParams`
     @objc public var paymentMethodID: String?
+    /// Options to update the associated PaymentMethod during SetupIntent confirmation.
+    @objc @_spi(KlarnaSDKPrivatePreview) public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
     /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
-    @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
+    @objc @_spi(InternalOnlyAPI) public var setAsDefaultPM: NSNumber?
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
     /// This should probably be a URL that opens your iOS app.
@@ -94,10 +96,10 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
     private var _mandateData: STPMandateDataParams?
     /// Radar options that may contain HCaptcha token
-    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
+    @objc @_spi(InternalOnlyAPI) public var radarOptions: STPRadarOptions?
 
     internal var _paymentMethodType: STPPaymentMethodType?
-    @_spi(STP) public var paymentMethodType: STPPaymentMethodType? {
+    @_spi(InternalOnlyAPI) public var paymentMethodType: STPPaymentMethodType? {
         if let type = _paymentMethodType {
             return type
         }
@@ -105,10 +107,10 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @objc @_spi(InternalOnlyAPI) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     /// ID of an existing ConfirmationToken to use for this SetupIntent confirmation.
-    @objc @_spi(STP) public var confirmationToken: String?
+    @objc @_spi(InternalOnlyAPI) public var confirmationToken: String?
 
     override convenience init() {
         // Not a valid clientSecret, but at least it'll be non-null
@@ -125,6 +127,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "returnURL = \(returnURL ?? "")",
             "paymentMethodId = \(paymentMethodID ?? "")",
             "paymentMethodParams = \(String(describing: paymentMethodParams))",
+            "paymentMethodOptions = \(String(describing: paymentMethodOptions))",
             "useStripeSDK = \(useStripeSDK ?? false)",
             // Set as default payment method
             "setAsDefaultPM = \(setAsDefaultPM ?? 0)",
@@ -153,6 +156,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         copy._paymentMethodType = _paymentMethodType
         copy.paymentMethodParams = paymentMethodParams
         copy.paymentMethodID = paymentMethodID
+        copy.paymentMethodOptions = paymentMethodOptions
         copy.setAsDefaultPM = setAsDefaultPM
         copy.returnURL = returnURL
         copy.useStripeSDK = useStripeSDK
@@ -175,6 +179,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             NSStringFromSelector(#selector(getter: clientSecret)): "client_secret",
             NSStringFromSelector(#selector(getter: paymentMethodParams)): "payment_method_data",
             NSStringFromSelector(#selector(getter: paymentMethodID)): "payment_method",
+            NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
             NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
             NSStringFromSelector(#selector(getter: useStripeSDK_apiValue)): "use_stripe_sdk",
@@ -191,7 +196,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         pattern: "^seti_[^_]+_secret_[^_]+$",
         options: []
     )
-    @_spi(STP) public static func isClientSecretValid(_ clientSecret: String) -> Bool {
+    @_spi(InternalOnlyAPI) public static func isClientSecretValid(_ clientSecret: String) -> Bool {
         return
             (regex.numberOfMatches(
                 in: clientSecret,
@@ -203,10 +208,10 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// Returns mandate data for the specified payment method type, if required.
     /// - Parameter paymentMethodType: The payment method type to check
     /// - Returns: STPMandateDataParams with inferred values if mandate is required for the payment method type, nil otherwise
-    @_spi(STP) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
+    @_spi(InternalOnlyAPI) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
         switch paymentMethodType {
-        case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .link, .USBankAccount,
-             .cashApp, .payPal, .revolutPay, .klarna, .amazonPay, .twint:
+        case .gcash, .touchNGo, .trueMoney, .AUBECSDebit, .alipay, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .link, .USBankAccount,
+             .cashApp, .payPal, .revolutPay, .klarna, .amazonPay, .twint, .kakaoPay, .krCard, .naverPay, .pix:
             return .makeWithInferredValues()
         default:
             return nil

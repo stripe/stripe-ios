@@ -8,11 +8,11 @@
 
 import Foundation
 
-@_spi(STP)
-extension Checkout {
+@_spi(InternalOnlyAPI)
+extension CheckoutController {
     enum SessionUpdate {
         case setPromotionCode(String)
-        case setTaxRegion(Address)
+        case setTaxRegion(Address?)
         case setCurrency(String)
 
         var parameters: [String: Any] {
@@ -20,6 +20,9 @@ extension Checkout {
             case .setPromotionCode(let code):
                 return ["promotion_code": code]
             case .setTaxRegion(let address):
+                guard let address else {
+                    return ["tax_region": ""]
+                }
                 return ([
                     "tax_region[country]": address.country,
                     "tax_region[line1]": address.line1,
@@ -29,7 +32,7 @@ extension Checkout {
                     "tax_region[postal_code]": address.postalCode,
                 ] as [String: Any?]).compactMapValues { $0 }
             case .setCurrency(let currency):
-                return ["updated_currency": currency]
+                return ["adaptive_pricing[currency]": currency]
             }
         }
     }

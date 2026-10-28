@@ -143,15 +143,15 @@ public class STPPaymentIntent: NSObject {
     @objc public let paymentMethod: STPPaymentMethod?
 
     /// Payment-method-specific configuration for this PaymentIntent.
-    @_spi(STP) public let paymentMethodOptions: STPPaymentMethodOptions?
+    @_spi(InternalOnlyAPI) public let paymentMethodOptions: STPPaymentMethodOptions?
 
     /// Whether the payment intent has setup for future usage set for a payment method type.
-    @_spi(STP) public func isSetupFutureUsageSet(for paymentMethodType: STPPaymentMethodType) -> Bool {
+    @_spi(InternalOnlyAPI) public func isSetupFutureUsageSet(for paymentMethodType: STPPaymentMethodType) -> Bool {
         let setupFutureUsageForPaymentMethodType: String? = setupFutureUsage(for: paymentMethodType)
         return setupFutureUsageForPaymentMethodType != nil && setupFutureUsageForPaymentMethodType != "none"
     }
 
-    @_spi(STP) public func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
+    @_spi(InternalOnlyAPI) public func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
         let paymentMethodOptionsSetupFutureUsage = paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
         // if pmo sfu is non-nil, it overrides the top level sfu
         if let paymentMethodOptionsSetupFutureUsage {
@@ -160,7 +160,7 @@ public class STPPaymentIntent: NSObject {
         return setupFutureUsage.stringValue
     }
 
-    @_spi(STP) public let automaticPaymentMethods: STPIntentAutomaticPaymentMethods?
+    @_spi(InternalOnlyAPI) public let automaticPaymentMethods: STPIntentAutomaticPaymentMethods?
 
     /// :nodoc:
     @objc public override var description: String {
@@ -348,7 +348,7 @@ extension STPPaymentIntent {
     /// Helper function for extracting PaymentIntent id from the Client Secret.
     /// This avoids having to pass around both the id and the secret.
     /// - Parameter clientSecret: The `client_secret` from the PaymentIntent
-    @_spi(STP) public class func id(fromClientSecret clientSecret: String) -> String? {
+    @_spi(InternalOnlyAPI) public class func id(fromClientSecret clientSecret: String) -> String? {
         // see parseClientSecret from stripe-js-v3
         // Handle both regular secrets (pi_xxx_secret_yyy) and scoped secrets (pi_xxx_scoped_secret_yyy)
         let secretComponents = clientSecret.components(separatedBy: "_secret_")
@@ -374,7 +374,7 @@ extension STPPaymentIntent {
     /// 
     /// When true, some fields like `amount`, `currency`, and `clientSecret` contain placeholder values
     /// and should not be used for display or business logic.
-    @_spi(STP) public var isRedacted: Bool {
+    @_spi(InternalOnlyAPI) public var isRedacted: Bool {
         return amount == -1 || currency == "unknown" || clientSecret == Self.RedactedClientSecret || paymentMethodTypes.isEmpty
     }
 

@@ -119,31 +119,31 @@ static NSString *UIViewHiddenKeyPath = @"hidden";
 
 - (void)_applyHorizontalConstraints {
     UIView *previousView;
-    NSLayoutConstraint *previousRightConstraint;
+    NSLayoutConstraint *previousTrailingConstraint;
     
     for (UIView *view in self.visibleArrangedSubviews) {
         NSLayoutConstraint *topConstraint = [NSLayoutConstraint _stds_topConstraintWithItem:view toItem:self];
         NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint _stds_bottomConstraintWithItem:view toItem:self];
-        NSLayoutConstraint *rightConstraint = [NSLayoutConstraint _stds_rightConstraintWithItem:view toItem:self];
+        NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:0];
         
         if (previousView == nil) {
-            NSLayoutConstraint *leftConstraint = [NSLayoutConstraint _stds_leftConstraintWithItem:view toItem:self];
+            NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1 constant:0];
             
-            [NSLayoutConstraint activateConstraints:@[topConstraint, leftConstraint, rightConstraint, bottomConstraint]];
+            [NSLayoutConstraint activateConstraints:@[topConstraint, leadingConstraint, trailingConstraint, bottomConstraint]];
         } else {
-            NSLayoutConstraint *leftConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:previousView attribute:NSLayoutAttributeRight multiplier:1 constant:0];
+            NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:previousView attribute:NSLayoutAttributeTrailing multiplier:1 constant:0];
             
-            if (previousRightConstraint != nil) {
-                [NSLayoutConstraint deactivateConstraints:@[previousRightConstraint]];
+            if (previousTrailingConstraint != nil) {
+                [NSLayoutConstraint deactivateConstraints:@[previousTrailingConstraint]];
             }
             
-            NSLayoutConstraint *previousConstraint = [NSLayoutConstraint constraintWithItem:previousView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeft multiplier:1 constant:0];
+            NSLayoutConstraint *previousConstraint = [NSLayoutConstraint constraintWithItem:previousView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeLeading multiplier:1 constant:0];
             
-            [NSLayoutConstraint activateConstraints:@[topConstraint, leftConstraint, rightConstraint, previousConstraint, bottomConstraint]];
+            [NSLayoutConstraint activateConstraints:@[topConstraint, leadingConstraint, trailingConstraint, previousConstraint, bottomConstraint]];
         }
         
         previousView = view;
-        previousRightConstraint = rightConstraint;
+        previousTrailingConstraint = trailingConstraint;
     }
 }
 

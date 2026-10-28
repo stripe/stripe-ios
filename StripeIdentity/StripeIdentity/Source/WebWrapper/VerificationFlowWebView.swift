@@ -6,7 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 import WebKit
 
@@ -70,7 +70,7 @@ final class VerificationFlowWebView: UIView {
 
         // NOTE: Computed so font is updated if UIAppearance changes
         static var errorLabelFont: UIFont {
-            UIFont.preferredFont(forTextStyle: .body, weight: .medium)
+            IdentityUI.bodyFont(withWeight: .medium)
         }
     }
 

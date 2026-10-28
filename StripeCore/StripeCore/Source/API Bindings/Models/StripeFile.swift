@@ -14,7 +14,7 @@ import Foundation
 /// (for example, when uploading dispute evidence) or it may have been created by Stripe
 /// (for example, the results of a [Sigma scheduled query](#scheduled_queries)).
 /// Related guide: [File Upload Guide](https://stripe.com/docs/file-upload).
-@_spi(STP) public struct StripeFile: UnknownFieldsDecodable, Equatable {
+@_spi(InternalOnlyAPI) public struct StripeFile: UnknownFieldsDecodable, Equatable {
     @frozen public enum Purpose: String, SafeEnumCodable, Equatable {
         // NOTE: If adding cases here that should also be available to the
         // public API, please also add to `STPFilePurpose`. This is not
@@ -26,6 +26,8 @@ import Foundation
         case identityDocument = "identity_document"
         /// Identity document file used only internally.
         case identityPrivate = "identity_private"
+        /// Additional crypto onramp KYC document, used only internally.
+        case cryptoOnrampKYCDocument = "crypto_onramp_kyc_document"
         /// Not a valid purpose – only used for `SafeEnumCodable` conformance.
         case unparsable = ""
     }

@@ -5,7 +5,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// The BottomSheetPresentationController is the middle layer between the presentingViewController
@@ -17,6 +17,7 @@ import UIKit
 /// - Pins the presented view controller to the bottom of the screen, but doesn't constrain the height (unless `forceFullHeight` is `true`)
 @objc(STPBottomSheetPresentationController)
 class BottomSheetPresentationController: UIPresentationController {
+
     // MARK: - Properties
     private var bottomAnchor: NSLayoutConstraint?
     private var presentable: BottomSheetPresentable? {

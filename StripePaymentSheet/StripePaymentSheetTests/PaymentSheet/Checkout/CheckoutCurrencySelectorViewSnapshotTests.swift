@@ -6,9 +6,9 @@
 //
 
 import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
-@_spi(STP) @testable import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 import UIKit
 import XCTest
 // ☠️ WARNING: These snapshots do not have capsule corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
@@ -87,7 +87,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
 
     func testDisabledState() async throws {
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp")
-        view.isEnabled = false
+        view.setEnabled(false)
         verify(view)
     }
 
@@ -174,9 +174,11 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         appearance: CurrencySelectorElement.Appearance = .init()
     ) async throws -> CurrencySelectorElementUIView {
         let session = makeSession(selectedCurrency: selectedCurrency)
-        var configuration = Checkout.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-        configuration.currencySelectorElement.appearance = appearance
-        let checkout = try await Checkout(
+        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
+        currencySelectorConfiguration.appearance = appearance
+        configuration.currencySelectorElement = currencySelectorConfiguration
+        let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
                 apiResponse: session,
                 configuration: configuration

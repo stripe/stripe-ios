@@ -6,11 +6,11 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 /// The response returned by v1/elements/sessions
-@_spi(STP) public final class STPElementsSession: NSObject {
+@_spi(InternalOnlyAPI) public final class STPElementsSession: NSObject {
     #if DEBUG && targetEnvironment(simulator)
     public static let countryCodeOverride: String? = nil
     #endif
@@ -47,6 +47,9 @@ import Foundation
     /// Link to the merchant's logo asset.
     let merchantLogoUrl: URL?
 
+    /// The merchant's connected account ID.
+    let accountID: String?
+
     /// Card brand choice settings for the merchant.
     let cardBrandChoice: STPCardBrandChoice?
 
@@ -80,6 +83,7 @@ import Foundation
         countryCode: String?,
         merchantCountryCode: String?,
         merchantLogoUrl: URL?,
+        accountID: String?,
         linkSettings: LinkSettings?,
         experimentsData: ExperimentsData?,
         flags: [String: Bool],
@@ -99,6 +103,7 @@ import Foundation
         self.countryCode = countryCode
         self.merchantCountryCode = merchantCountryCode
         self.merchantLogoUrl = merchantLogoUrl
+        self.accountID = accountID
         self.linkSettings = linkSettings
         self.experimentsData = experimentsData
         self.flags = flags
@@ -143,6 +148,7 @@ import Foundation
             countryCode: nil,
             merchantCountryCode: nil,
             merchantLogoUrl: nil,
+            accountID: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -250,6 +256,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             countryCode: paymentMethodPrefDict["country_code"] as? String,
             merchantCountryCode: response["merchant_country"] as? String,
             merchantLogoUrl: (response["merchant_logo_url"] as? String).flatMap { URL(string: $0) },
+            accountID: response["account_id"] as? String,
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: response["link_settings"] as? [AnyHashable: Any]
             ),
@@ -393,8 +400,18 @@ extension STPElementsSession {
         flags["elements_mobile_force_vertical_payment_method_layout"] == true
     }
 
+    /// Whether native-sheet presentation is enabled for this session.
+    var isNativeSheetEnabled: Bool {
+        flags["elements_mobile_ios_native_sheet_enabled"] == true
+    }
+
     var shouldUseAutocompleteProxyEndpoints: Bool {
         flags["ocs_mobile_should_use_autocomplete_proxy_endpoints"] == true
+    }
+
+    /// Whether legacy analytics (`STPAnalyticsClient`) should be sent to r.stripe.com instead of q.stripe.com.
+    var isAnalyticsToRStripeEnabled: Bool {
+        flags["ocs_mobile_enable_analytics_to_r"] == true
     }
 }
 

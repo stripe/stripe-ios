@@ -7,16 +7,16 @@
 //
 
 import AVKit
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) @frozen public enum CameraSessionError: Error {
+@_spi(InternalOnlyAPI) @frozen public enum CameraSessionError: Error {
     /// Can't find capture device to add
     case captureDeviceNotFound
     /// Session configuration has failed
     case configurationFailed
 }
 
-@_spi(STP) public protocol CameraSessionProtocol: AnyObject {
+@_spi(InternalOnlyAPI) public protocol CameraSessionProtocol: AnyObject {
 
     var previewView: CameraPreviewView? { get set }
 
@@ -52,7 +52,7 @@ import AVKit
     )
 }
 
-@_spi(STP) public final class CameraSession: CameraSessionProtocol {
+@_spi(InternalOnlyAPI) public final class CameraSession: CameraSessionProtocol {
     @frozen public enum SetupResult {
         /// Session has successfully updated
         case success

@@ -2,7 +2,7 @@
 //  PaymentIntentCodableTest.swift
 //  StripeApplePay
 //
-@_spi(STP) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeApplePay
 import XCTest
 
 class PaymentIntentCodableTest: XCTestCase {

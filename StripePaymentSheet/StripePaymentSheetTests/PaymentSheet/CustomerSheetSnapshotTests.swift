@@ -9,11 +9,11 @@ import StripeCoreTestUtils
 import UIKit
 import XCTest
 
-@_spi(STP)@testable import StripeCore
-@_spi(STP) @testable import StripePayments
-@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) @testable import StripePaymentsUI
-@_spi(STP)@testable import StripeUICore
+@_spi(InternalOnlyAPI)@testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentsUI
+@_spi(InternalOnlyAPI)@testable import StripeUICore
 
 // For backend example
 class StubCustomerAdapter: CustomerAdapter {
@@ -54,7 +54,6 @@ class StubCustomerAdapter: CustomerAdapter {
 class CustomerSheetSnapshotTests: STPSnapshotTestCase {
 
     private var cs: CustomerSheet!
-
     private var window: UIWindow {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
         window.isHidden = false
@@ -75,6 +74,16 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         prepareCS(configuration: configuration())
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testRightToLeft() {
+        stubSessions(paymentMethods: "\"card\"")
+        prepareCS(configuration: configuration())
+        presentCS(darkMode: false)
+        let view = cs.bottomSheetViewController.view!
+        view.forceRightToLeftLayout()
+        view.layoutIfNeeded()
+        verify(view)
     }
 
     func testNoSavedPMsDarkMode() {
@@ -484,6 +493,18 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         prepareCS(configuration: configuration(applePayEnabled: true), customerAdapter: customerAdapter)
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testOneSavedCardPMRightToLeft() {
+        stubSessions(paymentMethods: "\"card\"")
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [stubbedPaymentMethod()]
+        prepareCS(configuration: configuration(applePayEnabled: true), customerAdapter: customerAdapter)
+        presentCS(darkMode: false)
+        let view = cs.bottomSheetViewController.view!
+        view.forceRightToLeftLayout()
+        view.layoutIfNeeded()
+        verify(view)
     }
 
     func testOneSavedCardPMDarkMode() {

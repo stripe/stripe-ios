@@ -6,7 +6,7 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -51,7 +51,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
             paymentMethods.insert(card, at: 0)
         }
 
-        let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
+        let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
                                                             intent: ._testValue(),
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,
@@ -62,12 +62,12 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         let bottomSheet: BottomSheetViewController
         if isEmbedded {
             // In embedded, VerticalSavedPaymentMethodsViewController is the only contentViewController
-            bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+            bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, didCancelNative3DS2: {})
         } else {
             // In vertical mode, VerticalSavedPaymentMethodsViewController pushed onto the contentStack after PaymentSheetVerticalViewController
             // Use StubBottomSheetContentViewController as a convenience to rather than instantiating PaymentSheetVerticalViewController
             let stubViewController = StubBottomSheetContentViewController()
-            bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+            bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, didCancelNative3DS2: {})
             bottomSheet.pushContentViewController(sut)
         }
         bottomSheet.view.autosizeHeight(width: 375)
@@ -109,7 +109,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
 
 final class StubBottomSheetContentViewController: UIViewController, BottomSheetContentViewController {
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: false, appearance: .default)
+        let navBar = SheetNavigationBar(appearance: .default)
         navBar.setStyle(.close(showAdditionalButton: false))
         return navBar
     }()

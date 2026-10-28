@@ -7,12 +7,35 @@
 //
 
 import Foundation
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 import UIKit
+
+enum PaymentOrSetupIntent {
+    case paymentIntent(STPPaymentIntent)
+    case setupIntent(STPSetupIntent)
+
+    func isSetupFutureUsageSet(paymentMethodType: STPPaymentMethodType) -> Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
+        case .setupIntent:
+            return true
+        }
+    }
+
+    var paymentMethod: STPPaymentMethod? {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.paymentMethod
+        case .setupIntent(let setupIntent):
+            return setupIntent.paymentMethod
+        }
+    }
+}
 
 extension PaymentSheet {
     static var _preconfirmShim: ((UIViewController) -> Void)?
@@ -39,8 +62,10 @@ extension PaymentSheet {
     }
 
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
+    /// Shares the owning flow's presentation state without resolving it until a sheet is needed.
     static func confirm(
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -53,7 +78,7 @@ extension PaymentSheet {
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         if case .checkout = intent {
-            let message = "Checkout Session confirmation must go through Checkout.confirm, not PaymentSheet.confirm."
+            let message = "Checkout Session confirmation must go through CheckoutController.confirm, not PaymentSheet.confirm."
             stpAssertionFailure(message)
             completion(.failed(error: PaymentSheetError.unknown(debugDescription: message)), nil)
             return
@@ -62,6 +87,7 @@ extension PaymentSheet {
         Task { @MainActor in
             let preconfirmActionsResult = await handlePreconfirmActionsIfNecessary(
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 authenticationContext: authenticationContext,
                 intent: intent,
                 paymentOption: paymentOption,
@@ -83,6 +109,7 @@ extension PaymentSheet {
 
             confirmAfterHandlingLocalActions(
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 authenticationContext: authenticationContext,
                 intent: intent,
                 elementsSession: elementsSession,
@@ -103,11 +130,13 @@ extension PaymentSheet {
     @MainActor
     static func handlePreconfirmActionsIfNecessary(
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: SheetImplementationResolver?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         paymentOption: PaymentOption,
         paymentHandler: STPPaymentHandler,
-        integrationShape: IntegrationShape
+        integrationShape: IntegrationShape,
+        checkoutSessionID: String? = nil
     ) async -> PreconfirmActionsResult {
         // Perform PaymentSheet-specific local actions before confirming.
         // These actions are not represented in the PaymentIntent state and are specific to
@@ -165,14 +194,16 @@ extension PaymentSheet {
                 )
 
                 // Present CVC VC
-                let bottomSheetVC = FlowController.makeBottomSheetViewController(
+                let bottomSheetVC = FlowController.makePaymentSheetContainerViewController(
                     preConfirmationViewController,
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
+                    checkoutSessionID: checkoutSessionID,
                     didCancelNative3DS2: {
                         paymentHandler.cancel3DS2ChallengeFlow()
                     }
                 )
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+                presentingViewController.presentAsSheet(bottomSheetVC)
             }
         } else {
             // MARK: - No local actions
@@ -182,6 +213,7 @@ extension PaymentSheet {
 
     static func confirm(
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: SheetImplementationResolver? = nil,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -196,6 +228,7 @@ extension PaymentSheet {
             Task { @MainActor in
                 confirm(
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     authenticationContext: authenticationContext,
                     intent: intent,
                     elementsSession: elementsSession,
@@ -212,8 +245,10 @@ extension PaymentSheet {
         }
     }
 
+    @MainActor
     static fileprivate func confirmAfterHandlingLocalActions(
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: SheetImplementationResolver?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -573,6 +608,7 @@ extension PaymentSheet {
             ) {
                 PaymentSheet.confirm(
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     authenticationContext: linkAuthenticationContext,
                     intent: linkIntent,
                     elementsSession: linkElementsSession,
@@ -588,6 +624,7 @@ extension PaymentSheet {
             confirmLinkPaymentOption(
                 confirmOption: confirmOption,
                 configuration: configuration,
+                nativeSheetPresentation: nativeSheetPresentation,
                 authenticationContext: authenticationContext,
                 intent: intent,
                 elementsSession: elementsSession,
@@ -611,9 +648,11 @@ extension PaymentSheet {
         }
     }
 
+    @MainActor
     static func confirmLinkPaymentOption(
         confirmOption: LinkConfirmOption,
         configuration: PaymentElementConfiguration,
+        nativeSheetPresentation: SheetImplementationResolver?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -626,7 +665,8 @@ extension PaymentSheet {
         confirmWithPaymentMethod: @escaping (STPPaymentMethod, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState, STPClientAttributionMetadata?) -> Void,
         confirmHandler: @escaping (STPAuthenticationContext, Intent, STPElementsSession, PaymentOption, @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void,
         paymentHandlerCompletion: @escaping (STPPaymentHandlerActionStatus, NSError?) -> Void,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void,
+        confirmationSource: CheckoutController.ConfirmingElement? = nil
     ) {
         // This is called when the customer pays in the sheet (as opposed to the Link webview) and agreed to sign up for Link.
         let confirmWithPaymentDetails:
@@ -717,12 +757,14 @@ extension PaymentSheet {
                     intent: intent,
                     elementsSession: elementsSession,
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     logPayment: false,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
-                    confirmHandler: confirmHandler
+                    confirmHandler: confirmHandler,
+                    confirmationSource: confirmationSource
                 )
-                linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
+                linkController.presentAsSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                     completion(result, confirmationType)
                 })
             } else {
@@ -730,9 +772,11 @@ extension PaymentSheet {
                     intent: intent,
                     elementsSession: elementsSession,
                     configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
-                    confirmHandler: confirmHandler
+                    confirmHandler: confirmHandler,
+                    confirmationSource: confirmationSource
                 )
                 linkController.present(from: authenticationContext.authenticationPresentingViewController(), completion: completion)
             }
@@ -801,29 +845,6 @@ extension PaymentSheet {
 
     // MARK: - Helper methods
 
-    enum PaymentOrSetupIntent {
-        case paymentIntent(STPPaymentIntent)
-        case setupIntent(STPSetupIntent)
-
-        func isSetupFutureUsageSet(paymentMethodType: STPPaymentMethodType) -> Bool {
-            switch self {
-            case .paymentIntent(let paymentIntent):
-                return paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
-            case .setupIntent:
-                return true
-            }
-        }
-
-        var paymentMethod: STPPaymentMethod? {
-            switch self {
-            case .paymentIntent(let paymentIntent):
-                return paymentIntent.paymentMethod
-            case .setupIntent(let setupIntent):
-                return setupIntent.paymentMethod
-            }
-        }
-    }
-
     /// A helper method that sets the Customer's default payment method if necessary.
     /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
     static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration, paymentMethodSetAsDefault: Bool) {
@@ -861,24 +882,12 @@ extension PaymentSheet {
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
         /// - saveForFutureUseCheckboxState: The single source of truth for save consent when confirming with a new
         ///   payment method. It preserves whether the save checkbox was hidden, shown and deselected, or shown and
-        ///   selected so intent-based flows and Checkout Session flows can each derive the API parameters they need.
+        ///   selected so intent-based flows can derive the API parameters they need.
         case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState, shouldSetAsDefaultPM: Bool? = nil)
 
         /// Projects the unified checkbox state into intent save semantics.
         var shouldSaveForIntent: Bool {
             saveForFutureUseCheckboxState == .selected
-        }
-
-        /// Projects the unified checkbox state into Checkout Session `save_payment_method` semantics.
-        var savePaymentMethodForCheckoutSession: Bool? {
-            switch saveForFutureUseCheckboxState {
-            case .hidden:
-                return nil
-            case .deselected:
-                return false
-            case .selected:
-                return true
-            }
         }
 
         private var saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState {
@@ -1032,7 +1041,7 @@ private extension ConsumerPaymentDetails {
         switch details {
         case .bankAccount(let bankAccount):
             return bankAccount
-        case .card, .unparsable:
+        case .card, .generic:
             return nil
         }
     }

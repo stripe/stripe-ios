@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 2025-01-24.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 struct FinancialConnectionsAppearance: Equatable {
@@ -145,7 +145,7 @@ private extension UIColor {
     }
 
     static var neutral0Dark: UIColor {
-        return UIColor(red: 20 / 255.0, green: 23 / 255.0, blue: 29 / 255.0, alpha: 1) // #14171d
+        return UIColor(red: 23 / 255.0, green: 23 / 255.0, blue: 23 / 255.0, alpha: 1) // #171717
     }
 
     static var neutral25: UIColor {

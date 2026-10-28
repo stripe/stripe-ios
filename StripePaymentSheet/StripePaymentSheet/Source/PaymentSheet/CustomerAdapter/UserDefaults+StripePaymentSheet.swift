@@ -10,7 +10,7 @@ import Foundation
 
 extension UserDefaults {
     /// Canonical list of all UserDefaults keys the SDK uses
-    @_spi(STP) public enum StripePaymentSheetKeys: String {
+    @_spi(InternalOnlyAPI) public enum StripePaymentSheetKeys: String {
         /// The key for a dictionary of Customer id to their last selected payment method ID
         case customerToLastSelectedPaymentMethod = "com.stripe.lib:STPStripeCustomerToLastSelectedPaymentMethodKey"
 
@@ -18,7 +18,7 @@ extension UserDefaults {
         case customerHasUsedLink = "com.stripe.lib:STPStripeCustomerHasUsedLink"
     }
 
-    @_spi(STP) public var customerToLastSelectedPaymentMethod: [String: String]? {
+    @_spi(InternalOnlyAPI) public var customerToLastSelectedPaymentMethod: [String: String]? {
         get {
             let key = StripePaymentSheetKeys.customerToLastSelectedPaymentMethod.rawValue
             return dictionary(forKey: key) as? [String: String]
@@ -29,7 +29,7 @@ extension UserDefaults {
         }
     }
 
-    @_spi(STP) public var customerHasUsedLink: Bool {
+    @_spi(InternalOnlyAPI) public var customerHasUsedLink: Bool {
         get {
             let key = StripePaymentSheetKeys.customerHasUsedLink.rawValue
             return bool(forKey: key)
@@ -40,11 +40,11 @@ extension UserDefaults {
         }
     }
 
-    @_spi(STP) public func markLinkAsUsed() {
+    @_spi(InternalOnlyAPI) public func markLinkAsUsed() {
         customerHasUsedLink = true
     }
 
-    @_spi(STP) public func clearLinkDefaults() {
+    @_spi(InternalOnlyAPI) public func clearLinkDefaults() {
         customerHasUsedLink = false
     }
 }

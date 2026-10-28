@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: SavedPaymentOptionsViewController)
@@ -111,7 +111,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         let removeSavedPaymentMethodMessage: String?
         let merchantDisplayName: String
         let isCVCRecollectionEnabled: Bool
-        let isTestMode: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let allowsRemovalOfPaymentMethods: Bool
         let allowsSetAsDefaultPM: Bool
@@ -710,6 +709,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                                            appearance: appearance,
                                                                            billingDetailsCollectionConfiguration: paymentSheetConfiguration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,
+                                                                           checkoutSessionID: analyticsHelper.checkoutSessionID,
                                                                            cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
                                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                                            canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
@@ -721,7 +721,6 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
             merchantName: configuration.merchantDisplayName)
         let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
-                                                       isTestMode: configuration.isTestMode,
                                                        configuration: updateConfig)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)

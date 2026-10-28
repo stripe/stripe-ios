@@ -7,7 +7,7 @@
 
 import SafariServices
 @_spi(DashboardOnly) @testable import StripeConnect
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import WebKit
 import XCTest
 
@@ -18,6 +18,7 @@ class PaymentDetailsViewControllerTests: XCTestCase {
             return nil
         })
         let vc = componentManager.createPaymentDetailsViewController()
+        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
 
         let expectationDidFail = XCTestExpectation(description: "loadDidFail called")
 

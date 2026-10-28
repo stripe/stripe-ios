@@ -6,7 +6,7 @@
 import DeviceCheck
 import Foundation
 
-@_spi(STP) public protocol AppAttestService {
+@_spi(InternalOnlyAPI) public protocol AppAttestService {
     nonisolated var isSupported: Bool { get }
     func generateKey() async throws -> String
     func generateAssertion(_ keyId: String, clientDataHash: Data) async throws -> Data
@@ -17,29 +17,29 @@ import Foundation
     func attestationDataIsDevelopmentEnvironment(_ data: Data) -> Bool
 }
 
-@_spi(STP) public class AppleAppAttestService: AppAttestService {
-    @_spi(STP) public static var shared = AppleAppAttestService()
+@_spi(InternalOnlyAPI) public class AppleAppAttestService: AppAttestService {
+    @_spi(InternalOnlyAPI) public static var shared = AppleAppAttestService()
 
     // No one should initialize this directly, it's a wrapper around a system singleton
     private init() { }
 
-    @_spi(STP) public var isSupported: Bool {
+    @_spi(InternalOnlyAPI) public var isSupported: Bool {
         return DCAppAttestService.shared.isSupported
     }
 
-    @_spi(STP) public func generateKey() async throws -> String {
+    @_spi(InternalOnlyAPI) public func generateKey() async throws -> String {
         return try await DCAppAttestService.shared.generateKey()
     }
 
-    @_spi(STP) public func generateAssertion(_ keyId: String, clientDataHash: Data) async throws -> Data {
+    @_spi(InternalOnlyAPI) public func generateAssertion(_ keyId: String, clientDataHash: Data) async throws -> Data {
         return try await DCAppAttestService.shared.generateAssertion(keyId, clientDataHash: clientDataHash)
     }
 
-    @_spi(STP) public func attestKey(_ keyId: String, clientDataHash: Data) async throws -> Data {
+    @_spi(InternalOnlyAPI) public func attestKey(_ keyId: String, clientDataHash: Data) async throws -> Data {
         return try await DCAppAttestService.shared.attestKey(keyId, clientDataHash: clientDataHash)
     }
 
-    @_spi(STP) public func attestationDataIsDevelopmentEnvironment(_ data: Data) -> Bool {
+    @_spi(InternalOnlyAPI) public func attestationDataIsDevelopmentEnvironment(_ data: Data) -> Bool {
        let appAttestDevelopData = Data("appattestdevelop".utf8)
        return data.range(of: appAttestDevelopData) != nil
    }

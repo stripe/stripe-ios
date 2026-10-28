@@ -7,8 +7,8 @@
 
 import Combine
 import Foundation
-@_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 import UIKit
 
@@ -36,8 +36,6 @@ class EmbeddedPlaygroundViewController: UIViewController {
     private let configuration: EmbeddedPaymentElement.Configuration
 
     private let intentConfig: EmbeddedPaymentElement.IntentConfiguration?
-
-    private let checkout: Checkout?
 
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
     private var paymentMethodsViewController: EmbeddedPaymentElementWrapperViewController?
@@ -101,15 +99,34 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     private let paymentOptionView = EmbeddedPaymentOptionView()
 
+    private weak var highlightedContainerView: UIView?
+
+    private lazy var showElementBoundsSwitch: UISwitch = {
+        let toggle = UISwitch()
+        toggle.isOn = true
+        toggle.accessibilityLabel = "Show embedded element bounds"
+        toggle.addTarget(self, action: #selector(didToggleElementBounds), for: .valueChanged)
+        return toggle
+    }()
+
+    private lazy var showElementBoundsControl: UIStackView = {
+        let label = UILabel()
+        label.font = .preferredFont(forTextStyle: .body)
+        label.text = "Show embedded element bounds"
+
+        let stackView = UIStackView(arrangedSubviews: [label, showElementBoundsSwitch])
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        return stackView
+    }()
+
     init(
         configuration: EmbeddedPaymentElement.Configuration,
         intentConfig: EmbeddedPaymentElement.IntentConfiguration?,
-        checkout: Checkout?,
         playgroundController: PlaygroundController
     ) {
         self.configuration = configuration
         self.intentConfig = intentConfig
-        self.checkout = checkout
         self.playgroundController = playgroundController
 
         super.init(nibName: nil, bundle: nil)
@@ -146,20 +163,13 @@ class EmbeddedPlaygroundViewController: UIViewController {
     }
 
     private func setupUI() async throws {
-        let embeddedPaymentElement: EmbeddedPaymentElement
-        if let checkout = checkout {
-            embeddedPaymentElement = try await EmbeddedPaymentElement.create(
-                checkout: checkout,
-                configuration: configuration
-            )
-        } else if let intentConfig = intentConfig {
-            embeddedPaymentElement = try await EmbeddedPaymentElement.create(
-                intentConfiguration: intentConfig,
-                configuration: configuration
-            )
-        } else {
-            throw PaymentSheetError.unknown(debugDescription: "Either checkoutSession or intentConfig must be provided")
+        guard let intentConfig else {
+            throw PaymentSheetError.unknown(debugDescription: "intentConfig must be provided")
         }
+        let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
+            intentConfiguration: intentConfig,
+            configuration: configuration
+        )
         embeddedPaymentElement.delegate = self
         embeddedPaymentElement.presentingViewController = self
         self.embeddedPaymentElement = embeddedPaymentElement
@@ -171,23 +181,31 @@ class EmbeddedPlaygroundViewController: UIViewController {
         view.addSubview(scrollView)
 
         // If we are using the default row selection behavior, we include the payment element inline, otherwise we show a button to open the payment element in a sheet
-        let paymentElementView = switch configuration.rowSelectionBehavior {
+        let paymentElementView: UIView
+        let displaysPaymentElementInline: Bool
+        switch configuration.rowSelectionBehavior {
         case .immediateAction:
-            paymentMethodButton
+            paymentElementView = paymentMethodButton
+            displaysPaymentElementInline = false
         case .default:
-            embeddedPaymentElement.view
+            paymentElementView = makeHighlightedContainer(for: embeddedPaymentElement.view)
+            displaysPaymentElementInline = true
         @unknown default:
             fatalError("Implement how new row selection behavior should be displayed")
         }
 
         // All our content is in a stack view
-        let stackView = UIStackView(arrangedSubviews: [
-            settingsViewContainer,
+        var arrangedSubviews: [UIView] = [settingsViewContainer]
+        if displaysPaymentElementInline {
+            arrangedSubviews.append(showElementBoundsControl)
+        }
+        arrangedSubviews.append(contentsOf: [
             paymentElementView,
             paymentOptionView,
             checkoutButton,
             clearPaymentOptionButton,
         ])
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -214,6 +232,32 @@ class EmbeddedPlaygroundViewController: UIViewController {
             clearPaymentOptionButton.heightAnchor.constraint(equalToConstant: 45),
         ])
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
+    }
+
+    private func makeHighlightedContainer(for embeddedPaymentElementView: UIView) -> UIView {
+        let containerView = UIView()
+        containerView.layer.borderColor = UIColor.systemRed.cgColor
+        containerView.layer.borderWidth = 4
+        containerView.layoutMargins = .init(top: 8, left: 8, bottom: 8, right: 8)
+        highlightedContainerView = containerView
+
+        embeddedPaymentElementView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(embeddedPaymentElementView)
+
+        NSLayoutConstraint.activate([
+            embeddedPaymentElementView.topAnchor.constraint(equalTo: containerView.layoutMarginsGuide.topAnchor),
+            embeddedPaymentElementView.leadingAnchor.constraint(equalTo: containerView.layoutMarginsGuide.leadingAnchor),
+            embeddedPaymentElementView.trailingAnchor.constraint(equalTo: containerView.layoutMarginsGuide.trailingAnchor),
+            embeddedPaymentElementView.bottomAnchor.constraint(equalTo: containerView.layoutMarginsGuide.bottomAnchor),
+        ])
+        return containerView
+    }
+
+    @objc private func didToggleElementBounds() {
+        let showsBounds = showElementBoundsSwitch.isOn
+        highlightedContainerView?.layer.borderColor = showsBounds
+            ? UIColor.systemRed.cgColor
+            : UIColor.clear.cgColor
     }
 
     private func setupLoadingIndicator() {

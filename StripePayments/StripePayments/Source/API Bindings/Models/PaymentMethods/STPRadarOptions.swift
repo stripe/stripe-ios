@@ -6,10 +6,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Values for STPRadarOptions
-@_spi(STP) public class STPRadarOptions: NSObject {
+@_spi(InternalOnlyAPI) public class STPRadarOptions: NSObject {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     @objc public var hcaptchaToken: String?

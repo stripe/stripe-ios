@@ -7,10 +7,11 @@
 
 import Foundation
 import StripeCoreTestUtils
-@_spi(STP) import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 import UIKit
 
+@MainActor
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentMethodRowButton_unselected() {

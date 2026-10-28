@@ -7,9 +7,9 @@
 //
 
 import PassKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension PayWithLinkViewController {
@@ -54,7 +54,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var cancelButton: Button? = {
-            guard linkAccount.isInSignupFlow && context.launchedFromFlowController else {
+            guard linkAccount.isInSignupFlow && context.canContinueWithoutLink else {
                 return nil
             }
             let button = Button(

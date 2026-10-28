@@ -5,9 +5,9 @@
 //  Created by Mat Schmid on 7/23/25.
 //
 
-@_spi(STP)@testable import StripeCore
+@_spi(InternalOnlyAPI)@testable import StripeCore
 import StripeCoreTestUtils
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -48,9 +48,15 @@ class LinkInlineVerificationViewSnapshotTests: STPSnapshotTestCase {
     }
 
     @available(iOS 16.0, *)
+    func testLinkInlineVerificationView_RightToLeftWithError() {
+        verify(startVerificationError: makeStartVerificationRateLimitError(), rightToLeft: true)
+    }
+
+    @available(iOS 16.0, *)
     private func verify(
         displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails? = nil,
         startVerificationError: Error? = nil,
+        rightToLeft: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -66,7 +72,10 @@ class LinkInlineVerificationViewSnapshotTests: STPSnapshotTestCase {
             viewModel: viewModel,
             onComplete: { }
         )
-        let vc = UIHostingController(rootView: verificationView)
+        let rootView = rightToLeft
+            ? AnyView(verificationView.environment(\.layoutDirection, .rightToLeft))
+            : AnyView(verificationView)
+        let vc = UIHostingController(rootView: rootView)
 
         // Need to host the SwiftUI view in a window for iOSSnapshotTestCase to work:
         let window = UIWindow(frame: frame)

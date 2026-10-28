@@ -5,12 +5,12 @@
 //  Created by Yuki Tokuhiro on 10/13/23.
 //
 
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 import XCTest
 
 // ☠️ WARNING: These snapshots have selected borders that don't follow the correct curvature on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
@@ -33,13 +33,26 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_all_saved_pms_and_apple_pay_and_link(darkMode: false, showDefaultPMBadge: true)
     }
 
-    func _test_all_saved_pms_and_apple_pay_and_link(darkMode: Bool, appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(), showDefaultPMBadge: Bool = false) {
+    func test_all_saved_pms_editing_right_to_left() {
+        _test_all_saved_pms_and_apple_pay_and_link(
+            darkMode: false,
+            showDefaultPMBadge: true,
+            rightToLeft: true
+        )
+    }
+
+    func _test_all_saved_pms_and_apple_pay_and_link(
+        darkMode: Bool,
+        appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(),
+        showDefaultPMBadge: Bool = false,
+        rightToLeft: Bool = false
+    ) {
         let paymentMethods = [
             STPPaymentMethod._testCard(),
             STPPaymentMethod._testUSBankAccount(),
             STPPaymentMethod._testSEPA(),
         ]
-        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, linkBrand: .link, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, isTestMode: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true, allowsSetAsDefaultPM: showDefaultPMBadge, allowsUpdatePaymentMethod: false)
+        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, linkBrand: .link, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true, allowsSetAsDefaultPM: showDefaultPMBadge, allowsUpdatePaymentMethod: false)
         let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 0, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic), confirmHandler: { _, _ in return "" }))
         let sut = SavedPaymentOptionsViewController(
             savedPaymentMethods: paymentMethods,
@@ -62,17 +75,40 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         if darkMode {
             testWindow.overrideUserInterfaceStyle = .dark
         }
-        testWindow.rootViewController = sut
+        let rootViewController: UIViewController
+        let containerView: UIView
+        if rightToLeft {
+            let hostViewController = UIViewController()
+            hostViewController.addChild(sut)
+            hostViewController.setOverrideTraitCollection(
+                UITraitCollection(layoutDirection: .rightToLeft),
+                forChild: sut
+            )
+            rootViewController = hostViewController
+            containerView = hostViewController.view
+        } else {
+            rootViewController = sut
+            containerView = testWindow
+        }
+        testWindow.rootViewController = rootViewController
         // Adding sut.view as the subview should be implied by the above line, but Autolayout can't lay out the view correctly on this pass of the runloop unless we explicitly addSubview. Maybe there are side effects that happen one turn of the runloop after setting the rootViewController.
-        testWindow.addSubview(sut.view)
+        containerView.addSubview(sut.view)
+        if rightToLeft {
+            sut.didMove(toParent: rootViewController)
+            sut.view.forceRightToLeftLayout()
+        }
         sut.view.autosizeHeight(width: 1000)
         if showDefaultPMBadge {
             sut.isRemovingPaymentMethods = true
         }
         NSLayoutConstraint.activate([
-            sut.view.topAnchor.constraint(equalTo: testWindow.topAnchor),
-            sut.view.leftAnchor.constraint(equalTo: testWindow.leftAnchor),
+            sut.view.topAnchor.constraint(equalTo: containerView.topAnchor),
+            sut.view.leftAnchor.constraint(equalTo: containerView.leftAnchor),
         ])
+        XCTAssertEqual(
+            sut.view.effectiveUserInterfaceLayoutDirection,
+            rightToLeft ? .rightToLeft : .leftToRight
+        )
         STPSnapshotVerifyView(sut.view)
     }
 
@@ -97,7 +133,6 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             removeSavedPaymentMethodMessage: nil,
             merchantDisplayName: "Test Merchant",
             isCVCRecollectionEnabled: true,
-            isTestMode: false,
             allowsRemovalOfLastSavedPaymentMethod: false,
             allowsRemovalOfPaymentMethods: true,
             allowsSetAsDefaultPM: false,
