@@ -14,7 +14,7 @@ final class CameraPreviewContainerView: UIView {
     struct Styling {
         static let backgroundColor = IdentityUI.containerColor
 
-        static let shadows = [
+        static let standardShadows = [
             ShadowConfiguration(
                 shadowColor: .black,
                 shadowOffset: CGSize(width: 0, height: 1),
@@ -28,6 +28,21 @@ final class CameraPreviewContainerView: UIView {
                 shadowRadius: 5
             ),
         ]
+
+        static let viewfinderShadows = [
+            ShadowConfiguration(
+                shadowColor: .black,
+                shadowOffset: CGSize(width: 0, height: 4.5),
+                shadowOpacity: 0.12,
+                shadowRadius: 13.5
+            ),
+            ShadowConfiguration(
+                shadowColor: UIColor(red: 0x30 / 255, green: 0x31 / 255, blue: 0x3D / 255, alpha: 1),
+                shadowOffset: CGSize(width: 0, height: 13.5),
+                shadowOpacity: 0.08,
+                shadowRadius: 31.5
+            ),
+        ]
     }
 
     // MARK: Corner Radius
@@ -35,6 +50,21 @@ final class CameraPreviewContainerView: UIView {
     enum CornerRadius: CGFloat {
         case medium = 12
         case large = 16
+        case viewfinder = 20
+    }
+
+    enum ShadowStyle {
+        case standard
+        case viewfinder
+
+        var shadows: [ShadowConfiguration] {
+            switch self {
+            case .standard:
+                return Styling.standardShadows
+            case .viewfinder:
+                return Styling.viewfinderShadows
+            }
+        }
     }
 
     var cornerRadius: CornerRadius {
@@ -58,18 +88,20 @@ final class CameraPreviewContainerView: UIView {
     // MARK: Custom Layers
 
     /// Shadows for this view
-    private let shadowLayers: [CALayer] = Styling.shadows.map { config in
-        let layer = CALayer()
-        config.applyTo(layer: layer)
-        return layer
-    }
+    private let shadowLayers: [CALayer]
 
     // MARK: - Init
 
     init(
-        cornerRadius: CornerRadius = .large
+        cornerRadius: CornerRadius = .large,
+        shadowStyle: ShadowStyle = .standard
     ) {
         self.cornerRadius = cornerRadius
+        shadowLayers = shadowStyle.shadows.map { config in
+            let layer = CALayer()
+            config.applyTo(layer: layer)
+            return layer
+        }
         super.init(frame: .zero)
         addAndPinSubview(contentView)
         installShadowLayers()

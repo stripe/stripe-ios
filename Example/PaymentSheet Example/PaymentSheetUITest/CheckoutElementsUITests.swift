@@ -210,6 +210,8 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         ).firstMatch
         XCTAssertFalse(buyButton.exists)
         assertAnalyticsEvents([
+            "checkout_elements.init.started",
+            "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
         ])
 
@@ -219,11 +221,19 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // Then Checkout completes using the wallet confirmation flow
         payWithApplePay(successElement: app.alerts["Success"])
         assertAnalyticsEvents([
+            "checkout_elements.init.started",
+            "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
+            "checkout_elements.confirm.started",
             "stripeios.token_creation",
             "stripeios.paymenthandler.handle_next_action.started",
             "stripeios.paymenthandler.handle_next_action.finished",
+            "checkout_elements.confirm.succeeded",
         ])
+        XCTAssertEqual(
+            analyticsLog.first { $0[string: "event"] == "checkout_elements.confirm.succeeded" }?[string: "invocation_source"],
+            "express_checkout_element"
+        )
     }
 
     func testExpressCheckoutElementLinkAnalytics() {
@@ -239,7 +249,11 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         let linkButton = app.buttons["Pay with Link"]
         XCTAssertTrue(linkButton.waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["Select payment method"].exists)
-        assertAnalyticsEvents(["elements.express_checkout_element.init"])
+        assertAnalyticsEvents([
+            "checkout_elements.init.started",
+            "checkout_elements.init.succeeded",
+            "elements.express_checkout_element.init",
+        ])
 
         // When the customer opens Link from Express Checkout Element
         linkButton.tap()
@@ -247,7 +261,10 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // Then Link opens and its analytics remain part of the ECE sequence
         XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: 10))
         assertAnalyticsEvents([
+            "checkout_elements.init.started",
+            "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
+            "checkout_elements.confirm.started",
             "link.signup.flow_presented",
         ])
     }

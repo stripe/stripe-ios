@@ -31,7 +31,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
             ))
 
             // When the merchant confirms Checkout
-            let result = await checkout.confirm(flow)
+            let result = await checkout.confirm(source: .merchant) { flow }
 
             // Then the failed result preserves the server's optional message
             guard case .failed(let error) = result else {

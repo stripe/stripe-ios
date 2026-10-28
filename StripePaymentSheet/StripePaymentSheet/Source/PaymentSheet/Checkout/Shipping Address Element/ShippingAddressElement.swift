@@ -12,7 +12,7 @@ import UIKit
 @MainActor
 protocol ShippingAddressElementDelegate: AnyObject {
     /// Sets or clears the customer's shipping address.
-    func updateShippingAddress(name: String?, address: CheckoutController.Address?) async throws
+    func updateShippingAddressFromElement(name: String?, address: CheckoutController.Address?) async throws
 }
 
 /// A shipping address form backed by a Checkout Session.
@@ -150,7 +150,7 @@ extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
         let addressAnalyticData = addressViewController.addressAnalyticData(for: addressDetails)
         log(event: .shippingAddressElementSaveStarted, addressAnalyticData: addressAnalyticData)
         do {
-            try await delegate.updateShippingAddress(
+            try await delegate.updateShippingAddressFromElement(
                 name: addressDetails.name,
                 address: CheckoutController.Address(
                     country: addressDetails.address.country,

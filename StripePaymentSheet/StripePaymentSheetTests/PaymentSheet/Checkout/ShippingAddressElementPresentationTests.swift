@@ -401,7 +401,7 @@ private final class ShippingAddressElementDelegateMock: ShippingAddressElementDe
         self.error = error
     }
 
-    func updateShippingAddress(name: String?, address: CheckoutController.Address?) async throws {
+    func updateShippingAddressFromElement(name: String?, address: CheckoutController.Address?) async throws {
         if let error {
             throw error
         }

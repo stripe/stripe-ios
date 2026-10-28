@@ -24,16 +24,36 @@ protocol CheckoutSessionWalletUpdater: AnyObject {
     ///   pending operations. Calling the enqueuing variant there would deadlock.
     func updateTaxRegionWithoutEnqueueing(
         address: CheckoutController.Address,
-        canUpdateWhileSheetPresented: Bool
+        canUpdateWhileSheetPresented: Bool,
+        confirmationSource: CheckoutController.ConfirmingElement
     ) async throws -> CheckoutController.Session
 }
 
 extension CheckoutController: CheckoutSessionWalletUpdater {
     func updateTaxRegionWithoutEnqueueing(
         address: Address,
-        canUpdateWhileSheetPresented: Bool
+        canUpdateWhileSheetPresented: Bool,
+        confirmationSource: CheckoutController.ConfirmingElement
     ) async throws -> Session {
-        try await performUnqueuedUpdate(.setTaxRegion(address), canUpdateWhileSheetPresented: canUpdateWhileSheetPresented)
-        return session
+        let action: CheckoutControllerAnalyticsHelper.CheckoutAction = session.automaticTaxAddressSource == "shipping" ? .updateShippingAddress : .updateBillingAddress
+        let source: CheckoutControllerAnalyticsHelper.InvocationSource = confirmationSource == .expressCheckoutElement
+            ? .expressCheckoutElement : (action == .updateBillingAddress ? .paymentElement : .merchant)
+        let startedAction = analyticsHelper.logStarted(action, session: session, additionalParams: ["invocation_source": source.rawValue])
+        var didRequestTaxUpdate = false
+        var failure: Error?
+        defer {
+            analyticsHelper.logAddressUpdateFinished(startedAction, session: session, source: source, didRequestTaxUpdate: didRequestTaxUpdate, error: failure)
+        }
+        do {
+            try await performUnqueuedUpdate(
+                .setTaxRegion(address),
+                canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
+                onRequest: { didRequestTaxUpdate = true }
+            )
+            return session
+        } catch {
+            failure = error
+            throw error
+        }
     }
 }
