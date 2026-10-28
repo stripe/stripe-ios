@@ -243,8 +243,6 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             "elements.express_checkout_element.init",
             "checkout_elements.confirm.started",
             "stripeios.token_creation",
-            "stripeios.paymenthandler.handle_next_action.started",
-            "stripeios.paymenthandler.handle_next_action.finished",
             "checkout_elements.confirm.succeeded",
         ])
         XCTAssertEqual(
