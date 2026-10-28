@@ -513,7 +513,7 @@ extension CheckoutController {
 
     // MARK: - Confirm Response Handling
 
-    // TODO(CC migration): [1] Verify the deployed CC poll contract; the removed-field guards below need no replacement.
+    // TODO(CC migration): [1] Verify the deployed CC poll contract.
     // Timeout succeeds with the last server-reported Session state; not_started is an integration error.
     // Phase numbers follow CHECKOUT_CONFIRM_MIGRATION.md; update fixtures and tests alongside phases 2–5.
     /// Confirms a Checkout Session, handles any next action, and waits for confirmation to settle.
@@ -546,42 +546,20 @@ extension CheckoutController {
         // Release the assertion only after the request using it has finished, before handling next actions.
         await confirmationChallenge?.complete()
 
-        // TODO(CC migration): [3] Remove this guard without reconstructing submission-attempt state.
-        // PP only exposes submission_attempt for manual approval; CC does not expose it.
-        // Ordinary card/CVC confirmation failures are API errors handled by the catch above.
-        if response.submissionAttempt?.state == .failed {
-            return .failed(paymentError(from: response), sessionResponse: response)
-        }
-
-        // Manual approval isn't supported yet
-        // TODO(CC migration): [3] Remove this guard; CC does not expose manual-approval submission state.
-        if response.submissionAttempt?.state == .requiresApproval {
-            let error = CheckoutError.unknown(debugDescription: "Checkout Session confirmation unexpectedly requires manual approval.")
-            return .failed(error, sessionResponse: response)
-        }
-
-        // Orchestration isn't supported yet
-        // TODO(CC migration): [3] Remove this guard; CC normalizes orchestration into payment_response.
-        // Handle supported next actions without trying to infer the internal routing choice.
-        if response.routeToOrchestrationInterface == true {
-            let error = CheckoutError.unknown(debugDescription: "Checkout Session confirmation unexpectedly requires orchestration.")
-            return .failed(error, sessionResponse: response)
-        }
-
-        // 2. Handle any next action required by the Intent.
-        // TODO(CC migration): [3] Use paymentResponse's PI/SI client-secret references with PaymentHandler, as in #7500.
-        // Keep retrieved Intents local and preserve this Session response on retrieval/action failure or cancellation.
+        // 2. Retrieve the referenced Intent and handle next actions only when required.
         let clientCompletedIntent: PaymentOrSetupIntent?
-        if let paymentIntent = response.paymentIntent {
-            let result: (STPPaymentHandlerActionStatus, STPPaymentIntent?, Error?) = await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(
-                    for: paymentIntent,
-                    with: authenticationContext,
-                    returnURL: requestParameters.returnURL
-                ) { status, paymentIntent, error in
-                    continuation.resume(returning: (status, paymentIntent, error))
-                }
-            }
+        if response.paymentResponse == nil {
+            // No payment response means no Intent next action to handle; continue with Session/poll handling.
+            clientCompletedIntent = nil
+        } else if response.paymentResponse?.status != .requiresAction {
+            // If status != requires_action, continue.
+            clientCompletedIntent = nil
+        } else if let paymentIntentReference = response.paymentResponse?.paymentIntent {
+            let result = await paymentHandler.handleNextAction(
+                paymentIntentClientSecret: paymentIntentReference.clientSecret,
+                authenticationContext: authenticationContext,
+                returnURL: requestParameters.returnURL
+            )
             switch result.0 {
             case .succeeded:
                 guard let paymentIntent = result.1 else {
@@ -592,22 +570,18 @@ extension CheckoutController {
             case .canceled:
                 return .canceled(sessionResponse: response)
             case .failed:
-                let error = result.2 ?? PaymentSheetError.errorHandlingNextAction
+                let error: Error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
                 let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a PaymentIntent.")
                 return .failed(error, sessionResponse: response)
             }
-        } else if let setupIntent = response.setupIntent {
-            let result: (STPPaymentHandlerActionStatus, STPSetupIntent?, Error?) = await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(
-                    for: setupIntent,
-                    with: authenticationContext,
-                    returnURL: requestParameters.returnURL
-                ) { status, setupIntent, error in
-                    continuation.resume(returning: (status, setupIntent, error))
-                }
-            }
+        } else if let setupIntentReference = response.paymentResponse?.setupIntent {
+            let result = await paymentHandler.handleNextAction(
+                setupIntentClientSecret: setupIntentReference.clientSecret,
+                authenticationContext: authenticationContext,
+                returnURL: requestParameters.returnURL
+            )
             switch result.0 {
             case .succeeded:
                 guard let setupIntent = result.1 else {
@@ -625,7 +599,8 @@ extension CheckoutController {
                 return .failed(error, sessionResponse: response)
             }
         } else {
-            clientCompletedIntent = nil
+            let error = CheckoutError.unknown(debugDescription: "CheckoutClient requires an action without a supported Intent.")
+            return .failed(error, sessionResponse: response)
         }
 
         // 3. Poll if the Checkout Session is still in progress.
@@ -736,9 +711,7 @@ extension CheckoutController {
     }
 
     private static func paymentError(from session: PaymentPagesAPIResponse) -> Error {
-        // TODO(CC migration): [3] Read paymentResponse.lastPaymentError for either PI or SI; keep the generic fallback.
-        let lastErrorFields = session.paymentIntent?.lastPaymentError?.allResponseFields
-            ?? session.setupIntent?.lastSetupError?.allResponseFields
+        let lastErrorFields = session.paymentResponse?.lastPaymentError?.allResponseFields
         return NSError.stp_error(fromStripeResponse: lastErrorFields.map { ["error": $0] })
             ?? PaymentSheetError.errorHandlingNextAction
     }
