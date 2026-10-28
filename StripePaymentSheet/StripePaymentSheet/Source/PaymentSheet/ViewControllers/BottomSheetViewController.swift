@@ -118,6 +118,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable, Payme
     }
 
     let appearance: PaymentSheet.Appearance
+    private let checkoutSessionID: String?
 
     private var contentViewController: BottomSheetContentViewController
 
@@ -134,10 +135,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable, Payme
     required init(
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
+        checkoutSessionID: String? = nil,
         didCancelNative3DS2: @escaping () -> Void
     ) {
         self.contentViewController = contentViewController
         self.appearance = appearance
+        self.checkoutSessionID = checkoutSessionID
         self.didCancelNative3DS2 = didCancelNative3DS2
 
         super.init(nibName: nil, bundle: nil)
@@ -147,6 +150,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable, Payme
         addChild(contentViewController)
         contentViewController.didMove(toParent: self)
         contentContainerView.addArrangedSubview(contentViewController.view)
+        contentViewController.navigationBar.checkoutSessionID = checkoutSessionID
         navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
         self.view.backgroundColor = appearance.colors.background
     }
@@ -246,6 +250,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable, Payme
         scrollView.layoutIfNeeded()
         scrollView.updateConstraintsIfNeeded()
         oldContentViewController.navigationBar.removeFromSuperview()
+        newContentViewController.navigationBar.checkoutSessionID = checkoutSessionID
         navigationBarContainerView.addArrangedSubview(newContentViewController.navigationBar)
         navigationBarContainerView.layoutIfNeeded()
         // Layout is mostly completed at this point. The new height is the navigation bar + content
@@ -511,7 +516,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable, Payme
         let shouldLogPaymentSheetAnalyticsOnDismissal = contentViewController.navigationBar.shouldLogPaymentSheetAnalyticsOnDismissal
         contentViewController.didTapOrSwipeToDismiss()
         if shouldLogPaymentSheetAnalyticsOnDismissal {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed, checkoutSessionID: checkoutSessionID)
         }
     }
 }

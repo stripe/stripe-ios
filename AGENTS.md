@@ -133,7 +133,7 @@ In the PR description's `## Testing` section:
 - Don't use test commands or test names as the test description.
 
 ### Changelog Entries
-If adding a new CHANGELOG entry, always put it in the "changes pending release" section.
+Record only non-negligible user-facing changes in the CHANGELOG (`StripeInternal` SPIs are considered non-public APIs and users don't use them). If you are not sure if something belongs in the CHANGELOG, use existing entries as a standard and err on the side of including. However, always ask for confirmation before adding a CHANGELOG entry. Use the Dante skill to write CHANGELOG entries.
 
 ## Project Architecture
 

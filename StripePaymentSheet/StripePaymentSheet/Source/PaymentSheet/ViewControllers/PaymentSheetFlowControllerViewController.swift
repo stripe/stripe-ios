@@ -313,6 +313,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         ])
         stackView.bringSubviewToFront(headerLabel)
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
+        // Form padding is explicit; safe-area adjustments can create a layout loop for small bottom insets.
+        stackView.insetsLayoutMarginsFromSafeArea = false
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical

@@ -135,7 +135,8 @@ extension PaymentSheet {
         intent: Intent,
         paymentOption: PaymentOption,
         paymentHandler: STPPaymentHandler,
-        integrationShape: IntegrationShape
+        integrationShape: IntegrationShape,
+        checkoutSessionID: String? = nil
     ) async -> PreconfirmActionsResult {
         // Perform PaymentSheet-specific local actions before confirming.
         // These actions are not represented in the PaymentIntent state and are specific to
@@ -197,6 +198,7 @@ extension PaymentSheet {
                     preConfirmationViewController,
                     configuration: configuration,
                     nativeSheetPresentation: nativeSheetPresentation,
+                    checkoutSessionID: checkoutSessionID,
                     didCancelNative3DS2: {
                         paymentHandler.cancel3DS2ChallengeFlow()
                     }

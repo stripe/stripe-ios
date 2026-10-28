@@ -206,7 +206,7 @@ final class CardSectionElement: ContainerElement {
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
             lastPanElementValidationState = panElement.validationState
             if case .valid = panElement.validationState {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted, checkoutSessionID: analyticsHelper?.checkoutSessionID)
             }
         }
 
@@ -219,7 +219,7 @@ final class CardSectionElement: ContainerElement {
            !panElement.isEditing,
            !hasLoggedExpectedExtraDigitsButUserEntered16 {
             if panElement.text.count == 16 {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .cardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields)
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .cardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields, checkoutSessionID: analyticsHelper?.checkoutSessionID)
                 hasLoggedExpectedExtraDigitsButUserEntered16 = true
             }
         }
@@ -231,7 +231,7 @@ final class CardSectionElement: ContainerElement {
            lastDisallowedCardBrandLogged != brand {
 
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
-                event: .paymentSheetDisallowedCardBrand,
+                event: .paymentSheetDisallowedCardBrand, checkoutSessionID: analyticsHelper?.checkoutSessionID,
                 params: ["brand": STPCardBrandUtilities.apiValue(from: brand)]
             )
             lastDisallowedCardBrandLogged = brand
@@ -300,7 +300,7 @@ final class CardSectionElement: ContainerElement {
 
             // If we had no brands but now have selectable brands the CBC indicator will appear, log the analytic
             if !hadBrands, fetchedCardBrands.filter({ self.cardBrandFilter.isAccepted(cardBrand: $0) }).count > 1 {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandChoiceIndicator))
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandChoiceIndicator), checkoutSessionID: analyticsHelper?.checkoutSessionID)
             }
 
             if self.cardBrands != fetchedCardBrands {
