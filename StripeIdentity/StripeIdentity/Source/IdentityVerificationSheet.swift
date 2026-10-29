@@ -223,6 +223,15 @@ final public class IdentityVerificationSheet {
     ) {
         // Keep this API nonisolated for source compatibility. UIKit presentation was already
         // required to run on the main thread, so preserve its synchronous behavior without an actor hop.
+        // An off-main call is integration misuse: assert in debug, and hop to main in release
+        // because `MainActor.assumeIsolated` would crash the app.
+        guard Thread.isMainThread else {
+            assertionFailure("IdentityVerificationSheet.present(from:completion:) must be called on the main thread")
+            DispatchQueue.main.async {
+                self.present(from: presentingViewController, completion: completion)
+            }
+            return
+        }
         MainActor.assumeIsolated {
             presentOnMainActor(
                 from: presentingViewController,
@@ -236,6 +245,19 @@ final public class IdentityVerificationSheet {
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
     ) {
+        // Replacing the stored completion would leave the running flow's caller without a
+        // result, and an `await present(from:)` caller would wait forever.
+        guard self.completion == nil else {
+            completion(
+                .flowFailed(
+                    error: IdentityVerificationSheetError.unknown(
+                        debugDescription: "IdentityVerificationSheet is already presented"
+                    )
+                )
+            )
+            return
+        }
+
         if let sheetController = verificationSheetController {
             sheetController.analyticsClient.startTrackingTimeToScreen(from: nil, sheetController: sheetController)
         }
@@ -260,8 +282,9 @@ final public class IdentityVerificationSheet {
                     apiClient: .shared
                 )
             }
-            completion(result)
+            // Clear first so the merchant can present again from inside `completion`.
             self.completion = nil
+            completion(result)
         }
         self.completion = completion
 
