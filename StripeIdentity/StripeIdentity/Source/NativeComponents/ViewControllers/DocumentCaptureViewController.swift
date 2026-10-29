@@ -650,18 +650,11 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         let documentUploader = documentUploader
         Task { @MainActor [weak self] in
             guard let sheetController else { return }
-            do {
-                try await sheetController.saveDocumentBackAndTransition(
-                    from: screenName,
-                    documentUploader: documentUploader
-                )
-            } catch {
-                self?.imageScanningSession.setStateScanned(
-                    expectedClassification: .back,
-                    capturedData: backImage
-                )
-                return
-            }
+            // Leave the saving state whether the save succeeded or failed.
+            try? await sheetController.saveDocumentBackAndTransition(
+                from: screenName,
+                documentUploader: documentUploader
+            )
             self?.imageScanningSession.setStateScanned(
                 expectedClassification: .back,
                 capturedData: backImage
