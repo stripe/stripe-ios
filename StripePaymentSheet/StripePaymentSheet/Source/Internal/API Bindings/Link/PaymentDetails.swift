@@ -341,7 +341,7 @@ extension ConsumerPaymentDetails.Details.Card {
 
 // MARK: - Details.BankAccount
 extension ConsumerPaymentDetails.Details {
-    final class BankAccount: Codable {
+    struct BankAccount: Codable {
         let iconCode: String?
         let bankName: String
         /// The account's name (e.g. "Total Checking"). This can be null for some bank accounts.
@@ -360,20 +360,6 @@ extension ConsumerPaymentDetails.Details {
             case accountName = "bankAccountName"
             case last4
             case country
-        }
-
-        init(
-            iconCode: String?,
-            bankName: String,
-            accountName: String? = nil,
-            last4: String,
-            country: String
-        ) {
-            self.iconCode = iconCode
-            self.bankName = bankName
-            self.accountName = accountName
-            self.last4 = last4
-            self.country = country
         }
 
         func displayName(with nickname: String?) -> String {

@@ -274,6 +274,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
         let bankAccount = ConsumerPaymentDetails.Details.BankAccount(
             iconCode: nil,
             bankName: "Unknown Credit Union",
+            accountName: nil,
             last4: "1234",
             country: "COUNTRY_US"
         )
