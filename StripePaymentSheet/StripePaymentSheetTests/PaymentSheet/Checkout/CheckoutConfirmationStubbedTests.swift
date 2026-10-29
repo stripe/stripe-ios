@@ -1447,7 +1447,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         expectedAllowRedisplay: String? = nil,
         expectedBillingEmail: BillingEmailExpectation? = nil,
         expectedPaymentUserAgent: String? = nil,
-        expectedIntegrationSubtype: String = "payment-element",
+        expectedIntegrationSubtype: String = "mobile-payment-element",
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> XCTestExpectation {
@@ -1488,7 +1488,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 ? ["client_attribution_metadata", "payment_method_data[client_attribution_metadata]"]
                 : ["client_attribution_metadata"]
             for prefix in metadataPrefixes {
-                XCTAssertEqual(params["\(prefix)[merchant_integration_source]"], "checkout", file: file, line: line)
+                XCTAssertEqual(params["\(prefix)[merchant_integration_source]"], "mobile-checkout", file: file, line: line)
                 XCTAssertEqual(params["\(prefix)[merchant_integration_subtype]"], expectedIntegrationSubtype, file: file, line: line)
             }
             if let expectedAllowRedisplay {

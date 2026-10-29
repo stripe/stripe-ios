@@ -43,7 +43,7 @@ extension STPClientAttributionMetadata {
             elementsSessionConfigId: checkoutSession.elementsSession.configID,
             checkoutSessionId: checkoutSession.id,
             checkoutConfigId: checkoutSession.checkoutConfigID,
-            merchantIntegrationSource: "checkout",
+            merchantIntegrationSource: "mobile-checkout",
             merchantIntegrationSubtype: attribution?.confirmingElement.rawValue ?? "mobile",
             merchantIntegrationAdditionalElements: attribution?.configuredElements,
             paymentMethodSelectionFlow: checkoutSession.automaticPaymentMethodTypes.map {

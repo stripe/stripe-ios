@@ -48,11 +48,11 @@ class STPClientAttributionMetadataTests: XCTestCase {
                 "elements_session_config_id": "es_config_test",
                 "checkout_session_id": "cs_test",
                 "checkout_config_id": "config_test",
-                "merchant_integration_source": "checkout",
-                "merchant_integration_subtype": confirmingElement == .paymentElement ? "payment-element" : "express-checkout-element",
+                "merchant_integration_source": "mobile-checkout",
+                "merchant_integration_subtype": confirmingElement == .paymentElement ? "mobile-payment-element" : "mobile-express-checkout-element",
                 "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)",
                 "merchant_integration_additional_elements": confirmingElement == .paymentElement
-                    ? ["payment", "expressCheckout", "address", "currencySelector"] : ["expressCheckout"],
+                    ? ["mobile-payment-element", "mobile-express-checkout-element", "mobile-shipping-address-element", "mobile-currency-selector-element"] : ["mobile-express-checkout-element"],
             ]
             expected["payment_method_selection_flow"] = selectionFlow
             XCTAssertEqual(try metadata.encodeJSONDictionary() as NSDictionary, expected as NSDictionary)
