@@ -18,9 +18,15 @@
 
 "BSB number" = "Številka BSB";
 
+"Bank Account" = "Bančni račun";
+
 "Bank account •••• %@" = "Bančni račun •••• %@";
 
+"Billing address" = "Naslov plačnika računa";
+
 "Billing address is same as shipping" = "Naslov za obračunavanje je isti kot dostavni naslov";
+
+"CVC" = "CVC";
 
 "Cancel" = "Prekliči";
 
@@ -73,6 +79,8 @@
 "Island" = "Otok";
 
 "Last" = "Priimek";
+
+"MM / YY" = "MM/LL";
 
 "Name" = "Ime";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Vaša poštna številka ni veljavna.";
 
+"Your card number is incomplete." = "Številka vaše kartice ni popolna.";
+
+"Your card number is invalid." = "Številka vaše kartice ni veljavna.";
+
+"Your card's expiration date is incomplete." = "Datum poteka vaše kartice ni popoln.";
+
+"Your card's expiration date is invalid." = "Datum poteka vaše kartice ni veljaven.";
+
+"Your card's expiration month is invalid." = "Mesec poteka vaše kartice ni veljaven.";
+
+"Your card's security code is incomplete." = "Varnostna koda vaše kartice ni popolna.";
+
 "Your email is invalid." = "Vaš e-poštni naslov ni veljaven.";
 
 "Your payment information will not be saved." = "Vaši podatki o plačilo ne bodo shranjeni.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Vaša poštna številka ni veljavna.";
 
 "ZIP" = "Poštna številka";
+
+"expiration date" = "datum poteka";

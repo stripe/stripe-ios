@@ -18,12 +18,6 @@
 
 "BSB" = "Κωδικός BSB";
 
-"Bank Account" = "Τραπεζικός λογαριασμός";
-
-"Billing address" = "Διεύθυνση χρέωσης";
-
-"CVC" = "CVC";
-
 "Card information" = "Στοιχεία κάρτας";
 
 "Card number" = "Αριθμός κάρτας";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Επιβεβαιώστε τον κωδικό %@";
 
 "Invalid data." = "Μη έγκυρα δεδομένα.";
-
-"MM / YY" = "ΜΜ / ΕΕ";
 
 "MM/YY" = "ΜΜ/ΕΕ";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Η κάρτα σας έχει λήξει.";
 
-"Your card number is incomplete." = "Ο αριθμός της κάρτας σας είναι ελλιπής.";
-
-"Your card number is invalid." = "Ο αριθμός της κάρτας σας δεν είναι έγκυρος.";
-
-"Your card's expiration date is incomplete." = "Η ημερομηνία λήξης της κάρτας σας είναι ελλιπής.";
-
-"Your card's expiration date is invalid." = "Η ημερομηνία λήξης της κάρτας σας δεν είναι έγκυρη.";
-
-"Your card's expiration month is invalid." = "Ο μήνας λήξης της κάρτας σας δεν είναι έγκυρος.";
-
 "Your card's expiration year is invalid." = "Το έτος λήξης της κάρτας σας δεν είναι έγκυρο.";
-
-"Your card's security code is incomplete." = "Ο κωδικός ασφαλείας της κάρτας σας είναι ελλιπής.";
 
 "Your card's security code is invalid." = "Ο κωδικός ασφαλείας της κάρτας σας δεν είναι έγκυρος.";
 
 "card number" = "αριθμός κάρτας";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "ημερομηνία λήξης";

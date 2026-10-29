@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Rekening bank";
-
-"Billing address" = "Alamat tagihan";
-
-"CVC" = "CVC";
-
 "Card information" = "Informasi kartu";
 
 "Card number" = "Nomor kartu";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Konfirmasikan %@ Anda";
 
 "Invalid data." = "Data tidak valid.";
-
-"MM / YY" = "BB / TT";
 
 "MM/YY" = "BB/TT";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Kartu Anda telah kedaluwarsa.";
 
-"Your card number is incomplete." = "Nomor kartu Anda tidak lengkap.";
-
-"Your card number is invalid." = "Nomor kartu Anda tidak valid.";
-
-"Your card's expiration date is incomplete." = "Tanggal kedaluwarsa kartu Anda tidak lengkap.";
-
-"Your card's expiration date is invalid." = "Tanggal kedaluwarsa kartu Anda tidak valid.";
-
-"Your card's expiration month is invalid." = "Bulan kedaluwarsa kartu Anda tidak valid.";
-
 "Your card's expiration year is invalid." = "Tahun kedaluwarsa kartu Anda tidak valid.";
-
-"Your card's security code is incomplete." = "Kode keamanan kartu Anda tidak lengkap.";
 
 "Your card's security code is invalid." = "Kode keamanan kartu Anda tidak valid.";
 
 "card number" = "nomor kartu";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "Tanggal kedaluwarsa";

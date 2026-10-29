@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB номер";
 
+"Bank Account" = "Банкова сметка";
+
 "Bank account •••• %@" = "Банкова сметка •••• %@";
 
+"Billing address" = "Адрес за фактуриране";
+
 "Billing address is same as shipping" = "Адресът за фактуриране е същият като за доставка";
+
+"CVC" = "CVC";
 
 "Cancel" = "Отмяна";
 
@@ -73,6 +79,8 @@
 "Island" = "Остров";
 
 "Last" = "Фамилия";
+
+"MM / YY" = "ММ / ГГ";
 
 "Name" = "Име";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Вашият пощенски код е невалиден.";
 
+"Your card number is incomplete." = "Номерът на Вашата карта е непълен.";
+
+"Your card number is invalid." = "Номерът на Вашата карта е невалиден.";
+
+"Your card's expiration date is incomplete." = "Срокът на валидност на Вашата карта е непълен.";
+
+"Your card's expiration date is invalid." = "Датата на валидност на Вашата карта е невалидна.";
+
+"Your card's expiration month is invalid." = "Месецът на валидност на Вашата карта е невалиден.";
+
+"Your card's security code is incomplete." = "Кодът за сигурност на Вашата карта е непълен.";
+
 "Your email is invalid." = "Вашият имейл е невалиден.";
 
 "Your payment information will not be saved." = "Вашата информация за плащане няма да бъде запазена.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Вашият пощенски код е невалиден.";
 
 "ZIP" = "п.к.";
+
+"expiration date" = "дата на валидност";

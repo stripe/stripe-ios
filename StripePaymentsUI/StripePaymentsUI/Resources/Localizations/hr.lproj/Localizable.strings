@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Bankovni račun";
-
-"Billing address" = "Adresa za naplatu";
-
-"CVC" = "CVC";
-
 "Card information" = "Informacije o kartici";
 
 "Card number" = "Broj kartice";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Potvrdite svoj %@";
 
 "Invalid data." = "Nevaljani podaci.";
-
-"MM / YY" = "MM / GG";
 
 "MM/YY" = "MM/GG";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Vaša kartica je istekla.";
 
-"Your card number is incomplete." = "Broj vaše kartice nije kompletan.";
-
-"Your card number is invalid." = "Broj vaše kartice nije valjan.";
-
-"Your card's expiration date is incomplete." = "Datum isteka vaše kartice nije kompletan.";
-
-"Your card's expiration date is invalid." = "Datum isteka vaše kartice nije valjan.";
-
-"Your card's expiration month is invalid." = "Mjesec isteka kartice nije valjan.";
-
 "Your card's expiration year is invalid." = "Godina isteka kartice nije valjana.";
-
-"Your card's security code is incomplete." = "Sigurnosni kod vaše kartice nije kompletan.";
 
 "Your card's security code is invalid." = "Sigurnosni kod vaše kartice nije valjan.";
 
 "card number" = "broj kartice";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "Datum isteka";

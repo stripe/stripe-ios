@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Conta bancária";
-
-"Billing address" = "Endereço de faturação";
-
-"CVC" = "CVC";
-
 "Card information" = "Informações do cartão";
 
 "Card number" = "Número do cartão";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Confirme o seu %@";
 
 "Invalid data." = "Dados inválidos.";
-
-"MM / YY" = "MM/AA";
 
 "MM/YY" = "MM/AA";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "O seu cartão expirou.";
 
-"Your card number is incomplete." = "O número do seu cartão está incompleto.";
-
-"Your card number is invalid." = "O número do seu cartão é inválido.";
-
-"Your card's expiration date is incomplete." = "A data de validade do seu cartão está incompleta.";
-
-"Your card's expiration date is invalid." = "A data de validade do seu cartão é inválida.";
-
-"Your card's expiration month is invalid." = "O mês de validade do seu cartão é inválido.";
-
 "Your card's expiration year is invalid." = "O ano de validade do seu cartão é inválido.";
-
-"Your card's security code is incomplete." = "O código de segurança do seu cartão está incompleto.";
 
 "Your card's security code is invalid." = "O código de segurança do seu cartão é inválido.";
 
 "card number" = "número do cartão";
 
 "example@example.com" = "exemplo@exemplo.com";
-
-"expiration date" = "Data de validade";

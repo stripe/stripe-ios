@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Банковский счет";
-
-"Billing address" = "Адрес для выставления счета";
-
-"CVC" = "Код CVV/CVC";
-
 "Card information" = "Данные платежной карты";
 
 "Card number" = "Номер карты";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Подтвердите %@";
 
 "Invalid data." = "Недопустимые данные.";
-
-"MM / YY" = "ММ / ГГ";
 
 "MM/YY" = "ММ/ГГ";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Срок действия карты истек.";
 
-"Your card number is incomplete." = "Номер карты введен не полностью.";
-
-"Your card number is invalid." = "Номер карты недействителен.";
-
-"Your card's expiration date is incomplete." = "Дата истечения срока действия карты введена не полностью.";
-
-"Your card's expiration date is invalid." = "Дата истечения срока действия карты недействительна.";
-
-"Your card's expiration month is invalid." = "Недопустимый месяц окончания действия карты.";
-
 "Your card's expiration year is invalid." = "Недопустимый год окончания действия карты.";
-
-"Your card's security code is incomplete." = "Код CVV/CVC карты введен не полностью.";
 
 "Your card's security code is invalid." = "Код CVV/CVC карты недействителен.";
 
 "card number" = "номер карты";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "срок окончания действия";

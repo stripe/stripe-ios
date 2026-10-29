@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB-number";
 
+"Bank Account" = "Pangakonto";
+
 "Bank account •••• %@" = "Pangakonto •••• %@";
 
+"Billing address" = "Arveldusaadress";
+
 "Billing address is same as shipping" = "Arveldusaadress on sama mis tarneaadress";
+
+"CVC" = "CVC";
 
 "Cancel" = "Tühista";
 
@@ -73,6 +79,8 @@
 "Island" = "Saar";
 
 "Last" = "Viimane";
+
+"MM / YY" = "KK / AA";
 
 "Name" = "Nimi";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Teie postiindeks on vigane.";
 
+"Your card number is incomplete." = "Teie kaardinumber on puudulik.";
+
+"Your card number is invalid." = "Teie kaardinumber on kehtetu.";
+
+"Your card's expiration date is incomplete." = "Kaardi aegumiskuupäev on puudulik.";
+
+"Your card's expiration date is invalid." = "Teie kaardi aegumiskuupäev on kehtetu.";
+
+"Your card's expiration month is invalid." = "Kaardi aegumiskuu on kehtetu.";
+
+"Your card's security code is incomplete." = "Teie kaardi turvakood on puudulik.";
+
 "Your email is invalid." = "Teie meiliaadress on kehtetu.";
 
 "Your payment information will not be saved." = "Teie makseteavet ei salvestata.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Teie sihtnumber on kehtetu.";
 
 "ZIP" = "Sihtnr";
+
+"expiration date" = "aegumiskuupäev";

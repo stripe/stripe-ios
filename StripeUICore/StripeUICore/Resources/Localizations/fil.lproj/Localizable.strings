@@ -18,9 +18,15 @@
 
 "BSB number" = "Numero ng BSB";
 
+"Bank Account" = "Account sa Bangko";
+
 "Bank account •••• %@" = "Account sa bangko •••• %@";
 
+"Billing address" = "Adres para sa billing";
+
 "Billing address is same as shipping" = "Ang address sa billing ay kapareho ng sa pagpapadala";
+
+"CVC" = "CVC";
 
 "Cancel" = "Kanselahin";
 
@@ -73,6 +79,8 @@
 "Island" = "Isla";
 
 "Last" = "Apelyido";
+
+"MM / YY" = "BB / TT";
 
 "Name" = "Pangalan";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Ang iyong ZIP code ay hindi wasto.";
 
+"Your card number is incomplete." = "Ang numero ng iyong kard ay di kumpleto.";
+
+"Your card number is invalid." = "Ang numero ng iyong kard ay di balido.";
+
+"Your card's expiration date is incomplete." = "Ang petsa ng pagkapaso ng iyong kard ay di kumpleto.";
+
+"Your card's expiration date is invalid." = "Ang petsa ng pagkapaso ng iyong kard ay di balido.";
+
+"Your card's expiration month is invalid." = "Ang buwan ng pagkapaso ng iyong kard ay di balido.";
+
+"Your card's security code is incomplete." = "Ang security code ng iyong kard ay di kumpleto.";
+
 "Your email is invalid." = "Ang iyong email ay imbalido.";
 
 "Your payment information will not be saved." = "Hindi mase-save ang iyong impormasyon ng pagbabayad.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Ang iyong postal code ay di balido.";
 
 "ZIP" = "ZIP";
+
+"expiration date" = "Petsa ng pagkapaso";

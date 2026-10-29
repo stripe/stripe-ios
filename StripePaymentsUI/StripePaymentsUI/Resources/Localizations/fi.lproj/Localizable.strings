@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Pankkitili";
-
-"Billing address" = "Laskutusosoite";
-
-"CVC" = "CVC-tunnus";
-
 "Card information" = "Kortin tiedot";
 
 "Card number" = "Kortin numero";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Vahvista %@";
 
 "Invalid data." = "Virheelliset tiedot.";
-
-"MM / YY" = "KK/VV";
 
 "MM/YY" = "KK/VV";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Korttisi on vanhentunut.";
 
-"Your card number is incomplete." = "Kortin numero on puutteellinen.";
-
-"Your card number is invalid." = "Kortin numero on virheellinen.";
-
-"Your card's expiration date is incomplete." = "Kortin voimassaoloaika on puutteellinen.";
-
-"Your card's expiration date is invalid." = "Kortin voimassaoloaika on virheellinen.";
-
-"Your card's expiration month is invalid." = "Kortin erääntymiskuukausi ei kelpaa.";
-
 "Your card's expiration year is invalid." = "Kortin voimassaolovuosi ei kelpaa.";
-
-"Your card's security code is incomplete." = "Kortin turvakoodi on puutteellinen.";
 
 "Your card's security code is invalid." = "Kortin turvakoodi on virheellinen.";
 
 "card number" = "kortin numero";
 
 "example@example.com" = "esimerkki@esimerkki.com";
-
-"expiration date" = "erääntymispäivä";

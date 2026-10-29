@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "银行账户";
-
-"Billing address" = "账单地址";
-
-"CVC" = "安全码";
-
 "Card information" = "银行卡信息";
 
 "Card number" = "卡号";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "确认您的 %@";
 
 "Invalid data." = "数据无效。";
-
-"MM / YY" = "月份/年份";
 
 "MM/YY" = "月份/年份";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "您的银行卡已过期。";
 
-"Your card number is incomplete." = "您的银行卡号不完整。";
-
-"Your card number is invalid." = "您的卡号无效。";
-
-"Your card's expiration date is incomplete." = "您的银行卡的有效期不完整。";
-
-"Your card's expiration date is invalid." = "您的银行卡的有效期无效。";
-
-"Your card's expiration month is invalid." = "您的银行卡的到期月份无效。";
-
 "Your card's expiration year is invalid." = "您的银行卡的到期年份无效。";
-
-"Your card's security code is incomplete." = "您的银行卡的安全码不完整。";
 
 "Your card's security code is invalid." = "您的银行卡的安全码无效。";
 
 "card number" = "卡号";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "有效期";

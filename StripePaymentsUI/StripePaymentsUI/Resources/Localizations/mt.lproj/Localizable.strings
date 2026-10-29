@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Kont bankarju";
-
-"Billing address" = "Indirizz tal-kont";
-
-"CVC" = "CVC";
-
 "Card information" = "L-informazzjoni tal-karta";
 
 "Card number" = "In-numru tal-karta";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Ikkonferma l-%@ tiegħek";
 
 "Invalid data." = "Data invalida.";
-
-"MM / YY" = "XX / SS";
 
 "MM/YY" = "XX/SS";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Il-karta tiegħek skadiet.";
 
-"Your card number is incomplete." = "In-numru tal-karta tiegħek mhux komplut.";
-
-"Your card number is invalid." = "In-numru tal-karta tiegħek mhux tajjeb.";
-
-"Your card's expiration date is incomplete." = "Id-data tal-iskadenza tal-karta tiegħek mhix sħiħa.";
-
-"Your card's expiration date is invalid." = "Id-data tal-iskadenza tal-karta tiegħek mhix tajba.";
-
-"Your card's expiration month is invalid." = "Ix-xahar tal-iskadenza tal-karta tiegħek mhux tajjeb.";
-
 "Your card's expiration year is invalid." = "Is-sena tal-iskadenza tal-karta tiegħek mhix tajba.";
-
-"Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux komplut.";
 
 "Your card's security code is invalid." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux tajjeb.";
 
 "card number" = "in-numru tal-karta";
 
 "example@example.com" = "eżempju@eżempju.com";
-
-"expiration date" = "id-data tal-iskadenza";

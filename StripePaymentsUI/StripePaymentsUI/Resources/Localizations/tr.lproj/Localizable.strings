@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Banka Hesabı";
-
-"Billing address" = "Fatura adresi";
-
-"CVC" = "CVC";
-
 "Card information" = "Kart bilgileri";
 
 "Card number" = "Kart numarası";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "%@ kodunuzu onaylayın";
 
 "Invalid data." = "Geçersiz veri.";
-
-"MM / YY" = "AA / YY";
 
 "MM/YY" = "AA/YY";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Kartınızın süresi dolmuş.";
 
-"Your card number is incomplete." = "Kart numaranız eksik.";
-
-"Your card number is invalid." = "Kart numaranız geçersiz.";
-
-"Your card's expiration date is incomplete." = "Kartınızın son kullanma tarihi eksik.";
-
-"Your card's expiration date is invalid." = "Kartınızın son kullanma tarihi geçersiz.";
-
-"Your card's expiration month is invalid." = "Kartınızın son kullanma ayı geçersiz.";
-
 "Your card's expiration year is invalid." = "Kartınızın son kullanma yılı geçersiz.";
-
-"Your card's security code is incomplete." = "Kartınızın güvenlik kodu eksik.";
 
 "Your card's security code is invalid." = "Kartınızın güvenlik kodu geçersiz.";
 
 "card number" = "kart numarası";
 
 "example@example.com" = "ornek@ornek.com";
-
-"expiration date" = "son kullanma tarihi";

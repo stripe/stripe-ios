@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Bankrekening";
-
-"Billing address" = "Factuuradres";
-
-"CVC" = "Cvc";
-
 "Card information" = "Kaartgegevens";
 
 "Card number" = "Kaartnummer";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Je %@ bevestigen";
 
 "Invalid data." = "Ongeldige gegevens.";
-
-"MM / YY" = "MM / JJ";
 
 "MM/YY" = "MM/JJ";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Je betaalkaart is verlopen.";
 
-"Your card number is incomplete." = "Je kaartnummer is onvolledig.";
-
-"Your card number is invalid." = "Je kaartnummer is ongeldig.";
-
-"Your card's expiration date is incomplete." = "De vervaldatum van je kaart is onvolledig.";
-
-"Your card's expiration date is invalid." = "De vervaldatum van je kaart is ongeldig.";
-
-"Your card's expiration month is invalid." = "De vervalmaand van de kaart is ongeldig.";
-
 "Your card's expiration year is invalid." = "Het vervaljaar van de kaart is ongeldig.";
-
-"Your card's security code is incomplete." = "De beveiligingscode van je kaart is onvolledig.";
 
 "Your card's security code is invalid." = "De beveiligingscode van je kaart is ongeldig.";
 
 "card number" = "kaartnummer";
 
 "example@example.com" = "voorbeeld@voorbeeld.com";
-
-"expiration date" = "vervaldatum";

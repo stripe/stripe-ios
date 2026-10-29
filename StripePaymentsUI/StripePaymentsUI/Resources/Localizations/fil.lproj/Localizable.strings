@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Account sa Bangko";
-
-"Billing address" = "Adres para sa billing";
-
-"CVC" = "CVC";
-
 "Card information" = "Impormasyon ng kard";
 
 "Card number" = "Numero ng kard";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Kumpirmahin ang iyong %@";
 
 "Invalid data." = "Data na di balido.";
-
-"MM / YY" = "BB / TT";
 
 "MM/YY" = "BB / TT";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Napaso na ang iyong kard.";
 
-"Your card number is incomplete." = "Ang numero ng iyong kard ay di kumpleto.";
-
-"Your card number is invalid." = "Ang numero ng iyong kard ay di balido.";
-
-"Your card's expiration date is incomplete." = "Ang petsa ng pagkapaso ng iyong kard ay di kumpleto.";
-
-"Your card's expiration date is invalid." = "Ang petsa ng pagkapaso ng iyong kard ay di balido.";
-
-"Your card's expiration month is invalid." = "Ang buwan ng pagkapaso ng iyong kard ay di balido.";
-
 "Your card's expiration year is invalid." = "Ang taon ng pagkapaso ng iyong kard ay di balido.";
-
-"Your card's security code is incomplete." = "Ang security code ng iyong kard ay di kumpleto.";
 
 "Your card's security code is invalid." = "Ang security code ng iyong kard ay di balido.";
 
 "card number" = "numero ng kard";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "Petsa ng pagkapaso";

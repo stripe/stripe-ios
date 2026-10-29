@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Banko sąskaita";
-
-"Billing address" = "Atsiskaitymo adresas";
-
-"CVC" = "CVC";
-
 "Card information" = "Kortelės duomenys";
 
 "Card number" = "Kortelės numeris";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Patvirtinkite savo %@";
 
 "Invalid data." = "Netinkami duomenys.";
-
-"MM / YY" = "mm / MM";
 
 "MM/YY" = "mm / MM";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Jūsų kortelė baigė galioti.";
 
-"Your card number is incomplete." = "Neišsamus kortelės numeris.";
-
-"Your card number is invalid." = "Netinkamas kortelės numeris.";
-
-"Your card's expiration date is incomplete." = "Neišsami kortelės galiojimo pabaigos data.";
-
-"Your card's expiration date is invalid." = "Netinkama kortelės galiojimo pabaigos data.";
-
-"Your card's expiration month is invalid." = "Negaliojantis kortelės galiojimo pabaigos mėnuo.";
-
 "Your card's expiration year is invalid." = "Kortelės galiojimo pabaigos metai neteisingi.";
-
-"Your card's security code is incomplete." = "Neišsamus kortelės saugos kodas.";
 
 "Your card's security code is invalid." = "Kortelės saugos kodas negalioja.";
 
 "card number" = "kortelės numeris";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "galiojimo pabaigos data";

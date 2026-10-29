@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB numurs";
 
+"Bank Account" = "Bankas konts";
+
 "Bank account •••• %@" = "Bankas konts •••• %@";
 
+"Billing address" = "Norēķinu adrese";
+
 "Billing address is same as shipping" = "Norēķinu adrese un piegādes adrese sakrīt";
+
+"CVC" = "CVC";
 
 "Cancel" = "Atcelt";
 
@@ -73,6 +79,8 @@
 "Island" = "Sala";
 
 "Last" = "Uzvārds";
+
+"MM / YY" = "MM/GG";
 
 "Name" = "Vārds, uzvārds";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Pasta indekss nav derīgs.";
 
+"Your card number is incomplete." = "Kartes numurs nav pilnīgs.";
+
+"Your card number is invalid." = "Kartes numurs nav derīgs.";
+
+"Your card's expiration date is incomplete." = "Kartes derīguma termiņa datums nav pilnīgs.";
+
+"Your card's expiration date is invalid." = "Kartes derīguma termiņa beigu datums nav derīgs.";
+
+"Your card's expiration month is invalid." = "Kartes derīguma termiņa mēnesis nav derīgs.";
+
+"Your card's security code is incomplete." = "Kartes drošības kods nav pilnīgs.";
+
 "Your email is invalid." = "E-pasta adrese nav derīga.";
 
 "Your payment information will not be saved." = "Jūsu maksājuma informācija nav saglabāta.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Pasta indekss nav derīgs.";
 
 "ZIP" = "Pasta ind.";
+
+"expiration date" = "derīguma termiņš";

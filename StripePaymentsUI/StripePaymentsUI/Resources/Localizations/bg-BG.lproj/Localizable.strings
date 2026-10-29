@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Банкова сметка";
-
-"Billing address" = "Адрес за фактуриране";
-
-"CVC" = "CVC";
-
 "Card information" = "Информация за картата";
 
 "Card number" = "Номер на картата";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Потвърдете своя %@";
 
 "Invalid data." = "Невалидни данни.";
-
-"MM / YY" = "ММ / ГГ";
 
 "MM/YY" = "ММ/ГГ";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Вашата карта е изтекла.";
 
-"Your card number is incomplete." = "Номерът на Вашата карта е непълен.";
-
-"Your card number is invalid." = "Номерът на Вашата карта е невалиден.";
-
-"Your card's expiration date is incomplete." = "Срокът на валидност на Вашата карта е непълен.";
-
-"Your card's expiration date is invalid." = "Датата на валидност на Вашата карта е невалидна.";
-
-"Your card's expiration month is invalid." = "Месецът на валидност на Вашата карта е невалиден.";
-
 "Your card's expiration year is invalid." = "Годината на валидност на Вашата карта е невалидна.";
-
-"Your card's security code is incomplete." = "Кодът за сигурност на Вашата карта е непълен.";
 
 "Your card's security code is invalid." = "Кодът за сигурност на Вашата карта е невалиден.";
 
 "card number" = "номер на картата";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "дата на валидност";

@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Tài khoản ngân hàng";
-
-"Billing address" = "Địa chỉ thanh toán";
-
-"CVC" = "CVC";
-
 "Card information" = "Thông tin thẻ";
 
 "Card number" = "Số thẻ";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Xác nhận %@ của bạn";
 
 "Invalid data." = "Dữ liệu không hợp lệ.";
-
-"MM / YY" = "Tháng /Năm";
 
 "MM/YY" = "Tháng/Năm";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Thẻ đã hết hạn.";
 
-"Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
-
-"Your card number is invalid." = "Số thẻ không hợp lệ.";
-
-"Your card's expiration date is incomplete." = "Ngày hết hạn trên thẻ không hợp lệ.";
-
-"Your card's expiration date is invalid." = "Ngày hết hạn trên thẻ không hợp lệ.";
-
-"Your card's expiration month is invalid." = "Tháng hết hạn trên thẻ của bạn không hợp lệ.";
-
 "Your card's expiration year is invalid." = "Năm hết hạn trên thẻ của bạn không hợp lệ.";
-
-"Your card's security code is incomplete." = "Mã bảo mật trên thẻ chưa đầy đủ.";
 
 "Your card's security code is invalid." = "Mã bảo mật trên thẻ không hợp lệ.";
 
 "card number" = "số thẻ";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "Ngày hết hạn";

@@ -18,9 +18,15 @@
 
 "BSB number" = "Αριθμός BSB";
 
+"Bank Account" = "Τραπεζικός λογαριασμός";
+
 "Bank account •••• %@" = "Τραπεζικός λογαριασμός •••• %@";
 
+"Billing address" = "Διεύθυνση χρέωσης";
+
 "Billing address is same as shipping" = "Η διεύθυνση τιμολόγησης είναι ίδια με τη διεύθυνση αποστολής";
+
+"CVC" = "CVC";
 
 "Cancel" = "Ακύρωση";
 
@@ -73,6 +79,8 @@
 "Island" = "Νησί";
 
 "Last" = "Επώνυμο";
+
+"MM / YY" = "ΜΜ / ΕΕ";
 
 "Name" = "Όνομα";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Ο ταχυδρομικός κώδικας δεν είναι έγκυρος.";
 
+"Your card number is incomplete." = "Ο αριθμός της κάρτας σας είναι ελλιπής.";
+
+"Your card number is invalid." = "Ο αριθμός της κάρτας σας δεν είναι έγκυρος.";
+
+"Your card's expiration date is incomplete." = "Η ημερομηνία λήξης της κάρτας σας είναι ελλιπής.";
+
+"Your card's expiration date is invalid." = "Η ημερομηνία λήξης της κάρτας σας δεν είναι έγκυρη.";
+
+"Your card's expiration month is invalid." = "Ο μήνας λήξης της κάρτας σας δεν είναι έγκυρος.";
+
+"Your card's security code is incomplete." = "Ο κωδικός ασφαλείας της κάρτας σας είναι ελλιπής.";
+
 "Your email is invalid." = "Η διεύθυνση email σας δεν είναι έγκυρη.";
 
 "Your payment information will not be saved." = "Τα στοιχεία πληρωμής δε θα αποθηκευτούν.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
 
 "ZIP" = "Τ.Κ.";
+
+"expiration date" = "ημερομηνία λήξης";

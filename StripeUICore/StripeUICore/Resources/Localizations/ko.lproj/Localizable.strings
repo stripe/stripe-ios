@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB 번호";
 
+"Bank Account" = "은행 계좌";
+
 "Bank account •••• %@" = "은행 계좌 •••• %@";
 
+"Billing address" = "청구 주소";
+
 "Billing address is same as shipping" = "청구 주소가 배송 주소와 동일함";
+
+"CVC" = "CVC";
 
 "Cancel" = "취소";
 
@@ -73,6 +79,8 @@
 "Island" = "섬";
 
 "Last" = "성";
+
+"MM / YY" = "MM/YY";
 
 "Name" = "이름";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "우편번호가 유효하지 않습니다.";
 
+"Your card number is incomplete." = "카드 번호가 불완전합니다.";
+
+"Your card number is invalid." = "카드 번호가 유효하지 않습니다.";
+
+"Your card's expiration date is incomplete." = "카드의 만료 날짜가 불완전합니다.";
+
+"Your card's expiration date is invalid." = "카드의 만료 날짜가 유효하지 않습니다.";
+
+"Your card's expiration month is invalid." = "카드의 만료 월이 유효하지 않습니다.";
+
+"Your card's security code is incomplete." = "카드의 보안 코드가 불완전합니다.";
+
 "Your email is invalid." = "이메일이 잘못되었습니다.";
 
 "Your payment information will not be saved." = "귀하의 결제 정보가 저장되지 않습니다.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "우편번호가 유효하지 않습니다.";
 
 "ZIP" = "우편번호";
+
+"expiration date" = "만료 날짜";

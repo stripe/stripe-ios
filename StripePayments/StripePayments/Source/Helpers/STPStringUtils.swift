@@ -1,6 +1,6 @@
 //
 //  STPStringUtils.swift
-//  StripePaymentsUI
+//  StripePayments
 //
 //  Created by Brian Dorfman on 9/7/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.

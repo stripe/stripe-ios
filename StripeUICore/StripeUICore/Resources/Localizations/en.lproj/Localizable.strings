@@ -23,8 +23,14 @@ Section header for address fields */
 /* Label of an address field */
 "Area" = "Area";
 
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Bank Account";
+
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
 "Bank account •••• %@" = "Bank account •••• %@";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Billing address";
 
 /* Label for a checkbox that makes customers billing address same as their shipping address */
 "Billing address is same as shipping" = "Billing address is same as shipping";
@@ -63,6 +69,9 @@ Section header for address fields */
 Label of an address field */
 "County" = "County";
 
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
 /* Label for Date of birth field */
 "Date of Birth" = "Date of Birth";
 
@@ -99,6 +108,9 @@ Label of an address field */
 /* Text for error labels */
 "Error" = "Error";
 
+/* accessibility label for text field */
+"expiration date" = "expiration date";
+
 /* Label for first (given) name field */
 "First" = "First";
 
@@ -113,6 +125,9 @@ Label of an address field */
 
 /* Label for last (family) name field */
 "Last" = "Last";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "MM / YY";
 
 /* Label for Name field on form */
 "Name" = "Name";
@@ -212,6 +227,24 @@ Label of an address field */
 
 /* Error message when BLIK code is invalid */
 "Your BLIK code is invalid." = "Your BLIK code is invalid.";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Your card number is incomplete.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Your card number is invalid.";
+
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Your card's expiration month is invalid.";
+
+/* Error message for card entry form when CVC is incomplete. */
+"Your card's security code is incomplete." = "Your card's security code is incomplete.";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Your email is invalid.";

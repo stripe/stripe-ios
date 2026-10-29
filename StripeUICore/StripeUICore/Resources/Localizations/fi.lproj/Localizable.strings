@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB-numero";
 
+"Bank Account" = "Pankkitili";
+
 "Bank account •••• %@" = "Pankkitili •••• %@";
 
+"Billing address" = "Laskutusosoite";
+
 "Billing address is same as shipping" = "Laskutusosoite on sama kuin toimitusosoite";
+
+"CVC" = "CVC-tunnus";
 
 "Cancel" = "Peruuta";
 
@@ -73,6 +79,8 @@
 "Island" = "Saari";
 
 "Last" = "Sukunimi";
+
+"MM / YY" = "KK/VV";
 
 "Name" = "Nimi";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Postinumero ei ole kelvollinen.";
 
+"Your card number is incomplete." = "Kortin numero on puutteellinen.";
+
+"Your card number is invalid." = "Kortin numero on virheellinen.";
+
+"Your card's expiration date is incomplete." = "Kortin voimassaoloaika on puutteellinen.";
+
+"Your card's expiration date is invalid." = "Kortin voimassaoloaika on virheellinen.";
+
+"Your card's expiration month is invalid." = "Kortin erääntymiskuukausi ei kelpaa.";
+
+"Your card's security code is incomplete." = "Kortin turvakoodi on puutteellinen.";
+
 "Your email is invalid." = "Sähköposti on virheellinen.";
 
 "Your payment information will not be saved." = "Maksutietojasi ei tallenneta.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Postinumeroon virheellinen.";
 
 "ZIP" = "Postinumero";
+
+"expiration date" = "erääntymispäivä";

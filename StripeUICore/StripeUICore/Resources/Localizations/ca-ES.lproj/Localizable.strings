@@ -18,9 +18,15 @@
 
 "BSB number" = "Número BSB";
 
+"Bank Account" = "Compte bancari";
+
 "Bank account •••• %@" = "Compte bancari •••• %@";
 
+"Billing address" = "Adreça de facturació";
+
 "Billing address is same as shipping" = "L'adreça de facturació és la mateixa que la d'enviament";
+
+"CVC" = "CVC";
 
 "Cancel" = "Cancel·la";
 
@@ -73,6 +79,8 @@
 "Island" = "Illa";
 
 "Last" = "Cognom";
+
+"MM / YY" = "MM / AA";
 
 "Name" = "Nom";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "El codi ZIP no és vàlid.";
 
+"Your card number is incomplete." = "El número de la teva targeta no està complet.";
+
+"Your card number is invalid." = "El número de la teva targeta no és vàlid.";
+
+"Your card's expiration date is incomplete." = "La data de caducitat de la teva targeta no està completa.";
+
+"Your card's expiration date is invalid." = "La data de caducitat de la teva targeta no és vàlida.";
+
+"Your card's expiration month is invalid." = "El mes de caducitat de la teva targeta no és vàlid.";
+
+"Your card's security code is incomplete." = "El codi de seguretat de la teva targeta no està complet.";
+
 "Your email is invalid." = "L'adreça electrònica no és vàlida.";
 
 "Your payment information will not be saved." = "La informació de pagament no es desarà.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "El teu codi postal no és vàlid.";
 
 "ZIP" = "ZIP";
+
+"expiration date" = "data de caducitat";

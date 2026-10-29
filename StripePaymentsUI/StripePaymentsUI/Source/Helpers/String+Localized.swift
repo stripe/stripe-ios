@@ -12,10 +12,6 @@
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
 extension String.Localized {
-    @_spi(InternalOnlyAPI) public static var bank_account: String {
-        STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
-    }
-
     @_spi(InternalOnlyAPI) public static var card_number: String {
         STPLocalizedString("Card number", "Label for card number entry text field")
     }
@@ -38,10 +34,6 @@ extension String.Localized {
         STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
     }
 
-    @_spi(InternalOnlyAPI) public static var expiration_date_accessibility_label: String {
-        STPLocalizedString("expiration date", "accessibility label for text field")
-    }
-
     @_spi(InternalOnlyAPI) public static var allow_camera_access: String {
         STPLocalizedString(
             "To scan your card, allow camera access in Settings.",
@@ -53,23 +45,6 @@ extension String.Localized {
         STPLocalizedString("Shipping Address", "Title for shipping address entry section")
     }
 
-    @_spi(InternalOnlyAPI) public static var billing_address_lowercase: String {
-        STPLocalizedString("Billing address", "Billing address section title for card form entry.")
-    }
-
-    @_spi(InternalOnlyAPI) public static var your_card_number_is_incomplete: String {
-        STPLocalizedString(
-            "Your card number is incomplete.",
-            "Error message for card form when card number is incomplete"
-        )
-    }
-
-    @_spi(InternalOnlyAPI) public static var your_card_number_is_invalid: String {
-        STPLocalizedString(
-            "Your card number is invalid.",
-            "Error message for card form when card number is invalid"
-        )
-    }
     @_spi(InternalOnlyAPI) public static var cvc_section_title: String {
         STPLocalizedString(
             "Confirm your %@",
@@ -77,50 +52,14 @@ extension String.Localized {
         )
     }
 
-    @_spi(InternalOnlyAPI) public static var cvc: String {
-        STPLocalizedString("CVC", "Label for entering CVC in text field")
-    }
-
     @_spi(InternalOnlyAPI) public static var card_information: String {
         STPLocalizedString("Card information", "Card details entry form header title")
-    }
-
-    @_spi(InternalOnlyAPI) public static var mm_yy: String {
-        STPLocalizedString("MM / YY", "label for text field to enter card expiry")
-    }
-
-    @_spi(InternalOnlyAPI) public static var your_cards_security_code_is_incomplete: String {
-        STPLocalizedString(
-            "Your card's security code is incomplete.",
-            "Error message for card entry form when CVC is incomplete."
-        )
-    }
-
-    @_spi(InternalOnlyAPI) public static var your_cards_expiration_date_is_invalid: String {
-        STPLocalizedString(
-            "Your card's expiration date is invalid.",
-            "Error message for card details form when expiration date is invalid"
-        )
     }
 
     @_spi(InternalOnlyAPI) public static var your_card_has_expired: String {
         STPLocalizedString(
             "Your card has expired.",
             "Error message for card details form when expiration date has passed"
-        )
-    }
-
-    @_spi(InternalOnlyAPI) public static var your_cards_expiration_date_is_incomplete: String {
-        STPLocalizedString(
-            "Your card's expiration date is incomplete.",
-            "Error message for card details form when expiration date isn't entered completely"
-        )
-    }
-
-    @_spi(InternalOnlyAPI) public static var your_cards_expiration_month_is_invalid: String {
-        STPLocalizedString(
-            "Your card's expiration month is invalid.",
-            "String to describe an invalid month in expiry date."
         )
     }
 

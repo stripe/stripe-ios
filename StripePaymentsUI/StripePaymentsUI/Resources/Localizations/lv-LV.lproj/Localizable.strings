@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Bankas konts";
-
-"Billing address" = "Norēķinu adrese";
-
-"CVC" = "CVC";
-
 "Card information" = "Kartes informācija";
 
 "Card number" = "Kartes numurs";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Apstipriniet savu %@";
 
 "Invalid data." = "Nederīgi dati.";
-
-"MM / YY" = "MM/GG";
 
 "MM/YY" = "MM/GG";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Kartes derīguma termiņš ir beidzies.";
 
-"Your card number is incomplete." = "Kartes numurs nav pilnīgs.";
-
-"Your card number is invalid." = "Kartes numurs nav derīgs.";
-
-"Your card's expiration date is incomplete." = "Kartes derīguma termiņa datums nav pilnīgs.";
-
-"Your card's expiration date is invalid." = "Kartes derīguma termiņa beigu datums nav derīgs.";
-
-"Your card's expiration month is invalid." = "Kartes derīguma termiņa mēnesis nav derīgs.";
-
 "Your card's expiration year is invalid." = "Kartes derīguma termiņa gads nav derīgs.";
-
-"Your card's security code is incomplete." = "Kartes drošības kods nav pilnīgs.";
 
 "Your card's security code is invalid." = "Kartes drošības kods nav derīgs.";
 
 "card number" = "kartes numurs";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "derīguma termiņš";

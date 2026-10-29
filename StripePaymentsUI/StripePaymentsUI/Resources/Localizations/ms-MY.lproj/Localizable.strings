@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Akaun Bank";
-
-"Billing address" = "Alamat pengebilan";
-
-"CVC" = "CVC";
-
 "Card information" = "Maklumat kad";
 
 "Card number" = "Nombor kad";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Sahkan %@ anda";
 
 "Invalid data." = "Data tidak sah.";
-
-"MM / YY" = "BB / TT";
 
 "MM/YY" = "BB/TT";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Kad anda telah tamat tempoh.";
 
-"Your card number is incomplete." = "Nombor kad anda tidak lengkap.";
-
-"Your card number is invalid." = "Nombor kad anda tidak sah.";
-
-"Your card's expiration date is incomplete." = "Tarikh tamat tempoh kad anda tidak lengkap.";
-
-"Your card's expiration date is invalid." = "Tarikh tamat tempoh kad anda tidak sah.";
-
-"Your card's expiration month is invalid." = "Bulan tamat tempoh kad anda tidak sah.";
-
 "Your card's expiration year is invalid." = "Tahun tamat tempoh kad anda tidak sah.";
-
-"Your card's security code is incomplete." = "Kod keselamatan kad anda tidak lengkap.";
 
 "Your card's security code is invalid." = "Kod keselamatan kad anda tidak sah.";
 
 "card number" = "nombor kad";
 
 "example@example.com" = "contoh@example.com";
-
-"expiration date" = "Tarikh tamat tempoh";

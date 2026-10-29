@@ -18,9 +18,15 @@
 
 "BSB number" = "Nombor BSB";
 
+"Bank Account" = "Akaun Bank";
+
 "Bank account •••• %@" = "Akaun bank •••• %@";
 
+"Billing address" = "Alamat pengebilan";
+
 "Billing address is same as shipping" = "Alamat pengebilan sama dengan alamat penghantaran";
+
+"CVC" = "CVC";
 
 "Cancel" = "Batalkan";
 
@@ -73,6 +79,8 @@
 "Island" = "Pulau";
 
 "Last" = "Akhir";
+
+"MM / YY" = "BB / TT";
 
 "Name" = "Nama";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Poskod anda tidak sah.";
 
+"Your card number is incomplete." = "Nombor kad anda tidak lengkap.";
+
+"Your card number is invalid." = "Nombor kad anda tidak sah.";
+
+"Your card's expiration date is incomplete." = "Tarikh tamat tempoh kad anda tidak lengkap.";
+
+"Your card's expiration date is invalid." = "Tarikh tamat tempoh kad anda tidak sah.";
+
+"Your card's expiration month is invalid." = "Bulan tamat tempoh kad anda tidak sah.";
+
+"Your card's security code is incomplete." = "Kod keselamatan kad anda tidak lengkap.";
+
 "Your email is invalid." = "E-mel anda tidak sah.";
 
 "Your payment information will not be saved." = "Maklumat pembayaran anda tidak akan disimpan.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Poskod anda tidak sah.";
 
 "ZIP" = "ZIP";
+
+"expiration date" = "Tarikh tamat tempoh";

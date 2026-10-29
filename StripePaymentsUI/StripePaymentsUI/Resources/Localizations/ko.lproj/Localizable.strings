@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "은행 계좌";
-
-"Billing address" = "청구 주소";
-
-"CVC" = "CVC";
-
 "Card information" = "카드 정보";
 
 "Card number" = "카드 번호";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "%@ 확인";
 
 "Invalid data." = "잘못된 데이터입니다.";
-
-"MM / YY" = "MM/YY";
 
 "MM/YY" = "MM/YY";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "카드가 만료되었습니다.";
 
-"Your card number is incomplete." = "카드 번호가 불완전합니다.";
-
-"Your card number is invalid." = "카드 번호가 유효하지 않습니다.";
-
-"Your card's expiration date is incomplete." = "카드의 만료 날짜가 불완전합니다.";
-
-"Your card's expiration date is invalid." = "카드의 만료 날짜가 유효하지 않습니다.";
-
-"Your card's expiration month is invalid." = "카드의 만료 월이 유효하지 않습니다.";
-
 "Your card's expiration year is invalid." = "카드의 만료 연도가 유효하지 않습니다.";
-
-"Your card's security code is incomplete." = "카드의 보안 코드가 불완전합니다.";
 
 "Your card's security code is invalid." = "카드의 보안 코드가 유효하지 않습니다.";
 
 "card number" = "카드 번호";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "만료 날짜";

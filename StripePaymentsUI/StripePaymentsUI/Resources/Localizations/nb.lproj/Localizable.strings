@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Bankkonto";
-
-"Billing address" = "Fakturaadresse";
-
-"CVC" = "CVC";
-
 "Card information" = "Kortinformasjon";
 
 "Card number" = "Kortnummer";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Bekreft %@";
 
 "Invalid data." = "Ugyldige data.";
-
-"MM / YY" = "MM / ÅÅ";
 
 "MM/YY" = "MM/ÅÅ";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Kortet ditt er utløpt.";
 
-"Your card number is incomplete." = "Kortnummeret er ufullstendig.";
-
-"Your card number is invalid." = "Kortnummeret er ugyldig.";
-
-"Your card's expiration date is incomplete." = "Kortets utløpsdato er ufullstendig.";
-
-"Your card's expiration date is invalid." = "Kortets utløpsdato er ugyldig.";
-
-"Your card's expiration month is invalid." = "Kortets utløpsmåned er ugyldig.";
-
 "Your card's expiration year is invalid." = "Kortets utløpsår er ugyldig.";
-
-"Your card's security code is incomplete." = "Kortets sikkerhetskode er ufullstendig.";
 
 "Your card's security code is invalid." = "Kortets sikkerhetskode er ugyldig.";
 
 "card number" = "kortnummer";
 
 "example@example.com" = "eksempel@example.com";
-
-"expiration date" = "utløpsdato";

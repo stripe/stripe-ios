@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "บัญชีธนาคาร";
-
-"Billing address" = "ที่อยู่ในการเรียกเก็บเงิน";
-
-"CVC" = "CVC";
-
 "Card information" = "ข้อมูลบัตร";
 
 "Card number" = "หมายเลขบัตร";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "ยืนยัน %@ ของคุณ";
 
 "Invalid data." = "ข้อมูลไม่ถูกต้อง";
-
-"MM / YY" = "ดด / ปป";
 
 "MM/YY" = "ดด/ปป";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "บัตรของคุณหมดอายุแล้ว";
 
-"Your card number is incomplete." = "หมายเลขบัตรไม่ครบถ้วน";
-
-"Your card number is invalid." = "หมายเลขบัตรไม่ถูกต้อง";
-
-"Your card's expiration date is incomplete." = "วันที่หมดอายุของบัตรไม่ครบถ้วน";
-
-"Your card's expiration date is invalid." = "วันที่หมดอายุของบัตรไม่ถูกต้อง";
-
-"Your card's expiration month is invalid." = "เดือนที่หมดอายุของบัตรไม่ถูกต้อง";
-
 "Your card's expiration year is invalid." = "ปีที่หมดอายุของบัตรไม่ถูกต้อง";
-
-"Your card's security code is incomplete." = "รหัสความปลอดภัยของบัตรไม่ครบถ้วน";
 
 "Your card's security code is invalid." = "รหัสความปลอดภัยของบัตรไม่ถูกต้อง";
 
 "card number" = "หมายเลขบัตร";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "วันหมดอายุ";

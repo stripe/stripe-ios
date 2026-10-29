@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "Bančni račun";
-
-"Billing address" = "Naslov plačnika računa";
-
-"CVC" = "CVC";
-
 "Card information" = "Podatki o kartici";
 
 "Card number" = "Številka kartice";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "Potrdite svojo kodo %@";
 
 "Invalid data." = "Neveljavni podatki.";
-
-"MM / YY" = "MM/LL";
 
 "MM/YY" = "MM/LL";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "Vaša kartica je potekla.";
 
-"Your card number is incomplete." = "Številka vaše kartice ni popolna.";
-
-"Your card number is invalid." = "Številka vaše kartice ni veljavna.";
-
-"Your card's expiration date is incomplete." = "Datum poteka vaše kartice ni popoln.";
-
-"Your card's expiration date is invalid." = "Datum poteka vaše kartice ni veljaven.";
-
-"Your card's expiration month is invalid." = "Mesec poteka vaše kartice ni veljaven.";
-
 "Your card's expiration year is invalid." = "Leto poteka vaše kartice ni veljavno.";
-
-"Your card's security code is incomplete." = "Varnostna koda vaše kartice ni popolna.";
 
 "Your card's security code is invalid." = "Varnostna koda vaše kartice ni veljavna.";
 
 "card number" = "številka kartice";
 
 "example@example.com" = "primer@primer.com";
-
-"expiration date" = "datum poteka";

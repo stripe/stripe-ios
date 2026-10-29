@@ -18,12 +18,6 @@
 
 "BSB" = "BSB";
 
-"Bank Account" = "銀行口座";
-
-"Billing address" = "請求先住所";
-
-"CVC" = "セキュリティコード";
-
 "Card information" = "カード情報";
 
 "Card number" = "カード番号";
@@ -31,8 +25,6 @@
 "Confirm your %@" = "%@ を確認してください";
 
 "Invalid data." = "データが無効です。";
-
-"MM / YY" = "月 / 年";
 
 "MM/YY" = "MM/YY";
 
@@ -62,24 +54,10 @@
 
 "Your card has expired." = "カードの有効期限が切れています。";
 
-"Your card number is incomplete." = "カード番号に不備があります。";
-
-"Your card number is invalid." = "カード番号が無効です。";
-
-"Your card's expiration date is incomplete." = "カードの有効期限の日付に不備があります。";
-
-"Your card's expiration date is invalid." = "カードの有効期限の日付が無効です。";
-
-"Your card's expiration month is invalid." = "カードの有効期限の月が無効です。";
-
 "Your card's expiration year is invalid." = "カードの有効期限の年が無効です。";
-
-"Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
 
 "Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
 
 "card number" = "カード番号";
 
 "example@example.com" = "example@example.com";
-
-"expiration date" = "有効期限";
