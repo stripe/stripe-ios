@@ -604,14 +604,16 @@ extension CheckoutController {
                 return .completed(applyingPollResponse(lastResponse, to: response))
             case .failed(let pollResponse):
                 let updatedResponse = applyingPollResponse(pollResponse, to: response)
-                // Poll has no error details, and retrieving a completed Session may be rejected.
-                // Retrieve details best-effort without losing the Session fields reported by polling.
+                // Poll response has no error details; we have to retrieve the Session to get it :(
+                // Note that retrieving a completed Session will fail.
                 let latestSession = try? await apiClient.retrieveCheckoutSession(
                     checkoutSessionId: response.sessionId,
-                    clientSecret: requestParameters.clientSecret
+                    clientSecret: requestParameters.clientSecret,
+                    timeout: 5,
+                    retriesEnabled: false
                 )
-                let error = latestSession.map { paymentError(from: $0) } ?? PaymentSheetError.errorHandlingNextAction
-                return .failed(error, sessionResponse: updatedResponse)
+                let error = latestSession.map { paymentError(from: $0) } ?? CheckoutError.pollFailedAndSessionRetrievalFailed
+                return .failed(error, sessionResponse: latestSession ?? updatedResponse)
             case .notStarted(let pollResponse):
                 let message = "Checkout Session confirmation unexpectedly reported not_started after an accepted /confirm."
                 let error = CheckoutError.unknown(debugDescription: message)

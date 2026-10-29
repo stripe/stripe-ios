@@ -478,14 +478,14 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
     }
 
-    func testFailedPollRetrievesErrorDetailsAndPreservesPolledSession() async throws {
-        // Given polling reports failure for a complete Session
+    func testFailedPollReturnsRetrievedSessionAndError() async throws {
+        // Given polling reports failure for an open Session
         let checkout = try await makeCheckout()
-        let pollResponse = Self.pollResponse(confirmationStatus: "failed", status: "complete", paymentStatus: "unpaid")
+        let pollResponse = Self.pollResponse(confirmationStatus: "failed", status: "open", paymentStatus: "unpaid")
         let poller = TestCheckoutSessionPoller(outcome: .failed(pollResponse))
         let confirmJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
-        // Retrieve supplies error details but reports different Session fields.
-        var latestSessionJSON = makeConfirmedSessionJSON(paymentResponseStatus: "requires_payment_method", status: "open", paymentStatus: "paid")
+        // Retrieve supplies the updated payment response and its error details.
+        var latestSessionJSON = makeConfirmedSessionJSON(paymentResponseStatus: "requires_payment_method", status: "open", paymentStatus: "unpaid")
         var paymentResponse = latestSessionJSON["payment_response"] as! [String: Any]
         paymentResponse["last_payment_error"] = [
             "type": "card_error",
@@ -503,7 +503,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(error._stp_error_code, "card_declined")
         XCTAssertEqual(response?.status, pollResponse.status)
         XCTAssertEqual(response?.paymentStatus, .unpaid)
-        XCTAssertEqual(response?.paymentResponse?.status, .succeeded)
+        XCTAssertEqual(response?.paymentResponse?.status, .requiresPaymentMethod)
         await fulfillment(of: [retrieve], timeout: 1)
     }
 
@@ -512,9 +512,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let pollResponse = Self.pollResponse(confirmationStatus: "failed", status: "complete", paymentStatus: "unpaid")
         let poller = TestCheckoutSessionPoller(outcome: .failed(pollResponse))
         let retrieve = stubRetrieveCheckoutSession(
-            responseJSON: ["error": ["type": "invalid_request_error", "message": "Session is complete."]],
+            responseJSON: ["error": ["type": "invalid_request_error", "message": "Rate limited."]],
             clientSecret: checkout.clientSecret,
-            statusCode: 400
+            statusCode: 429,
+            headers: ["Stripe-Should-Retry": "true"]
         )
 
         let result = await confirmCheckoutSession(
@@ -523,13 +524,14 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             poller: poller
         )
 
-        // The failure remains a confirmation failure, with the polled fields despite the rejected retrieve.
+        // The lookup is not retried; its failure preserves the polled fields and the fallback error.
         guard case .failed(let error, let response) = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
-        guard case .errorHandlingNextAction? = error as? PaymentSheetError else {
+        guard case .pollFailedAndSessionRetrievalFailed? = error as? CheckoutError else {
             return XCTFail("Expected a confirmation failure, got \(error)")
         }
+        XCTAssertEqual(error.serializeForV1Analytics()["error_code"] as? String, "pollFailedAndSessionRetrievalFailed")
         XCTAssertEqual(response?.status, .complete(.unpaid))
         XCTAssertEqual(response?.paymentStatus, .unpaid)
         await fulfillment(of: [retrieve], timeout: 1)
@@ -1413,20 +1415,23 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     private func stubRetrieveCheckoutSession(
         responseJSON: [AnyHashable: Any],
         clientSecret: String,
-        statusCode: Int32 = 200
+        statusCode: Int32 = 200,
+        headers: [String: String]? = nil
     ) -> XCTestExpectation {
         let expectation = expectation(description: "Checkout Session retrieved")
+        expectation.assertForOverFulfill = true
         stub { request in
             request.httpMethod == "GET"
                 && request.url?.path.hasSuffix("/checkout_client/cs_test_123/retrieve") == true
         } response: { request in
             let query = request.url.flatMap { URLComponents(url: $0, resolvingAgainstBaseURL: false)?.queryItems }
             XCTAssertEqual(query?.first(where: { $0.name == "client_secret" })?.value, clientSecret)
+            XCTAssertEqual(request.timeoutInterval, 5)
             expectation.fulfill()
             return HTTPStubsResponse(
                 jsonObject: (responseJSON as? [String: Any] ?? [:]),
                 statusCode: statusCode,
-                headers: nil
+                headers: headers
             )
         }
         return expectation
