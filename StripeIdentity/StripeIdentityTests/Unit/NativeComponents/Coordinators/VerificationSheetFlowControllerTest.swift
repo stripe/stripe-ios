@@ -492,6 +492,19 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         XCTAssertEqual(viewControllers.map { $0.collectedFields }, mockCollectedFields)
         XCTAssertEqual(viewControllers.last?.didReset, true)
     }
+
+    func testSubmittedWithSkippedSuccessPageHasNoNextScreen() async throws {
+        // When the session is submitted and the success page is skipped
+        let nextVC = await flowController.nextViewController(
+            skipTestMode: true,
+            staticContentResult: .success(try VerificationPageMock.response200.make().copy(skipSuccessPage: true)),
+            updateDataResult: .success(try VerificationPageDataMock.submitted.make()),
+            sheetController: mockSheetController
+        )
+
+        // Then there is no next screen, so the flow dismisses the sheet
+        XCTAssertNil(nextVC)
+    }
 }
 
 private extension VerificationSheetFlowControllerTest {

@@ -11,7 +11,15 @@ import Foundation
 @_spi(InternalOnlyAPI) public final class MockAnalyticsClientV2: AnalyticsClientV2Protocol {
     public let clientId: String = "MockAnalyticsClient"
 
-    public private(set) var loggedAnalyticsPayloads: [[String: Any]] = []
+    // Locked, because some callers log from several queues at once.
+    private let lock = NSLock()
+    private var payloads: [[String: Any]] = []
+
+    public var loggedAnalyticsPayloads: [[String: Any]] {
+        lock.lock()
+        defer { lock.unlock() }
+        return payloads
+    }
 
     public func loggedAnalyticPayloads(withEventName eventName: String) -> [[String: Any]] {
         return loggedAnalyticsPayloads.filter { ($0["event_name"] as? String) == eventName }
@@ -20,6 +28,9 @@ import Foundation
     public init() {}
 
     public func log(eventName: String, parameters: [String: Any]) {
-        loggedAnalyticsPayloads.append(payload(withEventName: eventName, parameters: parameters))
+        let newPayload = payload(withEventName: eventName, parameters: parameters)
+        lock.lock()
+        payloads.append(newPayload)
+        lock.unlock()
     }
 }
