@@ -9,9 +9,14 @@ require 'terminal-table'
 require_relative '../../../ci_scripts/size_report_cache'
 
 selected_modules = nil
+@strip_localizations = false
 OptionParser.new do |opts|
   opts.on('--modules MODULES', Array, 'Measure only these SDKs and their embedded dependencies') do |names|
     selected_modules = names
+  end
+  opts.on('--strip-localizations', 'Run StripeCore/Scripts/strip_unused_localizations.sh on the app before measuring. ' \
+                                   'Disables the size cache.') do
+    @strip_localizations = true
   end
 end.parse!
 
@@ -130,6 +135,13 @@ def build(dir, target_name = 'SPMTest')
       command_succeeded = system(xcode_command)
       raise StandardError, 'Build failed' unless command_succeeded
 
+      # Optionally measure the size merchants get after removing unused localizations.
+      unless @strip_script.nil?
+        app_path = Dir.glob('build/SPMTest.xcarchive/Products/Applications/*.app').first
+        raise StandardError, 'Archived app not found' if app_path.nil?
+        raise StandardError, 'Stripping localizations failed' unless system(@strip_script, app_path)
+      end
+
       # Export a thinned archive for distribution using ad-hoc signing.
       # `ExportOptions.plist` contains a signingCertificate of "-": This isn't
       # documented anywhere, but will cause Xcode to ad-hoc sign the archive.
@@ -159,6 +171,13 @@ end
 @project_dir = File.expand_path(File.join_if_safe(@script_dir, '/../../../'), Dir.getwd)
 
 @temp_dir = `mktemp -d`.chomp("\n")
+
+# Copy the strip script from the current checkout so that the same script is
+# used for every branch, including branches that predate it.
+if @strip_localizations
+  @strip_script = File.join(`mktemp -d`.chomp("\n"), 'strip_unused_localizations.sh')
+  FileUtils.cp(File.join_if_safe(@project_dir, 'StripeCore/Scripts/strip_unused_localizations.sh'), @strip_script)
+end
 
 def setup_project(branch, directory, sdk)
   Dir.chdir(@project_dir) do
@@ -225,9 +244,10 @@ def check_size(modules, measure_branch, base_branch)
     `git checkout #{measure_branch}`
   end
 
-  cache = SizeReportCache.new
+  # Cached measurements don't account for stripped localizations.
+  cache = @strip_localizations ? nil : SizeReportCache.new
   expected_fingerprint = ENV['SIZE_REPORT_FINGERPRINT']
-  raise 'Size report recipe changed after cache preparation' if expected_fingerprint && expected_fingerprint != cache.fingerprint
+  raise 'Size report recipe changed after cache preparation' if cache && expected_fingerprint && expected_fingerprint != cache.fingerprint
 
   # Build without including the SDK and store the result
   setup_project(measure_branch, @temp_dir, nil)
@@ -264,7 +284,7 @@ def check_size(modules, measure_branch, base_branch)
       # Checkout measure branch and build with SDK
       puts "Building with #{sdk} on #{measure_branch}...".green
       measure_compressed_size, measure_uncompressed_size = build_from_branch(measure_branch, @temp_dir, sdk + 'Size')
-      cache.write(measure_branch, sdk, [measure_compressed_size, measure_uncompressed_size])
+      cache&.write(measure_branch, sdk, [measure_compressed_size, measure_uncompressed_size])
 
       measure_sdk_compressed = measure_compressed_size - unincluded_compressed_size
       measure_sdk_uncompressed = measure_uncompressed_size - unincluded_uncompressed_size
@@ -277,13 +297,13 @@ def check_size(modules, measure_branch, base_branch)
       unless base_branch.nil?
         if base_branch == measure_branch
           base_compressed_size, base_uncompressed_size = measure_compressed_size, measure_uncompressed_size
-        elsif (cached_sizes = cache.read(base_branch, sdk))
+        elsif (cached_sizes = cache&.read(base_branch, sdk))
           puts "Using cached baseline for #{sdk} at #{base_branch}".green
           base_compressed_size, base_uncompressed_size = cached_sizes
         else
           puts "Baseline cache miss; building with #{sdk} on #{base_branch}...".green
           base_compressed_size, base_uncompressed_size = build_from_branch(base_branch, @temp_dir, sdk + 'Size')
-          cache.write(base_branch, sdk, [base_compressed_size, base_uncompressed_size])
+          cache&.write(base_branch, sdk, [base_compressed_size, base_uncompressed_size])
         end
 
         base_sdk_compressed = base_compressed_size - unincluded_compressed_size
