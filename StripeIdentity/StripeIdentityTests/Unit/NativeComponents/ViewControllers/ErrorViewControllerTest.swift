@@ -57,10 +57,11 @@ final class ErrorViewControllerTest: XCTestCase {
         let continueText = "continue"
         let backText = "back"
         let forceConfirmStarted = expectation(description: "Force confirm started")
-        let finishForceConfirm = expectation(description: "Finish force confirm")
+        forceConfirmStarted.assertForOverFulfill = false
+        var forceConfirmCount = 0
         mockSheetController.forceDocumentFrontAndDecideBackHandler = {
+            forceConfirmCount += 1
             forceConfirmStarted.fulfill()
-            await self.fulfillment(of: [finishForceConfirm], timeout: 1)
             return false
         }
         let vc = ErrorViewController(
@@ -83,12 +84,14 @@ final class ErrorViewControllerTest: XCTestCase {
         vc.buttonViewModels[0].didTap()
         XCTAssertEqual(vc.buttonViewModels[0].state, .loading)
         XCTAssertEqual(vc.buttonViewModels[1].state, .disabled)
+        // A second tap while saving does not force-confirm again
+        vc.buttonViewModels[0].didTap()
         await fulfillment(of: [forceConfirmStarted], timeout: 1)
-
-        finishForceConfirm.fulfill()
+        XCTAssertEqual(forceConfirmCount, 1)
     }
 
     func testFailedContinueAllowsRetry() async {
+        // Given force-confirming the document front fails
         let forceConfirmExp = expectation(description: "Force confirm attempted")
         mockSheetController.forceDocumentFrontAndDecideBackHandler = {
             forceConfirmExp.fulfill()
@@ -107,11 +110,17 @@ final class ErrorViewControllerTest: XCTestCase {
             )
         )
 
+        // When the user taps continue
         vc.buttonViewModels[0].didTap()
-        await fulfillment(of: [forceConfirmExp], timeout: 1)
-        await Task.yield()
 
-        XCTAssertEqual(vc.buttonViewModels[0].state, .enabled)
+        // Then both buttons become enabled again so the user can retry
+        await fulfillment(
+            of: [
+                forceConfirmExp,
+                expectation(for: vc, keyPath: \.buttonViewModels[0].state, equalsToValue: .enabled),
+            ],
+            timeout: 4
+        )
         XCTAssertEqual(vc.buttonViewModels[1].state, .enabled)
     }
 }

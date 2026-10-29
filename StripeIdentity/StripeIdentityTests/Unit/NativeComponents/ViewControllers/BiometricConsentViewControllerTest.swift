@@ -48,6 +48,25 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         XCTAssertEqual(mockSheetController.savedData?.biometricConsent, true)
     }
 
+    func testSecondTapWhileSavingDoesNotSaveAgain() async {
+        // Given the user has read the consent
+        let secondSaveExp = expectation(description: "Consent saved twice")
+        secondSaveExp.expectedFulfillmentCount = 2
+        secondSaveExp.isInverted = true
+        mockSheetController.saveAndTransitionCallback = {
+            secondSaveExp.fulfill()
+        }
+        vc.scrolledToBottom = true
+
+        // When the user taps accept twice before the save finishes
+        vc.flowViewModel.buttons.first?.didTap()
+        vc.flowViewModel.buttons.first?.didTap()
+
+        // Then consent is saved once
+        await fulfillment(of: [secondSaveExp], timeout: 0.5)
+        XCTAssertEqual(mockSheetController.saveAndTransitionCallCount, 1)
+    }
+
     func testDeny() async {
         XCTAssertEqual(
             vc.flowViewModel.buttons.last?.text,

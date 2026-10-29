@@ -419,6 +419,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     @MainActor
     func testSaveDataFrontInputErrorPreservesDecisionState() async {
+        // Given the front save fails with an input error, which already shows the error screen
         let mockFrontImage = UIImage()
         let vc = makeViewController(state: .scanned(.front, mockFrontImage))
         mockSheetController.saveDocumentFrontAndDecideBackError =
@@ -427,11 +428,18 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockSheetController.saveDocumentFrontAndDecideBackCallback = {
             saveExp.fulfill()
         }
+        let restoredStateExp = expect(
+            vc,
+            toUpdateTo: .scanned(.front, mockFrontImage),
+            description: "Restored document front state"
+        )
+        restoredStateExp.isInverted = true
 
+        // When the front is saved
         vc.saveOrFlipDocument(scannedImage: mockFrontImage, documentSide: .front)
-        await fulfillment(of: [saveExp], timeout: 1)
-        await Task.yield()
 
+        // Then the screen keeps deciding the back, so a force-confirm can continue with it
+        await fulfillment(of: [saveExp, restoredStateExp], timeout: 0.5)
         XCTAssertTrue(vc.isDecidingBack)
         verify(
             vc,
@@ -442,6 +450,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     @MainActor
     func testSaveDataFrontFailureRestoresScannedState() async {
+        // Given a scanned front whose save fails
         let mockFrontImage = UIImage()
         let vc = makeViewController(state: .scanned(.front, mockFrontImage))
         mockSheetController.saveDocumentFrontAndDecideBackError = mockError
@@ -451,14 +460,23 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             description: "Restored document front state"
         )
 
+        // When the front is saved
         vc.saveOrFlipDocument(scannedImage: mockFrontImage, documentSide: .front)
 
+        // Then the screen returns to the scanned state with the button enabled
         await fulfillment(of: [restoredStateExp], timeout: 1)
         verify(
             vc,
             expectedState: .scanned(.front, mockFrontImage),
             expectedButtonState: .enabled
         )
+        // ...and saving the front again starts a new save
+        let secondSaveExp = expectation(description: "Saved document front again")
+        mockSheetController.saveDocumentFrontAndDecideBackCallback = {
+            secondSaveExp.fulfill()
+        }
+        vc.saveOrFlipDocument(scannedImage: mockFrontImage, documentSide: .front)
+        await fulfillment(of: [secondSaveExp], timeout: 1)
     }
 
     @MainActor
@@ -499,16 +517,20 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     @MainActor
     func testSaveDataBackFailureRestoresScannedState() async {
+        // Given a scanned back whose save fails
         let mockBackImage = UIImage()
         let vc = makeViewController(state: .scanned(.back, mockBackImage))
+        mockSheetController.saveDocumentBackAndTransitionError = mockError
         let restoredStateExp = expect(
             vc,
             toUpdateTo: .scanned(.back, mockBackImage),
             description: "Restored document back state"
         )
 
+        // When the back is saved
         vc.saveOrFlipDocument(scannedImage: mockBackImage, documentSide: .back)
 
+        // Then the screen returns to the scanned state with the button enabled
         await fulfillment(of: [restoredStateExp], timeout: 1)
         verify(
             vc,

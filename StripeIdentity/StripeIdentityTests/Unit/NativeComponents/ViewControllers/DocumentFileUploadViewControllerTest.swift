@@ -214,6 +214,8 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
             frontSaveExp.fulfill()
         }
         let backSaveExp = expectation(description: "Back saved")
+        // The call count below reports a second save.
+        backSaveExp.assertForOverFulfill = false
         mockSheetController.saveDocumentBackAndTransitionCallback = {
             backSaveExp.fulfill()
         }
@@ -224,6 +226,8 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         // click continue button to upload back
         vc.didTapContinueButton()
         XCTAssertEqual(vc.buttonState, .loading)
+        // A second tap while saving does not save again
+        vc.didTapContinueButton()
         // Verify data saved and transitioned to next screen
         await fulfillment(of: [backSaveExp], timeout: 1)
         XCTAssertEqual(mockSheetController.saveDocumentBackAndTransitionCallCount, 1)
@@ -238,20 +242,24 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssertEqual(back, backFileData)
     }
 
-    @MainActor
     func testContinueButtonFailureAllowsRetry() async {
+        // Given saving the back fails
         let vc = makeViewController()
+        mockSheetController.saveDocumentBackAndTransitionError = NSError(domain: "mock_error", code: 100)
         let saveExp = expectation(description: "Back save attempted")
         mockSheetController.saveDocumentBackAndTransitionCallback = {
             saveExp.fulfill()
         }
         vc.documentUploaderDidUploadBack(mockDocumentUploader)
 
+        // When the user taps continue
         vc.didTapContinueButton()
-        await fulfillment(of: [saveExp], timeout: 1)
-        await Task.yield()
 
-        XCTAssertEqual(vc.buttonState, .enabled)
+        // Then the button becomes enabled again so the user can retry
+        await fulfillment(
+            of: [saveExp, expectation(for: vc, keyPath: \.buttonState, equalsToValue: .enabled)],
+            timeout: 4
+        )
     }
 
     func testWarningAlertViewModelInitiallyNil() {

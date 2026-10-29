@@ -38,4 +38,23 @@ final class IndividualViewControllerTest: XCTestCase {
         vc.individualElement.addressCountryNotListedButtonElement?.didTap()
         XCTAssertEqual(mockSheetController.missingType, .address)
     }
+
+    @MainActor
+    func testSecondTapWhileSavingDoesNotSaveAgain() async {
+        // Given saving the individual data has not finished yet
+        let secondSaveExp = expectation(description: "Individual data saved twice")
+        secondSaveExp.expectedFulfillmentCount = 2
+        secondSaveExp.isInverted = true
+        mockSheetController.saveAndTransitionCallback = {
+            secondSaveExp.fulfill()
+        }
+
+        // When the user taps continue twice
+        vc.flowViewModel.buttons.first?.didTap()
+        vc.flowViewModel.buttons.first?.didTap()
+
+        // Then the data is saved once
+        await fulfillment(of: [secondSaveExp], timeout: 0.5)
+        XCTAssertEqual(mockSheetController.saveAndTransitionCallCount, 1)
+    }
 }

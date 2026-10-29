@@ -50,6 +50,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var didLoadAndUpdateUI = false
 
     private(set) var savedData: StripeAPI.VerificationPageCollectedData?
+    private(set) var saveAndTransitionCallCount = 0
     var saveAndTransitionCallback: (() -> Void)?
     private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
     private(set) var frontUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
@@ -63,9 +64,10 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var saveDocumentFrontAndDecideBackCallback: (() -> Void)?
     var saveDocumentFrontAndDecideBackError: Error?
     var saveDocumentBackAndTransitionCallback: (() -> Void)?
+    var saveDocumentBackAndTransitionError: Error?
     var saveSelfieFileDataAndTransitionCallback: (() -> Void)?
+    var saveSelfieFileDataAndTransitionError: Error?
     var forceDocumentFrontAndDecideBackHandler: (() async throws -> Bool)?
-    var forceDocumentBackAndTransitionHandler: (() async throws -> Void)?
 
     var missingType: StripeIdentity.IndividualFormElement.MissingType?
     var transitionedToIndividual: Bool = false
@@ -109,6 +111,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         collectedData: StripeAPI.VerificationPageCollectedData
     ) async {
         savedData = collectedData
+        saveAndTransitionCallCount += 1
         saveAndTransitionCallback?()
     }
 
@@ -131,6 +134,9 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         if let saveDocumentFrontAndDecideBackError {
             throw saveDocumentFrontAndDecideBackError
         }
+        guard result != nil else {
+            throw VerificationSheetControllerMockError.missingUploadResult
+        }
         if self.needBack {
             return true
         } else {
@@ -147,6 +153,9 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         let result = await documentUploader.backUploadResult()
         backUploadedDocumentsResult = result
         saveDocumentBackAndTransitionCallback?()
+        if let saveDocumentBackAndTransitionError {
+            throw saveDocumentBackAndTransitionError
+        }
         guard result != nil else {
             throw VerificationSheetControllerMockError.missingUploadResult
         }
@@ -163,9 +172,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     func forceDocumentBackAndTransition(
         from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName
     ) async throws {
-        if let forceDocumentBackAndTransitionHandler {
-            try await forceDocumentBackAndTransitionHandler()
-        }
+        // no-op
     }
 
     func saveSelfieFileDataAndTransition(
@@ -177,6 +184,9 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         let result = await selfieUploader.uploadResult()
         self.uploadedSelfieResult = result
         saveSelfieFileDataAndTransitionCallback?()
+        if let saveSelfieFileDataAndTransitionError {
+            throw saveSelfieFileDataAndTransitionError
+        }
         guard result != nil else {
             throw VerificationSheetControllerMockError.missingUploadResult
         }

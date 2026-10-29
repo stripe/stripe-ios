@@ -148,22 +148,27 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
     }
 
     func testSaveFailureRestoresScannedState() async {
+        // Given a scanned selfie whose save fails
         let faceCaptureData = makeFaceCaptureData()
         let vc = makeViewController(initialState: .scanned(.empty, faceCaptureData))
+        mockSheetController.saveSelfieFileDataAndTransitionError = mockError
         let saveExp = expectation(description: "Selfie save attempted")
         mockSheetController.saveSelfieFileDataAndTransitionCallback = {
             saveExp.fulfill()
         }
 
+        // When the user taps the save button
         vc.buttonViewModels[0].didTap()
-        await fulfillment(of: [saveExp], timeout: 1)
-        await Task.yield()
 
+        // Then the screen leaves the saving state and lets the user try again
+        await fulfillment(
+            of: [saveExp, expectation(for: vc, keyPath: \.buttonViewModels.first?.state, equalsToValue: .enabled)],
+            timeout: 4
+        )
         guard case .scanned = vc.imageScanningSession.state else {
             return XCTFail("Expected scanned state")
         }
         XCTAssertEqual(vc.buttonViewModels.count, 1)
-        XCTAssertEqual(vc.buttonViewModels[0].state, .enabled)
     }
 }
 
