@@ -13,11 +13,6 @@ protocol PickerFieldViewDelegate: AnyObject {
     func didBeginEditing(_ pickerFieldView: PickerFieldView)
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool)
     func didCancel(_ pickerFieldView: PickerFieldView)
-    func didDismissMenu(_ pickerFieldView: PickerFieldView)
-}
-
-extension PickerFieldViewDelegate {
-    func didDismissMenu(_ pickerFieldView: PickerFieldView) {}
 }
 
 /**
@@ -32,9 +27,6 @@ final class PickerFieldView: UIView {
     final class MenuButton: UIButton {
         override var canBecomeFirstResponder: Bool { true }
 
-        var willDisplayMenu: (() -> Void)?
-        var didDismissMenu: (() -> Void)?
-
         override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
             window?.endEditing(true)
             return super.beginTracking(touch, with: event)
@@ -43,24 +35,6 @@ final class PickerFieldView: UIView {
         override func accessibilityActivate() -> Bool {
             window?.endEditing(true)
             return super.accessibilityActivate()
-        }
-
-        override func contextMenuInteraction(
-            _ interaction: UIContextMenuInteraction,
-            willDisplayMenuFor configuration: UIContextMenuConfiguration,
-            animator: UIContextMenuInteractionAnimating?
-        ) {
-            super.contextMenuInteraction(interaction, willDisplayMenuFor: configuration, animator: animator)
-            willDisplayMenu?()
-        }
-
-        override func contextMenuInteraction(
-            _ interaction: UIContextMenuInteraction,
-            willEndFor configuration: UIContextMenuConfiguration,
-            animator: UIContextMenuInteractionAnimating?
-        ) {
-            super.contextMenuInteraction(interaction, willEndFor: configuration, animator: animator)
-            didDismissMenu?()
         }
     }
 
@@ -193,15 +167,6 @@ final class PickerFieldView: UIView {
             menuButton.accessibilityLabel = label
             menuButton.isAccessibilityElement = true
             accessibilityElements = [menuButton]
-            menuButton.willDisplayMenu = { [weak self] in
-                guard let self else { return }
-                self.window?.endEditing(true)
-                self.delegate?.didBeginEditing(self)
-            }
-            menuButton.didDismissMenu = { [weak self] in
-                guard let self else { return }
-                self.delegate?.didDismissMenu(self)
-            }
         }
 //      On Catalyst/visionOS, add the picker view as a subview instead of an input view.
         #if targetEnvironment(macCatalyst) || canImport(visionOS)

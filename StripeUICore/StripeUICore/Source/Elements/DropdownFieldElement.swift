@@ -68,17 +68,12 @@ import UIKit
     }
     public var selectedIndex: Int {
         didSet {
-            if menuButton != nil && !isSelecting {
-                previouslySelectedIndex = selectedIndex
-            }
             updatePickerField()
         }
     }
     public private(set) var isEditing: Bool = false {
         didSet {
-            if menuButton == nil {
-                delegate?.didUpdate(element: self)
-            }
+            delegate?.didUpdate(element: self)
         }
     }
     public var didUpdate: DidUpdateSelectedIndex?
@@ -154,7 +149,6 @@ import UIKit
 
     // MARK: - Private properties
     private var previouslySelectedIndex: Int
-    private var isSelecting = false
     private let disableDropdownWithSingleElement: Bool
     private let isOptional: Bool
     // Indicates if this dropdown should start with no selection. When true, a placeholder item is automatically
@@ -248,10 +242,22 @@ import UIKit
     }
 
     public func select(index: Int, shouldAutoAdvance: Bool = true) {
-        isSelecting = true
+        guard menuButton != nil else {
+            selectedIndex = index
+            didFinish(pickerFieldView, shouldAutoAdvance: shouldAutoAdvance)
+            return
+        }
+
+        let didChange = selectedIndex != index
         selectedIndex = index
-        isSelecting = false
-        didFinish(pickerFieldView, shouldAutoAdvance: shouldAutoAdvance)
+        if didChange {
+            didUpdate?(index)
+            delegate?.didUpdate(element: self)
+        }
+        if shouldAutoAdvance {
+            _ = pickerFieldView.resignFirstResponder()
+            delegate?.continueToNextField(element: self)
+        }
     }
 
     public func update(items: [DropdownItem]) {
@@ -405,27 +411,19 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
 
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
         isEditing = false
-        let didChange = previouslySelectedIndex != selectedIndex
-        if didChange {
+        if previouslySelectedIndex != selectedIndex {
             didUpdate?(selectedIndex)
         }
         previouslySelectedIndex = selectedIndex
 
-        let shouldNotifyDelegate = menuButton != nil ? didChange : shouldAutoAdvance
-        if shouldNotifyDelegate {
-            delegate?.didUpdate(element: self)
-        }
         if shouldAutoAdvance {
+            delegate?.didUpdate(element: self)
             delegate?.continueToNextField(element: self)
             // If the picker field view is still selected (e.g. if someone tapped "Done"), dismiss it on the next runloop
             DispatchQueue.main.async {
                 _ = pickerFieldView.resignFirstResponder()
             }
         }
-    }
-
-    func didDismissMenu(_ pickerFieldView: PickerFieldView) {
-        isEditing = false
     }
 
     func didCancel(_ pickerFieldView: PickerFieldView) {

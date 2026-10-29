@@ -133,14 +133,13 @@ final class DropdownFieldElementTest: XCTestCase {
         let action = try XCTUnwrap(button.menu?.children[2] as? UIAction)
 
         // When the actual menu action is invoked
-        button.willDisplayMenu?()
         button.sendAction(action)
-        button.didDismissMenu?()
 
         // Then the new selection is committed exactly once
         XCTAssertEqual(updates, [2])
         XCTAssertEqual(delegate.updates, 1)
         XCTAssertEqual(delegate.advances, 1)
+        XCTAssertFalse(element.isEditing)
         XCTAssertEqual(element.selectedItem.rawData, "C")
         XCTAssertEqual(button.accessibilityLabel, "Label")
         XCTAssertEqual(button.accessibilityValue, "C")
@@ -149,22 +148,6 @@ final class DropdownFieldElementTest: XCTestCase {
         button.sendAction(try XCTUnwrap(button.menu?.children[2] as? UIAction))
         XCTAssertEqual(updates, [2])
         XCTAssertEqual(delegate.updates, 1)
-    }
-
-    func testMenuDismissalDoesNotCommitOrAdvance() throws {
-        let element = DropdownFieldElement(items: items, label: "Label", presentation: .menu)
-        let delegate = MenuDelegate()
-        element.delegate = delegate
-        let button = try XCTUnwrap(element.menuButton)
-
-        button.willDisplayMenu?()
-        XCTAssertTrue(element.isEditing)
-        button.didDismissMenu?()
-
-        XCTAssertFalse(element.isEditing)
-        XCTAssertEqual(element.selectedIndex, 0)
-        XCTAssertEqual(delegate.updates, 0)
-        XCTAssertEqual(delegate.advances, 0)
     }
 
     func testMenuDisabledActionsAndFieldCannotCommit() throws {
