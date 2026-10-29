@@ -61,23 +61,29 @@ final class PhoneOtpViewControllerTest: XCTestCase {
     }
 
     func testRemainsRequestingWhenGenerateFails() async {
+        // Given the screen is requesting an OTP
         let finished = expectation(description: "Generate OTP finished")
         let pausedGenerateOtp = pauseGeneratePhoneOtp {
             finished.fulfill()
         }
-
         vc.viewDidAppear(false)
         await fulfillment(of: [pausedGenerateOtp.started], timeout: 1)
+        let viewStateUpdate = expectViewStateUpdate()
+        viewStateUpdate.isInverted = true
 
+        // When the request fails
         pausedGenerateOtp.finish(nil)
-        await fulfillment(of: [finished], timeout: 1)
 
+        // Then the screen never moves to OTP input, because the error screen replaces it
+        await fulfillment(of: [finished, viewStateUpdate], timeout: 0.5)
         XCTAssertEqual(vc.phoneOtpView.viewModel, .RequestingOTP)
     }
 
     func testInvalidFullOtp() async throws {
+        // Given the OTP screen is showing
         try await mockViewDidAppear()
 
+        // When the user enters a full OTP
         let pausedSaveOtp = pauseSaveOtp()
         let newOtp = "123456"
         vc.didInputFullOtp(newOtp: newOtp)
@@ -86,15 +92,19 @@ final class PhoneOtpViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.phoneOtpView.viewModel, .SubmittingOTP(newOtp))
 
         let errorOtp = expectViewStateUpdate()
+        // ...and the save finishes with `invalidOtp`
         pausedSaveOtp.finish(.invalidOtp)
         await fulfillment(of: [errorOtp], timeout: 1)
 
+        // Then the OTP field shows the error
         XCTAssertEqual(vc.phoneOtpView.viewModel, .ErrorOTP)
     }
 
     func testResetFullOtpAfterTransition() async throws {
+        // Given the OTP screen is showing
         try await mockViewDidAppear()
 
+        // When the user enters a full OTP
         let pausedSaveOtp = pauseSaveOtp()
         let newOtp = "123456"
         vc.didInputFullOtp(newOtp: newOtp)
@@ -103,9 +113,11 @@ final class PhoneOtpViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.phoneOtpView.viewModel, .SubmittingOTP(newOtp))
 
         let inputtingOtp = expectViewStateUpdate()
+        // ...and the save finishes with `transitioned`
         pausedSaveOtp.finish(.transitioned)
         await fulfillment(of: [inputtingOtp], timeout: 1)
 
+        // Then the OTP field resets for input
         XCTAssertEqual(vc.phoneOtpView.viewModel, .InputtingOTP)
     }
 
