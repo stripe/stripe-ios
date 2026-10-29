@@ -118,6 +118,13 @@ func deviceCanUseNativeLink(elementsSession: STPElementsSession, apiClient: STPA
     )
 }
 
+/// Whether the Embedded instant debits / link card brand row should launch the native Link wallet, scoped to bank accounts, instead of showing the bank form.
+func shouldUseLinkWalletForBankRow(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+    return PaymentSheet.LinkFeatureFlags.enableEmbeddedBankLinkWallet
+        && deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+        && elementsSession.linkFundingSources?.contains(ParsedEnum(.bankAccount)) == true
+}
+
 // MARK: - Link features
 
 extension PaymentSheet {
@@ -129,6 +136,10 @@ extension PaymentSheet {
 
         /// Overrides whether native Link is available. Intended for test playgrounds only.
         @_spi(InternalOnlyAPI) public static var nativeLinkEnabledOverride: Bool?
+
+        /// Decides whether the Embedded "Bank" row launches the native Link wallet (scoped to bank accounts) instead of the instant debits form.
+        /// Has no effect when native Link isn't available.
+        @_spi(InternalOnlyAPI) public static var enableEmbeddedBankLinkWallet: Bool = false
     }
 }
 

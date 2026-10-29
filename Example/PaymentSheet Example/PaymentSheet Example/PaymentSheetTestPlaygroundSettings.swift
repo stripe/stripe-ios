@@ -365,6 +365,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum EmbeddedBankLinkWallet: String, PickerEnum {
+        static var enumName: String { "Embedded Bank → Link wallet" }
+
+        case on
+        case off
+    }
+
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
 
@@ -801,6 +808,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkDisplay: LinkDisplay
     var forceOnelink: ForceOnelink
     var forceOnelinkConsumer: ForceOnelinkConsumer
+    // Keep this optional so saved settings and QR payloads from older builds remain decodable.
+    var embeddedBankLinkWallet: EmbeddedBankLinkWallet?
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -847,6 +856,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         nativeSheetOverride ?? (ProcessInfo.processInfo.environment["UITesting"] == nil ? .on : .off)
     }
 
+    var resolvedEmbeddedBankLinkWallet: EmbeddedBankLinkWallet {
+        embeddedBankLinkWallet ?? .off
+    }
+
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
@@ -882,6 +895,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkDisplay: .automatic,
             forceOnelink: .off,
             forceOnelinkConsumer: .off,
+            embeddedBankLinkWallet: nil,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
