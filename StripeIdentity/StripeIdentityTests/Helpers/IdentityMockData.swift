@@ -177,3 +177,34 @@ enum PhoneOtpPageMock {
         otpLength: 6
     )
 }
+
+extension StripeAPI.VerificationPage {
+    func copy(
+        experiments: [StripeAPI.VerificationPageStaticContentExperiment]? = nil,
+        skipSuccessPage: Bool? = nil
+    ) -> StripeAPI.VerificationPage {
+        return .init(
+            biometricConsent: biometricConsent,
+            documentCapture: documentCapture,
+            documentSelect: documentSelect,
+            individual: individual,
+            countryNotListed: countryNotListed,
+            individualWelcome: individualWelcome,
+            phoneOtp: phoneOtp,
+            fallbackUrl: fallbackUrl,
+            id: id,
+            livemode: livemode,
+            requirements: requirements,
+            selfie: selfie,
+            status: status,
+            submitted: submitted,
+            success: success,
+            unsupportedClient: unsupportedClient,
+            bottomsheet: bottomsheet,
+            userSessionId: userSessionId,
+            experiments: experiments ?? self.experiments,
+            isStripe: isStripe,
+            skipSuccessPage: skipSuccessPage ?? self.skipSuccessPage
+        )
+    }
+}

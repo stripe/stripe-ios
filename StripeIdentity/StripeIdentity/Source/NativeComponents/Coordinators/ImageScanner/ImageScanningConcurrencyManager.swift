@@ -94,7 +94,7 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
 
     /// Detectors will perform scans concurrently to optimize CPU and GPU overlap.
     /// No more than `maxConcurrentScans` tasks will run on this queue.
-    let concurrentQueue = DispatchQueue(
+    private let concurrentQueue = DispatchQueue(
         label: "com.stripe.identity.concurrent-image-scanner",
         attributes: .concurrent
     )
