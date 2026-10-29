@@ -270,7 +270,6 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
             let submittedData: Result<StripeAPI.VerificationPageData, Error>
             do {
                 submittedData = .success(try await apiClient.submitIdentityVerificationPage())
-                self.isVerificationPageSubmitted = (try? submittedData.get())?.submittedAndClosed() == true
             } catch {
                 submittedData = .failure(error)
             }
@@ -283,7 +282,7 @@ final class VerificationSheetController: @MainActor VerificationSheetControllerP
                 return
             }
 
-            self.isVerificationPageSubmitted = resultData.submitted == true && resultData.closed == true
+            self.isVerificationPageSubmitted = resultData.submittedAndClosed()
 
             if resultData.needsFallback() {
                 // Checking the buffered VerificationPageResponse, update its missings with the new missings
