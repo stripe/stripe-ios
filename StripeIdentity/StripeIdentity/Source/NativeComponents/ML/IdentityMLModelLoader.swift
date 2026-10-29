@@ -40,8 +40,9 @@ enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {
 }
 
 protocol IdentityMLModelLoaderProtocol {
-    func documentModels() async -> Result<AnyDocumentScanner, Error>
-    func faceModels() async -> Result<AnyFaceScanner, Error>
+    // Main actor, because the sheet controller starts loading the models on the main thread.
+    @MainActor func documentModels() async -> Result<AnyDocumentScanner, Error>
+    @MainActor func faceModels() async -> Result<AnyFaceScanner, Error>
 
     func startLoadingDocumentModels(
         from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
@@ -63,14 +64,14 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
     private var documentModelsTask: Task<AnyDocumentScanner, Error>?
     private var faceModelsTask: Task<AnyFaceScanner, Error>?
 
-    func documentModels() async -> Result<AnyDocumentScanner, Error> {
+    @MainActor func documentModels() async -> Result<AnyDocumentScanner, Error> {
         guard let documentModelsTask else {
             return .failure(IdentityMLModelLoaderError.mlModelNeverLoaded)
         }
         return await documentModelsTask.result
     }
 
-    func faceModels() async -> Result<AnyFaceScanner, Error> {
+    @MainActor func faceModels() async -> Result<AnyFaceScanner, Error> {
         guard let faceModelsTask else {
             return .failure(IdentityMLModelLoaderError.mlModelNeverLoaded)
         }

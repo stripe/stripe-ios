@@ -13,7 +13,8 @@ import UIKit
 
 /// Dependency-injectable protocol for SelfieUploader
 protocol SelfieUploaderProtocol: AnyObject {
-    func uploadResult() async -> Result<SelfieUploader.FileData, Error>?
+    // Main actor, because `uploadImages` and `reset` replace the upload task on the main thread.
+    @MainActor func uploadResult() async -> Result<SelfieUploader.FileData, Error>?
 
     func uploadImages(
         _ capturedImages: FaceCaptureData
@@ -68,7 +69,7 @@ final class SelfieUploader: SelfieUploaderProtocol {
         self.isTestMode = isTestMode
     }
 
-    func uploadResult() async -> Result<SelfieUploader.FileData, Error>? {
+    @MainActor func uploadResult() async -> Result<SelfieUploader.FileData, Error>? {
         guard let uploadTask else {
             return nil
         }

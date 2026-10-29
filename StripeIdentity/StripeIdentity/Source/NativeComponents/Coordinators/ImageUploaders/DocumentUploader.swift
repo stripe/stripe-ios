@@ -32,8 +32,9 @@ protocol DocumentUploaderProtocol: AnyObject {
     var frontUploadStatus: DocumentUploader.UploadStatus { get }
     var backUploadStatus: DocumentUploader.UploadStatus { get }
 
-    func frontUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
-    func backUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    // Main actor, because `uploadImages` and `reset` replace the upload tasks on the main thread.
+    @MainActor func frontUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    @MainActor func backUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
 
     func uploadImages(
         for side: DocumentSide,
@@ -101,14 +102,14 @@ final class DocumentUploader: DocumentUploaderProtocol {
         self.isTestMode = isTestMode
     }
 
-    func frontUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>? {
+    @MainActor func frontUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>? {
         guard let frontUploadTask else {
             return nil
         }
         return await frontUploadTask.result
     }
 
-    func backUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>? {
+    @MainActor func backUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>? {
         guard let backUploadTask else {
             return nil
         }
