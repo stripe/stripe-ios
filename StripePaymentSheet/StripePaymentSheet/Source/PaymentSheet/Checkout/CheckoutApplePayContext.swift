@@ -124,8 +124,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     return // The user canceled mid-payment - just abort
                 }
                 self.paymentState = .pending  // After this point, we can't cancel
-                let savePaymentMethod: Bool? = checkoutSession.noPaymentRequired ? nil
-                    : checkoutSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
 
                 // 2. Confirm
                 let cardParams = STPPaymentMethodCardParams()
@@ -142,7 +140,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     paymentMethodData: paymentMethodData,
                     confirmationSource: attribution.confirmingElement,
                     expectedAmount: checkoutSession.amount,
-                    savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,
