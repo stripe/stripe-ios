@@ -565,20 +565,13 @@ private extension SelfieCaptureViewController {
         let trainingConsent = consentSelection
         Task { @MainActor [weak self] in
             guard let sheetController else { return }
-            do {
-                try await sheetController.saveSelfieFileDataAndTransition(
-                    from: screenName,
-                    selfieUploader: selfieUploader,
-                    capturedImages: faceCaptureData,
-                    trainingConsent: trainingConsent
-                )
-            } catch {
-                self?.imageScanningSession.setStateScanned(
-                    expectedClassification: .empty,
-                    capturedData: faceCaptureData
-                )
-                return
-            }
+            // Leave the saving state whether the save succeeded or failed.
+            try? await sheetController.saveSelfieFileDataAndTransition(
+                from: screenName,
+                selfieUploader: selfieUploader,
+                capturedImages: faceCaptureData,
+                trainingConsent: trainingConsent
+            )
             self?.imageScanningSession.setStateScanned(
                 expectedClassification: .empty,
                 capturedData: faceCaptureData
