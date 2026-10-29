@@ -35,7 +35,8 @@ final class IdentityImageUploader {
     let apiClient: IdentityAPIClient
     let analyticsClient: IdentityAnalyticsClient
     let sheetController: VerificationSheetControllerProtocol
-    let imageProcessingQueue = DispatchQueue(label: "com.stripe.identity.image-processing")
+    // Serial, so only one crop or resize holds a full-size image in memory at a time.
+    private let imageProcessingQueue = DispatchQueue(label: "com.stripe.identity.image-processing")
 
     init(
         configuration: Configuration,
@@ -114,9 +115,10 @@ final class IdentityImageUploader {
         cropPaddingComputationMethod: CGImage.CropPaddingComputationMethod,
         fileName: String
     ) async throws -> StripeFile {
+        let imageToResize: CGImage
         do {
             // Crop image if there's a region of interest
-            let imageToResize = try await processImage {
+            imageToResize = try await processImage {
                 guard let regionOfInterest else { return image }
                 return try image.cropping(
                     toNormalizedRegion: regionOfInterest,
@@ -124,20 +126,20 @@ final class IdentityImageUploader {
                     computationMethod: cropPaddingComputationMethod
                 )
             }
-
-            return try await uploadJPEGResize(
-                image: imageToResize,
-                fileName: fileName,
-                jpegCompressionQuality: configuration.highResImageCompressionQuality,
-                newSize: CGSize(
-                    width: configuration.highResImageMaxDimension,
-                    height: configuration.highResImageMaxDimension
-                )
-            )
         } catch {
             await logUploadError(error, stage: .highResCrop, fileName: fileName)
             throw error
         }
+
+        return try await uploadJPEGResize(
+            image: imageToResize,
+            fileName: fileName,
+            jpegCompressionQuality: configuration.highResImageCompressionQuality,
+            newSize: CGSize(
+                width: configuration.highResImageMaxDimension,
+                height: configuration.highResImageMaxDimension
+            )
+        )
     }
 
     /// Resizes and uploads the low resolution image to the server
@@ -162,20 +164,21 @@ final class IdentityImageUploader {
         jpegCompressionQuality: CGFloat,
         newSize: CGSize
     ) async throws -> StripeFile {
+        let resizedImage: CGImage
         do {
-            let resizedImage = try await processImage {
+            resizedImage = try await processImage {
                 try image.scaledDown(toMaxPixelDimension: newSize)
             }
-
-            return try await uploadJPEG(
-                image: resizedImage,
-                fileName: fileName,
-                jpegCompressionQuality: jpegCompressionQuality
-            )
         } catch {
             await logUploadError(error, stage: .imageResize, fileName: fileName)
             throw error
         }
+
+        return try await uploadJPEG(
+            image: resizedImage,
+            fileName: fileName,
+            jpegCompressionQuality: jpegCompressionQuality
+        )
     }
 
     /// Converts image to JPEG data and uploads it to the server on a worker thread
