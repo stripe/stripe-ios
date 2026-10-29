@@ -49,15 +49,12 @@ enum CheckoutControllerLoader {
                 configuration: configuration,
                 session: session
             )
-            let customerProvider = CustomerProvider(checkoutSession: session)
             _ = await PaymentSheetLoader.loadLink(
                 elementsSession: session.elementsSession,
                 configuration: flowControllerConfiguration,
-                customerProvider: customerProvider,
-                // Checkout session email precedes merchant defaults.
-                email: customerProvider.linkEmail() ?? configuration.defaults.email,
+                email: session.email ?? configuration.defaults.email,
                 analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .checkoutElements),
-                prefetchedLinkEmailTask: Task { nil },
+                prefetchedEmailAndSourceTask: Task { nil },
                 loadTimings: .init(loadingStartDate: Date()),
                 isUpdate: false
             )
@@ -128,7 +125,8 @@ enum CheckoutControllerLoader {
             ?? PaymentSheetAnalyticsHelper(
                 integrationShape: .flowController,
                 configuration: fcConfiguration,
-                checkoutSessionID: session.id
+                checkoutSessionID: session.id,
+                checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
             )
         let orientation = fcConfiguration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
         flowControllerAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
@@ -138,7 +136,8 @@ enum CheckoutControllerLoader {
         ?? PaymentSheetAnalyticsHelper(
             integrationShape: .embedded,
             configuration: embeddedConfiguration,
-            checkoutSessionID: session.id
+            checkoutSessionID: session.id,
+            checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
         )
         embeddedAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
         embeddedAnalyticsHelper.paymentMethodOrientation = .vertical
