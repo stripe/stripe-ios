@@ -112,9 +112,10 @@ final class VerificationFlowWebViewController: UIViewController {
         // instantiating the webView, otherwise the `getUserMedia` returns
         // `undefined` in Javascript on iOS 14.6.
         webViewSetupTask = Task { @MainActor [weak self] in
-            guard let self else { return }
+            await Self.requestCameraPermissionsIfNeeded()
 
-            await requestCameraPermissionsIfNeeded()
+            // Check after the prompt: the user can close the sheet while it is open.
+            guard let self else { return }
 
             self.verificationWebView = VerificationFlowWebView(initialURL: self.startUrl)
 
@@ -155,7 +156,7 @@ extension VerificationFlowWebViewController {
     }
 
     @MainActor
-    fileprivate func requestCameraPermissionsIfNeeded() async {
+    fileprivate static func requestCameraPermissionsIfNeeded() async {
         // NOTE: We won't do anything different if the user does vs. doesn't
         // grant camera access. The web flow already handles both cases.
         guard AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined else {
