@@ -158,7 +158,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testVerificationPageEnables3DFaceCaptureFromExperiment() throws {
-        let mockResponse = try VerificationPageMock.response200.make().withExperiments([
+        let mockResponse = try VerificationPageMock.response200.make().copy(experiments: [
             .init(
                 experimentName: "idprod_3d_face_capture_mobile",
                 eventName: "screen_presented",
@@ -345,7 +345,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testSaveSelfieDataIncludes3DFieldsWhenExperimentIsEnabled() async throws {
-        let verificationPage = try VerificationPageMock.response200.make().withExperiments([
+        let verificationPage = try VerificationPageMock.response200.make().copy(experiments: [
             .init(
                 experimentName: "idprod_3d_face_capture_mobile",
                 eventName: "screen_presented",
@@ -395,6 +395,8 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testSaveSelfieWithoutUploadThrows() async {
+        // Given no upload was started
+        // When the controller saves
         do {
             try await controller.saveSelfieFileDataAndTransition(
                 from: .selfieCapture,
@@ -404,6 +406,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             )
             XCTFail("Expected error")
         } catch {
+            // Then it throws instead of waiting forever, and sends no request
             XCTAssertEqual(error as? VerificationSheetControllerSaveError, .missingUploadTask)
         }
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 0)
@@ -701,6 +704,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testSaveDocumentFrontInputErrorTransitionsAndThrows() async throws {
+        // Given an uploaded front that the server rejects with an input error
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
         let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
         mockDocumentUploader.frontUploadResultValue = .success(frontFileData)
@@ -709,6 +713,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             saveRequestExp.fulfill()
         }
 
+        // When the front is saved
         let saveTask = Task {
             try await controller.saveDocumentFrontAndDecideBack(
                 from: .biometricConsent,
@@ -720,6 +725,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             with: .success(try VerificationPageDataMock.response200.make())
         )
 
+        // Then it passes the input errors to the flow and tells the caller it already transitioned
         do {
             _ = try await saveTask.value
             XCTFail("Expected error")
@@ -727,9 +733,15 @@ final class VerificationSheetControllerTest: XCTestCase {
             XCTAssertEqual(error as? VerificationSheetControllerSaveError, .transitionedToInputError)
         }
         await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        guard case .success(let transitionedData) = mockFlowController.transitionedWithUpdateDataResult else {
+            return XCTFail("Expected success")
+        }
+        XCTAssertFalse(transitionedData.requirements.errors.isEmpty)
     }
 
     func testSaveDocumentFrontWithoutUploadThrows() async {
+        // Given no upload was started
+        // When the controller saves
         do {
             _ = try await controller.saveDocumentFrontAndDecideBack(
                 from: .biometricConsent,
@@ -737,6 +749,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             )
             XCTFail("Expected error")
         } catch {
+            // Then it throws instead of waiting forever, and sends no request
             XCTAssertEqual(error as? VerificationSheetControllerSaveError, .missingUploadTask)
         }
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 0)
@@ -881,6 +894,8 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testSaveDocumentBackWithoutUploadThrows() async {
+        // Given no upload was started
+        // When the controller saves
         do {
             try await controller.saveDocumentBackAndTransition(
                 from: .biometricConsent,
@@ -888,6 +903,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             )
             XCTFail("Expected error")
         } catch {
+            // Then it throws instead of waiting forever, and sends no request
             XCTAssertEqual(error as? VerificationSheetControllerSaveError, .missingUploadTask)
         }
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 0)
@@ -1203,6 +1219,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testGeneratePhoneOtpFailureTransitionsAndReturnsNil() async throws {
+        // Given the verification page is loaded
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let requestExp = expectation(description: "generate OTP request made")
@@ -1210,13 +1227,18 @@ final class VerificationSheetControllerTest: XCTestCase {
             requestExp.fulfill()
         }
 
+        // When requesting a new OTP fails
         let generateTask = Task { await controller.generatePhoneOtp() }
         await fulfillment(of: [requestExp], timeout: 1)
 
         let error = NSError(domain: "test", code: 1)
         mockAPIClient.verificationPageGeneratePhoneOtp.respondToRequests(with: .failure(error))
 
+        // Then the flow gets the failure and the caller gets no data
         await fulfillment(of: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        guard case .failure = mockFlowController.transitionedWithUpdateDataResult else {
+            return XCTFail("Expected failure")
+        }
         let result = await generateTask.value
         XCTAssertNil(result)
     }
@@ -1254,36 +1276,6 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.isVerificationPageSubmitted = true
         controller.verificationSheetFlowControllerDidDismissNativeView(mockFlowController)
         XCTAssertEqual(mockDelegate.result, .flowCompleted)
-    }
-}
-
-private extension StripeAPI.VerificationPage {
-    func withExperiments(
-        _ experiments: [StripeAPI.VerificationPageStaticContentExperiment]
-    ) -> StripeAPI.VerificationPage {
-        return .init(
-            biometricConsent: biometricConsent,
-            documentCapture: documentCapture,
-            documentSelect: documentSelect,
-            individual: individual,
-            countryNotListed: countryNotListed,
-            individualWelcome: individualWelcome,
-            phoneOtp: phoneOtp,
-            fallbackUrl: fallbackUrl,
-            id: id,
-            livemode: livemode,
-            requirements: requirements,
-            selfie: selfie,
-            status: status,
-            submitted: submitted,
-            success: success,
-            unsupportedClient: unsupportedClient,
-            bottomsheet: bottomsheet,
-            userSessionId: userSessionId,
-            experiments: experiments,
-            isStripe: isStripe,
-            skipSuccessPage: skipSuccessPage
-        )
     }
 }
 
