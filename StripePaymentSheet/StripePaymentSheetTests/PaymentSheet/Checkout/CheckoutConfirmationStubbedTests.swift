@@ -143,6 +143,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             "presentment_currency": "eur",
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur"),
             "ordered_payment_method_types_and_wallets": ["sepa_debit"],
+            // Checkout provides saved methods on its own customer object.
             "customer": [
                 "id": "cus_saved_sepa",
                 "payment_methods": [STPPaymentMethod._testSEPA().allResponseFields],
