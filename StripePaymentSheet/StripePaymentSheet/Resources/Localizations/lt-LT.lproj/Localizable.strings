@@ -1,3 +1,17 @@
+"%1$@ Card" = "„%1$@“ kortelė";
+
+"%1$@ Credit" = "„%1$@“ kredito";
+
+"%1$@ Debit" = "„%1$@“ debeto";
+
+"%1$@ Prepaid" = "„%1$@“ išankstinio mokėjimo";
+
+"%1$@ account ending in %2$@" = "%1$@ sąskaita, kurios paskutiniai skaičiai %2$@";
+
+"%1$@ ending in %2$@" = "%1$@, kuri baigiasi %2$@";
+
+"%1$@ is not accepted" = "\"%1$@\" nepriimamas";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ nebebus išsaugota jūsų piniginėje.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Pridėti naują mokėjimo būdą";
 
 "Add your payment information" = "Pridėkite mokėjimo informaciją";
+
+"Apple Pay" = "\"Apple Pay\"";
 
 "Approve payment" = "Patvirtinti mokėjimą";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Kortelės duomenų keisti negalima.";
 
+"Card information" = "Kortelės duomenys";
+
+"Card number" = "Kortelės numeris";
+
 "Card number. Supported cards include %@" = "Kortelės numeris. Palaikomos kortelės: %@";
 
 "Change" = "Keisti";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Patvirtinkite mokėjimą savo banko programėlėje per %@ ir užbaikite pirkimą.";
+
+"Confirm your %@" = "Patvirtinkite savo %@";
 
 "Confirm your CVC" = "Patvirtinkite savo CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Ne jūs?";
 
 "Only card brand can be changed." = "Galima keisti tik kortelės prekės ženklą.";
+
+"Only credit and prepaid cards are accepted" = "Priimamos tik kredito ir išankstinio mokėjimo kortelės";
+
+"Only credit cards are accepted" = "Priimamos tik kredito kortelės";
+
+"Only debit and credit cards are accepted" = "Priimamos tik debeto ir kredito kortelės";
+
+"Only debit and prepaid cards are accepted" = "Priimamos tik debeto ir išankstinio mokėjimo kortelės";
+
+"Only debit cards are accepted" = "Priimamos tik debeto kortelės";
+
+"Only prepaid cards are accepted" = "Priimamos tik išankstinio mokėjimo kortelės";
 
 "Open to see more information." = "Atidarykite, kad pamatytumėte daugiau informacijos.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Nustatyti";
 
+"Shipping Address" = "Siuntimo adresas";
+
 "Shipping to %@ is not supported." = "Siuntimas į %@ nepalaikomas.";
 
 "Show details" = "Rodyti išsamią informaciją";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Nurodytas neteisingas patikrinimo kodas.";
 
+"The selected brand is not allowed" = "Pasirinktas prekės ženklas neleidžiamas";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Tai – tarptautinis pirkinys, kuriam netaikomas 3,5 % IOF mokestis. Tęsdami, patvirtinate ir sutinkate su <terms>„Ebanx“ sąlygomis ir nuostatomis</terms>.";
 
 "This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Šis mokėjimo būdas bus pašalintas, tačiau ir toliau bus galima naudotis %@ prenumeratomis.";
+
+"To scan your card, allow camera access in Settings." = "Kad nuskaitytumėte kortelę, nustatymuose suteikite prieigą fotoaparatui.";
 
 "Too many attempts. Please try again in a few minutes." = "Per daug bandymų. Bandykite dar kartą po kelių minučių.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Jūsų IBAN turėtų prasidėti šalies kodu iš dviejų raidžių.";
 
 "Your address changes won't be saved." = "Su adresu susiję pakeitimai nebus išsaugoti.";
+
+"Your card has expired." = "Jūsų kortelė baigė galioti.";

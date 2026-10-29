@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 7/29/25.
 //
 
-@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 struct LinkPaymentMethodPreview {
@@ -33,7 +33,7 @@ struct LinkPaymentMethodPreview {
                 return nil
             }
             let cardBrand = STPCard.brand(from: brand)
-            let icon = STPImageLibrary.unpaddedCardBrandImage(for: cardBrand)
+            let icon = PaymentSheetImageLibrary.unpaddedCardBrandImage(for: cardBrand)
             self.init(icon: icon, last4: last4)
         case .bankAccount:
             let bankIconCode = PaymentSheetImageLibrary.bankIconCode(for: nil)

@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ Thẻ";
+
+"%1$@ Credit" = "%1$@ Ghi có";
+
+"%1$@ Debit" = "%1$@ Ghi nợ";
+
+"%1$@ Prepaid" = "%1$@ Trả trước";
+
+"%1$@ account ending in %2$@" = "Tài khoản %1$@ kết thúc bằng %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ kết thúc bằng %2$@";
+
+"%1$@ is not accepted" = "%1$@ không được chấp nhận";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ sẽ không còn được lưu vào ví của bạn nữa.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Thêm phương thức thanh toán mới";
 
 "Add your payment information" = "Thêm thông tin thanh toán của bạn";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Chấp nhận thanh toán";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Không thể thay đổi thông tin thẻ.";
 
+"Card information" = "Thông tin thẻ";
+
+"Card number" = "Số thẻ";
+
 "Card number. Supported cards include %@" = "Số thẻ. Các thẻ được hỗ trợ bao gồm %@";
 
 "Change" = "Thay đổi";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng hoặc ứng dụng thanh toán của bạn trong vòng %@ để hoàn tất giao dịch mua.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng của quý vị trong vòng %@ để hoàn tất giao dịch mua.";
+
+"Confirm your %@" = "Xác nhận %@ của bạn";
 
 "Confirm your CVC" = "Xác nhận CVC của bạn";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Đây không phải là bạn?";
 
 "Only card brand can be changed." = "Chỉ có thể thay đổi thương hiệu thẻ.";
+
+"Only credit and prepaid cards are accepted" = "Chỉ chấp nhận thẻ tín dụng và thẻ trả trước";
+
+"Only credit cards are accepted" = "Chỉ chấp nhận thẻ tín dụng";
+
+"Only debit and credit cards are accepted" = "Chỉ chấp nhận thẻ ghi nợ và thẻ tín dụng";
+
+"Only debit and prepaid cards are accepted" = "Chỉ chấp nhận thẻ ghi nợ và thẻ trả trước";
+
+"Only debit cards are accepted" = "Chỉ chấp nhận thẻ ghi nợ";
+
+"Only prepaid cards are accepted" = "Chỉ chấp nhận thẻ trả trước";
 
 "Open to see more information." = "Mở để xem thêm thông tin.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Cài đặt";
 
+"Shipping Address" = "Địa chỉ vận chuyển";
+
 "Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
 
 "Show details" = "Hiển thị chi tiết";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
 
+"The selected brand is not allowed" = "Thương hiệu đã chọn không được cho phép";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Đây là giao dịch mua quốc tế và không bao gồm phí IOF 3,5%. Khi tiếp tục, bạn thừa nhận và chấp nhận <terms>điều khoản và điều kiện của Ebanx</terms>.";
 
 "This is your default" = "Đây là thông tin mặc định của bạn";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Phương thức thanh toán này sẽ bị xóa nhưng sẽ vẫn khả dụng cho các gói đăng ký %@.";
+
+"To scan your card, allow camera access in Settings." = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
 
 "Too many attempts. Please try again in a few minutes." = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 
 "Your address changes won't be saved." = "Các thay đổi địa chỉ của bạn sẽ không được lưu.";
+
+"Your card has expired." = "Thẻ đã hết hạn.";

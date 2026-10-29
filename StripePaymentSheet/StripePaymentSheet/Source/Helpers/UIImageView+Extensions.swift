@@ -3,7 +3,7 @@
 //  StripePaymentSheet
 //
 
-@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 extension UIImageView {

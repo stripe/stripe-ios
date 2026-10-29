@@ -1,3 +1,17 @@
+"%1$@ Card" = "Karta %1$@";
+
+"%1$@ Credit" = "%1$@ Credit";
+
+"%1$@ Debit" = "%1$@ Debit";
+
+"%1$@ Prepaid" = "%1$@ Prepaid";
+
+"%1$@ account ending in %2$@" = "Kont ta' %1$@ li jintemm biċ-ċifri %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ li jispiċċa %2$@";
+
+"%1$@ is not accepted" = "%1$@ mhix aċċettata";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ mhux se jibqa' ssejvjat fil-kartiera tiegħek.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Żid metodu tal-ħlas ġdid";
 
 "Add your payment information" = "Żid l-informazzjoni dwar il-pagament tiegħek";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Approva l-pagament";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Id-dettalji tal-karta ma jistgħux jinbidlu.";
 
+"Card information" = "L-informazzjoni tal-karta";
+
+"Card number" = "In-numru tal-karta";
+
 "Card number. Supported cards include %@" = "Numru tal-kard. Il-kards appoġġjati jinkludu %@";
 
 "Change" = "Ibdel";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Biex tlesti x-xirja kkonferma l-pagament, fl-app tal-bank jew fl-app tal-pagamenti, fi żmien %@.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ikkonferma l-pagament fl-app tal-bank fi żmien %@ biex tlesti x-xirja.";
+
+"Confirm your %@" = "Ikkonferma l-%@ tiegħek";
 
 "Confirm your CVC" = "Ikkonferma l-kodiċi CVC tiegħek";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Mhux l-indirizz tal-email tiegħek?";
 
 "Only card brand can be changed." = "Tista' tibdel biss ix-xorta tal-karta.";
+
+"Only credit and prepaid cards are accepted" = "Huma aċċettati biss karti tal-kreditu u karti mħallsa minn qabel";
+
+"Only credit cards are accepted" = "Huma aċċettati biss karti ta' kreditu";
+
+"Only debit and credit cards are accepted" = "Huma aċċettati biss karti tad-debitu u tal-kreditu";
+
+"Only debit and prepaid cards are accepted" = "Huma aċċettati biss karti tad-debitu u karti mħallsa minn qabel";
+
+"Only debit cards are accepted" = "Huma aċċettati biss karti tad-debitu";
+
+"Only prepaid cards are accepted" = "Huma aċċettati biss karti mħallsa minn qabel";
 
 "Open to see more information." = "Iftaħ biex tara aktar informazzjoni.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Stabilixxi";
 
+"Shipping Address" = "L-Indirizz tat-Trasport tal-Merkanzija";
+
 "Shipping to %@ is not supported." = "Ma nistgħux nibagħtu l-affarijiet lejn: %@";
 
 "Show details" = "Uri d-dettalji";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Il-kodiċi tal-verifika mogħti mhuwiex tajjeb.";
 
+"The selected brand is not allowed" = "Ix-xorta ta' karta magħżula ma tistax tintuża";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Din hija xirja internazzjonali u teskludi tariffa IOF ta’ 3.5%. Billi tipproċedi, inti tirrikonoxxi u taċċetta t-<terms>termini u l-kundizzjonijiet ta’ Ebanx<terms>.";
 
 "This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Dan il-metodu ta' pagament se jitneħħa iżda se jibqa' disponibbli għal abbonamenti ta' %@.";
+
+"To scan your card, allow camera access in Settings." = "Biex tiskennja l-karta tiegħek, agħti l-aċċess għall-kamera mill-Għażliet.";
 
 "Too many attempts. Please try again in a few minutes." = "Ippruvajt wisq drabi. Jekk jogħġbok erġa' pprova wara ftit minuti.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "L-IBAN tiegħek għandu jibda b'kodiċi tal-pajjiż magħmul minn żewġ ittri.";
 
 "Your address changes won't be saved." = "Il-bidliet fl-indirizz tiegħek mhux se jiġu ssejvjati.";
+
+"Your card has expired." = "Il-karta tiegħek skadiet.";

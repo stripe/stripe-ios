@@ -1,3 +1,17 @@
+"%1$@ Card" = "Tarjeta %1$@";
+
+"%1$@ Credit" = "%1$@ de crédito";
+
+"%1$@ Debit" = "%1$@ de débito";
+
+"%1$@ Prepaid" = "%1$@ de prepago";
+
+"%1$@ account ending in %2$@" = "Cuenta de %1$@ terminada en %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ terminada en %2$@";
+
+"%1$@ is not accepted" = "No se acepta %1$@";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ ya no se guardará en tu monedero.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Añadir nuevo método de pago";
 
 "Add your payment information" = "Añadir información de pago";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Aprobar pago";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Los datos de la tarjeta no se pueden modificar.";
 
+"Card information" = "Información de la tarjeta";
+
+"Card number" = "Número de tarjeta";
+
 "Card number. Supported cards include %@" = "Número de tarjeta. Las tarjetas compatibles incluyen %@";
 
 "Change" = "Cambia los datos";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirma el pago en tu banco o aplicación de pago en %@ para completar la compra.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirma el pago en la aplicación de tu banco en %@ para completar la compra.";
+
+"Confirm your %@" = "Confirma tu %@";
 
 "Confirm your CVC" = "Confirma tu CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "¿No eres tú?";
 
 "Only card brand can be changed." = "Solo se puede cambiar la marca de la tarjeta.";
+
+"Only credit and prepaid cards are accepted" = "Solo se aceptan tarjetas de crédito y prepago";
+
+"Only credit cards are accepted" = "Solo se aceptan tarjetas de crédito";
+
+"Only debit and credit cards are accepted" = "Solo se aceptan tarjetas de débito y crédito";
+
+"Only debit and prepaid cards are accepted" = "Solo se aceptan tarjetas de débito y prepago";
+
+"Only debit cards are accepted" = "Solo se aceptan tarjetas de débito";
+
+"Only prepaid cards are accepted" = "Solo se aceptan tarjetas de prepago";
 
 "Open to see more information." = "Abrir para obtener más información.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Configurar";
 
+"Shipping Address" = "Dirección de envío";
+
 "Shipping to %@ is not supported." = "No se admiten los envíos a %@.";
 
 "Show details" = "Mostrar datos";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "El código de verificación proporcionado no es correcto.";
 
+"The selected brand is not allowed" = "La marca seleccionada no está permitida";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Esta es una compra internacional y excluye una comisión del 3,5 % del IOF. Al continuar, reconoces y aceptas <terms>los términos y condiciones de Ebanx</terms>.";
 
 "This is your default" = "Este es tu valor predeterminado";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Este método de pago se eliminará, pero seguirá disponible para %@ suscripciones.";
+
+"To scan your card, allow camera access in Settings." = "Para escanear la tarjeta, autoriza el acceso a la cámara en Ajustes.";
 
 "Too many attempts. Please try again in a few minutes." = "Demasiados intentos. Vuelve a intentarlo dentro de unos minutos.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "El IBAN debe empezar con un código de país de dos letras.";
 
 "Your address changes won't be saved." = "No se guardarán los cambios en la dirección.";
+
+"Your card has expired." = "Tu tarjeta ha caducado.";

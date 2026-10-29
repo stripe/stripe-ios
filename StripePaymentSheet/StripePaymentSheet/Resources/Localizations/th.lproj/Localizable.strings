@@ -1,3 +1,17 @@
+"%1$@ Card" = "บัตร %1$@";
+
+"%1$@ Credit" = "บัตรเครดิต %1$@";
+
+"%1$@ Debit" = "บัตรเดบิต %1$@";
+
+"%1$@ Prepaid" = "บัตรเติมเงิน %1$@";
+
+"%1$@ account ending in %2$@" = "บัญชี %1$@ ที่ลงท้ายด้วย %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ ลงท้ายด้วย %2$@";
+
+"%1$@ is not accepted" = "ระบบไม่รองรับ %1$@";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ จะไม่ได้รับการบันทึกลงในกระเป๋าเงินของคุณอีกต่อไป";
@@ -21,6 +35,8 @@
 "Add new payment method" = "เพิ่มวิธีการชำระเงินใหม่";
 
 "Add your payment information" = "เพิ่มข้อมูลการชำระเงิน";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "อนุมัติการชำระเงิน";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "เปลี่ยนแปลงรายละเอียดบัตรไม่ได้";
 
+"Card information" = "ข้อมูลบัตร";
+
+"Card number" = "หมายเลขบัตร";
+
 "Card number. Supported cards include %@" = "หมายเลขบัตร บัตรที่รองรับรวมถึง %@";
 
 "Change" = "เปลี่ยน";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "ยืนยันการชำระเงินในแอปของธนาคารหรือแอปชำระเงินภายใน %@ เพื่อชำระเงินให้เสร็จสิ้น";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "ยืนยันการชำระเงินในแอปของธนาคารภายใน %@ เพื่อชำระเงินให้เสร็จสิ้น";
+
+"Confirm your %@" = "ยืนยัน %@ ของคุณ";
 
 "Confirm your CVC" = "ยืนยัน CVC ของคุณ";
 
@@ -217,6 +239,18 @@
 "Not you?" = "หากไม่ใช่คุณ";
 
 "Only card brand can be changed." = "เปลี่ยนได้เฉพาะแบรนด์บัตรเท่านั้น";
+
+"Only credit and prepaid cards are accepted" = "รองรับเฉพาะบัตรเครดิตและบัตรเติมเงินเท่านั้น";
+
+"Only credit cards are accepted" = "รองรับเฉพาะบัตรเครดิตเท่านั้น";
+
+"Only debit and credit cards are accepted" = "รองรับเฉพาะบัตรเดบิตและบัตรเครดิตเท่านั้น";
+
+"Only debit and prepaid cards are accepted" = "รองรับเฉพาะบัตรเดบิตและบัตรเติมเงินเท่านั้น";
+
+"Only debit cards are accepted" = "รองรับเฉพาะบัตรเดบิตเท่านั้น";
+
+"Only prepaid cards are accepted" = "รองรับเฉพาะบัตรเติมเงินเท่านั้น";
 
 "Open to see more information." = "เปิดเพื่อดูข้อมูลเพิ่มเติม";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "ตั้งค่า";
 
+"Shipping Address" = "ที่อยู่สำหรับจัดส่ง";
+
 "Shipping to %@ is not supported." = "ระบบไม่รองรับการจัดส่งไปยัง%@";
 
 "Show details" = "แสดงรายละเอียด";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "รหัสยืนยันที่ป้อนไม่ถูกต้อง";
 
+"The selected brand is not allowed" = "ไม่อนุญาตให้ใช้แบรนด์ที่เลือก";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "นี่เป็นการซื้อระหว่างประเทศและไม่รวมค่าธรรมเนียม IOF 3.5% การดำเนินการต่อถือว่าคุณรับทราบและยอมรับ<terms>ข้อกำหนดและเงื่อนไขของ Ebanx</terms>";
 
 "This is your default" = "นี่คือค่าเริ่มต้นของคุณ";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "วิธีการชำระเงินนี้จะถูกนำออกไปแต่จะยังคงใช้ได้สำหรับการชำระเงินตามรอบบิล %@";
+
+"To scan your card, allow camera access in Settings." = "โปรดให้สิทธิ์เข้าถึงกล้องถ่ายรูปในการตั้งค่าเพื่อสแกนบัตร";
 
 "Too many attempts. Please try again in a few minutes." = "ลองหลายครั้งเกินไป โปรดลองใหม่ในอีกสักครู่";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "IBAN ควรเริ่มต้นด้วยรหัสประเทศ 2 ตัวอักษร";
 
 "Your address changes won't be saved." = "การเปลี่ยนแปลงที่อยู่ของคุณจะไม่ได้รับการบันทึก";
+
+"Your card has expired." = "บัตรของคุณหมดอายุแล้ว";

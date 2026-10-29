@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ 金融卡";
+
+"%1$@ Credit" = "%1$@ 信用卡";
+
+"%1$@ Debit" = "%1$@ 簽帳卡";
+
+"%1$@ Prepaid" = "%1$@ 預付卡";
+
+"%1$@ account ending in %2$@" = "尾號為 %2$@ 的 %1$@ 賬戶";
+
+"%1$@ ending in %2$@" = "%1$@ - 尾號：%2$@";
+
+"%1$@ is not accepted" = "不接受 %1$@";
+
 "+ Add" = "+ 添加";
 
 "Accept" = "接受";
@@ -17,6 +31,8 @@
 "Add new payment method" = "添加新支付方式";
 
 "Add your payment information" = "添加您的支付資訊";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "批准付款";
 
@@ -80,6 +96,10 @@
 
 "Card details cannot be changed." = "無法更改金融卡詳情。";
 
+"Card information" = "金融卡資訊";
+
+"Card number" = "卡號";
+
 "Change" = "更改";
 
 "Choose a payment method" = "選擇一個支付方式";
@@ -101,6 +121,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的銀行或支付應用程式中確認向 %@ 的付款，以完成購物。";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@内在您的銀行應用中確認付款，完成購物。";
+
+"Confirm your %@" = "確認您的 %@";
 
 "Confirm your CVC" = "確認您的 CVC";
 
@@ -258,6 +280,8 @@
 
 "Set up" = "設定";
 
+"Shipping Address" = "收貨地址";
+
 "Shipping to %@ is not supported." = "不支援向 %@ 配送。";
 
 "Show details" = "顯示詳細資料";
@@ -288,11 +312,15 @@
 
 "The provided verification code is incorrect." = "提供的驗證碼不正確。";
 
+"The selected brand is not allowed" = "不允許使用選定的品牌";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "此為國際購買，且不含 3.5% 的 IOF 費用。繼續購買，即表示您承認並接受 <terms>Ebanx 的條款和條件</terms>。";
 
 "This is your default" = "這是您的預設支付方式";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "此支付方式將被移除，但仍適用於 %@ 項訂閱。";
+
+"To scan your card, allow camera access in Settings." = "要掃描您的金融卡，在「設定」中啟用網路攝影機。";
 
 "Too many attempts. Please try again in a few minutes." = "嘗試次數過多。請幾分鐘後重試。";
 
@@ -307,3 +335,5 @@
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 應以兩個字母的國家代碼開頭。";
 
 "Your address changes won't be saved." = "您的地址變更將不會儲存。";
+
+"Your card has expired." = "您的金融卡已過期。";

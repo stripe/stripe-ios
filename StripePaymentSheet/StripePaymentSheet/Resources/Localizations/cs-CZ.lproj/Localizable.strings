@@ -1,3 +1,17 @@
+"%1$@ Card" = "Karta %1$@";
+
+"%1$@ Credit" = "Kredit %1$@";
+
+"%1$@ Debit" = "Debet %1$@";
+
+"%1$@ Prepaid" = "Předplaceno %1$@";
+
+"%1$@ account ending in %2$@" = "Účet %1$@ končící na %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ končící za %2$@";
+
+"%1$@ is not accepted" = "%1$@ se neakceptuje.";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ již nebude uloženo ve vaší peněžence.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Nová platební metoda";
 
 "Add your payment information" = "Přidejte své platební údaje";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Schválit platbu";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Údaje na kartě nelze měnit.";
 
+"Card information" = "Informace o kartě";
+
+"Card number" = "Číslo karty";
+
 "Card number. Supported cards include %@" = "Číslo karty. Mezi podporované karty patří %@";
 
 "Change" = "Změnit";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Pro dokončení nákupu potvrďte platbu ve své bance nebo platební aplikaci do %@.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Dokončete nákup potvrzením platby v bankovní aplikaci do  %@.";
+
+"Confirm your %@" = "Potvrďte svoje %@";
 
 "Confirm your CVC" = "Potvrďte vaše CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Nejste to vy?";
 
 "Only card brand can be changed." = "Změnit lze pouze značku karty.";
+
+"Only credit and prepaid cards are accepted" = "Akceptovány jsou pouze kreditní a předplacené karty";
+
+"Only credit cards are accepted" = "Akceptovány jsou pouze kreditní karty";
+
+"Only debit and credit cards are accepted" = "Akceptovány jsou pouze debetní a kreditní karty";
+
+"Only debit and prepaid cards are accepted" = "Akceptovány jsou pouze debetní a předplacené karty";
+
+"Only debit cards are accepted" = "Akceptovány jsou pouze debetní karty";
+
+"Only prepaid cards are accepted" = "Akceptovány jsou pouze předplacené karty";
 
 "Open to see more information." = "Otevřete pro více informací.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Nastavit";
 
+"Shipping Address" = "Dodací adresa";
+
 "Shipping to %@ is not supported." = "Dodání do zemí jako %@ není podporováno.";
 
 "Show details" = "Zobrazit podrobnosti";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Zadaný ověřovací kód není správný.";
 
+"The selected brand is not allowed" = "Vybraná značka není povolena";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Toto je mezinárodní nákup a nezahrnuje 3,5% poplatek IOF. Pokračováním berete na vědomí a souhlasíte <terms>s podmínkami společnosti Ebanx</terms>.";
 
 "This is your default" = "Toto je výchozí nastavení";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Tato platební metoda bude odebrána, ale zůstane dostupná pro předplatné %@.";
+
+"To scan your card, allow camera access in Settings." = "Chcete-li kartu naskenovat, povolte v Nastavení přístup k fotoaparátu.";
 
 "Too many attempts. Please try again in a few minutes." = "Příliš mnoho pokusů. Zkuste to prosím za pár minut znovu.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Číslo IBAN by mělo začínat dvěma písmeny kódu země.";
 
 "Your address changes won't be saved." = "Změny vaší adresy nebudou uloženy.";
+
+"Your card has expired." = "Platnost vaší karty vypršela.";

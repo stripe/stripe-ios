@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ kaart";
+
+"%1$@ Credit" = "%1$@ krediit";
+
+"%1$@ Debit" = "%1$@ deebet";
+
+"%1$@ Prepaid" = "%1$@ ettemakstud";
+
+"%1$@ account ending in %2$@" = "%1$@ konto lõpuga %2$@";
+
+"%1$@ ending in %2$@" = "%1$@, lõpeb nr-ga %2$@";
+
+"%1$@ is not accepted" = "%1$@ pole aktsepteeritud";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ ei salvestata enam teie rahakotti.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Lisage uus makseviis";
 
 "Add your payment information" = "Lisage makseteave";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Kinnitage makse";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Kaardi andmeid ei saa muuta.";
 
+"Card information" = "Kaardi andmed";
+
+"Card number" = "Kaardinumber";
+
 "Card number. Supported cards include %@" = "Kaardi number. Toetatud kaardid hõlmavad %@";
 
 "Change" = "Muuda";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma panga- või makserakenduses %@ jooksul.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma pangarakenduses %@ jooksul.";
+
+"Confirm your %@" = "Kinnitage oma %@";
 
 "Confirm your CVC" = "Kinnita CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Kas see pole teie?";
 
 "Only card brand can be changed." = "Muuta saab ainult kaardi tootemarki.";
+
+"Only credit and prepaid cards are accepted" = "Aktsepteeritakse ainult krediit- ja ettemakstud kaarte";
+
+"Only credit cards are accepted" = "Aktsepteeritakse ainult krediitkaarte";
+
+"Only debit and credit cards are accepted" = "Aktsepteeritakse ainult deebet- ja krediitkaarte";
+
+"Only debit and prepaid cards are accepted" = "Aktsepteeritakse ainult deebet- ja ettemakstud kaarte";
+
+"Only debit cards are accepted" = "Aktsepteeritakse ainult deebetkaarte";
+
+"Only prepaid cards are accepted" = "Aktsepteeritakse ainult ettemakstud kaarte";
 
 "Open to see more information." = "Ava, et näha rohkem teavet.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Seadista";
 
+"Shipping Address" = "Tarneaadress";
+
 "Shipping to %@ is not supported." = "Kohaletoimetamist %@ ei ole toetatud.";
 
 "Show details" = "Kuva üksikasjad";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Esitatud tuvastuskood on vale.";
 
+"The selected brand is not allowed" = "Valitud tootemark pole lubatud";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "See on rahvusvaheline ost ja ei sisalda 3,5% IOF-tasu. Jätkates tunnistate ja nõustute <terms>Ebanxi tingimustega<terms>.";
 
 "This is your default" = "See on teie vaikimisi makseviis";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "See makseviis eemaldatakse, kuid jääb %@ kordustellimuste jaoks saadavale.";
+
+"To scan your card, allow camera access in Settings." = "Kaardi skannimiseks lubage seadetes juurdepääs kaamerale.";
 
 "Too many attempts. Please try again in a few minutes." = "Liiga palju katseid. Proovige paari minuti pärast uuesti.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
 
 "Your address changes won't be saved." = "Teie aadressi muudatusi ei salvestata.";
+
+"Your card has expired." = "Teie kaart on aegunud.";

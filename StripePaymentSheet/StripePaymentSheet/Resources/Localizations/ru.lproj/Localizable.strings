@@ -1,3 +1,17 @@
+"%1$@ Card" = "Карта %1$@";
+
+"%1$@ Credit" = "%1$@ кредитная";
+
+"%1$@ Debit" = "%1$@ дебетовая";
+
+"%1$@ Prepaid" = "%1$@ предоплаченная";
+
+"%1$@ account ending in %2$@" = "%1$@ счет, номер которого оканчивается на %2$@";
+
+"%1$@ ending in %2$@" = "%1$@, оканч. на %2$@";
+
+"%1$@ is not accepted" = "%1$@ не принимается";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ более не хранится в вашем кошельке.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Добавить новый метод оплаты";
 
 "Add your payment information" = "Укажите платежные данные";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Подтвердить платеж";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Реквизиты карты нельзя изменить.";
 
+"Card information" = "Данные платежной карты";
+
+"Card number" = "Номер карты";
+
 "Card number. Supported cards include %@" = "Номер карты. В число поддерживаемых карт входят %@";
 
 "Change" = "Изменить";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Чтобы завершить оформление покупки, подтвердите платеж в своем банковском или платежном приложении в течение %@.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Подтвердите платеж в вашем банковском приложении в течение %@ для оформления покупки.";
+
+"Confirm your %@" = "Подтвердите %@";
 
 "Confirm your CVC" = "Подтвердить код CVV карты";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Это не вы?";
 
 "Only card brand can be changed." = "Изменить можно только бренд карты.";
+
+"Only credit and prepaid cards are accepted" = "Принимаются только кредитные и предоплаченные карты";
+
+"Only credit cards are accepted" = "Принимаются только кредитные карты";
+
+"Only debit and credit cards are accepted" = "Принимаются только дебетовые и кредитные карты";
+
+"Only debit and prepaid cards are accepted" = "Принимаются только дебетовые и предоплаченные карты";
+
+"Only debit cards are accepted" = "Принимаются только дебетовые карты";
+
+"Only prepaid cards are accepted" = "Принимаются только предоплаченные карты";
 
 "Open to see more information." = "Откройте, чтобы увидеть дополнительную информацию.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Настроить";
 
+"Shipping Address" = "Адрес доставки";
+
 "Shipping to %@ is not supported." = "Доставка в страну «%@» не поддерживается.";
 
 "Show details" = "Показать подробности";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
 
+"The selected brand is not allowed" = "Выбранный бренд недоступен";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Это международная покупка, которая не облагается сбором IOF в размере 3,5 %. Продолжая, вы подтверждаете и принимаете <terms>условия и положения Ebanx</terms>.";
 
 "This is your default" = "Это ваше значение по умолчанию";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Этот способ оплаты будет удален, но останется доступным для подписок (%@).";
+
+"To scan your card, allow camera access in Settings." = "Чтобы сканировать карту, войдите в \"Настройки\" и разрешите доступ к камере.";
 
 "Too many attempts. Please try again in a few minutes." = "Превышено разрешенное число попыток. Попробуйте еще раз через несколько минут.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
 
 "Your address changes won't be saved." = "Изменения адреса не будут сохранены.";
+
+"Your card has expired." = "Срок действия карты истек.";

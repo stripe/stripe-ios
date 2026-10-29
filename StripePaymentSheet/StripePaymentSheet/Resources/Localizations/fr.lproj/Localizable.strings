@@ -1,3 +1,17 @@
+"%1$@ Card" = "Carte %1$@";
+
+"%1$@ Credit" = "Carte de crédit %1$@";
+
+"%1$@ Debit" = "Carte de débit %1$@";
+
+"%1$@ Prepaid" = "Carte prépayée %1$@";
+
+"%1$@ account ending in %2$@" = "compte %1$@ se terminant par %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ se terminant par %2$@";
+
+"%1$@ is not accepted" = "%1$@ n'est pas accepté";
+
 "%1$@ ×%2$d" = "%1$@ × %2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ ne sera plus enregistrée dans votre wallet.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Ajouter un moyen de paiement";
 
 "Add your payment information" = "Ajoutez vos informations de paiement";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Autoriser le paiement";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Vous ne pouvez pas modifier les informations de la carte.";
 
+"Card information" = "Informations concernant la carte bancaire";
+
+"Card number" = "Numéro de carte bancaire";
+
 "Card number. Supported cards include %@" = "Numéro de carte bancaire. Les cartes bancaires prises en charge incluent [ %s]";
 
 "Change" = "Modifier";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Veuillez confirmer le paiement dans votre application bancaire ou de paiement sous %@ pour finaliser l'achat.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Veuillez confirmer le paiement dans votre application bancaire sous %@ pour effectuer l'achat.";
+
+"Confirm your %@" = "Confirmez votre %@";
 
 "Confirm your CVC" = "Confirmez votre CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Ce n'est pas vous ?";
 
 "Only card brand can be changed." = "Vous pouvez uniquement modifier la marque de la carte.";
+
+"Only credit and prepaid cards are accepted" = "Seules les cartes bancaires et prépayées sont acceptées";
+
+"Only credit cards are accepted" = "Seules les cartes bancaires sont acceptées";
+
+"Only debit and credit cards are accepted" = "Seules les cartes bancaires et de crédit sont acceptées";
+
+"Only debit and prepaid cards are accepted" = "Seules les cartes bancaires et prépayées sont acceptées";
+
+"Only debit cards are accepted" = "Seules les cartes bancaires sont acceptées";
+
+"Only prepaid cards are accepted" = "Seules les cartes prépayées sont acceptées";
 
 "Open to see more information." = "Ouvrir pour obtenir plus d'informations.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Configurer";
 
+"Shipping Address" = "Adresse de livraison";
+
 "Shipping to %@ is not supported." = "La livraison dans le pays suivant : %@ n'est pas prise en charge.";
 
 "Show details" = "Afficher les détails";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Le code de vérification fourni est incorrect.";
 
+"The selected brand is not allowed" = "La marque sélectionnée n'est pas autorisée";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Il s’agit d’un achat international n’incluant pas la taxe IOF de 3,5 %. En continuant, vous reconnaissez et acceptez les <terms>Conditions générales d’Ebanx</terms>.";
 
 "This is your default" = "Votre moyen de paiement par défaut";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Ce moyen de paiement sera supprimé mais restera disponible pour les Abonnements %@.";
+
+"To scan your card, allow camera access in Settings." = "Pour numériser votre carte bancaire, autorisez l'accès à l'appareil photo dans vos paramètres.";
 
 "Too many attempts. Please try again in a few minutes." = "Vous avez effectué un nombre trop élevé de tentatives. Veuillez réessayer dans quelques minutes.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Votre IBAN doit commencer par un code pays à deux lettres.";
 
 "Your address changes won't be saved." = "Les modifications apportées à votre adresse ne seront pas enregistrées.";
+
+"Your card has expired." = "Votre carte a expiré.";

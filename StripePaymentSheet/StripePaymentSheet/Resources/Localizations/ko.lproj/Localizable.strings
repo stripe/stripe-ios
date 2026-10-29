@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ 카드";
+
+"%1$@ Credit" = "%1$@ 신용";
+
+"%1$@ Debit" = "%1$@ 직불";
+
+"%1$@ Prepaid" = "%1$@ 선불";
+
+"%1$@ account ending in %2$@" = "%2$@(으)로 끝나는 %1$@ 계좌";
+
+"%1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@";
+
+"%1$@ is not accepted" = "%1$@이(가) 허용되지 않습니다.";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@은(는) 더 이상 간편결제에 저장되지 않습니다.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "새 결제 방식 추가";
 
 "Add your payment information" = "결제 정보를 추가하세요.";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "결제 승인";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "카드 세부사항은 설정되면 변경할 수 없습니다.";
 
+"Card information" = "카드 정보";
+
+"Card number" = "카드 번호";
+
 "Card number. Supported cards include %@" = "카드 번호. 지원되는 카드에는 %@가 포함됩니다";
 
 "Change" = "변경";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 이내에 은행 또는 결제 앱에서 결제를 확인하여 구매를 완료하십시오.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ 이내에 은행 앱에서 결제를 확인하여 구매를 완료하십시오.";
+
+"Confirm your %@" = "%@ 확인";
 
 "Confirm your CVC" = "CVC 확인";
 
@@ -217,6 +239,18 @@
 "Not you?" = "본인이 아닙니까?";
 
 "Only card brand can be changed." = "카드 브랜드만 변경할 수 있습니다.";
+
+"Only credit and prepaid cards are accepted" = "신용 카드 및 선불 카드만 허용됨";
+
+"Only credit cards are accepted" = "신용 카드만 허용됨";
+
+"Only debit and credit cards are accepted" = "직불 카드 및 신용 카드만 허용됨";
+
+"Only debit and prepaid cards are accepted" = "직불 카드 및 선불 카드만 허용됨";
+
+"Only debit cards are accepted" = "직불 카드만 허용됨";
+
+"Only prepaid cards are accepted" = "선불 카드만 허용됨";
 
 "Open to see more information." = "열어서 더 많은 정보를 확인하세요.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "설정";
 
+"Shipping Address" = "배송 주소";
+
 "Shipping to %@ is not supported." = "%@ 배송은 지원되지 않습니다.";
 
 "Show details" = "세부사항 표시";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
 
+"The selected brand is not allowed" = "선택한 브랜드는 허용되지 않습니다.";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "이는 국제 구매이며 3.5%의 IOF 비용이 제외됩니다. 진행하시면 귀하는 <terms>Ebanx의 이용 약관</terms>을 인정하고 이에 동의하는 것입니다.";
 
 "This is your default" = "기본값입니다";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "이 결제 방식은 제거되지만 %@ 구독에는 계속 사용할 수 있습니다.";
+
+"To scan your card, allow camera access in Settings." = "카드를 스캔하려면 설정에서 카메라 액세스를 허용하세요.";
 
 "Too many attempts. Please try again in a few minutes." = "너무 많이 시도했습니다. 몇 분 후에 다시 시도해 주십시오.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
 
 "Your address changes won't be saved." = "주소 변경 사항이 저장되지 않습니다.";
+
+"Your card has expired." = "카드가 만료되었습니다.";

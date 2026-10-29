@@ -8,7 +8,6 @@
 
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 import UIKit
 
 typealias ConsumerSessionWithPaymentDetails = (session: ConsumerSession, paymentDetails: [ConsumerPaymentDetails])

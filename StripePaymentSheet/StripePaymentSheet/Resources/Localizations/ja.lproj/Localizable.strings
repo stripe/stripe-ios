@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ カード";
+
+"%1$@ Credit" = "%1$@ クレジット";
+
+"%1$@ Debit" = "%1$@ デビット";
+
+"%1$@ Prepaid" = "%1$@ プリペイド";
+
+"%1$@ account ending in %2$@" = "末尾が %2$@ の %1$@ 口座";
+
+"%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
+
+"%1$@ is not accepted" = "%1$@ は受け付けられていません";
+
 "%1$@ ×%2$d" = "%1$@ × %2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ はウォレットに保存されなくなります。";
@@ -21,6 +35,8 @@
 "Add new payment method" = "新たな支払い方法を追加";
 
 "Add your payment information" = "支払い情報を追加";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "支払いを承認する";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "カードの詳細は変更できません。";
 
+"Card information" = "カード情報";
+
+"Card number" = "カード番号";
+
 "Card number. Supported cards include %@" = "カード番号。対応カードは %@ です";
 
 "Change" = "変更する";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 内で銀行または決済アプリで支払いを確定して、購入を完了します。";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "購入を完了するには、%@ 以内に銀行のアプリで支払いを確定してください。";
+
+"Confirm your %@" = "%@ を確認してください";
 
 "Confirm your CVC" = "セキュリティコードを確定";
 
@@ -217,6 +239,18 @@
 "Not you?" = "ご本人ではありませんか？";
 
 "Only card brand can be changed." = "カードブランドのみ変更できます。";
+
+"Only credit and prepaid cards are accepted" = "クレジットカードとプリペイドカードのみ利用できます";
+
+"Only credit cards are accepted" = "クレジットカードのみ利用できます";
+
+"Only debit and credit cards are accepted" = "デビットカードとクレジットカードのみ利用できます";
+
+"Only debit and prepaid cards are accepted" = "デビットカードとプリペイドカードのみ利用できます";
+
+"Only debit cards are accepted" = "デビットカードのみ利用できます";
+
+"Only prepaid cards are accepted" = "プリペイドカードのみ利用できます";
 
 "Open to see more information." = "詳細情報を表示するにはこちらを開いてください。";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "設定";
 
+"Shipping Address" = "配送先住所";
+
 "Shipping to %@ is not supported." = "%@ への配送には対応していません。";
 
 "Show details" = "詳細を表示";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
 
+"The selected brand is not allowed" = "選択したブランドは許可されていません";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "これは海外購入であり、3.5% の IOF 手数料は含まれません。続行することにより、<terms>Ebanx の利用規約</terms>を承認し、同意したとみなされます。";
 
 "This is your default" = "これはデフォルトです";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "この決済手段は削除されますが、%@ のサブスクリプションでは引き続き使用できます。";
+
+"To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
 
 "Too many attempts. Please try again in a few minutes." = "試行回数が多すぎます。数分後に再度お試しください。";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 
 "Your address changes won't be saved." = "住所の変更内容は保存されません。";
+
+"Your card has expired." = "カードの有効期限が切れています。";

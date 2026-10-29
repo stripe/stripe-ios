@@ -1,58 +1,16 @@
-"%1$@ Card" = "Kartica %1$@";
-
-"%1$@ Credit" = "Kreditna kartica %1$@";
-
-"%1$@ Debit" = "Debetna kartica %1$@";
-
-"%1$@ Prepaid" = "Predplačniška kartica %1$@";
-
-"%1$@ account ending in %2$@" = "Račun za %1$@, ki se konča s števkami %2$@";
-
-"%1$@ ending in %2$@" = "%1$@, ki se konča s/z %2$@";
-
-"%1$@ is not accepted" = "Kartica %1$@ ni sprejeta";
-
 "Address line 2 (optional)" = "Naslov 2 (izbirno)";
 
-"Apple Pay" = "Apple Pay";
-
 "BSB" = "BSB";
-
-"Card information" = "Podatki o kartici";
-
-"Card number" = "Številka kartice";
-
-"Confirm your %@" = "Potrdite svojo kodo %@";
 
 "Invalid data." = "Neveljavni podatki.";
 
 "MM/YY" = "MM/LL";
 
-"Only credit and prepaid cards are accepted" = "Sprejemajo se le kreditne in predplačniške kartice";
-
-"Only credit cards are accepted" = "Sprejemane so samo kreditne kartice";
-
-"Only debit and credit cards are accepted" = "Sprejemane so le debetne in kreditne kartice";
-
-"Only debit and prepaid cards are accepted" = "Sprejemajo se le debetne in predplačniške kartice";
-
-"Only debit cards are accepted" = "Sprejemane so le debetne kartice";
-
-"Only prepaid cards are accepted" = "Sprejemajo se le predplačniške kartice";
-
 "Postal Code" = "Poštna številka";
-
-"Shipping Address" = "Dostavni naslov";
 
 "State / Province / Region" = "Zvezna država/provinca/regija";
 
 "The BSB you entered is invalid." = "Vneseni BSB ni veljaven.";
-
-"The selected brand is not allowed" = "Izbrana blagovna znamka ni dovoljena";
-
-"To scan your card, allow camera access in Settings." = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
-
-"Your card has expired." = "Vaša kartica je potekla.";
 
 "Your card's expiration year is invalid." = "Leto poteka vaše kartice ni veljavno.";
 

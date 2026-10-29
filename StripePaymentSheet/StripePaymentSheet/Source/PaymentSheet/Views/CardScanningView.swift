@@ -11,7 +11,6 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 

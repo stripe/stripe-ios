@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ Card";
+
+"%1$@ Credit" = "%1$@ Credit";
+
+"%1$@ Debit" = "%1$@ Debit";
+
+"%1$@ Prepaid" = "%1$@ Preplătit";
+
+"%1$@ account ending in %2$@" = "Contul la %1$@ care se termină în %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ se termină în %2$@";
+
+"%1$@ is not accepted" = "%1$@ nu este acceptat";
+
 "%1$@ ×%2$d" = "%1$@ × %2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ nu va mai fi salvat în portofelul dvs.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Adăuga o nouă metodă de plată";
 
 "Add your payment information" = "Adăuga informațiile privind plata";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Aprobare plată";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Detaliile cardului nu pot fi modificate.";
 
+"Card information" = "Informații privind cardul";
+
+"Card number" = "Număr card";
+
 "Card number. Supported cards include %@" = "Numărul cardului. Cardurile acceptate includ %@";
 
 "Change" = "Modificare";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. sau în aplicația de plăți în termen de %@ pentru a finaliza achiziția.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. în termen de %@ pentru a finaliza achiziția.";
+
+"Confirm your %@" = "Confirmați-vă %@";
 
 "Confirm your CVC" = "Confirmă CVC-ul";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Nu sunteți dvs.?";
 
 "Only card brand can be changed." = "Doar marca cardului poate fi modificată.";
+
+"Only credit and prepaid cards are accepted" = "Sunt acceptate doar cardurile de credit și cele preplătite";
+
+"Only credit cards are accepted" = "Sunt acceptate doar cardurile de credit";
+
+"Only debit and credit cards are accepted" = "Sunt acceptate doar cardurile de debit și credit";
+
+"Only debit and prepaid cards are accepted" = "Sunt acceptate doar cardurile de debit și cele preplătite";
+
+"Only debit cards are accepted" = "Sunt acceptate doar cardurile de debit";
+
+"Only prepaid cards are accepted" = "Sunt acceptate doar cardurile preplătite";
 
 "Open to see more information." = "Deschideți pentru a vedea mai multe informații.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Configurare";
 
+"Shipping Address" = "Adresa de expediere";
+
 "Shipping to %@ is not supported." = "Expedierea către %@ nu este acceptată.";
 
 "Show details" = "Afișare detalii";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Codul de verificare furnizat este incorect.";
 
+"The selected brand is not allowed" = "Marca selectată nu este permisă";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Aceasta este o achiziție internațională și exclude o taxă IOF de 3,5 %. Continuând, confirmați că ați luat la cunoștință și acceptați <terms>termenii și condițiile Ebanx</terms>.";
 
 "This is your default" = "Aceasta este setarea dvs. implicită";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Această metodă de plată va fi eliminată, dar va rămâne disponibilă pentru abonamentele %@.";
+
+"To scan your card, allow camera access in Settings." = "Pentru a vă scana cardul, permiteți accesul camerei din Setări.";
 
 "Too many attempts. Please try again in a few minutes." = "Prea multe încercări. Vă rugăm să încercați din nou în câteva minute.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Codul dvs. IBAN trebuie să înceapă cu un cod de țară format din două litere.";
 
 "Your address changes won't be saved." = "Modificările aplicate adresei nu vor fi salvate.";
+
+"Your card has expired." = "Cardul dvs. a expirat.";

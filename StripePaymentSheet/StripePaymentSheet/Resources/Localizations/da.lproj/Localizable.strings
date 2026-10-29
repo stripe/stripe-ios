@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ Kort";
+
+"%1$@ Credit" = "%1$@ Kredit";
+
+"%1$@ Debit" = "%1$@ Debet";
+
+"%1$@ Prepaid" = "%1$@ Forudbetalt";
+
+"%1$@ account ending in %2$@" = "%1$@-konto, der ender på %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ slutter på %2$@";
+
+"%1$@ is not accepted" = "%1$@ accepteres ikke";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ gemmes ikke længere i din wallet.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Tilføj ny betalingsmetode";
 
 "Add your payment information" = "Tilføj dine betalingsoplysninger";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Godkend betaling";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Kortoplysninger kan ikke ændres.";
 
+"Card information" = "Kortoplysninger";
+
+"Card number" = "Kortnummer";
+
 "Card number. Supported cards include %@" = "Kortnummer. Understøttede kort omfatter %@";
 
 "Change" = "Skift";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekræft betalingen i din bank- eller betalingsapp indenfor %@ for at gennemføre købet.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bekræft betalingen i din banks app  indenfor %@ for at gennemføre købet.";
+
+"Confirm your %@" = "Bekræft dit %@";
 
 "Confirm your CVC" = "Bekræft dit CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Ikke dig?";
 
 "Only card brand can be changed." = "Kun kortbrand kan ændres.";
+
+"Only credit and prepaid cards are accepted" = "Kun kredit- og forudbetalte kort accepteres";
+
+"Only credit cards are accepted" = "Kun kreditkort accepteres";
+
+"Only debit and credit cards are accepted" = "Kun debet- og kreditkort accepteres";
+
+"Only debit and prepaid cards are accepted" = "Kun debet- og forudbetalte kort accepteres";
+
+"Only debit cards are accepted" = "Kun debetkort accepteres";
+
+"Only prepaid cards are accepted" = "Kun forudbetalte kort accepteres";
 
 "Open to see more information." = "Åbn for at se flere oplysninger.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Opsætning";
 
+"Shipping Address" = "Forsendelsesadresse";
+
 "Shipping to %@ is not supported." = "Forsewndelse til %@ understøttes ikke.";
 
 "Show details" = "Vis oplysninger";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Den angivne verifikationskode er forkert.";
 
+"The selected brand is not allowed" = "Det valgte brand er ikke tilladt";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Dette er et internationalt køb og ekskluderer et IOF-gebyr på 3,5 %. Ved at fortsætte accepterer du <terms>Ebanx’ vilkår<terms>.";
 
 "This is your default" = "Dette er din standard";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Denne betalingsmetode vil blive fjernet, men vil fortsat være tilgængelig for %@-abonnementer.";
+
+"To scan your card, allow camera access in Settings." = "Tillad kameraadgang i Indstillinger for at scanne dit kort.";
 
 "Too many attempts. Please try again in a few minutes." = "For mange forsøg. Prøv igen om et par minutter.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Dit IBAN-nummer skal starte med en landekode på to bogstaver.";
 
 "Your address changes won't be saved." = "Dine adresseændringer bliver ikke gemt.";
+
+"Your card has expired." = "Dit kort er udløbet.";

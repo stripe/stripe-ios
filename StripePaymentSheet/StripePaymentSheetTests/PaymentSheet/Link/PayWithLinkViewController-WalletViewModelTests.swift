@@ -13,7 +13,6 @@ import XCTest
 @testable@_spi(InternalOnlyAPI) import StripePayments
 @testable@_spi(InternalOnlyAPI) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 import StripePaymentsTestUtils
-@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 @MainActor
 class PayWithLinkViewController_WalletViewModelTests: XCTestCase {

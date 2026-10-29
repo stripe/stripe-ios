@@ -1,58 +1,16 @@
-"%1$@ Card" = "%1$@ Kort";
-
-"%1$@ Credit" = "%1$@ Kreditkort";
-
-"%1$@ Debit" = "%1$@ Bankkort";
-
-"%1$@ Prepaid" = "%1$@ Förbetalt";
-
-"%1$@ account ending in %2$@" = "%1$@-konto som slutar på %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ med slutsiffrorna %2$@";
-
-"%1$@ is not accepted" = "%1$@ accepteras inte";
-
 "Address line 2 (optional)" = "Adressrad 2 (valfritt)";
 
-"Apple Pay" = "Apple Pay";
-
 "BSB" = "BSB";
-
-"Card information" = "Kortinformation";
-
-"Card number" = "Kortnummer";
-
-"Confirm your %@" = "Bekräfta %@";
 
 "Invalid data." = "Ogiltiga data.";
 
 "MM/YY" = "MM/ÅÅ";
 
-"Only credit and prepaid cards are accepted" = "Endast kredit- och förbetalda kort godtas";
-
-"Only credit cards are accepted" = "Endast kreditkort godtas";
-
-"Only debit and credit cards are accepted" = "Endast betal- och kreditkort godtas";
-
-"Only debit and prepaid cards are accepted" = "Endast betalkort och förbetalda kort godtas";
-
-"Only debit cards are accepted" = "Endast betalkort godtas";
-
-"Only prepaid cards are accepted" = "Endast förbetalda kort godtas";
-
 "Postal Code" = "Postnummer";
-
-"Shipping Address" = "Leveransadress";
 
 "State / Province / Region" = "Stat/provins/region";
 
 "The BSB you entered is invalid." = "Det BSB du angav är ogiltigt.";
-
-"The selected brand is not allowed" = "Valt kortmärke är inte tillåtet";
-
-"To scan your card, allow camera access in Settings." = "Tillåt kameraåtkomst i Inställningar för att skanna kortet.";
-
-"Your card has expired." = "Ditt kort har upphört att gälla.";
 
 "Your card's expiration year is invalid." = "Kortets utgångsår är ogiltigt.";
 

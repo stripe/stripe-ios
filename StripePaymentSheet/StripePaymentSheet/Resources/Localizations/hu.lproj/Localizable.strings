@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@Kártya";
+
+"%1$@ Credit" = "%1$@Hitel";
+
+"%1$@ Debit" = "%1$@Betéti";
+
+"%1$@ Prepaid" = "%1$@Előre fizetett";
+
+"%1$@ account ending in %2$@" = "%2$@ végződésű számla %1$@";
+
+"%1$@ ending in %2$@" = "%1$@ végződése %2$@";
+
+"%1$@ is not accepted" = "%1$@ nem elfogadott";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "A(z) %@ a továbbiakban nem lesz mentve a pénztárcájában.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Új fizetési mód hozzáadása";
 
 "Add your payment information" = "Fizetési adatok megadása";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Fizetés jóváhagyása";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "A kártyai adatai nem módosíthatók.";
 
+"Card information" = "Kártyaadatok";
+
+"Card number" = "Kártyaszám";
+
 "Card number. Supported cards include %@" = "Kártyaszám. A támogatott kártyák közé tartozik: %@";
 
 "Change" = "Módosítás";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést a bankjánál vagy a fizetést biztosító alkalmazásban.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést bankja alkalmazásában.";
+
+"Confirm your %@" = "%@ megerősítése";
 
 "Confirm your CVC" = "CVC megerősítése";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Nem Ön az?";
 
 "Only card brand can be changed." = "Csak a kártyatípus módosítható.";
+
+"Only credit and prepaid cards are accepted" = "Csak hitelkártyák és előre fizetett kártyák elfogadottak";
+
+"Only credit cards are accepted" = "Csak hitelkártyák elfogadottak";
+
+"Only debit and credit cards are accepted" = "Csak betéti és hitelkártyák elfogadottak";
+
+"Only debit and prepaid cards are accepted" = "Csak betéti és előre fizetett kártyák elfogadottak";
+
+"Only debit cards are accepted" = "Csak betéti kártyák elfogadottak";
+
+"Only prepaid cards are accepted" = "Csak előre fizetett kártyák elfogadottak";
 
 "Open to see more information." = "Nyissa meg további adatok megtekintéséhez.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Beállítás";
 
+"Shipping Address" = "Szállítási cím";
+
 "Shipping to %@ is not supported." = "Ebbe az országba nem támogatott a szállítás: %@";
 
 "Show details" = "Részletek megjelenítése";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
 
+"The selected brand is not allowed" = "A kiválasztott kártyamárka nem engedélyezett";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ez egy nemzetközi vásárlás, amely nem tartalmazza a 3,5%-os IOF díjat. A folytatással Ön tudomásul veszi és elfogadja <terms>az Ebanx feltételeit<terms>.";
 
 "This is your default" = "Ez az alapértelmezett";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Ez a fizetési mód eltávolításra kerül, de továbbra is elérhető marad %@ előfizetések esetén.";
+
+"To scan your card, allow camera access in Settings." = "A kártya beolvasásához engedélyezze a kamerához való hozzáférést a Beállításokban.";
 
 "Too many attempts. Please try again in a few minutes." = "Túl sok kísérlet. Próbálja meg újra néhány perc múlva.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
 
 "Your address changes won't be saved." = "A cím módosításai nem lesznek mentve.";
+
+"Your card has expired." = "A kártyája lejárt.";

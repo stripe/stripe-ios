@@ -14,6 +14,7 @@ import StripeCryptoOnramp
 @_spi(InternalOnlyAPI)
 import StripePayments
 
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 @_spi(AppearanceAPIAdditionsPreview)
 import StripePaymentSheet

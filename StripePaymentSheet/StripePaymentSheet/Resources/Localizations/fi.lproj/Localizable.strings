@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@-kortti";
+
+"%1$@ Credit" = "%1$@-luottokortti";
+
+"%1$@ Debit" = "%1$@-pankkikortti";
+
+"%1$@ Prepaid" = "%1$@ Prepaid";
+
+"%1$@ account ending in %2$@" = "%1$@ -tili päättyy numeroihin %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ päättyy numeroihin %2$@";
+
+"%1$@ is not accepted" = "%1$@ ei hyväksytä";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ ei ole enää tallennettuna lompakkoosi.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Lisää uusi maksutapa";
 
 "Add your payment information" = "Lisää maksutiedot";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Hyväksy maksu";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Kortin tietoja ei voi muuttaa.";
 
+"Card information" = "Kortin tiedot";
+
+"Card number" = "Kortin numero";
+
 "Card number. Supported cards include %@" = "Kortin numero. Tuetut kortit sisältävät %@";
 
 "Change" = "Vaihda";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi kanssa tai maksusovelluksessa %@.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi sovelluksessa %@.";
+
+"Confirm your %@" = "Vahvista %@";
 
 "Confirm your CVC" = "Vahvista CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Onko kyseessä joku muu?";
 
 "Only card brand can be changed." = "Vain kortin brändi voidaan vaihtaa.";
+
+"Only credit and prepaid cards are accepted" = "Vain luotto- ja prepaid-kortit hyväksytään";
+
+"Only credit cards are accepted" = "Vain luottokortit hyväksytään";
+
+"Only debit and credit cards are accepted" = "Vain pankki- ja luottokortit hyväksytään";
+
+"Only debit and prepaid cards are accepted" = "Vain pankki- ja prepaid-kortit hyväksytään";
+
+"Only debit cards are accepted" = "Vain pankkikortit hyväksytään";
+
+"Only prepaid cards are accepted" = "Vain prepaid-kortit hyväksytään";
 
 "Open to see more information." = "Avaa nähdäksesi lisätietoja.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Määritä";
 
+"Shipping Address" = "Lähetysosoite";
+
 "Shipping to %@ is not supported." = "Toimitusta kohteeseen %@ ei tueta.";
 
 "Show details" = "Näytä tiedot";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Annettu vahvistuskoodi on virheellinen.";
 
+"The selected brand is not allowed" = "Valittu merkki ei ole sallittu";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Tämä on kansainvälinen ostos, eikä siihen sisälly 3,5 %:n IOF-maksua. Jatkamalla ostoa hyväksyt <terms>Ebanxin ehdot</terms>.";
 
 "This is your default" = "Tämä on oletusarvoinen";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Tämä maksutapa poistetaan, mutta se on edelleen käytettävissä %@ tilauksissa.";
+
+"To scan your card, allow camera access in Settings." = "Anna kameralle käyttöoikeus, jotta voit skannata kortin.";
 
 "Too many attempts. Please try again in a few minutes." = "Liian monta yritystä. Kokeile uudelleen muutaman minuutin kuluttua.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
 
 "Your address changes won't be saved." = "Osoitteesi muutoksia ei tallenneta.";
+
+"Your card has expired." = "Korttisi on vanhentunut.";
