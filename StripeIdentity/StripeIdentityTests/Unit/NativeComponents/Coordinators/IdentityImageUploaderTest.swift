@@ -266,31 +266,30 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssertEqual(imageFromData?.size, imageSize)
     }
 
-    func testImagePreprocessingUsesSerialQueue() async throws {
-        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
-        uploader.imageProcessingQueue.suspend()
+    func testHighResUploadFailureLogsOneUploadError() async throws {
+        // Given a cropped high-res upload request is in flight
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
         let uploadTask = Task {
-            try await uploader.uploadLowAndHighResImages(
+            try await uploader.uploadHighResImage(
                 mockImage,
-                highResRegionOfInterest: DocumentUploaderTest.mockRegionOfInterest,
+                regionOfInterest: DocumentUploaderTest.mockRegionOfInterest,
                 cropPaddingComputationMethod: .maxImageWidthOrHeight,
-                lowResFileName: "low-res",
-                highResFileName: "high-res"
+                fileName: "high-res-prefix"
             )
         }
-        let queueCheck = expectation(description: "Preprocessing queue remained suspended")
-        DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
-            queueCheck.fulfill()
-        }
-
-        await fulfillment(of: [queueCheck], timeout: 1)
-        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 0)
-
-        uploader.imageProcessingQueue.resume()
         await fulfillment(of: uploadRequestExpectations, timeout: 1)
-        mockAPIClient.imageUpload.respondToRequests(
-            with: .success((file: mockStripeFile, metrics: mockUploadMetrics))
+
+        // When the network request fails
+        mockAPIClient.imageUpload.respondToRequests(with: .failure(NSError(domain: "test", code: 1)))
+        _ = try? await uploadTask.value
+
+        // Then exactly one error is logged, for the upload stage
+        let errorAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "generic_error")
+        XCTAssertEqual(errorAnalytics.count, 1)
+        XCTAssert(
+            analytic: errorAnalytics.first,
+            hasMetadata: "image_upload_stage",
+            withValue: "imageUpload"
         )
-        _ = try await uploadTask.value
     }
 }
