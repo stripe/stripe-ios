@@ -244,6 +244,75 @@ final class IdentityVerificationSheetTest: XCTestCase {
         sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCanceled)
         await fulfillment(of: [exp], timeout: 1)
     }
+
+    func testAsyncPresentReturnsFlowResult() async {
+        // Given a native sheet presented with the async API
+        let sheet = sheetWithNativeUI()
+        let presentTask = Task {
+            await sheet.present(from: UIViewController(nibName: nil, bundle: nil))
+        }
+        // ...and the presentation has started, which logs the presented analytic
+        await fulfillment(
+            of: [expectation(for: mockAnalyticsClientV2!, keyPath: \.loggedAnalyticsPayloads.count, equalsToValue: 1)],
+            timeout: 4
+        )
+
+        // When the flow completes
+        sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCompleted)
+
+        // Then the awaiting caller gets the result
+        let result = await presentTask.value
+        guard case .flowCompleted = result else {
+            return XCTFail("Expected `flowCompleted`, got \(result)")
+        }
+    }
+
+    func testPresentWhileFlowIsRunningFailsAndKeepsRunningFlow() async {
+        // Given a sheet whose flow is running
+        let sheet = sheetWithNativeUI()
+        var firstResult: IdentityVerificationSheet.VerificationFlowResult?
+        sheet.present(from: mockViewController) { firstResult = $0 }
+
+        // When it is presented again with the async API
+        let secondPresentExp = expectation(description: "Second present returned")
+        var secondResult: IdentityVerificationSheet.VerificationFlowResult?
+        Task {
+            secondResult = await sheet.present(from: mockViewController)
+            secondPresentExp.fulfill()
+        }
+
+        // Then the second call fails at once
+        await fulfillment(of: [secondPresentExp], timeout: 1)
+        guard case .flowFailed = secondResult else {
+            return XCTFail("Expected `flowFailed`, got \(String(describing: secondResult))")
+        }
+        XCTAssertNil(firstResult)
+
+        // ...and the running flow still reports its result to the first caller
+        sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCompleted)
+        guard case .flowCompleted = firstResult else {
+            return XCTFail("Expected `flowCompleted`, got \(String(describing: firstResult))")
+        }
+    }
+
+    func testPresentFromCompletionStartsNewFlow() {
+        // Given a sheet that presents again when its flow finishes
+        let sheet = sheetWithNativeUI()
+        var secondResult: IdentityVerificationSheet.VerificationFlowResult?
+        sheet.present(from: mockViewController) { _ in
+            sheet.present(from: self.mockViewController) { secondResult = $0 }
+        }
+
+        // When the first flow finishes
+        sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCanceled)
+
+        // Then the second flow is running instead of failing
+        XCTAssertNil(secondResult)
+        sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCompleted)
+        guard case .flowCompleted = secondResult else {
+            return XCTFail("Expected `flowCompleted`, got \(String(describing: secondResult))")
+        }
+    }
 }
 
 // MARK: - Helpers
