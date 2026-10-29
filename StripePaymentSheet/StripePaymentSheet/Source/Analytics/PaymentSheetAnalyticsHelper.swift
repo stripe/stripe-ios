@@ -16,8 +16,9 @@ final class PaymentSheetAnalyticsHelper {
     let configuration: PaymentElementConfiguration
     private var customerProvider: CustomerProvider
     // Checkout-specific context lives here because Checkout's PaymentElement reuses MPE UI analytics.
-    // Nil for all other integrations.
     let checkoutSessionID: String?
+    /// Checkout attribution shared by Payment Element collection and Link flows. Nil outside Checkout.
+    let checkoutAttribution: CheckoutAttributionContext?
 
     /// Logs analytics to `r.stripe.com`.
     let analyticsClientV2: AnalyticsClientV2Protocol
@@ -47,14 +48,15 @@ final class PaymentSheetAnalyticsHelper {
                 return "linkcontroller"
             }
         }
+    }
 
-        var shouldMakeClientAttributionMetadata: Bool {
-            switch self {
-            case .complete, .flowController, .embedded:
-                return true
-            case .linkController:
-                return false
-            }
+    /// Whether collection UI should attach CAM. Basically, only stand-alone Link does not.
+    var shouldIncludeClientAttributionMetadata: Bool {
+        switch integrationShape {
+        case .complete, .flowController, .embedded:
+            return true
+        case .linkController:
+            return false
         }
     }
 
@@ -62,6 +64,7 @@ final class PaymentSheetAnalyticsHelper {
         integrationShape: IntegrationShape,
         configuration: PaymentElementConfiguration,
         checkoutSessionID: String? = nil,
+        checkoutAttribution: CheckoutAttributionContext? = nil,
         analyticsClient: STPAnalyticsClient = .sharedClient,
         analyticsClientV2: AnalyticsClientV2Protocol = AnalyticsClientV2(
             clientId: "stripe-mobile-sdk",
@@ -72,6 +75,7 @@ final class PaymentSheetAnalyticsHelper {
         self.configuration = configuration
         self.customerProvider = CustomerProvider(customer: configuration.customer)
         self.checkoutSessionID = checkoutSessionID
+        self.checkoutAttribution = checkoutAttribution
         self.analyticsClient = analyticsClient
         self.analyticsClientV2 = analyticsClientV2
     }

@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 30722b0fef3b1acb3e4839a96e95c28b;o=1
+x-cloud-trace-context: 1ec3eb8efb0b6128491be969154bdec4
 Via: 1.1 google
-Date: Fri, 23 Oct 2026 18:20:46 GMT
+Date: Wed, 28 Oct 2026 20:32:45 GMT
 Content-Length: 2588
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"a1c-WvWTMI2baRx6+ovwTweXXQa3AAA"
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"a1c-1nqUgsU+PaqbOt9U6JsblBzWADM"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a19Wf6KiTzyc09T0KjG4PbvqaTgwgJjHxrLvS4V6IjfU2LFl5N1AbSQpTJ",
-  "client_secret" : "cs_test_a19Wf6KiTzyc09T0KjG4PbvqaTgwgJjHxrLvS4V6IjfU2LFl5N1AbSQpTJ_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a1UnW7CNgH3G9T0TuOM5faQMPP9olkylLlwV2pa3SpxG2KPM0Ui47xFhmH",
+  "client_secret" : "cs_test_a1UnW7CNgH3G9T0TuOM5faQMPP9olkylLlwV2pa3SpxG2KPM0Ui47xFhmH_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a1c-WvWTMI2baRx6+ovwTweXXQa3AAA"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1792779646,
+  "created" : 1793219565,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "sepa_debit"
@@ -41,13 +41,13 @@ Etag: W/"a1c-WvWTMI2baRx6+ovwTweXXQa3AAA"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VUmeYgSa",
+      "key" : "checkout_item_VWguh3lV",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1UTn58Alz2yHYCNZl3uZ8qwt",
+            "price" : "price_1UVdWbAlz2yHYCNZHAklfI5T",
             "tax_rates" : null
           }
         ],
@@ -153,6 +153,6 @@ Etag: W/"a1c-WvWTMI2baRx6+ovwTweXXQa3AAA"
   },
   "livemode" : false,
   "customer_email" : "checkout@example.com",
-  "expires_at" : 1792866046,
+  "expires_at" : 1793305965,
   "marketing_attributions" : null
 }

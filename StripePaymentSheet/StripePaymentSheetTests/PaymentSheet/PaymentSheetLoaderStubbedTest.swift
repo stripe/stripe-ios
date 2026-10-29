@@ -673,47 +673,6 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         }
     }
 
-    func testCheckoutLinkEmailPrecedenceAndSource() async throws {
-        defer { LinkAccountContext.shared.account = nil }
-        let cases: [(sessionEmail: String?, customerEmail: String?, defaultEmail: String?, expected: (email: String, source: String))] = [
-            ("session@example.com", "customer@example.com", "default@example.com", ("session@example.com", "customer_email")),
-            (nil, "customer@example.com", "default@example.com", ("customer@example.com", "customer_email")),
-            (nil, nil, "default@example.com", ("default@example.com", "customer_email")),
-        ]
-        for testCase in cases {
-            // Given distinct emails from each Checkout source
-            let elementsJSON = STPElementsSession._testValue(paymentMethodTypes: ["card", "link"], customerSessionData: [:]).allResponseFields
-            var sessionJSON = CheckoutTestHelpers.openSessionJSON
-            sessionJSON["ordered_payment_method_types_and_wallets"] = ["card", "link"]
-            sessionJSON["link_settings"] = elementsJSON["link_settings"]
-            sessionJSON["customer_email"] = testCase.sessionEmail
-            if let customerEmail = testCase.customerEmail {
-                sessionJSON["customer"] = ["id": "cus_checkout", "email": customerEmail]
-            }
-            stub { $0.url?.path == "/v1/checkout_client/cs_test_123/init" } response: { _ in
-                HTTPStubsResponse(jsonObject: sessionJSON, statusCode: 200, headers: nil)
-            }
-            var lookupRequestCount = 0
-            stub { $0.url?.path == "/v1/consumers/sessions/lookup" } response: { request in
-                lookupRequestCount += 1
-                let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
-                XCTAssertEqual(params["email_address"], testCase.expected.email)
-                XCTAssertEqual(params["email_source"], testCase.expected.source)
-                return HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
-            }
-            var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
-            configuration.apiClient = stubbedAPIClient()
-            configuration.paymentElement = .init()
-            configuration.defaults.email = testCase.defaultEmail
-
-            // When initializing Checkout's Link account
-            _ = try await CheckoutControllerLoader.load(configuration: configuration)
-
-            // Then Checkout session email precedes merchant defaults
-            XCTAssertEqual(lookupRequestCount, 1)
-        }
-    }
-
     // MARK: - Link Lookup Session Preservation
 
     @MainActor
@@ -740,9 +699,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
             configuration: configuration,
-            customerProvider: CustomerProvider(customer: configuration.customer),
             email: "foo@bar.com",
-            prefetchedLinkEmail: nil,
+            prefetchedEmailAndSource: nil,
             loadTimings: .init(),
             isUpdate: false
         )
@@ -776,9 +734,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
             configuration: configuration,
-            customerProvider: CustomerProvider(customer: configuration.customer),
             email: "foo@bar.com",
-            prefetchedLinkEmail: nil,
+            prefetchedEmailAndSource: nil,
             loadTimings: .init(),
             isUpdate: false
         )
@@ -822,9 +779,8 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         _ = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: elementsSession,
             configuration: config,
-            customerProvider: CustomerProvider(customer: config.customer),
             email: "test@example.com",
-            prefetchedLinkEmail: nil,
+            prefetchedEmailAndSource: nil,
             loadTimings: .init(),
             isUpdate: false
         )

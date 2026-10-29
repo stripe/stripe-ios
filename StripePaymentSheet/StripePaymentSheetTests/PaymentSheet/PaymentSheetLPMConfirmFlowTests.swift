@@ -2074,7 +2074,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     confirmationChallenge: nil,
                     authenticationContext: self,
                     paymentHandler: paymentHandler,
-                    confirmationSource: .paymentElement
+                    attribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
                 )
                 let preconfirmResult = await CheckoutController.handlePaymentMethodPreconfirmActions(
                     checkoutSession: checkoutSession,
@@ -2108,7 +2108,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     confirmationChallenge: nil,
                     authenticationContext: self,
                     paymentHandler: paymentHandler,
-                    confirmationSource: .paymentElement
+                    attribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
                 )
                 let preconfirmResult = await CheckoutController.handlePaymentMethodPreconfirmActions(
                     checkoutSession: checkoutSession,
@@ -2143,7 +2143,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     analyticsHelper: analyticsHelper,
                     authenticationContext: self,
                     paymentHandler: paymentHandler,
-                    confirmationSource: .paymentElement
+                    attribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
                 )
                 result = await CheckoutController.confirmLink(
                     checkoutSession: checkoutSession,

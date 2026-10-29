@@ -29,8 +29,8 @@ extension CheckoutController {
         let configuration = parameters.configuration
         let confirmationChallenge = parameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-            intent: .checkout(checkoutSession),
-            elementsSession: elementsSession
+            checkoutSession: checkoutSession,
+            attribution: parameters.attribution
         )
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
             checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
@@ -83,7 +83,7 @@ extension CheckoutController {
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
                         paymentHandler: parameters.paymentHandler,
-                        confirmationSource: parameters.confirmationSource
+                        attribution: parameters.attribution
                     )
                     let result = await Self.confirmLinkPaymentMethod(
                         checkoutSession: checkoutSession,
@@ -111,7 +111,7 @@ extension CheckoutController {
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
                         paymentHandler: parameters.paymentHandler,
-                        confirmationSource: parameters.confirmationSource
+                        attribution: parameters.attribution
                     )
                     let result = await Self.confirmLinkPaymentMethod(
                         checkoutSession: checkoutSession,
@@ -153,7 +153,7 @@ extension CheckoutController {
                             analyticsHelper: parameters.analyticsHelper,
                             authenticationContext: linkAuthenticationContext,
                             paymentHandler: parameters.paymentHandler,
-                            confirmationSource: parameters.confirmationSource
+                            attribution: parameters.attribution
                         )
                     )
                     linkCompletionResult = result
@@ -186,8 +186,7 @@ extension CheckoutController {
                     } else {
                         completion(resultWithoutSessionResponse(result), confirmationType)
                     }
-                },
-                confirmationSource: parameters.confirmationSource
+                }
             )
         }
     }
