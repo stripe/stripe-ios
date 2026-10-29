@@ -17,6 +17,9 @@ final class MLModelLoader: @unchecked Sendable {
 
     private let loadTaskCacheQueue = DispatchQueue(label: "com.stripe.ml-loader")
     private var loadTaskCache: [URL: Task<MLModel, Error>] = [:]
+    /// Runs the blocking CoreML load and compile work, which must not occupy Swift concurrency's
+    /// cooperative threads for the length of a compile.
+    private let modelProcessingQueue = DispatchQueue(label: "com.stripe.ml-loader.processing")
 
     let fileDownloader: FileDownloader
     let cacheDirectory: URL
@@ -108,12 +111,29 @@ final class MLModelLoader: @unchecked Sendable {
     func loadVisionModel(
         fromRemote remoteURL: URL
     ) async throws -> VNCoreMLModel {
-        try VNCoreMLModel(for: await loadModel(fromRemote: remoteURL))
+        let mlModel = try await loadModel(fromRemote: remoteURL)
+        return try await onModelProcessingQueue { try VNCoreMLModel(for: mlModel) }
     }
 }
 
 private extension MLModelLoader {
     func loadModelFromCacheOrRemote(_ remoteURL: URL) async throws -> MLModel {
+        if let cachedModel = try await onModelProcessingQueue({ self.loadCachedModel(forRemoteURL: remoteURL) }) {
+            return cachedModel
+        }
+
+        let tmpFileURL = try await fileDownloader.downloadFileTemporarily(from: remoteURL)
+        return try await onModelProcessingQueue {
+            let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
+            let compiledURL = self.cache(
+                compiledModel: tmpCompiledURL,
+                downloadedFrom: remoteURL
+            ) ?? tmpCompiledURL
+            return try MLModel(contentsOf: compiledURL)
+        }
+    }
+
+    func loadCachedModel(forRemoteURL remoteURL: URL) -> MLModel? {
         let cachedModel = getCachedLocation(forRemoteURL: remoteURL)
         do {
             return try MLModel(contentsOf: cachedModel)
@@ -127,19 +147,16 @@ private extension MLModelLoader {
                 // If the model failed to load because it was corrupted, delete the artifact
                 try? FileManager.default.removeItem(at: cachedModel)
             }
+            return nil
         }
-
-        return try await downloadCompileAndLoadModel(fromRemote: remoteURL)
     }
 
-    func downloadCompileAndLoadModel(fromRemote remoteURL: URL) async throws -> MLModel {
-        let tmpFileURL = try await fileDownloader.downloadFileTemporarily(from: remoteURL)
-        let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
-        let compiledURL = cache(
-            compiledModel: tmpCompiledURL,
-            downloadedFrom: remoteURL
-        ) ?? tmpCompiledURL
-        return try MLModel(contentsOf: compiledURL)
+    func onModelProcessingQueue<T>(_ work: @escaping () throws -> T) async throws -> T {
+        try await withCheckedThrowingContinuation { continuation in
+            modelProcessingQueue.async {
+                continuation.resume(with: Result(catching: work))
+            }
+        }
     }
 
     static func logModelLoadingError(
