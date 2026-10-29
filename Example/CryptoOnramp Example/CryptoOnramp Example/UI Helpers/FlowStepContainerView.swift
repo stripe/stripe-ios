@@ -14,6 +14,7 @@ struct FlowStepContainerView<Content: View>: View {
     private let title: LocalizedStringKey
     private let message: LocalizedStringKey
     private let buttonTitle: LocalizedStringKey
+    private let isButtonDisabled: Bool
     private let action: () -> Void
     private let content: Content
 
@@ -26,6 +27,7 @@ struct FlowStepContainerView<Content: View>: View {
     ///   - title: The step's heading.
     ///   - message: The explanation below the heading.
     ///   - buttonTitle: The primary action's label.
+    ///   - isButtonDisabled: Whether the primary action is unavailable. Defaults to `false`.
     ///   - action: Called when the primary action is selected.
     ///   - content: Additional content below the explanation. Defaults to an empty view.
     init(
@@ -34,6 +36,7 @@ struct FlowStepContainerView<Content: View>: View {
         title: LocalizedStringKey,
         message: LocalizedStringKey,
         buttonTitle: LocalizedStringKey,
+        isButtonDisabled: Bool = false,
         action: @escaping () -> Void,
         @ViewBuilder content: () -> Content = { EmptyView() }
     ) {
@@ -42,6 +45,7 @@ struct FlowStepContainerView<Content: View>: View {
         self.title = title
         self.message = message
         self.buttonTitle = buttonTitle
+        self.isButtonDisabled = isButtonDisabled
         self.action = action
         self.content = content()
     }
@@ -81,9 +85,10 @@ struct FlowStepContainerView<Content: View>: View {
             Button(buttonTitle, action: action)
                 .buttonStyle(PrimaryButtonStyle())
                 .horizontallyCenteredContent()
-                .disabled(isLoading.wrappedValue)
-                .opacity(isLoading.wrappedValue ? 0.5 : 1)
+                .disabled(isButtonDisabled || isLoading.wrappedValue)
+                .opacity(isButtonDisabled || isLoading.wrappedValue ? 0.5 : 1)
                 .padding()
+                .background(.background)
                 .avoidingActiveFold()
         }
         .navigationTitle(navigationTitle)
