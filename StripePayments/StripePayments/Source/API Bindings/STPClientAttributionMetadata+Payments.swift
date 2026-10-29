@@ -19,6 +19,8 @@ extension STPClientAttributionMetadata: STPFormEncodable {
             NSStringFromSelector(#selector(getter: clientSessionId)): "client_session_id",
             NSStringFromSelector(#selector(getter: elementsSessionConfigId)): "elements_session_config_id",
             NSStringFromSelector(#selector(getter: checkoutSessionId)): "checkout_session_id",
+            NSStringFromSelector(#selector(getter: checkoutConfigId)): "checkout_config_id",
+            NSStringFromSelector(#selector(getter: merchantIntegrationAdditionalElements)): "merchant_integration_additional_elements",
             NSStringFromSelector(#selector(getter: merchantIntegrationSource)): "merchant_integration_source",
             NSStringFromSelector(#selector(getter: merchantIntegrationSubtype)): "merchant_integration_subtype",
             NSStringFromSelector(#selector(getter: merchantIntegrationVersion)): "merchant_integration_version",

@@ -148,45 +148,6 @@ final class CustomerProviderTests: XCTestCase {
         }
     }
 
-    func testLinkEmailUsesCheckoutSessionEmailPrecedence() {
-        // Given a Checkout customer email and an optional higher-priority session email
-        for sessionEmail in ["session@example.com", nil] {
-            var json: [String: Any] = [
-                "customer": ["id": "cus_checkout", "email": "customer@example.com"],
-            ]
-            json["customer_email"] = sessionEmail
-            let session = CheckoutTestHelpers.makeSession(json).makePublicSession()
-
-            // Then Link uses the same precedence as Checkout's session email
-            XCTAssertEqual(
-                CustomerProvider(checkoutSession: session).linkEmail(),
-                sessionEmail ?? "customer@example.com"
-            )
-        }
-    }
-
-    func testLinkEmailUsesPrefetchedEmailThenElementsSessionAcrossIntegrations() {
-        // Given an Elements Session email, including when no customer was configured locally
-        var json = STPElementsSession._testValue(paymentMethodTypes: ["card"], customerSessionData: [:]).allResponseFields
-        json[jsonDict: "customer"]?["email"] = "session@example.com"
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
-        let providers: [CustomerProvider] = [
-            .init(customer: nil),
-            .init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")),
-            .init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")),
-        ]
-        for provider in providers {
-            // Then missing or failed prefetches fall back to the session, and absent sources remain nil
-            XCTAssertEqual(provider.linkEmail(elementsSession: elementsSession), "session@example.com")
-            XCTAssertNil(provider.linkEmail())
-        }
-
-        // A retrieved legacy Customer email takes priority, preserving empty strings as before
-        let legacyProvider = providers[2]
-        XCTAssertEqual(legacyProvider.linkEmail(elementsSession: elementsSession, prefetchedEmail: "customer@example.com"), "customer@example.com")
-        XCTAssertEqual(legacyProvider.linkEmail(elementsSession: elementsSession, prefetchedEmail: ""), "")
-    }
-
     func testElementsSessionAuthenticationMatchesTheCustomerSource() {
         let checkoutSession = CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
         let cases: [(CustomerProvider, [String: String], Bool)] = [

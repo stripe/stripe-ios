@@ -1,0 +1,22 @@
+GET
+https:\/\/pm-redirects\.stripe\.com\/authorize\/acct_1PSnETIFbdis1OxT\/sa_nonce_VWhJc2FaNptm7XLWyt7EmA4pG8t6fGX\?useWebAuthSession=true&followRedirectsInSDK=true$
+302
+text/plain
+Content-Type: text/plain;charset=utf-8
+reporting-endpoints: coop="https://q.stripe.com/coop-report", wsp_coop="https://q.stripe.com/coop-report?s=N5ywDZ_qwQW5yeZYX-UavVwwoPoYvKl-rBVJyaiOIlTZV4OqPnMX8DTJFnROWK_WPxHW1W3InDg=", wsp_coep="https://q.stripe.com/coep-report?s=N5ywDZ_qwQW5yeZYX-UavVwwoPoYvKl-rBVJyaiOIlTZV4OqPnMX8DTJFnROWK_WPxHW1W3InDg=", csp="https://q.stripe.com/csp-report-v2?q=N5ywDZ_qwQW5yeZYX-UavVwwoPoYvKl-rBVJyaiOIlTZV4OqPnMX8DTJFnROWK_WPxHW1W3InDg%3D&t=1"
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action https:; frame-ancestors 'self'; img-src data:; object-src 'none'; script-src 'nonce-tcort6jMvf2RL8ceWwbZDw==' 'sha256-YZlprLcs6+DTMkWq0JdBb3xClwCRD54FhhFkvyrwKes=' 'sha256-CQ+jrTkUK6W2IPK95+6h1iIpeiNa07PT13lH/vifgK8=' 'report-sample'; style-src 'nonce-tcort6jMvf2RL8ceWwbZDw==' 'sha256-aR5Sp5stHIF+thqtAZobSN0ajjYkfr5RReQbFrjo0mI=' 'sha256-oYDgCv+4CaC/XxHqj8pUl1mvPK08iQviB6rfc2qAi9c='; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=N5ywDZ_qwQW5yeZYX-UavVwwoPoYvKl-rBVJyaiOIlTZV4OqPnMX8DTJFnROWK_WPxHW1W3InDg%3D; report-to csp
+x-stripe-proxy-response: upstream
+x-wc: 3ff
+Server: nginx
+cross-origin-opener-policy-report-only: unsafe-none; report-to="wsp_coop"
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}, {"group":"wsp_coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=N5ywDZ_qwQW5yeZYX-UavVwwoPoYvKl-rBVJyaiOIlTZV4OqPnMX8DTJFnROWK_WPxHW1W3InDg="}],"include_subdomains":true}, {"group":"wsp_coep","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coep-report?s=N5ywDZ_qwQW5yeZYX-UavVwwoPoYvKl-rBVJyaiOIlTZV4OqPnMX8DTJFnROWK_WPxHW1W3InDg="}],"include_subdomains":true}, {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=N5ywDZ_qwQW5yeZYX-UavVwwoPoYvKl-rBVJyaiOIlTZV4OqPnMX8DTJFnROWK_WPxHW1W3InDg%3D&t=1"}],"include_subdomains":true}
+Location: https://payments.stripe.com/payment_methods/test_setup?setup_attempt=setatt_1UVduqIFbdis1OxT80feE6rD
+Date: Wed, 28 Oct 2026 20:57:49 GMT
+Content-Length: 0
+cross-origin-opener-policy: unsafe-none; report-to="wsp_coop"
+x-stripe-routing-context-priority-tier: livemode-critical
+x-stripe-server-rpc-duration-micros: 94441
+x-content-type-options: nosniff
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
