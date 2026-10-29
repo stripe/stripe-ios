@@ -440,9 +440,9 @@ public struct CustomerSessionClientSecret {
         self.customerId = customerId
         self.clientSecret = clientSecret
 
-        stpAssert(!clientSecret.hasPrefix("ek_"),
-                  "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
-        stpAssert(clientSecret.hasPrefix("cuss_"),
-                  "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+        assert(!clientSecret.hasPrefix("ek_"),
+                "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+        assert(clientSecret.hasPrefix("cuss_"),
+                "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
     }
 }
