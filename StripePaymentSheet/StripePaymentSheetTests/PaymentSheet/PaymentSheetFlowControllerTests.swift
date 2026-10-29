@@ -39,7 +39,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             stripeID: "2",
             details: .bankAccount(bankAccount: .init(
                 iconCode: nil,
-                name: "STRIPE TEST BANK",
+                bankName: "STRIPE TEST BANK",
+                accountName: nil,
                 last4: "6789",
                 country: "COUNTRY_US"
             )),
