@@ -121,7 +121,12 @@ extension PayWithLinkViewController {
 
         /// Client attribution metadata for analytics
         var clientAttributionMetadata: STPClientAttributionMetadata? {
-            STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+            context.analyticsHelper.shouldIncludeClientAttributionMetadata
+                ? STPClientAttributionMetadata.makeClientAttributionMetadata(
+                    intent: context.intent,
+                    elementsSession: context.elementsSession,
+                    checkoutAttribution: context.analyticsHelper.checkoutAttribution
+                ) : nil
         }
 
         /// Returns a hint message, if it is supported.

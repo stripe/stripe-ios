@@ -88,6 +88,7 @@ extension CheckoutController {
         let clientSecret: String
         var checkoutConfigID: String?
         let paymentStatus: Status.PaymentStatus
+        let automaticPaymentMethodTypes: Bool?
         let paymentMethodOptions: STPPaymentMethodOptions?
         /// The immutable email provided when creating the Checkout Session, either through
         /// `customer_email` or the Checkout Session's Customer's email.
@@ -186,6 +187,7 @@ extension CheckoutController.Session {
             availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
             clientSecret: clientSecret,
             paymentStatus: apiResponse.paymentStatus,
+            automaticPaymentMethodTypes: apiResponse.automaticPaymentMethodTypes,
             paymentMethodOptions: apiResponse.paymentMethodOptions,
             serverEmail: serverEmail,
             localState: localState,

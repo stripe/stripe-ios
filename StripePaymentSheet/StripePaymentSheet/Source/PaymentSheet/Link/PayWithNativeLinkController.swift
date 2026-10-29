@@ -65,7 +65,6 @@ final class PayWithNativeLinkController {
     private let confirmationChallenge: ConfirmationChallenge?
     // If you pass a confirmHandler, it's used to confirm the payment. Otherwise, PaymentSheet.confirm is used.
     private let confirmHandler: ConfirmHandler?
-    private let confirmationSource: CheckoutController.ConfirmingElement?
 
     init(
         mode: Mode,
@@ -79,8 +78,7 @@ final class PayWithNativeLinkController {
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil,
-        confirmHandler: ConfirmHandler? = nil,
-        confirmationSource: CheckoutController.ConfirmingElement? = nil
+        confirmHandler: ConfirmHandler? = nil
     ) {
         self.mode = mode
         self.intent = intent
@@ -95,7 +93,6 @@ final class PayWithNativeLinkController {
         self.linkConfiguration = linkConfiguration
         self.confirmationChallenge = confirmationChallenge
         self.confirmHandler = confirmHandler
-        self.confirmationSource = confirmationSource
     }
 
     func presentAsSheet(
@@ -179,8 +176,7 @@ final class PayWithNativeLinkController {
                 analyticsHelper: self.analyticsHelper,
                 supportedPaymentMethodTypes: self.supportedPaymentMethodTypes,
                 linkAppearance: self.linkAppearance,
-                linkConfiguration: self.linkConfiguration,
-                confirmationSource: self.confirmationSource
+                linkConfiguration: self.linkConfiguration
             )
 
             payWithLinkVC.payWithLinkDelegate = self

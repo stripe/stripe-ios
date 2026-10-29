@@ -60,7 +60,7 @@ class LinkURLGenerator {
         configuration: PaymentElementConfiguration,
         intent: Intent,
         elementsSession: STPElementsSession,
-        confirmationSource: CheckoutController.ConfirmingElement? = nil
+        checkoutAttribution: CheckoutAttributionContext? = nil
     ) throws -> LinkURLParams {
         guard let publishableKey = configuration.apiClient.publishableKey ?? STPAPIClient.shared.publishableKey else {
             throw LinkURLGeneratorError.noPublishableKey
@@ -93,7 +93,7 @@ class LinkURLGenerator {
             loggerMetadata = ["mobile_session_id": sessionID]
         }
 
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession, checkoutAttribution: checkoutAttribution)
 
         let paymentObjectType: LinkURLParams.PaymentObjectMode = elementsSession.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
@@ -112,7 +112,7 @@ class LinkURLGenerator {
         // Build fresh for the confirming Checkout Elements component rather than falling back to
         // the global PaymentsSDKVariant.paymentUserAgent, for the same reason as
         // CheckoutController.ConfirmingElement's other callers — see that type's doc comment.
-        let paymentUserAgent = confirmationSource?.paymentUserAgent ?? PaymentsSDKVariant.paymentUserAgent
+        let paymentUserAgent = checkoutAttribution?.confirmingElement.paymentUserAgent ?? PaymentsSDKVariant.paymentUserAgent
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
                              stripeAccount: configuration.apiClient.stripeAccount,

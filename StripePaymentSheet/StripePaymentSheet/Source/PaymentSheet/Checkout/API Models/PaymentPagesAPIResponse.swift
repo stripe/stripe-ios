@@ -34,6 +34,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let totalSummary: TotalSummary?
     let adaptivePricingInfo: AdaptivePricingInfo?
     let automaticTax: AutomaticTax?
+    let automaticPaymentMethodTypes: Bool?
     let paymentMethodOptions: STPPaymentMethodOptions?
     let customer: Customer?
     let canDetachPaymentMethod: Bool
@@ -73,6 +74,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case shippingAddressCollection
         case totalSummary
         case adaptivePricingInfo
+        case automaticPaymentMethodTypes
         case paymentMethodOptions
         case customer
         case paymentResponse
@@ -145,6 +147,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         totalSummary = try container.decodeIfPresent(TotalSummary.self, forKey: .totalSummary)
         adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.self, forKey: .adaptivePricingInfo)
         automaticTax = try container.decodeIfPresent(AutomaticTax.self, forKey: .automaticTax)
+        automaticPaymentMethodTypes = try container.decodeIfPresent(Bool.self, forKey: .automaticPaymentMethodTypes)
         paymentMethodOptions = try container.decodeIfPresent(
             LegacyDecoded<STPPaymentMethodOptions>.self,
             forKey: .paymentMethodOptions

@@ -266,7 +266,7 @@ extension PaymentSheet {
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession, checkoutAttribution: analyticsHelper.checkoutAttribution)
 
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
             intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
@@ -665,8 +665,7 @@ extension PaymentSheet {
         confirmWithPaymentMethod: @escaping (STPPaymentMethod, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState, STPClientAttributionMetadata?) -> Void,
         confirmHandler: @escaping (STPAuthenticationContext, Intent, STPElementsSession, PaymentOption, @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void,
         paymentHandlerCompletion: @escaping (STPPaymentHandlerActionStatus, NSError?) -> Void,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void,
-        confirmationSource: CheckoutController.ConfirmingElement? = nil
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         // This is called when the customer pays in the sheet (as opposed to the Link webview) and agreed to sign up for Link.
         let confirmWithPaymentDetails:
@@ -761,8 +760,7 @@ extension PaymentSheet {
                     logPayment: false,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
-                    confirmHandler: confirmHandler,
-                    confirmationSource: confirmationSource
+                    confirmHandler: confirmHandler
                 )
                 linkController.presentAsSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                     completion(result, confirmationType)
@@ -775,8 +773,7 @@ extension PaymentSheet {
                     nativeSheetPresentation: nativeSheetPresentation,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
-                    confirmHandler: confirmHandler,
-                    confirmationSource: confirmationSource
+                    confirmHandler: confirmHandler
                 )
                 linkController.present(from: authenticationContext.authenticationPresentingViewController(), completion: completion)
             }
