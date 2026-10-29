@@ -21,54 +21,52 @@ extension LinkPaymentMethodPicker {
             static let maxFontSize: CGFloat = 20
         }
 
+        private let downloadManager: DownloadManager
+
+        /// Whether the remote `display.icon.default` image is currently displayed in place of the local icon.
+        private var isShowingRemoteIcon = false
+
         var paymentMethod: ConsumerPaymentDetails? {
             didSet {
+                // Avoid resetting the icon and re-downloading it when reconfigured with the same payment method.
+                guard paymentMethod !== oldValue else {
+                    return
+                }
+                isShowingRemoteIcon = false
                 switch paymentMethod?.details {
                 case .card(let card):
                     cardBrandView.setCardBrand(STPCard.brand(from: card.brand))
-                    bankIconView.isHidden = true
-                    cardBrandView.isHidden = false
-                    genericIconView.isHidden = true
+                    showIconView(cardBrandView)
                     primaryLabel.text = paymentMethod?.paymentSheetLabel
                     let hasDisplayName = card.displayName(with: paymentMethod?.nickname) != nil
                     secondaryLabel.text = hasDisplayName ? card.secondaryName : nil
                     secondaryLabel.isHidden = !hasDisplayName
                 case .bankAccount(let bankAccount):
                     bankIconView.image = makeBankIcon(for: bankAccount.iconCode)
-                    cardBrandView.isHidden = true
-                    bankIconView.isHidden = false
-                    genericIconView.isHidden = true
+                    showIconView(bankIconView)
                     primaryLabel.text = bankAccount.displayName(with: paymentMethod?.nickname)
                     secondaryLabel.text = "•••• \(bankAccount.last4)"
                     secondaryLabel.isHidden = false
                 case .generic:
                     guard let display = paymentMethod?.display else {
-                        cardBrandView.isHidden = true
-                        bankIconView.isHidden = true
-                        genericIconView.isHidden = true
+                        showIconView(nil)
                         primaryLabel.text = nil
                         secondaryLabel.text = nil
                         secondaryLabel.isHidden = true
                         break
                     }
-                    cardBrandView.isHidden = true
-                    bankIconView.isHidden = true
-                    genericIconView.isHidden = false
                     genericIconView.image = createGenericPaymentMethodIcon()
-                    if let iconUrl = display.icon?.main {
-                        loadRemoteIcon(from: iconUrl)
-                    }
+                    showIconView(genericIconView)
                     primaryLabel.text = display.label
                     secondaryLabel.text = display.sublabel
                     secondaryLabel.isHidden = display.sublabel == nil || display.sublabel?.isEmpty == true
                 case .none:
-                    cardBrandView.isHidden = true
-                    bankIconView.isHidden = true
-                    genericIconView.isHidden = true
+                    showIconView(nil)
                     primaryLabel.text = nil
                     secondaryLabel.text = nil
                     secondaryLabel.isHidden = true
                 }
+                loadRemoteIconIfNeeded()
             }
         }
 
@@ -87,6 +85,19 @@ extension LinkPaymentMethodPicker {
         }()
 
         private lazy var cardBrandView: CardBrandView = CardBrandView(centerHorizontally: true)
+
+        /// Displays the remote `display.icon.default` image for cards, which uses the same rectangular size as the card brand image.
+        private lazy var remoteCardIconView: UIImageView = {
+            let iconView = UIImageView()
+            iconView.contentMode = .scaleAspectFit
+            iconView.clipsToBounds = true
+            iconView.layer.cornerRadius = Constants.genericIconCornerRadius
+            return iconView
+        }()
+
+        private var iconViews: [UIView] {
+            [bankIconView, cardBrandView, remoteCardIconView, genericIconView]
+        }
 
         private let primaryLabel: UILabel = {
             let label = UILabel()
@@ -107,10 +118,12 @@ extension LinkPaymentMethodPicker {
             let view = UIView()
             bankIconView.translatesAutoresizingMaskIntoConstraints = false
             cardBrandView.translatesAutoresizingMaskIntoConstraints = false
+            remoteCardIconView.translatesAutoresizingMaskIntoConstraints = false
             genericIconView.translatesAutoresizingMaskIntoConstraints = false
 
             view.addSubview(bankIconView)
             view.addSubview(cardBrandView)
+            view.addSubview(remoteCardIconView)
             view.addSubview(genericIconView)
 
             let cardBrandSize = cardBrandView.size(for: Constants.iconSize)
@@ -139,6 +152,12 @@ extension LinkPaymentMethodPicker {
 
                 cardBrandView.widthAnchor.constraint(equalToConstant: cardBrandSize.width),
                 cardBrandView.heightAnchor.constraint(equalToConstant: cardBrandSize.height),
+
+                remoteCardIconView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                remoteCardIconView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                // `cardBrandSize` includes padding around the brand image, so size remote card icons to match the visible brand image instead.
+                remoteCardIconView.widthAnchor.constraint(equalToConstant: Constants.iconSize.width),
+                remoteCardIconView.heightAnchor.constraint(equalToConstant: Constants.iconSize.height),
 
                 genericIconView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor),
                 genericIconView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor),
@@ -175,8 +194,9 @@ extension LinkPaymentMethodPicker {
             return stackView
         }()
 
-        override init(frame: CGRect) {
-            super.init(frame: frame)
+        init(downloadManager: DownloadManager = .sharedManager) {
+            self.downloadManager = downloadManager
+            super.init(frame: .zero)
             addAndPinSubview(stackView)
         }
 
@@ -217,17 +237,52 @@ extension LinkPaymentMethodPicker {
             }
         }
 
-        private func loadRemoteIcon(from url: URL) {
-            let placeholder = createGenericPaymentMethodIcon()
-            genericIconView.image = DownloadManager.sharedManager.downloadImage(
+        /// Shows `iconView` and hides all other icon views.
+        private func showIconView(_ iconView: UIView?) {
+            for view in iconViews {
+                view.isHidden = view !== iconView
+            }
+        }
+
+        /// Replaces the local icon with the remote `display.icon.default` image once it's available.
+        /// The local icon remains visible while the image downloads, or if the download fails.
+        private func loadRemoteIconIfNeeded() {
+            guard let paymentMethod, let url = paymentMethod.display?.icon?.main else {
+                return
+            }
+
+            // Cards use a rectangular icon, while bank accounts and other payment methods use a square icon.
+            let remoteIconView: UIImageView
+            switch paymentMethod.details {
+            case .card:
+                remoteIconView = remoteCardIconView
+            case .bankAccount, .generic:
+                remoteIconView = genericIconView
+            }
+
+            let placeholder = UIImage()
+            let image = downloadManager.downloadImage(
                 url: url,
                 placeholder: placeholder,
                 updateHandler: { [weak self] image in
                     DispatchQueue.main.async {
-                        self?.genericIconView.image = image
+                        // Ignore the image if this view has since been configured with a different payment method.
+                        guard let self, self.paymentMethod === paymentMethod else {
+                            return
+                        }
+                        self.showRemoteIcon(image, in: remoteIconView)
                     }
                 }
             )
+            if image !== placeholder {
+                showRemoteIcon(image, in: remoteIconView)
+            }
+        }
+
+        private func showRemoteIcon(_ image: UIImage, in iconView: UIImageView) {
+            iconView.image = image
+            showIconView(iconView)
+            isShowingRemoteIcon = true
         }
 
         private func refreshBankIconIfNeeded() {
@@ -238,14 +293,10 @@ extension LinkPaymentMethodPicker {
         }
 
         private func refreshGenericIconIfNeeded() {
-            guard case .generic = paymentMethod?.details else {
+            guard case .generic = paymentMethod?.details, !isShowingRemoteIcon else {
                 return
             }
-            if let iconUrl = paymentMethod?.display?.icon?.main {
-                loadRemoteIcon(from: iconUrl)
-            } else {
-                genericIconView.image = createGenericPaymentMethodIcon()
-            }
+            genericIconView.image = createGenericPaymentMethodIcon()
         }
 
         // UIImages need to be manually updated when the system theme changes.
