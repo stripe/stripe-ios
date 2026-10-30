@@ -7,6 +7,7 @@
 
 @_spi(InternalOnlyAPI) @testable import StripePayments
 @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+import UIKit
 import XCTest
 
 enum PassiveCaptchaTestError: Error {

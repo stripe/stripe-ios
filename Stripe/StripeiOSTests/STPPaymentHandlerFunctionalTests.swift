@@ -9,6 +9,7 @@
 @_spi(InternalOnlyAPI) @testable import StripeCore
 @_spi(InternalOnlyAPI) @testable import StripePayments
 @_spi(InternalOnlyAPI) @testable import StripePaymentsTestUtils
+import UIKit
 import XCTest
 
 // You can add tests in here for payment methods that don't require customer actions (i.e. don't open webviews for customer authentication).
@@ -29,7 +30,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
                 XCTFail(String(describing: error))
                 return
             }
-            STPTestingAPIClient.shared().createPaymentIntent(withParams: [
+            STPTestingAPIClient.shared.createPaymentIntent(withParams: [
                 "confirm": "true",
                 "payment_method_types": ["card"],
                 "currency": "usd",
@@ -73,7 +74,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
                 XCTFail(String(describing: error))
                 return
             }
-            STPTestingAPIClient.shared().createPaymentIntent(withParams: [
+            STPTestingAPIClient.shared.createPaymentIntent(withParams: [
                 "confirm": "true",
                 "payment_method_types": ["sepa_debit"],
                 "currency": "eur",
@@ -109,7 +110,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
     func test_confirm_payment_intent_with_payments_orchestration() async throws {
         // See https://dashboard.stripe.com/acct_1T4pKXFRhicYlEF7/test/orchestration/rules/extn_test_61UEDJ3udBbhjozqU41FRhicYlEF7A4u/edit
         let apiClient = STPAPIClient(publishableKey: STPTestingPaymentsOrchestrationPublishableKey)
-        let clientSecret = try await STPTestingAPIClient.shared().createPaymentIntent(
+        let clientSecret = try await STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["card"],
                 "currency": "usd",
@@ -130,7 +131,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
     func test_handle_next_action_payment_intent_with_payments_orchestration() async throws {
         // See https://dashboard.stripe.com/acct_1T4pKXFRhicYlEF7/test/orchestration/rules/extn_test_61UEDJ3udBbhjozqU41FRhicYlEF7A4u/edit
         let apiClient = STPAPIClient(publishableKey: STPTestingPaymentsOrchestrationPublishableKey)
-        let clientSecret = try await STPTestingAPIClient.shared().createPaymentIntent(
+        let clientSecret = try await STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["card"],
                 "currency": "usd",
@@ -159,7 +160,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
                 XCTFail(String(describing: error))
                 return
             }
-            STPTestingAPIClient.shared().createSetupIntent(withParams: [
+            STPTestingAPIClient.shared.createSetupIntent(withParams: [
                 "confirm": "true",
                 "payment_method_types": ["card"],
                 "payment_method": paymentMethod.stripeId,
@@ -202,7 +203,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
                 XCTFail()
                 return
             }
-            STPTestingAPIClient.shared().createSetupIntent(withParams: [
+            STPTestingAPIClient.shared.createSetupIntent(withParams: [
                 "confirm": "true",
                 "payment_method_types": ["sepa_debit"],
                 "payment_method": paymentMethod.stripeId,

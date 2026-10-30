@@ -7,6 +7,9 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
+import StripePayments
+import XCTest
+
 class STPPaymentMethodFPXTest: XCTestCase {
     func exampleJson() -> [AnyHashable: Any]? {
         return [

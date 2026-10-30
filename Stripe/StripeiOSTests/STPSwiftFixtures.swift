@@ -14,7 +14,7 @@ import Foundation
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 
-@_exported @testable import StripePaymentsObjcTestUtils
+@_exported @testable import StripePaymentsTestUtils
 
 extension STPFixtures {
     /// A customer-scoped ephemeral key that expires in 100 seconds.

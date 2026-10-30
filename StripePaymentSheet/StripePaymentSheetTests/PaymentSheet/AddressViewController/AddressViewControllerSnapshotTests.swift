@@ -11,6 +11,7 @@ import StripeCoreTestUtils
 @_spi(InternalOnlyAPI)@testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(InternalOnlyAPI)@testable import StripeUICore
+import UIKit
 import XCTest
 
 class AddressViewControllerSnapshotTests: STPSnapshotTestCase {

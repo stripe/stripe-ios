@@ -7,8 +7,10 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
+import StripeCore
 import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
+import StripePaymentsTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePaymentsUI
 import UIKit
 import XCTest

@@ -13,6 +13,7 @@ import StripeCoreTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
+import XCTest
 
 class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
     func testCreatePaymentIntentWithTestingServer() {
@@ -40,6 +41,8 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    @available(*, deprecated, message: "Tests deprecated properties")
+    @available(*, deprecated, message: "Tests deprecated properties")
     func testRetrievePreviousCreatedPaymentIntent() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let expectation = self.expectation(description: "Payment Intent retrieve")
@@ -57,8 +60,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertNil(paymentIntent?.paymentMethodId)
                 XCTAssertEqual(paymentIntent?.status, .canceled)
                 XCTAssertEqual(paymentIntent?.setupFutureUsage, STPPaymentIntentSetupFutureUsage.none)
-            XCTAssertNil(paymentIntent?.perform(NSSelectorFromString("nextSourceAction")))
-            // #pragma clang diagnostic pop
+            XCTAssertNil(paymentIntent?.nextSourceAction)
             XCTAssertNil(paymentIntent!.nextAction)
 
             expectation.fulfill()
@@ -79,7 +81,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         XCTAssertNil(paymentIntent.paymentMethodId)
         XCTAssertEqual(paymentIntent.status, .canceled)
         XCTAssertEqual(paymentIntent.setupFutureUsage, STPPaymentIntentSetupFutureUsage.none)
-        XCTAssertNil(paymentIntent.perform(NSSelectorFromString("nextSourceAction")))
+        XCTAssertNil(paymentIntent.nextSourceAction)
         XCTAssertNil(paymentIntent.nextAction)
     }
 
@@ -195,7 +197,6 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(
                 paymentIntent?.nextAction?.redirectToURL?.returnURL,
                 URL(string: "example-app-scheme://authorized"))
-            // #pragma clang diagnostic pop
 
             expectation.fulfill()
         }

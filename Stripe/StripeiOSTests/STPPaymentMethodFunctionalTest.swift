@@ -12,6 +12,7 @@ import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) import StripePayments
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
+import XCTest
 
 class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
     func testCreateCardPaymentMethod() {
@@ -142,7 +143,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
          let testCustomerID = "cus_PTf9mhkFv9ZGXl"
 
          // Create a new EK for the Customer
-         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "fr")
+         let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "fr")
 
          // Create a new payment method
          let paymentMethod = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
@@ -174,7 +175,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         // Create a new customer and new key
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
 
         // Create a new payment method 1
         let paymentMethod1 = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
@@ -193,7 +194,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
                                    ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // Element/Sessions endpoint should de-dupe payment methods with CustomerSesssion
-        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
+        let cscs = try await STPTestingAPIClient.shared.fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
                                                                                                       merchantCountry: nil)
         var configuration = PaymentSheet.Configuration()
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
@@ -278,7 +279,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         }
 
         // Create a new customer and new key
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: "fr")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: "fr")
 
         // Attach the payment method to user
         try await client.attachPaymentMethod(sepaPaymentMethod.stripeId,
@@ -292,7 +293,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(fetchedPaymentMethods.count, 1)
         XCTAssertEqual(fetchedPaymentMethods[0].type, .SEPADebit)
 
-        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
+        let cscs = try await STPTestingAPIClient.shared.fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
                                                                                                       merchantCountry: "fr")
         var configuration = PaymentSheet.Configuration()
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
@@ -329,7 +330,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         // Create a new customer and new key
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
 
         // Create a new card pm and attach it to the customer
         let paymentMethod1 = try await client.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: []).stripeId

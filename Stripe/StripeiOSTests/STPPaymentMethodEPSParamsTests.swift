@@ -9,7 +9,9 @@
 
 import StripeCore
 import StripeCoreTestUtils
+import StripePayments
 import StripePaymentsTestUtils
+import XCTest
 
 class STPPaymentMethodEPSParamsTests: STPNetworkStubbingTestCase {
     func testCreateEPSPaymentMethod() {

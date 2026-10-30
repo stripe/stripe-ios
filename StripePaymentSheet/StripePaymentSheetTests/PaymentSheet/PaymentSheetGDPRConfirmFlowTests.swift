@@ -4,6 +4,7 @@
 //
 
 import StripeCoreTestUtils
+import UIKit
 import XCTest
 
 import SafariServices
@@ -452,7 +453,7 @@ final class PaymentSheetGDPRConfirmFlowTests: STPNetworkStubbingTestCase {
                         checkbox: CheckboxBehavior,
                         expectedAllowRedisplay: ExpectedAllowRedisplay) async throws {
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+        let newCustomer = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: nil,
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
         let clientSecretResolved = expectation(description: "clientSecretResolved")
         var clientSecret: String!

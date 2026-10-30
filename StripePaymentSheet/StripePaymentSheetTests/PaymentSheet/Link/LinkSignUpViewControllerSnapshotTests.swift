@@ -9,6 +9,7 @@ import Foundation
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
 @_spi(InternalOnlyAPI) import StripeUICore
+import UIKit
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet

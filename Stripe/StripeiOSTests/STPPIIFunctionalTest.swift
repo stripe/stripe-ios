@@ -7,7 +7,9 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
+import StripeCore
 import StripeCoreTestUtils
+import StripePayments
 import StripePaymentsTestUtils
 import XCTest
 

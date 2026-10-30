@@ -7,6 +7,8 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
+import StripePayments
+import StripePaymentsTestUtils
 import XCTest
 
 class STPCardParamsTest: XCTestCase {
@@ -115,9 +117,8 @@ class STPCardParamsTest: XCTestCase {
 
         let mapping = STPCardParams.propertyNamesToFormFieldNamesMapping()
 
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(cardParams.responds(to: NSSelectorFromString(propertyName)))
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((cardParams as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: cardParams))")
         }
 
         for formFieldName in mapping.values {
@@ -134,28 +135,18 @@ class STPCardParamsTest: XCTestCase {
         cardParams.address = STPFixtures.address()
         let copiedCardParams = cardParams.copy() as! STPCardParams
 
-        // The property names we expect to *not* be equal objects
-        let notEqualProperties = [
-                    // these include the object's address, so they won't be the same across copies
-            "debugDescription",
-            "description",
-            "hash",
-                    // STPAddress does not override isEqual:, so this is pointer comparison
-            "address",
-        ]
+        // STPAddress does not override isEqual:, and its description includes its address, so compare it separately
+        XCTAssertFalse(cardParams.address === copiedCardParams.address)
+        XCTAssertEqual(
+            STPTestUtils.storedPropertyDescriptions(of: cardParams.address),
+            STPTestUtils.storedPropertyDescriptions(of: copiedCardParams.address)
+        )
 
-        // use runtime inspection to find the list of properties. If a new property is
-        // added to the fixture, but not the `copyWithZone:` implementation, this should catch it
-        for property in STPTestUtils.propertyNames(of: cardParams) {
-            if notEqualProperties.contains(property) {
-                XCTAssertNotEqual(
-                    cardParams.value(forKey: property) as? NSObject,
-                    copiedCardParams.value(forKey: property) as? NSObject)
-            } else {
-                XCTAssertEqual(
-                    cardParams.value(forKey: property) as? NSObject,
-                    copiedCardParams.value(forKey: property) as? NSObject)
-            }
+        // Use reflection to find the list of stored properties. If a new property is
+        // added to the fixture, but not the `copy(with:)` implementation, this should catch it
+        let copiedValues = STPTestUtils.storedPropertyDescriptions(of: copiedCardParams)
+        for (property, value) in STPTestUtils.storedPropertyDescriptions(of: cardParams) where !(value.contains("STPAddress")) {
+            XCTAssertEqual(value, copiedValues[property], property)
         }
     }
 

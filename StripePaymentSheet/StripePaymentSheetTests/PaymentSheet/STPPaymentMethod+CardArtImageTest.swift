@@ -9,7 +9,8 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 @_spi(InternalOnlyAPI) @testable import StripeCore
 @_spi(InternalOnlyAPI) import StripeCoreTestUtils
-import StripePaymentsObjcTestUtils
+import StripePaymentsTestUtils
+import UIKit
 import XCTest
 
 final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {

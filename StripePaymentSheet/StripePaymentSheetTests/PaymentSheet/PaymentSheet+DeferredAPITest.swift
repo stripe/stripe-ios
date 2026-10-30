@@ -11,6 +11,7 @@
 @testable@_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripeUICore
+import UIKit
 import XCTest
 
 final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {

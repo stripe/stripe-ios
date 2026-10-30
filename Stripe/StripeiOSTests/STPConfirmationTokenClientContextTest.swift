@@ -21,10 +21,9 @@ class STPConfirmationTokenClientContextTest: XCTestCase {
         let clientContext = STPConfirmationTokenClientContext()
         let mapping = STPConfirmationTokenClientContext.propertyNamesToFormFieldNamesMapping()
 
-        // Verify all property names don't contain colons
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(clientContext.responds(to: NSSelectorFromString(propertyName)))
+        // Verify every key path applies to this type
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((clientContext as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: clientContext))")
         }
 
         // Verify all form field names are non-empty
@@ -36,15 +35,15 @@ class STPConfirmationTokenClientContextTest: XCTestCase {
         XCTAssertEqual(mapping.values.count, Set(mapping.values).count)
 
         // Verify expected mappings
-        XCTAssertEqual(mapping["mode"], "mode")
-        XCTAssertEqual(mapping["currency"], "currency")
-        XCTAssertEqual(mapping["setupFutureUsage"], "setup_future_usage")
-        XCTAssertEqual(mapping["captureMethod"], "capture_method")
-        XCTAssertEqual(mapping["paymentMethodTypes"], "payment_method_types")
-        XCTAssertEqual(mapping["onBehalfOf"], "on_behalf_of")
-        XCTAssertEqual(mapping["paymentMethodConfiguration"], "payment_method_configuration")
-        XCTAssertEqual(mapping["customer"], "customer")
-        XCTAssertEqual(mapping["paymentMethodOptions"], "payment_method_options")
+        XCTAssertEqual(mapping[\STPConfirmationTokenClientContext.mode], "mode")
+        XCTAssertEqual(mapping[\STPConfirmationTokenClientContext.currency], "currency")
+        XCTAssertEqual(mapping[\STPConfirmationTokenClientContext.setupFutureUsage], "setup_future_usage")
+        XCTAssertEqual(mapping[\STPConfirmationTokenClientContext.captureMethod], "capture_method")
+        XCTAssertEqual(mapping[\STPConfirmationTokenClientContext.paymentMethodTypes], "payment_method_types")
+        XCTAssertEqual(mapping[\STPConfirmationTokenClientContext.onBehalfOf], "on_behalf_of")
+        XCTAssertEqual(mapping[\STPConfirmationTokenClientContext.paymentMethodConfiguration], "payment_method_configuration")
+        XCTAssertEqual(mapping[\STPConfirmationTokenClientContext.customer], "customer")
+        XCTAssertEqual(mapping[\STPConfirmationTokenClientContext.paymentMethodOptions], "payment_method_options")
     }
 
     // MARK: - Form Encoding Tests

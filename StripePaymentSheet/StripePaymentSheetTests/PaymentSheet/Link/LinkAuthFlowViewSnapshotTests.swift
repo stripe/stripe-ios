@@ -6,6 +6,7 @@ import OHHTTPStubsSwift
 import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripeUICore
+import UIKit
 import XCTest
 
 #if !os(visionOS)

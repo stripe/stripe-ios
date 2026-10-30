@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
+import StripePaymentsTestUtils
 import UIKit
 import XCTest
 

@@ -8,6 +8,7 @@
 //
 
 @testable import StripePayments
+import XCTest
 
 class STPConnectAccountParamsTest: XCTestCase {
     // MARK: - STPFormEncodable Tests
@@ -39,9 +40,8 @@ class STPConnectAccountParamsTest: XCTestCase {
 
         let mapping = STPConnectAccountParams.propertyNamesToFormFieldNamesMapping()
 
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(accountParams.responds(to: NSSelectorFromString(propertyName)))
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((accountParams as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: accountParams))")
         }
 
         for formFieldName in mapping.values {

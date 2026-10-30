@@ -8,8 +8,10 @@
 import Foundation
 
 @testable@_spi(InternalOnlyAPI) import StripeCore
+import StripePayments
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
+import XCTest
 
 class STPStringUtilsTest: XCTestCase {
     func testParseRangeSingleTagSuccess1() {

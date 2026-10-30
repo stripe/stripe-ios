@@ -9,6 +9,9 @@
 
 import StripeCore
 import StripeCoreTestUtils
+import StripePayments
+import StripePaymentsTestUtils
+import XCTest
 
 class STPConnectAccountFunctionalTest: XCTestCase {
     /// Client with test publishable key

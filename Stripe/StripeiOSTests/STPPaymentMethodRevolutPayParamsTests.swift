@@ -12,6 +12,7 @@ import StripeCoreTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
+import XCTest
 
 class STPPaymentMethodRevolutPayParamsTests: STPNetworkStubbingTestCase {
 

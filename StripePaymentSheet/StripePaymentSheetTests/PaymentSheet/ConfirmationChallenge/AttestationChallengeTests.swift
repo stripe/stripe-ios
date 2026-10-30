@@ -11,7 +11,7 @@ import Foundation
 @_spi(InternalOnlyAPI) @testable import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) @testable import StripePayments
 @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
-@_spi(InternalOnlyAPI) @testable import StripePaymentsObjcTestUtils
+@_spi(InternalOnlyAPI) @testable import StripePaymentsTestUtils
 import XCTest
 
 class AttestationChallengeTests: XCTestCase {

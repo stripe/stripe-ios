@@ -7,6 +7,7 @@
 //
 
 @_spi(InternalOnlyAPI) @testable import StripePayments
+import UIKit
 import XCTest
 
 class HCaptcha__Tests: XCTestCase {

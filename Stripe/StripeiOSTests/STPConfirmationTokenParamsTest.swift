@@ -108,10 +108,9 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         let params = STPConfirmationTokenParams()
         let mapping = STPConfirmationTokenParams.propertyNamesToFormFieldNamesMapping()
 
-        // Verify all property names don't contain colons
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(params.responds(to: NSSelectorFromString(propertyName)))
+        // Verify every key path applies to this type
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((params as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: params))")
         }
 
         // Verify all form field names are non-empty
@@ -123,15 +122,15 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertEqual(mapping.values.count, Set(mapping.values).count)
 
         // Verify expected mappings
-        XCTAssertEqual(mapping["paymentMethod"], "payment_method")
-        XCTAssertEqual(mapping["paymentMethodData"], "payment_method_data")
-        XCTAssertEqual(mapping["paymentMethodOptions"], "payment_method_options")
-        XCTAssertEqual(mapping["returnURL"], "return_url")
-        XCTAssertEqual(mapping["shipping"], "shipping")
-        XCTAssertEqual(mapping["mandateData"], "mandate_data")
-        XCTAssertEqual(mapping["setAsDefaultPM"], "set_as_default_payment_method")
-        XCTAssertEqual(mapping["clientAttributionMetadata"], "client_attribution_metadata")
-        XCTAssertEqual(mapping["clientContext"], "client_context")
+        XCTAssertEqual(mapping[\STPConfirmationTokenParams.paymentMethod], "payment_method")
+        XCTAssertEqual(mapping[\STPConfirmationTokenParams.paymentMethodData], "payment_method_data")
+        XCTAssertEqual(mapping[\STPConfirmationTokenParams.paymentMethodOptions], "payment_method_options")
+        XCTAssertEqual(mapping[\STPConfirmationTokenParams.returnURL], "return_url")
+        XCTAssertEqual(mapping[\STPConfirmationTokenParams.shipping], "shipping")
+        XCTAssertEqual(mapping[\STPConfirmationTokenParams.mandateData], "mandate_data")
+        XCTAssertEqual(mapping[\STPConfirmationTokenParams.setAsDefaultPM], "set_as_default_payment_method")
+        XCTAssertEqual(mapping[\STPConfirmationTokenParams.clientAttributionMetadata], "client_attribution_metadata")
+        XCTAssertEqual(mapping[\STPConfirmationTokenParams.clientContext], "client_context")
     }
 
     // MARK: - Individual Property Tests

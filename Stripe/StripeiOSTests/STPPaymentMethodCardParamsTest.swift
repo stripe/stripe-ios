@@ -11,6 +11,7 @@
 @testable@_spi(InternalOnlyAPI) import StripePayments
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
+import XCTest
 
 class STPPaymentMethodCardParamsTest: XCTestCase {
     func testEqualityCheck() {
@@ -72,13 +73,13 @@ class STPPaymentMethodCardParamsTest: XCTestCase {
         // Test for STPPaymentMethodCardParams
         let cardParams = STPPaymentMethodCardParams()
 
-        let cardParamsExpectedMapping = [
-            "number": "number",
-            "expMonth": "exp_month",
-            "expYear": "exp_year",
-            "cvc": "cvc",
-            "token": "token",
-            "networks": "networks",
+        let cardParamsExpectedMapping: [AnyKeyPath: String] = [
+            \STPPaymentMethodCardParams.number: "number",
+            \STPPaymentMethodCardParams.expMonth: "exp_month",
+            \STPPaymentMethodCardParams.expYear: "exp_year",
+            \STPPaymentMethodCardParams.cvc: "cvc",
+            \STPPaymentMethodCardParams.token: "token",
+            \STPPaymentMethodCardParams.networks: "networks",
         ]
 
         let cardParamsMapping = type(of: cardParams).propertyNamesToFormFieldNamesMapping()
@@ -88,8 +89,8 @@ class STPPaymentMethodCardParamsTest: XCTestCase {
         // Test for STPPaymentMethodCardNetworksParams
         let networksParams = STPPaymentMethodCardNetworksParams()
 
-        let networksParamsExpectedMapping = [
-            "preferred": "preferred",
+        let networksParamsExpectedMapping: [AnyKeyPath: String] = [
+            \STPPaymentMethodCardNetworksParams.preferred: "preferred",
         ]
 
         let networksParamsMapping = type(of: networksParams).propertyNamesToFormFieldNamesMapping()

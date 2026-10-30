@@ -14,6 +14,7 @@ import PassKit
 @_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(InternalOnlyAPI) import StripeUICore
+import UIKit
 
 public extension PaymentSheet.Configuration {
     /// Provides a Configuration that allows all pm types available
