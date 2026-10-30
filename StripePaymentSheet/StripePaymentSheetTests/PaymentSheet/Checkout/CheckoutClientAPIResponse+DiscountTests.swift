@@ -1,18 +1,18 @@
 //
-//  PaymentPagesAPIResponseDiscountTests.swift
+//  CheckoutClientAPIResponseDiscountTests.swift
 //  StripePaymentSheetTests
 //
 
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
-private extension PaymentPagesAPIResponse {
+private extension CheckoutClientAPIResponse {
     static func makeDiscounts(from overrides: [String: Any]) -> [CheckoutController.Session.DiscountAmount] {
         return CheckoutTestHelpers.makeSession(overrides).makePublicSession().discountAmounts
     }
 }
 
-final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
+final class CheckoutClientAPIResponseDiscountTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         throw XCTSkip("TODO(porter) promo codes: Restore discount decoding coverage when CheckoutClient supports promotion codes.")
@@ -42,7 +42,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
+        let discounts = CheckoutClientAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
 
         let discount = discounts[0]
@@ -74,7 +74,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
+        let discounts = CheckoutClientAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
 
         let discount = discounts[0]
@@ -104,7 +104,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
+        let discounts = CheckoutClientAPIResponse.makeDiscounts(from: dict)
         XCTAssertTrue(discounts.isEmpty)
     }
 
@@ -119,7 +119,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
+        let discounts = CheckoutClientAPIResponse.makeDiscounts(from: dict)
         XCTAssertTrue(discounts.isEmpty)
     }
 
@@ -130,7 +130,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             "session_id": "cs_test_123",
         ]
 
-        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
+        let discounts = CheckoutClientAPIResponse.makeDiscounts(from: dict)
         XCTAssertTrue(discounts.isEmpty)
     }
 
@@ -166,7 +166,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
+        let discounts = CheckoutClientAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 2)
 
         XCTAssertEqual(discounts[0].displayName, "First")
@@ -209,7 +209,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
+        let discounts = CheckoutClientAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
         XCTAssertEqual(discounts[0].displayName, "Valid")
         XCTAssertEqual(discounts[0].minorUnitsAmount, 300)
@@ -236,7 +236,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ])
 
             XCTAssertThrowsError(
-                try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+                try CheckoutClientAPIResponse.decode(fromAPIResponse: json),
                 "Expected missing \(field) to fail decoding"
             )
         }
@@ -257,7 +257,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ])
 
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        XCTAssertThrowsError(try CheckoutClientAPIResponse.decode(fromAPIResponse: json))
     }
 
     // MARK: - Coupon without name uses code
@@ -280,7 +280,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
             ],
         ]
 
-        let discounts = PaymentPagesAPIResponse.makeDiscounts(from: dict)
+        let discounts = CheckoutClientAPIResponse.makeDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
         XCTAssertEqual(discounts[0].displayName, "coupon_no_name")
         XCTAssertEqual(discounts[0].percentOff, 5)
@@ -311,7 +311,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         ])
 
         // When decoding the public session
-        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+        let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession()
 
         // Then discounts come from the recurring summary
         XCTAssertEqual(session.discountAmounts.count, 1)
@@ -344,7 +344,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         ])
 
         // When decoding the public session
-        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession()
+        let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession()
 
         // Then only the summary fields used by the SDK affect decoding
         XCTAssertEqual(session.discountAmounts.count, 1)
@@ -360,7 +360,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         ])
 
         // Then decoding fails, preserving the required discount array
-        XCTAssertThrowsError(try PaymentPagesAPIResponse.decode(fromAPIResponse: json))
+        XCTAssertThrowsError(try CheckoutClientAPIResponse.decode(fromAPIResponse: json))
     }
 
     func testRecurringDetailsRejectsMissingRequiredTotalSummary() {
@@ -369,7 +369,7 @@ final class PaymentPagesAPIResponseDiscountTests: XCTestCase {
         ])
 
         XCTAssertThrowsError(
-            try PaymentPagesAPIResponse.decode(fromAPIResponse: json),
+            try CheckoutClientAPIResponse.decode(fromAPIResponse: json),
             "Expected missing total_summary to fail decoding"
         )
     }

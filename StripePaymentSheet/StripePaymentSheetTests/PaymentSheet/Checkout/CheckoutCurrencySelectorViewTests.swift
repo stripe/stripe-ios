@@ -231,7 +231,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         currency: String = "usd",
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
-    ) -> PaymentPagesAPIResponse {
+    ) -> CheckoutClientAPIResponse {
         CheckoutTestHelpers.makeAdaptivePricingSession(
             currency: currency,
             integrationAmount: integrationAmount,

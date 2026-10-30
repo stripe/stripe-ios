@@ -1,5 +1,5 @@
 //
-//  PaymentPagesAPIResponse.swift
+//  CheckoutClientAPIResponse.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 1/14/26.
@@ -14,7 +14,7 @@ import Foundation
 ///
 /// Properties in this model mirror the API payload. Construction of the public Checkout
 /// representation belongs to `CheckoutController.Session`.
-struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible {
+struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertible {
     // TODO: Make this Decodable instead, we don't need _allResponseFieldStorage.
     var _allResponseFieldsStorage: NonEncodableParameters?
 
@@ -43,7 +43,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
 
     var description: String {
         let props: [String] = [
-            "PaymentPagesAPIResponse",
+            "CheckoutClientAPIResponse",
             "sessionId = \(sessionId)",
             "currency = \(currency)",
             "uiMode = \(String(describing: allResponseFields["ui_mode"]))",
@@ -148,7 +148,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     }
 }
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     struct IntentReference: Decodable, CustomStringConvertible {
         let id: String
         let clientSecret: String
@@ -207,7 +207,7 @@ extension PaymentPagesAPIResponse {
 
 // MARK: - API-shaped nested models
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     struct CheckoutItem: Decodable {
         let key: String
         let oneTimePrice: OneTimePrice

@@ -1,5 +1,5 @@
 //
-//  PaymentPagesAPIResponse+SavedPaymentMethodsOfferSaveTest.swift
+//  CheckoutClientAPIResponse+SavedPaymentMethodsOfferSaveTest.swift
 //  StripePaymentSheetTests
 //
 
@@ -8,7 +8,7 @@
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
-class STPCheckoutSessionSavedPaymentMethodsOfferSaveTest: XCTestCase {
+class CheckoutClientAPIResponseSavedPaymentMethodsOfferSaveTest: XCTestCase {
 
     func testDecodedObjectWithSaveOfferEnabled() {
         let session = CheckoutTestHelpers.makeSession([

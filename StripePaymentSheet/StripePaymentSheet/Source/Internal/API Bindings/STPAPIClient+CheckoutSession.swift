@@ -190,7 +190,7 @@ extension STPAPIClient {
         checkoutSessionId: String,
         clientSecret: String,
         adaptivePricingAllowed: Bool
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         var parameters = Self.checkoutClientParameters(clientSecret: clientSecret)
         parameters["adaptive_pricing"] = ["allowed": adaptivePricingAllowed]
 
@@ -209,7 +209,7 @@ extension STPAPIClient {
         checkoutSessionId: String,
         clientSecret: String,
         parameters: [String: Any]
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         // TODO(porter) promo codes: CheckoutClient update does not support promotion codes yet.
         var params = Self.checkoutClientParameters(clientSecret: clientSecret)
         params.merge(parameters) { _, value in value }
@@ -225,7 +225,7 @@ extension STPAPIClient {
         clientSecret: String,
         timeout: TimeInterval? = nil,
         retriesEnabled: Bool = true
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         return try await get(
             endpoint: "checkout_client/\(checkoutSessionId)/retrieve",
             parameters: Self.checkoutClientParameters(clientSecret: clientSecret),
@@ -257,7 +257,7 @@ extension STPAPIClient {
     ) async throws {
         var params = Self.checkoutClientParameters(clientSecret: clientSecret)
         params["payment_method_to_detach"] = paymentMethodId
-        let _: PaymentPagesAPIResponse = try await post(
+        let _: CheckoutClientAPIResponse = try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
@@ -276,7 +276,7 @@ extension STPAPIClient {
         clientSecret: String,
         billingDetails: CheckoutController.PaymentMethodBillingDetails? = nil,
         expiryDetails: CheckoutController.PaymentMethodExpiryDetails? = nil
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         var params = Self.updatePaymentMethodParameters(
             paymentMethodId: paymentMethodId,
             billingDetails: billingDetails,
@@ -324,7 +324,7 @@ extension STPAPIClient {
     /// - Returns: The full confirmed session with expanded intents.
     func confirmCheckoutSession(
         with requestParameters: CheckoutSessionConfirmationRequestParameters
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         guard let returnURL = requestParameters.returnURL else {
             throw CheckoutError.unknown(debugDescription: "CheckoutClient confirmation requires a return URL.")
         }
@@ -398,7 +398,7 @@ extension STPAPIClient {
     private func post(
         endpoint: String,
         parameters: [String: Any]
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         do {
             return try await withCheckedThrowingContinuation { continuation in
                 post(resource: endpoint, parameters: parameters) { result in
@@ -409,7 +409,7 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
             }
             throw error
         }
@@ -452,7 +452,7 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
             }
             throw error
         }

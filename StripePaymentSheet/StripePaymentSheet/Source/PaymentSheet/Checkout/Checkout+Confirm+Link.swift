@@ -49,7 +49,7 @@ extension CheckoutController {
             // confirmed session doesn't need to be passed through this side channel.
             // An attempt can fail while the wallet stays open. Keep its session update, but let
             // the wallet's final result determine whether Checkout completed, canceled, or failed.
-            var latestSessionResponse: PaymentPagesAPIResponse?
+            var latestSessionResponse: CheckoutClientAPIResponse?
 
             func resultWithSessionResponse(_ result: PaymentSheetResult) -> InternalConfirmResult {
                 switch result {

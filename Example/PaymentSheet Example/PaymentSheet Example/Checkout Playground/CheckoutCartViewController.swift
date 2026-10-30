@@ -24,7 +24,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
-    let delayPaymentPagesRequests: Bool
+    let delayCheckoutClientRequests: Bool
 
     func makeUIViewController(context: Context) -> UINavigationController {
         let viewController = CheckoutCartViewController(
@@ -37,7 +37,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             integrationType: integrationType,
             expressCheckoutElementSettings: expressCheckoutElementSettings,
             currencySelectorAppearance: currencySelectorAppearance,
-            delayPaymentPagesRequests: delayPaymentPagesRequests,
+            delayCheckoutClientRequests: delayCheckoutClientRequests,
             closeAction: { dismiss() }
         )
         return UINavigationController(rootViewController: viewController)
@@ -58,7 +58,7 @@ final class CheckoutCartViewController: UIViewController {
     private let integrationType: CheckoutPlayground.IntegrationType
     private let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
-    private let delayPaymentPagesRequests: Bool
+    private let delayCheckoutClientRequests: Bool
     private let closeAction: () -> Void
     private let diagnostics = CheckoutSessionDiagnostics()
 
@@ -93,7 +93,7 @@ final class CheckoutCartViewController: UIViewController {
         integrationType: CheckoutPlayground.IntegrationType,
         expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings,
         currencySelectorAppearance: CurrencySelectorElement.Appearance,
-        delayPaymentPagesRequests: Bool,
+        delayCheckoutClientRequests: Bool,
         closeAction: @escaping () -> Void
     ) {
         self.clientSecret = clientSecret
@@ -105,7 +105,7 @@ final class CheckoutCartViewController: UIViewController {
         self.integrationType = integrationType
         self.expressCheckoutElementSettings = expressCheckoutElementSettings
         self.currencySelectorAppearance = currencySelectorAppearance
-        self.delayPaymentPagesRequests = delayPaymentPagesRequests
+        self.delayCheckoutClientRequests = delayCheckoutClientRequests
         self.closeAction = closeAction
         super.init(nibName: nil, bundle: nil)
     }
@@ -243,7 +243,7 @@ final class CheckoutCartViewController: UIViewController {
                 configuration.currencySelectorElement = currencySelectorConfiguration
             }
             configuration.apiClient = diagnostics.makeAPIClient(
-                paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
+                checkoutClientRequestDelay: delayCheckoutClientRequests ? 1 : 0
             )
 
             let checkout = try await CheckoutController(configuration: configuration)

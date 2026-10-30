@@ -376,7 +376,7 @@ public final class CheckoutController: ObservableObject {
                     throw CheckoutError.apiError(message: error.localizedDescription, underlyingError: error)
                 }
                 let sessionId = Self.extractSessionId(from: self.clientSecret)
-                let refreshedCheckoutSession: PaymentPagesAPIResponse
+                let refreshedCheckoutSession: CheckoutClientAPIResponse
                 do {
                     let refreshStart = ProcessInfo.processInfo.systemUptime
                     defer { analyticsParams["refresh_duration"] = ProcessInfo.processInfo.systemUptime - refreshStart }
@@ -561,7 +561,7 @@ extension CheckoutController {
     /// Existing local state is preserved unless explicitly replaced.
     /// TODO: Rename to `setSession` or delete this and just inline, it's unnecessarily complex.
     func commitSession(
-        _ apiResponse: PaymentPagesAPIResponse? = nil,
+        _ apiResponse: CheckoutClientAPIResponse? = nil,
         mutateLocalState: LocalStateMutation = { _ in }
     ) {
         var localState = session.localState

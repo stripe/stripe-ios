@@ -29,7 +29,7 @@ final class CheckoutSessionDiagnostics: ObservableObject {
             if path.hasSuffix("/confirm") {
                 return "Confirm session"
             }
-            if path.contains("/payment_pages/") {
+            if path.contains("/checkout_client/") {
                 return "Update session"
             }
             return "Stripe API request"
@@ -42,7 +42,7 @@ final class CheckoutSessionDiagnostics: ObservableObject {
     private var captureGeneration = UUID()
 
     /// Returns a copy of the shared API client that records Stripe request IDs for this cart.
-    func makeAPIClient(paymentPagesRequestDelay: TimeInterval) -> STPAPIClient {
+    func makeAPIClient(checkoutClientRequestDelay: TimeInterval) -> STPAPIClient {
         requests.removeAll()
         let captureGeneration = UUID()
         self.captureGeneration = captureGeneration
@@ -50,7 +50,7 @@ final class CheckoutSessionDiagnostics: ObservableObject {
         let apiClient = STPAPIClient.shared.makeCopy()
         let requestCapture = CheckoutRequestCapture(
             forwardingConfiguration: apiClient.urlSession.configuration,
-            paymentPagesRequestDelay: paymentPagesRequestDelay
+            checkoutClientRequestDelay: checkoutClientRequestDelay
         ) { [weak self] response in
             let request = Request(
                 requestID: response.requestID,

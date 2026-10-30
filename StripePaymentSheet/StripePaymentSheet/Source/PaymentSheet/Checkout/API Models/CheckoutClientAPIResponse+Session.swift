@@ -1,5 +1,5 @@
 //
-//  PaymentPagesAPIResponse+Session.swift
+//  CheckoutClientAPIResponse+Session.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/9/26.
@@ -10,12 +10,12 @@ import Foundation
 
 // MARK: - Public model conversion
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     static func makeAmount(_ minorUnitsAmount: Int, currency: String) -> CheckoutController.Session.Amount {
         return makeAmount(Double(minorUnitsAmount), currency: currency, locale: .autoupdatingCurrent)
     }
 
-    // TODO: Have Payment Pages return Session.Amount-shaped values so clients don't duplicate
+    // TODO: Have Checkout Client return Session.Amount-shaped values so clients don't duplicate
     // minor-to-major conversion and locale-aware currency formatting.
     private static func makeAmount(
         _ minorUnitsAmount: Double,

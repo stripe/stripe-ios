@@ -1,5 +1,5 @@
 //
-//  PaymentPagesAPIResponse+Customer.swift
+//  CheckoutClientAPIResponse+Customer.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 2/5/26.
@@ -9,7 +9,7 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     /// Customer data from a Checkout Session response.
     struct Customer: Decodable {
         /// The customer ID.
