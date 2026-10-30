@@ -154,7 +154,7 @@ extension PayWithLinkViewController {
                     checkoutAttribution: context.analyticsHelper.checkoutAttribution
                 ) : nil
 
-            allowSheetDismissal(false)
+            setUserInteractionEnabled(false)
 
             linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams, clientAttributionMetadata: clientAttributionMetadata) { [weak self] result in
                 guard let self else {
@@ -176,7 +176,7 @@ extension PayWithLinkViewController {
                     }
 
                     self.updateButton.update(status: .succeeded, callToAction: nil, animated: true) {
-                        self.allowSheetDismissal(true)
+                        self.setUserInteractionEnabled(true)
                         self.delegate?.didUpdate(
                             paymentMethod: updatedPaymentDetails,
                             confirmationExtras: confirmationExtras
@@ -187,7 +187,7 @@ extension PayWithLinkViewController {
                     self.updateErrorLabel(for: error)
                     self.paymentMethodEditElement.view.isUserInteractionEnabled = true
                     self.updateButton.update(status: .enabled)
-                    allowSheetDismissal(true)
+                    setUserInteractionEnabled(true)
                 }
             }
         }

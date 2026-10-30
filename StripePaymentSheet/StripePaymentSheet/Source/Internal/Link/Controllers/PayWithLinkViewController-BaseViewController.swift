@@ -71,15 +71,16 @@ extension PayWithLinkViewController {
             return navBar
         }()
 
-        /// Locks or unlocks this screen and sheet dismissal while it performs an operation such as confirmation.
-        func allowSheetDismissal(_ enable: Bool) {
+        /// Enables or disables input on this screen, including tap or swipe dismissal of the sheet,
+        /// while it performs an operation such as confirmation.
+        func setUserInteractionEnabled(_ enabled: Bool) {
             // Lock only this screen rather than the whole sheet container: the container is also the
             // payment handler's authentication context, so screens it pushes during confirmation
             // (e.g. 3DS challenges) must stay interactive. This screen stays locked after they're dismissed.
-            view.isUserInteractionEnabled = enable
+            view.isUserInteractionEnabled = enabled
             // The navigation bar lives outside `view` in both sheet containers.
-            navigationBar.isUserInteractionEnabled = enable
-            context.isDismissible = enable
+            navigationBar.isUserInteractionEnabled = enabled
+            context.isDismissible = enabled
         }
 
         func didTapOrSwipeToDismiss() {
