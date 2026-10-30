@@ -176,7 +176,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertNotEqual(totalAmount.label, subtotalAmount.label)
         XCTAssertTrue(buyButton.label.contains(totalAmount.label))
 
-        // When the customer selects a card in Payment Element
+        // When the customer selects a card that requires 3DS2 authentication in Payment Element
         app.buttons["Select payment method"].scrollToAndTap(in: app)
         if !app.textFields["Card number"].waitForExistence(timeout: 2) {
             app.buttons["Add new payment method"].forceTapWhenHittableInTestCase(self)
@@ -184,15 +184,24 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         if !app.textFields["Card number"].waitForExistence(timeout: 2) {
             app.buttons["+ Add"].forceTapWhenHittableInTestCase(self)
         }
-        try fillCardData(app)
+        try fillCardData(app, cardNumber: "4000002760003184")
         app.stp_dismissKeyboard()
         app.buttons["Continue"].forceTapWhenHittableInTestCase(self)
 
         // Then the merchant surface reflects the selected payment method after Checkout updates.
-        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["•••• 3184"].waitForExistence(timeout: 10))
         buyButton.scrollToAndTap(in: app)
 
-        XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
+        // When the customer completes the 3DS2 challenge
+        let challengeCodeTextField = app.textFields["STDSTextField"]
+        XCTAssertTrue(challengeCodeTextField.waitForExistenceAndTap(timeout: 10))
+        challengeCodeTextField.typeText("424242" + XCUIKeyboardKey.return.rawValue)
+        XCTAssertTrue(app.buttons["Submit"].waitForExistenceAndTap())
+
+        // Then Checkout polls the server and returns the updated payment status
+        let successAlert = app.alerts["Success"]
+        XCTAssertTrue(successAlert.waitForExistence(timeout: 20))
+        XCTAssertTrue(successAlert.staticTexts["Payment status: .paid"].exists)
     }
 
     func testExpressCheckoutElementApplePayCompletesCheckout() {
@@ -234,8 +243,6 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             "elements.express_checkout_element.init",
             "checkout_elements.confirm.started",
             "stripeios.token_creation",
-            "stripeios.paymenthandler.handle_next_action.started",
-            "stripeios.paymenthandler.handle_next_action.finished",
             "checkout_elements.confirm.succeeded",
         ])
         XCTAssertEqual(

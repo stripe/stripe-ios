@@ -222,11 +222,15 @@ extension STPAPIClient {
     /// Retrieves the latest full Checkout Session.
     func retrieveCheckoutSession(
         checkoutSessionId: String,
-        clientSecret: String
+        clientSecret: String,
+        timeout: TimeInterval? = nil,
+        retriesEnabled: Bool = true
     ) async throws -> PaymentPagesAPIResponse {
         return try await get(
             endpoint: "checkout_client/\(checkoutSessionId)/retrieve",
             parameters: Self.checkoutClientParameters(clientSecret: clientSecret),
+            timeout: timeout,
+            retriesEnabled: retriesEnabled,
             useServerErrorMessage: true
         )
     }
@@ -235,11 +239,12 @@ extension STPAPIClient {
     /// Session transition is still in progress.
     func pollCheckoutSession(
         checkoutSessionId: String,
+        clientSecret: String,
         timeout: TimeInterval
-    ) async throws -> PaymentPagePollResponse {
+    ) async throws -> CheckoutClientPollResponse {
         return try await get(
-            endpoint: "payment_pages/\(checkoutSessionId)/poll",
-            parameters: [:],
+            endpoint: "checkout_client/\(checkoutSessionId)/poll",
+            parameters: ["client_secret": clientSecret],
             timeout: timeout,
             retriesEnabled: false
         )

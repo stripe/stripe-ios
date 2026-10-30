@@ -244,26 +244,22 @@ extension PaymentPagesAPIResponse {
 }
 
 extension CheckoutController.Session.Status {
-    static func status(
-        from string: String,
+    static func decode<Key: CodingKey>(
+        from container: KeyedDecodingContainer<Key>,
+        forKey key: Key,
         paymentStatus: CheckoutController.Session.Status.PaymentStatus
-    ) -> CheckoutController.Session.Status? {
+    ) throws -> CheckoutController.Session.Status {
+        let string = try container.decode(String.self, forKey: key)
         switch string.lowercased() {
         case "open": return .open
         case "complete": return .complete(paymentStatus)
         case "expired": return .expired
-        default: return nil
-        }
-    }
-}
-
-extension CheckoutController.Session.Status.PaymentStatus {
-    static func paymentStatus(from string: String) -> CheckoutController.Session.Status.PaymentStatus? {
-        switch string.lowercased() {
-        case "paid": return .paid
-        case "unpaid": return .unpaid
-        case "no_payment_required": return .noPaymentRequired
-        default: return nil
+        default:
+            throw DecodingError.dataCorruptedError(
+                forKey: key,
+                in: container,
+                debugDescription: "Unsupported Checkout Session status: \(string)"
+            )
         }
     }
 }
