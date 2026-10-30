@@ -79,7 +79,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             sessionToken: "tok_abc",
             source: "google",
             sessionElapsed: 1.5,
-            msToFetch: 0.3,
+            fetchDuration: 0.3,
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
@@ -87,8 +87,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertEqual(last["result_count"] as? Int, 5)
         XCTAssertEqual(last["autocomplete_session_token"] as? String, "tok_abc")
         XCTAssertEqual(last["source"] as? String, "google")
-        XCTAssertEqual(last["ms_session_elapsed"] as? Double, 1.5)
-        XCTAssertEqual(last["ms_to_fetch"] as? Double, 0.3)
+        XCTAssertEqual(last["ms_session_elapsed"] as? Double, 1500)
+        XCTAssertEqual(last["ms_to_fetch"] as? Double, 300)
         let blob = last["address_data_blob"] as? [String: Any?]
         XCTAssertEqual(blob?["address_country_code"] as? String, "US")
     }
@@ -101,13 +101,14 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             sessionToken: "tok_xyz",
             source: "apple",
             sessionElapsed: 0.8,
-            msToFetch: nil,
+            fetchDuration: nil,
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
         XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_suggestions")
         XCTAssertEqual(last["source"] as? String, "apple")
         XCTAssertNil(last["ms_to_fetch"])
+        XCTAssertEqual(last["ms_session_elapsed"] as? Double, 800)
         let blob = last["address_data_blob"] as? [String: Any?]
         XCTAssertEqual(blob?["address_country_code"] as? String, "US")
     }
@@ -121,16 +122,16 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             source: "google",
             sessionElapsed: 2.1,
             placeId: "place_123",
-            msToFetch: 0.4,
+            fetchDuration: 0.4,
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
         XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_selected")
         XCTAssertEqual(last["query_length"] as? Int, 7)
         XCTAssertEqual(last["source"] as? String, "google")
-        XCTAssertEqual(last["ms_session_elapsed"] as? Double, 2.1)
+        XCTAssertEqual(last["ms_session_elapsed"] as? Double, 2100)
         XCTAssertEqual(last["place_id"] as? String, "place_123")
-        XCTAssertEqual(last["ms_to_fetch"] as? Double, 0.4)
+        XCTAssertEqual(last["ms_to_fetch"] as? Double, 400)
         let blob = last["address_data_blob"] as? [String: Any?]
         XCTAssertEqual(blob?["address_country_code"] as? String, "US")
     }
@@ -144,13 +145,13 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
             source: "apple",
             sessionElapsed: 0.9,
             placeId: nil,
-            msToFetch: nil,
+            fetchDuration: nil,
             apiClient: .init(publishableKey: "pk_test_123")
         )
         let last = client._testLogHistory.last!
         XCTAssertEqual(last["event"] as? String, "mc_address_autocomplete_selected")
         XCTAssertEqual(last["source"] as? String, "apple")
-        XCTAssertEqual(last["ms_session_elapsed"] as? Double, 0.9)
+        XCTAssertEqual(last["ms_session_elapsed"] as? Double, 900)
         XCTAssertNil(last["place_id"])
         XCTAssertNil(last["ms_to_fetch"])
         let blob = last["address_data_blob"] as? [String: Any?]
@@ -172,7 +173,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertEqual(last["autocomplete_session_token"] as? String, "tok_abc")
         XCTAssertNotNil(last["error_type"])
         XCTAssertNotNil(last["error_code"])
-        XCTAssertEqual(last["ms_session_elapsed"] as? Double, 0.5)
+        XCTAssertEqual(last["ms_session_elapsed"] as? Double, 500)
         let blob = last["address_data_blob"] as? [String: Any?]
         XCTAssertEqual(blob?["address_country_code"] as? String, "US")
     }

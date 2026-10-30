@@ -44,6 +44,9 @@ class AutoCompleteViewController: UIViewController {
     }()
 
     private var fetchTask: Task<Void, Never>?
+    var searchMapKit: (MKLocalSearch.Request) async throws -> [MKMapItem] = { request in
+        try await MKLocalSearch(request: request).start().mapItems
+    }
     private var debounceTask: Task<Void, Never>?
     private var lastFetchedQuery: String = ""
     var currentSource: String?
@@ -300,7 +303,7 @@ class AutoCompleteViewController: UIViewController {
                 sessionToken: sessionToken,
                 source: source,
                 sessionElapsed: elapsedTimeSinceAutocompleteStart,
-                msToFetch: requestLatency,
+                fetchDuration: requestLatency,
                 checkoutSessionID: checkoutSessionID,
                 apiClient: configuration.apiClient
             )
@@ -460,7 +463,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                     source: source,
                     sessionElapsed: elapsedTimeSinceAutocompleteStart,
                     placeId: suggestion.placeId,
-                    msToFetch: nil,
+                    fetchDuration: nil,
                     checkoutSessionID: checkoutSessionID,
                     apiClient: configuration.apiClient
                 )
@@ -480,6 +483,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             displayTitle: suggestion.title,
                             sessionToken: sessionToken
                         )
+                        guard !Task.isCancelled else { return }
                         let latency = Date().timeIntervalSince(requestStart)
                         STPAnalyticsClient.sharedClient.logAddressAutocompleteSelected(
                             addressCountryCode: selectedCountry,
@@ -488,13 +492,14 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             source: source,
                             sessionElapsed: elapsedTimeSinceAutocompleteStart,
                             placeId: placeId,
-                            msToFetch: latency,
+                            fetchDuration: latency,
                             checkoutSessionID: checkoutSessionID,
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(details.address)
                     } catch {
-                      STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
+                        guard !Task.isCancelled else { return }
+                        STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
                             addressCountryCode: selectedCountry,
                             error: error,
                             sessionToken: sessionToken,
@@ -502,7 +507,17 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             checkoutSessionID: checkoutSessionID,
                             apiClient: configuration.apiClient
                         )
+                        let request = MKLocalSearch.Request()
+                        request.naturalLanguageQuery = [suggestion.title, suggestion.subtitle]
+                            .filter { !$0.isEmpty }.joined(separator: ", ")
+                        request.resultTypes = .address
+                        let mapItems = try? await searchMapKit(request)
+                        guard !Task.isCancelled else { return }
+                        #if !os(visionOS)
+                        delegate?.didSelectAddress(mapItems?.first?.placemark.asAddress)
+                        #else
                         delegate?.didSelectAddress(nil)
+                        #endif
                     }
                 }
             }
@@ -517,7 +532,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                         source: source,
                         sessionElapsed: self.elapsedTimeSinceAutocompleteStart,
                         placeId: nil,
-                        msToFetch: nil,
+                        fetchDuration: nil,
                         checkoutSessionID: self.checkoutSessionID,
                         apiClient: self.configuration.apiClient
                     )
