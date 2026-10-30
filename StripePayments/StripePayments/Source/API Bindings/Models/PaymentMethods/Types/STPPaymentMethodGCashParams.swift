@@ -17,7 +17,7 @@ public class STPPaymentMethodGCashParams: NSObject, STPFormEncodable {
         return "gcash"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

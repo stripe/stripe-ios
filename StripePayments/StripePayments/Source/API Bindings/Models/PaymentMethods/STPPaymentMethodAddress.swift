@@ -14,17 +14,17 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// City/District/Suburb/Town/Village.
-    @objc public var city: String?
+    public var city: String?
     /// 2-letter country code.
-    @objc public var country: String?
+    public var country: String?
     /// Address line 1 (Street address/PO Box/Company name).
-    @objc public var line1: String?
+    public var line1: String?
     /// Address line 2 (Apartment/Suite/Unit/Building).
-    @objc public var line2: String?
+    public var line2: String?
     /// ZIP or postal code.
-    @objc public var postalCode: String?
+    public var postalCode: String?
     /// State/County/Province/Region.
-    @objc public var state: String?
+    public var state: String?
 
     /// Convenience initializer for creating a STPPaymentMethodAddress from an STPAddress.
     public init(
@@ -66,14 +66,14 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
 
     // MARK: - STPFormEncodable
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: line1)): "line1",
-            NSStringFromSelector(#selector(getter: line2)): "line2",
-            NSStringFromSelector(#selector(getter: city)): "city",
-            NSStringFromSelector(#selector(getter: country)): "country",
-            NSStringFromSelector(#selector(getter: state)): "state",
-            NSStringFromSelector(#selector(getter: CNMutablePostalAddress.postalCode)):
+            \STPPaymentMethodAddress.line1: "line1",
+            \STPPaymentMethodAddress.line2: "line2",
+            \STPPaymentMethodAddress.city: "city",
+            \STPPaymentMethodAddress.country: "country",
+            \STPPaymentMethodAddress.state: "state",
+            \STPPaymentMethodAddress.postalCode:
                 "postal_code",
         ]
     }

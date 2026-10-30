@@ -14,22 +14,22 @@ import Foundation
 public class STPPaymentIntentShippingDetailsAddressParams: NSObject {
 
     /// City/District/Suburb/Town/Village.
-    @objc public var city: String?
+    public var city: String?
 
     /// Two-letter country code (ISO 3166-1 alpha-2).
-    @objc public var country: String?
+    public var country: String?
 
     /// Address line 1 (Street address/PO Box/Company name).
-    @objc public var line1: String
+    public var line1: String
 
     /// Address line 2 (Apartment/Suite/Unit/Building).
-    @objc public var line2: String?
+    public var line2: String?
 
     /// ZIP or postal code.
-    @objc public var postalCode: String?
+    public var postalCode: String?
 
     /// State/County/Province/Region.
-    @objc public var state: String?
+    public var state: String?
 
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
@@ -74,14 +74,14 @@ public class STPPaymentIntentShippingDetailsAddressParams: NSObject {
 // MARK: - STPFormEncodable
 extension STPPaymentIntentShippingDetailsAddressParams: STPFormEncodable {
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: line1)): "line1",
-            NSStringFromSelector(#selector(getter: line2)): "line2",
-            NSStringFromSelector(#selector(getter: city)): "city",
-            NSStringFromSelector(#selector(getter: country)): "country",
-            NSStringFromSelector(#selector(getter: state)): "state",
-            NSStringFromSelector(#selector(getter: CNMutablePostalAddress.postalCode)):
+            \STPPaymentIntentShippingDetailsAddressParams.line1: "line1",
+            \STPPaymentIntentShippingDetailsAddressParams.line2: "line2",
+            \STPPaymentIntentShippingDetailsAddressParams.city: "city",
+            \STPPaymentIntentShippingDetailsAddressParams.country: "country",
+            \STPPaymentIntentShippingDetailsAddressParams.state: "state",
+            \STPPaymentIntentShippingDetailsAddressParams.postalCode:
                 "postal_code",
         ]
     }

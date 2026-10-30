@@ -16,7 +16,7 @@ public class STPPaymentMethodWeroParams: NSObject, STPFormEncodable {
         return "wero"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

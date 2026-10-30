@@ -13,7 +13,7 @@ import Foundation
 public class STPConfirmBLIKOptions: NSObject {
 
     /// The 6-digit BLIK code that a customer has generated using their banking application.
-    @objc public var code: String
+    public var code: String
 
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
@@ -40,9 +40,9 @@ public class STPConfirmBLIKOptions: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConfirmBLIKOptions: STPFormEncodable {
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: code)): "code"
+            \STPConfirmBLIKOptions.code: "code"
         ]
     }
 

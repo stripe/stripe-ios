@@ -42,10 +42,10 @@ public class STPConnectAccountParams: NSObject {
     public var businessType: STPConnectAccountBusinessType
 
     /// Information about the individual represented by the account.
-    @objc public var individual: STPConnectAccountIndividualParams?
+    public var individual: STPConnectAccountIndividualParams?
 
     /// Information about the company or business.
-    @objc public var company: STPConnectAccountCompanyParams?
+    public var company: STPConnectAccountCompanyParams?
 
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
@@ -160,9 +160,9 @@ public class STPConnectAccountParams: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConnectAccountParams: STPFormEncodable {
-    @objc private var tosShownAndAccepted_apiValue: NSNumber? { tosShownAndAccepted.map { NSNumber(value: $0) } }
+    private var tosShownAndAccepted_apiValue: NSNumber? { tosShownAndAccepted.map { NSNumber(value: $0) } }
 
-    @objc var businessTypeString: String? {
+    var businessTypeString: String? {
         return STPConnectAccountParams.string(from: businessType)
     }
 
@@ -170,12 +170,12 @@ extension STPConnectAccountParams: STPFormEncodable {
         return "account"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: tosShownAndAccepted_apiValue)): "tos_shown_and_accepted",
-            NSStringFromSelector(#selector(getter: individual)): "individual",
-            NSStringFromSelector(#selector(getter: company)): "company",
-            NSStringFromSelector(#selector(getter: businessTypeString)): "business_type",
+            \STPConnectAccountParams.tosShownAndAccepted_apiValue: "tos_shown_and_accepted",
+            \STPConnectAccountParams.individual: "individual",
+            \STPConnectAccountParams.company: "company",
+            \STPConnectAccountParams.businessTypeString: "business_type",
         ]
     }
 }

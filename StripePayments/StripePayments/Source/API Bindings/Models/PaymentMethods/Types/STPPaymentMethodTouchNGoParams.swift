@@ -17,7 +17,7 @@ public class STPPaymentMethodTouchNGoParams: NSObject, STPFormEncodable {
         return "touch_n_go"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

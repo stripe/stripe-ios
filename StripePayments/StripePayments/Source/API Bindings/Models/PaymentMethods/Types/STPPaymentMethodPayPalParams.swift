@@ -16,7 +16,7 @@ public class STPPaymentMethodPayPalParams: NSObject, STPFormEncodable {
         return "paypal"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

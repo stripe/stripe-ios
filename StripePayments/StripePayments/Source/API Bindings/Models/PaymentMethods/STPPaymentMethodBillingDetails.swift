@@ -15,13 +15,13 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Billing address.
-    @objc public var address: STPPaymentMethodAddress?
+    public var address: STPPaymentMethodAddress?
     /// Email address.
-    @objc public var email: String?
+    public var email: String?
     /// Full name.
-    @objc public var name: String?
+    public var name: String?
     /// Billing phone number (including extension).
-    @objc public var phone: String?
+    public var phone: String?
     public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
@@ -45,12 +45,12 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
 
     // MARK: - STPFormEncodable
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: address)): "address",
-            NSStringFromSelector(#selector(getter: email)): "email",
-            NSStringFromSelector(#selector(getter: name)): "name",
-            NSStringFromSelector(#selector(getter: phone)): "phone",
+            \STPPaymentMethodBillingDetails.address: "address",
+            \STPPaymentMethodBillingDetails.email: "email",
+            \STPPaymentMethodBillingDetails.name: "name",
+            \STPPaymentMethodBillingDetails.phone: "phone",
         ]
     }
 

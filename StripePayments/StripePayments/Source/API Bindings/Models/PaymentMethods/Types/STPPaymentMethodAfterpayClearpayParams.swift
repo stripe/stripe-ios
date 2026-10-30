@@ -16,7 +16,7 @@ public class STPPaymentMethodAfterpayClearpayParams: NSObject, STPFormEncodable 
         return "afterpay_clearpay"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

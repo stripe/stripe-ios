@@ -314,7 +314,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     /// The current card ZIP or postal code displayed by the field.
-    @objc open var postalCode: String? {
+    open var postalCode: String? {
         get {
             if postalCodeEntryEnabled {
                 return viewModel.postalCode

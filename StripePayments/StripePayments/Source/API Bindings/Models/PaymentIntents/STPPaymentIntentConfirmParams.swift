@@ -51,42 +51,42 @@ public class STPPaymentIntentConfirmParams: NSObject {
     }
 
     /// The client secret of the PaymentIntent. Required
-    @objc public var clientSecret: String
+    public var clientSecret: String
 
     /// Provide a supported `STPPaymentMethodParams` object, and Stripe will create a
     /// PaymentMethod during PaymentIntent confirmation.
     /// @note alternative to `paymentMethodId`
-    @objc public var paymentMethodParams: STPPaymentMethodParams?
+    public var paymentMethodParams: STPPaymentMethodParams?
 
     /// Provide an already created PaymentMethod's id, and it will be used to confirm the PaymentIntent.
     /// @note alternative to `paymentMethodParams`
-    @objc public var paymentMethodId: String?
+    public var paymentMethodId: String?
 
     /// Provide a supported `STPSourceParams` object into here, and Stripe will create a Source
     /// during PaymentIntent confirmation.
     /// @note alternative to `sourceId`
-    @objc public var sourceParams: STPSourceParams?
+    public var sourceParams: STPSourceParams?
 
     /// Provide an already created Source's id, and it will be used to confirm the PaymentIntent.
     /// @note alternative to `sourceParams`
-    @objc public var sourceId: String?
+    public var sourceId: String?
 
     /// Email address that the receipt for the resulting payment will be sent to.
-    @objc public var receiptEmail: String?
+    public var receiptEmail: String?
 
     /// `@YES` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
     /// if the PaymentMethod/Source is not already attached.
     /// This should be a boolean NSNumber, so that it can be `nil`
-    @objc public var savePaymentMethod: NSNumber?
+    public var savePaymentMethod: NSNumber?
 
     /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
-    @objc @_spi(InternalOnlyAPI) public var setAsDefaultPM: NSNumber?
+    @_spi(InternalOnlyAPI) public var setAsDefaultPM: NSNumber?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
     /// This should probably be a URL that opens your iOS app.
-    @objc public var returnURL: String?
+    public var returnURL: String?
 
     /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
     /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
@@ -138,7 +138,7 @@ public class STPPaymentIntentConfirmParams: NSObject {
     internal var _mandateData: STPMandateDataParams?
     /// Details about the Mandate to create.
     /// @note If this value is null, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context if it's required for `self.paymentMethodType`
-    @objc public var mandateData: STPMandateDataParams? {
+    public var mandateData: STPMandateDataParams? {
         get {
             if let _mandateData = _mandateData {
                 return _mandateData
@@ -158,19 +158,19 @@ public class STPPaymentIntentConfirmParams: NSObject {
 
     /// Options to update the associated PaymentMethod during confirmation.
     /// - seealso: STPConfirmPaymentMethodOptions
-    @objc public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
+    public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
 
     /// Radar options that may contain HCaptcha token
-    @objc @_spi(InternalOnlyAPI) public var radarOptions: STPRadarOptions?
+    @_spi(InternalOnlyAPI) public var radarOptions: STPRadarOptions?
 
     /// Shipping information.
-    @objc public var shipping: STPPaymentIntentShippingDetailsParams?
+    public var shipping: STPPaymentIntentShippingDetailsParams?
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(InternalOnlyAPI) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @_spi(InternalOnlyAPI) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     /// ID of an existing ConfirmationToken to use for this PaymentIntent confirmation.
-    @objc @_spi(InternalOnlyAPI) public var confirmationToken: String?
+    @_spi(InternalOnlyAPI) public var confirmationToken: String?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
@@ -246,32 +246,32 @@ public class STPPaymentIntentConfirmParams: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPPaymentIntentConfirmParams: STPFormEncodable {
-    @objc private var useStripeSDK_apiValue: NSNumber? { useStripeSDK.map { NSNumber(value: $0) } }
-    @objc internal var setupFutureUsageRawString: String? { setupFutureUsage?.stringValue }
+    private var useStripeSDK_apiValue: NSNumber? { useStripeSDK.map { NSNumber(value: $0) } }
+    internal var setupFutureUsageRawString: String? { setupFutureUsage?.stringValue }
 
     public class func rootObjectName() -> String? {
         return nil
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: clientSecret)): "client_secret",
-            NSStringFromSelector(#selector(getter: paymentMethodParams)): "payment_method_data",
-            NSStringFromSelector(#selector(getter: paymentMethodId)): "payment_method",
-            NSStringFromSelector(#selector(getter: setupFutureUsageRawString)): "setup_future_usage",
-            NSStringFromSelector(#selector(getter: sourceParams)): "source_data",
-            NSStringFromSelector(#selector(getter: sourceId)): "source",
-            NSStringFromSelector(#selector(getter: receiptEmail)): "receipt_email",
-            NSStringFromSelector(#selector(getter: savePaymentMethod)): "save_payment_method",
-            NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
-            NSStringFromSelector(#selector(getter: returnURL)): "return_url",
-            NSStringFromSelector(#selector(getter: useStripeSDK_apiValue)): "use_stripe_sdk",
-            NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
-            NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
-            NSStringFromSelector(#selector(getter: shipping)): "shipping",
-            NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
-            NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
-            NSStringFromSelector(#selector(getter: confirmationToken)): "confirmation_token",
+            \STPPaymentIntentConfirmParams.clientSecret: "client_secret",
+            \STPPaymentIntentConfirmParams.paymentMethodParams: "payment_method_data",
+            \STPPaymentIntentConfirmParams.paymentMethodId: "payment_method",
+            \STPPaymentIntentConfirmParams.setupFutureUsageRawString: "setup_future_usage",
+            \STPPaymentIntentConfirmParams.sourceParams: "source_data",
+            \STPPaymentIntentConfirmParams.sourceId: "source",
+            \STPPaymentIntentConfirmParams.receiptEmail: "receipt_email",
+            \STPPaymentIntentConfirmParams.savePaymentMethod: "save_payment_method",
+            \STPPaymentIntentConfirmParams.setAsDefaultPM: "set_as_default_payment_method",
+            \STPPaymentIntentConfirmParams.returnURL: "return_url",
+            \STPPaymentIntentConfirmParams.useStripeSDK_apiValue: "use_stripe_sdk",
+            \STPPaymentIntentConfirmParams.mandateData: "mandate_data",
+            \STPPaymentIntentConfirmParams.paymentMethodOptions: "payment_method_options",
+            \STPPaymentIntentConfirmParams.shipping: "shipping",
+            \STPPaymentIntentConfirmParams.radarOptions: "radar_options",
+            \STPPaymentIntentConfirmParams.clientAttributionMetadata: "client_attribution_metadata",
+            \STPPaymentIntentConfirmParams.confirmationToken: "confirmation_token",
         ]
     }
 }

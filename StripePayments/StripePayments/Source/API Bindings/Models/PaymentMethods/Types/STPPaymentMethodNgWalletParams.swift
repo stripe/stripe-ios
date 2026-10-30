@@ -17,7 +17,7 @@ public class STPPaymentMethodNgWalletParams: NSObject, STPFormEncodable {
         return "ng_wallet"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

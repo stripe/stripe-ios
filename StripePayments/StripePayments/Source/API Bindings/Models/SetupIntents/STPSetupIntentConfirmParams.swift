@@ -42,23 +42,23 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
 
     /// The client secret of the SetupIntent. Required.
-    @objc public var clientSecret: String
+    public var clientSecret: String
     /// Provide a supported `STPPaymentMethodParams` object, and Stripe will create a
     /// PaymentMethod during PaymentIntent confirmation.
     /// @note alternative to `paymentMethodId`
-    @objc public var paymentMethodParams: STPPaymentMethodParams?
+    public var paymentMethodParams: STPPaymentMethodParams?
     /// Provide an already created PaymentMethod's id, and it will be used to confirm the SetupIntent.
     /// @note alternative to `paymentMethodParams`
-    @objc public var paymentMethodID: String?
+    public var paymentMethodID: String?
     /// Options to update the associated PaymentMethod during SetupIntent confirmation.
-    @objc @_spi(KlarnaSDKPrivatePreview) public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
+    @_spi(KlarnaSDKPrivatePreview) public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
     /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
-    @objc @_spi(InternalOnlyAPI) public var setAsDefaultPM: NSNumber?
+    @_spi(InternalOnlyAPI) public var setAsDefaultPM: NSNumber?
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
     /// This should probably be a URL that opens your iOS app.
-    @objc public var returnURL: String?
+    public var returnURL: String?
     /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any SetupIntent next actions.
     /// If set to false, STPSetupIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
     /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
@@ -77,7 +77,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     public var useStripeSDK: Bool?
     /// Details about the Mandate to create.
     /// @note If this value is null, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context if it's required for `self.paymentMethodType`
-    @objc public var mandateData: STPMandateDataParams? {
+    public var mandateData: STPMandateDataParams? {
         get {
             if let _mandateData = _mandateData {
                 return _mandateData
@@ -93,7 +93,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
     private var _mandateData: STPMandateDataParams?
     /// Radar options that may contain HCaptcha token
-    @objc @_spi(InternalOnlyAPI) public var radarOptions: STPRadarOptions?
+    @_spi(InternalOnlyAPI) public var radarOptions: STPRadarOptions?
 
     internal var _paymentMethodType: STPPaymentMethodType?
     @_spi(InternalOnlyAPI) public var paymentMethodType: STPPaymentMethodType? {
@@ -104,10 +104,10 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(InternalOnlyAPI) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @_spi(InternalOnlyAPI) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     /// ID of an existing ConfirmationToken to use for this SetupIntent confirmation.
-    @objc @_spi(InternalOnlyAPI) public var confirmationToken: String?
+    @_spi(InternalOnlyAPI) public var confirmationToken: String?
 
     override convenience init() {
         // Not a valid clientSecret, but at least it'll be non-null
@@ -170,24 +170,24 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         return nil
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: clientSecret)): "client_secret",
-            NSStringFromSelector(#selector(getter: paymentMethodParams)): "payment_method_data",
-            NSStringFromSelector(#selector(getter: paymentMethodID)): "payment_method",
-            NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
-            NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
-            NSStringFromSelector(#selector(getter: returnURL)): "return_url",
-            NSStringFromSelector(#selector(getter: useStripeSDK_apiValue)): "use_stripe_sdk",
-            NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
-            NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
-            NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
-            NSStringFromSelector(#selector(getter: confirmationToken)): "confirmation_token",
+            \STPSetupIntentConfirmParams.clientSecret: "client_secret",
+            \STPSetupIntentConfirmParams.paymentMethodParams: "payment_method_data",
+            \STPSetupIntentConfirmParams.paymentMethodID: "payment_method",
+            \STPSetupIntentConfirmParams.paymentMethodOptions: "payment_method_options",
+            \STPSetupIntentConfirmParams.setAsDefaultPM: "set_as_default_payment_method",
+            \STPSetupIntentConfirmParams.returnURL: "return_url",
+            \STPSetupIntentConfirmParams.useStripeSDK_apiValue: "use_stripe_sdk",
+            \STPSetupIntentConfirmParams.mandateData: "mandate_data",
+            \STPSetupIntentConfirmParams.radarOptions: "radar_options",
+            \STPSetupIntentConfirmParams.clientAttributionMetadata: "client_attribution_metadata",
+            \STPSetupIntentConfirmParams.confirmationToken: "confirmation_token",
         ]
     }
 
     // MARK: - Utilities
-    @objc private var useStripeSDK_apiValue: NSNumber? { useStripeSDK.map { NSNumber(value: $0) } }
+    private var useStripeSDK_apiValue: NSNumber? { useStripeSDK.map { NSNumber(value: $0) } }
     static private let regex = try! NSRegularExpression(
         pattern: "^seti_[^_]+_secret_[^_]+$",
         options: []

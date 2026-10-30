@@ -17,7 +17,7 @@ public class STPPaymentMethodQRISParams: NSObject, STPFormEncodable {
         return "qris"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

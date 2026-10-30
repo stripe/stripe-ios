@@ -16,7 +16,7 @@ public class STPPaymentMethodSunbitParams: NSObject, STPFormEncodable {
         return "sunbit"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

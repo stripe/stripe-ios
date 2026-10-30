@@ -17,7 +17,7 @@ public class STPPaymentMethodNgUSSDParams: NSObject, STPFormEncodable {
         return "ng_ussd"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

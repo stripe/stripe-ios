@@ -14,7 +14,7 @@ public class STPPaymentMethodCardNetworksParams: NSObject, STPFormEncodable {
     /// The network that your user selected for this payment
     /// method. This must reflect an explicit user choice. If your user didn't
     /// make a selection, then pass `null`.
-    @objc public var preferred: String?
+    public var preferred: String?
 
     public convenience init(preferred: String?) {
         self.init()
@@ -40,9 +40,9 @@ public class STPPaymentMethodCardNetworksParams: NSObject, STPFormEncodable {
         return "networks"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: preferred)): "preferred",
+            \STPPaymentMethodCardNetworksParams.preferred: "preferred",
         ]
     }
 }

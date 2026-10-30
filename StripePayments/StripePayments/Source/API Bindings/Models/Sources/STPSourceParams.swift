@@ -32,22 +32,22 @@ public class STPSourceParams: NSObject, STPFormEncodable, NSCopying {
     /// by the current version of the SDK's `STPSourceType` enum.
     /// Setting this to a value not known by the SDK causes `type` to
     /// return `STPSourceTypeUnknown`
-    @objc public var rawTypeString: String?
+    public var rawTypeString: String?
     /// A positive integer in the smallest currency unit representing the
     /// amount to charge the customer (e.g., @1099 for a €10.99 payment).
     /// Required for `single_use` sources.
-    @objc public var amount: NSNumber?
+    public var amount: NSNumber?
     /// The currency associated with the source. This is the currency for which the source
     /// will be chargeable once ready.
-    @objc public var currency: String?
+    public var currency: String?
     /// A set of key/value pairs that you can attach to a source object.
-    @objc public var metadata: [AnyHashable: Any]?
+    public var metadata: [AnyHashable: Any]?
     /// Information about the owner of the payment instrument. May be used or required
     /// by particular source types.
-    @objc public var owner: [AnyHashable: Any]?
+    public var owner: [AnyHashable: Any]?
     /// An optional token used to create the source. When passed, token properties will
     /// override source parameters.
-    @objc public var token: String?
+    public var token: String?
     /// Whether this source should be reusable or not. `usage` may be "reusable" or
     /// "single_use". Some source types may or may not be reusable by construction,
     /// while other may leave the option at creation.
@@ -106,7 +106,7 @@ extension STPSourceParams {
         return params
     }
 
-    @objc func usageString() -> String? {
+    var usageString: String? {
         return STPSource.string(from: usage)
     }
 
@@ -136,15 +136,15 @@ extension STPSourceParams {
         return nil
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: rawTypeString)): "type",
-            NSStringFromSelector(#selector(getter: amount)): "amount",
-            NSStringFromSelector(#selector(getter: currency)): "currency",
-            NSStringFromSelector(#selector(getter: metadata)): "metadata",
-            NSStringFromSelector(#selector(getter: owner)): "owner",
-            NSStringFromSelector(#selector(getter: token)): "token",
-            NSStringFromSelector(#selector(usageString)): "usage",
+            \STPSourceParams.rawTypeString: "type",
+            \STPSourceParams.amount: "amount",
+            \STPSourceParams.currency: "currency",
+            \STPSourceParams.metadata: "metadata",
+            \STPSourceParams.owner: "owner",
+            \STPSourceParams.token: "token",
+            \STPSourceParams.usageString: "usage",
         ]
     }
 

@@ -14,7 +14,7 @@ public class STPPaymentMethodVippsParams: NSObject, STPFormEncodable {
         return "vipps"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

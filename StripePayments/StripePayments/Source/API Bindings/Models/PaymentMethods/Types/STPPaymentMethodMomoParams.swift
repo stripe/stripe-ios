@@ -17,7 +17,7 @@ public class STPPaymentMethodMomoParams: NSObject, STPFormEncodable {
         return "momo"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

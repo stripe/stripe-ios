@@ -16,7 +16,7 @@ public class STPPaymentMethodKakaoPayParams: NSObject, STPFormEncodable {
         return "kakao_pay"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

@@ -17,7 +17,7 @@ public class STPPaymentMethodMonduParams: NSObject, STPFormEncodable {
         return "mondu"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

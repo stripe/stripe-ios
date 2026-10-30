@@ -17,22 +17,22 @@ public class STPAddress: NSObject {
     public var name: String?
 
     /// The first line of the user's street address (e.g. "123 Fake St")
-    @objc public var line1: String?
+    public var line1: String?
 
     /// The apartment, floor number, etc of the user's street address (e.g. "Apartment 1A")
-    @objc public var line2: String?
+    public var line2: String?
 
     /// The city in which the user resides (e.g. "San Francisco")
-    @objc public var city: String?
+    public var city: String?
 
     /// The state in which the user resides (e.g. "CA")
-    @objc public var state: String?
+    public var state: String?
 
     /// The postal code in which the user resides (e.g. "90210")
-    @objc public var postalCode: String?
+    public var postalCode: String?
 
     /// The ISO country code of the address (e.g. "US")
-    @objc public var country: String?
+    public var country: String?
 
     /// The phone number of the address (e.g. "8885551212")
     public var phone: String?
@@ -243,17 +243,17 @@ extension STPAddress: STPFormEncodable {
         return nil
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         // Paralleling `decodedObjectFromAPIResponse:`, *only* the 6 address fields are encoded
         // If this changes, shippingInfoForChargeWithAddress:shippingMethod: might break
         return [
-            NSStringFromSelector(#selector(getter: line1)): "line1",
-            NSStringFromSelector(#selector(getter: line2)): "line2",
-            NSStringFromSelector(#selector(getter: city)): "city",
-            NSStringFromSelector(#selector(getter: state)): "state",
-            NSStringFromSelector(#selector(getter: CNMutablePostalAddress.postalCode)):
+            \STPAddress.line1: "line1",
+            \STPAddress.line2: "line2",
+            \STPAddress.city: "city",
+            \STPAddress.state: "state",
+            \STPAddress.postalCode:
                 "postal_code",
-            NSStringFromSelector(#selector(getter: country)): "country",
+            \STPAddress.country: "country",
         ]
     }
 

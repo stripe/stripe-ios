@@ -12,8 +12,8 @@ import Foundation
 @_spi(InternalOnlyAPI) public class STPRadarOptions: NSObject {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc public var hcaptchaToken: String?
-    @objc public var iosVerificationObject: [String: String]?
+    public var hcaptchaToken: String?
+    public var iosVerificationObject: [String: String]?
 
     public init(hcaptchaToken: String? = nil, assertion: StripeAttest.Assertion? = nil) {
         self.hcaptchaToken = hcaptchaToken
@@ -29,10 +29,10 @@ extension STPRadarOptions: STPFormEncodable {
         return "radar_options"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: hcaptchaToken)): "hcaptcha_token",
-            NSStringFromSelector(#selector(getter: iosVerificationObject)): "ios_verification_object",
+            \STPRadarOptions.hcaptchaToken: "hcaptcha_token",
+            \STPRadarOptions.iosVerificationObject: "ios_verification_object",
         ]
     }
 }

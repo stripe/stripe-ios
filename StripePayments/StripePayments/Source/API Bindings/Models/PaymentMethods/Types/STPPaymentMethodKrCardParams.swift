@@ -16,7 +16,7 @@ public class STPPaymentMethodKrCardParams: NSObject, STPFormEncodable {
         return "kr_card"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

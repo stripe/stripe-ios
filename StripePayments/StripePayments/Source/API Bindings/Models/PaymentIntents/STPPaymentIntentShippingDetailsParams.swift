@@ -13,19 +13,19 @@ import Foundation
 public class STPPaymentIntentShippingDetailsParams: NSObject {
 
     /// Shipping address.
-    @objc public var address: STPPaymentIntentShippingDetailsAddressParams
+    public var address: STPPaymentIntentShippingDetailsAddressParams
 
     /// Recipient name.
-    @objc public var name: String
+    public var name: String
 
     /// The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
-    @objc public var carrier: String?
+    public var carrier: String?
 
     /// Recipient phone (including extension).
-    @objc public var phone: String?
+    public var phone: String?
 
     /// The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
-    @objc public var trackingNumber: String?
+    public var trackingNumber: String?
 
     /// :nodoc:
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
@@ -73,13 +73,13 @@ public class STPPaymentIntentShippingDetailsParams: NSObject {
 // MARK: - STPFormEncodable
 extension STPPaymentIntentShippingDetailsParams: STPFormEncodable {
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: address)): "address",
-            NSStringFromSelector(#selector(getter: name)): "name",
-            NSStringFromSelector(#selector(getter: carrier)): "carrier",
-            NSStringFromSelector(#selector(getter: phone)): "phone",
-            NSStringFromSelector(#selector(getter: trackingNumber)): "tracking_number",
+            \STPPaymentIntentShippingDetailsParams.address: "address",
+            \STPPaymentIntentShippingDetailsParams.name: "name",
+            \STPPaymentIntentShippingDetailsParams.carrier: "carrier",
+            \STPPaymentIntentShippingDetailsParams.phone: "phone",
+            \STPPaymentIntentShippingDetailsParams.trackingNumber: "tracking_number",
         ]
     }
 

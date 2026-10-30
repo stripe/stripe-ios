@@ -15,7 +15,7 @@ public class STPPaymentMethodAffirmParams: NSObject, STPFormEncodable {
         return "affirm"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

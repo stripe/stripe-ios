@@ -24,7 +24,7 @@ public class STPMandateCustomerAcceptanceParams: NSObject, STPFormEncodable {
 
     /// If this is a Mandate accepted online, this object contains details about the online acceptance.
     /// @note If `type == STPMandateCustomerAcceptanceTypeOnline`, this value must be non-nil.
-    @objc public var onlineParams: STPMandateOnlineParams?
+    public var onlineParams: STPMandateOnlineParams?
 
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
@@ -61,7 +61,7 @@ public class STPMandateCustomerAcceptanceParams: NSObject, STPFormEncodable {
     }
 
     // MARK: - STPFormEncodable
-    @objc internal var typeString: String {
+    internal var typeString: String {
         switch type {
         case .online:
             return "online"
@@ -70,10 +70,10 @@ public class STPMandateCustomerAcceptanceParams: NSObject, STPFormEncodable {
         }
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: typeString)): "type",
-            NSStringFromSelector(#selector(getter: onlineParams)): "online",
+            \STPMandateCustomerAcceptanceParams.typeString: "type",
+            \STPMandateCustomerAcceptanceParams.onlineParams: "online",
         ]
     }
 

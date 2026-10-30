@@ -34,7 +34,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     }
 
     /// The card's number.
-    @objc public var number: String?
+    public var number: String?
 
     /// The last 4 digits of the card's number, if it's been set, otherwise nil.
     public func last4() -> String? {
@@ -46,16 +46,16 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     }
 
     /// The card's expiration month.
-    @objc public var expMonth: UInt = 0
+    public var expMonth: UInt = 0
     /// The card's expiration year.
-    @objc public var expYear: UInt = 0
+    public var expYear: UInt = 0
     /// The card's security code, found on the back.
-    @objc public var cvc: String?
+    public var cvc: String?
 
     /// The cardholder's name.
     /// @note Changing this property will also changing the name of the
     /// param's `address` property.
-    @objc public var name: String? {
+    public var name: String? {
         didSet {
             address.name = name
         }
@@ -74,12 +74,12 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     /// account. This is only applicable when tokenizing debit cards to issue payouts
     /// to managed accounts. You should not set it otherwise. The card can then be
     /// used as a transfer destination for funds in this currency.
-    @objc public var currency: String?
+    public var currency: String?
 
     // MARK: - Deprecated methods
 
     /// The first line of the cardholder's address
-    @objc public var addressLine1: String? {
+    public var addressLine1: String? {
         get {
             return address.line1
         }
@@ -89,7 +89,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     }
 
     /// The second line of the cardholder's address
-    @objc public var addressLine2: String? {
+    public var addressLine2: String? {
         get {
             return address.line2
         }
@@ -99,7 +99,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     }
 
     /// The city of the cardholder's address
-    @objc public var addressCity: String? {
+    public var addressCity: String? {
         get {
             return address.city
         }
@@ -109,7 +109,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     }
 
     /// The state of the cardholder's address
-    @objc public var addressState: String? {
+    public var addressState: String? {
         get {
             return address.state
         }
@@ -119,7 +119,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     }
 
     /// The zip code of the cardholder's address
-    @objc public var addressZip: String? {
+    public var addressZip: String? {
         get {
             return address.postalCode
         }
@@ -129,7 +129,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     }
 
     /// The country of the cardholder's address
-    @objc public var addressCountry: String? {
+    public var addressCountry: String? {
         get {
             return address.country
         }
@@ -171,20 +171,20 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
         return "card"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: number)): "number",
-            NSStringFromSelector(#selector(getter: cvc)): "cvc",
-            NSStringFromSelector(#selector(getter: name)): "name",
-            NSStringFromSelector(#selector(getter: addressLine1)): "address_line1",
-            NSStringFromSelector(#selector(getter: addressLine2)): "address_line2",
-            NSStringFromSelector(#selector(getter: addressCity)): "address_city",
-            NSStringFromSelector(#selector(getter: addressState)): "address_state",
-            NSStringFromSelector(#selector(getter: addressZip)): "address_zip",
-            NSStringFromSelector(#selector(getter: addressCountry)): "address_country",
-            NSStringFromSelector(#selector(getter: expMonth)): "exp_month",
-            NSStringFromSelector(#selector(getter: expYear)): "exp_year",
-            NSStringFromSelector(#selector(getter: currency)): "currency",
+            \STPCardParams.number: "number",
+            \STPCardParams.cvc: "cvc",
+            \STPCardParams.name: "name",
+            \STPCardParams.addressLine1: "address_line1",
+            \STPCardParams.addressLine2: "address_line2",
+            \STPCardParams.addressCity: "address_city",
+            \STPCardParams.addressState: "address_state",
+            \STPCardParams.addressZip: "address_zip",
+            \STPCardParams.addressCountry: "address_country",
+            \STPCardParams.expMonth: "exp_month",
+            \STPCardParams.expYear: "exp_year",
+            \STPCardParams.currency: "currency",
         ]
     }
 

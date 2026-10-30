@@ -16,7 +16,7 @@ public class STPPaymentMethodCashAppParams: NSObject, STPFormEncodable {
         return "cashapp"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

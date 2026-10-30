@@ -12,7 +12,7 @@ import Foundation
 public class STPMandateDataParams: NSObject {
 
     /// Details about the customer acceptance of the Mandate.
-    @objc public let customerAcceptance: STPMandateCustomerAcceptanceParams
+    public let customerAcceptance: STPMandateCustomerAcceptanceParams
 
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
@@ -51,9 +51,9 @@ public class STPMandateDataParams: NSObject {
 }
 
 extension STPMandateDataParams: STPFormEncodable {
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: customerAcceptance)): "customer_acceptance",
+            \STPMandateDataParams.customerAcceptance: "customer_acceptance",
         ]
     }
 

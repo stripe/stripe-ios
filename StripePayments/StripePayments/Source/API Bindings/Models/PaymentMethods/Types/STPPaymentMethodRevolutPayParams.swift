@@ -13,7 +13,7 @@ public class STPPaymentMethodRevolutPayParams: NSObject, STPFormEncodable {
         return "revolut_pay"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

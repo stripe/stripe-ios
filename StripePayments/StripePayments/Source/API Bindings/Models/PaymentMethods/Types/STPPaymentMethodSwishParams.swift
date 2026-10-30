@@ -16,7 +16,7 @@ public class STPPaymentMethodSwishParams: NSObject, STPFormEncodable {
         return "swish"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

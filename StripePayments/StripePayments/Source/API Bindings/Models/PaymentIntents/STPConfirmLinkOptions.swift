@@ -22,7 +22,7 @@ import Foundation
 // MARK: - STPFormEncodable
 extension STPConfirmLinkOptions: STPFormEncodable {
 
-    @objc internal var setupFutureUsageRawString: String? {
+    internal var setupFutureUsageRawString: String? {
         return setupFutureUsage.stringValue
     }
 
@@ -30,7 +30,7 @@ extension STPConfirmLinkOptions: STPFormEncodable {
         return "link"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        [NSStringFromSelector(#selector(getter: setupFutureUsageRawString)): "setup_future_usage"]
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
+        [\STPConfirmLinkOptions.setupFutureUsageRawString: "setup_future_usage"]
     }
 }

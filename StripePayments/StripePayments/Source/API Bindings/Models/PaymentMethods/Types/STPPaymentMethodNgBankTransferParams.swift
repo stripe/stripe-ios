@@ -17,7 +17,7 @@ public class STPPaymentMethodNgBankTransferParams: NSObject, STPFormEncodable {
         return "ng_bank_transfer"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

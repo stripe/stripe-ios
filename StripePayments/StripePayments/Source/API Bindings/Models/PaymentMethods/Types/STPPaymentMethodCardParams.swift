@@ -30,17 +30,17 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     }
 
     /// The card number, as a string without any separators. Ex. @"4242424242424242"
-    @objc public var number: String?
+    public var number: String?
     /// Number representing the card's expiration month. Ex. @1
-    @objc public var expMonth: NSNumber?
+    public var expMonth: NSNumber?
     /// Two- or four-digit number representing the card's expiration year.
-    @objc public var expYear: NSNumber?
+    public var expYear: NSNumber?
     /// For backwards compatibility, you can alternatively set this as a Stripe token (e.g., for apple pay)
-    @objc public var token: String?
+    public var token: String?
     /// Card security code. It is highly recommended to always include this value.
-    @objc public var cvc: String?
+    public var cvc: String?
     /// Information about the networks to use with this payment method.
-    @objc public var networks: STPPaymentMethodCardNetworksParams?
+    public var networks: STPPaymentMethodCardNetworksParams?
 
     /// The last 4 digits of the card.
     public var last4: String? {
@@ -76,14 +76,14 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
         return "card"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: number)): "number",
-            NSStringFromSelector(#selector(getter: expMonth)): "exp_month",
-            NSStringFromSelector(#selector(getter: expYear)): "exp_year",
-            NSStringFromSelector(#selector(getter: cvc)): "cvc",
-            NSStringFromSelector(#selector(getter: token)): "token",
-            NSStringFromSelector(#selector(getter: networks)): "networks",
+            \STPPaymentMethodCardParams.number: "number",
+            \STPPaymentMethodCardParams.expMonth: "exp_month",
+            \STPPaymentMethodCardParams.expYear: "exp_year",
+            \STPPaymentMethodCardParams.cvc: "cvc",
+            \STPPaymentMethodCardParams.token: "token",
+            \STPPaymentMethodCardParams.networks: "networks",
         ]
     }
 

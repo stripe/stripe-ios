@@ -16,7 +16,7 @@ public class STPPaymentMethodBoletoParams: NSObject, STPFormEncodable {
     /// Supported formats:
     /// * `XXX.XXX.XXX-XX` or `XXXXXXXXXXX` for CPF
     /// * `XX.XXX.XXX/XXXX-XX` or `XXXXXXXXXXXXXX` for CNPJ
-    @objc public var taxID: String?
+    public var taxID: String?
 
     /// :nodoc:
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
@@ -39,9 +39,9 @@ public class STPPaymentMethodBoletoParams: NSObject, STPFormEncodable {
         return "boleto"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: taxID)): "tax_id"
+            \STPPaymentMethodBoletoParams.taxID: "tax_id"
         ]
     }
 }

@@ -13,16 +13,16 @@ public class STPPaymentMethodiDEALParams: NSObject, STPFormEncodable {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The customer’s bank.
-    @objc public var bankName: String?
+    public var bankName: String?
 
     // MARK: - STPFormEncodable
     public class func rootObjectName() -> String? {
         return "ideal"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: bankName)): "bank"
+            \STPPaymentMethodiDEALParams.bankName: "bank"
         ]
     }
 }

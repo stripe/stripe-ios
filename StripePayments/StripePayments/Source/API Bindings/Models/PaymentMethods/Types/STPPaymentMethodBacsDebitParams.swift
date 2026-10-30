@@ -14,18 +14,18 @@ public class STPPaymentMethodBacsDebitParams: NSObject, STPFormEncodable {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The bank account number (eg 00012345)
-    @objc public var accountNumber: String?
+    public var accountNumber: String?
     /// The sort code of the bank account (eg 10-88-00)
-    @objc public var sortCode: String?
+    public var sortCode: String?
 
     public class func rootObjectName() -> String? {
         return "bacs_debit"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: sortCode)): "sort_code",
-            NSStringFromSelector(#selector(getter: accountNumber)): "account_number",
+            \STPPaymentMethodBacsDebitParams.sortCode: "sort_code",
+            \STPPaymentMethodBacsDebitParams.accountNumber: "account_number",
         ]
     }
 }

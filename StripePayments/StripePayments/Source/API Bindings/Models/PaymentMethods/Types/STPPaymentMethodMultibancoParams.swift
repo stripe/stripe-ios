@@ -15,7 +15,7 @@ public class STPPaymentMethodMultibancoParams: NSObject, STPFormEncodable {
         return "multibanco"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

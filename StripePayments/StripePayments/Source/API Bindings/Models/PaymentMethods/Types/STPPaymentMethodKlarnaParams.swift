@@ -16,7 +16,7 @@ public class STPPaymentMethodKlarnaParams: NSObject, STPFormEncodable {
         return "klarna"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

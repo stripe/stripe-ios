@@ -16,7 +16,7 @@ public class STPPaymentMethodSequraParams: NSObject, STPFormEncodable {
         return "sequra"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

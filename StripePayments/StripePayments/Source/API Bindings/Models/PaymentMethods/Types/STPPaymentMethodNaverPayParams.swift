@@ -11,7 +11,7 @@ import Foundation
 /// An object representing parameters used to create a Naver Pay Payment Method.
 public class STPPaymentMethodNaverPayParams: NSObject, STPFormEncodable {
     /// The raw funding source sent to Stripe.
-    @objc public var fundingString: String?
+    public var fundingString: String?
 
     /// Whether to fund the transaction with a card or Naver Pay points.
     public var funding: STPPaymentMethodNaverPayFunding {
@@ -29,9 +29,9 @@ public class STPPaymentMethodNaverPayParams: NSObject, STPFormEncodable {
         return "naver_pay"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: fundingString)): "funding",
+            \STPPaymentMethodNaverPayParams.fundingString: "funding",
         ]
     }
 }

@@ -17,7 +17,7 @@ public class STPPaymentMethodTrueMoneyParams: NSObject, STPFormEncodable {
         return "truemoney"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

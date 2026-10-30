@@ -33,7 +33,7 @@ public class STPConfirmUSBankAccountOptions: NSObject {
 // MARK: - STPFormEncodable
 extension STPConfirmUSBankAccountOptions: STPFormEncodable {
 
-    @objc internal var setupFutureUsageRawString: String? {
+    internal var setupFutureUsageRawString: String? {
         return setupFutureUsage.stringValue
     }
 
@@ -41,7 +41,7 @@ extension STPConfirmUSBankAccountOptions: STPFormEncodable {
         return "us_bank_account"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        [NSStringFromSelector(#selector(getter: setupFutureUsageRawString)): "setup_future_usage"]
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
+        [\STPConfirmUSBankAccountOptions.setupFutureUsageRawString: "setup_future_usage"]
     }
 }

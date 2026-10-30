@@ -17,7 +17,7 @@ public class STPPaymentMethodGoPayParams: NSObject, STPFormEncodable {
         return "gopay"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

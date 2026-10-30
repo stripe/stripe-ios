@@ -17,7 +17,7 @@ public class STPPaymentMethodNgCardParams: NSObject, STPFormEncodable {
         return "ng_card"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

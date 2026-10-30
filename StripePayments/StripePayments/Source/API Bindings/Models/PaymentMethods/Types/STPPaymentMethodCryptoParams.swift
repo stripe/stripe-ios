@@ -16,7 +16,7 @@ public class STPPaymentMethodCryptoParams: NSObject, STPFormEncodable {
         return "crypto"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

@@ -19,7 +19,7 @@ public class STPMandateOnlineParams: NSObject {
 
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc @_spi(InternalOnlyAPI) public var inferFromClient: NSNumber?
+    @_spi(InternalOnlyAPI) public var inferFromClient: NSNumber?
 
     /// :nodoc:
     private(set) public var allResponseFields: [AnyHashable: Any] = [:]
@@ -53,25 +53,25 @@ public class STPMandateOnlineParams: NSObject {
 
 extension STPMandateOnlineParams: STPFormEncodable {
 
-    @objc internal var ipAddressField: String? {
+    internal var ipAddressField: String? {
         guard inferFromClient == nil || !(inferFromClient?.boolValue ?? false) else {
             return nil
         }
         return ipAddress
     }
 
-    @objc internal var userAgentField: String? {
+    internal var userAgentField: String? {
         guard inferFromClient == nil || !(inferFromClient?.boolValue ?? false) else {
             return nil
         }
         return userAgent
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: ipAddressField)): "ip_address",
-            NSStringFromSelector(#selector(getter: userAgentField)): "user_agent",
-            NSStringFromSelector(#selector(getter: inferFromClient)): "infer_from_client",
+            \STPMandateOnlineParams.ipAddressField: "ip_address",
+            \STPMandateOnlineParams.userAgentField: "user_agent",
+            \STPMandateOnlineParams.inferFromClient: "infer_from_client",
         ]
     }
 

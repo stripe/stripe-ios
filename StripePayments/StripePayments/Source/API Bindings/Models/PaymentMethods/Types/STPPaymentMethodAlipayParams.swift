@@ -19,7 +19,7 @@ public class STPPaymentMethodAlipayParams: NSObject, STPFormEncodable {
         return "alipay"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

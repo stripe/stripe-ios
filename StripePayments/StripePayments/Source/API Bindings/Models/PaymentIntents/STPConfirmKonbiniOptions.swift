@@ -11,7 +11,7 @@ import Foundation
 /// - seealso https://stripe.com/docs/api/errors#errors-payment_intent-payment_method_options-konbini
 public class STPConfirmKonbiniOptions: NSObject {
     /// An optional 10 to 11 digit numeric-only string determining the confirmation code at applicable convenience stores.
-    @objc public var confirmationNumber: String?
+    public var confirmationNumber: String?
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
@@ -21,7 +21,7 @@ extension STPConfirmKonbiniOptions: STPFormEncodable {
         return "konbini"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        [NSStringFromSelector(#selector(getter: confirmationNumber)): "confirmation_number"]
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
+        [\STPConfirmKonbiniOptions.confirmationNumber: "confirmation_number"]
     }
 }

@@ -27,7 +27,7 @@ public class STPPaymentIntentShippingDetailsAddress: NSObject {
     public let line2: String?
 
     /// ZIP or postal code.
-    @objc public let postalCode: String?
+    public let postalCode: String?
 
     /// State/County/Province/Region.
     public let state: String?
