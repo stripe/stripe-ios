@@ -283,7 +283,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             "link.signup.flow_presented",
         ])
 
-        fillOutLinkSignup(app, email: "link_3ds_cancel+\(UUID().uuidString)@link.com")
+        fillOutLinkSignup(app, email: "link_checkout+\(UUID().uuidString)@link.com")
         app.otherElements["Stripe.Link.PaymentMethodPicker"].waitForExistenceAndTap(timeout: 10)
         app.buttons["Add a payment method"].waitForExistenceAndTap()
         app.buttons["Debit or credit card"].waitForExistenceAndTap()
