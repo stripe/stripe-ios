@@ -10,12 +10,6 @@ import UIKit
 
 final class LinkBottomSheetViewController: BottomSheetViewController {
 
-    override func pushContentViewController(_ contentViewController: any BottomSheetContentViewController) {
-        // Confirmation disables the wallet, but authentication screens must accept input.
-        setUserInteractionEnabled(true)
-        super.pushContentViewController(contentViewController)
-    }
-
     override var navigationBarHeight: CGFloat {
         LinkUI.navigationBarHeight
     }
@@ -26,12 +20,6 @@ final class LinkBottomSheetViewController: BottomSheetViewController {
 }
 
 final class LinkNativeSheetContainerViewController: NativeSheetContainerViewController {
-
-    override func pushContentViewController(_ contentViewController: any BottomSheetContentViewController) {
-        // Confirmation disables the wallet, but authentication screens must accept input.
-        setUserInteractionEnabled(true)
-        super.pushContentViewController(contentViewController)
-    }
 
     override var sheetCornerRadius: CGFloat? {
         LinkUI.largeCornerRadius

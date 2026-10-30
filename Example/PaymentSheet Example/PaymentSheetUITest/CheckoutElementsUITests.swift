@@ -301,7 +301,12 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // Then authentication exits and the wallet can submit another payment attempt
         XCTAssertTrue(challengeCode.waitForNonExistence(timeout: 10))
         XCTAssertTrue(payButton.waitForExistence(timeout: 10))
+        // The screen stays locked until confirmation reports the cancellation. It unlocks together with its
+        // Back button shortly after the pay button re-enables, so wait for both before retrying.
+        let backButton = app.buttons["UIButton.Back"]
+        XCTAssertTrue(backButton.waitForExistence(timeout: 10))
         expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton)
+        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: backButton)
         waitForExpectations(timeout: 10)
         payButton.tap()
 

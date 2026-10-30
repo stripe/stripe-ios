@@ -6,6 +6,7 @@ MINOR
 * [Added] The Link auth flow now natively supports email OTP and multi-factor authentication (MFA) enabled accounts.
 * [Added] Added `returnURL` to `LinkConfiguration`, allowing `LinkController` users to let customers authenticate in their banking app and then return to the merchant's app. Without a `returnURL`, bank authentication happens in a secure webview presented in the merchant's app (private preview).
 * [Fixed] Fixed a horizontal layout bug that caused the sheet to freeze when the bottom form insets were less than the bottom safe area.
+* [Fixed] Fixed an issue introduced in 26.14.0 where customers couldn't interact with 3D Secure authentication challenges shown in the Link sheet.
 
 ## 26.15.1 2026-10-26
 ### General

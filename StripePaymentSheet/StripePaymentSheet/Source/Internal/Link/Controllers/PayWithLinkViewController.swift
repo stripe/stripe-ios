@@ -62,7 +62,6 @@ protocol PayWithLinkCoordinating: AnyObject {
     func handlePaymentDetailsSelected(_ paymentDetails: ConsumerPaymentDetails, confirmationExtras: LinkConfirmationExtras)
     func logout(cancel: Bool)
     func bailToWebFlow()
-    func allowSheetDismissal(_ enable: Bool)
     func cancel3DS2ChallengeFlow()
 }
 
@@ -784,11 +783,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             ),
             completion: completion
         )
-    }
-
-    func allowSheetDismissal(_ enable: Bool) {
-        setUserInteractionEnabled(enable)
-        context.isDismissible = enable
     }
 
     func confirmWithApplePay() {
