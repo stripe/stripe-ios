@@ -114,56 +114,26 @@ struct ComplianceIdentifiersEntryView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Image(systemName: "number.square")
-                    .font(.largeTitle)
-                    .padding()
-                    .background {
-                        Color(.systemGroupedBackground)
-                            .cornerRadius(16)
-                    }
-
-                VStack(spacing: 6) {
-                    Text("Add identifiers")
-                        .font(.title)
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Text("Link needs you to specify the following identifiers before you can continue.")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+        FlowStepContainerView(
+            navigationTitle: "Identifiers",
+            systemImageName: "number.square",
+            title: "Add identifiers",
+            message: "Link needs you to specify the following identifiers before you can continue.",
+            buttonTitle: "Submit Identifiers",
+            isButtonDisabled: isSubmitButtonDisabled,
+            action: submitIdentifiers
+        ) {
+            VStack(alignment: .leading, spacing: 32) {
+                if isCARFTINRequired {
+                    carfSection
                 }
 
-                VStack(alignment: .leading, spacing: 32) {
-                    if isCARFTINRequired {
-                        carfSection
-                    }
-
-                    if !identifierInputs.isEmpty {
-                        micaSection
-                    }
+                if !identifierInputs.isEmpty {
+                    micaSection
                 }
-                .animation(.default, value: carfIdentifierInputs.count)
             }
-            .padding()
+            .animation(.default, value: carfIdentifierInputs.count)
         }
-        .safeAreaInset(edge: .bottom) {
-            Button("Submit Identifiers") {
-                submitIdentifiers()
-            }
-            .buttonStyle(PrimaryButtonStyle())
-            .disabled(isSubmitButtonDisabled)
-            .opacity(isSubmitButtonDisabled ? 0.5 : 1)
-            .background {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color(.systemBackground))
-            }
-            .padding()
-        }
-        .navigationTitle("Identifiers")
-        .navigationBarTitleDisplayMode(.inline)
         .alert(
             alert?.title ?? "Error",
             isPresented: isPresentingAlert,
