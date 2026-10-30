@@ -5,9 +5,9 @@
 //  Created by Yuki Tokuhiro on 5/16/24.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol PaymentMethodFormViewControllerDelegate: AnyObject {
@@ -224,7 +224,8 @@ class PaymentMethodFormViewController: UIViewController {
             selectedCountry: addressSectionElement.selectedCountryCode,
             addressSpecProvider: AddressSpecProvider.shared,
             verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance),
-            useAutocompleteEndpoints: elementsSession.shouldUseAutocompleteProxyEndpoints
+            useAutocompleteEndpoints: elementsSession.shouldUseAutocompleteProxyEndpoints,
+            checkoutSessionID: analyticsHelper.checkoutSessionID
         )
         autoCompleteViewController.delegate = self
 
@@ -354,7 +355,7 @@ extension PaymentMethodFormViewController {
         }
     }
 
-    private var elementsSessionContext: ElementsSessionContext {
+    var elementsSessionContext: ElementsSessionContext {
         let intentId: ElementsSessionContext.IntentID? = {
             switch intent {
             case .paymentIntent(let paymentIntent):
@@ -387,7 +388,12 @@ extension PaymentMethodFormViewController {
         let paymentMethodType: STPPaymentMethodType = elementsSession.useCardPaymentMethodTypeForIBP ? .card : .USBankAccount
         let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         let allowRedisplay = elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp)
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: analyticsHelper, intent: intent, elementsSession: elementsSession)
+        let clientAttributionMetadata = analyticsHelper.shouldIncludeClientAttributionMetadata
+            ? STPClientAttributionMetadata.makeClientAttributionMetadata(
+                intent: intent,
+                elementsSession: elementsSession,
+                checkoutAttribution: analyticsHelper.checkoutAttribution
+            ) : nil
 
         return ElementsSessionContext(
             amount: intent.amount,
@@ -763,6 +769,6 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
         if let autoCompleteAddress = selectedAutoCompleteAddress {
             editDistance = submittedAddress.editDistance(from: autoCompleteAddress)
         }
-        STPAnalyticsClient.sharedClient.logBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, apiClient: configuration.apiClient)
+        STPAnalyticsClient.sharedClient.logBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, checkoutSessionID: analyticsHelper.checkoutSessionID, apiClient: configuration.apiClient)
     }
 }

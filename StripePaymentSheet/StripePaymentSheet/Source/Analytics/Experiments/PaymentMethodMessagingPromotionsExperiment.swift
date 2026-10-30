@@ -5,7 +5,7 @@
 //  Created by George Birch on 5/4/26.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
 struct PaymentMethodMessagingPromotionsExperiment: LoggableExperiment {
     static let experimentName = "ocs_mobile_payment_method_messaging_promotions"

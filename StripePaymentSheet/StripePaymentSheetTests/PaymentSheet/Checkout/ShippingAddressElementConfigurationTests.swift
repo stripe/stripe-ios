@@ -4,8 +4,8 @@
 //
 //  Created by George Birch on 8/4/26.
 
-@_spi(STP) @testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 import UIKit
 import XCTest
 
@@ -25,9 +25,9 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         // Given
         var sessionJSON = CheckoutTestHelpers.openSessionJSON
         sessionJSON["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
-        var elementsSessionJSON = CheckoutTestHelpers.minimalElementsSessionJSON
+        var elementsSessionJSON = CheckoutTestHelpers.minimalCheckoutClientConfigurationJSON
         elementsSessionJSON["flags"] = ["ocs_mobile_should_use_autocomplete_proxy_endpoints": true]
-        sessionJSON["elements_session"] = elementsSessionJSON
+        for (key, value) in elementsSessionJSON { sessionJSON[key] = value }
         let apiResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
 
         var configuration = CheckoutController.Configuration(
@@ -39,6 +39,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         shippingAddressElementConfiguration.buttonTitle = "Save delivery address"
         shippingAddressElementConfiguration.appearance.colors.primary = .purple
         configuration.shippingAddressElement = shippingAddressElementConfiguration
+        configuration.userInterfaceStyle = .alwaysDark
         var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Jenny Rosen"
         shippingDetails.address = .init(
@@ -70,6 +71,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         XCTAssertEqual(addressConfiguration.defaultValues.address.line1, "510 Townsend St.")
         XCTAssertTrue(addressConfiguration.apiClient === configuration.apiClient)
         XCTAssertTrue(shippingAddressElement.addressViewController.useAutocompleteEndpoints)
+        XCTAssertEqual(shippingAddressElement.addressViewController.overrideUserInterfaceStyle, .dark)
     }
 
     func testMakeAddressViewControllerConfiguration() {

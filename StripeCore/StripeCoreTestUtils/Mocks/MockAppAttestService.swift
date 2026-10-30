@@ -7,13 +7,13 @@
 
 import CryptoKit
 import DeviceCheck
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-@_spi(STP) public actor MockAppAttestService: AppAttestService {
-    @_spi(STP) public static var shared = MockAppAttestService()
+@_spi(InternalOnlyAPI) public actor MockAppAttestService: AppAttestService {
+    @_spi(InternalOnlyAPI) public static var shared = MockAppAttestService()
 
-    @_spi(STP) public nonisolated var isSupported: Bool {
+    @_spi(InternalOnlyAPI) public nonisolated var isSupported: Bool {
         return true
     }
 
@@ -55,7 +55,7 @@ import UIKit
         var counter: Int = 0
     }
 
-    @_spi(STP) public func generateKey() async throws -> String {
+    @_spi(InternalOnlyAPI) public func generateKey() async throws -> String {
         if let error = shouldFailKeygenWithError {
             throw error
         }
@@ -64,7 +64,7 @@ import UIKit
         return key.id
     }
 
-    @_spi(STP) public func generateAssertion(_ keyId: String, clientDataHash: Data) async throws -> Data {
+    @_spi(InternalOnlyAPI) public func generateAssertion(_ keyId: String, clientDataHash: Data) async throws -> Data {
         if assertionDelay > 0 {
             try await Task.sleep(nanoseconds: UInt64(assertionDelay * 1_000_000_000))
         }
@@ -82,7 +82,7 @@ import UIKit
         return try JSONSerialization.data(withJSONObject: assertion)
     }
 
-    @_spi(STP) public func attestKey(_ keyId: String, clientDataHash: Data) async throws -> Data {
+    @_spi(InternalOnlyAPI) public func attestKey(_ keyId: String, clientDataHash: Data) async throws -> Data {
         if attestationDelay > 0 {
             try await Task.sleep(nanoseconds: UInt64(attestationDelay * 1_000_000_000))
         }
@@ -100,13 +100,13 @@ import UIKit
         return try JSONSerialization.data(withJSONObject: attestation)
     }
 
-    @_spi(STP) public nonisolated func attestationDataIsDevelopmentEnvironment(_ data: Data) -> Bool {
+    @_spi(InternalOnlyAPI) public nonisolated func attestationDataIsDevelopmentEnvironment(_ data: Data) -> Bool {
         let decodedKey = try! JSONSerialization.jsonObject(with: data) as! [String: Any]
         return decodedKey["isDevelopmentEnvironment"] as! Bool
     }
 }
 
-@_spi(STP) public class MockAttestBackend: StripeAttestBackend {
+@_spi(InternalOnlyAPI) public class MockAttestBackend: StripeAttestBackend {
     var storedChallenge: String?
     var keyHasBeenAttested: [String: Bool] = [:]
     var keyCounter: [String: Int] = [:]

@@ -3,9 +3,9 @@
 //  StripePaymentSheet
 //
 import Foundation
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController.Session {
     /// Shipping address of the customer.

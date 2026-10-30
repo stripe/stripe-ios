@@ -76,6 +76,14 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         buyButton.scrollToAndTap(in: app)
 
         XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
+
+        // Existing MPE events from saved-card editing and card entry belong to this Checkout Session.
+        let events = analyticsLog
+        let checkoutSessionID = try XCTUnwrap(events.first { $0[string: "event"] == "checkout_elements.init.succeeded" }?[string: "checkout_session_id"])
+        for eventName in ["mc_open_edit_screen", "mc_card_number_completed"] {
+            let event = try XCTUnwrap(events.first { $0[string: "event"] == eventName })
+            XCTAssertEqual(event[string: "checkout_session_id"], checkoutSessionID)
+        }
     }
 
     func testElementsStaySynchronizedWithCheckoutSession() throws {
@@ -210,6 +218,8 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         ).firstMatch
         XCTAssertFalse(buyButton.exists)
         assertAnalyticsEvents([
+            "checkout_elements.init.started",
+            "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
         ])
 
@@ -219,12 +229,19 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // Then Checkout completes using the wallet confirmation flow
         payWithApplePay(successElement: app.alerts["Success"])
         assertAnalyticsEvents([
+            "checkout_elements.init.started",
+            "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
+            "checkout_elements.confirm.started",
             "stripeios.token_creation",
-            "stripeios.payment_method_creation",
             "stripeios.paymenthandler.handle_next_action.started",
             "stripeios.paymenthandler.handle_next_action.finished",
+            "checkout_elements.confirm.succeeded",
         ])
+        XCTAssertEqual(
+            analyticsLog.first { $0[string: "event"] == "checkout_elements.confirm.succeeded" }?[string: "invocation_source"],
+            "express_checkout_element"
+        )
     }
 
     func testExpressCheckoutElementLinkAnalytics() {
@@ -240,7 +257,11 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         let linkButton = app.buttons["Pay with Link"]
         XCTAssertTrue(linkButton.waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["Select payment method"].exists)
-        assertAnalyticsEvents(["elements.express_checkout_element.init"])
+        assertAnalyticsEvents([
+            "checkout_elements.init.started",
+            "checkout_elements.init.succeeded",
+            "elements.express_checkout_element.init",
+        ])
 
         // When the customer opens Link from Express Checkout Element
         linkButton.tap()
@@ -248,9 +269,12 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // Then Link opens and its analytics remain part of the ECE sequence
         XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: 10))
         assertAnalyticsEvents([
+            "checkout_elements.init.started",
+            "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
+            "checkout_elements.confirm.started",
             "link.signup.flow_presented",
-        ], ignoringEventPrefixes: ["elements.captcha.passive.", "stripeios.attest."])
+        ])
     }
 
     private func fillShippingAddress() {
@@ -275,13 +299,24 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
     private func assertAnalyticsEvents(
         _ expectedEvents: [String],
-        ignoringEventPrefixes: [String] = [],
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
+        let events = analyticsLog
+        let checkoutSessionID = events.first { $0[string: "event"] == "checkout_elements.init.succeeded" }?[string: "checkout_session_id"]
+        XCTAssertNotNil(checkoutSessionID, file: file, line: line)
+        XCTAssertEqual(
+            events.first { $0[string: "event"] == "elements.express_checkout_element.init" }?[string: "checkout_session_id"],
+            checkoutSessionID,
+            file: file,
+            line: line
+        )
+
+        // Checkout preloads confirmation challenges at initialization; their events are asynchronous.
+        let ignoringEventPrefixes = ["elements.captcha.passive.", "stripeios.attest."]
         // Keep the sequence exact so new Checkout Session metrics require updated ECE expectations.
         XCTAssertEqual(
-            analyticsLog.compactMap { $0[string: "event"] }.filter { event in
+            events.compactMap { $0[string: "event"] }.filter { event in
                 !ignoringEventPrefixes.contains { event.hasPrefix($0) }
             },
             expectedEvents,

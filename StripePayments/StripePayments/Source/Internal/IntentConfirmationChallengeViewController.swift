@@ -5,7 +5,7 @@
 //  Created by Joyce Qin on 11/4/25.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 @preconcurrency import WebKit
 

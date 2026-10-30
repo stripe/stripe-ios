@@ -6,11 +6,12 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
+// TODO: Rework - it's super confusing that PaymentElement.Configuration dooesn't conform to this
 /// Represents shared configuration properties between integration surfaces in mobile payment element.
 /// - Note: See the concrete implementations of `PaymentElementConfiguration` for detailed doc comments.
 /// - Note: Not currently used by CustomerSheet.

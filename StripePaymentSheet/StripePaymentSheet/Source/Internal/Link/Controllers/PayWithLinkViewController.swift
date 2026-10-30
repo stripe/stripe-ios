@@ -8,9 +8,9 @@
 
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
 @MainActor
 protocol PayWithLinkViewControllerDelegate: AnyObject {
@@ -557,10 +557,18 @@ extension PayWithLinkViewController {
 
 extension PayWithLinkViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+        if let authController = contentStack.first as? VerifyAccountViewController {
+            authController.didTapOrSwipeToDismiss()
+            return
+        }
         payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self, shouldReturnToPaymentSheet: false)
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+        if let authController = contentStack.first as? VerifyAccountViewController {
+            authController.goBackInAuthentication()
+            return
+        }
         _ = self.popContentViewController()
     }
 }
@@ -665,7 +673,12 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             linkBrand: consumerSession.linkBrand
         )
 
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+        let clientAttributionMetadata = context.analyticsHelper.shouldIncludeClientAttributionMetadata
+            ? STPClientAttributionMetadata.makeClientAttributionMetadata(
+                intent: context.intent,
+                elementsSession: context.elementsSession,
+                checkoutAttribution: context.analyticsHelper.checkoutAttribution
+            ) : nil
 
         func createPaymentDetails(linkedAccountId: String) {
             linkAccount.createPaymentDetails(
@@ -857,7 +870,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             elementsSession: context.elementsSession,
             configuration: context.configuration,
             linkAccount: linkAccount,
-            alwaysUseEphemeralSession: true
+            alwaysUseEphemeralSession: true,
+            checkoutAttribution: context.analyticsHelper.checkoutAttribution
         )
         payWithLinkVC.payWithLinkDelegate = payWithLinkWebDelegate
         // Dismiss ourselves...

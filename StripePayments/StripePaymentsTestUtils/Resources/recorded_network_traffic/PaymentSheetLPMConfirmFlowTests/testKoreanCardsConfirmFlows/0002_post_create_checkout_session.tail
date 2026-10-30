@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 4223de6cfb1ad18c6f509d5a5220c3b3
+x-cloud-trace-context: c925805ce0a27b6ad6cbf66811fe5bf7
 Via: 1.1 google
-Date: Fri, 11 Sep 2026 22:06:58 GMT
-Content-Length: 2577
-Alt-Svc: h3=":443"; ma=2592000
-Etag: W/"a11-lz3pZl2ex5ChqLhwq/tnbmTJiwE"
+Date: Wed, 28 Oct 2026 20:47:09 GMT
+Content-Length: 2621
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"a3d-SPl2HQd1k8oGhYFAggriLqgmW88"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1ipfZ2uysmpJRrML1SI8t1QYGdN9JbfRhUFNEcdySDRtS8zfFfkIeLezg",
-  "client_secret" : "cs_test_a1ipfZ2uysmpJRrML1SI8t1QYGdN9JbfRhUFNEcdySDRtS8zfFfkIeLezg_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a1IrMPMwphROWNoG5pOne3ccwAvf72Guz0wunfZqLVK5Uml63FV6G8PZNQ",
+  "client_secret" : "cs_test_a1IrMPMwphROWNoG5pOne3ccwAvf72Guz0wunfZqLVK5Uml63FV6G8PZNQ_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a11-lz3pZl2ex5ChqLhwq/tnbmTJiwE"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1789164418,
+  "created" : 1793220429,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "kr_card"
@@ -41,16 +41,19 @@ Etag: W/"a11-lz3pZl2ex5ChqLhwq/tnbmTJiwE"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VF6oyjzh",
+      "key" : "checkout_item_VWh8xjQ0",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1UEcb0Lu5o3P18ZpHreezQHk",
+            "price" : "price_1UVdkXLu5o3P18ZpauA7Yt9H",
             "tax_rates" : null
           }
-        ]
+        ],
+        "metadata" : {
+
+        }
       },
       "type" : "one_time_price"
     }
@@ -154,5 +157,6 @@ Etag: W/"a11-lz3pZl2ex5ChqLhwq/tnbmTJiwE"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1789250818
+  "expires_at" : 1793306829,
+  "marketing_attributions" : null
 }

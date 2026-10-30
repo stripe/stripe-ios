@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension DocumentFileUploadViewController {
     func listItemText(for side: DocumentSide, availableIDTypes: [String]) -> String {

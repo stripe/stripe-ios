@@ -3,12 +3,12 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripePaymentsTestUtils
-@testable @_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest
 
@@ -28,7 +28,10 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
 
         // Then confirmation completes without creating an Intent
         assertCompleted(result)
-        XCTAssertEqual(checkout.session.status, .complete(.noPaymentRequired))
+        // TODO(porter) polling: Expect complete when CheckoutClient polling is available.
+        // Until then, preserve the open Session returned by confirmation.
+        XCTAssertEqual(checkout.session.status, .open)
+        XCTAssertEqual(checkout.session.paymentStatus, .noPaymentRequired)
     }
 
     func test_confirm_zero_amount_with_card_and_local_email_completes_with_setup_intent() async throws {
@@ -38,7 +41,7 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
             serverEmailSource: nil,
             localDefaultEmail: "test@example.com"
         )
-        selectCardWithoutBillingEmail(on: checkout)
+        selectCard(on: checkout)
 
         // When the coordinator confirms the Checkout Session
         let result = await checkout.confirm(from: UIViewController())
@@ -55,7 +58,7 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
             serverEmailSource: .checkoutSession("test@example.com"),
             localDefaultEmail: nil
         )
-        selectCardWithoutBillingEmail(on: checkout)
+        selectCard(on: checkout)
 
         // When the coordinator confirms the Checkout Session
         let result = await checkout.confirm(from: UIViewController())
@@ -72,13 +75,43 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
             serverEmailSource: .customer("test@example.com"),
             localDefaultEmail: nil
         )
-        selectCardWithoutBillingEmail(on: checkout)
+        selectCard(on: checkout)
 
         // When the coordinator confirms the Checkout Session
         let result = await checkout.confirm(from: UIViewController())
 
         // Then confirmation creates and completes a PaymentIntent
         assertCompleted(result, paymentStatus: .paid)
+        XCTAssertEqual(checkout.session.status, .complete(.paid))
+    }
+
+    func test_confirm_with_declined_card_allows_retry_with_valid_card() async throws {
+        // Given a Checkout Session with a card that will be declined
+        let checkout = try await makeCheckout(
+            amount: 1_000,
+            serverEmailSource: .checkoutSession("test@example.com"),
+            localDefaultEmail: nil
+        )
+        selectCard(on: checkout, cardNumber: "4000000000000002")
+
+        // When confirming with payment method data
+        let result = await checkout.confirm(from: UIViewController())
+
+        // Then the decline is returned and the session remains open for another attempt
+        guard case .failed(let error) = result else {
+            return XCTFail("Expected a card decline, got \(result)")
+        }
+        XCTAssertEqual(error._stp_error_code, "card_declined")
+        XCTAssertEqual(checkout.session.status, .open)
+
+        // When selecting a valid card and retrying on the same controller and session
+        let sessionID = checkout.session.id
+        selectCard(on: checkout)
+        let retryResult = await checkout.confirm(from: UIViewController())
+
+        // Then the retry succeeds and completes the original session
+        assertCompleted(retryResult, paymentStatus: .paid)
+        XCTAssertEqual(checkout.session.id, sessionID)
         XCTAssertEqual(checkout.session.status, .complete(.paid))
     }
 
@@ -178,11 +211,11 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         return try await CheckoutController(configuration: configuration)
     }
 
-    private func selectCardWithoutBillingEmail(on checkout: CheckoutController) {
+    private func selectCard(on checkout: CheckoutController, cardNumber: String = "4242424242424242") {
         let paymentElement = checkout.getPaymentElement()
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
-        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.number = cardNumber
         confirmParams.paymentMethodParams.card?.expMonth = 12
         confirmParams.paymentMethodParams.card?.expYear = 2040
         confirmParams.paymentMethodParams.card?.cvc = "123"

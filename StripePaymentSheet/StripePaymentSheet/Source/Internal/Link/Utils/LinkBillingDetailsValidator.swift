@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 
 @MainActor
 class LinkBillingDetailsValidator {
@@ -104,7 +104,12 @@ class LinkBillingDetailsValidator {
             billingDetails: billingDetails
         )
 
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+        let clientAttributionMetadata = context.analyticsHelper.shouldIncludeClientAttributionMetadata
+            ? STPClientAttributionMetadata.makeClientAttributionMetadata(
+                intent: context.intent,
+                elementsSession: context.elementsSession,
+                checkoutAttribution: context.analyticsHelper.checkoutAttribution
+            ) : nil
 
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             self?.linkAccount.updatePaymentDetails(

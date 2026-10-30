@@ -8,9 +8,9 @@ import DeviceCheck
 import Foundation
 import UIKit
 
-@_spi(STP) public actor StripeAttest {
+@_spi(InternalOnlyAPI) public actor StripeAttest {
     /// Initialize a new StripeAttest object with the specified STPAPIClient.
-    @_spi(STP) public init(apiClient: STPAPIClient = .shared) {
+    @_spi(InternalOnlyAPI) public init(apiClient: STPAPIClient = .shared) {
         self.init(appAttestService: AppleAppAttestService.shared,
                   appAttestBackend: StripeAPIAttestationBackend(apiClient: apiClient),
                   apiClient: apiClient)
@@ -19,7 +19,7 @@ import UIKit
     /// Sign an assertion.
     /// Will create and attest a new device key if needed.
     /// Returns an AssertionHandle, which must be called after the network request completes (with success or failure) in order to unblock future assertions.
-    @_spi(STP) public func assert(canSyncState: Bool) async throws -> AssertionHandle {
+    @_spi(InternalOnlyAPI) public func assert(canSyncState: Bool) async throws -> AssertionHandle {
         // Make sure we only process one assertion at a time, until the latest
         if assertionInProgress {
             try await withCheckedThrowingContinuation { continuation in
@@ -54,7 +54,7 @@ import UIKit
     /// Determines if the current device is able to sign requests.
     /// If the device has not attested previously, we will create a key and attest it.
     /// If `true`, the device is ready for attestation. If `false`, attestation is not possible.
-    @_spi(STP) public func prepareAttestation() async -> Bool {
+    @_spi(InternalOnlyAPI) public func prepareAttestation() async -> Bool {
         do {
             if !successfullyAttested {
                 // We haven't attested yet, so do that first.
@@ -69,7 +69,7 @@ import UIKit
 
     /// Inform StripeAttest of an error received in response to an assertion.
     /// The key will be reset.
-    @_spi(STP) public func receivedAssertionError(_ error: Error) {
+    @_spi(InternalOnlyAPI) public func receivedAssertionError(_ error: Error) {
         let resetKeyAnalytic = ErrorAnalytic(event: .resetKeyForAssertionError, error: error)
         if let apiClient {
             STPAnalyticsClient.sharedClient.log(analytic: resetKeyAnalytic, apiClient: apiClient)
@@ -78,11 +78,11 @@ import UIKit
     }
 
     /// Returns whether the device is capable of performing attestation.
-    @_spi(STP) nonisolated public var isSupported: Bool {
+    @_spi(InternalOnlyAPI) nonisolated public var isSupported: Bool {
         return appAttestService.isSupported
     }
 
-    @_spi(STP) public static func isLinkAssertionError(error: Error) -> Bool {
+    @_spi(InternalOnlyAPI) public static func isLinkAssertionError(error: Error) -> Bool {
         if let error = error as? StripeCore.StripeError,
            case let .apiError(apiError) = error,
            apiError.code == "link_failed_to_attest_request" {
@@ -94,18 +94,18 @@ import UIKit
     // MARK: Public structs
 
     /// Contains the signed data and various information used to sign the request.
-    @_spi(STP) public struct Assertion {
+    @_spi(InternalOnlyAPI) public struct Assertion {
         /// The signed assertion data.
-        @_spi(STP) public var assertionData: Data
+        @_spi(InternalOnlyAPI) public var assertionData: Data
         /// The `identifierForVendor` for the current app/device pair.
-        @_spi(STP) public var deviceID: String
+        @_spi(InternalOnlyAPI) public var deviceID: String
         /// The App ID (not fully qualified, it's missing the Team ID prefix)
-        @_spi(STP) public var appID: String
+        @_spi(InternalOnlyAPI) public var appID: String
         /// The key ID
-        @_spi(STP) public var keyID: String
+        @_spi(InternalOnlyAPI) public var keyID: String
 
         /// A convenience function to return the fields used in an asserted request.
-        @_spi(STP) public var requestFields: [String: String] {
+        @_spi(InternalOnlyAPI) public var requestFields: [String: String] {
             return [ "device_id": deviceID,
                      "app_id": appID,
                      "key_id": keyID,
@@ -113,7 +113,7 @@ import UIKit
         }
     }
 
-    @_spi(STP) public enum AttestationError: String, Error {
+    @_spi(InternalOnlyAPI) public enum AttestationError: String, Error {
         /// Attestation is not supported on this device.
         case attestationNotSupported = "attestation_not_supported"
         /// Device ID is unavailable.
@@ -394,7 +394,7 @@ import UIKit
         return try await task.value
     }
 
-    @_spi(STP) public func resetKey() {
+    @_spi(InternalOnlyAPI) public func resetKey() {
         storedKeyID = nil
         successfullyAttested = false
     }
@@ -470,7 +470,7 @@ import UIKit
     // MARK: Assertion concurrency
 
     // Called when an assertion handle is completed or times out
-    @_spi(STP) public func assertionCompleted() {
+    @_spi(InternalOnlyAPI) public func assertionCompleted() {
         assertionInProgress = false
 
         // Resume the next waiter if there is one

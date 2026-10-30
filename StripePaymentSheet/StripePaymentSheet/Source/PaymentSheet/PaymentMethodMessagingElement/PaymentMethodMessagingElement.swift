@@ -6,7 +6,7 @@
 //
 
 import Combine
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripePayments
 import SwiftUI
 import UIKit

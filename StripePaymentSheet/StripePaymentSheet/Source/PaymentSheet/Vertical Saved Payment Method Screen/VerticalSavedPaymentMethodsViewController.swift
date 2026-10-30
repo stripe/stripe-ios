@@ -6,10 +6,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 @MainActor
@@ -36,6 +36,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
     private let configuration: PaymentElementConfiguration
+    private let customerProvider: CustomerProvider
     private let intent: Intent
     private weak var checkout: CheckoutSessionBillingAddressUpdater?
     private let elementsSession: STPElementsSession
@@ -182,6 +183,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     init(
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         intent: Intent,
         checkout: CheckoutSessionBillingAddressUpdater? = nil,
         selectedPaymentMethod: STPPaymentMethod?,
@@ -191,6 +193,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         defaultPaymentMethod: STPPaymentMethod?
     ) {
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.intent = intent
         self.checkout = checkout
         self.elementsSession = elementsSession
@@ -445,7 +448,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         }
         CustomerPaymentOption.setDefaultPaymentMethod(
             .stripeId(paymentMethod.stripeId),
-            forCustomer: configuration.customer?.id
+            forCustomer: customerProvider.customerID
         )
     }
 
@@ -454,6 +457,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                                            appearance: configuration.appearance,
                                                                            billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                            hostedSurface: .paymentSheet,
+                                                                           checkoutSessionID: analyticsHelper.checkoutSessionID,
                                                                            cardBrandFilter: configuration.cardBrandFilter,
                                                                            canRemove: canRemovePaymentMethods,
                                                                            canUpdate: paymentMethodUpdate,

@@ -6,10 +6,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-@_spi(STP) public extension TextFieldElement {
+@_spi(InternalOnlyAPI) public extension TextFieldElement {
 
     enum Account {
         // MARK: - BSB Number

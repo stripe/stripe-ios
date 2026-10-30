@@ -9,9 +9,9 @@
 import UIKit
 
 import AuthenticationServices
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 
 @MainActor
 protocol PayWithLinkWebControllerDelegate: AnyObject {
@@ -69,6 +69,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         let alwaysUseEphemeralSession: Bool
+        let checkoutAttribution: CheckoutAttributionContext?
 
         /// Creates a new Context object.
         /// - Parameters:
@@ -77,13 +78,15 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         ///   - configuration: PaymentElementConfiguration configuration.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
         ///   - alwaysUseEphemeralSession: If `true`, always use an ephemeral session. If `false`, we'll follow our existing ephemeral session logic.
+        ///   - checkoutAttribution: Integration context for Checkout CAM and `payment_user_agent`.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
             configuration: PaymentElementConfiguration,
             linkBrand: LinkBrand,
             callToAction: ConfirmButton.CallToActionType?,
-            alwaysUseEphemeralSession: Bool
+            alwaysUseEphemeralSession: Bool,
+            checkoutAttribution: CheckoutAttributionContext? = nil
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -91,6 +94,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             self.linkBrand = linkBrand
             self.callToAction = callToAction ?? .makeDefaultType(intent: intent)
             self.alwaysUseEphemeralSession = alwaysUseEphemeralSession
+            self.checkoutAttribution = checkoutAttribution
         }
     }
 
@@ -104,7 +108,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
-        alwaysUseEphemeralSession: Bool = false
+        alwaysUseEphemeralSession: Bool = false,
+        checkoutAttribution: CheckoutAttributionContext? = nil
     ) {
         self.init(
             context: Context(
@@ -113,7 +118,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 configuration: configuration,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
                 callToAction: callToAction,
-                alwaysUseEphemeralSession: alwaysUseEphemeralSession
+                alwaysUseEphemeralSession: alwaysUseEphemeralSession,
+                checkoutAttribution: checkoutAttribution
             )
         )
     }
@@ -133,7 +139,12 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         STPAnalyticsClient.sharedClient.logLinkPopupShow(sessionType: self.context.elementsSession.linkPopupWebviewOption)
         do {
             // Generate Link URL, fetching the customer if needed
-            let linkPopupParams = try LinkURLGenerator.linkParams(configuration: self.context.configuration, intent: self.context.intent, elementsSession: self.context.elementsSession)
+            let linkPopupParams = try LinkURLGenerator.linkParams(
+                configuration: self.context.configuration,
+                intent: self.context.intent,
+                elementsSession: self.context.elementsSession,
+                checkoutAttribution: self.context.checkoutAttribution
+            )
             let linkPopupUrl = try LinkURLGenerator.url(params: linkPopupParams)
 
             let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in

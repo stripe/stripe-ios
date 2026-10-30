@@ -7,10 +7,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// For internal SDK use only
@@ -215,7 +215,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
-                customerID: configuration.customer?.id,
+                customerID: loadResult.customerProvider.customerID,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
@@ -278,18 +278,18 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.addPaymentMethodViewController.delegate = self
         if initialState.paymentOption == nil,
            shouldUseLinkOnlyWalletHeader,
-           Self.customerDefaultIsLink(configuration: configuration, elementsSession: elementsSession) {
+           Self.customerDefaultIsLink(customerProvider: loadResult.customerProvider, elementsSession: elementsSession) {
             mode = .addingNew
             isHackyLinkButtonSelected = true
         }
     }
 
     private static func customerDefaultIsLink(
-        configuration: PaymentSheet.Configuration,
+        customerProvider: CustomerProvider,
         elementsSession: STPElementsSession
     ) -> Bool {
         return CustomerPaymentOption.selectedPaymentMethod(
-            for: configuration.customer?.id,
+            for: customerProvider.customerID,
             elementsSession: elementsSession,
             surface: .paymentSheet
         ) == .link
@@ -313,6 +313,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         ])
         stackView.bringSubviewToFront(headerLabel)
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
+        // Form padding is explicit; safe-area adjustments can create a layout loop for small bottom insets.
+        stackView.insetsLayoutMarginsFromSafeArea = false
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical

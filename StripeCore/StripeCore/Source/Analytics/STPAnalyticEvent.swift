@@ -9,7 +9,7 @@
 import Foundation
 
 /// Enumeration of all the analytic events logged by our SDK.
-@_spi(STP) public enum STPAnalyticEvent: String {
+@_spi(InternalOnlyAPI) public enum STPAnalyticEvent: String {
     // MARK: - Payment Creation
     case tokenCreation = "stripeios.token_creation"
 
@@ -363,6 +363,37 @@ import Foundation
     case adaptivePricingCurrencyToggled = "elements.adaptive_pricing.currency_toggled"
     case adaptivePricingCurrencyToggledFailed = "elements.adaptive_pricing.currency_toggled.failed"
     case adaptivePricingFlagImageLoadFailed = "elements.adaptive_pricing.flag_image_load.failed"
+
+    // MARK: - Checkout SDK operations
+    case checkoutElementsInitStarted = "checkout_elements.init.started"
+    case checkoutElementsInitSucceeded = "checkout_elements.init.succeeded"
+    case checkoutElementsInitFailed = "checkout_elements.init.failed"
+    case checkoutElementsConfirmStarted = "checkout_elements.confirm.started"
+    case checkoutElementsConfirmSucceeded = "checkout_elements.confirm.succeeded"
+    case checkoutElementsConfirmFailed = "checkout_elements.confirm.failed"
+    case checkoutElementsConfirmCanceled = "checkout_elements.confirm.canceled"
+    case checkoutElementsApplyPromotionCodeStarted = "checkout_elements.apply_promotion_code.started"
+    case checkoutElementsApplyPromotionCodeSucceeded = "checkout_elements.apply_promotion_code.succeeded"
+    case checkoutElementsApplyPromotionCodeFailed = "checkout_elements.apply_promotion_code.failed"
+    case checkoutElementsRemovePromotionCodeStarted = "checkout_elements.remove_promotion_code.started"
+    case checkoutElementsRemovePromotionCodeSucceeded = "checkout_elements.remove_promotion_code.succeeded"
+    case checkoutElementsRemovePromotionCodeFailed = "checkout_elements.remove_promotion_code.failed"
+    case checkoutElementsUpdateEmailStarted = "checkout_elements.update_email.started"
+    case checkoutElementsUpdateEmailSucceeded = "checkout_elements.update_email.succeeded"
+    case checkoutElementsUpdateEmailFailed = "checkout_elements.update_email.failed"
+    case checkoutElementsUpdateShippingAddressStarted = "checkout_elements.update_shipping_address.started"
+    case checkoutElementsUpdateShippingAddressSucceeded = "checkout_elements.update_shipping_address.succeeded"
+    case checkoutElementsUpdateShippingAddressFailed = "checkout_elements.update_shipping_address.failed"
+    case checkoutElementsUpdateBillingAddressStarted = "checkout_elements.update_billing_address.started"
+    case checkoutElementsUpdateBillingAddressSucceeded = "checkout_elements.update_billing_address.succeeded"
+    case checkoutElementsUpdateBillingAddressFailed = "checkout_elements.update_billing_address.failed"
+    case checkoutElementsUpdateCurrencyStarted = "checkout_elements.update_currency.started"
+    case checkoutElementsUpdateCurrencySucceeded = "checkout_elements.update_currency.succeeded"
+    case checkoutElementsUpdateCurrencyFailed = "checkout_elements.update_currency.failed"
+    case checkoutElementsRunServerUpdateStarted = "checkout_elements.run_server_update.started"
+    case checkoutElementsRunServerUpdateSucceeded = "checkout_elements.run_server_update.succeeded"
+    case checkoutElementsRunServerUpdateFailed = "checkout_elements.run_server_update.failed"
+    case checkoutElementsClearPaymentOption = "checkout_elements.clear_payment_option"
 
     // MARK: - Express Checkout Element
     case expressCheckoutElementInit = "elements.express_checkout_element.init"

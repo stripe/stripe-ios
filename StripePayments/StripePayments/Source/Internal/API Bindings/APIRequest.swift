@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 let HTTPMethodPOST = "POST"
 let HTTPMethodGET = "GET"
@@ -16,11 +16,11 @@ let JSONKeyObject = "object"
 
 /// - Note: The shape of this class is only for backwards compatibility with `STPAPIResponseDecodable` public API bindings.
 ///         If you're not dealing with `STPAPIResponseDecodable` objects, use STPAPIClient's `get`, `post`, etc. methods.
-@_spi(STP) public class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
-    @_spi(STP) public typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) ->
+@_spi(InternalOnlyAPI) public class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
+    @_spi(InternalOnlyAPI) public typealias STPAPIResponseBlock = (ResponseType?, HTTPURLResponse?, Error?) ->
         Void
 
-    @_spi(STP) public class func post(
+    @_spi(InternalOnlyAPI) public class func post(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -45,7 +45,7 @@ let JSONKeyObject = "object"
     }
 
     /// Async version
-    @_spi(STP) public class func post(
+    @_spi(InternalOnlyAPI) public class func post(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -62,7 +62,7 @@ let JSONKeyObject = "object"
         }
     }
 
-    @_spi(STP) public class func getWith(
+    @_spi(InternalOnlyAPI) public class func getWith(
         _ apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -92,7 +92,7 @@ let JSONKeyObject = "object"
     }
 
     /// Async version
-    @_spi(STP) public class func getWith(
+    @_spi(InternalOnlyAPI) public class func getWith(
         _ apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
@@ -110,7 +110,7 @@ let JSONKeyObject = "object"
         }
     }
 
-    @_spi(STP) public class func delete(
+    @_spi(InternalOnlyAPI) public class func delete(
         with apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],

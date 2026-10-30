@@ -9,12 +9,9 @@
 ///
 /// This keeps MPE plumbing from depending on the full `Checkout` object or reading
 /// `checkout.session` directly. Callers must use these sanctioned update methods to sync
-/// billing tax changes or commit session updates.
+/// billing tax changes.
 @MainActor
 protocol CheckoutSessionBillingAddressUpdater: AnyObject {
-    // TODO: Delete this when CheckoutSession confirmation no longer uses `PaymentSheet.confirm`.
-    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws
-
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
         address: CheckoutController.Address,
         canUpdateWhileSheetPresented: Bool
@@ -22,17 +19,14 @@ protocol CheckoutSessionBillingAddressUpdater: AnyObject {
 }
 
 extension CheckoutController: CheckoutSessionBillingAddressUpdater {
-    func commitSession(_ apiResponse: PaymentPagesAPIResponse) async throws {
-        try await commitSession(apiResponse, mutateLocalState: { _ in })
-    }
-
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
         address: Address,
         canUpdateWhileSheetPresented: Bool
     ) async throws -> Session {
         try await updateBillingTaxRegionIfNecessary(
             address: address,
-            canUpdateWhileSheetPresented: canUpdateWhileSheetPresented
+            canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
+            source: .paymentElement
         )
         return session
     }

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Style options for colors in the bank account collector.
 @objc @frozen public enum STPBankAccountCollectorUserInterfaceStyle: Int {

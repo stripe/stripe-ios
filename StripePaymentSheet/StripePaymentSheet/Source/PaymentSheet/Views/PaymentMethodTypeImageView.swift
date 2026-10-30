@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 5/13/24.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A convenience UIImageView that displays the payment method types image, handles the download, and automatically updates its image for dark mode.

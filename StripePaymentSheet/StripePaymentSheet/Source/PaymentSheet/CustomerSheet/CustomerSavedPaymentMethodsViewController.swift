@@ -4,9 +4,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
@@ -615,26 +615,26 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             Task {
                 confirmParams.paymentMethodParams.radarOptions = await self.confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
                 configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
-                    Task { await self.confirmationChallenge?.complete() }
-                    if let error = error {
-                        self.error = error
-                        self.processingInFlight = false
-                        STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
-                        self.actionButton.update(status: .enabled, animated: true) {
-                            self.updateUI()
-                        }
-                        return
-                    }
-                    guard let paymentMethod = paymentMethod else {
-                        self.error = CustomerSheetError.unknown(debugDescription: "Error on payment method creation")
-                        self.processingInFlight = false
-                        STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
-                        self.actionButton.update(status: .enabled, animated: true) {
-                            self.updateUI()
-                        }
-                        return
-                    }
                     Task {
+                        await self.confirmationChallenge?.complete()
+                        if let error = error {
+                            self.error = error
+                            self.processingInFlight = false
+                            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
+                            self.actionButton.update(status: .enabled, animated: true) {
+                                self.updateUI()
+                            }
+                            return
+                        }
+                        guard let paymentMethod = paymentMethod else {
+                            self.error = CustomerSheetError.unknown(debugDescription: "Error on payment method creation")
+                            self.processingInFlight = false
+                            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
+                            self.actionButton.update(status: .enabled, animated: true) {
+                                self.updateUI()
+                            }
+                            return
+                        }
                         do {
                             try await customerSheetDataSource.attachPaymentMethod(paymentMethod.stripeId)
                         } catch {

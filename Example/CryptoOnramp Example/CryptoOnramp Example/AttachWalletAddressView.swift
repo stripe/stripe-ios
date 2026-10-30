@@ -10,7 +10,7 @@ import SwiftUI
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 import StripePaymentSheet
 
 /// A view shown in a sheet to attach a crypto wallet address to the current user’s account.

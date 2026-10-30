@@ -5,9 +5,9 @@
 
 import Foundation
 
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripePayments
-@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripePayments
+@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -123,6 +123,48 @@ class LinkURLGeneratorTests: XCTestCase {
                                            clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
+    }
+
+    func testURLParamsUsesConfirmationSourcePaymentUserAgent() async throws {
+        try await assertURLParamsPaymentUserAgent(.paymentElement)
+    }
+
+    func testURLParamsUsesConfirmationSourcePaymentUserAgent_expressCheckoutElement() async throws {
+        try await assertURLParamsPaymentUserAgent(.expressCheckoutElement)
+    }
+
+    private func assertURLParamsPaymentUserAgent(
+        _ confirmationSource: CheckoutController.ConfirmingElement
+    ) async throws {
+        // Given a global product usage set already polluted with the labels PaymentElement
+        // wraps internally (simulating FlowController/EmbeddedPaymentElement self-registration)
+        STPAnalyticsClient.sharedClient.productUsage.formUnion([
+            "PaymentSheet.FlowController",
+            "EmbeddedPaymentElement",
+        ])
+        let config = PaymentSheet.Configuration()
+        config.apiClient.publishableKey = "pk_123"
+        let session = CheckoutTestHelpers.makeSession([
+            "checkout_session_config_id": "config_checkout",
+        ]).makePublicSession()
+        let intent = Intent.checkout(session)
+
+        // When building Link web popup params with Checkout attribution
+        let attribution = CheckoutAttributionContext(confirmingElement: confirmationSource, configuredElements: [.paymentElement, .expressCheckoutElement])
+        let params = try LinkURLGenerator.linkParams(
+            configuration: config,
+            intent: intent,
+            elementsSession: .emptyElementsSession,
+            checkoutAttribution: attribution
+        )
+
+        // Then paymentUserAgent is built fresh for the confirming element, not the global one
+        XCTAssertEqual(params.paymentUserAgent, confirmationSource.paymentUserAgent)
+        XCTAssertNotEqual(params.paymentUserAgent, PaymentsSDKVariant.paymentUserAgent)
+        XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSource, "mobile-checkout")
+        XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSubtype, confirmationSource.rawValue)
+        XCTAssertEqual(params.clientAttributionMetadata.checkoutConfigId, "config_checkout")
+        XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationAdditionalElements, ["mobile-payment-element", "mobile-express-checkout-element"])
     }
 
     func testURLParamsPaymentMethodOptionsSetupFutureUsage() {

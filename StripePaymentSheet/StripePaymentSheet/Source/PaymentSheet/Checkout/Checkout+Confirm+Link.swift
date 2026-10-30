@@ -5,8 +5,8 @@
 //  Created by Yuki Tokuhiro on 7/30/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension CheckoutController {
     // 😵😵😵 `LinkConfirmOption` represents both the beginning and the result of a Link wallet flow:
@@ -29,8 +29,8 @@ extension CheckoutController {
         let configuration = parameters.configuration
         let confirmationChallenge = parameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-            intent: .checkout(checkoutSession),
-            elementsSession: elementsSession
+            checkoutSession: checkoutSession,
+            attribution: parameters.attribution
         )
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
             checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
@@ -82,7 +82,8 @@ extension CheckoutController {
                         nativeSheetPresentation: parameters.nativeSheetPresentation,
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
-                        paymentHandler: parameters.paymentHandler
+                        paymentHandler: parameters.paymentHandler,
+                        attribution: parameters.attribution
                     )
                     let result = await Self.confirmLinkPaymentMethod(
                         checkoutSession: checkoutSession,
@@ -109,7 +110,8 @@ extension CheckoutController {
                         nativeSheetPresentation: parameters.nativeSheetPresentation,
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
-                        paymentHandler: parameters.paymentHandler
+                        paymentHandler: parameters.paymentHandler,
+                        attribution: parameters.attribution
                     )
                     let result = await Self.confirmLinkPaymentMethod(
                         checkoutSession: checkoutSession,
@@ -149,7 +151,8 @@ extension CheckoutController {
                             confirmationChallenge: confirmationChallenge,
                             analyticsHelper: parameters.analyticsHelper,
                             authenticationContext: linkAuthenticationContext,
-                            paymentHandler: parameters.paymentHandler
+                            paymentHandler: parameters.paymentHandler,
+                            attribution: parameters.attribution
                         )
                     )
                     linkCompletionResult = result
@@ -193,21 +196,18 @@ extension CheckoutController {
         checkoutSession: Session,
         parameters: PaymentMethodConfirmationParameters
     ) async -> InternalConfirmResult {
-        do {
-            let requestParameters = try await makeConfirmationRequestParameters(
-                for: parameters,
-                checkoutSession: checkoutSession,
-                preconfirmedIntentParams: nil
-            )
-            return await confirmCheckoutSession(
-                with: requestParameters,
-                apiClient: parameters.configuration.apiClient,
-                authenticationContext: parameters.authenticationContext,
-                paymentHandler: parameters.paymentHandler
-            )
-        } catch {
-            return .failed(error)
-        }
+        let requestParameters = await makeConfirmationRequestParameters(
+            for: parameters,
+            checkoutSession: checkoutSession,
+            preconfirmedIntentParams: nil
+        )
+        return await confirmCheckoutSession(
+            with: requestParameters,
+            apiClient: parameters.configuration.apiClient,
+            authenticationContext: parameters.authenticationContext,
+            paymentHandler: parameters.paymentHandler,
+            confirmationChallenge: requestParameters.paymentMethodData == nil ? nil : parameters.confirmationChallenge
+        )
     }
 
 }

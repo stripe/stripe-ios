@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) public extension UISpringTimingParameters {
+@_spi(InternalOnlyAPI) public extension UISpringTimingParameters {
     convenience init(mass: CGFloat, dampingRatio: CGFloat, frequencyResponse: CGFloat) {
         // h/t https://medium.com/ios-os-x-development/demystifying-uikit-spring-animations-2bb868446773
         let stiffness: CGFloat = pow(2 * .pi / frequencyResponse, 2) * mass

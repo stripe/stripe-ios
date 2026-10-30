@@ -6,13 +6,13 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 // MARK: - Session
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController {
     /// A read-only representation of a Stripe Checkout Session.
@@ -85,15 +85,18 @@ extension CheckoutController {
 
         // MARK: - Internal Properties
 
+        let clientSecret: String
+        var checkoutConfigID: String?
         let paymentStatus: Status.PaymentStatus
+        let automaticPaymentMethodTypes: Bool?
         let paymentMethodOptions: STPPaymentMethodOptions?
         /// The immutable email provided when creating the Checkout Session, either through
         /// `customer_email` or the Checkout Session's Customer's email.
         let serverEmail: String?
         var localState: LocalState
         let customer: PaymentPagesAPIResponse.Customer?
+        let canDetachPaymentMethod: Bool
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
-        let setupFutureUsage: String?
         let setupFutureUsageForPaymentMethodType: [String: String]
         let allowedShippingCountries: [String]?
         let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
@@ -124,14 +127,11 @@ extension CheckoutController.Session {
     /// Builds a read-only session snapshot from server-backed and local state.
     init(
         apiResponse: PaymentPagesAPIResponse,
+        clientSecret: String,
         localState: LocalState,
         configuration: CheckoutController.Configuration? = nil
     ) {
         let elementsSessionValue = apiResponse.elementsSession.value
-        let publicDiscountAmounts = PaymentPagesAPIResponse.makeDiscountAmounts(
-            from: apiResponse.recurringDetails?.totalSummary.totalDiscountAmounts ?? [],
-            currency: apiResponse.currency
-        )
         let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
             PaymentPagesAPIResponse.makeSessionTaxAmount(
                 from: $0,
@@ -147,25 +147,19 @@ extension CheckoutController.Session {
             from: apiResponse.checkoutItems,
             currency: apiResponse.currency
         )
-        let publicTax = PaymentPagesAPIResponse.makeTax(
-            taxMeta: apiResponse.taxMeta,
-            taxContext: apiResponse.taxContext
-        )
+        let publicTax = PaymentPagesAPIResponse.makeTax(from: apiResponse.automaticTax)
         let localizedPricesMetas = PaymentPagesAPIResponse.makeLocalizedPricesMetas(
             from: apiResponse.adaptivePricingInfo
         )
         let exchangeRateMeta = PaymentPagesAPIResponse.makeExchangeRateMeta(
-            from: apiResponse.adaptivePricingInfo
+            from: apiResponse.adaptivePricingInfo,
+            currency: apiResponse.currency
         )
-        // TODO: Read explicit integration and presentment currency fields from the mobile
-        // translation layer once available instead of deriving them from the PP response shape.
-        let presentmentDetails = apiResponse.adaptivePricingInfo.map {
-            CheckoutController.Session.PresentmentDetails(presentmentCurrency: $0.activePresentmentCurrency)
+        let presentmentDetails = apiResponse.adaptivePricingInfo.map { _ in
+            CheckoutController.Session.PresentmentDetails(presentmentCurrency: apiResponse.currency)
         }
-        let automaticTaxEnabled = apiResponse.taxContext?.automaticTaxEnabled ?? false
-        let automaticTaxAddressSource = PaymentPagesAPIResponse.makeAutomaticTaxAddressSource(
-            from: apiResponse.taxContext?.automaticTaxAddressSource
-        )
+        let automaticTaxEnabled = apiResponse.automaticTax?.enabled ?? false
+        let automaticTaxAddressSource = apiResponse.automaticTax?.addressSource
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
@@ -177,9 +171,10 @@ extension CheckoutController.Session {
         self.init(
             id: apiResponse.sessionId,
             businessName: apiResponse.elementsSession.businessName,
-            currency: apiResponse.adaptivePricingInfo?.integrationCurrency ?? apiResponse.currency,
+            currency: apiResponse.integrationCurrency,
             presentmentDetails: presentmentDetails,
-            discountAmounts: publicDiscountAmounts,
+            // TODO(porter) promo codes: CheckoutClient does not expose promotion code discounts yet.
+            discountAmounts: [],
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,
             minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
@@ -190,15 +185,17 @@ extension CheckoutController.Session {
             taxAmounts: publicTaxAmounts,
             totals: publicTotals,
             availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
+            clientSecret: clientSecret,
             paymentStatus: apiResponse.paymentStatus,
+            automaticPaymentMethodTypes: apiResponse.automaticPaymentMethodTypes,
             paymentMethodOptions: apiResponse.paymentMethodOptions,
             serverEmail: serverEmail,
             localState: localState,
             customer: apiResponse.customer,
+            canDetachPaymentMethod: apiResponse.canDetachPaymentMethod,
             savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
                 from: apiResponse.savedPaymentMethodsOfferSave
             ),
-            setupFutureUsage: apiResponse.setupFutureUsage,
             setupFutureUsageForPaymentMethodType: apiResponse.setupFutureUsageForPaymentMethodType ?? [:],
             allowedShippingCountries: apiResponse.shippingAddressCollection?.allowedCountries.map { $0.uppercased() },
             localizedPricesMetas: localizedPricesMetas,
@@ -210,6 +207,7 @@ extension CheckoutController.Session {
             merchantCountryCode: apiResponse.elementsSession.merchantCountryCode,
             elementsSession: elementsSessionValue
         )
+        checkoutConfigID = apiResponse.checkoutConfigID
     }
 }
 
@@ -354,7 +352,7 @@ extension CheckoutController.Session {
         /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
         /// - If this is Apple Pay, the value is "apple_pay"
         public let paymentMethodType: String
-        /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
+        /// If you set `PaymentElement.Configuration.displaysMandateText = false`, display this text in a `UITextView` (so that URLs are handled) near your “Buy” button.
         public let mandateText: NSAttributedString?
 
         /// The billing details collected for a payment method.

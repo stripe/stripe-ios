@@ -6,9 +6,9 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Standalone Link controller
@@ -65,7 +65,8 @@ final class PayWithLinkController {
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
-            linkAccount: LinkAccountContext.shared.account
+            linkAccount: LinkAccountContext.shared.account,
+            checkoutAttribution: analyticsHelper.checkoutAttribution
         )
         payWithLinkWebController.payWithLinkDelegate = self
         payWithLinkWebController.present(over: presentingController)

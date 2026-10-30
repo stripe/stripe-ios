@@ -9,7 +9,7 @@
 import Foundation
 
 /// Describes an element that is either a text or dropdown element
-@_spi(STP) public protocol TextOrDropdownElement: Element {
+@_spi(InternalOnlyAPI) public protocol TextOrDropdownElement: Element {
 
     /// The raw data for the element, e.g. the text of a textfield or raw data of a dropdown item
     var rawData: String { get }

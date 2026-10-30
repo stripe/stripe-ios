@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 10/17/24.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Indicates to open the FinancialConnections flow
 class OpenFinancialConnectionsMessageHandler: ScriptMessageHandler<OpenFinancialConnectionsMessageHandler.Payload> {

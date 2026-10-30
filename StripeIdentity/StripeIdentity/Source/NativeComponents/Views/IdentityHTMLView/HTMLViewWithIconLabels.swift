@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 final class HTMLViewWithIconLabels: UIView {
@@ -39,12 +39,29 @@ final class HTMLViewWithIconLabels: UIView {
         var nonIconText: [NonIconText] = []
 
         let bodyHtmlString: String
+        let shouldCenterBodyText: Bool
         let didOpenURL: (URL) -> Void
+
+        init(
+            iconText: [IconText] = [],
+            nonIconText: [NonIconText] = [],
+            bodyHtmlString: String,
+            shouldCenterBodyText: Bool = false,
+            didOpenURL: @escaping (URL) -> Void
+        ) {
+            self.iconText = iconText
+            self.nonIconText = nonIconText
+            self.bodyHtmlString = bodyHtmlString
+            self.shouldCenterBodyText = shouldCenterBodyText
+            self.didOpenURL = didOpenURL
+        }
 
         var bodyTextViewModel: HTMLTextView.ViewModel {
             return .init(
                 text: bodyHtmlString,
-                style: .html(makeStyle: Styling.bodyTextHTMLStyle),
+                style: .html(makeStyle: {
+                    Styling.bodyTextHTMLStyle(shouldCenterText: self.shouldCenterBodyText)
+                }),
                 didOpenURL: didOpenURL
             )
         }
@@ -208,17 +225,18 @@ extension HTMLViewWithIconLabels.Styling {
         )
     }
 
-    static func bodyTextHTMLStyle() -> HTMLStyle {
+    static func bodyTextHTMLStyle(shouldCenterText: Bool = false) -> HTMLStyle {
         return htmlStyle(
             font: bodyTextFont,
-            boldFont: IdentityUI.bodyFont(withWeight: .bold)
+            boldFont: IdentityUI.bodyFont(withWeight: .bold),
+            shouldCenterText: shouldCenterText
         )
     }
 
     private static func htmlStyle(
         font: UIFont,
         boldFont: UIFont,
-        shouldCenterText ceterText: Bool = false
+        shouldCenterText: Bool = false
     ) -> HTMLStyle {
         return .init(
             bodyFont: font,
@@ -230,7 +248,7 @@ extension HTMLViewWithIconLabels.Styling {
             h5Font: boldFont,
             h6Font: boldFont,
             isLinkUnderlined: false,
-            shouldCenterText: ceterText
+            shouldCenterText: shouldCenterText
         )
     }
 }

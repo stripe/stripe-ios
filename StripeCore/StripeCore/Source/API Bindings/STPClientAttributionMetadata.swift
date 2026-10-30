@@ -8,7 +8,14 @@
 import Foundation
 
 // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
-@_spi(STP) public class STPClientAttributionMetadata: NSObject {
+@_spi(InternalOnlyAPI) public class STPClientAttributionMetadata: NSObject {
+
+    public enum AdditionalElement: String {
+        case paymentElement = "mobile-payment-element"
+        case expressCheckoutElement = "mobile-express-checkout-element"
+        case shippingAddressElement = "mobile-shipping-address-element"
+        case currencySelectorElement = "mobile-currency-selector-element"
+    }
 
     public enum IntentCreationFlow: String {
         case standard
@@ -28,6 +35,10 @@ import Foundation
     @objc public let elementsSessionConfigId: String?
     /// The identifier string for the Checkout Session, when present
     @objc public let checkoutSessionId: String?
+    /// The identifier string for the Checkout configuration, when present
+    @objc public let checkoutConfigId: String?
+    /// The configured Elements
+    @objc public let merchantIntegrationAdditionalElements: [String]?
     /// The source for the merchant integration
     @objc public let merchantIntegrationSource: String
     /// The subtype for the merchant integration
@@ -41,13 +52,19 @@ import Foundation
 
     public init(elementsSessionConfigId: String?,
                 checkoutSessionId: String? = nil,
+                checkoutConfigId: String? = nil,
+                merchantIntegrationSource: String = "elements",
+                merchantIntegrationSubtype: String = "mobile",
+                merchantIntegrationAdditionalElements: [AdditionalElement]? = nil,
                 paymentIntentCreationFlow: IntentCreationFlow? = nil,
                 paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
         self.clientSessionId = AnalyticsHelper.shared.sessionID
         self.elementsSessionConfigId = elementsSessionConfigId
         self.checkoutSessionId = checkoutSessionId
-        self.merchantIntegrationSource = "elements"
-        self.merchantIntegrationSubtype = "mobile"
+        self.checkoutConfigId = checkoutConfigId
+        self.merchantIntegrationSource = merchantIntegrationSource
+        self.merchantIntegrationSubtype = merchantIntegrationSubtype
+        self.merchantIntegrationAdditionalElements = merchantIntegrationAdditionalElements?.map(\.rawValue)
         self.merchantIntegrationVersion = "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
         self.paymentIntentCreationFlow = paymentIntentCreationFlow?.rawValue
         self.paymentMethodSelectionFlow = paymentMethodSelectionFlow?.rawValue
@@ -61,6 +78,8 @@ extension STPClientAttributionMetadata: Encodable {
         case clientSessionId = "client_session_id"
         case elementsSessionConfigId = "elements_session_config_id"
         case checkoutSessionId = "checkout_session_id"
+        case checkoutConfigId = "checkout_config_id"
+        case merchantIntegrationAdditionalElements = "merchant_integration_additional_elements"
         case merchantIntegrationSource = "merchant_integration_source"
         case merchantIntegrationSubtype = "merchant_integration_subtype"
         case merchantIntegrationVersion = "merchant_integration_version"
@@ -73,6 +92,8 @@ extension STPClientAttributionMetadata: Encodable {
         try container.encodeIfPresent(clientSessionId, forKey: .clientSessionId)
         try container.encodeIfPresent(elementsSessionConfigId, forKey: .elementsSessionConfigId)
         try container.encodeIfPresent(checkoutSessionId, forKey: .checkoutSessionId)
+        try container.encodeIfPresent(checkoutConfigId, forKey: .checkoutConfigId)
+        try container.encodeIfPresent(merchantIntegrationAdditionalElements, forKey: .merchantIntegrationAdditionalElements)
         try container.encode(merchantIntegrationSource, forKey: .merchantIntegrationSource)
         try container.encode(merchantIntegrationSubtype, forKey: .merchantIntegrationSubtype)
         try container.encode(merchantIntegrationVersion, forKey: .merchantIntegrationVersion)

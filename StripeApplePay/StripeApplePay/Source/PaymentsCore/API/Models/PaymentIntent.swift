@@ -7,59 +7,59 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI {
-    @_spi(STP) public struct PaymentIntent: UnknownFieldsDecodable {
+    @_spi(InternalOnlyAPI) public struct PaymentIntent: UnknownFieldsDecodable {
         // TODO: (MOBILESDK-468) Add modern bindings for more PaymentIntent fields
         /// The Stripe ID of the PaymentIntent.
-        @_spi(STP) public let id: String
+        @_spi(InternalOnlyAPI) public let id: String
 
         /// The client secret used to fetch this PaymentIntent
-        @_spi(STP) public let clientSecret: String
+        @_spi(InternalOnlyAPI) public let clientSecret: String
 
         /// Amount intended to be collected by this PaymentIntent.
-        @_spi(STP) public let amount: Int
+        @_spi(InternalOnlyAPI) public let amount: Int
 
         /// If status is `.canceled`, when the PaymentIntent was canceled.
-        @_spi(STP) public let canceledAt: Date?
+        @_spi(InternalOnlyAPI) public let canceledAt: Date?
 
         /// Capture method of this PaymentIntent
-        @_spi(STP) public let captureMethod: CaptureMethod
+        @_spi(InternalOnlyAPI) public let captureMethod: CaptureMethod
 
         /// Confirmation method of this PaymentIntent
-        @_spi(STP) public let confirmationMethod: ConfirmationMethod
+        @_spi(InternalOnlyAPI) public let confirmationMethod: ConfirmationMethod
 
         /// When the PaymentIntent was created.
-        @_spi(STP) public let created: Date
+        @_spi(InternalOnlyAPI) public let created: Date
 
         /// The currency associated with the PaymentIntent.
-        @_spi(STP) public let currency: String
+        @_spi(InternalOnlyAPI) public let currency: String
 
         /// The `description` field of the PaymentIntent.
         /// An arbitrary string attached to the object. Often useful for displaying to users.
-        @_spi(STP) public let stripeDescription: String?
+        @_spi(InternalOnlyAPI) public let stripeDescription: String?
 
         /// Whether or not this PaymentIntent was created in livemode.
-        @_spi(STP) public let livemode: Bool
+        @_spi(InternalOnlyAPI) public let livemode: Bool
 
         /// Email address that the receipt for the resulting payment will be sent to.
-        @_spi(STP) public let receiptEmail: String?
+        @_spi(InternalOnlyAPI) public let receiptEmail: String?
 
         /// The Stripe ID of the Source used in this PaymentIntent.
-        @_spi(STP) public let sourceId: String?
+        @_spi(InternalOnlyAPI) public let sourceId: String?
 
         /// The Stripe ID of the PaymentMethod used in this PaymentIntent.
-        @_spi(STP) public let paymentMethodId: String?
+        @_spi(InternalOnlyAPI) public let paymentMethodId: String?
 
         /// Status of the PaymentIntent
-        @_spi(STP) public let status: Status
+        @_spi(InternalOnlyAPI) public let status: Status
 
         /// Shipping information for this PaymentIntent.
-        @_spi(STP) public let shipping: ShippingDetails?
+        @_spi(InternalOnlyAPI) public let shipping: ShippingDetails?
 
         /// Status types for a PaymentIntent
-        @frozen @_spi(STP) public enum Status: String, SafeEnumCodable {
+        @frozen @_spi(InternalOnlyAPI) public enum Status: String, SafeEnumCodable {
             /// Unknown status
             case unknown
             /// This PaymentIntent requires a PaymentMethod or Source
@@ -83,7 +83,7 @@ extension StripeAPI {
             // Remove @frozen after Xcode 12.2 support has been dropped.
         }
 
-        @frozen @_spi(STP) public enum ConfirmationMethod: String, SafeEnumCodable {
+        @frozen @_spi(InternalOnlyAPI) public enum ConfirmationMethod: String, SafeEnumCodable {
             /// Unknown confirmation method
             case unknown
             /// Confirmed via publishable key
@@ -96,7 +96,7 @@ extension StripeAPI {
             // Remove @frozen after Xcode 12.2 support has been dropped.
         }
 
-        @frozen @_spi(STP) public enum CaptureMethod: String, SafeEnumCodable {
+        @frozen @_spi(InternalOnlyAPI) public enum CaptureMethod: String, SafeEnumCodable {
             /// Unknown capture method
             case unknown
             /// The PaymentIntent will be automatically captured
@@ -110,7 +110,7 @@ extension StripeAPI {
             // Remove @frozen after Xcode 12.2 support has been dropped.
         }
 
-        @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
+        @_spi(InternalOnlyAPI) public var _allResponseFieldsStorage: NonEncodableParameters?
     }
 }
 

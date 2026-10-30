@@ -8,22 +8,26 @@
 
 import Combine
 import Foundation
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 /// Use this class to build a [Checkout elements](todo) integration.
 /// It manages a CheckoutSession object and UI elements (e.g. PaymentElement, ShippingAddressElement).
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 @MainActor
 public final class CheckoutController: ObservableObject {
     // MARK: - Public Properties
 
-    /// True when the session is being updated.
+    /// True while a Checkout Session update or confirmation is in progress or queued.
     /// Use this to disable interactive UI e.g. your buy button.
-    @Published public internal(set) var isUpdating: Bool = false
+    @Published public internal(set) var isUpdating: Bool = false {
+        didSet {
+            expressCheckoutElement?.uiView.setEnabled(!isUpdating)
+        }
+    }
 
     /// The Session object is a view of the Checkout Session API object and represents your customer's session in your checkout flow.
     @Published public private(set) var session: Session
@@ -45,8 +49,11 @@ public final class CheckoutController: ObservableObject {
     /// The ShippingAddressElement for this CheckoutController instance.
     private let shippingAddressElement: ShippingAddressElement?
 
+    private(set) var confirmationChallenge: ConfirmationChallenge?
+
     let clientSecret: String
     let apiClient: STPAPIClient
+    let analyticsHelper: CheckoutControllerAnalyticsHelper
     lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: apiClient)
     var effectiveMerchantDisplayName: String {
         configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? ""
@@ -87,69 +94,65 @@ public final class CheckoutController: ObservableObject {
 
     /// Initializes a CheckoutController instance
     public init(configuration: Configuration) async throws {
+        // TODO(MOBILESDK-5054): Own the analytics session in the surface's analytics helper and pass it to other consumers
+        // instead of using a singleton.
+        AnalyticsHelper.shared.generateSessionID()
         let clientSecret = configuration.clientSecret
+        let analyticsHelper = CheckoutControllerAnalyticsHelper(
+            apiClient: configuration.apiClient,
+            checkoutSessionId: clientSecret.contains("_secret_") ? Self.extractSessionId(from: clientSecret) : ""
+        )
+        self.analyticsHelper = analyticsHelper
+        let configurationParams = configuration.checkoutAnalyticsPayload
+        let startedAction = analyticsHelper.logStarted(.initialize, additionalParams: configurationParams)
         guard !clientSecret.isEmpty else {
+            analyticsHelper.logFailed(startedAction, error: CheckoutError.invalidClientSecret, additionalParams: configurationParams)
             throw CheckoutError.invalidClientSecret
         }
         #if DEBUG
         configuration.validateReturnURL()
         #endif
-        self.clientSecret = clientSecret
+        assert(!configuration.apiClient.publishableKeyIsUserKey, "Dashboard isn't supported.")
+        self.clientSecret = configuration.clientSecret
         self.configuration = configuration
         self.apiClient = configuration.apiClient
 
-        let sessionId = Self.extractSessionId(from: clientSecret)
+        var analyticsSession: Session?
         do {
-            // Load address specs etc. in parallel with /init. PaymentElement also loads these via
-            // PaymentSheetLoader, but integrations without it (e.g. ECE-only) still need them for
-            // address forms like the one in the Link wallet's "Add a payment method" screen.
-            // ⚠️ Using a Task instead of `async let`; see PaymentSheetLoader.load.
-            let loadMiscellaneousSingletonsTask = Task {
-                await PaymentSheetLoader.loadMiscellaneousSingletons()
-            }
-            // Call /init
-            let apiResponse = try await configuration.apiClient.initCheckoutSession(
-                checkoutSessionId: sessionId,
-                adaptivePricingAllowed: configuration.currencySelectorElement != nil
-            )
-            await loadMiscellaneousSingletonsTask.value
-            let loadedSession = Session(
-                apiResponse: apiResponse,
-                localState: .empty,
-                configuration: configuration
-            )
-            self.session = loadedSession
+            // 1. Initialize the session
+            let session = try await CheckoutControllerLoader.load(configuration: configuration)
+            self.session = session
+            analyticsSession = session
 
-            // Element initialization is intentionally sequential:
-
-            // 1. Initialize SAE, when configured, so that its form can normalize the raw default
-            // shipping address before it is applied to the session.
+            // 2. Initialize SAE first so it can normalize the default shipping address before we apply it to the session.
             let (shippingAddressElement, normalizedDefaultShippingAddress) = await Self.makeShippingAddressElement(
                 configuration: configuration,
-                session: loadedSession
+                session: session
             )
             self.shippingAddressElement = shippingAddressElement
             self.shippingAddressElement?.delegate = self
+            defer { analyticsSession = self.session }
 
+            // 3. Apply defaults; note this can trigger tax updates that change the session total.
             try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
 
-            // 2.
-            // PaymentElement reads from the session during initialization, then updates it with the
-            // initial payment option and may sync its billing address to recalculate tax. It must finish
-            // before creating the session source so the remaining elements receive the resulting session
-            // as their initial value.
-            if let paymentElementConfiguration = configuration.paymentElement {
-                self.paymentElement = try await PaymentElement(
+            // 4. The session is now finalized - do post-session-change stuff
+            let handleSessionChangeResult = CheckoutControllerLoader.handleSessionChange(checkout: self)
+            confirmationChallenge = handleSessionChangeResult.confirmationChallenge
+            // 4a. Initialize PE
+            if let paymentElementInitParameters = handleSessionChangeResult.paymentElement {
+                self.paymentElement = try PaymentElement(
                     checkout: self,
-                    configuration: paymentElementConfiguration
+                    flowControllerInitParameters: paymentElementInitParameters.flowController,
+                    embeddedPaymentElementInitParameters: paymentElementInitParameters.embedded
                 )
+                // The initial payment selection's billing address may require another tax update.
+                try await syncBillingAddress(from: paymentElement?.embeddedPaymentElement._paymentOption?.checkoutBillingDetails)
             }
 
-            // Create the session source that we can pass to the reaminign elements, which do not need to mutate the session.
-            // Elements past this point can be initialized in any order since they do not mutate the session.
-            let sessionSource = CheckoutSessionSource(initialSession: session, sessionPublisher: $session)
+            // 4b. Initialize remaining elements
+            let sessionSource = CheckoutSessionSource(initialSession: self.session, sessionPublisher: $session)
 
-            // 3. ECE
             if let expressCheckoutElementConfiguration = configuration.expressCheckoutElement {
                 self.expressCheckoutElement = ExpressCheckoutElement(
                     sessionSource: sessionSource,
@@ -157,9 +160,9 @@ public final class CheckoutController: ObservableObject {
                     delegate: self,
                     apiClient: apiClient
                 )
+                self.expressCheckoutElement?.uiView.setEnabled(!isUpdating)
             }
 
-            // 4. CSE
             if let currencySelectorConfiguration = configuration.currencySelectorElement {
                 self.currencySelectorElement = await CurrencySelectorElement(
                     sessionSource: sessionSource,
@@ -167,8 +170,13 @@ public final class CheckoutController: ObservableObject {
                     delegate: self
                 )
             }
+            var params = configurationParams
+            params["ordered_lpms"] = paymentElement?.embeddedPaymentElement.loadResult.paymentMethodTypes.map { $0.identifier }.joined(separator: ",")
+                ?? self.session.availableExpressCheckoutPaymentMethods.joined(separator: ",")
+            analyticsHelper.logSucceeded(startedAction, session: self.session, additionalParams: params)
         } catch {
-            throw CheckoutError.apiError(message: error.nonGenericDescription)
+            analyticsHelper.logFailed(startedAction, error: error, session: analyticsSession, additionalParams: configurationParams)
+            throw CheckoutError.apiError(message: error.nonGenericDescription, underlyingError: error)
         }
     }
 
@@ -194,6 +202,7 @@ public final class CheckoutController: ObservableObject {
         // Initialize the SAE with the raw default so its form can normalize the address.
         let shippingAddressElement = ShippingAddressElement(
             configuration: shippingAddressElementConfiguration,
+            userInterfaceStyle: configuration.userInterfaceStyle,
             initialShippingAddress: defaultShippingAddress ?? session.shippingAddress,
             allowedCountries: session.allowedShippingCountries,
             checkoutSessionId: session.id,
@@ -214,18 +223,23 @@ public final class CheckoutController: ObservableObject {
 
     /// Use this method to apply a promotion code that your customer enters.
     public func applyPromotionCode(_ promotionCode: String) async throws {
-        try await performUpdate(.setPromotionCode(promotionCode))
+        try await analyticsHelper.track(.applyPromotionCode, checkout: self) {
+            try await performQueuedUpdate(.setPromotionCode(promotionCode))
+        }
     }
 
     /// Use this method to remove the currently applied promotion code, if applicable.
     public func removePromotionCode() async throws {
-        try await performUpdate(.setPromotionCode(""))
+        try await analyticsHelper.track(.removePromotionCode, checkout: self) {
+            try await performQueuedUpdate(.setPromotionCode(""))
+        }
     }
 
     // MARK: - Payment Option
 
     /// Clears the currently selected payment option.
     public func clearPaymentOption() async throws {
+        analyticsHelper.logClearPaymentOption(session: session)
         try await paymentElement?.clearPaymentOption()
     }
 
@@ -235,11 +249,14 @@ public final class CheckoutController: ObservableObject {
     /// - Important: You cannot use this method if the Checkout Session was created with
     ///   `customer_email` or a Customer with an email. Those emails are immutable.
     public func updateEmail(_ email: String?) async throws {
-        try await enqueueSessionUpdate {
-            guard self.canSetLocalEmail() else { return }
-            guard self.session.localState.email != email else { return }
-            try await self.applySessionUpdate { localState in
-                localState.email = email
+        try await analyticsHelper.track(.updateEmail, checkout: self) {
+            try await enqueueSessionUpdate {
+                guard self.canSetLocalEmail() else { return }
+                guard self.session.localState.email != email else { return }
+                // TODO: Refresh Link account lookup when the email changes.
+                try await self.performUnqueuedUpdate(mutateLocalState: { localState in
+                    localState.email = email
+                })
             }
         }
     }
@@ -257,68 +274,81 @@ public final class CheckoutController: ObservableObject {
     ///   the server request fails.
     func updateBillingTaxRegionIfNecessary(
         address: Address?,
-        canUpdateWhileSheetPresented: Bool = false
+        canUpdateWhileSheetPresented: Bool = false,
+        source: CheckoutControllerAnalyticsHelper.InvocationSource = .merchant
     ) async throws {
-        guard session.shouldSendTaxRegion(for: "billing") else { return }
-        let taxRegion: Address
-        if let address {
-            taxRegion = address
-        } else {
-            guard let country = session.paymentOption?.billingDetails?.address?.country?.nonEmpty else {
-                return
-            }
-            // The Checkout Session update endpoint requires tax_region[country] and does not
-            // support clearing tax_region, so keep the previous country.
-            // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
-            taxRegion = Address(country: country)
+        let startedAction = analyticsHelper.logStarted(.updateBillingAddress, session: session, additionalParams: ["invocation_source": source.rawValue])
+        var didRequestTaxUpdate = false
+        var failure: Error?
+        defer {
+            analyticsHelper.logAddressUpdateFinished(startedAction, session: session, source: source, didRequestTaxUpdate: didRequestTaxUpdate, error: failure)
         }
-        try await performUpdate(
-            .setTaxRegion(taxRegion),
-            canUpdateWhileSheetPresented: canUpdateWhileSheetPresented
-        )
+        do {
+            guard session.shouldSendTaxRegion(for: "billing") else { return }
+            try await performQueuedUpdate(
+                .setTaxRegion(address),
+                canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
+                onRequest: { didRequestTaxUpdate = true }
+            )
+        } catch {
+            failure = error
+            throw error
+        }
     }
 
     /// Use this method to update the Customer's shipping address.
-    public func updateShippingAddress(
+    public func updateShippingAddress(name: String?, address: Address?) async throws {
+        try await updateShippingAddress(name: name, address: address, source: .merchant)
+    }
+
+    func updateShippingAddress(
         name: String?,
-        address: Address?
+        address: Address?,
+        source: CheckoutControllerAnalyticsHelper.InvocationSource
     ) async throws {
-        guard let address else {
-            try await clearShippingAddress()
-            return
+        let startedAction = analyticsHelper.logStarted(.updateShippingAddress, session: session, additionalParams: ["invocation_source": source.rawValue])
+        var didRequestTaxUpdate = false
+        var failure: Error?
+        defer {
+            analyticsHelper.logAddressUpdateFinished(startedAction, session: session, source: source, didRequestTaxUpdate: didRequestTaxUpdate, error: failure)
         }
-        if let allowedCountries = session.allowedShippingCountries,
-           !allowedCountries.contains(address.country.uppercased()) {
-            throw CheckoutError.invalidShippingCountry(countryCode: address.country)
-        }
-        let shippingAddress = Session.ShippingAddress(name: name, address: address)
-        guard session.shippingAddress != shippingAddress else { return }
-        if session.shouldSendTaxRegion(for: "shipping") {
-            try await performUpdate(.setTaxRegion(address)) {
-                $0.shippingAddress = shippingAddress
+        do {
+            guard let address else {
+                try await clearShippingAddress(onRequest: { didRequestTaxUpdate = true })
+                return
             }
-        } else {
-            try await performUpdate {
-                $0.shippingAddress = shippingAddress
+            if let allowedCountries = session.allowedShippingCountries,
+               !allowedCountries.contains(address.country.uppercased()) {
+                throw CheckoutError.invalidShippingCountry(countryCode: address.country)
             }
+            let shippingAddress = Session.ShippingAddress(name: name, address: address)
+            guard session.shippingAddress != shippingAddress else { return }
+            if session.shouldSendTaxRegion(for: "shipping") {
+                try await performQueuedUpdate(.setTaxRegion(address), onRequest: { didRequestTaxUpdate = true }) {
+                    $0.shippingAddress = shippingAddress
+                }
+            } else {
+                try await performQueuedUpdate(mutateLocalState: {
+                    $0.shippingAddress = shippingAddress
+                })
+            }
+        } catch {
+            failure = error
+            throw error
         }
     }
 
-    private func clearShippingAddress() async throws {
-        guard let shippingAddress = session.shippingAddress else { return }
+    private func clearShippingAddress(onRequest: @escaping @MainActor () -> Void) async throws {
+        guard session.shippingAddress != nil else { return }
         if session.shouldSendTaxRegion(for: "shipping") {
-            // The Checkout Session update endpoint requires tax_region[country] and does not
-            // support clearing tax_region, so keep the previous country.
-            // TODO(porter) When migrating to the CheckoutClient API, stop sending country only and send nil
-            let countryOnlyAddress = Address(country: shippingAddress.address.country)
-            try await performUpdate(.setTaxRegion(countryOnlyAddress)) {
+            try await performQueuedUpdate(.setTaxRegion(nil), onRequest: onRequest) {
                 $0.shippingAddress = nil
             }
         } else {
             // No server update is needed when shipping isn't the tax address source.
-            try await performUpdate {
+            try await performQueuedUpdate(mutateLocalState: {
                 $0.shippingAddress = nil
-            }
+            })
         }
     }
 
@@ -329,28 +359,42 @@ public final class CheckoutController: ObservableObject {
     public func runServerUpdate(
         _ update: @escaping () async throws -> Void
     ) async throws {
-        try await enqueueSessionUpdate {
-            try self.requireSheetNotPresented()
-            let result = await withTimeout(Self.serverUpdateTimeout) {
-                try await update()
-            }
-            if case .failure(let error) = result {
-                if error is TimeoutError {
-                    throw CheckoutError.timedOut
+        let startedAction = analyticsHelper.logStarted(.runServerUpdate, session: session)
+        var analyticsParams: [String: Any] = [:]
+        do {
+            try await enqueueSessionUpdate {
+                try self.requireSheetNotPresented()
+                let merchantStart = ProcessInfo.processInfo.systemUptime
+                let result = await withTimeout(Self.serverUpdateTimeout) {
+                    try await update()
                 }
-                throw CheckoutError.apiError(message: error.localizedDescription)
+                analyticsParams["merchant_update_duration"] = ProcessInfo.processInfo.systemUptime - merchantStart
+                if case .failure(let error) = result {
+                    if error is TimeoutError {
+                        throw CheckoutError.timedOut
+                    }
+                    throw CheckoutError.apiError(message: error.localizedDescription, underlyingError: error)
+                }
+                let sessionId = Self.extractSessionId(from: self.clientSecret)
+                let refreshedCheckoutSession: PaymentPagesAPIResponse
+                do {
+                    let refreshStart = ProcessInfo.processInfo.systemUptime
+                    defer { analyticsParams["refresh_duration"] = ProcessInfo.processInfo.systemUptime - refreshStart }
+                    refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
+                        checkoutSessionId: sessionId,
+                        clientSecret: self.clientSecret,
+                        adaptivePricingAllowed: self.configuration.currencySelectorElement != nil
+                    )
+                } catch {
+                    throw CheckoutError.apiError(message: error.nonGenericDescription, underlyingError: error)
+                }
+                self.commitSession(refreshedCheckoutSession)
+                self.updateForSessionChange()
             }
-            let sessionId = Self.extractSessionId(from: self.clientSecret)
-            let refreshedCheckoutSession: PaymentPagesAPIResponse
-            do {
-                refreshedCheckoutSession = try await self.apiClient.initCheckoutSession(
-                    checkoutSessionId: sessionId,
-                    adaptivePricingAllowed: self.configuration.currencySelectorElement != nil
-                )
-            } catch {
-                throw CheckoutError.apiError(message: error.nonGenericDescription)
-            }
-            try await self.commitSession(refreshedCheckoutSession)
+            analyticsHelper.logSucceeded(startedAction, session: session, additionalParams: analyticsParams)
+        } catch {
+            analyticsHelper.logFailed(startedAction, error: error, session: session, additionalParams: analyticsParams)
+            throw error
         }
     }
 
@@ -396,19 +440,21 @@ public final class CheckoutController: ObservableObject {
     /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer. If you're using SwiftUI, you may pass nil and it will use the topmost UIViewController from the key window.
     /// Returns a ConfirmResult enum - either completed, canceled, or failed.
     public func confirm(from presentingViewController: UIViewController? = nil) async -> ConfirmResult {
-        guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
-            let errorMessage = "CheckoutController.confirm(from:) could not find a presenting view controller."
-            assertionFailure(errorMessage)
-            return .failed(PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
-        }
+        return await confirm(source: .merchant) {
+            guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
+                let errorMessage = "CheckoutController.confirm(from:) could not find a presenting view controller."
+                assertionFailure(errorMessage)
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
+            }
 
-        guard let flow = makeConfirmationFlow(
-            for: paymentElement,
-            presentingViewController: presentingViewController
-        ) else {
-            return .failed(PaymentSheetError.confirmingWithInvalidPaymentOption)
+            guard let flow = makeConfirmationFlow(
+                for: paymentElement,
+                presentingViewController: presentingViewController
+            ) else {
+                throw PaymentSheetError.confirmingWithInvalidPaymentOption
+            }
+            return flow
         }
-        return await confirm(flow)
     }
 
     /// The result of an attempt to confirm a Checkout Session.
@@ -430,27 +476,77 @@ extension CheckoutController {
     func applyDefaults(shippingAddress: Session.ShippingAddress?) async throws {
         let defaults = configuration.defaults
 
+        // Apply the default email locally
         if let email = defaults.email,
            canSetLocalEmail() {
-            try await commitSession { localState in
+            commitSession { localState in
                 localState.email = email
             }
         }
 
-        if let billingDetails = defaults.billingDetails,
-           let address = billingDetails.address {
-            try await updateBillingTaxRegionIfNecessary(address: address)
+        // Update tax from the default billing address, if needed
+        if let address = defaults.billingDetails?.address {
+            let startedAction = analyticsHelper.logStarted(.updateBillingAddress, session: session, additionalParams: ["invocation_source": "merchant"])
+            var didRequestTaxUpdate = false
+            var failure: Error?
+            defer {
+                analyticsHelper.logAddressUpdateFinished(startedAction, session: session, source: .merchant, didRequestTaxUpdate: didRequestTaxUpdate, error: failure)
+            }
+            do {
+                if session.shouldSendTaxRegion(for: "billing") {
+                    didRequestTaxUpdate = true
+                    let response = try await apiClient.updateCheckoutSession(
+                        checkoutSessionId: Self.extractSessionId(from: clientSecret),
+                        clientSecret: clientSecret,
+                        parameters: SessionUpdate.setTaxRegion(address).parameters
+                    )
+                    currentTaxRegion = address
+                    commitSession(response)
+                }
+            } catch {
+                failure = error
+                throw error
+            }
         }
 
+        // Apply the default shipping address
         if let shippingAddress {
-            do {
-                try await updateShippingAddress(
-                    name: shippingAddress.name,
-                    address: shippingAddress.address
-                )
-            } catch CheckoutError.invalidShippingCountry {
+            let startedAction = analyticsHelper.logStarted(.updateShippingAddress, session: session, additionalParams: ["invocation_source": "merchant"])
+            var didRequestTaxUpdate = false
+            var failure: Error?
+            defer {
+                analyticsHelper.logAddressUpdateFinished(startedAction, session: session, source: .merchant, didRequestTaxUpdate: didRequestTaxUpdate, error: failure)
+            }
+            // Check that the shipping country is allowed
+            if let allowedCountries = session.allowedShippingCountries,
+               !allowedCountries.contains(shippingAddress.address.country.uppercased()) {
                 // Treat a default address with a disallowed country as nil.
+                failure = CheckoutError.invalidShippingCountry(countryCode: shippingAddress.address.country)
+                return
+            }
+            guard session.shippingAddress != shippingAddress else { return }
+
+            do {
+                // Update tax from the default shipping address, if needed
+                if session.shouldSendTaxRegion(for: "shipping") {
+                    didRequestTaxUpdate = true
+                    let response = try await apiClient.updateCheckoutSession(
+                        checkoutSessionId: Self.extractSessionId(from: clientSecret),
+                        clientSecret: clientSecret,
+                        parameters: SessionUpdate.setTaxRegion(shippingAddress.address).parameters
+                    )
+                    currentTaxRegion = shippingAddress.address
+                    commitSession(response) {
+                        $0.shippingAddress = shippingAddress
+                    }
+                } else {
+                    // No tax update needed; only store the default shipping address locally
+                    commitSession {
+                        $0.shippingAddress = shippingAddress
+                    }
+                }
             } catch {
+                failure = error
                 throw error
             }
         }
@@ -458,33 +554,52 @@ extension CheckoutController {
 }
 // MARK: - Internal session setters
 // These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
-// Setting the session should generally only be done via `commitSession` to avoid putting us into an inconsistent state e.g. without using commitSession, MPE is not aware of the updated session.
+// Normal update paths commit the session, then call updateForSessionChange to update derived state and elements.
 extension CheckoutController {
-    /// Replaces the current session from an API response, applies local state, and updates Checkout elements.
+    /// Stores an API response and local state without processing the session or updating elements.
     ///
     /// Existing local state is preserved unless explicitly replaced.
+    /// TODO: Rename to `setSession` or delete this and just inline, it's unnecessarily complex.
     func commitSession(
         _ apiResponse: PaymentPagesAPIResponse? = nil,
         mutateLocalState: LocalStateMutation = { _ in }
-    ) async throws {
+    ) {
         var localState = session.localState
         mutateLocalState(&localState)
 
         if let apiResponse {
-            session = Session(
+            let checkoutConfigID = apiResponse.checkoutConfigID ?? session.checkoutConfigID
+            var updatedSession = Session(
                 apiResponse: apiResponse,
+                clientSecret: clientSecret,
                 localState: localState,
                 configuration: configuration
             )
+            updatedSession.checkoutConfigID = checkoutConfigID
+            session = updatedSession
         } else {
             session.localState = localState
         }
-
-        // === Update Payment Element and all other asynchronously updated elements ==
-        try await paymentElement?.update(checkout: self)
     }
 
-    /// - Warning: See `commitSession` for what this method *doesn't* do. That includes updating Checkout elements.
+    /// Updates everything necessary after a session change.
+    /// Call this after committing a 'normal' session update; not for initialization or confirmation.
+    func updateForSessionChange() {
+        guard sessionIsOpen else { return }
+        let result = CheckoutControllerLoader.handleSessionChange(checkout: self)
+        // Update confirmation challenge. I'm not sure if this is necessary, but the intents integration does it too on `update`
+        confirmationChallenge = result.confirmationChallenge
+        // Update PE
+        if let paymentElementInitParameters = result.paymentElement {
+            paymentElement?.apply(
+                flowControllerInitParameters: paymentElementInitParameters.flowController,
+                embeddedPaymentElementInitParameters: paymentElementInitParameters.embedded,
+                checkout: self
+            )
+        }
+    }
+
+    /// - Warning: Replaces the entire session without processing it or updating Checkout elements.
     func dangerouslySetSessionDirectly(_ session: Session) {
         self.session = session
     }

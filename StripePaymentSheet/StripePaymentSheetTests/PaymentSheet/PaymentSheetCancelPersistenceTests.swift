@@ -3,11 +3,11 @@
 //  StripePaymentSheetTests
 //
 
-@_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripePaymentsTestUtils
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 @MainActor
@@ -43,7 +43,8 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
     }
 
     private func makeLoadResult(
-        savedPaymentMethods: [STPPaymentMethod]
+        savedPaymentMethods: [STPPaymentMethod],
+        customerProvider: CustomerProvider
     ) -> PaymentSheetLoader.LoadResult {
         return PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -51,7 +52,8 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(.card)],
             paymentMethodMessagingPromotionsHelper: ._testValue(),
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            customerProvider: customerProvider
         )
     }
 
@@ -67,7 +69,10 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
             paymentIntentClientSecret: "pi_123_secret_456",
             configuration: configuration
         )
-        let loadResult = makeLoadResult(savedPaymentMethods: [cardA, cardB])
+        let loadResult = makeLoadResult(
+            savedPaymentMethods: [cardA, cardB],
+            customerProvider: CustomerProvider(customer: configuration.customer)
+        )
         _ = sheet.makePaymentSheetVC(
             loadResult: loadResult,
             previousPaymentOption: nil

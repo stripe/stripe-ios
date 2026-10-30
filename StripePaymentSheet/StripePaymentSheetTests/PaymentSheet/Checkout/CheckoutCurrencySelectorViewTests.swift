@@ -5,11 +5,8 @@
 //  Created by Nick Porter on 4/6/26.
 //
 
-import Combine
-import OHHTTPStubs
-import OHHTTPStubsSwift
-@testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 @MainActor
@@ -59,7 +56,8 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         XCTAssertTrue(selectorView!.rightItem.displayText.string.contains("12"))
 
         let updatedSession = makeSession(integrationAmount: 2400, localAmount: 2000)
-        try await checkout.commitSession(updatedSession)
+        checkout.commitSession(updatedSession)
+        await waitForViewUpdate()
 
         XCTAssertTrue(selectorView!.leftItem.displayText.string.contains("20"))
         XCTAssertTrue(selectorView!.rightItem.displayText.string.contains("24"))
@@ -74,47 +72,11 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         let selector = try XCTUnwrap(currencySelector(in: view))
 
         // When the Checkout Session changes to GBP
-        try await checkout.commitSession(makeSession(currency: "gbp"))
+        checkout.commitSession(makeSession(currency: "gbp"))
         await waitForViewUpdate()
 
         // Then the selector agrees with the Checkout Session
         XCTAssertEqual(selector.selectedItemId, checkout.session.presentmentDetails?.presentmentCurrency)
-    }
-
-    func testFailedPaymentElementRefreshKeepsUpdatedSessionCurrencySelected() async throws {
-        // Given a currency selector with USD selected and a currency update that returns GBP
-        let initialSession = makeSession()
-        let configuration = CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: initialSession)
-        let updatedSessionJSON = makeSessionJSON(currency: "gbp", paymentMethodTypes: [])
-        let sessionId = initialSession.sessionId
-        stub(condition: { request in
-            request.httpMethod == "POST" && request.url?.path == "/v1/payment_pages/\(sessionId)"
-        }) { _ in
-            HTTPStubsResponse(jsonObject: updatedSessionJSON, statusCode: 200, headers: nil)
-        }
-        let checkout = try await CheckoutController(configuration: configuration)
-        let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
-        let selector = try XCTUnwrap(currencySelector(in: view))
-        let updateFinished = expectation(description: "Currency update finishes")
-        var didStartUpdate = false
-        let updateSubscription = checkout.$isUpdating.sink { isUpdating in
-            if isUpdating {
-                didStartUpdate = true
-            } else if didStartUpdate {
-                updateFinished.fulfill()
-            }
-        }
-
-        // When the customer selects GBP and Payment Element cannot reload
-        selector.select("gbp", notifyDelegate: true)
-        await fulfillment(of: [updateFinished], timeout: 2)
-        withExtendedLifetime(updateSubscription) {}
-        await waitForViewUpdate()
-
-        // Then the selector shows the error without reverting the updated session currency
-        XCTAssertNotNil(errorLabel(in: view)?.text)
-        XCTAssertEqual(selector.selectedItemId, checkout.session.presentmentDetails?.presentmentCurrency)
-        XCTAssertEqual(checkout.session.presentmentDetails?.presentmentCurrency, "gbp")
     }
 
     // MARK: - Height update tests
@@ -282,25 +244,23 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         paymentMethodTypes: [String]
     ) -> [AnyHashable: Any] {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["currency"] = currency
-        json["payment_method_types"] = paymentMethodTypes
-        json["checkout_items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency)
-        json["elements_session"] = [
-            "session_id": "es_test",
-            "merchant_country": "US",
-            "payment_method_preference": ["ordered_payment_method_types": paymentMethodTypes],
-        ]
+        json["presentment_currency"] = currency
+        json["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency)
+        json["ordered_payment_method_types_and_wallets"] = paymentMethodTypes
         json["adaptive_pricing_info"] = [
-            "integration_currency": "usd",
-            "integration_amount": 1200,
-            "active_presentment_currency": currency,
             "local_currency_options": [
                 [
                     "currency": "gbp",
                     "amount": 1000,
-                    "presentment_exchange_rate": "0.776917",
-                    "conversion_markup_bps": 400,
+                    "disclosure": [
+                        "caption": "1 GBP = 1.2871 USD (includes 4% conversion fee).",
+                        "details": "This string will come from the translation layer in the future",
+                    ],
                 ],
+            ],
+            "integration_currency_option": [
+                "amount": 1200,
+                "currency": "usd",
             ],
         ]
         return json
@@ -317,14 +277,6 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     private func currencySelector(in view: CurrencySelectorElementUIView) -> TwoOptionSelectorView? {
         return view.subviews
             .compactMap { ($0 as? UIStackView)?.arrangedSubviews.compactMap { $0 as? TwoOptionSelectorView }.first }
-            .first
-    }
-
-    private func errorLabel(in view: CurrencySelectorElementUIView) -> UILabel? {
-        return view.subviews
-            .compactMap { $0 as? UIStackView }
-            .flatMap(\.arrangedSubviews)
-            .compactMap { $0 as? UILabel }
             .first
     }
 }

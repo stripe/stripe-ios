@@ -5,10 +5,10 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@_spi(STP) import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 import XCTest
 
 @MainActor
@@ -64,13 +64,14 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
         XCTAssertTrue(helper.isInTreatmentGroup)
 
         // Verify exposure was logged exactly once with correct parameters
-        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName)
         XCTAssertEqual(payloads.count, 1)
         guard let payload = payloads.first else {
             return XCTFail("Expected exposure event to be logged")
@@ -81,7 +82,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
 
         // Second access should not log again
         _ = helper.isInTreatmentGroup
-        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).count, 1)
+        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).count, 1)
     }
 
     func testInit_noAssignment_returnsNil() {
@@ -94,6 +95,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )
 
@@ -125,13 +127,14 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
         XCTAssertFalse(helper.isInTreatmentGroup)
 
         // Verify exposure was logged exactly once with correct parameters
-        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+        let payloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName)
         XCTAssertEqual(payloads.count, 1)
         guard let payload = payloads.first else {
             return XCTFail("Expected exposure event to be logged")
@@ -142,7 +145,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
 
         // Second access should not log again
         _ = helper.isInTreatmentGroup
-        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).count, 1)
+        XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).count, 1)
     }
 
     func testPromotion_returnsNilForUnsupportedType() async throws {
@@ -160,6 +163,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         ))
 
@@ -202,6 +206,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         ))
 
@@ -240,6 +245,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -271,6 +277,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -302,6 +309,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -337,6 +345,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 
@@ -371,6 +380,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
             analyticsHelper: analyticsHelper
         ))
 

@@ -45,7 +45,7 @@ extension Dictionary {
         return newDict
     }
 
-    @_spi(STP) public mutating func mergeAssertingOnOverwrites(_ other: [Key: Value]) {
+    @_spi(InternalOnlyAPI) public mutating func mergeAssertingOnOverwrites(_ other: [Key: Value]) {
         merge(other) { a, b in
             stpAssertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")
             return a
@@ -76,7 +76,7 @@ extension Dictionary where Value == Any {
 }
 
 // From https://talk.objc.io/episodes/S01E31-mutating-untyped-dictionaries
-@_spi(STP) public extension Dictionary {
+@_spi(InternalOnlyAPI) public extension Dictionary {
     /// Example usage: `dict[jsonDict: "countries"]?[jsonDict: "japan"]?["capital"] = "berlin"`
     subscript(jsonDict key: Key) -> [String: Any]? {
         get {

@@ -6,13 +6,15 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeUICore
+import UIKit
 import Vision
 import XCTest
 
 // swift-format-ignore
-@_spi(STP) @testable import StripeIdentity
+@_spi(InternalOnlyAPI) @testable import StripeIdentity
 
 private let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
@@ -45,6 +47,73 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             flowController.navigationController.viewControllers.first as Any,
             LoadingViewController.self
         )
+    }
+
+    func testDarkBrandColorUsesWhitePrimaryButtonText() throws {
+        let brandColor = UIColor(red: 0.05, green: 0.12, blue: 0.20, alpha: 1)
+        let flowController = VerificationSheetFlowController(
+            configuration: .init(brandLogo: UIImage(), brandColor: brandColor)
+        )
+
+        let (backgroundColor, textColor, height) = try customColors(flowController.primaryButtonStyle)
+        XCTAssertEqual(backgroundColor, brandColor)
+        XCTAssertEqual(textColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)), .white)
+        XCTAssertNil(height)
+    }
+
+    func testLightBrandColorUsesBlackPrimaryButtonText() throws {
+        let brandColor = UIColor(red: 1, green: 0.85, blue: 0, alpha: 1)
+        let configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage(), brandColor: brandColor)
+
+        let (backgroundColor, textColor, _) = try customColors(configuration.resolvedPrimaryButtonStyle)
+        XCTAssertEqual(backgroundColor, brandColor)
+        XCTAssertEqual(textColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)), .black)
+    }
+
+    func testBrandColorTakesPrecedenceOverPrimaryButtonStyle() throws {
+        let brandColor = UIColor(red: 1, green: 0.85, blue: 0, alpha: 1)
+        var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage(), brandColor: brandColor)
+        configuration.primaryButtonStyle = .custom(backgroundColor: .red, textColor: .green, height: 52)
+
+        let (backgroundColor, textColor, height) = try customColors(configuration.resolvedPrimaryButtonStyle)
+        XCTAssertEqual(backgroundColor, brandColor)
+        XCTAssertEqual(textColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)), .black)
+        XCTAssertEqual(height, 52)
+    }
+
+    func testNilBrandColorKeepsPrimaryButtonStyle() throws {
+        var configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage())
+        guard case .default = configuration.resolvedPrimaryButtonStyle else {
+            return XCTFail("Expected the default primary button style")
+        }
+
+        configuration.primaryButtonStyle = .custom(backgroundColor: .red, textColor: .green, height: nil)
+        let (backgroundColor, textColor, _) = try customColors(configuration.resolvedPrimaryButtonStyle)
+        XCTAssertEqual(backgroundColor, .red)
+        XCTAssertEqual(textColor, .green)
+    }
+
+    func testDynamicBrandColorPicksTextColorForEachAppearance() throws {
+        let dynamicBrandColor = UIColor { traitCollection in
+            return traitCollection.userInterfaceStyle == .dark
+                ? UIColor(red: 0.05, green: 0.12, blue: 0.20, alpha: 1)
+                : UIColor(red: 1, green: 0.85, blue: 0, alpha: 1)
+        }
+        let configuration = IdentityVerificationSheet.Configuration(brandLogo: UIImage(), brandColor: dynamicBrandColor)
+
+        let (_, textColor, _) = try customColors(configuration.resolvedPrimaryButtonStyle)
+        XCTAssertEqual(textColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)), .black)
+        XCTAssertEqual(textColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .dark)), .white)
+    }
+
+    private func customColors(
+        _ style: IdentityVerificationSheet.Configuration.PrimaryButtonStyle
+    ) throws -> (UIColor, UIColor, CGFloat?) {
+        guard case let .custom(backgroundColor, textColor, height) = style else {
+            XCTFail("Expected a custom primary button style")
+            throw mockError
+        }
+        return (backgroundColor, textColor, height)
     }
 
     // Tests the navigation stack between screen transitions
@@ -375,6 +444,21 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
         // Then routing completes synchronously without waiting for the models
         XCTAssertIs(try XCTUnwrap(nextViewController), SelfieWarmupViewController.self)
+    }
+
+    func testNextViewControllerBiometricConsentPrecedesSelfie() throws {
+        let exp = expectation(
+            description: "testNextViewControllerBiometricConsentPrecedesSelfie"
+        )
+        try nextViewController(
+            missingRequirements: [.biometricConsent, .face],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, BiometricConsentViewController.self)
+                exp.fulfill()
+            }
+        )
+
+        wait(for: [exp], timeout: 1)
     }
 
     func testDelegateChain() {

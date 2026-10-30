@@ -7,10 +7,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 import UIKit
 
@@ -135,7 +135,8 @@ extension PaymentSheet {
         intent: Intent,
         paymentOption: PaymentOption,
         paymentHandler: STPPaymentHandler,
-        integrationShape: IntegrationShape
+        integrationShape: IntegrationShape,
+        checkoutSessionID: String? = nil
     ) async -> PreconfirmActionsResult {
         // Perform PaymentSheet-specific local actions before confirming.
         // These actions are not represented in the PaymentIntent state and are specific to
@@ -197,6 +198,7 @@ extension PaymentSheet {
                     preConfirmationViewController,
                     configuration: configuration,
                     nativeSheetPresentation: nativeSheetPresentation,
+                    checkoutSessionID: checkoutSessionID,
                     didCancelNative3DS2: {
                         paymentHandler.cancel3DS2ChallengeFlow()
                     }
@@ -264,7 +266,7 @@ extension PaymentSheet {
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession, checkoutAttribution: analyticsHelper.checkoutAttribution)
 
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
             intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
@@ -327,11 +329,13 @@ extension PaymentSheet {
                         params: params,
                         authenticationContext: authenticationContext,
                         completion: { actionStatus, paymentIntent, error in
-                            Task { await confirmationChallenge?.complete() }
-                            if let paymentIntent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                            Task { @MainActor in
+                                await confirmationChallenge?.complete()
+                                if let paymentIntent {
+                                    setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                                }
+                                paymentHandlerCompletion(actionStatus, error)
                             }
-                            paymentHandlerCompletion(actionStatus, error)
                         }
                     )
                     // MARK: ↪ SetupIntent
@@ -350,11 +354,13 @@ extension PaymentSheet {
                         params: setupIntentParams,
                         authenticationContext: authenticationContext,
                         completion: { actionStatus, setupIntent, error in
-                            Task { await confirmationChallenge?.complete() }
-                            if let setupIntent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                            Task { @MainActor in
+                                await confirmationChallenge?.complete()
+                                if let setupIntent {
+                                    setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                                }
+                                paymentHandlerCompletion(actionStatus, error)
                             }
-                            paymentHandlerCompletion(actionStatus, error)
                         }
                     )
                     // MARK: ↪ Deferred Intent
@@ -467,10 +473,12 @@ extension PaymentSheet {
                             params: paymentIntentParams,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
-                                Task { await confirmationChallenge?.complete() }
-                                paymentHandlerCompletion(actionStatus, error)
-                                if actionStatus == .succeeded {
-                                    linkAccount?.logout()
+                                Task { @MainActor in
+                                    await confirmationChallenge?.complete()
+                                    paymentHandlerCompletion(actionStatus, error)
+                                    if actionStatus == .succeeded {
+                                        linkAccount?.logout()
+                                    }
                                 }
                             }
                         )
@@ -483,10 +491,12 @@ extension PaymentSheet {
                             params: setupIntentParams,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
-                                Task { await confirmationChallenge?.complete() }
-                                paymentHandlerCompletion(actionStatus, error)
-                                if actionStatus == .succeeded {
-                                    linkAccount?.logout()
+                                Task { @MainActor in
+                                    await confirmationChallenge?.complete()
+                                    paymentHandlerCompletion(actionStatus, error)
+                                    if actionStatus == .succeeded {
+                                        linkAccount?.logout()
+                                    }
                                 }
                             }
                         )
@@ -549,11 +559,13 @@ extension PaymentSheet {
                             params: paymentIntentParams,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
-                                Task { await confirmationChallenge?.complete() }
-                                if actionStatus == .succeeded {
-                                    linkAccount?.logout()
+                                Task { @MainActor in
+                                    await confirmationChallenge?.complete()
+                                    if actionStatus == .succeeded {
+                                        linkAccount?.logout()
+                                    }
+                                    paymentHandlerCompletion(actionStatus, error)
                                 }
-                                paymentHandlerCompletion(actionStatus, error)
                             }
                         )
                     case .setupIntent(let setupIntent):
@@ -567,11 +579,13 @@ extension PaymentSheet {
                             params: setupIntentParams,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
-                                Task { await confirmationChallenge?.complete() }
-                                if actionStatus == .succeeded {
-                                    linkAccount?.logout()
+                                Task { @MainActor in
+                                    await confirmationChallenge?.complete()
+                                    if actionStatus == .succeeded {
+                                        linkAccount?.logout()
+                                    }
+                                    paymentHandlerCompletion(actionStatus, error)
                                 }
-                                paymentHandlerCompletion(actionStatus, error)
                             }
                         )
                     case .deferredIntent(let intentConfig):

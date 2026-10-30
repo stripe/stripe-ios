@@ -4,10 +4,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension CustomerSheet {
@@ -72,8 +72,10 @@ extension CustomerSheet {
                     params: setupIntentParams,
                     authenticationContext: authenticationContext,
                     completion: { status, intent, error in
-                        Task { await confirmationChallenge?.complete() }
-                        paymentHandlerCompletion(status, intent, error)
+                        Task {
+                            await confirmationChallenge?.complete()
+                            paymentHandlerCompletion(status, intent, error)
+                        }
                     })
             }
         } else {

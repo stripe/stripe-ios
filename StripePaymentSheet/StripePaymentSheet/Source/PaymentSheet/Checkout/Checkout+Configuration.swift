@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController {
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
@@ -68,6 +68,17 @@ extension CheckoutController {
             self.returnURL = returnURL
         }
 
+        /// Elements enabled by configuration, regardless of whether they are displayed or used.
+        var configuredElements: [STPClientAttributionMetadata.AdditionalElement] {
+            let elements: [STPClientAttributionMetadata.AdditionalElement?] = [
+                paymentElement != nil ? .paymentElement : nil,
+                expressCheckoutElement != nil ? .expressCheckoutElement : nil,
+                shippingAddressElement != nil ? .shippingAddressElement : nil,
+                currencySelectorElement != nil ? .currencySelectorElement : nil,
+            ]
+            return elements.compactMap { $0 }
+        }
+
         // MARK: - Debug-only return URL validation
 #if DEBUG
         /// Debug-only listener used to verify Checkout return URLs can be routed through
@@ -120,7 +131,7 @@ extension CheckoutController {
     }
 }
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CheckoutController.Configuration {
     /// Default customer details used to pre-populate Checkout integrations.

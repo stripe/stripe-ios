@@ -5,9 +5,9 @@
 //  Created by George Birch on 8/6/26.
 
 import OHHTTPStubs
-@_spi(STP) @testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 import UIKit
 import XCTest
 
@@ -61,6 +61,35 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
             weakElement == nil
         }, object: nil)
         await fulfillment(of: [released], timeout: 2)
+    }
+
+    func testPresentationUsesCheckoutUserInterfaceStyle() async throws {
+        let styles: [(CheckoutController.UserInterfaceStyle, UIUserInterfaceStyle)] = [
+            (.alwaysLight, .light),
+            (.alwaysDark, .dark),
+            (.automatic, .unspecified),
+        ]
+
+        for (checkoutStyle, expectedStyle) in styles {
+            // Given checkout's user interface style
+            var configuration = CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+            configuration.shippingAddressElement = .init()
+            configuration.userInterfaceStyle = checkoutStyle
+            let checkout = try await CheckoutController(configuration: configuration)
+            let shippingAddressElement = checkout.getShippingAddressElement()
+            let presenter = PresentationCapturingViewController()
+
+            // When the shipping address sheet is configured for presentation
+            shippingAddressElement.present(from: presenter, completion: nil)
+            let navigationController = try XCTUnwrap(presenter.capturedViewController as? UINavigationController)
+
+            // Then the address controller and its navigation stack use checkout's style
+            XCTAssertEqual(shippingAddressElement.addressViewController.overrideUserInterfaceStyle, expectedStyle, "Checkout style: \(checkoutStyle)")
+            XCTAssertEqual(navigationController.overrideUserInterfaceStyle, expectedStyle, "Checkout style: \(checkoutStyle)")
+        }
     }
 
     func testCompletionRunsAfterDelegateDismissesPresentation() async throws {
@@ -269,6 +298,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
     private func makeShippingAddressElement() -> ShippingAddressElement {
         return ShippingAddressElement(
             configuration: .init(),
+            userInterfaceStyle: .automatic,
             initialShippingAddress: .init(
                 name: "Jane Doe",
                 address: .init(
@@ -348,6 +378,20 @@ private final class PresentationObservingViewController: UIViewController {
     }
 }
 
+// Capture the sheet synchronously so style checks do not depend on UIKit transitions.
+private final class PresentationCapturingViewController: UIViewController {
+
+    var capturedViewController: UIViewController?
+
+    override func present(
+        _ viewControllerToPresent: UIViewController,
+        animated flag: Bool,
+        completion: (() -> Void)? = nil
+    ) {
+        capturedViewController = viewControllerToPresent
+    }
+}
+
 @MainActor
 private final class ShippingAddressElementDelegateMock: ShippingAddressElementDelegate {
 
@@ -357,7 +401,7 @@ private final class ShippingAddressElementDelegateMock: ShippingAddressElementDe
         self.error = error
     }
 
-    func updateShippingAddress(name: String?, address: CheckoutController.Address?) async throws {
+    func updateShippingAddressFromElement(name: String?, address: CheckoutController.Address?) async throws {
         if let error {
             throw error
         }

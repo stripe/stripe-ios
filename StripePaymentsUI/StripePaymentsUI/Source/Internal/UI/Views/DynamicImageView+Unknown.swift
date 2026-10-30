@@ -6,9 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
-@_spi(STP) public extension DynamicImageView {
+@_spi(InternalOnlyAPI) public extension DynamicImageView {
     static func makeUnknownCardImageView(theme: ElementsAppearance) -> DynamicImageView {
         return DynamicImageView(
             dynamicImage: STPImageLibrary.unknownCardCardImage(),

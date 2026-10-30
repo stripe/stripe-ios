@@ -4,8 +4,8 @@
 //
 
 import DeviceCheck
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import XCTest
 
 class StripeAttestTest: XCTestCase {

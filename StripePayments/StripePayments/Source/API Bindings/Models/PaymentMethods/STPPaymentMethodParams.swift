@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// An object representing parameters used to create a PaymentMethod object.
@@ -153,13 +153,13 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var ngCard: STPPaymentMethodNgCardParams?
 
     /// Radar options that may contain HCaptcha token
-    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
+    @objc @_spi(InternalOnlyAPI) public var radarOptions: STPRadarOptions?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @objc @_spi(InternalOnlyAPI) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     /// Creates params for a card PaymentMethod.
     /// - Parameters:
@@ -1577,7 +1577,7 @@ extension STPPaymentMethodParams {
 }
 
 extension STPPaymentMethodParams {
-    @_spi(STP) public convenience init(
+    @_spi(InternalOnlyAPI) public convenience init(
         type: STPPaymentMethodType
     ) {
         self.init()

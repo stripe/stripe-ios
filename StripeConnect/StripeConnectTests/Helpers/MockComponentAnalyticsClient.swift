@@ -6,7 +6,7 @@
 //
 
 @testable import StripeConnect
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import XCTest
 
 class MockComponentAnalyticsClient: ComponentAnalyticsClient {

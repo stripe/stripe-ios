@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 4/8/26.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Handles Checkout mutations requested by a CurrencySelectorElement.
 @MainActor
@@ -19,7 +19,7 @@ protocol CurrencySelectorElementCheckoutDelegate: AnyObject {
 /// Obtain an instance from ``Checkout/getCurrencySelectorElement()`` and use
 /// ``view`` in SwiftUI or ``uiView`` in UIKit.
 @MainActor
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 public final class CurrencySelectorElement {
     // MARK: - Public Properties
@@ -74,7 +74,7 @@ public final class CurrencySelectorElement {
 }
 
 @MainActor
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 public protocol CurrencySelectorElementDelegate: AnyObject {
     /// Called inside an animation block when the CurrencySelectorElement view is updating its height. Your implementation should call `setNeedsLayout()` and `layoutIfNeeded` on the scroll view that contains the CurrencySelectorElement view. This enables a smooth animation of the height change.

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 actor ConfirmationChallenge {
     private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
@@ -76,16 +76,6 @@ actor ConfirmationChallenge {
             await complete()
             throw error
         }
-    }
-
-    @MainActor
-    static func withRadarOptions<Result>(
-        for paymentMethodType: STPPaymentMethodType,
-        challenge: ConfirmationChallenge?,
-        operation: (STPRadarOptions?) async throws -> Result
-    ) async throws -> Result {
-        guard let challenge else { return try await operation(nil) }
-        return try await challenge.withRadarOptions(for: paymentMethodType, operation: operation)
     }
 
     func fetchTokensWithTimeout() async -> ChallengeTokens {

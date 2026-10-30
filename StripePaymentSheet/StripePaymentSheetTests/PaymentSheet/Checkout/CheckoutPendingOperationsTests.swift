@@ -6,8 +6,8 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 @MainActor
@@ -174,20 +174,23 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
         // Two distinct sessions (different currencies) so we can tell them apart
         var firstJSON = CheckoutTestHelpers.openSessionJSON
-        firstJSON["currency"] = "eur"
-        firstJSON["checkout_items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur")
+        firstJSON["presentment_currency"] = "eur"
+        firstJSON["integration_currency"] = "eur"
+        firstJSON["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur")
         let firstSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: firstJSON)
 
         var secondJSON = CheckoutTestHelpers.openSessionJSON
-        secondJSON["currency"] = "gbp"
-        secondJSON["checkout_items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "gbp")
+        secondJSON["presentment_currency"] = "gbp"
+        secondJSON["integration_currency"] = "gbp"
+        secondJSON["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "gbp")
         let secondSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: secondJSON)
 
         // First op blocks on firstGate until we explicitly open it
         let firstTask = Task { @MainActor in
             try await checkout.enqueueSessionUpdate {
                 await firstGate.wait()
-                try await checkout.commitSession(firstSession)
+                checkout.commitSession(firstSession)
+                checkout.updateForSessionChange()
             }
         }
 
@@ -197,7 +200,8 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         let secondTask = Task { @MainActor in
             try await checkout.enqueueSessionUpdate {
                 await secondGate.wait()
-                try await checkout.commitSession(secondSession)
+                checkout.commitSession(secondSession)
+                checkout.updateForSessionChange()
             }
         }
 
@@ -258,7 +262,8 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         // Enqueue an operation that commits the same session (no actual mutation)
         let existingSession = CheckoutTestHelpers.makeOpenSession()
         try await checkout.enqueueSessionUpdate {
-            try await checkout.commitSession(existingSession)
+            checkout.commitSession(existingSession)
+            checkout.updateForSessionChange()
         }
 
         XCTAssertEqual(recorder.sessions.count, 2)

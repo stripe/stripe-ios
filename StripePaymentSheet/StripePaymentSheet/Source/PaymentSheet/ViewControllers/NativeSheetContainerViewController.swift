@@ -7,10 +7,10 @@
 //
 
 import SafariServices
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
@@ -112,6 +112,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     }
 
     let appearance: PaymentSheet.Appearance
+    private let checkoutSessionID: String?
 
     private var contentViewController: BottomSheetContentViewController
 
@@ -130,10 +131,12 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
     required init(
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
+        checkoutSessionID: String? = nil,
         didCancelNative3DS2: @escaping () -> Void
     ) {
         self.contentViewController = contentViewController
         self.appearance = appearance
+        self.checkoutSessionID = checkoutSessionID
         self.didCancelNative3DS2 = didCancelNative3DS2
         super.init(nibName: nil, bundle: nil)
 
@@ -142,6 +145,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         addChild(contentViewController)
         contentViewController.didMove(toParent: self)
         contentContainerView.addArrangedSubview(contentViewController.view)
+        contentViewController.navigationBar.checkoutSessionID = checkoutSessionID
         contentViewController.navigationBar.systemNavigationItem = navigationItem
         self.view.backgroundColor = appearance.colors.background
     }
@@ -282,6 +286,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         scrollView.updateConstraintsIfNeeded()
         oldContentViewController.navigationBar.removeFromSuperview()
         oldContentViewController.navigationBar.systemNavigationItem = nil
+        newContentViewController.navigationBar.checkoutSessionID = checkoutSessionID
         newContentViewController.navigationBar.systemNavigationItem = navigationItem
         newContentViewController.view.alpha = 0
 
@@ -440,8 +445,17 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
             return
         }
 
-        // Wait until UIKit finishes presenting or dismissing before starting a height animation.
-        if rootParent.isBeingPresented || rootParent.isBeingDismissed {
+        if rootParent.isBeingPresented {
+            // UIKit establishes the native header's height and safe areas as presentation starts.
+            // Refresh the initial estimate now so the sheet opens at its final height instead of
+            // waiting until presentation completes and starting a second resize animation.
+            lastFittedContentHeight = fittedContentHeight
+            rootParent.sheetPresentationController?.invalidateDetents()
+            return
+        }
+
+        // Wait until UIKit finishes dismissing before starting another height animation.
+        if rootParent.isBeingDismissed {
             guard let transitionCoordinator = rootParent.transitionCoordinator else { return }
             // Set `isWaitingForDetentTransition` to true if animation work successfully starts
             isWaitingForDetentTransition = transitionCoordinator.animate(alongsideTransition: nil) { [weak self] _ in
@@ -542,8 +556,15 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
 
         // The keyboard guide reserves the bottom safe area by default, even with the keyboard hidden.
         // TODO: When we drop iOS 16 support, remove this compensation after setting usesBottomSafeArea = false.
-        let bottomInset = view.keyboardLayoutGuide.layoutFrame.height <= view.safeAreaInsets.bottom
+        let keyboardHeight = view.keyboardLayoutGuide.layoutFrame.height
+        var bottomInset = keyboardHeight <= view.safeAreaInsets.bottom
             ? view.safeAreaInsets.bottom : 0
+        if usesLiquidGlass, keyboardHeight > view.safeAreaInsets.bottom,
+           let toolbar = view.firstResponder()?.inputAccessoryView as? DoneButtonToolbar {
+            // The guide includes the transparent Done toolbar. Keep content behind it instead of
+            // exposing an opaque strip of sheet background, while still avoiding the keyboard keys.
+            bottomInset = min(toolbar.bounds.height, keyboardHeight)
+        }
         if keyboardAvoidanceConstraint?.constant != bottomInset {
             keyboardAvoidanceConstraint?.constant = bottomInset
             view.layoutIfNeeded()
@@ -557,6 +578,13 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         guard view.window != nil,
               abs(fittedContentHeight - lastFittedContentHeight) > 0.5,
               !hasScheduledDetentInvalidation else {
+            return
+        }
+
+        if rootParent.isBeingPresented {
+            // Resolve the actual header layout before UIKit captures the opening animation's height.
+            // Queuing this correction would animate from the shorter offscreen estimate.
+            invalidateContentDetent()
             return
         }
 
@@ -576,7 +604,7 @@ class NativeSheetContainerViewController: UIViewController, PaymentSheetContaine
         let shouldLogPaymentSheetAnalyticsOnDismissal = contentViewController.navigationBar.shouldLogPaymentSheetAnalyticsOnDismissal
         contentViewController.didTapOrSwipeToDismiss()
         if shouldLogPaymentSheetAnalyticsOnDismissal {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed, checkoutSessionID: checkoutSessionID)
         }
     }
 
@@ -598,6 +626,12 @@ extension NativeSheetContainerViewController {
         #if !os(visionOS)
         // UIKit adapts navigation items into the appropriate horizontal or vertical system bar.
         let navigationController = navigationController ?? UINavigationController(rootViewController: self)
+        // Resolve semantic colors so UIKit doesn't blend the sheet background with its material.
+        // Keep the provider dynamic so the header and form still update together in light and dark mode.
+        let backgroundColor = appearance.colors.background
+        navigationController.view.backgroundColor = UIColor { traits in
+            backgroundColor.resolvedColor(with: traits)
+        }
         navigationController.modalPresentationStyle = .automatic
         // Dismissal is handled by the sheet's explicit controls rather than UIKit's interactive gestures.
         navigationController.isModalInPresentation = true
@@ -637,7 +671,9 @@ extension NativeSheetContainerViewController {
                 sheetPresentationController.detents = [.large()]
                 sheetPresentationController.selectedDetentIdentifier = .large
             }
-            sheetPresentationController.preferredCornerRadius = sheetCornerRadius
+            // Duo's full-height sheets can meet the screen's rounded corners. Let UIKit adapt
+            // their radius to the display instead of forcing the form's smaller corner radius.
+            sheetPresentationController.preferredCornerRadius = SheetImplementationResolver.isRequiredForDevice ? nil : sheetCornerRadius
             sheetPresentationController.prefersGrabberVisible = false
             sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
         }

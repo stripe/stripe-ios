@@ -7,13 +7,13 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public final class StripeIdentityBundleLocator: BundleLocatorProtocol {
-    @_spi(STP) public static let internalClass: AnyClass = StripeIdentityBundleLocator.self
-    @_spi(STP) public static let bundleName = "StripeIdentityBundle"
+@_spi(InternalOnlyAPI) public final class StripeIdentityBundleLocator: BundleLocatorProtocol {
+    @_spi(InternalOnlyAPI) public static let internalClass: AnyClass = StripeIdentityBundleLocator.self
+    @_spi(InternalOnlyAPI) public static let bundleName = "StripeIdentityBundle"
     #if SWIFT_PACKAGE
-    @_spi(STP) public static let spmResourcesBundle = Bundle.module
+    @_spi(InternalOnlyAPI) public static let spmResourcesBundle = Bundle.module
     #endif
-    @_spi(STP) public static let resourcesBundle = StripeIdentityBundleLocator.computeResourcesBundle()
+    @_spi(InternalOnlyAPI) public static let resourcesBundle = StripeIdentityBundleLocator.computeResourcesBundle()
 }

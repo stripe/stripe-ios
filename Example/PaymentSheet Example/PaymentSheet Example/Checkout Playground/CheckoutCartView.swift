@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 3/2/26.
 //
 
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutCartView: View {
@@ -171,13 +171,13 @@ struct CheckoutCartView: View {
                 }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
                     merchantId: "merchant.com.stripe.umbrella.test",
-                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType,
-                    display: expressCheckoutElementSettings.applePayDisplay
+                    buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType
                 )
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(
                     display: expressCheckoutElementSettings.linkDisplay
                 )
                 expressCheckoutElementConfiguration.appearance.buttonTheme = expressCheckoutElementSettings.appearance.buttonTheme
+                expressCheckoutElementConfiguration.appearance.cornerRadius = expressCheckoutElementSettings.appearance.cornerRadius
                 expressCheckoutElementConfiguration.appearance.buttonLayout.maxColumns = expressCheckoutElementSettings.appearance.buttonLayout.maxColumns
                 expressCheckoutElementConfiguration.appearance.buttonLayout.maxRows = expressCheckoutElementSettings.appearance.buttonLayout.maxRows
                 config.expressCheckoutElement = expressCheckoutElementConfiguration

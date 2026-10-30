@@ -6,16 +6,16 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public class BSBNumberProvider {
+@_spi(InternalOnlyAPI) public class BSBNumberProvider {
     enum Error: Swift.Error {
         case bsbLoadFailure
     }
 
     private let bsbDataFilename = "au_becs_bsb"
 
-    @_spi(STP) public static var shared: BSBNumberProvider = BSBNumberProvider()
+    @_spi(InternalOnlyAPI) public static var shared: BSBNumberProvider = BSBNumberProvider()
     var bsbNumberToNameMapping: [String: String] = [:]
     private let bsbNumberUpdateQueue = DispatchQueue(label: "com.stripe.BSB.BSBNumberProvider", qos: .userInitiated)
 

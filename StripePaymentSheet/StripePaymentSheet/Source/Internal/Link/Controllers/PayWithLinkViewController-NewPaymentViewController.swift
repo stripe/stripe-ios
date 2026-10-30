@@ -7,9 +7,9 @@
 //
 
 import PassKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension PayWithLinkViewController {
@@ -225,7 +225,12 @@ extension PayWithLinkViewController {
             confirmButton.update(status: .processing)
             coordinator?.allowSheetDismissal(false)
 
-            confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+            confirmParams.paymentMethodParams.clientAttributionMetadata = context.analyticsHelper.shouldIncludeClientAttributionMetadata
+                ? STPClientAttributionMetadata.makeClientAttributionMetadata(
+                    intent: context.intent,
+                    elementsSession: context.elementsSession,
+                    checkoutAttribution: context.analyticsHelper.checkoutAttribution
+                ) : nil
 
             linkAccount.createPaymentDetails(
                 with: confirmParams.paymentMethodParams,

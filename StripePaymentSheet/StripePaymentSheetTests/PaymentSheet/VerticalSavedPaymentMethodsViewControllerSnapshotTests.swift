@@ -6,7 +6,7 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -51,7 +51,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
             paymentMethods.insert(card, at: 0)
         }
 
-        let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
+        let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
                                                             intent: ._testValue(),
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,

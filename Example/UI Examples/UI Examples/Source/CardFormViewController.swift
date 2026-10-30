@@ -7,7 +7,7 @@
 //
 
 import Stripe
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 import UIKit
 
 class CardFormViewController: UIViewController {

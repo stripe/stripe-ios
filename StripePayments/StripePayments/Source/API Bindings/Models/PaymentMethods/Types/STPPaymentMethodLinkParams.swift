@@ -11,10 +11,10 @@ import UIKit
 /// An object representing parameters used to create an Link Payment Method
 public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
     /// :nodoc:
-    @objc @_spi(STP) public var paymentDetailsID: String?
+    @objc @_spi(InternalOnlyAPI) public var paymentDetailsID: String?
 
     /// :nodoc:
-    @objc @_spi(STP) public var credentials: [AnyHashable: Any]?
+    @objc @_spi(InternalOnlyAPI) public var credentials: [AnyHashable: Any]?
 
     /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]

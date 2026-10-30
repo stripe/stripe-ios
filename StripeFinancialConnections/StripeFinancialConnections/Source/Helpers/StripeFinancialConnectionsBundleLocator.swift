@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 final class StripeFinancialConnectionsBundleLocator: BundleLocatorProtocol {
     static let internalClass: AnyClass = StripeFinancialConnectionsBundleLocator.self

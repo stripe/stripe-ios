@@ -7,9 +7,9 @@
 //
 
 import AVKit
-@_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 // MARK: - ScanningState
@@ -358,10 +358,6 @@ enum EmptyClassificationType: Equatable {
 }
 
 extension ImageScanningSession where ExpectedClassificationType == EmptyClassificationType {
-
-    func setStateScanned(capturedData: CapturedDataType) {
-        setStateScanned(expectedClassification: .empty, capturedData: capturedData)
-    }
 
     func startIfNeeded() {
         startIfNeeded(expectedClassification: .empty)

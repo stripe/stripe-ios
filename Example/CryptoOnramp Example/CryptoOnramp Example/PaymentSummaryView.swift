@@ -10,7 +10,7 @@ import SwiftUI
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 import StripePayments
 
 /// A view used to display a payment summary, from which the user can complete checkout.
