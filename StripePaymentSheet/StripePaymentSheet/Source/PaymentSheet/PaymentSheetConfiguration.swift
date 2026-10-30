@@ -342,10 +342,10 @@ extension PaymentSheet {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
 
-            stpAssert(!customerSessionClientSecret.hasPrefix("ek_"),
-                      "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
-            stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
-                      "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+            assert(!customerSessionClientSecret.hasPrefix("ek_"),
+                    "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+            assert(customerSessionClientSecret.hasPrefix("cuss_"),
+                    "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
         }
     }
     /// TermsDisplay controls how mandates or other legal agreements are displayed. Use 'never' to never display legal agreements.
