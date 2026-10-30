@@ -310,6 +310,16 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         challengeCode.typeText("424242" + XCUIKeyboardKey.return.rawValue)
         XCTAssertTrue(app.buttons["Submit"].waitForExistenceAndTap())
         XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
+
+        // Canceling authentication and retrying still produces one successful Checkout confirmation.
+        let confirmationEvents = analyticsLog.filter {
+            $0[string: "event"]?.hasPrefix("checkout_elements.confirm.") == true
+        }
+        XCTAssertEqual(confirmationEvents.compactMap { $0[string: "event"] }, [
+            "checkout_elements.confirm.started",
+            "checkout_elements.confirm.succeeded",
+        ])
+        XCTAssertEqual(confirmationEvents.last?[string: "invocation_source"], "express_checkout_element")
     }
 
     private func fillShippingAddress() {
