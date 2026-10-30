@@ -174,16 +174,16 @@ extension PaymentSheetLoader {
         }
     }
 
-    /// If configuration uses Ephemeral Key, retrieve Customer object and return email
+    /// If the customer uses a legacy Ephemeral Key, retrieve Customer object and return email
     @MainActor
     static func getCustomerEmailForLinkWithEphemeralKey(
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         loadTimings: LoadTimings
     ) async throws -> (email: String, source: EmailSource)? {
         guard
             configuration.defaultBillingDetails.email == nil, // If email was already provided, don't make a network request to retrieve it.
-            let customerID = configuration.customer?.id,
-            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
+            let credentials = customerProvider.legacyEphemeralKeyCredentials
         else {
             return nil
         }
@@ -191,7 +191,10 @@ extension PaymentSheetLoader {
         defer {
             loadTimings.logEnd("retrieveCustomer")
         }
-        let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
+        let customer = try await configuration.apiClient.retrieveCustomer(
+            credentials.customerID,
+            using: credentials.ephemeralKeySecret
+        )
         if let email = customer.email {
             return (email, EmailSource.customerObject)
         }
