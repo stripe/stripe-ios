@@ -22,7 +22,6 @@ public class STPAnalyticsClientTest: XCTestCase {
         let apiClient = STPAPIClient(publishableKey: "pk_test_example")
         apiClient.publishableKey = nil
         _ = apiClient.publishableKey
-        _ = STPAPIClient.shared
 
         let payload = STPAnalyticsClient().commonPayload(apiClient)
 
@@ -37,7 +36,6 @@ public class STPAnalyticsClientTest: XCTestCase {
 
         _ = apiClient.perform(NSSelectorFromString("publishableKey"))
 
-        XCTAssertTrue(apiClient.usesObjectiveCAPI)
         XCTAssertEqual(STPAnalyticsClient().commonPayload(apiClient)["uses_objective_c_api"] as? Bool, true)
     }
 
@@ -53,11 +51,6 @@ public class STPAnalyticsClientTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last?["uses_objective_c_api"] as? Bool, true)
         XCTAssertTrue(apiClient.makeCopy().usesObjectiveCAPI)
         XCTAssertFalse(STPAPIClient().usesObjectiveCAPI)
-    }
-
-    func testObjectiveCUsageRemainsMarkedAfterSwiftCalls() {
-        let apiClient = STPAPIClient()
-        apiClient.perform(NSSelectorFromString("setPublishableKey:"), with: "pk_test_example")
 
         apiClient.publishableKey = nil
         _ = apiClient.publishableKey

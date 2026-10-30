@@ -316,9 +316,7 @@ import UIKit
         client.urlSession = urlSession
         client.betas = betas
         client.userKeyLiveMode = userKeyLiveMode
-        if usesObjectiveCAPI {
-            client.recordObjectiveCAPIUsage()
-        }
+        client._usesObjectiveCAPI = usesObjectiveCAPI
         return client
     }
 
