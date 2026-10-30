@@ -334,10 +334,6 @@ final class PayWithLinkViewController: NSObject {
             contentViewController.navigationBar.setStyle(.back(showAdditionalButton: false))
         }
 
-        // Re-enable user interaction when presenting a new controller.
-        if !sheetContainer.view.isUserInteractionEnabled {
-            setUserInteractionEnabled(true)
-        }
         sheetContainer.pushContentViewController(contentViewController)
     }
 
