@@ -239,7 +239,7 @@ public class AddressViewController: UIViewController {
 
     fileprivate lazy var closeButton: UIButton = {
         let button = SheetNavigationButton.makeCloseButton(appearance: configuration.appearance)
-        button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.didTapCloseButton() }, for: .touchUpInside)
         return button
     }()
 
@@ -428,7 +428,7 @@ extension AddressViewController {
         navigationController?.pushViewController(autoCompleteViewController, animated: true)
     }
 
-    @objc func didTapCloseButton() {
+    func didTapCloseButton() {
         // Tapping 'X' is a cancel: if the customer changed nothing, dismiss and return the
         // as-presented address; otherwise confirm before discarding their changes.
         if hasChanges {

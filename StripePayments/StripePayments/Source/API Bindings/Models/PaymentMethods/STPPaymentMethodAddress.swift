@@ -10,7 +10,7 @@ import Contacts
 import Foundation
 
 /// The billing address, a property on `STPPaymentMethodBillingDetails`
-public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPFormEncodable {
+public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPFormEncodable, NSCopying {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// City/District/Suburb/Town/Village.
@@ -83,7 +83,8 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
     }
 
     // MARK: - NSCopying
-    func copy(with zone: NSZone? = nil) -> Any {
+    /// :nodoc:
+    public func copy(with zone: NSZone? = nil) -> Any {
         let copyPaymentMethodAddress = type(of: self).init()
 
         copyPaymentMethodAddress.allResponseFields = allResponseFields

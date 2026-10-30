@@ -27,7 +27,7 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// The value of the token. You can store this value on your server and use it to make charges and customers.
     /// - seealso: https://stripe.com/docs/payments/charges-api
     public private(set) var tokenId: String
-    /// Whether or not this token was created in livemode. Will be YES if you used your Live Publishable Key, and NO if you used your Test Publishable Key.
+    /// Whether or not this token was created in livemode. Will be true if you used your Live Publishable Key, and false if you used your Test Publishable Key.
     public private(set) var livemode = false
     /// The type of this token.
     public private(set) var type: STPTokenType = .account

@@ -9,19 +9,21 @@ import Foundation
 
 @_spi(InternalOnlyAPI) public class PaymentsSDKVariant {
     @_spi(InternalOnlyAPI) public static let variant: String = {
-        if NSClassFromString("STP_Internal_PaymentSheetViewController") != nil {
+        // StripeCore can't reference these classes directly, so look them up by their module-qualified Swift names.
+        if NSClassFromString("StripePaymentSheet.PaymentSheetViewController") != nil {
             // This is the PaymentSheet SDK
             return "paymentsheet"
         }
+        // STPPaymentCardTextField keeps a fixed Objective-C runtime name so that Interface Builder files can find it.
         if NSClassFromString("STPPaymentCardTextField") != nil {
             // This is the Payments UI SDK
             return "payments-ui"
         }
-        if NSClassFromString("STPCardValidator") != nil {
+        if NSClassFromString("StripePayments.STPCardValidator") != nil {
             // This is the API-only Payments SDK
             return "payments-api"
         }
-        if NSClassFromString("STPApplePayContext") != nil {
+        if NSClassFromString("StripeApplePay.STPApplePayContext") != nil {
             // This is only the Apple Pay SDK
             return "applepay"
         }

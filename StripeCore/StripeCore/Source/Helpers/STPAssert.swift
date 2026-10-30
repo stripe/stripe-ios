@@ -57,10 +57,10 @@ import Foundation
 }
 
 /// Resets STPAssertTestUtil state after each test to prevent cross-test pollution.
-/// Conforms to XCTestObservation via Obj-C runtime message dispatch — the selector
+/// Conforms to XCTestObservation via Objective-C runtime message dispatch — the selector
 /// `testCaseDidFinish:` is recognized without formal protocol conformance or an XCTest import.
 private class _STPAssertTestObserver: NSObject {
-    func testCaseDidFinish(_ testCase: AnyObject) {
+    @objc func testCaseDidFinish(_ testCase: AnyObject) {
         STPAssertTestUtil.shouldSuppressNextSTPAlert = false
         STPAssertTestUtil.lastAssertMessage = ""
     }

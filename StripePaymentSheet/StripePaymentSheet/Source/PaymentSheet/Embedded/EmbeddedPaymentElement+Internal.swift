@@ -808,7 +808,7 @@ final class PaymentSheetAuthenticationContextViewController: UIViewController {
     }
 }
 
-extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthenticationContext {
+extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthenticationContext, _stpinternal_STPAuthenticationContextDismissalObserver {
 
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
         DispatchQueue.main.async {

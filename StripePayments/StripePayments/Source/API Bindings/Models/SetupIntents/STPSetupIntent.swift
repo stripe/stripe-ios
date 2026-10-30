@@ -21,7 +21,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     public let customerID: String?
     /// An arbitrary string attached to the object. Often useful for displaying to users.
     public let stripeDescription: String?
-    /// Has the value `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
+    /// Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
     public let livemode: Bool
     /// If present, this property tells you what actions you need to take in order for your customer to set up this payment method.
     public let nextAction: STPIntentAction?
@@ -29,11 +29,6 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     public let paymentMethodID: String?
     /// The optionally expanded PaymentMethod used in this SetupIntent.
     public let paymentMethod: STPPaymentMethod?
-    /// The list of payment method types (e.g. `[STPPaymentMethodType.card]`) that this SetupIntent is allowed to set up.
-    @available(swift, obsoleted: 1.0, renamed: "paymentMethodTypes")
-    public var paymentMethodTypes_objc: [NSNumber] {
-        return paymentMethodTypes.map { NSNumber(value: $0.rawValue) }
-    }
     /// The list of payment method types that this PaymentIntent is allowed to use.
     public let paymentMethodTypes: [STPPaymentMethodType]
     /// Status of this SetupIntent.

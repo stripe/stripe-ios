@@ -29,7 +29,6 @@ import Foundation
 /// This class contains static methods to validate card numbers, expiration dates,
 /// and CVCs. For a list of test card numbers to use with this code,
 /// see https://stripe.com/docs/testing
-@objc(STPCardValidator)
 public class STPCardValidator: NSObject {
     /// Returns a copy of the passed string with all non-numeric characters removed.
     public class func sanitizedNumericString(
@@ -80,9 +79,9 @@ public class STPCardValidator: NSObject {
     /// network currently issues card numbers beginning with the digit 9; if an
     /// otherwise correct-length and luhn-valid card number beginning with 9
     /// (example: 9999999999999995) were passed to this method, it would return
-    /// STPCardValidationStateInvalid if this parameter were YES and
-    /// STPCardValidationStateValid if this parameter were NO. If unsure, you should
-    /// use YES for this value.
+    /// STPCardValidationStateInvalid if this parameter were true and
+    /// STPCardValidationStateValid if this parameter were false. If unsure, you should
+    /// use true for this value.
     /// - Returns: STPCardValidationStateValid if the number is valid,
     /// STPCardValidationStateInvalid if the number is invalid, or
     /// STPCardValidationStateIncomplete if the number is a substring of a valid

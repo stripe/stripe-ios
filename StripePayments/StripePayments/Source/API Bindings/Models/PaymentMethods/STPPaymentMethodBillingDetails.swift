@@ -11,7 +11,7 @@ import Foundation
 
 /// Billing information associated with a `STPPaymentMethod` that may be used or required by particular types of payment methods.
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-billing_details
-public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, STPFormEncodable {
+public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, STPFormEncodable, NSCopying {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Billing address.
@@ -59,7 +59,8 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
     }
 
     // MARK: - NSCopying
-    func copy(with zone: NSZone? = nil) -> Any {
+    /// :nodoc:
+    public func copy(with zone: NSZone? = nil) -> Any {
         let copyBillingDetails = type(of: self).init()
 
         copyBillingDetails.allResponseFields = allResponseFields

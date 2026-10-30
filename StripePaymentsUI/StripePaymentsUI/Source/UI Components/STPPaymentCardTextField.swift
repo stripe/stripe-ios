@@ -40,7 +40,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     private var metadataLoadingIndicator: STPCardLoadingIndicator?
 
     /// - seealso: STPPaymentCardTextFieldDelegate
-    @IBOutlet open weak var delegate: STPPaymentCardTextFieldDelegate?
+    open weak var delegate: STPPaymentCardTextFieldDelegate?
 
     /// The font used in each child field. Default is `UIFont.systemFont(ofSize:18)`.
     open var font: UIFont = {
@@ -248,13 +248,13 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     open private(set) var brandImage: UIImage?
     /// Whether or not the form currently contains a valid card number,
     /// expiration date, CVC, and postal code (if required).
+    /// To be notified when this changes, implement `STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidChange(_:)`
+    /// or add a target for the `.valueChanged` control event.
     /// - seealso: STPCardValidator
-
-    @objc dynamic open var isValid: Bool {
+    open var isValid: Bool {
         return viewModel.isValid
     }
     /// Enable/disable selecting or editing the field. Useful when submitting card details to Stripe.
-
     open override var isEnabled: Bool {
         get {
             super.isEnabled
@@ -331,11 +331,11 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
     /// Controls if a postal code entry field can be displayed to the user.
-    /// Default is YES.
-    /// If YES, the type of code entry shown is controlled by the set `countryCode`
+    /// Default is true.
+    /// If true, the type of code entry shown is controlled by the set `countryCode`
     /// value. Some country codes may result in no postal code entry being shown if
     /// those countries do not commonly use postal codes.
-    /// If NO, no postal code entry will ever be displayed.
+    /// If false, no postal code entry will ever be displayed.
     open var postalCodeEntryEnabled: Bool {
         get {
             return viewModel.postalCodeRequired
@@ -345,8 +345,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
     /// The two-letter ISO country code that corresponds to the user's billing address.
-    /// If `postalCodeEntryEnabled` is YES, this controls which type of entry is allowed.
-    /// If `postalCodeEntryEnabled` is NO, this property currently has no effect.
+    /// If `postalCodeEntryEnabled` is true, this controls which type of entry is allowed.
+    /// If `postalCodeEntryEnabled` is false, this property currently has no effect.
     /// If set to nil and postal code entry is enabled, the country from the user's current
     /// locale will be filled in. Otherwise the specific country code set will be used.
     /// By default this will fetch the user's current country code from NSLocale.
@@ -1060,7 +1060,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     /// Returns the next text field to be edited, in priority order:
-    /// 1. If we're currently in a text field, returns the next one (ignoring postalCodeField if postalCodeEntryEnabled == NO)
+    /// 1. If we're currently in a text field, returns the next one (ignoring postalCodeField if postalCodeEntryEnabled == false)
     /// 2. Otherwise, returns the first invalid field (either cycling back from the end or as it gains 1st responder)
     /// 3. As a final fallback, just returns the last field
     func nextFirstResponderField() -> STPFormTextField {
@@ -1696,7 +1696,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     // MARK: STPFormTextFieldDelegate
-    @objc(formTextFieldDidBackspaceOnEmpty:) func formTextFieldDidBackspace(
+    func formTextFieldDidBackspace(
         onEmpty formTextField: STPFormTextField
     ) {
         let previous = previousField()
@@ -1711,7 +1711,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 
-    @objc(formTextField:modifyIncomingTextChange:) func formTextField(
+    func formTextField(
         _ formTextField: STPFormTextField,
         modifyIncomingTextChange input: NSAttributedString
     ) -> NSAttributedString {
@@ -1755,7 +1755,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 
-    @objc(formTextFieldTextDidChange:) func formTextFieldTextDidChange(
+    func formTextFieldTextDidChange(
         _ formTextField: STPFormTextField
     ) {
         guard let fieldType = STPCardFieldType(rawValue: formTextField.tag) else {
@@ -1937,14 +1937,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         )
 
         if !isMidSubviewEditingTransition {
-            if delegate?.responds(
-                to: #selector(
-                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditing(_:))
-            )
-                ?? false
-            {
-                delegate?.paymentCardTextFieldDidBeginEditing?(self)
-            }
+            delegate?.paymentCardTextFieldDidBeginEditing(self)
         }
 
         guard let cardType = STPCardFieldType(rawValue: textField.tag) else {
@@ -1953,43 +1946,13 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         switch cardType {
         case .number:
             (textField as? STPFormTextField)?.validText = true
-            if delegate?.responds(
-                to: #selector(
-                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditingNumber(_:))
-            ) ?? false {
-                delegate?.paymentCardTextFieldDidBeginEditingNumber?(self)
-            }
+            delegate?.paymentCardTextFieldDidBeginEditingNumber(self)
         case .CVC:
-            if delegate?.responds(
-                to: #selector(
-                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditingCVC(_:))
-            )
-                ?? false
-            {
-                delegate?.paymentCardTextFieldDidBeginEditingCVC?(self)
-            }
+            delegate?.paymentCardTextFieldDidBeginEditingCVC(self)
         case .expiration:
-            if delegate?.responds(
-                to: #selector(
-                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditingExpiration(
-                        _:
-                    ))
-            )
-                ?? false
-            {
-                delegate?.paymentCardTextFieldDidBeginEditingExpiration?(self)
-            }
+            delegate?.paymentCardTextFieldDidBeginEditingExpiration(self)
         case .postalCode:
-            if delegate?.responds(
-                to: #selector(
-                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditingPostalCode(
-                        _:
-                    ))
-            )
-                ?? false
-            {
-                delegate?.paymentCardTextFieldDidBeginEditingPostalCode?(self)
-            }
+            delegate?.paymentCardTextFieldDidBeginEditingPostalCode(self)
         }
         updateImage(for: cardType)
     }
@@ -2018,37 +1981,13 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                     (textField as? STPFormTextField)?.validText = false
                 }
             })
-            if delegate?.responds(
-                to: #selector(
-                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidEndEditingNumber(_:))
-            )
-                ?? false
-            {
-                delegate?.paymentCardTextFieldDidEndEditingNumber?(self)
-            }
+            delegate?.paymentCardTextFieldDidEndEditingNumber(self)
         case .CVC:
-            if delegate?.responds(
-                to: #selector(
-                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidEndEditingCVC(_:))
-            )
-                ?? false
-            {
-                delegate?.paymentCardTextFieldDidEndEditingCVC?(self)
-            }
+            delegate?.paymentCardTextFieldDidEndEditingCVC(self)
         case .expiration:
-            if delegate?.responds(
-                to: #selector(
-                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidEndEditingExpiration(_:))
-            ) ?? false {
-                delegate?.paymentCardTextFieldDidEndEditingExpiration?(self)
-            }
+            delegate?.paymentCardTextFieldDidEndEditingExpiration(self)
         case .postalCode:
-            if delegate?.responds(
-                to: #selector(
-                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidEndEditingPostalCode(_:))
-            ) ?? false {
-                delegate?.paymentCardTextFieldDidEndEditingPostalCode?(self)
-            }
+            delegate?.paymentCardTextFieldDidEndEditingPostalCode(self)
         }
 
         if !isMidSubviewEditingTransition {
@@ -2059,13 +1998,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 completion: nil
             )
             updateImage(for: .number)
-            if delegate?.responds(
-                to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidEndEditing(_:))
-            )
-                ?? false
-            {
-                delegate?.paymentCardTextFieldDidEndEditing?(self)
-            }
+            delegate?.paymentCardTextFieldDidEndEditing(self)
 
             // Clear this when the whole field ends editing, so the next call to should begin is not ignored.
             lastShouldBeginField = nil
@@ -2076,14 +2009,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     open func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == lastSubField() && _firstInvalidAutoAdvanceField() == nil {
             // User pressed return in the last field, and all fields are valid
-            if delegate?.responds(
-                to: #selector(
-                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldWillEndEditing(forReturn:))
-            )
-                ?? false
-            {
-                delegate?.paymentCardTextFieldWillEndEditing?(forReturn: self)
-            }
+            delegate?.paymentCardTextFieldWillEndEditing(forReturn: self)
             resignFirstResponder()
         } else {
             // otherwise, move to the next field
@@ -2325,13 +2251,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         if isValid {
             cardElementAnalytics.reportFormCompleted()
         }
-        if delegate?.responds(
-            to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidChange(_:))
-        )
-            ?? false
-        {
-            delegate?.paymentCardTextFieldDidChange?(self)
-        }
+        delegate?.paymentCardTextFieldDidChange(self)
         sendActions(for: .valueChanged)
     }
 
@@ -2372,45 +2292,6 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 
-    /// The list of preferred networks that should be used to process
-    /// payments made with a co-branded card if your user hasn't selected a
-    /// network themselves.
-    ///
-    /// The first preferred network that matches any available network will
-    /// be offered to the customer. If no preferred network is applicable, the
-    /// customer will select the network.
-    ///
-    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
-    /// For example:
-    /// [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
-    @available(swift, obsoleted: 1.0)
-    open func preferredNetworks_objc() -> [NSNumber]? {
-        guard let preferredNetworks = self.preferredNetworks else {
-            return nil
-        }
-        return preferredNetworks.map { NSNumber(value: $0.rawValue) }
-    }
-
-    /// The list of preferred networks that should be used to process
-    /// payments made with a co-branded card if your user hasn't selected a
-    /// network themselves.
-    ///
-    /// The first preferred network that matches any available network will
-    /// be offered to the customer. If no preferred network is applicable, the
-    /// customer will select the network.
-    ///
-    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
-    /// For example:
-    /// [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
-    @available(swift, obsoleted: 1.0)
-    open func setPreferredNetworks_objc(preferredNetworks: [NSNumber]?) {
-        guard let preferredNetworks = preferredNetworks else {
-            self.preferredNetworks = nil
-            return
-        }
-        self.preferredNetworks = preferredNetworks.map { STPCardBrand(rawValue: $0.intValue) ?? .unknown }
-    }
-
     /// The account (if any) for which the funds of the intent are intended.
     /// The Stripe account ID (if any) which is the business of record.
     /// See [use cases](https://docs.stripe.com/connect/charges#on_behalf_of) to determine if this option is relevant for your integration.
@@ -2426,63 +2307,79 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 /// This protocol allows a delegate to be notified when a payment text field's
 /// contents change, which can in turn be used to take further actions depending
 /// on the validity of its contents.
+/// Every method has a default implementation that does nothing, so implement only the ones you need.
 @MainActor @preconcurrency
-@objc public protocol STPPaymentCardTextFieldDelegate: NSObjectProtocol {
+public protocol STPPaymentCardTextFieldDelegate: AnyObject {
     /// Called when either the card number, expiration, or CVC changes. At this point,
     /// one can call `isValid` on the text field to determine, for example,
     /// whether or not to enable a button to submit the form. Example:
-    /// - (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
-    /// self.paymentButton.enabled = textField.isValid;
+    /// ```
+    /// func paymentCardTextFieldDidChange(_ textField: STPPaymentCardTextField) {
+    ///     paymentButton.isEnabled = textField.isValid
     /// }
+    /// ```
     /// - Parameter textField: the text field that has changed
-    @objc optional func paymentCardTextFieldDidChange(_ textField: STPPaymentCardTextField)
+    func paymentCardTextFieldDidChange(_ textField: STPPaymentCardTextField)
     /// Called when editing begins in the text field as a whole.
     /// After receiving this callback, you will always also receive a callback for which
     /// specific subfield of the view began editing.
-    @objc optional func paymentCardTextFieldDidBeginEditing(_ textField: STPPaymentCardTextField)
+    func paymentCardTextFieldDidBeginEditing(_ textField: STPPaymentCardTextField)
     /// Notification that the user pressed the `return` key after completely filling
     /// out the STPPaymentCardTextField with data that passes validation.
     /// The Stripe SDK is going to `resignFirstResponder` on the `STPPaymentCardTextField`
     /// to dismiss the keyboard after this delegate method returns, however if your app wants
     /// to do something more (ex: move first responder to another field), this is a good
     /// opportunity to do that.
-    /// This is delivered *before* the corresponding `paymentCardTextFieldDidEndEditing:`
+    /// This is delivered *before* the corresponding `paymentCardTextFieldDidEndEditing(_:)`
     /// - Parameter textField: The STPPaymentCardTextField that was being edited when the user pressed return
-    @objc optional func paymentCardTextFieldWillEndEditing(
-        forReturn textField: STPPaymentCardTextField
-    )
+    func paymentCardTextFieldWillEndEditing(forReturn textField: STPPaymentCardTextField)
     /// Called when editing ends in the text field as a whole.
     /// This callback is always preceded by an callback for which
     /// specific subfield of the view ended its editing.
-    @objc optional func paymentCardTextFieldDidEndEditing(_ textField: STPPaymentCardTextField)
+    func paymentCardTextFieldDidEndEditing(_ textField: STPPaymentCardTextField)
     /// Called when editing begins in the payment card field's number field.
-    @objc optional func paymentCardTextFieldDidBeginEditingNumber(
-        _ textField: STPPaymentCardTextField
-    )
+    func paymentCardTextFieldDidBeginEditingNumber(_ textField: STPPaymentCardTextField)
     /// Called when editing ends in the payment card field's number field.
-    @objc optional func paymentCardTextFieldDidEndEditingNumber(
-        _ textField: STPPaymentCardTextField
-    )
+    func paymentCardTextFieldDidEndEditingNumber(_ textField: STPPaymentCardTextField)
     /// Called when editing begins in the payment card field's CVC field.
-    @objc optional func paymentCardTextFieldDidBeginEditingCVC(_ textField: STPPaymentCardTextField)
+    func paymentCardTextFieldDidBeginEditingCVC(_ textField: STPPaymentCardTextField)
     /// Called when editing ends in the payment card field's CVC field.
-    @objc optional func paymentCardTextFieldDidEndEditingCVC(_ textField: STPPaymentCardTextField)
+    func paymentCardTextFieldDidEndEditingCVC(_ textField: STPPaymentCardTextField)
     /// Called when editing begins in the payment card field's expiration field.
-    @objc optional func paymentCardTextFieldDidBeginEditingExpiration(
-        _ textField: STPPaymentCardTextField
-    )
+    func paymentCardTextFieldDidBeginEditingExpiration(_ textField: STPPaymentCardTextField)
     /// Called when editing ends in the payment card field's expiration field.
-    @objc optional func paymentCardTextFieldDidEndEditingExpiration(
-        _ textField: STPPaymentCardTextField
-    )
+    func paymentCardTextFieldDidEndEditingExpiration(_ textField: STPPaymentCardTextField)
     /// Called when editing begins in the payment card field's ZIP/postal code field.
-    @objc optional func paymentCardTextFieldDidBeginEditingPostalCode(
-        _ textField: STPPaymentCardTextField
-    )
+    func paymentCardTextFieldDidBeginEditingPostalCode(_ textField: STPPaymentCardTextField)
     /// Called when editing ends in the payment card field's ZIP/postal code field.
-    @objc optional func paymentCardTextFieldDidEndEditingPostalCode(
-        _ textField: STPPaymentCardTextField
-    )
+    func paymentCardTextFieldDidEndEditingPostalCode(_ textField: STPPaymentCardTextField)
+}
+
+extension STPPaymentCardTextFieldDelegate {
+    /// :nodoc:
+    public func paymentCardTextFieldDidChange(_ textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldDidBeginEditing(_ textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldWillEndEditing(forReturn textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldDidEndEditing(_ textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldDidBeginEditingNumber(_ textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldDidEndEditingNumber(_ textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldDidBeginEditingCVC(_ textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldDidEndEditingCVC(_ textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldDidBeginEditingExpiration(_ textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldDidEndEditingExpiration(_ textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldDidBeginEditingPostalCode(_ textField: STPPaymentCardTextField) {}
+    /// :nodoc:
+    public func paymentCardTextFieldDidEndEditingPostalCode(_ textField: STPPaymentCardTextField) {}
 }
 
 private let kCardLoadingAnimationDelay: TimeInterval = 0.1

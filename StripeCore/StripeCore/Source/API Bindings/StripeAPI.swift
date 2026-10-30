@@ -30,10 +30,10 @@ public class StripeAPI: NSObject {
 
     /// A Boolean value that determines whether additional device data is sent to Stripe for fraud prevention.
     ///
-    /// If YES, additional device signals will be sent to Stripe.
+    /// If true, additional device signals will be sent to Stripe.
     /// For more details on the information we collect, visit https://stripe.com/docs/disputes/prevention/advanced-fraud-detection
     /// Disabling this setting will reduce Stripe's ability to protect your business from fraudulent payments.
-    /// The default value is YES.
+    /// The default value is true.
     public static var advancedFraudSignalsEnabled: Bool = true
 
     /// If the SDK receives a "Too Many Requests" (429) status code from Stripe,
@@ -45,10 +45,10 @@ public class StripeAPI: NSObject {
 
     // MARK: - Apple Pay
 
-    /// Japanese users can enable JCB for Apple Pay by setting this to `YES`,
+    /// Japanese users can enable JCB for Apple Pay by setting this to `true`,
     /// after they have been approved by JCB.
     ///
-    /// The default value is NO.
+    /// The default value is false.
     /// @note JCB is only supported on iOS 10.1+
     public class var jcbPaymentNetworkSupported: Bool {
         get {
@@ -117,13 +117,13 @@ public class StripeAPI: NSObject {
     ///
     /// The Stripe supported Apple Pay card networks are:
     /// American Express, Visa, Mastercard, Discover, Maestro.
-    /// Japanese users can enable JCB by setting `JCBPaymentNetworkSupported` to YES,
+    /// Japanese users can enable JCB by setting `JCBPaymentNetworkSupported` to true,
     /// after they have been approved by JCB.
     /// Users that have the Payment Method Cartes Bancaires set to Active, can enable it
     /// by adding `.cartesBancaires` to the `additionalEnabledApplePayNetworks` list.
     /// Australian users can enable eftpos Australia by adding `.eftpos` to the `additionalEnabledApplePayNetworks` list.
-    /// - Returns: YES if the device is currently able to make Apple Pay payments via one
-    /// of the supported networks. NO if the user does not have a saved card of a
+    /// - Returns: true if the device is currently able to make Apple Pay payments via one
+    /// of the supported networks. false if the user does not have a saved card of a
     /// supported type, or other restrictions prevent payment (such as parental controls).
     /// - Warning: This method synchronously queries PassKit and has been observed to block while
     ///   waiting for system services:
@@ -194,12 +194,12 @@ public class StripeAPI: NSObject {
     /// to this method first, and check the return value
     /// to easily determine whether it is a callback URL that Stripe will handle
     /// or if your app should process it normally.
-    /// If you are using a universal link URL, you will receive the callback in `application:continueUserActivity:restorationHandler:`
+    /// If you are using a universal link URL, you will receive the callback in `application(_:continue:restorationHandler:)`
     /// To learn more about universal links, see https://developer.apple.com/library/content/documentation/General/Conceptual/AppSearch/UniversalLinks.html
-    /// If you are using a native scheme URL, you will receive the callback in `application:openURL:options:`
+    /// If you are using a native scheme URL, you will receive the callback in `application(_:open:options:)`
     /// To learn more about native url schemes, see https://developer.apple.com/library/content/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Inter-AppCommunication/Inter-AppCommunication.html#//apple_ref/doc/uid/TP40007072-CH6-SW10
     /// - Parameter url: The URL that you received in your app delegate
-    /// - Returns: YES if the URL is expected and will be handled by Stripe. NO otherwise.
+    /// - Returns: true if the URL is expected and will be handled by Stripe. false otherwise.
     @discardableResult public static func handleURLCallback(
         with url: URL
     ) -> Bool {

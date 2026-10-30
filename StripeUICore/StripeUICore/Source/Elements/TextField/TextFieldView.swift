@@ -63,7 +63,7 @@ class TextFieldView: UIView {
     private(set) lazy var textField: STPTextFieldThatRemembersWantingToBecomeFirstResponder = {
         let textField = STPTextFieldThatRemembersWantingToBecomeFirstResponder()
         textField.delegate = self
-        textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        textField.addAction(UIAction { [weak self] _ in self?.textDidChange() }, for: .editingChanged)
         textField.autocorrectionType = .no
         textField.spellCheckingType = .no
         textField.adjustsFontForContentSizeCategory = true
@@ -121,7 +121,7 @@ class TextFieldView: UIView {
         button.tintColor = viewModel.theme.colors.placeholderText
         button.setImage(Image.icon_clear.makeImage(template: true), for: .normal)
         button.isHidden = true
-        button.addTarget(self, action: #selector(clearText), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.clearText() }, for: .touchUpInside)
 
         return button
     }()
@@ -193,7 +193,7 @@ class TextFieldView: UIView {
         addAndPinSubview(hStack, insets: viewModel.theme.textFieldInsets)
     }
 
-    @objc private func clearText() {
+    private func clearText() {
         textField.text = nil
         textField.sendActions(for: .editingChanged)
     }
@@ -291,7 +291,7 @@ extension TextFieldView: UITextFieldDelegate {
         return viewModel.editConfiguration.isEditable
     }
 
-    @objc func textDidChange() {
+    func textDidChange() {
         // If the text updates to non-empty, ensure the clear button is visible
         if let text = textField.text, !text.isEmpty, viewModel.shouldShowClearButton {
             setClearButton(hidden: false)

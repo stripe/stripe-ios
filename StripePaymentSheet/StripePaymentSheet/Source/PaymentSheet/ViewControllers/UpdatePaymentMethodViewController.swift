@@ -127,7 +127,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
 
     private lazy var removeButton: RemoveButton = {
         let button = RemoveButton(title: .Localized.remove, appearance: configuration.appearance)
-        button.addTarget(self, action: #selector(removePaymentMethod), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.removePaymentMethod() }, for: .touchUpInside)
         button.isHidden = !configuration.canRemove
         return button
     }()
@@ -212,7 +212,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         }
     }
 
-    @objc private func removePaymentMethod() {
+    private func removePaymentMethod() {
         for element in self.paymentMethodForm.getAllUnwrappedSubElements() {
             if let textElement = element as? TextFieldElement {
                 textElement.endEditing(true, continueToNextField: false)

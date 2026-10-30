@@ -16,7 +16,7 @@ import UIKit
 
     // MARK: - Property Overrides
     private var _defaultColor: UIColor?
-    /// color to use for `text` when `validText` is YES
+    /// color to use for `text` when `validText` is true
     @_spi(InternalOnlyAPI) public var defaultColor: UIColor? {
         get {
             _defaultColor
@@ -28,7 +28,7 @@ import UIKit
     }
 
     private var _errorColor: UIColor?
-    /// color to use for `text` when `validText` is NO
+    /// color to use for `text` when `validText` is false
     @_spi(InternalOnlyAPI) public var errorColor: UIColor? {
         get {
             _errorColor

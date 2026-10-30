@@ -63,7 +63,7 @@ extension STPStringUtils {
         completion(finalString, finalTagRange)
     }
 
-    /// Like `parseRangeFromString:withTag:completion:` but you can pass in a set
+    /// Like `parseRange(from:withTag:completion:)` but you can pass in a set
     /// of unique tags to get the ranges for and it will return you the mapping.
     /// E.g. Passing @"<a>Test</a> <b>string</b>" with the tag set [a, b]
     /// will get you a completion block dictionary that looks like

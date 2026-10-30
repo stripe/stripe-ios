@@ -495,10 +495,12 @@ extension STPAPIClient {
     }
 
     // Internal helper to pass timeout
+    // `@objc` so that test doubles can override this method, which is declared in an extension.
+    @objc
     @_spi(InternalOnlyAPI) public func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
-        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
+        timeout: NSNumber?, // NSNumber rather than TimeInterval so that this can be @objc
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         let endpoint: String = paymentIntentEndpoint(from: secret)
@@ -554,6 +556,8 @@ extension STPAPIClient {
         }
     }
 
+    // `@objc` so that test doubles can override this method, which is declared in an extension.
+    @objc
     @_spi(InternalOnlyAPI) public func refreshPaymentIntent(withClientSecret secret: String,
                                                             completion: @escaping STPPaymentIntentCompletionBlock) {
         let endpoint = "\(paymentIntentEndpoint(from: secret))/refresh"
@@ -587,7 +591,7 @@ extension STPAPIClient {
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmPaymentIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - paymentIntentConfirmParams:  The `STPPaymentIntentConfirmParams` to pass to `/confirm`
@@ -606,7 +610,7 @@ extension STPAPIClient {
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmPaymentIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - paymentIntentConfirmParams:  The `STPPaymentIntentConfirmParams` to pass to `/confirm`
@@ -666,7 +670,7 @@ extension STPAPIClient {
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmPaymentIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - paymentIntentParams: The `STPPaymentIntentParams` to pass to `/confirm`
@@ -789,10 +793,12 @@ extension STPAPIClient {
     }
 
     // Internal helper to pass timeout to URL request
+    // `@objc` so that test doubles can override this method, which is declared in an extension.
+    @objc
     func retrieveSetupIntent(
         withClientSecret secret: String,
         expand: [String]?,
-        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
+        timeout: NSNumber?, // NSNumber rather than TimeInterval so that this can be @objc
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
 
@@ -840,7 +846,7 @@ extension STPAPIClient {
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmSetupIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
@@ -859,7 +865,7 @@ extension STPAPIClient {
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmSetupIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - setupIntentParams: The `STPSetupIntentConfirmParams` to pass to `/confirm`
@@ -914,7 +920,7 @@ extension STPAPIClient {
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmSetupIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - setupIntentParams: The `STPSetupIntentConfirmParams` to pass to `/confirm`
@@ -957,6 +963,8 @@ extension STPAPIClient {
         }
     }
 
+    // `@objc` so that test doubles can override this method, which is declared in an extension.
+    @objc
     @_spi(InternalOnlyAPI) public func refreshSetupIntent(withClientSecret secret: String,
                                                           completion: @escaping STPSetupIntentCompletionBlock) {
         let endpoint = "\(setupIntentEndpoint(from: secret))/refresh"

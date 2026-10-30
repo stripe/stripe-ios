@@ -25,7 +25,7 @@ final class CardSectionWithScannerView: UIView {
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     lazy var cardScanButton: UIButton = {
         let button = UIButton.makeCardScanButton(theme: theme, linkAppearance: linkAppearance)
-        button.addTarget(self, action: #selector(didTapCardScanButton), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.didTapCardScanButton() }, for: .touchUpInside)
         return button
     }()
     lazy var cardScanningView: CardScanningView = {
@@ -76,7 +76,7 @@ final class CardSectionWithScannerView: UIView {
         addAndPinSubview(stack)
     }
 
-    @objc func didTapCardScanButton() {
+    func didTapCardScanButton() {
         analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
         animateScannerVisibility(true)
         cardScanningView.startScanner()

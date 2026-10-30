@@ -9,7 +9,7 @@
 import Foundation
 
 /// The user's card details.
-public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
+public class STPPaymentMethodCardParams: NSObject, STPFormEncodable, NSCopying {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// A convenience initializer for creating a payment method from a card source.
@@ -88,7 +88,8 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     }
 
     // MARK: - NSCopying
-    func copy(with zone: NSZone? = nil) -> Any {
+    /// :nodoc:
+    public func copy(with zone: NSZone? = nil) -> Any {
         let copyCardParams = type(of: self).init()
 
         copyCardParams.number = number

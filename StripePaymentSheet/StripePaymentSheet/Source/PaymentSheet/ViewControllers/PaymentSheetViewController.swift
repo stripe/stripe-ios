@@ -14,7 +14,6 @@ import PassKit
 import UIKit
 
 /// For internal SDK use only
-@objc(STP_Internal_PaymentSheetViewController)
 class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerProtocol {
     enum PaymentSheetViewControllerError: Error {
         case addingNewNoPaymentOptionOnBuyButtonTap

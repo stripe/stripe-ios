@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 /// An object representing parameters used to create a PaymentMethod object.
-/// @note To create a PaymentMethod from an Apple Pay PKPaymentToken, see `STPAPIClient createPaymentMethodWithPayment:completion:`
+/// @note To create a PaymentMethod from an Apple Pay PKPaymentToken, see `STPAPIClient.createPaymentMethod(with:completion:)`
 /// - seealso: https://stripe.com/docs/api/payment_methods/create
 public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
@@ -1165,7 +1165,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     }
 }
 
-// MARK: - Legacy ObjC
+// MARK: - Legacy factory methods
 
 extension STPPaymentMethodParams {
     /// Creates params for a card PaymentMethod.

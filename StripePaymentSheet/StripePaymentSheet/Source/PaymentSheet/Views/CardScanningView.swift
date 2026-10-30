@@ -136,7 +136,7 @@ class CardScanningView: UIView {
         cardScanner?.stop()
     }
 
-    @objc private func closeTapped() {
+    private func closeTapped() {
         cardScanner?.stop()
         delegate?.cardScanningViewShouldClose(self, cardParams: nil)
     }
@@ -176,7 +176,7 @@ class CardScanningView: UIView {
         cardScanner.cameraView = cameraView
         self.cardScanner = cardScanner
 
-        closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
+        closeButton.addAction(UIAction { [weak self] _ in self?.closeTapped() }, for: .touchUpInside)
 
         addSubview(cameraView)
         addSubview(cardOutlineView)

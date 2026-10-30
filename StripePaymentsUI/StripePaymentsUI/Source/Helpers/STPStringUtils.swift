@@ -56,7 +56,7 @@ import Foundation
         )
     }()
 
-    /// Returns YES if the string is likely to contain something formatted similar to an expiration date.
+    /// Returns true if the string is likely to contain something formatted similar to an expiration date.
     /// It doesn't confirm that the expiration date is valid, or that it is even a date.
     @_spi(InternalOnlyAPI) public class func stringMayContainExpirationDate(_ string: String?) -> Bool {
         let result = stringMayContainExpirationDateRegex?.matches(

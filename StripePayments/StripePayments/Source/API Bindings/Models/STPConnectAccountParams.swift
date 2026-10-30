@@ -15,24 +15,12 @@ public enum STPConnectAccountBusinessType: Int {
     /// This Connect account represents a company.
     case company
     /// No value was provided.
-    /// - Note: This value is used instead of `nil` for Obj-C compatibility.
     case none
 }
 
 /// Parameters for creating a Connect Account token.
 /// - seealso: https://stripe.com/docs/api/tokens/create_account
 public class STPConnectAccountParams: NSObject {
-
-    /// Boolean indicating that the Terms Of Service were shown to the user &
-    /// the user accepted them.
-    @available(swift, obsoleted: 1.0, renamed: "tosShownAndAccepted")
-    public var tosShownAndAccepted_objc: NSNumber? {
-        get {
-            guard let tosShownAndAccepted else { return nil }
-            return NSNumber(value: tosShownAndAccepted)
-        }
-        set { tosShownAndAccepted = newValue?.boolValue }
-    }
 
     /// Boolean indicating that the Terms Of Service were shown to the user &
     /// the user accepted them.
@@ -49,12 +37,12 @@ public class STPConnectAccountParams: NSObject {
 
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    /// Initialize `STPConnectAccountParams` with tosShownAndAccepted = YES
-    /// This method cannot be called with `wasAccepted == NO`, guarded by a `NSParameterAssert()`.
+    /// Initialize `STPConnectAccountParams` with tosShownAndAccepted = true
+    /// Returns `nil` if `wasAccepted` is `false`.
     /// Use this init method if you want to set the `tosShownAndAccepted` parameter. If you
-    /// don't, use the `initWithIndividual:` version instead.
+    /// don't, use `init(individual:)` instead.
     /// - Parameters:
-    ///   - wasAccepted: Must be YES, but only if the user was shown & accepted the ToS
+    ///   - wasAccepted: Must be true, but only if the user was shown & accepted the ToS
     ///   - individual: Information about the person represented by the account. See `STPConnectAccountIndividualParams`.
     public init?(
         tosShownAndAccepted wasAccepted: Bool,
@@ -71,12 +59,12 @@ public class STPConnectAccountParams: NSObject {
         super.init()
     }
 
-    /// Initialize `STPConnectAccountParams` with tosShownAndAccepted = YES
-    /// This method cannot be called with `wasAccepted == NO`, guarded by a `NSParameterAssert()`.
+    /// Initialize `STPConnectAccountParams` with tosShownAndAccepted = true
+    /// Returns `nil` if `wasAccepted` is `false`.
     /// Use this init method if you want to set the `tosShownAndAccepted` parameter. If you
-    /// don't, use the `initWithCompany:` version instead.
+    /// don't, use `init(company:)` instead.
     /// - Parameters:
-    ///   - wasAccepted: Must be YES, but only if the user was shown & accepted the ToS
+    ///   - wasAccepted: Must be true, but only if the user was shown & accepted the ToS
     ///   - company: Information about the company or business. See `STPConnectAccountCompanyParams`.
     public init?(
         tosShownAndAccepted wasAccepted: Bool,
@@ -96,7 +84,7 @@ public class STPConnectAccountParams: NSObject {
     /// Initialize `STPConnectAccountParams` with the provided `individual` dictionary.
     /// - Parameter individual: Information about the person represented by the account
     /// This init method cannot change the `tosShownAndAccepted` parameter. Use
-    /// `initWithTosShownAndAccepted:individual:` instead if you need to do that.
+    /// `init(tosShownAndAccepted:individual:)` instead if you need to do that.
     public init(
         individual: STPConnectAccountIndividualParams
     ) {
@@ -111,7 +99,7 @@ public class STPConnectAccountParams: NSObject {
     /// Initialize `STPConnectAccountParams` with the provided `company` dictionary.
     /// - Parameter company: Information about the company or business
     /// This init method cannot change the `tosShownAndAccepted` parameter. Use
-    /// `initWithTosShownAndAccepted:company:` instead if you need to do that.
+    /// `init(tosShownAndAccepted:company:)` instead if you need to do that.
     public init(
         company: STPConnectAccountCompanyParams
     ) {

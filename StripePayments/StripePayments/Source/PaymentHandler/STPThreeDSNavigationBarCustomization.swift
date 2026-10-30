@@ -49,7 +49,7 @@ public class STPThreeDSNavigationBarCustomization: NSObject {
         }
     }
     /// A Boolean value indicating whether the navigation bar is translucent or not.
-    /// Defaults to YES.
+    /// Defaults to true.
     public var translucent: Bool {
         get {
             return navigationBarCustomization.translucent

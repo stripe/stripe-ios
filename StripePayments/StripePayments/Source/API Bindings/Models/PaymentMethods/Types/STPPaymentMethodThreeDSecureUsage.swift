@@ -10,7 +10,7 @@ import Foundation
 
 /// Contains details on how an `STPPaymentMethodCard` maybe be used for 3D Secure authentication.
 public class STPPaymentMethodThreeDSecureUsage: NSObject, STPAPIResponseDecodable {
-    /// `YES` if 3D Secure is supported on this card.
+    /// `true` if 3D Secure is supported on this card.
     public private(set) var supported = false
     private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 

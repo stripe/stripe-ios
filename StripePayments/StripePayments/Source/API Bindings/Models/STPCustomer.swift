@@ -100,7 +100,7 @@ public class STPCustomer: NSObject {
     /// they should include Apple Pay sources. More details on documentation for
     /// `STPCustomerContext includeApplePaySources`
     ///
-    /// @param filteringApplePay      If YES, Apple Pay sources will be ignored
+    /// @param filteringApplePay      If true, Apple Pay sources will be ignored
     public func updateSources(filteringApplePay: Bool) {
         let (defaultSource, sources) = STPCustomer.sources(
             from: allResponseFields,

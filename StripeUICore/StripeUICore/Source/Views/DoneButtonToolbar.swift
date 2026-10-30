@@ -35,17 +35,9 @@ import UIKit
         super.init(frame: CGRect(x: 0, y: 0, width: 100, height: height))
         self.doneButtonToolbarDelegate = delegate
 
-        let doneButton = UIBarButtonItem(
-            barButtonSystemItem: .done,
-            target: self,
-            action: #selector(didTapDone)
-        )
+        let doneButton = UIBarButtonItem(systemItem: .done, primaryAction: UIAction { [weak self] _ in self?.didTapDone() })
         doneButton.tintColor = theme.colors.primary
-        let cancelButton = UIBarButtonItem(
-            barButtonSystemItem: .cancel,
-            target: self,
-            action: #selector(didTapCancel)
-        )
+        let cancelButton = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [weak self] _ in self?.didTapCancel() })
         cancelButton.tintColor = theme.colors.secondaryText
 
         var items = [.flexibleSpace(), doneButton]
@@ -66,12 +58,10 @@ import UIKit
 
     // MARK: Internal Methods
 
-    @objc
     private func didTapDone() {
         doneButtonToolbarDelegate?.didTapDone(self)
     }
 
-    @objc
     private func didTapCancel() {
         doneButtonToolbarDelegate?.didTapCancel(self)
     }

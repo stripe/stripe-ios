@@ -60,7 +60,7 @@ extension PayWithLinkViewController {
                 configuration: .linkPlain(),
                 title: context.secondaryButtonLabel
             )
-            button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+            button.addAction(UIAction { [weak self] _ in self?.cancelButtonTapped() }, for: .touchUpInside)
             return button
         }()
 
@@ -327,7 +327,6 @@ extension PayWithLinkViewController {
             coordinator?.confirmWithApplePay()
         }
 
-        @objc
         func cancelButtonTapped() {
             coordinator?.cancel(shouldReturnToPaymentSheet: true)
         }

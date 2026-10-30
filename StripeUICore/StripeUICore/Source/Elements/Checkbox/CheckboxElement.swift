@@ -16,7 +16,7 @@ import UIKit
             text: label,
             theme: theme
         )
-        checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
+        checkbox.addAction(UIAction { [weak self] _ in self?.didToggleCheckbox() }, for: .touchUpInside)
         checkbox.isSelected = isSelectedByDefault
         return checkbox
     }()
@@ -33,7 +33,7 @@ import UIKit
         }
     }
 
-    @objc func didToggleCheckbox() {
+    func didToggleCheckbox() {
         didToggle(checkboxButton.isSelected)
         delegate?.didUpdate(element: self)
     }

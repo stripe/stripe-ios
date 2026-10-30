@@ -92,14 +92,12 @@ class SheetNavigationBar: UIView {
     func updateSystemNavigationBar() {
         guard let systemNavigationItem else { return }
 
-        let closeItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(didTapCloseButton))
+        let closeItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction { [weak self] _ in self?.didTapCloseButton() })
         closeItem.isEnabled = isUserInteractionEnabled
         closeItem.accessibilityIdentifier = "UIButton.Close"
         let backItem = UIBarButtonItem(
             image: UIImage(systemName: "chevron.left")?.imageFlippedForRightToLeftLayoutDirection(),
-            style: .plain,
-            target: self,
-            action: #selector(didTapBackButton)
+            primaryAction: UIAction { [weak self] _ in self?.didTapBackButton() }
         )
         backItem.isEnabled = isUserInteractionEnabled
         backItem.accessibilityLabel = String.Localized.back
@@ -108,11 +106,14 @@ class SheetNavigationBar: UIView {
         let additionalItem: UIBarButtonItem
         switch additionalButton.title(for: .normal) {
         case UIButton.editButtonTitle:
-            additionalItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(didTapAdditionalButton))
+            additionalItem = UIBarButtonItem(systemItem: .edit, primaryAction: UIAction { [weak self] _ in self?.didTapAdditionalButton() })
         case UIButton.doneButtonTitle:
-            additionalItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(didTapAdditionalButton))
+            additionalItem = UIBarButtonItem(systemItem: .done, primaryAction: UIAction { [weak self] _ in self?.didTapAdditionalButton() })
         default:
-            additionalItem = UIBarButtonItem(title: additionalButton.title(for: .normal), style: .plain, target: self, action: #selector(didTapAdditionalButton))
+            additionalItem = UIBarButtonItem(
+                title: additionalButton.title(for: .normal),
+                primaryAction: UIAction { [weak self] _ in self?.didTapAdditionalButton() }
+            )
         }
         additionalItem.isEnabled = isUserInteractionEnabled && additionalButton.isEnabled
         additionalItem.accessibilityIdentifier = additionalButton.accessibilityIdentifier
@@ -193,9 +194,9 @@ class SheetNavigationBar: UIView {
             closeButtonRight.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
-        closeButtonLeft.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
-        closeButtonRight.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
-        backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        closeButtonLeft.addAction(UIAction { [weak self] _ in self?.didTapCloseButton() }, for: .touchUpInside)
+        closeButtonRight.addAction(UIAction { [weak self] _ in self?.didTapCloseButton() }, for: .touchUpInside)
+        backButton.addAction(UIAction { [weak self] _ in self?.didTapBackButton() }, for: .touchUpInside)
 
         setStyle(.close(showAdditionalButton: false))
     }
@@ -208,7 +209,6 @@ class SheetNavigationBar: UIView {
         return CGSize(width: UIView.noIntrinsicMetric, height: Self.height(appearance: appearance))
     }
 
-    @objc
     private func didTapCloseButton() {
         if shouldLogPaymentSheetAnalyticsOnDismissal {
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed, checkoutSessionID: checkoutSessionID)
@@ -216,12 +216,10 @@ class SheetNavigationBar: UIView {
         delegate?.sheetNavigationBarDidClose(self)
     }
 
-    @objc
     private func didTapBackButton() {
         delegate?.sheetNavigationBarDidBack(self)
     }
 
-    @objc
     private func didTapAdditionalButton() {
         additionalButton.sendActions(for: .touchUpInside)
     }

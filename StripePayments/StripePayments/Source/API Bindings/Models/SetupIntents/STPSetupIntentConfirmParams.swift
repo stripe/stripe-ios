@@ -52,24 +52,13 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     public var paymentMethodID: String?
     /// Options to update the associated PaymentMethod during SetupIntent confirmation.
     @_spi(KlarnaSDKPrivatePreview) public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
-    /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
+    /// `true` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
     @_spi(InternalOnlyAPI) public var setAsDefaultPM: NSNumber?
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
     /// This should probably be a URL that opens your iOS app.
     public var returnURL: String?
-    /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any SetupIntent next actions.
-    /// If set to false, STPSetupIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
-    /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
-    /// app.
-    @available(swift, obsoleted: 1.0, renamed: "useStripeSDK")
-    public var useStripeSDK_objc: NSNumber? {
-        get {
-            return useStripeSDK.map { NSNumber(value: $0) }
-        }
-        set { useStripeSDK = newValue?.boolValue }
-    }
     /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any SetupIntent next actions.
     /// If set to false, STPSetupIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
     /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your

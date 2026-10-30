@@ -18,7 +18,7 @@ import UIKit
     case bsbNumber
 }
 
-@objc protocol STPFormTextFieldDelegate: UITextFieldDelegate {
+protocol STPFormTextFieldDelegate: UITextFieldDelegate {
     // Note, post-Swift conversion:
     // In lieu of a real delegate proxy, this should always be implemented and call:
     //    if let textField = textField as? STPFormTextField, let delegateProxy = textField.delegateProxy {
@@ -31,12 +31,25 @@ import UIKit
         replacementString string: String
     ) -> Bool
 
-    @objc optional func formTextFieldDidBackspace(onEmpty formTextField: STPFormTextField)
-    @objc optional func formTextField(
+    func formTextFieldDidBackspace(onEmpty formTextField: STPFormTextField)
+    func formTextField(
         _ formTextField: STPFormTextField,
         modifyIncomingTextChange input: NSAttributedString
     ) -> NSAttributedString
-    @objc optional func formTextFieldTextDidChange(_ textField: STPFormTextField)
+    func formTextFieldTextDidChange(_ textField: STPFormTextField)
+}
+
+extension STPFormTextFieldDelegate {
+    func formTextFieldDidBackspace(onEmpty formTextField: STPFormTextField) {}
+
+    func formTextField(
+        _ formTextField: STPFormTextField,
+        modifyIncomingTextChange input: NSAttributedString
+    ) -> NSAttributedString {
+        return input
+    }
+
+    func formTextFieldTextDidChange(_ textField: STPFormTextField) {}
 }
 
 @_spi(InternalOnlyAPI) public class STPFormTextField: STPValidatedTextField {
@@ -195,11 +208,7 @@ import UIKit
     public override func deleteBackward() {
         super.deleteBackward()
         if (text?.count ?? 0) == 0 {
-            if formDelegate?.responds(
-                to: #selector(STPPaymentCardTextField.formTextFieldDidBackspace(onEmpty:))
-            ) ?? false {
-                formDelegate?.formTextFieldDidBackspace?(onEmpty: self)
-            }
+            formDelegate?.formTextFieldDidBackspace(onEmpty: self)
         }
     }
 
@@ -225,30 +234,18 @@ import UIKit
         }
         set(attributedText) {
             let oldValue = self.attributedText
-            let shouldModify =
-                formDelegate != nil
-                && formDelegate?.responds(
-                    to: #selector(
-                        STPFormTextFieldDelegate.formTextField(_:modifyIncomingTextChange:))
-                )
-                    ?? false
             var modified: NSAttributedString?
             if let attributedText = attributedText {
                 modified =
-                    shouldModify
-                    ? formDelegate?.formTextField?(self, modifyIncomingTextChange: attributedText)
-                    : attributedText
+                    formDelegate?.formTextField(self, modifyIncomingTextChange: attributedText)
+                    ?? attributedText
             }
             let transformed = textFormattingBlock != nil ? textFormattingBlock?(modified) : modified
             super.attributedText = transformed
             sendActions(for: .editingChanged)
-            if formDelegate?.responds(
-                to: #selector(STPPaymentCardTextField.formTextFieldTextDidChange(_:))
-            ) ?? false {
-                if let oldValue = oldValue {
-                    if !(transformed?.isEqual(to: oldValue) ?? false) {
-                        formDelegate?.formTextFieldTextDidChange?(self)
-                    }
+            if let oldValue = oldValue {
+                if !(transformed?.isEqual(to: oldValue) ?? false) {
+                    formDelegate?.formTextFieldTextDidChange(self)
                 }
             }
         }
@@ -403,7 +400,7 @@ class STPTextFieldDelegateProxy: NSObject, UITextFieldDelegate {
             //         Therefore, always allow entry of a single space in order to support `textContentType`.
             //
             //         Warning: This bypasses `setText:`, and subsequently `setAttributedText:` and the
-            //         formDelegate methods: `formTextField:modifyIncomingTextChange:` & `formTextFieldTextDidChange:`
+            //         formDelegate methods: `formTextField(_:modifyIncomingTextChange:)` & `formTextFieldTextDidChange(_:)`
             //         That's acceptable for a single space.
             inShouldChangeCharactersInRange = false
             return true

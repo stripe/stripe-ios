@@ -17,7 +17,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     private(set) public var stripeId: String
     /// Time at which the object was created. Measured in seconds since the Unix epoch.
     private(set) public var created: Date
-    /// `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
+    /// `true` if the object exists in live mode or the value `false` if the object exists in test mode.
     private(set) public var liveMode = false
     /// The type of the PaymentMethod.  The corresponding, similarly named property contains additional information specific to the PaymentMethod type.
     /// e.g. if the type is `STPPaymentMethodTypeCard`, the `card` property is also populated.

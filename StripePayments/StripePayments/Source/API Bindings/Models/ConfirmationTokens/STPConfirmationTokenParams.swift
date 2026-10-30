@@ -34,7 +34,7 @@ import Foundation
     /// Details about the Mandate to create.
     public var mandateData: STPMandateDataParams?
 
-    /// `@YES` to set this ConfirmationToken's PaymentMethod as the associated Customer's default
+    /// `true` to set this ConfirmationToken's PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
     @_spi(InternalOnlyAPI) public var setAsDefaultPM: NSNumber?
 

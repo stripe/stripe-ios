@@ -199,7 +199,7 @@ import WebKit
         manager.configureWebView?(manager.webView)
     }
 
-    // MARK: - Objective-C 'convenience' inits
+    // MARK: - Convenience inits
 
     convenience init(locale: Locale) throws {
         try self.init(locale: locale, size: .invisible)

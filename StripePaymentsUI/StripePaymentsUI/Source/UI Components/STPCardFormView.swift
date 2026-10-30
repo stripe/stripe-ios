@@ -577,45 +577,6 @@ public class STPCardFormView: STPFormView {
         }
     }
 
-    /// The list of preferred networks that should be used to process
-    /// payments made with a co-branded card if your user hasn't selected a
-    /// network themselves.
-    ///
-    /// The first preferred network that matches any available network will
-    /// be offered to the customer. If no preferred network is applicable, the
-    /// customer will select the network.
-    ///
-    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
-    /// For example:
-    /// [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
-    @available(swift, obsoleted: 1.0)
-    open func preferredNetworks_objc() -> [NSNumber]? {
-        guard let preferredNetworks = self.preferredNetworks else {
-            return nil
-        }
-        return preferredNetworks.map { NSNumber(value: $0.rawValue) }
-    }
-
-    /// The list of preferred networks that should be used to process
-    /// payments made with a co-branded card if your user hasn't selected a
-    /// network themselves.
-    ///
-    /// The first preferred network that matches any available network will
-    /// be offered to the customer. If no preferred network is applicable, the
-    /// customer will select the network.
-    ///
-    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
-    /// For example:
-    /// [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
-    @available(swift, obsoleted: 1.0)
-    open func setPreferredNetworks_objc(preferredNetworks: [NSNumber]?) {
-        guard let preferredNetworks = preferredNetworks else {
-            self.preferredNetworks = nil
-            return
-        }
-        self.preferredNetworks = preferredNetworks.map { STPCardBrand(rawValue: $0.intValue) ?? .unknown }
-    }
-
     /// The account (if any) for which the funds of the intent are intended.
     /// The Stripe account ID (if any) which is the business of record.
     /// See [use cases](https://docs.stripe.com/connect/charges#on_behalf_of) to determine if this option is relevant for your integration.

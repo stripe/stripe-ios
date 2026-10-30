@@ -185,7 +185,7 @@ extension SavedPaymentMethodCollectionView {
             selectableRectangle.accessibilityTraits = [.button]
 
             paymentMethodLogo.contentMode = .scaleAspectFit
-            accessoryButton.addTarget(self, action: #selector(didSelectAccessory), for: .touchUpInside)
+            accessoryButton.addAction(UIAction { [weak self] _ in self?.didSelectAccessory() }, for: .touchUpInside)
             let views = [
                 label, selectableRectangle, paymentMethodLogo, plus, selectedIcon, accessoryButton, defaultBadge
             ]
@@ -323,7 +323,6 @@ extension SavedPaymentMethodCollectionView {
         }
 
         // MARK: - Private Methods
-        @objc
         private func didSelectAccessory() {
             if isEditable {
                 delegate?.paymentOptionCellDidSelectEdit(self)

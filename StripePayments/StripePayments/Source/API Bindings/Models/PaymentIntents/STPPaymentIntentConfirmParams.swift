@@ -74,12 +74,12 @@ public class STPPaymentIntentConfirmParams: NSObject {
     /// Email address that the receipt for the resulting payment will be sent to.
     public var receiptEmail: String?
 
-    /// `@YES` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
+    /// `true` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
     /// if the PaymentMethod/Source is not already attached.
     /// This should be a boolean NSNumber, so that it can be `nil`
     public var savePaymentMethod: NSNumber?
 
-    /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
+    /// `true` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
     @_spi(InternalOnlyAPI) public var setAsDefaultPM: NSNumber?
 
@@ -91,36 +91,6 @@ public class STPPaymentIntentConfirmParams: NSObject {
     /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
     /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
     public var setupFutureUsage: STPPaymentIntentSetupFutureUsage?
-
-    /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
-    /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
-    /// This property should only be used in Objective-C. In Swift, use `setupFutureUsage`.
-    /// - seealso: STPPaymentIntentSetupFutureUsage for more details on what values you can provide.
-    @available(swift, obsoleted: 1.0, renamed: "setupFutureUsage")
-    public var setupFutureUsage_objc: NSNumber? {
-        get {
-            setupFutureUsage?.rawValue as NSNumber?
-        }
-        set {
-            if let newValue = newValue {
-                setupFutureUsage = STPPaymentIntentSetupFutureUsage(
-                    rawValue: Int(truncating: newValue)
-                )
-            } else {
-                setupFutureUsage = nil
-            }
-        }
-    }
-
-    /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any PaymentIntent next actions.
-    /// If set to false, STPPaymentIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
-    /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
-    /// app.
-    @available(swift, obsoleted: 1.0, renamed: "useStripeSDK")
-    public var useStripeSDK_objc: NSNumber? {
-        get { return useStripeSDK.map { NSNumber(value: $0) } }
-        set { useStripeSDK = newValue?.boolValue }
-    }
 
     /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any PaymentIntent next actions.
     /// If set to false, STPPaymentIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
