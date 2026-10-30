@@ -79,7 +79,7 @@ final class STPAPIClientTest: APIStubbedTestCase {
         }
 
         let completion = expectation(description: "All GET overloads completed")
-        completion.expectedFulfillmentCount = 3
+        completion.expectedFulfillmentCount = 2
 
         let handler: (Result<EmptyResponse, Error>) -> Void = { result in
             if case .failure(let error) = result {
@@ -102,13 +102,6 @@ final class STPAPIClientTest: APIStubbedTestCase {
             completion: handler
         )
 
-        let promise: Promise<EmptyResponse> = apiClient.get(
-            resource: "test",
-            parameters: ["key": "value"],
-            additionalHeaders: headers
-        )
-
-        promise.observe(using: handler)
         wait(for: [completion], timeout: 5)
     }
 

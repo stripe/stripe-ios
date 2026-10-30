@@ -17,6 +17,7 @@ import XCTest
 
 @testable import StripeIdentity
 
+@MainActor
 final class SelfieCaptureViewControllerTest: XCTestCase {
     private static let mockVerificationPage = try! VerificationPageMock.response200.make()
 
@@ -45,12 +46,12 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         mockSelfieUploader = SelfieUploaderMock()
     }
 
-    func testRequestCameraAccessDeniedLogsAnalytics() {
+    func testRequestCameraAccessDeniedLogsAnalytics() async {
         let vc = makeViewController()
 
         vc.viewWillAppear(false)
         mockCameraPermissionsManager.respondToRequest(granted: false)
-        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+        await fulfillment(of: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
 
         let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
             withEventName: "camera_permission_denied"
@@ -80,12 +81,12 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(error?["file"] as? String, "SelfieCaptureViewController.swift")
     }
 
-    func testRequestCameraAccessGrantedLogsExistingAnalytic() {
+    func testRequestCameraAccessGrantedLogsExistingAnalytic() async {
         let vc = makeViewController()
 
         vc.viewWillAppear(false)
         mockCameraPermissionsManager.respondToRequest(granted: true)
-        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+        await fulfillment(of: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
 
         XCTAssertEqual(
             mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted")
@@ -103,15 +104,15 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         )
     }
 
-    func testCameraSessionFailedConfigureLogsAnalytics() {
+    func testCameraSessionFailedConfigureLogsAnalytics() async {
         let vc = makeViewController()
 
         vc.viewWillAppear(false)
         mockCameraPermissionsManager.respondToRequest(granted: true)
-        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+        await fulfillment(of: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
 
         mockCameraSession.respondToConfigureSession(setupResult: .failed(error: mockError))
-        wait(for: [mockCameraSession.configureSessionCompletionExp], timeout: 1)
+        await fulfillment(of: [mockCameraSession.configureSessionCompletionExp], timeout: 1)
 
         let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
             withEventName: "camera_error"
@@ -144,6 +145,30 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
                 initialState: .saving(.empty, makeFaceCaptureData())
             ).buttonViewModels.isEmpty
         )
+    }
+
+    func testSaveFailureRestoresScannedState() async {
+        // Given a scanned selfie whose save fails
+        let faceCaptureData = makeFaceCaptureData()
+        let vc = makeViewController(initialState: .scanned(.empty, faceCaptureData))
+        mockSheetController.saveSelfieFileDataAndTransitionError = mockError
+        let saveExp = expectation(description: "Selfie save attempted")
+        mockSheetController.saveSelfieFileDataAndTransitionCallback = {
+            saveExp.fulfill()
+        }
+
+        // When the user taps the save button
+        vc.buttonViewModels[0].didTap()
+
+        // Then the screen leaves the saving state and lets the user try again
+        await fulfillment(
+            of: [saveExp, expectation(for: vc, keyPath: \.buttonViewModels.first?.state, equalsToValue: .enabled)],
+            timeout: 4
+        )
+        guard case .scanned = vc.imageScanningSession.state else {
+            return XCTFail("Expected scanned state")
+        }
+        XCTAssertEqual(vc.buttonViewModels.count, 1)
     }
 }
 
@@ -191,13 +216,17 @@ private extension SelfieCaptureViewControllerTest {
 }
 
 private final class SelfieUploaderMock: SelfieUploaderProtocol {
-    var uploadFuture: Future<SelfieUploader.FileData>?
+    var uploadResultValue: Result<SelfieUploader.FileData, Error>?
+
+    func uploadResult() async -> Result<SelfieUploader.FileData, Error>? {
+        uploadResultValue
+    }
 
     func uploadImages(_ capturedImages: FaceCaptureData) {
         // no-op
     }
 
     func reset() {
-        uploadFuture = nil
+        uploadResultValue = nil
     }
 }

@@ -575,12 +575,24 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     // MARK: - Continue button
 
+    @MainActor
     func didTapContinueButton() {
+        guard !isSubmitting else { return }
         isSubmitting = true
-        sheetController?.saveDocumentBackAndTransition(
-            from: analyticsScreenName,
-            documentUploader: self.documentUploader
-        ) { [weak self] in
+        let screenName = analyticsScreenName
+        let sheetController = sheetController
+        let documentUploader = documentUploader
+        Task { @MainActor [weak self] in
+            guard let sheetController else { return }
+            do {
+                try await sheetController.saveDocumentBackAndTransition(
+                    from: screenName,
+                    documentUploader: documentUploader
+                )
+            } catch {
+                self?.isSubmitting = false
+                return
+            }
             self?.isSubmitting = false
             self?.continueButtonEnabled = false
         }
@@ -722,16 +734,20 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
 
 extension DocumentFileUploadViewController: DocumentUploaderDelegate {
     func documentUploaderDidUploadFront(_ documentUploader: DocumentUploaderProtocol) {
-        sheetController?.saveDocumentFrontAndDecideBack(
-            from: analyticsScreenName,
-            documentUploader: documentUploader,
-            onCompletion: { [weak self] isBackRequired in
+        guard let sheetController else { return }
+        let screenName = analyticsScreenName
+        Task { @MainActor [weak self] in
+            do {
+                let isBackRequired = try await sheetController.saveDocumentFrontAndDecideBack(
+                    from: screenName,
+                    documentUploader: documentUploader
+                )
                 guard isBackRequired else { return }
-                DispatchQueue.main.async {
-                    self?.updateUI()
-                }
+                self?.updateUI()
+            } catch {
+                return
             }
-        )
+        }
     }
 
     func documentUploaderDidUploadBack(_ documentUploader: DocumentUploaderProtocol) {

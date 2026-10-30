@@ -32,8 +32,9 @@ protocol DocumentUploaderProtocol: AnyObject {
     var frontUploadStatus: DocumentUploader.UploadStatus { get }
     var backUploadStatus: DocumentUploader.UploadStatus { get }
 
-    var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? { get }
-    var backUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? { get }
+    // Main actor, because `uploadImages` and `reset` replace the upload tasks on the main thread.
+    @MainActor func frontUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    @MainActor func backUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
 
     func uploadImages(
         for side: DocumentSide,
@@ -60,55 +61,17 @@ final class DocumentUploader: DocumentUploaderProtocol {
     let imageUploader: IdentityImageUploader
     let isTestMode: Bool
 
-    /// Future that is fulfilled when front images are uploaded to the server.
-    /// Value is nil if upload has not been requested.
-    private(set) var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
-        didSet {
-            guard oldValue !== frontUploadFuture else {
-                return
-            }
-            frontUploadStatus = (frontUploadFuture == nil) ? .notStarted : .inProgress
-            frontUploadFuture?.observe { [weak self, weak frontUploadFuture] result in
-                // Only update `frontUploadStatus` if `frontUploadFuture` has not been reassigned
-                guard let self = self,
-                    frontUploadFuture === self.frontUploadFuture
-                else {
-                    return
-                }
-                switch result {
-                case .success:
-                    self.frontUploadStatus = .complete
-                case .failure(let error):
-                    self.frontUploadStatus = .error(error)
-                }
-            }
-        }
-    }
+    private var frontUploadGeneration = 0
 
-    /// Future that is fulfilled when back images are uploaded to the server.
+    /// Task that is fulfilled when front images are uploaded to the server.
     /// Value is nil if upload has not been requested.
-    private(set) var backUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
-        didSet {
-            guard oldValue !== backUploadFuture else {
-                return
-            }
-            backUploadStatus = (backUploadFuture == nil) ? .notStarted : .inProgress
-            backUploadFuture?.observe { [weak self, weak backUploadFuture] result in
-                // Only update `backUploadStatus` if `backUploadFuture` has not been reassigned
-                guard let self = self,
-                    backUploadFuture === self.backUploadFuture
-                else {
-                    return
-                }
-                switch result {
-                case .success:
-                    self.backUploadStatus = .complete
-                case .failure(let error):
-                    self.backUploadStatus = .error(error)
-                }
-            }
-        }
-    }
+    private var frontUploadTask: Task<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+
+    private var backUploadGeneration = 0
+
+    /// Task that is fulfilled when back images are uploaded to the server.
+    /// Value is nil if upload has not been requested.
+    private var backUploadTask: Task<StripeAPI.VerificationPageDataDocumentFileData, Error>?
 
     /// Status of whether the front images have finished uploading
     private(set) var frontUploadStatus: UploadStatus = .notStarted {
@@ -139,8 +102,22 @@ final class DocumentUploader: DocumentUploaderProtocol {
         self.isTestMode = isTestMode
     }
 
+    @MainActor func frontUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>? {
+        guard let frontUploadTask else {
+            return nil
+        }
+        return await frontUploadTask.result
+    }
+
+    @MainActor func backUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>? {
+        guard let backUploadTask else {
+            return nil
+        }
+        return await backUploadTask.result
+    }
+
     /// Uploads a high and low resolution image for a specific side of the
-    /// document and updates either `frontUploadFuture` or `backUploadFuture`.
+    /// document and updates either `frontUploadTask` or `backUploadTask`.
     /// - Note: If `idDetectorOutput` is non-nil, high- and low-resolution images
     /// are uploaded. In live mode, the high-resolution image is cropped. If
     /// `idDetectorOutput` is nil, only an uncropped high-resolution image is uploaded.
@@ -156,31 +133,23 @@ final class DocumentUploader: DocumentUploaderProtocol {
         exifMetadata: CameraExifMetadata?,
         method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
-        let uploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>
-        do {
-            let imageToUpload: CGImage
-            if isTestMode {
-                imageToUpload = try side.testModeImage.makeCGImage()
-            } else {
-                imageToUpload = originalImage
-            }
-            uploadFuture = uploadImages(
+        let uploadTask = Task {
+            let imageToUpload = self.isTestMode ? try side.testModeImage.makeCGImage() : originalImage
+            return try await self.uploadImages(
                 imageToUpload,
                 documentScannerOutput: documentScannerOutput,
                 exifMetadata: exifMetadata,
                 method: method,
-                fileNamePrefix: "\(imageUploader.apiClient.verificationSessionId)_\(side.rawValue)",
-                shouldCrop: !isTestMode
+                fileNamePrefix: "\(self.imageUploader.apiClient.verificationSessionId)_\(side.rawValue)",
+                shouldCrop: !self.isTestMode
             )
-        } catch {
-            uploadFuture = Promise(error: error)
         }
 
         switch side {
         case .front:
-            self.frontUploadFuture = uploadFuture
+            setFrontUploadTask(uploadTask)
         case .back:
-            self.backUploadFuture = uploadFuture
+            setBackUploadTask(uploadTask)
         }
     }
 
@@ -192,13 +161,14 @@ final class DocumentUploader: DocumentUploaderProtocol {
         method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod,
         fileNamePrefix: String,
         shouldCrop: Bool = true
-    ) -> Future<StripeAPI.VerificationPageDataDocumentFileData> {
+    ) async throws -> StripeAPI.VerificationPageDataDocumentFileData {
 
         // Only upload a low-res image when document bounds are available.
         if let documentBounds = documentScannerOutput?.idDetectorOutput.documentBounds {
-            let uploadFuture: Future<IdentityImageUploader.LowHighResFiles>
+            let lowResFile: StripeFile
+            let highResFile: StripeFile
             if shouldCrop {
-                uploadFuture = imageUploader.uploadLowAndHighResImages(
+                (lowResFile, highResFile) = try await imageUploader.uploadLowAndHighResImages(
                     originalImage,
                     highResRegionOfInterest: documentBounds,
                     cropPaddingComputationMethod: .maxImageWidthOrHeight,
@@ -206,48 +176,105 @@ final class DocumentUploader: DocumentUploaderProtocol {
                     highResFileName: fileNamePrefix
                 )
             } else {
-                uploadFuture = imageUploader.uploadLowAndHighResImagesNoCropping(
+                (lowResFile, highResFile) = try await imageUploader.uploadLowAndHighResImagesNoCropping(
                     highResImage: originalImage,
                     lowResImage: originalImage,
                     highResFileName: fileNamePrefix,
                     lowResFileName: "\(fileNamePrefix)_full_frame"
                 )
             }
-            return uploadFuture.chained { (lowResFile, highResFile) in
-                return Promise(
-                    value: StripeAPI.VerificationPageDataDocumentFileData(
-                        documentScannerOutput: documentScannerOutput,
-                        highResImage: highResFile.id,
-                        lowResImage: lowResFile.id,
-                        exifMetadata: exifMetadata,
-                        uploadMethod: method
-                    )
-                )
-            }
+            return StripeAPI.VerificationPageDataDocumentFileData(
+                documentScannerOutput: documentScannerOutput,
+                highResImage: highResFile.id,
+                lowResImage: lowResFile.id,
+                exifMetadata: exifMetadata,
+                uploadMethod: method
+            )
         } else {
-            return imageUploader.uploadHighResImage(
+            let highResFile = try await imageUploader.uploadHighResImage(
                 originalImage,
                 regionOfInterest: nil,
                 cropPaddingComputationMethod: .maxImageWidthOrHeight,
                 fileName: fileNamePrefix
-            ).chained { highResFile in
-                return Promise(
-                    value: StripeAPI.VerificationPageDataDocumentFileData(
-                        documentScannerOutput: documentScannerOutput,
-                        highResImage: highResFile.id,
-                        lowResImage: nil,
-                        exifMetadata: exifMetadata,
-                        uploadMethod: method
-                    )
-                )
-            }
+            )
+            return StripeAPI.VerificationPageDataDocumentFileData(
+                documentScannerOutput: documentScannerOutput,
+                highResImage: highResFile.id,
+                lowResImage: nil,
+                exifMetadata: exifMetadata,
+                uploadMethod: method
+            )
         }
     }
 
     /// Resets the status of the uploader
     func reset() {
-        frontUploadFuture = nil
-        backUploadFuture = nil
+        setFrontUploadTask(nil)
+        setBackUploadTask(nil)
+    }
+}
+
+private extension DocumentUploader {
+    func setFrontUploadTask(
+        _ uploadTask: Task<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    ) {
+        frontUploadGeneration += 1
+        let generation = frontUploadGeneration
+
+        guard let uploadTask else {
+            frontUploadTask = nil
+            frontUploadStatus = .notStarted
+            return
+        }
+
+        frontUploadStatus = .inProgress
+        frontUploadTask = Task { @MainActor [weak self] in
+            do {
+                let value = try await uploadTask.value
+                guard generation == self?.frontUploadGeneration else {
+                    return value
+                }
+                self?.frontUploadStatus = .complete
+                return value
+            } catch {
+                guard generation == self?.frontUploadGeneration else {
+                    throw error
+                }
+                self?.frontUploadStatus = .error(error)
+                throw error
+            }
+        }
+    }
+
+    func setBackUploadTask(
+        _ uploadTask: Task<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    ) {
+        backUploadGeneration += 1
+        let generation = backUploadGeneration
+
+        guard let uploadTask else {
+            backUploadTask = nil
+            backUploadStatus = .notStarted
+            return
+        }
+
+        backUploadStatus = .inProgress
+        backUploadTask = Task { @MainActor [weak self] in
+            do {
+                let value = try await uploadTask.value
+                guard generation == self?.backUploadGeneration else {
+                    return value
+                }
+                self?.backUploadStatus = .complete
+                return value
+            } catch {
+                guard generation == self?.backUploadGeneration else {
+                    throw error
+                }
+                self?.backUploadStatus = .error(error)
+                throw error
+            }
+        }
     }
 }
 

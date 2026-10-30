@@ -559,12 +559,24 @@ private extension SelfieCaptureViewController {
             expectedClassification: .empty,
             capturedData: faceCaptureData
         )
-        self.sheetController?.saveSelfieFileDataAndTransition(
-            from: analyticsScreenName,
-            selfieUploader: selfieUploader,
-            capturedImages: faceCaptureData,
-            trainingConsent: consentSelection
-        ) {}
+        let screenName = analyticsScreenName
+        let sheetController = sheetController
+        let selfieUploader = selfieUploader
+        let trainingConsent = consentSelection
+        Task { @MainActor [weak self] in
+            guard let sheetController else { return }
+            // Leave the saving state whether the save succeeded or failed.
+            try? await sheetController.saveSelfieFileDataAndTransition(
+                from: screenName,
+                selfieUploader: selfieUploader,
+                capturedImages: faceCaptureData,
+                trainingConsent: trainingConsent
+            )
+            self?.imageScanningSession.setStateScanned(
+                expectedClassification: .empty,
+                capturedData: faceCaptureData
+            )
+        }
     }
 
     func uploadAndSave(
@@ -813,21 +825,28 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     }
 
     func imageScanningSessionWillStopScanning(_ scanningSession: SelfieImageScanningSession) {
-        scanningSession.concurrencyManager.getPerformanceMetrics(completeOn: .main) {
-            [weak sheetController] averageFPS, numFramesScanned in
-            guard let averageFPS = averageFPS else { return }
-            if let sheetController = sheetController {
-                sheetController.analyticsClient.logAverageFramesPerSecond(
-                    averageFPS: averageFPS,
-                    numFrames: numFramesScanned,
-                    scannerName: .selfie,
-                    sheetController: sheetController
-                )
+        let concurrencyManager = scanningSession.concurrencyManager
+        Task { @MainActor [weak sheetController] in
+            let metrics = await concurrencyManager.getPerformanceMetrics()
+            guard let averageFPS = metrics.averageFPS, let sheetController else {
+                return
             }
+
+            sheetController.analyticsClient.logAverageFramesPerSecond(
+                averageFPS: averageFPS,
+                numFrames: metrics.numFramesScanned,
+                scannerName: .selfie,
+                sheetController: sheetController
+            )
         }
-        if let sheetController = sheetController {
-            sheetController.analyticsClient.logModelPerformance(
-                mlModelMetricsTrackers: scanningSession.scanner.mlModelMetricsTrackers,
+        let metricsTrackers = scanningSession.scanner.mlModelMetricsTrackers
+        Task { @MainActor [weak sheetController] in
+            guard let sheetController else {
+                return
+            }
+
+            await sheetController.analyticsClient.logModelPerformance(
+                mlModelMetricsTrackers: metricsTrackers,
                 sheetController: sheetController
             )
         }

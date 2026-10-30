@@ -26,14 +26,14 @@ final class SelfieUploaderTest: XCTestCase {
         uploader = makeUploader(isTestMode: true)
     }
 
-    func testUploadImagesInTestModeUsesPlaceholderImage() throws {
+    func testUploadImagesInTestModeUsesPlaceholderImage() async throws {
         // Given a captured selfie
         let capturedImage = try makeCapturedImage()
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
 
         // When the image is uploaded in test mode
-        _ = uploader.uploadImages(capturedImage, ofType: .best)
-        wait(for: uploadRequestExpectations, timeout: 1)
+        _ = Task { try await uploader.uploadImages(capturedImage, ofType: .best) }
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         // Then both requests use the bundled selfie placeholder
         let placeholder = try TestModeImage.selfie.makeCGImage()
@@ -54,15 +54,15 @@ final class SelfieUploaderTest: XCTestCase {
         )
     }
 
-    func testUploadImagesInLiveModeUsesCapturedImage() throws {
+    func testUploadImagesInLiveModeUsesCapturedImage() async throws {
         // Given a live mode uploader and captured selfie
         uploader = makeUploader(isTestMode: false)
         let capturedImage = try makeCapturedImage()
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
 
         // When the image is uploaded
-        _ = uploader.uploadImages(capturedImage, ofType: .best)
-        wait(for: uploadRequestExpectations, timeout: 1)
+        _ = Task { try await uploader.uploadImages(capturedImage, ofType: .best) }
+        await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         // Then the upload requests use the captured image instead of the placeholder
         let highResRequest = uploadRequest(named: "VS_123_face")

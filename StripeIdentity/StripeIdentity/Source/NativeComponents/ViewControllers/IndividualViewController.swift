@@ -55,29 +55,37 @@ final class IndividualViewController: IdentityFlowViewController {
         updateUI()
     }
 
+    var flowViewModel: IdentityFlowView.ViewModel {
+        return .init(
+            headerViewModel: .init(
+                backgroundColor: .systemBackground,
+                headerType: .plain,
+                titleText: individualContent.title
+            ),
+            contentView: individualElement.view,
+            buttonText: individualContent.buttonText,
+            state: isSaving ? .loading : (individualElement.hasValidInput ? .enabled : .disabled),
+            didTapButton: { [weak self] in
+                guard let self else { return }
+                guard !self.isSaving else { return }
+                self.isSaving = true
+                let collectedData = self.individualElement.collectedData
+                let sheetController = self.sheetController
+                Task { @MainActor [weak self] in
+                    await sheetController?.saveAndTransition(from: .individual, collectedData: collectedData)
+                    self?.isSaving = false
+                }
+            }
+        )
+    }
+
     func updateUI() {
         configure(
             backButtonTitle: STPLocalizedString(
                 "Personal Information",
                 "Back button title for returning to the individual's perssonal infomation screen"
             ),
-            viewModel: .init(
-                headerViewModel: .init(
-                    backgroundColor: .systemBackground,
-                    headerType: .plain,
-                    titleText: individualContent.title
-                ),
-                contentView: individualElement.view,
-                buttonText: individualContent.buttonText,
-                state: isSaving ? .loading : (individualElement.hasValidInput ? .enabled : .disabled),
-                didTapButton: { [weak self] in
-                    self?.isSaving = true
-                    let collectedData = self?.individualElement.collectedData
-                    self?.sheetController?.saveAndTransition(from: .individual, collectedData: collectedData!) {
-                        self?.isSaving = false
-                    }
-                }
-            )
+            viewModel: flowViewModel
         )
     }
 }
