@@ -499,15 +499,13 @@ extension StripeAttest {
         }
 
         // Must be called by the caller when done with the assertion
-        public func complete() {
+        public func complete() async {
             guard let stripeAttest = stripeAttest else {
                 stpAssertionFailure("StripeAttest was deallocated before the assertion was completed")
                 return
             }
 
-            Task {
-                await stripeAttest.assertionCompleted()
-            }
+            await stripeAttest.assertionCompleted()
         }
     }
 }

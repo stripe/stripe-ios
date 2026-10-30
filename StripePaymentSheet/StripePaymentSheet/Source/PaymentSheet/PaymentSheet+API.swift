@@ -299,7 +299,6 @@ extension PaymentSheet {
         // MARK: - New Payment Method
         case let .new(confirmParams):
             Task { @MainActor in
-                let radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
                     case .stripe(let paymentMethodType):
@@ -310,75 +309,108 @@ extension PaymentSheet {
                 }()
                 // Set allow_redisplay on params
                 setAllowRedisplay(confirmParams, paymentMethodType)
-                confirmParams.paymentMethodParams.radarOptions = radarOptions
                 confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                 switch intent {
                     // MARK: ↪ PaymentIntent
                 case .paymentIntent(let paymentIntent):
-                    let params = makePaymentIntentParams(
-                        confirmPaymentMethodType: .new(
-                            params: confirmParams.paymentMethodParams,
-                            paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                            saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
-                            shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
-                        ),
-                        paymentIntent: paymentIntent,
-                        configuration: configuration
-                    )
-                    paymentHandler.confirmPaymentIntent(
-                        params: params,
-                        authenticationContext: authenticationContext,
-                        completion: { actionStatus, paymentIntent, error in
-                            Task { await confirmationChallenge?.complete() }
-                            if let paymentIntent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                    do {
+                        let (actionStatus, resultPaymentIntent, error) = try await ConfirmationChallenge.withRadarOptions(
+                            for: paymentMethodType,
+                            challenge: confirmationChallenge
+                        ) { radarOptions in
+                            confirmParams.paymentMethodParams.radarOptions = radarOptions
+                            let params = makePaymentIntentParams(
+                                confirmPaymentMethodType: .new(
+                                    params: confirmParams.paymentMethodParams,
+                                    paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                                    saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
+                                    shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                                ),
+                                paymentIntent: paymentIntent,
+                                configuration: configuration
+                            )
+                            return await withGuardedContinuation { resume in
+                                paymentHandler.confirmPaymentIntent(
+                                    params: params,
+                                    authenticationContext: authenticationContext,
+                                    completion: { actionStatus, paymentIntent, error in
+                                        resume((actionStatus, paymentIntent, error))
+                                    }
+                                )
                             }
-                            paymentHandlerCompletion(actionStatus, error)
                         }
-                    )
+                        if let resultPaymentIntent {
+                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(resultPaymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                        }
+                        paymentHandlerCompletion(actionStatus, error)
+                    } catch {
+                        // Only reachable if the enclosing Task is cancelled.
+                        paymentHandlerCompletion(.failed, error as NSError)
+                    }
                     // MARK: ↪ SetupIntent
                 case .setupIntent(let setupIntent):
-                    let setupIntentParams = makeSetupIntentParams(
-                        confirmPaymentMethodType: .new(
-                            params: confirmParams.paymentMethodParams,
-                            paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                            saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
-                            shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
-                        ),
-                        setupIntent: setupIntent,
-                        configuration: configuration
-                    )
-                    paymentHandler.confirmSetupIntent(
-                        params: setupIntentParams,
-                        authenticationContext: authenticationContext,
-                        completion: { actionStatus, setupIntent, error in
-                            Task { await confirmationChallenge?.complete() }
-                            if let setupIntent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                    do {
+                        let (actionStatus, resultSetupIntent, error) = try await ConfirmationChallenge.withRadarOptions(
+                            for: paymentMethodType,
+                            challenge: confirmationChallenge
+                        ) { radarOptions in
+                            confirmParams.paymentMethodParams.radarOptions = radarOptions
+                            let setupIntentParams = makeSetupIntentParams(
+                                confirmPaymentMethodType: .new(
+                                    params: confirmParams.paymentMethodParams,
+                                    paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                                    saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
+                                    shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                                ),
+                                setupIntent: setupIntent,
+                                configuration: configuration
+                            )
+                            return await withGuardedContinuation { resume in
+                                paymentHandler.confirmSetupIntent(
+                                    params: setupIntentParams,
+                                    authenticationContext: authenticationContext,
+                                    completion: { actionStatus, setupIntent, error in
+                                        resume((actionStatus, setupIntent, error))
+                                    }
+                                )
                             }
-                            paymentHandlerCompletion(actionStatus, error)
                         }
-                    )
+                        if let resultSetupIntent {
+                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(resultSetupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                        }
+                        paymentHandlerCompletion(actionStatus, error)
+                    } catch {
+                        // Only reachable if the enclosing Task is cancelled.
+                        paymentHandlerCompletion(.failed, error as NSError)
+                    }
                     // MARK: ↪ Deferred Intent
                 case .deferredIntent(let intentConfig):
-                    Task { @MainActor in
-                        let result = await routeDeferredIntentConfirmation(
-                            confirmType: .new(
-                                params: confirmParams.paymentMethodParams,
-                                paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                                saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
-                                shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
-                            ),
-                            configuration: configuration,
-                            intentConfig: intentConfig,
-                            authenticationContext: authenticationContext,
-                            paymentHandler: paymentHandler,
-                            isFlowController: isFlowController,
-                            allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                            elementsSession: elementsSession
-                        )
-                        await confirmationChallenge?.complete()
+                    do {
+                        let result = try await ConfirmationChallenge.withRadarOptions(
+                            for: paymentMethodType,
+                            challenge: confirmationChallenge
+                        ) { radarOptions in
+                            confirmParams.paymentMethodParams.radarOptions = radarOptions
+                            return await routeDeferredIntentConfirmation(
+                                confirmType: .new(
+                                    params: confirmParams.paymentMethodParams,
+                                    paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                                    saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
+                                    shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                                ),
+                                configuration: configuration,
+                                intentConfig: intentConfig,
+                                authenticationContext: authenticationContext,
+                                paymentHandler: paymentHandler,
+                                isFlowController: isFlowController,
+                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                                elementsSession: elementsSession
+                            )
+                        }
                         completion(result.result, result.deferredIntentConfirmationType)
+                    } catch {
+                        // Only reachable if the enclosing Task is cancelled.
+                        completion(.failed(error: error), nil)
                     }
                 case .checkout:
                     stpAssertionFailure()
@@ -450,67 +482,103 @@ extension PaymentSheet {
                 _ saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState
             ) {
                 Task { @MainActor in
-                    let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethodParams.type)
-                    paymentMethodParams.radarOptions = radarOptions
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
                     case .paymentIntent(let paymentIntent):
-                        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
-                        paymentIntentParams.paymentMethodParams = paymentMethodParams
-                        paymentIntentParams.returnURL = configuration.returnURL
-                        let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-                        let paymentMethodType = paymentMethodParams.type
-                        let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
-                        paymentOptions.setSetupFutureUsageIfNecessary(saveForFutureUseCheckboxState == .selected, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
-                        paymentIntentParams.paymentMethodOptions = paymentOptions
-                        paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
-                        paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
-                        paymentHandler.confirmPaymentIntent(
-                            params: paymentIntentParams,
-                            authenticationContext: authenticationContext,
-                            completion: { actionStatus, _, error in
-                                Task { await confirmationChallenge?.complete() }
-                                paymentHandlerCompletion(actionStatus, error)
-                                if actionStatus == .succeeded {
-                                    linkAccount?.logout()
+                        do {
+                            let (actionStatus, error) = try await ConfirmationChallenge.withRadarOptions(
+                                for: paymentMethodParams.type,
+                                challenge: confirmationChallenge
+                            ) { radarOptions in
+                                paymentMethodParams.radarOptions = radarOptions
+                                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
+                                paymentIntentParams.paymentMethodParams = paymentMethodParams
+                                paymentIntentParams.returnURL = configuration.returnURL
+                                let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
+                                let paymentMethodType = paymentMethodParams.type
+                                let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
+                                paymentOptions.setSetupFutureUsageIfNecessary(saveForFutureUseCheckboxState == .selected, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
+                                paymentIntentParams.paymentMethodOptions = paymentOptions
+                                paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                                paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
+                                let (actionStatus, _, error): (STPPaymentHandlerActionStatus, STPPaymentIntent?, NSError?) = await withGuardedContinuation { resume in
+                                    paymentHandler.confirmPaymentIntent(
+                                        params: paymentIntentParams,
+                                        authenticationContext: authenticationContext,
+                                        completion: { actionStatus, paymentIntent, error in
+                                            resume((actionStatus, paymentIntent, error))
+                                        }
+                                    )
                                 }
+                                return (actionStatus, error)
                             }
-                        )
-                    case .setupIntent(let setupIntent):
-                        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
-                        setupIntentParams.paymentMethodParams = paymentMethodParams
-                        setupIntentParams.returnURL = configuration.returnURL
-                        setupIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
-                        paymentHandler.confirmSetupIntent(
-                            params: setupIntentParams,
-                            authenticationContext: authenticationContext,
-                            completion: { actionStatus, _, error in
-                                Task { await confirmationChallenge?.complete() }
-                                paymentHandlerCompletion(actionStatus, error)
-                                if actionStatus == .succeeded {
-                                    linkAccount?.logout()
-                                }
+                            paymentHandlerCompletion(actionStatus, error)
+                            if actionStatus == .succeeded {
+                                linkAccount?.logout()
                             }
-                        )
-                    case .deferredIntent(let intentConfig):
-                        let result = await routeDeferredIntentConfirmation(
-                            confirmType: .new(
-                                params: paymentMethodParams,
-                                paymentOptions: STPConfirmPaymentMethodOptions(),
-                                saveForFutureUseCheckboxState: saveForFutureUseCheckboxState
-                            ),
-                            configuration: configuration,
-                            intentConfig: intentConfig,
-                            authenticationContext: authenticationContext,
-                            paymentHandler: paymentHandler,
-                            isFlowController: isFlowController,
-                            elementsSession: elementsSession
-                        )
-                        if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
-                            linkAccount?.logout()
+                        } catch {
+                            // Only reachable if the enclosing Task is cancelled.
+                            paymentHandlerCompletion(.failed, error as NSError)
                         }
-                        await confirmationChallenge?.complete()
-                        completion(result.result, result.deferredIntentConfirmationType)
+                    case .setupIntent(let setupIntent):
+                        do {
+                            let (actionStatus, error) = try await ConfirmationChallenge.withRadarOptions(
+                                for: paymentMethodParams.type,
+                                challenge: confirmationChallenge
+                            ) { radarOptions in
+                                paymentMethodParams.radarOptions = radarOptions
+                                let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
+                                setupIntentParams.paymentMethodParams = paymentMethodParams
+                                setupIntentParams.returnURL = configuration.returnURL
+                                setupIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
+                                let (actionStatus, _, error): (STPPaymentHandlerActionStatus, STPSetupIntent?, NSError?) = await withGuardedContinuation { resume in
+                                    paymentHandler.confirmSetupIntent(
+                                        params: setupIntentParams,
+                                        authenticationContext: authenticationContext,
+                                        completion: { actionStatus, setupIntent, error in
+                                            resume((actionStatus, setupIntent, error))
+                                        }
+                                    )
+                                }
+                                return (actionStatus, error)
+                            }
+                            paymentHandlerCompletion(actionStatus, error)
+                            if actionStatus == .succeeded {
+                                linkAccount?.logout()
+                            }
+                        } catch {
+                            // Only reachable if the enclosing Task is cancelled.
+                            paymentHandlerCompletion(.failed, error as NSError)
+                        }
+                    case .deferredIntent(let intentConfig):
+                        do {
+                            let result = try await ConfirmationChallenge.withRadarOptions(
+                                for: paymentMethodParams.type,
+                                challenge: confirmationChallenge
+                            ) { radarOptions in
+                                paymentMethodParams.radarOptions = radarOptions
+                                return await routeDeferredIntentConfirmation(
+                                    confirmType: .new(
+                                        params: paymentMethodParams,
+                                        paymentOptions: STPConfirmPaymentMethodOptions(),
+                                        saveForFutureUseCheckboxState: saveForFutureUseCheckboxState
+                                    ),
+                                    configuration: configuration,
+                                    intentConfig: intentConfig,
+                                    authenticationContext: authenticationContext,
+                                    paymentHandler: paymentHandler,
+                                    isFlowController: isFlowController,
+                                    elementsSession: elementsSession
+                                )
+                            }
+                            if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
+                                linkAccount?.logout()
+                            }
+                            completion(result.result, result.deferredIntentConfirmationType)
+                        } catch {
+                            // Only reachable if the enclosing Task is cancelled.
+                            completion(.failed(error: error), nil)
+                        }
                     case .checkout:
                         stpAssertionFailure()
                     }
@@ -525,7 +593,6 @@ extension PaymentSheet {
                 _ clientAttributionMetadata: STPClientAttributionMetadata?
             ) {
                 Task { @MainActor in
-                    let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethod.type)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                     let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                     // Tell Stripe to infer mandate info from client
@@ -535,63 +602,98 @@ extension PaymentSheet {
                     let mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
                     switch intent {
                     case .paymentIntent(let paymentIntent):
-                        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
-                        paymentIntentParams.paymentMethodId = paymentMethod.stripeId
-                        paymentIntentParams.returnURL = configuration.returnURL
-                        paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
-                        let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-                        let paymentMethodType = paymentMethod.type
-                        let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
-                        paymentOptions.setSetupFutureUsageIfNecessary(saveForFutureUseCheckboxState == .selected, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
-                        paymentIntentParams.paymentMethodOptions = paymentOptions
-                        paymentIntentParams.radarOptions = radarOptions
-                        paymentIntentParams.mandateData = mandateData
-                        paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
-                        paymentHandler.confirmPaymentIntent(
-                            params: paymentIntentParams,
-                            authenticationContext: authenticationContext,
-                            completion: { actionStatus, _, error in
-                                Task { await confirmationChallenge?.complete() }
-                                if actionStatus == .succeeded {
-                                    linkAccount?.logout()
+                        do {
+                            let (actionStatus, error) = try await ConfirmationChallenge.withRadarOptions(
+                                for: paymentMethod.type,
+                                challenge: confirmationChallenge
+                            ) { radarOptions in
+                                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
+                                paymentIntentParams.paymentMethodId = paymentMethod.stripeId
+                                paymentIntentParams.returnURL = configuration.returnURL
+                                paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                                let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
+                                let paymentMethodType = paymentMethod.type
+                                let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
+                                paymentOptions.setSetupFutureUsageIfNecessary(saveForFutureUseCheckboxState == .selected, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
+                                paymentIntentParams.paymentMethodOptions = paymentOptions
+                                paymentIntentParams.radarOptions = radarOptions
+                                paymentIntentParams.mandateData = mandateData
+                                paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
+                                let (actionStatus, _, error): (STPPaymentHandlerActionStatus, STPPaymentIntent?, NSError?) = await withGuardedContinuation { resume in
+                                    paymentHandler.confirmPaymentIntent(
+                                        params: paymentIntentParams,
+                                        authenticationContext: authenticationContext,
+                                        completion: { actionStatus, paymentIntent, error in
+                                            resume((actionStatus, paymentIntent, error))
+                                        }
+                                    )
                                 }
-                                paymentHandlerCompletion(actionStatus, error)
+                                return (actionStatus, error)
                             }
-                        )
-                    case .setupIntent(let setupIntent):
-                        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
-                        setupIntentParams.paymentMethodID = paymentMethod.stripeId
-                        setupIntentParams.returnURL = configuration.returnURL
-                        setupIntentParams.mandateData = mandateData
-                        setupIntentParams.radarOptions = radarOptions
-                        setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
-                        paymentHandler.confirmSetupIntent(
-                            params: setupIntentParams,
-                            authenticationContext: authenticationContext,
-                            completion: { actionStatus, _, error in
-                                Task { await confirmationChallenge?.complete() }
-                                if actionStatus == .succeeded {
-                                    linkAccount?.logout()
-                                }
-                                paymentHandlerCompletion(actionStatus, error)
+                            if actionStatus == .succeeded {
+                                linkAccount?.logout()
                             }
-                        )
-                    case .deferredIntent(let intentConfig):
-                        let result = await routeDeferredIntentConfirmation(
-                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
-                            configuration: configuration,
-                            intentConfig: intentConfig,
-                            authenticationContext: authenticationContext,
-                            paymentHandler: paymentHandler,
-                            isFlowController: isFlowController,
-                            elementsSession: elementsSession,
-                            isFromLink: true
-                        )
-                        if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
-                            linkAccount?.logout()
+                            paymentHandlerCompletion(actionStatus, error)
+                        } catch {
+                            // Only reachable if the enclosing Task is cancelled.
+                            paymentHandlerCompletion(.failed, error as NSError)
                         }
-                        await confirmationChallenge?.complete()
-                        completion(result.result, result.deferredIntentConfirmationType)
+                    case .setupIntent(let setupIntent):
+                        do {
+                            let (actionStatus, error) = try await ConfirmationChallenge.withRadarOptions(
+                                for: paymentMethod.type,
+                                challenge: confirmationChallenge
+                            ) { radarOptions in
+                                let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
+                                setupIntentParams.paymentMethodID = paymentMethod.stripeId
+                                setupIntentParams.returnURL = configuration.returnURL
+                                setupIntentParams.mandateData = mandateData
+                                setupIntentParams.radarOptions = radarOptions
+                                setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
+                                let (actionStatus, _, error): (STPPaymentHandlerActionStatus, STPSetupIntent?, NSError?) = await withGuardedContinuation { resume in
+                                    paymentHandler.confirmSetupIntent(
+                                        params: setupIntentParams,
+                                        authenticationContext: authenticationContext,
+                                        completion: { actionStatus, setupIntent, error in
+                                            resume((actionStatus, setupIntent, error))
+                                        }
+                                    )
+                                }
+                                return (actionStatus, error)
+                            }
+                            if actionStatus == .succeeded {
+                                linkAccount?.logout()
+                            }
+                            paymentHandlerCompletion(actionStatus, error)
+                        } catch {
+                            // Only reachable if the enclosing Task is cancelled.
+                            paymentHandlerCompletion(.failed, error as NSError)
+                        }
+                    case .deferredIntent(let intentConfig):
+                        do {
+                            let result = try await ConfirmationChallenge.withRadarOptions(
+                                for: paymentMethod.type,
+                                challenge: confirmationChallenge
+                            ) { radarOptions in
+                                await routeDeferredIntentConfirmation(
+                                    confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
+                                    configuration: configuration,
+                                    intentConfig: intentConfig,
+                                    authenticationContext: authenticationContext,
+                                    paymentHandler: paymentHandler,
+                                    isFlowController: isFlowController,
+                                    elementsSession: elementsSession,
+                                    isFromLink: true
+                                )
+                            }
+                            if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
+                                linkAccount?.logout()
+                            }
+                            completion(result.result, result.deferredIntentConfirmationType)
+                        } catch {
+                            // Only reachable if the enclosing Task is cancelled.
+                            completion(.failed(error: error), nil)
+                        }
                     case .checkout:
                         stpAssertionFailure()
                     }

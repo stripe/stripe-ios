@@ -158,7 +158,7 @@ extension STPAPIClient {
                     await self.stripeAttest.receivedAssertionError(error)
                 }
                 // Mark the assertion handle as completed
-                requestAssertionHandle?.complete()
+                await requestAssertionHandle?.complete()
                 completion(result)
             }
         }
@@ -230,7 +230,7 @@ extension STPAPIClient {
                         await self.stripeAttest.receivedAssertionError(error)
                     }
                     // Mark the assertion handle as completed
-                    requestAssertionHandle?.complete()
+                    await requestAssertionHandle?.complete()
                     completion(result)
                 }
             }

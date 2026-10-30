@@ -12,6 +12,8 @@ import Foundation
 actor ConfirmationChallenge {
     private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
     private var attestationChallenge: AttestationChallenge?
+    private var requestInProgress = false
+    private var requestWaiters: [CheckedContinuation<Void, Never>] = []
 
     private var timeout: TimeInterval = 6 // same as web
 
@@ -42,6 +44,49 @@ actor ConfirmationChallenge {
         }
         let (hcaptchaToken, assertion) = await fetchTokensWithTimeout()
         return STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
+    }
+
+    /// Owns the challenge until the request carrying its radar options has finished.
+    /// Cleanup is awaited on success, failure, and cancellation before another scoped request begins.
+    func withRadarOptions<Result>(
+        for paymentMethodType: STPPaymentMethodType,
+        operation: (STPRadarOptions?) async throws -> Result
+    ) async throws -> Result {
+        if requestInProgress {
+            await withCheckedContinuation { requestWaiters.append($0) }
+        } else {
+            requestInProgress = true
+        }
+        defer {
+            if requestWaiters.isEmpty {
+                requestInProgress = false
+            } else {
+                requestWaiters.removeFirst().resume()
+            }
+        }
+
+        do {
+            try Task.checkCancellation()
+            let options = await makeRadarOptions(for: paymentMethodType)
+            try Task.checkCancellation()
+            let result = try await operation(options)
+            await complete()
+            return result
+        } catch {
+            await complete()
+            throw error
+        }
+    }
+
+    /// Convenience for optional challenges: runs `operation` directly (with no radar options) when `challenge` is nil.
+    @MainActor
+    static func withRadarOptions<Result>(
+        for paymentMethodType: STPPaymentMethodType,
+        challenge: (any CheckoutConfirmationChallenge)?,
+        operation: (STPRadarOptions?) async throws -> Result
+    ) async throws -> Result {
+        guard let challenge else { return try await operation(nil) }
+        return try await challenge.withRadarOptions(for: paymentMethodType, operation: operation)
     }
 
     func fetchTokensWithTimeout() async -> ChallengeTokens {
