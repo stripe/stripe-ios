@@ -23,16 +23,23 @@ final class CheckoutSessionDiagnostics: ObservableObject {
         }
 
         var displayName: String {
-            if path.hasSuffix("/init") {
+            guard path.contains("/checkout_client/") else {
+                return "Stripe API request"
+            }
+            switch path.split(separator: "/").last {
+            case "init":
                 return "Initialize session"
-            }
-            if path.hasSuffix("/confirm") {
+            case "confirm":
                 return "Confirm session"
-            }
-            if path.contains("/checkout_client/") {
+            case "update":
                 return "Update session"
+            case "retrieve":
+                return "Retrieve session"
+            case "poll":
+                return "Poll session"
+            default:
+                return "Stripe API request"
             }
-            return "Stripe API request"
         }
     }
 
