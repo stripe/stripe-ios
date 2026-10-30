@@ -1,6 +1,15 @@
 {
-  "originHash" : "3ea723345cd13d1828d3e6bb3682dc8a2b42617451635d648595416cbc8517e3",
+  "originHash" : "76bd9d3f54ac707238b12d858d7274122336b844ce0b531febdc1fde00f0660c",
   "pins" : [
+    {
+      "identity" : "identity-ios-mediapipe",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stripe/identity-ios-mediapipe",
+      "state" : {
+        "revision" : "66147f847d308460cb4827fc1f05fa99fc201836",
+        "version" : "1.0.0"
+      }
+    },
     {
       "identity" : "ios-snapshot-test-case",
       "kind" : "remoteSourceControl",
