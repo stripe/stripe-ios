@@ -49,35 +49,44 @@ struct SeamlessSignInView: View {
     // MARK: - View
 
     var body: some View {
-        ScrollView {
-            Spacer(minLength: 60)
-            VStack(alignment: .center, spacing: 8) {
-                Image(systemName: "person.circle")
-                    .font(.system(size: 60))
-                    .foregroundColor(Color.accentColor)
-                    .padding()
+        FoldAvoidingScrollView(prefersLargerRegion: true) { availableHeight in
+            let isCompact = availableHeight < LayoutConstants.contentMaxWidth
+            let buttonLayout = isCompact
+                ? AnyLayout(HStackLayout(spacing: 8))
+                : AnyLayout(VStackLayout(spacing: 8))
 
-                Text(attributedContinueString)
-                    .font(.title)
-                    .bold()
-                    .multilineTextAlignment(.center)
-            }
-            .padding()
-        }
-        .safeAreaInset(edge: .bottom) {
-            VStack(spacing: 8) {
-                Button("Continue") {
-                    continueSeamlessSignIn()
-                }
-                .buttonStyle(PrimaryButtonStyle())
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
 
-                Button("Not Me") {
-                    APIClient.shared.clearAuthState()
+                VStack(spacing: isCompact ? 12 : 20) {
+                    Image(systemName: "person.circle")
+                        .font(.system(size: 60))
+                        .foregroundColor(Color.accentColor)
+
+                    Text(attributedContinueString)
+                        .font(.title)
+                        .bold()
+                        .multilineTextAlignment(.center)
                 }
+
+                Spacer(minLength: isCompact ? 12 : 24)
+
+                buttonLayout {
+                    Button("Continue") {
+                        continueSeamlessSignIn()
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+
+                    Button("Not Me") {
+                        APIClient.shared.clearAuthState()
+                    }
+                }
+                .disabled(shouldDisableButtons)
+                .opacity(shouldDisableButtons ? 0.5 : 1)
             }
-            .disabled(shouldDisableButtons)
-            .opacity(shouldDisableButtons ? 0.5 : 1)
-            .padding()
+            .padding(.vertical, isCompact ? 12 : 16)
+            .horizontallyCenteredContent()
+            .padding(.horizontal)
         }
     }
 
