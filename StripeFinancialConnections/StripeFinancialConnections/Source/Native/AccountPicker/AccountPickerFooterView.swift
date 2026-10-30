@@ -17,7 +17,7 @@ final class AccountPickerFooterView: UIView {
 
     private lazy var linkAccountsButton: Button = {
         let linkAccountsButton = Button.primary(appearance: appearance)
-        linkAccountsButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
+        linkAccountsButton.addAction(UIAction { [weak self] _ in self?.didSelectLinkAccountsButton() }, for: .touchUpInside)
         linkAccountsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             linkAccountsButton.heightAnchor.constraint(equalToConstant: 56)
@@ -66,7 +66,7 @@ final class AccountPickerFooterView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func didSelectLinkAccountsButton() {
+    private func didSelectLinkAccountsButton() {
         didSelectLinkAccounts()
     }
 

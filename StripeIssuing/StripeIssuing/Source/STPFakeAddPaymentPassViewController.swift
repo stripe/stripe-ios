@@ -13,13 +13,11 @@ import UIKit
 /// This class is a piece of fake UI that is intended to mimic `PKAddPaymentPassViewController`. That class is restricted to apps with a special entitlement from Apple, and as such can be difficult to build and test against. This class implements the same public API as `PKAddPaymentPassViewController`, and can be used to develop against the Stripe API in *testmode only*. (Obviously it will not actually place cards into the user's Apple Pay wallet either.) When it's time to go to production, you may simply replace all references to `STPFakeAddPaymentPassViewController` in your app with `PKAddPaymentPassViewController` and it will continue to function. For more information on developing against this API, please see https://stripe.com/docs/issuing/cards/digital-wallets .
 public class STPFakeAddPaymentPassViewController: UIViewController {
     /// @see PKAddPaymentPassViewController
-    @objc
     public class func canAddPaymentPass() -> Bool {
         return true
     }
 
     /// @see PKAddPaymentPassViewController
-    @objc(initWithRequestConfiguration:delegate:)
     public required init?(
         requestConfiguration configuration: PKAddPaymentPassRequestConfiguration,
         delegate: PKAddPaymentPassViewControllerDelegate?
@@ -38,7 +36,7 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
     }
 
     /// @see PKAddPaymentPassViewController
-    @objc public weak var delegate: PKAddPaymentPassViewControllerDelegate?
+    public weak var delegate: PKAddPaymentPassViewControllerDelegate?
     private var configuration: PKAddPaymentPassRequestConfiguration?
 
     private var _state: STPFakeAddPaymentPassViewControllerState = .initial
@@ -97,7 +95,7 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
     private var errorText: String?
 
     /// :nodoc:
-    @objc public convenience override init(
+    public convenience override init(
         nibName nibNameOrNil: String?,
         bundle nibBundleOrNil: Bundle?
     ) {
@@ -105,14 +103,13 @@ public class STPFakeAddPaymentPassViewController: UIViewController {
     }
 
     /// :nodoc:
-    @objc public required convenience init?(
+    public required convenience init?(
         coder aDecoder: NSCoder
     ) {
         self.init(requestConfiguration: PKAddPaymentPassRequestConfiguration(), delegate: nil)
     }
 
     /// :nodoc:
-    @objc
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white

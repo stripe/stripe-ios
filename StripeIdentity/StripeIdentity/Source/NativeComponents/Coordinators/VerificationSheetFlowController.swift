@@ -82,7 +82,6 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var analyticsLastScreen: IdentityFlowViewController? { get }
 }
 
-@objc(STP_Internal_VerificationSheetFlowController)
 final class VerificationSheetFlowController: NSObject {
 
     let brandLogo: UIImage

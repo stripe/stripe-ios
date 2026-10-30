@@ -64,7 +64,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
         let saveToLinkButton = Button.primary(appearance: appearance)
         saveToLinkButton.title = saveToLinkButtonText
         saveToLinkButton.accessibilityIdentifier = "networking_link_signup_footer_view.save_to_link_button"
-        saveToLinkButton.addTarget(self, action: #selector(didSelectSaveToLinkButton), for: .touchUpInside)
+        saveToLinkButton.addAction(UIAction { [weak self] _ in self?.didSelectSaveToLinkButton() }, for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             saveToLinkButton.heightAnchor.constraint(equalToConstant: 56)
@@ -76,7 +76,7 @@ class NetworkingLinkSignupFooterView: HitTestView {
         let saveToLinkButton = Button.secondary()
         saveToLinkButton.title = notNowButtonText
         saveToLinkButton.accessibilityIdentifier = "networking_link_signup_footer_view.not_now_button"
-        saveToLinkButton.addTarget(self, action: #selector(didSelectNotNowButton), for: .touchUpInside)
+        saveToLinkButton.addAction(UIAction { [weak self] _ in self?.didSelectNotNowButton() }, for: .touchUpInside)
         saveToLinkButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             saveToLinkButton.heightAnchor.constraint(equalToConstant: 56)
@@ -113,11 +113,11 @@ class NetworkingLinkSignupFooterView: HitTestView {
         saveToLinkButton.isEnabled = enable
     }
 
-    @objc private func didSelectSaveToLinkButton() {
+    private func didSelectSaveToLinkButton() {
         didSelectSaveToLink()
     }
 
-    @objc private func didSelectNotNowButton() {
+    private func didSelectNotNowButton() {
         didSelectNotNow()
     }
 

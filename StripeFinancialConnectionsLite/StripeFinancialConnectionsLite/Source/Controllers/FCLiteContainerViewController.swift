@@ -293,14 +293,10 @@ class FCLiteContainerViewController: UIViewController {
 
     private func setNavigationBar(isHidden: Bool) {
         navigationController?.navigationBar.isHidden = isHidden
-        navigationItem.rightBarButtonItem = isHidden ? nil : UIBarButtonItem(
-            barButtonSystemItem: .close,
-            target: self,
-            action: #selector(closeButtonTapped)
-        )
+        navigationItem.rightBarButtonItem = isHidden ? nil : UIBarButtonItem(systemItem: .close, primaryAction: UIAction { [weak self] _ in self?.closeButtonTapped() })
     }
 
-    @objc private func closeButtonTapped() {
+    private func closeButtonTapped() {
         Task {
             await self.completeFlow(result: .cancelled(.cancelledOutsideWebView))
         }

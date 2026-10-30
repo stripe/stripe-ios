@@ -89,7 +89,7 @@ final class HostViewController: UIViewController {
         view.addSubview(loadingView)
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.rightBarButtonItem = closeItem
-        loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
+        loadingView.tryAgainButton.addAction(UIAction { [weak self] _ in self?.didTapTryAgainButton() }, for: .touchUpInside)
         getManifest()
     }
 
@@ -162,7 +162,6 @@ extension HostViewController {
 
 private extension HostViewController {
 
-    @objc
     func didTapTryAgainButton() {
         getManifest()
     }

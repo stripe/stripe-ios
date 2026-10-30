@@ -39,11 +39,7 @@ class IdentityFlowViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         if shouldShowCancelButton {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(
-                barButtonSystemItem: .close,
-                target: self,
-                action: #selector(didTapCancelButton)
-            )
+            navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction { [weak self] _ in self?.didTapCancelButton() })
         }
     }
 
@@ -161,7 +157,7 @@ extension IdentityFlowViewController {
         )
     }
 
-    @objc fileprivate func didTapCancelButton() {
+    fileprivate func didTapCancelButton() {
         dismiss(animated: true, completion: nil)
     }
 }

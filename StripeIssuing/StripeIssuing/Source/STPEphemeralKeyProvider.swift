@@ -11,7 +11,7 @@ import Foundation
 /// You should make your application's API client conform to this interface.
 /// It provides a way for Stripe utility classes to request a new ephemeral key from
 /// your backend, which it will use to retrieve and update Stripe API objects.
-@objc public protocol STPCustomerEphemeralKeyProvider: NSObjectProtocol {
+public protocol STPCustomerEphemeralKeyProvider: NSObjectProtocol {
     /// Creates a new ephemeral key for retrieving and updating a Stripe customer.
     /// On your backend, you should create a new ephemeral key for the Stripe customer
     /// associated with your user, and return the raw JSON response from the Stripe API.
@@ -27,7 +27,7 @@ import Foundation
     ///   - completion:  Call this callback when you're done fetching a new ephemeral
     /// key from your backend. For example, `completion(json, nil)` (if your call succeeds)
     /// or `completion(nil, error)` if an error is returned.
-    @objc(createCustomerKeyWithAPIVersion:completion:) func createCustomerKey(
+    func createCustomerKey(
         withAPIVersion apiVersion: String,
         completion: @escaping STPJSONResponseCompletionBlock
     )
@@ -36,7 +36,7 @@ import Foundation
 /// You should make your application's API client conform to this interface.
 /// It provides a way for Stripe utility classes to request a new ephemeral key from
 /// your backend, which it will use to retrieve and update Stripe API objects.
-@objc public protocol STPIssuingCardEphemeralKeyProvider: NSObjectProtocol {
+public protocol STPIssuingCardEphemeralKeyProvider: NSObjectProtocol {
     /// Creates a new ephemeral key for retrieving and updating a Stripe Issuing Card.
     /// On your backend, you should create a new ephemeral key for your logged-in user's
     /// primary Issuing Card, and return the raw JSON response from the Stripe API.
@@ -52,7 +52,7 @@ import Foundation
     ///   - completion:  Call this callback when you're done fetching a new ephemeral
     /// key from your backend. For example, `completion(json, nil)` (if your call succeeds)
     /// or `completion(nil, error)` if an error is returned.
-    @objc(createIssuingCardKeyWithAPIVersion:completion:) func createIssuingCardKey(
+    func createIssuingCardKey(
         withAPIVersion apiVersion: String,
         completion: @escaping STPJSONResponseCompletionBlock
     )
@@ -62,7 +62,7 @@ import Foundation
 /// It provides a way for Stripe utility classes to request a new ephemeral key from
 /// your backend, which it will use to retrieve and update Stripe API objects.
 /// @deprecated use `STPCustomerEphemeralKeyProvider` or `STPIssuingCardEphemeralKeyProvider`
-/// depending on the type of key that will@objc  be fetched.
+/// depending on the type of key that will be fetched.
 
 @available(
     *,
@@ -70,5 +70,5 @@ import Foundation
     message:
         "use `STPCustomerEphemeralKeyProvider` or `STPIssuingCardEphemeralKeyProvider` depending on the type of key that will be fetched."
 )
-@objc public protocol STPEphemeralKeyProvider: STPCustomerEphemeralKeyProvider {
+public protocol STPEphemeralKeyProvider: STPCustomerEphemeralKeyProvider {
 }
