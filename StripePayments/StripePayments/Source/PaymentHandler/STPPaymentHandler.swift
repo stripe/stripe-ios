@@ -880,6 +880,7 @@ public class STPPaymentHandler: NSObject {
             .payByBank,
             .mbWay,
             .bizum,
+            .payto,
             .kakaoPay,
             .krCard,
             .naverPay,
@@ -1024,10 +1025,14 @@ public class STPPaymentHandler: NSObject {
             return true
 
         case .processing:
-            action.complete(
-                with: STPPaymentHandlerActionStatus.failed,
-                error: _error(for: .intentStatusErrorCode)
-            )
+            if action.pollingStatus == .processing {
+                presentPaytoPolling(for: action)
+            } else {
+                action.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(for: .intentStatusErrorCode)
+                )
+            }
 
         case .succeeded:
             action.complete(with: STPPaymentHandlerActionStatus.succeeded, error: nil)
@@ -1096,7 +1101,9 @@ public class STPPaymentHandler: NSObject {
             return true
 
         case .processing:
-            if let type = paymentIntent.paymentMethod?.type,
+            if action.pollingStatus == .processing {
+                presentPaytoPolling(for: action)
+            } else if let type = paymentIntent.paymentMethod?.type,
                 STPPaymentHandler._isProcessingIntentSuccess(for: type)
             {
                 action.complete(with: STPPaymentHandlerActionStatus.succeeded, error: nil)
@@ -1117,6 +1124,15 @@ public class STPPaymentHandler: NSObject {
             action.complete(with: STPPaymentHandlerActionStatus.canceled, error: nil)
         }
         return false
+    }
+
+    private func presentPaytoPolling(for action: STPPaymentHandlerActionParams) {
+        guard let presentingVC = action.authenticationContext as? PaymentSheetAuthenticationContext else {
+            assertionFailure("PayTo is not supported outside of PaymentSheet.")
+            action.complete(with: .failed, error: _error(for: .unsupportedAuthenticationErrorCode, loggingSafeErrorMessage: "PayTo is not supported outside of PaymentSheet."))
+            return
+        }
+        presentingVC.presentPollingVCForAction(action: action, type: .payto, safariViewController: nil)
     }
 
     func _handleAuthenticationForCurrentAction() {
@@ -1436,6 +1452,8 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             presentingVC.presentPollingVCForAction(action: currentAction, type: .mbWay, safariViewController: nil)
+        case .paytoAwaitAuthorization:
+            presentPaytoPolling(for: currentAction)
         case .awaitAuthorization:
             guard let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext else {
                 assertionFailure("Bizum is not supported outside of PaymentSheet.")
@@ -2129,6 +2147,7 @@ public class STPPaymentHandler: NSObject {
                 .payNowDisplayQrCode,
                 .promptpayDisplayQrCode,
                 .pixDisplayQrCode,
+                .paytoAwaitAuthorization,
                 .swishHandleRedirect:
                 return false
             case .OXXODisplayDetails,
@@ -2165,7 +2184,7 @@ public class STPPaymentHandler: NSObject {
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
             .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode,
             .promptpayDisplayQrCode, .swishHandleRedirect, .multibancoDisplayDetails,
-            .mbWayAwaitAuthorization, .awaitAuthorization, .pixDisplayQrCode:
+            .mbWayAwaitAuthorization, .awaitAuthorization, .paytoAwaitAuthorization, .pixDisplayQrCode:
             break
         }
 

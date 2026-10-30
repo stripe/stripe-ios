@@ -19,11 +19,17 @@ import UIKit
 class PollingViewController: UIViewController {
     private enum PollingState {
         case polling
+        case checkingCancellation
+        case processing
+        case finishing
         case error
+        case finished
     }
 
     // MARK: State
 
+    private var isActive = false
+    private var pendingPollWorkItem: DispatchWorkItem?
     private var oneSecondTimer: Timer?
     private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
@@ -55,6 +61,9 @@ class PollingViewController: UIViewController {
     }
 
     private var instructionLabelAttributedText: NSAttributedString {
+        if pollingState == .processing {
+            return NSAttributedString(string: .Localized.payto_processing_details)
+        }
         guard viewModel.showsCountdown else {
             return NSAttributedString(string: viewModel.CTA)
         }
@@ -75,14 +84,6 @@ class PollingViewController: UIViewController {
             }
         }
     }
-
-    private lazy var setErrorStateWorkItem: DispatchWorkItem = {
-        let workItem = DispatchWorkItem { [weak self] in
-            self?.pollingState = .error
-        }
-
-        return workItem
-    }()
 
     // MARK: Views
 
@@ -114,7 +115,8 @@ class PollingViewController: UIViewController {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = .Localized.approve_payment
+        label.text = pollingState == .processing ? .Localized.payto_processing
+            : viewModel.paymentMethodType == .payto ? .Localized.payto_authorize_payment : .Localized.approve_payment
         label.textColor = appearance.colors.text
         label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .body, maximumPointSize: 25)
         label.sizeToFit()
@@ -138,6 +140,7 @@ class PollingViewController: UIViewController {
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, style: .footnote, maximumPointSize: 22)
         button.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
         button.tintColor = appearance.colors.primary
+        button.isHidden = pollingState == .processing
         return button
     }()
 
@@ -170,6 +173,7 @@ class PollingViewController: UIViewController {
             self.viewModel.deadline = expiresAt
         }
         self.safariViewController = safariViewController
+        self.pollingState = currentAction.pollingStatus == .processing ? .processing : .polling
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -208,8 +212,9 @@ class PollingViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        isActive = true
 
-        if oneSecondTimer == nil {
+        if oneSecondTimer == nil && pollingState == .polling {
             oneSecondTimer = Timer.scheduledTimer(timeInterval: 1,
                                   target: self,
                                   selector: (#selector(updateTimer)),
@@ -217,9 +222,7 @@ class PollingViewController: UIViewController {
                                   repeats: true)
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
-            self?.beginPolling()
-        }
+        schedulePolling()
 
         NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
 
@@ -228,7 +231,10 @@ class PollingViewController: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        isActive = false
         suspendPolling()
+        oneSecondTimer?.invalidate()
+        oneSecondTimer = nil
 
         NotificationCenter.default.removeObserver(self)
     }
@@ -236,6 +242,25 @@ class PollingViewController: UIViewController {
     // MARK: Handlers
 
     @objc func didTapCancel() {
+        guard pollingState == .polling else { return }
+        if viewModel.paymentMethodType == .payto {
+            // Check once more before canceling so an approval racing with the tap is honored.
+            pollingState = .checkingCancellation
+            suspendPolling()
+            currentAction.retrievePollingResult(timeout: viewModel.cancellationCheckTimeout) { [weak self] result in
+                guard let self, self.pollingState == .checkingCancellation else { return }
+                if let result, result.status == .processing || result.status == .succeeded {
+                    self.didUpdate(result)
+                } else {
+                    self.cancelPolling()
+                }
+            }
+        } else {
+            cancelPolling()
+        }
+    }
+
+    private func cancelPolling() {
         dismiss {
             // Wait a short amount of time before completing the action to ensure smooth animations
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -245,6 +270,8 @@ class PollingViewController: UIViewController {
     }
 
     private func dismiss(completion: (() -> Void)? = nil) {
+        pollingState = .finished
+        suspendPolling()
         if let authContext = currentAction.authenticationContext as? PaymentSheetAuthenticationContext {
             authContext.authenticationContextWillDismiss?(self)
             authContext.dismiss(self, completion: completion)
@@ -256,18 +283,19 @@ class PollingViewController: UIViewController {
     // MARK: App lifecycle observers
 
     @objc func didBecomeActive(_ notification: Notification) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.beginPolling()
-        }
+        isActive = true
+        schedulePolling()
     }
 
     @objc func didEnterBackground(_ notification: Notification) {
+        isActive = false
         suspendPolling()
     }
 
     // MARK: Timer handler
 
     @objc func updateTimer() {
+        guard pollingState == .polling else { return }
         guard timeRemaining > 0 else {
             oneSecondTimer?.invalidate()
             finishPolling()
@@ -281,6 +309,7 @@ class PollingViewController: UIViewController {
 
     private func moveToErrorState() {
         DispatchQueue.main.async {
+            guard self.pollingState == .error else { return }
             self.errorImageView.isHidden = false
             self.actvityIndicator.isHidden = true
             self.cancelButton.isHidden = true
@@ -298,29 +327,52 @@ class PollingViewController: UIViewController {
 
     // Called after the timer expires to wrap up polling
     private func finishPolling() {
-        self.suspendPolling()
+        pollingState = .finishing
+        suspendPolling()
+        guard isActive else { return }
 
-        // Do one last force poll after deadline
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            guard let self = self else { return }
+        // Do one last force poll after deadline.
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self, self.pollingState == .finishing else { return }
             self.pollOnce { [weak self] succeeded in
-                if !succeeded {
+                if !succeeded, self?.pollingState == .finishing {
                     self?.pollingState = .error
                 }
             }
         }
+        pendingPollWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + viewModel.finalPollDelay, execute: workItem)
+    }
+
+    private func schedulePolling() {
+        guard isActive else { return }
+        if pollingState == .finishing {
+            finishPolling()
+            return
+        }
+        guard pollingState == .polling || pollingState == .processing else { return }
+        pendingPollWorkItem?.cancel()
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.beginPolling()
+        }
+        pendingPollWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + viewModel.initialPollDelay, execute: workItem)
     }
 
     private func beginPolling() {
+        guard isActive else { return }
+        guard pollingState == .polling || pollingState == .processing else { return }
         intentStatusPoller.beginPolling()
     }
 
     private func suspendPolling() {
+        pendingPollWorkItem?.cancel()
+        pendingPollWorkItem = nil
         intentStatusPoller.suspendPolling()
     }
 
     private func pollOnce(completion: @escaping (Bool) -> Void) {
-        intentStatusPoller.pollOnce { completion($0 == .succeeded) }
+        intentStatusPoller.pollOnce { completion($0 == .succeeded || $0 == .processing) }
     }
 
     private func complete(with status: STPPaymentHandlerActionStatus) {
@@ -328,12 +380,19 @@ class PollingViewController: UIViewController {
     }
 
     private func didUpdate(_ result: STPPaymentHandlerPollingResult) {
+        guard pollingState != .finished && pollingState != .error else { return }
         result.updateActionIntent()
         switch result.status {
         case .pending:
             break
+        case .processing:
+            pollingState = .processing
+            oneSecondTimer?.invalidate()
+            cancelButton.isHidden = true
+            titleLabel.text = .Localized.payto_processing
+            instructionLabel.text = .Localized.payto_processing_details
+            beginPolling()
         case .succeeded:
-            setErrorStateWorkItem.cancel()
             dismiss {
                 self.complete(with: .succeeded)
             }

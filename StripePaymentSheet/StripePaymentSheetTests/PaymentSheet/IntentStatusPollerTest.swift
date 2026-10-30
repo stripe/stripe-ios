@@ -92,6 +92,7 @@ final class IntentStatusPollerTest: XCTestCase {
         // When polling once
         sut.pollOnce { status in
             XCTAssertEqual(status, .pending)
+            XCTAssertEqual(self.updates, [.pending])
             completionExpectation.fulfill()
         }
 
@@ -133,6 +134,24 @@ final class IntentStatusPollerTest: XCTestCase {
         // Then the stale response is ignored
         wait(for: [updateExpectation!], timeout: retryInterval * 2)
         XCTAssertEqual(updates, [.pending])
+    }
+
+    func testSuspendingFromStatusCallbackStopsFurtherRequests() {
+        retriever.statuses = [.succeeded]
+        sut = IntentStatusPoller(
+            retryInterval: retryInterval,
+            retrieveValue: retriever.retrieve,
+            status: \.self,
+            didUpdate: { [weak self] _ in self?.sut.suspendPolling() }
+        )
+
+        // The terminal status callback suspends polling before retrieval returns.
+        sut.beginPolling()
+
+        let noMoreRequests = expectation(description: "No requests after terminal status")
+        noMoreRequests.isInverted = true
+        retriever.expectation = noMoreRequests
+        wait(for: [noMoreRequests], timeout: retryInterval * 3)
     }
 }
 

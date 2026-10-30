@@ -68,6 +68,9 @@ final class IntentStatusPoller<Value, Status: Equatable> {
         pollingGeneration requestGeneration: Int? = nil,
         completion: ((Status?) -> Void)? = nil
     ) {
+        if let requestGeneration {
+            guard requestGeneration == pollingGeneration && isPolling else { return }
+        }
         retrieveValue { [weak self] value in
             dispatchPrecondition(condition: .onQueue(.main))
             guard let self else { return }
@@ -78,15 +81,14 @@ final class IntentStatusPoller<Value, Status: Equatable> {
             guard isCurrentPollingRequest ?? true else { return }
 
             let status = value.map { $0[keyPath: self.statusKeyPath] }
-            completion?(status)
-
             if let value, let status, status != self.lastStatus {
                 self.lastStatus = status
                 self.didUpdate(value)
             }
+            completion?(status)
 
             // Retrieval failures are transient. Keep polling until the caller suspends us or the deadline expires.
-            if isCurrentPollingRequest == true, let requestGeneration {
+            if let requestGeneration, requestGeneration == self.pollingGeneration && self.isPolling {
                 self.retryAfterInterval(pollingGeneration: requestGeneration)
             }
         }

@@ -330,6 +330,8 @@ class PaymentSheetFormFactory {
                     emailAPIPath: "billing_details[email]",
                     additionalElements: makeSetupMandateElements(for: paymentMethod)
                 )
+            case .payto:
+                return makePayto()
             case .mbWay, .bizum:
                 return makeContactInformationAndBillingAddressForm(phoneRequired: true)
             case .cashApp, .payPal, .revolutPay, .amazonPay, .satispay, .twint, .krCard:

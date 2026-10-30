@@ -40,6 +40,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var sepaDebit: STPPaymentMethodSEPADebit?
     /// If this is a Bacs Debit PaymentMethod (ie `self.type == STPPaymentMethodTypeBacsDebit`), this contains additional details.
     @objc private(set) public var bacsDebit: STPPaymentMethodBacsDebit?
+    /// If this is a PayTo PaymentMethod, this contains its bank account details.
+    @objc private(set) public var payto: STPPaymentMethodPayto?
     /// If this is an AU BECS Debit PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAUBECSDebit`), this contains additional details.
     @objc private(set) public var auBECSDebit: STPPaymentMethodAUBECSDebit?
     /// If this is an EPS PaymentMethod (i.e. `self.type == STPPaymentMethodTypeEPS`), this contains additional details.
@@ -332,6 +334,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.sepaDebit = STPPaymentMethodSEPADebit.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "sepa_debit")
         )
+        paymentMethod.payto = STPPaymentMethodPayto.decodedObject(fromAPIResponse: dict["payto"] as? [AnyHashable: Any])
         paymentMethod.bacsDebit = STPPaymentMethodBacsDebit.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "bacs_debit")
         )

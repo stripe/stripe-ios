@@ -609,3 +609,21 @@ the heading the screen itself. */
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
 
+
+"PayTo details" = "PayTo details";
+
+"BSB and account number" = "BSB and account number";
+
+"Enter a valid email address or phone number registered as a PayID." = "Enter a valid email address or phone number registered as a PayID.";
+
+"Your PayTo transaction may be subject to the <terms>terms and conditions</terms> of your financial service provider and/or %@." = "Your PayTo transaction may be subject to the <terms>terms and conditions</terms> of your financial service provider and/or %@.";
+
+"By confirming your payment with PayTo, you allow %@ to charge your bank account for future payments in accordance with their terms." = "By confirming your payment with PayTo, you allow %@ to charge your bank account for future payments in accordance with their terms.";
+
+"Open your mobile banking app or online banking and authorise the PayTo payment within %@." = "Open your mobile banking app or online banking and authorise the PayTo payment within %@.";
+
+"Authorise payment with your banking app" = "Authorise payment with your banking app";
+
+"Please wait while we confirm your payment with your bank." = "Please wait while we confirm your payment with your bank.";
+
+"This can take up to 60 seconds." = "This can take up to 60 seconds.";

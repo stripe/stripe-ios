@@ -79,6 +79,9 @@ import Foundation
     /// The customer must authorize the payment out of band, such as in their mobile banking app.
     case awaitAuthorization
 
+    /// The customer must authorize a PayTo agreement in their banking app.
+    case paytoAwaitAuthorization
+
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the NSString with the `next_action.type`
@@ -118,6 +121,8 @@ import Foundation
             self = .multibancoDisplayDetails
         case "mb_way_await_authorization":
             self = .mbWayAwaitAuthorization
+        case "payto_await_authorization":
+            self = .paytoAwaitAuthorization
         case "await_authorization":
             self = .awaitAuthorization
         default:
@@ -162,6 +167,8 @@ import Foundation
             return "multibanco_display_details"
         case .mbWayAwaitAuthorization:
             return "mb_way_await_authorization"
+        case .paytoAwaitAuthorization:
+            return "payto_await_authorization"
         case .awaitAuthorization:
             return "await_authorization"
         case .unknown:
@@ -267,7 +274,7 @@ public class STPIntentAction: NSObject {
             break  // no additional details
         case .mbWayAwaitAuthorization:
             break  // no additional details
-        case .awaitAuthorization:
+        case .awaitAuthorization, .paytoAwaitAuthorization:
             break  // no additional details
         case .verifyWithMicrodeposits:
             if let verifyWithMicrodeposits = verifyWithMicrodeposits {
@@ -426,7 +433,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             break  // no additional details
         case .mbWayAwaitAuthorization:
             break  // no additional details
-        case .awaitAuthorization:
+        case .awaitAuthorization, .paytoAwaitAuthorization:
             break  // no additional details
         case .verifyWithMicrodeposits:
             verifyWithMicrodeposits = STPIntentActionVerifyWithMicrodeposits.decodedObject(

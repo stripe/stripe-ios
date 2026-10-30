@@ -142,6 +142,8 @@ import Foundation
     case mondu
     /// An unknown type.
     case unknown
+    /// A PayTo payment method
+    case payto
 
     /// Localized display name for this payment method type
     @_spi(InternalOnlyAPI) public var displayName: String {
@@ -238,6 +240,8 @@ import Foundation
             return "Pay by Bank"
         case .mbWay:
             return "MB WAY"
+        case .payto:
+            return "PayTo"
         case .bizum:
             return "Bizum"
         case .kakaoPay:
@@ -379,6 +383,8 @@ import Foundation
             return "pay_by_bank"
         case .mbWay:
             return "mb_way"
+        case .payto:
+            return "payto"
         case .bizum:
             return "bizum"
         case .kakaoPay:

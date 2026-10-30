@@ -275,6 +275,8 @@ extension STPPaymentMethodType {
                 return .pm_type_amazonpay
             case .billie:
                 return .pm_type_billie
+            case .payto:
+                return .pm_type_payto
             case .bizum:
                 return .pm_type_bizum
             case .boleto:

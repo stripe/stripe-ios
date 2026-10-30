@@ -18,6 +18,7 @@ import UIKit
 /// The states relevant while polling an Intent for an out-of-band action.
 @_spi(InternalOnlyAPI) @frozen public enum STPPaymentHandlerPollingStatus: Equatable {
     case pending
+    case processing
     case succeeded
     case failed
 }
@@ -45,6 +46,8 @@ import UIKit
     var threeDSCustomizationSettings: STPThreeDSCustomizationSettings { get }
     var returnURLString: String? { get }
     var intentStripeID: String { get }
+    /// The current intent status interpreted for its selected polling payment method.
+    var pollingStatus: STPPaymentHandlerPollingStatus { get }
     /// Returns the payment or setup intent's next action
     func nextAction() -> STPIntentAction?
     /// Retrieves the latest Intent and its polling status without mutating the action.
@@ -53,9 +56,49 @@ import UIKit
     func complete(with status: STPPaymentHandlerActionStatus, error: NSError?)
 }
 
+@_spi(InternalOnlyAPI) public extension STPPaymentHandlerActionParams {
+    /// Bounds a final status check so canceling does not wait for the network request timeout.
+    /// A response arriving after the deadline is ignored.
+    func retrievePollingResult(timeout: TimeInterval, completion: @escaping (STPPaymentHandlerPollingResult?) -> Void) {
+        dispatchPrecondition(condition: .onQueue(.main))
+        var didComplete = false
+        let finish: (STPPaymentHandlerPollingResult?) -> Void = { result in
+            guard !didComplete else { return }
+            didComplete = true
+            completion(result)
+        }
+        let timeoutWorkItem = DispatchWorkItem { finish(nil) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: timeoutWorkItem)
+        retrievePollingResult { result in
+            timeoutWorkItem.cancel()
+            finish(result)
+        }
+    }
+}
+
+private func pollingRetrievalFailure(_ error: Error?, isPayto: Bool) -> STPPaymentHandlerPollingResult? {
+    // Preserve the existing retry behavior for other polling payment methods.
+    guard isPayto, let error = error as NSError? else { return nil }
+    if error.domain == NSURLErrorDomain {
+        return nil
+    }
+    if error.domain == STPError.stripeDomain {
+        let code = error.userInfo[STPError.stripeErrorCodeKey] as? String
+        let type = error.userInfo[STPError.stripeErrorTypeKey] as? String
+        if error.code == STPErrorCode.connectionError.rawValue
+            || code == "lock_timeout" || code == "rate_limit"
+            || type == "rate_limit_error" || error.userInfo[STPError.httpStatusCodeKey] as? Int == 429 {
+            return nil
+        }
+    }
+    return STPPaymentHandlerPollingResult(status: .failed, updateActionIntent: {})
+}
+
 @_spi(InternalOnlyAPI)
 public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHandlerActionParams {
     private var serviceInitialized = false
+    // Keep the selected flow when later responses omit next_action and the expanded payment method.
+    private let usesPaytoPolling: Bool
 
     @_spi(InternalOnlyAPI) public let authenticationContext: STPAuthenticationContext
     @_spi(InternalOnlyAPI) public let apiClient: STPAPIClient
@@ -116,8 +159,13 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
         self.returnURLString = returnURLString
         self.paymentIntent = paymentIntent
+        self.usesPaytoPolling = paymentIntent.nextAction?.type == .paytoAwaitAuthorization || paymentIntent.paymentMethod?.type == .payto || paymentIntent.paymentMethodTypes == [.payto]
         self.paymentIntentCompletion = completion
         super.init()
+    }
+
+    @_spi(InternalOnlyAPI) public var pollingStatus: STPPaymentHandlerPollingStatus {
+        paymentIntent.status.paymentHandlerPollingStatus(isPayto: usesPaytoPolling)
     }
 
     @_spi(InternalOnlyAPI) public func nextAction() -> STPIntentAction? {
@@ -125,12 +173,16 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     }
 
     @_spi(InternalOnlyAPI) public func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void) {
-        apiClient.retrievePaymentIntent(withClientSecret: paymentIntent.clientSecret) { [weak self] paymentIntent, _ in
-            guard let self, let paymentIntent else {
+        apiClient.retrievePaymentIntent(withClientSecret: paymentIntent.clientSecret) { [weak self] paymentIntent, error in
+            guard let self else {
                 completion(nil)
                 return
             }
-            completion(STPPaymentHandlerPollingResult(status: paymentIntent.status.paymentHandlerPollingStatus, updateActionIntent: { [weak self] in
+            guard let paymentIntent else {
+                completion(pollingRetrievalFailure(error, isPayto: self.usesPaytoPolling))
+                return
+            }
+            completion(STPPaymentHandlerPollingResult(status: paymentIntent.status.paymentHandlerPollingStatus(isPayto: self.usesPaytoPolling), updateActionIntent: { [weak self] in
                 self?.paymentIntent = paymentIntent
             }))
         }
@@ -151,6 +203,8 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
 
 internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHandlerActionParams {
     private var serviceInitialized = false
+    // Keep the selected flow when later responses omit next_action and the expanded payment method.
+    private let usesPaytoPolling: Bool
 
     let authenticationContext: STPAuthenticationContext
     let apiClient: STPAPIClient
@@ -211,8 +265,13 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
         self.returnURLString = returnURLString
         self.setupIntent = setupIntent
+        self.usesPaytoPolling = setupIntent.nextAction?.type == .paytoAwaitAuthorization || setupIntent.paymentMethod?.type == .payto || setupIntent.paymentMethodTypes == [.payto]
         self.setupIntentCompletion = completion
         super.init()
+    }
+
+    var pollingStatus: STPPaymentHandlerPollingStatus {
+        setupIntent.status.paymentHandlerPollingStatus(isPayto: usesPaytoPolling)
     }
 
     func nextAction() -> STPIntentAction? {
@@ -220,12 +279,16 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     }
 
     func retrievePollingResult(completion: @escaping (STPPaymentHandlerPollingResult?) -> Void) {
-        apiClient.retrieveSetupIntent(withClientSecret: setupIntent.clientSecret) { [weak self] setupIntent, _ in
-            guard let self, let setupIntent else {
+        apiClient.retrieveSetupIntent(withClientSecret: setupIntent.clientSecret) { [weak self] setupIntent, error in
+            guard let self else {
                 completion(nil)
                 return
             }
-            completion(STPPaymentHandlerPollingResult(status: setupIntent.status.paymentHandlerPollingStatus, updateActionIntent: { [weak self] in
+            guard let setupIntent else {
+                completion(pollingRetrievalFailure(error, isPayto: self.usesPaytoPolling))
+                return
+            }
+            completion(STPPaymentHandlerPollingResult(status: setupIntent.status.paymentHandlerPollingStatus(isPayto: self.usesPaytoPolling), updateActionIntent: { [weak self] in
                 self?.setupIntent = setupIntent
             }))
         }
@@ -245,11 +308,15 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
 }
 
 private extension STPPaymentIntentStatus {
-    var paymentHandlerPollingStatus: STPPaymentHandlerPollingStatus {
+    func paymentHandlerPollingStatus(isPayto: Bool) -> STPPaymentHandlerPollingStatus {
         switch self {
         case .requiresAction:
             return .pending
+        case .processing where isPayto:
+            return .processing
         case .succeeded:
+            return .succeeded
+        case .requiresCapture where isPayto:
             return .succeeded
         case .unknown, .requiresPaymentMethod, .requiresConfirmation, .processing, .requiresCapture, .canceled:
             return .failed
@@ -260,10 +327,12 @@ private extension STPPaymentIntentStatus {
 }
 
 private extension STPSetupIntentStatus {
-    var paymentHandlerPollingStatus: STPPaymentHandlerPollingStatus {
+    func paymentHandlerPollingStatus(isPayto: Bool) -> STPPaymentHandlerPollingStatus {
         switch self {
         case .requiresAction:
             return .pending
+        case .processing where isPayto:
+            return .processing
         case .succeeded:
             return .succeeded
         case .unknown, .requiresPaymentMethod, .requiresConfirmation, .processing, .canceled:

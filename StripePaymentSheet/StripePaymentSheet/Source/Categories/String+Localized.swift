@@ -430,6 +430,34 @@ extension String.Localized {
                            "Instructions shown while waiting for an MB WAY payment authorization")
     }
 
+    static var payto_payment_details: String {
+        STPLocalizedString("PayTo details", "Label for selecting PayID or Australian bank details")
+    }
+    static var payto_bank_account: String {
+        STPLocalizedString("BSB and account number", "PayTo bank account entry option")
+    }
+    static var payto_invalid_payid: String {
+        STPLocalizedString("Enter a valid email address or phone number registered as a PayID.", "PayTo PayID validation error")
+    }
+    static var payto_terms: String {
+        STPLocalizedString("Your PayTo transaction may be subject to the <terms>terms and conditions</terms> of your financial service provider and/or %@.", "PayTo legal notice. Placeholder is merchant name; terms tags mark a link.")
+    }
+    static var payto_reuse_mandate: String {
+        STPLocalizedString("By confirming your payment with PayTo, you allow %@ to charge your bank account for future payments in accordance with their terms.", "PayTo reuse mandate. Placeholder is merchant name.")
+    }
+    static var payto_confirm_payment: String {
+        STPLocalizedString("Open your mobile banking app or online banking and authorise the PayTo payment within %@.", "PayTo authorization instructions. Placeholder is time remaining.")
+    }
+    static var payto_authorize_payment: String {
+        STPLocalizedString("Authorise payment with your banking app", "PayTo authorization title")
+    }
+    static var payto_processing: String {
+        STPLocalizedString("Please wait while we confirm your payment with your bank.", "PayTo processing title")
+    }
+    static var payto_processing_details: String {
+        STPLocalizedString("This can take up to 60 seconds.", "PayTo processing instructions")
+    }
+
     static var bizum_confirm_payment: String {
         STPLocalizedString("Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase.",
                            "Instructions shown while waiting for a Bizum payment authorization")

@@ -51,6 +51,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var sepaDebit: STPPaymentMethodSEPADebitParams?
     /// If this is a Bacs Debit PaymentMethod, this contains details about the bank account to debit.
     @objc public var bacsDebit: STPPaymentMethodBacsDebitParams?
+    /// If this is a PayTo PaymentMethod, this contains the bank account details.
+    @objc public var payto: STPPaymentMethodPaytoParams?
     /// If this is an AU BECS Debit PaymentMethod, this contains details about the bank to debit.
     @objc public var auBECSDebit: STPPaymentMethodAUBECSDebitParams?
     /// If this is a PayPal PaymentMethod, this contains additional details. :nodoc:
@@ -1128,6 +1130,19 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a PayTo PaymentMethod.
+    /// - Parameters:
+    ///   - payto: The bank account details or PayID.
+    ///   - billingDetails: The account holder's billing details.
+    ///   - metadata: Additional information to attach to the PaymentMethod.
+    @objc public convenience init(payto: STPPaymentMethodPaytoParams, billingDetails: STPPaymentMethodBillingDetails?, metadata: [String: String]?) {
+        self.init()
+        self.type = .payto
+        self.payto = payto
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     /// Creates params for a Naira card PaymentMethod.
     /// - Parameters:
     ///   - ngCard:       An object containing additional Naira card details.
@@ -1164,6 +1179,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: fpx)): "fpx",
             NSStringFromSelector(#selector(getter: sepaDebit)): "sepa_debit",
             NSStringFromSelector(#selector(getter: bacsDebit)): "bacs_debit",
+            NSStringFromSelector(#selector(getter: payto)): "payto",
             NSStringFromSelector(#selector(getter: auBECSDebit)): "au_becs_debit",
             NSStringFromSelector(#selector(getter: grabPay)): "grabpay",
             NSStringFromSelector(#selector(getter: przelewy24)): "p24",
@@ -1597,6 +1613,8 @@ extension STPPaymentMethodParams {
             sepaDebit = STPPaymentMethodSEPADebitParams()
         case .AUBECSDebit:
             auBECSDebit = STPPaymentMethodAUBECSDebitParams()
+        case .payto:
+            payto = STPPaymentMethodPaytoParams()
         case .bacsDebit:
             bacsDebit = STPPaymentMethodBacsDebitParams()
         case .przelewy24:

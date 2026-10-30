@@ -662,6 +662,32 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    // Confirmation Tokens do not yet accept client_context[payment_method_options][payto].
+    func testPaytoConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "AUD",
+                               paymentMethodType: .payto,
+                               merchantCountry: .AU) { form in
+            form.getTextFieldElement("Full name").setText("Jane Smith")
+            form.getTextFieldElement("BSB number").setText("000000")
+            form.getTextFieldElement("Account number").setText("000123456")
+        }
+    }
+
+    func testPaytoPayIDConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "AUD",
+                               paymentMethodType: .payto,
+                               merchantCountry: .AU) { form in
+            form.getTextFieldElement("Full name").setText("Jane Smith")
+            let method: DropdownFieldElement = form.getDropdownFieldElement(String.Localized.payto_payment_details)
+            method.selectedIndex = 1
+            method.didUpdate?(1)
+            form.getTextFieldElement("Email").setText("jane@example.com")
+            form.getTextFieldElement("PayID").setText("test+succeed@stripe.com")
+        }
+    }
+
     func testBizumConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",

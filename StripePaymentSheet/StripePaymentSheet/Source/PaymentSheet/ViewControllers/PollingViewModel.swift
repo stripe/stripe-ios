@@ -14,8 +14,12 @@ import UIKit
 
 class PollingViewModel {
 
+    var initialPollDelay: TimeInterval { 5 }
+    var finalPollDelay: TimeInterval { 3 }
+    var cancellationCheckTimeout: TimeInterval { 3 }
+
     let paymentMethodType: STPPaymentMethodType
-    let supportedPaymentMethods: [STPPaymentMethodType] = [.blik, .paynow, .promptPay, .mbWay, .bizum, .pix]
+    let supportedPaymentMethods: [STPPaymentMethodType] = [.blik, .paynow, .promptPay, .mbWay, .bizum, .pix, .payto]
     lazy var CTA: String = {
         switch paymentMethodType {
         case .blik:
@@ -24,6 +28,8 @@ class PollingViewModel {
             return .Localized.paynow_confirm_payment
         case .mbWay:
             return .Localized.mb_way_confirm_payment
+        case .payto:
+            return .Localized.payto_confirm_payment
         case .bizum:
             return .Localized.bizum_confirm_payment
         case .pix:
@@ -49,6 +55,9 @@ class PollingViewModel {
             // Keep in sync with:
             // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/lib/payment_flows/private/payment_methods/mb_way/constants.rb
             return Date().addingTimeInterval(60 * 4) // 4 minutes
+        case .payto:
+            // Match Payment Element's PayTo authorization window.
+            return Date().addingTimeInterval(30 * 60)
         case .pix:
             // Used only when the API response does not include `expires_at`.
             return Date().addingTimeInterval(60 * 60 * 24)
@@ -58,7 +67,7 @@ class PollingViewModel {
     }()
     var retryInterval: TimeInterval {
         switch paymentMethodType {
-        case .blik, .paynow, .promptPay, .mbWay:
+        case .blik, .paynow, .promptPay, .mbWay, .payto:
             return 1
         case .bizum:
             // Payment Element polls every 3 seconds. Poll every second here to match the other iOS polling flows:
