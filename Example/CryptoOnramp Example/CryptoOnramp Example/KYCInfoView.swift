@@ -184,7 +184,7 @@ struct KYCInfoView: View {
     // MARK: - View
 
     var body: some View {
-        ScrollView {
+        FoldAvoidingScrollView(alignment: .top, avoidsHorizontalFolds: false) { _ in
             VStack(spacing: 20) {
                 ZStack {
                     switch collectionMode {
@@ -358,6 +358,8 @@ struct KYCInfoView: View {
                     }
                 }
 
+                Spacer(minLength: 0)
+
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
                 }
@@ -370,6 +372,7 @@ struct KYCInfoView: View {
                 .disabled(isSubmitButtonDisabled)
                 .opacity(isSubmitButtonDisabled ? 0.5 : 1)
             }
+            .horizontallyCenteredContent()
             .padding()
         }
         .navigationTitle("KYC Information")
