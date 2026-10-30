@@ -165,7 +165,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Pay $50.99"].tap()
         // Cancel
         XCTAssertTrue(app.otherElements["TopBrowserBar"].waitForExistence(timeout: 30))
-        app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap()
+        // The browser toolbar can expose multiple Close buttons in the accessibility hierarchy.
+        XCTAssertTrue(app.otherElements["TopBrowserBar"].buttons["Close"].firstMatch.waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 1))
         // Fail payment
         app.buttons["Pay $50.99"].tap()
