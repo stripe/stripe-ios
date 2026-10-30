@@ -35,6 +35,14 @@ extension PaymentOption {
             switch linkConfirmOption {
             case .signUp(_, _, _, _, _, let confirmParams):
                 return confirmParams.makeIcon(forDarkBackground: isDarkMode, currency: currency, iconStyle: iconStyle)
+            case .wallet where linkConfirmOption.isBankScopedWallet:
+                // Match the icon of the bank row that launches this wallet
+                return PaymentSheet.PaymentMethodType.instantDebits.makeImage(
+                    forDarkBackground: isDarkMode,
+                    currency: currency,
+                    iconStyle: iconStyle,
+                    updateHandler: nil
+                )
             case .wallet, .withPaymentMethod, .withPaymentDetails:
                 return Image.paymentSheetLinkLogoImage
             }

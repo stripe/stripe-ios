@@ -747,7 +747,7 @@ extension PaymentSheet {
             }
 
         switch confirmOption {
-        case .wallet:
+        case .wallet(_, let supportedPaymentMethodTypes):
             let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
             if useNativeLink {
                 // logPayment is false because callers of PaymentSheet.confirm() are responsible for logging the payment result.
@@ -759,6 +759,7 @@ extension PaymentSheet {
                     nativeSheetPresentation: nativeSheetPresentation,
                     logPayment: false,
                     analyticsHelper: analyticsHelper,
+                    supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                     confirmationChallenge: confirmationChallenge,
                     confirmHandler: confirmHandler
                 )

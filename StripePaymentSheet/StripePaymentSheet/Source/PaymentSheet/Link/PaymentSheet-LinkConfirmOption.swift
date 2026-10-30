@@ -15,7 +15,8 @@ extension PaymentSheet {
 
     enum LinkConfirmOption {
         /// Present the Link wallet.
-        case wallet(brand: LinkBrand)
+        /// - Parameter supportedPaymentMethodTypes: The payment method types to show in the wallet. If `nil`, all available types are shown.
+        case wallet(brand: LinkBrand, supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil)
 
         /// Signup for Link then pay.
         case signUp(
@@ -140,7 +141,18 @@ extension PaymentSheet.LinkConfirmOption {
         }
     }
 
+    /// Whether this option presents a Link wallet that only shows bank accounts.
+    var isBankScopedWallet: Bool {
+        guard case .wallet(_, let supportedPaymentMethodTypes) = self else {
+            return false
+        }
+        return supportedPaymentMethodTypes == [.bankAccount]
+    }
+
     func paymentSheetLabel(brand: LinkBrand) -> String {
+        if isBankScopedWallet {
+            return String.Localized.bank
+        }
         switch self {
         case .wallet, .withPaymentDetails:
             return brand.displayName

@@ -119,6 +119,11 @@ extension EmbeddedPaymentElement {
             return nil
         }
 
+        // The bank row acts like a wallet row and launches the native Link wallet at confirm time, so there's no form.
+        if paymentMethodType.isLinkBankPayment && shouldUseLinkWalletForBankRow(elementsSession: elementsSession, configuration: configuration) {
+            return nil
+        }
+
         let formViewController = EmbeddedFormViewController(
             configuration: configuration,
             intent: intent,
