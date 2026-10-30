@@ -77,7 +77,7 @@ final class LinkSignUpViewController: UIViewController {
 
     private lazy var emailElement = {
         let element = LinkEmailElement(defaultValue: viewModel.emailAddress, theme: theme)
-        element.indicatorTintColor = appearance?.colors?.primary ?? .linkIconBrand
+        element.indicatorTintColor = appearance?.colors?.primary ?? .linkAccent
         return element
     }()
 
@@ -149,7 +149,7 @@ final class LinkSignUpViewController: UIViewController {
         if let cornerRadius = appearance?.primaryButton.cornerRadius {
             configuration.cornerRadius = cornerRadius
         }
-        let button = Button(configuration: configuration, title: viewModel.signUpButtonTitle)
+        let button = Button.linkPrimary(title: viewModel.signUpButtonTitle, configuration: configuration)
         button.addTarget(self, action: #selector(didTapSignUpButton(_:)), for: .touchUpInside)
         button.adjustsFontForContentSizeCategory = true
         button.isEnabled = false

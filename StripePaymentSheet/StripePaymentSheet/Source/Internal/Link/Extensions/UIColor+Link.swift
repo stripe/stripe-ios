@@ -21,10 +21,11 @@ extension UIColor {
 
     // Border colors
     static let linkBorderDefault: UIColor = dynamic(light: neutral300, dark: neutral900)
-    static let linkBorderSelected: UIColor = dynamic(light: neutral900, dark: brand200)
+    static let linkBorderSelected: UIColor = dynamic(light: neutral900, dark: neutral0)
 
     // Button colors
-    static let linkButtonBrand: UIColor = brand200
+    static let linkButtonPrimary: UIColor = dynamic(light: neutral900, dark: neutral0)
+    static let linkContentOnButtonPrimary: UIColor = dynamic(light: neutral0, dark: neutral900)
 
     // Text colors
     static let linkTextPrimary: UIColor = dynamic(light: neutral900, dark: neutral0)
@@ -32,6 +33,9 @@ extension UIColor {
     static let linkTextTertiary: UIColor = neutral500
     static let linkTextBrand: UIColor = dynamic(light: brand600, dark: brand200)
     static let linkTextCritical: UIColor = critical600
+
+    // Accent colors (e.g. radio buttons, loading indicators)
+    static let linkAccent: UIColor = dynamic(light: neutral900, dark: neutral0)
 
     // Icon colors
     static let linkIconPrimary: UIColor = dynamic(light: neutral900, dark: neutral100)
@@ -42,14 +46,14 @@ extension UIColor {
     /**
      * Workaround:
      *
-     * - The new Link theme primary button uses white on dark mode and dark on light mode
-     * - But we're still using Link green theming for buttons, regardless of dark mode
+     * - The Link theme primary button uses white on dark mode and dark on light mode
+     * - But `PayWithLinkButton` still uses Link green theming, regardless of dark mode
      * - This means that the fixed button color is not consistent with variable text / divider colors,
-     *   so we need to keep them fixed until we migrate to the updated primary color styling.
+     *   so we need to keep them fixed until we migrate it to the updated primary color styling.
      */
-    /// Content color on primary button
+    /// Content color on the green `PayWithLinkButton`
     static let linkContentOnPrimaryButton: UIColor = UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0)
-    /// Separator color on primary button
+    /// Separator color on the green `PayWithLinkButton`
     static let linkSeparatorOnPrimaryButton: UIColor = brand400
     /// Foreground color in the outlined Link hint message view
     static let linkOutlinedHintMessageForeground: UIColor = .dynamic(light: neutral700, dark: neutral500)
