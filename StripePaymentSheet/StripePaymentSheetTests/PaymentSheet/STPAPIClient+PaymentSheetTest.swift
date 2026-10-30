@@ -41,7 +41,12 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: config.externalPaymentMethodConfiguration,
             cpmConfiguration: config.customPaymentMethodConfiguration,
             clientDefaultPaymentMethod: "pm_12345",
-            customerAccessProvider: .customerSession("cs_12345"),
+            customerProvider: CustomerProvider(
+                customer: .init(
+                    id: "cus_12345",
+                    customerSessionClientSecret: "cuss_12345"
+                )
+            ),
             linkDisallowFundingSourceCreation: []
         )
         XCTAssertNotNil(parameters["mobile_session_id"])
@@ -49,7 +54,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], ["external_foo", "external_bar"])
         XCTAssertEqual(parameters["custom_payment_methods"] as? [String], ["cpmt_123", "cpmt_789"])
-        XCTAssertEqual(parameters["customer_session_client_secret"] as? String, "cs_12345")
+        XCTAssertEqual(parameters["customer_session_client_secret"] as? String, "cuss_12345")
         XCTAssertEqual(parameters["client_default_payment_method"] as? String, "pm_12345")
 
         let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as?  [String: Any])
@@ -77,7 +82,9 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: .legacyCustomerEphemeralKey("ek_12345"),
+            customerProvider: CustomerProvider(
+                customer: .init(id: "cus_12345", ephemeralKeySecret: "ek_12345")
+            ),
             linkDisallowFundingSourceCreation: []
         )
         XCTAssertNotNil(parameters["mobile_session_id"])
@@ -110,7 +117,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: nil,
+            customerProvider: CustomerProvider(customer: nil),
             linkDisallowFundingSourceCreation: []
         )
 
@@ -136,7 +143,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: nil,
+            customerProvider: CustomerProvider(customer: nil),
             linkDisallowFundingSourceCreation: []
         )
 
@@ -229,7 +236,9 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: .legacyCustomerEphemeralKey("ek_123"),
+            customerProvider: CustomerProvider(
+                customer: .init(id: "cus_123", ephemeralKeySecret: "ek_123")
+            ),
             linkDisallowFundingSourceCreation: []
         )
         XCTAssertEqual(parameters["legacy_customer_ephemeral_key"] as? String, "ek_123")
@@ -242,7 +251,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: nil,
+            customerProvider: CustomerProvider(customer: nil),
             linkDisallowFundingSourceCreation: []
         )
         XCTAssertNil(parameters["legacy_customer_ephemeral_key"])
@@ -255,7 +264,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: nil,
+            customerProvider: CustomerProvider(customer: nil),
             linkDisallowFundingSourceCreation: ["usInstantBankPayment"]
         )
         let linkParams = try XCTUnwrap(parameters["link"] as? [String: Any])
@@ -268,7 +277,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: nil,
+            customerProvider: CustomerProvider(customer: nil),
             linkDisallowFundingSourceCreation: []
         )
         XCTAssertNil(parameters["link"])
@@ -288,7 +297,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: nil,
+            customerProvider: CustomerProvider(customer: nil),
             linkDisallowFundingSourceCreation: []
         )
 
@@ -310,7 +319,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: nil,
+            customerProvider: CustomerProvider(customer: nil),
             linkDisallowFundingSourceCreation: []
         )
 
