@@ -251,39 +251,6 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         )
     }
 
-    func testExpressCheckoutElementLinkAnalytics() {
-        // Given an ECE-only Checkout Session that does not require shipping or automatic tax
-        var settings = CheckoutPlayground.Settings()
-        settings.integrationType = .eceOnly
-        settings.shippingAddressCollection = false
-        settings.automaticTax = false
-        loadCheckoutPlayground(app, settings)
-        app.buttons["Create Checkout Session"].waitForExistenceAndTap()
-
-        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
-        let linkButton = app.buttons["Pay with Link"]
-        XCTAssertTrue(linkButton.waitForExistence(timeout: 10))
-        XCTAssertFalse(app.buttons["Select payment method"].exists)
-        assertAnalyticsEvents([
-            "checkout_elements.init.started",
-            "checkout_elements.init.succeeded",
-            "elements.express_checkout_element.init",
-        ])
-
-        // When the customer opens Link from Express Checkout Element
-        linkButton.tap()
-
-        // Then Link opens and its analytics remain part of the ECE sequence
-        XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: 10))
-        assertAnalyticsEvents([
-            "checkout_elements.init.started",
-            "checkout_elements.init.succeeded",
-            "elements.express_checkout_element.init",
-            "checkout_elements.confirm.started",
-            "link.signup.flow_presented",
-        ])
-    }
-
     func testExpressCheckoutElementLink() {
         // Given a native Link checkout with a card that always requires authentication
         var settings = CheckoutPlayground.Settings()
@@ -297,7 +264,26 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
 
-        signUpFor(app, email: "link_3ds_cancel+\(UUID().uuidString)@link.com")
+        let linkButton = app.buttons["Pay with Link"]
+        XCTAssertTrue(linkButton.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Select payment method"].exists)
+        assertAnalyticsEvents([
+            "checkout_elements.init.started",
+            "checkout_elements.init.succeeded",
+            "elements.express_checkout_element.init",
+        ])
+
+        linkButton.tap()
+        XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: 10))
+        assertAnalyticsEvents([
+            "checkout_elements.init.started",
+            "checkout_elements.init.succeeded",
+            "elements.express_checkout_element.init",
+            "checkout_elements.confirm.started",
+            "link.signup.flow_presented",
+        ])
+
+        fillOutLinkSignup(app, email: "link_3ds_cancel+\(UUID().uuidString)@link.com")
         app.otherElements["Stripe.Link.PaymentMethodPicker"].waitForExistenceAndTap(timeout: 10)
         app.buttons["Add a payment method"].waitForExistenceAndTap()
         app.buttons["Debit or credit card"].waitForExistenceAndTap()
