@@ -12,8 +12,7 @@ import UIKit
 final class SheetImplementationResolver {
 
     static let isRequiredForDevice: Bool = {
-        // TODO: Re-enable the device override once the CocoaPods compatibility requirement is retired.
-        #if false && os(iOS) && !targetEnvironment(macCatalyst)
+        #if os(iOS) && !targetEnvironment(macCatalyst)
         // Use the hardware model rather than size classes, which change when Duo folds or unfolds.
         let modelIdentifier: String
         #if targetEnvironment(simulator)
