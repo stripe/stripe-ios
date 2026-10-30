@@ -1,5 +1,5 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_b12DVeucp23NNVTUHGUfs4DW4wG2RhqQ8OIH3CjnKmrTXzdqXiTLbXQz3W$
+https:\/\/api\.stripe\.com\/v1\/checkout_client\/cs_test_b12DVeucp23NNVTUHGUfs4DW4wG2RhqQ8OIH3CjnKmrTXzdqXiTLbXQz3W\/update$
 400
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
@@ -13,7 +13,7 @@ stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
 request-id: req_kfHGeBUkngicNv
-Content-Length: 190
+Content-Length: 180
 Vary: Origin
 Date: Tue, 17 Mar 2026 23:54:34 GMT
 original-request: req_kfHGeBUkngicNv
@@ -23,11 +23,11 @@ access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: promotion_code=BOGUS_CODE_123
+X-Stripe-Mock-Request: client_secret=cs_test_b12DVeucp23NNVTUHGUfs4DW4wG2RhqQ8OIH3CjnKmrTXzdqXiTLbXQz3W_secret_fidnandhYHdWcXxpYCc%252FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl&locale=.*&mobile_app_id=.*&promotion_code=BOGUS_CODE_123&timezone=.*
 
 {
   "error" : {
-    "code" : "payment_pages_promotion_code_invalid",
+    "code" : "promotion_code_invalid",
     "message" : "This promotion code is invalid.",
     "param" : "promotion_code",
     "type" : "invalid_request_error"

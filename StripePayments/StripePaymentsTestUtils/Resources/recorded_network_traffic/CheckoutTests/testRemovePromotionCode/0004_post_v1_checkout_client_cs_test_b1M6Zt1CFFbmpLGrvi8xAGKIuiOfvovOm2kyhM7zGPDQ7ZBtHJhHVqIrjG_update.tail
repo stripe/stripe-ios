@@ -1,9 +1,9 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_b1M6Zt1CFFbmpLGrvi8xAGKIuiOfvovOm2kyhM7zGPDQ7ZBtHJhHVqIrjG\/init$
+https:\/\/api\.stripe\.com\/v1\/checkout_client\/cs_test_b1M6Zt1CFFbmpLGrvi8xAGKIuiOfvovOm2kyhM7zGPDQ7ZBtHJhHVqIrjG\/update$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=juDlrUXInWUcjTXHZkJsWxV9Ub3RjONl1ZIrNF1Q2eiM_Z0srMsbcZcgmgXEUUgl-zvkKoDg6cAi_I-x
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=-zFANhJSJgYGzohG-j8ZhN3_7N4LD0dLWaT6HiTHo4URArq2qbXQKzlgf2x5BPKwX_ndIRQ-d18CGkix
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,18 +12,18 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_87YePPACdlsj65
-Content-Length: 29100
+request-id: req_Lcz78XfIXCkCKo
+Content-Length: 29068
 Vary: Origin
-Date: Mon, 16 Mar 2026 15:37:11 GMT
-original-request: req_87YePPACdlsj65
+Date: Mon, 16 Mar 2026 15:37:10 GMT
+original-request: req_Lcz78XfIXCkCKo
 stripe-version: 2020-08-27
-idempotency-key: d0d0ae26-caa0-4ab3-be34-6c94385446c2
+idempotency-key: 5522fa4b-feb5-4e78-92ed-e8b376e431d4
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_session_client\[is_aggregation_expected]=true&elements_session_client\[locale]=en-US&elements_session_client\[mobile_app_id]=com\.stripe\.StripeiOSTestHostApp&redirect_type=embedded
+X-Stripe-Mock-Request: client_secret=cs_test_b1M6Zt1CFFbmpLGrvi8xAGKIuiOfvovOm2kyhM7zGPDQ7ZBtHJhHVqIrjG_secret_fidnandhYHdWcXxpYCc%252FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl&locale=.*&mobile_app_id=.*&promotion_code=&timezone=.*
 
 {
   "sepa_debit_info" : null,
@@ -301,14 +301,14 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
     ],
     "checkout_session_id" : "cs_test_b1M6Zt1CFFbmpLGrvi8xAGKIuiOfvovOm2kyhM7zGPDQ7ZBtHJhHVqIrjG",
     "merchant_support_shipping" : null,
-    "mobile_app_id" : "com.stripe.StripeiOSTestHostApp",
+    "mobile_app_id" : null,
     "currency" : null,
     "external_payment_methods" : null,
     "legacy_customer_ephemeral_key" : null,
     "mobile_session_id" : null,
     "app_info_partner_id" : null,
     "disable_link_passthrough" : null,
-    "locale" : "en-US",
+    "locale" : null,
     "client_secret" : null,
     "client_default_payment_method" : null,
     "adaptive_pricing_context" : null,
@@ -347,7 +347,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   ],
   "billing_address_collection" : null,
   "experiments_data" : {
-    "event_id" : "25c215f4-7aca-4dda-9c29-1d9f5fdec2d9",
+    "event_id" : "247e8761-efbd-4b90-bc3c-81f52c82d6b7",
     "experiment_metadata" : {
       "ocs_buyer_xp_cpl_lpm_holdback" : {
         "heldback_special_wallets" : [
@@ -549,10 +549,10 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "link_forest_enable_ece_bank_use_shipping_as_billing" : false
     },
     "merchant_logo_url" : null,
-    "session_id" : "elements_session_1NrTjWgUwr6",
+    "session_id" : "elements_session_13Jq4eBzBG8",
     "card_installments_enabled" : false,
     "account_id" : "acct_1G6m1pFY0qyl6XeW",
-    "config_id" : "a612b715-0486-4d9c-931b-76edfdb976fa",
+    "config_id" : "389e21f5-59f6-4516-8d9e-c649dbc6f50c",
     "merchant_currency" : "usd",
     "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
     "card_brand_choice" : {
@@ -580,7 +580,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "paypal_merchant_id" : null
     },
     "experiments_data" : {
-      "arb_id" : "8f220bb0-3230-4e56-8f16-ecd0ddcaebb3",
+      "arb_id" : "4306e143-66ab-4f46-a8c4-3da7836aabc2",
       "experiment_metadata" : {
         "seed" : "020c709c49aae4cc9fb8fa74ea4c9c87a7ccf84268e4c5362f614c08b2755edf",
         "semi_dominant_payment_methods" : [
@@ -767,7 +767,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   },
   "shipping" : null,
   "crypto_in_link_ui_enabled" : false,
-  "rqdata" : "r\/tkBtGY\/wlcfoRRurGjApTh4KSF3sOPYvbz8G7PbQk7xL8Lxkz+eT6Qb5XFTDdKSI\/A4Dl2N3Itk0JOf0xqi5QFPNqMXQD6brh0sIPAabc+f6yvNHS1\/sGLRoGBaKyeGdPL+5Q1CLt3WLxVlWnF24CiE81IpIEwLk0PfwbCg4Ds4IhRxRryZRxMLWd\/QgidniuPvBCMAO3o7RkcWkW9Wozzzd0l9uUhvncHxjNy6YnLe0991l84jN2z8Xv8xg37XmymQRvJ+\/+irrc3hISg1ZEJtWzxY2nWKPfVEzbuetTf0EnWKx6Ij\/AYEw==KAUMvVA7DfPqGyd9",
+  "rqdata" : "xoPOzgHrb2p6AGM1yoEfg6oyjSMgbFw\/mI0t8my\/kOrN0ONsiY\/PAUz60SlnVL9iEzUPuCcAncz9Fclw\/cW0cRaAoXaLT6zrMn63JHVZeN3rXQd2iA7q6sbSwey2sjRO12uELIMVuOXbqyDUncseSmxrzYhMe8EKS11yLlrkiN\/eu77QmZkjSNI4jYSJhsBjSiZ795mtVYNQDlOuPiDdpGvK9h5SP2h6I9m5qqW7fGqJJHxEsmKt05b0bhqoNnhQM0LuVDdlG0uJHW9mcA4uksBvdAu+woon8b2SBlO3SbSIjXI2bMIdBmCP1w==dfTw3Q\/ZOHCHBZil",
   "total_summary" : {
     "due" : 2000,
     "subtotal" : 2000,
@@ -777,7 +777,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   "cross_sell_group" : null,
   "site_key" : "20000000-ffff-ffff-ffff-000000000002",
   "checkout_multistep_ui" : false,
-  "eid" : "EF2408D9-9307-44F3-A3FF-A36A287F1E56",
+  "eid" : "cb32da10-813a-4e02-ae08-2e1e94b96faa",
   "line_item_group" : {
     "tax_amounts" : [
 
@@ -856,6 +856,6 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   },
   "name_collection" : null,
   "payment_intent" : null,
-  "config_id" : "76559312-1ed4-4413-92fb-25efe7c9e1c2",
+  "config_id" : "5dec7ee6-49b0-48bb-b9ea-1979bf532e97",
   "is_sandbox_merchant" : false
 }
