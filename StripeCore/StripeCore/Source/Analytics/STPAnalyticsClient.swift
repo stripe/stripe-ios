@@ -203,6 +203,7 @@ extension STPAnalyticsClient {
     public func commonPayload(_ apiClient: STPAPIClient) -> [String: Any] {
         var payload: [String: Any] = [:]
         payload["bindings_version"] = StripeAPIConfiguration.STPSDKVersion
+        payload["uses_objective_c_api"] = apiClient.usesObjectiveCAPI
         payload["analytics_ua"] = "analytics.stripeios-1.0"
         let version = UIDevice.current.systemVersion
         if !version.isEmpty {

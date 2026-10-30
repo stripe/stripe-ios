@@ -18,15 +18,21 @@ import UIKit
     ///
     /// By default, the SDK uses this instance to make API requests
     /// eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.
-    @objc(sharedClient) public static let shared: STPAPIClient = {
+    public static let shared: STPAPIClient = {
         let client = STPAPIClient()
         return client
     }()
 
+    @available(swift, obsoleted: 1.0, renamed: "shared")
+    @objc(sharedClient) public class var sharedClient_objc: STPAPIClient {
+        shared.recordObjectiveCAPIUsage()
+        return shared
+    }
+
     /// The client's publishable key.
     ///
     /// The default value is `StripeAPI.defaultPublishableKey`.
-    @objc public var publishableKey: String? {
+    public var publishableKey: String? {
         get {
             if let publishableKey = _publishableKey {
                 return publishableKey
@@ -39,6 +45,35 @@ import UIKit
         }
     }
     var _publishableKey: String?
+
+    @available(swift, obsoleted: 1.0, renamed: "publishableKey")
+    @objc(publishableKey) public var publishableKey_objc: String? {
+        get {
+            recordObjectiveCAPIUsage()
+            return publishableKey
+        }
+        set {
+            recordObjectiveCAPIUsage()
+            publishableKey = newValue
+        }
+    }
+
+    private let objectiveCAPIUsageLock = NSLock()
+    private var _usesObjectiveCAPI = false
+
+    // Records observed use of the shared-client, initializer, and key-property bridges.
+    // A false value does not rule out use of other Objective-C APIs.
+    var usesObjectiveCAPI: Bool {
+        objectiveCAPIUsageLock.lock()
+        defer { objectiveCAPIUsageLock.unlock() }
+        return _usesObjectiveCAPI
+    }
+
+    private func recordObjectiveCAPIUsage() {
+        objectiveCAPIUsageLock.lock()
+        defer { objectiveCAPIUsageLock.unlock() }
+        _usesObjectiveCAPI = true
+    }
 
     /// A publishable key that only contains publishable keys and not secret keys.
     ///
@@ -104,12 +139,18 @@ import UIKit
     ///
     /// - Parameter publishableKey: The publishable key to use.
     /// - Returns: An instance of STPAPIClient.
-    @objc(initWithPublishableKey:)
     public convenience init(
         publishableKey: String
     ) {
         self.init()
         self.publishableKey = publishableKey
+    }
+
+    @available(swift, obsoleted: 1.0, renamed: "init(publishableKey:)")
+    @objc(initWithPublishableKey:)
+    public convenience init(publishableKey_objc: String) {
+        self.init(publishableKey: publishableKey_objc)
+        recordObjectiveCAPIUsage()
     }
 
     @_spi(InternalOnlyAPI) public func configuredRequest(
@@ -275,6 +316,9 @@ import UIKit
         client.urlSession = urlSession
         client.betas = betas
         client.userKeyLiveMode = userKeyLiveMode
+        if usesObjectiveCAPI {
+            client.recordObjectiveCAPIUsage()
+        }
         return client
     }
 

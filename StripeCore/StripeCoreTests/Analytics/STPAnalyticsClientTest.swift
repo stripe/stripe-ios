@@ -11,7 +11,70 @@ import XCTest
 
 @testable@_spi(InternalOnlyAPI) @_spi(MobilePaymentElementAnalyticEventBeta) @_spi(ReactNativeSDK) import StripeCore
 
-class STPAnalyticsClientTest: XCTestCase {
+public class STPAnalyticsClientTest: XCTestCase {
+
+    @objc(usesObjectiveCAPIForClient:)
+    public static func usesObjectiveCAPI(for client: STPAPIClient) -> Bool {
+        return client.usesObjectiveCAPI
+    }
+
+    func testSwiftAPIUsageIsNotMarkedAsObjectiveC() {
+        let apiClient = STPAPIClient(publishableKey: "pk_test_example")
+        apiClient.publishableKey = nil
+        _ = apiClient.publishableKey
+        _ = STPAPIClient.shared
+
+        let payload = STPAnalyticsClient().commonPayload(apiClient)
+
+        XCTAssertEqual(payload["uses_objective_c_api"] as? Bool, false)
+        XCTAssertEqual(payload["bindings_version"] as? String, StripeAPIConfiguration.STPSDKVersion)
+        XCTAssertFalse(apiClient.makeCopy().usesObjectiveCAPI)
+    }
+
+    func testObjectiveCPublishableKeyGetterMarksUsage() {
+        let apiClient = STPAPIClient()
+        XCTAssertFalse(apiClient.usesObjectiveCAPI)
+
+        _ = apiClient.perform(NSSelectorFromString("publishableKey"))
+
+        XCTAssertTrue(apiClient.usesObjectiveCAPI)
+        XCTAssertEqual(STPAnalyticsClient().commonPayload(apiClient)["uses_objective_c_api"] as? Bool, true)
+    }
+
+    func testObjectiveCPublishableKeySetterMarksUsageBeforeLogging() {
+        let apiClient = STPAPIClient()
+        XCTAssertFalse(apiClient.usesObjectiveCAPI)
+
+        apiClient.perform(NSSelectorFromString("setPublishableKey:"), with: "pk_test_example")
+        let analyticsClient = STPAnalyticsClient()
+        analyticsClient.log(analytic: GenericAnalytic(event: .addressShow, params: [:]), apiClient: apiClient)
+
+        XCTAssertEqual(apiClient.publishableKey, "pk_test_example")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["uses_objective_c_api"] as? Bool, true)
+        XCTAssertTrue(apiClient.makeCopy().usesObjectiveCAPI)
+        XCTAssertFalse(STPAPIClient().usesObjectiveCAPI)
+    }
+
+    func testObjectiveCUsageRemainsMarkedAfterSwiftCalls() {
+        let apiClient = STPAPIClient()
+        apiClient.perform(NSSelectorFromString("setPublishableKey:"), with: "pk_test_example")
+
+        apiClient.publishableKey = nil
+        _ = apiClient.publishableKey
+
+        XCTAssertTrue(apiClient.usesObjectiveCAPI)
+    }
+
+    func testObjectiveCUsageIsSafeAcrossConcurrentAccess() {
+        let apiClient = STPAPIClient()
+
+        DispatchQueue.concurrentPerform(iterations: 100) { _ in
+            _ = apiClient.perform(NSSelectorFromString("publishableKey"))
+            XCTAssertTrue(apiClient.usesObjectiveCAPI)
+        }
+
+        XCTAssertTrue(apiClient.usesObjectiveCAPI)
+    }
 
     func testIsUnitOrUITest_alwaysTrueInTest() {
         XCTAssertTrue(STPAnalyticsClient.isUnitOrUITest)
