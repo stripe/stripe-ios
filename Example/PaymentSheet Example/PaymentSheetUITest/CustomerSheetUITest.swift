@@ -368,7 +368,7 @@ class CustomerSheetUITest: XCTestCase {
         dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
-    func disabled_testCustomerSheet_addUSBankAccount_MicroDeposit() throws {
+    func testCustomerSheet_addUSBankAccount_MicroDeposit() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .off
@@ -395,6 +395,8 @@ class CustomerSheetUITest: XCTestCase {
         // Go through connections flow
         app.otherElements["consent_manually_verify_label"].links.firstMatch.tap()
         try! fillUSBankData_microdeposits(app)
+
+        skipLinkSignup(app)
 
         let doneManualEntry = app.buttons["success_done_button"]
         XCTAssertTrue(doneManualEntry.waitForExistence(timeout: timeout))
