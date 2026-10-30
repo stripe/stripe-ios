@@ -28,6 +28,8 @@
 		A2C357322EF35FEC00BE7824 /* StripePaymentsTestUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C357302EF35FEC00BE7824 /* StripePaymentsTestUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A2C357382EF3616600BE7824 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C357372EF3616600BE7824 /* StripeCore.framework */; };
 		A2C357392EF3616600BE7824 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C357372EF3616600BE7824 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2C3573A2EF3700000BE7824 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = A2C3573B2EF3700000BE7824 /* OHHTTPStubs */; };
+		A2C3573C2EF3700000BE7824 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2C3573D2EF3700000BE7824 /* OHHTTPStubsSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +128,8 @@
 				A2C357292EF35CE700BE7824 /* StripeCoreTestUtils.framework in Frameworks */,
 				A2C3572D2EF35D7500BE7824 /* XCTest.framework in Frameworks */,
 				3D136BC62EB4493500186DA1 /* StripeIssuing.framework in Frameworks */,
+				A2C3573A2EF3700000BE7824 /* OHHTTPStubs in Frameworks */,
+				A2C3573C2EF3700000BE7824 /* OHHTTPStubsSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +245,8 @@
 			);
 			name = StripeIssuingTests;
 			packageProductDependencies = (
+				A2C3573B2EF3700000BE7824 /* OHHTTPStubs */,
+				A2C3573D2EF3700000BE7824 /* OHHTTPStubsSwift */,
 			);
 			productName = StripeIssuingTests;
 			productReference = 3D136BC52EB4493500186DA1 /* StripeIssuingTests.xctest */;
@@ -314,6 +320,9 @@
 				hr,
 			);
 			mainGroup = 3D136BB02EB4493500186DA1;
+			packageReferences = (
+				A2C3573E2EF3700000BE7824 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
+			);
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3D136BBB2EB4493500186DA1 /* Products */;
@@ -536,6 +545,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A2C3573E2EF3700000BE7824 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
+			requirement = {
+				branch = "stripe-mock";
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A2C3573B2EF3700000BE7824 /* OHHTTPStubs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A2C3573E2EF3700000BE7824 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubs;
+		};
+		A2C3573D2EF3700000BE7824 /* OHHTTPStubsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A2C3573E2EF3700000BE7824 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubsSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3D136BB12EB4493500186DA1 /* Project object */;
 }
