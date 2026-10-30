@@ -58,74 +58,48 @@ struct WalletSelectionView: View {
     // MARK: - View
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Image(systemName: "dollarsign.circle")
-                    .font(.largeTitle)
-                    .padding()
-                    .background {
-                        Color(.systemGroupedBackground)
-                            .cornerRadius(16)
-                    }
-
-                VStack(spacing: 6) {
-                    Text(title)
-                        .font(.title)
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Text(subtitle)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-
-                if !wallets.isEmpty {
-                    VStack(spacing: 8) {
-                        ForEach(wallets) { wallet in
-                            WalletSelectionRowView(
-                                wallet: wallet,
-                                isSelected: selectedWallet == wallet,
-                                isLoading: isLoading.wrappedValue,
-                                onSelect: {
-                                    selectedWallet = wallet
-                                },
-                                onVerifyWalletOwnership: {
-                                    startWalletOwnershipVerification(for: wallet)
-                                },
-                                onDelete: {
-                                    deleteWallet(wallet)
-                                }
-                            )
-                            .transition(.move(edge: .trailing).combined(with: .opacity))
-                        }
-                    }
-
-                    Button("Add another wallet…") {
-                        showAttachWalletSheet = true
-                    }
-                    .disabled(isLoading.wrappedValue)
-                    .opacity(isLoading.wrappedValue ? 0.5 : 1)
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding()
-        }
-        .navigationTitle("Wallets")
-        .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .bottom, content: {
-            Button(primaryButtonTitle) {
+        FlowStepContainerView(
+            navigationTitle: "Wallets",
+            systemImageName: "dollarsign.circle",
+            title: title,
+            message: subtitle,
+            buttonTitle: primaryButtonTitle,
+            action: {
                 if wallets.isEmpty {
                     showAttachWalletSheet = true
                 } else if let selectedWallet {
                     onCompleted(selectedWallet)
                 }
             }
-            .buttonStyle(PrimaryButtonStyle())
-            .disabled(isLoading.wrappedValue)
-            .opacity(isLoading.wrappedValue ? 0.5 : 1)
-            .padding()
-        })
+        ) {
+            if !wallets.isEmpty {
+                VStack(spacing: 8) {
+                    ForEach(wallets) { wallet in
+                        WalletSelectionRowView(
+                            wallet: wallet,
+                            isSelected: selectedWallet == wallet,
+                            isLoading: isLoading.wrappedValue,
+                            onSelect: {
+                                selectedWallet = wallet
+                            },
+                            onVerifyWalletOwnership: {
+                                startWalletOwnershipVerification(for: wallet)
+                            },
+                            onDelete: {
+                                deleteWallet(wallet)
+                            }
+                        )
+                        .transition(.move(edge: .trailing).combined(with: .opacity))
+                    }
+                }
+
+                Button("Add another wallet…") {
+                    showAttachWalletSheet = true
+                }
+                .disabled(isLoading.wrappedValue)
+                .opacity(isLoading.wrappedValue ? 0.5 : 1)
+            }
+        }
         .sheet(isPresented: $showAttachWalletSheet) {
             AttachWalletAddressView(
                 coordinator: coordinator,
