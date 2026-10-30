@@ -14,7 +14,6 @@ import UIKit
  
  For internal SDK use only
  */
-@objc(STP_Internal_FormView)
 @_spi(InternalOnlyAPI) public class FormView: UIView {
     private let stackView: UIStackView
     public init(viewModel: FormElement.ViewModel) {

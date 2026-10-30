@@ -16,6 +16,8 @@ import Foundation
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
+import UIKit
+import XCTest
 
 final class PaymentSheetConfirmParamsTest: APIStubbedTestCase {
     enum MockJson {

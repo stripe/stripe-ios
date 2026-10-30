@@ -63,7 +63,7 @@ final class NetworkingOTPView: UIView {
             theme: theme
         )
         otpTextField.tintColor = dataSource.appearance.colors.primary
-        otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
+        otpTextField.addAction(UIAction { [weak self] _ in self?.otpTextFieldDidChange() }, for: .valueChanged)
         return otpTextField
     }()
     private lazy var theme: ElementsAppearance = {
@@ -90,7 +90,7 @@ final class NetworkingOTPView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func otpTextFieldDidChange() {
+    private func otpTextFieldDidChange() {
         showErrorText(nil) // clear the error
 
         if otpTextField.isComplete {

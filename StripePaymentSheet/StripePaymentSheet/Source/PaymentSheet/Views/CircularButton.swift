@@ -11,7 +11,6 @@
 import UIKit
 
 /// For internal SDK use only
-@objc(STP_Internal_CircularButton)
 class CircularButton: UIControl {
     private let radius: CGFloat = 10
     private let shadowOpacity: Float = 0.5

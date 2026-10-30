@@ -7,6 +7,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+import StripePayments
+import XCTest
+
 class STPConfirmCardOptionsTest: XCTestCase {
     func testCVC() {
         let cardOptions = STPConfirmCardOptions()
@@ -22,9 +25,9 @@ class STPConfirmCardOptionsTest: XCTestCase {
 
     func testEncoding() {
         let propertyMap = STPConfirmCardOptions.propertyNamesToFormFieldNamesMapping()
-        let expected = [
-            "cvc": "cvc",
-            "network": "network",
+        let expected: [AnyKeyPath: String] = [
+            \STPConfirmCardOptions.cvc: "cvc",
+            \STPConfirmCardOptions.network: "network",
         ]
         XCTAssertEqual(propertyMap, expected)
     }

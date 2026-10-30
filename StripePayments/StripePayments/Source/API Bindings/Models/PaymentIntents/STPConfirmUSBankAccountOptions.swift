@@ -15,7 +15,7 @@ import Foundation
 public class STPConfirmUSBankAccountOptions: NSObject {
     /// Initializer for `STPConfirmUSBankAccountOptions`
     /// - Parameter setupFutureUsage: Indicates that you intend to make future payments with this payment method.
-    @objc public init(
+    public init(
         setupFutureUsage: STPPaymentIntentSetupFutureUsage
     ) {
         self.setupFutureUsage = setupFutureUsage
@@ -25,15 +25,15 @@ public class STPConfirmUSBankAccountOptions: NSObject {
     /// Providing this parameter will attach the payment method to the PaymentIntent’s Customer, if present, after the Intent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be attached to a Customer after the transaction completes.
     ///
     /// If setup_future_usage is already set, you may only update the value from on_session to off_session.
-    @objc public var setupFutureUsage: STPPaymentIntentSetupFutureUsage
+    public var setupFutureUsage: STPPaymentIntentSetupFutureUsage
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
 // MARK: - STPFormEncodable
 extension STPConfirmUSBankAccountOptions: STPFormEncodable {
 
-    @objc internal var setupFutureUsageRawString: String? {
+    internal var setupFutureUsageRawString: String? {
         return setupFutureUsage.stringValue
     }
 
@@ -41,7 +41,7 @@ extension STPConfirmUSBankAccountOptions: STPFormEncodable {
         return "us_bank_account"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        [NSStringFromSelector(#selector(getter: setupFutureUsageRawString)): "setup_future_usage"]
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
+        [\STPConfirmUSBankAccountOptions.setupFutureUsageRawString: "setup_future_usage"]
     }
 }

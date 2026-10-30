@@ -11,6 +11,7 @@
 @testable@_spi(InternalOnlyAPI) import StripePayments
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
+import XCTest
 
 class STPPaymentIntentConfirmParamsTest: XCTestCase {
     func testInit() {
@@ -47,18 +48,17 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
 
     // MARK: Deprecated Property
 
-    // #pragma clang diagnostic push
-    // #pragma clang diagnostic ignored "-Wdeprecated"
+    @available(*, deprecated, message: "Tests deprecated properties")
     func testReturnURLRenaming() {
         let params = STPPaymentIntentConfirmParams()
 
         XCTAssertNil(params.returnURL)
-        XCTAssertNil(params.perform(NSSelectorFromString("returnUrl")))
+        XCTAssertNil(params.returnUrl)
 
         params.returnURL = "set via new name"
-        XCTAssertEqual(params.perform(NSSelectorFromString("returnUrl")).takeUnretainedValue() as? NSString, "set via new name")
+        XCTAssertEqual(params.returnUrl, "set via new name")
 
-        params.perform(NSSelectorFromString("setReturnUrl:"), with: "set via old name")
+        params.returnUrl = "set via old name"
         XCTAssertEqual(params.returnURL, "set via old name")
     }
 
@@ -129,9 +129,8 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
 
         let mapping = STPPaymentIntentConfirmParams.propertyNamesToFormFieldNamesMapping()
 
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(params.responds(to: NSSelectorFromString(propertyName)))
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((params as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: params))")
         }
 
         for formFieldName in mapping.values {
@@ -211,7 +210,7 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
 
     func testFormFieldMappingIncludesConfirmationToken() {
         let mapping = STPPaymentIntentParams.propertyNamesToFormFieldNamesMapping()
-        XCTAssertEqual(mapping[NSStringFromSelector(#selector(getter: STPPaymentIntentParams.confirmationToken))], "confirmation_token")
+        XCTAssertEqual(mapping[\STPPaymentIntentParams.confirmationToken], "confirmation_token")
     }
 
     func testClientSecretValidation() {

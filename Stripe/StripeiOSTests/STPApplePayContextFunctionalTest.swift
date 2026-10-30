@@ -8,13 +8,14 @@
 //
 
 import OHHTTPStubs
+import PassKit
 @testable import Stripe
 @testable import StripeApplePay
 @testable@_spi(InternalOnlyAPI) import StripeCore
 @testable import StripeCoreTestUtils
 @testable import StripePayments
-@testable import StripePaymentsObjcTestUtils
 @testable import StripePaymentsTestUtils
+import XCTest
 
 class STPTestApplePayContextDelegate: NSObject, STPApplePayContextDelegate {
     func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCreatePaymentMethod paymentMethod: StripePayments.STPPaymentMethod, paymentInformation: PKPayment, completion: @escaping StripeApplePay.STPIntentClientSecretCompletionBlock) {

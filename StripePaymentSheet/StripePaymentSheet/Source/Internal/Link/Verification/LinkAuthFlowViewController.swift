@@ -117,8 +117,8 @@ final class LinkAuthFlowViewController: UIViewController {
         }
         view.backgroundColor = .linkSurfacePrimary
         contentStack.addArrangedSubview(childContainer)
-        header.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-        header.backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
+        header.closeButton.addAction(UIAction { [weak self] _ in self?.close() }, for: .touchUpInside)
+        header.backButton.addAction(UIAction { [weak self] _ in self?.back() }, for: .touchUpInside)
         statusLabel.numberOfLines = 0
         statusLabel.textAlignment = .center
         statusLabel.font = LinkUI.font(forTextStyle: .body)
@@ -173,11 +173,11 @@ final class LinkAuthFlowViewController: UIViewController {
         return contentHeight + (mode.requiresModalPresentation ? 20 + header.intrinsicContentSize.height : 0)
     }
 
-    @objc func close() {
+    func close() {
         coordinator.cancel()
     }
 
-    @objc func back() {
+    func back() {
         coordinator.goBack()
     }
 

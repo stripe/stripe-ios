@@ -7,8 +7,11 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+import StripeCore
 import StripeCoreTestUtils
+import StripePayments
 import StripePaymentsTestUtils
+import XCTest
 
 class STPPaymentMethodBancontactParamsTests: STPNetworkStubbingTestCase {
     func testCreateBancontactPaymentMethod() {

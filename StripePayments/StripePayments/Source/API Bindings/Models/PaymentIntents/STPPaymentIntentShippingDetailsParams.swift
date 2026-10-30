@@ -13,25 +13,24 @@ import Foundation
 public class STPPaymentIntentShippingDetailsParams: NSObject {
 
     /// Shipping address.
-    @objc public var address: STPPaymentIntentShippingDetailsAddressParams
+    public var address: STPPaymentIntentShippingDetailsAddressParams
 
     /// Recipient name.
-    @objc public var name: String
+    public var name: String
 
     /// The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
-    @objc public var carrier: String?
+    public var carrier: String?
 
     /// Recipient phone (including extension).
-    @objc public var phone: String?
+    public var phone: String?
 
     /// The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
-    @objc public var trackingNumber: String?
+    public var trackingNumber: String?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Initialize an `STPPaymentIntentShippingDetailsParams` with required properties.
-    @objc
     public init(
         address: STPPaymentIntentShippingDetailsAddressParams,
         name: String
@@ -43,7 +42,7 @@ public class STPPaymentIntentShippingDetailsParams: NSObject {
     }
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(
@@ -74,18 +73,16 @@ public class STPPaymentIntentShippingDetailsParams: NSObject {
 // MARK: - STPFormEncodable
 extension STPPaymentIntentShippingDetailsParams: STPFormEncodable {
 
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: address)): "address",
-            NSStringFromSelector(#selector(getter: name)): "name",
-            NSStringFromSelector(#selector(getter: carrier)): "carrier",
-            NSStringFromSelector(#selector(getter: phone)): "phone",
-            NSStringFromSelector(#selector(getter: trackingNumber)): "tracking_number",
+            \STPPaymentIntentShippingDetailsParams.address: "address",
+            \STPPaymentIntentShippingDetailsParams.name: "name",
+            \STPPaymentIntentShippingDetailsParams.carrier: "carrier",
+            \STPPaymentIntentShippingDetailsParams.phone: "phone",
+            \STPPaymentIntentShippingDetailsParams.trackingNumber: "tracking_number",
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
@@ -95,7 +92,6 @@ extension STPPaymentIntentShippingDetailsParams: STPFormEncodable {
 // MARK: - NSCopying
 extension STPPaymentIntentShippingDetailsParams: NSCopying {
     /// :nodoc:
-    @objc
     public func copy(with zone: NSZone? = nil) -> Any {
         let copy = STPPaymentIntentShippingDetailsParams(address: address, name: name)
 

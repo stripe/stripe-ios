@@ -11,6 +11,7 @@
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 @testable@_spi(InternalOnlyAPI) import StripeUICore
+import UIKit
 import XCTest
 
 @MainActor

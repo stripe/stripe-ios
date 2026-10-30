@@ -8,7 +8,7 @@
 import Foundation
 
 @testable import StripeIssuing
-@_exported @testable import StripePaymentsObjcTestUtils
+@_exported @testable import StripePaymentsTestUtils
 
 extension STPFixtures {
     /// A customer-scoped ephemeral key that expires in 100 seconds.

@@ -13,10 +13,10 @@ import Foundation
 /// - seealso: https://docs.stripe.com/payments/mondu/accept-a-payment?payment-ui=direct-api
 public class STPPaymentMethodMondu: NSObject, STPAPIResponseDecodable {
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodMondu.self), self)
         ]
@@ -24,7 +24,7 @@ public class STPPaymentMethodMondu: NSObject, STPAPIResponseDecodable {
     }
 
     /// :nodoc:
-    @objc public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response else {
             return nil
         }

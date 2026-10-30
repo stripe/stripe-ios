@@ -13,28 +13,28 @@ import Foundation
 public class STPConfirmAlipayOptions: NSObject {
 
     /// Three-letter ISO currency code in lowercase. Required when confirming a SetupIntent.
-    @objc public var currency: String?
+    public var currency: String?
 
     /// Indicates that you intend to make future payments with this payment method.
     /// Alipay only supports `STPPaymentIntentSetupFutureUsage.offSession`.
-    @objc public var setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
+    public var setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
 
     /// The app bundle ID.
     /// @note This is automatically populated by the SDK.
-    @objc public var appBundleID: String {
+    public var appBundleID: String {
         return Bundle.main.bundleIdentifier ?? ""
     }
 
     /// The app version.
     /// @note This is automatically populated by the SDK.
-    @objc public var appVersionKey: String {
+    public var appVersionKey: String {
         return Bundle.stp_applicationVersion() ?? "1.0.0"  // Should only be nil for tests
     }
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
@@ -51,21 +51,19 @@ public class STPConfirmAlipayOptions: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConfirmAlipayOptions: STPFormEncodable {
-    @objc internal var setupFutureUsageRawString: String? {
+    internal var setupFutureUsageRawString: String? {
         return setupFutureUsage.stringValue
     }
 
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: currency)): "currency",
-            NSStringFromSelector(#selector(getter: appBundleID)): "app_bundle_id",
-            NSStringFromSelector(#selector(getter: appVersionKey)): "app_version_key",
-            NSStringFromSelector(#selector(getter: setupFutureUsageRawString)): "setup_future_usage",
+            \STPConfirmAlipayOptions.currency: "currency",
+            \STPConfirmAlipayOptions.appBundleID: "app_bundle_id",
+            \STPConfirmAlipayOptions.appVersionKey: "app_version_key",
+            \STPConfirmAlipayOptions.setupFutureUsageRawString: "setup_future_usage",
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return "alipay"
     }

@@ -44,7 +44,7 @@ extension StripeAPI.PaymentIntent {
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
     /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
-    /// @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `PaymentHandler` instead
+    /// @note Use the `confirmPaymentIntent(params:authenticationContext:completion:)` method on `PaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
     /// - Parameters:
     ///   - paymentIntentParams:  The `PaymentIntentParams` to pass to `/confirm`

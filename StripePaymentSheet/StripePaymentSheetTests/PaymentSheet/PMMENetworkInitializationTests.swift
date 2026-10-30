@@ -11,6 +11,7 @@ import OHHTTPStubsSwift
 @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @_spi(InternalOnlyAPI)@_spi(PaymentMethodMessagingElementPreview)@testable import StripePaymentSheet
 @_spi(InternalOnlyAPI)@testable import StripePaymentsTestUtils
+import UIKit
 import XCTest
 
 class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {

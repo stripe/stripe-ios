@@ -14,7 +14,6 @@ import SafariServices
 import UIKit
 
 /// For internal SDK use only
-@objc(STP_Internal_AfterpayPriceBreakdownView)
 class AfterpayPriceBreakdownView: UIView {
     private let afterPayClearPayLabel = UILabel()
     private let appearance: PaymentSheet.Appearance

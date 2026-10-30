@@ -10,7 +10,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
-@objc enum STPCardFieldType: Int {
+enum STPCardFieldType: Int {
     case number
     case expiration
     case CVC
@@ -23,7 +23,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     }
 
     private var _cardNumber: String?
-    @objc dynamic var cardNumber: String? {
+    var cardNumber: String? {
         get {
             _cardNumber
         }
@@ -45,7 +45,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    @objc var rawExpiration: String? {
+    var rawExpiration: String? {
         get {
             var array: [String] = []
             if expirationMonth != nil && !(expirationMonth == "") {
@@ -66,7 +66,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     }
 
     private var _cvc: String?
-    @objc dynamic var cvc: String? {
+    var cvc: String? {
         get {
             _cvc
         }
@@ -77,7 +77,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             )
         }
     }
-    @objc dynamic var postalCodeRequested = false
+    var postalCodeRequested = false
 
     var postalCodeRequired: Bool {
         return postalCodeRequested
@@ -99,7 +99,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     }
 
     private var _postalCodeCountryCode: String?
-    @objc dynamic var postalCodeCountryCode: String? {
+    var postalCodeCountryCode: String? {
         get {
             _postalCodeCountryCode
         }
@@ -115,7 +115,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
 
     let cbcController: STPCBCController
 
-    @objc dynamic var brand: STPCardBrand {
+    var brand: STPCardBrand {
         switch cbcController.brandState {
         case .brand(let brand):
             return brand
@@ -126,7 +126,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    @objc dynamic var isValid: Bool {
+    var isValid: Bool {
         return STPCardValidator.validationState(
             forNumber: cardNumber ?? "",
             validatingCardBrand: true
@@ -136,7 +136,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             && validationStateForCVC() == .valid
             && (!postalCodeRequired || validationStateForPostalCode() == .valid)
     }
-    @objc dynamic private(set) var hasCompleteMetadataForCardNumber = false
+    private(set) var hasCompleteMetadataForCardNumber = false
 
     var isNumberMaxLength: Bool {
         return (cardNumber?.count ?? 0) == STPBINController.shared.maxCardNumberLength()
@@ -217,7 +217,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
     }
 
     private var _expirationMonth: String?
-    @objc private(set) var expirationMonth: String? {
+    private(set) var expirationMonth: String? {
         get {
             _expirationMonth
         }
@@ -233,7 +233,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
     private var _expirationYear: String?
-    @objc private(set) dynamic var expirationYear: String? {
+    private(set) var expirationYear: String? {
         get {
             _expirationYear
         }
@@ -244,7 +244,6 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    @objc
     public class func keyPathsForValuesAffectingIsValid() -> Set<String> {
         return Set<String>([
             "cardNumber",

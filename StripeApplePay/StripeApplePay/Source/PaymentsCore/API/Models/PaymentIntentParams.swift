@@ -39,7 +39,7 @@ extension StripeAPI {
         /// Email address that the receipt for the resulting payment will be sent to.
         @_spi(InternalOnlyAPI) public var receiptEmail: String?
 
-        /// `@YES` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
+        /// `true` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
         /// if the PaymentMethod/Source is not already attached.
         /// This should be a boolean NSNumber, so that it can be `nil`
         @_spi(InternalOnlyAPI) public var savePaymentMethod: Bool?

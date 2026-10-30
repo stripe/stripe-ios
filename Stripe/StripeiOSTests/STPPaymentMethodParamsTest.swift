@@ -7,6 +7,9 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
+import StripePayments
+import XCTest
+
 class STPPaymentMethodParamsTest: XCTestCase {
     // MARK: STPFormEncodable Tests
 
@@ -19,9 +22,8 @@ class STPPaymentMethodParamsTest: XCTestCase {
 
         let mapping = STPPaymentMethodParams.propertyNamesToFormFieldNamesMapping()
 
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(params.responds(to: NSSelectorFromString(propertyName)))
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((params as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: params))")
         }
 
         for formFieldName in mapping.values {

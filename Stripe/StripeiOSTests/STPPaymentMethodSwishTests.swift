@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import StripeCore
 import StripePaymentsTestUtils
 
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
+import XCTest
 
 class STPPaymentMethodSwishTests: STPNetworkStubbingTestCase {
 

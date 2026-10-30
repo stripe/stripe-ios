@@ -7,6 +7,8 @@
 //
 
 import iOSSnapshotTestCase
+import UIKit
+import XCTest
 
 extension FBSnapshotTestCase {
     /// Embeds the given controller in a navigation controller, prepares it for

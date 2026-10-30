@@ -14,7 +14,7 @@ extension NSURLComponents {
     ///
     /// When reading, if there are duplicate
     /// names, earlier ones are overwritten by later ones.
-    @objc var stp_queryItemsDictionary: [String: String] {
+    var stp_queryItemsDictionary: [String: String] {
         get {
             guard let queryItems = queryItems else {
                 return [:]
@@ -35,12 +35,12 @@ extension NSURLComponents {
         }
     }
 
-    /// Returns YES if the passed in url matches self in scheme, host, and path,
+    /// Returns true if the passed in url matches self in scheme, host, and path,
     /// AND all the query items in self are also in the passed
     /// in components (as determined by `stp_queryItemsDictionary`)
     /// This is used for URL routing style matching
     /// - Parameter rhsComponents: The components to match against
-    /// - Returns: YES if there is a match, NO otherwise.
+    /// - Returns: true if there is a match, false otherwise.
     func stp_matchesURLComponents(_ rhsComponents: NSURLComponents) -> Bool {
         var matches =
             (scheme?.lowercased() == rhsComponents.scheme?.lowercased())

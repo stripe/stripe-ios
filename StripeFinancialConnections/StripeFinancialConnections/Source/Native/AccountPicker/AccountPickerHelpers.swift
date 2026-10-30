@@ -82,7 +82,7 @@ final class AccountPickerHelpers {
 // TODO(kgaidis): move this to StripeCore
 
 extension NSDecimalNumber {
-    @objc class func stp_fn_decimalNumber(
+    class func stp_fn_decimalNumber(
         withAmount amount: Int,
         currency: String?
     ) -> NSDecimalNumber {
@@ -97,7 +97,7 @@ extension NSDecimalNumber {
         return number.multiplying(byPowerOf10: -2)
     }
 
-    @objc func stp_fn_amount(withCurrency currency: String?) -> Int {
+    func stp_fn_amount(withCurrency currency: String?) -> Int {
         let noDecimalCurrencies = NSDecimalNumber.stp_fn_currenciesWithNoDecimal()
 
         var ourNumber = self

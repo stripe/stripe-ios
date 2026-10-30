@@ -112,7 +112,7 @@ final class PrepaneViews {
         secondaryButton?.isEnabled = !show
     }
 
-    @objc fileprivate func didSelectContinueButton() {
+    fileprivate func didSelectContinueButton() {
         didSelectContinue()
     }
 }

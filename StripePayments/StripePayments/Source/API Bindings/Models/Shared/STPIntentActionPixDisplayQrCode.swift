@@ -10,25 +10,25 @@ import Foundation
 public class STPIntentActionPixDisplayQrCode: NSObject {
 
     /// The Pix copy-and-paste string represented by the QR code.
-    @objc public let data: String?
+    public let data: String?
 
     /// A PNG image containing the Pix QR code.
-    @objc public let imageURLPNG: URL?
+    public let imageURLPNG: URL?
 
     /// An SVG image containing the Pix QR code.
-    @objc public let imageURLSVG: URL?
+    public let imageURLSVG: URL?
 
     /// The time at which the Pix QR code expires.
-    @objc public let expiresAt: Date?
+    public let expiresAt: Date?
 
     /// The URL to open which contains instructions on how to complete the payment.
-    @objc public let hostedInstructionsURL: URL?
+    public let hostedInstructionsURL: URL?
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             String(
                 format: "%@: %p",
@@ -66,7 +66,6 @@ public class STPIntentActionPixDisplayQrCode: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPIntentActionPixDisplayQrCode: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
               let hostedInstructionsURLString = dict["hosted_instructions_url"] as? String,

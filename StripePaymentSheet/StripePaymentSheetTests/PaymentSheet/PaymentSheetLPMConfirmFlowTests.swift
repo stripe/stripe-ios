@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 7/18/23.
 //
 
+import PassKit
 import SafariServices
 @testable@_spi(InternalOnlyAPI) import StripeApplePay
 @testable@_spi(InternalOnlyAPI) import StripeCore
@@ -524,7 +525,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         // from async server-side processing (mandate creation, PM attachment) across iterations.
         for intentKind in intentKinds {
             // Create customer session for confirmation token support
-            let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+            let customerAndCustomerSession = try await STPTestingAPIClient.shared.fetchCustomerAndCustomerSessionClientSecret(
                 customerID: nil,
                 merchantCountry: merchantCountry.rawValue,
                 paymentMethodSave: true
@@ -917,7 +918,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
 
         // Create customer session for confirmation token support
-        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared.fetchCustomerAndCustomerSessionClientSecret(
             customerID: nil,
             merchantCountry: merchantCountry.rawValue,
             paymentMethodSave: true
@@ -1851,7 +1852,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             // TODO(porter): Setup mode is out of scope for unified-mode private preview.
             // Re-enable once unified mode supports setup mode.
             // if shouldTest(.checkoutSession) {
-            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared().createCheckoutSession(
+            //     let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             //         types: paymentMethodTypes,
             //         currency: currency,
             //         merchantCountry: merchantCountry.rawValue,
@@ -1887,7 +1888,7 @@ extension PaymentSheetLPMConfirmFlowTests {
 
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
         // Create a fresh customer so we don't accumulate payment methods on a shared customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(
             customerID: nil,
             merchantCountry: merchantCountry.rawValue.lowercased()
         )

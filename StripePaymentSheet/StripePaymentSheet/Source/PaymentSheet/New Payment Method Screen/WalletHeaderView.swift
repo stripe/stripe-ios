@@ -81,7 +81,7 @@ extension PaymentSheetViewController {
                 button.cornerRadius = appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
             }
             button.accessibilityIdentifier = "pay_with_link_button"
-            button.addTarget(self, action: #selector(handleTapPayWithLink), for: .touchUpInside)
+            button.addAction(UIAction { [weak self] _ in self?.handleTapPayWithLink() }, for: .touchUpInside)
             return button
         }()
 
@@ -149,11 +149,11 @@ extension PaymentSheetViewController {
             fatalError("init(coder:) has not been implemented")
         }
 
-        @objc func handleTapApplePay() {
+        func handleTapApplePay() {
             delegate?.walletHeaderViewApplePayButtonTapped(self)
         }
 
-        @objc func handleTapPayWithLink() {
+        func handleTapPayWithLink() {
             delegate?.walletHeaderViewPayWithLinkTapped(self)
         }
 
@@ -219,7 +219,7 @@ extension PaymentSheetViewController {
             }
 
             button.accessibilityIdentifier = "apple_pay_button"
-            button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
+            button.addAction(UIAction { [weak self] _ in self?.handleTapApplePay() }, for: .touchUpInside)
 
             NSLayoutConstraint.activate([
                 button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight),

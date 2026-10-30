@@ -10,6 +10,7 @@
 @testable@_spi(InternalOnlyAPI) @_spi(KlarnaSDKPrivatePreview) import StripePayments
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
+import XCTest
 
 class STPSetupIntentConfirmParamsTest: XCTestCase {
     func testInit() {
@@ -80,9 +81,8 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
 
         let mapping = STPSetupIntentConfirmParams.propertyNamesToFormFieldNamesMapping()
 
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(params.responds(to: NSSelectorFromString(propertyName)))
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((params as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: params))")
         }
 
         for formFieldName in mapping.values {
@@ -150,7 +150,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
     func testFormFieldMappingIncludesPaymentMethodOptions() {
         let mapping = STPSetupIntentConfirmParams.propertyNamesToFormFieldNamesMapping()
         XCTAssertEqual(
-            mapping[NSStringFromSelector(#selector(getter: STPSetupIntentConfirmParams.paymentMethodOptions))],
+            mapping[\STPSetupIntentConfirmParams.paymentMethodOptions],
             "payment_method_options"
         )
     }
@@ -172,7 +172,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
 
     func testFormFieldMappingIncludesConfirmationToken() {
         let mapping = STPSetupIntentConfirmParams.propertyNamesToFormFieldNamesMapping()
-        XCTAssertEqual(mapping[NSStringFromSelector(#selector(getter: STPSetupIntentConfirmParams.confirmationToken))], "confirmation_token")
+        XCTAssertEqual(mapping[\STPSetupIntentConfirmParams.confirmationToken], "confirmation_token")
     }
 
     func testFormEncodingIncludesAlipayOptions() {

@@ -7,6 +7,9 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
+import StripePayments
+import XCTest
+
 class STPConnectAccountAddressTest: XCTestCase {
     // MARK: STPFormEncodable Tests
 
@@ -19,9 +22,8 @@ class STPConnectAccountAddressTest: XCTestCase {
 
         let mapping = STPConnectAccountAddress.propertyNamesToFormFieldNamesMapping()
 
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(address.responds(to: NSSelectorFromString(propertyName)))
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((address as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: address))")
         }
 
         for formFieldName in mapping.values {

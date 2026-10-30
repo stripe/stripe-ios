@@ -35,7 +35,6 @@ public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPAPIResponseDecodable
 
-    @objc
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

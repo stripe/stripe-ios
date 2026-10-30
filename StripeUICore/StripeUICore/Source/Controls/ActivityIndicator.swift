@@ -10,7 +10,6 @@ import UIKit
 
 /// A custom replacement for `UIActivityIndicatorView`.
 /// For internal SDK use only
-@objc(STP_Internal_ActivityIndicator)
 @_spi(InternalOnlyAPI) public final class ActivityIndicator: UIView {
 
     #if DEBUG

@@ -9,7 +9,7 @@
 import Foundation
 
 /// Possible validation states for a bank account.
-@objc public enum STPBankAccountStatus: Int {
+public enum STPBankAccountStatus: Int {
     /// The account has had no activity or validation performed
     case new
     /// Stripe has determined this bank account exists.
@@ -33,24 +33,24 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
 
     /// The routing number for the bank account. This should be the ACH routing number,
     /// not the wire routing number.
-    @objc public private(set) var routingNumber: String?
+    public private(set) var routingNumber: String?
     /// Two-letter ISO code representing the country the bank account is located in.
-    @objc public private(set) var country: String?
+    public private(set) var country: String?
     /// The default currency for the bank account.
-    @objc public private(set) var currency: String?
+    public private(set) var currency: String?
     /// The last 4 digits of the account number.
-    @objc public private(set) var last4: String?
+    public private(set) var last4: String?
     /// The name of the bank that owns the account.
-    @objc public private(set) var bankName: String?
+    public private(set) var bankName: String?
     /// The name of the person or business that owns the bank account.
-    @objc public private(set) var accountHolderName: String?
+    public private(set) var accountHolderName: String?
     /// The type of entity that holds the account.
-    @objc public private(set) var accountHolderType: STPBankAccountHolderType = .individual
+    public private(set) var accountHolderType: STPBankAccountHolderType = .individual
     /// A proxy for the account number, this uniquely identifies the account and can be
     /// used to compare equality of different bank accounts.
-    @objc public private(set) var fingerprint: String?
+    public private(set) var fingerprint: String?
     /// The validation status of the bank account. - seealso: STPBankAccountStatus
-    @objc public private(set) var status: STPBankAccountStatus = .new
+    public private(set) var status: STPBankAccountStatus = .new
 
     // MARK: - Deprecated methods
 
@@ -70,11 +70,11 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
         deprecated,
         message: "Use stripeID (defined in STPSourceProtocol)"
     )
-    @objc public var bankAccountId: String? {
+    public var bankAccountId: String? {
         return stripeID
     }
-    @objc public private(set) var stripeID: String = ""
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var stripeID: String = ""
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - STPBankAccountStatus
     class func stringToStatusMapping() -> [String: NSNumber] {
@@ -89,7 +89,7 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
         ]
     }
 
-    @objc(statusFromString:) class func status(from string: String) -> STPBankAccountStatus {
+    class func status(from string: String) -> STPBankAccountStatus {
         let key = string.lowercased()
         let statusNumber = self.stringToStatusMapping()[key]
 
@@ -100,7 +100,7 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
         return .new
     }
 
-    @objc(stringFromStatus:) class func string(from status: STPBankAccountStatus) -> String? {
+    class func string(from status: STPBankAccountStatus) -> String? {
         return
             (self.stringToStatusMapping() as NSDictionary).allKeys(
                 for: NSNumber(value: status.rawValue)
@@ -110,13 +110,12 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
 
     // MARK: - Equality
     /// :nodoc:
-    @objc
     public override func isEqual(_ bankAccount: Any?) -> Bool {
         return isEqual(to: bankAccount as? STPBankAccount)
     }
 
     /// :nodoc:
-    @objc public override var hash: Int {
+    public override var hash: Int {
         return stripeID.hash
     }
 
@@ -130,7 +129,7 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPBankAccount.self), self),
@@ -154,7 +153,6 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

@@ -80,7 +80,7 @@ extension LinkInlineSignupView {
                 alwaysEmphasizeText: true
             )
             checkbox.accessibilityLabel = brand.accessibilityText(from: text)
-            checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
+            checkbox.addAction(UIAction { [weak self] _ in self?.didToggleCheckbox() }, for: .touchUpInside)
             checkbox.isSelected = false
 
             return checkbox
@@ -180,7 +180,7 @@ extension LinkInlineSignupView {
 
         }
 
-        @objc func didToggleCheckbox() {
+        func didToggleCheckbox() {
             delegate?.didUpdate(element: self)
         }
     }

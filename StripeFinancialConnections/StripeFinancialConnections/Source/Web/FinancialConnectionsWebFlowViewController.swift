@@ -121,7 +121,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
 
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.rightBarButtonItem = closeItem
-        loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
+        loadingView.tryAgainButton.addAction(UIAction { [weak self] _ in self?.didTapTryAgainButton() }, for: .touchUpInside)
         view.addSubview(loadingView)
 
         continueStateView.isHidden = true
@@ -355,7 +355,6 @@ extension FinancialConnectionsWebFlowViewController: STPURLCallbackListener {
 
 private extension FinancialConnectionsWebFlowViewController {
 
-    @objc
     private func didTapTryAgainButton() {
         fetchSession()
     }

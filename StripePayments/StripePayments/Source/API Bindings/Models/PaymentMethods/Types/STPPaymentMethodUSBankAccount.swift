@@ -14,34 +14,34 @@ import UIKit
 public class STPPaymentMethodUSBankAccount: NSObject {
 
     /// Account holder type
-    @objc public let accountHolderType: STPPaymentMethodUSBankAccountHolderType
+    public let accountHolderType: STPPaymentMethodUSBankAccountHolderType
 
     /// Account type
-    @objc public let accountType: STPPaymentMethodUSBankAccountType
+    public let accountType: STPPaymentMethodUSBankAccountType
 
     /// The name of the bank
-    @objc public let bankName: String
+    public let bankName: String
 
     /// Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
-    @objc public let fingerprint: String
+    public let fingerprint: String
 
     /// Last four digits of the bank account number
-    @objc public let last4: String
+    public let last4: String
 
     @available(*, deprecated, renamed: "financialConnectionsAccount")
-    @objc public var linkedAccount: String? { financialConnectionsAccount }
+    public var linkedAccount: String? { financialConnectionsAccount }
 
     /// The ID of the Financial Connections Account used to create the payment method
-    @objc public let financialConnectionsAccount: String?
+    public let financialConnectionsAccount: String?
 
     /// Contains information about US bank account networks that can be used
-    @objc public let networks: STPPaymentMethodUSBankAccountNetworks?
+    public let networks: STPPaymentMethodUSBankAccountNetworks?
 
     /// Routing number of the bank account
-    @objc public let routingNumber: String
+    public let routingNumber: String
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     internal init(
         accountHolderType: STPPaymentMethodUSBankAccountHolderType,
@@ -111,7 +111,7 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
 
 // MARK: - STPPaymentMethodUSBankAccountHolderType
 /// Account holder type
-@objc public enum STPPaymentMethodUSBankAccountHolderType: Int {
+public enum STPPaymentMethodUSBankAccountHolderType: Int {
     /// This is an unknown type that's been added since the SDK
     /// was last updated.
     /// Update your SDK, or use the `allResponseFields`
@@ -154,7 +154,7 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
 
 // MARK: - STPPaymentMethodUSBankAccountType
 /// Account type
-@objc public enum STPPaymentMethodUSBankAccountType: Int {
+public enum STPPaymentMethodUSBankAccountType: Int {
     /// This is an unknown type that's been added since the SDK
     /// was last updated.
     /// Update your SDK, or use the `allResponseFields`
@@ -200,10 +200,10 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
 public class STPPaymentMethodUSBankAccountNetworks: NSObject {
 
     /// The preferred network
-    @objc public let preferred: String?
+    public let preferred: String?
 
     /// All supported networks
-    @objc public let supported: [String]
+    public let supported: [String]
 
     internal init(
         preferred: String?,

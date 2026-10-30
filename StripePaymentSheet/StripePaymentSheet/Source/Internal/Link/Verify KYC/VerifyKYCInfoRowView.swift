@@ -19,7 +19,7 @@ final class VerifyKYCInfoRowView: UIView {
         stackView.spacing = LinkUI.contentSpacing
 
         if editAction != nil {
-            editButton.addTarget(self, action: #selector(didTapEdit), for: .touchUpInside)
+            editButton.addAction(UIAction { [weak self] _ in self?.didTapEdit() }, for: .touchUpInside)
             stackView.addArrangedSubview(editButton)
         }
 
@@ -95,7 +95,7 @@ final class VerifyKYCInfoRowView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func didTapEdit() {
+    private func didTapEdit() {
         editAction?()
     }
 }

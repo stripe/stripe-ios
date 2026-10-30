@@ -105,7 +105,7 @@ class STPLabeledMultiFormTextFieldView: UIView {
         self.fieldContainer = fieldContainer
     }
 
-    @objc var formBackgroundColor: UIColor? {
+    var formBackgroundColor: UIColor? {
         get {
             return fieldContainer?.backgroundColor ?? UIColor.clear
         }

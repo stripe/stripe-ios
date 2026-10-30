@@ -4,6 +4,7 @@
 //
 
 import StripeCoreTestUtils
+import UIKit
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import StripeCore
@@ -41,7 +42,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
     func testCardConfirmation() async throws {
         let merchantCountry = MerchantCountry.US
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+        let newCustomer = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: nil,
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
         try await _testConfirm(
             apiClient: apiClient,
@@ -58,7 +59,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
     func testCardConfirmation_FR() async throws {
         let merchantCountry = MerchantCountry.FR
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+        let newCustomer = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: nil,
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
         try await _testConfirm(
             apiClient: apiClient,
@@ -76,7 +77,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
     func testSepaConfirmation() async throws {
         let merchantCountry = MerchantCountry.US
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+        let newCustomer = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: nil,
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
 
         // Create default billing details to trigger individual address fields
@@ -197,7 +198,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
     func testAllowRedisplay_legacy() async throws {
         let merchantCountry = MerchantCountry.US
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+        let newCustomer = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: nil,
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
         guard let clientSecret = try await _testConfirm(apiClient: apiClient,
                                                         merchantCountry: merchantCountry,
@@ -221,7 +222,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
     func testAllowRedisplay_customerSession() async throws {
         let merchantCountry = MerchantCountry.US
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
+        let newCustomer = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: nil,
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
                                                             customerSessionData: [

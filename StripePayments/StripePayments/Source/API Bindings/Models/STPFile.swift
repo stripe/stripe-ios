@@ -11,7 +11,6 @@ import Foundation
 
 /// The purpose of the uploaded file.
 /// - seealso: https://stripe.com/docs/file-upload
-@objc
 public enum STPFilePurpose: Int {
 
     // NOTE: If adding cases here, also add to `StripeFile.Purpose` or they will
@@ -33,19 +32,18 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
     // not be decoded from the API response.
 
     /// The token for this file.
-    @objc public private(set) var fileId: String
+    public private(set) var fileId: String
     /// The date this file was created.
-    @objc public private(set) var created: Date
+    public private(set) var created: Date
     /// The purpose of this file. This can be either an identifing document or an evidence dispute.
     /// - seealso: https://stripe.com/docs/file-upload
-    @objc public private(set) var purpose: STPFilePurpose = .unknown
+    public private(set) var purpose: STPFilePurpose = .unknown
     /// The file size in bytes.
-    @objc public private(set) var size: NSNumber?
+    public private(set) var size: NSNumber?
     /// The file type. This can be "jpg", "png", or "pdf".
-    @objc public private(set) var type: String?
+    public private(set) var type: String?
 
     /// Returns the string value for a purpose.
-    @objc(stringFromPurpose:)
     public class func string(from purpose: STPFilePurpose) -> String? {
         let purpose = StripeFile.Purpose(from: purpose)
 
@@ -55,7 +53,7 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
 
         return purpose.rawValue
     }
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     required init(
         fileId: String,
@@ -75,14 +73,12 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPFilePurpose
 
-    @objc(purposeFromString:)
     class func purpose(from string: String) -> STPFilePurpose {
         return StripeFile.Purpose(rawValue: string.lowercased())?.toSTPFilePurpose ?? .unknown
     }
 
     // MARK: - Equality
     /// :nodoc:
-    @objc
     public override func isEqual(_ object: Any?) -> Bool {
         return isEqual(to: object as? STPFile)
     }
@@ -98,12 +94,11 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
     }
 
     /// :nodoc:
-    @objc public override var hash: Int {
+    public override var hash: Int {
         return fileId.hash
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

@@ -11,10 +11,10 @@ import Foundation
 /// An OXXO Payment Method.
 /// - seealso: https://stripe.com/docs/payments/oxxo
 public class STPPaymentMethodOXXO: NSObject, STPAPIResponseDecodable {
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodOXXO.self), self)
@@ -28,7 +28,6 @@ public class STPPaymentMethodOXXO: NSObject, STPAPIResponseDecodable {
         super.init()
     }
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

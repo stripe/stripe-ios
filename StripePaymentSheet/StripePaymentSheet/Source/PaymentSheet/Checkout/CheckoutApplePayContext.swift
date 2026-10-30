@@ -43,7 +43,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private var continuation: CheckedContinuation<CheckoutController.InternalConfirmResult, Never>?
     var result: CheckoutController.InternalConfirmResult?
     var paymentState: PaymentState = .notStarted
-    /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) resumes our continuation
+    /// true if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) resumes our continuation
     var didCancelOrTimeoutWhilePending = false
     /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
     private var didFinish = false
@@ -193,7 +193,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
     }
 
-    @objc nonisolated func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+    nonisolated func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
         return presentationWindow
     }
 

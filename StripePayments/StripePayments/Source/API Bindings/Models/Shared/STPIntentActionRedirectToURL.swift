@@ -14,10 +14,10 @@ import Foundation
 public class STPIntentActionRedirectToURL: NSObject {
 
     /// The URL you must redirect your customer to in order to authenticate the payment.
-    @objc public let url: URL
+    public let url: URL
     /// The return URL that'll be redirected back to when the user is done
     /// authenticating.
-    @objc public let returnURL: URL?
+    public let returnURL: URL?
 
     /// If true, we'll follow one 30x redirect and open the webview using the resulting URL.
     @_spi(InternalOnlyAPI) public var followRedirects: Bool {
@@ -44,12 +44,12 @@ public class STPIntentActionRedirectToURL: NSObject {
         return false
     }
 
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     let threeDSSourceID: String?
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPIntentActionRedirectToURL.self), self),
@@ -78,7 +78,6 @@ public class STPIntentActionRedirectToURL: NSObject {
 
 // MARK: - STPAPIResponseDecodable
 extension STPIntentActionRedirectToURL: STPAPIResponseDecodable {
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let urlString = dict["url"] as? String,

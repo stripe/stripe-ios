@@ -38,7 +38,6 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
  */
 
 /// For internal SDK use only
-@objc(STP_Internal_SavedPaymentMethodsCollectionViewController)
 class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     enum Error: Swift.Error {
         case didSelectEditOnInvalidItem

@@ -9,7 +9,9 @@
 
 import iOSSnapshotTestCaseCore
 import StripeCoreTestUtils
+import StripePayments
 @testable import StripePaymentsUI
+import UIKit
 
 class STPViewWithSeparatorSnapshotTests: STPSnapshotTestCase {
 

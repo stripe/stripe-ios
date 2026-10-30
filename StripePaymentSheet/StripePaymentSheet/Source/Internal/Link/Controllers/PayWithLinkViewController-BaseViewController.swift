@@ -11,7 +11,6 @@ import UIKit
 extension PayWithLinkViewController {
 
     /// For internal SDK use only
-    @objc(STP_Internal_PayWithLinkBaseViewController)
     class BaseViewController: UIViewController, BottomSheetContentViewController {
         weak var coordinator: PayWithLinkCoordinating?
 

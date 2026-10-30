@@ -10,6 +10,7 @@ import Foundation
 @testable import StripePayments
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import StripePaymentsTestUtils
+import XCTest
 
 enum PayWithLinkTestHelpers {
     static func makePaymentIntentAndElementsSession(

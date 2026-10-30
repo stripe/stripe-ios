@@ -11,11 +11,11 @@ import Foundation
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-wechat_pay
 /// WeChat Pay is currently unavailable in the iOS SDK.
 class STPPaymentMethodWeChatPay: NSObject, STPAPIResponseDecodable {
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodWeChatPay.self), self)
@@ -25,7 +25,6 @@ class STPPaymentMethodWeChatPay: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

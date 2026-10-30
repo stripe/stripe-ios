@@ -17,43 +17,43 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
     }
 
     /// The issuer of the card.
-    @objc public private(set) var brand: STPCardBrand = .unknown
+    public private(set) var brand: STPCardBrand = .unknown
     /// Checks on Card address and CVC if provided.
-    @objc public private(set) var checks: STPPaymentMethodCardChecks?
+    public private(set) var checks: STPPaymentMethodCardChecks?
     /// Two-letter ISO code representing the country of the card.
-    @objc public private(set) var country: String?
+    public private(set) var country: String?
     /// Two-digit number representing the card’s expiration month.
-    @objc public private(set) var expMonth = 0
+    public private(set) var expMonth = 0
     /// Four-digit number representing the card’s expiration year.
-    @objc public private(set) var expYear = 0
+    public private(set) var expYear = 0
     /// Card funding type. Can be credit, debit, prepaid, or unknown.
-    @objc public private(set) var funding: String?
+    public private(set) var funding: String?
     /// The last four digits of the card.
-    @objc public private(set) var last4: String?
+    public private(set) var last4: String?
     /// Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example.
-    @objc public private(set) var fingerprint: String?
+    public private(set) var fingerprint: String?
     /// Contains information about card networks that can be used to process the payment.
-    @objc public private(set) var networks: STPPaymentMethodCardNetworks?
+    public private(set) var networks: STPPaymentMethodCardNetworks?
     /// Contains information about the card's display brand
-    @objc @_spi(InternalOnlyAPI) public private(set) var displayBrand: String?
+    @_spi(InternalOnlyAPI) public private(set) var displayBrand: String?
     /// Contains details on how this Card maybe be used for 3D Secure authentication.
-    @objc public private(set) var threeDSecureUsage: STPPaymentMethodThreeDSecureUsage?
+    public private(set) var threeDSecureUsage: STPPaymentMethodThreeDSecureUsage?
     /// If this Card is part of a Card Wallet, this contains the details of the Card Wallet.
-    @objc public private(set) var wallet: STPPaymentMethodCardWallet?
+    public private(set) var wallet: STPPaymentMethodCardWallet?
     /// Card art, if available
-    @objc @_spi(InternalOnlyAPI) public var cardArt: STPPaymentMethodCardArt?
+    @_spi(InternalOnlyAPI) public var cardArt: STPPaymentMethodCardArt?
 
     /// Returns a string representation for the provided card brand;
     /// i.e. `STPPaymentMethodCard.string(from brand:.visa) == "Visa"`.
     /// - Parameter brand: the brand you want to convert to a string
     /// - Returns: A string representing the brand, suitable for displaying to a user.
-    @objc(stringFromBrand:) public class func string(from brand: STPCardBrand) -> String {
+    public class func string(from brand: STPCardBrand) -> String {
         return STPCardBrandUtilities.stringFrom(brand) ?? ""
     }
     public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodCard.self), self),

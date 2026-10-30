@@ -29,7 +29,7 @@ extension STPStringUtils {
     ///   - tag:        The tag to search for.
     ///   - completion: The string with the named tag removed and the range of the
     /// substring it covered.
-    @objc(parseRangeFromString:withTag:completion:) class func parseRange(
+    class func parseRange(
         from string: String,
         withTag tag: String,
         completion: STPTaggedSubstringCompletionBlock
@@ -63,7 +63,7 @@ extension STPStringUtils {
         completion(finalString, finalTagRange)
     }
 
-    /// Like `parseRangeFromString:withTag:completion:` but you can pass in a set
+    /// Like `parseRange(from:withTag:completion:)` but you can pass in a set
     /// of unique tags to get the ranges for and it will return you the mapping.
     /// E.g. Passing @"<a>Test</a> <b>string</b>" with the tag set [a, b]
     /// will get you a completion block dictionary that looks like
@@ -76,7 +76,7 @@ extension STPStringUtils {
     /// substrings they covered (wrapped in NSValue)
     /// @warning Doesn't currently support overlapping tag ranges because that's
     /// complicated and we don't need it at the moment.
-    @objc(parseRangesFromString:withTags:completion:) class func parseRanges(
+    class func parseRanges(
         from string: String,
         withTags tags: Set<String>,
         completion: STPTaggedSubstringsCompletionBlock

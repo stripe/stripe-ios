@@ -85,7 +85,6 @@ final class VerificationFlowWebView: UIView {
 
     // MARK: View Properties
 
-    @objc
     private(set) lazy var webView: WKWebView = {
         // Set `allowsInlineMediaPlayback` so the camera view doesn't try to full screen.
         let configuration = WKWebViewConfiguration()
@@ -119,7 +118,7 @@ final class VerificationFlowWebView: UIView {
     private(set) lazy var tryAgainButton: UIButton = {
         let button = UIButton(type: UIButton.ButtonType.system)
         button.setTitle(String.Localized.tryAgain, for: .normal)
-        button.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.didTapTryAgainButton() }, for: .touchUpInside)
         return button
     }()
 
@@ -247,7 +246,6 @@ extension VerificationFlowWebView {
         )
     }
 
-    @objc
     fileprivate func didTapTryAgainButton() {
         load()
     }

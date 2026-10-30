@@ -15,7 +15,6 @@ import UIKit
 
 /// A button for paying with Link.
 /// For internal SDK use only
-@objc(STP_Internal_PayWithLinkButton)
 final class PayWithLinkButton: UIControl {
 
     struct Constants {

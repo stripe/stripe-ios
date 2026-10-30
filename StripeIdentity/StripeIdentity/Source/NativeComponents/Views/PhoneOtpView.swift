@@ -76,7 +76,7 @@ class PhoneOtpView: UIView {
         otpErrorLabel.text = errorString
 
         super.init(frame: .zero)
-        otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
+        otpTextField.addAction(UIAction { [weak self] _ in self?.otpTextFieldDidChange() }, for: .valueChanged)
 
         let warningIconView = UIImageView()
         warningIconView.contentMode = .scaleToFill
@@ -143,7 +143,7 @@ class PhoneOtpView: UIView {
         delegate?.viewStateDidUpdate()
     }
 
-    @objc private func otpTextFieldDidChange() {
+    private func otpTextFieldDidChange() {
         if self.viewModel == .ErrorOTP {
             self.configure(with: .InputtingOTP)
         }

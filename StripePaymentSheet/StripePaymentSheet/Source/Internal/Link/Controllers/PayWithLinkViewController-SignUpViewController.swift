@@ -11,7 +11,6 @@ import UIKit
 extension PayWithLinkViewController {
 
     /// For internal SDK use only
-    @objc(STP_Internal_PayWithLinkSignUpViewController)
     final class SignUpViewController: BaseViewController {
 
         private let linkAccount: PaymentSheetLinkAccount?

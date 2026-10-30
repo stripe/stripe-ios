@@ -10,6 +10,7 @@ import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) @_spi(AppearanceAPIAdditionsPreview) @_spi(CustomEmbeddedDisclosureImagePreview) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(InternalOnlyAPI) @testable import StripeUICore
+import UIKit
 import XCTest
 
 @MainActor

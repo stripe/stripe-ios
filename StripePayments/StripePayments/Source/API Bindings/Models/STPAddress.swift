@@ -14,33 +14,33 @@ import PassKit
 /// STPAddress Contains an address as represented by the Stripe API.
 public class STPAddress: NSObject {
     /// The user's full name (e.g. "Jane Doe")
-    @objc public var name: String?
+    public var name: String?
 
     /// The first line of the user's street address (e.g. "123 Fake St")
-    @objc public var line1: String?
+    public var line1: String?
 
     /// The apartment, floor number, etc of the user's street address (e.g. "Apartment 1A")
-    @objc public var line2: String?
+    public var line2: String?
 
     /// The city in which the user resides (e.g. "San Francisco")
-    @objc public var city: String?
+    public var city: String?
 
     /// The state in which the user resides (e.g. "CA")
-    @objc public var state: String?
+    public var state: String?
 
     /// The postal code in which the user resides (e.g. "90210")
-    @objc public var postalCode: String?
+    public var postalCode: String?
 
     /// The ISO country code of the address (e.g. "US")
-    @objc public var country: String?
+    public var country: String?
 
     /// The phone number of the address (e.g. "8885551212")
-    @objc public var phone: String?
+    public var phone: String?
 
     /// The email of the address (e.g. "jane@doe.com")
-    @objc public var email: String?
+    public var email: String?
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// When creating a charge on your backend, you can attach shipping information
     /// to prevent fraud on a physical good. You can use this method to turn your user's
@@ -51,7 +51,6 @@ public class STPAddress: NSObject {
     /// - Parameters:
     ///   - address:  The user's shipping address. If nil, this method will return nil.
     ///   - method:   The user's selected shipping method. May be nil.
-    @objc(shippingInfoForChargeWithAddress:shippingMethod:)
     public class func shippingInfoForCharge(
         with address: STPAddress?,
         shippingMethod method: PKShippingMethod?
@@ -70,7 +69,6 @@ public class STPAddress: NSObject {
     }
 
     /// Initializes an empty STPAddress.
-    @objc
     public override init() {
         super.init()
     }
@@ -78,7 +76,6 @@ public class STPAddress: NSObject {
     /// Initializes a new STPAddress with data from STPPaymentMethodBillingDetails.
     /// - Parameter billingDetails: The STPPaymentMethodBillingDetails instance you want to populate the STPAddress from.
     /// - Returns: A new STPAddress instance with data copied from the passed in billing details.
-    @objc
     public init(
         paymentMethodBillingDetails billingDetails: STPPaymentMethodBillingDetails
     ) {
@@ -98,7 +95,6 @@ public class STPAddress: NSObject {
     /// Initializes a new STPAddress with data from an PassKit contact.
     /// - Parameter contact: The PassKit contact you want to populate the STPAddress from.
     /// - Returns: A new STPAddress instance with data copied from the passed in contact.
-    @objc(initWithPKContact:)
     public init(
         pkContact contact: PKContact
     ) {
@@ -123,7 +119,6 @@ public class STPAddress: NSObject {
 
     /// Generates a PassKit contact representation of this STPAddress.
     /// - Returns: A new PassKit contact with data copied from this STPAddress instance.
-    @objc(PKContactValue)
     public func pkContactValue() -> PKContact {
         let contact = PKContact()
         var personName = PersonNameComponents()
@@ -145,7 +140,6 @@ public class STPAddress: NSObject {
     /// Initializes a new STPAddress with a contact from the Contacts framework.
     /// - Parameter contact: The CNContact you want to populate the STPAddress from.
     /// - Returns: A new STPAddress instance with data copied from the passed in contact.
-    @objc(initWithCNContact:)
     public init(
         cnContact contact: CNContact
     ) {
@@ -168,7 +162,7 @@ public class STPAddress: NSObject {
         }
     }
 
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
     private var givenName: String?
     private var familyName: String?
 
@@ -225,7 +219,6 @@ public class STPAddress: NSObject {
 }
 
 extension STPAddress: STPAPIResponseDecodable {
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response else {
             return nil
@@ -246,23 +239,21 @@ extension STPAddress: STPAPIResponseDecodable {
 
 extension STPAddress: STPFormEncodable {
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
 
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         // Paralleling `decodedObjectFromAPIResponse:`, *only* the 6 address fields are encoded
         // If this changes, shippingInfoForChargeWithAddress:shippingMethod: might break
         return [
-            NSStringFromSelector(#selector(getter: line1)): "line1",
-            NSStringFromSelector(#selector(getter: line2)): "line2",
-            NSStringFromSelector(#selector(getter: city)): "city",
-            NSStringFromSelector(#selector(getter: state)): "state",
-            NSStringFromSelector(#selector(getter: CNMutablePostalAddress.postalCode)):
+            \STPAddress.line1: "line1",
+            \STPAddress.line2: "line2",
+            \STPAddress.city: "city",
+            \STPAddress.state: "state",
+            \STPAddress.postalCode:
                 "postal_code",
-            NSStringFromSelector(#selector(getter: country)): "country",
+            \STPAddress.country: "country",
         ]
     }
 
@@ -270,7 +261,6 @@ extension STPAddress: STPFormEncodable {
 
 extension STPAddress: NSCopying {
     /// :nodoc:
-    @objc
     public func copy(with zone: NSZone? = nil) -> Any {
         let copyAddress = STPAddress()
 

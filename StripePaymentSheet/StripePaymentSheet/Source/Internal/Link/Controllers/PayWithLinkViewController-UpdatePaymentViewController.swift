@@ -19,7 +19,6 @@ protocol UpdatePaymentViewControllerDelegate: AnyObject {
 extension PayWithLinkViewController {
 
     /// For internal SDK use only
-    @objc(STP_Internal_UpdatePaymentViewController)
     final class UpdatePaymentViewController: BaseViewController {
         weak var delegate: UpdatePaymentViewControllerDelegate?
         let linkAccount: PaymentSheetLinkAccount

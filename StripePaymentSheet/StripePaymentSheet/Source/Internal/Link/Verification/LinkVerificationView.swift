@@ -20,7 +20,6 @@ protocol LinkVerificationViewDelegate: AnyObject {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkVerificationView)
 final class LinkVerificationView: UIView {
     struct Constants {
         static let edgeMargin: CGFloat = 20
@@ -73,7 +72,7 @@ final class LinkVerificationView: UIView {
 
     private lazy var header: Header = {
         let header = Header(brand: brand)
-        header.closeButton.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
+        header.closeButton.addAction(UIAction { [weak self] _ in self?.didSelectCancel() }, for: .touchUpInside)
         return header
     }()
 
@@ -197,7 +196,6 @@ final class LinkVerificationView: UIView {
         }
     }
 
-    @objc
     func didSelectCancel() {
         delegate?.verificationViewDidCancel(self)
     }

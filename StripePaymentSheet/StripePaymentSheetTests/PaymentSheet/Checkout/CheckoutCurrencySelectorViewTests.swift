@@ -7,6 +7,7 @@
 
 @testable @_spi(InternalOnlyAPI) import StripePayments
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+import UIKit
 import XCTest
 
 @MainActor

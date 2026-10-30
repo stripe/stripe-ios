@@ -111,7 +111,6 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         validator.inputValue = formatted.string
     }
 
-    @objc
     override public func becomeFirstResponder() -> Bool {
         self.formContainer?.inputTextFieldWillBecomeFirstResponder(self)
         let ret = super.becomeFirstResponder()
@@ -119,7 +118,6 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         return ret
     }
 
-    @objc
     override public func resignFirstResponder() -> Bool {
         let ret = super.resignFirstResponder()
         if ret {
@@ -144,7 +142,6 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         }
     }
 
-    @objc
     override public var isUserInteractionEnabled: Bool {
         didSet {
             if isUserInteractionEnabled {
@@ -185,7 +182,7 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         }
     }
 
-    @objc public override var accessibilityAttributedValue: NSAttributedString? {
+    public override var accessibilityAttributedValue: NSAttributedString? {
         get {
             guard let text = text else {
                 return nil
@@ -203,7 +200,7 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         }
     }
 
-    @objc public override var accessibilityAttributedLabel: NSAttributedString? {
+    public override var accessibilityAttributedLabel: NSAttributedString? {
         get {
             guard let accessibilityLabel = accessibilityLabel else {
                 return nil
@@ -230,7 +227,6 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         }
     }
 
-    @objc
     public override func deleteBackward() {
         let deletingOnEmpty = (text?.count ?? 0) == 0
         super.deleteBackward()
@@ -241,7 +237,6 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
 
     // Fixes a weird issue related to our custom override of deleteBackwards. This only affects the simulator and iPads with custom keyboards.
     // copied from STPFormTextField
-    @objc
     public override var keyCommands: [UIKeyCommand]? {
         return [
             UIKeyCommand(

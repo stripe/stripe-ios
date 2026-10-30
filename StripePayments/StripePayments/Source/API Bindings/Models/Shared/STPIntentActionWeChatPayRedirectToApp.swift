@@ -12,13 +12,13 @@ import Foundation
 public class STPIntentActionWechatPayRedirectToApp: NSObject {
 
     /// The native URL you must redirect your customer to in order to authenticate the payment.
-    @objc public let nativeURL: URL?
+    public let nativeURL: URL?
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(
@@ -46,7 +46,6 @@ public class STPIntentActionWechatPayRedirectToApp: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPIntentActionWechatPayRedirectToApp: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let nativeURLString = dict["native_url"] as? String,

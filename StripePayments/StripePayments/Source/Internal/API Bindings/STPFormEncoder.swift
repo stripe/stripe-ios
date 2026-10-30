@@ -9,8 +9,8 @@
 import Foundation
 
 @_spi(InternalOnlyAPI) public class STPFormEncoder: NSObject {
-    @objc @_spi(InternalOnlyAPI) public class func dictionary(
-        forObject object: (NSObject & STPFormEncodable)
+    @_spi(InternalOnlyAPI) public class func dictionary(
+        forObject object: STPFormEncodable
     ) -> [String: Any] {
         // returns [object root name : object.coded (eg [property name strings: property values)]
         let keyPairs = self.keyPairDictionary(forObject: object)
@@ -26,26 +26,17 @@ import Foundation
 
     /// Returns [Property name : Property's form encodable value]
     private class func keyPairDictionary(
-        forObject object: (NSObject & STPFormEncodable)
-    )
-        -> [String:
-        Any]
-    {
+        forObject object: STPFormEncodable
+    ) -> [String: Any] {
         var keyPairs: [String: Any] = [:]
-        for (propertyName, formFieldName) in type(of: object).propertyNamesToFormFieldNamesMapping()
-        {
-            if let propertyValue = object.value(forKeyPath: propertyName) {
-                guard let propertyValue = propertyValue as? NSObject else {
-                    assertionFailure()
-                    continue
-                }
+        for (keyPath, formFieldName) in type(of: object).propertyNamesToFormFieldNamesMapping() {
+            if let rawValue = (object as Any)[keyPath: keyPath],
+               let propertyValue = flattenOptional(rawValue) {
                 keyPairs[formFieldName] = formEncodableValue(for: propertyValue)
             }
         }
         for (additionalFieldName, additionalFieldValue) in object.additionalAPIParameters {
-            guard let additionalFieldName = additionalFieldName as? String,
-                let additionalFieldValue = additionalFieldValue as? NSObject
-            else {
+            guard let additionalFieldName = additionalFieldName as? String else {
                 assertionFailure()
                 continue
             }
@@ -54,44 +45,47 @@ import Foundation
         return keyPairs
     }
 
+    private class func flattenOptional(_ value: Any) -> Any? {
+        let mirror = Mirror(reflecting: value)
+        guard mirror.displayStyle == .optional else {
+            return value
+        }
+        guard let child = mirror.children.first else {
+            return nil
+        }
+        return flattenOptional(child.value)
+    }
+
     /// Expands object, and any subobjects, into key pair dictionaries if they are STPFormEncodable
-    private class func formEncodableValue(for object: NSObject) -> NSObject {
+    private class func formEncodableValue(for object: Any) -> NSObject {
         switch object {
-        case let object as NSObject & STPFormEncodable:
+        case let object as STPFormEncodable:
             return self.keyPairDictionary(forObject: object) as NSObject
-        case let dict as NSDictionary:
+        case let dict as [AnyHashable: Any]:
             let result = NSMutableDictionary(capacity: dict.count)
-            dict.enumerateKeysAndObjects({ key, value, _ in
-                if let key = key as? NSObject,  // Don't all keys need to be Strings?
-                    let value = value as? NSObject
-                {
-                    result[formEncodableValue(for: key)] = formEncodableValue(for: value)
-                } else {
-                    assertionFailure()  // TODO remove
-                }
-            })
+            for (key, value) in dict {
+                result[formEncodableValue(for: key.base)] = formEncodableValue(for: value)
+            }
             return result
-        case let array as NSArray:
+        case let array as [Any]:
             let result = NSMutableArray()
             for element in array {
-                guard let element = element as? NSObject else {
-                    assertionFailure()  // TODO remove
-                    continue
-                }
                 result.add(formEncodableValue(for: element))
             }
             return result
         case let set as NSSet:
             let result = NSMutableSet()
             for element in set {
-                guard let element = element as? NSObject else {
-                    continue
-                }
                 result.add(self.formEncodableValue(for: element))
             }
             return result
-        default:
+        case let rawRepresentable as any RawRepresentable:
+            return formEncodableValue(for: rawRepresentable.rawValue)
+        case let object as NSObject:
             return object
+        default:
+            assertionFailure("Unexpected form encodable value \(object)")
+            return "\(object)" as NSString
         }
     }
 }

@@ -10,12 +10,12 @@ import Foundation
 
 /// Contains details on how an `STPPaymentMethodCard` maybe be used for 3D Secure authentication.
 public class STPPaymentMethodThreeDSecureUsage: NSObject, STPAPIResponseDecodable {
-    /// `YES` if 3D Secure is supported on this card.
-    @objc public private(set) var supported = false
+    /// `true` if 3D Secure is supported on this card.
+    public private(set) var supported = false
     private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(
@@ -35,7 +35,6 @@ public class STPPaymentMethodThreeDSecureUsage: NSObject, STPAPIResponseDecodabl
         super.init()
     }
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
 
         guard let response = response else {

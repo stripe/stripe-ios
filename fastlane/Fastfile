@@ -38,7 +38,6 @@ platform :ios do
     Dir.chdir('..') do
       sh('./ci_scripts/check_version.rb')
       sh('./ci_scripts/check_for_new_localized_strings.sh')
-      sh('./ci_scripts/check_for_missing_custom_string_convertible.sh')
       sh('./ci_scripts/check_spm_warnings.rb')
     end
   end
@@ -48,7 +47,6 @@ platform :ios do
       sh('rm -rf build-ci-tests')
       sh("./ci_scripts/test.rb --build-only --scheme 'CardImageVerification Example'")
       sh("./ci_scripts/test.rb --build-only --scheme 'UI Examples'")
-      sh("./ci_scripts/test.rb --build-only --scheme 'Non-Card Payment Examples'")
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
       sh("./ci_scripts/test.rb --build-only --scheme 'AppClipExample'")
@@ -156,26 +154,6 @@ platform :ios do
   end
 
 
-  lane :installation_cocoapods_without_frameworks_objc do
-    Dir.chdir('..') do
-      sh('./Tests/installation_tests/cocoapods/setup.sh without_frameworks_objc')
-    end
-    run_tests(
-      workspace: './Tests/installation_tests/cocoapods/without_frameworks_objc/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
-    )
-  end
-
-  lane :installation_cocoapods_frameworks_objc do
-    Dir.chdir('..') do
-      sh('./Tests/installation_tests/cocoapods/setup.sh with_frameworks_objc')
-    end
-    run_tests(
-      workspace: './Tests/installation_tests/cocoapods/with_frameworks_objc/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
-    )
-  end
-
   lane :installation_cocoapods_frameworks_swift do
     Dir.chdir('..') do
       sh('./Tests/installation_tests/cocoapods/setup.sh with_frameworks_swift')
@@ -183,14 +161,6 @@ platform :ios do
     run_tests(
       workspace: './Tests/installation_tests/cocoapods/with_frameworks_swift/CocoapodsTest.xcworkspace',
       destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
-    )
-  end
-
-  lane :installation_spm_objc do
-    run_tests(
-      workspace: './Tests/installation_tests/swift_package_manager/with_objc/SPMTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
-      scheme: 'SPMTest'
     )
   end
 
@@ -211,12 +181,6 @@ platform :ios do
   lane :check_docs do
     Dir.chdir('..') do
       sh('./ci_scripts/check_documentation.sh')
-    end
-  end
-
-  lane :objc_symbol_check do
-    Dir.chdir('..') do
-      sh('./ci_scripts/objc_bridging_checker.rb')
     end
   end
 

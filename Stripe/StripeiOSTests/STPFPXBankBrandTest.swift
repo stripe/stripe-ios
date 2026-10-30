@@ -8,6 +8,7 @@
 //
 
 @_spi(InternalOnlyAPI) import StripePayments
+import XCTest
 
 class STPFPXBankBrandTest: XCTestCase {
     /// Expected API identifier and display name for every bank brand.

@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import UIKit
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import Stripe

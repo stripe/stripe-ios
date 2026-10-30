@@ -5,8 +5,11 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import StripeCore
 import StripeCoreTestUtils
+import StripePayments
 import StripePaymentsTestUtils
+import XCTest
 
 class STPPaymentMethodTwintParamsTests: STPNetworkStubbingTestCase {
     func testCreateTwintPaymentMethod() {

@@ -9,11 +9,11 @@ import Foundation
 /// - seealso: https://stripe.com/docs/payments/revolut-pay
 public class STPPaymentMethodRevolutPay: NSObject {
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodRevolutPay.self), self)
@@ -23,7 +23,6 @@ public class STPPaymentMethodRevolutPay: NSObject {
     }
 
     // MARK: - STPAPIResponseDecodeable
-    @objc
     /// :nodoc:
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {

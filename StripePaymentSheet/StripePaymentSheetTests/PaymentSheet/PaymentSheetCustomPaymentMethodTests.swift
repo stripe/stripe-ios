@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 import XCTest
 
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet

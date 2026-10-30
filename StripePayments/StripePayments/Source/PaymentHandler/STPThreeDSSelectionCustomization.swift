@@ -17,7 +17,6 @@ import UIKit
 /// radio buttons and checkboxes.
 public class STPThreeDSSelectionCustomization: NSObject {
     /// The default settings.
-    @objc
     public class func defaultSettings() -> STPThreeDSSelectionCustomization {
         return STPThreeDSSelectionCustomization()
     }
@@ -27,7 +26,7 @@ public class STPThreeDSSelectionCustomization: NSObject {
     /// The primary color of the selected state.
     /// Defaults to blue.
 
-    @objc public var primarySelectedColor: UIColor {
+    public var primarySelectedColor: UIColor {
         get {
             return selectionCustomization.primarySelectedColor
         }
@@ -38,7 +37,7 @@ public class STPThreeDSSelectionCustomization: NSObject {
     /// The secondary color of the selected state (e.g. the checkmark color).
     /// Defaults to white.
 
-    @objc public var secondarySelectedColor: UIColor {
+    public var secondarySelectedColor: UIColor {
         get {
             return selectionCustomization.secondarySelectedColor
         }
@@ -49,7 +48,7 @@ public class STPThreeDSSelectionCustomization: NSObject {
     /// The background color displayed in the unselected state.
     /// Defaults to light blue.
 
-    @objc public var unselectedBackgroundColor: UIColor {
+    public var unselectedBackgroundColor: UIColor {
         get {
             return selectionCustomization.unselectedBackgroundColor
         }
@@ -60,7 +59,7 @@ public class STPThreeDSSelectionCustomization: NSObject {
     /// The color of the border drawn around the view in the unselected state.
     /// Defaults to blue.
 
-    @objc public var unselectedBorderColor: UIColor {
+    public var unselectedBorderColor: UIColor {
         get {
             return selectionCustomization.unselectedBorderColor
         }

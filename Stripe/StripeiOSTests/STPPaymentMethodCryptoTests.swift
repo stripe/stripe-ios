@@ -7,6 +7,7 @@
 
 @testable import Stripe
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
 class STPPaymentMethodCryptoTests: XCTestCase {

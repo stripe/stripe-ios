@@ -7,7 +7,8 @@
 //
 
 @testable import StripeIssuing
-@testable@_spi(InternalOnlyAPI) import StripePaymentsObjcTestUtils
+@testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+import XCTest
 
 class STPEphemeralKeyTest: XCTestCase {
     func testDecoding() {

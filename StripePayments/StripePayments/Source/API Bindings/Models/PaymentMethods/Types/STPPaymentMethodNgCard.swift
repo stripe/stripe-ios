@@ -13,14 +13,14 @@ import Foundation
 /// - seealso: https://docs.stripe.com/payments/ng-card/accept-a-payment?payment-ui=direct-api
 public class STPPaymentMethodNgCard: NSObject, STPAPIResponseDecodable {
     /// The local credit or debit card brand.
-    @objc public private(set) var brand: STPPaymentMethodNgCardBrand = .unknown
+    public private(set) var brand: STPPaymentMethodNgCardBrand = .unknown
     /// The last four digits of the card.
-    @objc public private(set) var last4: String?
+    public private(set) var last4: String?
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodNgCard.self), self),
             "brand = \(brand.stringValue ?? "")",
@@ -30,7 +30,7 @@ public class STPPaymentMethodNgCard: NSObject, STPAPIResponseDecodable {
     }
 
     /// :nodoc:
-    @objc public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response else {
             return nil
         }
@@ -46,7 +46,7 @@ public class STPPaymentMethodNgCard: NSObject, STPAPIResponseDecodable {
 }
 
 /// The local brand of a Naira card Payment Method.
-@objc public enum STPPaymentMethodNgCardBrand: Int {
+public enum STPPaymentMethodNgCardBrand: Int {
     /// An unknown card brand.
     case unknown
     /// An American Express card.

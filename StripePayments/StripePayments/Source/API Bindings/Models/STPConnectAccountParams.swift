@@ -9,13 +9,12 @@
 import Foundation
 
 /// The business type of the Connect account.
-@objc public enum STPConnectAccountBusinessType: Int {
+public enum STPConnectAccountBusinessType: Int {
     /// This Connect account represents an individual.
     case individual
     /// This Connect account represents a company.
     case company
     /// No value was provided.
-    /// - Note: This value is used instead of `nil` for Obj-C compatibility.
     case none
 }
 
@@ -25,39 +24,27 @@ public class STPConnectAccountParams: NSObject {
 
     /// Boolean indicating that the Terms Of Service were shown to the user &
     /// the user accepted them.
-    @objc(tosShownAndAccepted)
-    @available(swift, obsoleted: 1.0, renamed: "tosShownAndAccepted")
-    public var tosShownAndAccepted_objc: NSNumber? {
-        get {
-            guard let tosShownAndAccepted else { return nil }
-            return NSNumber(value: tosShownAndAccepted)
-        }
-        set { tosShownAndAccepted = newValue?.boolValue }
-    }
-
-    /// Boolean indicating that the Terms Of Service were shown to the user &
-    /// the user accepted them.
     public var tosShownAndAccepted: Bool?
 
     /// The business type.
-    @objc public var businessType: STPConnectAccountBusinessType
+    public var businessType: STPConnectAccountBusinessType
 
     /// Information about the individual represented by the account.
-    @objc public var individual: STPConnectAccountIndividualParams?
+    public var individual: STPConnectAccountIndividualParams?
 
     /// Information about the company or business.
-    @objc public var company: STPConnectAccountCompanyParams?
+    public var company: STPConnectAccountCompanyParams?
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    /// Initialize `STPConnectAccountParams` with tosShownAndAccepted = YES
-    /// This method cannot be called with `wasAccepted == NO`, guarded by a `NSParameterAssert()`.
+    /// Initialize `STPConnectAccountParams` with tosShownAndAccepted = true
+    /// Returns `nil` if `wasAccepted` is `false`.
     /// Use this init method if you want to set the `tosShownAndAccepted` parameter. If you
-    /// don't, use the `initWithIndividual:` version instead.
+    /// don't, use `init(individual:)` instead.
     /// - Parameters:
-    ///   - wasAccepted: Must be YES, but only if the user was shown & accepted the ToS
+    ///   - wasAccepted: Must be true, but only if the user was shown & accepted the ToS
     ///   - individual: Information about the person represented by the account. See `STPConnectAccountIndividualParams`.
-    @objc public init?(
+    public init?(
         tosShownAndAccepted wasAccepted: Bool,
         individual: STPConnectAccountIndividualParams
     ) {
@@ -72,14 +59,14 @@ public class STPConnectAccountParams: NSObject {
         super.init()
     }
 
-    /// Initialize `STPConnectAccountParams` with tosShownAndAccepted = YES
-    /// This method cannot be called with `wasAccepted == NO`, guarded by a `NSParameterAssert()`.
+    /// Initialize `STPConnectAccountParams` with tosShownAndAccepted = true
+    /// Returns `nil` if `wasAccepted` is `false`.
     /// Use this init method if you want to set the `tosShownAndAccepted` parameter. If you
-    /// don't, use the `initWithCompany:` version instead.
+    /// don't, use `init(company:)` instead.
     /// - Parameters:
-    ///   - wasAccepted: Must be YES, but only if the user was shown & accepted the ToS
+    ///   - wasAccepted: Must be true, but only if the user was shown & accepted the ToS
     ///   - company: Information about the company or business. See `STPConnectAccountCompanyParams`.
-    @objc public init?(
+    public init?(
         tosShownAndAccepted wasAccepted: Bool,
         company: STPConnectAccountCompanyParams
     ) {
@@ -97,8 +84,7 @@ public class STPConnectAccountParams: NSObject {
     /// Initialize `STPConnectAccountParams` with the provided `individual` dictionary.
     /// - Parameter individual: Information about the person represented by the account
     /// This init method cannot change the `tosShownAndAccepted` parameter. Use
-    /// `initWithTosShownAndAccepted:individual:` instead if you need to do that.
-    @objc
+    /// `init(tosShownAndAccepted:individual:)` instead if you need to do that.
     public init(
         individual: STPConnectAccountIndividualParams
     ) {
@@ -113,8 +99,7 @@ public class STPConnectAccountParams: NSObject {
     /// Initialize `STPConnectAccountParams` with the provided `company` dictionary.
     /// - Parameter company: Information about the company or business
     /// This init method cannot change the `tosShownAndAccepted` parameter. Use
-    /// `initWithTosShownAndAccepted:company:` instead if you need to do that.
-    @objc
+    /// `init(tosShownAndAccepted:company:)` instead if you need to do that.
     public init(
         company: STPConnectAccountCompanyParams
     ) {
@@ -125,7 +110,7 @@ public class STPConnectAccountParams: NSObject {
         super.init()
     }
 
-    @objc public override init() {
+    public override init() {
         tosShownAndAccepted = false
         businessType = .none
         individual = nil
@@ -135,7 +120,7 @@ public class STPConnectAccountParams: NSObject {
 
     // MARK: - description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             String(format: "%@: %p", NSStringFromClass(STPConnectAccountParams.self), self),
             // We use NSParameterAssert to block this being NO:
@@ -163,24 +148,22 @@ public class STPConnectAccountParams: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConnectAccountParams: STPFormEncodable {
-    @objc private var tosShownAndAccepted_apiValue: NSNumber? { tosShownAndAccepted.map { NSNumber(value: $0) } }
+    private var tosShownAndAccepted_apiValue: NSNumber? { tosShownAndAccepted.map { NSNumber(value: $0) } }
 
-    @objc var businessTypeString: String? {
+    var businessTypeString: String? {
         return STPConnectAccountParams.string(from: businessType)
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return "account"
     }
 
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: tosShownAndAccepted_apiValue)): "tos_shown_and_accepted",
-            NSStringFromSelector(#selector(getter: individual)): "individual",
-            NSStringFromSelector(#selector(getter: company)): "company",
-            NSStringFromSelector(#selector(getter: businessTypeString)): "business_type",
+            \STPConnectAccountParams.tosShownAndAccepted_apiValue: "tos_shown_and_accepted",
+            \STPConnectAccountParams.individual: "individual",
+            \STPConnectAccountParams.company: "company",
+            \STPConnectAccountParams.businessTypeString: "business_type",
         ]
     }
 }

@@ -123,7 +123,7 @@ final class ManualEntryFormView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func textFieldTextDidChange() {
+    private func textFieldTextDidChange() {
         delegate?.manualEntryFormViewTextDidChange(self)
         updateTextFieldErrorStates()
     }

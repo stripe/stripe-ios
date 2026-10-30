@@ -18,28 +18,41 @@ import UIKit
     case bsbNumber
 }
 
-@objc protocol STPFormTextFieldDelegate: UITextFieldDelegate {
+protocol STPFormTextFieldDelegate: UITextFieldDelegate {
     // Note, post-Swift conversion:
     // In lieu of a real delegate proxy, this should always be implemented and call:
     //    if let textField = textField as? STPFormTextField, let delegateProxy = textField.delegateProxy {
     //        return delegateProxy.textField(textField, shouldChangeCharactersIn: range, replacementString: string)
     //    }
     //    return true
-    @objc(textField:shouldChangeCharactersInRange:replacementString:) func textField(
+    func textField(
         _ textField: UITextField,
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool
 
-    @objc optional func formTextFieldDidBackspace(onEmpty formTextField: STPFormTextField)
-    @objc optional func formTextField(
+    func formTextFieldDidBackspace(onEmpty formTextField: STPFormTextField)
+    func formTextField(
         _ formTextField: STPFormTextField,
         modifyIncomingTextChange input: NSAttributedString
     ) -> NSAttributedString
-    @objc optional func formTextFieldTextDidChange(_ textField: STPFormTextField)
+    func formTextFieldTextDidChange(_ textField: STPFormTextField)
 }
 
-@objc @_spi(InternalOnlyAPI) public class STPFormTextField: STPValidatedTextField {
+extension STPFormTextFieldDelegate {
+    func formTextFieldDidBackspace(onEmpty formTextField: STPFormTextField) {}
+
+    func formTextField(
+        _ formTextField: STPFormTextField,
+        modifyIncomingTextChange input: NSAttributedString
+    ) -> NSAttributedString {
+        return input
+    }
+
+    func formTextFieldTextDidChange(_ textField: STPFormTextField) {}
+}
+
+@_spi(InternalOnlyAPI) public class STPFormTextField: STPValidatedTextField {
 
     private var _selectionEnabled = false
     @_spi(InternalOnlyAPI) public var selectionEnabled: Bool {
@@ -187,26 +200,20 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc
     public override func insertText(_ text: String) {
         self.text = self.text ?? "" + text
     }
 
     /// :nodoc:
-    @objc
     public override func deleteBackward() {
         super.deleteBackward()
         if (text?.count ?? 0) == 0 {
-            if formDelegate?.responds(
-                to: #selector(STPPaymentCardTextField.formTextFieldDidBackspace(onEmpty:))
-            ) ?? false {
-                formDelegate?.formTextFieldDidBackspace?(onEmpty: self)
-            }
+            formDelegate?.formTextFieldDidBackspace(onEmpty: self)
         }
     }
 
     /// :nodoc:
-    @objc public override var text: String? {
+    public override var text: String? {
         get {
             return super.text
         }
@@ -221,42 +228,30 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc public override var attributedText: NSAttributedString? {
+    public override var attributedText: NSAttributedString? {
         get {
             return super.attributedText
         }
         set(attributedText) {
             let oldValue = self.attributedText
-            let shouldModify =
-                formDelegate != nil
-                && formDelegate?.responds(
-                    to: #selector(
-                        STPFormTextFieldDelegate.formTextField(_:modifyIncomingTextChange:))
-                )
-                    ?? false
             var modified: NSAttributedString?
             if let attributedText = attributedText {
                 modified =
-                    shouldModify
-                    ? formDelegate?.formTextField?(self, modifyIncomingTextChange: attributedText)
-                    : attributedText
+                    formDelegate?.formTextField(self, modifyIncomingTextChange: attributedText)
+                    ?? attributedText
             }
             let transformed = textFormattingBlock != nil ? textFormattingBlock?(modified) : modified
             super.attributedText = transformed
             sendActions(for: .editingChanged)
-            if formDelegate?.responds(
-                to: #selector(STPPaymentCardTextField.formTextFieldTextDidChange(_:))
-            ) ?? false {
-                if let oldValue = oldValue {
-                    if !(transformed?.isEqual(to: oldValue) ?? false) {
-                        formDelegate?.formTextFieldTextDidChange?(self)
-                    }
+            if let oldValue = oldValue {
+                if !(transformed?.isEqual(to: oldValue) ?? false) {
+                    formDelegate?.formTextFieldTextDidChange(self)
                 }
             }
         }
     }
 
-    @objc public override var accessibilityAttributedValue: NSAttributedString? {
+    public override var accessibilityAttributedValue: NSAttributedString? {
         get {
             guard let text = text else {
                 return nil
@@ -274,7 +269,7 @@ import UIKit
         }
     }
 
-    @objc public override var accessibilityAttributedLabel: NSAttributedString? {
+    public override var accessibilityAttributedLabel: NSAttributedString? {
         get {
             guard let accessibilityLabel = accessibilityLabel else {
                 return nil
@@ -302,7 +297,7 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc public override var attributedPlaceholder: NSAttributedString? {
+    public override var attributedPlaceholder: NSAttributedString? {
         get {
             return super.attributedPlaceholder
         }
@@ -319,7 +314,7 @@ import UIKit
 
     // Fixes a weird issue related to our custom override of deleteBackwards. This only affects the simulator and iPads with custom keyboards.
     /// :nodoc:
-    @objc public override var keyCommands: [UIKeyCommand]? {
+    public override var keyCommands: [UIKeyCommand]? {
         return [
             UIKeyCommand(
                 input: "\u{08}",
@@ -334,7 +329,6 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc
     public override func closestPosition(to point: CGPoint) -> UITextPosition? {
         if selectionEnabled {
             return super.closestPosition(to: point)
@@ -343,7 +337,6 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc
     public override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return super.canPerformAction(action, withSender: sender) && action == #selector(paste(_:))
     }
@@ -361,7 +354,7 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc public override weak var delegate: UITextFieldDelegate? {
+    public override weak var delegate: UITextFieldDelegate? {
         get {
             super.delegate
         }
@@ -407,7 +400,7 @@ class STPTextFieldDelegateProxy: NSObject, UITextFieldDelegate {
             //         Therefore, always allow entry of a single space in order to support `textContentType`.
             //
             //         Warning: This bypasses `setText:`, and subsequently `setAttributedText:` and the
-            //         formDelegate methods: `formTextField:modifyIncomingTextChange:` & `formTextFieldTextDidChange:`
+            //         formDelegate methods: `formTextField(_:modifyIncomingTextChange:)` & `formTextFieldTextDidChange(_:)`
             //         That's acceptable for a single space.
             inShouldChangeCharactersInRange = false
             return true

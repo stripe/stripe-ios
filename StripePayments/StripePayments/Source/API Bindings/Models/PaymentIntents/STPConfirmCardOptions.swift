@@ -13,16 +13,16 @@ import Foundation
 public class STPConfirmCardOptions: NSObject {
 
     /// CVC value with which to update the Card PaymentMethod.
-    @objc public var cvc: String?
+    public var cvc: String?
 
     /// Selected network to process this PaymentIntent on. Depends on the available networks of the card attached to the PaymentIntent. Can be only set confirm-time.
-    @objc public var network: String?
+    public var network: String?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
@@ -38,15 +38,13 @@ public class STPConfirmCardOptions: NSObject {
 // MARK: - STPFormEncodable
 extension STPConfirmCardOptions: STPFormEncodable {
 
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: cvc)): "cvc",
-            NSStringFromSelector(#selector(getter: network)): "network",
+            \STPConfirmCardOptions.cvc: "cvc",
+            \STPConfirmCardOptions.network: "network",
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return "card"
     }

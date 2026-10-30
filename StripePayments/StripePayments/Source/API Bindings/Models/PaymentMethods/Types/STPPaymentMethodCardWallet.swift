@@ -9,7 +9,6 @@
 import Foundation
 
 /// The type of Card Wallet.
-@objc
 public enum STPPaymentMethodCardWalletType: Int {
     /// Amex Express Checkout
     case amexExpressCheckout
@@ -33,15 +32,15 @@ public enum STPPaymentMethodCardWalletType: Int {
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-wallet
 public class STPPaymentMethodCardWallet: NSObject, STPAPIResponseDecodable {
     /// The type of the Card Wallet. A matching property is populated if the type is `STPPaymentMethodCardWalletTypeMasterpass` or `STPPaymentMethodCardWalletTypeVisaCheckout` containing additional information specific to the Card Wallet type.
-    @objc public private(set) var type: STPPaymentMethodCardWalletType = .unknown
+    public private(set) var type: STPPaymentMethodCardWalletType = .unknown
     /// Contains additional Masterpass information, if the type of the Card Wallet is `STPPaymentMethodCardWalletTypeMasterpass`
-    @objc public private(set) var masterpass: STPPaymentMethodCardWalletMasterpass?
+    public private(set) var masterpass: STPPaymentMethodCardWalletMasterpass?
     /// Contains additional Visa Checkout information, if the type of the Card Wallet is `STPPaymentMethodCardWalletTypeVisaCheckout`
-    @objc public private(set) var visaCheckout: STPPaymentMethodCardWalletVisaCheckout?
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var visaCheckout: STPPaymentMethodCardWalletVisaCheckout?
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodCardWallet.self), self),
@@ -67,7 +66,6 @@ public class STPPaymentMethodCardWallet: NSObject, STPAPIResponseDecodable {
         ]
     }
 
-    @objc(typeFromString:)
     class func type(from string: String) -> STPPaymentMethodCardWalletType {
         let key = string.lowercased()
         let typeNumber = self.stringToTypeMapping()[key]

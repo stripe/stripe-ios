@@ -24,7 +24,6 @@ protocol STPCardScannerDelegate: AnyObject {
 }
 
 @available(macCatalyst 14.0, *)
-@objc(STPCardScanner)
 class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     // MARK: - Constants
@@ -51,7 +50,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     private var feedbackGenerator: UINotificationFeedbackGenerator?
 
-    @objc var deviceOrientation: UIDeviceOrientation {
+    var deviceOrientation: UIDeviceOrientation {
         get {
             return stp_deviceOrientation
         }

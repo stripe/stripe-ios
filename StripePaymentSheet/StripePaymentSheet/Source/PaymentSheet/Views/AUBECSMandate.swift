@@ -11,7 +11,6 @@ import SafariServices
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@objc(STP_Internal_AUBECSLegalTermsView)
 final class AUBECSLegalTermsView: UIView {
 
     private let links: [String: URL] = [

@@ -8,6 +8,8 @@
 //
 
 @testable import StripePayments
+import StripePaymentsTestUtils
+import XCTest
 
 class STPPaymentMethodCardWalletTest: XCTestCase {
     // MARK: - STPPaymentMethodCardWalletType Tests

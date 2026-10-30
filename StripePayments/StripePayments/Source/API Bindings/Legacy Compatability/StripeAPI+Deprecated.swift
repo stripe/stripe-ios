@@ -20,15 +20,14 @@ extension StripeAPI {
     /// currencyCode to "USD".
     /// - Parameter merchantIdentifier: Your Apple Merchant ID.
     /// - Returns: a `PKPaymentRequest` with proper default values. Returns nil if running on < iOS8.
-    /// @deprecated Use `paymentRequestWithMerchantIdentifier:country:currency:` instead.
+    /// @deprecated Use `paymentRequest(withMerchantIdentifier:country:currency:)` instead.
     /// Apple Pay is available in many countries and currencies, and you should use
     /// the appropriate values for your business.
     @available(
         *,
         deprecated,
-        message: "Use `paymentRequestWithMerchantIdentifier:country:currency:` instead."
+        message: "Use `paymentRequest(withMerchantIdentifier:country:currency:)` instead."
     )
-    @objc(paymentRequestWithMerchantIdentifier:)
     public class func paymentRequest(
         withMerchantIdentifier merchantIdentifier: String
     )

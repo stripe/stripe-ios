@@ -12,7 +12,7 @@ import Foundation
 
 @_spi(InternalOnlyAPI) public class STPPhoneNumberValidator: NSObject {
 
-    @objc(formattedSanitizedPhoneNumberForString:) class func formattedSanitizedPhoneNumber(
+    class func formattedSanitizedPhoneNumber(
         for string: String
     ) -> String {
         return self.formattedSanitizedPhoneNumber(
@@ -21,7 +21,6 @@ import Foundation
         )
     }
 
-    @objc(formattedSanitizedPhoneNumberForString:forCountryCode:)
     class func formattedSanitizedPhoneNumber(
         for string: String,
         forCountryCode nillableCode: String?
@@ -34,7 +33,7 @@ import Foundation
         )
     }
 
-    @objc(formattedRedactedPhoneNumberForString:) class func formattedRedactedPhoneNumber(
+    class func formattedRedactedPhoneNumber(
         for string: String
     ) -> String {
         return self.formattedRedactedPhoneNumber(
@@ -43,7 +42,6 @@ import Foundation
         )
     }
 
-    @objc(formattedRedactedPhoneNumberForString:forCountryCode:)
     class func formattedRedactedPhoneNumber(
         for string: String,
         forCountryCode nillableCode: String?

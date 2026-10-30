@@ -16,4 +16,4 @@ import Foundation
     message: "Use `STPIntentActionRedirectToURL` instead.",
     renamed: "STPIntentActionRedirectToURL"
 )
-@objc public final class STPPaymentIntentActionRedirectToURL: STPIntentActionRedirectToURL {}
+public final class STPPaymentIntentActionRedirectToURL: STPIntentActionRedirectToURL {}

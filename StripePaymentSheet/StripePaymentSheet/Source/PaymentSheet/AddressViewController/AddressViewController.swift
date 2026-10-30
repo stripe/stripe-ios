@@ -22,7 +22,6 @@ public protocol AddressViewControllerDelegate: AnyObject {
 /// A view controller that collects a name and an address, with full localization and autocomplete.
 /// - Note: It uses `navigationItem` and can push a view controller, so it must be shown inside a `UINavigationController`.
 /// - Seealso: https://stripe.com/docs/elements/address-element?platform=ios
-@objc(STPAddressViewController)
 public class AddressViewController: UIViewController {
     // MARK: - Public properties
     /// Configuration containing e.g. appearance styling properties, default values, etc.
@@ -240,7 +239,7 @@ public class AddressViewController: UIViewController {
 
     fileprivate lazy var closeButton: UIButton = {
         let button = SheetNavigationButton.makeCloseButton(appearance: configuration.appearance)
-        button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.didTapCloseButton() }, for: .touchUpInside)
         return button
     }()
 
@@ -421,7 +420,7 @@ extension AddressViewController {
         view.endEditing(false)
     }
 
-    @objc func presentAutocomplete() {
+    func presentAutocomplete() {
         assert(navigationController != nil)
         let keyboardShowing = view.firstResponder() != nil
         let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode ?? "", addressSpecProvider: addressSpecProvider, keyboardAlreadyShowing: keyboardShowing, useAutocompleteEndpoints: useAutocompleteEndpoints)
@@ -429,7 +428,7 @@ extension AddressViewController {
         navigationController?.pushViewController(autoCompleteViewController, animated: true)
     }
 
-    @objc func didTapCloseButton() {
+    func didTapCloseButton() {
         // Tapping 'X' is a cancel: if the customer changed nothing, dismiss and return the
         // as-presented address; otherwise confirm before discarding their changes.
         if hasChanges {

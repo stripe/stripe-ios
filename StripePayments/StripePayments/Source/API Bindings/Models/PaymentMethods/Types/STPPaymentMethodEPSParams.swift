@@ -16,7 +16,7 @@ public class STPPaymentMethodEPSParams: NSObject, STPFormEncodable {
         return "eps"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

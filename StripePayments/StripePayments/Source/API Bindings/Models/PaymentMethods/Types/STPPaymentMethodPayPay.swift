@@ -10,11 +10,11 @@ import Foundation
 /// A PayPay Payment Method. :nodoc:
 /// - seealso: https://stripe.com/docs/payments/paypay
 public class STPPaymentMethodPayPay: NSObject, STPAPIResponseDecodable {
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodPayPay.self), self)
@@ -24,7 +24,6 @@ public class STPPaymentMethodPayPay: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil
