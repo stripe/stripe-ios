@@ -31,7 +31,6 @@ enum SetAsDefaultCheckboxState {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_UpdatePaymentMethodViewController)
 final class UpdatePaymentMethodViewController: UIViewController {
     private let removeSavedPaymentMethodMessage: String?
 

@@ -27,7 +27,7 @@ import Foundation
         case merchantSpecified = "merchant_specified"
     }
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The identifier string for the session
     @objc public let clientSessionId: String?

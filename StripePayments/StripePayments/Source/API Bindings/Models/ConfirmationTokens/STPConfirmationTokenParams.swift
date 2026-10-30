@@ -26,7 +26,7 @@ import Foundation
     @objc public var returnURL: String?
 
     /// Indicates that you intend to make future payments with the payment method collected during checkout.
-    @objc public var setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
+    public var setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
 
     /// Shipping information to include with the ConfirmationToken.
     @objc public var shipping: STPPaymentIntentShippingDetailsParams?
@@ -45,7 +45,7 @@ import Foundation
     @objc @_spi(InternalOnlyAPI) public var clientContext: STPConfirmationTokenClientContext?
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPConfirmationTokenParams.self), self),
@@ -66,12 +66,10 @@ import Foundation
 
     // MARK: - STPFormEncodable
 
-    @objc
     public static func rootObjectName() -> String? {
         return nil
     }
 
-    @objc
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: paymentMethod)): "payment_method",
@@ -86,7 +84,7 @@ import Foundation
         ]
     }
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] {
+    public var additionalAPIParameters: [AnyHashable: Any] {
         get {
             var params = _additionalAPIParameters
             // Only include setup_future_usage if it has a valid string value (not .none or .unknown)

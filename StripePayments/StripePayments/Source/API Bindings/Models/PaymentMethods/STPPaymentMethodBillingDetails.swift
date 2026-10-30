@@ -12,7 +12,7 @@ import Foundation
 /// Billing information associated with a `STPPaymentMethod` that may be used or required by particular types of payment methods.
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-billing_details
 public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Billing address.
     @objc public var address: STPPaymentMethodAddress?
@@ -22,10 +22,10 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
     @objc public var name: String?
     /// Billing phone number (including extension).
     @objc public var phone: String?
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodBillingDetails.self), self),
@@ -39,13 +39,12 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
     }
 
     /// :nodoc:
-    @objc public override required init() {
+    public override required init() {
         super.init()
     }
 
     // MARK: - STPFormEncodable
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: address)): "address",
@@ -55,13 +54,12 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
 
     // MARK: - NSCopying
-    @objc(copyWithZone:) func copy(with zone: NSZone? = nil) -> Any {
+    func copy(with zone: NSZone? = nil) -> Any {
         let copyBillingDetails = type(of: self).init()
 
         copyBillingDetails.allResponseFields = allResponseFields
@@ -75,7 +73,6 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
 
     // MARK: - Equality
     /// :nodoc:
-    @objc
     public override func isEqual(_ other: Any?) -> Bool {
         return isEqual(to: other as? STPPaymentMethodBillingDetails)
     }
@@ -99,7 +96,6 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil
@@ -120,7 +116,7 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
 /// :nodoc:
 extension STPPaymentMethodBillingDetails {
     /// Convenience initializer for creating an `STPPaymentMethodBillingDetails` instance with a postal and country code
-    @objc convenience init(
+    convenience init(
         postalCode: String,
         countryCode: String? = Locale.autoupdatingCurrent.stp_regionCode
     ) {

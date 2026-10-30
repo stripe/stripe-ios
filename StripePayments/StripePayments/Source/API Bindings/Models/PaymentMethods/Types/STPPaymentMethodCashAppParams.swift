@@ -10,14 +10,12 @@ import Foundation
 
 /// An object representing parameters used to create a CashApp Payment Method
 public class STPPaymentMethodCashAppParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc
     public static func rootObjectName() -> String? {
         return "cashapp"
     }
 
-    @objc
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [:]
     }

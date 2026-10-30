@@ -12,7 +12,6 @@ import UIKit
 
 /// A simple button that increases the tap target for small buttons used in the navigation bar of PaymentSheet
 /// For internal SDK use only
-@objc(STP_Internal_SheetNavigationButton)
 class SheetNavigationButton: UIButton {
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {

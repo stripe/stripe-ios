@@ -22,7 +22,6 @@ public class STPCollectBankAccountParams: NSObject {
     /// - Parameters:
     ///     - name: The customer's full name. _required_
     ///     - email: The customer's email. If included, can be used to notify the customer of pending micro-deposit verification.
-    @objc(collectUSBankAccountParamsWithName:email:)
     public class func collectUSBankAccountParams(
         with name: String,
         email: String?
@@ -40,7 +39,6 @@ public class STPCollectBankAccountParams: NSObject {
     /// Configures and returns an instance of `STPCollectBankAccountParams` for Instant Debits
     /// - Parameters:
     ///     - email: The customer's email.
-    @objc(collectInstantDebitsParamsWithEmail:)
     @_spi(InternalOnlyAPI) public class func collectInstantDebitsParams(
         email: String?
     ) -> STPCollectBankAccountParams {

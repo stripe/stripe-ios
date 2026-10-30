@@ -11,7 +11,7 @@ import Foundation
 /// Only includes properties that can be populated from PaymentSheet.IntentConfiguration.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens
 @_spi(InternalOnlyAPI) public class STPConfirmationTokenClientContext: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The mode of this intent, either "payment" or "setup"
     @objc public var mode: String?
@@ -41,7 +41,7 @@ import Foundation
     @objc public var paymentMethodOptions: [String: Any]?
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPConfirmationTokenClientContext.self), self),
@@ -61,12 +61,10 @@ import Foundation
 
     // MARK: - STPFormEncodable
 
-    @objc
     public static func rootObjectName() -> String? {
         return "client_context"
     }
 
-    @objc
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: mode)): "mode",

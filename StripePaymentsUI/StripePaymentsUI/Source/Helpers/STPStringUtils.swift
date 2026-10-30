@@ -19,7 +19,7 @@ import Foundation
         )
     }()
 
-    @objc(expirationDateStringFromString:) @_spi(InternalOnlyAPI) public class func expirationDateString(
+    @_spi(InternalOnlyAPI) public class func expirationDateString(
         from string: String?
     )
         -> String?

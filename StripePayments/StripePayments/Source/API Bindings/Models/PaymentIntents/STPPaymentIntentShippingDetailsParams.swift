@@ -28,10 +28,9 @@ public class STPPaymentIntentShippingDetailsParams: NSObject {
     @objc public var trackingNumber: String?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Initialize an `STPPaymentIntentShippingDetailsParams` with required properties.
-    @objc
     public init(
         address: STPPaymentIntentShippingDetailsAddressParams,
         name: String
@@ -43,7 +42,7 @@ public class STPPaymentIntentShippingDetailsParams: NSObject {
     }
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(
@@ -74,7 +73,6 @@ public class STPPaymentIntentShippingDetailsParams: NSObject {
 // MARK: - STPFormEncodable
 extension STPPaymentIntentShippingDetailsParams: STPFormEncodable {
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: address)): "address",
@@ -85,7 +83,6 @@ extension STPPaymentIntentShippingDetailsParams: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
@@ -95,7 +92,6 @@ extension STPPaymentIntentShippingDetailsParams: STPFormEncodable {
 // MARK: - NSCopying
 extension STPPaymentIntentShippingDetailsParams: NSCopying {
     /// :nodoc:
-    @objc
     public func copy(with zone: NSZone? = nil) -> Any {
         let copy = STPPaymentIntentShippingDetailsParams(address: address, name: name)
 

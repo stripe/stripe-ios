@@ -12,10 +12,10 @@ import Foundation
 /// - seealso: https://docs.stripe.com/payments/kakao-pay/accept-a-payment
 public class STPPaymentMethodKakaoPay: NSObject, STPAPIResponseDecodable {
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodKakaoPay.self), self)
         ]
@@ -23,7 +23,7 @@ public class STPPaymentMethodKakaoPay: NSObject, STPAPIResponseDecodable {
     }
 
     /// :nodoc:
-    @objc public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response else {
             return nil
         }

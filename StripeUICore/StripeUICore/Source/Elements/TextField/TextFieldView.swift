@@ -20,7 +20,6 @@ protocol TextFieldViewDelegate: AnyObject {
  
  For internal SDK use only
  */
-@objc(STP_Internal_TextFieldView)
 class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
     private lazy var toolbar = DoneButtonToolbar(delegate: self, theme: viewModel.theme)

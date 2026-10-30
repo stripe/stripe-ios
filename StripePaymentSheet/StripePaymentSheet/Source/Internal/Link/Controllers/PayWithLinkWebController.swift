@@ -32,7 +32,6 @@ protocol PayWithLinkWebControllerDelegate: AnyObject {
 /// Instantiate and present this controller when the user chooses to pay with Link.
 /// For internal SDK use only
 
-@objc(STP_Internal_PayWithLinkWebController)
 @MainActor
 final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationContextProviding, STPAuthenticationContext {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {

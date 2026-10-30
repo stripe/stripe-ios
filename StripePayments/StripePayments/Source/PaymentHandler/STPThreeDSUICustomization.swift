@@ -20,7 +20,6 @@ import UIKit
 /// - seealso: https://stripe.com/docs/payments/3d-secure
 public class STPThreeDSUICustomization: NSObject {
     /// The default settings.  See individual properties for their default values.
-    @objc
     public class func defaultSettings() -> STPThreeDSUICustomization {
         return STPThreeDSUICustomization()
     }
@@ -30,7 +29,7 @@ public class STPThreeDSUICustomization: NSObject {
     private var _navigationBarCustomization = STPThreeDSNavigationBarCustomization.defaultSettings()
     /// Provides custom settings for the UINavigationBar of all UIViewControllers displayed during 3D Secure authentication.
     /// The default is `STPThreeDSNavigationBarCustomization.defaultSettings()`.
-    @objc public var navigationBarCustomization: STPThreeDSNavigationBarCustomization {
+    public var navigationBarCustomization: STPThreeDSNavigationBarCustomization {
         get {
             _navigationBarCustomization
         }
@@ -44,7 +43,7 @@ public class STPThreeDSUICustomization: NSObject {
     private var _labelCustomization = STPThreeDSLabelCustomization.defaultSettings()
     /// Provides custom settings for labels.
     /// The default is `STPThreeDSLabelCustomization.defaultSettings()`.
-    @objc public var labelCustomization: STPThreeDSLabelCustomization {
+    public var labelCustomization: STPThreeDSLabelCustomization {
         get {
             _labelCustomization
         }
@@ -57,7 +56,7 @@ public class STPThreeDSUICustomization: NSObject {
     private var _textFieldCustomization = STPThreeDSTextFieldCustomization.defaultSettings()
     /// Provides custom settings for text fields.
     /// The default is `STPThreeDSTextFieldCustomization.defaultSettings()`.
-    @objc public var textFieldCustomization: STPThreeDSTextFieldCustomization {
+    public var textFieldCustomization: STPThreeDSTextFieldCustomization {
         get {
             _textFieldCustomization
         }
@@ -69,7 +68,7 @@ public class STPThreeDSUICustomization: NSObject {
 
     /// The primary background color of all UIViewControllers displayed during 3D Secure authentication.
     /// Defaults to white.
-    @objc public var backgroundColor: UIColor {
+    public var backgroundColor: UIColor {
         get {
             return uiCustomization.backgroundColor
         }
@@ -81,7 +80,7 @@ public class STPThreeDSUICustomization: NSObject {
     private var _footerCustomization = STPThreeDSFooterCustomization.defaultSettings()
     /// Provides custom settings for the footer the challenge view can display containing additional details.
     /// The default is `STPThreeDSFooterCustomization.defaultSettings()`.
-    @objc public var footerCustomization: STPThreeDSFooterCustomization {
+    public var footerCustomization: STPThreeDSFooterCustomization {
         get {
             _footerCustomization
         }
@@ -95,7 +94,7 @@ public class STPThreeDSUICustomization: NSObject {
     /// - Parameters:
     ///   - buttonCustomization: The buttom customization to use.
     ///   - buttonType: The type of button to use the customization for.
-    @objc(setButtonCustomization:forType:) public func setButtonCustomization(
+    public func setButtonCustomization(
         _ buttonCustomization: STPThreeDSButtonCustomization,
         for buttonType: STPThreeDSCustomizationButtonType
     ) {
@@ -110,7 +109,7 @@ public class STPThreeDSUICustomization: NSObject {
     /// - Parameter buttonType: The button type to retrieve a customization object for.
     /// - Returns: A button customization object, or the default if none was set.
     /// - seealso: STPThreeDSButtonCustomization
-    @objc(buttonCustomizationForButtonType:) public func buttonCustomization(
+    public func buttonCustomization(
         for buttonType: STPThreeDSCustomizationButtonType
     ) -> STPThreeDSButtonCustomization {
         return (buttonCustomizationDictionary[NSNumber(value: buttonType.rawValue)])!
@@ -119,7 +118,7 @@ public class STPThreeDSUICustomization: NSObject {
     private var _selectionCustomization = STPThreeDSSelectionCustomization.defaultSettings()
     /// Provides custom settings for radio buttons and checkboxes.
     /// The default is `STPThreeDSSelectionCustomization.defaultSettings()`.
-    @objc public var selectionCustomization: STPThreeDSSelectionCustomization {
+    public var selectionCustomization: STPThreeDSSelectionCustomization {
         get {
             _selectionCustomization
         }
@@ -133,7 +132,7 @@ public class STPThreeDSUICustomization: NSObject {
     /// The style of `UIActivityIndicatorView`s displayed.
     /// This should contrast with `backgroundColor`.  Defaults to gray.
 
-    @objc public var activityIndicatorViewStyle: UIActivityIndicatorView.Style {
+    public var activityIndicatorViewStyle: UIActivityIndicatorView.Style {
         get {
             return uiCustomization.activityIndicatorViewStyle
         }
@@ -144,7 +143,7 @@ public class STPThreeDSUICustomization: NSObject {
 
     /// The style of the `UIBlurEffect` displayed underneath the `UIActivityIndicatorView`.
     /// Defaults to `UIBlurEffectStyleLight`.
-    @objc public var blurStyle: UIBlurEffect.Style {
+    public var blurStyle: UIBlurEffect.Style {
         get {
             return uiCustomization.blurStyle
         }
@@ -156,7 +155,6 @@ public class STPThreeDSUICustomization: NSObject {
     private var buttonCustomizationDictionary: [NSNumber: STPThreeDSButtonCustomization]
 
     /// :nodoc:
-    @objc
     public override init() {
         // Initialize defaults for all properties
         let nextButton = STPThreeDSButtonCustomization.defaultSettings(for: .next)

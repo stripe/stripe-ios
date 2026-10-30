@@ -20,7 +20,6 @@ protocol AutoCompleteViewControllerDelegate: AnyObject {
     func didSelectManualEntry(_ line1: String)
 }
 
-@objc(STP_Internal_AutoCompleteViewController)
 class AutoCompleteViewController: UIViewController {
     let configuration: AddressViewController.Configuration
     private let checkoutSessionID: String?

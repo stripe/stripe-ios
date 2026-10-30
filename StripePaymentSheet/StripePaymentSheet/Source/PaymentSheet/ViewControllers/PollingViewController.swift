@@ -15,7 +15,6 @@ import SafariServices
 import UIKit
 
 /// For internal SDK use only
-@objc(STP_Internal_PollingViewController)
 class PollingViewController: UIViewController {
     private enum PollingState {
         case polling

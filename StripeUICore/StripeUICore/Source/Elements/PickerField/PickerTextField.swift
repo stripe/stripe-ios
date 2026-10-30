@@ -15,7 +15,6 @@ import UIKit
  
  For internal SDK use only
  */
-@objc(STP_Internal_PickerTextField)
 class PickerTextField: UITextField {
 
     // MARK: Overrides

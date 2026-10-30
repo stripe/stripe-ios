@@ -10,7 +10,7 @@ import Foundation
 
 /// An object representing parameters used to create an AU BECS Debit Payment Method
 public class STPPaymentMethodAUBECSDebitParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The account number to debit.
     @objc public var accountNumber: String?

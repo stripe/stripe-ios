@@ -15,7 +15,6 @@ import UIKit
 
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
-@objc(STP_Internal_NativeSheetContainerViewController)
 class NativeSheetContainerViewController: UIViewController, PaymentSheetContainer {
 
     // Native navigation follows the merchant app's design, independently of the payment form's appearance.

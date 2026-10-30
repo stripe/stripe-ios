@@ -16,7 +16,6 @@ import UIKit
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_CheckboxButton)
 @_spi(InternalOnlyAPI) public class CheckboxButton: UIControl {
     // MARK: - Properties
 
@@ -286,7 +285,6 @@ extension CheckboxButton: UITextViewDelegate {
 
 // MARK: - CheckBox
 /// For internal SDK use only
-@objc(STP_Internal_CheckBox)
 class CheckBox: UIView {
     var isSelected: Bool = false {
         didSet {

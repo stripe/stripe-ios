@@ -9,7 +9,6 @@
 import Foundation
 
 /// The result of a check on a Card address or CVC.
-@objc
 public enum STPPaymentMethodCardCheckResult: Int {
     /// The check passed.
     case pass
@@ -39,7 +38,7 @@ public class STPPaymentMethodCardChecks: NSObject, STPAPIResponseDecodable {
         message:
             "Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )
-    @objc public private(set) var addressLine1Check: STPPaymentMethodCardCheckResult = .unknown
+    public private(set) var addressLine1Check: STPPaymentMethodCardCheckResult = .unknown
     /// If a address postal code was provided, results of the check.
     /// deprecated Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
     @available(
@@ -48,7 +47,7 @@ public class STPPaymentMethodCardChecks: NSObject, STPAPIResponseDecodable {
         message:
             "Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )
-    @objc public private(set) var addressPostalCodeCheck: STPPaymentMethodCardCheckResult = .unknown
+    public private(set) var addressPostalCodeCheck: STPPaymentMethodCardCheckResult = .unknown
     /// If a CVC was provided, results of the check.
     /// deprecated Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
     @available(
@@ -57,11 +56,11 @@ public class STPPaymentMethodCardChecks: NSObject, STPAPIResponseDecodable {
         message:
             "Card check values are no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )
-    @objc public private(set) var cvcCheck: STPPaymentMethodCardCheckResult = .unknown
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var cvcCheck: STPPaymentMethodCardCheckResult = .unknown
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodCardChecks.self), self),
@@ -74,7 +73,6 @@ public class STPPaymentMethodCardChecks: NSObject, STPAPIResponseDecodable {
         return "<\(props.joined(separator: "; "))>"
     }
 
-    @objc(checkResultFromString:)
     class func checkResult(from string: String?) -> STPPaymentMethodCardCheckResult {
         let check = string?.lowercased()
         if check == "pass" {

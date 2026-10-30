@@ -11,19 +11,19 @@ import Foundation
 /// Contains Boleto details necessary for the customer to complete the payment.
 public class STPIntentActionBoletoDisplayDetails: NSObject, STPAPIResponseDecodable {
     /// The boleto voucher number.
-    @objc public let number: String
+    public let number: String
 
     /// The expiry date of the boleto voucher.
-    @objc public let expiresAt: Date
+    public let expiresAt: Date
 
     /// The URL to the hosted boleto voucher page, which allows customers to view the boleto voucher.
-    @objc public let hostedVoucherURL: URL
+    public let hostedVoucherURL: URL
 
     /// :nodoc:
     public private(set) var allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(

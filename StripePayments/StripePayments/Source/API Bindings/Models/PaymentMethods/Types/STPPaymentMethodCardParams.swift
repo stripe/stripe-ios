@@ -10,11 +10,11 @@ import Foundation
 
 /// The user's card details.
 public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// A convenience initializer for creating a payment method from a card source.
     /// This should be used to help with migrations to Payment Methods from Sources.
-    @objc public convenience init(
+    public convenience init(
         cardSourceParams: STPCardParams
     ) {
         self.init()
@@ -43,7 +43,7 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     @objc public var networks: STPPaymentMethodCardNetworksParams?
 
     /// The last 4 digits of the card.
-    @objc public var last4: String? {
+    public var last4: String? {
         if number != nil && (number?.count ?? 0) >= 4 {
             return (number as NSString?)?.substring(from: (number?.count ?? 0) - 4) ?? ""
         } else {
@@ -53,7 +53,7 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodCardParams.self), self),
@@ -72,12 +72,10 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
 
     // MARK: - STPFormEncodable
 
-    @objc
     public class func rootObjectName() -> String? {
         return "card"
     }
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: number)): "number",
@@ -90,7 +88,7 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
     }
 
     // MARK: - NSCopying
-    @objc(copyWithZone:) func copy(with zone: NSZone? = nil) -> Any {
+    func copy(with zone: NSZone? = nil) -> Any {
         let copyCardParams = type(of: self).init()
 
         copyCardParams.number = number
@@ -103,7 +101,6 @@ public class STPPaymentMethodCardParams: NSObject, STPFormEncodable {
 
     // MARK: - Equality
     /// :nodoc:
-    @objc
     public override func isEqual(_ other: Any?) -> Bool {
         return isEqual(to: other as? STPPaymentMethodCardParams)
     }

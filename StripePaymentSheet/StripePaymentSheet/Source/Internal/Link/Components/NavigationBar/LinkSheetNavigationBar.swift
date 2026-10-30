@@ -13,7 +13,6 @@ import UIKit
 @_spi(InternalOnlyAPI) import StripeUICore
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkSheetNavigationBar)
 class LinkSheetNavigationBar: SheetNavigationBar {
 
     private let brand: LinkBrand

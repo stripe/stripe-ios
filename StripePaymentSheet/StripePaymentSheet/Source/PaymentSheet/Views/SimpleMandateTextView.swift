@@ -10,7 +10,6 @@
 import UIKit
 
 /// For internal SDK use only
-@objc(STP_Internal_SimpleMandateTextView)
 class SimpleMandateTextView: UIView {
     private let theme: ElementsAppearance
     private let textAlignment: NSTextAlignment

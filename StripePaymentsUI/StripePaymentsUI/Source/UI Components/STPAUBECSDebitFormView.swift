@@ -15,7 +15,7 @@ import UIKit
 /// STPAUBECSDebitFormViewDelegate provides methods for STPAUBECSDebitFormView to inform its delegate
 /// of when the form has been completed.
 @MainActor @preconcurrency
-@objc public protocol STPAUBECSDebitFormViewDelegate: NSObjectProtocol {
+public protocol STPAUBECSDebitFormViewDelegate: NSObjectProtocol {
     /// Called when the form transitions from complete to incomplete or vice-versa.
     /// - Parameters:
     ///   - form: The `STPAUBECSDebitFormView` instance whose completion state has changed
@@ -42,7 +42,6 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     private var companyName: String
 
     /// - Parameter companyName: The name of the company collecting AU BECS Debit payment details information. This will be used to provide the required service agreement text. - seealso: https://stripe.com/au-becs/legal
-    @objc(initWithCompanyName:)
     public required init(
         companyName: String
     ) {
@@ -244,7 +243,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
 
     /// The background color for the form text fields. Defaults to .systemBackground on iOS 13.0 and later, .white on earlier iOS versions.
-    @objc public var formBackgroundColor: UIColor = .systemBackground
+    public var formBackgroundColor: UIColor = .systemBackground
     {
         didSet {
             labeledNameField.formBackgroundColor = formBackgroundColor
@@ -254,10 +253,10 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
 
     /// The delegate to inform about changes to this STPAUBECSDebitFormView instance.
-    @objc public weak var becsDebitFormDelegate: STPAUBECSDebitFormViewDelegate?
+    public weak var becsDebitFormDelegate: STPAUBECSDebitFormViewDelegate?
     /// This property will return a non-nil value if and only if the form is in a complete state. The `STPPaymentMethodParams` instance
     /// will have it's `auBECSDebit` property populated with the values input in this form.
-    @objc public var paymentMethodParams: STPPaymentMethodParams? {
+    public var paymentMethodParams: STPPaymentMethodParams? {
         return viewModel.paymentMethodParams
     }
 
@@ -333,7 +332,6 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
 
     /// :nodoc:
-    @objc
     public override func systemLayoutSizeFitting(
         _ targetSize: CGSize,
         withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
@@ -517,7 +515,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
 
     // MARK: - STPFormTextFieldContainer (Overrides)
     /// :nodoc:
-    @objc public override var formFont: UIFont {
+    public override var formFont: UIFont {
         get {
             super.formFont
         }
@@ -529,7 +527,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
 
     /// :nodoc:
-    @objc public override var formTextColor: UIColor {
+    public override var formTextColor: UIColor {
         get {
             super.formTextColor
         }

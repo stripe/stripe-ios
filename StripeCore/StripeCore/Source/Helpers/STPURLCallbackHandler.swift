@@ -8,18 +8,18 @@
 
 import Foundation
 
-@_spi(InternalOnlyAPI) @objc public protocol STPURLCallbackListener: NSObjectProtocol {
+@_spi(InternalOnlyAPI) public protocol STPURLCallbackListener: NSObjectProtocol {
     func handleURLCallback(_ url: URL) -> Bool
 }
 
 @_spi(InternalOnlyAPI) public class STPURLCallbackHandler: NSObject {
     @_spi(InternalOnlyAPI) public static var sharedHandler: STPURLCallbackHandler = STPURLCallbackHandler()
 
-    @objc @_spi(InternalOnlyAPI) public class func shared() -> STPURLCallbackHandler {
+    @_spi(InternalOnlyAPI) public class func shared() -> STPURLCallbackHandler {
         return sharedHandler
     }
 
-    @objc @discardableResult @_spi(InternalOnlyAPI) public func handleURLCallback(_ url: URL) -> Bool {
+    @discardableResult @_spi(InternalOnlyAPI) public func handleURLCallback(_ url: URL) -> Bool {
         guard
             let components = NSURLComponents(
                 url: url,
@@ -42,7 +42,7 @@ import Foundation
         return resultsOrred
     }
 
-    @objc(registerListener:forURL:) @_spi(InternalOnlyAPI) public func register(
+    @_spi(InternalOnlyAPI) public func register(
         _ listener: STPURLCallbackListener,
         for url: URL
     ) {
@@ -61,7 +61,7 @@ import Foundation
         callbacks = callbacksCopy
     }
 
-    @objc @_spi(InternalOnlyAPI) public func unregisterListener(_ listener: STPURLCallbackListener) {
+    @_spi(InternalOnlyAPI) public func unregisterListener(_ listener: STPURLCallbackListener) {
         var callbacksToRemove: [AnyHashable] = []
 
         for callback in callbacks {

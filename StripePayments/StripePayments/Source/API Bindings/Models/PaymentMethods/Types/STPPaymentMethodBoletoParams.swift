@@ -19,10 +19,10 @@ public class STPPaymentMethodBoletoParams: NSObject, STPFormEncodable {
     @objc public var taxID: String?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodBoletoParams.self), self),
@@ -35,12 +35,10 @@ public class STPPaymentMethodBoletoParams: NSObject, STPFormEncodable {
 
     // MARK: - STPFormEncodable
 
-    @objc
     public class func rootObjectName() -> String? {
         return "boleto"
     }
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: taxID)): "tax_id"

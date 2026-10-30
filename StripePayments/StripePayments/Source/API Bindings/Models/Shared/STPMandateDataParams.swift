@@ -14,13 +14,13 @@ public class STPMandateDataParams: NSObject {
     /// Details about the customer acceptance of the Mandate.
     @objc public let customerAcceptance: STPMandateCustomerAcceptanceParams
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// Initializes an STPMandateDataParams from an STPMandateCustomerAcceptanceParams.
-    @objc public init(
+    public init(
         customerAcceptance: STPMandateCustomerAcceptanceParams
     ) {
         self.customerAcceptance = customerAcceptance
@@ -51,21 +51,18 @@ public class STPMandateDataParams: NSObject {
 }
 
 extension STPMandateDataParams: STPFormEncodable {
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: customerAcceptance)): "customer_acceptance",
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return "mandate_data"
     }
 }
 
 extension STPMandateDataParams: STPAPIResponseDecodable {
-    @objc
     @_spi(InternalOnlyAPI) public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response else {
             return nil

@@ -25,7 +25,7 @@ import UIKit
     //        return delegateProxy.textField(textField, shouldChangeCharactersIn: range, replacementString: string)
     //    }
     //    return true
-    @objc(textField:shouldChangeCharactersInRange:replacementString:) func textField(
+    func textField(
         _ textField: UITextField,
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
@@ -39,7 +39,7 @@ import UIKit
     @objc optional func formTextFieldTextDidChange(_ textField: STPFormTextField)
 }
 
-@objc @_spi(InternalOnlyAPI) public class STPFormTextField: STPValidatedTextField {
+@_spi(InternalOnlyAPI) public class STPFormTextField: STPValidatedTextField {
 
     private var _selectionEnabled = false
     @_spi(InternalOnlyAPI) public var selectionEnabled: Bool {
@@ -187,13 +187,11 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc
     public override func insertText(_ text: String) {
         self.text = self.text ?? "" + text
     }
 
     /// :nodoc:
-    @objc
     public override func deleteBackward() {
         super.deleteBackward()
         if (text?.count ?? 0) == 0 {
@@ -206,7 +204,7 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc public override var text: String? {
+    public override var text: String? {
         get {
             return super.text
         }
@@ -221,7 +219,7 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc public override var attributedText: NSAttributedString? {
+    public override var attributedText: NSAttributedString? {
         get {
             return super.attributedText
         }
@@ -256,7 +254,7 @@ import UIKit
         }
     }
 
-    @objc public override var accessibilityAttributedValue: NSAttributedString? {
+    public override var accessibilityAttributedValue: NSAttributedString? {
         get {
             guard let text = text else {
                 return nil
@@ -274,7 +272,7 @@ import UIKit
         }
     }
 
-    @objc public override var accessibilityAttributedLabel: NSAttributedString? {
+    public override var accessibilityAttributedLabel: NSAttributedString? {
         get {
             guard let accessibilityLabel = accessibilityLabel else {
                 return nil
@@ -302,7 +300,7 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc public override var attributedPlaceholder: NSAttributedString? {
+    public override var attributedPlaceholder: NSAttributedString? {
         get {
             return super.attributedPlaceholder
         }
@@ -319,7 +317,7 @@ import UIKit
 
     // Fixes a weird issue related to our custom override of deleteBackwards. This only affects the simulator and iPads with custom keyboards.
     /// :nodoc:
-    @objc public override var keyCommands: [UIKeyCommand]? {
+    public override var keyCommands: [UIKeyCommand]? {
         return [
             UIKeyCommand(
                 input: "\u{08}",
@@ -334,7 +332,6 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc
     public override func closestPosition(to point: CGPoint) -> UITextPosition? {
         if selectionEnabled {
             return super.closestPosition(to: point)
@@ -343,7 +340,6 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc
     public override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return super.canPerformAction(action, withSender: sender) && action == #selector(paste(_:))
     }
@@ -361,7 +357,7 @@ import UIKit
     }
 
     /// :nodoc:
-    @objc public override weak var delegate: UITextFieldDelegate? {
+    public override weak var delegate: UITextFieldDelegate? {
         get {
             super.delegate
         }

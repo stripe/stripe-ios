@@ -16,7 +16,7 @@ let kLabeledFormHorizontalMargin: CGFloat = 12.0
 class STPLabeledFormTextFieldView: STPViewWithSeparator {
     private var formLabel: UILabel?
 
-    @objc init(
+    init(
         formLabel formLabelText: String,
         textField: STPFormTextField
     ) {
@@ -77,7 +77,7 @@ class STPLabeledFormTextFieldView: STPViewWithSeparator {
         NSLayoutConstraint.activate(constraints)
     }
 
-    @objc var formBackgroundColor: UIColor? {
+    var formBackgroundColor: UIColor? {
         get {
             return backgroundColor ?? UIColor.clear
         }

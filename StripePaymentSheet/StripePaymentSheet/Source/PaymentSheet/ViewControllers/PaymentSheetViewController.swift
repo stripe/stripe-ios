@@ -420,7 +420,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
     }
 
-    @objc
     private func didTapBuyButton() {
         let paymentOption: PaymentOption
         switch mode {

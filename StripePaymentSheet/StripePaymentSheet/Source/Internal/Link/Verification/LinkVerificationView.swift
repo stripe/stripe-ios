@@ -20,7 +20,6 @@ protocol LinkVerificationViewDelegate: AnyObject {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkVerificationView)
 final class LinkVerificationView: UIView {
     struct Constants {
         static let edgeMargin: CGFloat = 20

@@ -14,7 +14,6 @@ protocol BankAccountInfoViewDelegate {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_BankAccountInfoView)
 class BankAccountInfoView: UIView {
     struct Constants {
         static let spacing: CGFloat = 12

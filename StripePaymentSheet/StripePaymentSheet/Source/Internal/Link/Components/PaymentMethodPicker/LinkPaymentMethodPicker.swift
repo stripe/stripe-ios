@@ -57,7 +57,6 @@ protocol LinkPaymentMethodPickerDataSource: AnyObject {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkPaymentMethodPicker)
 final class LinkPaymentMethodPicker: UIView {
     weak var delegate: LinkPaymentMethodPickerDelegate?
     weak var dataSource: LinkPaymentMethodPickerDataSource? {

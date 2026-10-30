@@ -13,7 +13,7 @@ class STPViewWithSeparator: UIView {
     private var bottomSeparator = UIView()
     private var separatorHeightConstraint = NSLayoutConstraint()
 
-    @objc public var topSeparatorHidden: Bool {
+    public var topSeparatorHidden: Bool {
         get {
             return topSeparator.isHidden
         }
@@ -68,7 +68,6 @@ class STPViewWithSeparator: UIView {
     }
 
     /// :nodoc:
-    @objc
     public override func didMoveToWindow() {
         super.didMoveToWindow()
         separatorHeightConstraint.constant = _currentPixelHeight()

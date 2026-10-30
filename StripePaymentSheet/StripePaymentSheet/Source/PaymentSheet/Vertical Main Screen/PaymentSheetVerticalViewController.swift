@@ -752,7 +752,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         updateUI()
     }
 
-    @objc func didTapPrimaryButton() {
+    func didTapPrimaryButton() {
         // If the form has overridden the primary buy button, hand control over to the form
         guard paymentMethodFormViewController?.overridePrimaryButtonState == nil else {
             paymentMethodFormViewController?.didTapCallToActionButton(from: self)
@@ -804,7 +804,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         pay(with: selectedPaymentOption)
     }
 
-    @objc func didTapPrimaryButtonWhenDisabled() {
+    func didTapPrimaryButtonWhenDisabled() {
         // When the disabled button is tapped, show validation errors on all form fields
 #if !os(visionOS)
         UINotificationFeedbackGenerator().notificationOccurred(.error)
@@ -847,7 +847,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
     }
 
-    @objc func presentManageScreen() {
+    func presentManageScreen() {
         error = nil
         // Special case, only 1 card remaining, skip showing the list and show update view controller
         if savedPaymentMethods.count == 1,

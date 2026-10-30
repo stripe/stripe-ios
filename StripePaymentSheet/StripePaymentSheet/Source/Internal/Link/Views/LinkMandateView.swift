@@ -22,7 +22,6 @@ protocol LinkMandateViewDelegate: AnyObject {
 // TODO(ramont): extract common code with `LinkLegalTermsView`.
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkMandateViewDelegate)
 final class LinkMandateView: UIView {
     weak var delegate: LinkMandateViewDelegate?
     private let linkTextColor: UIColor

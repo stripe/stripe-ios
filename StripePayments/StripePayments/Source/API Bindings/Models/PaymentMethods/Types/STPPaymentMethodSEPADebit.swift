@@ -11,23 +11,23 @@ import Foundation
 /// A SEPA Debit Payment Method.
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-sepa_debit
 public class STPPaymentMethodSEPADebit: NSObject, STPAPIResponseDecodable {
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
     /// The last 4 digits of the account number.
-    @objc public private(set) var last4: String?
+    public private(set) var last4: String?
     /// The account's bank code.
-    @objc public private(set) var bankCode: String?
+    public private(set) var bankCode: String?
     /// The account's branch code
-    @objc public private(set) var branchCode: String?
+    public private(set) var branchCode: String?
     /// Two-letter ISO code representing the country of the bank account.
-    @objc public private(set) var country: String?
+    public private(set) var country: String?
     /// The account's fingerprint.
-    @objc public private(set) var fingerprint: String?
+    public private(set) var fingerprint: String?
     /// The reference of the mandate accepted by your customer. - seealso: https://stripe.com/docs/api/sources/create#create_source-mandate
-    @objc public private(set) var mandate: String?
+    public private(set) var mandate: String?
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodSEPADebit.self), self),
@@ -45,7 +45,6 @@ public class STPPaymentMethodSEPADebit: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

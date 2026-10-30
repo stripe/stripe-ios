@@ -15,10 +15,10 @@ public class STPConfirmBLIKOptions: NSObject {
     /// The 6-digit BLIK code that a customer has generated using their banking application.
     @objc public var code: String
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
@@ -30,7 +30,7 @@ public class STPConfirmBLIKOptions: NSObject {
 
     /// Initializes STPConfirmBLIKOptions
     /// - parameter code: The 6-digit BLIK code that a customer has generated using their banking application.
-    @objc public required init(
+    public required init(
         code: String
     ) {
         self.code = code
@@ -40,14 +40,12 @@ public class STPConfirmBLIKOptions: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConfirmBLIKOptions: STPFormEncodable {
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: code)): "code"
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return "blik"
     }

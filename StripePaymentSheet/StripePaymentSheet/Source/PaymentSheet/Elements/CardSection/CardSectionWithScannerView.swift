@@ -19,7 +19,6 @@ import UIKit
  */
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
-@objc(STP_Internal_CardSectionWithScannerView)
 final class CardSectionWithScannerView: UIView {
 
     let cardSectionView: UIView

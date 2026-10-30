@@ -14,7 +14,7 @@ extension NSURLComponents {
     ///
     /// When reading, if there are duplicate
     /// names, earlier ones are overwritten by later ones.
-    @objc var stp_queryItemsDictionary: [String: String] {
+    var stp_queryItemsDictionary: [String: String] {
         get {
             guard let queryItems = queryItems else {
                 return [:]

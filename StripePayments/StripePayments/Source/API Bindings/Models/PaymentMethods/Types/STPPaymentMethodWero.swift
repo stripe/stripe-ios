@@ -11,11 +11,11 @@ import Foundation
 /// - seealso: https://docs.stripe.com/payments/wero/accept-a-payment
 public class STPPaymentMethodWero: NSObject {
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodWero.self), self)
@@ -25,7 +25,6 @@ public class STPPaymentMethodWero: NSObject {
     }
 
     // MARK: - STPAPIResponseDecodeable
-    @objc
     /// :nodoc:
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {

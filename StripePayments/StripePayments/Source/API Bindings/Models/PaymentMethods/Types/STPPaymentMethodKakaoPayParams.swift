@@ -10,13 +10,13 @@ import Foundation
 
 /// An object representing parameters used to create a Kakao Pay Payment Method.
 public class STPPaymentMethodKakaoPayParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc public class func rootObjectName() -> String? {
+    public class func rootObjectName() -> String? {
         return "kakao_pay"
     }
 
-    @objc public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [:]
     }
 }

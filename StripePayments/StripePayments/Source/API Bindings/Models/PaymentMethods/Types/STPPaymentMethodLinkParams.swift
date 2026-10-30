@@ -17,15 +17,13 @@ public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
     @objc @_spi(InternalOnlyAPI) public var credentials: [AnyHashable: Any]?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     // MARK: - STPFormEncodable
-    @objc
     public class func rootObjectName() -> String? {
         return "link"
     }
 
-    @objc
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: credentials)): "credentials",

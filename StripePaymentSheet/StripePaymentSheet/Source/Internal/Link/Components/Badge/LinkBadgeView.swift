@@ -11,7 +11,6 @@ import UIKit
 @_spi(InternalOnlyAPI) import StripeUICore
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkBadgeView)
 final class LinkBadgeView: UIView {
     struct Constants {
         static let spacing: CGFloat = 4

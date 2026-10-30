@@ -18,7 +18,6 @@ import UIKit
  
  For internal SDK use only
  */
-@objc(STP_Internal_SectionContainerView)
 class SectionContainerView: UIView {
 
     // MARK: - Views

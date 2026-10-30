@@ -10,7 +10,6 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkSettings)
 @_spi(InternalOnlyAPI) public final class LinkSettings: NSObject, STPAPIResponseDecodable {
     @_spi(InternalOnlyAPI) public enum FundingSource: String, SafeParsedEnumCodable {
         case card = "CARD"

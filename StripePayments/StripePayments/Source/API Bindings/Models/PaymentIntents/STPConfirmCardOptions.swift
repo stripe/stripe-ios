@@ -19,10 +19,10 @@ public class STPConfirmCardOptions: NSObject {
     @objc public var network: String?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
@@ -38,7 +38,6 @@ public class STPConfirmCardOptions: NSObject {
 // MARK: - STPFormEncodable
 extension STPConfirmCardOptions: STPFormEncodable {
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: cvc)): "cvc",
@@ -46,7 +45,6 @@ extension STPConfirmCardOptions: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return "card"
     }

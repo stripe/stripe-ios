@@ -14,4 +14,4 @@ import Foundation
 /// it.
 /// @deprecated Use `STPIntentAction` instead.
 @available(*, unavailable, message: "Use `STPIntentAction` instead.", renamed: "STPIntentAction")
-@objc public final class STPPaymentIntentSourceAction: STPIntentAction {}
+public final class STPPaymentIntentSourceAction: STPIntentAction {}

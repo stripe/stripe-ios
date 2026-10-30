@@ -14,136 +14,136 @@ import UIKit
 /// - seealso: https://stripe.com/docs/api/payment_methods
 public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// Unique identifier for the object.
-    @objc private(set) public var stripeId: String
+    private(set) public var stripeId: String
     /// Time at which the object was created. Measured in seconds since the Unix epoch.
-    @objc private(set) public var created: Date
+    private(set) public var created: Date
     /// `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
-    @objc private(set) public var liveMode = false
+    private(set) public var liveMode = false
     /// The type of the PaymentMethod.  The corresponding, similarly named property contains additional information specific to the PaymentMethod type.
     /// e.g. if the type is `STPPaymentMethodTypeCard`, the `card` property is also populated.
-    @objc private(set) public var type: STPPaymentMethodType = .unknown
+    private(set) public var type: STPPaymentMethodType = .unknown
     /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
-    @objc private(set) public var billingDetails: STPPaymentMethodBillingDetails?
+    private(set) public var billingDetails: STPPaymentMethodBillingDetails?
     /// If this is an Alipay PaymentMethod (ie `self.type == STPPaymentMethodTypeAlipay`), this contains additional detailsl
-    @objc private(set) public var alipay: STPPaymentMethodAlipay?
+    private(set) public var alipay: STPPaymentMethodAlipay?
     /// If this is a GrabPay PaymentMethod (ie `self.type == STPPaymentMethodTypeGrabPay`), this contains additional details.
-    @objc private(set) public var grabPay: STPPaymentMethodGrabPay?
+    private(set) public var grabPay: STPPaymentMethodGrabPay?
     /// If this is a card PaymentMethod (ie `self.type == STPPaymentMethodTypeCard`), this contains additional details.
-    @objc private(set) public var card: STPPaymentMethodCard?
+    private(set) public var card: STPPaymentMethodCard?
     /// If this is a iDEAL PaymentMethod (ie `self.type == STPPaymentMethodTypeiDEAL`), this contains additional details.
-    @objc private(set) public var iDEAL: STPPaymentMethodiDEAL?
+    private(set) public var iDEAL: STPPaymentMethodiDEAL?
     /// If this is an FPX PaymentMethod (ie `self.type == STPPaymentMethodTypeFPX`), this contains additional details.
-    @objc private(set) public var fpx: STPPaymentMethodFPX?
+    private(set) public var fpx: STPPaymentMethodFPX?
     /// If this is a card present PaymentMethod (ie `self.type == STPPaymentMethodTypeCardPresent`), this contains additional details.
-    @objc private(set) public var cardPresent: STPPaymentMethodCardPresent?
+    private(set) public var cardPresent: STPPaymentMethodCardPresent?
     /// If this is a SEPA Debit PaymentMethod (ie `self.type == STPPaymentMethodTypeSEPADebit`), this contains additional details.
-    @objc private(set) public var sepaDebit: STPPaymentMethodSEPADebit?
+    private(set) public var sepaDebit: STPPaymentMethodSEPADebit?
     /// If this is a Bacs Debit PaymentMethod (ie `self.type == STPPaymentMethodTypeBacsDebit`), this contains additional details.
-    @objc private(set) public var bacsDebit: STPPaymentMethodBacsDebit?
+    private(set) public var bacsDebit: STPPaymentMethodBacsDebit?
     /// If this is an AU BECS Debit PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAUBECSDebit`), this contains additional details.
-    @objc private(set) public var auBECSDebit: STPPaymentMethodAUBECSDebit?
+    private(set) public var auBECSDebit: STPPaymentMethodAUBECSDebit?
     /// If this is an EPS PaymentMethod (i.e. `self.type == STPPaymentMethodTypeEPS`), this contains additional details.
-    @objc private(set) public var eps: STPPaymentMethodEPS?
+    private(set) public var eps: STPPaymentMethodEPS?
     /// If this is a Przelewy24 PaymentMethod (i.e. `self.type == STPPaymentMethodTypePrzelewy24`), this contains additional details.
-    @objc private(set) public var przelewy24: STPPaymentMethodPrzelewy24?
+    private(set) public var przelewy24: STPPaymentMethodPrzelewy24?
     /// If this is a Bancontact PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBancontact`), this contains additional details.
-    @objc private(set) public var bancontact: STPPaymentMethodBancontact?
+    private(set) public var bancontact: STPPaymentMethodBancontact?
     /// If this is a NetBanking PaymentMethod (i.e. `self.type == STPPaymentMethodTypeNetBanking`), this contains additional details.
-    @objc private(set) public var netBanking: STPPaymentMethodNetBanking?
+    private(set) public var netBanking: STPPaymentMethodNetBanking?
     /// If this is an OXXO PaymentMethod (i.e. `self.type == STPPaymentMethodTypeOXXO`), this contains additional details.
-    @objc private(set) public var oxxo: STPPaymentMethodOXXO?
+    private(set) public var oxxo: STPPaymentMethodOXXO?
     /// If this is a PayPal PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPal`), this contains additional details. :nodoc:
-    @objc private(set) public var payPal: STPPaymentMethodPayPal?
+    private(set) public var payPal: STPPaymentMethodPayPal?
     /// If this is an AfterpayClearpay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAfterpayClearpay`), this contains additional details. :nodoc:
-    @objc private(set) public var afterpayClearpay: STPPaymentMethodAfterpayClearpay?
+    private(set) public var afterpayClearpay: STPPaymentMethodAfterpayClearpay?
     /// If this is a BLIK PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBLIK`), this contains additional details. :nodoc:
-    @objc private(set) public var blik: STPPaymentMethodBLIK?
+    private(set) public var blik: STPPaymentMethodBLIK?
     /// If this is a WeChat Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeWeChatPay`), this contains additional details.
-    @objc private(set) var weChatPay: STPPaymentMethodWeChatPay?
+    private(set) var weChatPay: STPPaymentMethodWeChatPay?
     /// If this is an Boleto PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBoleto`), this contains additional details.
-    @objc private(set) public var boleto: STPPaymentMethodBoleto?
+    private(set) public var boleto: STPPaymentMethodBoleto?
     /// If this is a Link PaymentMethod (i.e. `self.type == STPPaymentMethodTypeLink`), this contains additional details.
-    @objc private(set) public var link: STPPaymentMethodLink?
+    private(set) public var link: STPPaymentMethodLink?
     /// If this is an Klarna PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKlarna`), this contains additional details.
-    @objc private(set) public var klarna: STPPaymentMethodKlarna?
+    private(set) public var klarna: STPPaymentMethodKlarna?
     /// If this is an Affirm PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAffirm`), this contains additional details.
-    @objc private(set) public var affirm: STPPaymentMethodAffirm?
+    private(set) public var affirm: STPPaymentMethodAffirm?
     /// If this is a US Bank Account PaymentMethod (i.e. `self.type == STPPaymentMethodTypeUSBankAccount`), this contains additional details.
-    @objc private(set) public var usBankAccount: STPPaymentMethodUSBankAccount?
+    private(set) public var usBankAccount: STPPaymentMethodUSBankAccount?
     /// If this is an Cash App PaymentMethod (i.e. `self.type == STPPaymentMethodTypeCashApp`), this contains additional details.
-    @objc private(set) public var cashApp: STPPaymentMethodCashApp?
+    private(set) public var cashApp: STPPaymentMethodCashApp?
     /// If this is an RevolutPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeRevolutPay`), this contains additional details.
-    @objc private(set) public var revolutPay: STPPaymentMethodRevolutPay?
+    private(set) public var revolutPay: STPPaymentMethodRevolutPay?
     /// If this is a Swish PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSwish`), this contains additional details.
-    @objc private(set) public var swish: STPPaymentMethodSwish?
+    private(set) public var swish: STPPaymentMethodSwish?
     /// If this is a Amazon Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAmazonPay`), this contains additional details.
-    @objc private(set) public var amazonPay: STPPaymentMethodAmazonPay?
+    private(set) public var amazonPay: STPPaymentMethodAmazonPay?
     /// If this is a Alma PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAlma`), this contains additional details.
-    @objc private(set) public var alma: STPPaymentMethodAlma?
+    private(set) public var alma: STPPaymentMethodAlma?
     /// If this is a Sunbit PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSunibt`), this contains additional details.
-    @objc private(set) public var sunbit: STPPaymentMethodSunbit?
+    private(set) public var sunbit: STPPaymentMethodSunbit?
     /// If this is a Billie PaymentMethod (i.e. `self.type == STPPaymentMethodTypeBillie`), this contains additional details.
-    @objc private(set) public var billie: STPPaymentMethodBillie?
+    private(set) public var billie: STPPaymentMethodBillie?
     /// If this is a Satispay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSatispay`), this contains additional details.
-    @objc private(set) public var satispay: STPPaymentMethodSatispay?
+    private(set) public var satispay: STPPaymentMethodSatispay?
     /// If this is a Crypto PaymentMethod (i.e. `self.type == STPPaymentMethodTypeCrypto`), this contains additional details.
-    @objc private(set) public var crypto: STPPaymentMethodCrypto?
+    private(set) public var crypto: STPPaymentMethodCrypto?
     /// If this is a Multibanco PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMultibanco`), this contains additional details.
-    @objc private(set) public var multibanco: STPPaymentMethodMultibanco?
+    private(set) public var multibanco: STPPaymentMethodMultibanco?
     /// If this is a MobilePay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMobilePay`), this contains additional details.
-    @objc private(set) public var mobilePay: STPPaymentMethodMobilePay?
+    private(set) public var mobilePay: STPPaymentMethodMobilePay?
     /// If this is a Vipps PaymentMethod (i.e. `self.type == STPPaymentMethodTypeVipps`), this contains additional details.
-    @objc private(set) public var vipps: STPPaymentMethodVipps?
+    private(set) public var vipps: STPPaymentMethodVipps?
     /// If this is a PayPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPay`), this contains additional details.
-    @objc private(set) public var payPay: STPPaymentMethodPayPay?
+    private(set) public var payPay: STPPaymentMethodPayPay?
     /// If this is a TWINT PaymentMethod (i.e. `self.type == STPPaymentMethodTypeTwint`), this contains additional details.
-    @objc private(set) public var twint: STPPaymentMethodTwint?
+    private(set) public var twint: STPPaymentMethodTwint?
     /// If this is a Wero PaymentMethod (i.e. `self.type == STPPaymentMethodTypeWero`), this contains additional details.
-    @objc private(set) public var wero: STPPaymentMethodWero?
+    private(set) public var wero: STPPaymentMethodWero?
     /// If this is a Pay by Bank PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayByBank`), this contains additional details.
-    @objc private(set) public var payByBank: STPPaymentMethodPayByBank?
+    private(set) public var payByBank: STPPaymentMethodPayByBank?
     /// If this is a Kakao Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKakaoPay`), this contains additional details.
-    @objc private(set) public var kakaoPay: STPPaymentMethodKakaoPay?
+    private(set) public var kakaoPay: STPPaymentMethodKakaoPay?
     /// If this is a Korean cards PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKrCard`), this contains additional details.
-    @objc private(set) public var krCard: STPPaymentMethodKrCard?
+    private(set) public var krCard: STPPaymentMethodKrCard?
     /// If this is a Naver Pay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeNaverPay`), this contains additional details.
-    @objc private(set) public var naverPay: STPPaymentMethodNaverPay?
+    private(set) public var naverPay: STPPaymentMethodNaverPay?
     /// If this is a PAYCO PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayco`), this contains additional details.
-    @objc private(set) public var payco: STPPaymentMethodPayco?
+    private(set) public var payco: STPPaymentMethodPayco?
     /// If this is a SeQura PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSequra`), this contains additional details.
-    @objc private(set) public var sequra: STPPaymentMethodSequra?
+    private(set) public var sequra: STPPaymentMethodSequra?
     /// If this is a Scalapay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeScalapay`), this contains additional details.
-    @objc private(set) public var scalapay: STPPaymentMethodScalapay?
+    private(set) public var scalapay: STPPaymentMethodScalapay?
     /// If this is a GoPay PaymentMethod, this contains additional details.
-    @objc private(set) public var goPay: STPPaymentMethodGoPay?
+    private(set) public var goPay: STPPaymentMethodGoPay?
     /// If this is a Mondu PaymentMethod, this contains additional details.
-    @objc private(set) public var mondu: STPPaymentMethodMondu?
+    private(set) public var mondu: STPPaymentMethodMondu?
     /// If this is a Naira USSD PaymentMethod, this contains additional details.
-    @objc private(set) public var ngUSSD: STPPaymentMethodNgUSSD?
+    private(set) public var ngUSSD: STPPaymentMethodNgUSSD?
     /// If this is a QRIS PaymentMethod, this contains additional details.
-    @objc private(set) public var qris: STPPaymentMethodQRIS?
+    private(set) public var qris: STPPaymentMethodQRIS?
     /// If this is a Naira Wallet PaymentMethod, this contains additional details.
-    @objc private(set) public var ngWallet: STPPaymentMethodNgWallet?
+    private(set) public var ngWallet: STPPaymentMethodNgWallet?
     /// If this is a ShopeePay PaymentMethod, this contains additional details.
-    @objc private(set) public var shopeePay: STPPaymentMethodShopeePay?
+    private(set) public var shopeePay: STPPaymentMethodShopeePay?
     /// If this is a TrueMoney PaymentMethod, this contains additional details.
-    @objc private(set) public var trueMoney: STPPaymentMethodTrueMoney?
+    private(set) public var trueMoney: STPPaymentMethodTrueMoney?
     /// If this is a Touch 'n Go PaymentMethod, this contains additional details.
-    @objc private(set) public var touchNGo: STPPaymentMethodTouchNGo?
+    private(set) public var touchNGo: STPPaymentMethodTouchNGo?
     /// If this is a GCash PaymentMethod, this contains additional details.
-    @objc private(set) public var gcash: STPPaymentMethodGCash?
+    private(set) public var gcash: STPPaymentMethodGCash?
     /// If this is a MoMo PaymentMethod, this contains additional details.
-    @objc private(set) public var momo: STPPaymentMethodMomo?
+    private(set) public var momo: STPPaymentMethodMomo?
     /// If this is a Naira bank transfer PaymentMethod, this contains additional details.
-    @objc private(set) public var ngBankTransfer: STPPaymentMethodNgBankTransfer?
+    private(set) public var ngBankTransfer: STPPaymentMethodNgBankTransfer?
     /// If this is a Naira card PaymentMethod, this contains additional details.
-    @objc private(set) public var ngCard: STPPaymentMethodNgCard?
+    private(set) public var ngCard: STPPaymentMethodNgCard?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
-    @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
+    private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
 
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
-    @objc private(set) public var customerId: String?
+    private(set) public var customerId: String?
 
     /// The payment details of a PaymentMethod that was created using Link.
     @_spi(InternalOnlyAPI) public var linkPaymentDetails: LinkPaymentDetails?
@@ -162,10 +162,10 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     }
 
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethod.self), self),
@@ -279,7 +279,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
 
     // MARK: - STPAPIResponseDecodable
     /// :nodoc:
-    @objc @_spi(InternalOnlyAPI) public required init(
+    @_spi(InternalOnlyAPI) public required init(
         stripeId: String,
         created: Date,
         type: STPPaymentMethodType,
@@ -292,7 +292,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         super.init()
     }
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

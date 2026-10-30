@@ -16,7 +16,6 @@ protocol LinkInlineSignupViewDelegate: AnyObject {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkInlineSignupView)
 final class LinkInlineSignupView: UIView {
 
     weak var delegate: LinkInlineSignupViewDelegate?

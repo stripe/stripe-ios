@@ -41,7 +41,7 @@ import UIKit
 
     private var _placeholderColor: UIColor?
     /// color to use for `placeholderText`, displayed when `text` is empty
-    @objc @_spi(InternalOnlyAPI) public var placeholderColor: UIColor? {
+    @_spi(InternalOnlyAPI) public var placeholderColor: UIColor? {
         get {
             _placeholderColor
         }
@@ -53,7 +53,7 @@ import UIKit
 
     private var _validText = false
     /// flag to indicate whether the contents are valid or not.
-    @objc @_spi(InternalOnlyAPI) public var validText: Bool {
+    @_spi(InternalOnlyAPI) public var validText: Bool {
         get {
             _validText
         }
@@ -74,7 +74,7 @@ import UIKit
 
     // MARK: - UITextField overrides
     /// :nodoc:
-    @objc public override var placeholder: String? {
+    public override var placeholder: String? {
         get {
             return super.placeholder
         }

@@ -11,7 +11,7 @@ import Foundation
 
 /// The billing address, a property on `STPPaymentMethodBillingDetails`
 public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// City/District/Suburb/Town/Village.
     @objc public var city: String?
@@ -27,7 +27,6 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
     @objc public var state: String?
 
     /// Convenience initializer for creating a STPPaymentMethodAddress from an STPAddress.
-    @objc
     public init(
         address: STPAddress
     ) {
@@ -41,7 +40,7 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
     }
 
     /// :nodoc:
-    @objc public required override init() {
+    public required override init() {
         super.init()
     }
 
@@ -49,7 +48,7 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
     private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodAddress.self), self),
@@ -67,7 +66,6 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
 
     // MARK: - STPFormEncodable
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: line1)): "line1",
@@ -80,13 +78,12 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
 
     // MARK: - NSCopying
-    @objc(copyWithZone:) func copy(with zone: NSZone? = nil) -> Any {
+    func copy(with zone: NSZone? = nil) -> Any {
         let copyPaymentMethodAddress = type(of: self).init()
 
         copyPaymentMethodAddress.allResponseFields = allResponseFields
@@ -101,7 +98,6 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
 
     // MARK: - Equality
     /// :nodoc:
-    @objc
     public override func isEqual(_ other: Any?) -> Bool {
         return isEqual(to: other as? STPPaymentMethodAddress)
     }
@@ -124,7 +120,6 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

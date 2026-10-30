@@ -9,7 +9,6 @@
 import Foundation
 
 /// Possible Token types
-@objc
 public enum STPTokenType: Int {
     /// Account token type
     case account = 0
@@ -27,19 +26,19 @@ public enum STPTokenType: Int {
 public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// The value of the token. You can store this value on your server and use it to make charges and customers.
     /// - seealso: https://stripe.com/docs/payments/charges-api
-    @objc public private(set) var tokenId: String
+    public private(set) var tokenId: String
     /// Whether or not this token was created in livemode. Will be YES if you used your Live Publishable Key, and NO if you used your Test Publishable Key.
-    @objc public private(set) var livemode = false
+    public private(set) var livemode = false
     /// The type of this token.
-    @objc public private(set) var type: STPTokenType = .account
+    public private(set) var type: STPTokenType = .account
     /// The credit card details that were used to create the token. Will only be set if the token was created via a credit card or Apple Pay, otherwise it will be
     /// nil.
-    @objc public private(set) var card: STPCard?
+    public private(set) var card: STPCard?
     /// The bank account details that were used to create the token. Will only be set if the token was created with a bank account, otherwise it will be nil.
-    @objc public private(set) var bankAccount: STPBankAccount?
+    public private(set) var bankAccount: STPBankAccount?
     /// When the token was created.
-    @objc public private(set) var created: Date
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var created: Date
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     required init(tokenId: String, type: STPTokenType, created: Date) {
         self.tokenId = tokenId
@@ -49,12 +48,12 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         return tokenId
     }
 
     /// :nodoc:
-    @objc public override var debugDescription: String {
+    public override var debugDescription: String {
         let token = tokenId
         let livemode = self.livemode ? "live mode" : "test mode"
         return "\(token) (\(livemode))"
@@ -62,13 +61,12 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
 
     // MARK: - Equality
     /// :nodoc:
-    @objc
     public override func isEqual(_ object: Any?) -> Bool {
         return isEqual(to: object as? STPToken)
     }
 
     /// :nodoc:
-    @objc public override var hash: Int {
+    public override var hash: Int {
         return tokenId.hash
     }
 
@@ -96,12 +94,11 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     }
 
     // MARK: - STPSourceProtocol
-    @objc public var stripeID: String {
+    public var stripeID: String {
         return tokenId
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else { return nil }
         let dict = response.stp_dictionaryByRemovingNulls()

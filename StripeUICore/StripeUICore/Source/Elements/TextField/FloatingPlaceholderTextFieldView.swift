@@ -13,7 +13,6 @@ import UIKit
  
  For internal SDK use only
  */
-@objc(STP_Internal_FloatingPlaceholderTextFieldView)
 class FloatingPlaceholderTextFieldView: UIView {
 
     // MARK: - Views

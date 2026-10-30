@@ -19,7 +19,7 @@ public class STPPaymentMethodUSBankAccountParams: NSObject {
     @objc public var accountHolderTypeString: String?
 
     /// Account holder type
-    @objc public var accountHolderType: STPPaymentMethodUSBankAccountHolderType {
+    public var accountHolderType: STPPaymentMethodUSBankAccountHolderType {
         get {
             return STPPaymentMethodUSBankAccountHolderType(string: accountHolderTypeString)
         }
@@ -40,7 +40,7 @@ public class STPPaymentMethodUSBankAccountParams: NSObject {
     @objc public var accountTypeString: String?
 
     /// Account type
-    @objc public var accountType: STPPaymentMethodUSBankAccountType {
+    public var accountType: STPPaymentMethodUSBankAccountType {
         get {
             return STPPaymentMethodUSBankAccountType(string: accountTypeString)
         }
@@ -54,7 +54,7 @@ public class STPPaymentMethodUSBankAccountParams: NSObject {
     @objc public var routingNumber: String?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Internal-only option to create directly from a link_account_session ID
     @objc @_spi(InternalOnlyAPI) public var linkAccountSessionID: String?

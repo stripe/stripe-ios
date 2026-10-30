@@ -10,7 +10,7 @@ import Foundation
 /// An object representing parameters used to update a PaymentMethod object.
 /// - seealso: https://stripe.com/docs/api/payment_methods/update
 public class STPPaymentMethodUpdateParams: NSObject {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
     @objc public var billingDetails: STPPaymentMethodBillingDetails?
@@ -18,7 +18,6 @@ public class STPPaymentMethodUpdateParams: NSObject {
     /// - Note: Only a card's `cvc`, `expMonth`, `expYear`, and `networks.preferred` can be updated.
     @objc public var card: STPPaymentMethodCardParams?
 
-    @objc
     public convenience init(
         card: STPPaymentMethodCardParams,
         billingDetails: STPPaymentMethodBillingDetails?
@@ -33,12 +32,10 @@ public class STPPaymentMethodUpdateParams: NSObject {
 
 extension STPPaymentMethodUpdateParams: STPFormEncodable {
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: billingDetails)): "billing_details",

@@ -14,7 +14,7 @@ import UIKit
 #endif
 
 /// An enum that defines the different types of buttons that are able to be customized.
-@objc public enum STPThreeDSCustomizationButtonType: Int {
+public enum STPThreeDSCustomizationButtonType: Int {
     /// The submit button type.
     case submit = 0
     /// The continue button type.
@@ -28,7 +28,7 @@ import UIKit
 }
 
 /// An enumeration of the case transformations that can be applied to the button's title
-@objc public enum STPThreeDSButtonTitleStyle: Int {
+public enum STPThreeDSButtonTitleStyle: Int {
     /// Default style, doesn't modify the title
     case `default`
     /// Applies localizedUppercaseString to the title
@@ -42,7 +42,7 @@ import UIKit
 /// A customization object to use to configure the UI of a button.
 public class STPThreeDSButtonCustomization: NSObject {
     /// The default settings for the provided button type.
-    @objc(defaultSettingsForButtonType:) public class func defaultSettings(
+    public class func defaultSettings(
         for type: STPThreeDSCustomizationButtonType
     ) -> STPThreeDSButtonCustomization {
         let stdsButtonCustomization = STDSButtonCustomization.defaultSettings(
@@ -59,7 +59,6 @@ public class STPThreeDSButtonCustomization: NSObject {
     internal var buttonCustomization: STDSButtonCustomization
 
     /// Initializes an instance of STDSButtonCustomization with the given backgroundColor and colorRadius.
-    @objc
     public init(
         backgroundColor: UIColor,
         cornerRadius: CGFloat
@@ -75,7 +74,7 @@ public class STPThreeDSButtonCustomization: NSObject {
     /// The default for .resend and .cancel is clear.
     /// The default for .submit, .continue, and .next is blue.
 
-    @objc public var backgroundColor: UIColor {
+    public var backgroundColor: UIColor {
         get {
             return buttonCustomization.backgroundColor
         }
@@ -85,7 +84,7 @@ public class STPThreeDSButtonCustomization: NSObject {
     }
     /// The corner radius of the button. Defaults to 8.
 
-    @objc public var cornerRadius: CGFloat {
+    public var cornerRadius: CGFloat {
         get {
             return buttonCustomization.cornerRadius
         }
@@ -95,7 +94,7 @@ public class STPThreeDSButtonCustomization: NSObject {
     }
     /// The capitalization style of the button title.
 
-    @objc public var titleStyle: STPThreeDSButtonTitleStyle {
+    public var titleStyle: STPThreeDSButtonTitleStyle {
         get {
             return STPThreeDSButtonTitleStyle(rawValue: buttonCustomization.titleStyle.rawValue)!
         }
@@ -105,7 +104,7 @@ public class STPThreeDSButtonCustomization: NSObject {
     }
     /// The font of the title.
 
-    @objc public var font: UIFont? {
+    public var font: UIFont? {
         get {
             return buttonCustomization.font
         }
@@ -115,7 +114,7 @@ public class STPThreeDSButtonCustomization: NSObject {
     }
     /// The text color of the title.
 
-    @objc public var textColor: UIColor? {
+    public var textColor: UIColor? {
         get {
             return buttonCustomization.textColor
         }

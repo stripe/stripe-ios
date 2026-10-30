@@ -35,7 +35,6 @@ import Foundation
         return newString
     }
 
-    @objc(queryStringFromParameters:)
     public static func queryString(from parameters: [String: Any]) -> String {
         return query(parameters)
     }

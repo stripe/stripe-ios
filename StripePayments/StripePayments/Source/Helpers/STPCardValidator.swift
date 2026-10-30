@@ -11,7 +11,7 @@ import Foundation
 
 /// These fields indicate whether a card field represents a valid value, invalid
 /// value, or incomplete value.
-@objc @frozen public enum STPCardValidationState: Int {
+@frozen public enum STPCardValidationState: Int {
     /// The field's contents are valid. For example, a valid, 16-digit card number.
     /// Note that valid values may not be complete. For example: a US Zip code can
     /// be 5 or 9 digits. A 5-digit code is Valid, but more text could be entered
@@ -32,7 +32,6 @@ import Foundation
 @objc(STPCardValidator)
 public class STPCardValidator: NSObject {
     /// Returns a copy of the passed string with all non-numeric characters removed.
-    @objc(sanitizedNumericStringForString:)
     public class func sanitizedNumericString(
         for string: String
     )
@@ -42,7 +41,6 @@ public class STPCardValidator: NSObject {
     }
 
     /// Returns a copy of the passed string with all characters removed that do not exist within a postal code.
-    @objc(sanitizedPostalStringForString:)
     public class func sanitizedPostalString(
         for string: String
     )
@@ -64,7 +62,6 @@ public class STPCardValidator: NSObject {
     }
 
     /// Whether or not the target string contains only numeric characters.
-    @objc(stringIsNumeric:)
     public class func stringIsNumeric(_ string: String) -> Bool {
         return
             (string as NSString).rangeOfCharacter(from: CharacterSet.stp_invertedAsciiDigit)
@@ -90,7 +87,6 @@ public class STPCardValidator: NSObject {
     /// STPCardValidationStateInvalid if the number is invalid, or
     /// STPCardValidationStateIncomplete if the number is a substring of a valid
     /// card (e.g. @"4242").
-    @objc(validationStateForNumber:validatingCardBrand:)
     public class func validationState(
         forNumber cardNumber: String?,
         validatingCardBrand: Bool
@@ -135,7 +131,6 @@ public class STPCardValidator: NSObject {
     /// - Returns: The brand for that card number. The example parameters would
     /// return STPCardBrandVisa, STPCardBrandMasterCard, and
     /// STPCardBrandUnknown, respectively.
-    @objc(brandForNumber:)
     public class func brand(forNumber cardNumber: String) -> STPCardBrand {
         let sanitizedNumber = self.sanitizedNumericString(for: cardNumber)
         let brands = self.possibleBrands(forNumber: sanitizedNumber)
@@ -150,7 +145,6 @@ public class STPCardValidator: NSObject {
     /// cards contain 15 characters.
     /// - Parameter brand: The brand to return lengths for.
     /// - Returns: The set of possible lengths cards associated with that brand can be.
-    @objc(lengthsForCardBrand:)
     public class func lengths(for brand: STPCardBrand) -> Set<UInt> {
         var set: Set<UInt> = []
         let binRanges = STPBINController.shared.binRanges(for: brand)
@@ -166,7 +160,6 @@ public class STPCardValidator: NSObject {
     /// would return 16 for the that card brand.
     /// - Parameter brand: The brand to return the max length for.
     /// - Returns: The maximum length card numbers associated with that brand could be.
-    @objc(maxLengthForCardBrand:)
     public class func maxLength(for brand: STPCardBrand) -> Int {
         var maxLength = -1
         for length in self.lengths(for: brand) {
@@ -183,7 +176,6 @@ public class STPCardValidator: NSObject {
     /// American Express cards display their final 5 digits, e.g. "10005".
     /// - Parameter brand: The brand to return the fragment length for.
     /// - Returns: The final fragment length card numbers associated with that brand use.
-    @objc(fragmentLengthForCardBrand:)
     public class func fragmentLength(for brand: STPCardBrand) -> Int {
         return Int(self.cardNumberFormat(for: brand).last?.uintValue ?? 0)
     }
@@ -197,7 +189,6 @@ public class STPCardValidator: NSObject {
     /// STPCardValidationStateInvalid if the month is invalid, or
     /// STPCardValidationStateIncomplete if the month is a substring of a valid
     /// month (e.g. @"0" or @"1").
-    @objc(validationStateForExpirationMonth:)
     public class func validationState(
         forExpirationMonth expirationMonth: String
     )
@@ -244,7 +235,6 @@ public class STPCardValidator: NSObject {
     /// STPCardValidationStateInvalid if the year is invalid, or
     /// STPCardValidationStateIncomplete if the year is a substring of a valid
     /// year (e.g. @"1" or @"2").
-    @objc(validationStateForExpirationYear:inMonth:)
     public class func validationState(
         forExpirationYear expirationYear: String,
         inMonth expirationMonth: String
@@ -261,7 +251,6 @@ public class STPCardValidator: NSObject {
     /// 4 digits, while all others are 3).
     /// - Parameter brand: The brand to return the max CVC length for.
     /// - Returns: The maximum length of CVC numbers for cards associated with that brand.
-    @objc(maxCVCLengthForCardBrand:)
     public class func maxCVCLength(for brand: STPCardBrand) -> UInt {
         switch brand {
         case .amex, .unknown:
@@ -281,7 +270,6 @@ public class STPCardValidator: NSObject {
     /// STPCardBrandVisa, STPCardValidationStateValid for @"1234" and
     /// STPCardBrandAmericanExpress, STPCardValidationStateIncomplete for @"12" and
     /// STPCardBrandVisa, and STPCardValidationStateInvalid for @"12345" and any brand.
-    @objc(validationStateForCVC:cardBrand:)
     public class func validationState(
         forCVC cvc: String,
         cardBrand brand: STPCardBrand
@@ -311,7 +299,6 @@ public class STPCardValidator: NSObject {
     /// - Returns: STPCardValidationStateValid if all fields are valid,
     /// STPCardValidationStateInvalid if any field is invalid, or
     /// STPCardValidationStateIncomplete if all fields are either incomplete or valid.
-    @objc(validationStateForCard:)
     public class func validationState(forCard card: STPCardParams) -> STPCardValidationState {
         return self.validationState(
             forCard: card,

@@ -24,7 +24,6 @@ public class STPConnectAccountCompanyParams: NSObject {
     /// Whether the company’s directors have been provided.
     /// Set this Boolean to true after creating all the company’s directors with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.director requirement.
     /// This value is not automatically set to true after creating directors, so it needs to be updated to indicate all directors have been provided.
-    @objc(directorsProvided)
     @available(swift, obsoleted: 1.0, renamed: "directorsProvided")
     public var directorsProvided_objc: NSNumber? {
         get { directorsProvided.map { NSNumber(value: $0) } }
@@ -47,7 +46,6 @@ public class STPConnectAccountCompanyParams: NSObject {
 
     /// Whether the company’s owners have been provided.
     /// Set this Boolean to true after creating all the company’s owners with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.owner requirement.
-    @objc(ownersProvided)
     @available(swift, obsoleted: 1.0, renamed: "ownersProvided")
     public var ownersProvided_objc: NSNumber? {
         get { ownersProvided.map { NSNumber(value: $0) } }
@@ -72,10 +70,10 @@ public class STPConnectAccountCompanyParams: NSObject {
     @objc public var vatID: String?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPConnectAccountCompanyParams.self), self),
@@ -104,7 +102,6 @@ extension STPConnectAccountCompanyParams: STPFormEncodable {
     @objc private var directorsProvided_apiValue: NSNumber? { directorsProvided.map { NSNumber(value: $0) } }
     @objc private var ownersProvided_apiValue: NSNumber? { ownersProvided.map { NSNumber(value: $0) } }
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: address)): "address",
@@ -122,7 +119,6 @@ extension STPConnectAccountCompanyParams: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }

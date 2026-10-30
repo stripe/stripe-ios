@@ -9,7 +9,6 @@
 import UIKit
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkAccountSession)
 @_spi(InternalOnlyAPI) public class LinkAccountSession: NSObject, STPAPIResponseDecodable {
     @_spi(InternalOnlyAPI) public let stripeID: String
     @_spi(InternalOnlyAPI) public let livemode: Bool

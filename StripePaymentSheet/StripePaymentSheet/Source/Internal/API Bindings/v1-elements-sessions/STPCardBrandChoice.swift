@@ -25,7 +25,7 @@ class STPCardBrandChoice: NSObject {
     let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc override var description: String {
+    override var description: String {
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPCardBrandChoice.self), self),
@@ -53,7 +53,6 @@ class STPCardBrandChoice: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPCardBrandChoice: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response else {
             return nil

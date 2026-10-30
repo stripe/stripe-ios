@@ -12,7 +12,6 @@ import UIKit
 extension LinkAuthFlowViewController {
 
     /// For internal SDK use only
-    @objc(STP_Internal_LinkPresentationController)
     final class PresentationController: UIPresentationController {
         struct Constants {
             static let padding: CGFloat = 16

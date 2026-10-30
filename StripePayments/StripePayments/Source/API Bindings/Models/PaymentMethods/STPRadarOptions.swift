@@ -25,12 +25,10 @@ import Foundation
 
 extension STPRadarOptions: STPFormEncodable {
 
-    @objc
     public class func rootObjectName() -> String? {
         return "radar_options"
     }
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: hcaptchaToken)): "hcaptcha_token",

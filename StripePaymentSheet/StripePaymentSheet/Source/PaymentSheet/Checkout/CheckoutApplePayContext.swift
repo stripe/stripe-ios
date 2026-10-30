@@ -193,7 +193,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
     }
 
-    @objc nonisolated func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
+    nonisolated func presentationWindow(for controller: PKPaymentAuthorizationController) -> UIWindow? {
         return presentationWindow
     }
 

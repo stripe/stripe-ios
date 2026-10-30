@@ -11,11 +11,11 @@ import Foundation
 /// An object representing parameters used to create a Source object.
 /// - seealso: https://stripe.com/docs/api#create_source
 public class STPSourceParams: NSObject, STPFormEncodable, NSCopying {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The type of the source to create. Required.
 
-    @objc public var type: STPSourceType {
+    public var type: STPSourceType {
         get {
             return STPSource.type(from: rawTypeString ?? "")
         }
@@ -51,7 +51,7 @@ public class STPSourceParams: NSObject, STPFormEncodable, NSCopying {
     /// Whether this source should be reusable or not. `usage` may be "reusable" or
     /// "single_use". Some source types may or may not be reusable by construction,
     /// while other may leave the option at creation.
-    @objc public var usage: STPSourceUsage
+    public var usage: STPSourceUsage
 
     /// Initializes an empty STPSourceParams.
     override public required init() {
@@ -69,7 +69,6 @@ extension STPSourceParams {
     /// - seealso: https://stripe.com/docs/sources/cards#create-source
     /// - Parameter card:        An object containing the user's card details
     /// - Returns: an STPSourceParams object populated with the provided card details.
-    @objc
     public class func cardParams(withCard card: STPCardParams) -> STPSourceParams {
         let params = self.init()
         params.type = .card
@@ -113,7 +112,7 @@ extension STPSourceParams {
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPSourceParams.self), self),

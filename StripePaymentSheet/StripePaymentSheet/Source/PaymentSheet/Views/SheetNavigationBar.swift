@@ -18,7 +18,6 @@ protocol SheetNavigationBarDelegate: AnyObject {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
 
     static func height(appearance: PaymentSheet.Appearance) -> CGFloat {

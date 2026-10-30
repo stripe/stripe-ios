@@ -18,7 +18,6 @@ protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
     func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
 }
 
-@objc(STP_Internal_CustomerSavedPaymentMethodsViewController)
 class CustomerSavedPaymentMethodsViewController: UIViewController {
     enum Error: Swift.Error {
         case sheetNavigationBarDidBack

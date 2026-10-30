@@ -15,7 +15,6 @@ import UIKit
 extension PayWithLinkViewController {
 
     /// For internal SDK use only
-    @objc(STP_Internal_NewPaymentViewController)
     final class NewPaymentViewController: BaseViewController {
         struct Constants {
             static let applePayButtonHeight: CGFloat = 48

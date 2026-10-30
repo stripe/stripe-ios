@@ -1058,7 +1058,6 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
 // MARK: - PaymentSheetAuthenticationContext
 /// A simple STPAuthenticationContext that wraps a UIViewController
 /// For internal SDK use only
-@objc(STP_Internal_AuthenticationContext)
 class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
         presentingViewController.present(authenticationViewController, animated: true, completion: nil)

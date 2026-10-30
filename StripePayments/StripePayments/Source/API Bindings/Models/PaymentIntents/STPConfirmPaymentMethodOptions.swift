@@ -40,16 +40,16 @@ public class STPConfirmPaymentMethodOptions: NSObject {
 
     /// Initializes payment method options with Klarna options.
     /// - Parameter klarnaOptions: Options for a Klarna Payment Method.
-    @objc @_spi(KlarnaSDKPrivatePreview) public convenience init(klarnaOptions: STPConfirmKlarnaOptions) {
+    @_spi(KlarnaSDKPrivatePreview) public convenience init(klarnaOptions: STPConfirmKlarnaOptions) {
         self.init()
         self.klarnaOptions = klarnaOptions
     }
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
@@ -68,7 +68,6 @@ public class STPConfirmPaymentMethodOptions: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConfirmPaymentMethodOptions: STPFormEncodable {
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: alipayOptions)): "alipay",
@@ -82,7 +81,6 @@ extension STPConfirmPaymentMethodOptions: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return "payment_method_options"
     }

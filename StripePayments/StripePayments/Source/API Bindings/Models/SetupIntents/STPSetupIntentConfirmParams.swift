@@ -15,11 +15,10 @@ import Foundation
 /// Instead of passing this to `STPAPIClient.confirmSetupIntent(...)` directly, we recommend using `STPPaymentHandler` to handle any additional steps for you.
 /// - seealso: https://stripe.com/docs/api/setup_intents/confirm
 public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Initialize this `STPSetupIntentConfirmParams` with a `clientSecret`.
     /// - Parameter clientSecret: the client secret for this SetupIntent
-    @objc
     public init(
         clientSecret: String
     ) {
@@ -32,7 +31,6 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// Use this initializer for SetupIntents that already have a PaymentMethod attached.
     /// - Parameter clientSecret: the client secret for this SetupIntent
     /// - Parameter paymentMethodType: the known type of the SetupIntent's attached PaymentMethod
-    @objc
     public init(
         clientSecret: String,
         paymentMethodType: STPPaymentMethodType
@@ -65,7 +63,6 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// If set to false, STPSetupIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
     /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
     /// app.
-    @objc(useStripeSDK)
     @available(swift, obsoleted: 1.0, renamed: "useStripeSDK")
     public var useStripeSDK_objc: NSNumber? {
         get {
@@ -118,7 +115,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPSetupIntentConfirmParams.self), self),
@@ -148,7 +145,6 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
 
     // MARK: - NSCopying
     /// :nodoc:
-    @objc
     public func copy(with zone: NSZone? = nil) -> Any {
         let copy = STPSetupIntentConfirmParams()
 

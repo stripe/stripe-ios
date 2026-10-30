@@ -11,13 +11,13 @@ import Foundation
 
 /// An object representing parameters used to create a GoPay Payment Method.
 public class STPPaymentMethodGoPayParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc public class func rootObjectName() -> String? {
+    public class func rootObjectName() -> String? {
         return "gopay"
     }
 
-    @objc public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [:]
     }
 }

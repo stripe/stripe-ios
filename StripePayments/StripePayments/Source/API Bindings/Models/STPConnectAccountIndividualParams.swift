@@ -23,7 +23,7 @@ public class STPConnectAccountIndividualParams: NSObject {
 
     /// The individual’s date of birth.
     /// Must include `day`, `month`, and `year`, and only those fields are used.
-    @objc public var dateOfBirth: DateComponents?
+    public var dateOfBirth: DateComponents?
 
     /// The individual's email address.
     @objc public var email: String?
@@ -72,10 +72,10 @@ public class STPConnectAccountIndividualParams: NSObject {
     @objc public var verification: STPConnectAccountIndividualVerification?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(
@@ -121,7 +121,6 @@ public class STPConnectAccountIndividualParams: NSObject {
 }
 
 extension STPConnectAccountIndividualParams: STPFormEncodable {
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: address)): "address",
@@ -145,7 +144,6 @@ extension STPConnectAccountIndividualParams: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
@@ -162,11 +160,10 @@ public class STPConnectAccountIndividualVerification: NSObject {
     /// A document showing address, either a passport, local ID card, or utility bill from a well-known utility company.
     @objc public var additionalDocument: STPConnectAccountVerificationDocument?
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
 extension STPConnectAccountIndividualVerification: STPFormEncodable {
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: document)): "document",
@@ -174,7 +171,6 @@ extension STPConnectAccountIndividualVerification: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
@@ -193,11 +189,10 @@ public class STPConnectAccountVerificationDocument: NSObject {
     /// - seealso: https://stripe.com/docs/api/files/create for file uploads
     @objc public var front: String?
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
 extension STPConnectAccountVerificationDocument: STPFormEncodable {
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: back)): "back",
@@ -205,7 +200,6 @@ extension STPConnectAccountVerificationDocument: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
@@ -226,11 +220,10 @@ public class STPDateOfBirth: NSObject {
     /// The four-digit year of birth.
     @objc public var year = 0
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
 extension STPDateOfBirth: STPFormEncodable {
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: day)): "day",
@@ -239,7 +232,6 @@ extension STPDateOfBirth: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }

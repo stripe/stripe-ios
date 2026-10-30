@@ -39,10 +39,10 @@ public class STPConnectAccountAddress: NSObject {
     @objc public var town: String?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPConnectAccountAddress.self), self),
@@ -62,7 +62,6 @@ public class STPConnectAccountAddress: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConnectAccountAddress: STPFormEncodable {
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: line1)): "line1",
@@ -75,7 +74,6 @@ extension STPConnectAccountAddress: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }

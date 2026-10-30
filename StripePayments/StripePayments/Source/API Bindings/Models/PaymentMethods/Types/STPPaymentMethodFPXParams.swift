@@ -10,11 +10,11 @@ import Foundation
 
 /// An object representing parameters used to create an FPX Payment Method
 public class STPPaymentMethodFPXParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The customer's bank. Required.
 
-    @objc public var bank: STPFPXBankBrand {
+    public var bank: STPFPXBankBrand {
         get {
             return STPFPXBank.brandFrom(rawBankString)
         }

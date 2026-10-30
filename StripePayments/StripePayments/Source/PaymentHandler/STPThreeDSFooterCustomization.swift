@@ -17,7 +17,6 @@ import UIKit
 /// expand when tapped. This object configures the appearance of that view.
 public class STPThreeDSFooterCustomization: NSObject {
     /// The default settings.
-    @objc
     public class func defaultSettings() -> STPThreeDSFooterCustomization {
         return STPThreeDSFooterCustomization()
     }
@@ -26,7 +25,7 @@ public class STPThreeDSFooterCustomization: NSObject {
     /// The background color of the footer.
     /// Defaults to gray.
 
-    @objc public var backgroundColor: UIColor {
+    public var backgroundColor: UIColor {
         get {
             return footerCustomization.backgroundColor
         }
@@ -36,7 +35,7 @@ public class STPThreeDSFooterCustomization: NSObject {
     }
 
     /// The color of the chevron. Defaults to a dark gray.
-    @objc public var chevronColor: UIColor {
+    public var chevronColor: UIColor {
         get {
             return footerCustomization.chevronColor
         }
@@ -46,7 +45,7 @@ public class STPThreeDSFooterCustomization: NSObject {
     }
 
     /// The color of the heading text. Defaults to black.
-    @objc public var headingTextColor: UIColor {
+    public var headingTextColor: UIColor {
         get {
             return footerCustomization.headingTextColor
         }
@@ -56,7 +55,7 @@ public class STPThreeDSFooterCustomization: NSObject {
     }
     /// The font to use for the heading text.
 
-    @objc public var headingFont: UIFont {
+    public var headingFont: UIFont {
         get {
             return footerCustomization.headingFont
         }
@@ -66,7 +65,7 @@ public class STPThreeDSFooterCustomization: NSObject {
     }
 
     /// The font of the text.
-    @objc public var font: UIFont? {
+    public var font: UIFont? {
         get {
             return footerCustomization.font
         }
@@ -76,7 +75,7 @@ public class STPThreeDSFooterCustomization: NSObject {
     }
 
     /// The color of the text.
-    @objc public var textColor: UIColor? {
+    public var textColor: UIColor? {
         get {
             return footerCustomization.textColor
         }

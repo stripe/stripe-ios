@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 /// The various funding sources for a payment card.
-@objc
 public enum STPCardFundingType: Int {
     /// Debit card funding
     case debit
@@ -27,40 +26,39 @@ public enum STPCardFundingType: Int {
 /// - seealso: https://stripe.com/docs/api#cards
 public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// The last 4 digits of the card.
-    @objc public internal(set) var last4: String
+    public internal(set) var last4: String
     /// For cards made with Apple Pay, this refers to the last 4 digits of the
     /// "Device Account Number" for the tokenized card. For regular cards, it will
     /// be nil.
-    @objc public internal(set) var dynamicLast4: String?
+    public internal(set) var dynamicLast4: String?
     /// Whether or not the card originated from Apple Pay.
 
-    @objc public var isApplePayCard: Bool {
+    public var isApplePayCard: Bool {
         return (allResponseFields["tokenization_method"] as? String) == "apple_pay"
     }
     /// The card's expiration month. 1-indexed (i.e. 1 == January)
-    @objc public internal(set) var expMonth = 0
+    public internal(set) var expMonth = 0
     /// The card's expiration year.
-    @objc public internal(set) var expYear = 0
+    public internal(set) var expYear = 0
     /// The cardholder's name.
-    @objc public internal(set) var name: String?
+    public internal(set) var name: String?
     /// The cardholder's address.
-    @objc public internal(set) var address: STPAddress?
+    public internal(set) var address: STPAddress?
     /// The issuer of the card.
-    @objc public internal(set) var brand: STPCardBrand = .unknown
+    public internal(set) var brand: STPCardBrand = .unknown
     /// The funding source for the card (credit, debit, prepaid, or other)
-    @objc public internal(set) var funding: STPCardFundingType = .other
+    public internal(set) var funding: STPCardFundingType = .other
     /// Two-letter ISO code representing the issuing country of the card.
-    @objc public internal(set) var country: String?
+    public internal(set) var country: String?
     /// This is only applicable when tokenizing debit cards to issue payouts to managed
     /// accounts. You should not set it otherwise. The card can then be used as a
     /// transfer destination for funds in this currency.
-    @objc public internal(set) var currency: String?
+    public internal(set) var currency: String?
 
     /// Returns a string representation for the provided card brand;
     /// i.e. `STPCard.string(from brand: .visa) == "Visa"`.
     /// - Parameter brand: the brand you want to convert to a string
     /// - Returns: A string representing the brand, suitable for displaying to a user.
-    @objc(stringFromBrand:)
     public class func string(from brand: STPCardBrand) -> String {
         return STPCardBrandUtilities.stringFrom(brand) ?? ""
     }
@@ -75,7 +73,6 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// the Stripe API
     /// - Returns: an enum value mapped to that string. If the string is unrecognized,
     /// returns STPCardBrandUnknown.
-    @objc(brandFromString:)
     public class func brand(from string: String) -> STPCardBrand {
         // Documentation: https://stripe.com/docs/api#card_object-brand
         let brand = string.lowercased()
@@ -117,7 +114,6 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         message:
             "You cannot directly instantiate an STPCard. You should only use one that has been returned from an STPAPIClient callback."
     )
-    @objc(initWithID:brand:last4:expMonth:expYear:funding:)
     public init(
         id cardID: String,
         brand: STPCardBrand,
@@ -143,7 +139,6 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// the Stripe API
     /// - Returns: an enum value mapped to that string. If the string is unrecognized,
     /// returns `STPCardFundingTypeOther`.
-    @objc(fundingFromString:)
     public class func funding(from string: String) -> STPCardFundingType {
         let key = string.lowercased()
         let fundingNumber = self.stringToFundingMapping()[key]
@@ -155,7 +150,7 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         return .other
     }
 
-    @objc public var stripeID: String
+    public var stripeID: String
     internal(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // See STPCard+Private.h
@@ -182,13 +177,12 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
 
     // MARK: - Equality
     /// :nodoc:
-    @objc
     public override func isEqual(_ other: Any?) -> Bool {
         return isEqual(to: other as? STPCard)
     }
 
     /// :nodoc:
-    @objc public override var hash: Int {
+    public override var hash: Int {
         return stripeID.hash
     }
 
@@ -206,7 +200,7 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPCard.self), self),
@@ -232,7 +226,7 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc func stripeObject() -> String {
+    func stripeObject() -> String {
         return "card"
     }
 
@@ -245,7 +239,6 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         super.init()
     }
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil
@@ -301,40 +294,40 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         message:
             "Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead."
     )
-    @objc public private(set) var metadata: [String: String]?
+    public private(set) var metadata: [String: String]?
     /// The Stripe ID for the card.
     @available(*, deprecated, message: "Use stripeID (defined in STPSourceProtocol)")
-    @objc public var cardId: String? {
+    public var cardId: String? {
         return stripeID
     }
     /// The first line of the cardholder's address
     @available(*, deprecated, message: "Use address.line1")
-    @objc public var addressLine1: String? {
+    public var addressLine1: String? {
         return address?.line1
     }
     /// The second line of the cardholder's address
     @available(*, deprecated, message: "Use address.line2")
-    @objc public var addressLine2: String? {
+    public var addressLine2: String? {
         return address?.line2
     }
     /// The city of the cardholder's address
     @available(*, deprecated, message: "Use address.city")
-    @objc public var addressCity: String? {
+    public var addressCity: String? {
         return address?.city
     }
     /// The state of the cardholder's address
     @available(*, deprecated, message: "Use address.state")
-    @objc public var addressState: String? {
+    public var addressState: String? {
         return address?.state
     }
     /// The zip code of the cardholder's address
     @available(*, deprecated, message: "Use address.postalCode")
-    @objc public var addressZip: String? {
+    public var addressZip: String? {
         return address?.postalCode
     }
     /// The country of the cardholder's address
     @available(*, deprecated, message: "Use address.country")
-    @objc public var addressCountry: String? {
+    public var addressCountry: String? {
         return address?.country
     }
 }

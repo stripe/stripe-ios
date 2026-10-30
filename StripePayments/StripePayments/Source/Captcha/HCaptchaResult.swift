@@ -12,7 +12,6 @@ import Foundation
 
  This may contain the validation token on success, or an error that may have occurred.
  */
-@objc
 @_spi(InternalOnlyAPI) public class HCaptchaResult: NSObject {
 
     /// Result token
@@ -37,7 +36,6 @@ import Foundation
 
      - Throws: `HCaptchaError`
      */
-    @objc
     public func dematerialize() throws -> String {
         manager.resultHandled = true
 

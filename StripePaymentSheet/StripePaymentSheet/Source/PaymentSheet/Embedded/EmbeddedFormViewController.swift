@@ -359,7 +359,7 @@ class EmbeddedFormViewController: UIViewController {
 
     // MARK: - Tap handling
 
-    @objc func didTapPrimaryButton() {
+    func didTapPrimaryButton() {
         // If the form has overridden the primary buy button, hand control over to the form
         guard paymentMethodFormViewController.overridePrimaryButtonState == nil else {
             paymentMethodFormViewController.didTapCallToActionButton(from: self)
@@ -421,7 +421,7 @@ class EmbeddedFormViewController: UIViewController {
         }
     }
 
-    @objc func didTapPrimaryButtonWhenDisabled() {
+    func didTapPrimaryButtonWhenDisabled() {
         // When the disabled button is tapped, show validation errors on all form fields
 #if !os(visionOS)
         UINotificationFeedbackGenerator().notificationOccurred(.error)

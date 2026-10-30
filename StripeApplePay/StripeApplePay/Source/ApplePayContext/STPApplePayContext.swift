@@ -182,7 +182,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// - Parameters:
     ///   - paymentRequest:      The payment request to use with Apple Pay.
     ///   - delegate:                    The delegate.
-    @objc(initWithPaymentRequest:delegate:)
     public required init?(
         paymentRequest: PKPaymentRequest,
         delegate: _stpinternal_STPApplePayContextDelegateBase?
@@ -230,7 +229,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     ///   - completion:               Called after the Apple Pay sheet is presented
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
-    @objc(presentApplePayWithCompletion:)
     public func presentApplePay(completion: STPVoidBlock? = nil) {
         // This isn't great: We should encourage the use of presentApplePay(from window:) instead.
         let window = UIApplication.shared.connectedScenes
@@ -245,7 +243,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// - Parameters:
     ///   - window:                   The UIWindow to host the Apple Pay sheet
     ///   - completion:               Called after the Apple Pay sheet is presented
-    @objc(presentApplePayFromWindow:completion:)
     public func presentApplePay(from window: UIWindow?, completion: STPVoidBlock? = nil) {
         presentationWindow = window
         guard !didPresentApplePay, !didFinish else {
@@ -282,7 +279,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// - Parameters:
     ///   - viewController:      The UIViewController instance to present the Apple Pay sheet on
     ///   - completion:               Called after the Apple Pay sheet is presented
-    @objc(presentApplePayOnViewController:completion:)
     @available(
         *,
         deprecated,
@@ -301,7 +297,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// - Parameter completion: Called after the Apple Pay sheet is dismissed.
     /// - Note: Does not call the `applePayContext:didCompleteWithStatus:` delegate method.
     /// - Note: You must create a new instance of ApplePayContext after using this method.
-    @objc(dismissWithCompletion:)
     public func dismiss(completion: STPVoidBlock? = nil) {
         guard didPresentApplePay, !didFinish else {
             return
@@ -326,12 +321,12 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
-    @objc public var apiClient: STPAPIClient = STPAPIClient.shared
+    public var apiClient: STPAPIClient = STPAPIClient.shared
     /// ApplePayContext passes this to the /confirm endpoint for PaymentIntents if it did not collect shipping details itself.
     /// :nodoc:
     @_spi(InternalOnlyAPI) public var shippingDetails: StripeAPI.ShippingDetails?
     weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
-    @objc var authorizationController: PKPaymentAuthorizationController
+    var authorizationController: PKPaymentAuthorizationController
     @_spi(InternalOnlyAPI) public var returnUrl: String?
 
     @_spi(InternalOnlyAPI) @frozen public enum ConfirmType {
@@ -359,7 +354,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     var didFinish = false
 
     /// :nodoc:
-    @objc public override func responds(to aSelector: Selector!) -> Bool {
+    public override func responds(to aSelector: Selector!) -> Bool {
         // ApplePayContextDelegate exposes methods that map 1:1 to PKPaymentAuthorizationControllerDelegate methods
         // We want this method to return YES for these methods IFF they are implemented by our delegate
 
@@ -615,7 +610,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
     }
 
-    @objc public func paymentAuthorizationControllerDidFinish(
+    public func paymentAuthorizationControllerDidFinish(
         _ controller: PKPaymentAuthorizationController
     ) {
         // Note: If you don't dismiss the VC, the UI disappears, the VC blocks interaction, and this method gets called again.
@@ -650,7 +645,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     /// :nodoc:
-    @objc public func presentationWindow(
+    public func presentationWindow(
         for controller: PKPaymentAuthorizationController
     ) -> UIWindow? {
         return presentationWindow

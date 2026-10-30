@@ -20,7 +20,6 @@ import UIKit
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_DoneButtonToolbar)
 @_spi(InternalOnlyAPI) public final class DoneButtonToolbar: UIToolbar {
 
     public weak var doneButtonToolbarDelegate: DoneButtonToolbarDelegate?

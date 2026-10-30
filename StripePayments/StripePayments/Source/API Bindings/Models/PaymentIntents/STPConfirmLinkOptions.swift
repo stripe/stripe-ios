@@ -14,9 +14,9 @@ import Foundation
     /// Providing this parameter will attach the payment method to the PaymentIntent’s Customer, if present, after the Intent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be attached to a Customer after the transaction completes.
     ///
     /// If setup_future_usage is already set, you may only update the value from on_session to off_session.
-    @objc public var setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
+    public var setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
 // MARK: - STPFormEncodable

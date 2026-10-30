@@ -14,7 +14,7 @@ public class STPPaymentMethodNaverPayParams: NSObject, STPFormEncodable {
     @objc public var fundingString: String?
 
     /// Whether to fund the transaction with a card or Naver Pay points.
-    @objc public var funding: STPPaymentMethodNaverPayFunding {
+    public var funding: STPPaymentMethodNaverPayFunding {
         get {
             return STPPaymentMethodNaverPayFunding(string: fundingString)
         }
@@ -23,13 +23,13 @@ public class STPPaymentMethodNaverPayParams: NSObject, STPFormEncodable {
         }
     }
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc public class func rootObjectName() -> String? {
+    public class func rootObjectName() -> String? {
         return "naver_pay"
     }
 
-    @objc public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: fundingString)): "funding",
         ]

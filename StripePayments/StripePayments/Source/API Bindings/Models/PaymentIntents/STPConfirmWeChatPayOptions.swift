@@ -18,10 +18,10 @@ public class STPConfirmWeChatPayOptions: NSObject {
     /// this as the redirect URL scheme.
     @objc public var appId: String?
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
@@ -35,7 +35,7 @@ public class STPConfirmWeChatPayOptions: NSObject {
     /// Initializes STPConfirmWeChatPayOptions
     /// - parameter appId: Your WeChat-provided application ID. WeChat Pay
     /// uses this as the redirect URL scheme.
-    @objc public required init(
+    public required init(
         appId: String
     ) {
         self.appId = appId
@@ -45,7 +45,6 @@ public class STPConfirmWeChatPayOptions: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConfirmWeChatPayOptions: STPFormEncodable {
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: client)): "client",
@@ -53,7 +52,6 @@ extension STPConfirmWeChatPayOptions: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return "wechat_pay"
     }

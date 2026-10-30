@@ -15,7 +15,6 @@ import UIKit
 /// viewController.modalPresentationStyle = .custom
 /// viewController.transitioningDelegate = BottomSheetTransitioningDelegate.default
 /// ```
-@objc(STPBottomSheetTransitioningDelegate)
 class BottomSheetTransitioningDelegate: NSObject {
 
     static var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default

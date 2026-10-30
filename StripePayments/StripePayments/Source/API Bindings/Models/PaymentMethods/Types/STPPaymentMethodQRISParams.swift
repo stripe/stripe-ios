@@ -11,13 +11,13 @@ import Foundation
 
 /// An object representing parameters used to create a QRIS Payment Method.
 public class STPPaymentMethodQRISParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc public class func rootObjectName() -> String? {
+    public class func rootObjectName() -> String? {
         return "qris"
     }
 
-    @objc public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [:]
     }
 }

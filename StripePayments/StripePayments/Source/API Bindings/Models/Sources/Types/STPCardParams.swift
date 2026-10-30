@@ -16,7 +16,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// A convenience initializer for creating a card params from a card payment method params.
-    @objc public convenience init(
+    public convenience init(
         paymentMethodParams: STPPaymentMethodParams
     ) {
         self.init()
@@ -37,7 +37,6 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     @objc public var number: String?
 
     /// The last 4 digits of the card's number, if it's been set, otherwise nil.
-    @objc
     public func last4() -> String? {
         if number != nil && (number?.count ?? 0) >= 4 {
             return (number as NSString?)?.substring(from: (number?.count ?? 0) - 4)
@@ -66,7 +65,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
     /// @note Setting `address` to a new value will also change the `name` property to
     /// be the value of `address.name`. However, changing `address.name` directly will
     /// not* change `name`.
-    @objc public var address: STPAddress {
+    public var address: STPAddress {
         didSet {
             name = address.name
         }
@@ -148,7 +147,7 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPCardParams.self), self),
@@ -191,7 +190,6 @@ public class STPCardParams: NSObject, STPFormEncodable, NSCopying {
 
     // MARK: - NSCopying
     /// :nodoc:
-    @objc
     public func copy(with zone: NSZone? = nil) -> Any {
         let copyCardParams = STPCardParams()
 

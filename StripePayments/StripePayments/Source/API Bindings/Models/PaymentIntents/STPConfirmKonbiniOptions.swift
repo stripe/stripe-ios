@@ -9,10 +9,10 @@ import Foundation
 
 /// Options for a Konbini Payment Methods during PaymentIntent confirmation
 /// - seealso https://stripe.com/docs/api/errors#errors-payment_intent-payment_method_options-konbini
-@objc public class STPConfirmKonbiniOptions: NSObject {
+public class STPConfirmKonbiniOptions: NSObject {
     /// An optional 10 to 11 digit numeric-only string determining the confirmation code at applicable convenience stores.
     @objc public var confirmationNumber: String?
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
 // MARK: - STPFormEncodable

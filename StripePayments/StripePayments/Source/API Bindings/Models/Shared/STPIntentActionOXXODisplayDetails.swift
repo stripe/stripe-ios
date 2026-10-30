@@ -11,13 +11,13 @@ import Foundation
 /// Contains OXXO details necessary for the customer to complete the payment.
 public class STPIntentActionOXXODisplayDetails: NSObject, STPAPIResponseDecodable {
     /// The timestamp after which the OXXO voucher expires.
-    @objc public let expiresAfter: Date
+    public let expiresAfter: Date
 
     /// The URL for the hosted OXXO voucher page, which allows customers to view and print an OXXO voucher.
-    @objc public let hostedVoucherURL: URL
+    public let hostedVoucherURL: URL
 
     /// OXXO reference number.
-    @objc public let number: String
+    public let number: String
 
     internal init(
         expiresAfter: Date,
@@ -33,7 +33,7 @@ public class STPIntentActionOXXODisplayDetails: NSObject, STPAPIResponseDecodabl
     }
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(

@@ -21,7 +21,6 @@ public class STPPaymentIntentConfirmParams: NSObject {
     /// Initialize this `STPPaymentIntentConfirmParams` with a `clientSecret`, which is the only required
     /// field.
     /// - Parameter clientSecret: the client secret for this PaymentIntent
-    @objc
     public init(
         clientSecret: String
     ) {
@@ -33,7 +32,6 @@ public class STPPaymentIntentConfirmParams: NSObject {
     /// Use this initializer for PaymentIntents that already have a PaymentMethod attached.
     /// - Parameter clientSecret: the client secret for this PaymentIntent
     /// - Parameter paymentMethodType: the known type of the PaymentIntent's attached PaymentMethod
-    @objc
     public init(
         clientSecret: String,
         paymentMethodType: STPPaymentMethodType
@@ -43,12 +41,12 @@ public class STPPaymentIntentConfirmParams: NSObject {
         super.init()
     }
 
-    @objc convenience override init() {
+    convenience override init() {
         self.init(clientSecret: "")
     }
 
     /// The Stripe id of the PaymentIntent, extracted from the clientSecret.
-    @objc public var stripeId: String? {
+    public var stripeId: String? {
         return STPPaymentIntent.id(fromClientSecret: clientSecret)
     }
 
@@ -99,7 +97,7 @@ public class STPPaymentIntentConfirmParams: NSObject {
     /// This property should only be used in Objective-C. In Swift, use `setupFutureUsage`.
     /// - seealso: STPPaymentIntentSetupFutureUsage for more details on what values you can provide.
     @available(swift, obsoleted: 1.0, renamed: "setupFutureUsage")
-    @objc(setupFutureUsage) public var setupFutureUsage_objc: NSNumber? {
+    public var setupFutureUsage_objc: NSNumber? {
         get {
             setupFutureUsage?.rawValue as NSNumber?
         }
@@ -118,7 +116,6 @@ public class STPPaymentIntentConfirmParams: NSObject {
     /// If set to false, STPPaymentIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
     /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
     /// app.
-    @objc(useStripeSDK)
     @available(swift, obsoleted: 1.0, renamed: "useStripeSDK")
     public var useStripeSDK_objc: NSNumber? {
         get { return useStripeSDK.map { NSNumber(value: $0) } }
@@ -179,7 +176,7 @@ public class STPPaymentIntentConfirmParams: NSObject {
     /// their payment on the payment method’s app or site.
     /// This property has been renamed to `returnURL` and deprecated.
     @available(*, deprecated, renamed: "returnURL")
-    @objc public var returnUrl: String? {
+    public var returnUrl: String? {
         get {
             return returnURL
         }
@@ -189,10 +186,10 @@ public class STPPaymentIntentConfirmParams: NSObject {
     }
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentIntentConfirmParams.self), self),
@@ -252,12 +249,10 @@ extension STPPaymentIntentConfirmParams: STPFormEncodable {
     @objc private var useStripeSDK_apiValue: NSNumber? { useStripeSDK.map { NSNumber(value: $0) } }
     @objc internal var setupFutureUsageRawString: String? { setupFutureUsage?.stringValue }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: clientSecret)): "client_secret",
@@ -285,7 +280,6 @@ extension STPPaymentIntentConfirmParams: STPFormEncodable {
 extension STPPaymentIntentConfirmParams: NSCopying {
 
     /// :nodoc:
-    @objc
     public func copy(with zone: NSZone? = nil) -> Any {
         let copy = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
 

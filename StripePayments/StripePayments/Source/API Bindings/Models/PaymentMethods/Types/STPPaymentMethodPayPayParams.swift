@@ -9,14 +9,12 @@ import Foundation
 
 /// An object representing parameters used to create a PayPay Payment Method :nodoc:
 public class STPPaymentMethodPayPayParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc
     public class func rootObjectName() -> String? {
         return "paypay"
     }
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [:]
     }

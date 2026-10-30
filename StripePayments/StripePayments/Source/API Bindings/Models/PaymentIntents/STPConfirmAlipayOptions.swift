@@ -17,7 +17,7 @@ public class STPConfirmAlipayOptions: NSObject {
 
     /// Indicates that you intend to make future payments with this payment method.
     /// Alipay only supports `STPPaymentIntentSetupFutureUsage.offSession`.
-    @objc public var setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
+    public var setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
 
     /// The app bundle ID.
     /// @note This is automatically populated by the SDK.
@@ -31,10 +31,10 @@ public class STPConfirmAlipayOptions: NSObject {
         return Bundle.stp_applicationVersion() ?? "1.0.0"  // Should only be nil for tests
     }
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
@@ -55,7 +55,6 @@ extension STPConfirmAlipayOptions: STPFormEncodable {
         return setupFutureUsage.stringValue
     }
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: currency)): "currency",
@@ -65,7 +64,6 @@ extension STPConfirmAlipayOptions: STPFormEncodable {
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return "alipay"
     }

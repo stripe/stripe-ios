@@ -70,7 +70,6 @@ protocol PayWithLinkCoordinating: AnyObject {
 ///
 /// Instantiate this coordinator when the user chooses to pay with Link, then present its `sheetContainer`.
 /// For internal SDK use only
-@objc(STP_Internal_PayWithLinkViewController)
 @MainActor
 final class PayWithLinkViewController: NSObject {
 

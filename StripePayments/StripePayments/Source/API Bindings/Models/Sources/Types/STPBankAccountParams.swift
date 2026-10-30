@@ -9,7 +9,7 @@
 import Foundation
 
 /// The type of entity that holds a bank account.
-@objc public enum STPBankAccountHolderType: Int {
+public enum STPBankAccountHolderType: Int {
     /// An individual holds this bank account.
     case individual
     /// A company holds this bank account.
@@ -26,7 +26,7 @@ public class STPBankAccountParams: NSObject, STPFormEncodable {
     /// The last 4 digits of the bank account's account number, if it's been set,
     /// otherwise nil.
 
-    @objc public var last4: String? {
+    public var last4: String? {
         if accountNumber != nil && (accountNumber?.count ?? 0) >= 4 {
             return (accountNumber as NSString?)?.substring(from: (accountNumber?.count ?? 0) - 4)
                 ?? ""
@@ -45,9 +45,9 @@ public class STPBankAccountParams: NSObject, STPFormEncodable {
     @objc public var accountHolderName: String?
     /// The type of entity that holds the account.
     /// Defaults to STPBankAccountHolderTypeIndividual.
-    @objc public var accountHolderType: STPBankAccountHolderType = .individual
+    public var accountHolderType: STPBankAccountHolderType = .individual
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Initializes an empty STPBankAccountParams.
     public override init() {
@@ -62,7 +62,7 @@ public class STPBankAccountParams: NSObject, STPFormEncodable {
         "company": .company,
     ]
 
-    @objc(accountHolderTypeFromString:) class func accountHolderType(
+    class func accountHolderType(
         from string: String
     )
         -> STPBankAccountHolderType
@@ -71,7 +71,7 @@ public class STPBankAccountParams: NSObject, STPFormEncodable {
         return self.stringToAccountHolderTypeMapping[key] ?? .individual
     }
 
-    @objc(stringFromAccountHolderType:) class func string(
+    class func string(
         from accountHolderType: STPBankAccountHolderType
     ) -> String {
         guard
@@ -86,7 +86,7 @@ public class STPBankAccountParams: NSObject, STPFormEncodable {
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPBankAccountParams.self), self),
@@ -105,12 +105,10 @@ public class STPBankAccountParams: NSObject, STPFormEncodable {
     }
 
     // MARK: - STPFormEncodable
-    @objc
     public class func rootObjectName() -> String? {
         return "bank_account"
     }
 
-    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: accountNumber)): "account_number",

@@ -8,8 +8,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-/// For internal SDK use only.
-@objc(STP_Internal_DownloadManager)
+// For internal SDK use only.
 // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
 @_spi(InternalOnlyAPI) public class DownloadManager: NSObject {
     public typealias UpdateImageHandler = (UIImage) -> Void

@@ -10,7 +10,7 @@ import Foundation
 
 /// Capture methods for a STPPaymentIntent
 /// - seealso: https://docs.stripe.com/api/payment_intents/object#payment_intent_object-capture_method
-@objc public enum STPPaymentIntentCaptureMethod: Int {
+public enum STPPaymentIntentCaptureMethod: Int {
     /// Unknown capture method
     case unknown
     /// The PaymentIntent will be automatically captured
@@ -39,7 +39,7 @@ import Foundation
 }
 
 /// Confirmation methods for a STPPaymentIntent
-@objc public enum STPPaymentIntentConfirmationMethod: Int {
+public enum STPPaymentIntentConfirmationMethod: Int {
     /// Unknown confirmation method
     case unknown
     /// Confirmed via publishable key
@@ -71,54 +71,53 @@ import Foundation
 public class STPPaymentIntent: NSObject {
 
     /// The Stripe ID of the PaymentIntent.
-    @objc public let stripeId: String
+    public let stripeId: String
 
     /// The client secret used to fetch this PaymentIntent
-    @objc public let clientSecret: String
+    public let clientSecret: String
 
     /// Amount intended to be collected by this PaymentIntent.
-    @objc public let amount: Int
+    public let amount: Int
 
     /// If status is `.canceled`, when the PaymentIntent was canceled.
-    @objc public let canceledAt: Date?
+    public let canceledAt: Date?
 
     /// Capture method of this PaymentIntent
-    @objc public let captureMethod: STPPaymentIntentCaptureMethod
+    public let captureMethod: STPPaymentIntentCaptureMethod
 
     /// Confirmation method of this PaymentIntent
-    @objc public let confirmationMethod: STPPaymentIntentConfirmationMethod
+    public let confirmationMethod: STPPaymentIntentConfirmationMethod
 
     /// When the PaymentIntent was created.
-    @objc public let created: Date
+    public let created: Date
 
     /// The currency associated with the PaymentIntent.
-    @objc public let currency: String
+    public let currency: String
 
     /// The `description` field of the PaymentIntent.
     /// An arbitrary string attached to the object. Often useful for displaying to users.
-    @objc public let stripeDescription: String?
+    public let stripeDescription: String?
 
     /// Whether or not this PaymentIntent was created in livemode.
-    @objc public let livemode: Bool
+    public let livemode: Bool
 
     /// If `status == .requiresAction`, this
     /// property contains the next action to take for this PaymentIntent.
-    @objc public let nextAction: STPIntentAction?
+    public let nextAction: STPIntentAction?
 
     /// Email address that the receipt for the resulting payment will be sent to.
-    @objc public let receiptEmail: String?
+    public let receiptEmail: String?
 
     /// The Stripe ID of the Source used in this PaymentIntent.
-    @objc public let sourceId: String?
+    public let sourceId: String?
 
     /// The Stripe ID of the PaymentMethod used in this PaymentIntent.
-    @objc public let paymentMethodId: String?
+    public let paymentMethodId: String?
 
     /// Status of the PaymentIntent
-    @objc public let status: STPPaymentIntentStatus
+    public let status: STPPaymentIntentStatus
 
     /// The list of payment method types (e.g. `[NSNumber(value: STPPaymentMethodType.card.rawValue)]`) that this PaymentIntent is allowed to use.
-    @objc(paymentMethodTypes)
     @available(swift, obsoleted: 1.0, renamed: "paymentMethodTypes")
     public var paymentMethodTypes_objc: [NSNumber] {
         return paymentMethodTypes.map { NSNumber(value: $0.rawValue) }
@@ -129,18 +128,18 @@ public class STPPaymentIntent: NSObject {
 
     /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes. If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
     /// Use on_session if you intend to only reuse the payment method when the customer is in your checkout flow. Use off_session if your customer may or may not be in your checkout flow.
-    @objc public let setupFutureUsage: STPPaymentIntentSetupFutureUsage
+    public let setupFutureUsage: STPPaymentIntentSetupFutureUsage
 
     /// The payment error encountered in the previous PaymentIntent confirmation.
-    @objc public let lastPaymentError: STPPaymentIntentLastPaymentError?
+    public let lastPaymentError: STPPaymentIntentLastPaymentError?
 
     /// Shipping information for this PaymentIntent.
-    @objc public let shipping: STPPaymentIntentShippingDetails?
+    public let shipping: STPPaymentIntentShippingDetails?
 
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// The optionally expanded PaymentMethod used in this PaymentIntent.
-    @objc public let paymentMethod: STPPaymentMethod?
+    public let paymentMethod: STPPaymentMethod?
 
     /// Payment-method-specific configuration for this PaymentIntent.
     @_spi(InternalOnlyAPI) public let paymentMethodOptions: STPPaymentMethodOptions?
@@ -163,7 +162,7 @@ public class STPPaymentIntent: NSObject {
     @_spi(InternalOnlyAPI) public let automaticPaymentMethods: STPIntentAutomaticPaymentMethods?
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentIntent.self), self),
@@ -251,7 +250,6 @@ public class STPPaymentIntent: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPPaymentIntent: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let stripeId = dict["id"] as? String,
@@ -337,7 +335,7 @@ extension STPPaymentIntent {
     /// property contains the next source action to take for this PaymentIntent.
     /// @deprecated Use nextAction instead
     @available(*, deprecated, message: "Use nextAction instead", renamed: "nextAction")
-    @objc public var nextSourceAction: STPIntentAction? {
+    public var nextSourceAction: STPIntentAction? {
         return nextAction
     }
 }

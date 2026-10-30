@@ -11,7 +11,7 @@ import PassKit
 
 /// Internal Apple Pay class. Do not use.
 /// :nodoc:
-@objc @_spi(InternalOnlyAPI) public class _stpinternal_ApplePayContextDidCreatePaymentMethodStorage: NSObject {
+@_spi(InternalOnlyAPI) public class _stpinternal_ApplePayContextDidCreatePaymentMethodStorage: NSObject {
     @_spi(InternalOnlyAPI) public weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
     @_spi(InternalOnlyAPI) public var context: STPApplePayContext
     @_spi(InternalOnlyAPI) public var paymentMethod: StripeAPI.PaymentMethod
@@ -35,7 +35,7 @@ import PassKit
 
 /// Internal Apple Pay class. Do not use.
 /// :nodoc:
-@objc @_spi(InternalOnlyAPI) public class _stpinternal_ApplePayContextDidCompleteStorage: NSObject {
+@_spi(InternalOnlyAPI) public class _stpinternal_ApplePayContextDidCompleteStorage: NSObject {
     @_spi(InternalOnlyAPI) public weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
     @_spi(InternalOnlyAPI) public var context: STPApplePayContext
     @_spi(InternalOnlyAPI) public var status: STPApplePayContext.PaymentStatus

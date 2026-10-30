@@ -15,21 +15,21 @@ import Foundation
 public class STPCustomer: NSObject {
 
     /// The Stripe ID of the customer, e.g. `cus_1234`
-    @objc public let stripeID: String
+    public let stripeID: String
 
     /// The default source used to charge the customer.
-    @objc public private(set) var defaultSource: STPSourceProtocol?
+    public private(set) var defaultSource: STPSourceProtocol?
 
     /// The available payment sources the customer has (this may be an empty array).
-    @objc public private(set) var sources: [STPSourceProtocol]
+    public private(set) var sources: [STPSourceProtocol]
 
     /// The customer’s email address.
-    @objc public private(set) var email: String?
+    public private(set) var email: String?
 
     /// The customer's shipping address.
-    @objc public var shippingAddress: STPAddress?
+    public var shippingAddress: STPAddress?
 
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// Initialize a customer object with the provided values.
     /// - Parameters:
@@ -37,7 +37,6 @@ public class STPCustomer: NSObject {
     ///   - defaultSource: The default source of the customer, such as an `STPCard` object. Can be nil.
     ///   - sources:       All of the customer's payment sources. This might be an empty array.
     /// - Returns: an instance of STPCustomer
-    @objc
     public convenience init(
         stripeID: String,
         defaultSource: STPSourceProtocol?,
@@ -83,7 +82,7 @@ public class STPCustomer: NSObject {
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPCustomer.self), self),
@@ -102,7 +101,6 @@ public class STPCustomer: NSObject {
     /// `STPCustomerContext includeApplePaySources`
     ///
     /// @param filteringApplePay      If YES, Apple Pay sources will be ignored
-    @objc(updateSourcesFilteringApplePay:)
     public func updateSources(filteringApplePay: Bool) {
         let (defaultSource, sources) = STPCustomer.sources(
             from: allResponseFields,
@@ -114,7 +112,6 @@ public class STPCustomer: NSObject {
 }
 
 extension STPCustomer: STPAPIResponseDecodable {
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let stripeID = dict["id"] as? String
@@ -205,9 +202,9 @@ extension STPCustomer: STPAPIResponseDecodable {
 public class STPCustomerDeserializer: NSObject {
 
     /// If a customer was successfully parsed from the response, it will be set here. Otherwise, this value wil be nil (and the `error` property will explain what went wrong).
-    @objc public let customer: STPCustomer?
+    public let customer: STPCustomer?
     /// If the deserializer failed to parse a customer, this property will explain why (and the `customer` property will be nil).
-    @objc public let error: Error?
+    public let error: Error?
 
     /// Initialize a customer deserializer. The `data`, `urlResponse`, and `error`
     /// parameters are intended to be passed from an `NSURLSessionDataTask` callback.
@@ -219,7 +216,6 @@ public class STPCustomerDeserializer: NSObject {
     ///   - urlResponse: The URL response obtained from the `NSURLSessionTask`
     ///   - error:       Any error that occurred from the URL session task (if this
     /// is non-nil, the `error` property will be set to this value after initialization).
-    @objc
     public convenience init(
         data: Data?,
         urlResponse: URLResponse?,
@@ -246,7 +242,6 @@ public class STPCustomerDeserializer: NSObject {
     /// parsed, the `customer` parameter will be present after initialization;
     /// otherwise `error` will be present.
     /// - Parameter json: a JSON dictionary.
-    @objc
     public convenience init(
         jsonResponse json: Any?
     ) {
