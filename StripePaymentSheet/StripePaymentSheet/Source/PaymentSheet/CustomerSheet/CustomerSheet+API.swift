@@ -59,24 +59,35 @@ extension CustomerSheet {
            case .setupIntent(let setupIntent) = intent {
             Task {
                 confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
-                confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
                 confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.configID)
-                let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
-                setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
-                // Send CAM at the top-level of all requests in scope for consistency
-                // Also send under payment_method_data because there are existing dependencies
-                setupIntentParams.clientAttributionMetadata = confirmParams.paymentMethodParams.clientAttributionMetadata
-                setupIntentParams.returnURL = configuration.returnURL
-                setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
-                paymentHandler.confirmSetupIntent(
-                    params: setupIntentParams,
-                    authenticationContext: authenticationContext,
-                    completion: { status, intent, error in
-                        Task {
-                            await confirmationChallenge?.complete()
-                            paymentHandlerCompletion(status, intent, error)
+                do {
+                    let (status, intent, error) = try await ConfirmationChallenge.withRadarOptions(
+                        for: confirmParams.paymentMethodParams.type,
+                        challenge: confirmationChallenge
+                    ) { radarOptions in
+                        confirmParams.paymentMethodParams.radarOptions = radarOptions
+                        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
+                        setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
+                        // Send CAM at the top-level of all requests in scope for consistency
+                        // Also send under payment_method_data because there are existing dependencies
+                        setupIntentParams.clientAttributionMetadata = confirmParams.paymentMethodParams.clientAttributionMetadata
+                        setupIntentParams.returnURL = configuration.returnURL
+                        setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
+                        return await withGuardedContinuation { resume in
+                            paymentHandler.confirmSetupIntent(
+                                params: setupIntentParams,
+                                authenticationContext: authenticationContext,
+                                completion: { status, intent, error in
+                                    resume((status, intent, error))
+                                }
+                            )
                         }
-                    })
+                    }
+                    paymentHandlerCompletion(status, intent, error)
+                } catch {
+                    // Only reachable if the enclosing Task is cancelled.
+                    paymentHandlerCompletion(.failed, nil, error as NSError)
+                }
             }
         } else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,

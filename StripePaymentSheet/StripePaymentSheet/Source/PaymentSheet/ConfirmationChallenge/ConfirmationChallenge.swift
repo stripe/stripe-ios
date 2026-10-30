@@ -78,6 +78,17 @@ actor ConfirmationChallenge {
         }
     }
 
+    /// Convenience for optional challenges: runs `operation` directly (with no radar options) when `challenge` is nil.
+    @MainActor
+    static func withRadarOptions<Result>(
+        for paymentMethodType: STPPaymentMethodType,
+        challenge: (any CheckoutConfirmationChallenge)?,
+        operation: (STPRadarOptions?) async throws -> Result
+    ) async throws -> Result {
+        guard let challenge else { return try await operation(nil) }
+        return try await challenge.withRadarOptions(for: paymentMethodType, operation: operation)
+    }
+
     func fetchTokensWithTimeout() async -> ChallengeTokens {
         let startTime = Date()
         let getPassiveCaptchaToken: () async throws -> PassiveCaptchaChallenge.ConsumedToken? = {

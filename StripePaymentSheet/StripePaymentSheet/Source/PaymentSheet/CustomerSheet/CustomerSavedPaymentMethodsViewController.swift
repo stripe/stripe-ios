@@ -613,58 +613,73 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
         if case .new(let confirmParams) = paymentOption  {
             Task {
-                confirmParams.paymentMethodParams.radarOptions = await self.confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
-                configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
-                    Task {
-                        await self.confirmationChallenge?.complete()
-                        if let error = error {
-                            self.error = error
-                            self.processingInFlight = false
-                            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
-                            self.actionButton.update(status: .enabled, animated: true) {
-                                self.updateUI()
+                do {
+                    let (paymentMethod, error) = try await ConfirmationChallenge.withRadarOptions(
+                        for: confirmParams.paymentMethodParams.type,
+                        challenge: self.confirmationChallenge
+                    ) { radarOptions in
+                        confirmParams.paymentMethodParams.radarOptions = radarOptions
+                        return await withGuardedContinuation { resume in
+                            configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
+                                resume((paymentMethod, error))
                             }
-                            return
                         }
-                        guard let paymentMethod = paymentMethod else {
-                            self.error = CustomerSheetError.unknown(debugDescription: "Error on payment method creation")
-                            self.processingInFlight = false
-                            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
-                            self.actionButton.update(status: .enabled, animated: true) {
-                                self.updateUI()
-                            }
-                            return
-                        }
-                        do {
-                            try await customerSheetDataSource.attachPaymentMethod(paymentMethod.stripeId)
-                        } catch {
-                            self.error = error
-                            self.processingInFlight = false
-                            STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
-                            self.actionButton.update(status: .enabled, animated: true) {
-                                self.updateUI()
-                            }
-                            return
-                        }
-
-                        guard let updatedSavedPaymentMethods = await self.fetchSavedPaymentMethods() else {
-                            // PM is attached, but failed to refresh payment methods
-                            // Sheet will dismiss and payment method will be unselected
-                            self.processingInFlight = false
-                            self.handleDismissSheet(shouldDismissImmediately: true)
-                            return
-                        }
-
-                        self.savedPaymentMethods = updatedSavedPaymentMethods
-                        self.lastSavedPaymentMethod = paymentMethod
-
-                        let customerPaymentOption = CustomerPaymentOption(value: paymentMethod.stripeId)
-                        self.reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: customerPaymentOption)
+                    }
+                    if let error = error {
+                        self.error = error
                         self.processingInFlight = false
+                        STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
+                        self.actionButton.update(status: .enabled, animated: true) {
+                            self.updateUI()
+                        }
+                        return
+                    }
+                    guard let paymentMethod = paymentMethod else {
+                        self.error = CustomerSheetError.unknown(debugDescription: "Error on payment method creation")
+                        self.processingInFlight = false
+                        STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
+                        self.actionButton.update(status: .enabled, animated: true) {
+                            self.updateUI()
+                        }
+                        return
+                    }
+                    do {
+                        try await customerSheetDataSource.attachPaymentMethod(paymentMethod.stripeId)
+                    } catch {
+                        self.error = error
+                        self.processingInFlight = false
+                        STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
+                        self.actionButton.update(status: .enabled, animated: true) {
+                            self.updateUI()
+                        }
+                        return
+                    }
 
-                        self.mode = .selectingSaved
-                        self.updateUI(animated: true)
-                        self.reinitAddPaymentMethodViewController()
+                    guard let updatedSavedPaymentMethods = await self.fetchSavedPaymentMethods() else {
+                        // PM is attached, but failed to refresh payment methods
+                        // Sheet will dismiss and payment method will be unselected
+                        self.processingInFlight = false
+                        self.handleDismissSheet(shouldDismissImmediately: true)
+                        return
+                    }
+
+                    self.savedPaymentMethods = updatedSavedPaymentMethods
+                    self.lastSavedPaymentMethod = paymentMethod
+
+                    let customerPaymentOption = CustomerPaymentOption(value: paymentMethod.stripeId)
+                    self.reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: customerPaymentOption)
+                    self.processingInFlight = false
+
+                    self.mode = .selectingSaved
+                    self.updateUI(animated: true)
+                    self.reinitAddPaymentMethodViewController()
+                } catch {
+                    // Only reachable if the enclosing Task is cancelled.
+                    self.error = error
+                    self.processingInFlight = false
+                    STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
+                    self.actionButton.update(status: .enabled, animated: true) {
+                        self.updateUI()
                     }
                 }
             }

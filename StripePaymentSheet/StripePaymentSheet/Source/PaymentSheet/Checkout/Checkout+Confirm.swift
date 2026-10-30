@@ -22,6 +22,28 @@ extension CheckoutSessionPoller: CheckoutSessionPolling {}
 protocol CheckoutConfirmationChallenge {
     func makeRadarOptions(for paymentMethodType: STPPaymentMethodType) async -> STPRadarOptions?
     func complete() async
+    /// Owns the challenge until `operation` finishes; `complete()` is always awaited before returning.
+    func withRadarOptions<Result>(
+        for paymentMethodType: STPPaymentMethodType,
+        operation: (STPRadarOptions?) async throws -> Result
+    ) async throws -> Result
+}
+
+extension CheckoutConfirmationChallenge {
+    func withRadarOptions<Result>(
+        for paymentMethodType: STPPaymentMethodType,
+        operation: (STPRadarOptions?) async throws -> Result
+    ) async throws -> Result {
+        do {
+            let options = await makeRadarOptions(for: paymentMethodType)
+            let result = try await operation(options)
+            await complete()
+            return result
+        } catch {
+            await complete()
+            throw error
+        }
+    }
 }
 
 extension ConfirmationChallenge: CheckoutConfirmationChallenge {}
@@ -361,7 +383,7 @@ extension CheckoutController {
                     }
 
                     // 3. Make /confirm parameters
-                    let confirmRequestParameters = await Self.makeConfirmationRequestParameters(
+                    let confirmRequestParameters = Self.makeConfirmationRequestParameters(
                         for: paymentMethodParameters,
                         checkoutSession: self.session,
                         preconfirmedIntentParams: paymentOptionsOverride
@@ -445,13 +467,15 @@ extension CheckoutController {
         )
     }
 
+    /// Builds the `/confirm` request parameters. For a new PM, `paymentMethodData.radarOptions` is left
+    /// unset here — `confirmCheckoutSession` fills it in immediately before sending the request, scoped by
+    /// `ConfirmationChallenge.withRadarOptions`.
     static func makeConfirmationRequestParameters(
         for paymentMethodParameters: PaymentMethodConfirmationParameters,
         checkoutSession: Session,
         preconfirmedIntentParams: IntentConfirmParams?
-    ) async -> CheckoutSessionConfirmationRequestParameters {
+    ) -> CheckoutSessionConfirmationRequestParameters {
         let configuration = paymentMethodParameters.configuration
-        let confirmationChallenge = paymentMethodParameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             checkoutSession: checkoutSession,
             attribution: paymentMethodParameters.attribution
@@ -464,7 +488,6 @@ extension CheckoutController {
             confirmParams.setAllowRedisplayForCheckoutSession(
                 merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
             )
-            confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
             // Nested CAM attributes the PaymentMethodCreated event; top-level CAM links Checkout
             // confirmation events to the Elements session configuration. The backend reads each
             // copy independently, so keep both.
@@ -531,16 +554,20 @@ extension CheckoutController {
         //     poller = CheckoutSessionPoller(apiClient: apiClient)
         // }
 
-        // 1. Call /confirm
+        // 1. Call /confirm. Scoped so the challenge (if any) is released immediately after,
+        // before handling any next action.
         let response: PaymentPagesAPIResponse
         do {
-            response = try await apiClient.confirmCheckoutSession(with: requestParameters)
+            response = try await ConfirmationChallenge.withRadarOptions(
+                for: requestParameters.paymentMethodData?.type ?? .unknown,
+                challenge: confirmationChallenge
+            ) { radarOptions in
+                requestParameters.paymentMethodData?.radarOptions = radarOptions
+                return try await apiClient.confirmCheckoutSession(with: requestParameters)
+            }
         } catch {
-            await confirmationChallenge?.complete()
             return .failed(error)
         }
-        // Release the assertion only after the request using it has finished, before handling next actions.
-        await confirmationChallenge?.complete()
 
         if response.paymentResponse?.status == "requires_payment_method" {
             return .failed(paymentError(from: response), sessionResponse: response)
