@@ -643,7 +643,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 "status": testCase.status,
                 testCase.key: ["id": intentJSON["id"]!, "client_secret": intentJSON["client_secret"]!],
             ]
-            let confirmedResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: responseJSON)
+            let confirmedResponse = try CheckoutClientAPIResponse.decode(fromAPIResponse: responseJSON)
             let poller = TestCheckoutSessionPoller(outcome: .succeeded(Self.pollResponse()))
 
             // The Intent stub rejects retrieval when /confirm does not require an action.
@@ -1280,7 +1280,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func makeCheckout(
-        apiResponse: PaymentPagesAPIResponse = CheckoutTestHelpers.makeOpenSession()
+        apiResponse: CheckoutClientAPIResponse = CheckoutTestHelpers.makeOpenSession()
     ) async throws -> CheckoutController {
         try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse))
     }
@@ -1313,7 +1313,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func assertNewPaymentMethodConfirmation(
-        session: PaymentPagesAPIResponse,
+        session: CheckoutClientAPIResponse,
         paymentMethodType: PaymentSheet.PaymentMethodType,
         checkboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
         expectedAllowRedisplay: String,

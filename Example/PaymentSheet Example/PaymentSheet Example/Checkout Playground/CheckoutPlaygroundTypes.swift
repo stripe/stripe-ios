@@ -486,7 +486,7 @@ enum CheckoutPlayground {
         var currencySelectorAppearance = CurrencySelectorElement.Appearance()
         var checkoutEndpointOption: EndpointOption = .hosted
         var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
-        var delayPaymentPagesRequests = false
+        var delayCheckoutClientRequests = false
 
         static let nsUserDefaultsKey = "CheckoutPlaygroundSettings"
     }

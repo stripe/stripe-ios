@@ -14,7 +14,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
-    @Binding var delayPaymentPagesRequests: Bool
+    @Binding var delayCheckoutClientRequests: Bool
     let onReset: () -> Void
 
     var body: some View {
@@ -85,9 +85,9 @@ struct CheckoutPlaygroundConfigurationSection: View {
                 .padding(.horizontal, 16)
                 .background(Color(uiColor: .secondarySystemGroupedBackground))
                 CheckoutPlayground.ToggleRow(
-                    title: "Delay Payment Pages Requests",
-                    isOn: $delayPaymentPagesRequests,
-                    tooltip: "Adds a 1-second delay before Payment Pages API requests except the initial /init request so loading states are easier to inspect."
+                    title: "Delay Checkout Client Requests",
+                    isOn: $delayCheckoutClientRequests,
+                    tooltip: "Adds a 1-second delay before Checkout Client API requests except the initial /init request so loading states are easier to inspect."
                 )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))

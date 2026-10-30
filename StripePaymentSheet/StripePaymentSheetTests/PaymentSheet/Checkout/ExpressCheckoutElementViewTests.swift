@@ -419,7 +419,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         customerEmail: String? = nil,
         billingAddressCollectionRequired: Bool = false,
         nativeLink: Bool = false
-    ) -> PaymentPagesAPIResponse {
+    ) -> CheckoutClientAPIResponse {
         var elementsSession = CheckoutTestHelpers.minimalCheckoutClientConfigurationJSON
         elementsSession["ordered_payment_method_types_and_wallets"] = ["link"]
         if nativeLink {

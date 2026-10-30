@@ -247,7 +247,7 @@ extension CheckoutController {
             try requireSheetNotPresented()
         }
         do {
-            let updatedSessionAPIResponse: PaymentPagesAPIResponse?
+            let updatedSessionAPIResponse: CheckoutClientAPIResponse?
             if let update {
                 let sessionId = CheckoutController.extractSessionId(from: clientSecret)
                 onRequest?()

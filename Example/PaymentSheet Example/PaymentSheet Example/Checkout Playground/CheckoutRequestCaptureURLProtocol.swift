@@ -23,7 +23,7 @@ final class CheckoutRequestCapture {
 
     init(
         forwardingConfiguration: URLSessionConfiguration,
-        paymentPagesRequestDelay: TimeInterval,
+        checkoutClientRequestDelay: TimeInterval,
         didReceiveResponse: @escaping @Sendable (Response) -> Void
     ) {
         guard let sessionConfiguration = forwardingConfiguration.copy() as? URLSessionConfiguration else {
@@ -33,7 +33,7 @@ final class CheckoutRequestCapture {
         CheckoutRequestCaptureRegistry.register(
             captureID: captureID,
             forwardingConfiguration: forwardingConfiguration,
-            paymentPagesRequestDelay: paymentPagesRequestDelay,
+            checkoutClientRequestDelay: checkoutClientRequestDelay,
             didReceiveResponse: didReceiveResponse
         )
 
@@ -56,24 +56,24 @@ private enum CheckoutRequestCaptureRegistry {
         let forwardingConfiguration: URLSessionConfiguration
         let didReceiveResponse: @Sendable (CheckoutRequestCapture.Response) -> Void
 
-        private let paymentPagesRequestDelay: TimeInterval
+        private let checkoutClientRequestDelay: TimeInterval
         private let lock = NSLock()
         private var skippedInitialInitRequest = false
 
         init(
             forwardingConfiguration: URLSessionConfiguration,
-            paymentPagesRequestDelay: TimeInterval,
+            checkoutClientRequestDelay: TimeInterval,
             didReceiveResponse: @escaping @Sendable (CheckoutRequestCapture.Response) -> Void
         ) {
             self.forwardingConfiguration = forwardingConfiguration
-            self.paymentPagesRequestDelay = paymentPagesRequestDelay
+            self.checkoutClientRequestDelay = checkoutClientRequestDelay
             self.didReceiveResponse = didReceiveResponse
         }
 
         func delay(for request: URLRequest) -> TimeInterval {
-            guard paymentPagesRequestDelay > 0,
+            guard checkoutClientRequestDelay > 0,
                   let path = request.url?.path,
-                  path.contains("/payment_pages/") else {
+                  path.contains("/checkout_client/") else {
                 return 0
             }
 
@@ -83,7 +83,7 @@ private enum CheckoutRequestCaptureRegistry {
                 skippedInitialInitRequest = true
                 return 0
             }
-            return paymentPagesRequestDelay
+            return checkoutClientRequestDelay
         }
     }
 
@@ -93,13 +93,13 @@ private enum CheckoutRequestCaptureRegistry {
     static func register(
         captureID: String,
         forwardingConfiguration: URLSessionConfiguration,
-        paymentPagesRequestDelay: TimeInterval,
+        checkoutClientRequestDelay: TimeInterval,
         didReceiveResponse: @escaping @Sendable (CheckoutRequestCapture.Response) -> Void
     ) {
         lock.lock()
         contexts[captureID] = Context(
             forwardingConfiguration: forwardingConfiguration,
-            paymentPagesRequestDelay: paymentPagesRequestDelay,
+            checkoutClientRequestDelay: checkoutClientRequestDelay,
             didReceiveResponse: didReceiveResponse
         )
         lock.unlock()

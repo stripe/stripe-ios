@@ -18,7 +18,7 @@ enum ExpressCheckoutElementUtilities {
     }
 
     static func availablePaymentMethods(
-        for apiResponse: PaymentPagesAPIResponse,
+        for apiResponse: CheckoutClientAPIResponse,
         configuration: CheckoutController.Configuration
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         guard let expressCheckoutConfiguration = configuration.expressCheckoutElement else {

@@ -94,7 +94,7 @@ extension CheckoutController {
         /// `customer_email` or the Checkout Session's Customer's email.
         let serverEmail: String?
         var localState: LocalState
-        let customer: PaymentPagesAPIResponse.Customer?
+        let customer: CheckoutClientAPIResponse.Customer?
         let canDetachPaymentMethod: Bool
         let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
         let setupFutureUsageForPaymentMethodType: [String: String]
@@ -126,32 +126,32 @@ extension CheckoutController {
 extension CheckoutController.Session {
     /// Builds a read-only session snapshot from server-backed and local state.
     init(
-        apiResponse: PaymentPagesAPIResponse,
+        apiResponse: CheckoutClientAPIResponse,
         clientSecret: String,
         localState: LocalState,
         configuration: CheckoutController.Configuration? = nil
     ) {
         let elementsSessionValue = apiResponse.elementsSession.value
         let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
-            PaymentPagesAPIResponse.makeSessionTaxAmount(
+            CheckoutClientAPIResponse.makeSessionTaxAmount(
                 from: $0,
                 currency: apiResponse.currency,
                 locale: .autoupdatingCurrent
             )
         }
-        let publicOrderSummaryItems = PaymentPagesAPIResponse.makeOrderSummaryItems(
+        let publicOrderSummaryItems = CheckoutClientAPIResponse.makeOrderSummaryItems(
             from: apiResponse.checkoutItems,
             locale: .autoupdatingCurrent
         )
-        let publicTotals = PaymentPagesAPIResponse.makeTotals(
+        let publicTotals = CheckoutClientAPIResponse.makeTotals(
             from: apiResponse.checkoutItems,
             currency: apiResponse.currency
         )
-        let publicTax = PaymentPagesAPIResponse.makeTax(from: apiResponse.automaticTax)
-        let localizedPricesMetas = PaymentPagesAPIResponse.makeLocalizedPricesMetas(
+        let publicTax = CheckoutClientAPIResponse.makeTax(from: apiResponse.automaticTax)
+        let localizedPricesMetas = CheckoutClientAPIResponse.makeLocalizedPricesMetas(
             from: apiResponse.adaptivePricingInfo
         )
-        let exchangeRateMeta = PaymentPagesAPIResponse.makeExchangeRateMeta(
+        let exchangeRateMeta = CheckoutClientAPIResponse.makeExchangeRateMeta(
             from: apiResponse.adaptivePricingInfo,
             currency: apiResponse.currency
         )
@@ -177,7 +177,7 @@ extension CheckoutController.Session {
             discountAmounts: [],
             orderSummaryItems: publicOrderSummaryItems,
             livemode: apiResponse.livemode,
-            minorUnitsAmountDivisor: PaymentPagesAPIResponse.makeMinorUnitsAmountDivisor(
+            minorUnitsAmountDivisor: CheckoutClientAPIResponse.makeMinorUnitsAmountDivisor(
                 currency: apiResponse.currency
             ),
             status: apiResponse.status,
@@ -193,7 +193,7 @@ extension CheckoutController.Session {
             localState: localState,
             customer: apiResponse.customer,
             canDetachPaymentMethod: apiResponse.canDetachPaymentMethod,
-            savedPaymentMethodsOfferSave: PaymentPagesAPIResponse.makeSavedPaymentMethodsOfferSave(
+            savedPaymentMethodsOfferSave: CheckoutClientAPIResponse.makeSavedPaymentMethodsOfferSave(
                 from: apiResponse.savedPaymentMethodsOfferSave
             ),
             setupFutureUsageForPaymentMethodType: apiResponse.setupFutureUsageForPaymentMethodType ?? [:],

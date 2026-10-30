@@ -779,7 +779,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         payment.billingContact?.phoneNumber = nil
         payment.shippingContact?.emailAddress = "wallet@example.com"
         payment.shippingContact?.phoneNumber = CNPhoneNumber(stringValue: "+1 (415) 555-1234")
-        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
         let confirmed = expectation(description: "Checkout confirmed with inline Apple Pay data")
         let session = CheckoutTestHelpers.makeSession([
             "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
@@ -837,7 +837,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         stub(condition: isPath("/v1/tokens")) { _ in
             HTTPStubsResponse(jsonObject: self.tokenJSON(), statusCode: 200, headers: nil)
         }
-        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
         let confirmed = expectation(description: "Checkout confirmed with inline Apple Pay data")
         let (context, controller) = makeContext(attribution: .init(confirmingElement: confirmationSource, configuredElements: [.paymentElement, .expressCheckoutElement])) { parameters in
             // Then the /confirm request parameters are tagged with that same component, so
@@ -871,7 +871,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             tokenCount += 1
             return HTTPStubsResponse(jsonObject: self.tokenJSON(id: "tok_\(tokenCount)"), statusCode: 200, headers: nil)
         }
-        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
         var confirmedTokens: [String?] = []
         let (context, controller) = makeContext { parameters in
             confirmedTokens.append(parameters.paymentMethodData?.card?.token)

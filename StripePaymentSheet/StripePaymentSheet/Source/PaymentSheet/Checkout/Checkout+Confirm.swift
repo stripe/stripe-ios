@@ -114,9 +114,9 @@ extension CheckoutController {
     }
 
     enum InternalConfirmResult {
-        case completed(PaymentPagesAPIResponse)
-        case canceled(sessionResponse: PaymentPagesAPIResponse? = nil)
-        case failed(Error, sessionResponse: PaymentPagesAPIResponse? = nil)
+        case completed(CheckoutClientAPIResponse)
+        case canceled(sessionResponse: CheckoutClientAPIResponse? = nil)
+        case failed(Error, sessionResponse: CheckoutClientAPIResponse? = nil)
 
         var paymentSheetResult: PaymentSheetResult {
             switch self {
@@ -129,7 +129,7 @@ extension CheckoutController {
             }
         }
 
-        var checkoutSessionResponse: PaymentPagesAPIResponse? {
+        var checkoutSessionResponse: CheckoutClientAPIResponse? {
             switch self {
             case .completed(let response):
                 return response
@@ -533,7 +533,7 @@ extension CheckoutController {
         // 1. Call /confirm
         // TODO: Scope Radar option creation and this request with confirmationChallenge.withRadarOptions(for:).
         // complete() is async, but the underlying AssertionHandle.complete() schedules rather than awaits release.
-        let response: PaymentPagesAPIResponse
+        let response: CheckoutClientAPIResponse
         do {
             response = try await apiClient.confirmCheckoutSession(with: requestParameters)
         } catch {
@@ -637,8 +637,8 @@ extension CheckoutController {
     /// Applies the server-reported Session fields, preserving /confirm when no poll response was received.
     private static func applyingPollResponse(
         _ pollResponse: CheckoutClientPollResponse?,
-        to response: PaymentPagesAPIResponse
-    ) -> PaymentPagesAPIResponse {
+        to response: CheckoutClientAPIResponse
+    ) -> CheckoutClientAPIResponse {
         guard let pollResponse else { return response }
         var updatedResponse = response
         updatedResponse.status = pollResponse.status
@@ -646,7 +646,7 @@ extension CheckoutController {
         return updatedResponse
     }
 
-    private static func paymentError(from session: PaymentPagesAPIResponse) -> Error {
+    private static func paymentError(from session: CheckoutClientAPIResponse) -> Error {
         let lastErrorFields = session.paymentResponse?.lastPaymentError?.allResponseFields
         return NSError.stp_error(fromStripeResponse: lastErrorFields.map { ["error": $0] })
             ?? PaymentSheetError.errorHandlingNextAction

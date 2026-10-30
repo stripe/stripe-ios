@@ -398,7 +398,7 @@ extension Intent {
                 ],
             ]
         }
-        let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        let checkoutSession = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
         return .checkout(checkoutSession.makePublicSession())
     }
 }

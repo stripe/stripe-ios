@@ -155,7 +155,7 @@ final class PaymentElementTest: XCTestCase {
         // Given Link is enabled and an unverified account is already loaded
         var json = Self.openSessionJSON(paymentMethodTypes: ["card", "link"])
         json["customer_email"] = "customer@example.com"
-        let response = try PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
         let previousAccount = LinkAccountContext.shared.account
         defer { LinkAccountContext.shared.account = previousAccount }
         let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: response))
@@ -226,7 +226,7 @@ final class PaymentElementTest: XCTestCase {
             "arb_id": "arb_test",
             "experiment_assignments": [PaymentMethodMessagingPromotionsExperiment.experimentName: "treatment"],
         ]
-        checkout.dangerouslySetSessionDirectly(try PaymentPagesAPIResponse.decode(fromAPIResponse: json).makePublicSession())
+        checkout.dangerouslySetSessionDirectly(try CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession())
         checkout.updateForSessionChange()
 
         // Then the update has finished while promotions fetch asynchronously with the new inputs
@@ -301,7 +301,7 @@ final class PaymentElementTest: XCTestCase {
         // When Checkout creates PaymentElement
         let checkout = try await CheckoutController(
             configuration: CheckoutTestHelpers.makeConfiguration(
-                apiResponse: try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON),
+                apiResponse: try CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON),
                 configuration: checkoutConfiguration
             )
         )
@@ -668,7 +668,7 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.label, "PayNow")
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
 
-        let completedSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: {
+        let completedSession = try CheckoutClientAPIResponse.decode(fromAPIResponse: {
             var json = Self.openSessionJSON(paymentMethodTypes: ["card", "paynow"])
             json["status"] = "complete"
             json["payment_status"] = "paid"
@@ -794,7 +794,7 @@ final class PaymentElementTest: XCTestCase {
     ) {
         var sessionJSON = STPTestUtils.jsonNamed("CheckoutSession")!
         sessionJSON["automatic_tax"] = ["enabled": true, "status": "requires_address", "address_source": "billing"]
-        let session = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
+        let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON)
         let requestRecorder = CheckoutSessionRequestRecorder()
         let configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         CheckoutTestHelpers.stubCheckoutSessionRequests(
@@ -810,8 +810,8 @@ final class PaymentElementTest: XCTestCase {
         return (configuration, requestRecorder)
     }
 
-    private static func makeOpenSession(paymentMethodTypes: [String], businessName: String? = nil) -> PaymentPagesAPIResponse {
-        return try! PaymentPagesAPIResponse.decode(
+    private static func makeOpenSession(paymentMethodTypes: [String], businessName: String? = nil) -> CheckoutClientAPIResponse {
+        return try! CheckoutClientAPIResponse.decode(
             fromAPIResponse: openSessionJSON(paymentMethodTypes: paymentMethodTypes, businessName: businessName)
         )
     }

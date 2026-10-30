@@ -17,7 +17,7 @@ import PassKit
 import UIKit
 import XCTest
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     /// Convenience for fixtures that contain no client-local session state.
     func makePublicSession(
         clientSecret: String? = nil,
@@ -68,12 +68,12 @@ extension ExpressCheckoutElementUtilities {
     }
 }
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     static func decode(
         fromAPIResponse response: [AnyHashable: Any]
-    ) throws -> PaymentPagesAPIResponse {
+    ) throws -> CheckoutClientAPIResponse {
         let data = try JSONSerialization.data(withJSONObject: response)
-        return try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
+        return try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
     }
 
 }
@@ -205,11 +205,11 @@ enum CheckoutTestHelpers {
         "ordered_payment_method_types_and_wallets": ["card"],
     ]
 
-    /// Creates a `PaymentPagesAPIResponse` from `baseSessionJSON` with top-level key overrides.
+    /// Creates a `CheckoutClientAPIResponse` from `baseSessionJSON` with top-level key overrides.
     /// To test field *absence*, mutate `baseSessionJSON` directly instead.
-    static func makeSession(_ overrides: [String: Any] = [:]) -> PaymentPagesAPIResponse {
+    static func makeSession(_ overrides: [String: Any] = [:]) -> CheckoutClientAPIResponse {
         let json = makeSessionJSON(overrides)
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeSessionWithWalletTypes(
@@ -218,7 +218,7 @@ enum CheckoutTestHelpers {
         linkUseAttestation: Bool? = nil,
         automaticTaxAddressSource: String? = nil,
         customerEmail: String? = nil
-    ) -> PaymentPagesAPIResponse {
+    ) -> CheckoutClientAPIResponse {
         var session: [String: Any] = [
             "ordered_payment_method_types_and_wallets": walletTypes,
         ]
@@ -259,7 +259,7 @@ enum CheckoutTestHelpers {
     ///   - stubAllOutgoingRequests: Whether to stub every outgoing API request made by the client, or only the initialization request.
     @MainActor
     static func makeConfiguration(
-        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
+        apiResponse: CheckoutClientAPIResponse = makeOpenSession(),
         configuration: CheckoutController.Configuration? = nil,
         paymentElementConfiguration: PaymentElement.Configuration? = .init(),
         expressCheckoutElementConfiguration: ExpressCheckoutElement.Configuration? = .init { _ in },
@@ -290,7 +290,7 @@ enum CheckoutTestHelpers {
     /// Builds a stubbed Checkout configuration that enables Currency Selector Element.
     @MainActor
     static func makeCurrencySelectorConfiguration(
-        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
+        apiResponse: CheckoutClientAPIResponse = makeOpenSession(),
         configuration: CheckoutController.Configuration? = nil
     ) -> CheckoutController.Configuration {
         let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
@@ -308,7 +308,7 @@ enum CheckoutTestHelpers {
 
     @MainActor
     static func makeStubbedAPIClient(
-        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
+        apiResponse: CheckoutClientAPIResponse = makeOpenSession(),
         clientSecret: String? = nil,
         stubAllOutgoingRequests: Bool = true
     ) -> STPAPIClient {
@@ -415,34 +415,34 @@ enum CheckoutTestHelpers {
         }
     }
 
-    /// Presents the shared Payment Pages test session using the CheckoutClient init field names.
+    /// Presents the shared Checkout Client test session using the CheckoutClient init field names.
     static let openSessionJSON: [AnyHashable: Any] = baseSessionJSON.merging(["id": "cs_test_123"]) { _, new in new }
 
-    static func makeOpenSession(customerEmail: String? = nil, billingAddressCollection: String? = nil) -> PaymentPagesAPIResponse {
+    static func makeOpenSession(customerEmail: String? = nil, billingAddressCollection: String? = nil) -> CheckoutClientAPIResponse {
         var json = openSessionJSON
         json["customer_email"] = customerEmail
         json["billing_address_collection"] = billingAddressCollection
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 
-    static func makeClosedSession() -> PaymentPagesAPIResponse {
+    static func makeClosedSession() -> CheckoutClientAPIResponse {
         var json = openSessionJSON
         json["status"] = "complete"
         json["payment_status"] = "paid"
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 
-    static func makeOpenSession(allowedCountries: [String]) -> PaymentPagesAPIResponse {
+    static func makeOpenSession(allowedCountries: [String]) -> CheckoutClientAPIResponse {
         var json = openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": allowedCountries]
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeAdaptivePricingSession(
         currency: String = "usd",
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
-    ) -> PaymentPagesAPIResponse {
+    ) -> CheckoutClientAPIResponse {
         var json: [AnyHashable: Any] = openSessionJSON
         json["presentment_currency"] = currency
         json["items"] = makeOneTimePriceCheckoutItems(
@@ -462,7 +462,7 @@ enum CheckoutTestHelpers {
             "local_currency_options": [localCurrencyOption],
         ]
 
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 
     private static func jsonObject(_ value: Any) -> Any {
@@ -591,19 +591,19 @@ extension CheckoutController.ApplePayConfirmationParameters {
     }
 }
 
-// MARK: - PaymentPagesAPIResponse decorator helpers
+// MARK: - CheckoutClientAPIResponse decorator helpers
 
-extension PaymentPagesAPIResponse {
-    func withCustomer(id: String = "cus_123") -> PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
+    func withCustomer(id: String = "cus_123") -> CheckoutClientAPIResponse {
         withOverrides(["customer": ["id": id]])
     }
 
-    func withSessionId(_ id: String) -> PaymentPagesAPIResponse {
+    func withSessionId(_ id: String) -> CheckoutClientAPIResponse {
         withOverrides(["id": id])
     }
 
-    private func withOverrides(_ overrides: [String: Any]) -> PaymentPagesAPIResponse {
+    private func withOverrides(_ overrides: [String: Any]) -> CheckoutClientAPIResponse {
         let json = allResponseFields.merging(overrides) { _, new in new }
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 }
