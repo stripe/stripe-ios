@@ -34,6 +34,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
     let totalSummary: TotalSummary?
     let adaptivePricingInfo: AdaptivePricingInfo?
     let automaticTax: AutomaticTax?
+    let automaticPaymentMethodTypes: Bool?
     let paymentMethodOptions: STPPaymentMethodOptions?
     let customer: Customer?
     let canDetachPaymentMethod: Bool
@@ -73,6 +74,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         case shippingAddressCollection
         case totalSummary
         case adaptivePricingInfo
+        case automaticPaymentMethodTypes
         case paymentMethodOptions
         case customer
         case paymentResponse
@@ -145,6 +147,7 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         totalSummary = try container.decodeIfPresent(TotalSummary.self, forKey: .totalSummary)
         adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.self, forKey: .adaptivePricingInfo)
         automaticTax = try container.decodeIfPresent(AutomaticTax.self, forKey: .automaticTax)
+        automaticPaymentMethodTypes = try container.decodeIfPresent(Bool.self, forKey: .automaticPaymentMethodTypes)
         paymentMethodOptions = try container.decodeIfPresent(
             LegacyDecoded<STPPaymentMethodOptions>.self,
             forKey: .paymentMethodOptions
@@ -230,14 +233,10 @@ extension PaymentPagesAPIResponse {
         let innerItemKey: String
         let price: Price
         let quantity: Int
-        let subtotal: Int
-        let total: Int
+        let amountDetails: AmountDetails
         let unitAmount: Int?
         let unitAmountDecimal: Double?
         let unitLabel: String?
-        let taxAmounts: [TaxAmount]
-        let taxInclusive: Int
-        let taxExclusive: Int
         let adjustableQuantity: AdjustableQuantity?
 
         private enum CodingKeys: String, CodingKey {
@@ -251,7 +250,7 @@ extension PaymentPagesAPIResponse {
             case adjustableQuantity
         }
 
-        private struct AmountDetails: Decodable {
+        struct AmountDetails: Decodable {
             let subtotal: Int
             let total: Int
             let taxAmounts: [TaxAmount]?
@@ -267,9 +266,7 @@ extension PaymentPagesAPIResponse {
             guard quantity >= 0 else {
                 throw decoder.dataCorrupted("quantity must not be negative")
             }
-            let amountDetails = try container.decode(AmountDetails.self, forKey: .amountDetails)
-            subtotal = amountDetails.subtotal
-            total = amountDetails.total
+            amountDetails = try container.decode(AmountDetails.self, forKey: .amountDetails)
             unitAmount = try container.decodeIfPresent(Int.self, forKey: .unitAmount)
 
             if let rawUnitAmountDecimal = try container.decodeIfPresent(
@@ -290,9 +287,6 @@ extension PaymentPagesAPIResponse {
             }
 
             unitLabel = try container.decodeIfPresent(String.self, forKey: .unitLabel)
-            taxAmounts = amountDetails.taxAmounts ?? []
-            taxInclusive = amountDetails.taxInclusive
-            taxExclusive = amountDetails.taxExclusive
             adjustableQuantity = try container.decodeIfPresent(
                 AdjustableQuantity.self,
                 forKey: .adjustableQuantity

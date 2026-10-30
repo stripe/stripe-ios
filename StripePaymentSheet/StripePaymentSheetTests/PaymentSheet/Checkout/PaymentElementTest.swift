@@ -836,6 +836,7 @@ final class PaymentElementTest: XCTestCase {
     ) {
         let requestRecorder = CheckoutSessionRequestRecorder()
         var sessionJSON = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
+        // Keep the saved card and its billing address on the Checkout customer.
         sessionJSON["customer"] = [
             "id": "cus_123",
             "payment_methods": [

@@ -73,15 +73,16 @@ extension PaymentPagesAPIResponse {
                     } else {
                         adjustableQuantity = nil
                     }
-                    let taxAmounts = item.taxAmounts.map {
+                    let amountDetails = item.amountDetails
+                    let taxAmounts = (amountDetails.taxAmounts ?? []).map {
                         makeSessionTaxAmount(from: $0, currency: currency, locale: locale)
                     }
-                    let amountDetails = CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item.AmountDetails(
-                        total: makeAmount(Double(item.total), currency: currency, locale: locale),
-                        subtotal: makeAmount(Double(item.subtotal), currency: currency, locale: locale),
+                    let publicAmountDetails = CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item.AmountDetails(
+                        total: makeAmount(Double(amountDetails.total), currency: currency, locale: locale),
+                        subtotal: makeAmount(Double(amountDetails.subtotal), currency: currency, locale: locale),
                         taxAmounts: taxAmounts.isEmpty ? nil : taxAmounts,
-                        taxInclusive: makeAmount(Double(item.taxInclusive), currency: currency, locale: locale),
-                        taxExclusive: makeAmount(Double(item.taxExclusive), currency: currency, locale: locale)
+                        taxInclusive: makeAmount(Double(amountDetails.taxInclusive), currency: currency, locale: locale),
+                        taxExclusive: makeAmount(Double(amountDetails.taxExclusive), currency: currency, locale: locale)
                     )
                     return CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item(
                         key: item.innerItemKey,
@@ -103,7 +104,7 @@ extension PaymentPagesAPIResponse {
                         unitLabel: item.unitLabel,
                         quantity: item.quantity,
                         adjustableQuantity: adjustableQuantity,
-                        amountDetails: amountDetails
+                        amountDetails: publicAmountDetails
                     )
                 }
 
@@ -144,10 +145,10 @@ extension PaymentPagesAPIResponse {
         var total = 0
         for checkoutItem in checkoutItems {
             for item in checkoutItem.oneTimePrice.items {
-                subtotal += item.subtotal
-                taxExclusive += item.taxExclusive
-                taxInclusive += item.taxInclusive
-                total += item.total
+                subtotal += item.amountDetails.subtotal
+                taxExclusive += item.amountDetails.taxExclusive
+                taxInclusive += item.amountDetails.taxInclusive
+                total += item.amountDetails.total
             }
         }
         return CheckoutController.Session.Totals(
