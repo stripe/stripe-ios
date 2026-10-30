@@ -54,13 +54,15 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         // When the session is polled
         let response = try await apiClient.pollCheckoutSession(
             checkoutSessionId: sessionId,
+            clientSecret: checkoutSessionResponse.clientSecret,
             timeout: 30
         )
 
         // Then its current poll state is returned
         XCTAssertEqual(response.sessionId, sessionId)
-        XCTAssertEqual(response.state, .active)
-        XCTAssertNil(response.paymentObjectStatus)
+        XCTAssertEqual(response.confirmationStatus, .notStarted)
+        XCTAssertEqual(response.status, .open)
+        XCTAssertEqual(response.paymentStatus, .unpaid)
     }
 
     func testInitCheckoutSessionPayment() async throws {

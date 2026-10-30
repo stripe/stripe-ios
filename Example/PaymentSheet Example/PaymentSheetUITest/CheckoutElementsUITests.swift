@@ -176,7 +176,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertNotEqual(totalAmount.label, subtotalAmount.label)
         XCTAssertTrue(buyButton.label.contains(totalAmount.label))
 
-        // When the customer selects a card in Payment Element
+        // When the customer selects a card that requires 3DS2 authentication in Payment Element
         app.buttons["Select payment method"].scrollToAndTap(in: app)
         if !app.textFields["Card number"].waitForExistence(timeout: 2) {
             app.buttons["Add new payment method"].forceTapWhenHittableInTestCase(self)
@@ -184,15 +184,24 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         if !app.textFields["Card number"].waitForExistence(timeout: 2) {
             app.buttons["+ Add"].forceTapWhenHittableInTestCase(self)
         }
-        try fillCardData(app)
+        try fillCardData(app, cardNumber: "4000002760003184")
         app.stp_dismissKeyboard()
         app.buttons["Continue"].forceTapWhenHittableInTestCase(self)
 
         // Then the merchant surface reflects the selected payment method after Checkout updates.
-        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["•••• 3184"].waitForExistence(timeout: 10))
         buyButton.scrollToAndTap(in: app)
 
-        XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
+        // When the customer completes the 3DS2 challenge
+        let challengeCodeTextField = app.textFields["STDSTextField"]
+        XCTAssertTrue(challengeCodeTextField.waitForExistenceAndTap(timeout: 10))
+        challengeCodeTextField.typeText("424242" + XCUIKeyboardKey.return.rawValue)
+        XCTAssertTrue(app.buttons["Submit"].waitForExistenceAndTap())
+
+        // Then Checkout polls the server and returns the updated payment status
+        let successAlert = app.alerts["Success"]
+        XCTAssertTrue(successAlert.waitForExistence(timeout: 20))
+        XCTAssertTrue(successAlert.staticTexts["Payment status: .paid"].exists)
     }
 
     func testExpressCheckoutElementApplePayCompletesCheckout() {
@@ -236,8 +245,6 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             "elements.express_checkout_element.init",
             "checkout_elements.confirm.started",
             "stripeios.token_creation",
-            "stripeios.paymenthandler.handle_next_action.started",
-            "stripeios.paymenthandler.handle_next_action.finished",
             "checkout_elements.confirm.succeeded",
         ])
         XCTAssertEqual(
@@ -246,40 +253,75 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         )
     }
 
-    func testExpressCheckoutElementLinkAnalytics() {
-        // Given an ECE-only Checkout Session for a new Link customer, without shipping or automatic tax
+    func testExpressCheckoutElementLink() {
+        // Given a native Link checkout with a card that always requires authentication
         var settings = CheckoutPlayground.Settings()
-        settings.email?.value = "checkout-elements-\(UUID().uuidString)@example.com"
         settings.integrationType = .eceOnly
+        settings.linkMode = .native
+        settings.currency = .eur
+        settings.email = .init(source: .none)
         settings.shippingAddressCollection = false
         settings.automaticTax = false
         loadCheckoutPlayground(app, settings)
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
-
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
+
         let linkButton = app.buttons["Pay with Link"]
         XCTAssertTrue(linkButton.waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["Select payment method"].exists)
         assertAnalyticsEvents([
             "checkout_elements.init.started",
-            "link.account_lookup.complete",
             "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
         ])
 
-        // When the customer opens Link from Express Checkout Element
         linkButton.tap()
-
-        // Then Link opens and its analytics remain part of the ECE sequence
         XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: 10))
         assertAnalyticsEvents([
             "checkout_elements.init.started",
-            "link.account_lookup.complete",
             "checkout_elements.init.succeeded",
             "elements.express_checkout_element.init",
             "checkout_elements.confirm.started",
             "link.signup.flow_presented",
         ])
+
+        fillOutLinkSignup(app, email: "link_checkout+\(UUID().uuidString)@link.com")
+        app.otherElements["Stripe.Link.PaymentMethodPicker"].waitForExistenceAndTap(timeout: 10)
+        app.buttons["Add a payment method"].waitForExistenceAndTap()
+        app.buttons["Debit or credit card"].waitForExistenceAndTap()
+        fillOutLinkCardData(app, cardNumber: "4000002760003184", cvc: "123", includingBillingDetails: false)
+
+        let wallet = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+        let payButton = wallet.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Pay €")).firstMatch
+        XCTAssertTrue(payButton.waitForExistenceAndTap(timeout: 10))
+        let challengeCode = app.textFields["STDSTextField"]
+        XCTAssertTrue(challengeCode.waitForExistence(timeout: 20))
+
+        // When the customer cancels through the sheet's navigation bar
+        XCTAssertTrue(app.buttons["UIButton.Back"].waitForExistenceAndTap())
+
+        // Then authentication exits and the wallet can submit another payment attempt
+        XCTAssertTrue(challengeCode.waitForNonExistence(timeout: 10))
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10))
+        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton)
+        waitForExpectations(timeout: 10)
+        payButton.tap()
+
+        // ...and completing authentication on the retry finishes Checkout
+        XCTAssertTrue(challengeCode.waitForExistenceAndTap(timeout: 20))
+        challengeCode.typeText("424242" + XCUIKeyboardKey.return.rawValue)
+        XCTAssertTrue(app.buttons["Submit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
+
+        // Canceling authentication and retrying still produces one successful Checkout confirmation.
+        let confirmationEvents = analyticsLog.filter {
+            $0[string: "event"]?.hasPrefix("checkout_elements.confirm.") == true
+        }
+        XCTAssertEqual(confirmationEvents.compactMap { $0[string: "event"] }, [
+            "checkout_elements.confirm.started",
+            "checkout_elements.confirm.succeeded",
+        ])
+        XCTAssertEqual(confirmationEvents.last?[string: "invocation_source"], "express_checkout_element")
     }
 
     private func fillShippingAddress() {

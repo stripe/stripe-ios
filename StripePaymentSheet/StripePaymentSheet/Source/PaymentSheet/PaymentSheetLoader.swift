@@ -98,11 +98,11 @@ final class PaymentSheetLoader {
 
             // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.
             let prefetchedLinkEmailAndSourceTask = Task {
-                try? await getCustomerEmailForLinkWithEphemeralKey(configuration: configuration, loadTimings: loadTimings)
+                try? await getCustomerEmailForLinkWithEphemeralKey(configuration: configuration, customerProvider: customerProvider, loadTimings: loadTimings)
             }
             // Fetch Customer SPMs if using EK b/c they're not in the v1/e/s response.
             let prefetchedSavedPaymentMethodsTask = Task {
-                try await fetchSavedPaymentMethodsWithEphemeralKey(configuration: configuration, loadTimings: loadTimings)
+                try await fetchSavedPaymentMethodsWithEphemeralKey(configuration: configuration, customerProvider: customerProvider, loadTimings: loadTimings)
             }
 
             // Load misc singletons
@@ -376,19 +376,10 @@ final class PaymentSheetLoader {
         loadTimings?.logStart("filterPaymentMethods")
         defer { loadTimings?.logEnd("filterPaymentMethods") }
         // Retrieve the payment methods from ElementsSession or by making direct API calls
-        var savedPaymentMethods: [STPPaymentMethod]
-        if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
-            // A. SPMs are on ElementSessions object when using CustomerSession.
-            savedPaymentMethods = elementsSessionPaymentMethods
-        } else if case let .checkout(session) = intent,
-                  let customerPaymentMethods = session.customer?.paymentMethods {
-            // B. SPMs are on CheckoutSession object
-            savedPaymentMethods = customerPaymentMethods
-        } else if let prefetchedSPMs {
-            // C. SPMs are pre-fetched prior to this point when using Ephemeral Keys.
-            // Filter them manually now that we have the v1/e/s response. This step should ~mimick the filtering in v1/elements/sessions.
-            savedPaymentMethods = prefetchedSPMs
-        } else {
+        guard var savedPaymentMethods = customerProvider.savedPaymentMethods(
+            elementsSession: elementsSession,
+            prefetchedPaymentMethods: prefetchedSPMs
+        ) else {
             return []
         }
 
@@ -452,12 +443,10 @@ final class PaymentSheetLoader {
     @MainActor
     static func fetchSavedPaymentMethodsWithEphemeralKey(
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         loadTimings: LoadTimings
     ) async throws -> [STPPaymentMethod]? {
-        guard
-            let customerID = configuration.customer?.id,
-            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
-        else {
+        guard let credentials = customerProvider.legacyEphemeralKeyCredentials else {
             return nil
         }
         loadTimings.logStart("fetchSavedPaymentMethods")
@@ -465,8 +454,8 @@ final class PaymentSheetLoader {
             loadTimings.logEnd("fetchSavedPaymentMethods")
         }
         var paymentMethods = try await configuration.apiClient.listPaymentMethods(
-            customerID: customerID,
-            ephemeralKeySecret: ephemeralKey
+            customerID: credentials.customerID,
+            ephemeralKeySecret: credentials.ephemeralKeySecret
         )
         // Remove unsupported types
         // We don't support Link payment methods with customer ephemeral keys

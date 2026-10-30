@@ -28,9 +28,7 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
 
         // Then confirmation completes without creating an Intent
         assertCompleted(result)
-        // TODO(porter) polling: Expect complete when CheckoutClient polling is available.
-        // Until then, preserve the open Session returned by confirmation.
-        XCTAssertEqual(checkout.session.status, .open)
+        XCTAssertEqual(checkout.session.status, .complete(.noPaymentRequired))
         XCTAssertEqual(checkout.session.paymentStatus, .noPaymentRequired)
     }
 

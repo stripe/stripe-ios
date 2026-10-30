@@ -92,7 +92,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
         // Given the poll endpoint returns an error used only for internal rate-limit handling
         let apiClient = CheckoutTestHelpers.makeStubbedAPIClient()
         stubError(
-            path: "/v1/payment_pages/cs_test_123/poll",
+            path: "/v1/checkout_client/cs_test_123/poll",
             response: ["type": "invalid_request_error", "code": "test_code", "message": "Server message"],
             statusCode: 429,
             headers: ["request-id": "req_test_poll"]
@@ -100,7 +100,11 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
 
         // When Checkout polls for confirmation status
         do {
-            _ = try await apiClient.pollCheckoutSession(checkoutSessionId: "cs_test_123", timeout: 10)
+            _ = try await apiClient.pollCheckoutSession(
+                checkoutSessionId: "cs_test_123",
+                clientSecret: "cs_test_123_secret_123",
+                timeout: 10
+            )
             XCTFail("Expected polling to fail")
         } catch {
             // Then standard message formatting applies and the original metadata remains available

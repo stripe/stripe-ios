@@ -109,22 +109,13 @@ struct PaymentPagesAPIResponse: UnknownFieldsDecodable, CustomStringConvertible 
         checkoutItems = decodedCheckoutItems
 
         livemode = try container.decode(Bool.self, forKey: .livemode)
-        let decodedPaymentStatus = try container.decode(String.self, forKey: .paymentStatus)
-        guard let paymentStatus = CheckoutController.Session.Status.PaymentStatus.paymentStatus(
-            from: decodedPaymentStatus
-        ) else {
-            throw decoder.dataCorrupted("Unsupported payment_status: \(decodedPaymentStatus)")
-        }
-        self.paymentStatus = paymentStatus
+        paymentStatus = try container.decode(CheckoutController.Session.Status.PaymentStatus.self, forKey: .paymentStatus)
 
-        let decodedStatus = try container.decode(String.self, forKey: .status)
-        guard let status = CheckoutController.Session.Status.status(
-            from: decodedStatus,
+        status = try CheckoutController.Session.Status.decode(
+            from: container,
+            forKey: .status,
             paymentStatus: paymentStatus
-        ) else {
-            throw decoder.dataCorrupted("Unsupported Checkout Session status: \(decodedStatus)")
-        }
-        self.status = status
+        )
 
         customerEmail = try container.decodeIfPresent(String.self, forKey: .customerEmail)
         let savedOptions = try container.decodeIfPresent(SavedPaymentMethodOptions.self, forKey: .savedPaymentMethodOptions)
@@ -175,10 +166,23 @@ extension PaymentPagesAPIResponse {
 
     /// CheckoutClient's canonical payment details. Intent references are retrieved separately for authentication.
     struct PaymentResponse: Decodable {
-        let status: String
+        let status: Status
         let lastPaymentError: StripeAPIError?
         let paymentIntent: IntentReference?
         let setupIntent: IntentReference?
+
+        enum Status: String, Decodable {
+            case succeeded
+            case requiresAction = "requires_action"
+            case processing
+            case requiresCapture = "requires_capture"
+            case requiresPaymentMethod = "requires_payment_method"
+            case canceled
+            case requiresConfirmation = "requires_confirmation"
+            case processingSync = "processing_sync"
+            case requiresReauthorization = "requires_reauthorization"
+            case expired
+        }
     }
 
     /// Adapts a dictionary-backed API model to `Decodable` while it is migrated.

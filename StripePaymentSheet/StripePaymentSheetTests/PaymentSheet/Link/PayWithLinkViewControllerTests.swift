@@ -8,6 +8,7 @@
 import Foundation
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePayments
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
@@ -299,6 +300,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
             intent: ._testValue(),
             elementsSession: ._testValue(intent: ._testValue()),
             configuration: config,
+            paymentHandler: STPPaymentHandler(apiClient: config.apiClient),
             analyticsHelper: ._testValue()
         )
 

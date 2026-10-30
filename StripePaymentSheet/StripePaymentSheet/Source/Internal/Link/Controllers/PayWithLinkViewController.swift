@@ -76,14 +76,11 @@ final class PayWithLinkViewController: NSObject {
 
     enum LinkAccountError: LocalizedError {
         case noLinkAccount
-        case noFundingSources
 
         var errorDescription: String? {
             switch self {
             case .noLinkAccount:
                 return "No Link account is set"
-            case .noFundingSources:
-                return "No supported payment methods available for this Link session"
             }
         }
     }
@@ -337,10 +334,6 @@ final class PayWithLinkViewController: NSObject {
             contentViewController.navigationBar.setStyle(.back(showAdditionalButton: false))
         }
 
-        // Re-enable user interaction when presenting a new controller.
-        if !sheetContainer.view.isUserInteractionEnabled {
-            setUserInteractionEnabled(true)
-        }
         sheetContainer.pushContentViewController(contentViewController)
     }
 
@@ -426,7 +419,9 @@ private extension PayWithLinkViewController {
         let supportedPaymentDetailsTypesSet = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
 
         guard !supportedPaymentDetailsTypesSet.isEmpty else {
-            finish(withResult: .failed(error: LinkAccountError.noFundingSources), deferredIntentConfirmationType: nil)
+            // We only learn which payment details types the consumer can use after they authenticate,
+            // so let them pick another account or payment method instead of dismissing Link.
+            setViewControllers([NoFundingSourcesViewController(context: context)])
             return
         }
 
