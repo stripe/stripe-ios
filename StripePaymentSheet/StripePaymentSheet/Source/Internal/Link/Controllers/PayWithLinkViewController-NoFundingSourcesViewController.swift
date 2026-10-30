@@ -79,7 +79,7 @@ extension PayWithLinkViewController {
                 return nil
             }
             let button = Button(configuration: primaryButtonConfiguration, title: context.secondaryButtonLabel)
-            button.addTarget(self, action: #selector(payAnotherWayButtonTapped(_:)), for: .touchUpInside)
+            button.addTarget(self, action: #selector(payAnotherWayButtonTapped), for: .touchUpInside)
             return button
         }()
 
@@ -87,7 +87,7 @@ extension PayWithLinkViewController {
             // When the user can't leave Link, logging in to another account is the only action, so it becomes the primary button.
             let configuration = context.canContinueWithoutLink ? secondaryButtonConfiguration : primaryButtonConfiguration
             let button = Button(configuration: configuration, title: String.Localized.log_in_to_another_account)
-            button.addTarget(self, action: #selector(useAnotherAccountButtonTapped(_:)), for: .touchUpInside)
+            button.addTarget(self, action: #selector(useAnotherAccountButtonTapped), for: .touchUpInside)
             return button
         }()
 
@@ -162,12 +162,12 @@ extension PayWithLinkViewController {
         }
 
         @objc
-        private func payAnotherWayButtonTapped(_ sender: Button) {
+        private func payAnotherWayButtonTapped() {
             coordinator?.cancel(shouldReturnToPaymentSheet: true)
         }
 
         @objc
-        private func useAnotherAccountButtonTapped(_ sender: Button) {
+        private func useAnotherAccountButtonTapped() {
             coordinator?.logout(cancel: false)
         }
     }
