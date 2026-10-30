@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 /**
- A textfield whose input view is a `UIPickerView` (on iOS) or a `UIMenu` (on Catalyst) with a list of the strings.
+ A dropdown field backed by a `UIPickerView` or an anchored `UIMenu`.
  
  For internal SDK use only
  */
@@ -82,6 +82,24 @@ import UIKit
 
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
     public let label: String?
+
+    public enum Presentation {
+        case picker
+        case menu
+    }
+    private let presentation: Presentation
+
+    private(set) lazy var menuButton: PickerFieldView.MenuButton? = {
+        #if targetEnvironment(macCatalyst) || canImport(visionOS)
+        return nil
+        #else
+        guard presentation == .menu else { return nil }
+        let button = PickerFieldView.MenuButton()
+        button.showsMenuAsPrimaryAction = true
+        return button
+        #endif
+    }()
+
 #if targetEnvironment(macCatalyst) || canImport(visionOS)
     private(set) lazy var pickerView: UIButton = {
         let button = UIButton()
@@ -116,11 +134,12 @@ import UIKit
         let pickerFieldView = PickerFieldView(
             label: label,
             shouldShowChevron: disableDropdownWithSingleElement ? items.count != 1 : true,
-            pickerView: pickerView,
+            pickerView: menuButton ?? pickerView,
             delegate: self,
             theme: theme,
             hasPadding: hasPadding,
-            isOptional: isOptional
+            isOptional: isOptional,
+            menuButton: menuButton
         )
         if disableDropdownWithSingleElement && items.count == 1 {
             pickerFieldView.isUserInteractionEnabled = false
@@ -173,10 +192,12 @@ import UIKit
         disableDropdownWithSingleElement: Bool = false,
         isOptional: Bool = false,
         startsEmpty: Bool = false,
+        presentation: Presentation = .picker,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
         stpAssert(!items.filter { !$0.isDisabled }.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
 
+        self.presentation = presentation
         self.label = label
         self.theme = theme
         self.disableDropdownWithSingleElement = disableDropdownWithSingleElement
@@ -221,8 +242,22 @@ import UIKit
     }
 
     public func select(index: Int, shouldAutoAdvance: Bool = true) {
+        guard menuButton != nil else {
+            selectedIndex = index
+            didFinish(pickerFieldView, shouldAutoAdvance: shouldAutoAdvance)
+            return
+        }
+
+        let didChange = selectedIndex != index
         selectedIndex = index
-        didFinish(pickerFieldView, shouldAutoAdvance: shouldAutoAdvance)
+        if didChange {
+            didUpdate?(index)
+            delegate?.didUpdate(element: self)
+        }
+        if shouldAutoAdvance {
+            _ = pickerFieldView.resignFirstResponder()
+            delegate?.continueToNextField(element: self)
+        }
     }
 
     public func update(items: [DropdownItem]) {
@@ -239,6 +274,24 @@ import UIKit
 private extension DropdownFieldElement {
 
     func updatePickerField() {
+        if let menuButton {
+            menuButton.menu = UIMenu(children: items.enumerated().compactMap { index, item in
+                guard !(startsEmpty && index == 0) else { return nil }
+                return UIAction(
+                    title: item.pickerDisplayName.string,
+                    identifier: .init(rawValue: String(index)),
+                    attributes: item.isDisabled ? .disabled : [],
+                    state: index == selectedIndex ? .on : .off
+                ) { [weak self] _ in
+                    guard let self,
+                          self.pickerFieldView.isUserInteractionEnabled,
+                          self.items.indices.contains(index),
+                          self.items[index].rawData == item.rawData,
+                          !self.items[index].isDisabled else { return }
+                    self.select(index: index)
+                }
+            })
+        }
         #if targetEnvironment(macCatalyst) || canImport(visionOS)
         if #available(macCatalyst 14.0, *) {
             // Mark the enabled menu item as selected
@@ -247,7 +300,7 @@ private extension DropdownFieldElement {
         }
         #else
         // Update picker view selection directly using selectedIndex
-        if pickerView.selectedRow(inComponent: 0) != selectedIndex {
+        if menuButton == nil && pickerView.selectedRow(inComponent: 0) != selectedIndex {
             pickerView.reloadComponent(0)
             pickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
         }
