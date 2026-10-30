@@ -431,6 +431,10 @@ private extension PayWithLinkViewController {
 
         let supportedPaymentDetailsTypes = supportedPaymentDetailsTypesSet.toSortedArray()
 
+        context.analyticsHelper.analyticsClient.logLinkPaymentDetailsListRequestSent(
+            sentTypes: supportedPaymentDetailsTypes
+        )
+
         Task { @MainActor in
             let paymentDetailsTask = Task {
                 try await linkAccount.listPaymentDetails(
@@ -451,6 +455,11 @@ private extension PayWithLinkViewController {
 
             do {
                 let paymentDetails = try await paymentDetailsTask.value
+
+                let receivedTypes = Set(paymentDetails.map { $0.type })
+                context.analyticsHelper.analyticsClient.logLinkPaymentDetailsListRequestReceived(
+                    receivedTypes: receivedTypes
+                )
 
                 // Ignore any errors that might happen here.
                 shippingAddressResponse = await shippingAddressTask.value
