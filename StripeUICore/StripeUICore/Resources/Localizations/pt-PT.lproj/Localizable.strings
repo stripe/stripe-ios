@@ -18,9 +18,15 @@
 
 "BSB number" = "Número de BSB";
 
+"Bank Account" = "Conta bancária";
+
 "Bank account •••• %@" = "Conta bancária •••• %@";
 
+"Billing address" = "Endereço de faturação";
+
 "Billing address is same as shipping" = "O endereço de faturação é igual ao endereço de envio";
+
+"CVC" = "CVC";
 
 "Cancel" = "Cancelar";
 
@@ -73,6 +79,8 @@
 "Island" = "Ilha";
 
 "Last" = "Apelido";
+
+"MM / YY" = "MM/AA";
 
 "Name" = "Nome";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "O seu código postal é inválido.";
 
+"Your card number is incomplete." = "O número do seu cartão está incompleto.";
+
+"Your card number is invalid." = "O número do seu cartão é inválido.";
+
+"Your card's expiration date is incomplete." = "A data de validade do seu cartão está incompleta.";
+
+"Your card's expiration date is invalid." = "A data de validade do seu cartão é inválida.";
+
+"Your card's expiration month is invalid." = "O mês de validade do seu cartão é inválido.";
+
+"Your card's security code is incomplete." = "O código de segurança do seu cartão está incompleto.";
+
 "Your email is invalid." = "O seu email é inválido.";
 
 "Your payment information will not be saved." = "As suas informações de pagamento não serão guardadas.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "O seu código postal é inválido.";
 
 "ZIP" = "C.P.";
+
+"expiration date" = "Data de validade";

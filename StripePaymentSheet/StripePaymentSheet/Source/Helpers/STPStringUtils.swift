@@ -8,7 +8,7 @@
 
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
-@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePayments
 
 typealias STPTaggedSubstringCompletionBlock = (String?, NSRange) -> Void
 typealias STPTaggedSubstringsCompletionBlock = (String, [String: NSValue]) -> Void

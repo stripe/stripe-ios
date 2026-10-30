@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB-szám";
 
+"Bank Account" = "Bankszámla";
+
 "Bank account •••• %@" = "Bankszámla •••• %@";
 
+"Billing address" = "Számlázási cím";
+
 "Billing address is same as shipping" = "A számlázási cím megegyezik a szállítási címmel";
+
+"CVC" = "CVC";
 
 "Cancel" = "Mégse";
 
@@ -73,6 +79,8 @@
 "Island" = "Sziget";
 
 "Last" = "Vezetéknév";
+
+"MM / YY" = "HH / ÉÉ";
 
 "Name" = "Név";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Az irányítószáma érvénytelen.";
 
+"Your card number is incomplete." = "A kártyaszám hiányos.";
+
+"Your card number is invalid." = "A kártyaszám érvénytelen.";
+
+"Your card's expiration date is incomplete." = "A kártya lejárati dátuma hiányos.";
+
+"Your card's expiration date is invalid." = "A kártya lejárati dátuma érvénytelen.";
+
+"Your card's expiration month is invalid." = "Kártyájának lejárati hónapja érvénytelen.";
+
+"Your card's security code is incomplete." = "A kártya biztonsági kódja hiányos.";
+
 "Your email is invalid." = "Érvénytelen e-mail-cím.";
 
 "Your payment information will not be saved." = "Fizetési adatai nem lesznek mentve.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Az irányítószám érvénytelen.";
 
 "ZIP" = "Irányítószám";
+
+"expiration date" = "lejárati dátum";

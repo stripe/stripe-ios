@@ -18,9 +18,15 @@
 
 "BSB number" = "Номер BSB";
 
+"Bank Account" = "Банковский счет";
+
 "Bank account •••• %@" = "Банковский счет ••••%@";
 
+"Billing address" = "Адрес для выставления счета";
+
 "Billing address is same as shipping" = "Адрес выставления счетов такой же, как адрес доставки";
+
+"CVC" = "Код CVV/CVC";
 
 "Cancel" = "Отмена";
 
@@ -73,6 +79,8 @@
 "Island" = "Остров";
 
 "Last" = "Фамилия";
+
+"MM / YY" = "ММ / ГГ";
 
 "Name" = "Имя";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Ваш почтовый индекс недействителен.";
 
+"Your card number is incomplete." = "Номер карты введен не полностью.";
+
+"Your card number is invalid." = "Номер карты недействителен.";
+
+"Your card's expiration date is incomplete." = "Дата истечения срока действия карты введена не полностью.";
+
+"Your card's expiration date is invalid." = "Дата истечения срока действия карты недействительна.";
+
+"Your card's expiration month is invalid." = "Недопустимый месяц окончания действия карты.";
+
+"Your card's security code is incomplete." = "Код CVV/CVC карты введен не полностью.";
+
 "Your email is invalid." = "Недействительный адрес эл. почты.";
 
 "Your payment information will not be saved." = "Ваши платежные реквизиты не будут сохранены.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Введенный почтовый индекс недействителен.";
 
 "ZIP" = "Почтовый индекс";
+
+"expiration date" = "срок окончания действия";

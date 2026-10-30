@@ -18,9 +18,15 @@
 
 "BSB number" = "Numru BSB";
 
+"Bank Account" = "Kont bankarju";
+
 "Bank account •••• %@" = "Kont tal-bank •••• %@";
 
+"Billing address" = "Indirizz tal-kont";
+
 "Billing address is same as shipping" = "L-indirizz tal-fatturazzjoni huwa l-istess bħall-indirizz tal-posta";
+
+"CVC" = "CVC";
 
 "Cancel" = "Ikkanċella";
 
@@ -73,6 +79,8 @@
 "Island" = "Gżira";
 
 "Last" = "L-aħħar";
+
+"MM / YY" = "XX / SS";
 
 "Name" = "Isem";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Il-kodiċi ZIP tiegħek huwa invalidu.";
 
+"Your card number is incomplete." = "In-numru tal-karta tiegħek mhux komplut.";
+
+"Your card number is invalid." = "In-numru tal-karta tiegħek mhux tajjeb.";
+
+"Your card's expiration date is incomplete." = "Id-data tal-iskadenza tal-karta tiegħek mhix sħiħa.";
+
+"Your card's expiration date is invalid." = "Id-data tal-iskadenza tal-karta tiegħek mhix tajba.";
+
+"Your card's expiration month is invalid." = "Ix-xahar tal-iskadenza tal-karta tiegħek mhux tajjeb.";
+
+"Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux komplut.";
+
 "Your email is invalid." = "L-indirizz tal-email li daħħalt mhux tajjeb.";
 
 "Your payment information will not be saved." = "L-informazzjoni tal-pagament tiegħek mhux se tiġi merfugħa.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
 
 "ZIP" = "Kodiċi Postali";
+
+"expiration date" = "id-data tal-iskadenza";

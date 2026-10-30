@@ -5,8 +5,8 @@
 //  Created by Yuki Tokuhiro on 6/28/24.
 //
 
+@testable @_spi(InternalOnlyAPI) import StripePayments
 @testable import StripePaymentSheet
-@testable import StripePaymentsUI
 import XCTest
 
 final class PaymentSheetImageTests: XCTestCase {

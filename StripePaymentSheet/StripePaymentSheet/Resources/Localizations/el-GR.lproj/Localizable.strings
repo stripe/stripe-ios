@@ -1,3 +1,17 @@
+"%1$@ Card" = "Κάρτα %1$@";
+
+"%1$@ Credit" = "Πιστωτική κάρτα %1$@";
+
+"%1$@ Debit" = "Χρεωστική κάρτα %1$@";
+
+"%1$@ Prepaid" = "Προπληρωμένη κάρτα %1$@";
+
+"%1$@ account ending in %2$@" = "%1$@ τραπεζικός λογαριασμός που λήγει σε %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ λήγει σε %2$@";
+
+"%1$@ is not accepted" = "Η επωνυμία %1$@ δεν είναι αποδεκτή";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "Το %@ δεν θα είναι πλέον αποθηκευμένο στο πορτοφόλι.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Προσθέστε νέα μέθοδο πληρωμής";
 
 "Add your payment information" = "Προσθέστε τα στοιχεία πληρωμής σας";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Έγκριση πληρωμής";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων κάρτας.";
 
+"Card information" = "Στοιχεία κάρτας";
+
+"Card number" = "Αριθμός κάρτας";
+
 "Card number. Supported cards include %@" = "Αριθμός κάρτας. Οι υποστηριζόμενες κάρτες περιλαμβάνουν την %@";
 
 "Change" = "Αλλαγή";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή τράπεζας ή πληρωμής σας μέσα σε %@ για να ολοκληρώσετε την αγορά.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή της τράπεζάς σας μέσα σε %@ για την ολοκλήρωση της αγοράς.";
+
+"Confirm your %@" = "Επιβεβαιώστε τον κωδικό %@";
 
 "Confirm your CVC" = "Επιβεβαιώστε τον κωδικό CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Δεν είστε εσείς;";
 
 "Only card brand can be changed." = "Μπορείτε να αλλάξετε μόνο την επωνυμία κάρτας.";
+
+"Only credit and prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο πιστωτικές και προπληρωμένες κάρτες";
+
+"Only credit cards are accepted" = "Γίνονται αποδεκτές μόνο πιστωτικές κάρτες";
+
+"Only debit and credit cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές και πιστωτικές κάρτες";
+
+"Only debit and prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές και προπληρωμένες κάρτες";
+
+"Only debit cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές κάρτες";
+
+"Only prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο οι προπληρωμένες κάρτες";
 
 "Open to see more information." = "Ανοίξτε για να δείτε περισσότερες πληροφορίες.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Διαμόρφωση";
 
+"Shipping Address" = "Διεύθυνση αποστολής";
+
 "Shipping to %@ is not supported." = "Η αποστολή στη χώρα %@ δεν υποστηρίζεται.";
 
 "Show details" = "Εμφάνιση λεπτομερειών";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Ο κωδικός επαλήθευσης που παρασχέθηκε είναι λανθασμένος.";
 
+"The selected brand is not allowed" = "Η επιλεγμένη επωνυμία δεν επιτρέπεται";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Αυτή είναι μια διεθνής αγορά και δεν περιλαμβάνει χρέωση IOF ύψους 3,5%. Συνεχίζοντας, αναγνωρίζετε και αποδέχεστε τους<terms> όρους και τις προϋποθέσεις της Ebanx</terms>.";
 
 "This is your default" = "Αυτή είναι η προεπιλογή σας";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Αυτή η μέθοδος πληρωμής θα καταργηθεί, αλλά θα παραμείνει διαθέσιμη για %@ συνδρομές.";
+
+"To scan your card, allow camera access in Settings." = "Για να σαρώσετε την κάρτα σας, επιτρέψτε την πρόσβαση της κάμερας από τις Ρυθμίσεις.";
 
 "Too many attempts. Please try again in a few minutes." = "Πραγματοποιήθηκαν πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγα λεπτά.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Ο κωδικός IBAN σας πρέπει να αρχίζει με έναν διψήφιο κωδικό χώρας.";
 
 "Your address changes won't be saved." = "Οι αλλαγές στη διεύθυνσή σας δεν θα αποθηκευτούν";
+
+"Your card has expired." = "Η κάρτα σας έχει λήξει.";

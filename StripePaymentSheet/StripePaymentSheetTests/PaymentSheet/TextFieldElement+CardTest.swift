@@ -12,7 +12,6 @@ import XCTest
 @testable@_spi(InternalOnlyAPI) import StripePayments
 @testable@_spi(InternalOnlyAPI) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
-@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 @testable@_spi(InternalOnlyAPI) import StripeUICore
 
 @MainActor

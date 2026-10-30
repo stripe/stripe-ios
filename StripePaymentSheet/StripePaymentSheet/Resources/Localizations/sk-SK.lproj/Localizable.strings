@@ -1,3 +1,17 @@
+"%1$@ Card" = "Karta %1$@";
+
+"%1$@ Credit" = "Kreditná karta %1$@";
+
+"%1$@ Debit" = "Debetná karta %1$@";
+
+"%1$@ Prepaid" = "Predplatená platba %1$@";
+
+"%1$@ account ending in %2$@" = "%1$@ účet končiaci na %2$@";
+
+"%1$@ ending in %2$@" = "Karta %1$@ s poslednými štyrmi číslami %2$@";
+
+"%1$@ is not accepted" = "%1$@ sa neakceptuje";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "Položka %@ už nebude uložená vo vašej peňaženke.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Pridajte nový spôsob platby";
 
 "Add your payment information" = "Pridajte svoje informácie o platbe";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Schváliť platbu";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Informácie o karte nie je možné meniť.";
 
+"Card information" = "Informácie o karte";
+
+"Card number" = "Číslo karty";
+
 "Card number. Supported cards include %@" = "Číslo karty. K podporovaným kartám patria karty %@";
 
 "Change" = "Zmeniť";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v banke alebo platobnej aplikácii v priebehu %@.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v aplikácii vašej banky v priebehu %@.";
+
+"Confirm your %@" = "Potvrďte svoje číslo %@";
 
 "Confirm your CVC" = "Potvrďte CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Nie ste to vy?";
 
 "Only card brand can be changed." = "Je možné zmeniť len značku banky.";
+
+"Only credit and prepaid cards are accepted" = "Akceptujú sa len kreditné a predplatené karty";
+
+"Only credit cards are accepted" = "Akceptujú sa iba kreditné karty";
+
+"Only debit and credit cards are accepted" = "Akceptujú sa iba debetné a kreditné karty";
+
+"Only debit and prepaid cards are accepted" = "Akceptujú sa iba debetné a predplatené karty";
+
+"Only debit cards are accepted" = "Akceptujú sa iba debetné karty";
+
+"Only prepaid cards are accepted" = "Akceptujú sa iba predplatené karty";
 
 "Open to see more information." = "Otvorte a zobrazte viac informácií.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Nastaviť";
 
+"Shipping Address" = "Dodacia adresa";
+
 "Shipping to %@ is not supported." = "Dodanie na/do %@ sa nepodporuje.";
 
 "Show details" = "Zobraziť podrobnosti";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Zadaný overovací kód je nesprávny.";
 
+"The selected brand is not allowed" = "Vybraná značka nie je povolená";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ide o medzinárodný nákup, ktorý nezahŕňa 3,5 % poplatok IOF. Pokračovaním beriete na vedomie a akceptujete <terms>podmienky spoločnosti Ebanx</terms>.";
 
 "This is your default" = "Toto je váš predvolený spôsob platby";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Tento spôsob platby sa odstráni, ale ostane k dispozícii pre predplatné %@.";
+
+"To scan your card, allow camera access in Settings." = "Na nasnímanie vašej karty umožnite prístup ku kamere pod položkou Nastavenia.";
 
 "Too many attempts. Please try again in a few minutes." = "Príliš veľa pokusov. Skúste to znova o niekoľko minút.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Váš IBAN by mal začínať dvojpísmenovým kódom krajiny.";
 
 "Your address changes won't be saved." = "Zmeny vašej adresy sa neuložia.";
+
+"Your card has expired." = "Platnosť vašej karty vypršala.";

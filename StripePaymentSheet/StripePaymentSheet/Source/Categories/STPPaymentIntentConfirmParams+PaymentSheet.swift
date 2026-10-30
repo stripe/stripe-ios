@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension STPPaymentIntentConfirmParams {
     var nonnil_paymentMethodOptions: STPConfirmPaymentMethodOptions {

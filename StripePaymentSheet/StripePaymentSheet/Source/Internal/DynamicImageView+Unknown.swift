@@ -8,10 +8,10 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripeUICore
 
-@_spi(InternalOnlyAPI) public extension DynamicImageView {
+extension DynamicImageView {
     static func makeUnknownCardImageView(theme: ElementsAppearance) -> DynamicImageView {
         return DynamicImageView(
-            dynamicImage: STPImageLibrary.unknownCardCardImage(),
+            dynamicImage: PaymentSheetImageLibrary.unknownCardCardImage(),
             pairedColor: theme.colors.componentBackground
         )
     }

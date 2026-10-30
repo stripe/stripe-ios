@@ -18,9 +18,15 @@
 
 "BSB number" = "Číslo BSB";
 
+"Bank Account" = "Bankovní účet";
+
 "Bank account •••• %@" = "Bankovní účet •••• %@";
 
+"Billing address" = "Fakturační adresa";
+
 "Billing address is same as shipping" = "Fakturační adresa je stejná jako dodací";
+
+"CVC" = "CVC";
 
 "Cancel" = "Zrušit";
 
@@ -73,6 +79,8 @@
 "Island" = "Ostrov";
 
 "Last" = "Příjmení";
+
+"MM / YY" = "MM / RR";
 
 "Name" = "Jméno";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Vaše PSČ je neplatné.";
 
+"Your card number is incomplete." = "Číslo karty je neúplné.";
+
+"Your card number is invalid." = "Číslo karty je neplatné.";
+
+"Your card's expiration date is incomplete." = "Datum konce platnosti vaší karty je neúplné.";
+
+"Your card's expiration date is invalid." = "Datum konce platnosti karty je neplatné.";
+
+"Your card's expiration month is invalid." = "Rok konce platnosti vaší karty je neplatný.";
+
+"Your card's security code is incomplete." = "Bezpečnostní kód karty je neúplný.";
+
 "Your email is invalid." = "Váš e-mail je neplatný.";
 
 "Your payment information will not be saved." = "Vaše platební údaje nebudou uloženy.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Poštovní směrovací číslo je neplatné";
 
 "ZIP" = "PSČ";
+
+"expiration date" = "datum konce platnosti";

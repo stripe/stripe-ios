@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ Card";
+
+"%1$@ Credit" = "%1$@ Credit";
+
+"%1$@ Debit" = "%1$@ Debit";
+
+"%1$@ Prepaid" = "%1$@ Prepaid";
+
+"%1$@ account ending in %2$@" = "%1$@ account na nagtatapos sa %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ nagtatapos sa %2$@";
+
+"%1$@ is not accepted" = "Ang %1$@ ay hindi tinatanggap";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "Ang %@ ay hindi na ise-save sa iyong wallet.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Magdagadag ng bagong pamamaraan ng pagbabayad";
 
 "Add your payment information" = "Magdagdag ng iyong impormasyon sa pagbabayad";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Aprubahan ang pagbabayad";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng kard.";
 
+"Card information" = "Impormasyon ng kard";
+
+"Card number" = "Numero ng kard";
+
 "Card number. Supported cards include %@" = "Numero ng card. Kabilang sa mga suportadong card ang %@";
 
 "Change" = "Palitan";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa iyong bangko o app ng pagbabayad sa loob ng %@ para kumpletuhin ang pagbili.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa app ng iyong bangko sa loob ng %@ para kumpletuhin ang pagbili.";
+
+"Confirm your %@" = "Kumpirmahin ang iyong %@";
 
 "Confirm your CVC" = "Kumpirmahin ang iyong CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Hindi ikaw?";
 
 "Only card brand can be changed." = "Ang brand ng kard lamang ang puwedeng palitan.";
+
+"Only credit and prepaid cards are accepted" = "Mga credit at prepaid card lamang ang tinatanggap";
+
+"Only credit cards are accepted" = "Mga credit card lamang ang tinatanggap";
+
+"Only debit and credit cards are accepted" = "Mga debit at credit card lamang ang tinatanggap";
+
+"Only debit and prepaid cards are accepted" = "Mga debit at prepaid card lamang ang tinatanggap";
+
+"Only debit cards are accepted" = "Mga debit card lamang ang tinatanggap";
+
+"Only prepaid cards are accepted" = "Mga prepaid card lamang ang tinatanggap";
 
 "Open to see more information." = "Buksan upang makita ang karagdagang impormasyon.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "I-set up";
 
+"Shipping Address" = "Adres ng Nagpadala";
+
 "Shipping to %@ is not supported." = "Hindi sinusuportahan ang pagpapadala sa %@.";
 
 "Show details" = "Ipakita ang mga detalye";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Mali ang ibinigay na verification code.";
 
+"The selected brand is not allowed" = "Ang napiling brand ay hindi pinapayagan";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ito ay isang internasyonal na pagbili at hindi kasama ang 3.5% IOF na Bayarin. Sa pamamagitan ng pagpapatuloy, kinikilala at tinatanggap mo ang <terms>Mga Tuntunin at Kundisyon ng Ebanx</terms>.";
 
 "This is your default" = "Ito ang iyong default";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Tatanggalin ang paraan ng pagbabayad na ito pero mananatiling available para sa %@ (na) subskripsiyon.";
+
+"To scan your card, allow camera access in Settings." = "Upang ma-scan ang iyong kard, pahintulutan ang access ng kamera sa Settings.";
 
 "Too many attempts. Please try again in a few minutes." = "Masyado nang marami ang pagtatangka. Pakisubukan muli sa loob ng ilang minuto.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Ang iyong IBAN ay dapat magsimula sa dalawang letra na code ng bansa.";
 
 "Your address changes won't be saved." = "Hindi mase-save ang mga pagbabago sa iyong address.";
+
+"Your card has expired." = "Napaso na ang iyong kard.";

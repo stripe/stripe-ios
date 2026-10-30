@@ -18,9 +18,15 @@
 
 "BSB number" = "หมายเลข BSB";
 
+"Bank Account" = "บัญชีธนาคาร";
+
 "Bank account •••• %@" = "บัญชีธนาคาร •••• %@";
 
+"Billing address" = "ที่อยู่ในการเรียกเก็บเงิน";
+
 "Billing address is same as shipping" = "ที่อยู่ในการเรียกเก็บเงินเหมือนกันกับที่อยู่ในการจัดส่ง";
+
+"CVC" = "CVC";
 
 "Cancel" = "ยกเลิก";
 
@@ -73,6 +79,8 @@
 "Island" = "เกาะ";
 
 "Last" = "นามสกุล";
+
+"MM / YY" = "ดด / ปป";
 
 "Name" = "ชื่อ";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "รหัสไปรษณีย์ของคุณไม่ถูกต้อง";
 
+"Your card number is incomplete." = "หมายเลขบัตรไม่ครบถ้วน";
+
+"Your card number is invalid." = "หมายเลขบัตรไม่ถูกต้อง";
+
+"Your card's expiration date is incomplete." = "วันที่หมดอายุของบัตรไม่ครบถ้วน";
+
+"Your card's expiration date is invalid." = "วันที่หมดอายุของบัตรไม่ถูกต้อง";
+
+"Your card's expiration month is invalid." = "เดือนที่หมดอายุของบัตรไม่ถูกต้อง";
+
+"Your card's security code is incomplete." = "รหัสความปลอดภัยของบัตรไม่ครบถ้วน";
+
 "Your email is invalid." = "อีเมลไม่ถูกต้อง";
 
 "Your payment information will not be saved." = "ข้อมูลการชำระเงินของคุณจะไม่ได้รับการบันทึก";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "รหัสไปรษณีย์ไม่ถูกต้อง";
 
 "ZIP" = "รหัสไปรษณีย์";
+
+"expiration date" = "วันหมดอายุ";

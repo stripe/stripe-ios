@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB 号码";
 
+"Bank Account" = "银行账户";
+
 "Bank account •••• %@" = "银行账户 •••• %@";
 
+"Billing address" = "账单地址";
+
 "Billing address is same as shipping" = "账单地址与收货地址相同";
+
+"CVC" = "安全码";
 
 "Cancel" = "取消";
 
@@ -73,6 +79,8 @@
 "Island" = "岛";
 
 "Last" = "姓氏";
+
+"MM / YY" = "月份/年份";
 
 "Name" = "姓名";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "您的邮编无效。";
 
+"Your card number is incomplete." = "您的银行卡号不完整。";
+
+"Your card number is invalid." = "您的卡号无效。";
+
+"Your card's expiration date is incomplete." = "您的银行卡的有效期不完整。";
+
+"Your card's expiration date is invalid." = "您的银行卡的有效期无效。";
+
+"Your card's expiration month is invalid." = "您的银行卡的到期月份无效。";
+
+"Your card's security code is incomplete." = "您的银行卡的安全码不完整。";
+
 "Your email is invalid." = "您的邮件地址无效。";
 
 "Your payment information will not be saved." = "不会保存您的付款信息。";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "您的邮编无效。";
 
 "ZIP" = "邮编";
+
+"expiration date" = "有效期";

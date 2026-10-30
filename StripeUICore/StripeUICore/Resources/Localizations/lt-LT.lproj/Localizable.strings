@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB numeris";
 
+"Bank Account" = "Banko sąskaita";
+
 "Bank account •••• %@" = "Banko sąskaita •••• %@";
 
+"Billing address" = "Atsiskaitymo adresas";
+
 "Billing address is same as shipping" = "Atsiskaitymo ir siuntimo adresai vienodi";
+
+"CVC" = "CVC";
 
 "Cancel" = "Atšaukti";
 
@@ -73,6 +79,8 @@
 "Island" = "Sala";
 
 "Last" = "Pavardė";
+
+"MM / YY" = "mm / MM";
 
 "Name" = "Vardas, pavardė";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Jūsų pašto kodas netinkamas.";
 
+"Your card number is incomplete." = "Neišsamus kortelės numeris.";
+
+"Your card number is invalid." = "Netinkamas kortelės numeris.";
+
+"Your card's expiration date is incomplete." = "Neišsami kortelės galiojimo pabaigos data.";
+
+"Your card's expiration date is invalid." = "Netinkama kortelės galiojimo pabaigos data.";
+
+"Your card's expiration month is invalid." = "Negaliojantis kortelės galiojimo pabaigos mėnuo.";
+
+"Your card's security code is incomplete." = "Neišsamus kortelės saugos kodas.";
+
 "Your email is invalid." = "Jūsų el. paštas yra neteisingas.";
 
 "Your payment information will not be saved." = "Jūsų mokėjimo informacija nebus įrašyta.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Jūsų pašto kodas yra netinkamas.";
 
 "ZIP" = "Pašto kodas";
+
+"expiration date" = "galiojimo pabaigos data";

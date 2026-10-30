@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ 銀行卡";
+
+"%1$@ Credit" = "%1$@ 信用卡";
+
+"%1$@ Debit" = "%1$@ 扣賬卡";
+
+"%1$@ Prepaid" = "%1$@ 預付卡";
+
+"%1$@ account ending in %2$@" = "尾號為 %2$@ 的 %1$@ 賬戶";
+
+"%1$@ ending in %2$@" = "%1$@ - 尾號：%2$@";
+
+"%1$@ is not accepted" = "不接受 %1$@";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ 將不再儲存至您的錢包。";
@@ -21,6 +35,8 @@
 "Add new payment method" = "添加新支付方式";
 
 "Add your payment information" = "添加您的支付資訊";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "批准付款";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "無法更改銀行卡詳情。";
 
+"Card information" = "銀行卡資訊";
+
+"Card number" = "卡號";
+
 "Card number. Supported cards include %@" = "銀行卡號碼。支援的銀行卡包括 %@";
 
 "Change" = "更改";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的銀行或支付應用程式中確認向 %@ 的付款，以完成購物。";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@内在您的銀行應用中確認付款，完成購物。";
+
+"Confirm your %@" = "確認您的 %@";
 
 "Confirm your CVC" = "請確認您的 CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "不是您本人？";
 
 "Only card brand can be changed." = "只可更改銀行卡品牌。";
+
+"Only credit and prepaid cards are accepted" = "僅接受信用卡與儲值卡";
+
+"Only credit cards are accepted" = "僅接受信用卡";
+
+"Only debit and credit cards are accepted" = "僅接受借記卡與信用卡";
+
+"Only debit and prepaid cards are accepted" = "僅接受借記卡與儲值卡";
+
+"Only debit cards are accepted" = "僅接受借記卡";
+
+"Only prepaid cards are accepted" = "僅接受儲值卡";
 
 "Open to see more information." = "開啟以查看更多資訊。";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "設置";
 
+"Shipping Address" = "收貨地址";
+
 "Shipping to %@ is not supported." = "不支援向 %@ 配送。";
 
 "Show details" = "顯示詳情";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "提供的驗證碼不正確。";
 
+"The selected brand is not allowed" = "不允許使用選定的品牌";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "此為國際購買，不包括 3.5% IOF 費用。繼續操作即表示閣下了解並接受 <terms>Ebanx 的條款及細則</terms>。";
 
 "This is your default" = "這是您的預設支付方式";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "此支付方式將被移除，但仍適用於 %@ 項訂閱。";
+
+"To scan your card, allow camera access in Settings." = "要掃描您的銀行卡，在「設置」中啟用照相機。";
 
 "Too many attempts. Please try again in a few minutes." = "嘗試次數過多。請幾分鐘後重試。";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 應以兩個字母的國家代碼開頭。";
 
 "Your address changes won't be saved." = "閣下的地址變更將不會被儲存。";
+
+"Your card has expired." = "您的銀行卡已過期。";

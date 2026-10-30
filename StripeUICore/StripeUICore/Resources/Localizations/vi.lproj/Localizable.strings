@@ -18,9 +18,15 @@
 
 "BSB number" = "Số BSB";
 
+"Bank Account" = "Tài khoản ngân hàng";
+
 "Bank account •••• %@" = "Tài khoản ngân hàng •••• %@";
 
+"Billing address" = "Địa chỉ thanh toán";
+
 "Billing address is same as shipping" = "Địa chỉ xuất hóa đơn giống địa chỉ chuyển hàng";
+
+"CVC" = "CVC";
 
 "Cancel" = "Hủy";
 
@@ -73,6 +79,8 @@
 "Island" = "Đảo";
 
 "Last" = "Họ";
+
+"MM / YY" = "Tháng /Năm";
 
 "Name" = "Tên";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Mã bưu điện của bạn không hợp lệ.";
 
+"Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
+
+"Your card number is invalid." = "Số thẻ không hợp lệ.";
+
+"Your card's expiration date is incomplete." = "Ngày hết hạn trên thẻ không hợp lệ.";
+
+"Your card's expiration date is invalid." = "Ngày hết hạn trên thẻ không hợp lệ.";
+
+"Your card's expiration month is invalid." = "Tháng hết hạn trên thẻ của bạn không hợp lệ.";
+
+"Your card's security code is incomplete." = "Mã bảo mật trên thẻ chưa đầy đủ.";
+
 "Your email is invalid." = "Email của quý vị không hợp lệ.";
 
 "Your payment information will not be saved." = "Thông tin thanh toán của bạn sẽ không lưu lại.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
 
 "ZIP" = "ZIP";
+
+"expiration date" = "Ngày hết hạn";

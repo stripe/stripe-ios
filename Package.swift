@@ -181,7 +181,7 @@ let package = Package(
         ),
         .target(
             name: "StripePaymentSheet",
-            dependencies: ["StripePaymentsUI", "StripeApplePay", "StripePayments", "StripeCore", "StripeUICore", "StripeFinancialConnectionsLite"],
+            dependencies: ["StripeApplePay", "StripePayments", "StripeCore", "StripeUICore", "StripeFinancialConnectionsLite"],
             path: "StripePaymentSheet/StripePaymentSheet",
             exclude: ["Info.plist"],
             resources: [

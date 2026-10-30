@@ -1,3 +1,17 @@
+"%1$@ Card" = "Kartu %1$@";
+
+"%1$@ Credit" = "Kredit %1$@";
+
+"%1$@ Debit" = "Debit %1$@";
+
+"%1$@ Prepaid" = "Prabayar %1$@";
+
+"%1$@ account ending in %2$@" = "Rekening %1$@ berakhiran dengan %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ berakhiran %2$@";
+
+"%1$@ is not accepted" = "%1$@ tidak diterima";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ tidak akan lagi disimpan ke dompet digital Anda.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Tambahkan metode pembayaran baru";
 
 "Add your payment information" = "Tambahkan informasi pembayaran Anda";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Setujui pembayaran";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Detail kartu tidak dapat diubah.";
 
+"Card information" = "Informasi kartu";
+
+"Card number" = "Nomor kartu";
+
 "Card number. Supported cards include %@" = "Nomor kartu. Kartu yang didukung meliputi %@";
 
 "Change" = "Ubah";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Konfirmasikan pembayaran di aplikasi pembayaran atau bank Anda dalam %@ untuk menyelesaikan pembelian.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Konfirmasikan pembayaran di aplikasi bank Anda dalam %@ untuk menyelesaikan pembelian.";
+
+"Confirm your %@" = "Konfirmasikan %@ Anda";
 
 "Confirm your CVC" = "Konfirmasikan CVC Anda";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Bukan Anda?";
 
 "Only card brand can be changed." = "Hanya brand kartu yang dapat diubah.";
+
+"Only credit and prepaid cards are accepted" = "Hanya kartu kredit dan prabayar yang diterima";
+
+"Only credit cards are accepted" = "Hanya kartu kredit yang diterima";
+
+"Only debit and credit cards are accepted" = "Hanya kartu debit dan kredit yang diterima";
+
+"Only debit and prepaid cards are accepted" = "Hanya kartu debit dan prabayar yang diterima";
+
+"Only debit cards are accepted" = "Hanya kartu debit yang diterima";
+
+"Only prepaid cards are accepted" = "Hanya kartu prabayar yang diterima";
 
 "Open to see more information." = "Buka untuk melihat informasi selengkapnya.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Siapkan";
 
+"Shipping Address" = "Alamat Pengiriman";
+
 "Shipping to %@ is not supported." = "Pengiriman ke %@ tidak didukung.";
 
 "Show details" = "Tampilkan detail";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Kode verifikasi yang diberikan salah.";
 
+"The selected brand is not allowed" = "Brand yang dipilih tidak diizinkan";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ini adalah pembelian internasional dan tidak termasuk biaya IOF 3,5%. Dengan melanjutkan, Anda mengakui dan menerima <terms>syarat dan ketentuan Ebanx</terms>.";
 
 "This is your default" = "Ini default Anda";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Metode pembayaran ini akan dihapus tetapi akan tetap tersedia untuk langganan %@.";
+
+"To scan your card, allow camera access in Settings." = "Untuk memindai kartu Anda, izinkan akses kamera di Pengaturan.";
 
 "Too many attempts. Please try again in a few minutes." = "Terlalu banyak percobaan. Cobalah lagi sebentar lagi.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "IBAN Anda harus diawali dengan kode negara dua-huruf.";
 
 "Your address changes won't be saved." = "Perubahan alamat Anda tidak akan disimpan.";
+
+"Your card has expired." = "Kartu Anda telah kedaluwarsa.";

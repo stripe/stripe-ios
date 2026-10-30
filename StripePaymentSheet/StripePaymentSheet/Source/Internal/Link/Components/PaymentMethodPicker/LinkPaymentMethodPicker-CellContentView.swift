@@ -7,7 +7,6 @@
 //
 
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
@@ -16,7 +15,7 @@ extension LinkPaymentMethodPicker {
     final class CellContentView: UIView {
         struct Constants {
             static let contentSpacing: CGFloat = 12
-            static let iconSize: CGSize = CardBrandView.targetIconSize
+            static let iconSize: CGSize = LinkCardBrandView.targetIconSize
             static let genericIconCornerRadius: CGFloat = 3.0
             static let maxFontSize: CGFloat = 20
         }
@@ -86,7 +85,7 @@ extension LinkPaymentMethodPicker {
             return iconView
         }()
 
-        private lazy var cardBrandView: CardBrandView = CardBrandView(centerHorizontally: true)
+        private lazy var cardBrandView: LinkCardBrandView = LinkCardBrandView(centerHorizontally: true)
 
         private let primaryLabel: UILabel = {
             let label = UILabel()

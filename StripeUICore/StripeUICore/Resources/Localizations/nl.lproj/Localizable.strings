@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB-nummer";
 
+"Bank Account" = "Bankrekening";
+
 "Bank account •••• %@" = "Bankrekening •••• %@";
 
+"Billing address" = "Factuuradres";
+
 "Billing address is same as shipping" = "Factuuradres is hetzelfde als het verzendadres";
+
+"CVC" = "Cvc";
 
 "Cancel" = "Annuleren";
 
@@ -73,6 +79,8 @@
 "Island" = "Eiland";
 
 "Last" = "Achternaam";
+
+"MM / YY" = "MM / JJ";
 
 "Name" = "Naam";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Uw postcode is ongeldig.";
 
+"Your card number is incomplete." = "Je kaartnummer is onvolledig.";
+
+"Your card number is invalid." = "Je kaartnummer is ongeldig.";
+
+"Your card's expiration date is incomplete." = "De vervaldatum van je kaart is onvolledig.";
+
+"Your card's expiration date is invalid." = "De vervaldatum van je kaart is ongeldig.";
+
+"Your card's expiration month is invalid." = "De vervalmaand van de kaart is ongeldig.";
+
+"Your card's security code is incomplete." = "De beveiligingscode van je kaart is onvolledig.";
+
 "Your email is invalid." = "Je e-mailadres is ongeldig.";
 
 "Your payment information will not be saved." = "Je betaalgegevens worden niet opgeslagen.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Je postcode is ongeldig.";
 
 "ZIP" = "Postcode";
+
+"expiration date" = "vervaldatum";

@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ Card";
+
+"%1$@ Credit" = "%1$@ Credit";
+
+"%1$@ Debit" = "%1$@ Debit";
+
+"%1$@ Prepaid" = "%1$@ Prepaid";
+
+"%1$@ account ending in %2$@" = "%1$@ account ending in %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ ending in %2$@";
+
+"%1$@ is not accepted" = "%1$@ is not accepted";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ will no longer be saved to your wallet.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Add new payment method";
 
 "Add your payment information" = "Add your payment information";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Approve payment";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Card details cannot be changed.";
 
+"Card information" = "Card information";
+
+"Card number" = "Card number";
+
 "Card number. Supported cards include %@" = "Card number. Supported cards include %@";
 
 "Change" = "Change";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirm the payment in your bank's app within %@ to complete the purchase.";
+
+"Confirm your %@" = "Confirm your %@";
 
 "Confirm your CVC" = "Confirm your CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Not you?";
 
 "Only card brand can be changed." = "Only card brand can be changed.";
+
+"Only credit and prepaid cards are accepted" = "Only credit and prepaid cards are accepted";
+
+"Only credit cards are accepted" = "Only credit cards are accepted";
+
+"Only debit and credit cards are accepted" = "Only debit and credit cards are accepted";
+
+"Only debit and prepaid cards are accepted" = "Only debit and prepaid cards are accepted";
+
+"Only debit cards are accepted" = "Only debit cards are accepted";
+
+"Only prepaid cards are accepted" = "Only prepaid cards are accepted";
 
 "Open to see more information." = "Open to see more information.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Set up";
 
+"Shipping Address" = "Shipping Address";
+
 "Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
 
 "Show details" = "Show details";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "The provided verification code is incorrect.";
 
+"The selected brand is not allowed" = "The selected brand is not allowed";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx's terms and conditions</terms>.";
 
 "This is your default" = "This is your default";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "This payment method will be removed but will remain available for %@ subscriptions.";
+
+"To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
 
 "Your address changes won't be saved." = "Your address changes won't be saved.";
+
+"Your card has expired." = "Your card has expired.";

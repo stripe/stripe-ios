@@ -1,3 +1,17 @@
+"%1$@ Card" = "%1$@ Kartı";
+
+"%1$@ Credit" = "%1$@ Kredisi";
+
+"%1$@ Debit" = "%1$@ Borcu";
+
+"%1$@ Prepaid" = "%1$@ Ön Ödemeli";
+
+"%1$@ account ending in %2$@" = "%2$@ ile biten %1$@ hesabınız";
+
+"%1$@ ending in %2$@" = "%2$@ İle Biten %1$@";
+
+"%1$@ is not accepted" = "%1$@ kabul edilmiyor";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ artık cüzdanınıza kaydedilmeyecektir.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Yeni ödeme yöntemi ekle";
 
 "Add your payment information" = "Ödeme bilgilerinizi ekleyin";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Ödemeyi onaylayın";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Kart ayrıntıları değiştirilemiyor.";
 
+"Card information" = "Kart bilgileri";
+
+"Card number" = "Kart numarası";
+
 "Card number. Supported cards include %@" = "Kart numarası. Desteklenen kartlar %@ içerir";
 
 "Change" = "Değiştir";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ içinde banka veya ödeme uygulamanızla ödemeyi onaylayarak satın almayı tamamlayın.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ içinde banka uygulamanızda ödemeyi onaylayarak satın almayı tamamlayın.";
+
+"Confirm your %@" = "%@ kodunuzu onaylayın";
 
 "Confirm your CVC" = "CVC kodunuzu onaylayın";
 
@@ -217,6 +239,18 @@
 "Not you?" = "Siz değil misiniz?";
 
 "Only card brand can be changed." = "Yalnızca kart markası değiştirilebilir.";
+
+"Only credit and prepaid cards are accepted" = "Yalnızca kredi ve ön ödemeli kartlar kabul edilir";
+
+"Only credit cards are accepted" = "Yalnızca kredi kartları kabul edilir";
+
+"Only debit and credit cards are accepted" = "Yalnızca bankamatik ve kredi kartları kabul edilir";
+
+"Only debit and prepaid cards are accepted" = "Yalnızca bankamatik ve ön ödemeli kartlar kabul edilir";
+
+"Only debit cards are accepted" = "Yalnızca bankamatik kartları kabul edilir";
+
+"Only prepaid cards are accepted" = "Yalnızca ön ödemeli kartlar kabul edilir";
 
 "Open to see more information." = "Daha fazla bilgi almak için açın.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Ayarla";
 
+"Shipping Address" = "Gönderi Adresi";
+
 "Shipping to %@ is not supported." = "Varış noktası %@ olan gönderimler desteklenmez.";
 
 "Show details" = "Ayrıntıları göster";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Sağlanan doğrulama kodu yanlış.";
 
+"The selected brand is not allowed" = "Seçilen markaya izin verilmiyor";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Bu uluslararası bir satın alma işlemidir ve %3,5 IOF ücreti hariçtir. Devam ederek <terms>Ebanx'ın hüküm ve koşullarını</terms> onaylamış ve kabul etmiş olursunuz.";
 
 "This is your default" = "Bu varsayılan ödeme yönteminizdir";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Bu ödeme yöntemi kaldırılacak ancak %@ abonelikleri için kullanılabilir kalacaktır.";
+
+"To scan your card, allow camera access in Settings." = "Kartınızı taramak için Ayarlar'da kamera erişimine izin verin.";
 
 "Too many attempts. Please try again in a few minutes." = "Çok fazla deneme yapıldı. Lütfen birkaç dakika içinde tekrar deneyin.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
 
 "Your address changes won't be saved." = "Adres değişiklikleriniz kaydedilmeyecek.";
+
+"Your card has expired." = "Kartınızın süresi dolmuş.";

@@ -18,9 +18,15 @@
 
 "BSB number" = "Număr BSB";
 
+"Bank Account" = "Cont bancar";
+
 "Bank account •••• %@" = "Cont bancar •••• %@";
 
+"Billing address" = "Adresă de facturare";
+
 "Billing address is same as shipping" = "Adresa de facturare este la fel cu cea de expediere";
+
+"CVC" = "Cod CVC";
 
 "Cancel" = "Anulare";
 
@@ -73,6 +79,8 @@
 "Island" = "Insulă";
 
 "Last" = "Nume de familie";
+
+"MM / YY" = "LL/AA";
 
 "Name" = "Nume";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Codul dvs. poștal este nevalid.";
 
+"Your card number is incomplete." = "Numărul cardului dvs. nu este complet.";
+
+"Your card number is invalid." = "Numărul cardului dvs. nu este valid.";
+
+"Your card's expiration date is incomplete." = "Data de expirare a cardului nu este completă.";
+
+"Your card's expiration date is invalid." = "Data de expirare a cardului dvs. nu este validă.";
+
+"Your card's expiration month is invalid." = "Luna de expirare a cardului nu este validă.";
+
+"Your card's security code is incomplete." = "Codul de securitate al cardului dvs. nu este complet.";
+
 "Your email is invalid." = "E-mailul nu este valid.";
 
 "Your payment information will not be saved." = "Informațiile dvs. de plată nu vor fi salvate.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Codul dvs. poștal nu este valid.";
 
 "ZIP" = "Cod poștal";
+
+"expiration date" = "data de expirare";

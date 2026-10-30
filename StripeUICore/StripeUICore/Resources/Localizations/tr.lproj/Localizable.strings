@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB numarası";
 
+"Bank Account" = "Banka Hesabı";
+
 "Bank account •••• %@" = "Banka hesabı •••• %@";
 
+"Billing address" = "Fatura adresi";
+
 "Billing address is same as shipping" = "Faturalama adresi, gönderim adresiyle aynı";
+
+"CVC" = "CVC";
 
 "Cancel" = "İptal";
 
@@ -73,6 +79,8 @@
 "Island" = "Ada";
 
 "Last" = "Soyadı";
+
+"MM / YY" = "AA / YY";
 
 "Name" = "Ad";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "Posta kodunuz geçersiz.";
 
+"Your card number is incomplete." = "Kart numaranız eksik.";
+
+"Your card number is invalid." = "Kart numaranız geçersiz.";
+
+"Your card's expiration date is incomplete." = "Kartınızın son kullanma tarihi eksik.";
+
+"Your card's expiration date is invalid." = "Kartınızın son kullanma tarihi geçersiz.";
+
+"Your card's expiration month is invalid." = "Kartınızın son kullanma ayı geçersiz.";
+
+"Your card's security code is incomplete." = "Kartınızın güvenlik kodu eksik.";
+
 "Your email is invalid." = "E-postanız geçersiz.";
 
 "Your payment information will not be saved." = "Ödeme bilgileriniz kaydedilmeyecek.";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "Posta kodunuz geçersiz.";
 
 "ZIP" = "Posta Kodu";
+
+"expiration date" = "son kullanma tarihi";

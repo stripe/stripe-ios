@@ -18,9 +18,15 @@
 
 "BSB number" = "BSB 番号";
 
+"Bank Account" = "銀行口座";
+
 "Bank account •••• %@" = "銀行口座 •••• %@";
 
+"Billing address" = "請求先住所";
+
 "Billing address is same as shipping" = "請求先住所は配送先住所と同じ";
+
+"CVC" = "セキュリティコード";
 
 "Cancel" = "キャンセル";
 
@@ -73,6 +79,8 @@
 "Island" = "島しょ";
 
 "Last" = "姓";
+
+"MM / YY" = "月 / 年";
 
 "Name" = "名前";
 
@@ -142,6 +150,18 @@
 
 "Your ZIP code is invalid." = "あなたの郵便番号は無効です。";
 
+"Your card number is incomplete." = "カード番号に不備があります。";
+
+"Your card number is invalid." = "カード番号が無効です。";
+
+"Your card's expiration date is incomplete." = "カードの有効期限の日付に不備があります。";
+
+"Your card's expiration date is invalid." = "カードの有効期限の日付が無効です。";
+
+"Your card's expiration month is invalid." = "カードの有効期限の月が無効です。";
+
+"Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
+
 "Your email is invalid." = "メールアドレスが無効です。";
 
 "Your payment information will not be saved." = "支払い情報は保存されません。";
@@ -151,3 +171,5 @@
 "Your postal code is invalid." = "郵便番号が無効です";
 
 "ZIP" = "郵便番号";
+
+"expiration date" = "有効期限";

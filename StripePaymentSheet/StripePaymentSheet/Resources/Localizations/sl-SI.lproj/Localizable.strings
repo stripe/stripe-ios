@@ -1,3 +1,17 @@
+"%1$@ Card" = "Kartica %1$@";
+
+"%1$@ Credit" = "Kreditna kartica %1$@";
+
+"%1$@ Debit" = "Debetna kartica %1$@";
+
+"%1$@ Prepaid" = "Predplačniška kartica %1$@";
+
+"%1$@ account ending in %2$@" = "Račun za %1$@, ki se konča s števkami %2$@";
+
+"%1$@ ending in %2$@" = "%1$@, ki se konča s/z %2$@";
+
+"%1$@ is not accepted" = "Kartica %1$@ ni sprejeta";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ ne bo več shranjeno v vaši denarnici.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Dodaj nov način plačila";
 
 "Add your payment information" = "Dodajte podatke o plačilu";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Odobrite plačilo";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Podrobnosti kartice ni mogoče spremeniti.";
 
+"Card information" = "Podatki o kartici";
+
+"Card number" = "Številka kartice";
+
 "Card number. Supported cards include %@" = "Številka kartice. Podprte kartice vključujejo %@";
 
 "Change" = "Spremeni";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke ali aplikaciji za plačilo v %@, da zaključite nakup.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke %@, da zaključite nakup.";
+
+"Confirm your %@" = "Potrdite svojo kodo %@";
 
 "Confirm your CVC" = "Potrdite svojo kodo CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "To niste vi?";
 
 "Only card brand can be changed." = "Spremenite lahko samo blagovno znamko kartice.";
+
+"Only credit and prepaid cards are accepted" = "Sprejemajo se le kreditne in predplačniške kartice";
+
+"Only credit cards are accepted" = "Sprejemane so samo kreditne kartice";
+
+"Only debit and credit cards are accepted" = "Sprejemane so le debetne in kreditne kartice";
+
+"Only debit and prepaid cards are accepted" = "Sprejemajo se le debetne in predplačniške kartice";
+
+"Only debit cards are accepted" = "Sprejemane so le debetne kartice";
+
+"Only prepaid cards are accepted" = "Sprejemajo se le predplačniške kartice";
 
 "Open to see more information." = "Odprite za več informacij.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Nastavi";
 
+"Shipping Address" = "Dostavni naslov";
+
 "Shipping to %@ is not supported." = "Dostava v državo %@ ni podprta.";
 
 "Show details" = "Prikaži podrobnosti";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
 
+"The selected brand is not allowed" = "Izbrana blagovna znamka ni dovoljena";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "To je mednarodni nakup in ne vključuje 3,5-% pristojbine IOF. Z nadaljevanjem potrjujete in sprejemate <terms>Pogoje in določila družbe Ebanx</terms>.";
 
 "This is your default" = "To je vaš privzeti način plačila";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Ta način plačila bo odstranjen, vendar bo še naprej na voljo za naročnine %@.";
+
+"To scan your card, allow camera access in Settings." = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
 
 "Too many attempts. Please try again in a few minutes." = "Preveč poskusov. Poskusite znova čez nekaj minut.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
 
 "Your address changes won't be saved." = "Vaše spremembe naslova ne bodo shranjene.";
+
+"Your card has expired." = "Vaša kartica je potekla.";

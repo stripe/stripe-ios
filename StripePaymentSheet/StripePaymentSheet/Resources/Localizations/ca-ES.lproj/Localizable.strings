@@ -1,3 +1,17 @@
+"%1$@ Card" = "Targeta %1$@";
+
+"%1$@ Credit" = "%1$@ de crèdit";
+
+"%1$@ Debit" = "%1$@ de dèbit";
+
+"%1$@ Prepaid" = "%1$@ de prepagament";
+
+"%1$@ account ending in %2$@" = "Compte bancari de %1$@ que acaba en %2$@";
+
+"%1$@ ending in %2$@" = "%1$@ que acaba en %2$@";
+
+"%1$@ is not accepted" = "No s'accepta %1$@";
+
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
 
 "%@ will no longer be saved to your wallet." = "%@ ja no es desarà a la vostra cartera.";
@@ -21,6 +35,8 @@
 "Add new payment method" = "Afegir nou mètode de pagament";
 
 "Add your payment information" = "Afegir la teva informació de pagament";
+
+"Apple Pay" = "Apple Pay";
 
 "Approve payment" = "Aprova el pagament";
 
@@ -106,6 +122,10 @@
 
 "Card details cannot be changed." = "Les dades de la targeta no es poden canviar.";
 
+"Card information" = "Informació de targeta";
+
+"Card number" = "Número de targeta";
+
 "Card number. Supported cards include %@" = "Número de targeta. Les targetes admeses inclouen %@";
 
 "Change" = "Canvia";
@@ -131,6 +151,8 @@
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmeu el pagament al vostre banc o a l'aplicació de pagament en un termini de %@ per completar la compra.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmeu el pagament a l'aplicació del vostre banc en un termini de %@ per completar la compra.";
+
+"Confirm your %@" = "Confirmeu el vostre %@";
 
 "Confirm your CVC" = "Confirmeu el vostre CVC";
 
@@ -217,6 +239,18 @@
 "Not you?" = "No ets tu?";
 
 "Only card brand can be changed." = "Només es pot canviar la marca de la targeta.";
+
+"Only credit and prepaid cards are accepted" = "Només s'accepten les targetes de crèdit i de prepagament";
+
+"Only credit cards are accepted" = "Només s'accepten les targetes de crèdit";
+
+"Only debit and credit cards are accepted" = "Només s'accepten les targetes de dèbit i de crèdit";
+
+"Only debit and prepaid cards are accepted" = "Només s'accepten les targetes de dèbit i de prepagament";
+
+"Only debit cards are accepted" = "Només s'accepten les targetes de dèbit";
+
+"Only prepaid cards are accepted" = "Només s'accepten les de prepagament";
 
 "Open to see more information." = "Obre per a veure més informació.";
 
@@ -314,6 +348,8 @@
 
 "Set up" = "Configuració";
 
+"Shipping Address" = "Adreça d'enviament";
+
 "Shipping to %@ is not supported." = "L'enviament a %@ no s'admet.";
 
 "Show details" = "Mostra els detalls";
@@ -352,11 +388,15 @@
 
 "The provided verification code is incorrect." = "El codi de verificació proporcionat no és correcte.";
 
+"The selected brand is not allowed" = "La marca seleccionada no està permesa";
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Aquesta és una compra internacional i exclou una comissió del 3,5 % d'IOF. En continuar, accepteu les <terms>condicions d'Ebanx</terms>.";
 
 "This is your default" = "Aquesta és l'opció per defecte";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Aquesta forma de pagament se suprimirà, però continuarà disponible per a les subscripcions del %@.";
+
+"To scan your card, allow camera access in Settings." = "Per escanejar la teva targeta, permet l'accès a la càmera a Ajusts.";
 
 "Too many attempts. Please try again in a few minutes." = "Massa intents. Torneu-ho a provar d'aquí uns minuts.";
 
@@ -375,3 +415,5 @@
 "Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
 
 "Your address changes won't be saved." = "Els canvis de la vostra adreça no es desaran.";
+
+"Your card has expired." = "La targeta ha caducat.";
