@@ -125,6 +125,7 @@ final class CheckoutUnitTests: XCTestCase {
                 ? element.paymentSheetFlowController.nativeSheetPresentation
                 : element.embeddedPaymentElement.nativeSheetPresentation
             XCTAssertIdentical(parameters.nativeSheetPresentation, expectedPresentation)
+            XCTAssertEqual(parameters.analyticsHelper.checkoutSessionID, checkout.session.id)
             XCTAssertNotNil(parameters.confirmationChallenge)
         }
     }

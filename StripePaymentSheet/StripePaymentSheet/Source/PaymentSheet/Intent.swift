@@ -23,6 +23,11 @@ enum Intent {
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
     case checkout(CheckoutController.Session)
 
+    var checkoutSessionID: String? {
+        guard case .checkout(let session) = self else { return nil }
+        return session.id
+    }
+
     var stripeId: String? {
         switch self {
         case .paymentIntent(let intent): intent.stripeId

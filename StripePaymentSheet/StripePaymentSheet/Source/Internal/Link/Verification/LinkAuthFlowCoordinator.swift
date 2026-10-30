@@ -67,6 +67,7 @@ final class LinkAuthFlowCoordinator {
         let challenge: Challenge?
     }
 
+    private let analyticsHelper: LinkAnalyticsHelper
     private let account: LinkAuthAccount
     private let now: () -> Date
     private let consentGranted: Bool?
@@ -93,10 +94,12 @@ final class LinkAuthFlowCoordinator {
 
     init(
         account: LinkAuthAccount,
+        analyticsHelper: LinkAnalyticsHelper,
         consentGranted: Bool? = nil,
         now: @escaping () -> Date = Date.init
     ) {
         self.account = account
+        self.analyticsHelper = analyticsHelper
         self.consentGranted = consentGranted
         self.now = now
     }
@@ -152,13 +155,13 @@ final class LinkAuthFlowCoordinator {
     func start() {
         guard !didStart, !finished else { return }
         didStart = true
-        STPAnalyticsClient.sharedClient.logLink2FAStart(type: challenge?.type)
+        self.analyticsHelper.log2FAStart(type: challenge?.type)
         advance()
     }
 
     func cancel(switchAccount: Bool = false) {
         guard !finished else { return }
-        STPAnalyticsClient.sharedClient.logLink2FACancel(type: challenge?.type)
+        self.analyticsHelper.log2FACancel(type: challenge?.type)
         finish(switchAccount ? .switchAccount : .canceled)
     }
 
@@ -186,7 +189,7 @@ final class LinkAuthFlowCoordinator {
 
     func resend() {
         guard canResend else { return }
-        STPAnalyticsClient.sharedClient.logLink2FAResendCode(type: challenge?.type)
+        self.analyticsHelper.log2FAResendCode(type: challenge?.type)
         sendCode(isResending: true)
     }
 
@@ -209,7 +212,7 @@ final class LinkAuthFlowCoordinator {
                 self.resetInput()
                 self.advance(previous: challenge.type)
             case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLink2FAFailure(type: challenge.type)
+                self.analyticsHelper.log2FAFailure(type: challenge.type)
                 self.invalidCodeRevision += 1
                 self.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
                 let errorCode = error._stp_error_code.flatMap(LinkUtils.ConsumerErrorCode.init(rawValue:))
@@ -270,7 +273,7 @@ final class LinkAuthFlowCoordinator {
                 onUpdate?()
                 return
             }
-            STPAnalyticsClient.sharedClient.logLink2FAComplete(type: previous ?? challenge?.type)
+            self.analyticsHelper.log2FAComplete(type: previous ?? challenge?.type)
             finish(.completed)
             return
         }
@@ -358,7 +361,7 @@ final class LinkAuthFlowCoordinator {
                 self.previousChallenges[challenge.type] = self.challenge
                 self.onUpdate?()
             case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLink2FAStartFailure(type: challenge.type)
+                self.analyticsHelper.log2FAStartFailure(type: challenge.type)
                 let errorCode = error._stp_error_code.flatMap(LinkUtils.ConsumerErrorCode.init(rawValue:))
                 if challenge.type == .email, errorCode == .phoneNumberMissing || errorCode == .phoneNumberMismatch {
                     self.screen = .phoneMatch

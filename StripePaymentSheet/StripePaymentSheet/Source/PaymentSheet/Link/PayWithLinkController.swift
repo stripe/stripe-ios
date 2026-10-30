@@ -66,7 +66,8 @@ final class PayWithLinkController {
             elementsSession: elementsSession,
             configuration: configuration,
             linkAccount: LinkAccountContext.shared.account,
-            checkoutAttribution: analyticsHelper.checkoutAttribution
+            checkoutAttribution: analyticsHelper.checkoutAttribution,
+            analyticsHelper: analyticsHelper.linkAnalytics
         )
         payWithLinkWebController.payWithLinkDelegate = self
         payWithLinkWebController.present(over: presentingController)

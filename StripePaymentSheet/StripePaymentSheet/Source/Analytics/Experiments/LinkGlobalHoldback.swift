@@ -25,14 +25,16 @@ struct LinkGlobalHoldback: LoggableExperiment {
     init(
         arbId: String,
         session elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
+        isLinkEnabled: Bool,
+        defaultBillingDetails: PaymentSheet.BillingDetails,
         linkAccount: PaymentSheetLinkAccount?,
         integrationShape: ExperimentIntegrationShape
     ) {
         let baseExperiment = BaseLinkHoldbackExperiment(
             experimentName: Self.experimentName,
             elementsSession: elementsSession,
-            configuration: configuration,
+            isLinkEnabled: isLinkEnabled,
+            defaultBillingDetails: defaultBillingDetails,
             linkAccount: linkAccount,
             integrationShape: integrationShape
         )

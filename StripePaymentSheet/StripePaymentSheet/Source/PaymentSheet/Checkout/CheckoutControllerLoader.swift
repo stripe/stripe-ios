@@ -26,8 +26,8 @@ enum CheckoutControllerLoader {
         let analyticsHelper: PaymentSheetAnalyticsHelper
     }
 
-    /// Loads everything needed to initialize CheckoutController
-    static func load(configuration: CheckoutController.Configuration) async throws -> CheckoutController.Session {
+    /// Loads the initial Checkout Session and shared resources.
+    static func initCheckoutSession(configuration: CheckoutController.Configuration) async throws -> CheckoutController.Session {
         // 1a. Load misc. singletons
         let resources = Task { // Use a Task instead of async let; see PaymentSheetLoader.load.
             await PaymentSheetLoader.loadMiscellaneousSingletons()
@@ -41,26 +41,37 @@ enum CheckoutControllerLoader {
         let session = CheckoutController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
         await resources.value
 
-        // 2. Load Link
-        if let paymentElementConfiguration = configuration.paymentElement {
-            // TODO: Refactor - loadLink needs a configuration for apiClient, link settings etc. but it should just take them directly rather than us having to create a dummy FC configuration
-            let flowControllerConfiguration = makeFlowControllerConfiguration(
-                paymentElementConfiguration: paymentElementConfiguration,
-                configuration: configuration,
-                session: session
-            )
-            _ = await PaymentSheetLoader.loadLink(
-                elementsSession: session.elementsSession,
-                configuration: flowControllerConfiguration,
-                email: session.email ?? configuration.defaults.email,
-                analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .checkoutElements),
-                prefetchedEmailAndSourceTask: Task { nil },
-                loadTimings: .init(loadingStartDate: Date()),
-                isUpdate: false
-            )
-        }
         STPTelemetryClient.shared.sendTelemetryData() // see https://docs.google.com/document/d/18Aamx_KxPZLHOc1x-9MJriEoTiX7l0N-x0cj8Nk_IYM
         return session
+    }
+
+    /// Loads the shared Link account
+    static func loadLink(
+        session: CheckoutController.Session,
+        configuration: CheckoutController.Configuration,
+        paymentElementConfiguration: PaymentSheet.Configuration?
+    ) async {
+        let paymentElementUsesLink = paymentElementConfiguration.map {
+            PaymentSheet.isLinkEnabled(elementsSession: session.elementsSession, configuration: $0)
+        } ?? false
+        let expressCheckoutUsesLink = session.availableExpressCheckoutPaymentMethods.contains(ExpressCheckoutElement.PaymentMethod.link.rawValue)
+        // Hack: Link experiment exposures send default billing details
+        var defaultBillingDetails = PaymentSheet.BillingDetails()
+        defaultBillingDetails.email = session.email
+        defaultBillingDetails.name = configuration.defaults.billingDetails?.name
+        defaultBillingDetails.phone = configuration.defaults.phone
+        _ = await PaymentSheetLoader.loadLink(
+            elementsSession: session.elementsSession,
+            apiClient: configuration.apiClient,
+            isLinkEnabled: paymentElementUsesLink || expressCheckoutUsesLink,
+            email: defaultBillingDetails.email,
+            defaultBillingDetails: defaultBillingDetails,
+            analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .checkoutElements),
+            prefetchedEmailAndSourceTask: Task { nil },
+            loadTimings: .init(loadingStartDate: Date()),
+            isUpdate: false,
+            linkAnalytics: .init(checkoutSessionID: session.id)
+        )
     }
 
     /// This method contains all the stuff we have to do after (1) init and (2) updates i.e. when the session+elements session changes:

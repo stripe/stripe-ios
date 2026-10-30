@@ -62,6 +62,7 @@ protocol LinkAccountServiceProtocol {
 
 final class LinkAccountService: LinkAccountServiceProtocol {
 
+    private let analyticsHelper: LinkAnalyticsHelper
     let apiClient: STPAPIClient
     let sessionID: String
     let customerID: String?
@@ -73,7 +74,8 @@ final class LinkAccountService: LinkAccountServiceProtocol {
 
     convenience init(
         apiClient: STPAPIClient = .shared,
-        elementsSession: STPElementsSession
+        elementsSession: STPElementsSession,
+        analyticsHelper: LinkAnalyticsHelper
     ) {
         let shouldPassCustomerIdToLookup = elementsSession.linkSettings?.linkEnableDisplayableDefaultValuesInECE == true
 
@@ -85,7 +87,8 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             sessionID: elementsSession.sessionID,
             customerID: elementsSession.customer?.customerSession.customer,
             shouldPassCustomerIdToLookup: shouldPassCustomerIdToLookup,
-            merchantLogoUrl: elementsSession.merchantLogoUrl
+            merchantLogoUrl: elementsSession.merchantLogoUrl,
+            analyticsHelper: analyticsHelper
         )
         countryCode = elementsSession.countryCode
     }
@@ -98,8 +101,10 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         sessionID: String,
         customerID: String?,
         shouldPassCustomerIdToLookup: Bool,
-        merchantLogoUrl: URL?
+        merchantLogoUrl: URL?,
+        analyticsHelper: LinkAnalyticsHelper
     ) {
+        self.analyticsHelper = analyticsHelper
         self.apiClient = apiClient
         self.useMobileEndpoints = useMobileEndpoints
         self.canSyncAttestationState = canSyncAttestationState
@@ -136,7 +141,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             switch result {
             case .success(let lookupResponse):
                 // TODO: Since success can include cases where we *don't* look up, we log "look up complete" even when no lookup was performed - is this intentional or desired?
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
+                self.analyticsHelper.logAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
                     completion(
@@ -181,7 +186,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                     completion(.success(nil))
                 }
             case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
+                self.analyticsHelper.logAccountLookupFailure(error: error)
                 completion(.failure(error))
             }
         }
@@ -216,7 +221,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         ) { [apiClient] result in
             switch result {
             case .success(let lookupResponse):
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
+                self.analyticsHelper.logAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
                     completion(.success(
@@ -236,7 +241,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                     completion(.success(nil))
                 }
             case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
+                self.analyticsHelper.logAccountLookupFailure(error: error)
                 completion(.failure(error))
             }
         }
@@ -266,7 +271,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             guard let self else { return }
             switch result {
             case .success(let lookupResponse):
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
+                self.analyticsHelper.logAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
                     let linkAccount = PaymentSheetLinkAccount(
@@ -297,7 +302,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                     completion(.success(nil))
                 }
             case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
+                self.analyticsHelper.logAccountLookupFailure(error: error)
                 completion(.failure(error))
             }
         }

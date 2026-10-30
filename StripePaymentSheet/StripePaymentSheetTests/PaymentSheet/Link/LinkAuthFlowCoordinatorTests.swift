@@ -86,7 +86,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
 
     func testDefaultCapabilitiesAuthenticateEmailOnlyAccount() async {
         let account = AuthAccountStub(session: authSession(factors: [email()]))
-        let flow = LinkAuthFlowCoordinator(account: account)
+        let flow = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init())
         flow.start()
         await settle()
         XCTAssertEqual(account.starts.map(\.type), [.email])
@@ -212,7 +212,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         // Given an email-only account while the MFA auth flow is disabled
         let account = AuthAccountStub(session: authSession(factors: [email()]))
         account.supportedVerificationTypes = SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: false)
-        let flow = LinkAuthFlowCoordinator(account: account)
+        let flow = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init())
 
         // When the flow starts
         flow.start()
@@ -226,7 +226,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     func testCapabilitiesControlSelectionAndActions() async {
         let account = AuthAccountStub()
         account.supportedVerificationTypes = [.sms]
-        let flow = LinkAuthFlowCoordinator(account: account)
+        let flow = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init())
         flow.start()
         await settle()
         XCTAssertEqual(flow.actions, [.resend])
@@ -237,7 +237,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     func testResendCooldownOnlyStartsOnSuccess() async {
         let account = AuthAccountStub()
         var date = Date(timeIntervalSince1970: 100)
-        let flow = LinkAuthFlowCoordinator(account: account, now: { date })
+        let flow = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init(), now: { date })
         flow.start()
         await settle()
         account.nextStartResult = .failure(authError("rate_limit_exceeded"))
@@ -400,7 +400,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     private func makeFlow(_ account: AuthAccountStub) -> LinkAuthFlowCoordinator {
-        LinkAuthFlowCoordinator(account: account)
+        LinkAuthFlowCoordinator(account: account, analyticsHelper: .init())
     }
 
     /// Stub responses are synchronous; drain the main-queue callbacks including one recovery/replay.

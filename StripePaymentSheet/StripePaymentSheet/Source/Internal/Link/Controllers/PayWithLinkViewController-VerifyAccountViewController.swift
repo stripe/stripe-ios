@@ -20,7 +20,8 @@ extension PayWithLinkViewController {
                 mode: .embedded,
                 linkAccount: linkAccount,
                 brand: context.linkBrand,
-                appearance: context.linkAppearance
+                appearance: context.linkAppearance,
+                analyticsHelper: context.analyticsHelper.linkAnalytics
             )
             controller.onFinish = { [weak self] result in self?.handleVerificationResult(result) }
             controller.onNavigationUpdate = { [weak self] in
