@@ -68,6 +68,15 @@ extension UIColor {
     /**
      * Workaround:
      *
+     * The default border color matches the surface color on dark mode, which hides the outline of
+     * secondary buttons. We give it a clearer color here.
+     *
+     */
+    static let linkSecondaryButtonBorder: UIColor = .dynamic(light: neutral300, dark: neutral700)
+
+    /**
+     * Workaround:
+     *
      * Tertiary text color doesn't look great on this badge in dark mode. We give it a lighter color here.
      *
      */
