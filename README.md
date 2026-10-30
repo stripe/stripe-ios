@@ -100,6 +100,19 @@ For other modules, follow the instructions below:
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy.
 
+#### Removing unused localizations
+
+The SDK includes translations for all of the languages listed above. If your app supports fewer languages, you can reduce your app's size by removing the Stripe localizations your app doesn't use. The script keeps English, every language your app is localized into, and regional variants of those languages (for example, `es-419` if your app supports `es`).
+
+1. In Xcode, select your app target, open **Build Phases**, and add a **New Run Script Phase**. Move it to the end of the list, after **Embed Frameworks** and any CocoaPods phases.
+2. Uncheck **Based on dependency analysis**, then set the script to:
+   - Swift Package Manager: `"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/stripe-ios-spm/StripeCore/Scripts/strip_unused_localizations.sh"`
+   - CocoaPods: `"${PODS_ROOT}/StripeCore/StripeCore/Scripts/strip_unused_localizations.sh"`
+   - Other installations: paste the contents of [`strip_unused_localizations.sh`](StripeCore/Scripts/strip_unused_localizations.sh) into the build phase.
+3. If your target's **User Script Sandboxing** (`ENABLE_USER_SCRIPT_SANDBOXING`) build setting is `Yes`, set it to `No`. The script needs to modify your built app.
+
+The script detects your app's languages from its `.lproj` folders and `CFBundleLocalizations`. To choose languages explicitly, set the `STRIPE_KEEP_LOCALIZATIONS` build setting to a list such as `fr de ja`. See the script for more options.
+
 ## Requirements
 
 The Stripe iOS SDK supports all [Apple supported Xcode versions](https://developer.apple.com/news/upcoming-requirements/) and is compatible with apps targeting iOS 15 or above. We support Catalyst on macOS 12 or later.
