@@ -974,7 +974,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = previousOverride
             LinkAccountContext.shared.account = previousAccount
         }
-        let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeSession().withCustomer())
+        let checkout = try await makeCheckout(apiResponse: CheckoutTestHelpers.makeOpenSession().withCustomer())
         let presenter = UIViewController()
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.rootViewController = presenter
@@ -995,11 +995,28 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let wallet = try XCTUnwrap(content.coordinator as? PayWithLinkViewController)
 
         // When a payment attempt fails, the wallet stays open for another attempt
-        var declinedResponse = makeConfirmedSessionJSON(paymentIntentStatus: "requires_payment_method", status: "open", paymentStatus: "unpaid")
+        var declinedResponse = makeConfirmedSessionJSON(paymentResponseStatus: "requires_payment_method", status: "open", paymentStatus: "unpaid")
         declinedResponse["customer_email"] = "after-decline@example.com"
+        var paymentResponse = declinedResponse["payment_response"] as! [String: Any]
+        paymentResponse["last_payment_error"] = [
+            "type": "card_error",
+            "code": "card_declined",
+            "message": "Your card was declined.",
+        ]
+        declinedResponse["payment_response"] = paymentResponse
         stubConfirmation(responseJSON: declinedResponse)
+        let poll = stubPollCheckoutSession(
+            sessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
+            confirmationStatus: "failed",
+            status: "open",
+            paymentStatus: "unpaid"
+        )
+        let retrieve = stubRetrieveCheckoutSession(responseJSON: declinedResponse, clientSecret: checkout.clientSecret)
         let attemptResult = await confirmLinkWalletAttempt(wallet)
-        guard case .failed = attemptResult else { return XCTFail("Expected the first attempt to fail") }
+        guard case .failed(let error) = attemptResult else { return XCTFail("Expected the first attempt to fail") }
+        XCTAssertEqual(error._stp_error_code, "card_declined")
+        await fulfillment(of: [poll, retrieve], timeout: 5)
         XCTAssertNil(finalCheckoutResult)
 
         if retry {
@@ -1620,7 +1637,13 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         return expectation
     }
 
-    private func stubPollCheckoutSession(sessionId: String, clientSecret: String) -> XCTestExpectation {
+    private func stubPollCheckoutSession(
+        sessionId: String,
+        clientSecret: String,
+        confirmationStatus: String = "succeeded",
+        status: String = "complete",
+        paymentStatus: String = "paid"
+    ) -> XCTestExpectation {
         let expectation = expectation(description: "Checkout Session polled")
         stub { request in
             request.httpMethod == "GET"
@@ -1632,9 +1655,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             return HTTPStubsResponse(
                 jsonObject: [
                     "id": sessionId,
-                    "confirmation_status": "succeeded",
-                    "status": "complete",
-                    "payment_status": "paid",
+                    "confirmation_status": confirmationStatus,
+                    "status": status,
+                    "payment_status": paymentStatus,
                 ],
                 statusCode: 200,
                 headers: nil
