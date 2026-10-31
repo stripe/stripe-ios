@@ -244,6 +244,64 @@ final class CheckoutSessionPollerTests: XCTestCase {
         XCTAssertEqual(outcome, .succeeded(pollResponse(confirmationStatus: .succeeded)))
     }
 
+    // MARK: - Cancellation
+
+    func testClockSleepIgnoresTaskCancellation() async {
+        // Given a sleep started on the real (production) polling clock
+        let clock = CheckoutSessionPollingClock()
+        let start = Date()
+        let sleepTask = Task {
+            await clock.sleep(for: 1.0)
+        }
+
+        // When the Task running it is canceled almost immediately
+        await Task.yield()
+        sleepTask.cancel()
+        XCTAssertTrue(sleepTask.isCancelled)
+        await sleepTask.value
+
+        // Then the sleep still ran for (close to) its full duration instead of returning early:
+        // `withCheckedContinuation` has no cancellation handler, so canceling the Task has no
+        // effect on this sleep. Contrast with `Task.sleep`, which throws `CancellationError`
+        // almost immediately when canceled.
+        let elapsed = Date().timeIntervalSince(start)
+        XCTAssertGreaterThanOrEqual(elapsed, 0.9, "clock.sleep(for:) returned early despite never checking cancellation; this assertion should fail if that's fixed.")
+    }
+
+    func testPollKeepsRequestingAfterItsTaskIsCanceled() async {
+        // Given a poller that's wrapped in a Task the caller intends to abandon (e.g. a SwiftUI
+        // `.task { }` whose view disappeared, or `CheckoutController.awaitPendingOperations(timeout:)`
+        // giving up after its own timeout without canceling the underlying operation Task).
+        let apiClient = AlwaysPendingAPIClient()
+        let poller = CheckoutSessionPoller(apiClient: apiClient) // real apiClient + real (production) clock
+        let pollTask = Task {
+            await poller.poll(checkoutSessionId: checkoutSessionId, clientSecret: clientSecret)
+        }
+
+        // When the Task is canceled right after the first /poll request goes out
+        while apiClient.callCount < 1 {
+            await Task.yield()
+        }
+        pollTask.cancel()
+        XCTAssertTrue(pollTask.isCancelled)
+        let countAtCancellation = apiClient.callCount
+
+        // Then `poll()` still issues further /poll requests well after cancellation: it never
+        // calls `Task.checkCancellation()` / checks `Task.isCancelled`, so canceling the Task
+        // that's running it does not stop it from continuing to poll (and later calling
+        // `commitSession`, overwriting shared session state, once some caller abandoned it).
+        // (minimumTimeInterval between polls is 0.5s; wait comfortably past that.)
+        try? await Task.sleep(nanoseconds: 900_000_000)
+        XCTAssertGreaterThan(
+            apiClient.callCount,
+            countAtCancellation,
+            "poll() should have stopped issuing requests once its Task was canceled, but it kept polling."
+        )
+        // Note: `pollTask` is intentionally left running in the background (uncanceled, by
+        // design, since that's the bug) rather than awaited; it harmlessly finishes on its own
+        // once it hits the poller's internal 30s timeout.
+    }
+
     private func makePoller(
         apiClient: MockAPIClient,
         clock: TestClock
@@ -356,4 +414,25 @@ private final class MockAPIClient: CheckoutSessionPollingAPIClient {
 private enum PollerTestError: Swift.Error, Equatable {
     case missingResult
     case requestFailed
+}
+
+/// Always reports `.pending` instantly, so a real (non-fast-forwarded) clock's actual
+/// `minimumTimeInterval` spacing between requests is observable in real wall-clock time.
+private final class AlwaysPendingAPIClient: CheckoutSessionPollingAPIClient {
+    private(set) var callCount = 0
+
+    func pollCheckoutSession(
+        checkoutSessionId: String,
+        clientSecret: String,
+        timeout: TimeInterval
+    ) async throws -> CheckoutClientPollResponse {
+        callCount += 1
+        let data = try! JSONSerialization.data(withJSONObject: [
+            "id": checkoutSessionId,
+            "confirmation_status": "pending",
+            "status": "open",
+            "payment_status": "unpaid",
+        ])
+        return try! StripeJSONDecoder().decode(CheckoutClientPollResponse.self, from: data)
+    }
 }

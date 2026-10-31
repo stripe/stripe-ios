@@ -6,6 +6,8 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
@@ -118,6 +120,76 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         try await checkout.awaitPendingOperations(timeout: 1)
 
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
+    }
+
+    // MARK: - Unqueued Wallet Updates
+
+    /// `CheckoutSessionWalletUpdater.updateTaxRegionWithoutEnqueueing` (used by Apple Pay's
+    /// `didSelectShippingContact`/`didSelectPaymentMethod` delegate callbacks) deliberately calls
+    /// `performUnqueuedUpdate` directly, bypassing `pendingOperations` entirely. `performUnqueuedUpdate`
+    /// itself warns: "Only call this within a queued context, to prevent concurrent updates from
+    /// applying responses out of order." This test demonstrates that warning being violated in practice:
+    /// a wallet update can run fully concurrently with an unrelated queued update, and whichever
+    /// network response arrives last wins -- regardless of which update was logically more recent.
+    func testWalletUpdateBypassesQueueAndCanRaceAQueuedUpdate() async throws {
+        // Given a Checkout Session where a queued update (e.g. Payment Element's billing-address
+        // tax sync) and an unqueued wallet update (e.g. Apple Pay's shipping-contact tax sync)
+        // can both send `/update` requests.
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        addTeardownBlock { HTTPStubs.removeAllStubs() }
+
+        stub(condition: { request in
+            request.url?.path.hasSuffix("/update") == true
+        }) { request in
+            let body = request.ohhttpStubs_httpBody.flatMap { String(data: $0, encoding: .utf8) } ?? ""
+            // The queued update's (US) response is artificially delayed; the wallet update's (CA)
+            // response resolves immediately, even though the wallet update is the LATER action.
+            let isQueuedUpdateRequest = body.contains("country%5D=US") || body.contains("country]=US")
+            let currency = isQueuedUpdateRequest ? "eur" : "gbp"
+            var json = CheckoutTestHelpers.openSessionJSON
+            json["presentment_currency"] = currency
+            json["integration_currency"] = currency
+            json["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency)
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+                .responseTime(isQueuedUpdateRequest ? 0.3 : 0)
+        }
+
+        // When the queued update is sent first...
+        let queuedUpdateTask = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                try await checkout.performUnqueuedUpdate(.setTaxRegion(CheckoutController.Address(country: "US")))
+            }
+        }
+        try await waitUntil {
+            checkout.pendingOperations.count == 1
+        }
+
+        // ...and, while it's still in flight, an Apple-Pay-style wallet update starts for a
+        // DIFFERENT (later) address.
+        let walletUpdateTask = Task { @MainActor in
+            try await checkout.updateTaxRegionWithoutEnqueueing(
+                address: CheckoutController.Address(country: "CA"),
+                canUpdateWhileSheetPresented: true,
+                confirmationSource: .expressCheckoutElement
+            )
+        }
+
+        // Then: the wallet update never joins the queue -- it bypasses it entirely, by design.
+        XCTAssertEqual(
+            checkout.pendingOperations.count, 1,
+            "the wallet update bypasses pendingOperations, so nothing serializes it against the in-flight queued update"
+        )
+
+        try await queuedUpdateTask.value
+        try await walletUpdateTask.value
+
+        // Then: despite the wallet update being the customer's LATER action, the queued update's
+        // delayed response arrives last and overwrites it -- the final session reflects the
+        // EARLIER, now-stale update instead of the later one.
+        XCTAssertEqual(
+            checkout.session.currency, "eur",
+            "the earlier queued update's delayed response clobbered the later wallet update's result"
+        )
     }
 
     func testUpdateEmailUsesLatestQueuedValue() async throws {
