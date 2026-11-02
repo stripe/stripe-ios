@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 26.16.0 2026-11-02
 ### PaymentSheet
 * [Added] The Link auth flow now natively supports email OTP and multi-factor authentication (MFA) enabled accounts.
 * [Added] Added `returnURL` to `LinkConfiguration`, allowing `LinkController` users to let customers authenticate in their banking app and then return to the merchant's app. Without a `returnURL`, bank authentication happens in a secure webview presented in the merchant's app (private preview).
