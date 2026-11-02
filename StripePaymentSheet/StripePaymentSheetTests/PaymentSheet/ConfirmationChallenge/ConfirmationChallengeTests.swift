@@ -265,6 +265,52 @@ class ConfirmationChallengeTests: XCTestCase {
         }.get()
     }
 
+    func testCancelingQueuedScopedRequestDoesNotBlockOnActiveHolder() async throws {
+        // Given a signed request A that's holding the slot with a long-running operation
+        let challenge = makeAttestationOnlyChallenge()
+        let aStarted = expectation(description: "A started")
+        let requestA = Task {
+            try await challenge.withRadarOptions(for: .card) { options in
+                XCTAssertNotNil(options?.iosVerificationObject)
+                aStarted.fulfill()
+                try await Task.sleep(nanoseconds: 10_000_000_000)
+            }
+        }
+        await fulfillment(of: [aStarted], timeout: 5)
+
+        // And a request B queued behind it
+        let requestB = Task {
+            try await challenge.withRadarOptions(for: .card) { _ in
+                XCTFail("B's operation should never run; it was canceled while still queued")
+            }
+        }
+        // Give B a moment to actually enqueue behind A before canceling it.
+        try await Task.sleep(nanoseconds: 200_000_000)
+
+        // When B is canceled while still queued
+        requestB.cancel()
+
+        // Then B resolves promptly with cancellation, without waiting for A's 10-second operation
+        let bResult = await withTimeout(2) {
+            try await requestB.value
+        }
+        switch bResult {
+        case .success:
+            XCTFail("Expected cancellation")
+        case .failure(let error):
+            XCTAssertTrue(error is CancellationError)
+        }
+
+        // And A, which held the slot the whole time, is unaffected.
+        requestA.cancel()
+        do {
+            try await requestA.value
+            XCTFail("Expected cancellation")
+        } catch {
+            XCTAssertTrue(error is CancellationError)
+        }
+    }
+
     func testConcurrentScopedRequestsUseDistinctAssertions() async throws {
         // Given multiple requests sharing a challenge
         let challenge = makeAttestationOnlyChallenge()
