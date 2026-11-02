@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-/// Keeps a group of custom controls in one usable region, with scrolling when height is limited.
+/// Scrolls content beside vertical folds, with optional horizontal-fold avoidance.
 struct FoldAvoidingScrollView<Content: View>: View {
     private let alignment: Alignment
+    private let avoidsHorizontalFolds: Bool
     private let prefersLargerRegion: Bool
     private let content: (CGFloat) -> Content
 
@@ -18,14 +19,17 @@ struct FoldAvoidingScrollView<Content: View>: View {
     /// Creates a scroll view whose content can adapt to the usable height.
     /// - Parameters:
     ///   - alignment: The content alignment within the usable region. Defaults to `.center`.
-    ///   - prefersLargerRegion: Use the side of a horizontal fold with more available height. When `false`, always use the space below the fold. Defaults to `false`.
+    ///   - avoidsHorizontalFolds: Whether to keep content on one side of a horizontal fold. Set to `false` to scroll across it while still avoiding vertical folds. Defaults to `true`.
+    ///   - prefersLargerRegion: When avoiding horizontal folds, use the side with more available height. When `false`, use the space below the fold. Defaults to `false`.
     ///   - content: The content to display, given the usable height after fold avoidance and safe areas.
     init(
         alignment: Alignment = .center,
+        avoidsHorizontalFolds: Bool = true,
         prefersLargerRegion: Bool = false,
         @ViewBuilder content: @escaping (CGFloat) -> Content
     ) {
         self.alignment = alignment
+        self.avoidsHorizontalFolds = avoidsHorizontalFolds
         self.prefersLargerRegion = prefersLargerRegion
         self.content = content
     }
@@ -47,7 +51,14 @@ struct FoldAvoidingScrollView<Content: View>: View {
         }
         // Measure the full container so moving the content doesn't change the fold-avoidance calculation.
         .onGeometryChange(for: EdgeInsets.self) { geometry in
-            let lowerRegionInsets = geometry.activeFoldInsets()
+            var lowerRegionInsets = geometry.activeFoldInsets()
+
+            if !avoidsHorizontalFolds {
+                lowerRegionInsets.top = 0
+                lowerRegionInsets.bottom = 0
+                return lowerRegionInsets
+            }
+
             guard prefersLargerRegion else { return lowerRegionInsets }
 
             // The keyboard can leave more usable space above a horizontal fold.
