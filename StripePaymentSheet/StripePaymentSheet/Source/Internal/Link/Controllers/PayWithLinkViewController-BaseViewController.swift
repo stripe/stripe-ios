@@ -24,6 +24,14 @@ extension PayWithLinkViewController {
 
         private(set) lazy var contentView = UIView()
 
+        /// The sheet's bottom safe area, for padding content above the home indicator.
+        /// Our own safe area only covers the part of the view that overlaps the home indicator, so it shrinks
+        /// whenever the content moves away from the sheet's bottom edge (for example, while a native sheet
+        /// stretches during an upward swipe). Padding with it changes the content's height, which resizes the sheet mid-gesture.
+        var sheetBottomSafeAreaInset: CGFloat {
+            parent?.view.safeAreaInsets.bottom ?? view.safeAreaInsets.bottom
+        }
+
         init(context: Context, navigationTitle: String? = nil) {
             self.context = context
             self.navigationTitle = navigationTitle

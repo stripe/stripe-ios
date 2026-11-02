@@ -173,6 +173,16 @@ extension PayWithLinkViewController {
 
         private var containerViewBottomConstraint: NSLayoutConstraint!
 
+        /// The portion of the keyboard overlapping the view, or `nil` while the keyboard is hidden.
+        private var keyboardInViewHeight: CGFloat?
+
+        private var containerViewBottomPadding: CGFloat {
+            if let keyboardInViewHeight {
+                return keyboardInViewHeight + LinkUI.contentSpacing
+            }
+            return bottomInset + sheetBottomSafeAreaInset
+        }
+
         #if !os(visionOS)
         private let feedbackGenerator = UINotificationFeedbackGenerator()
         #endif
@@ -196,6 +206,13 @@ extension PayWithLinkViewController {
             setupUI()
             updateUI(animated: false)
             viewModel.delegate = self
+        }
+
+        override func viewWillLayoutSubviews() {
+            super.viewWillLayoutSubviews()
+            if containerViewBottomConstraint.constant != -containerViewBottomPadding {
+                containerViewBottomConstraint.constant = -containerViewBottomPadding
+            }
         }
 
         override func viewWillAppear(_ animated: Bool) {
@@ -222,8 +239,8 @@ extension PayWithLinkViewController {
             containerView.translatesAutoresizingMaskIntoConstraints = false
 
             containerViewBottomConstraint = containerView.bottomAnchor.constraint(
-                equalTo: contentView.safeAreaLayoutGuide.bottomAnchor,
-                constant: -bottomInset
+                equalTo: contentView.bottomAnchor,
+                constant: -containerViewBottomPadding
             )
 
             NSLayoutConstraint.activate([
@@ -873,11 +890,8 @@ private extension PayWithLinkViewController.WalletViewController {
         let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
         let keyboardInViewHeight = view.safeAreaLayoutGuide.layoutFrame.intersection(keyboardViewEndFrame).height
 
-        if notification.name == UIResponder.keyboardWillHideNotification {
-            containerViewBottomConstraint.constant = -bottomInset
-        } else {
-            containerViewBottomConstraint.constant = -keyboardInViewHeight - LinkUI.contentSpacing
-        }
+        self.keyboardInViewHeight = notification.name == UIResponder.keyboardWillHideNotification ? nil : keyboardInViewHeight
+        containerViewBottomConstraint.constant = -containerViewBottomPadding
 
         view.setNeedsLayout()
         UIView.animateAlongsideKeyboard(notification) {
