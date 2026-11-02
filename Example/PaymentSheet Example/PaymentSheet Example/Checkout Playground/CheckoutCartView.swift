@@ -146,13 +146,14 @@ struct CheckoutCartView: View {
         errorMessage = nil
         do {
             var config = CheckoutElementsController.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
-            config.applePayMerchantId = "merchant.com.stripe.umbrella.test"
             config.apiClient = diagnostics.makeAPIClient(
                 checkoutClientRequestDelay: delayCheckoutClientRequests ? 1 : 0
             )
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
-                paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration()
+                paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
+                    merchantId: "merchant.com.stripe.umbrella.test"
+                )
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails

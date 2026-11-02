@@ -46,7 +46,7 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
             // instead of `WindowAuthenticationContext` to avoid presenting in the wrong scene?
             let authenticationContext = WindowAuthenticationContext()
             return .applePay(.init(
-                applePayMerchantId: applePayConfiguration.merchantId,
+                applePayConfiguration: applePayConfiguration,
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,

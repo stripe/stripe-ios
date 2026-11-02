@@ -486,25 +486,6 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         XCTAssertEqual(response.paymentResponse?.setupIntent?.id, "seti_123")
     }
 
-    func testSessionExposesLastPaymentError() throws {
-        // Given a Checkout Session with a failed payment attempt
-        var json = CheckoutTestHelpers.baseSessionJSON
-        json["payment_response"] = [
-            "status": "requires_payment_method",
-            "last_payment_error": [
-                "type": "card_error",
-                "code": "card_declined",
-                "message": "Your card was declined.",
-            ],
-        ]
-
-        // When the response is converted to the public Session
-        let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession()
-
-        // Then the merchant can inspect the payment error
-        XCTAssertEqual(session.lastPaymentError?._stp_error_code, "card_declined")
-    }
-
     func testIntentReferencesRequireClientSecrets() {
         for key in ["payment_intent", "setup_intent"] {
             var json = CheckoutTestHelpers.baseSessionJSON

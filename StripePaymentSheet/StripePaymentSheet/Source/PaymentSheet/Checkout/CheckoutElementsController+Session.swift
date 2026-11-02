@@ -64,9 +64,6 @@ extension CheckoutElementsController {
         /// Status of the Checkout Session.
         public let status: Status
 
-        /// The error from the most recent payment attempt, if any.
-        public private(set) var lastPaymentError: Error? = nil
-
         /// The tax computation state, if available.
         public let tax: Tax?
 
@@ -211,8 +208,6 @@ extension CheckoutElementsController.Session {
             elementsSession: elementsSessionValue
         )
         checkoutConfigID = apiResponse.checkoutConfigID
-        let lastErrorFields = apiResponse.paymentResponse?.lastPaymentError?.allResponseFields
-        lastPaymentError = NSError.stp_error(fromStripeResponse: lastErrorFields.map { ["error": $0] })
     }
 }
 

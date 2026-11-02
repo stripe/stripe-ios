@@ -291,9 +291,9 @@ final class PaymentElementTest: XCTestCase {
         )
         var paymentElementConfiguration = PaymentElement.Configuration()
         paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
+            merchantId: "merchant.com.example",
             buttonType: .donate
         )
-        checkoutConfiguration.applePayMerchantId = "merchant.com.example"
         checkoutConfiguration.paymentElement = paymentElementConfiguration
         var sessionJSON = Self.openSessionJSON(paymentMethodTypes: ["card"])
         sessionJSON["merchant_info"] = ["country": "GB"]

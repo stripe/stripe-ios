@@ -472,13 +472,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         checkoutSession: CheckoutElementsController.Session,
         applePayConfirmationParameters: CheckoutElementsController.ApplePayConfirmationParameters
     ) -> PKPaymentRequest {
+        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
         let paymentRequest = StripeAPI.paymentRequest(
-            withMerchantIdentifier: applePayConfirmationParameters.applePayMerchantId,
+            withMerchantIdentifier: applePayConfig.merchantId,
             country: checkoutSession.merchantCountryCode,
             currency: checkoutSession.activePresentmentCurrency ?? "USD"
         )
 
-        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set an Apple Pay merchant identifier.")
+        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `ApplePayConfiguration`.")
 
         let merchantLabel = applePayConfirmationParameters.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)

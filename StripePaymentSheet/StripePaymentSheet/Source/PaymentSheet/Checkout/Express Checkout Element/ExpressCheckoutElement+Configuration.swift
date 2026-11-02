@@ -33,7 +33,7 @@ extension ExpressCheckoutElement {
 
 extension ExpressCheckoutElement.Configuration {
     /// Configuration for Apple Pay.
-    public struct ApplePayConfiguration {
+    public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
         /// The Apple Pay merchant identifier.
         public let merchantId: String
 
