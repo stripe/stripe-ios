@@ -373,7 +373,7 @@ final class LinkAuthFlowViewSnapshotTests: STPSnapshotTestCase {
             ],
             ], statusCode: 200, headers: nil)
         }
-        return LinkAuthFlowViewController(mode: mode, linkAccount: account, brand: .link)
+        return LinkAuthFlowViewController(mode: mode, linkAccount: account, brand: .link, analyticsHelper: .init())
     }
 }
 

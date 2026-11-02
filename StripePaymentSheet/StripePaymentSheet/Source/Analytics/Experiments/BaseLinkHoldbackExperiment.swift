@@ -43,15 +43,11 @@ struct BaseLinkHoldbackExperiment {
     init(
         experimentName: String,
         elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
+        isLinkEnabled: Bool,
+        defaultBillingDetails: PaymentSheet.BillingDetails,
         linkAccount: PaymentSheetLinkAccount?,
         integrationShape: ExperimentIntegrationShape
     ) {
-        let isLinkEnabled = PaymentSheet.isLinkEnabled(
-            elementsSession: elementsSession,
-            configuration: configuration
-        )
-
         // In some scenarios (i.e. testmode) there will be no group assignment.
         // Treat these scenarios as though we're in the control group.
         let assignment = elementsSession.experimentsData?.experimentAssignments[experimentName]
@@ -65,13 +61,13 @@ struct BaseLinkHoldbackExperiment {
         self.linkDisplayed = isLinkEnabled
 
         var defaultValuesProvided: [String] = []
-        if configuration.defaultBillingDetails.email != nil {
+        if defaultBillingDetails.email != nil {
             defaultValuesProvided.append("email")
         }
-        if configuration.defaultBillingDetails.name != nil {
+        if defaultBillingDetails.name != nil {
             defaultValuesProvided.append("name")
         }
-        if configuration.defaultBillingDetails.phone != nil {
+        if defaultBillingDetails.phone != nil {
             defaultValuesProvided.append("phone")
         }
         self.defaultValuesProvided = defaultValuesProvided.joined(separator: " ")

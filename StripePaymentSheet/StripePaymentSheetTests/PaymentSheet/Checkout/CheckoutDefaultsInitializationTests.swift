@@ -352,6 +352,105 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
         XCTAssertFalse(AddressSpecProvider.shared.countries.isEmpty)
     }
 
+    func testInitLooksUpLinkForExpressCheckout() async throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+
+        // Given ECE offers Link, with PE either absent or explicitly hiding Link
+        for hasPaymentElement in [false, true] {
+            analyticsClient._testLogHistory = []
+            LinkAccountContext.shared.account = nil
+            let response = CheckoutTestHelpers.makeSessionWithWalletTypes(
+                ["card", "link"],
+                customerEmail: "foo@bar.com"
+            )
+            var configuration = CheckoutTestHelpers.makeConfiguration(
+                apiResponse: response,
+                paymentElementConfiguration: hasPaymentElement ? .init() : nil
+            )
+            configuration.paymentElement?.linkConfiguration = .init(display: .never)
+            let lookup = expectation(description: "Lookup with PE configured: \(hasPaymentElement)")
+            lookup.assertForOverFulfill = true
+            let responseData = try FileMock.consumers_lookup_200.data()
+            let stub = HTTPStubs.stubRequests(passingTest: { $0.url?.path == "/v1/consumers/sessions/lookup" }) { request in
+                let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+                XCTAssertEqual(params["email_address"], "foo@bar.com")
+                lookup.fulfill()
+                return HTTPStubsResponse(data: responseData, statusCode: 200, headers: nil)
+            }
+            defer { HTTPStubs.removeStub(stub) }
+
+            // When Checkout initializes, without opening either element
+            let checkout = try await CheckoutController(configuration: configuration)
+
+            // Then the shared Link account is recognized before ECE can be used
+            XCTAssertEqual(checkout.paymentElement != nil, hasPaymentElement)
+            XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
+            XCTAssertEqual(LinkAccountContext.shared.account?.isRegistered, true)
+            let lookupEvent = try XCTUnwrap(analyticsClient._testLogHistory.first { $0["event"] as? String == "link.account_lookup.complete" })
+            XCTAssertEqual(lookupEvent["checkout_session_id"] as? String, checkout.session.id)
+            await fulfillment(of: [lookup], timeout: 1)
+        }
+    }
+
+    func testInitLoadsLinkUsingSessionAfterApplyingDefaults() async throws {
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        LinkAccountContext.shared.account = nil
+
+        // Given Link becomes available in the response to the default shipping address update
+        let initialSession = CheckoutTestHelpers.makeSessionWithWalletTypes([], automaticTaxAddressSource: "shipping")
+        let updatedSession = CheckoutTestHelpers.makeSessionWithWalletTypes(
+            ["link"],
+            automaticTaxAddressSource: "shipping",
+            customerEmail: "foo@bar.com"
+        )
+        var configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: initialSession, paymentElementConfiguration: nil)
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
+        shippingDetails.address = .init(country: "US", postalCode: "94105")
+        configuration.defaults.shippingDetails = shippingDetails
+        HTTPStubs.stubRequests(passingTest: { $0.url?.path == "/v1/checkout_client/cs_test/update" }) { _ in
+            HTTPStubsResponse(jsonObject: updatedSession.allResponseFields, statusCode: 200, headers: nil)
+        }
+        let lookup = expectation(description: "Link lookup using updated session")
+        let responseData = try FileMock.consumers_lookup_200.data()
+        HTTPStubs.stubRequests(passingTest: { $0.url?.path == "/v1/consumers/sessions/lookup" }) { request in
+            XCTAssertEqual(RequestBodyTestHelpers.formEncodedBodyParams(from: request)["email_address"], "foo@bar.com")
+            lookup.fulfill()
+            return HTTPStubsResponse(data: responseData, statusCode: 200, headers: nil)
+        }
+
+        // When Checkout initializes
+        _ = try await CheckoutController(configuration: configuration)
+
+        // Then Link has loaded using the updated eligibility and email before initialization completes
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
+        await fulfillment(of: [lookup], timeout: 1)
+    }
+
+    func testInitSkipsLinkLookupWhenBothElementsDisableLink() async throws {
+        // Given Link is supported by the session but disabled in both elements
+        let response = CheckoutTestHelpers.makeSessionWithWalletTypes(["card", "link"], customerEmail: "foo@bar.com")
+        var configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: response)
+        configuration.paymentElement?.linkConfiguration = .init(display: .never)
+        configuration.expressCheckoutElement?.linkConfiguration.display = .never
+        let lookup = expectation(description: "No Link lookup")
+        lookup.isInverted = true
+        HTTPStubs.stubRequests(passingTest: { $0.url?.path == "/v1/consumers/sessions/lookup" }) { _ in
+            lookup.fulfill()
+            return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
+        }
+
+        // When Checkout initializes
+        _ = try await CheckoutController(configuration: configuration)
+
+        // Then no background lookup is scheduled either
+        await fulfillment(of: [lookup], timeout: 0.2)
+    }
+
     // MARK: - Stubs
 
     private func stubCheckoutSessionRequests(

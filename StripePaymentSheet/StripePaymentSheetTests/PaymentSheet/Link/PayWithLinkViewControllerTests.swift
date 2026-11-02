@@ -18,6 +18,41 @@ class PayWithLinkViewControllerTests: XCTestCase {
     var paymentSheet: PayWithNativeLinkController!
 
     @MainActor
+    func testSignupUsesCheckoutAnalyticsFromItsParentFlow() throws {
+        // Given a native Link flow with Checkout context and an injected analytics client
+        let analyticsClient = STPTestingAnalyticsClient()
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
+        let configuration = PaymentSheet.Configuration()
+        let context = PayWithLinkViewController.Context(
+            intent: .checkout(session),
+            elementsSession: session.elementsSession,
+            configuration: configuration,
+            linkBrand: .link,
+            shouldOfferApplePay: false,
+            shouldFinishOnClose: false,
+            canContinueWithoutLink: false,
+            initiallySelectedPaymentDetailsID: nil,
+            callToAction: nil,
+            supportedPaymentMethodTypes: [.card],
+            analyticsHelper: PaymentSheetAnalyticsHelper(
+                integrationShape: .complete,
+                configuration: configuration,
+                checkoutSessionID: session.id,
+                analyticsClient: analyticsClient
+            )
+        )
+        let parent = PayWithLinkViewController.SignUpViewController(linkAccount: nil, context: context)
+        let signup = try XCTUnwrap(parent.children.compactMap { $0 as? LinkSignUpViewController }.first)
+
+        // When signup appears
+        signup.viewDidAppear(false)
+
+        // Then the existing signup event reaches that client with the Checkout session ID
+        let event = try XCTUnwrap(analyticsClient._testLogHistory.first { $0["event"] as? String == "link.signup.flow_presented" })
+        XCTAssertEqual(event["checkout_session_id"] as? String, session.id)
+    }
+
+    @MainActor
     func testNativeWalletResizesWhenPaymentPickerExpandsAndCollapses() async throws {
         // Given a presented wallet with two saved cards and a collapsed payment picker
         let (window, wallet, sheet, picker) = try await presentNativeWallet()

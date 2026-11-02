@@ -90,6 +90,7 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
             let analyticsHelper = PaymentSheetAnalyticsHelper(
                 integrationShape: .complete, // Wallet Link analytics don't log integrationShape, so it's not worth adding an .expressCheckout case.
                 configuration: linkConfirmationConfiguration,
+                checkoutSessionID: session.id,
                 checkoutAttribution: attribution
             )
             let authenticationContext = AuthenticationContext(

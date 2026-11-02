@@ -474,7 +474,7 @@ private extension PayWithLinkViewController {
 
     private func attemptReauthentication() async -> PaymentSheetLinkAccount? {
         // Tell the LinkAccountService to lookup again
-        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
+        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession, analyticsHelper: context.analyticsHelper.linkAnalytics)
 
         return await withCheckedContinuation { continuation in
             accountService.lookupAccount(
@@ -860,7 +860,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             configuration: context.configuration,
             linkAccount: linkAccount,
             alwaysUseEphemeralSession: true,
-            checkoutAttribution: context.analyticsHelper.checkoutAttribution
+            checkoutAttribution: context.analyticsHelper.checkoutAttribution,
+            analyticsHelper: context.analyticsHelper.linkAnalytics
         )
         payWithLinkVC.payWithLinkDelegate = payWithLinkWebDelegate
         // Dismiss ourselves...
@@ -868,7 +869,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             // ... and present the web controller. (This presentation will be handled by ASWebAuthenticationSession)
             payWithLinkVC.present(over: presentingViewController)
         }
-        STPAnalyticsClient.sharedClient.logLinkBailedToWebFlow()
+        context.analyticsHelper.linkAnalytics.logBailedToWebFlow()
     }
 
     func cancel3DS2ChallengeFlow() {
@@ -880,7 +881,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, any Error>) -> Void) {
         // Tell the LinkAccountService to lookup again
-        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
+        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession, analyticsHelper: context.analyticsHelper.linkAnalytics)
         accountService.lookupAccount(
             withEmail: linkAccount?.email,
             emailSource: .prefilledEmail,
@@ -898,7 +899,8 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                         linkAccount: account,
                         brand: account.linkBrand ?? self.context.linkBrand,
                         configuration: self.context.configuration,
-                        appearance: self.context.linkAppearance
+                        appearance: self.context.linkAppearance,
+                        analyticsHelper: self.context.analyticsHelper.linkAnalytics
                     )
                     verificationController.present(from: self.sheetContainer) { result in
                         switch result {
