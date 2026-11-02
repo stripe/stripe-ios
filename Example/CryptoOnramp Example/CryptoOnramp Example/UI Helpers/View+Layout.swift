@@ -48,10 +48,15 @@ private struct FoldAvoidingActionsModifier: ViewModifier {
             .padding(insets)
             .frame(maxWidth: .infinity)
             // Measure the full-width container so moving the controls doesn’t change the fold-avoidance calculation.
-            .onGeometryChange(for: EdgeInsets.self) { geometry in
-                geometry.activeFoldInsets(anchoredToBottom: true)
-            } action: { insets in
-                self.insets = insets
+            .background {
+                // Reading reserved regions here avoids a layout cycle during keyboard and display changes.
+                GeometryReader { geometry in
+                    let insets = geometry.activeFoldInsets(anchoredToBottom: true)
+                    Color.clear
+                        .onChange(of: insets, initial: true) { _, insets in
+                            self.insets = insets
+                        }
+                }
             }
     }
 }
