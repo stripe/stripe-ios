@@ -624,6 +624,7 @@ extension PaymentSheet {
             confirmLinkPaymentOption(
                 confirmOption: confirmOption,
                 configuration: configuration,
+                paymentHandler: paymentHandler,
                 nativeSheetPresentation: nativeSheetPresentation,
                 authenticationContext: authenticationContext,
                 intent: intent,
@@ -652,6 +653,7 @@ extension PaymentSheet {
     static func confirmLinkPaymentOption(
         confirmOption: LinkConfirmOption,
         configuration: PaymentElementConfiguration,
+        paymentHandler: STPPaymentHandler,
         nativeSheetPresentation: SheetImplementationResolver?,
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
@@ -756,6 +758,7 @@ extension PaymentSheet {
                     intent: intent,
                     elementsSession: elementsSession,
                     configuration: configuration,
+                    paymentHandler: paymentHandler,
                     nativeSheetPresentation: nativeSheetPresentation,
                     logPayment: false,
                     analyticsHelper: analyticsHelper,
