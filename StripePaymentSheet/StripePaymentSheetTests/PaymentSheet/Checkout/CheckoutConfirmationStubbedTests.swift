@@ -916,6 +916,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
         XCTAssertNil(parameters.nativeSheetPresentation)
         XCTAssertNil(checkout.paymentElement)
+        XCTAssertEqual(parameters.analyticsHelper.checkoutSessionID, checkout.session.id)
         XCTAssertNotNil(parameters.confirmationChallenge)
     }
 

@@ -166,7 +166,8 @@ public class PaymentSheet {
                             mode: .inlineLogin,
                             linkAccount: linkAccount,
                             brand: self.configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: linkAccount),
-                            configuration: self.configuration
+                            configuration: self.configuration,
+                            analyticsHelper: self.analyticsHelper.linkAnalytics
                         )
 
                         verificationController.present(from: self.bottomSheetViewController) { result in
