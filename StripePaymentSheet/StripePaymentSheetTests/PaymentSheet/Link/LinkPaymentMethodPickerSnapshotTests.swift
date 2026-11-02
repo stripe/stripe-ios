@@ -138,7 +138,8 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         seedURLCache(urlSessionConfig.urlCache, url: bankIconURL, image: makeImage(color: .systemBlue, size: CGSize(width: 96, height: 96)))
         let downloadManager = DownloadManager(urlSessionConfiguration: urlSessionConfig, isTesting: true)
 
-        // ...and a card and bank account with cached icons, and a card whose icon can't be loaded
+        // ...and a card and bank account with cached icons, a card whose icon can't be loaded,
+        // and a card with a cached `card_brand` icon
         let paymentMethods = [
             ConsumerPaymentDetails(
                 stripeID: "1",
@@ -146,7 +147,7 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,
-                display: .init(label: "Visa Credit", sublabel: "•••• 4242", icon: .init(main: cardIconURL)),
+                display: .init(label: "Visa Credit", sublabel: "•••• 4242", icon: .init(main: cardIconURL, type: .cardArt)),
                 isDefault: true
             ),
             ConsumerPaymentDetails(
@@ -155,7 +156,7 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,
-                display: .init(label: "Checking", sublabel: "••6789", icon: .init(main: bankIconURL)),
+                display: .init(label: "Checking", sublabel: "••6789", icon: .init(main: bankIconURL, type: .institution)),
                 isDefault: false
             ),
             ConsumerPaymentDetails(
@@ -164,7 +165,16 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,
-                display: .init(label: "American Express Credit", sublabel: "•••• 0005", icon: .init(main: uncachedIconURL)),
+                display: .init(label: "American Express Credit", sublabel: "•••• 0005", icon: .init(main: uncachedIconURL, type: .cardArt)),
+                isDefault: false
+            ),
+            ConsumerPaymentDetails(
+                stripeID: "4",
+                details: .card(card: .init(expiryYear: 30, expiryMonth: 10, brand: "mastercard", networks: ["mastercard"], last4: "4444", funding: .credit, checks: nil)),
+                billingAddress: nil,
+                billingEmailAddress: nil,
+                nickname: nil,
+                display: .init(label: "Mastercard Credit", sublabel: "•••• 4444", icon: .init(main: cardIconURL, type: .cardBrand)),
                 isDefault: false
             ),
         ]
@@ -178,8 +188,8 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         stackView.axis = .vertical
         stackView.spacing = 16
 
-        // Then the card icon fills the rectangular icon area, the bank account icon fills the square icon area,
-        // and the card without a loadable icon shows its local brand icon
+        // Then the card art icon fills the rectangular icon area, the bank account icon fills the square icon area,
+        // and the card without a loadable icon and the card with a `card_brand` icon show their local brand icons
         verify(stackView)
     }
 

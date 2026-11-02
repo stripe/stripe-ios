@@ -247,7 +247,7 @@ extension LinkPaymentMethodPicker {
         /// Replaces the local icon with the remote `display.icon.default` image once it's available.
         /// The local icon remains visible while the image downloads, or if the download fails.
         private func loadRemoteIconIfNeeded() {
-            guard let paymentMethod, let url = paymentMethod.display?.icon?.main else {
+            guard let paymentMethod, let icon = paymentMethod.display?.icon, let url = icon.main else {
                 return
             }
 
@@ -255,6 +255,10 @@ extension LinkPaymentMethodPicker {
             let remoteIconView: UIImageView
             switch paymentMethod.details {
             case .card:
+                // `card_brand` icons are a generic fallback for cards without card art, so keep the local card brand icon instead.
+                guard icon.type != .cardBrand else {
+                    return
+                }
                 remoteIconView = remoteCardIconView
             case .bankAccount, .generic:
                 remoteIconView = genericIconView
