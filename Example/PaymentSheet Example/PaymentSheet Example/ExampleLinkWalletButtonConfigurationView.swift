@@ -6,8 +6,8 @@
 import SwiftUI
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) @_spi(LinkControllerPreview) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) import StripePaymentSheet
 
 struct LinkWalletButtonDemoConfiguration {
     var email: String = "foo@bar.com"

@@ -4,7 +4,7 @@
 //
 
 import Combine
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 import UIKit
 import XCTest
 

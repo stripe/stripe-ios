@@ -149,7 +149,7 @@ import UIKit
     @Published @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
     /// Forces the Link brand of `LinkController`s created afterwards, for testing. In production, the brand is chosen by Stripe.
-    @_spi(STP) public static var forcedLinkBrandForTesting: LinkBrand?
+    @_spi(InternalOnlyAPI) public static var forcedLinkBrandForTesting: LinkBrand?
 
     var resolvedLinkBrand: LinkBrand {
         paymentElementConfiguration.link.brand

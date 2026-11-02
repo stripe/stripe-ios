@@ -4,14 +4,14 @@
 //
 
 import Combine
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// The delegate of a `LinkWalletButton`.
 @MainActor
-@_spi(STP) @_spi(LinkControllerPreview) public protocol LinkWalletButtonDelegate: AnyObject {
+@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public protocol LinkWalletButtonDelegate: AnyObject {
     /// Called when the Link flow launched by the button finishes.
     /// - Parameter button: The button that launched the Link flow.
     /// - Parameter result: `.success(.completed(paymentMethod))` when the customer selects a payment method,
@@ -25,7 +25,7 @@ import UIKit
     func linkWalletButtonWillPresent(_ button: LinkWalletButton)
 }
 
-@_spi(STP) @_spi(LinkControllerPreview) public extension LinkWalletButtonDelegate {
+@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public extension LinkWalletButtonDelegate {
     func linkWalletButtonWillPresent(_ button: LinkWalletButton) {}
 }
 
@@ -35,7 +35,7 @@ import UIKit
 /// and their payment method once one is available. Tapping it presents Link, and the resulting payment method is
 /// delivered to the `delegate`.
 @MainActor
-@_spi(STP) @_spi(LinkControllerPreview) public final class LinkWalletButton: UIView {
+@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public final class LinkWalletButton: UIView {
 
     /// The delegate that receives the result of the Link flow.
     public weak var delegate: LinkWalletButtonDelegate?

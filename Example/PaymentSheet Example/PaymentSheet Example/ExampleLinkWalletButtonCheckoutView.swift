@@ -7,7 +7,7 @@ import SwiftUI
 import UIKit
 
 import StripePayments
-@_spi(STP) @_spi(LinkControllerPreview) import StripePaymentSheet
+@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) import StripePaymentSheet
 
 @available(iOS 16.0, *)
 @MainActor

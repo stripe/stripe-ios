@@ -9,7 +9,7 @@ import UIKit
 /// A SwiftUI view that displays a `LinkWalletButton`.
 ///
 /// Set the button's `delegate` to receive the result of the Link flow.
-@_spi(STP) @_spi(LinkControllerPreview) public struct LinkWalletButtonView: View {
+@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public struct LinkWalletButtonView: View {
     private let button: LinkWalletButton
 
     /// Creates a view that displays the given `LinkWalletButton`.
