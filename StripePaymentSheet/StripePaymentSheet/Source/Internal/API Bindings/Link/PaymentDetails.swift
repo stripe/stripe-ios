@@ -146,21 +146,9 @@ extension ConsumerPaymentDetails {
             let main: URL?
             let type: IconType?
 
-            init(main: URL?, type: IconType? = nil) {
-                self.main = main
-                self.type = type
-            }
-
             enum CodingKeys: String, CodingKey {
                 case main = "default"
                 case type
-            }
-
-            init(from decoder: Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.main = try container.decodeIfPresent(URL.self, forKey: .main)
-                // Not every decoder maps unknown values to `.unparsable`, so don't let an unknown type fail decoding the icon.
-                self.type = try? container.decodeIfPresent(IconType.self, forKey: .type)
             }
         }
 
@@ -214,6 +202,16 @@ extension ConsumerPaymentDetails {
         case .generic(let rawValue):
             return ParsedEnum(rawValue: rawValue)
         }
+    }
+}
+
+extension ConsumerPaymentDetails.DisplayMetadata.Icon {
+    // Defined in an extension to keep the synthesized memberwise initializer.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.main = try container.decodeIfPresent(URL.self, forKey: .main)
+        // Not every decoder maps unknown values to `.unparsable`, so don't let an unknown type fail decoding the icon.
+        self.type = try? container.decodeIfPresent(ConsumerPaymentDetails.DisplayMetadata.IconType.self, forKey: .type)
     }
 }
 

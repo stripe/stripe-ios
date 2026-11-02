@@ -132,7 +132,8 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         let cardIconURL = URL(string: "https://b.stripecdn.com/card-icon.png")!
         let bankIconURL = URL(string: "https://b.stripecdn.com/bank-icon.png")!
         let uncachedIconURL = URL(string: "https://b.stripecdn.com/uncached-icon.png")!
-        let urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
+        let urlSessionConfig = URLSessionConfiguration.ephemeral
+        urlSessionConfig.protocolClasses = [OfflineURLProtocol.self]
         urlSessionConfig.urlCache = URLCache(memoryCapacity: 5_000_000, diskCapacity: 0)
         seedURLCache(urlSessionConfig.urlCache, url: cardIconURL, image: makeImage(color: .systemRed, size: CGSize(width: 48, height: 32)))
         seedURLCache(urlSessionConfig.urlCache, url: bankIconURL, image: makeImage(color: .systemBlue, size: CGSize(width: 96, height: 96)))
@@ -233,6 +234,23 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 }
 
 extension LinkPaymentMethodPickerSnapshotTests {
+
+    /// Fails every request, so `DownloadManager` only returns images that are already cached.
+    fileprivate final class OfflineURLProtocol: URLProtocol {
+        override static func canInit(with request: URLRequest) -> Bool {
+            return true
+        }
+
+        override static func canonicalRequest(for request: URLRequest) -> URLRequest {
+            return request
+        }
+
+        override func startLoading() {
+            client?.urlProtocol(self, didFailWithError: URLError(.notConnectedToInternet))
+        }
+
+        override func stopLoading() {}
+    }
 
     fileprivate final class MockDataSource: LinkPaymentMethodPickerDataSource {
 
