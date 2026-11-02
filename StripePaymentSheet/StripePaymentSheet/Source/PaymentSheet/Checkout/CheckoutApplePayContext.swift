@@ -9,9 +9,9 @@
 import Contacts
 import Foundation
 import PassKit
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 /// Responsible for handling the Apple Pay flow end to end: displaying line items,
@@ -124,8 +124,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     return // The user canceled mid-payment - just abort
                 }
                 self.paymentState = .pending  // After this point, we can't cancel
-                let savePaymentMethod: Bool? = checkoutSession.noPaymentRequired ? nil
-                    : checkoutSession.merchantWillSavePaymentMethod(STPPaymentMethodType.card) ? true : nil
 
                 // 2. Confirm
                 let cardParams = STPPaymentMethodCardParams()
@@ -138,10 +136,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 paymentMethodData.clientAttributionMetadata = clientAttributionMetadata
                 let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodData(
                     sessionId: checkoutSession.id,
+                    clientSecret: checkoutSession.clientSecret,
                     paymentMethodData: paymentMethodData,
                     confirmationSource: confirmationSource,
                     expectedAmount: checkoutSession.amount,
-                    savePaymentMethod: savePaymentMethod,
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,
@@ -558,9 +556,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
               checkoutWalletUpdater.currentTaxRegion != initialTaxRegion else {
             return
         }
-        let taxRegionToRestore = initialTaxRegion ?? .init(country: session.merchantCountryCode)
         _ = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
-            address: taxRegionToRestore,
+            address: initialTaxRegion,
             canUpdateWhileSheetPresented: true,
             confirmationSource: confirmationSource
         )

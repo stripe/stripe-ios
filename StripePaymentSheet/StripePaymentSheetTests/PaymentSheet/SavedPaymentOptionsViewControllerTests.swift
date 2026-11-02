@@ -4,7 +4,7 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 @testable import StripePaymentSheet
 import XCTest
 

@@ -5,9 +5,9 @@
 //  Created by Vardges Avetisyan on 11/9/21.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) @_spi(v25) import StripeFinancialConnections
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) @_spi(v25) import StripeFinancialConnections
 import XCTest
 
 class EmptySessionFetcher: FinancialConnectionsSessionFetcher {

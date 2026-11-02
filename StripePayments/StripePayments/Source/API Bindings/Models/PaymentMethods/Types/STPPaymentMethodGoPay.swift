@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// A GoPay Payment Method.
 /// - seealso: https://docs.stripe.com/payments/gopay/accept-a-payment?payment-ui=direct-api

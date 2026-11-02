@@ -8,13 +8,13 @@
 import Foundation
 import PassKit
 
-@_spi(STP) import StripeApplePay
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeIdentity
-@_spi(STP) import StripePayments
-@_spi(STP) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeApplePay
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeIdentity
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 
 import UIKit
 

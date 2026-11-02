@@ -7,10 +7,10 @@
 
 import AVKit
 import Foundation
-@_spi(STP)@testable import StripeCameraCore
+@_spi(InternalOnlyAPI)@testable import StripeCameraCore
 import XCTest
 
-@_spi(STP) public final class MockTestCameraSession: CameraSessionProtocol {
+@_spi(InternalOnlyAPI) public final class MockTestCameraSession: CameraSessionProtocol {
 
     /// Mock image to display in previewView. Should be used for snapshot tests
     public var mockImage: UIImage? {

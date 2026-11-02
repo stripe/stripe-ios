@@ -7,12 +7,12 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore  // for StripeError
+@_spi(InternalOnlyAPI) import StripeCore  // for StripeError
 import StripeCoreTestUtils
 import XCTest
 
 // swift-format-ignore
-@_spi(STP) @testable import StripeApplePay
+@_spi(InternalOnlyAPI) @testable import StripeApplePay
 
 let STPTestingDefaultPublishableKey = "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"
 public let STPTestingNetworkRequestTimeout: TimeInterval = 8

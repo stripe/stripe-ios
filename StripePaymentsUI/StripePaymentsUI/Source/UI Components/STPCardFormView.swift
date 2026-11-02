@@ -6,9 +6,9 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// Options for configuring the display of an `STPCardFormView` instance.
@@ -35,7 +35,7 @@ public protocol STPCardFormViewDelegate: NSObjectProtocol {
 }
 
 /// Internal only delegate methods for STPCardFormView
-@_spi(STP) public protocol STPCardFormViewInternalDelegate {
+@_spi(InternalOnlyAPI) public protocol STPCardFormViewInternalDelegate {
     /// Delegate method that is called when the selected country is changed.
     func cardFormView(_ form: STPCardFormView, didUpdateSelectedCountry countryCode: String?)
 }
@@ -68,11 +68,11 @@ public class STPCardFormView: STPFormView {
     let postalCodeRequirement: STPPostalCodeRequirement
     let inputMode: STPCardNumberInputTextField.InputMode
 
-    @_spi(STP) public var countryField: STPCountryPickerInputField {
+    @_spi(InternalOnlyAPI) public var countryField: STPCountryPickerInputField {
         return billingAddressSubForm.countryPickerField
     }
 
-    @_spi(STP) public var postalCodeField: STPPostalCodeInputTextField {
+    @_spi(InternalOnlyAPI) public var postalCodeField: STPPostalCodeInputTextField {
         return billingAddressSubForm.postalCodeField
     }
 
@@ -80,7 +80,7 @@ public class STPCardFormView: STPFormView {
         return billingAddressSubForm.stateField
     }
 
-    @_spi(STP) public var countryCode: String? {
+    @_spi(InternalOnlyAPI) public var countryCode: String? {
         didSet {
             updateCountryCodeValues()
         }
@@ -323,7 +323,7 @@ public class STPCardFormView: STPFormView {
         )
     }
 
-    @_spi(STP) public convenience init(
+    @_spi(InternalOnlyAPI) public convenience init(
         billingAddressCollection: BillingAddressCollectionLevel,
         style: STPCardFormViewStyle = .standard,
         postalCodeRequirement: STPPostalCodeRequirement = .standard,
@@ -529,7 +529,7 @@ public class STPCardFormView: STPFormView {
     }
 
     /// Returns true iff the form can mark the error to one of its fields
-    @_spi(STP) public func markFormErrors(for apiError: Error) -> Bool {
+    @_spi(InternalOnlyAPI) public func markFormErrors(for apiError: Error) -> Bool {
         let error = apiError as NSError
         guard let errorCode = error.userInfo[STPError.stripeErrorCodeKey] as? String else {
             return false
@@ -802,28 +802,28 @@ extension STPCardFormView {
 }
 
 /// :nodoc:
-@_spi(STP) extension STPCardFormView: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier: String = "STPCardFormView"
+@_spi(InternalOnlyAPI) extension STPCardFormView: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier: String = "STPCardFormView"
 }
 
 extension STPCardFormView {
 
-    @_spi(STP) public struct PrefillDetails {
-        @_spi(STP) public let last4: String
-        @_spi(STP) public let expiryMonth: Int
-        @_spi(STP) public let expiryYear: Int
-        @_spi(STP) public let cardBrand: STPCardBrand
+    @_spi(InternalOnlyAPI) public struct PrefillDetails {
+        @_spi(InternalOnlyAPI) public let last4: String
+        @_spi(InternalOnlyAPI) public let expiryMonth: Int
+        @_spi(InternalOnlyAPI) public let expiryYear: Int
+        @_spi(InternalOnlyAPI) public let cardBrand: STPCardBrand
 
-        @_spi(STP) public var formattedLast4: String {
+        @_spi(InternalOnlyAPI) public var formattedLast4: String {
             return "•••• \(last4)"
         }
 
-        @_spi(STP) public var formattedExpiry: String {
+        @_spi(InternalOnlyAPI) public var formattedExpiry: String {
             let paddedZero = expiryMonth < 10
             return "\(paddedZero ? "0" : "")\(expiryMonth)/\(expiryYear)"
         }
 
-        @_spi(STP) public init(
+        @_spi(InternalOnlyAPI) public init(
             last4: String,
             expiryMonth: Int,
             expiryYear: Int,
@@ -838,7 +838,7 @@ extension STPCardFormView {
 }
 
 /// Billing address collection modes for PaymentSheet
-@_spi(STP) public enum BillingAddressCollectionLevel {
+@_spi(InternalOnlyAPI) public enum BillingAddressCollectionLevel {
     /// (Default) PaymentSheet will only collect the necessary billing address information
     case automatic
 

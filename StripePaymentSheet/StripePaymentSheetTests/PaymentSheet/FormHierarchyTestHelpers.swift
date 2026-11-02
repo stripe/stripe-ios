@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 // MARK: - FormHierarchyNode

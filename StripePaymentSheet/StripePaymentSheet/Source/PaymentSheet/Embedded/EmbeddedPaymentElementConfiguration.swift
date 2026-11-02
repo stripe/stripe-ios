@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 9/25/24.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 extension EmbeddedPaymentElement {
@@ -102,7 +102,7 @@ extension EmbeddedPaymentElement {
         }
 
         /// Override country for test purposes
-        @_spi(STP) public var userOverrideCountry: String?
+        @_spi(InternalOnlyAPI) public var userOverrideCountry: String?
 
         /// Describes how billing details should be collected.
         /// All values default to `automatic`.

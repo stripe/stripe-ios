@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 9/11/25.
 //
 
-@testable@_spi(STP) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePayments
 import XCTest
 
 final class PollingBudgetTests: XCTestCase {

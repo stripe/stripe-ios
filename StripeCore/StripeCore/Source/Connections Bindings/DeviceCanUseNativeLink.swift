@@ -8,7 +8,7 @@
 import Foundation
 
 /// Check if native Link is available on this device
-@_spi(STP) public func deviceCanUseNativeLink(
+@_spi(InternalOnlyAPI) public func deviceCanUseNativeLink(
     useAttestationEndpoints: Bool?,
     apiClient: STPAPIClient
 ) -> Bool {

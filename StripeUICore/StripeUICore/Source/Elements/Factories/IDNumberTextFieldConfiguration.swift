@@ -7,9 +7,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public struct IDNumberTextFieldConfiguration: TextFieldElementConfiguration {
+@_spi(InternalOnlyAPI) public struct IDNumberTextFieldConfiguration: TextFieldElementConfiguration {
 
     // TODO(mludowise|IDPROD-2596): Check if these are the formats needed to support IDV.
     // When finalized, change enum to String type so we can configure allowed formats from our backend response.

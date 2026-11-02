@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// Errors specific to the `IdentityVerificationSheet`.
 public enum IdentityVerificationSheetError: Error {
@@ -40,7 +40,7 @@ extension IdentityVerificationSheetError: CustomDebugStringConvertible {
 }
 
 /// :nodoc:
-@_spi(STP) extension IdentityVerificationSheetError: AnalyticLoggableErrorV2 {
+@_spi(InternalOnlyAPI) extension IdentityVerificationSheetError: AnalyticLoggableErrorV2 {
 
     /// The error code
     public var errorCode: Int {

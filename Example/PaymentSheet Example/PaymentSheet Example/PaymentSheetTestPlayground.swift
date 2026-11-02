@@ -5,7 +5,7 @@
 //  Created by David Estes on 5/31/23.
 //
 
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 import SwiftUI
 
 // MARK: - PaymentSheetTestPlayground

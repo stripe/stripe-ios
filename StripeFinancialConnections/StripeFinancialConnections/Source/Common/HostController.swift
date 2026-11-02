@@ -5,17 +5,17 @@
 //  Created by Vardges Avetisyan on 6/3/22.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// An internal result type that helps us handle both
 /// Financial Connections and Instant Debits
-@_spi(STP) public enum HostControllerResult {
+@_spi(InternalOnlyAPI) public enum HostControllerResult {
     case completed(Completed)
     case failed(error: Error)
     case canceled
 
-    @_spi(STP) public enum Completed {
+    @_spi(InternalOnlyAPI) public enum Completed {
         case financialConnections(StripeAPI.FinancialConnectionsSession)
         case instantDebits(InstantDebitsLinkedBank)
         case linkedAccount(id: String)

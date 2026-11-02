@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 // A message that indicates components have loaded
 class PageDidLoadMessageHandler: ScriptMessageHandler<PageDidLoadMessageHandler.Payload> {

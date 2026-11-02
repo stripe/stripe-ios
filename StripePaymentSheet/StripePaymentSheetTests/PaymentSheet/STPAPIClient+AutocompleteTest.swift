@@ -9,7 +9,7 @@ import StripeCoreTestUtils
 import StripePaymentsTestUtils
 import XCTest
 
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 
 class STPAPIClientAutocompleteTest: STPNetworkStubbingTestCase {
     func testAutocompleteAndDetails() async throws {

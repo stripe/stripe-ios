@@ -10,7 +10,7 @@ import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_StackViewWithSeparator)
-@_spi(STP) public class StackViewWithSeparator: UIStackView {
+@_spi(InternalOnlyAPI) public class StackViewWithSeparator: UIStackView {
 
     public static let borderlessInset: CGFloat = 10
 

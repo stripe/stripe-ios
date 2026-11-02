@@ -53,7 +53,7 @@ public class STPPaymentMethodNaverPay: NSObject, STPAPIResponseDecodable {
     /// Naver Pay points.
     case points
 
-    @_spi(STP) public init(string: String?) {
+    @_spi(InternalOnlyAPI) public init(string: String?) {
         switch string?.lowercased() {
         case "card":
             self = .card
@@ -64,7 +64,7 @@ public class STPPaymentMethodNaverPay: NSObject, STPAPIResponseDecodable {
         }
     }
 
-    @_spi(STP) public var stringValue: String? {
+    @_spi(InternalOnlyAPI) public var stringValue: String? {
         switch self {
         case .unknown:
             return nil

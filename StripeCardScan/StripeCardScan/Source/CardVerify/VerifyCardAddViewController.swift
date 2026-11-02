@@ -1,4 +1,4 @@
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// This class is a first cut on providing verification on card add (i.e., Zero Fraud). Currently it includes a manual entry button

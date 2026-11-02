@@ -10,7 +10,7 @@ import UIKit
 /// Base class for any OCR prediction systems. All implementations must override `recognizeCard` and update the `frames`
 /// and `computationTime` member variables
 
-@_spi(STP) public class CreditCardOcrImplementation {
+@_spi(InternalOnlyAPI) public class CreditCardOcrImplementation {
     let dispatchQueue: ActiveStateComputation
     var frames = 0
     var computationTime = 0.0

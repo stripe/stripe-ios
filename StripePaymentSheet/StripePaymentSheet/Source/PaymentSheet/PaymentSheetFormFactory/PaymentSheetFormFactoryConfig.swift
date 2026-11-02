@@ -6,8 +6,8 @@
 import Foundation
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 enum PaymentSheetFormFactoryConfig {
     case paymentElement(PaymentElementConfiguration, isLinkUI: Bool = false)

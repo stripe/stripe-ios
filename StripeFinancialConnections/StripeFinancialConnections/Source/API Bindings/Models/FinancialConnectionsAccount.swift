@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 public extension StripeAPI {
 
@@ -138,8 +138,8 @@ public extension StripeAPI {
 
 // MARK: - Codable & Equatable
 
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount: Codable, Equatable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.BalanceRefresh: Codable, Equatable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CashBalance: Codable, Equatable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CreditBalance: Codable, Equatable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.Balance: Codable, Equatable {}
+@_spi(InternalOnlyAPI) extension StripeAPI.FinancialConnectionsAccount: Codable, Equatable {}
+@_spi(InternalOnlyAPI) extension StripeAPI.FinancialConnectionsAccount.BalanceRefresh: Codable, Equatable {}
+@_spi(InternalOnlyAPI) extension StripeAPI.FinancialConnectionsAccount.CashBalance: Codable, Equatable {}
+@_spi(InternalOnlyAPI) extension StripeAPI.FinancialConnectionsAccount.CreditBalance: Codable, Equatable {}
+@_spi(InternalOnlyAPI) extension StripeAPI.FinancialConnectionsAccount.Balance: Codable, Equatable {}

@@ -5,9 +5,9 @@
 //  Created by Michael Liberatore on 9/10/26.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 @_spi(CryptoOnrampAlpha) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 /// A generic message UI with an icon, heading, body text, and primary action button.

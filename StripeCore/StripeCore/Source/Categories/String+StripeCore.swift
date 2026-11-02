@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) extension String {
+@_spi(InternalOnlyAPI) extension String {
     public func stp_stringByRemovingCharacters(from characterSet: CharacterSet) -> String {
         return String(unicodeScalars.filter { !characterSet.contains($0) })
     }
@@ -25,7 +25,7 @@ import Foundation
         stringIfHasContentsElseNil(self)
     }
 
-    @_spi(STP) public var sanitizedKey: String {
+    @_spi(InternalOnlyAPI) public var sanitizedKey: String {
         return (!self.hasPrefix("pk_"))
             ? "[REDACTED_LIVE_KEY]" : self
     }
@@ -40,7 +40,7 @@ extension Character {
     var isEmoji: Bool { unicodeScalars.first(where: { $0.properties.isEmojiPresentation || ($0.value == 0xFE0F) }) != nil }
 }
 
-@_spi(STP) public func stringIfHasContentsElseNil(
+@_spi(InternalOnlyAPI) public func stringIfHasContentsElseNil(
     _ string: String?
 ) ->  // MARK: -
     String?

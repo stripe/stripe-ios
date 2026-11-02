@@ -7,8 +7,8 @@
 //
 import Foundation
 import SafariServices
-@_spi(STP) import StripePaymentsUI
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 @objc(STP_Internal_AUBECSLegalTermsView)

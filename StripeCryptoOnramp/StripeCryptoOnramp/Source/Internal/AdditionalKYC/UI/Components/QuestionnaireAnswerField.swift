@@ -6,7 +6,7 @@
 //
 
 import Combine
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 @_spi(CryptoOnrampAlpha) import StripePaymentSheet
 import SwiftUI
 

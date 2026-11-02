@@ -4,8 +4,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 // MARK: - Computed Properties
 
@@ -68,12 +68,7 @@ extension CheckoutController.Session {
     }
 
     func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
-        let perPaymentMethodSetupFutureUsage = setupFutureUsageForPaymentMethodType[paymentMethodType.identifier]
-        if let perPaymentMethodSetupFutureUsage {
-            return perPaymentMethodSetupFutureUsage
-        }
-
-        return setupFutureUsage
+        return setupFutureUsageForPaymentMethodType[paymentMethodType.identifier]
     }
 }
 

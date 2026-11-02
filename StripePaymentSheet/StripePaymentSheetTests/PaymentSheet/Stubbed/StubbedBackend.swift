@@ -3,8 +3,8 @@
 //  StripePaymentSheetTests
 //
 
-@_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripePayments
 @testable import StripePaymentSheet
 
 import OHHTTPStubs
@@ -133,7 +133,7 @@ class StubbedBackend {
 }
 
 public class ClassForBundle {}
-@_spi(STP) public enum FileMock: String, MockData {
+@_spi(InternalOnlyAPI) public enum FileMock: String, MockData {
     public typealias ResponseType = StripeFile
     public var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 

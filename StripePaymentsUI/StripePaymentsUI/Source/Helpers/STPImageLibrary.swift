@@ -7,8 +7,8 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.
@@ -77,7 +77,7 @@ public class STPImageLibrary: NSObject {
     }
 
     /// This returns an unpadded image for the specified card brand if available.
-    @_spi(STP) public class func unpaddedCardBrandImage(
+    @_spi(InternalOnlyAPI) public class func unpaddedCardBrandImage(
         for brand: STPCardBrand
     )
         -> UIImage
@@ -133,7 +133,7 @@ public class STPImageLibrary: NSObject {
         return self.safeImageNamed("stp_card_error")
     }
 
-    @_spi(STP) public class func linkBankIcon() -> UIImage {
+    @_spi(InternalOnlyAPI) public class func linkBankIcon() -> UIImage {
         return self.safeImageNamed("stp_icon_bank_link", templateIfAvailable: true)
     }
 
@@ -176,6 +176,6 @@ public class STPImageLibrary: NSObject {
 // MARK: - ImageMaker
 
 /// :nodoc:
-@_spi(STP) extension STPImageLibrary: ImageMaker {
-    @_spi(STP) public typealias BundleLocator = StripePaymentsUIBundleLocator
+@_spi(InternalOnlyAPI) extension STPImageLibrary: ImageMaker {
+    @_spi(InternalOnlyAPI) public typealias BundleLocator = StripePaymentsUIBundleLocator
 }

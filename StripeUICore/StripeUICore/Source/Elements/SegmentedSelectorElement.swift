@@ -12,7 +12,7 @@ import UIKit
 
 /// Element that displays items in a horizontal row with tap-to-select behavior.
 /// Selecting an item shows a checkmark, tapping again deselects it (toggle).
-@_spi(STP) public final class SegmentedSelectorElement: Element {
+@_spi(InternalOnlyAPI) public final class SegmentedSelectorElement: Element {
     weak public var delegate: ElementDelegate?
 
     public var view: UIView {
@@ -378,7 +378,7 @@ private final class SegmentedItemView: UIControl {
 
 /// A struct that encapsulates the display information for a selectable item.
 /// Uses type erasure with rawData to support any type.
-@_spi(STP) public struct SegmentedSelectorItem: Hashable {
+@_spi(InternalOnlyAPI) public struct SegmentedSelectorItem: Hashable {
     public let rawData: String
     public let image: UIImage
     public let accessibilityLabel: String

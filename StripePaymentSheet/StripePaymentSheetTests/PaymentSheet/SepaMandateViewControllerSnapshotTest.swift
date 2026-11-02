@@ -6,7 +6,7 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 import XCTest
 
 final class SepaMandateViewControllerSnapshotTest: STPSnapshotTestCase {

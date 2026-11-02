@@ -7,21 +7,21 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI.SetupIntent {
     /// A callback to be run with a SetupIntent response from the Stripe API.
     /// - Parameters:
     ///   - setupIntent: The Stripe SetupIntent from the response. Will be nil if an error occurs. - seealso: SetupIntent
     ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-    @_spi(STP) public typealias SetupIntentCompletionBlock = (Result<StripeAPI.SetupIntent, Error>)
+    @_spi(InternalOnlyAPI) public typealias SetupIntentCompletionBlock = (Result<StripeAPI.SetupIntent, Error>)
         -> Void
 
     /// Retrieves the SetupIntent object using the given secret. - seealso: https://stripe.com/docs/api/setup_intents/retrieve
     /// - Parameters:
     ///   - secret:      The client secret of the SetupIntent to be retrieved. Cannot be nil.
     ///   - completion:  The callback to run with the returned SetupIntent object, or an error.
-    @_spi(STP) public static func get(
+    @_spi(InternalOnlyAPI) public static func get(
         apiClient: STPAPIClient = .shared,
         clientSecret: String,
         completion: @escaping SetupIntentCompletionBlock
@@ -48,7 +48,7 @@ extension StripeAPI.SetupIntent {
     /// - Parameters:
     ///   - setupIntentParams:    The `SetupIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @_spi(STP) public static func confirm(
+    @_spi(InternalOnlyAPI) public static func confirm(
         apiClient: STPAPIClient = .shared,
         params: StripeAPI.SetupIntentConfirmParams,
         completion: @escaping SetupIntentCompletionBlock

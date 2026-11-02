@@ -9,7 +9,7 @@
 import Contacts
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// STPAddress Contains an address as represented by the Stripe API.
 public class STPAddress: NSObject {

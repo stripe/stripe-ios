@@ -8,8 +8,8 @@
 
 import XCTest
 
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 class PaymentSheetAddressTests: XCTestCase {
 

@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 7/22/26.
 //
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CurrencySelectorElement {
     /// Configuration for Currency Selector Element.

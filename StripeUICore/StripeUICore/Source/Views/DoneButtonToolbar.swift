@@ -8,12 +8,12 @@
 
 import UIKit
 
-@_spi(STP) public protocol DoneButtonToolbarDelegate: AnyObject {
+@_spi(InternalOnlyAPI) public protocol DoneButtonToolbarDelegate: AnyObject {
     func didTapDone(_ toolbar: DoneButtonToolbar)
     func didTapCancel(_ toolbar: DoneButtonToolbar)
 }
 
-@_spi(STP) public extension DoneButtonToolbarDelegate {
+@_spi(InternalOnlyAPI) public extension DoneButtonToolbarDelegate {
     func didTapCancel(_ toolbar: DoneButtonToolbar) {
         // no-op, cancel button is hidden by default
     }
@@ -21,7 +21,7 @@ import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_DoneButtonToolbar)
-@_spi(STP) public final class DoneButtonToolbar: UIToolbar {
+@_spi(InternalOnlyAPI) public final class DoneButtonToolbar: UIToolbar {
 
     public weak var doneButtonToolbarDelegate: DoneButtonToolbarDelegate?
 

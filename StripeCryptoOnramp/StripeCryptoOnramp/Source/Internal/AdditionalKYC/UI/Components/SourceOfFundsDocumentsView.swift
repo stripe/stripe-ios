@@ -5,8 +5,8 @@
 //  Created by Michael Liberatore on 9/24/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 /// A summary of uploaded documents grouped by funds source, with an action to add another source.

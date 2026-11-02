@@ -6,15 +6,15 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@_spi(STP) public class STPCardNumberInputTextField: STPInputTextField {
+@_spi(InternalOnlyAPI) public class STPCardNumberInputTextField: STPInputTextField {
 
     /// Describes which input fields can take input
-    @_spi(STP) public enum InputMode {
+    @_spi(InternalOnlyAPI) public enum InputMode {
         /// All input fields can be edited
         case standard
         // PAN field is locked, all others are editable
@@ -62,7 +62,7 @@ import UIKit
         return validator.cbcController.contextMenuConfiguration
     }
 
-    @_spi(STP) public convenience init(
+    @_spi(InternalOnlyAPI) public convenience init(
         inputMode: InputMode = .standard,
         prefillDetails: STPCardFormView.PrefillDetails? = nil,
         cbcEnabledOverride: Bool? = nil

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /**
  Errors specific to the `FinancialConnectionsSheet`.
@@ -22,7 +22,7 @@ public enum FinancialConnectionsSheetError: Error, LocalizedError {
 }
 
 /// :nodoc:
-@_spi(STP) extension FinancialConnectionsSheetError: AnalyticLoggableErrorV2 {
+@_spi(InternalOnlyAPI) extension FinancialConnectionsSheetError: AnalyticLoggableErrorV2 {
 
     /// The error code
     public var errorCode: Int {

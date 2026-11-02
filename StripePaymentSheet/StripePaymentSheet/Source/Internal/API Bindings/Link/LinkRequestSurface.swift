@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public enum LinkRequestSurface: String {
+@_spi(InternalOnlyAPI) public enum LinkRequestSurface: String {
     /// Used for requests from the `StripePaymentSheet` SDK.
     case paymentElement = "ios_payment_element"
     /// Used for requests from the `StripeCryptoOnramp` SDK.
@@ -16,6 +16,6 @@ import Foundation
     case standaloneLink = "ios_link_standalone"
 }
 
-@_spi(STP) public extension LinkRequestSurface {
+@_spi(InternalOnlyAPI) public extension LinkRequestSurface {
     static let `default`: LinkRequestSurface = .paymentElement
 }

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import XCTest
 
 @testable import StripeIdentity

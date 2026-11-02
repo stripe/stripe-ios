@@ -5,7 +5,7 @@
 
 import XCTest
 
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 class PaymentSheetConfigurationTests: XCTestCase {
     func testIsUsingBillingAddressCollection_Default() {

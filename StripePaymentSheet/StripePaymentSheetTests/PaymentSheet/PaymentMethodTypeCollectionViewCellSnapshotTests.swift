@@ -7,11 +7,11 @@
 
 import Foundation
 import StripeCoreTestUtils
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest
 
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 // @iOS26
 class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {

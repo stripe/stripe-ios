@@ -8,9 +8,9 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripePaymentsUI
 import UIKit
 
 /// The result of an attempt to confirm a PaymentIntent or SetupIntent
@@ -468,8 +468,8 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 }
 
 /// :nodoc:
-@_spi(STP) extension PaymentSheet: STPAnalyticsProtocol {
-    @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet"
+@_spi(InternalOnlyAPI) extension PaymentSheet: STPAnalyticsProtocol {
+    @_spi(InternalOnlyAPI) public static let stp_analyticsIdentifier: String = "PaymentSheet"
 }
 
 // MARK: - PaymentSheetViewControllerProtocol

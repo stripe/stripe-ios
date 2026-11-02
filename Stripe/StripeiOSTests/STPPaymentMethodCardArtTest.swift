@@ -3,7 +3,7 @@
 //  StripeiOS Tests
 //
 
-@testable @_spi(STP) import StripePayments
+@testable @_spi(InternalOnlyAPI) import StripePayments
 import XCTest
 
 class STPPaymentMethodCardArtTest: XCTestCase {

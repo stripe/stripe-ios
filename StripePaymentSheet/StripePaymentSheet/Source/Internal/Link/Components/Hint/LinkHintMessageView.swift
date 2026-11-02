@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 8/14/25.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// For internal SDK use only

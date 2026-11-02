@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /**
@@ -15,7 +15,7 @@ import UIKit
  
  For internal SDK use only
  */
-@_spi(STP) public final class DropdownFieldElement {
+@_spi(InternalOnlyAPI) public final class DropdownFieldElement {
     public typealias DidUpdateSelectedIndex = (Int) -> Void
 
     public struct DropdownItem {

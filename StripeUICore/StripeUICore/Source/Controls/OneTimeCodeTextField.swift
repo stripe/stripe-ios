@@ -11,7 +11,7 @@ import UIKit
 /// A field for collecting one-time codes (OTCs).
 /// For internal SDK use only
 @objc(STP_Internal_OneTimeCodeTextField)
-@_spi(STP) public final class OneTimeCodeTextField: UIControl {
+@_spi(InternalOnlyAPI) public final class OneTimeCodeTextField: UIControl {
 
     public struct Configuration {
         /// Total number of digits of the one-time code.

@@ -5,9 +5,9 @@
 //  Created by Michael Liberatore on 9/30/26.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 @_spi(CryptoOnrampAlpha) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 /// Edits the document category and uploaded files for one source of funds.

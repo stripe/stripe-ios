@@ -11,14 +11,14 @@ import PassKit
 
 /// Internal Apple Pay class. Do not use.
 /// :nodoc:
-@objc @_spi(STP) public class _stpinternal_ApplePayContextDidCreatePaymentMethodStorage: NSObject {
-    @_spi(STP) public weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
-    @_spi(STP) public var context: STPApplePayContext
-    @_spi(STP) public var paymentMethod: StripeAPI.PaymentMethod
-    @_spi(STP) public var paymentInformation: PKPayment
-    @_spi(STP) public var completion: STPIntentClientSecretCompletionBlock
+@objc @_spi(InternalOnlyAPI) public class _stpinternal_ApplePayContextDidCreatePaymentMethodStorage: NSObject {
+    @_spi(InternalOnlyAPI) public weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
+    @_spi(InternalOnlyAPI) public var context: STPApplePayContext
+    @_spi(InternalOnlyAPI) public var paymentMethod: StripeAPI.PaymentMethod
+    @_spi(InternalOnlyAPI) public var paymentInformation: PKPayment
+    @_spi(InternalOnlyAPI) public var completion: STPIntentClientSecretCompletionBlock
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         delegate: _stpinternal_STPApplePayContextDelegateBase,
         context: STPApplePayContext,
         paymentMethod: StripeAPI.PaymentMethod,
@@ -35,13 +35,13 @@ import PassKit
 
 /// Internal Apple Pay class. Do not use.
 /// :nodoc:
-@objc @_spi(STP) public class _stpinternal_ApplePayContextDidCompleteStorage: NSObject {
-    @_spi(STP) public weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
-    @_spi(STP) public var context: STPApplePayContext
-    @_spi(STP) public var status: STPApplePayContext.PaymentStatus
-    @_spi(STP) public var error: Error?
+@objc @_spi(InternalOnlyAPI) public class _stpinternal_ApplePayContextDidCompleteStorage: NSObject {
+    @_spi(InternalOnlyAPI) public weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
+    @_spi(InternalOnlyAPI) public var context: STPApplePayContext
+    @_spi(InternalOnlyAPI) public var status: STPApplePayContext.PaymentStatus
+    @_spi(InternalOnlyAPI) public var error: Error?
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         delegate: _stpinternal_STPApplePayContextDelegateBase,
         context: STPApplePayContext,
         status: STPApplePayContext.PaymentStatus,

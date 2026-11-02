@@ -9,7 +9,7 @@ import Foundation
 
 /// Intermediary object between `PaymentSheet.Configuration.UserInterfaceStyle` / `STPBankAccountCollectorStyle`
 /// and `FinancialConnectionsSheet.Configuration.UserInterfaceStyle`.
-@_spi(STP) @frozen public enum FinancialConnectionsStyle {
+@_spi(InternalOnlyAPI) @frozen public enum FinancialConnectionsStyle {
     case automatic
     case alwaysLight
     case alwaysDark

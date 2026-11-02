@@ -5,8 +5,8 @@
 //  Created by Yuki Tokuhiro on 8/22/26.
 //
 
-@testable @_spi(STP) import StripeCore
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 final class PaymentPagePollResponseTests: XCTestCase {

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) @_spi(DashboardOnly) import StripeCore
+@_spi(InternalOnlyAPI) @_spi(DashboardOnly) import StripeCore
 
 /// Structured parameters for URL params accepted by the iOS ConnectJS wrapper
 struct ConnectJSURLParams: Encodable {

@@ -5,8 +5,8 @@
 //  Created by Vardges Avetisyan on 6/3/22.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 protocol HostViewControllerDelegate: AnyObject {

@@ -7,14 +7,14 @@
 
 import Foundation
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(STP) public protocol BankRoutingNumber {
+@_spi(InternalOnlyAPI) public protocol BankRoutingNumber {
     var number: String { get }
     var pattern: String { get }
 }
 
-@_spi(STP) public extension BankRoutingNumber {
+@_spi(InternalOnlyAPI) public extension BankRoutingNumber {
     var isComplete: Bool {
         return formattedNumber().count >= pattern.count
     }
@@ -40,22 +40,22 @@ import Foundation
     }
 }
 
-@_spi(STP) public struct BSBNumber: BankRoutingNumber {
+@_spi(InternalOnlyAPI) public struct BSBNumber: BankRoutingNumber {
     public var number: String
-    
+
     public init(number: String) {
         self.number = number
     }
-    
+
     public let pattern: String = "###-###"
 }
 
-@_spi(STP) public struct SortCode: BankRoutingNumber {
+@_spi(InternalOnlyAPI) public struct SortCode: BankRoutingNumber {
     public var number: String
-    
+
     public init(number: String) {
         self.number = number
     }
-    
+
     public let pattern: String = "##-##-##"
 }

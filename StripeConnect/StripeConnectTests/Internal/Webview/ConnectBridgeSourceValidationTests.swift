@@ -5,7 +5,7 @@
 
 import AuthenticationServices
 @_spi(DashboardOnly) @testable import StripeConnect
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 import WebKit
 import XCTest

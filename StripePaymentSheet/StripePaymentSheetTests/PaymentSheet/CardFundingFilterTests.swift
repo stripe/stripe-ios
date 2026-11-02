@@ -6,9 +6,9 @@
 //
 
 import PassKit
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) @_spi(CardFundingFilteringPrivatePreview) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) @_spi(CardFundingFilteringPrivatePreview) @testable import StripePaymentSheet
 import XCTest
 
 class CardFundingFilterTests: XCTestCase {

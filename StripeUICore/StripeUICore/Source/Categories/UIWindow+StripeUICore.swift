@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) public extension UIWindow {
+@_spi(InternalOnlyAPI) public extension UIWindow {
 
     /// Returns the top most presented view controller including the root view controller.
     /// - Returns: The top most view controller, or `nil` if the window has no root view controller.

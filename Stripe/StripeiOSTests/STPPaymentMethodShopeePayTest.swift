@@ -6,8 +6,8 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
 import XCTest
 
 final class STPPaymentMethodShopeePayTest: XCTestCase {

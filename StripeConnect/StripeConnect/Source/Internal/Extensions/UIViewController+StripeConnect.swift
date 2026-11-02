@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 10/11/24.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension UIViewController {

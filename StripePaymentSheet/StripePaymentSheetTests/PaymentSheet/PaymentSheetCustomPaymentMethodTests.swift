@@ -8,8 +8,8 @@
 import Foundation
 import XCTest
 
-@testable @_spi(STP) import StripePaymentSheet
-@testable @_spi(STP) import StripeUICore
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripeUICore
 
 @MainActor
 final class PaymentSheetCustomPaymentMethodTests: XCTestCase {

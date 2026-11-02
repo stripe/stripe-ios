@@ -7,53 +7,53 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkSettings)
-@_spi(STP) public final class LinkSettings: NSObject, STPAPIResponseDecodable {
-    @_spi(STP) public enum FundingSource: String, SafeParsedEnumCodable {
+@_spi(InternalOnlyAPI) public final class LinkSettings: NSObject, STPAPIResponseDecodable {
+    @_spi(InternalOnlyAPI) public enum FundingSource: String, SafeParsedEnumCodable {
         case card = "CARD"
         case bankAccount = "BANK_ACCOUNT"
     }
 
-    @_spi(STP) @frozen public enum PopupWebviewOption: String {
+    @_spi(InternalOnlyAPI) @frozen public enum PopupWebviewOption: String {
         case shared
         case ephemeral
     }
 
-    @_spi(STP) @frozen public enum LinkDefaultOptIn: String {
+    @_spi(InternalOnlyAPI) @frozen public enum LinkDefaultOptIn: String {
         case full = "FULL"
         case optional = "OPTIONAL"
         case none = "NONE"
     }
 
-    @_spi(STP) public let brand: LinkBrand
-    @_spi(STP) public let fundingSources: Set<ParsedEnum<FundingSource>>
-    @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
-    @_spi(STP) public let passthroughModeEnabled: Bool?
-    @_spi(STP) public let disableSignup: Bool?
-    @_spi(STP) public let suppress2FAModal: Bool?
-    @_spi(STP) public let disableFlowControllerRUX: Bool?
-    @_spi(STP) public let useAttestationEndpoints: Bool?
-    @_spi(STP) public let linkMode: LinkMode?
-    @_spi(STP) public let linkFlags: [String: Bool]?
-    @_spi(STP) public let linkConsumerIncentive: LinkConsumerIncentive?
-    @_spi(STP) public let linkDefaultOptIn: LinkDefaultOptIn?
-    @_spi(STP) public let linkEnableDisplayableDefaultValuesInECE: Bool?
-    @_spi(STP) public let linkShowPreferDebitCardHint: Bool?
-    @_spi(STP) public let mfaAuthFlowEnabled: Bool?
-    @_spi(STP) public let attestationStateSyncEnabled: Bool?
-    @_spi(STP) public let linkSupportedPaymentMethodsOnboardingEnabled: [String]
-    @_spi(STP) public let linkPaymentMethodBankAccountDataConsent: String?
+    @_spi(InternalOnlyAPI) public let brand: LinkBrand
+    @_spi(InternalOnlyAPI) public let fundingSources: Set<ParsedEnum<FundingSource>>
+    @_spi(InternalOnlyAPI) public let popupWebviewOption: PopupWebviewOption?
+    @_spi(InternalOnlyAPI) public let passthroughModeEnabled: Bool?
+    @_spi(InternalOnlyAPI) public let disableSignup: Bool?
+    @_spi(InternalOnlyAPI) public let suppress2FAModal: Bool?
+    @_spi(InternalOnlyAPI) public let disableFlowControllerRUX: Bool?
+    @_spi(InternalOnlyAPI) public let useAttestationEndpoints: Bool?
+    @_spi(InternalOnlyAPI) public let linkMode: LinkMode?
+    @_spi(InternalOnlyAPI) public let linkFlags: [String: Bool]?
+    @_spi(InternalOnlyAPI) public let linkConsumerIncentive: LinkConsumerIncentive?
+    @_spi(InternalOnlyAPI) public let linkDefaultOptIn: LinkDefaultOptIn?
+    @_spi(InternalOnlyAPI) public let linkEnableDisplayableDefaultValuesInECE: Bool?
+    @_spi(InternalOnlyAPI) public let linkShowPreferDebitCardHint: Bool?
+    @_spi(InternalOnlyAPI) public let mfaAuthFlowEnabled: Bool?
+    @_spi(InternalOnlyAPI) public let attestationStateSyncEnabled: Bool?
+    @_spi(InternalOnlyAPI) public let linkSupportedPaymentMethodsOnboardingEnabled: [String]
+    @_spi(InternalOnlyAPI) public let linkPaymentMethodBankAccountDataConsent: String?
 
-    @_spi(STP) public let allResponseFields: [AnyHashable: Any]
+    @_spi(InternalOnlyAPI) public let allResponseFields: [AnyHashable: Any]
 
-    @_spi(STP) public var instantDebitsOnboardingEnabled: Bool {
+    @_spi(InternalOnlyAPI) public var instantDebitsOnboardingEnabled: Bool {
         linkSupportedPaymentMethodsOnboardingEnabled.contains("INSTANT_DEBITS")
     }
 
-    @_spi(STP) public init(
+    @_spi(InternalOnlyAPI) public init(
         brand: LinkBrand,
         fundingSources: Set<ParsedEnum<FundingSource>>,
         popupWebviewOption: PopupWebviewOption?,
@@ -95,7 +95,7 @@ import Foundation
         self.allResponseFields = allResponseFields
     }
 
-    @_spi(STP) public static func decodedObject(
+    @_spi(InternalOnlyAPI) public static func decodedObject(
         fromAPIResponse response: [AnyHashable: Any]?
     ) -> Self? {
         guard

@@ -6,7 +6,7 @@
 //  Created by Yuki Tokuhiro on 6/27/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
-@_spi(STP) @testable import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePayments
 
 class STPSetupIntentTest: XCTestCase {
     // MARK: - Description Tests

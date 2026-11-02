@@ -5,8 +5,8 @@
 //  Created by Joyce Qin on 10/14/25.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension STPClientAttributionMetadata {
     @MainActor

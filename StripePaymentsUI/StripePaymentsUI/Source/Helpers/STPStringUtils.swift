@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) public class STPStringUtils: NSObject {
+@_spi(InternalOnlyAPI) public class STPStringUtils: NSObject {
     // This code was adapted from Stripe.js
     /// Reformats an expiration date with a four-digit year to one with a two digit year.
     /// Ex: `01/2021` to `01/21`.
@@ -19,7 +19,7 @@ import Foundation
         )
     }()
 
-    @objc(expirationDateStringFromString:) @_spi(STP) public class func expirationDateString(
+    @objc(expirationDateStringFromString:) @_spi(InternalOnlyAPI) public class func expirationDateString(
         from string: String?
     )
         -> String?
@@ -58,7 +58,7 @@ import Foundation
 
     /// Returns YES if the string is likely to contain something formatted similar to an expiration date.
     /// It doesn't confirm that the expiration date is valid, or that it is even a date.
-    @_spi(STP) public class func stringMayContainExpirationDate(_ string: String?) -> Bool {
+    @_spi(InternalOnlyAPI) public class func stringMayContainExpirationDate(_ string: String?) -> Bool {
         let result = stringMayContainExpirationDateRegex?.matches(
             in: string ?? "",
             options: [],
@@ -74,7 +74,7 @@ import Foundation
     /// Returns a sanitized expiration date (in "0101" format) from a string.
     /// This differs from the existing expiration date parser, as it only looks for dates formatted by slashes.
     /// This is only intended for OCR use, as we'll often get messy strings like "Exp 01/20 Verification Code 123"
-    @_spi(STP) public class func sanitizedExpirationDateFromOCRString(_ string: String) -> String? {
+    @_spi(InternalOnlyAPI) public class func sanitizedExpirationDateFromOCRString(_ string: String) -> String? {
         guard let regex = slashFormattedExpirationDateRegex,
               let match = regex.firstMatch(in: string, range: NSRange(string.startIndex..., in: string)),
               match.numberOfRanges >= 3,

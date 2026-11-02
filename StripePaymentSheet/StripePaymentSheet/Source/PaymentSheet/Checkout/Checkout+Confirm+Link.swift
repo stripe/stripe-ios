@@ -5,8 +5,8 @@
 //  Created by Yuki Tokuhiro on 7/30/26.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 extension CheckoutController {
     // 😵😵😵 `LinkConfirmOption` represents both the beginning and the result of a Link wallet flow:

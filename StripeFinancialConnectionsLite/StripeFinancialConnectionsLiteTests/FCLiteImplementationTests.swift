@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 2025-03-28.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 class FCLiteImplementationTests: XCTestCase {

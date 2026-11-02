@@ -11,7 +11,7 @@ import Foundation
 extension String {
 
     /// A Boolean value indicating whether the string contains only whitespace.
-    @_spi(STP) public var isBlank: Bool {
+    @_spi(InternalOnlyAPI) public var isBlank: Bool {
         return allSatisfy({ $0.isWhitespace })
     }
 
@@ -21,7 +21,7 @@ extension String {
     ///
     /// - Parameter index: Index of last character to include in the substring.
     /// - Returns: Substring.
-    @_spi(STP) public func stp_safeSubstring(to index: Int) -> String {
+    @_spi(InternalOnlyAPI) public func stp_safeSubstring(to index: Int) -> String {
         let maxLength = max(min(index, count), 0)
         return String(prefix(maxLength))
     }
@@ -32,12 +32,12 @@ extension String {
     ///
     /// - Parameter index: Index of starting point of substring.
     /// - Returns: Substring.
-    @_spi(STP) public func stp_safeSubstring(from index: Int) -> String {
+    @_spi(InternalOnlyAPI) public func stp_safeSubstring(from index: Int) -> String {
         let maxLength = max(min(count - index, count), 0)
         return String(suffix(maxLength))
     }
 
-    @_spi(STP) public func stp_string(byRemovingSuffix suffix: String?) -> String {
+    @_spi(InternalOnlyAPI) public func stp_string(byRemovingSuffix suffix: String?) -> String {
         if let suffix = suffix, self.hasSuffix(suffix) {
             return String(dropLast(suffix.count))
         } else {
@@ -46,7 +46,7 @@ extension String {
     }
 
     // e.g. localizedAmountDisplayString(for: 1099, "USD") -> "$10.99" in en_US, "10,99 $" in fr_FR
-    @_spi(STP) public static func localizedAmountDisplayString(
+    @_spi(InternalOnlyAPI) public static func localizedAmountDisplayString(
         for amount: Int,
         currency: String,
         locale: Locale = NSLocale.autoupdatingCurrent

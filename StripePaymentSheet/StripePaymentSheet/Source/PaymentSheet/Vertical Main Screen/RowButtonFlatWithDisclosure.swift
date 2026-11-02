@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 /// A `RowButton` subclass that presents a flat layout featuring a chevron. No selected state is available for this style.

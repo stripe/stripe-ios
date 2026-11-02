@@ -5,11 +5,11 @@
 //  Created by Mat Schmid on 2025-03-25.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// NOTE: If you change the name of this class, make sure to also change it in the `FinancialConnectionsSDKAvailability` file.
-@_spi(STP) public class FCLiteImplementation: FinancialConnectionsSDKInterface {
+@_spi(InternalOnlyAPI) public class FCLiteImplementation: FinancialConnectionsSDKInterface {
     required public init() {}
 
     public func presentFinancialConnectionsSheet(

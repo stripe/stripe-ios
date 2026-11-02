@@ -6,7 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 /// The presentation-independent interface used by PaymentSheet content.
@@ -48,6 +48,7 @@ enum PaymentSheetContainerFactory {
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
         usesNativeSheet: Bool = false,
+        checkoutSessionID: String? = nil,
         didCancelNative3DS2: @escaping () -> Void
     ) -> any PaymentSheetContainer {
         #if os(visionOS)
@@ -60,12 +61,14 @@ enum PaymentSheetContainerFactory {
             return NativeSheetContainerViewController(
                 contentViewController: contentViewController,
                 appearance: appearance,
+                checkoutSessionID: checkoutSessionID,
                 didCancelNative3DS2: didCancelNative3DS2
             )
         }
         return BottomSheetViewController(
             contentViewController: contentViewController,
             appearance: appearance,
+            checkoutSessionID: checkoutSessionID,
             didCancelNative3DS2: didCancelNative3DS2
         )
     }

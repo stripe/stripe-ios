@@ -6,10 +6,10 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidationObserver {
     let formatter: STPInputTextFieldFormatter
 
@@ -66,7 +66,7 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         fatalError("init(coder:) has not been implemented")
     }
 
-    @_spi(STP) public override var text: String? {
+    @_spi(InternalOnlyAPI) public override var text: String? {
         didSet {
             textDidChange()
         }

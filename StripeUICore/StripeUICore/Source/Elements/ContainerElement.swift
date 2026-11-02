@@ -15,7 +15,7 @@ import UIKit
  
  - Note:You still need to set your sub-element's delegates = self!
  */
-@_spi(STP) public protocol ContainerElement: Element, ElementDelegate {
+@_spi(InternalOnlyAPI) public protocol ContainerElement: Element, ElementDelegate {
     var elements: [Element] { get }
 }
 

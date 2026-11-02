@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 2024-07-24.
 //
 
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 import XCTest
 

@@ -8,10 +8,10 @@
 import Foundation
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 @MainActor
 // @iOS26

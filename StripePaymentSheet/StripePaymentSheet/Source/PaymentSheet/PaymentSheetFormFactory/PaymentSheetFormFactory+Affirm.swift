@@ -4,7 +4,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 
 extension PaymentSheetFormFactory {
     func makeAffirm() -> PaymentMethodElement {

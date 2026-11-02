@@ -7,14 +7,14 @@
 //
 
 import CoreMedia
-@_spi(STP) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import XCTest
 
 // swift-format-ignore
-@testable @_spi(STP) import StripeCameraCore
+@testable @_spi(InternalOnlyAPI) import StripeCameraCore
 
 // swift-format-ignore
-@testable @_spi(STP) import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeCore
 
 @testable import StripeIdentity
 

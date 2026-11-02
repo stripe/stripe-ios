@@ -19,11 +19,12 @@ protocol CheckoutSessionWalletUpdater: AnyObject {
 
     /// Updates tax region for billing and shipping addresses
     /// but does not enqueue behind the checkout's pending session updates.
+    /// Pass `nil` to clear the tax address and let the server select its default country.
     ///
     /// - Warning: Only call this from a context that's already serialized behind the checkout's
     ///   pending operations. Calling the enqueuing variant there would deadlock.
     func updateTaxRegionWithoutEnqueueing(
-        address: CheckoutController.Address,
+        address: CheckoutController.Address?,
         canUpdateWhileSheetPresented: Bool,
         confirmationSource: CheckoutController.ConfirmingElement
     ) async throws -> CheckoutController.Session
@@ -31,7 +32,7 @@ protocol CheckoutSessionWalletUpdater: AnyObject {
 
 extension CheckoutController: CheckoutSessionWalletUpdater {
     func updateTaxRegionWithoutEnqueueing(
-        address: Address,
+        address: Address?,
         canUpdateWhileSheetPresented: Bool,
         confirmationSource: CheckoutController.ConfirmingElement
     ) async throws -> Session {

@@ -7,7 +7,7 @@
 
 import UIKit
 
-@_spi(STP)
+@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 extension CurrencySelectorElement {
     /// Appearance configuration for ``CurrencySelectorElement``.

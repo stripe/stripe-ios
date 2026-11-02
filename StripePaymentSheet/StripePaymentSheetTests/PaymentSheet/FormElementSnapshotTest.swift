@@ -7,8 +7,8 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
-@_spi(STP) @testable import StripeUICore
+@_spi(InternalOnlyAPI) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable import StripeUICore
 
 // These are in StripePaymentSheet instead of StripeUICore so that we can test using PaymentSheet.Appearance rather than ElementsAppearance.
 // @iOS26

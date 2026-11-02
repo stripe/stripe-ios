@@ -4,7 +4,7 @@
 //
 
 import StripeCoreTestUtils
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import UIKit
 
 @MainActor

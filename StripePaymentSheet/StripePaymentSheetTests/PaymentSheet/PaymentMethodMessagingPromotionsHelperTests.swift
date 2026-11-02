@@ -5,10 +5,10 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeCoreTestUtils
-@_spi(STP) import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 import XCTest
 
 @MainActor

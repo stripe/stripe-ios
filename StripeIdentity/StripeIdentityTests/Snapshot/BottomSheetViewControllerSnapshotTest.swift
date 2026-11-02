@@ -6,7 +6,7 @@
 //
 
 import iOSSnapshotTestCase
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 import UIKit
 

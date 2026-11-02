@@ -9,7 +9,7 @@ import Foundation
 import StripeCore
 import StripeCoreTestUtils
 @testable @_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
-@_spi(STP) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift

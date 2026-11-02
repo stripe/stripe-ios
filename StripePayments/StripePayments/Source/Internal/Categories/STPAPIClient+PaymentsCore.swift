@@ -7,12 +7,12 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension STPAPIClient {
 
     /// - Parameter additionalValues: A list of values to append to the `payment_user_agent`. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    @_spi(STP) public class func paramsAddingPaymentUserAgent(
+    @_spi(InternalOnlyAPI) public class func paramsAddingPaymentUserAgent(
         _ params: [String: Any],
         additionalValues: [String] = []
     ) -> [String: Any] {
@@ -21,7 +21,7 @@ extension STPAPIClient {
         return newParams
     }
 
-    @_spi(STP) public class func paramsAddingClientAttributionMetadata(
+    @_spi(InternalOnlyAPI) public class func paramsAddingClientAttributionMetadata(
         _ params: [String: Any],
         clientAttributionMetadata: STPClientAttributionMetadata
     ) -> [String: Any] {

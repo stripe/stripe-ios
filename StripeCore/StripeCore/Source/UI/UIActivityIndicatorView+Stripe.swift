@@ -8,7 +8,7 @@
 
 import UIKit
 
-@_spi(STP) extension UIActivityIndicatorView {
+@_spi(InternalOnlyAPI) extension UIActivityIndicatorView {
     #if DEBUG
         /// Disables animation for `stp_startAnimatingAndShow`.
         ///

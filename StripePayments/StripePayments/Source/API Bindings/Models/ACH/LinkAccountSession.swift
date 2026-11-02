@@ -10,15 +10,15 @@ import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkAccountSession)
-@_spi(STP) public class LinkAccountSession: NSObject, STPAPIResponseDecodable {
-    @_spi(STP) public let stripeID: String
-    @_spi(STP) public let livemode: Bool
-    @_spi(STP) public let clientSecret: String
-    @_spi(STP) public let permissions: [String]
+@_spi(InternalOnlyAPI) public class LinkAccountSession: NSObject, STPAPIResponseDecodable {
+    @_spi(InternalOnlyAPI) public let stripeID: String
+    @_spi(InternalOnlyAPI) public let livemode: Bool
+    @_spi(InternalOnlyAPI) public let clientSecret: String
+    @_spi(InternalOnlyAPI) public let permissions: [String]
 
-    @_spi(STP) public let allResponseFields: [AnyHashable: Any]
+    @_spi(InternalOnlyAPI) public let allResponseFields: [AnyHashable: Any]
 
-    @_spi(STP) public required init(
+    @_spi(InternalOnlyAPI) public required init(
         stripeID: String,
         livemode: Bool,
         clientSecret: String,
@@ -33,7 +33,7 @@ import UIKit
         super.init()
     }
 
-    @_spi(STP) public static func decodedObject(
+    @_spi(InternalOnlyAPI) public static func decodedObject(
         fromAPIResponse response: [AnyHashable: Any]?
     ) -> Self? {
         guard let response = response,

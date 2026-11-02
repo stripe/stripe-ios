@@ -6,7 +6,7 @@
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
 
-@testable@_spi(STP) import Stripe
+@testable@_spi(InternalOnlyAPI) import Stripe
 
 class STPPaymentMethodVippsParamsTests: STPNetworkStubbingTestCase {
 

@@ -10,7 +10,7 @@ import Foundation
 import PassKit
 
 extension PKContact {
-    @_spi(STP) public var addressParams: [AnyHashable: Any] {
+    @_spi(InternalOnlyAPI) public var addressParams: [AnyHashable: Any] {
         var params: [AnyHashable: Any] = [:]
         let stpAddress = StripeContact(pkContact: self)
 

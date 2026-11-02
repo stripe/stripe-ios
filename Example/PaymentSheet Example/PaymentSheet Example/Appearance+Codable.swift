@@ -8,8 +8,8 @@
 //  These extensions are only for the example app and don't affect the public API.
 
 import Foundation
-@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 // Helper for encoding/decoding UIColor

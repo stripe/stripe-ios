@@ -7,12 +7,12 @@
 //
 
 import iOSSnapshotTestCase
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@testable @_spi(STP) import StripeIdentity
+@testable @_spi(InternalOnlyAPI) import StripeIdentity
 
 class HeaderIconViewSnapshotTest: STPSnapshotTestCase {
     let iconView = HeaderIconView()

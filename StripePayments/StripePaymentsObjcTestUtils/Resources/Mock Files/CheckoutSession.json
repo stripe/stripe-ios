@@ -1,23 +1,27 @@
 {
-  "session_id": "cs_test_a1b2c3d4e5f6g7h8i9j0",
-  "object": "checkout.session",
-  "total_summary": {
-    "due": 2149,
-    "subtotal": 2000,
-    "total": 2149,
-    "total_tax_amounts": [
-      {
-        "amount": 149,
-        "inclusive": false,
-        "taxable_amount": 2000,
-        "tax_rate": {
-          "percentage": 7.45,
-          "display_name": "Sales Tax"
-        }
-      }
+  "shipping_address_collection": {
+    "allowed_countries": [
+      "US",
+      "CA"
     ]
   },
-  "checkout_items": [
+  "status": "open",
+  "payment_status": "unpaid",
+  "customer_email": "test@example.com",
+  "livemode": false,
+  "payment_method_options": {
+    "card": {
+      "request_three_d_secure": "automatic"
+    },
+    "us_bank_account": {
+      "verification_method": "automatic"
+    }
+  },
+  "id": "cs_test_a1b2c3d4e5f6g7h8i9j0",
+  "ui_mode": "mobile_elements",
+  "integration_currency": "usd",
+  "presentment_currency": "eur",
+  "items": [
     {
       "key": "ci_1abc",
       "type": "one_time_price",
@@ -30,7 +34,7 @@
             "unit_amount_decimal": "750",
             "price": {
               "id": "price_1abc",
-              "currency": "usd",
+              "currency": "eur",
               "unit_amount": 750,
               "product": {
                 "name": "Widget",
@@ -61,7 +65,7 @@
             "unit_amount_decimal": "500",
             "price": {
               "id": "price_2def",
-              "currency": "usd",
+              "currency": "eur",
               "unit_amount": 500,
               "product": {
                 "name": "Gadget",
@@ -91,45 +95,18 @@
       }
     }
   ],
-  "recurring_details": {
-    "total_summary": {
-      "total_discount_amounts": []
-    },
-    "subtotal": 2000,
-    "total": 2149,
-    "due": 2149,
-    "currency": "usd"
+  "merchant_info": {
+    "country": "US",
+    "display_name": "CI Stuff"
   },
-  "tax_context": {
-    "automatic_tax_enabled": true,
-    "automatic_tax_address_source": "session.billing"
-  },
-  "shipping_address_collection": {
-    "allowed_countries": ["US", "CA"]
-  },
-  "adaptive_pricing_info": {
-    "active_presentment_currency": "eur",
-    "integration_amount": 12000,
-    "integration_currency": "usd",
-    "local_currency_options": [
-      {
-        "amount": 10839,
-        "conversion_markup_bps": 400,
-        "currency": "eur",
-        "presentment_exchange_rate": "0.90325"
-      }
-    ]
-  },
-  "currency": "usd",
-  "mode": "modeless",
-  "status": "open",
-  "payment_status": "unpaid",
+  "elements_session_id": "elements_session_test123",
+  "ordered_payment_method_types_and_wallets": [
+    "card"
+  ],
+  "elements_session_config_id": null,
+  "country_code": null,
   "customer": {
     "id": "cus_test123456",
-    "object": "customer",
-    "email": "customer@example.com",
-    "name": "Test Customer",
-    "phone": "+15555555555",
     "payment_methods": [
       {
         "id": "pm_1Sxae3Lu5o3P18Zpt5YuRRoG",
@@ -163,7 +140,9 @@
           "generated_from": null,
           "last4": "4242",
           "networks": {
-            "available": ["visa"],
+            "available": [
+              "visa"
+            ],
             "preferred": null
           },
           "three_d_secure_usage": {
@@ -205,45 +184,58 @@
           "last4": "6789",
           "networks": {
             "preferred": "ach",
-            "supported": ["ach"]
+            "supported": [
+              "ach"
+            ]
           },
           "routing_number": "110000000"
         }
       }
     ]
   },
-  "customer_managed_saved_payment_methods_offer_save": {
+  "saved_payment_method_options": {
+    "payment_method_save": "enabled",
+    "payment_method_remove": "disabled"
+  },
+  "automatic_tax": {
     "enabled": true,
-    "status": "not_accepted"
+    "status": "ready",
+    "address_source": "billing"
   },
-  "customer_email": "test@example.com",
-  "payment_intent": "pi_test123456789",
-  "setup_intent": null,
-  "livemode": false,
-  "created": 1609459200,
-  "expires_at": 1609545600,
-  "url": "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0",
-  "return_url": "https://example.com/return",
-  "success_url": "https://example.com/success",
-  "cancel_url": "https://example.com/cancel",
-  "payment_method_types": [
-    "card",
-    "us_bank_account"
-  ],
-  "payment_method_options": {
-    "card": {
-      "request_three_d_secure": "automatic"
+  "total_summary": {
+    "due": 2149,
+    "subtotal": 2000,
+    "total": 2149,
+    "total_tax_amounts": [
+      {
+        "amount": 149,
+        "inclusive": false,
+        "taxable_amount": 2000,
+        "display_name": "Sales Tax",
+        "percentage": 7.45
+      }
+    ]
+  },
+  "adaptive_pricing_info": {
+    "integration_currency_option": {
+      "currency": "usd",
+      "amount": 12000,
+      "disclosure": {
+        "caption": "Exchange rate and fees of your bank may apply."
+      }
     },
-    "us_bank_account": {
-      "verification_method": "automatic"
-    }
+    "local_currency_options": [
+      {
+        "amount": 10839,
+        "currency": "eur"
+      }
+    ]
   },
-  "elements_session": {
-    "business_name": "CI Stuff",
-    "merchant_country": "US",
-    "session_id": "elements_session_test123",
-    "payment_method_preference": {
-      "ordered_payment_method_types": ["card"]
+  "payment_response": {
+    "status": "requires_payment_method",
+    "payment_intent": {
+      "id": "pi_test123456789",
+      "client_secret": "pi_test123456789_secret_test"
     }
   }
 }

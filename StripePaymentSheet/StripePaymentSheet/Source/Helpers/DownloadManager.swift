@@ -5,13 +5,13 @@
 
 import CoreGraphics
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// For internal SDK use only.
 @objc(STP_Internal_DownloadManager)
 // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
-@_spi(STP) public class DownloadManager: NSObject {
+@_spi(InternalOnlyAPI) public class DownloadManager: NSObject {
     public typealias UpdateImageHandler = (UIImage) -> Void
 
     enum Error: Swift.Error {

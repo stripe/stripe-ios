@@ -5,7 +5,7 @@
 //  Created by Michael Liberatore on 9/16/26.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import SwiftUI
 
 /// An upload action with a configurable format and size hint.

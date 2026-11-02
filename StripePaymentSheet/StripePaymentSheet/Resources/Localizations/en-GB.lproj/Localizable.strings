@@ -4,10 +4,6 @@
 
 "+ Add" = "+ Add";
 
-"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee).";
-
-"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
-
 "Accept" = "Accept";
 
 "Add US bank account" = "Add US bank account";

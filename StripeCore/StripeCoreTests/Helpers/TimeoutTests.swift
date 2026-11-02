@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) @testable import StripeCore
+@_spi(InternalOnlyAPI) @testable import StripeCore
 import XCTest
 
 class TimeoutTests: XCTestCase {

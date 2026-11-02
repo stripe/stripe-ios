@@ -7,68 +7,68 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 
 extension StripeAPI {
-    @_spi(STP) public struct PaymentIntentParams: UnknownFieldsEncodable {
+    @_spi(InternalOnlyAPI) public struct PaymentIntentParams: UnknownFieldsEncodable {
         /// The client secret of the PaymentIntent. Required
-        @_spi(STP) public let clientSecret: String
+        @_spi(InternalOnlyAPI) public let clientSecret: String
 
-        @_spi(STP) public init(
+        @_spi(InternalOnlyAPI) public init(
             clientSecret: String
         ) {
             self.clientSecret = clientSecret
         }
 
-        @_spi(STP) public var id: String? {
+        @_spi(InternalOnlyAPI) public var id: String? {
             return PaymentIntent.id(fromClientSecret: clientSecret)
         }
 
         /// Provide a supported `PaymentMethodParams` object, and Stripe will create a
         /// PaymentMethod during PaymentIntent confirmation.
         /// @note alternative to `paymentMethodId`
-        @_spi(STP) public var paymentMethodData: PaymentMethodParams?
+        @_spi(InternalOnlyAPI) public var paymentMethodData: PaymentMethodParams?
 
         /// Provide an already created PaymentMethod's id, and it will be used to confirm the PaymentIntent.
         /// @note alternative to `paymentMethodParams`
-        @_spi(STP) public var paymentMethod: String?
+        @_spi(InternalOnlyAPI) public var paymentMethod: String?
 
         /// Provide an already created Source's id, and it will be used to confirm the PaymentIntent.
-        @_spi(STP) public var sourceId: String?
+        @_spi(InternalOnlyAPI) public var sourceId: String?
 
         /// Email address that the receipt for the resulting payment will be sent to.
-        @_spi(STP) public var receiptEmail: String?
+        @_spi(InternalOnlyAPI) public var receiptEmail: String?
 
         /// `@YES` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
         /// if the PaymentMethod/Source is not already attached.
         /// This should be a boolean NSNumber, so that it can be `nil`
-        @_spi(STP) public var savePaymentMethod: Bool?
+        @_spi(InternalOnlyAPI) public var savePaymentMethod: Bool?
 
         /// The URL to redirect your customer back to after they authenticate or cancel
         /// their payment on the payment method’s app or site.
         /// This should probably be a URL that opens your iOS app.
-        @_spi(STP) public var returnURL: String?
+        @_spi(InternalOnlyAPI) public var returnURL: String?
 
         /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
         /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
-        @_spi(STP) public var setupFutureUsage: SetupFutureUsage?
+        @_spi(InternalOnlyAPI) public var setupFutureUsage: SetupFutureUsage?
 
         /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any PaymentIntent next actions.
         /// If set to false, STPPaymentIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
         /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
         /// app.
-        @_spi(STP) public var useStripeSdk: Bool?
+        @_spi(InternalOnlyAPI) public var useStripeSdk: Bool?
 
         /// Shipping information.
-        @_spi(STP) public var shipping: ShippingDetails?
+        @_spi(InternalOnlyAPI) public var shipping: ShippingDetails?
 
         /// Contains metadata with identifiers for the session and information about the integration
-        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+        @_spi(InternalOnlyAPI) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
         /// Indicates how you intend to use the payment method that your customer provides after the current payment completes.
         /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
         /// - seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-setup_future_usage
-        @frozen @_spi(STP) public enum SetupFutureUsage: String, SafeEnumCodable {
+        @frozen @_spi(InternalOnlyAPI) public enum SetupFutureUsage: String, SafeEnumCodable {
             /// Unknown value.  Update your SDK, or use `allResponseFields` for custom handling.
             case unknown
             /// No value was provided.
@@ -83,7 +83,7 @@ extension StripeAPI {
             // Remove @frozen after Xcode 12.2 support has been dropped.
         }
 
-        @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
+        @_spi(InternalOnlyAPI) public var _additionalParametersStorage: NonEncodableParameters?
     }
 }
 
@@ -93,7 +93,7 @@ extension StripeAPI.PaymentIntentParams {
         options: []
     )
 
-    @_spi(STP) public static func isClientSecretValid(_ clientSecret: String) -> Bool {
+    @_spi(InternalOnlyAPI) public static func isClientSecretValid(_ clientSecret: String) -> Bool {
         return
             (isClientSecretValidRegex.numberOfMatches(
                 in: clientSecret,

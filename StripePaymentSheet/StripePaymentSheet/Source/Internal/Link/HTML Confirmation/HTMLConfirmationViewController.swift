@@ -5,7 +5,7 @@
 //  Created by Michael Liberatore on 8/27/26.
 //
 
-@_spi(STP) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
 /// Displays an HTML confirmation screen in a Link-styled bottom sheet.

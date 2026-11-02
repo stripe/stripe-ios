@@ -9,7 +9,7 @@
 import Foundation
 import XCTest
 
-@testable@_spi(STP) @_spi(ReactNativeSDK) import StripeCore
+@testable@_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) import StripeCore
 
 final class AnalyticsClientV2Test: XCTestCase {
     let client = AnalyticsClientV2(

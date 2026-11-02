@@ -5,8 +5,8 @@
 //  Created by Krisjanis Gaidis on 7/14/22.
 //
 
-@_spi(STP) @testable import StripeCore
-@testable @_spi(STP) import StripeFinancialConnections
+@_spi(InternalOnlyAPI) @testable import StripeCore
+@testable @_spi(InternalOnlyAPI) import StripeFinancialConnections
 import XCTest
 
 class StringExtensionsTests: XCTestCase {

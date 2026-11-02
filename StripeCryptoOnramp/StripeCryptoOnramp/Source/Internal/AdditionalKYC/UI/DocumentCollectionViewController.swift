@@ -6,7 +6,7 @@
 //
 
 @_spi(CryptoOnrampAlpha) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 /// Hosts a document collection step and cleans up its work when the customer leaves it.
