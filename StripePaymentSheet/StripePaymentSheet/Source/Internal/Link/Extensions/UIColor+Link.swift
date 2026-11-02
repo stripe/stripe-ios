@@ -31,7 +31,6 @@ extension UIColor {
     static let linkTextPrimary: UIColor = dynamic(light: neutral900, dark: neutral0)
     static let linkTextSecondary: UIColor = dynamic(light: neutral700, dark: neutral300)
     static let linkTextTertiary: UIColor = neutral500
-    static let linkTextBrand: UIColor = dynamic(light: brand600, dark: brand200)
     static let linkTextCritical: UIColor = critical600
 
     // Accent colors (e.g. radio buttons, loading indicators)
@@ -111,7 +110,6 @@ private extension UIColor {
     static let neutral200: UIColor = UIColor(hex: 0xE5E5E5)
     static let neutral100: UIColor = UIColor(hex: 0xF5F5F5)
     static let neutral0: UIColor = UIColor(hex: 0xFFFFFF)
-    static let brand600: UIColor = UIColor(hex: 0x006635)
     static let brand400: UIColor = UIColor(red: 0, green: 0.64, blue: 0.33, alpha: 1.0) // #00A355
     static let brand200: UIColor = UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0) // #00D670
     static let critical600: UIColor = UIColor(hex: 0xC0123C)

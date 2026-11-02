@@ -115,7 +115,7 @@ final class LinkSignUpViewController: UIViewController {
 
     private lazy var legalTermsView: LinkLegalTermsView = {
         let legalTermsView = LinkLegalTermsView(textAlignment: .center, brand: brand, isStandalone: true)
-        legalTermsView.tintColor = appearance?.colors?.primary ?? .linkTextBrand
+        legalTermsView.tintColor = appearance?.colors?.primary ?? .linkTextPrimary
         legalTermsView.delegate = self
         return legalTermsView
     }()
@@ -331,7 +331,7 @@ final class LinkSignUpViewController: UIViewController {
                 TappableAttributedLabel.TappableHighlight(
                     text: yesUpdateLocalizedText,
                     font: LinkUI.font(forTextStyle: .caption),
-                    color: .linkTextBrand,
+                    color: .linkTextPrimary,
                     action: { [weak self] in
                         self?.didTapYesUpdate()
                     }
