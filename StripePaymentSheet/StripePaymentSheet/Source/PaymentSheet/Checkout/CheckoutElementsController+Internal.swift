@@ -1,5 +1,5 @@
 //
-//  Checkout+Internal.swift
+//  CheckoutElementsController+Internal.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/5/26.
@@ -11,7 +11,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-extension CheckoutController: ExpressCheckoutElementDelegate {
+extension CheckoutElementsController: ExpressCheckoutElementDelegate {
     func expressCheckoutElementShouldConfirm(
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
@@ -109,14 +109,14 @@ extension CheckoutController: ExpressCheckoutElementDelegate {
     }
 }
 
-extension CheckoutController: CurrencySelectorElementCheckoutDelegate {}
-extension CheckoutController: ShippingAddressElementDelegate {
+extension CheckoutElementsController: CurrencySelectorElementCheckoutDelegate {}
+extension CheckoutElementsController: ShippingAddressElementDelegate {
     func updateShippingAddressFromElement(name: String?, address: Address?) async throws {
         try await updateShippingAddress(name: name, address: address, source: .shippingAddressElement)
     }
 }
 
-extension CheckoutController {
+extension CheckoutElementsController {
 
     // MARK: - Currency
 
@@ -150,7 +150,7 @@ extension CheckoutController {
     /// - Parameters:
     ///   - timeout: Maximum time to wait, in seconds.
     func awaitPendingOperations(
-        timeout: TimeInterval = CheckoutController.defaultPendingOperationsTimeout
+        timeout: TimeInterval = CheckoutElementsController.defaultPendingOperationsTimeout
     ) async throws {
         let snapshot = pendingOperations
         guard !snapshot.isEmpty else { return }
@@ -249,7 +249,7 @@ extension CheckoutController {
         do {
             let updatedSessionAPIResponse: CheckoutClientAPIResponse?
             if let update {
-                let sessionId = CheckoutController.extractSessionId(from: clientSecret)
+                let sessionId = CheckoutElementsController.extractSessionId(from: clientSecret)
                 onRequest?()
                 updatedSessionAPIResponse = try await apiClient.updateCheckoutSession(
                     checkoutSessionId: sessionId,

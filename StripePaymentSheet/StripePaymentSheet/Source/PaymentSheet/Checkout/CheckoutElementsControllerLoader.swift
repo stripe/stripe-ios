@@ -1,5 +1,5 @@
 //
-//  CheckoutControllerLoader.swift
+//  CheckoutElementsControllerLoader.swift
 //  StripePaymentSheet
 //
 
@@ -8,7 +8,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
 @MainActor
-enum CheckoutControllerLoader {
+enum CheckoutElementsControllerLoader {
     struct PaymentElementInitializationParameters {
         let flowController: FlowControllerInitializationParameters
         let embedded: EmbeddedPaymentElementInitializationParameters
@@ -26,19 +26,19 @@ enum CheckoutControllerLoader {
         let analyticsHelper: PaymentSheetAnalyticsHelper
     }
 
-    /// Loads everything needed to initialize CheckoutController
-    static func load(configuration: CheckoutController.Configuration) async throws -> CheckoutController.Session {
+    /// Loads everything needed to initialize CheckoutElementsController
+    static func load(configuration: CheckoutElementsController.Configuration) async throws -> CheckoutElementsController.Session {
         // 1a. Load misc. singletons
         let resources = Task { // Use a Task instead of async let; see PaymentSheetLoader.load.
             await PaymentSheetLoader.loadMiscellaneousSingletons()
         }
         // 1b. Call the /init endpoint
         let response = try await configuration.apiClient.initCheckoutSession(
-            checkoutSessionId: CheckoutController.extractSessionId(from: configuration.clientSecret),
+            checkoutSessionId: CheckoutElementsController.extractSessionId(from: configuration.clientSecret),
             clientSecret: configuration.clientSecret,
             adaptivePricingAllowed: configuration.currencySelectorElement != nil
         )
-        let session = CheckoutController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
+        let session = CheckoutElementsController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
         await resources.value
 
         // 2. Load Link
@@ -73,7 +73,7 @@ enum CheckoutControllerLoader {
     ///   fetch in the background.
     ///
     /// - Returns: the challenge and FC/Embedded initialization parameters so the caller can create or update PaymentElement.
-    static func handleSessionChange(checkout: CheckoutController) -> (
+    static func handleSessionChange(checkout: CheckoutElementsController) -> (
         confirmationChallenge: ConfirmationChallenge,
         paymentElement: PaymentElementInitializationParameters?
     ) {
@@ -192,8 +192,8 @@ enum CheckoutControllerLoader {
 
     private static func makeFlowControllerConfiguration(
         paymentElementConfiguration: PaymentElement.Configuration,
-        configuration: CheckoutController.Configuration,
-        session: CheckoutController.Session
+        configuration: CheckoutElementsController.Configuration,
+        session: CheckoutElementsController.Session
     ) -> PaymentSheet.Configuration {
         var paymentSheetConfiguration = paymentElementConfiguration.makeFlowControllerConfiguration(
             apiClient: configuration.apiClient,
@@ -209,8 +209,8 @@ enum CheckoutControllerLoader {
 
     private static func makeEmbeddedConfiguration(
         paymentElementConfiguration: PaymentElement.Configuration,
-        configuration: CheckoutController.Configuration,
-        session: CheckoutController.Session
+        configuration: CheckoutElementsController.Configuration,
+        session: CheckoutElementsController.Session
     ) -> EmbeddedPaymentElement.Configuration {
         var embeddedConfiguration = paymentElementConfiguration.makeEmbeddedConfiguration(
             apiClient: configuration.apiClient,

@@ -1,5 +1,5 @@
 //
-//  Checkout+Session+DiscountAmount.swift
+//  CheckoutElementsController+Session+DiscountAmount.swift
 //  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 8/16/26.
@@ -9,7 +9,7 @@ import Foundation
 
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
-extension CheckoutController.Session {
+extension CheckoutElementsController.Session {
     /// An aggregate discount amount calculated across all line items in a Checkout Session.
     public struct DiscountAmount: Sendable, Hashable {
         /// The localized, formatted representation of the discount amount.

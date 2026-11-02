@@ -15,7 +15,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     // MARK: - Availability tests
 
     func testUnavailableWhenAdaptivePricingDataIsUnavailableAtInitialization() async throws {
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration()
         )
 
@@ -24,7 +24,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     func testAvailableWhenAdaptivePricingActive() async throws {
         let session = makeSession()
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
 
@@ -36,12 +36,12 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     // MARK: - Label update tests
 
     func testLabelsUpdateWhenSessionAmountChanges() async throws {
-        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
         currencySelectorConfiguration.appearance.labelContent = .amount
         configuration.currencySelectorElement = currencySelectorConfiguration
         let session = makeSession(integrationAmount: 1200, localAmount: 1000)
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
                 apiResponse: session,
                 configuration: configuration
@@ -65,7 +65,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     func testSelectedCurrencyUpdatesWhenSessionCurrencyChanges() async throws {
         // Given a currency selector with USD selected
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: makeSession())
         )
         let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
@@ -84,7 +84,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
     func testNotifiesDelegateInsideAnimationWhenDetailsChangeHeight() async throws {
         // Given a currency selector in a merchant-owned container
         let session = makeSession()
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
         let element = try XCTUnwrap(checkout.getCurrencySelectorElement())
@@ -116,7 +116,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     func testCollapsingDetailsRestoresHeightAndSurroundingLayout() async throws {
         // Given a currency selector with content below it in a merchant-owned stack
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: makeSession())
         )
         let element = try XCTUnwrap(checkout.getCurrencySelectorElement())

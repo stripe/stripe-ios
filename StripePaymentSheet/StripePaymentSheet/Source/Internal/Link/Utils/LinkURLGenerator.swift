@@ -111,7 +111,7 @@ class LinkURLGenerator {
         let linkPaymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? .card : .link
         // Build fresh for the confirming Checkout Elements component rather than falling back to
         // the global PaymentsSDKVariant.paymentUserAgent, for the same reason as
-        // CheckoutController.ConfirmingElement's other callers — see that type's doc comment.
+        // CheckoutElementsController.ConfirmingElement's other callers — see that type's doc comment.
         let paymentUserAgent = checkoutAttribution?.confirmingElement.paymentUserAgent ?? PaymentsSDKVariant.paymentUserAgent
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,

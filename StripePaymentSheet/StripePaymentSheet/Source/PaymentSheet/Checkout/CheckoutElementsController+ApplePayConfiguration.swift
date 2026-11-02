@@ -1,5 +1,5 @@
 //
-//  Checkout+ApplePayConfiguration.swift
+//  CheckoutElementsController+ApplePayConfiguration.swift
 //  StripePaymentSheet
 //
 //  Created by Joyce Qin on 7/22/26.

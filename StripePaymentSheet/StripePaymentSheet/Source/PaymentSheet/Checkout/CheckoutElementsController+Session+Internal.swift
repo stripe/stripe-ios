@@ -1,5 +1,5 @@
 //
-//  Checkout+Session+Internal.swift
+//  CheckoutElementsController+Session+Internal.swift
 //  StripePaymentSheet
 //
 
@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Computed Properties
 
-extension CheckoutController.Session {
+extension CheckoutElementsController.Session {
     var customerId: String? {
         return customer?.id
     }
@@ -44,7 +44,7 @@ extension CheckoutController.Session {
 
 // MARK: - Methods
 
-extension CheckoutController.Session {
+extension CheckoutElementsController.Session {
     /// Returns `true` when the server needs a `tax_region` update for the given address type.
     ///
     /// - Parameter addressType: Either `"billing"` or `"shipping"`.
@@ -72,6 +72,6 @@ extension CheckoutController.Session {
     }
 }
 
-extension CheckoutController {
+extension CheckoutElementsController {
     typealias LocalStateMutation = @MainActor @Sendable (inout Session.LocalState) -> Void
 }

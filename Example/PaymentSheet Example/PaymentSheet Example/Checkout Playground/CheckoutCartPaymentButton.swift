@@ -9,13 +9,13 @@
 import SwiftUI
 
 struct CheckoutCartPaymentMethodSection: View {
-    @ObservedObject var checkout: CheckoutController
+    @ObservedObject var checkout: CheckoutElementsController
     let integrationType: CheckoutPlayground.IntegrationType
 
     @State private var showEmbeddedScreen = false
     @State private var clearPaymentOptionErrorMessage: String?
 
-    private var session: CheckoutController.Session { checkout.session }
+    private var session: CheckoutElementsController.Session { checkout.session }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -136,10 +136,10 @@ struct CheckoutCartPaymentMethodSection: View {
 }
 
 struct CheckoutCartBuyButton: View {
-    @ObservedObject var checkout: CheckoutController
-    let onConfirm: (CheckoutController.ConfirmResult) -> Void
+    @ObservedObject var checkout: CheckoutElementsController
+    let onConfirm: (CheckoutElementsController.ConfirmResult) -> Void
 
-    private var session: CheckoutController.Session { checkout.session }
+    private var session: CheckoutElementsController.Session { checkout.session }
 
     var body: some View {
         Button {

@@ -64,7 +64,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
     }
 
     func testPresentationUsesCheckoutUserInterfaceStyle() async throws {
-        let styles: [(CheckoutController.UserInterfaceStyle, UIUserInterfaceStyle)] = [
+        let styles: [(CheckoutElementsController.UserInterfaceStyle, UIUserInterfaceStyle)] = [
             (.alwaysLight, .light),
             (.alwaysDark, .dark),
             (.automatic, .unspecified),
@@ -78,7 +78,7 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
             )
             configuration.shippingAddressElement = .init()
             configuration.userInterfaceStyle = checkoutStyle
-            let checkout = try await CheckoutController(configuration: configuration)
+            let checkout = try await CheckoutElementsController(configuration: configuration)
             let shippingAddressElement = checkout.getShippingAddressElement()
             let presenter = PresentationCapturingViewController()
 
@@ -246,9 +246,9 @@ final class ShippingAddressElementPresentationTests: XCTestCase {
 
     func testCheckoutReleaseLeavesSheetOpenUntilSave() async throws {
         // Given a presented sheet with no merchant-owned reference to its element
-        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         configuration.shippingAddressElement = .init()
-        var checkout: CheckoutController? = try await CheckoutController(
+        var checkout: CheckoutElementsController? = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 configuration: configuration,
                 paymentElementConfiguration: nil,
@@ -401,7 +401,7 @@ private final class ShippingAddressElementDelegateMock: ShippingAddressElementDe
         self.error = error
     }
 
-    func updateShippingAddressFromElement(name: String?, address: CheckoutController.Address?) async throws {
+    func updateShippingAddressFromElement(name: String?, address: CheckoutElementsController.Address?) async throws {
         if let error {
             throw error
         }

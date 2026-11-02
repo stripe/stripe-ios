@@ -1,5 +1,5 @@
 //
-//  Checkout+Configuration.swift
+//  CheckoutElementsController+Configuration.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 4/9/26.
@@ -10,10 +10,10 @@ import Foundation
 
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
-extension CheckoutController {
+extension CheckoutElementsController {
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
 
-    /// Configuration for initializing a CheckoutController.
+    /// Configuration for initializing a CheckoutElementsController.
     public struct Configuration {
         /// The client secret for your Checkout Session.
         public var clientSecret: String
@@ -35,13 +35,13 @@ extension CheckoutController {
 
         /// Configuration for Payment Element.
         ///
-        /// Set this property to use Payment Element with this CheckoutController.
+        /// Set this property to use Payment Element with this CheckoutElementsController.
         /// The default value is `nil`.
         public var paymentElement: PaymentElement.Configuration?
 
         /// Configuration for Express Checkout Element.
         ///
-        /// Set this property to use Express Checkout Element with this CheckoutController.
+        /// Set this property to use Express Checkout Element with this CheckoutElementsController.
         /// The default value is `nil`.
         public var expressCheckoutElement: ExpressCheckoutElement.Configuration?
 
@@ -53,14 +53,14 @@ extension CheckoutController {
 
         /// Configuration for Shipping Address Element.
         ///
-        /// Set this property to use Shipping Address Element with this CheckoutController.
+        /// Set this property to use Shipping Address Element with this CheckoutElementsController.
         /// The default value is `nil`.
         public var shippingAddressElement: ShippingAddressElement.Configuration?
 
         /// The color styling to use for Checkout UI.
         public var userInterfaceStyle: UserInterfaceStyle = .automatic
 
-        /// Initializes a `CheckoutController.Configuration` with default values.
+        /// Initializes a `CheckoutElementsController.Configuration` with default values.
         /// - Parameter clientSecret: The CheckoutSession client secret.
         /// - Parameter returnURL: A URL that redirects back to your app after authenticating a payment method.
         public init(clientSecret: String, returnURL: String) {
@@ -101,7 +101,7 @@ extension CheckoutController {
             guard let url = URL(string: returnURL),
                   let scheme = url.scheme,
                   !scheme.isEmpty else {
-                assertionFailure("CheckoutController.Configuration.returnURL must be a valid URL with a scheme.")
+                assertionFailure("CheckoutElementsController.Configuration.returnURL must be a valid URL with a scheme.")
                 return
             }
 
@@ -111,7 +111,7 @@ extension CheckoutController {
             STPURLCallbackHandler.shared().unregisterListener(listener)
             assert(
                 handled && listener.handledURL == url,
-                "CheckoutController.Configuration.returnURL must be forwarded to StripeAPI.handleURLCallback(with:) when your app receives the URL in application(_:open:options:) or scene(_:openURLContexts:)."
+                "CheckoutElementsController.Configuration.returnURL must be forwarded to StripeAPI.handleURLCallback(with:) when your app receives the URL in application(_:open:options:) or scene(_:openURLContexts:)."
             )
 
             guard scheme.lowercased() != "http" && scheme.lowercased() != "https" else {
@@ -124,7 +124,7 @@ extension CheckoutController {
                 .map { $0.lowercased() } ?? []
             assert(
                 registeredSchemes.contains(scheme.lowercased()),
-                "CheckoutController.Configuration.returnURL uses the custom URL scheme '\(scheme)', but it is not registered in CFBundleURLTypes."
+                "CheckoutElementsController.Configuration.returnURL uses the custom URL scheme '\(scheme)', but it is not registered in CFBundleURLTypes."
             )
         }
 #endif
@@ -133,7 +133,7 @@ extension CheckoutController {
 
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
-extension CheckoutController.Configuration {
+extension CheckoutElementsController.Configuration {
     /// Default customer details used to pre-populate Checkout integrations.
     public struct Defaults {
         /// Default billing details.
@@ -157,7 +157,7 @@ extension CheckoutController.Configuration {
             public var name: String?
 
             /// The customer's billing address.
-            public var address: CheckoutController.Address?
+            public var address: CheckoutElementsController.Address?
 
             /// Creates default billing details.
             public init() {}
@@ -169,7 +169,7 @@ extension CheckoutController.Configuration {
             public var name: String?
 
             /// The customer's shipping address.
-            public var address: CheckoutController.Address?
+            public var address: CheckoutElementsController.Address?
 
             /// Creates default shipping details.
             public init() {}

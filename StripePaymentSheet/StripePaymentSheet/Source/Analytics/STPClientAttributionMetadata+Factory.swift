@@ -35,7 +35,7 @@ extension STPClientAttributionMetadata {
 
     @MainActor
     static func makeClientAttributionMetadata(
-        checkoutSession: CheckoutController.Session,
+        checkoutSession: CheckoutElementsController.Session,
         attribution: CheckoutAttributionContext?
     ) -> STPClientAttributionMetadata {
         stpAssert(attribution != nil, "Checkout CAM requires attribution context.")

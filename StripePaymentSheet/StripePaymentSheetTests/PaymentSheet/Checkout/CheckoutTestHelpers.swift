@@ -22,16 +22,16 @@ extension CheckoutClientAPIResponse {
     func makePublicSession(
         clientSecret: String? = nil,
         expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
-    ) -> CheckoutController.Session {
+    ) -> CheckoutElementsController.Session {
         let configuration = expressCheckoutConfiguration.map { expressConfiguration in
-            var configuration = CheckoutController.Configuration(
+            var configuration = CheckoutElementsController.Configuration(
                 clientSecret: "\(sessionId)_secret_abc",
                 returnURL: "stripe-ios-test://checkout-return"
             )
             configuration.expressCheckoutElement = expressConfiguration
             return configuration
         }
-        return CheckoutController.Session(
+        return CheckoutElementsController.Session(
             apiResponse: self,
             clientSecret: clientSecret ?? "\(sessionId)_secret_abc",
             localState: .empty,
@@ -82,11 +82,11 @@ extension CheckoutClientAPIResponse {
 
 @MainActor
 class CheckoutEmissionRecorder {
-    var sessions: [CheckoutController.Session] = []
+    var sessions: [CheckoutElementsController.Session] = []
     var loading: [Bool] = []
     private var subscriptions = Set<AnyCancellable>()
 
-    init(_ checkout: CheckoutController) {
+    init(_ checkout: CheckoutElementsController) {
         checkout.$session.dropFirst().sink { [weak self] in self?.sessions.append($0) }
             .store(in: &subscriptions)
         checkout.$isUpdating.dropFirst().sink { [weak self] in self?.loading.append($0) }
@@ -250,7 +250,7 @@ enum CheckoutTestHelpers {
 
     // MARK: - Checkout-flow helpers
 
-    /// Builds a `CheckoutController.Configuration`, replacing its `apiClient` with one that uses test stubs.
+    /// Builds a `CheckoutElementsController.Configuration`, replacing its `apiClient` with one that uses test stubs.
     ///
     /// - Parameters:
     ///   - apiResponse: The Checkout Session response returned by the stubbed `/init` request.
@@ -260,16 +260,16 @@ enum CheckoutTestHelpers {
     @MainActor
     static func makeConfiguration(
         apiResponse: CheckoutClientAPIResponse = makeOpenSession(),
-        configuration: CheckoutController.Configuration? = nil,
+        configuration: CheckoutElementsController.Configuration? = nil,
         paymentElementConfiguration: PaymentElement.Configuration? = .init(),
         expressCheckoutElementConfiguration: ExpressCheckoutElement.Configuration? = .init { _ in },
         stubAllOutgoingRequests: Bool = true
-    ) -> CheckoutController.Configuration {
+    ) -> CheckoutElementsController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
         let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration =
             configuration
-            ?? CheckoutController.Configuration(
+            ?? CheckoutElementsController.Configuration(
                 clientSecret: clientSecret,
                 returnURL: "stripe-ios-test://checkout-return"
             )
@@ -291,12 +291,12 @@ enum CheckoutTestHelpers {
     @MainActor
     static func makeCurrencySelectorConfiguration(
         apiResponse: CheckoutClientAPIResponse = makeOpenSession(),
-        configuration: CheckoutController.Configuration? = nil
-    ) -> CheckoutController.Configuration {
+        configuration: CheckoutElementsController.Configuration? = nil
+    ) -> CheckoutElementsController.Configuration {
         let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration =
             configuration
-            ?? CheckoutController.Configuration(
+            ?? CheckoutElementsController.Configuration(
                 clientSecret: clientSecret,
                 returnURL: "stripe-ios-test://checkout-return"
             )
@@ -313,7 +313,7 @@ enum CheckoutTestHelpers {
         stubAllOutgoingRequests: Bool = true
     ) -> STPAPIClient {
         let resolvedClientSecret = clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
-        let sessionId = CheckoutController.extractSessionId(from: resolvedClientSecret)
+        let sessionId = CheckoutElementsController.extractSessionId(from: resolvedClientSecret)
         let apiClient = APIStubbedTestCase.stubbedAPIClient()
         apiClient.publishableKey = "pk_test_123"
 
@@ -333,7 +333,7 @@ enum CheckoutTestHelpers {
             request.httpMethod == "POST"
                 && request.url?.path == "/v1/checkout_client/\(sessionId)/init"
         }) { _ in
-            // Feed CheckoutController(configuration:) the session fixture this test requested.
+            // Feed CheckoutElementsController(configuration:) the session fixture this test requested.
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
             responseJSON["id"] = responseJSON["id"] ?? sessionId
             let data = try! JSONSerialization.data(
@@ -370,7 +370,7 @@ enum CheckoutTestHelpers {
     ///     sessionJSON: { CheckoutTestHelpers.openSessionJSON }
     /// )
     ///
-    /// _ = try await CheckoutController(configuration: configuration)
+    /// _ = try await CheckoutElementsController(configuration: configuration)
     /// XCTAssertEqual(recorder.requests.map(\.kind), [.initSession, .updateSession])
     /// XCTAssertEqual(recorder.requests[1].params["tax_region[country]"], "US")
     /// ```
@@ -499,14 +499,14 @@ class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
 
 @MainActor
 class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
-    private(set) var currentTaxRegion: CheckoutController.Address?
+    private(set) var currentTaxRegion: CheckoutElementsController.Address?
     private(set) var updateCallCount = 0
-    private(set) var lastAddress: CheckoutController.Address?
+    private(set) var lastAddress: CheckoutElementsController.Address?
     private(set) var lastCanUpdateWhileSheetPresented: Bool?
-    private let sessionToReturn: CheckoutController.Session?
+    private let sessionToReturn: CheckoutElementsController.Session?
     private let errorToThrow: Error?
     private let suspendsFirstUpdate: Bool
-    private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
+    private var continuation: CheckedContinuation<CheckoutElementsController.Session, Error>?
     private var didSuspend = false
 
     var isWaiting: Bool {
@@ -514,9 +514,9 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     }
 
     init(
-        sessionToReturn: CheckoutController.Session? = nil,
+        sessionToReturn: CheckoutElementsController.Session? = nil,
         errorToThrow: Error? = nil,
-        currentTaxRegion: CheckoutController.Address? = nil,
+        currentTaxRegion: CheckoutElementsController.Address? = nil,
         suspendsFirstUpdate: Bool = false
     ) {
         self.sessionToReturn = sessionToReturn
@@ -526,10 +526,10 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     }
 
     func updateTaxRegionWithoutEnqueueing(
-        address: CheckoutController.Address?,
+        address: CheckoutElementsController.Address?,
         canUpdateWhileSheetPresented: Bool,
-        confirmationSource: CheckoutController.ConfirmingElement
-    ) async throws -> CheckoutController.Session {
+        confirmationSource: CheckoutElementsController.ConfirmingElement
+    ) async throws -> CheckoutElementsController.Session {
         updateCallCount += 1
         lastAddress = address
         lastCanUpdateWhileSheetPresented = canUpdateWhileSheetPresented
@@ -539,7 +539,7 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
         guard let sessionToReturn else {
             throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
         }
-        let session: CheckoutController.Session
+        let session: CheckoutElementsController.Session
         if suspendsFirstUpdate && !didSuspend {
             didSuspend = true
             session = try await withCheckedThrowingContinuation { continuation in
@@ -563,21 +563,21 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     }
 }
 
-extension CheckoutController.ApplePayConfirmationParameters {
+extension CheckoutElementsController.ApplePayConfirmationParameters {
     static func makeMock(
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
         applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.test"),
         shippingAddressRequired: Bool = false,
-        defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
+        defaultBillingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
-        confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
+        confirmationHandler: @escaping CheckoutElementsController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
             .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
         },
         attribution: CheckoutAttributionContext = .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
-    ) -> CheckoutController.ApplePayConfirmationParameters {
-        CheckoutController.ApplePayConfirmationParameters(
+    ) -> CheckoutElementsController.ApplePayConfirmationParameters {
+        CheckoutElementsController.ApplePayConfirmationParameters(
             applePayConfiguration: applePayConfiguration,
             apiClient: apiClient,
             returnURL: returnURL,

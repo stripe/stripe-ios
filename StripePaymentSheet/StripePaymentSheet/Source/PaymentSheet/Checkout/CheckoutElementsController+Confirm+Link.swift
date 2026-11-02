@@ -1,5 +1,5 @@
 //
-//  Checkout+Confirm+Link.swift
+//  CheckoutElementsController+Confirm+Link.swift
 //  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 7/30/26.
@@ -8,7 +8,7 @@
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
 
-extension CheckoutController {
+extension CheckoutElementsController {
     // 😵😵😵 `LinkConfirmOption` represents both the beginning and the result of a Link wallet flow:
     //
     // | Option                | Link UI       | Meaning |

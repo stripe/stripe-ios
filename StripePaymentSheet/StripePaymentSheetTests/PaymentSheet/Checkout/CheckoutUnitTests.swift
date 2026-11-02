@@ -20,16 +20,16 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testExtractSessionId() {
         XCTAssertEqual(
-            CheckoutController.extractSessionId(from: "cs_test_abc123_secret_xyz789"),
+            CheckoutElementsController.extractSessionId(from: "cs_test_abc123_secret_xyz789"),
             "cs_test_abc123"
         )
         XCTAssertEqual(
-            CheckoutController.extractSessionId(from: "cs_live_def456_secret_uvw012"),
+            CheckoutElementsController.extractSessionId(from: "cs_live_def456_secret_uvw012"),
             "cs_live_def456"
         )
         // No _secret_ separator returns original
         XCTAssertEqual(
-            CheckoutController.extractSessionId(from: "cs_test_nosecret"),
+            CheckoutElementsController.extractSessionId(from: "cs_test_nosecret"),
             "cs_test_nosecret"
         )
     }
@@ -40,7 +40,7 @@ final class CheckoutUnitTests: XCTestCase {
         analyticsClient._testLogHistory = []
         defer { analyticsClient._testLogHistory = previousLogHistory }
 
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         XCTAssertFalse(checkout.isUpdating)
         XCTAssertEqual(checkout.session.status, .open)
 
@@ -59,13 +59,13 @@ final class CheckoutUnitTests: XCTestCase {
     func testPaymentElementConfigurationsUseCheckoutReturnURL() async throws {
         // Given a Checkout configuration with a return URL
         let returnURL = "stripe-ios-test://custom-checkout-return"
-        let baseConfiguration = CheckoutController.Configuration(
+        let baseConfiguration = CheckoutElementsController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: returnURL
         )
 
         // When Checkout creates Payment Element's sheet and embedded integrations
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeConfiguration(configuration: baseConfiguration)
         )
         let paymentElement = checkout.getPaymentElement()
@@ -76,7 +76,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testPaymentElementConfigurationDefaultsToNil() {
-        let configuration = CheckoutController.Configuration(
+        let configuration = CheckoutElementsController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
@@ -86,7 +86,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testPaymentElementUpdatePreservesNativeSheetPresentation() async throws {
         // Given a loaded Checkout with both sheet and embedded integrations
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let element = checkout.getPaymentElement()
         let flowControllerPresentation = element.paymentSheetFlowController.nativeSheetPresentation
         let embeddedPresentation = element.embeddedPaymentElement.nativeSheetPresentation
@@ -101,7 +101,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testLinkConfirmationSharesPresentationWithSelectedIntegration() async throws {
         // Given both integrations have selected Link
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let element = checkout.getPaymentElement()
         let confirmOption = PaymentSheet.LinkConfirmOption.wallet(brand: .link)
         element.paymentSheetFlowController.viewController.linkConfirmOption = confirmOption
@@ -134,14 +134,14 @@ final class CheckoutUnitTests: XCTestCase {
         let configuration = CheckoutTestHelpers.makeConfiguration(paymentElementConfiguration: nil)
 
         // When Checkout loads the session
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
 
         // Then Payment Element is not created
         XCTAssertNil(checkout.paymentElement)
     }
 
     func testGetPaymentElementReturnsStableInstanceWhenConfigured() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
 
         let firstElement = checkout.getPaymentElement()
         let secondElement = checkout.getPaymentElement()
@@ -149,7 +149,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testCurrencySelectorElementConfigurationDefaultsToNil() {
-        let configuration = CheckoutController.Configuration(
+        let configuration = CheckoutElementsController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
@@ -159,7 +159,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testGetCurrencySelectorElementReturnsStableInstanceWhenConfigured() async throws {
         let session = CheckoutTestHelpers.makeAdaptivePricingSession()
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
 
@@ -175,7 +175,7 @@ final class CheckoutUnitTests: XCTestCase {
         defer { analyticsClient._testLogHistory = previousLogHistory }
 
         let session = CheckoutTestHelpers.makeAdaptivePricingSession()
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
         )
 
@@ -191,7 +191,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testSessionPaymentOptionUpdatesAndClears() async throws {
         // Given a Checkout with a PaymentElement and valid card payment option
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let paymentElement = checkout.getPaymentElement()
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
@@ -233,7 +233,7 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - runServerUpdate Tests
 
     func testRunServerUpdateWrapsClosureError() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let expectedMessage = "Server returned 500"
 
         do {
@@ -253,7 +253,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testRunServerUpdateWrapsTimeoutError() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
 
         do {
             try await checkout.runServerUpdate {
@@ -271,7 +271,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testRunServerUpdateWrapsGenericError() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
 
         do {
             try await checkout.runServerUpdate {
@@ -373,7 +373,7 @@ final class CheckoutUnitTests: XCTestCase {
         defer { analyticsClient._testLogHistory = previousLogHistory }
 
         // Given a Checkout Session without a server email
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 paymentElementConfiguration: nil,
                 expressCheckoutElementConfiguration: nil
@@ -402,7 +402,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateEmailClearsEmailLocally() async throws {
         // Given a Checkout Session with a local email
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 paymentElementConfiguration: nil,
                 expressCheckoutElementConfiguration: nil
@@ -424,7 +424,7 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - Address Override Tests
 
     func testUpdateShippingAddress_noTax_setsLocallyAndEmitsUpdates() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let recorder = CheckoutEmissionRecorder(checkout)
 
         try await checkout.updateShippingAddress(
@@ -441,7 +441,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateShippingAddress_noTax_clearsLocallyAndEmitsUpdates() async throws {
         // Given a Checkout with a locally stored shipping address
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         try await checkout.updateShippingAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
@@ -501,7 +501,7 @@ final class CheckoutUnitTests: XCTestCase {
         // Given a ShippingAddressElement connected to its Checkout
         var configuration = CheckoutTestHelpers.makeConfiguration()
         configuration.shippingAddressElement = .init()
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
         let shippingAddressElement = checkout.getShippingAddressElement()
 
         // When the element saves a collected address
@@ -539,12 +539,12 @@ final class CheckoutUnitTests: XCTestCase {
             "address_source": "shipping",
         ]
         let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
-        var configuration = CheckoutController.Configuration(
+        var configuration = CheckoutElementsController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
         configuration.shippingAddressElement = .init()
-        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
+        var shippingDetails = CheckoutElementsController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Jane Doe"
         shippingDetails.address = .init(
             country: "US",
@@ -558,7 +558,7 @@ final class CheckoutUnitTests: XCTestCase {
             apiResponse: session,
             configuration: configuration
         )
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
         let addressViewController = try XCTUnwrap(
             checkout.getShippingAddressElement().addressViewController
         )
@@ -599,7 +599,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateShippingAddress_disallowedCountry_throws() async throws {
         let session = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US", "CA"])
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
 
         do {
             try await checkout.updateShippingAddress(
@@ -619,7 +619,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateShippingAddress_allowedCountry_succeeds() async throws {
         let session = CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US", "CA", "GB"])
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session))
 
         try await checkout.updateShippingAddress(
             name: nil,
@@ -638,12 +638,12 @@ final class CheckoutUnitTests: XCTestCase {
             "address_source": "shipping",
         ]
         let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: session)
         )
 
         // ...and a previously stored local shipping address
-        let previousAddress = CheckoutController.Session.ShippingAddress(
+        let previousAddress = CheckoutElementsController.Session.ShippingAddress(
             name: "Jane Doe",
             address: .init(
                 country: "US",
@@ -939,7 +939,7 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(
             description,
             """
-            CheckoutController.Session {
+            CheckoutElementsController.Session {
               id: "cs_test_123"
               status: .open
               livemode: false
@@ -1096,7 +1096,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testUpdateSessionEmitsSessionUpdates() async throws {
         // Given a Checkout with a session recorder
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let recorder = CheckoutEmissionRecorder(checkout)
 
         var updatedJSON = CheckoutTestHelpers.openSessionJSON
@@ -1117,10 +1117,10 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdateSessionCarriesOverAddressOverrides() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
 
         // Set address overrides on the initial session
-        let shippingUpdate = CheckoutController.Session.ShippingAddress(
+        let shippingUpdate = CheckoutElementsController.Session.ShippingAddress(
             name: "Jane Doe",
             address: .init(country: "US")
         )
@@ -1142,7 +1142,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdateSessionCarriesOverAndClearsLocalPaymentOption() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let paymentElement = checkout.getPaymentElement()
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
@@ -1174,7 +1174,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdateSessionCanBeCalledMultipleTimes() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let recorder = CheckoutEmissionRecorder(checkout)
 
         var firstResponse = CheckoutTestHelpers.openSessionJSON
@@ -1197,12 +1197,12 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - State Convenience Tests
 
     func testSessionAvailableAfterInit() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         XCTAssertEqual(checkout.session.status, .open)
     }
 
     func testIsLoadingFalseAfterInit() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         XCTAssertFalse(checkout.isUpdating)
     }
 
@@ -1216,7 +1216,7 @@ final class CheckoutUnitTests: XCTestCase {
         let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: responseJSON)
 
         // When the internal result is mapped to the public result
-        let result = CheckoutController.mapConfirmationResult(.completed(response))
+        let result = CheckoutElementsController.mapConfirmationResult(.completed(response))
 
         // Then success preserves the Checkout Session payment status
         guard case .completed(let paymentStatus) = result else {
@@ -1227,7 +1227,7 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testMapCanceledConfirmationResult() async throws {
         // When the internal result is mapped to the public result
-        let result = CheckoutController.mapConfirmationResult(.canceled())
+        let result = CheckoutElementsController.mapConfirmationResult(.canceled())
 
         // Then cancellation is preserved
         guard case .canceled = result else {
@@ -1241,7 +1241,7 @@ final class CheckoutUnitTests: XCTestCase {
         let params = STPAPIClient.updatePaymentMethodParameters(
             paymentMethodId: "pm_123",
             billingDetails: nil,
-            expiryDetails: CheckoutController.PaymentMethodExpiryDetails(expMonth: 12, expYear: 2028)
+            expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails(expMonth: 12, expYear: 2028)
         )
 
         XCTAssertEqual(params["payment_method_to_update[payment_method_id]"] as? String, "pm_123")
@@ -1252,11 +1252,11 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdatePaymentMethodParameters_billingDetailsOnly() {
-        let billing = CheckoutController.PaymentMethodBillingDetails(
+        let billing = CheckoutElementsController.PaymentMethodBillingDetails(
             name: "Jane Doe",
             email: "jane@example.com",
             phone: "+15551234567",
-            address: CheckoutController.PaymentMethodBillingAddress(
+            address: CheckoutElementsController.PaymentMethodBillingAddress(
                 line1: "123 Main St",
                 line2: "Apt 4",
                 city: "San Francisco",
@@ -1286,11 +1286,11 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdatePaymentMethodParameters_billingAndExpiry() {
-        let billing = CheckoutController.PaymentMethodBillingDetails(
+        let billing = CheckoutElementsController.PaymentMethodBillingDetails(
             name: "John Smith",
             address: nil
         )
-        let expiry = CheckoutController.PaymentMethodExpiryDetails(expMonth: 3, expYear: 2026)
+        let expiry = CheckoutElementsController.PaymentMethodExpiryDetails(expMonth: 3, expYear: 2026)
         let params = STPAPIClient.updatePaymentMethodParameters(
             paymentMethodId: "pm_789",
             billingDetails: billing,
@@ -1307,8 +1307,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdatePaymentMethodParameters_partialBillingAddress() {
-        let billing = CheckoutController.PaymentMethodBillingDetails(
-            address: CheckoutController.PaymentMethodBillingAddress(
+        let billing = CheckoutElementsController.PaymentMethodBillingDetails(
+            address: CheckoutElementsController.PaymentMethodBillingAddress(
                 postalCode: "94105",
                 country: "US"
             )
@@ -1331,8 +1331,8 @@ final class CheckoutUnitTests: XCTestCase {
     private func makeCheckoutWithShippingTax(
         updateStatusCode: @escaping (_ requestNumber: Int) -> Int32 = { _ in 200 }
     ) async throws -> (
-        CheckoutController,
-        CheckoutController.Session.ShippingAddress,
+        CheckoutElementsController,
+        CheckoutElementsController.Session.ShippingAddress,
         CheckoutSessionRequestRecorder
     ) {
         var json = CheckoutTestHelpers.openSessionJSON
@@ -1348,13 +1348,13 @@ final class CheckoutUnitTests: XCTestCase {
             sessionJSON: { json },
             updateStatusCode: updateStatusCode
         )
-        var configuration = CheckoutController.Configuration(
+        var configuration = CheckoutElementsController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        let checkout = try await CheckoutController(configuration: configuration)
-        let shippingAddress = CheckoutController.Session.ShippingAddress(
+        let checkout = try await CheckoutElementsController(configuration: configuration)
+        let shippingAddress = CheckoutElementsController.Session.ShippingAddress(
             name: "John Smith",
             address: .init(
                 country: "US",
@@ -1374,7 +1374,7 @@ final class CheckoutUnitTests: XCTestCase {
         initialSessionJSON: [AnyHashable: Any],
         updatedSessionJSON: [AnyHashable: Any],
         updateStatusCode: Int32 = 200
-    ) async throws -> (CheckoutController, CheckoutSessionRequestRecorder) {
+    ) async throws -> (CheckoutElementsController, CheckoutSessionRequestRecorder) {
         let requestRecorder = CheckoutSessionRequestRecorder()
         CheckoutTestHelpers.stubCheckoutSessionRequests(
             sessionId: "cs_test_123",
@@ -1386,12 +1386,12 @@ final class CheckoutUnitTests: XCTestCase {
             },
             updateStatusCode: { _ in updateStatusCode }
         )
-        var configuration = CheckoutController.Configuration(
+        var configuration = CheckoutElementsController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        return (try await CheckoutController(configuration: configuration), requestRecorder)
+        return (try await CheckoutElementsController(configuration: configuration), requestRecorder)
     }
 
     private func sessionJSONWithPromotionCode(_ promotionCode: String) -> [AnyHashable: Any] {

@@ -13,7 +13,7 @@ import Foundation
 /// The Checkout response used throughout the SDK.
 ///
 /// Properties in this model mirror the API payload. Construction of the public Checkout
-/// representation belongs to `CheckoutController.Session`.
+/// representation belongs to `CheckoutElementsController.Session`.
 struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertible {
     // TODO: Make this Decodable instead, we don't need _allResponseFieldStorage.
     var _allResponseFieldsStorage: NonEncodableParameters?
@@ -24,8 +24,8 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
     let integrationCurrency: String
     let checkoutItems: [CheckoutItem]
     let livemode: Bool
-    var status: CheckoutController.Session.Status
-    var paymentStatus: CheckoutController.Session.Status.PaymentStatus
+    var status: CheckoutElementsController.Session.Status
+    var paymentStatus: CheckoutElementsController.Session.Status.PaymentStatus
     let customerEmail: String?
     let savedPaymentMethodsOfferSave: SavedPaymentMethodsOfferSave?
     let setupFutureUsageForPaymentMethodType: [String: String]?
@@ -109,9 +109,9 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
         checkoutItems = decodedCheckoutItems
 
         livemode = try container.decode(Bool.self, forKey: .livemode)
-        paymentStatus = try container.decode(CheckoutController.Session.Status.PaymentStatus.self, forKey: .paymentStatus)
+        paymentStatus = try container.decode(CheckoutElementsController.Session.Status.PaymentStatus.self, forKey: .paymentStatus)
 
-        status = try CheckoutController.Session.Status.decode(
+        status = try CheckoutElementsController.Session.Status.decode(
             from: container,
             forKey: .status,
             paymentStatus: paymentStatus

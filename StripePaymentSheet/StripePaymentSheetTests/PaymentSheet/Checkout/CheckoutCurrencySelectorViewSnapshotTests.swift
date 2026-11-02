@@ -174,11 +174,11 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         appearance: CurrencySelectorElement.Appearance = .init()
     ) async throws -> CurrencySelectorElementUIView {
         let session = makeSession(selectedCurrency: selectedCurrency)
-        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
         currencySelectorConfiguration.appearance = appearance
         configuration.currencySelectorElement = currencySelectorConfiguration
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
                 apiResponse: session,
                 configuration: configuration

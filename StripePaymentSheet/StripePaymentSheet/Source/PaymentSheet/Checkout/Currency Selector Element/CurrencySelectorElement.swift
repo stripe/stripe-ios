@@ -16,7 +16,7 @@ protocol CurrencySelectorElementCheckoutDelegate: AnyObject {
 
 /// An Adaptive Pricing currency selector backed by a Checkout Session.
 ///
-/// Obtain an instance from ``Checkout/getCurrencySelectorElement()`` and use
+/// Obtain an instance from ``CheckoutElementsController/getCurrencySelectorElement()`` and use
 /// ``view`` in SwiftUI or ``uiView`` in UIKit.
 @MainActor
 @_spi(InternalOnlyAPI)
