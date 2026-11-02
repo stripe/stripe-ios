@@ -1,5 +1,5 @@
 //
-//  Checkout+Session+ExchangeRateMeta.swift
+//  CheckoutElementsController+Session+ExchangeRateMeta.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/19/26.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension CheckoutController.Session {
+extension CheckoutElementsController.Session {
     /// Exchange rate metadata for adaptive pricing in a Checkout Session.
     struct ExchangeRateMeta {
         /// The merchant's currency (e.g. "usd").

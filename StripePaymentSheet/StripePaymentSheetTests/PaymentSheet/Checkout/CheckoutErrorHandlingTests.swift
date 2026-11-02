@@ -20,7 +20,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
     func testConfirmationErrorMessages() async throws {
         for (response, expectedMessage) in Self.errorCases {
             // Given a loaded Checkout whose confirmation API returns an error
-            let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
                 paymentElementConfiguration: nil,
                 expressCheckoutElementConfiguration: nil
             ))

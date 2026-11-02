@@ -11,7 +11,7 @@ import Foundation
 // MARK: - Public model conversion
 
 extension CheckoutClientAPIResponse {
-    static func makeAmount(_ minorUnitsAmount: Int, currency: String) -> CheckoutController.Session.Amount {
+    static func makeAmount(_ minorUnitsAmount: Int, currency: String) -> CheckoutElementsController.Session.Amount {
         return makeAmount(Double(minorUnitsAmount), currency: currency, locale: .autoupdatingCurrent)
     }
 
@@ -22,7 +22,7 @@ extension CheckoutClientAPIResponse {
         currency: String,
         locale: Locale,
         supportsSubcentPrecision: Bool = false
-    ) -> CheckoutController.Session.Amount {
+    ) -> CheckoutElementsController.Session.Amount {
         let minorUnitValueInMajorUnits = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency) // e.g. USD: 0.01
         let decimalizedAmount = NSDecimalNumber(value: minorUnitsAmount).multiplying(by: minorUnitValueInMajorUnits) // e.g. 49,900 × 0.01 = 499.00
         let formatter = NumberFormatter()
@@ -37,7 +37,7 @@ extension CheckoutClientAPIResponse {
         }
         let formatted = formatter.string(from: decimalizedAmount)
             ?? "\(formatter.currencySymbol ?? "")\(decimalizedAmount)"
-        return CheckoutController.Session.Amount(
+        return CheckoutElementsController.Session.Amount(
             amount: formatted,
             minorUnitsAmount: minorUnitsAmount
         )
@@ -51,21 +51,21 @@ extension CheckoutClientAPIResponse {
     static func makeOrderSummaryItems(
         from checkoutItems: [CheckoutItem],
         locale: Locale
-    ) -> [CheckoutController.Session.OrderSummaryItem] {
+    ) -> [CheckoutElementsController.Session.OrderSummaryItem] {
         checkoutItems.map { item in
             let oneTimePrice = item.oneTimePrice
-            let publicItems: [CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item] =
+            let publicItems: [CheckoutElementsController.Session.OrderSummaryItem.OneTimePrice.Item] =
                 oneTimePrice.items.map { item in
                     let price = item.price
                     let product = price.product
                     let currency = price.currency
                     let unitAmount = item.unitAmount ?? price.unitAmount ?? 0
-                    let adjustableQuantity: CheckoutController.Session.AdjustableQuantity?
+                    let adjustableQuantity: CheckoutElementsController.Session.AdjustableQuantity?
                     if let rawAdjustableQuantity = item.adjustableQuantity,
                        rawAdjustableQuantity.enabled,
                        let maximum = rawAdjustableQuantity.maximum,
                        let minimum = rawAdjustableQuantity.minimum {
-                        adjustableQuantity = CheckoutController.Session.AdjustableQuantity(
+                        adjustableQuantity = CheckoutElementsController.Session.AdjustableQuantity(
                             enabled: true,
                             maximum: maximum,
                             minimum: minimum
@@ -77,14 +77,14 @@ extension CheckoutClientAPIResponse {
                     let taxAmounts = (amountDetails.taxAmounts ?? []).map {
                         makeSessionTaxAmount(from: $0, currency: currency, locale: locale)
                     }
-                    let publicAmountDetails = CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item.AmountDetails(
+                    let publicAmountDetails = CheckoutElementsController.Session.OrderSummaryItem.OneTimePrice.Item.AmountDetails(
                         total: makeAmount(Double(amountDetails.total), currency: currency, locale: locale),
                         subtotal: makeAmount(Double(amountDetails.subtotal), currency: currency, locale: locale),
                         taxAmounts: taxAmounts.isEmpty ? nil : taxAmounts,
                         taxInclusive: makeAmount(Double(amountDetails.taxInclusive), currency: currency, locale: locale),
                         taxExclusive: makeAmount(Double(amountDetails.taxExclusive), currency: currency, locale: locale)
                     )
-                    return CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item(
+                    return CheckoutElementsController.Session.OrderSummaryItem.OneTimePrice.Item(
                         key: item.innerItemKey,
                         displayName: product.name,
                         images: product.images,
@@ -109,7 +109,7 @@ extension CheckoutClientAPIResponse {
                 }
 
             return .oneTimePrice(
-                CheckoutController.Session.OrderSummaryItem.OneTimePrice(
+                CheckoutElementsController.Session.OrderSummaryItem.OneTimePrice(
                     key: item.key,
                     description: nil,
                     items: publicItems
@@ -122,9 +122,9 @@ extension CheckoutClientAPIResponse {
         from taxAmount: TaxAmount,
         currency: String,
         locale: Locale
-    ) -> CheckoutController.Session.TaxAmount {
+    ) -> CheckoutElementsController.Session.TaxAmount {
         let publicAmount = makeAmount(Double(taxAmount.amount), currency: currency, locale: locale)
-        return CheckoutController.Session.TaxAmount(
+        return CheckoutElementsController.Session.TaxAmount(
             amount: publicAmount.amount,
             minorUnitsAmount: publicAmount.minorUnitsAmount,
             inclusive: taxAmount.inclusive,
@@ -138,7 +138,7 @@ extension CheckoutClientAPIResponse {
     static func makeTotals(
         from checkoutItems: [CheckoutItem],
         currency: String
-    ) -> CheckoutController.Session.Totals {
+    ) -> CheckoutElementsController.Session.Totals {
         var subtotal = 0
         var taxExclusive = 0
         var taxInclusive = 0
@@ -151,7 +151,7 @@ extension CheckoutClientAPIResponse {
                 total += item.amountDetails.total
             }
         }
-        return CheckoutController.Session.Totals(
+        return CheckoutElementsController.Session.Totals(
             subtotal: makeAmount(subtotal, currency: currency),
             taxExclusive: makeAmount(taxExclusive, currency: currency),
             taxInclusive: makeAmount(taxInclusive, currency: currency),
@@ -161,20 +161,20 @@ extension CheckoutClientAPIResponse {
         )
     }
 
-    static func makeTax(from automaticTax: AutomaticTax?) -> CheckoutController.Session.Tax? {
+    static func makeTax(from automaticTax: AutomaticTax?) -> CheckoutElementsController.Session.Tax? {
         guard let automaticTax else { return nil }
         guard automaticTax.enabled else {
-            return CheckoutController.Session.Tax(status: .ready)
+            return CheckoutElementsController.Session.Tax(status: .ready)
         }
         switch automaticTax.status {
         case "ready":
-            return CheckoutController.Session.Tax(status: .ready)
+            return CheckoutElementsController.Session.Tax(status: .ready)
         case "requires_address":
             switch automaticTax.addressSource {
             case "shipping":
-                return CheckoutController.Session.Tax(status: .requiresShippingAddress)
+                return CheckoutElementsController.Session.Tax(status: .requiresShippingAddress)
             case "billing":
-                return CheckoutController.Session.Tax(status: .requiresBillingAddress)
+                return CheckoutElementsController.Session.Tax(status: .requiresBillingAddress)
             default:
                 return nil
             }
@@ -223,7 +223,7 @@ extension CheckoutClientAPIResponse {
     static func makeExchangeRateMeta(
         from adaptivePricingInfo: AdaptivePricingInfo?,
         currency: String
-    ) -> CheckoutController.Session.ExchangeRateMeta? {
+    ) -> CheckoutElementsController.Session.ExchangeRateMeta? {
         guard let adaptivePricingInfo,
               let selectedOption = adaptivePricingInfo.localCurrencyOptions.first(where: {
                   $0.currency.lowercased() == currency.lowercased()
@@ -232,7 +232,7 @@ extension CheckoutClientAPIResponse {
         }
 
         // CheckoutClient returns localized disclosures instead of raw exchange rates.
-        return CheckoutController.Session.ExchangeRateMeta(
+        return CheckoutElementsController.Session.ExchangeRateMeta(
             integrationCurrency: adaptivePricingInfo.integrationCurrency,
             localizedCurrency: selectedOption.currency,
             caption: selectedOption.disclosureCaption,
@@ -243,12 +243,12 @@ extension CheckoutClientAPIResponse {
 
 }
 
-extension CheckoutController.Session.Status {
+extension CheckoutElementsController.Session.Status {
     static func decode<Key: CodingKey>(
         from container: KeyedDecodingContainer<Key>,
         forKey key: Key,
-        paymentStatus: CheckoutController.Session.Status.PaymentStatus
-    ) throws -> CheckoutController.Session.Status {
+        paymentStatus: CheckoutElementsController.Session.Status.PaymentStatus
+    ) throws -> CheckoutElementsController.Session.Status {
         let string = try container.decode(String.self, forKey: key)
         switch string.lowercased() {
         case "open": return .open

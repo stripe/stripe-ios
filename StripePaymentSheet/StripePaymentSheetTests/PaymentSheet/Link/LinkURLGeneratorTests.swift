@@ -134,7 +134,7 @@ class LinkURLGeneratorTests: XCTestCase {
     }
 
     private func assertURLParamsPaymentUserAgent(
-        _ confirmationSource: CheckoutController.ConfirmingElement
+        _ confirmationSource: CheckoutElementsController.ConfirmingElement
     ) async throws {
         // Given a global product usage set already polluted with the labels PaymentElement
         // wraps internally (simulating FlowController/EmbeddedPaymentElement self-registration)

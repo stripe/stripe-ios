@@ -1,5 +1,5 @@
 //
-//  CheckoutControllerAnalyticsHelper.swift
+//  CheckoutElementsControllerAnalyticsHelper.swift
 //  StripePaymentSheet
 //
 
@@ -8,7 +8,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
 @MainActor
-final class CheckoutControllerAnalyticsHelper {
+final class CheckoutElementsControllerAnalyticsHelper {
     /// Who initiated the action. For example, a merchant calling `updateShippingAddress`
     /// uses `.merchant`, while saving an address in ShippingAddressElement uses `.shippingAddressElement`.
     enum InvocationSource: String {
@@ -117,7 +117,7 @@ final class CheckoutControllerAnalyticsHelper {
 
     func logStarted(
         _ action: CheckoutAction,
-        session: CheckoutController.Session? = nil,
+        session: CheckoutElementsController.Session? = nil,
         additionalParams: [String: Any] = [:]
     ) -> CheckoutActionWithStartTime {
         let startedAction = CheckoutActionWithStartTime(action: action, startTime: ProcessInfo.processInfo.systemUptime)
@@ -127,7 +127,7 @@ final class CheckoutControllerAnalyticsHelper {
 
     func logSucceeded(
         _ startedAction: CheckoutActionWithStartTime,
-        session: CheckoutController.Session? = nil,
+        session: CheckoutElementsController.Session? = nil,
         additionalParams: [String: Any] = [:]
     ) {
         log(event: startedAction.action.succeededEvent, session: session, startedAction: startedAction, additionalParams: additionalParams)
@@ -136,7 +136,7 @@ final class CheckoutControllerAnalyticsHelper {
     func logFailed(
         _ startedAction: CheckoutActionWithStartTime,
         error: Error,
-        session: CheckoutController.Session? = nil,
+        session: CheckoutElementsController.Session? = nil,
         additionalParams: [String: Any] = [:]
     ) {
         var params = additionalParams
@@ -147,7 +147,7 @@ final class CheckoutControllerAnalyticsHelper {
 
     func logCanceled(
         _ startedAction: CheckoutActionWithStartTime,
-        session: CheckoutController.Session? = nil,
+        session: CheckoutElementsController.Session? = nil,
         additionalParams: [String: Any] = [:]
     ) {
         stpAssert(startedAction.action == .confirm, "Only confirmation has a canceled action event.")
@@ -156,7 +156,7 @@ final class CheckoutControllerAnalyticsHelper {
 
     func logAddressUpdateFinished(
         _ startedAction: CheckoutActionWithStartTime,
-        session: CheckoutController.Session,
+        session: CheckoutElementsController.Session,
         source: InvocationSource,
         didRequestTaxUpdate: Bool,
         error: Error?
@@ -172,14 +172,14 @@ final class CheckoutControllerAnalyticsHelper {
         }
     }
 
-    func logClearPaymentOption(session: CheckoutController.Session) {
+    func logClearPaymentOption(session: CheckoutElementsController.Session) {
         log(event: .checkoutElementsClearPaymentOption, session: session)
     }
 
     /// Logs started and succeeded/failed around the body, preserving any thrown error.
     func track(
         _ action: CheckoutAction,
-        checkout: CheckoutController,
+        checkout: CheckoutElementsController,
         additionalParams: [String: Any] = [:],
         body: () async throws -> Void
     ) async rethrows {
@@ -195,7 +195,7 @@ final class CheckoutControllerAnalyticsHelper {
 
     private func log(
         event: STPAnalyticEvent,
-        session: CheckoutController.Session?,
+        session: CheckoutElementsController.Session?,
         startedAction: CheckoutActionWithStartTime? = nil,
         additionalParams: [String: Any] = [:]
     ) {

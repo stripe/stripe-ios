@@ -221,7 +221,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             setup.paymentMethodID,
             inCheckoutSession: setup.checkoutSessionID,
             clientSecret: setup.clientSecret,
-            expiryDetails: CheckoutController.PaymentMethodExpiryDetails(expMonth: 6, expYear: 2029)
+            expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails(expMonth: 6, expYear: 2029)
         )
 
         // Then CheckoutClient returns the updated saved card, decoded from the session response
@@ -247,11 +247,11 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             setup.paymentMethodID,
             inCheckoutSession: setup.checkoutSessionID,
             clientSecret: setup.clientSecret,
-            billingDetails: CheckoutController.PaymentMethodBillingDetails(
+            billingDetails: CheckoutElementsController.PaymentMethodBillingDetails(
                 name: "Jane Doe",
                 email: "jane@example.com",
                 phone: "+15551234567",
-                address: CheckoutController.PaymentMethodBillingAddress(
+                address: CheckoutElementsController.PaymentMethodBillingAddress(
                     line1: "123 Main St",
                     city: "San Francisco",
                     state: "CA",

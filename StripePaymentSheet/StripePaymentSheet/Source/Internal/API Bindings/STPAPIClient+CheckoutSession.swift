@@ -51,7 +51,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The Checkout Elements component confirming. Used to tag
     /// `payment_method_data[payment_user_agent]` for payment/attribution purposes. Required on
     /// every factory so all Checkout confirmation paths identify their confirming element.
-    let confirmationSource: CheckoutController.ConfirmingElement
+    let confirmationSource: CheckoutElementsController.ConfirmingElement
 
     /// The expected amount for validation. `nil` for setup-style Sessions.
     let expectedAmount: Int?
@@ -90,7 +90,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     static func createWithoutPaymentMethod(
         sessionId: String,
         clientSecret: String,
-        confirmationSource: CheckoutController.ConfirmingElement,
+        confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
         returnURL: String? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
@@ -118,7 +118,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         sessionId: String,
         clientSecret: String,
         paymentMethodId: String,
-        confirmationSource: CheckoutController.ConfirmingElement,
+        confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
         expectedPaymentMethodType: String,
         savePaymentMethod: Bool? = nil,
@@ -151,7 +151,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         sessionId: String,
         clientSecret: String,
         paymentMethodData: STPPaymentMethodParams,
-        confirmationSource: CheckoutController.ConfirmingElement,
+        confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
         savePaymentMethod: Bool? = nil,
         returnURL: String? = nil,
@@ -274,8 +274,8 @@ extension STPAPIClient {
         _ paymentMethodId: String,
         inCheckoutSession checkoutSessionId: String,
         clientSecret: String,
-        billingDetails: CheckoutController.PaymentMethodBillingDetails? = nil,
-        expiryDetails: CheckoutController.PaymentMethodExpiryDetails? = nil
+        billingDetails: CheckoutElementsController.PaymentMethodBillingDetails? = nil,
+        expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails? = nil
     ) async throws -> CheckoutClientAPIResponse {
         var params = Self.updatePaymentMethodParameters(
             paymentMethodId: paymentMethodId,
@@ -291,8 +291,8 @@ extension STPAPIClient {
 
     static func updatePaymentMethodParameters(
         paymentMethodId: String,
-        billingDetails: CheckoutController.PaymentMethodBillingDetails?,
-        expiryDetails: CheckoutController.PaymentMethodExpiryDetails?
+        billingDetails: CheckoutElementsController.PaymentMethodBillingDetails?,
+        expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails?
     ) -> [String: Any] {
         var params: [String: Any] = [
             "payment_method_to_update[payment_method_id]": paymentMethodId,
@@ -341,7 +341,7 @@ extension STPAPIClient {
             // rather than appending to it, so it's never contaminated by whatever classes have
             // registered into the global STPAnalyticsClient.sharedClient.productUsage set (e.g.
             // PaymentSheet.FlowController/EmbeddedPaymentElement, which PaymentElement wraps
-            // internally) — see CheckoutController.ConfirmingElement.
+            // internally) — see CheckoutElementsController.ConfirmingElement.
             data["payment_user_agent"] = requestParameters.confirmationSource.paymentUserAgent
             STPTelemetryClient.shared.addTelemetryFields(toParams: &data)
             parameters["payment_method_data"] = data

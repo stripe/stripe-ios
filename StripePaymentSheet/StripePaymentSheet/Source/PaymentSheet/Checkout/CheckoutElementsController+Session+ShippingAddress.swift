@@ -1,5 +1,5 @@
 //
-//  Checkout+Session+ShippingAddress.swift
+//  CheckoutElementsController+Session+ShippingAddress.swift
 //  StripePaymentSheet
 //
 import Foundation
@@ -7,27 +7,27 @@ import Foundation
 
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
-extension CheckoutController.Session {
+extension CheckoutElementsController.Session {
     /// Shipping address of the customer.
     public struct ShippingAddress: Equatable, Hashable, Sendable {
         /// The customer's full name.
         public let name: String?
 
         /// The customer's shipping address.
-        public let address: CheckoutController.Address
+        public let address: CheckoutElementsController.Address
 
         /// Creates a shipping address.
         /// - Parameters:
         ///   - name: The customer's full name.
         ///   - address: The customer's shipping address.
-        init(name: String? = nil, address: CheckoutController.Address) {
+        init(name: String? = nil, address: CheckoutElementsController.Address) {
             self.name = name
             self.address = address
         }
     }
 }
 
-extension CheckoutController.Session.ShippingAddress {
+extension CheckoutElementsController.Session.ShippingAddress {
     var shippingDetailsParams: STPPaymentIntentShippingDetailsParams? {
         guard let name,
               let line1 = address.line1 else {

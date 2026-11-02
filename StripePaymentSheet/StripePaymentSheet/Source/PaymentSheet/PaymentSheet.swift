@@ -48,7 +48,7 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkout(CheckoutController)
+        case checkout(CheckoutElementsController)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {

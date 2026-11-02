@@ -132,7 +132,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
     func testExpressCheckoutButtonsStayDisabledUntilQueueDrains() async throws {
         // Given an element with an available Link button
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: makeLinkSession(customerEmail: "jenny@example.com"),
             paymentElementConfiguration: nil
         ))
@@ -280,7 +280,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
         // When the public session applies the automatic tax restriction before calculating ECE availability
         XCTAssertFalse(apiResponse.elementsSession.value.disableLinkForAutomaticTaxBilling)
-        let session = CheckoutController.Session(apiResponse: apiResponse, clientSecret: checkoutConfiguration.clientSecret, localState: .empty, configuration: checkoutConfiguration)
+        let session = CheckoutElementsController.Session(apiResponse: apiResponse, clientSecret: checkoutConfiguration.clientSecret, localState: .empty, configuration: checkoutConfiguration)
 
         let reasons = ExpressCheckoutElementUtilities.linkDisabledReasonsWithoutCheckoutRequirements(
             for: session.elementsSession,
@@ -444,7 +444,7 @@ private final class FakeExpressCheckoutElementDelegate: ExpressCheckoutElementDe
     func expressCheckoutElementShouldConfirm(
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
-    ) async -> CheckoutController.ConfirmResult {
+    ) async -> CheckoutElementsController.ConfirmResult {
         return .canceled
     }
 }

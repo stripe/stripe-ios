@@ -1,5 +1,5 @@
 //
-//  Checkout+Session+AddressMerging.swift
+//  CheckoutElementsController+Session+AddressMerging.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/2/26.
@@ -9,7 +9,7 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
-extension CheckoutController.Session {
+extension CheckoutElementsController.Session {
 
     /// Populates empty fields in the configuration with checkout-collected addresses.
     func applyAddressOverrides<C: PaymentElementConfiguration>(to configuration: inout C) {

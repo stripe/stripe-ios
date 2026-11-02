@@ -1,5 +1,5 @@
 //
-//  Checkout+Status.swift
+//  CheckoutElementsController+Status.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/7/2026.
@@ -9,7 +9,7 @@ import Foundation
 
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
-extension CheckoutController.Session {
+extension CheckoutElementsController.Session {
     /// The status of a checkout session.
     public enum Status: Sendable, Hashable {
         /// The checkout session is still in progress. Payment processing has not started.

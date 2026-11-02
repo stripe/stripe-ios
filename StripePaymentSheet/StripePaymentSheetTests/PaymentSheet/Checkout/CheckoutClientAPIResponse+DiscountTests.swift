@@ -7,7 +7,7 @@
 import XCTest
 
 private extension CheckoutClientAPIResponse {
-    static func makeDiscounts(from overrides: [String: Any]) -> [CheckoutController.Session.DiscountAmount] {
+    static func makeDiscounts(from overrides: [String: Any]) -> [CheckoutElementsController.Session.DiscountAmount] {
         return CheckoutTestHelpers.makeSession(overrides).makePublicSession().discountAmounts
     }
 }

@@ -7,7 +7,7 @@ import UIKit
 /// Integration-side inputs for Checkout client attribution metadata (CAM) and `payment_user_agent`.
 struct CheckoutAttributionContext {
     /// The element whose collection or confirmation flow is being attributed; determines the CAM subtype and `payment_user_agent`.
-    let confirmingElement: CheckoutController.ConfirmingElement
+    let confirmingElement: CheckoutElementsController.ConfirmingElement
     /// All elements enabled in the Checkout configuration, including the confirming element,
     /// regardless of whether they were displayed or used. Populates CAM's `merchant_integration_additional_elements`.
     let configuredElements: [STPClientAttributionMetadata.AdditionalElement]
@@ -26,7 +26,7 @@ protocol CheckoutConfirmationChallenge {
 
 extension ConfirmationChallenge: CheckoutConfirmationChallenge {}
 
-extension CheckoutController {
+extension CheckoutElementsController {
     /// The supported confirmation flows for a Checkout Session.
     enum CheckoutConfirmationFlow {
         case applePay(ApplePayConfirmationParameters)
@@ -48,7 +48,7 @@ extension CheckoutController {
         let shippingAddressRequired: Bool
         let defaultBillingDetails: Configuration.Defaults.BillingDetails?
         let presentationWindow: UIWindow?
-        // TODO: This should probably live with the other methods that delegate to CheckoutController
+        // TODO: This should probably live with the other methods that delegate to CheckoutElementsController
         // to update shipping, billing, etc., unless those methods end up living here too.
         let confirmationHandler: ConfirmationHandler
         let attribution: CheckoutAttributionContext
@@ -270,7 +270,7 @@ extension CheckoutController {
     // MARK: - Confirmation
 
     func confirm(
-        source: CheckoutControllerAnalyticsHelper.InvocationSource,
+        source: CheckoutElementsControllerAnalyticsHelper.InvocationSource,
         makeFlow: () throws -> CheckoutConfirmationFlow
     ) async -> ConfirmResult {
         let flow = Result(catching: makeFlow)
@@ -284,13 +284,13 @@ extension CheckoutController {
 
             // Validations
             guard sessionIsOpen else {
-                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm a Checkout Session that is no longer open.")
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutElementsController cannot confirm a Checkout Session that is no longer open.")
             }
             guard !confirmationInProgress else {
-                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot start a second confirmation while one is in progress.")
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutElementsController cannot start a second confirmation while one is in progress.")
             }
             guard pendingOperations.isEmpty else {
-                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutController cannot confirm while the Checkout Session is updating. Wait until isUpdating is false.")
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "CheckoutElementsController cannot confirm while the Checkout Session is updating. Wait until isUpdating is false.")
             }
 
             confirmationInProgress = true

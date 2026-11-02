@@ -127,14 +127,14 @@ extension PaymentElement {
         }()
 
         // TODO: Have both configuration conversion methods accept Checkout configuration and session,
-        // apply address overrides here, and remove the CheckoutControllerLoader wrappers.
+        // apply address overrides here, and remove the CheckoutElementsControllerLoader wrappers.
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
             returnURL: String,
-            defaults: CheckoutController.Configuration.Defaults,
+            defaults: CheckoutElementsController.Configuration.Defaults,
             merchantDisplayName: String,
             merchantCountryCode: String,
-            userInterfaceStyle: CheckoutController.UserInterfaceStyle
+            userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.allowsDelayedPaymentMethods = true
@@ -157,10 +157,10 @@ extension PaymentElement {
         func makeFlowControllerConfiguration(
             apiClient: STPAPIClient,
             returnURL: String,
-            defaults: CheckoutController.Configuration.Defaults,
+            defaults: CheckoutElementsController.Configuration.Defaults,
             merchantDisplayName: String,
             merchantCountryCode: String,
-            userInterfaceStyle: CheckoutController.UserInterfaceStyle
+            userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.allowsDelayedPaymentMethods = true
@@ -287,7 +287,7 @@ private extension PaymentElement.Configuration {
 }
 
 extension PaymentSheet.BillingDetails {
-    mutating func set(_ billingDetails: CheckoutController.Configuration.Defaults.BillingDetails) {
+    mutating func set(_ billingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails) {
         name = billingDetails.name
         if let billingAddress = billingDetails.address {
             address.set(billingAddress)
@@ -296,7 +296,7 @@ extension PaymentSheet.BillingDetails {
 }
 
 private extension PaymentSheet.Address {
-    mutating func set(_ address: CheckoutController.Address) {
+    mutating func set(_ address: CheckoutElementsController.Address) {
         city = address.city
         country = address.country
         line1 = address.line1

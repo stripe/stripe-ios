@@ -1,5 +1,5 @@
 //
-//  Checkout+Tax.swift
+//  CheckoutElementsController+Tax.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/7/2026.
@@ -9,7 +9,7 @@ import Foundation
 
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
-extension CheckoutController.Session {
+extension CheckoutElementsController.Session {
     /// The tax computation status for a checkout session.
     public struct Tax: Sendable, Hashable {
         /// The current tax computation status.

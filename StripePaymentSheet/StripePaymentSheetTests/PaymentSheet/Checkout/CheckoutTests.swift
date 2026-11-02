@@ -17,9 +17,9 @@ import XCTest
 final class CheckoutTests: STPNetworkStubbingTestCase {
     func testLoadCheckoutSession() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
-        var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
 
         let session = checkout.session
         XCTAssertEqual(session.id, checkoutSessionResponse.id)
@@ -38,14 +38,14 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             customerID: customerID
         )
-        var configuration = CheckoutController.Configuration(
+        var configuration = CheckoutElementsController.Configuration(
             clientSecret: checkoutSessionResponse.clientSecret,
             returnURL: "stripe-ios-test://checkout-return"
         )
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
 
-        // When initializing CheckoutController
-        let checkout = try await CheckoutController(configuration: configuration)
+        // When initializing CheckoutElementsController
+        let checkout = try await CheckoutElementsController(configuration: configuration)
 
         // Then Customer.email becomes the server-backed effective Session email
         XCTAssertEqual(checkout.session.serverEmail, "customer@example.com")
@@ -58,9 +58,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             allowPromotionCodes: true
         )
-        var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
 
         let recorder = CheckoutEmissionRecorder(checkout)
 
@@ -78,9 +78,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             allowPromotionCodes: true
         )
-        var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
 
         XCTAssertTrue(checkout.session.discountAmounts.isEmpty)
         XCTAssertNil(promotionCode(in: checkout.session))
@@ -99,9 +99,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             allowPromotionCodes: true
         )
-        var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
 
         // Apply first
         try await checkout.applyPromotionCode("SAVE25")
@@ -122,9 +122,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             allowPromotionCodes: true
         )
-        var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
 
         do {
             try await checkout.applyPromotionCode("BOGUS_CODE_123")
@@ -144,9 +144,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             collectBillingAddress: true,
             automaticTax: true
         )
-        var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
 
         // Pre-tax price, CA sales has not yet been applied
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 5050)
@@ -183,9 +183,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             merchantCountry: "us_tax"
         )
-        var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
 
         let session = checkout.session
         XCTAssertEqual(session.id, checkoutSessionResponse.id)
@@ -221,9 +221,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             automaticTax: true,
             allowedShippingCountries: ["US"]
         )
-        var configuration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
 
         XCTAssertNil(checkout.session.shippingAddress)
         XCTAssertEqual(checkout.session.totals.subtotal.minorUnitsAmount, 2000)
@@ -274,7 +274,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2000)
     }
 
-    private func promotionCode(in session: CheckoutController.Session?) -> String? {
+    private func promotionCode(in session: CheckoutElementsController.Session?) -> String? {
         session?.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
     }
 }
