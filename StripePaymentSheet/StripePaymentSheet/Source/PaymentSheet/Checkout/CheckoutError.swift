@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// An error returned by ``Checkout``.
 enum CheckoutError: Error, LocalizedError, Sendable {
@@ -18,6 +19,9 @@ enum CheckoutError: Error, LocalizedError, Sendable {
 
     /// A pending Checkout operation did not complete before the timeout elapsed.
     case timedOut
+
+    /// Polling reported failed confirmation, and retrieving the Session for error details failed.
+    case pollFailedAndSessionRetrievalFailed
 
     /// The provided shipping country is not in the session's list of allowed shipping countries.
     case invalidShippingCountry(countryCode: String)
@@ -38,6 +42,8 @@ enum CheckoutError: Error, LocalizedError, Sendable {
             return "A payment sheet or form is currently presented. Dismiss it before making changes."
         case .timedOut:
             return "Timed out waiting for a Checkout operation to complete."
+        case .pollFailedAndSessionRetrievalFailed:
+            return NSError.stp_unexpectedErrorMessage()
         case .invalidShippingCountry(let countryCode):
             return "Country code '\(countryCode)' is not in allowedShippingCountries"
         case .apiError(let message, _):
