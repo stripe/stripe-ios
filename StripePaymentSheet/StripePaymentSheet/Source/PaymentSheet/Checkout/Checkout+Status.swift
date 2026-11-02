@@ -20,14 +20,14 @@ extension CheckoutController.Session {
         case complete(PaymentStatus)
 
         /// The payment status of a completed checkout session.
-        public enum PaymentStatus: Sendable, Hashable {
+        public enum PaymentStatus: String, Decodable, Sendable, Hashable {
             /// The payment funds are available in your account.
             case paid
             /// The payment funds are not yet available in your account.
             case unpaid
             /// The payment is delayed to a future date, or the session is in setup mode
             /// and doesn't require a payment at this time.
-            case noPaymentRequired
+            case noPaymentRequired = "no_payment_required"
         }
     }
 }
