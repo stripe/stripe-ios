@@ -568,6 +568,11 @@ extension EmbeddedPaymentElement {
     public typealias BillingDetails = PaymentSheet.BillingDetails
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
+    @available(
+        *,
+        deprecated,
+        message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+    )
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
     public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
     @_spi(CardFundingFilteringPrivatePreview) public typealias CardFundingType = PaymentSheet.CardFundingType

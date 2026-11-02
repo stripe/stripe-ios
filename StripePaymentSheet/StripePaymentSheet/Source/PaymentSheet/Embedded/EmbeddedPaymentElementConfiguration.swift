@@ -114,6 +114,11 @@ extension EmbeddedPaymentElement {
         public var removeSavedPaymentMethodMessage: String?
 
         /// Configuration for external payment methods.
+        @available(
+            *,
+            deprecated,
+            message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+        )
         public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
 
         /// Configuration for custom payment methods.
