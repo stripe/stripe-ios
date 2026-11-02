@@ -750,7 +750,15 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: pod lib lint --include-podspecs='*.podspec' --external-podspecs='ExternalPodspecs/*.podspec'
+        - content: |-
+            #!/usr/bin/env bash
+            set -euo pipefail
+            shopt -s extglob
+            # StripeCore is the only podspec without dependencies, so CocoaPods disables remote
+            # spec sources when linting it. Lint it alone so the included podspecs don't pull in
+            # external dependencies (such as StripeMediaPipe) that it can't resolve.
+            pod lib lint StripeCore.podspec
+            pod lib lint --include-podspecs='*.podspec' --external-podspecs='ExternalPodspecs/*.podspec' !(StripeCore).podspec
         title: pod lib lint
     before_run:
     - install-runtime-16
