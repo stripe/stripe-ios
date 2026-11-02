@@ -98,6 +98,7 @@ struct WalletOwnershipVerificationSheet: View {
                     FormField("Signature") {
                         TextField("Paste signature", text: $signature, axis: .vertical)
                             .lineLimit(1...3)
+                            .accessibilityIdentifier("wallet_signature")
                             .textFieldStyle(.roundedBorder)
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()

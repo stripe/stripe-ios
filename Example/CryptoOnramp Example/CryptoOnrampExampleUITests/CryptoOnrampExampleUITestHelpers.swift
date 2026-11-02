@@ -156,7 +156,7 @@ extension CryptoOnrampExampleUITestCase {
         )
         addWalletButton.tap()
 
-        enterText(address, inTextField: "Enter wallet address", file: file, line: line)
+        enterText(address, in: app.textViews["Enter wallet address"].firstMatch, file: file, line: line)
         let submitButton = app.buttons["Submit"].firstMatch
         XCTAssertTrue(submitButton.isEnabled, "Wallet Submit button should be enabled", file: file, line: line)
         submitButton.tap()
