@@ -82,6 +82,7 @@ extension PaymentMethodMessagingElement {
     /// Displayable data of an initialized Payment Method Messaging Element.
     /// For use by PaymentMethodMessagingElement.View.
     public struct ViewData {
+        let id = UUID()
         let mode: Mode
         let infoUrl: URL
         let learnMoreText: String
