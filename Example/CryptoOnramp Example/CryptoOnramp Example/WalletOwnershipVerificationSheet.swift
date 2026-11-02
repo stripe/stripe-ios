@@ -67,7 +67,7 @@ struct WalletOwnershipVerificationSheet: View {
     // MARK: - View
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     Text("Sign the challenge message with your wallet, then paste the signature below.")
@@ -79,7 +79,7 @@ struct WalletOwnershipVerificationSheet: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .textSelection(.enabled)
-                            .frame(maxWidth: .infinity, minHeight: 160, alignment: .topLeading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(10)
                             .background(Color(.secondarySystemBackground))
                             .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -96,7 +96,8 @@ struct WalletOwnershipVerificationSheet: View {
                     }
 
                     FormField("Signature") {
-                        TextField("Paste signature", text: $signature)
+                        TextField("Paste signature", text: $signature, axis: .vertical)
+                            .lineLimit(1...3)
                             .textFieldStyle(.roundedBorder)
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
@@ -108,20 +109,25 @@ struct WalletOwnershipVerificationSheet: View {
                         }
                     }
                 }
+                .horizontallyCenteredContent()
                 .padding()
             }
             .navigationTitle("Verify Wallet")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark")
                     }
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Submit") {
+                    Button {
                         submitSignature()
+                    } label: {
+                        Label("Submit", systemImage: "checkmark")
                     }
                     .disabled(isSubmitDisabled)
                     .opacity(isSubmitDisabled ? 0.5 : 1)
