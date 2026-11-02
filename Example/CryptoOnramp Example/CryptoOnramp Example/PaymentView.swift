@@ -465,13 +465,13 @@ struct PaymentView: View {
         #if compiler(>=6.4)
         if #available(iOS 27.1, *), !geometry.reservedRegions(kind: .division).isEmpty {
             ArrangementView {
-                FoldAvoidingScrollView {
+                FoldAvoidingScrollView { _ in
                     makeSplitPaymentDetails(metrics: .standard)
                         .horizontallyCenteredContent()
                         .padding(.horizontal)
                 }
             } secondary: {
-                FoldAvoidingScrollView(alignment: .bottom) {
+                FoldAvoidingScrollView(alignment: .bottom) { _ in
                     makeAmountEntryControls(metrics: .compact)
                         .horizontallyCenteredContent()
                         .padding(.horizontal)
@@ -500,7 +500,7 @@ struct PaymentView: View {
             if geometry.size.width > geometry.size.height {
                 sideBySidePaymentContent
             } else {
-                FoldAvoidingScrollView {
+                FoldAvoidingScrollView { _ in
                     makeSingleColumnPaymentContent(metrics: .compact)
                 }
             }
@@ -530,7 +530,7 @@ struct PaymentView: View {
 
     private var sideBySidePaymentContent: some View {
         HStack(spacing: 16) {
-            FoldAvoidingScrollView {
+            FoldAvoidingScrollView { _ in
                 makeSplitPaymentDetails(metrics: .compact)
                     .horizontallyCenteredContent()
                     .padding()
@@ -539,7 +539,7 @@ struct PaymentView: View {
             ViewThatFits(in: .vertical) {
                 makeAmountEntryControls(metrics: .standard)
                 makeAmountEntryControls(metrics: .compact)
-                FoldAvoidingScrollView {
+                FoldAvoidingScrollView { _ in
                     makeAmountEntryControls(metrics: .compact)
                 }
             }
