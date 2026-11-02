@@ -753,12 +753,25 @@ workflows:
         - content: |-
             #!/usr/bin/env bash
             set -euo pipefail
-            shopt -s extglob
             # StripeCore is the only podspec without dependencies, so CocoaPods disables remote
             # spec sources when linting it. Lint it alone so the included podspecs don't pull in
             # external dependencies (such as StripeMediaPipe) that it can't resolve.
             pod lib lint StripeCore.podspec
-            pod lib lint --include-podspecs='*.podspec' --external-podspecs='ExternalPodspecs/*.podspec' !(StripeCore).podspec
+            pod lib lint --include-podspecs='*.podspec' --external-podspecs='ExternalPodspecs/*.podspec' \
+              Stripe.podspec \
+              StripeApplePay.podspec \
+              StripeCameraCore.podspec \
+              StripeCardScan.podspec \
+              StripeConnect.podspec \
+              StripeCryptoOnramp.podspec \
+              StripeFinancialConnections.podspec \
+              StripeFinancialConnectionsLite.podspec \
+              StripeIdentity.podspec \
+              StripeIssuing.podspec \
+              StripePayments.podspec \
+              StripePaymentSheet.podspec \
+              StripePaymentsUI.podspec \
+              StripeUICore.podspec
         title: pod lib lint
     before_run:
     - install-runtime-16
