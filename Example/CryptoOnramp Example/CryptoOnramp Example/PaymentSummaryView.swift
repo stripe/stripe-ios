@@ -223,8 +223,11 @@ struct PaymentSummaryView: View {
                     switch checkoutResult {
                     case .completed:
                         let amount = onrampSessionResponse.amountToReceiveText
-                        let network = onrampSessionResponse.transactionDetails.destinationNetwork.localizedCapitalized
-                        onCheckoutSuccess("You’ve added \(amount) to your \(network) wallet.")
+                        if let network = onrampSessionResponse.transactionDetails.destinationNetwork?.localizedCapitalized {
+                            onCheckoutSuccess("You’ve added \(amount) to your \(network) wallet.")
+                        } else {
+                            onCheckoutSuccess("You’ve added \(amount) to your wallet.")
+                        }
                     case .canceled:
                         break
                     @unknown default:
@@ -291,28 +294,42 @@ private extension CreateOnrampSessionResponse {
     }
 
     var amountToReceiveText: String {
-        let amount = Double(transactionDetails.destinationAmount) ?? 0
+        guard let destinationAmount = transactionDetails.destinationAmount,
+              let destinationCurrency = transactionDetails.destinationCurrency,
+              let amount = Double(destinationAmount) else {
+            return "Unavailable"
+        }
         let formattedAmount = Self.currencyFormatterWithoutSymbol.string(from: NSNumber(value: amount)) ?? "$0"
-        return "\(formattedAmount) \(transactionDetails.destinationCurrency)"
+        return "\(formattedAmount) \(destinationCurrency)"
     }
 
     var totalFeesText: String {
-        let networkFee = Double(transactionDetails.fees.networkFeeAmount) ?? 0
-        let transactionFee = Double(transactionDetails.fees.transactionFeeAmount) ?? 0
+        guard let networkFeeAmount = transactionDetails.fees?.networkFeeAmount,
+              let transactionFeeAmount = transactionDetails.fees?.transactionFeeAmount,
+              let networkFee = Double(networkFeeAmount),
+              let transactionFee = Double(transactionFeeAmount) else {
+            return "Unavailable"
+        }
         let total = networkFee + transactionFee
         return formattedSourceAmount(total)
     }
 
     var depositToText: String {
-        let network = transactionDetails.destinationNetwork.localizedCapitalized
-        let address = transactionDetails.walletAddress
+        guard let destinationNetwork = transactionDetails.destinationNetwork,
+              let address = transactionDetails.walletAddress else {
+            return "Unavailable"
+        }
+        let network = destinationNetwork.localizedCapitalized
         let prefix = String(address.prefix(2))
         let suffix = String(address.suffix(4))
         return "\(network) • \(prefix)••••\(suffix)"
     }
 
     private func formattedSourceAmount(_ amount: Double) -> String {
-        let sourceCurrencyCode = transactionDetails.sourceCurrency.uppercased()
+        guard let sourceCurrency = transactionDetails.sourceCurrency else {
+            return "Unavailable"
+        }
+        let sourceCurrencyCode = sourceCurrency.uppercased()
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = Locale.current
@@ -360,8 +377,7 @@ private extension CreateOnrampSessionResponse {
                     destinationNetworks: [],
                     transactionId: nil,
                     transactionLimit: 74517,
-                    walletAddress: "0123451234512345123545",
-                    walletAddresses: nil
+                    walletAddress: "0123451234512345123545"
                 ),
                 uiMode: "headless"
             ),
