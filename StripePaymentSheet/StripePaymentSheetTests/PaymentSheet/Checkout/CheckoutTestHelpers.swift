@@ -568,7 +568,7 @@ extension CheckoutElementsController.ApplePayConfirmationParameters {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        applePayMerchantId: String = "merchant.com.test",
         shippingAddressRequired: Bool = false,
         defaultBillingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
@@ -578,7 +578,7 @@ extension CheckoutElementsController.ApplePayConfirmationParameters {
         attribution: CheckoutAttributionContext = .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
     ) -> CheckoutElementsController.ApplePayConfirmationParameters {
         CheckoutElementsController.ApplePayConfirmationParameters(
-            applePayConfiguration: applePayConfiguration,
+            applePayMerchantId: applePayMerchantId,
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: merchantDisplayName,

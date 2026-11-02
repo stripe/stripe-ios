@@ -41,7 +41,7 @@ extension CheckoutElementsController {
             CheckoutSessionConfirmationRequestParameters
         ) async -> InternalConfirmResult
 
-        let applePayConfiguration: any CheckoutApplePayConfiguration
+        let applePayMerchantId: String
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
@@ -200,11 +200,12 @@ extension CheckoutElementsController {
         switch paymentOption {
         case .applePay:
             guard let paymentElementConfiguration = self.configuration.paymentElement,
-                  let applePayConfiguration = paymentElementConfiguration.applePayConfiguration else {
+                  paymentElementConfiguration.applePayConfiguration != nil,
+                  let applePayMerchantId = self.configuration.applePayMerchantId else {
                 return nil
             }
             return .applePay(.init(
-                applePayConfiguration: applePayConfiguration,
+                applePayMerchantId: applePayMerchantId,
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,

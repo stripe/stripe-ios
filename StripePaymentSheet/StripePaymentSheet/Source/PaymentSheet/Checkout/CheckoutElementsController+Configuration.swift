@@ -33,6 +33,10 @@ extension CheckoutElementsController {
         /// Default customer details used to pre-populate Checkout integrations.
         public var defaults: Defaults = Defaults()
 
+        /// The Apple Pay merchant identifier used by Payment Element.
+        /// To obtain one, see https://stripe.com/docs/apple-pay#native
+        public var applePayMerchantId: String?
+
         /// Configuration for Payment Element.
         ///
         /// Set this property to use Payment Element with this CheckoutElementsController.
@@ -135,6 +139,8 @@ extension CheckoutElementsController {
 @_spi(ReactNativeSDK)
 extension CheckoutElementsController.Configuration {
     /// Default customer details used to pre-populate Checkout integrations.
+    /// Providing default data does not guarantee it can be displayed or accepted. If a
+    /// shipping address is required, check that one is present before confirming.
     public struct Defaults {
         /// Default billing details.
         public var billingDetails: BillingDetails?
