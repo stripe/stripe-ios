@@ -128,6 +128,8 @@ extension PayWithLinkViewController {
             }
         }
 
+        private var containerViewBottomConstraint: NSLayoutConstraint!
+
         override func viewDidLoad() {
             super.viewDidLoad()
 
@@ -150,15 +152,25 @@ extension PayWithLinkViewController {
             containerView.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(containerView)
 
+            containerViewBottomConstraint = containerView.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor,
+                constant: -(bottomInset + sheetBottomSafeAreaInset)
+            )
+
             NSLayoutConstraint.activate([
                 containerView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
                 containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
                 containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-                containerView.bottomAnchor.constraint(
-                    equalTo: contentView.safeAreaLayoutGuide.bottomAnchor,
-                    constant: -bottomInset
-                ),
+                containerViewBottomConstraint,
             ])
+        }
+
+        override func viewWillLayoutSubviews() {
+            super.viewWillLayoutSubviews()
+            let bottomPadding = bottomInset + sheetBottomSafeAreaInset
+            if containerViewBottomConstraint.constant != -bottomPadding {
+                containerViewBottomConstraint.constant = -bottomPadding
+            }
         }
 
         @objc
