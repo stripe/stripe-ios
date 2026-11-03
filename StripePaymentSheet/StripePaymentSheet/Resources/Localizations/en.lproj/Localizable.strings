@@ -191,9 +191,6 @@
 /* Card details entry form header title */
 "Card information" = "Card information";
 
-/* Label for card number entry text field */
-"Card number" = "Card number";
-
 /* Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
 "Card number. Supported cards include %@" = "Card number. Supported cards include %@";
 

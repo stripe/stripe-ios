@@ -124,8 +124,6 @@
 
 "Card information" = "Informations concernant la carte bancaire";
 
-"Card number" = "Numéro de carte bancaire";
-
 "Card number. Supported cards include %@" = "Numéro de carte bancaire. Les cartes bancaires prises en charge incluent [ %s]";
 
 "Change" = "Modifier";

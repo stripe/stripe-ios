@@ -124,8 +124,6 @@
 
 "Card information" = "カード情報";
 
-"Card number" = "カード番号";
-
 "Card number. Supported cards include %@" = "カード番号。対応カードは %@ です";
 
 "Change" = "変更する";

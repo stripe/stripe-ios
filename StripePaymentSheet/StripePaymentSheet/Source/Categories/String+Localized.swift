@@ -14,10 +14,6 @@ import Foundation
 extension String.Localized {
     // MARK: - Card and saved payment method details
 
-    static var card_number: String {
-        STPLocalizedString("Card number", "Label for card number entry text field")
-    }
-
     static var card_brand_ending_in_last_4: String {
         STPLocalizedString(
             "%1$@ ending in %2$@",

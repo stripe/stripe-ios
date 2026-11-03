@@ -124,8 +124,6 @@
 
 "Card information" = "銀行卡資訊";
 
-"Card number" = "卡號";
-
 "Card number. Supported cards include %@" = "銀行卡號碼。支援的銀行卡包括 %@";
 
 "Change" = "更改";

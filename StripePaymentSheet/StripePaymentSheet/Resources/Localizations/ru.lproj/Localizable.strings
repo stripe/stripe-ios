@@ -124,8 +124,6 @@
 
 "Card information" = "Данные платежной карты";
 
-"Card number" = "Номер карты";
-
 "Card number. Supported cards include %@" = "Номер карты. В число поддерживаемых карт входят %@";
 
 "Change" = "Изменить";

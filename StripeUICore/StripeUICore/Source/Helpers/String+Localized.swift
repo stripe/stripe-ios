@@ -381,6 +381,10 @@ import Foundation
 
     // MARK: - Card details
 
+    static var card_number: String {
+        STPLocalizedString("Card number", "Label for card number entry text field")
+    }
+
     static var bank_account: String {
         STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
     }

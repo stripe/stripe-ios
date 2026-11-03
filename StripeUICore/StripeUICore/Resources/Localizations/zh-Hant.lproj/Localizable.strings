@@ -32,6 +32,8 @@
 
 "Card brand" = "金融卡品牌";
 
+"Card number" = "卡號";
+
 "City" = "城市";
 
 "Code field" = "驗證碼欄位";
