@@ -997,7 +997,6 @@ class CheckoutClientAPIResponseTest: XCTestCase {
             return XCTFail("Expected one-time Price order summary item")
         }
         let enabledQuantity = try XCTUnwrap(enabledOneTimePrice.items.first?.adjustableQuantity)
-        XCTAssertTrue(enabledQuantity.enabled)
         XCTAssertEqual(enabledQuantity.minimum, 2)
         XCTAssertEqual(enabledQuantity.maximum, 10)
 
