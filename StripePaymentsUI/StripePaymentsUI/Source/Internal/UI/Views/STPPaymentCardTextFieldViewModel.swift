@@ -243,18 +243,4 @@ class STPPaymentCardTextFieldViewModel: NSObject {
 
         }
     }
-
-    public class func keyPathsForValuesAffectingIsValid() -> Set<String> {
-        return Set<String>([
-            "cardNumber",
-            "expirationMonth",
-            "expirationYear",
-            "cvc",
-            "brand",
-            "postalCode",
-            "postalCodeRequested",
-            "postalCodeCountryCode",
-            "hasCompleteMetadataForCardNumber",
-        ])
-    }
 }

@@ -2273,14 +2273,6 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         currentFirstResponderField()?.deleteBackward()
     }
 
-    /// :nodoc:
-    open class func keyPathsForValuesAffectingIsValid() -> Set<String> {
-        return Set<String>([
-            "viewModel.isValid",
-            "viewModel.hasCompleteMetadataForCardNumber",
-        ])
-    }
-
     /// The list of preferred networks that should be used to process
     /// payments made with a co-branded card if your user hasn't selected a
     /// network themselves.
