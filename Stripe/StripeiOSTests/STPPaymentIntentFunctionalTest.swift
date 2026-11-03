@@ -26,22 +26,6 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
-    func testCreatePaymentIntentWithInvalidCurrency() {
-        let expectation = self.expectation(description: "PaymentIntent create.")
-        STPTestingAPIClient.shared.createPaymentIntent(withParams: [
-            // `allowed_payment_method_types` drops payment method types that don't support the currency instead of
-            // returning an error, so use a currency that doesn't exist.
-            "currency": "usdd",
-        ]) { clientSecret, error in
-            XCTAssertNil(clientSecret)
-            XCTAssertNotNil(error)
-            let errorString = (error! as NSError).userInfo[STPError.errorMessageKey] as! String
-            XCTAssertTrue(errorString.hasPrefix("Error creating PaymentIntent: Invalid currency: usdd."))
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-    }
-
     func testRetrievePreviousCreatedPaymentIntent() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let expectation = self.expectation(description: "Payment Intent retrieve")

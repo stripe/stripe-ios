@@ -847,8 +847,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                         continuation.resume(throwing: error ?? ExpectedError())
                     }
                 }
-                // Server-side confirmation uses card-only intents: without payment method types, the intents use
-                // dynamic payment methods, which require a `return_url` when confirmed on the server.
                 if isPaymentIntent {
                     let params: [String: Any] = isServerSideConfirm ?
                     [
@@ -972,7 +970,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             try await withCheckedThrowingContinuation { continuation in
                 STPTestingAPIClient.shared.createPaymentIntent(withParams: [
                     "amount": 1050,
-                    // Card-only, because confirming dynamic payment method intents on the server requires a `return_url`
                     "allowed_payment_method_types": ["card"],
                     "confirm": true,
                     "payment_method": paymentMethod.stripeId,
@@ -1007,7 +1004,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             try await withCheckedThrowingContinuation { continuation in
                 STPTestingAPIClient.shared.createSetupIntent(withParams: [
                     "usage": "on_session",
-                    // Card-only, because confirming dynamic payment method intents on the server requires a `return_url`
                     "allowed_payment_method_types": ["card"],
                     "payment_method": paymentMethod.stripeId,
                     "confirm": true,

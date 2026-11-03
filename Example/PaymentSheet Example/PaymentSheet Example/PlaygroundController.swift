@@ -419,6 +419,10 @@ import UIKit
             paymentMethodTypes = self.paymentMethodTypes
         }
 
+        // Match the capture method of the PaymentIntents the backend creates. "Manual Capture" makes the backend use
+        // `manual`; otherwise it uses `automatic`, the default for the backend's API version.
+        let captureMethod: PaymentSheet.IntentConfiguration.CaptureMethod = settings.manualCapture == .on ? .manual : .automatic
+
         // Use confirmation token handler for CT integration types
         if settings.confirmationMode == .confirmationToken {
             let confirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { [weak self] confirmationToken in
@@ -434,7 +438,7 @@ import UIKit
             switch settings.mode {
             case .payment:
                 return PaymentSheet.IntentConfiguration(
-                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
+                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, captureMethod: captureMethod, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                     paymentMethodTypes: paymentMethodTypes,
                     paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                     confirmationTokenConfirmHandler: confirmationTokenConfirmHandler,
@@ -442,7 +446,7 @@ import UIKit
                 )
             case .paymentWithSetup:
                 return PaymentSheet.IntentConfiguration(
-                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, captureMethod: .automatic, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
+                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, captureMethod: captureMethod, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                     paymentMethodTypes: paymentMethodTypes,
                     paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                     confirmationTokenConfirmHandler: confirmationTokenConfirmHandler,
@@ -475,7 +479,7 @@ import UIKit
             switch settings.mode {
             case .payment:
                 return PaymentSheet.IntentConfiguration(
-                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
+                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, captureMethod: captureMethod, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                     paymentMethodTypes: paymentMethodTypes,
                     paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                     confirmHandler: confirmHandler,
@@ -483,7 +487,7 @@ import UIKit
                 )
             case .paymentWithSetup:
                 return PaymentSheet.IntentConfiguration(
-                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, captureMethod: .automatic, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
+                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, captureMethod: captureMethod, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                     paymentMethodTypes: paymentMethodTypes,
                     paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                     confirmHandler: confirmHandler,

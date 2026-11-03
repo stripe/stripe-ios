@@ -46,7 +46,6 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil,
-                                    // Use the same capture method as the PaymentIntent your server creates.
                                     captureMethod: .automatic)
         ) { [weak self] paymentMethod, shouldSavePaymentMethod in
             // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret or an error.

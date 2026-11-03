@@ -76,7 +76,6 @@ class BackendViewModel: ObservableObject {
                 amount: amount,
                 currency: "USD",
                 setupFutureUsage: usage,
-                // Use the same capture method as the PaymentIntent your server creates.
                 captureMethod: .automatic
             )
         ) { [weak self] paymentMethod, shouldSavePaymentMethod in
