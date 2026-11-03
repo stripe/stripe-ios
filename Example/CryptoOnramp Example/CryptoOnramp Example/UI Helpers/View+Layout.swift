@@ -41,6 +41,7 @@ extension View {
 #if compiler(>=6.4)
 @available(iOS 27.1, *)
 private struct FoldAvoidingActionsModifier: ViewModifier {
+    @Environment(\.displayScale) private var displayScale
     @State private var insets = EdgeInsets()
 
     func body(content: Content) -> some View {
@@ -52,7 +53,14 @@ private struct FoldAvoidingActionsModifier: ViewModifier {
             .background {
                 // Reading reserved regions here avoids a layout cycle during keyboard and display changes.
                 GeometryReader { geometry in
-                    let insets = geometry.activeFoldInsets(anchoredToBottom: true)
+                    let foldInsets = geometry.activeFoldInsets(anchoredToBottom: true)
+                    // Round the insets up to display pixels to prevent tiny floating-point differences from triggering an infinite layout loop.
+                    let insets = EdgeInsets(
+                        top: (foldInsets.top * displayScale).rounded(.up) / displayScale,
+                        leading: (foldInsets.leading * displayScale).rounded(.up) / displayScale,
+                        bottom: (foldInsets.bottom * displayScale).rounded(.up) / displayScale,
+                        trailing: (foldInsets.trailing * displayScale).rounded(.up) / displayScale
+                    )
                     Color.clear
                         .onChange(of: insets, initial: true) { _, insets in
                             self.insets = insets
