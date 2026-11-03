@@ -17,6 +17,7 @@ import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
 
+@MainActor
 final class PaymentSheetConfirmParamsTest: APIStubbedTestCase {
     enum MockJson {
         static let cardPaymentMethod = STPTestUtils.jsonNamed("CardPaymentMethod")!
@@ -89,8 +90,8 @@ final class PaymentSheetConfirmParamsTest: APIStubbedTestCase {
         }
     }
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
 
         // Stub all API calls that can be made
 

@@ -16,6 +16,7 @@ import XCTest
 @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 @_spi(InternalOnlyAPI)@testable import StripeUICore
 
+@MainActor
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
@@ -29,8 +30,8 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     // Change this to true to hit the real glitch backend. This may be required
     // to capture data for new use cases
     var runAgainstLiveService: Bool = false
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
 //        recordMode = true
 
         configuration = PaymentSheet.Configuration()

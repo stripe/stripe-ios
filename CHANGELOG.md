@@ -1,8 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+MAJOR
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
+* [Changed] `PaymentSheet` and `PaymentSheet.FlowController` are now `@MainActor`-isolated to improve support for Swift strict concurrency. Calls to their APIs must now be made from the main actor.
 * [Added] The Link auth flow now natively supports email OTP and multi-factor authentication (MFA) enabled accounts.
 * [Added] Added `returnURL` to `LinkConfiguration`, allowing `LinkController` users to let customers authenticate in their banking app and then return to the merchant's app. Without a `returnURL`, bank authentication happens in a secure webview presented in the merchant's app (private preview).
 * [Fixed] Fixed a horizontal layout bug that caused the sheet to freeze when the bottom form insets were less than the bottom safe area.
