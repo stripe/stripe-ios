@@ -20,8 +20,6 @@ import Foundation
 
     // MARK: - LocalizedError
 
-    /// A generic, actually-localized message. The diagnostic detail lives in `nonPIIErrorMessage`,
-    /// surfaced via analytics and the debug assertion — not to merchants or customers.
     public var errorDescription: String? {
         NSError.stp_unexpectedErrorMessage()
     }
@@ -52,6 +50,7 @@ import Foundation
 /// Non-throwing call site can write `logUnexpectedError(...)`.
 ///
 /// - Note: Unexpected errors are observed and alerted on.
+@discardableResult
 @_spi(InternalOnlyAPI) public func logUnexpectedError(
     _ nonPIIErrorMessage: String,
     event: STPAnalyticEvent,
