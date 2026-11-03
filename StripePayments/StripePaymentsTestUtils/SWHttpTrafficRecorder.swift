@@ -145,6 +145,9 @@ private final class SWRecordingProtocol: URLProtocol, URLSessionDataDelegate {
 
     override func stopLoading() {
         dataTask?.cancel()
+        // The session retains this protocol instance as its delegate until it's invalidated.
+        session?.finishTasksAndInvalidate()
+        session = nil
         receivedData = Data()
     }
 

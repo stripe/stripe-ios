@@ -139,6 +139,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// If this is a Naira card PaymentMethod, this contains additional details.
     private(set) public var ngCard: STPPaymentMethodNgCard?
 
+    // periphery:ignore - Public API that the SDK sets but doesn't read.
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
 

@@ -18,6 +18,7 @@ class STPTestFormEncodableObject: NSObject, STPFormEncodable {
     var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     var testProperty: String?
+    // periphery:ignore - Assigned to check that properties missing from the mapping aren't encoded.
     var testIgnoredProperty: String?
     var testArrayProperty: [AnyHashable]?
     var testDictionaryProperty: [AnyHashable: Any]?
