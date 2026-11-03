@@ -99,20 +99,23 @@ struct UpdateAddressView: View {
                         )
                     }
                 }
+                .horizontallyCenteredContent()
                 .padding()
             }
             .navigationTitle("Update Address")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
                         focusedField = nil
                         dismiss()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark")
                     }
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Submit") {
+                    Button {
                         focusedField = nil
                         dismiss()
                         onConfirm(
@@ -137,6 +140,8 @@ struct UpdateAddressView: View {
                                 )
                             )
                         )
+                    } label: {
+                        Label("Submit", systemImage: "checkmark")
                     }
                     .disabled(isSubmitButtonDisabled)
                     .opacity(isSubmitButtonDisabled ? 0.5 : 1)

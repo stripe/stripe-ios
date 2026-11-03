@@ -49,6 +49,17 @@ extension PaymentElement {
             }
         }
 
+        /// By default, PaymentElement accepts all card brands supported by Stripe.
+        /// You can specify which card brands to allow or disallow.
+        /// - Note: This is only a client-side solution.
+        /// - Note: Card brand filtering is not currently supported by Apple Pay or Link.
+        public var cardBrandAcceptance: CardBrandAcceptance = .all {
+            didSet {
+                paymentSheetConfiguration.cardBrandAcceptance = cardBrandAcceptance
+                embeddedConfiguration.cardBrandAcceptance = cardBrandAcceptance
+            }
+        }
+
         /// Optional configuration to display a custom message when a saved payment method is removed.
         public var removeSavedPaymentMethodMessage: String? {
             didSet {
@@ -127,14 +138,14 @@ extension PaymentElement {
         }()
 
         // TODO: Have both configuration conversion methods accept Checkout configuration and session,
-        // apply address overrides here, and remove the CheckoutControllerLoader wrappers.
+        // apply address overrides here, and remove the CheckoutElementsControllerLoader wrappers.
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
             returnURL: String,
-            defaults: CheckoutController.Configuration.Defaults,
+            defaults: CheckoutElementsController.Configuration.Defaults,
             merchantDisplayName: String,
             merchantCountryCode: String,
-            userInterfaceStyle: CheckoutController.UserInterfaceStyle
+            userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.allowsDelayedPaymentMethods = true
@@ -157,10 +168,10 @@ extension PaymentElement {
         func makeFlowControllerConfiguration(
             apiClient: STPAPIClient,
             returnURL: String,
-            defaults: CheckoutController.Configuration.Defaults,
+            defaults: CheckoutElementsController.Configuration.Defaults,
             merchantDisplayName: String,
             merchantCountryCode: String,
-            userInterfaceStyle: CheckoutController.UserInterfaceStyle
+            userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.allowsDelayedPaymentMethods = true
@@ -273,6 +284,8 @@ extension PaymentElement {
     public typealias Appearance = PaymentSheet.Appearance
     public typealias SavePaymentMethodOptInBehavior = PaymentSheet.SavePaymentMethodOptInBehavior
     public typealias PaymentMethodLayout = PaymentSheet.PaymentMethodLayout
+    public typealias CardBrandAcceptance = PaymentSheet.CardBrandAcceptance
+    public typealias BrandCategory = PaymentSheet.CardBrandAcceptance.BrandCategory
 }
 
 private extension PaymentElement.Configuration {
@@ -287,7 +300,7 @@ private extension PaymentElement.Configuration {
 }
 
 extension PaymentSheet.BillingDetails {
-    mutating func set(_ billingDetails: CheckoutController.Configuration.Defaults.BillingDetails) {
+    mutating func set(_ billingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails) {
         name = billingDetails.name
         if let billingAddress = billingDetails.address {
             address.set(billingAddress)
@@ -296,7 +309,7 @@ extension PaymentSheet.BillingDetails {
 }
 
 private extension PaymentSheet.Address {
-    mutating func set(_ address: CheckoutController.Address) {
+    mutating func set(_ address: CheckoutElementsController.Address) {
         city = address.city
         country = address.country
         line1 = address.line1

@@ -158,6 +158,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
                 configuration: flowController.configuration,
+                paymentHandler: flowController.paymentHandler,
                 nativeSheetPresentation: flowController.nativeSheetPresentation,
                 analyticsHelper: flowController.analyticsHelper
             )

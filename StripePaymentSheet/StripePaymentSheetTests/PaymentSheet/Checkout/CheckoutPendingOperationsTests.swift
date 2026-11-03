@@ -14,7 +14,7 @@ import XCTest
 final class CheckoutPendingOperationsTests: XCTestCase {
 
     func testEnqueueSessionUpdateSerializesOperations() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let firstGate = CheckoutPendingOperationsTestGate()
         var events: [String] = []
 
@@ -51,7 +51,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     }
 
     func testAwaitPendingOperationsWaitsForQueuedWork() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let gate = CheckoutPendingOperationsTestGate()
         var waiterCompleted = false
 
@@ -87,7 +87,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     }
 
     func testAwaitPendingOperationsTimesOutWithoutCancelingQueuedWork() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let gate = CheckoutPendingOperationsTestGate()
 
         let operationTask = Task { @MainActor in
@@ -122,7 +122,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
     func testUpdateEmailUsesLatestQueuedValue() async throws {
         // Given a Checkout Session with a blocked update
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 paymentElementConfiguration: nil,
                 expressCheckoutElementConfiguration: nil
@@ -165,7 +165,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     // MARK: - Loading & Emission Tests
 
     func testLoadingStatePersistsAcrossConsecutiveQueuedOperations() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let recorder = CheckoutEmissionRecorder(checkout)
 
         // Gates let us pause each operation mid-flight so we can assert state at precise moments
@@ -177,13 +177,13 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         firstJSON["presentment_currency"] = "eur"
         firstJSON["integration_currency"] = "eur"
         firstJSON["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "eur")
-        let firstSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: firstJSON)
+        let firstSession = try CheckoutClientAPIResponse.decode(fromAPIResponse: firstJSON)
 
         var secondJSON = CheckoutTestHelpers.openSessionJSON
         secondJSON["presentment_currency"] = "gbp"
         secondJSON["integration_currency"] = "gbp"
         secondJSON["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "gbp")
-        let secondSession = try PaymentPagesAPIResponse.decode(fromAPIResponse: secondJSON)
+        let secondSession = try CheckoutClientAPIResponse.decode(fromAPIResponse: secondJSON)
 
         // First op blocks on firstGate until we explicitly open it
         let firstTask = Task { @MainActor in
@@ -238,7 +238,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     }
 
     func testThrowingOperationEmitsLoadingButNoSessionUpdate() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let recorder = CheckoutEmissionRecorder(checkout)
 
         do {
@@ -256,7 +256,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     }
 
     func testNoOpOperationStillEmitsSessionUpdate() async throws {
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let recorder = CheckoutEmissionRecorder(checkout)
 
         // Enqueue an operation that commits the same session (no actual mutation)

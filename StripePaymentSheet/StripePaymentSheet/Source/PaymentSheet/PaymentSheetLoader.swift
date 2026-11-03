@@ -98,7 +98,7 @@ final class PaymentSheetLoader {
 
             // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.
             let prefetchedLinkEmailAndSourceTask = Task {
-                try? await getCustomerEmailForLinkWithEphemeralKey(configuration: configuration, loadTimings: loadTimings)
+                try? await getCustomerEmailForLinkWithEphemeralKey(configuration: configuration, customerProvider: customerProvider, loadTimings: loadTimings)
             }
             // Fetch Customer SPMs if using EK b/c they're not in the v1/e/s response.
             let prefetchedSavedPaymentMethodsTask = Task {
@@ -113,14 +113,17 @@ final class PaymentSheetLoader {
             let elementsSessionAndIntent = try await elementsSessionAndIntentTask.value
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
-            let (_, didLinkLookupTimeOut) = await loadLink(
+            let didLinkLookupTimeOut = await loadLink(
                 elementsSession: elementsSession,
-                configuration: configuration,
+                apiClient: configuration.apiClient,
+                isLinkEnabled: PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
                 email: configuration.defaultBillingDetails.email,
+                defaultBillingDetails: configuration.defaultBillingDetails,
                 analyticsHelper: analyticsHelper.experimentAnalyticsHelper,
                 prefetchedEmailAndSourceTask: prefetchedLinkEmailAndSourceTask,
                 loadTimings: loadTimings,
-                isUpdate: isUpdate
+                isUpdate: isUpdate,
+                linkAnalytics: analyticsHelper.linkAnalytics
             )
 
             loadTimings.logStart("computePaymentMethodTypes")
