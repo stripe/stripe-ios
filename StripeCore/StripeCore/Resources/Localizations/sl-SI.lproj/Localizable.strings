@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Privzet način plačila ni bil posodobljen. Poskusite znova.";
 
+"Enter card details manually" = "Ročni vnos podatkov o kartici";
+
 "Enter the code sent to %@." = "Vnesite kodo, poslano v %@.";
 
 "Failed to connect" = "Povezava ni bila vzpostavljena";

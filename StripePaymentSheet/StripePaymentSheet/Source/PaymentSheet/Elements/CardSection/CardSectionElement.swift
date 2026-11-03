@@ -395,6 +395,10 @@ extension CardSectionElement: CardSectionWithScannerViewDelegate {
             lastCompletedElement.delegate?.continueToNextField(element: lastCompletedElement)
         }
     }
+
+    func didSelectManualCardEntry() {
+        _ = panElement.beginEditing()
+    }
 }
 #endif
 

@@ -1434,6 +1434,8 @@ private final class VerticalPaymentMethodListDelegateStub: VerticalPaymentMethod
 private final class CardSectionDelegateStub: CardSectionWithScannerViewDelegate {
 
     func didScanCard(cardParams: STPPaymentMethodCardParams) {}
+
+    func didSelectManualCardEntry() {}
 }
 
 // Shared by the native-sheet and Link-wallet resize tests.

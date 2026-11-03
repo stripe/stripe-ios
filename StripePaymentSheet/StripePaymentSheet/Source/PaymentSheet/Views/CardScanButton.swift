@@ -42,4 +42,16 @@ extension UIButton {
         scanButton.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
         return scanButton
     }
+
+    /// A capsule-shaped variant of the card scan button, used when the card scanner opens automatically.
+    /// It gives customers a prominent way back into the scanner to fix an incorrect scan or scan a different card.
+    static func makeCardScanPillButton(theme: ElementsAppearance = .default, linkAppearance: LinkAppearance? = nil) -> UIButton {
+        let scanButton = makeCardScanButton(theme: theme, linkAppearance: linkAppearance)
+        let tintColor = linkAppearance?.colors?.primary ?? theme.colors.primary
+        scanButton.configuration?.cornerStyle = .capsule
+        scanButton.configuration?.background.backgroundColor = tintColor.withAlphaComponent(0.1)
+        scanButton.configuration?.contentInsets = .init(top: 6, leading: 10, bottom: 6, trailing: 10)
+        scanButton.setContentHuggingPriority(.required, for: .horizontal)
+        return scanButton
+    }
 }

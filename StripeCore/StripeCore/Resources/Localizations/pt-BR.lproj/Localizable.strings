@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "A forma de pagamento padrão não foi atualizada. Tente novamente.";
 
+"Enter card details manually" = "Inserir manualmente os dados do cartão";
+
 "Enter the code sent to %@." = "Insira o código enviado para %@.";
 
 "Failed to connect" = "Falha ao conectar";

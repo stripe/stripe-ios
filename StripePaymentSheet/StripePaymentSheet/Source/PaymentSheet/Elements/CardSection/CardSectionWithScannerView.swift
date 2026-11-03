@@ -16,6 +16,7 @@ import UIKit
 
 /**
  A view that wraps a normal section and adds a "Scan card" button. Tapping the button displays a card scan view below the section.
+ If the scanner opens automatically, the section instead pushes a full-height `CardScanViewController` when it first appears, and the button reopens that screen.
  */
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
@@ -25,7 +26,9 @@ final class CardSectionWithScannerView: UIView {
     let cardSectionView: UIView
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     lazy var cardScanButton: UIButton = {
-        let button = UIButton.makeCardScanButton(theme: theme, linkAppearance: linkAppearance)
+        let button = opensCardScannerAutomatically
+            ? UIButton.makeCardScanPillButton(theme: theme, linkAppearance: linkAppearance)
+            : UIButton.makeCardScanButton(theme: theme, linkAppearance: linkAppearance)
         button.addTarget(self, action: #selector(didTapCardScanButton), for: .touchUpInside)
         return button
     }()
@@ -35,6 +38,7 @@ final class CardSectionWithScannerView: UIView {
         return scanningView
     }()
     private let opensCardScannerAutomatically: Bool
+    private var hasOpenedCardScannerAutomatically = false
     weak var delegate: CardSectionWithScannerViewDelegate?
     private let theme: ElementsAppearance
     private let linkAppearance: LinkAppearance?
@@ -55,12 +59,7 @@ final class CardSectionWithScannerView: UIView {
         self.linkAppearance = linkAppearance
         super.init(frame: .zero)
         installConstraints()
-
-        if opensCardScannerAutomatically {
-            cardScanButton.alpha = 0
-        } else {
-            cardScanningView.setHiddenIfNecessary(true)
-        }
+        cardScanningView.setHiddenIfNecessary(true)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -69,6 +68,9 @@ final class CardSectionWithScannerView: UIView {
         let sectionTitle = ElementsUI.makeSectionTitleLabel(theme: theme)
         sectionTitle.text = String.Localized.card_information
         let cardSectionTitleAndButton = UIStackView(arrangedSubviews: [sectionTitle, cardScanButton])
+        if opensCardScannerAutomatically {
+            cardSectionTitleAndButton.alignment = .center
+        }
 
         let stack = UIStackView(arrangedSubviews: [cardSectionTitleAndButton, cardSectionView, cardScanningView])
         stack.axis = .vertical
@@ -79,9 +81,35 @@ final class CardSectionWithScannerView: UIView {
 
     @objc func didTapCardScanButton() {
         analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
+        if opensCardScannerAutomatically && pushCardScanViewController() {
+            return
+        }
+        showInlineCardScanner()
+    }
+
+    private func showInlineCardScanner() {
         animateScannerVisibility(true)
         cardScanningView.startScanner()
         becomeFirstResponder()
+    }
+
+    /// Pushes the full-height card scan screen on top of the sheet's current content.
+    /// - Returns: `false` if this view isn't hosted in a sheet, in which case nothing happens.
+    @discardableResult
+    private func pushCardScanViewController() -> Bool {
+        guard window != nil, let bottomSheetController = findViewController(for: self)?.bottomSheetController else {
+            return false
+        }
+        // Dismiss the keyboard so it doesn't cover the scanner
+        endEditing(true)
+        let cardScanViewController = CardScanViewController(
+            appearance: bottomSheetController.appearance,
+            theme: theme,
+            underlyingContentViewController: bottomSheetController.contentStack.first
+        )
+        cardScanViewController.delegate = self
+        bottomSheetController.pushContentViewController(cardScanViewController)
+        return true
     }
 
     private func hideCardScanner() {
@@ -125,16 +153,35 @@ final class CardSectionWithScannerView: UIView {
         return super.resignFirstResponder()
     }
 
-    override func willMove(toWindow newWindow: UIWindow?) {
-        // We wait until we are added to the screen to start the scanner instead of at initialization
-        // If cardScanningView.start() is called when it is already started, nothing will happen
-        // The opensCardScannerAutomatically check is redudant since this should only apply in that case,
-        //    but it adds a bit of extra safety. This can be removed in the future.
-        if newWindow != nil && !cardScanningView.isHidden && opensCardScannerAutomatically {
-            cardScanningView.startScanner()
-            becomeFirstResponder()
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        // We wait until we are added to the screen to open the scanner instead of at initialization.
+        // We only do this once, so returning to the form from the scanner doesn't reopen it.
+        guard opensCardScannerAutomatically, window != nil, !hasOpenedCardScannerAutomatically else {
+            return
         }
-        super.willMove(toWindow: newWindow)
+        hasOpenedCardScannerAutomatically = true
+        // Wait for the in-progress layout or transition that added us to the window to finish before pushing a new screen.
+        DispatchQueue.main.async { [weak self] in
+            guard let self, self.window != nil else { return }
+            if !self.pushCardScanViewController() {
+                self.showInlineCardScanner()
+            }
+        }
+    }
+}
+
+// MARK: - CardScanViewControllerDelegate
+
+@available(macCatalyst 14.0, *)
+extension CardSectionWithScannerView: CardScanViewControllerDelegate {
+    func cardScanViewController(_ viewController: CardScanViewController, didScan cardParams: STPPaymentMethodCardParams) {
+        cardScanButton.configuration?.title = String.Localized.rescan_card
+        delegate?.didScanCard(cardParams: cardParams)
+    }
+
+    func cardScanViewControllerDidSelectManualEntry(_ viewController: CardScanViewController) {
+        delegate?.didSelectManualCardEntry()
     }
 }
 
@@ -151,6 +198,7 @@ extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
 // MARK: - CardFormElementViewDelegate
 protocol CardSectionWithScannerViewDelegate: AnyObject {
     func didScanCard(cardParams: STPPaymentMethodCardParams)
+    func didSelectManualCardEntry()
 }
 
 #endif
