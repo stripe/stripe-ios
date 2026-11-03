@@ -237,8 +237,8 @@ extension VerificationFlowWebView {
     }
 
     fileprivate func installObservers() {
-        urlObservation = observe(
-            \.webView.url,
+        urlObservation = webView.observe(
+            \.url,
             changeHandler: { [weak self] (_, _) in
                 guard let self = self else { return }
                 self.delegate?.verificationFlowWebView(self, didChangeURL: self.webView.url)
