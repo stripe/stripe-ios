@@ -124,6 +124,7 @@ class StripeCodableTests: APIStubbedTestCase {
             XCTAssertEqual(event["event"] as? String, "unexpected_error.api_response_decoding")
             XCTAssertEqual(event["error_type"] as? String, "Swift.DecodingError")
             XCTAssertEqual(event["error_code"] as? String, testCase.code)
+            XCTAssertEqual(event["error_message"] as? String, "\(String(reflecting: TestCodable.self)) failed to decode")
             XCTAssertEqual(event["failed_decoding_path"] as? String, "arrayProperty.0.nestedProperty")
             XCTAssertEqual(event["request_id"] as? String, testCase.requestID)
             XCTAssertEqual(event["http_status_code"] as? Int, 200)

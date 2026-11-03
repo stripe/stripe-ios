@@ -702,10 +702,11 @@ extension STPAPIClient {
                         codingPath = []
                     }
                     // Decoding debug descriptions can contain response values. Send only structural details.
+                    let responseType = String(reflecting: T.self)
                     var params: [String: Any] = [
-                        "error_message": "Failed to decode API response.",
+                        "error_message": "\(responseType) failed to decode",
                         "failed_decoding_path": codingPath.map(\.stringValue).joined(separator: "."),
-                        "response_type": String(reflecting: T.self),
+                        "response_type": responseType,
                     ]
                     let httpResponse = response as? HTTPURLResponse
                     params["request_id"] = httpResponse?.value(forHTTPHeaderField: "request-id")
