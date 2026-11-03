@@ -204,13 +204,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successAlert.staticTexts["Payment status: .paid"].exists)
     }
 
-    /// Live repro for the "ShippingAddressElement never re-syncs after construction" bug
-    /// (ISSUE_sub-elements_shipping-address-element-never-resyncs-after-construction.md):
-    /// an address change made outside the element (here, via a debug button added to the
-    /// Example app that calls `checkout.updateShippingAddress` directly, simulating a merchant's
-    /// own "use my saved address" control) updates the Checkout Session and the merchant's own
-    /// UI, but the element's own form -- reopened afterward -- still shows the address it was
-    /// last told about through its own sheet, not the session's current address.
+    /// Reopening and saving the shipping form restores its stale address over a direct update.
     func testShippingAddressElementShowsStaleAddressAfterExternalUpdate() throws {
         // Given a live Checkout Session with the Shipping Address Element enabled
         loadCheckoutPlayground(app, CheckoutPlayground.Settings())
@@ -248,21 +242,20 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         let fullNameField = app.textFields["Full name"]
         XCTAssertTrue(fullNameField.waitForExistence(timeout: 10))
         XCTAssertEqual(fullNameField.value as? String, "Jane Doe", "the element's form should reflect the session's current shipping address (Alex Direct), but it's stuck on the last value it saved itself")
+
+        // When the customer saves the reopened form without changing its stale values
+        app.buttons["Save Address"].tap()
+
+        // Then the old address replaces the merchant's newer address in the session
+        XCTAssertTrue(app.staticTexts["Jane Doe"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["510 Townsend St"].exists)
+        XCTAssertFalse(app.staticTexts["Alex Direct"].exists)
+        XCTAssertFalse(app.staticTexts["1 Direct Ave"].exists)
     }
 
-    /// Live repro for the "awaitPendingOperations doesn't cancel a timed-out confirm" bug
-    /// (ISSUE_polling-async_awaitpendingoperations-doesnt-cancel-timed-out-confirm.md):
-    /// re-presenting Payment Options while a confirm is still in flight hits
-    /// `awaitPendingOperations`'s 30s timeout; the sheet dismisses silently as if nothing is
-    /// pending, but the original confirm keeps running in the background and completes later,
-    /// uncanceled.
-    ///
-    /// Uses `delayCheckoutClientRequests` (bumped to 35s in `CheckoutCartView.swift` for this
-    /// purpose) to make the live `/confirm` call take longer than the 30s timeout, and a debug
-    /// toolbar button (`checkout_force_present_payment_options`, calls
-    /// `PaymentElement.present(from:)` directly) added to `CheckoutCartView.swift` to bypass
-    /// this screen's own `.disabled(checkout.isUpdating)` guard, which would otherwise block
-    /// the merchant from re-presenting Payment Options while a confirm is in flight.
+    /// A payment-options wait timeout dismisses the loading sheet while the original
+    /// confirmation continues. The debug toolbar control bypasses the example screen's
+    /// disabled state; the request capture delays sending /confirm by 35 seconds.
     func testReopeningPaymentOptionsDuringASlowConfirmTimesOutWhileConfirmKeepsRunning() throws {
         // Given a Checkout Session with a 35s delay injected on every live checkout_client request
         var settings = CheckoutPlayground.Settings()
@@ -286,7 +279,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         let buyButton = app.buttons["checkout_buy_button"]
         buyButton.scrollToAndTap(in: app)
 
-        // Then the confirm is in flight (its /confirm request is delayed 35s)...
+        // Then confirmation is pending while sending /confirm is delayed by 35 seconds...
         XCTAssertFalse(buyButton.isEnabled)
 
         // ...and when the merchant re-presents Payment Options while it's still pending (using
@@ -310,8 +303,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertFalse(buyButton.isEnabled, "the original confirm should still be running in the background")
         XCTAssertEqual(app.activityIndicators.count, 1, "the loading sheet's own spinner should be gone; only the Buy button's persistent one should remain")
 
-        // Then, once the original confirm's delayed /confirm response finally arrives, it
-        // completes on its own -- demonstrating it was never canceled by the timeout above.
+        // Then the original confirmation sends its request and reports success to its caller.
         XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
     }
 

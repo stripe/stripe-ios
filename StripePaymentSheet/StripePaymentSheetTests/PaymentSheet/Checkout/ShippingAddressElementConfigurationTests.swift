@@ -74,10 +74,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         XCTAssertEqual(shippingAddressElement.addressViewController.overrideUserInterfaceStyle, .dark)
     }
 
-    /// `ShippingAddressElement` is constructed once in `CheckoutController.init` with a snapshot
-    /// of the shipping address, and is a `private let` on `CheckoutController` with no update
-    /// hook from `updateForSessionChange()`. This demonstrates that an address change made
-    /// through the public API (bypassing the element) never reaches the element's own form.
+    /// Reproduces stale form values and the old address being saved over a direct update.
     func testShippingAddressElementDoesNotReflectAddressUpdatesMadeOutsideTheElement() async throws {
         // Given a Checkout Session with a Shipping Address Element, seeded with a default address.
         var sessionJSON = CheckoutTestHelpers.openSessionJSON
@@ -133,6 +130,27 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
             "San Francisco",
             "the element should reflect the session's current shipping address, but it never updates after construction"
         )
+
+        // Read the actual form fields, rather than relying only on immutable configuration.
+        let element = checkout.getShippingAddressElement()
+        let formDetails = await element.addressViewController.initialAddressDetails()
+        let staleAddress = try XCTUnwrap(formDetails)
+        XCTAssertEqual(staleAddress.name, "Jenny Rosen")
+        XCTAssertEqual(staleAddress.address.city, "San Francisco")
+
+        // When the user saves those unchanged form values through the normal save delegate
+        try await element.save(addressDetails: staleAddress)
+
+        // Then the old form values replace the merchant's newer address in the session
+        XCTAssertEqual(checkout.session.shippingAddress?.name, "Jenny Rosen")
+        XCTAssertEqual(checkout.session.shippingAddress?.address.city, "San Francisco")
+
+        // Clearing the session address also leaves the form populated with the old address.
+        try await checkout.updateShippingAddress(name: nil, address: nil)
+        XCTAssertNil(checkout.session.shippingAddress)
+        let detailsAfterClearing = await element.addressViewController.initialAddressDetails()
+        XCTAssertEqual(detailsAfterClearing?.name, "Jenny Rosen")
+        XCTAssertEqual(detailsAfterClearing?.address.city, "San Francisco")
     }
 
     func testMakeAddressViewControllerConfiguration() {

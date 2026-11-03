@@ -406,6 +406,95 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
 
+    func testPendingWaitTimeoutLeavesConfirmationOwnedByOriginalCaller() async throws {
+        // Given a confirmation whose response arrives after a second caller's wait expires
+        let checkout = try await makeCheckout()
+        stubConfirmation(responseTime: 0.5)
+        let flow = makePaymentMethodFlow(for: checkout)
+        var confirmationReturned = false
+        let confirmation = Task { @MainActor in
+            let result = await checkout.confirm(flow)
+            confirmationReturned = true
+            return result
+        }
+        try await waitUntil { checkout.confirmationInProgress && checkout.pendingOperations.count == 1 }
+
+        // When another caller times out waiting for the queue
+        do {
+            try await checkout.awaitPendingOperations(timeout: 0.01)
+            XCTFail("Expected the wait to time out")
+        } catch let error as CheckoutError {
+            guard case .timedOut = error else {
+                return XCTFail("Expected a wait timeout, got \(error)")
+            }
+        }
+
+        // Then the payment remains pending, and a duplicate confirmation is rejected
+        XCTAssertFalse(confirmationReturned)
+        XCTAssertTrue(checkout.confirmationInProgress)
+        XCTAssertTrue(checkout.isUpdating)
+        XCTAssertEqual(checkout.session.status, .open)
+        let duplicateResult = await checkout.confirm(makePaymentMethodFlow(for: checkout))
+        guard case .failed(let error) = duplicateResult else {
+            return XCTFail("Expected duplicate confirmation to fail, got \(duplicateResult)")
+        }
+        XCTAssertTrue(error.nonGenericDescription.contains("second confirmation"))
+
+        // ...and the original caller receives success and the queue clears normally
+        assertSucceeded(await confirmation.value)
+        XCTAssertTrue(confirmationReturned)
+        XCTAssertEqual(checkout.session.status, .complete(.paid))
+        XCTAssertFalse(checkout.confirmationInProgress)
+        XCTAssertFalse(checkout.isUpdating)
+        XCTAssertTrue(checkout.pendingOperations.isEmpty)
+    }
+
+    func testPaymentOptionsWaitTimeoutReportsCancellationWhileConfirmationContinues() async throws {
+        // Given a confirmation that outlasts the payment-options presentation timeout
+        let checkout = try await makeCheckout()
+        stubConfirmation(responseTime: 35)
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let flow = makePaymentMethodFlow(for: checkout)
+        var confirmationReturned = false
+        let confirmation = Task { @MainActor in
+            let result = await checkout.confirm(flow)
+            confirmationReturned = true
+            return result
+        }
+        try await waitUntil { checkout.confirmationInProgress && checkout.pendingOperations.count == 1 }
+
+        // When payment options are requested while that confirmation is pending
+        let flowController = checkout.getPaymentElement().paymentSheetFlowController
+        let presentationFinished = expectation(description: "Presentation reports cancellation")
+        var presentationWasCanceled: Bool?
+        flowController.presentPaymentOptions(from: presenter) { didCancel in
+            presentationWasCanceled = didCancel
+            presentationFinished.fulfill()
+        }
+        XCTAssertNotNil(presenter.presentedViewController)
+        await fulfillment(of: [presentationFinished], timeout: 33)
+
+        // Then the loading sheet closes with didCancel=true, without presenting options
+        XCTAssertEqual(presentationWasCanceled, true)
+        XCTAssertNil(presenter.presentedViewController)
+        XCTAssertFalse(flowController.isPresentingPaymentUI)
+        XCTAssertFalse(confirmationReturned)
+        XCTAssertTrue(checkout.confirmationInProgress)
+        XCTAssertTrue(checkout.isUpdating)
+
+        // ...and the first confirmation still reports its result to its original caller
+        assertSucceeded(await confirmation.value)
+        XCTAssertTrue(confirmationReturned)
+        XCTAssertFalse(checkout.isUpdating)
+    }
+
     func testConfirmRejectsClosedSessionWithoutCallingConfirmAPI() async throws {
         // Given a Checkout Session that is already complete
         let checkout = try await CheckoutController(

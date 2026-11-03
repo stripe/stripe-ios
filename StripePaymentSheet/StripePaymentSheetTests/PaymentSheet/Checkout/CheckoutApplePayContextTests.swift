@@ -722,6 +722,84 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     // MARK: - Cancellation during tax updates
 
+    func testQueuedWalletPresentationSerializesContactUpdatesAndMerchantUpdates() async throws {
+        // Given a real CheckoutController and Apple Pay context inside the same queued
+        // scope used by confirm(source:makeFlow:), with PassKit and HTTP responses stubbed.
+        let apiResponse = CheckoutTestHelpers.makeSession([
+            "automatic_tax": ["enabled": true, "status": "ready", "address_source": "billing"],
+        ])
+        let checkout = try await CheckoutController(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse)
+        )
+        let (context, controller) = makeContext(
+            checkoutSession: checkout.session,
+            apiClient: checkout.apiClient,
+            checkoutWalletUpdater: checkout,
+            attribution: .init(confirmingElement: .expressCheckoutElement, configuredElements: [.expressCheckoutElement])
+        )
+        let walletStarted = expectation(description: "Wallet presentation started inside the queue")
+        let wallet = Task { @MainActor in
+            try await checkout.enqueueSessionUpdate {
+                walletStarted.fulfill()
+                return await context.presentApplePay()
+            }
+        }
+        await fulfillment(of: [walletStarted], timeout: 5)
+
+        var updateRequests = 0
+        stub { $0.url?.path.hasSuffix("/update") == true } response: { _ in
+            updateRequests += 1
+            return HTTPStubsResponse(jsonObject: apiResponse.allResponseFields, statusCode: 200, headers: nil)
+        }
+
+        // When merchant updates are submitted while the wallet is already open
+        var merchantUpdateFinished = false
+        let merchantUpdate = Task { @MainActor in
+            try await checkout.updateBillingTaxRegionIfNecessary(address: .init(country: "CA"))
+            merchantUpdateFinished = true
+        }
+        var serverUpdateStarted = false
+        let serverUpdate = Task { @MainActor in
+            try await checkout.runServerUpdate {
+                serverUpdateStarted = true
+            }
+        }
+        let bothUpdatesQueued = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            MainActor.assumeIsolated { checkout.pendingOperations.count == 3 }
+        }, object: nil)
+        await fulfillment(of: [bothUpdatesQueued], timeout: 5)
+
+        // ...and PassKit delivers a billing-contact selection to the real delegate
+        let contactUpdated = expectation(description: "Wallet contact update completed")
+        context.paymentAuthorizationController(
+            controller,
+            didSelectPaymentMethod: MockPKPaymentMethod(billingAddress: makeBillingContact())
+        ) { _ in
+            contactUpdated.fulfill()
+        }
+        await fulfillment(of: [contactUpdated], timeout: 5)
+
+        // Then only the wallet request runs; merchant work remains behind the wallet
+        XCTAssertEqual(updateRequests, 1)
+        XCTAssertEqual(checkout.currentTaxRegion?.country, "US")
+        XCTAssertFalse(merchantUpdateFinished)
+        XCTAssertFalse(serverUpdateStarted)
+        XCTAssertTrue(checkout.isUpdating)
+
+        // When the customer cancels, Apple Pay restores its initial region before
+        // releasing the queue, then both merchant operations are allowed to run.
+        context.paymentAuthorizationControllerDidFinish(controller)
+        let walletResult = try await wallet.value
+        XCTAssertEqual(walletResult.paymentSheetResult, .canceled)
+        try await merchantUpdate.value
+        try await serverUpdate.value
+        XCTAssertEqual(updateRequests, 3) // Wallet selection, restoration, merchant selection.
+        XCTAssertEqual(checkout.currentTaxRegion?.country, "CA")
+        XCTAssertTrue(serverUpdateStarted)
+        XCTAssertFalse(checkout.isUpdating)
+        XCTAssertTrue(checkout.pendingOperations.isEmpty)
+    }
+
     func testDidFinish_notStarted_waitsForBillingTaxUpdateBeforeCanceling() async {
         // Given Apple Pay presented by ECE with a billing tax update that is suspended
         let updatedSession = CheckoutTestHelpers.makeOpenSession().makePublicSession()

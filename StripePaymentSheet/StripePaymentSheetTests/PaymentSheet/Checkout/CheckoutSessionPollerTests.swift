@@ -269,11 +269,9 @@ final class CheckoutSessionPollerTests: XCTestCase {
     }
 
     func testPollKeepsRequestingAfterItsTaskIsCanceled() async {
-        // Given a poller that's wrapped in a Task the caller intends to abandon (e.g. a SwiftUI
-        // `.task { }` whose view disappeared, or `CheckoutController.awaitPendingOperations(timeout:)`
-        // giving up after its own timeout without canceling the underlying operation Task).
+        // Given the production poller and clock with a fake API that always returns pending
         let apiClient = AlwaysPendingAPIClient()
-        let poller = CheckoutSessionPoller(apiClient: apiClient) // real apiClient + real (production) clock
+        let poller = CheckoutSessionPoller(apiClient: apiClient)
         let pollTask = Task {
             await poller.poll(checkoutSessionId: checkoutSessionId, clientSecret: clientSecret)
         }
@@ -286,20 +284,15 @@ final class CheckoutSessionPollerTests: XCTestCase {
         XCTAssertTrue(pollTask.isCancelled)
         let countAtCancellation = apiClient.callCount
 
-        // Then `poll()` still issues further /poll requests well after cancellation: it never
-        // calls `Task.checkCancellation()` / checks `Task.isCancelled`, so canceling the Task
-        // that's running it does not stop it from continuing to poll (and later calling
-        // `commitSession`, overwriting shared session state, once some caller abandoned it).
-        // (minimumTimeInterval between polls is 0.5s; wait comfortably past that.)
+        // Then direct cancellation does not stop requests during the polling window.
+        // This tests the poller in isolation, not cancellation through CheckoutController.
         try? await Task.sleep(nanoseconds: 900_000_000)
         XCTAssertGreaterThan(
             apiClient.callCount,
             countAtCancellation,
-            "poll() should have stopped issuing requests once its Task was canceled, but it kept polling."
+            "The current poller continues requesting after direct task cancellation."
         )
-        // Note: `pollTask` is intentionally left running in the background (uncanceled, by
-        // design, since that's the bug) rather than awaited; it harmlessly finishes on its own
-        // once it hits the poller's internal 30s timeout.
+        // The canceled task finishes at the poller's own 30-second timeout.
     }
 
     private func makePoller(
