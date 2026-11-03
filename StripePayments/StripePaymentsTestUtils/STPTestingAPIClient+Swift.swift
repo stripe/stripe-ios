@@ -32,7 +32,9 @@ extension STPTestingAPIClient {
         var params = [String: Any]()
         params["amount"] = amount ?? 5050
         params["currency"] = currency
-        params["payment_method_types"] = types
+        // The backend creates intents with the SDK's API version, which no longer accepts `payment_method_types`.
+        // `allowed_payment_method_types` limits the intent to these types instead.
+        params["allowed_payment_method_types"] = types
         params["confirm"] = confirm
         if let paymentMethodID {
             params["payment_method"] = paymentMethodID
@@ -107,7 +109,8 @@ extension STPTestingAPIClient {
         otherParams: [String: Any] = [:]
     ) async throws -> String {
         var params = [String: Any]()
-        params["payment_method_types"] = types
+        // See `fetchPaymentIntent`: the SDK's API version requires `allowed_payment_method_types`.
+        params["allowed_payment_method_types"] = types
         params["confirm"] = confirm
         if let paymentMethodID {
             params["payment_method"] = paymentMethodID

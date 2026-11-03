@@ -45,7 +45,9 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     private var intentConfig: PaymentSheet.IntentConfiguration {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
-                                    setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
+                                    setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil,
+                                    // Use the same capture method as the PaymentIntent your server creates.
+                                    captureMethod: .automatic)
         ) { [weak self] paymentMethod, shouldSavePaymentMethod in
             // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret or an error.
             // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2577) Show client-side confirm, not server-side confirm.

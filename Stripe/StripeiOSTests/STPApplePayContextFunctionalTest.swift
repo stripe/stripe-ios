@@ -66,6 +66,8 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             if let stripeId = paymentMethod?.stripeId {
                 STPTestingAPIClient.shared.createPaymentIntent(withParams: [
                     "confirmation_method": "manual",
+                    // Card-only, because confirming dynamic payment method intents on the server requires a `return_url`
+                    "allowed_payment_method_types": ["card"],
                     "payment_method": stripeId,
                     "confirm": NSNumber(value: true),
                 ]) { _clientSecret, _ in

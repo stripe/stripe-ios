@@ -53,7 +53,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             return paymentIntent.clientSecret
         }
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 2345, currency: "usd"),
+            mode: .payment(amount: 2345, currency: "usd", captureMethod: .automatic),
             confirmationTokenConfirmHandler: confirmHandler
         )
 
