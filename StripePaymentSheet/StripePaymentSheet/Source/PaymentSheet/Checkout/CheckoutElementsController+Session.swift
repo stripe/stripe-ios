@@ -267,6 +267,7 @@ extension CheckoutElementsController.Session {
                 public let quantity: Int
 
                 /// The allowed quantity range when the customer can adjust the quantity.
+                /// This is `nil` when quantity adjustment is disabled.
                 public let adjustableQuantity: AdjustableQuantity?
 
                 /// The computed amounts for this Price.
@@ -326,9 +327,6 @@ extension CheckoutElementsController.Session {
 
     /// The allowed range for a customer-adjustable quantity.
     public struct AdjustableQuantity: Sendable, Hashable {
-        /// Whether the customer can adjust the quantity.
-        public let enabled: Bool
-
         /// The maximum quantity the customer can select.
         public let maximum: Int
 
