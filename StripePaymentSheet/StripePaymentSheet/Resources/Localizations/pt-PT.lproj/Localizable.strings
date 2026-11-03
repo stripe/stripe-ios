@@ -32,6 +32,10 @@
 
 "Bank account details cannot be changed." = "Os detalhes da conta bancária não podem ser alterados.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Antes de podermos enviar um código para o seu email, precisamos de verificar informações adicionais sobre si. Introduza o seu número de telefone que termina em ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Antes de podermos enviar um código para o seu email, precisamos de verificar informações adicionais sobre si. Introduza o seu número de telefone.";
+
 "Buy Now, Pay Later with  <img/>" = "Compre agora, pague mais tarde com <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Compre agora, pague mais tarde com Afterpay";
@@ -116,8 +120,6 @@
 
 "Close card scanner" = "Fechar leitor de cartões";
 
-"Code sent" = "Código enviado";
-
 "Complete the payment using Pix to finish the purchase." = "Conclua o pagamento utilizando o Pix para terminar a compra.";
 
 "Confirm" = "Confirmar";
@@ -162,7 +164,11 @@
 
 "Edit address" = "Editar endereço";
 
+"Email code" = "Código de email";
+
 "Enter address manually" = "Introduzir endereço manualmente";
+
+"Enter the phone number on your Link account." = "Introduza o número de telefone da sua conta Link.";
 
 "Exchange rate and fees of your bank may apply." = "Podem aplicar-se a Taxa de câmbio e as comissões do seu banco.";
 
@@ -201,6 +207,8 @@
 "Manage payment methods" = "Gerir métodos de pagamento";
 
 "Manage your payment methods" = "Gerir os seus métodos de pagamento";
+
+"More options" = "Mais opções";
 
 "Name on card" = "Nome no cartão";
 
@@ -277,6 +285,8 @@
 "Remove payment method" = "Remover método de pagamento";
 
 "Remove payment method?" = "Remover método de pagamento?";
+
+"Resend code in %d seconds" = "Reenviar código em %li segundos";
 
 "SEPA debit details cannot be changed." = "Os detalhes de débito SEPA não podem ser alterados.";
 
@@ -358,6 +368,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Este método de pagamento será removido, mas continuará disponível para subscrições %@.";
 
+"This phone number doesn't match your Link account. Please try again." = "Este número de telefone não corresponde à sua conta Link. Tente novamente.";
+
 "Too many attempts. Please try again in a few minutes." = "Demasiadas tentativas. Tente novamente dentro de alguns minutos.";
 
 "Unavailable for this purchase" = "Indisponível para esta compra";
@@ -368,7 +380,13 @@
 
 "Use billing address for shipping" = "Utilizar endereço de faturação para envio";
 
+"Verify your phone number" = "Verifique o seu número de telefone";
+
+"Verifying your account…" = "A verificar a sua conta…";
+
 "View more" = "Ver mais";
+
+"We couldn't verify your account. Please close this window and try again." = "Não foi possível verificar a sua conta. Feche esta janela e tente novamente.";
 
 "Yes, update" = "Sim, atualizar";
 
