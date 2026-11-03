@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Oletusmaksutapaa ei päivitetty. Yritä uudelleen.";
 
+"Enter card details manually" = "Syötä kortin tiedot manuaalisesti";
+
 "Enter the code sent to %@." = "Syötä kohteeseen %@ lähetetty koodi.";
 
 "Failed to connect" = "Yhteyden muodostaminen epäonnistui";

@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Výchozí způsob platby nebyl aktualizován. Zkuste to prosím znovu.";
 
+"Enter card details manually" = "Zadejte podrobnosti o kartě ručně";
+
 "Enter the code sent to %@." = "Zadejte kód zaslaný na %@.";
 
 "Failed to connect" = "Propojení se nezdařilo";

@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Hindi na-update ang default na paraan ng pagbabayad. Pakisubukan muli.";
 
+"Enter card details manually" = "Manwal na ilagay ang mga detalye ng card";
+
 "Enter the code sent to %@." = "Ilagay ang code na ipinadala sa %@.";
 
 "Failed to connect" = "Nabigong kumonekta";

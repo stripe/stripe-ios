@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Способ оплаты по умолчанию не был изменен. Попробуйте еще раз.";
 
+"Enter card details manually" = "Ввести реквизиты карты вручную";
+
 "Enter the code sent to %@." = "Введите код, отправленный на %@.";
 
 "Failed to connect" = "Не удалось подключиться";

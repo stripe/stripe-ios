@@ -53,9 +53,16 @@ final class FormHeaderView: UIView {
             views.append(contentsOf: [promoBadgeView, spacerView])
         }
 
+        if let accessoryView {
+            if promoBadgeView == nil {
+                views.append(spacerView)
+            }
+            views.append(accessoryView)
+        }
+
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.spacing = 12
-        if imageView == nil {
+        if imageView == nil && accessoryView == nil {
             // Avoid stackview ambiguous height
             stackView.alignment = .fill
         } else {
@@ -69,14 +76,18 @@ final class FormHeaderView: UIView {
     private let appearance: PaymentSheet.Appearance
     private let currency: String?
     private var incentive: PaymentMethodIncentive?
+    /// A view shown at the trailing edge of the header, e.g. a button
+    let accessoryView: UIView?
 
     init(
         paymentMethodType: PaymentSheet.PaymentMethodType,
         shouldUseNewCardHeader: Bool,
         appearance: PaymentSheet.Appearance,
         currency: String?,
-        incentive: PaymentMethodIncentive?
+        incentive: PaymentMethodIncentive?,
+        accessoryView: UIView? = nil
     ) {
+        self.accessoryView = accessoryView
         self.paymentMethodType = paymentMethodType
         self.shouldUseNewCardHeader = shouldUseNewCardHeader
         self.appearance = appearance

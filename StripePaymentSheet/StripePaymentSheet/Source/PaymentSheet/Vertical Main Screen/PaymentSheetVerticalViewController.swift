@@ -91,7 +91,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let isFlowController: Bool
     /// The selection used to seed this controller when it is rebuilt.
     private var previousPaymentOption: PaymentOption?
-    private var previousFormConfirmParams: IntentConfirmParams? {
+    var previousFormConfirmParams: IntentConfirmParams? {
         return previousPaymentOption?.formConfirmParamsForCancellationRestoration
     }
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
@@ -132,6 +132,18 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var paymentMethodListViewController: VerticalPaymentMethodListViewController?
     var paymentMethodFormViewController: PaymentMethodFormViewController?
     var cvcRecollectionViewController: CVCReconfirmationVerticalViewController?
+    #if !os(visionOS)
+    // See PaymentSheetVerticalViewController+AutomaticCardScan.swift
+    /// Shown in place of the card form while scanning
+    var automaticCardScanViewController: AutomaticCardScanViewController?
+    /// Set when the customer enters their card manually or finishes a scan, so the card form opens without the scanner
+    var prefersCardFormOverScanner: Bool = false
+    lazy var manualCardEntryButton: UIButton = {
+        let button = AutomaticCardScanViewController.ManualEntryButton(appearance: configuration.appearance)
+        button.addTarget(self, action: #selector(didTapManualCardEntryButton), for: .touchUpInside)
+        return button
+    }()
+    #endif
 
     lazy var paymentContainerView: DynamicHeightContainerView = {
         DynamicHeightContainerView()
@@ -262,11 +274,20 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if let paymentMethodFormViewController {
             remove(childViewController: paymentMethodFormViewController)
         }
+        #if !os(visionOS)
+        if let automaticCardScanViewController {
+            remove(childViewController: automaticCardScanViewController)
+        }
+        #endif
         if shouldDisplayFormOnly, let paymentMethodType = loadResult.paymentMethodTypes.first {
             // If we'd only show one PM in the vertical list, and it collects user input, display the form instead of the payment method list.
             let formVC = makeFormVC(paymentMethodType: paymentMethodType)
             self.paymentMethodFormViewController = formVC
-            add(childViewController: formVC, containerView: paymentContainerView)
+            if shouldAutomaticallyShowCardScanner(for: paymentMethodType) {
+                showAutomaticCardScanner(animated: false)
+            } else {
+                add(childViewController: formVC, containerView: paymentContainerView)
+            }
         } else {
             // Otherwise, we're using the list
             let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
@@ -292,6 +313,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     /// Updates all UI elements (pay button, error, mandate)
     func updateUI() {
         updatePrimaryButton()
+        updateManualCardEntryButton()
         updateMandate()
         updateError()
     }
@@ -338,7 +360,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     func updateMandate(animated: Bool = true) {
         let hadLabelInStackView = mandateView.attributedText != nil || errorLabel.text != nil
         let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
-        let newMandateText = mandateProvider.mandate(
+        // The scanner shows only the scanner and the button to enter details manually
+        let newMandateText = isShowingAutomaticCardScanner ? nil : mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             bottomNoticeAttributedString: paymentMethodFormViewController?.bottomNoticeAttributedString
@@ -559,6 +582,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             primaryButtonTopAnchorConstraint,
             primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
+        installManualCardEntryButton()
     }
 
     private var canPresentLinkOnPrimaryButton: Bool {
@@ -971,7 +995,11 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 // The payment method form collects user input, display it
                 self.paymentMethodFormViewController = pmFormVC
                 paymentMethodListContentOffsetPercentage = bottomSheetController?.contentOffsetPercentage
-                switchContentIfNecessary(to: pmFormVC, containerView: paymentContainerView, contentOffsetPercentage: 0)
+                if shouldAutomaticallyShowCardScanner(for: paymentMethodType) {
+                    showAutomaticCardScanner(animated: true)
+                } else {
+                    switchContentIfNecessary(to: pmFormVC, containerView: paymentContainerView, contentOffsetPercentage: 0)
+                }
                 navigationBar.setStyle(.back(showAdditionalButton: false))
             }
         }
@@ -993,6 +1021,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 return nil
             }
         }()
+        let headerCardScanButton = makeHeaderCardScanButton(for: paymentMethodType)
         let headerView: UIView = {
             let incentive = paymentMethodListViewController?.incentive?.takeIfAppliesTo(paymentMethodType)
             let currentForm = formCache[paymentMethodType]
@@ -1032,11 +1061,12 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                     shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                     appearance: configuration.appearance,
                     currency: intent.currency,
-                    incentive: displayedIncentive
+                    incentive: displayedIncentive,
+                    accessoryView: headerCardScanButton
                 )
             }
         }()
-        return PaymentMethodFormViewController(
+        let formViewController = PaymentMethodFormViewController(
             type: paymentMethodType,
             intent: intent,
             elementsSession: elementsSession,
@@ -1051,6 +1081,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             delegate: self,
             previousLinkInlineSignupAction: previousLinkInlineSignupAction
         )
+        configureAutomaticCardScanner(for: formViewController)
+        return formViewController
     }
 
     private func shouldDisplayForm(for paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {

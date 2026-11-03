@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Numatytasis mokėjimo būdas neatnaujintas. Bandykite dar kartą.";
 
+"Enter card details manually" = "Įveskite kortelės duomenis rankiniu būdu";
+
 "Enter the code sent to %@." = "Įveskite į %@ išsiųstą kodą.";
 
 "Failed to connect" = "Susieti nepavyko";

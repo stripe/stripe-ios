@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Standardbetalingsmetoden blev ikke opdateret. Prøv igen.";
 
+"Enter card details manually" = "Indtast kortoplysninger manuelt";
+
 "Enter the code sent to %@." = "Indtast koden, der blev sendt til %@.";
 
 "Failed to connect" = "Kunne ikke oprette forbindelse";

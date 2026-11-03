@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Начинът на плащане по подразбиране не беше актуализиран. Моля, опитайте отново.";
 
+"Enter card details manually" = "Ръчно въвеждане на данните на картата";
+
 "Enter the code sent to %@." = "Въведете кода, изпратен до %@.";
 
 "Failed to connect" = "Неуспешно свързване";

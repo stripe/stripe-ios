@@ -35,6 +35,8 @@ final class CardSectionWithScannerView: UIView {
         return scanningView
     }()
     private let opensCardScannerAutomatically: Bool
+    /// When set, the "Scan card" button calls this instead of showing the inline scanner.
+    private var externalCardScannerHandler: (() -> Void)?
     weak var delegate: CardSectionWithScannerViewDelegate?
     private let theme: ElementsAppearance
     private let linkAppearance: LinkAppearance?
@@ -77,8 +79,22 @@ final class CardSectionWithScannerView: UIView {
         addAndPinSubview(stack)
     }
 
+    /// Hands scanning off to a scanner shown outside of this view, e.g. `AutomaticCardScanViewController`.
+    /// The inline scanner is never shown, even if `opensCardScannerAutomatically` is true.
+    func useExternalCardScanner(showsScanButton: Bool, onTapScanButton: @escaping () -> Void) {
+        externalCardScannerHandler = onTapScanButton
+        cardScanningView.stopScanner()
+        cardScanningView.setHiddenIfNecessary(true)
+        cardScanButton.alpha = 1
+        cardScanButton.setHiddenIfNecessary(!showsScanButton)
+    }
+
     @objc func didTapCardScanButton() {
         analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
+        if let externalCardScannerHandler {
+            externalCardScannerHandler()
+            return
+        }
         animateScannerVisibility(true)
         cardScanningView.startScanner()
         becomeFirstResponder()
@@ -119,6 +135,9 @@ final class CardSectionWithScannerView: UIView {
     }
 
     override func resignFirstResponder() -> Bool {
+        guard externalCardScannerHandler == nil else {
+            return super.resignFirstResponder()
+        }
         // If we leave the screen or an input field is focused, we close the scanner
         cardScanningView.stopScanner()
         hideCardScanner()
@@ -130,7 +149,7 @@ final class CardSectionWithScannerView: UIView {
         // If cardScanningView.start() is called when it is already started, nothing will happen
         // The opensCardScannerAutomatically check is redudant since this should only apply in that case,
         //    but it adds a bit of extra safety. This can be removed in the future.
-        if newWindow != nil && !cardScanningView.isHidden && opensCardScannerAutomatically {
+        if newWindow != nil && !cardScanningView.isHidden && opensCardScannerAutomatically && externalCardScannerHandler == nil {
             cardScanningView.startScanner()
             becomeFirstResponder()
         }
