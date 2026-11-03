@@ -14,5 +14,6 @@ extension StripeAPI {
 
         let clearData: VerificationPageClearData?
         let collectedData: VerificationPageCollectedData?
+        var mediaPipeAvailable: Bool?
     }
 }
