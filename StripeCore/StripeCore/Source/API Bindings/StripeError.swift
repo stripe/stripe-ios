@@ -26,7 +26,7 @@ extension StripeError: AnalyticLoggableError {
     public var additionalNonPIIErrorDetails: [String: Any] {
         [:]
     }
-    public var analyticsErrorCode: String? {
+    public var analyticsErrorCode: String {
         switch self {
         case .invalidRequest:
             "invalidRequest"

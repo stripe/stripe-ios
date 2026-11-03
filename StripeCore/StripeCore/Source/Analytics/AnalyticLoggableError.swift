@@ -16,9 +16,9 @@ import Foundation
     /// The default implementation uses `Error.extractErrorType`
     var analyticsErrorType: String { get }
 
-    /// The value used for `"error_code"` in the analytics payload. Omitted when nil.
+    /// The value used for `"error_code"` in the analytics payload.
     /// The default implementation uses `Error.errorCode`
-    var analyticsErrorCode: String? { get }
+    var analyticsErrorCode: String { get }
 
     /// Additional, non-PII/PDE details about the error.
     /// If non-empty, this is sent as the value for `"error_details"` in the analytics payload.
@@ -31,7 +31,7 @@ import Foundation
         Self.extractErrorType(from: self)
     }
 
-    var analyticsErrorCode: String? {
+    var analyticsErrorCode: String {
         Self.extractErrorCode(from: self)
     }
 
@@ -61,7 +61,7 @@ extension AnalyticLoggableError where Self: Error {}
                 Self.extractErrorType(from: self)
             }
         }()
-        let errorCode: String? = {
+        let errorCode: String = {
             if let analyticLoggableError = self as? AnalyticLoggableError {
                 analyticLoggableError.analyticsErrorCode
             } else {
@@ -70,8 +70,8 @@ extension AnalyticLoggableError where Self: Error {}
         }()
         var params: [String: Any] = [
             "error_type": errorType,
+            "error_code": errorCode,
         ]
-        params["error_code"] = errorCode
         params["request_id"] = Self.extractStripeAPIRequestID(from: self)
 
         if let analyticLoggableError = self as? AnalyticLoggableError, !analyticLoggableError.additionalNonPIIErrorDetails.isEmpty {

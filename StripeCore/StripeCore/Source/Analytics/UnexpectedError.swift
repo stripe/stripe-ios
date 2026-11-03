@@ -14,8 +14,11 @@ import Foundation
     /// Must not contain PII — this value is sent to analytics and included in the debug-only assertion message.
     public let nonPIIErrorMessage: String
 
-    public init(nonPIIErrorMessage: String) {
+    public let code: String
+
+    public init(nonPIIErrorMessage: String, code: String = "") {
         self.nonPIIErrorMessage = nonPIIErrorMessage
+        self.code = code
     }
 
     // MARK: - LocalizedError
@@ -36,8 +39,8 @@ import Foundation
         "UnexpectedError"
     }
 
-    public var analyticsErrorCode: String? {
-        nil
+    public var analyticsErrorCode: String {
+        code
     }
 
     public var additionalNonPIIErrorDetails: [String: Any] {
@@ -54,10 +57,11 @@ import Foundation
 @_spi(InternalOnlyAPI) public func logUnexpectedError(
     _ nonPIIErrorMessage: String,
     event: STPAnalyticEvent,
+    code: String = "",
     apiClient: STPAPIClient = .shared,
     analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
 ) -> UnexpectedError {
-    let error = UnexpectedError(nonPIIErrorMessage: nonPIIErrorMessage)
+    let error = UnexpectedError(nonPIIErrorMessage: nonPIIErrorMessage, code: code)
     analyticsClient.log(
         analytic: ErrorAnalytic(
             event: event,

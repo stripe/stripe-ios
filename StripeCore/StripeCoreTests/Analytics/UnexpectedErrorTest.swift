@@ -16,7 +16,7 @@ class UnexpectedErrorTest: XCTestCase {
         let params = error.serializeForV1Analytics()
 
         XCTAssertEqual(params["error_type"] as? String, "UnexpectedError")
-        XCTAssertNil(params["error_code"])
+        XCTAssertEqual(params["error_code"] as? String, "")
         let errorDetails = params["error_details"] as? [String: Any]
         XCTAssertEqual(errorDetails?["error_message"] as? String, "Payment option out of sync.")
     }
@@ -36,18 +36,20 @@ class UnexpectedErrorTest: XCTestCase {
         let error = logUnexpectedError(
             "Could not find a presenting view controller.",
             event: .unexpectedCheckoutElementsError,
+            code: "missing_presenting_view_controller",
             analyticsClient: analyticsClient
         )
 
         XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
         let event = analyticsClient._testLogHistory.first
         XCTAssertEqual(event?["event"] as? String, "unexpected_error.checkout_elements")
-        XCTAssertNil(event?["error_code"])
+        XCTAssertEqual(event?["error_code"] as? String, "missing_presenting_view_controller")
         // Dashboards use the top-level message; later serialization preserves error_details.
         XCTAssertEqual(event?["error_message"] as? String, "Could not find a presenting view controller.")
         let errorDetails = event?["error_details"] as? [String: Any]
         XCTAssertEqual(errorDetails?["error_message"] as? String, "Could not find a presenting view controller.")
         XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
         XCTAssertEqual(error.nonPIIErrorMessage, "Could not find a presenting view controller.")
+        XCTAssertEqual(error.code, "missing_presenting_view_controller")
     }
 }

@@ -2459,7 +2459,7 @@ public class STPPaymentHandler: NSObject {
 struct STPPaymentHandlerError: Error, CustomNSError, AnalyticLoggableError {
     // AnalyticLoggableError properties
     let analyticsErrorType: String = errorDomain
-    let analyticsErrorCode: String?
+    let analyticsErrorCode: String
     let additionalNonPIIErrorDetails: [String: Any]
 
     // CustomNSError properties, to not break old behavior when this was an NSError
