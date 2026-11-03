@@ -124,7 +124,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
             httpVersion: nil,
             headerFields: ["request-id": "req_123"]
         )
-        let result: Result<FinancialConnectionsSynchronize, Error> = STPAPIClient.decodeResponse(
+        let result: Result<FinancialConnectionsSynchronize, Error> = STPAPIClient().decodeResponse(
             data: data,
             error: nil,
             response: response

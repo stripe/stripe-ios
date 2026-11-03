@@ -161,7 +161,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             httpVersion: nil,
             headerFields: ["request-id": "req_attestation_test"]
         )
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+        let result: Result<EmptyResponse, Error> = STPAPIClient().decodeResponse(
             data: responseData, error: nil, response: response
         )
         guard case .failure(let stripeError) = result else {

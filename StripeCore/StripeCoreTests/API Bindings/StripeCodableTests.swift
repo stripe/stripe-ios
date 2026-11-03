@@ -82,6 +82,74 @@ private struct ResponseWithRequestID: Decodable {
 }
 
 class StripeCodableTests: APIStubbedTestCase {
+    func testDecodingFailureLogsResponseContext() throws {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousHistory = analyticsClient._testLogHistory
+        defer { analyticsClient._testLogHistory = previousHistory }
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_decoding"
+        let cases: [(body: String, code: String, requestID: String?)] = [
+            (#"{"top_property":"ok","array_property":[{}]}"#, "keyNotFound", "req_missing_field"),
+            (#"{"top_property":"ok","array_property":[{"nested_property":{"private_response_value":true}}]}"#, "dataCorrupted", nil),
+        ]
+        for testCase in cases {
+            // Given a successful HTTP response that cannot decode into the expected model
+            analyticsClient._testLogHistory = []
+            let stubDescriptor = stub(condition: { _ in true }) { _ in
+                HTTPStubsResponse(
+                    data: Data(testCase.body.utf8),
+                    statusCode: 200,
+                    headers: testCase.requestID.map { ["Request-Id": $0] }
+                )
+            }
+            let completed = expectation(description: "Request completed")
+            STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+
+            // When the Codable API client receives it
+            apiClient.get(resource: "test", parameters: [:]) { (result: Result<TestCodable, Error>) in
+                if case .failure(let error) = result {
+                    XCTAssertTrue(error is DecodingError)
+                } else {
+                    XCTFail("Expected a decoding error")
+                }
+                completed.fulfill()
+            }
+            waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
+            HTTPStubs.removeStub(stubDescriptor)
+
+            // ...and one analytic contains response context, without response values
+            XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
+            XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
+            let event = try XCTUnwrap(analyticsClient._testLogHistory.first)
+            XCTAssertEqual(event["event"] as? String, "unexpected_error.api_response_decoding")
+            XCTAssertEqual(event["error_type"] as? String, "Swift.DecodingError")
+            XCTAssertEqual(event["error_code"] as? String, testCase.code)
+            XCTAssertEqual(event["failed_decoding_path"] as? String, "arrayProperty.0.nestedProperty")
+            XCTAssertEqual(event["request_id"] as? String, testCase.requestID)
+            XCTAssertEqual(event["http_status_code"] as? Int, 200)
+            XCTAssertEqual(event["response_type"] as? String, String(reflecting: TestCodable.self))
+            XCTAssertEqual(event["publishable_key"] as? String, "pk_test_decoding")
+            XCTAssertFalse(String(describing: event).contains("private_response_value"))
+        }
+    }
+
+    func testAPIErrorWithSuccessfulStatusDoesNotLogDecodingFailure() {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousHistory }
+
+        // An error envelope must take precedence over failure to decode the expected response.
+        let result: Result<TestCodable, Error> = STPAPIClient().decodeResponse(
+            data: Data(#"{"error":{"type":"api_error"}}"#.utf8),
+            error: nil,
+            response: HTTPURLResponse(url: URL(string: "https://api.stripe.com/v1/test")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+        )
+
+        XCTAssertThrowsError(try result.get()) { XCTAssertTrue($0 is StripeError) }
+        XCTAssertTrue(analyticsClient._testLogHistory.isEmpty)
+    }
+
     func testSuccessfulResponseExposesRequestIDToDecoder() throws {
         for requestID in ["req_123", nil] {
             // Given a successful response, with or without a request ID header
@@ -94,7 +162,7 @@ class StripeCodableTests: APIStubbedTestCase {
             ))
 
             // When the API client decodes the response
-            let result: Result<ResponseWithRequestID, Error> = STPAPIClient.decodeResponse(
+            let result: Result<ResponseWithRequestID, Error> = STPAPIClient().decodeResponse(
                 data: Data("{}".utf8),
                 error: nil,
                 response: response

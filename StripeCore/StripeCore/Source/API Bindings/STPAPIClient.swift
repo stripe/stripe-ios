@@ -641,7 +641,7 @@ extension STPAPIClient {
             completionHandler: { [includeRequestIDInDescription = shouldIncludeRequestIDInErrorDescription] (data, response, error) in
                 DispatchQueue.main.async {
                     completion(
-                        STPAPIClient.decodeResponse(data: data, error: error, response: response, request: request, includeRequestIDInDescription: includeRequestIDInDescription)
+                        self.decodeResponse(data: data, error: error, response: response, request: request, includeRequestIDInDescription: includeRequestIDInDescription)
                     )
                 }
             },
@@ -649,7 +649,7 @@ extension STPAPIClient {
         )
     }
 
-    @_spi(InternalOnlyAPI) public static func decodeResponse<T: Decodable>(
+    @_spi(InternalOnlyAPI) public func decodeResponse<T: Decodable>(
         data: Data?,
         error: Error?,
         response: URLResponse?,
@@ -690,6 +690,31 @@ extension STPAPIClient {
                 apiError.includeRequestIDInDescription = includeRequestIDInDescription
                 return .failure(StripeError.apiError(apiError))
             } else {
+                // Report an unexpected error when a successful HTTP response can't be decoded.
+                if let decodingError = error as? DecodingError {
+                    let codingPath: [CodingKey] // e.g. items → 0 → quantity
+                    switch decodingError {
+                    case .keyNotFound(let key, let context):
+                        codingPath = context.codingPath + [key]
+                    case .typeMismatch(_, let context), .valueNotFound(_, let context), .dataCorrupted(let context):
+                        codingPath = context.codingPath
+                    @unknown default:
+                        codingPath = []
+                    }
+                    // Decoding debug descriptions can contain response values. Send only structural details.
+                    var params: [String: Any] = [
+                        "error_message": "Failed to decode API response.",
+                        "failed_decoding_path": codingPath.map(\.stringValue).joined(separator: "."),
+                        "response_type": String(reflecting: T.self),
+                    ]
+                    let httpResponse = response as? HTTPURLResponse
+                    params["request_id"] = httpResponse?.value(forHTTPHeaderField: "request-id")
+                    params["http_status_code"] = httpResponse?.statusCode
+                    STPAnalyticsClient.sharedClient.log(
+                        analytic: ErrorAnalytic(event: .unexpectedAPIResponseDecodingError, error: decodingError, additionalNonPIIParams: params),
+                        apiClient: self
+                    )
+                }
                 // Return decoding error directly
                 return .failure(error)
             }

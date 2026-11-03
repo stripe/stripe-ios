@@ -22,7 +22,7 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+        let result: Result<EmptyResponse, Error> = STPAPIClient().decodeResponse(
             data: responseData,
             error: nil,
             response: HTTPURLResponse(
@@ -50,7 +50,7 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
     /// Should result in a failure.
     func testEmptyResponse_WithError() throws {
         let responseData = try JSONSerialization.data(withJSONObject: [:], options: [])
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+        let result: Result<EmptyResponse, Error> = STPAPIClient().decodeResponse(
             data: responseData,
             error: NSError.stp_genericConnectionError(),
             response: nil
@@ -68,7 +68,7 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
     func test429() throws {
         let responseData = try JSONSerialization.data(withJSONObject: [:], options: [])
         let response = HTTPURLResponse(url: URL(string: "http://foo.bar")!, statusCode: 429, httpVersion: nil, headerFields: nil)
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+        let result: Result<EmptyResponse, Error> = STPAPIClient().decodeResponse(
             data: responseData,
             error: nil,
             response: response
@@ -86,7 +86,7 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
     func testEmptyResponse_NoError() throws {
         let responseData = try JSONSerialization.data(withJSONObject: [:], options: [])
         let response = HTTPURLResponse(url: URL(string: "http://foo.bar")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+        let result: Result<EmptyResponse, Error> = STPAPIClient().decodeResponse(
             data: responseData,
             error: nil,
             response: response
