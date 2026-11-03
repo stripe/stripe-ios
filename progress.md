@@ -1,70 +1,68 @@
-# Progress Tracker
+# Checkout bug bash — evidence and coverage
 
-Source of truth for what's been covered. Update this after finishing (or abandoning) a surface —
-don't rely on conversation history, it gets compacted/restarted.
+Scope: complete the supported-flow pass in `search_strategy.md` and `docs_driven_strategy.md`. Shipping options, tax ID collection, phone collection, promotion-code support, and other documented unfinished preview features are excluded. Baseline: `5efd450a813`. The user subsequently requested committing and pushing the reports and repros for shareable links; that instruction supersedes the earlier uncommitted-only guidance. Production SDK code is unchanged.
 
-Status values: `not started` / `in progress` / `done`.
+## Correction and integration-guide follow-up
 
-## Audit outcome (2026-11-03)
+The earlier completion claim was too broad: the SDK scenario pass used docs as input but had not audited the guide's samples themselves. A subsequent direct audit of the core iOS guide found **three additional guide issues**, bringing the local report count to seven. See [integration_guide_audit.md](integration_guide_audit.md) for exact scope, sources, compiler controls, live checks, and limits.
 
-One issue remains: saving the stale Shipping Address Element form overwrites a newer address set directly by the merchant. The wallet-race and confirmation-cancellation reports were rejected and removed. See [issue_audit.md](issue_audit.md) for source traces, test results, and limitations. Other exploration notes below have not been re-audited.
+- [Documented SPI import does not expose CheckoutController](ISSUE_integration-guide_ios-preview-import-does-not-expose-checkout.md).
+- [Pay-button predicate requires shipping even when collection is omitted](ISSUE_integration-guide_pay-button-requires-optional-shipping.md).
+- [Result switch fails in Swift 6 with a resilient framework](ISSUE_integration-guide_result-switch-fails-with-swift6-framework.md).
 
-## Code-reading surfaces (search_strategy.md)
+The guide's server request body was also exercised verbatim and successfully loaded and paid. `guide_repros/check_swift_samples.py` reproduces both compilation problems and verifies their minimal corrections. These checks do not establish exhaustive coverage of all sibling guides or Android/React Native examples.
 
-| # | Surface | Status | Result |
-|---|---------|--------|--------|
-| 1 | state-machine | done | Audit: confirmation and later merchant updates remain serialized. The payment-options wait timeout does not cancel the original confirmation; it continues to report its result to its caller. Earlier investigation also found no stale confirmation-challenge defect. |
-| 2 | polling-async | done | Report rejected and removed. A payment-options presentation timeout reports cancellation while the original confirmation remains tracked. Direct poller cancellation tests establish an isolated behavior, not the alleged confirmation bug. |
-| 3 | confirm-flow | done | Report rejected and removed. The entire Apple Pay flow holds a queued operation; contact updates run within it, and later merchant updates wait. The original race test violated the helper's queued-context precondition and was removed. New tests cover both operation orderings. |
-| 4 | session-model-and-parsing | done | No bug found. Investigated `makeExchangeRateMeta`'s `.first(where:) ?? .first` fallback (looked like a currency mismatch risk if `localCurrencyOptions` had >1 entry) — ruled out: `CurrencySelectorUtilities` is explicitly architected as a 2-option (local vs. integration) toggle, confirmed by its own doc comment, so `localCurrencyOptions` is always a single entry in practice and the fallback never diverges. Also checked address-merging (`Checkout+Session+AddressMerging.swift`, fine) and money formatting (`makeAmount` uses `NSDecimalNumber`, avoids float imprecision, fine). |
-| 5 | sub-elements | done | Confirmed `ISSUE_sub-elements_shipping-address-element-never-resyncs-after-construction.md`. Direct session address updates do not refresh the form. Reopening and saving restores the stale address over the newer one; reproduced against the test backend. |
-| 6 | config-and-analytics | done | No bug found. Checked `AdaptivePricingFlagImageManager` (graceful emoji fallback on download failure, one-time prefetch is correct since the local/integration currency pair is fixed per session) and `Checkout+Configuration.swift` (plain config plumbing). Did not deep-dive `Checkout+Analytic(s).swift` or `STPPaymentMethodAddress+Checkout.swift` — lowest-priority surface per search_strategy.md, diminishing returns given findings so far cluster in concurrency/coordination code, not config/analytics. |
+## SDK behavior findings
 
-## Docs-driven surfaces (docs_driven_strategy.md)
+1. [Shipping Address Element restores stale form values](ISSUE_sub-elements_shipping-address-element-never-resyncs-after-construction.md). Retained from the original audit; real UI reproduction and a form-level test verify the overwrite.
+2. [Overlapping shipping API calls discard later clears/reverts](ISSUE_state-machine_shipping-update-noop-check-drops-queued-reverts.md). Three failing local repros and the same three failures against the real test backend; two controls pass in each matrix. This requires overlapping programmatic calls, not taps through controls disabled while `isUpdating`.
+3. [COP total strings round away cents](ISSUE_session-model_formatted-cop-total-rounds-away-cents.md). A real session for 1,234,567 minor units exposes `COP 12,346` instead of `COP 12,345.67` on iOS 18.5, en_US. Numeric amounts remain correct. JPY control passes.
 
-| # | Surface | Status | Result |
-|---|---------|--------|--------|
-| 1 | core-lifecycle | done | No bug found. "No double charges" guarantee verified sound (`Checkout+Confirm.swift:286-297`). Added regression test for an untested-but-not-broken poll-phase double-confirm case (`CheckoutConfirmDuringPollTests.swift`). Preview-limitation list (tax ID, shipping options, etc.): zero client-side modeling found; inconclusive without a live-backend repro (not yet attempted). |
-| 2 | multi-element-composition | done | No new bug. Checked the doc's three coordination claims against code: "only one Element confirms" (verified sound, same `confirmationInProgress`/`pendingOperations` guards checked in state-machine surface), "Currency Selector updates amounts shown by other Elements" (verified — `ExpressCheckoutElement` subscribes to `$session` reactively, `PaymentElement` is refreshed via `updateForSessionChange()`'s explicit dispatch), "Shipping Address Element updates taxes/totals" (outbound direction works via its delegate callback; the *inbound* gap — external updates not reaching the element — is the already-filed sub-elements bug, not new). |
-| 3 | express-checkout-wallets | done | No new bug. Double-tap: defended at both UI layer (`isUpdating` disables all wallet buttons the instant `pendingOperations` becomes non-empty, synchronously, before any `await`) and logic layer (`confirm()`'s guards, verified in state-machine surface). Wallet-becomes-unavailable-after-mount: `CheckoutApplePayContext.create` re-checks `PKPaymentAuthorizationController.canMakePayments()` fresh at tap time, not relying on stale mount-time availability. Cancellation mid-flow: already covered thoroughly in confirm-flow surface (`CheckoutApplePayContext`'s `.pending` state machine). |
-| 4 | adaptive-pricing-currency | done | No new bug. Checked whether a wallet (Apple Pay) could confirm with a stale currency if tapped right after a currency switch — can't: `confirm()`'s `pendingOperations.isEmpty` guard + `isUpdating`-driven button disabling (same mechanism verified elsewhere) blocks the tap until the currency update settles. The 24h exchange-rate-validity guarantee is server-enforced with no client-side expiry tracking to get wrong. Currency Selector Element's availability guard (`CurrencySelectorUtilities.adaptivePricingData`) correctly hides the element when any precondition (`adaptivePricingActive`, non-empty `localizedPricesMetas`, `exchangeRateMeta`, `activePresentmentCurrency`) is missing. |
-| 5 | shipping-and-tax | done | No new bug. Checked whether a failed tax computation (e.g. unsupported country) leaves `shippingAddress` "half-saved" locally while the tax portion fails — it doesn't: `performUnqueuedUpdate` throws before reaching `commitSession`/`mutateLocalState` on any API failure, so a rejected address update is fully rejected, not partially applied. Checked rapid repeated shipping edits — correctly serialized/converges via the FIFO queue (same mechanism verified in state-machine surface). The Express Checkout Element wallet's tax updates commit to `CheckoutController.session` inside the queued wallet operation; the audit rejected the claimed race. |
-| 6 | appearance-and-migration | done | No bug found, lighter pass (lowest-priority surface). Checked appearance config files for risky force-unwraps/crashes (none). Considered whether a merchant mixing old PaymentSheet/PaymentIntents with new CheckoutController in the same app could corrupt shared state (e.g. `AnalyticsHelper.shared` session ID if both flows run concurrently) — plausible but speculative and low-severity (analytics attribution only, not money/correctness); didn't find concrete reachable harm, so not filed per the no-theoretical-bugs rule. |
+4. [Link web handoff retains the previous email](ISSUE_config_link-web-handoff-keeps-email-before-update.md). Real session creation and initial Link lookup; after `updateEmail`, the session and Payment Element contain the new email but generated web parameters still contain the old email. No web presentation or payment is claimed by this repro.
 
-## Repro status after audit
+The SDK scenario matrix below finished with four distinct root causes. It was not a full guide-sample audit; the follow-up and correction above record that additional work.
 
-- **Shipping address:** live UI repro passed, including reopening and saving the stale form over the newer address. The unit repro also verifies actual form fields and clearing the address.
-- **Payment-options timeout:** live UI repro passed. The loading sheet dismisses without opening the picker, Buy remains disabled, and the original confirmation produces Success. A separate unit test verifies `didCancel == true` on presentation completion. This does not establish a cancellation defect.
-- **Wallet race:** source tracing and queue/delegate tests reject the reported trigger. Merchant updates submitted while the wallet is open wait for the wallet operation to finish. PassKit presentation and HTTP responses were stubbed for this check; no end-to-end system-sheet race was reproduced.
+## Coverage and evidence
 
-The earlier instruction to leave bug-hunt work uncommitted is superseded for this update by the user's request to update the branch and issue reports.
+| Area | Checks | Result |
+| --- | --- | --- |
+| State and queue | Shipping overlap/revert/clear; confirmation/update ordering; duplicate confirmation; failures release pending work | Shipping defect above. Core regressions pass; real duplicate confirmation rejected while the original completes. |
+| Polling and lifecycle | Request failures, rate limiting/backoff, deadline, preservation of latest response, next actions, cancellation ownership, terminal confirmation | Core regression matrix passes; real reconfirmation of a completed session rejected. |
+| Payment Element and billing tax | Embedded/sheet selection, clear, saved-card change, rollback on failed tax update, selection restoration, form tax requirements | Regression matrices pass. Incomplete saved addresses are filtered; new-method forms append/widen required tax fields. |
+| Wallets | Apple Pay contact/tax callbacks, queue ownership, tokenization failure/retry/cancel; Link decline/close/retry and response propagation | Regression matrices pass. All six live UI flows passed. |
+| Data and currency | Decoding/statuses, line items/taxes, currency changes, flags/labels, currency precision | COP display defect above. Real EUR→USD→EUR round trip and JPY control pass. |
+| Configuration and eligibility | Defaults, allowed countries, saved methods, Link/Apple Pay availability, analytics attribution, errors | Regression matrices pass. Link email handoff defect above; defaults/eligibility/analytics regression checks pass. |
+| Live payment lifecycle | Declined card→valid-card retry, concurrent confirm, terminal confirm, free checkout | All behavioral checks passed. Duplicate/terminal test initially checked generic localized text; corrected to inspect integration-error payload and passed. |
+| Final dedup | Retained form, pre-enqueue no-op checks, currency precision, cached Link email | Four distinct root causes; no duplicate reports. |
 
-## Guide-driven live exploration round 2 (2026-10-31, continued)
+## Test runs
 
-Went through more guide sections live against the real backend, beyond the bugs already filed:
+Environment: Xcode 27.1, iOS 18.5, iPhone 12 mini simulator `E52DA269-0E66-4555-9B2E-E74C04B128C3`.
 
-- **Currency switch after shipping/tax established** (reverse order from the one working
-  reference test): tried 4 times, inconsistent results (sometimes only tax lagged, sometimes
-  neither total nor tax updated, with neither the success nor failure analytics event firing —
-  meaning the tap likely never reached the SDK handler). Concluded likely test-automation
-  flakiness, not a product bug, per instruction. Removed the test; not filed.
-- **Apple Pay: cancel before authorizing, then retry** — new coverage
-  (`testCancelingApplePayLeavesCheckoutUsable`). Passed: checkout returns to a fully usable
-  state, second attempt completes normally. No bug.
-- **Payment Element + Express Checkout coordination**, with a card already entered in Payment
-  Element before switching to Apple Pay — new coverage
-  (`testApplePayConfirmsWhenACardIsAlreadyEnteredInPaymentElement`). Passed: exactly one
-  confirmation attempt, via ECE; the entered card was never submitted. No bug.
-- **Link wallet**: confirmed via code that Link has no analog to Apple Pay's unqueued wallet
-  tax-update path (`updateTaxRegionWithoutEnqueueing` has exactly one caller,
-  `CheckoutApplePayContext`), and the audit rejected the claimed Apple Pay race as well. Didn't find a
-  quick way to verify the Link button's displayed email re-syncs on session change (its
-  rendering isn't in any Checkout-specific file, so likely shared, already-tested Link
-  infrastructure) — dropped rather than sink more time into locating it.
+| Result bundle under `/tmp/` | Result |
+| --- | --- |
+| `checkout-supported-updates-unit.xcresult` | 3 intentionally failing shipping repros, 2 passing controls. |
+| `checkout-supported-updates-live.xcresult` | Same 3 failures and 2 controls against real backend; HTTPStubs observes request starts but returns false and supplies no response. |
+| `checkout-bash-core.xcresult` | 173 passed, 2 skipped; three known shipping repro failures deliberately excluded. |
+| `checkout-bash-live.xcresult` | 4 passed; COP repro failed; duplicate/terminal test had two erroneous localized-text assertions, subsequently corrected. |
+| `checkout-bash-remaining.xcresult` | 211 passed, including corrected live duplicate/terminal test; 1 crashed because the new Link test omitted attribution context. |
+| `checkout-bash-link-email.xcresult` | Corrected live Link repro: 1 expected assertion failure, old email in web handoff. |
+| `checkout-bash-ui.xcresult` | 6 passed: saved-card remove/add/save/confirm, multi-element tax/currency synchronization, ECE Apple Pay, Apple Pay cancel/retry, Apple Pay after card entry, Link authentication cancel/retry. |
 
-## Open threads worth revisiting
+Core classes: `CheckoutPendingOperationsTests`, `CheckoutSessionPollerTests`, `CheckoutConfirmDuringPollTests`, `CheckoutConfirmationStubbedTests`, `PaymentElementTest`, `SavedPaymentMethodBillingSyncTests`, `FlowControllerSelectionRestorationTests`, `CheckoutErrorHandlingTests`, `CheckoutDefaultsInitializationTests`, `CheckoutUnitTests`.
 
-- **core-lifecycle's preview-limitation list**: per the updated guidance, absence of client code
-  for a documented limitation should now be filed, not left inconclusive. Worth a short follow-up
-  pass using the live test backend (`STPTestingAPIClient+Swift.swift`) rather than a fresh full
-  re-run of that surface.
+Remaining regression classes: `CheckoutApplePayContextTests`, `CheckoutClientAPIResponseTest`, `CheckoutClientPollResponseTests`, `CheckoutSessionPollingAPIClientTests`, `CheckoutCurrencySelectorViewTests`, `ExpressCheckoutElementViewTests`, `CheckoutAddressMergingTests`, `ShippingAddressElementConfigurationTests`, `ShippingAddressElementPresentationTests`, `STPClientAttributionMetadataTests`, `PaymentSheetLoaderAutomaticTaxTest`, `PaymentSheetFormFactoryTaxTest`, `PaymentMethodAvailabilityTests`.
+
+New `CheckoutSupportedFlowsLiveTests` is a plain XCTestCase, without recorded responses. It selects card params through the existing test hook for API confirmation checks; the UI batch separately exercises real card entry. Existing functional tests based on `STPNetworkStubbingTestCase` are not counted as live backend evidence.
+
+## Rejected hypotheses and limits
+
+- Original wallet tax race: the full wallet flow already owns the queue; enqueueing its nested updater would deadlock. Original timeout/orphaned-confirmation claim: only the presentation wait times out; confirmation remains owned and reports its result. See [issue_audit.md](issue_audit.md).
+- Missing billing-country tax sync: reachable saved methods and new forms are protected by filtering and automatic-tax field requirements; an early return in the sync helper alone is insufficient evidence.
+- Apple Pay retry/cancel returning an earlier error: matches existing flow-level Apple Pay behavior and the failure-on-dismissal test. No demonstrated UI failure or violated API promise; no issue filed.
+- Server-email override: docs explicitly prohibit overriding `customer_email` or `Customer.email`; not a supported-flow issue.
+- No arbitrary network-loss/background timing sweep, physical-device/OS matrix, or 24-hour adaptive-pricing expiry wait was performed. Poll/error recovery was exercised with controlled responses; live backend and UI evidence is identified separately above.
+
+Three cheaper readers covered wallets, data, and configuration. Their source notes are `bash_wallets_notes.md`, `bash_data_notes.md`, and `bash_config_notes.md`; candidates were checked by the lead before filing. Follow-up task transport remained broken, so the lead owns final review.
+
+Final validation: SwiftLint passed for the new live test file; `git diff --check` passed. The preexisting untracked Xcode workspace directory is untouched. The reports and repros are being published on `yuki/checkout-session-bug-finder` at the user's request. The new shipping, COP, and Link repros intentionally assert correct behavior and fail on the current SDK; they are not fixes. The guide follow-up additionally changes a test backend helper and adds compiler fixtures; production SDK code remains unchanged.

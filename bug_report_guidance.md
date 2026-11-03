@@ -9,10 +9,9 @@
   Do not run `git add`/`git commit`. Leave repro tests and `ISSUE_*.md` files as uncommitted
   changes in the worktree.
 
-  If you find no client-side code at all modeling a documented-as-unsupported feature, that
-  absence is itself worth filing — don't treat "there's nothing to map the claim to" as
-  inconclusive and drop it. File it with lower confidence if you haven't confirmed actual runtime
-  behavior via a live repro, higher confidence if you have.
+  Known unfinished preview features are out of scope per the user's 2026-11-03 direction.
+  Do not file absence of their implementation as a bug. Focus on supported flows and concrete
+  incorrect outcomes; respect documented integration preconditions when assessing reachability.
 
   When you have identified a potential issue:
   - Identify the minimal repro/trigger condition.

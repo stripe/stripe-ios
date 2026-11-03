@@ -6,6 +6,8 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
@@ -190,6 +192,76 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         // Then the latest queued email wins
         XCTAssertNil(checkout.session.email)
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
+    }
+
+    // MARK: - Shipping Updates
+
+    func testQueuedShippingSetThenClearPreservesLatestValue() async throws {
+        try await assertShippingUpdates(initial: nil, first: "A", last: nil)
+    }
+
+    func testQueuedShippingChangeThenRestorePreservesLatestValue() async throws {
+        try await assertShippingUpdates(initial: "A", first: "B", last: "A")
+    }
+
+    func testQueuedShippingClearThenRestorePreservesLatestValue() async throws {
+        try await assertShippingUpdates(initial: "A", first: nil, last: "A")
+    }
+
+    func testQueuedShippingChangesUseLastDistinctAddress() async throws {
+        try await assertShippingUpdates(initial: "A", first: "B", last: "C")
+    }
+
+    func testSequentialShippingSetThenClearPreservesLatestValue() async throws {
+        try await assertShippingUpdates(initial: nil, first: "A", last: nil, overlapping: false)
+    }
+
+    private func assertShippingUpdates(
+        initial: String?,
+        first: String?,
+        last: String?,
+        overlapping: Bool = true,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) async throws {
+        // Given shipping-sourced automatic tax, so each address update awaits a request.
+        // No Shipping Address Element is configured or involved in this test.
+        let response = CheckoutTestHelpers.makeSession([
+            "automatic_tax": ["enabled": true, "status": "ready", "address_source": "shipping"],
+            "shipping_address_collection": ["allowed_countries": ["US"]],
+        ])
+        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: response,
+            paymentElementConfiguration: nil,
+            expressCheckoutElementConfiguration: nil
+        ))
+        addTeardownBlock { HTTPStubs.removeAllStubs() }
+        stub { $0.url?.path.hasSuffix("/update") == true } response: { _ in
+            HTTPStubsResponse(jsonObject: response.allResponseFields, statusCode: 200, headers: nil)
+                .responseTime(0.2)
+        }
+        func address(_ name: String?) -> CheckoutController.Address? {
+            name.map { .init(country: "US", line1: "\($0) Street", city: "San Francisco", state: "CA", postalCode: "94103") }
+        }
+        try await checkout.updateShippingAddress(name: initial, address: address(initial))
+
+        // When the merchant makes two public API calls, either overlapping or sequential.
+        let firstUpdate = Task { @MainActor in
+            try await checkout.updateShippingAddress(name: first, address: address(first))
+        }
+        if overlapping {
+            try await waitUntil { checkout.isUpdating }
+            XCTAssertEqual(checkout.session.shippingAddress?.name, initial, file: file, line: line)
+        } else {
+            try await firstUpdate.value
+        }
+        try await checkout.updateShippingAddress(name: last, address: address(last))
+        try await firstUpdate.value
+
+        // Then both calls succeeded, and the final session should reflect the later call.
+        XCTAssertFalse(checkout.isUpdating, file: file, line: line)
+        XCTAssertEqual(checkout.session.shippingAddress?.name, last, file: file, line: line)
+        XCTAssertEqual(checkout.session.shippingAddress?.address, address(last), file: file, line: line)
     }
 
     // MARK: - Loading & Emission Tests

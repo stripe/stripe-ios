@@ -231,7 +231,8 @@ extension STPTestingAPIClient {
         returnURL: String? = nil,
         allowPromotionCodes: Bool = false,
         allowedShippingCountries: [String]? = nil,
-        customerEmail: String? = nil
+        customerEmail: String? = nil,
+        sessionParametersOverride: [String: Any]? = nil
     ) async throws -> CreateCheckoutSessionResponse {
         let playgroundMerchant = playgroundMerchant(for: merchantCountry)
         var sessionParameters: [String: Any] = [
@@ -299,7 +300,7 @@ extension STPTestingAPIClient {
                 "stripe_version": types.contains("vipps")
                     ? "\(Self.checkoutMobileElementsAPISettings); vipps_preview=v1"
                     : Self.checkoutMobileElementsAPISettings,
-                "request_params": sessionParameters,
+                "request_params": sessionParametersOverride ?? sessionParameters,
             ]
         )
         let publishableKeyResponse: PlaygroundPublishableKeyResponse = try await makePlaygroundRequest(

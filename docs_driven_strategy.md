@@ -13,24 +13,9 @@ pass at the end.
 Docs root (fetch each with `execute_internal_search` / `fetch_internal_search_result`, type
 `stripe_doc`): `https://docs.corp.stripe.com/payments/mobile/checkout-sessions` and siblings.
 
-## Ground truth: what's explicitly unsupported (private preview)
+## Scope: supported behavior
 
-Per the landing doc, Mobile Checkout Elements does NOT support: subscription/setup-mode
-Sessions, server-side line-item updates/manual approval, shipping option collection, custom
-payment methods or multiprocessor integrations, tax ID or phone-number collection, tap-to-add-
-card, card funding filtering.
-
-For each: don't just confirm it's "not supported" — find out what *actually happens* if a
-merchant configures one anyway (silent no-op, thrown error, crash, or — worst case — a
-charge that doesn't match what was configured). A silent wrong-behavior here is a worse bug
-than a crash.
-
-**If you find zero client-side code modeling a documented limitation at all** (no field, no
-guard, no validation anywhere in `Checkout/`), that absence is itself a finding — file it, don't
-treat it as inconclusive. "Nothing stops a merchant from configuring this server-side and the
-client has no way to react" is a real gap even before you know exactly what the client does in
-that case. Rate confidence lower if you haven't confirmed the actual runtime behavior via a live
-repro (see Verification below), higher if you have.
+Per the user's 2026-11-03 direction, do not spend time on known unfinished preview features: shipping option collection, tax ID collection, checkout phone collection, and the other explicitly unsupported features. Read the current docs to distinguish supported promises from those exclusions. Missing implementation of an excluded feature is not a bug report for this hunt.
 
 ## Method per agent
 
@@ -47,7 +32,6 @@ For your assigned doc(s):
    - **Invalid/boundary config**: nil, empty, zero-amount, unsupported country/currency.
    - **Customer interrupts**: backgrounds the app, loses network, cancels a system sheet
      (Apple Pay, Google Pay auth), mid-flow.
-   - **Preview-limitation violation**: see above.
 4. File via `bug_report_guidance.md`.
 
 ## Verification: use the live test backend, not just stubs
@@ -55,9 +39,8 @@ For your assigned doc(s):
 `StripePayments/StripePaymentsTestUtils/STPTestingAPIClient+Swift.swift`'s
 `createCheckoutSession(...)` hits a real playground backend and can construct an arbitrary
 Checkout Session (it already takes params like `automaticTax`, `allowPromotionCodes`,
-`allowedShippingCountries`; extend it with more raw `sessionParameters` as needed — e.g.
-`tax_id_collection`, `shipping_options`, `phone_number_collection` — to construct sessions that
-exercise the preview-limitation list above). Prefer this over stubbed/mocked unit tests for
+`allowedShippingCountries`; use these supported parameters to construct sessions that exercise real address, tax,
+discount, and payment-method behavior). Prefer this over stubbed/mocked unit tests for
 anything you're testing against a *documented claim* — a stub only proves your code does what
 you told it to; a live session proves the SDK does what the docs promise against a real backend
 response.
