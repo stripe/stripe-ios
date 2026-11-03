@@ -84,10 +84,11 @@ class UnexpectedErrorTest: XCTestCase {
             analyticsClient: analyticsClient
         )
 
-        // Then the analytic fires exactly once, carrying the event, code, and message...
+        // Then the analytic fires exactly once, with the message at the top level and in error_details...
         let events = analyticsClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.checkout_elements" }
         XCTAssertEqual(events.count, 1)
         XCTAssertEqual(events.first?["error_code"] as? String, "missing_presenting_view_controller")
+        XCTAssertEqual(events.first?["error_message"] as? String, "Could not find a presenting view controller.")
         let errorDetails = events.first?["error_details"] as? [String: Any]
         XCTAssertEqual(errorDetails?["error_message"] as? String, "Could not find a presenting view controller.")
 

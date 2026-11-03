@@ -64,6 +64,15 @@ import Foundation
     analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
 ) -> UnexpectedError {
     let error = UnexpectedError(nonPIIErrorMessage: nonPIIErrorMessage, code: code)
-    analyticsClient.log(analytic: ErrorAnalytic(event: event, error: error), apiClient: apiClient)
+    analyticsClient.log(
+        analytic: ErrorAnalytic(
+            event: event,
+            error: error,
+            // Dashboards and alerts read the top-level message. AnalyticLoggableError also
+            // preserves it under error_details when the returned error is serialized later.
+            additionalNonPIIParams: ["error_message": nonPIIErrorMessage]
+        ),
+        apiClient: apiClient
+    )
     return error
 }
