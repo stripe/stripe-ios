@@ -379,7 +379,7 @@ enum ChallengeError: LocalizedError, AnalyticLoggableError {
         }
     }
 
-    var analyticsErrorCode: String {
+    var analyticsErrorCode: String? {
         switch self {
         case .webError(_, _, let code):
             return code ?? "unknown"

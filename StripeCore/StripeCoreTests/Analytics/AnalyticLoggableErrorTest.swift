@@ -150,7 +150,7 @@ class AnalyticLoggableErrorTest: XCTestCase {
             var analyticsErrorType: String {
                 return "overriden error type"
             }
-            var analyticsErrorCode: String {
+            var analyticsErrorCode: String? {
                 return "overridden error code"
             }
 
