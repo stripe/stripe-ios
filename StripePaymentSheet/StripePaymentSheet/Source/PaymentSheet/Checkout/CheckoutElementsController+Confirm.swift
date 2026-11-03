@@ -154,7 +154,7 @@ extension CheckoutElementsController {
         }
 
         guard let paymentElement else {
-            logUnexpectedCheckoutElementsErrorAndAssert(
+            logUnexpectedCheckoutElementsError(
                 "Checkout Session has a payment option without a PaymentElement.",
                 apiClient: apiClient
             )
@@ -168,7 +168,7 @@ extension CheckoutElementsController {
 
         if paymentElement.paymentOptionSourceOfTruthIsFlowController {
             guard let resolvedPaymentOption = paymentElement.paymentSheetFlowController.internalPaymentOption else {
-                logUnexpectedCheckoutElementsErrorAndAssert(
+                logUnexpectedCheckoutElementsError(
                     "Checkout Session payment option and FlowController payment option are out of sync.",
                     apiClient: apiClient
                 )
@@ -180,7 +180,7 @@ extension CheckoutElementsController {
             integrationShape = .flowController
         } else {
             guard let resolvedPaymentOption = paymentElement.embeddedPaymentElement._paymentOption else {
-                logUnexpectedCheckoutElementsErrorAndAssert(
+                logUnexpectedCheckoutElementsError(
                     "Checkout Session payment option and EmbeddedPaymentElement payment option are out of sync.",
                     apiClient: apiClient
                 )

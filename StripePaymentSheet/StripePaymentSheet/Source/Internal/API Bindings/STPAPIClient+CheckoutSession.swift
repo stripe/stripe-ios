@@ -409,7 +409,11 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
+                logUnexpectedCheckoutElementsError(
+                    "Failed to parse Checkout Client response: \(String(describing: error))",
+                    code: "checkout_client_response_parsing_failed",
+                    apiClient: self
+                )
             }
             throw error
         }
@@ -452,7 +456,11 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
+                logUnexpectedCheckoutElementsError(
+                    "Failed to parse Checkout Client response: \(String(describing: error))",
+                    code: "checkout_client_response_parsing_failed",
+                    apiClient: self
+                )
             }
             throw error
         }
