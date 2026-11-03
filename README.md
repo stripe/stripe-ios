@@ -111,7 +111,7 @@ The SDK includes translations for all of the languages listed above. If your app
    - Other installations: paste the contents of [`strip_unused_localizations.sh`](StripeCore/Scripts/strip_unused_localizations.sh) into the build phase.
 3. If your target's **User Script Sandboxing** (`ENABLE_USER_SCRIPT_SANDBOXING`) build setting is `Yes`, set it to `No`. The script needs to modify your built app.
 
-The script detects your app's languages from its `.lproj` folders and `CFBundleLocalizations`. To choose languages explicitly, set the `STRIPE_KEEP_LOCALIZATIONS` build setting to a list such as `fr de ja`. See the script for more options.
+The script detects your app's languages from its `.lproj` folders and `CFBundleLocalizations`. To choose languages explicitly, set the `STRIPE_KEEP_LOCALIZATIONS` build setting to a list such as `fr de ja`. If your app sets `CFBundleAllowMixedLocalizations`, the script only removes localizations when `STRIPE_KEEP_LOCALIZATIONS` is set. See the script for more options.
 
 ## Requirements
 

@@ -4,8 +4,10 @@
 #
 # Removes Stripe SDK localizations that your app doesn't support, reducing the
 # size of your app. The Stripe SDK ships translations for 40+ locales, but iOS
-# only ever displays Stripe UI in a language that the Stripe bundle supports,
-# so any locale your app itself isn't localized into is usually dead weight.
+# only displays Stripe UI in a language your app is also localized into, so the
+# other locales are dead weight. If your app sets CFBundleAllowMixedLocalizations,
+# Stripe UI can appear in any language, so the script doesn't remove anything
+# unless you set STRIPE_KEEP_LOCALIZATIONS.
 #
 # The script only touches Stripe resource bundles and frameworks (bundles or
 # frameworks named `Stripe*` or `*_Stripe*`). It never modifies your app's own
@@ -24,6 +26,13 @@
 #   4. If your target sets ENABLE_USER_SCRIPT_SANDBOXING = YES (the default for
 #      projects created in Xcode 15 or later), set it to NO for that target.
 #      The script needs to modify the built app bundle.
+#
+#   With Swift Package Manager, Xcode can copy Stripe's resource bundles into
+#   the app after this script runs in incremental builds, so those builds may
+#   keep every localization. Clean builds and archives aren't affected. To make
+#   incremental builds consistent, add each Stripe bundle your app embeds to the
+#   build phase's Input Files, for example
+#   `$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Stripe_StripeCore.bundle`.
 #
 # USAGE (command line, e.g. on an unsigned .xcarchive):
 #   strip_unused_localizations.sh path/to/MyApp.app
@@ -154,6 +163,12 @@ else
 
   # 2. CFBundleLocalizations and CFBundleDevelopmentRegion from the app's Info.plist.
   if [ -f "$INFO_PLIST" ]; then
+    # With mixed localizations, iOS displays Stripe UI in the user's preferred
+    # language even if the app isn't localized into it, so every locale is used.
+    if [ "$(/usr/libexec/PlistBuddy -c "Print :CFBundleAllowMixedLocalizations" "$INFO_PLIST" 2>/dev/null || true)" = "true" ]; then
+      warn "CFBundleAllowMixedLocalizations is enabled, so Stripe UI can appear in any language. Set STRIPE_KEEP_LOCALIZATIONS to choose the languages to keep. Skipping."
+      exit 0
+    fi
     index=0
     while locale="$(/usr/libexec/PlistBuddy -c "Print :CFBundleLocalizations:$index" "$INFO_PLIST" 2>/dev/null)"; do
       add_app_locale "$locale"
