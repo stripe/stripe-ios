@@ -88,6 +88,21 @@ struct CheckoutCartView: View {
                     .opacity(checkout == nil ? 0 : 1)
                     .accessibilityLabel("Session diagnostics")
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    // Debug-only: calls PaymentElement.present(from:) directly, bypassing the
+                    // cart content's `.disabled(checkout.isUpdating)` wrapper, to let a UI test
+                    // re-present Payment Options while a confirm is still in flight -- exactly
+                    // what `presentPaymentOptionsAwaitingMutations`/`awaitPendingOperations`
+                    // handle internally.
+                    Button {
+                        checkout?.getPaymentElement().present(from: nil)
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    .disabled(checkout == nil)
+                    .opacity(checkout == nil ? 0 : 1)
+                    .accessibilityIdentifier("checkout_force_present_payment_options")
+                }
             }
             .sheet(isPresented: $showsCheckoutDetails) {
                 if let checkout {
@@ -147,7 +162,10 @@ struct CheckoutCartView: View {
         do {
             var config = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.apiClient = diagnostics.makeAPIClient(
-                checkoutClientRequestDelay: delayCheckoutClientRequests ? 1 : 0
+                // 35s: long enough to exceed CheckoutController.defaultPendingOperationsTimeout
+                // (30s), so a bug repro can force a confirm's /confirm or /poll request to still
+                // be in flight after `awaitPendingOperations` gives up waiting on it.
+                checkoutClientRequestDelay: delayCheckoutClientRequests ? 35 : 0
             )
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()

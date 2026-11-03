@@ -1,0 +1,20 @@
+Summary: If a merchant calls the public `CheckoutController.updateShippingAddress(name:address:)` API directly — e.g. from their own "use my saved address" button, or auto-filling shipping from some other source — and the checkout also uses the Shipping Address Element, the customer can later open the Shipping Address Element and see the OLD address, not the one the merchant just set. The session (`checkout.session.shippingAddress`) is correctly updated, but the element's own form never finds out.
+
+Repro (live, against the real test backend — see Test):
+1. In the PaymentSheet Example app's Checkout Playground, create a Checkout Session with Shipping Address Element enabled (default settings).
+2. Tap "Add shipping address", enter "Jane Doe" / "510 Townsend St", save. The merchant's own UI shows it.
+3. Tap the (debug) "Set address directly (bypass element)" button — added to `CheckoutCartContentView.swift` to simulate a merchant's own "use my saved address" control — which calls `checkout.updateShippingAddress(name: "Alex Direct", address: ...)` directly.
+4. The merchant's own UI now shows "Alex Direct" (the session updated correctly).
+5. Tap "Edit" to reopen the Shipping Address Element sheet. Its "Full name" field still shows "Jane Doe", not "Alex Direct".
+
+Also reproducible at the unit level without the live backend:
+1. Configure a `CheckoutController` with `configuration.shippingAddressElement` set and a default shipping address (e.g. San Francisco).
+2. After initialization, call `checkout.updateShippingAddress(name:address:)` with a different address (e.g. New York).
+3. Check `checkout.session.shippingAddress` — it now reflects New York.
+4. Check `checkout.getShippingAddressElement().addressViewController.configuration.defaultValues.address` — it still shows San Francisco. If the customer opens the element's sheet at this point, they see the stale address.
+
+Test:
+- Live, against the real test backend: `Example/PaymentSheet Example/PaymentSheetUITest/CheckoutElementsUITests.swift` — `testShippingAddressElementShowsStaleAddressAfterExternalUpdate`. Requires the debug button added to `Example/PaymentSheet Example/PaymentSheet Example/Checkout Playground/CheckoutCartContentView.swift` (`setShippingAddressDirectly()` / `checkout_set_shipping_address_directly`) and an accessibility identifier added to the shipping address card's "Edit" button (`checkout_shipping_address_edit`, to disambiguate it from an unrelated "Edit" button elsewhere in the view hierarchy). Run with `ci_scripts/run_tests.rb --test "PaymentSheetUITest/CheckoutElementsUITests/testShippingAddressElementShowsStaleAddressAfterExternalUpdate"`. Passed.
+- Unit-level, no live backend: `StripePaymentSheet/StripePaymentSheetTests/PaymentSheet/Checkout/ShippingAddressElementConfigurationTests.swift` — `testShippingAddressElementDoesNotReflectAddressUpdatesMadeOutsideTheElement`.
+
+Elaboration: `CheckoutController.shippingAddressElement` is declared `private let` (`CheckoutController.swift:50`) and assigned exactly once, during `init`, via `makeShippingAddressElement` (`CheckoutController.swift:128-133, 183-220`) — grepping the whole `Checkout/` directory for `shippingAddressElement` turns up no other assignment site. `ShippingAddressElement` itself (`Shipping Address Element/ShippingAddressElement.swift`) has no method that lets anything re-seed its `addressViewController` after construction; its only outbound path is the `ShippingAddressElementDelegate.updateShippingAddressFromElement` callback fired from the user's own `save()` action inside the sheet — there's no inbound path at all. Compare this to `ExpressCheckoutElement`/`CurrencySelectorElement`, which are both constructed with a `CheckoutSessionSource` holding a live Combine publisher (`sessionPublisher: $session`) specifically so they keep receiving session updates — `ShippingAddressElement` was never given that same mechanism, and `CheckoutController.updateForSessionChange()` (the other place session changes get distributed) only touches `confirmationChallenge` and `paymentElement` (`CheckoutController.swift:587-600`), not `shippingAddressElement`.

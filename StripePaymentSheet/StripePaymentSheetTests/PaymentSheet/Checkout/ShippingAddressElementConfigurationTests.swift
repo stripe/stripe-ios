@@ -74,6 +74,67 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         XCTAssertEqual(shippingAddressElement.addressViewController.overrideUserInterfaceStyle, .dark)
     }
 
+    /// `ShippingAddressElement` is constructed once in `CheckoutController.init` with a snapshot
+    /// of the shipping address, and is a `private let` on `CheckoutController` with no update
+    /// hook from `updateForSessionChange()`. This demonstrates that an address change made
+    /// through the public API (bypassing the element) never reaches the element's own form.
+    func testShippingAddressElementDoesNotReflectAddressUpdatesMadeOutsideTheElement() async throws {
+        // Given a Checkout Session with a Shipping Address Element, seeded with a default address.
+        var sessionJSON = CheckoutTestHelpers.openSessionJSON
+        sessionJSON["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
+        let apiResponse = try CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON)
+
+        var configuration = CheckoutController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.shippingAddressElement = ShippingAddressElement.Configuration()
+        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
+        shippingDetails.name = "Jenny Rosen"
+        shippingDetails.address = .init(
+            country: "US",
+            line1: "510 Townsend St.",
+            city: "San Francisco",
+            state: "CA",
+            postalCode: "94103"
+        )
+        configuration.defaults.shippingDetails = shippingDetails
+        configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse, configuration: configuration)
+
+        let checkout = try await CheckoutController(configuration: configuration)
+        XCTAssertEqual(
+            checkout.getShippingAddressElement().addressViewController.configuration.defaultValues.address.city,
+            "San Francisco"
+        )
+        XCTAssertEqual(checkout.session.shippingAddress?.address.city, "San Francisco")
+
+        // When the shipping address is updated through the public API directly, bypassing the
+        // element (e.g. the merchant's own "use my saved address" button). This session has no
+        // automatic tax address source configured, so the update is purely local -- no network
+        // stubbing is needed to exercise it.
+        try await checkout.updateShippingAddress(
+            name: "New Name",
+            address: CheckoutController.Address(
+                country: "US",
+                line1: "1 New St.",
+                city: "New York",
+                state: "NY",
+                postalCode: "10001"
+            )
+        )
+
+        // Then: the session reflects the new address...
+        XCTAssertEqual(checkout.session.shippingAddress?.address.city, "New York")
+
+        // ...but the Shipping Address Element's own form still has the OLD address baked in --
+        // it was seeded once at construction and has no mechanism to re-sync.
+        XCTAssertEqual(
+            checkout.getShippingAddressElement().addressViewController.configuration.defaultValues.address.city,
+            "San Francisco",
+            "the element should reflect the session's current shipping address, but it never updates after construction"
+        )
+    }
+
     func testMakeAddressViewControllerConfiguration() {
         // Given
         let apiClient = STPAPIClient(publishableKey: "pk_test_123")

@@ -63,9 +63,8 @@ you told it to; a live session proves the SDK does what the docs promise against
 response.
 
 You may edit this helper (and any other source, including test infra) to add the params you
-need — this is a temporary branch, nothing here gets pushed upstream. Commit any repro test you
-write, even though it won't be pushed, so it's part of the local branch history alongside the
-`ISSUE_*.md` files.
+need — this is a temporary branch, nothing here gets pushed upstream. Do not run `git add`/
+`git commit` — leave repro tests and `ISSUE_*.md` files as uncommitted changes in the worktree.
 
 ## Partition (6 agents, by doc)
 

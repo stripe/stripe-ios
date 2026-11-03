@@ -204,6 +204,117 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successAlert.staticTexts["Payment status: .paid"].exists)
     }
 
+    /// Live repro for the "ShippingAddressElement never re-syncs after construction" bug
+    /// (ISSUE_sub-elements_shipping-address-element-never-resyncs-after-construction.md):
+    /// an address change made outside the element (here, via a debug button added to the
+    /// Example app that calls `checkout.updateShippingAddress` directly, simulating a merchant's
+    /// own "use my saved address" control) updates the Checkout Session and the merchant's own
+    /// UI, but the element's own form -- reopened afterward -- still shows the address it was
+    /// last told about through its own sheet, not the session's current address.
+    func testShippingAddressElementShowsStaleAddressAfterExternalUpdate() throws {
+        // Given a live Checkout Session with the Shipping Address Element enabled
+        loadCheckoutPlayground(app, CheckoutPlayground.Settings())
+        app.buttons["Create Checkout Session"].waitForExistenceAndTap()
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
+
+        // When the customer sets an address through the Shipping Address Element itself
+        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
+        app.buttons["Add shipping address"].scrollToAndTap(in: app)
+        fillShippingAddress()
+        let saveAddressButton = app.buttons["Save Address"]
+        XCTAssertTrue(saveAddressButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(saveAddressButton.isEnabled)
+        saveAddressButton.tap()
+
+        // Then the merchant surface reflects it
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Jane Doe"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["510 Townsend St"].exists)
+
+        // When the merchant's own integration updates the shipping address directly, bypassing
+        // the element (a realistic pattern -- e.g. auto-filling from the customer's account)
+        app.buttons["checkout_set_shipping_address_directly"].scrollToAndTap(in: app)
+
+        // Then the Checkout Session and the merchant's own UI reflect the new address...
+        XCTAssertTrue(app.staticTexts["Alex Direct"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["1 Direct Ave"].exists)
+        XCTAssertFalse(app.staticTexts["Jane Doe"].exists)
+
+        // ...but reopening the Shipping Address Element shows the OLD address it was last told
+        // about through its own sheet -- it never learned about the direct update.
+        app.buttons["checkout_shipping_address_edit"].scrollToAndTap(in: app)
+        let fullNameField = app.textFields["Full name"]
+        XCTAssertTrue(fullNameField.waitForExistence(timeout: 10))
+        XCTAssertEqual(fullNameField.value as? String, "Jane Doe", "the element's form should reflect the session's current shipping address (Alex Direct), but it's stuck on the last value it saved itself")
+    }
+
+    /// Live repro for the "awaitPendingOperations doesn't cancel a timed-out confirm" bug
+    /// (ISSUE_polling-async_awaitpendingoperations-doesnt-cancel-timed-out-confirm.md):
+    /// re-presenting Payment Options while a confirm is still in flight hits
+    /// `awaitPendingOperations`'s 30s timeout; the sheet dismisses silently as if nothing is
+    /// pending, but the original confirm keeps running in the background and completes later,
+    /// uncanceled.
+    ///
+    /// Uses `delayCheckoutClientRequests` (bumped to 35s in `CheckoutCartView.swift` for this
+    /// purpose) to make the live `/confirm` call take longer than the 30s timeout, and a debug
+    /// toolbar button (`checkout_force_present_payment_options`, calls
+    /// `PaymentElement.present(from:)` directly) added to `CheckoutCartView.swift` to bypass
+    /// this screen's own `.disabled(checkout.isUpdating)` guard, which would otherwise block
+    /// the merchant from re-presenting Payment Options while a confirm is in flight.
+    func testReopeningPaymentOptionsDuringASlowConfirmTimesOutWhileConfirmKeepsRunning() throws {
+        // Given a Checkout Session with a 35s delay injected on every live checkout_client request
+        var settings = CheckoutPlayground.Settings()
+        settings.delayCheckoutClientRequests = true
+        settings.automaticTax = false
+        settings.shippingAddressCollection = false
+        loadCheckoutPlayground(app, settings)
+        app.buttons["Create Checkout Session"].waitForExistenceAndTap()
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 45))
+
+        // When the customer selects a simple card payment method (no 3DS2) and taps Buy
+        app.buttons["Select payment method"].scrollToAndTap(in: app)
+        if !app.textFields["Card number"].waitForExistence(timeout: 2) {
+            app.buttons["Add new payment method"].forceTapWhenHittableInTestCase(self)
+        }
+        try fillCardData(app, cardNumber: "4242424242424242")
+        app.stp_dismissKeyboard()
+        app.buttons["Continue"].forceTapWhenHittableInTestCase(self)
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 45))
+
+        let buyButton = app.buttons["checkout_buy_button"]
+        buyButton.scrollToAndTap(in: app)
+
+        // Then the confirm is in flight (its /confirm request is delayed 35s)...
+        XCTAssertFalse(buyButton.isEnabled)
+
+        // ...and when the merchant re-presents Payment Options while it's still pending (using
+        // the debug button since the real "Select payment method" button is disabled during
+        // isUpdating, same as the Buy button -- a direct call to PaymentElement.present(from:)
+        // is not), a loading indicator appears...
+        let forcePresentButton = app.buttons["checkout_force_present_payment_options"]
+        XCTAssertTrue(forcePresentButton.waitForExistenceAndTap(timeout: 10))
+
+        // ...and a loading sheet appears (its own UIActivityIndicatorView, distinct from the
+        // Buy button's persistent SwiftUI spinner).
+        XCTAssertGreaterThan(app.activityIndicators.count, 1, "expected both the Buy button's spinner and the loading sheet's own spinner")
+
+        // Then, after awaitPendingOperations' ~30s timeout, the loading sheet dismisses on its
+        // own WITHOUT ever showing the payment options sheet -- the merchant's re-presentation
+        // attempt silently gave up -- even though the original confirm (35s delay) has not
+        // resolved yet. Wait out the timeout window using a condition that's never true, so this
+        // doesn't depend on matching the right spinner.
+        _ = app.staticTexts["checkout_test_never_exists"].waitForExistence(timeout: 32)
+        XCTAssertFalse(app.textFields["Card number"].exists, "the real payment options sheet should never have appeared")
+        XCTAssertFalse(buyButton.isEnabled, "the original confirm should still be running in the background")
+        XCTAssertEqual(app.activityIndicators.count, 1, "the loading sheet's own spinner should be gone; only the Buy button's persistent one should remain")
+
+        // Then, once the original confirm's delayed /confirm response finally arrives, it
+        // completes on its own -- demonstrating it was never canceled by the timeout above.
+        XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
+    }
+
     func testExpressCheckoutElementApplePayCompletesCheckout() {
         // Given an ECE-only Checkout Session without address-dependent tax in the normal hosted playground
         // ECE Apple Pay does not yet request a shipping postal address. Enabling shipping-sourced
@@ -249,6 +360,89 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             analyticsLog.first { $0[string: "event"] == "checkout_elements.confirm.succeeded" }?[string: "invocation_source"],
             "express_checkout_element"
         )
+    }
+
+    /// Exploratory: cancels Apple Pay from Express Checkout Element before authorizing, then
+    /// checks the checkout returns to a fully usable state -- no stuck `isUpdating`, no stuck
+    /// disabled buttons, and a payment can still be completed afterward (via Payment Element,
+    /// then a second Apple Pay attempt). Not previously covered by any existing test.
+    func testCancelingApplePayLeavesCheckoutUsable() throws {
+        var settings = CheckoutPlayground.Settings()
+        settings.integrationType = .eceOnly
+        settings.shippingAddressCollection = false
+        settings.automaticTax = false
+        loadCheckoutPlayground(app, settings)
+        app.buttons["Create Checkout Session"].waitForExistenceAndTap()
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
+
+        let applePayButton = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Buy with Apple")
+        ).firstMatch
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 10))
+
+        // When the customer taps Apple Pay, then cancels before authorizing
+        applePayButton.tap()
+        let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
+        _ = applePay.wait(for: .runningForeground, timeout: 10)
+        let cancelButton = applePay.buttons["dismiss"]
+        if !cancelButton.waitForExistence(timeout: 15) {
+            let attachment = XCTAttachment(screenshot: applePay.screenshot())
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
+        XCTAssertTrue(cancelButton.waitForExistence(timeout: 1))
+        cancelButton.tap()
+
+        // Then the checkout returns to a usable state: not stuck mid-update, and the customer
+        // can complete a payment on a second Apple Pay attempt.
+        XCTAssertTrue(app.wait(for: .runningForeground, timeout: 10))
+        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: applePayButton)
+        waitForExpectations(timeout: 10)
+
+        applePayButton.tap()
+        payWithApplePay(successElement: app.alerts["Success"])
+    }
+
+    /// Exploratory: tests the "Express Checkout Element and Payment Element share the same
+    /// Checkout Session and coordinate confirmation so that only one Element confirms the
+    /// payment" claim (build-a-checkout-page guide) with a realistic combo not covered by any
+    /// existing test: a card already entered in Payment Element (not yet confirmed), then the
+    /// customer changes their mind and pays with Apple Pay instead.
+    func testApplePayConfirmsWhenACardIsAlreadyEnteredInPaymentElement() throws {
+        var settings = CheckoutPlayground.Settings()
+        settings.shippingAddressCollection = false
+        settings.automaticTax = false
+        loadCheckoutPlayground(app, settings)
+        app.buttons["Create Checkout Session"].waitForExistenceAndTap()
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
+
+        // Given the customer has entered a card in Payment Element, but not yet tapped Buy
+        app.buttons["Select payment method"].scrollToAndTap(in: app)
+        if !app.textFields["Card number"].waitForExistence(timeout: 2) {
+            app.buttons["Add new payment method"].forceTapWhenHittableInTestCase(self)
+        }
+        try fillCardData(app, cardNumber: "4242424242424242")
+        app.stp_dismissKeyboard()
+        app.buttons["Continue"].forceTapWhenHittableInTestCase(self)
+        XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: 10))
+
+        // When the customer instead confirms with Apple Pay
+        let applePayButton = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH %@", "Buy with Apple")
+        ).firstMatch
+        applePayButton.scrollToAndTap(in: app)
+        payWithApplePay(successElement: app.alerts["Success"])
+
+        // Then only the Express Checkout Element's confirmation ran -- the card entered in
+        // Payment Element was never submitted. One confirmation attempt emits both a "started"
+        // and "succeeded" event; a second (unwanted) attempt would add more.
+        let confirmEvents = analyticsLog.filter { $0[string: "event"]?.hasPrefix("checkout_elements.confirm.") == true }
+        XCTAssertEqual(
+            confirmEvents.compactMap { $0[string: "event"] },
+            ["checkout_elements.confirm.started", "checkout_elements.confirm.succeeded"],
+            "expected exactly one confirmation attempt"
+        )
+        XCTAssertEqual(confirmEvents.last?[string: "invocation_source"], "express_checkout_element")
     }
 
     func testExpressCheckoutElementLink() {

@@ -180,6 +180,30 @@ struct CheckoutCartContentView: View {
             } else {
                 emptyAddressCard(label: "Add shipping address", onAdd: presentShippingAddressElement)
             }
+
+            // Simulates a merchant-owned "use my saved address" control that calls the public
+            // updateShippingAddress API directly, bypassing the Shipping Address Element -- the
+            // same pattern a real integration could use to auto-fill an address from account data.
+            Button("Set address directly (bypass element)") {
+                setShippingAddressDirectly()
+            }
+            .accessibilityIdentifier("checkout_set_shipping_address_directly")
+            .padding(.horizontal)
+        }
+    }
+
+    private func setShippingAddressDirectly() {
+        Task {
+            try? await checkout.updateShippingAddress(
+                name: "Alex Direct",
+                address: CheckoutController.Address(
+                    country: "US",
+                    line1: "1 Direct Ave",
+                    city: "New York",
+                    state: "NY",
+                    postalCode: "10001"
+                )
+            )
         }
     }
 
@@ -225,6 +249,7 @@ struct CheckoutCartContentView: View {
             Button("Edit", action: onEdit)
                 .foregroundColor(.blue)
                 .font(.subheadline)
+                .accessibilityIdentifier("checkout_shipping_address_edit")
         }
         .padding()
         .background(Color(UIColor.systemBackground))

@@ -6,9 +6,8 @@ Each agent:
 1. Reads `bug_report_guidance.md` first.
 2. Reads only its assigned surface below (not the whole directory) — stay deep, not broad.
 3. Files findings as `ISSUE_<surface>_<description>.md` in the worktree root.
-4. May edit source, including test infra helpers, and should commit any repro tests it writes
-   (this is a temporary branch, nothing here gets pushed — see `bug_report_guidance.md`'s
-   Verification section for why and how).
+4. May edit source, including test infra helpers (this is a temporary branch, nothing here gets
+   pushed). Do not run `git add`/`git commit` — leave changes uncommitted in the worktree.
 
 ## Surfaces (non-overlapping, risk-ordered)
 

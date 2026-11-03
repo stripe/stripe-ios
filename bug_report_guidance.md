@@ -6,8 +6,8 @@
   live repro against the real test backend (`createCheckoutSession(...)` and friends, which can
   construct arbitrary Checkout Session configs) over a stubbed/mocked unit test when you're
   checking a claim against actual backend behavior, not just your own code's internal logic.
-  Commit repro tests you write, even though they won't be pushed, so they stay in the local
-  branch history next to the `ISSUE_*.md` files.
+  Do not run `git add`/`git commit`. Leave repro tests and `ISSUE_*.md` files as uncommitted
+  changes in the worktree.
 
   If you find no client-side code at all modeling a documented-as-unsupported feature, that
   absence is itself worth filing — don't treat "there's nothing to map the claim to" as
