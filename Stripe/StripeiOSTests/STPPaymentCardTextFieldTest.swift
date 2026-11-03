@@ -964,6 +964,32 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         sut.paymentMethodParams = params
         XCTAssertFalse(sut.isValid)
     }
+
+    func testUserDefinedRuntimeAttributesCustomizeTextField() {
+        // Given a card text field
+        let sut = STPPaymentCardTextField()
+
+        // When its appearance is set with key-value coding, as Interface Builder's user-defined runtime attributes do
+        sut.setValue(UIFont.systemFont(ofSize: 21), forKey: "font")
+        sut.setValue(UIColor.systemPurple, forKey: "textColor")
+        sut.setValue(UIColor.systemOrange, forKey: "textErrorColor")
+        sut.setValue(UIColor.systemTeal, forKey: "placeholderColor")
+        sut.setValue(UIColor.systemPink, forKey: "cursorColor")
+        sut.setValue(UIColor.systemGreen, forKey: "borderColor")
+        sut.setValue(3, forKey: "borderWidth")
+        sut.setValue(7, forKey: "cornerRadius")
+
+        // Then the field uses them
+        XCTAssertEqual(sut.font, .systemFont(ofSize: 21))
+        XCTAssertEqual(sut.textColor, .systemPurple)
+        XCTAssertEqual(sut.textErrorColor, .systemOrange)
+        XCTAssertEqual(sut.placeholderColor, .systemTeal)
+        XCTAssertEqual(sut.cursorColor, .systemPink)
+        XCTAssertEqual(sut.borderColor, .systemGreen)
+        XCTAssertEqual(sut.borderWidth, 3)
+        // The `cornerRadius` getter doesn't reflect the value that was set, so check the layer.
+        XCTAssertEqual(sut.layer.cornerRadius, 7)
+    }
 }
 
 // N.B. It is eexpected for setting the card params to generate API response errors

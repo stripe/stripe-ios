@@ -262,7 +262,8 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     }
 
     // MARK: - STPFormTextFieldContainer
-    public var formFont: UIFont = UIFont.preferredFont(forTextStyle: .body) {
+    // These properties are `@objc` so that Interface Builder's user-defined runtime attributes can set them.
+    @objc public var formFont: UIFont = UIFont.preferredFont(forTextStyle: .body) {
         didSet {
             if formFont != oldValue {
                 for textField in formTextFields ?? [] {
@@ -272,7 +273,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         }
     }
 
-    public var formTextColor: UIColor = .label
+    @objc public var formTextColor: UIColor = .label
     {
         didSet {
             if oldValue != formTextColor {
@@ -283,7 +284,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         }
     }
 
-    public var formTextErrorColor: UIColor = .systemRed
+    @objc public var formTextErrorColor: UIColor = .systemRed
     {
         didSet {
             if oldValue != formTextErrorColor {
@@ -294,7 +295,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         }
     }
 
-    public var formPlaceholderColor: UIColor = .placeholderText
+    @objc public var formPlaceholderColor: UIColor = .placeholderText
     {
         didSet {
             if oldValue != formPlaceholderColor {
@@ -305,7 +306,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         }
     }
 
-    public var formCursorColor: UIColor {
+    @objc public var formCursorColor: UIColor {
         get {
             self.tintColor
         }
@@ -319,7 +320,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         }
     }
 
-    public var formKeyboardAppearance: UIKeyboardAppearance = .default {
+    @objc public var formKeyboardAppearance: UIKeyboardAppearance = .default {
         didSet {
             if oldValue != formKeyboardAppearance {
                 for textField in formTextFields ?? [] {

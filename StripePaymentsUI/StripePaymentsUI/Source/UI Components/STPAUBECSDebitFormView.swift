@@ -243,7 +243,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     }
 
     /// The background color for the form text fields. Defaults to .systemBackground on iOS 13.0 and later, .white on earlier iOS versions.
-    public var formBackgroundColor: UIColor = .systemBackground
+    @objc public var formBackgroundColor: UIColor = .systemBackground
     {
         didSet {
             labeledNameField.formBackgroundColor = formBackgroundColor

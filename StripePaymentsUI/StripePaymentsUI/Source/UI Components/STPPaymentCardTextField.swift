@@ -42,8 +42,10 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// - seealso: STPPaymentCardTextFieldDelegate
     open weak var delegate: STPPaymentCardTextFieldDelegate?
 
+    // The appearance properties are `@objc` so that Interface Builder's user-defined runtime attributes can set them.
+
     /// The font used in each child field. Default is `UIFont.systemFont(ofSize:18)`.
-    open var font: UIFont = {
+    @objc open var font: UIFont = {
         return UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 18))
     }()
     {
@@ -60,7 +62,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     /// The text color to be used when entering valid text. Default is `.label`.
-    open var textColor: UIColor = .label
+    @objc open var textColor: UIColor = .label
     {
         didSet {
             for field in allFields {
@@ -72,7 +74,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// The text color to be used when the user has entered invalid information,
     /// such as an invalid card number.
     /// Default is `.red`.
-    open var textErrorColor: UIColor = .systemRed
+    @objc open var textErrorColor: UIColor = .systemRed
     {
         didSet {
             for field in allFields {
@@ -84,7 +86,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// The text placeholder color used in each child field.
     /// This will also set the color of the card placeholder icon.
     /// Default is `.systemGray2`.
-    open var placeholderColor: UIColor = placeholderGrayColor {
+    @objc open var placeholderColor: UIColor = placeholderGrayColor {
         didSet {
             brandImageView.tintColor = placeholderColor
             cbcIndicatorView.tintColor = placeholderColor
@@ -149,7 +151,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// The cursor color for the field.
     /// This is a proxy for the view's tintColor property, exposed for clarity only
     /// (in other words, calling setCursorColor is identical to calling setTintColor).
-    open var cursorColor: UIColor {
+    @objc open var cursorColor: UIColor {
         get {
             tintColor
         }
@@ -162,7 +164,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     /// The border color for the field.
     /// Can be nil (in which case no border will be drawn).
     /// Default is .systemGray2.
-    open var borderColor: UIColor? {
+    @objc open var borderColor: UIColor? {
         get {
             _borderColor
         }
@@ -179,7 +181,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     var _borderWidth: CGFloat = 1.0
     /// The width of the field's border.
     /// Default is 1.0.
-    open var borderWidth: CGFloat {
+    @objc open var borderWidth: CGFloat {
         get {
             _borderWidth
         }
@@ -192,7 +194,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     var _cornerRadius: CGFloat = 5.0
     /// The corner radius for the field's border.
     /// Default is 5.0.
-    open var cornerRadius: CGFloat {
+    @objc open var cornerRadius: CGFloat {
         get {
             _cornerRadius
         }
