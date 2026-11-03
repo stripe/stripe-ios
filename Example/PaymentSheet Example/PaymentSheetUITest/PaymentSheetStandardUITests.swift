@@ -536,5 +536,13 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // Return to the form again
         manualEntryButton.tap()
         XCTAssertTrue(cardNumberField.waitForExistence(timeout: 10.0), "Card number field should appear after choosing manual entry")
+
+        // Verify the back button on the card scan screen returns to the payment method list
+        scanCardButton.tap()
+        XCTAssertTrue(manualEntryButton.waitForExistence(timeout: 10.0), "Card scan screen should open when tapping scan button")
+        app.buttons["Back"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Card"].waitForExistence(timeout: 10.0), "Payment method list should appear after tapping back")
+        XCTAssertFalse(manualEntryButton.exists, "Card scan screen should be closed after tapping back")
+        XCTAssertFalse(cardNumberField.exists, "Card form should be closed after tapping back")
     }
 }

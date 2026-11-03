@@ -39,6 +39,8 @@ final class CardSectionWithScannerView: UIView {
     }()
     private let opensCardScannerAutomatically: Bool
     private var hasOpenedCardScannerAutomatically = false
+    /// Work to do once the form is back on screen after the card scan screen pops, e.g. filling in the scanned card.
+    private var actionWhenVisible: (() -> Void)?
     weak var delegate: CardSectionWithScannerViewDelegate?
     private let theme: ElementsAppearance
     private let linkAppearance: LinkAppearance?
@@ -155,6 +157,10 @@ final class CardSectionWithScannerView: UIView {
 
     override func didMoveToWindow() {
         super.didMoveToWindow()
+        if window != nil, let actionWhenVisible {
+            self.actionWhenVisible = nil
+            actionWhenVisible()
+        }
         // We wait until we are added to the screen to open the scanner instead of at initialization.
         // We only do this once, so returning to the form from the scanner doesn't reopen it.
         guard opensCardScannerAutomatically, window != nil, !hasOpenedCardScannerAutomatically else {
@@ -177,11 +183,25 @@ final class CardSectionWithScannerView: UIView {
 extension CardSectionWithScannerView: CardScanViewControllerDelegate {
     func cardScanViewController(_ viewController: CardScanViewController, didScan cardParams: STPPaymentMethodCardParams) {
         cardScanButton.configuration?.title = String.Localized.rescan_card
-        delegate?.didScanCard(cardParams: cardParams)
+        performWhenVisible { [weak self] in
+            self?.delegate?.didScanCard(cardParams: cardParams)
+        }
     }
 
     func cardScanViewControllerDidSelectManualEntry(_ viewController: CardScanViewController) {
-        delegate?.didSelectManualCardEntry()
+        performWhenVisible { [weak self] in
+            self?.delegate?.didSelectManualCardEntry()
+        }
+    }
+
+    /// Fields can only be focused while on screen. The sheet usually puts the form back on screen as soon as the scan screen starts popping,
+    /// so this runs immediately and the keyboard comes up during the same transition. Otherwise, it waits for the form to reappear.
+    private func performWhenVisible(_ action: @escaping () -> Void) {
+        if window != nil {
+            action()
+        } else {
+            actionWhenVisible = action
+        }
     }
 }
 

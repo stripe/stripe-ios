@@ -18,9 +18,9 @@ import UIKit
 
 @available(macCatalyst 14.0, *)
 protocol CardScanViewControllerDelegate: AnyObject {
-    /// Called after a successful scan, once the screen has been popped and the form is visible again.
+    /// Called after a successful scan, as soon as the screen starts popping back to the form.
     func cardScanViewController(_ viewController: CardScanViewController, didScan cardParams: STPPaymentMethodCardParams)
-    /// Called when the customer chooses to type their card details instead, once the screen has been popped and the form is visible again.
+    /// Called when the customer chooses to type their card details instead, as soon as the screen starts popping back to the form.
     func cardScanViewControllerDidSelectManualEntry(_ viewController: CardScanViewController)
 }
 
@@ -49,7 +49,12 @@ final class CardScanViewController: UIViewController {
 
     lazy var navigationBar: SheetNavigationBar = {
         let navigationBar = SheetNavigationBar(appearance: appearance)
-        navigationBar.setStyle(.close(showAdditionalButton: false))
+        // Match the screen underneath, so customers can go back to wherever they came from (e.g. the payment method list).
+        if case .back = underlyingContentViewController?.navigationBar.currentStyle {
+            navigationBar.setStyle(.back(showAdditionalButton: false))
+        } else {
+            navigationBar.setStyle(.close(showAdditionalButton: false))
+        }
         navigationBar.delegate = self
         return navigationBar
     }()
@@ -210,20 +215,14 @@ final class CardScanViewController: UIViewController {
         guard !hasFinished else { return }
         hasFinished = true
         viewfinderView.stopScanner()
-        pop { delegate in
-            delegate?.cardScanViewControllerDidSelectManualEntry(self)
-        }
+        pop()
+        delegate?.cardScanViewControllerDidSelectManualEntry(self)
     }
 
-    /// Returns to the form. The delegate is notified once the form is back on screen, so it can move focus into the form.
-    private func pop(then notifyDelegate: @escaping (CardScanViewControllerDelegate?) -> Void) {
-        // Capture the delegate now; this screen may be deallocated once it is popped.
-        let delegate = delegate
-        guard let bottomSheetController,
-              bottomSheetController.popContentViewController(completion: { notifyDelegate(delegate) }) != nil else {
-            notifyDelegate(delegate)
-            return
-        }
+    /// Returns to the form.
+    /// The sheet puts the form back on screen as soon as the pop begins, so the delegate is notified right after this, letting the form fill in and focus its fields (and bring up the keyboard) as part of the same transition.
+    private func pop() {
+        _ = bottomSheetController?.popContentViewController()
     }
 }
 
@@ -239,9 +238,8 @@ extension CardScanViewController: CardScanViewfinderViewDelegate {
         // Let the customer see that the scan succeeded before showing the filled-in form.
         DispatchQueue.main.asyncAfter(deadline: .now() + Self.successDisplayDuration) { [weak self] in
             guard let self else { return }
-            self.pop { delegate in
-                delegate?.cardScanViewController(self, didScan: cardParams)
-            }
+            self.pop()
+            self.delegate?.cardScanViewController(self, didScan: cardParams)
         }
     }
 
@@ -272,7 +270,17 @@ extension CardScanViewController: SheetNavigationBarDelegate {
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        // no-op: this screen only shows a close button
+        guard !hasFinished else { return }
+        hasFinished = true
+        viewfinderView.stopScanner()
+        // Go back on the screen underneath first, so the sheet transitions straight to its previous screen instead of briefly showing the form.
+        if let underlyingContentViewController {
+            underlyingContentViewController.navigationBar.delegate?.sheetNavigationBarDidBack(underlyingContentViewController.navigationBar)
+        }
+        // Going back may have already removed this screen from the sheet.
+        if bottomSheetController?.contentStack.first === self {
+            pop()
+        }
     }
 }
 
