@@ -153,7 +153,8 @@ extension BestFramePickerTest {
                 documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
                 allClassificationScores: [
                     classification: 0.9
-                ]
+                ],
+                originalImageSize: CGSize(width: 1080, height: 1920)
             ),
             nil,
             .init(
