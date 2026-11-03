@@ -46,7 +46,8 @@ private struct FoldAvoidingActionsModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding(insets)
-            .frame(maxWidth: .infinity)
+            // Keep previous fold padding from widening the measurement during window resizing.
+            .frame(minWidth: 0, maxWidth: .infinity)
             // Measure the full-width container so moving the controls doesn’t change the fold-avoidance calculation.
             .background {
                 // Reading reserved regions here avoids a layout cycle during keyboard and display changes.
