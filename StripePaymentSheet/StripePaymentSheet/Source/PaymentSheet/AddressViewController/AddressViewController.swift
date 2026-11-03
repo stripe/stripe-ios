@@ -32,33 +32,9 @@ public class AddressViewController: UIViewController {
     let useAutocompleteEndpoints: Bool
     /// A valid address or nil.
     private var addressDetails: AddressDetails? {
-        guard let addressSection = addressSection else { return nil }
-
-        guard case .valid = addressSection.validationState,
-              let line1 = addressSection.line1?.text.nonEmpty
-        else {
-            return nil
-        }
-        let address = AddressDetails.Address(
-            city: addressSection.city?.text.nonEmpty,
-            country: addressSection.selectedCountryCode,
-            line1: line1,
-            line2: addressSection.line2?.text.nonEmpty,
-            postalCode: addressSection.postalCode?.text.nonEmpty,
-            state: addressSection.state?.rawData.nonEmpty
-        )
-        let name: String?
-        switch configuration.nameField {
-        case .auto:
-            name = addressSection.name?.text.nonEmpty
-        case .never:
-            // The customer can't edit a hidden name, so the result keeps the default one.
-            name = configuration.defaultValues.name
-        }
-        return .init(
-            address: address,
-            name: name,
-            phone: addressSection.phone?.phoneNumber?.string(as: .e164).nonEmpty,
+        return addressSection?.completeAddressDetails(
+            nameField: configuration.nameField,
+            defaultName: configuration.defaultValues.name,
             isCheckboxSelected: checkboxElement?.checkboxButton.isSelected
         )
     }
@@ -766,6 +742,47 @@ extension AddressViewController: UIGestureRecognizerDelegate {
 }
 
 // MARK: - PaymentSheet <-> AddressSectionElement Helpers
+extension AddressSectionElement {
+    /// The address entered in this section, or nil until it's valid.
+    /// - Parameters:
+    ///   - nameField: Whether the section has a name field. A hidden name is `defaultName`.
+    ///   - defaultName: The name to return when the name field is hidden.
+    ///   - isCheckboxSelected: The state of the host's custom checkbox, if it has one.
+    func completeAddressDetails(
+        nameField: AddressViewController.Configuration.NameField,
+        defaultName: String?,
+        isCheckboxSelected: Bool?
+    ) -> AddressViewController.AddressDetails? {
+        guard case .valid = validationState,
+              let line1 = line1?.text.nonEmpty
+        else {
+            return nil
+        }
+        let address = AddressViewController.AddressDetails.Address(
+            city: city?.text.nonEmpty,
+            country: selectedCountryCode,
+            line1: line1,
+            line2: line2?.text.nonEmpty,
+            postalCode: postalCode?.text.nonEmpty,
+            state: state?.rawData.nonEmpty
+        )
+        let name: String?
+        switch nameField {
+        case .auto:
+            name = self.name?.text.nonEmpty
+        case .never:
+            // The customer can't edit a hidden name, so the result keeps the default one.
+            name = defaultName
+        }
+        return .init(
+            address: address,
+            name: name,
+            phone: phone?.phoneNumber?.string(as: .e164).nonEmpty,
+            isCheckboxSelected: isCheckboxSelected
+        )
+    }
+}
+
 extension AddressSectionElement.AddressDetails {
     init(from addressDetails: AddressViewController.Configuration.DefaultAddressDetails) {
         self.init(
