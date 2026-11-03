@@ -757,10 +757,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Adjustable Quantity" }
         case on, off
     }
-    enum CSManualCapture: String, PickerEnum {
-        static var enumName: String { "Manual Capture" }
-        case on, off
-    }
 
     var uiStyle: UIStyle
     // Keep this optional so saved settings and QR payloads from older builds remain decodable.
@@ -812,7 +808,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var csAdaptivePricing: CSAdaptivePricing
     var csDisplayShippingRates: CSDisplayShippingRates
     var csAdjustableQuantity: CSAdjustableQuantity
-    var csManualCapture: CSManualCapture
     var csPaymentMethodConfiguration: String?
     var csCustomerEmail: String?
 
@@ -891,7 +886,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             csAdaptivePricing: .off,
             csDisplayShippingRates: .off,
             csAdjustableQuantity: .off,
-            csManualCapture: .off,
             csPaymentMethodConfiguration: nil,
             csCustomerEmail: nil,
             autoreload: .on,
