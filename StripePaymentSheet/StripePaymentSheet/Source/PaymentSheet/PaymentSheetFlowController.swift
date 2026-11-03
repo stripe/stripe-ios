@@ -154,7 +154,7 @@ extension PaymentSheet {
     }
 
     /// A class that presents the individual steps of a payment flow
-    @MainActor
+    @MainActor @preconcurrency
     public class FlowController: ObservableObject {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer
@@ -1048,7 +1048,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
 @_spi(InternalOnlyAPI) extension PaymentSheet.FlowController: STPAnalyticsProtocol {
-    @_spi(InternalOnlyAPI) public static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
+    @_spi(InternalOnlyAPI) public nonisolated static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
 }
 
 // MARK: - PaymentSheetAuthenticationContext

@@ -43,7 +43,7 @@ import UIKit
 }
 
 /// A drop-in class that presents a sheet for a customer to complete their payment
-@MainActor
+@MainActor @preconcurrency
 public class PaymentSheet {
     enum InitializationMode {
         case paymentIntentClientSecret(String)
@@ -463,7 +463,7 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 
 /// :nodoc:
 @_spi(InternalOnlyAPI) extension PaymentSheet: STPAnalyticsProtocol {
-    @_spi(InternalOnlyAPI) public static let stp_analyticsIdentifier: String = "PaymentSheet"
+    @_spi(InternalOnlyAPI) public nonisolated static let stp_analyticsIdentifier: String = "PaymentSheet"
 }
 
 // MARK: - PaymentSheetViewControllerProtocol
