@@ -14,7 +14,8 @@ import UIKit
 @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public protocol LinkWalletButtonDelegate: AnyObject {
     /// Called when the Link flow launched by the button finishes.
     /// - Parameter button: The button that launched the Link flow.
-    /// - Parameter result: `.success(.completed(paymentMethod))` when the customer selects a payment method,
+    /// - Parameter result: `.success(.completed(paymentMethod))` when the flow completes: the payment or setup was confirmed
+    ///   if the `LinkController` was created with an `IntentConfiguration`, otherwise the customer selected a payment method.
     ///   `.success(.canceled)` when they dismiss the flow, or `.failure(error)` on an error.
     func linkWalletButton(
         _ button: LinkWalletButton,
@@ -32,8 +33,9 @@ import UIKit
 /// A "Pay with Link" button that launches the Link flow using a `LinkController`.
 ///
 /// The button reflects the customer's Link account: it shows their email once they're recognized as a Link user,
-/// and their payment method once one is available. Tapping it presents Link, and the resulting payment method is
-/// delivered to the `delegate`.
+/// and their payment method once one is available. Tapping it presents Link with `LinkController.present`, which either
+/// completes the payment or setup, or collects a payment method, depending on how the `LinkController` was created.
+/// The result is delivered to the `delegate`.
 @MainActor
 @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public final class LinkWalletButton: UIView {
 
@@ -45,7 +47,8 @@ import UIKit
     public var presentingViewController: UIViewController?
 
     /// The customer's email address. The button looks up the associated Link account to display its details.
-    public var email: String {
+    /// If `nil`, the button shows "Pay with Link", and tapping it lets the customer sign in to or sign up for Link.
+    public var email: String? {
         didSet {
             guard oldValue != email else { return }
             updateButton()
@@ -75,13 +78,13 @@ import UIKit
 
     /// Creates a `LinkWalletButton`.
     /// - Parameter linkController: The `LinkController` used to look up the customer and present the Link flow.
-    /// - Parameter email: The customer's email address.
+    /// - Parameter email: The customer's email address, if you have it. If `nil`, the customer enters it in Link.
     /// - Parameter phoneNumber: The customer's phone number in E.164 format, used to prefill the Link signup form.
-    public convenience init(linkController: LinkController, email: String, phoneNumber: String? = nil) {
+    public convenience init(linkController: LinkController, email: String? = nil, phoneNumber: String? = nil) {
         self.init(controller: linkController, email: email, phoneNumber: phoneNumber)
     }
 
-    init(controller: LinkWalletButtonControlling, email: String, phoneNumber: String?) {
+    init(controller: LinkWalletButtonControlling, email: String?, phoneNumber: String?) {
         self.linkController = controller
         self.email = email
         self.phoneNumber = phoneNumber
@@ -118,8 +121,8 @@ import UIKit
     var displayedLinkAccount: PaymentSheetLinkAccount? { button.linkAccount as? PaymentSheetLinkAccount }
     var displayedPaymentMethodPreview: LinkPaymentMethodPreview? { button.paymentMethodPreview }
 
-    static func accountMatches(_ linkAccount: PaymentSheetLinkAccount?, email: String) -> Bool {
-        guard let linkAccount else { return false }
+    static func accountMatches(_ linkAccount: PaymentSheetLinkAccount?, email: String?) -> Bool {
+        guard let linkAccount, let email else { return false }
         return linkAccount.email.lowercased() == email.lowercased()
     }
 
@@ -160,8 +163,7 @@ import UIKit
         // Re-evaluated when the in-flight lookup completes
         guard !isLookingUp else { return }
 
-        let email = self.email
-        guard !email.isEmpty, !Self.accountMatches(linkController.linkAccount, email: email) else {
+        guard let email, !email.isEmpty, !Self.accountMatches(linkController.linkAccount, email: email) else {
             return
         }
 
@@ -211,7 +213,7 @@ protocol LinkWalletButtonControlling: AnyObject {
 
     func lookupConsumer(with email: String, completion: @escaping (Result<Bool, Error>) -> Void)
     func present(
-        email: String,
+        email: String?,
         phoneNumber: String?,
         from presentingViewController: UIViewController,
         completion: @escaping (Result<LinkController.PaymentMethodResult, Error>) -> Void

@@ -49,11 +49,14 @@ import UIKit
         case canceled
     }
 
-    /// The result of presenting Link to collect a payment method.
+    /// The result of presenting Link.
     @frozen @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public enum PaymentMethodResult {
-        /// The user selected a payment method. The associated value is the resulting `STPPaymentMethod`.
+        /// The flow completed. The associated value is the customer's `STPPaymentMethod`.
+        ///
+        /// If the `LinkController` was created with an `IntentConfiguration`, the intent has also been confirmed.
+        /// Otherwise, the customer selected the payment method, and you complete the payment or setup.
         case completed(STPPaymentMethod)
-        /// The user dismissed the flow without selecting a payment method.
+        /// The user dismissed the flow before it completed.
         case canceled
     }
 
@@ -81,13 +84,21 @@ import UIKit
     }
 
     /// Errors specific incorrect integrations with LinkController
-    @_spi(InternalOnlyAPI) public enum IntegrationError: LocalizedError {
+    /// Errors caused by how `LinkController` is integrated or configured.
+    @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public enum IntegrationError: LocalizedError {
+        /// `confirmSetupIntent` was called before the customer selected a payment method.
         case noPaymentMethodSelected
+        /// The operation requires a signed-in Link consumer.
         case noActiveLinkConsumer
+        /// The device or app can't use native Link, e.g. because app attestation isn't available.
         case missingAppAttestation
+        /// Link isn't enabled for this merchant.
         case linkUnavailable
+        /// The `IntentConfiguration` passed to `create` has no `confirmHandler`. `LinkController` doesn't support
+        /// `confirmationTokenConfirmHandler`.
+        case unsupportedIntentConfiguration
 
-        @_spi(InternalOnlyAPI) public var errorDescription: String? {
+        public var errorDescription: String? {
             switch self {
             case .noPaymentMethodSelected:
                 return "No payment method has been selected."
@@ -97,6 +108,8 @@ import UIKit
                 return "App attestation is missing or device cannot use native Link."
             case .linkUnavailable:
                 return "Link is not available for this merchant. Check that Link is enabled in your Payment Element settings."
+            case .unsupportedIntentConfiguration:
+                return "LinkController requires an IntentConfiguration with a confirmHandler. confirmationTokenConfirmHandler is not supported."
             }
         }
     }
@@ -106,6 +119,15 @@ import UIKit
         case payment
         case paymentAndSetupFutureUse
         case setup
+
+        init(_ intentMode: PaymentSheet.IntentConfiguration.Mode) {
+            switch intentMode {
+            case let .payment(_, _, setupFutureUsage, _, _):
+                self = setupFutureUsage == nil ? .payment : .paymentAndSetupFutureUse
+            case .setup:
+                self = .setup
+            }
+        }
     }
 
     private let apiClient: STPAPIClient
@@ -162,6 +184,10 @@ import UIKit
         elementsSession.sessionID
     }
 
+    /// Records the payment method passed to the merchant's `confirmHandler`, so `present` can return it.
+    /// `nil` if the controller was created without an `IntentConfiguration`, and only collects payment methods.
+    let confirmedPaymentMethodRecorder: ConfirmedPaymentMethodRecorder?
+
     /// Completion handler for full consent screen
     private var fullConsentCompletion: ((Result<AuthorizationResult, Error>) -> Void)?
 
@@ -170,6 +196,7 @@ import UIKit
         mode: Mode,
         elementsSession: STPElementsSession,
         intent: Intent,
+        confirmedPaymentMethodRecorder: ConfirmedPaymentMethodRecorder? = nil,
         paymentElementConfiguration: PaymentElementConfiguration,
         linkBrand: LinkBrand,
         appearance: LinkAppearance?,
@@ -181,6 +208,7 @@ import UIKit
         self.mode = mode
         self.elementsSession = elementsSession
         self.intent = intent
+        self.confirmedPaymentMethodRecorder = confirmedPaymentMethodRecorder
         self.paymentElementConfiguration = paymentElementConfiguration
         self.initialLinkBrand = linkBrand
         self.appearance = appearance
@@ -297,8 +325,8 @@ import UIKit
                 )
 
                 let loadResult = try await Self.loadElementsSession(
+                    intentConfiguration: Self.collectionOnlyIntentConfiguration(linkConfiguration: configuration),
                     paymentElementConfiguration: paymentElementConfiguration,
-                    linkConfiguration: configuration,
                     analyticsHelper: analyticsHelper
                 )
 
@@ -335,17 +363,25 @@ import UIKit
     /// Creates a `LinkController` for collecting a customer's payment method via Link.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance. Defaults to `.shared`.
+    /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent to confirm, and the `confirmHandler`
+    ///   that creates it. If provided, `present` completes the payment or setup inside Link (e.g. with a "Pay $10.99" button).
+    ///   If `nil`, `present` returns the customer's selected payment method, and you complete the payment or setup.
     /// - Parameter appearance: Link UI appearance overrides.
     /// - Parameter configuration: Configuration for Link behaviour.
     /// - Parameter completion: Called with the ready `LinkController` or an error.
     @_spi(LinkControllerPreview) public static func create(
         apiClient: STPAPIClient = .shared,
+        intentConfiguration: PaymentSheet.IntentConfiguration? = nil,
         appearance: LinkAppearance? = nil,
         configuration: LinkConfiguration? = nil,
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
         Task {
             do {
+                let (loadedIntentConfiguration, confirmedPaymentMethodRecorder) = try Self.makeIntentConfiguration(
+                    intentConfiguration,
+                    linkConfiguration: configuration
+                )
                 var paymentElementConfiguration = PaymentSheet.Configuration()
                 paymentElementConfiguration.apiClient = apiClient
                 if let appearance = appearance {
@@ -363,8 +399,8 @@ import UIKit
                 )
 
                 let loadResult = try await Self.loadElementsSession(
+                    intentConfiguration: loadedIntentConfiguration,
                     paymentElementConfiguration: paymentElementConfiguration,
-                    linkConfiguration: configuration,
                     analyticsHelper: analyticsHelper
                 )
 
@@ -378,9 +414,10 @@ import UIKit
 
                 let controller = LinkController(
                     apiClient: apiClient,
-                    mode: .setup,
+                    mode: Mode(loadedIntentConfiguration.mode),
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
+                    confirmedPaymentMethodRecorder: confirmedPaymentMethodRecorder,
                     paymentElementConfiguration: paymentElementConfiguration,
                     linkBrand: paymentElementConfiguration.resolvedLinkBrand(
                         elementsSession: loadResult.elementsSession,
@@ -568,85 +605,53 @@ import UIKit
         }
     }
 
-    /// Presents the full Link payment method selection flow, handling lookup, authentication or signup,
-    /// wallet display, and payment method creation in a single call.
+    /// Presents the full Link flow, handling lookup, authentication or signup, and wallet display in a single call.
     ///
     /// Under the hood, this method:
     /// 1. Looks up the consumer by email, unless an authenticated session for that email already exists.
+    ///    If `email` is `nil`, skips the lookup, and the customer enters their email in Link.
     /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
     ///    If `phoneNumber` is provided, it is prefilled in the signup form.
-    /// 3. Once the user selects a payment method, creates and returns an `STPPaymentMethod`.
+    /// 3. Completes based on how the `LinkController` was created:
+    ///    - With an `IntentConfiguration`: the wallet's primary button completes the payment or setup (e.g. "Pay $10.99").
+    ///      Link creates a payment method, calls your `confirmHandler`, and confirms the intent, handling authentication
+    ///      such as 3D Secure in the sheet. The completion is called once the intent is confirmed.
+    ///    - Without an `IntentConfiguration`: once the user selects a payment method, creates and returns an `STPPaymentMethod`.
+    ///      Use it to confirm a SetupIntent with `confirmSetupIntent`, or to complete the payment or setup on your server.
     ///
-    /// - Parameter email: The email address to look up and associate with the Link account.
+    /// In both cases, `paymentMethodPreview` is updated to show the payment method the customer used, e.g. on a confirmation screen.
+    ///
+    /// - Parameter email: The email address to look up and associate with the Link account. If `nil`, the customer enters it in Link.
     /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
-    /// - Parameter completion: A closure called with `.success(.completed(paymentMethod))` on selection,
-    ///   `.success(.canceled)` if the user dismisses the flow, or `.failure(error)` on API or network errors.
+    /// - Parameter completion: A closure called with `.success(.completed(paymentMethod))` when the flow completes,
+    ///   `.success(.canceled)` if the user dismisses the flow, or `.failure(error)` on API, network, or confirmation errors.
     @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public func present(
-        email: String,
+        email: String?,
         phoneNumber: String? = nil,
         from presentingViewController: UIViewController,
         completion: @escaping (Result<PaymentMethodResult, Error>) -> Void
     ) {
-        let alreadyAuthenticated = linkAccount?.sessionState == .verified
-            && linkAccount?.email.lowercased() == email.lowercased()
-
-        let presentWallet = { [weak self] in
+        lookupConsumerIfNeeded(email: email) { [weak self] error in
             guard let self else { return }
-            var paymentElementConfiguration = self.paymentElementConfiguration
-            paymentElementConfiguration.defaultBillingDetails.email = email
-            if let phoneNumber {
-                paymentElementConfiguration.defaultBillingDetails.phone = phoneNumber
+            if let error {
+                completion(.failure(error))
+                return
             }
-            if let billingConfig = self.configuration?.billingDetailsCollectionConfiguration {
-                paymentElementConfiguration.billingDetailsCollectionConfiguration = billingConfig
-            }
-
-            presentingViewController.presentNativeLink(
-                selectedPaymentDetailsID: nil,
-                configuration: paymentElementConfiguration,
-                nativeSheetPresentation: self.nativeSheetPresentation,
-                intent: self.intent,
-                elementsSession: self.elementsSession,
-                analyticsHelper: self.analyticsHelper,
-                supportedPaymentMethodTypes: self.resolvedSupportedPaymentMethodTypes(override: nil),
-                linkAppearance: self.appearance,
-                linkConfiguration: self.configuration,
-                canContinueWithoutLink: false
-            ) { [weak self] confirmOption, _, error in
-                guard let self else { return }
-                if let error {
-                    completion(.failure(error))
-                    return
-                }
-                guard let confirmOption else {
-                    completion(.success(.canceled))
-                    return
-                }
-                self.internalPaymentOption = .link(option: confirmOption)
-                self.createPaymentMethod { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .failure(let error):
-                        completion(.failure(error))
-                    case .success(let paymentMethod):
-                        self.lastCreatedPaymentMethod = paymentMethod
-                        completion(.success(.completed(paymentMethod)))
-                    }
-                }
-            }
-        }
-
-        if alreadyAuthenticated {
-            presentWallet()
-        } else {
-            lookupConsumer(with: email) { result in
-                switch result {
-                case .failure(let error):
-                    completion(.failure(error))
-                case .success:
-                    presentWallet()
-                }
+            let configuration = self.walletConfiguration(email: email, phoneNumber: phoneNumber)
+            if let confirmedPaymentMethodRecorder = self.confirmedPaymentMethodRecorder {
+                self.presentWalletForConfirmation(
+                    configuration: configuration,
+                    recorder: confirmedPaymentMethodRecorder,
+                    from: presentingViewController,
+                    completion: completion
+                )
+            } else {
+                self.presentWalletForSelection(
+                    configuration: configuration,
+                    from: presentingViewController,
+                    completion: completion
+                )
             }
         }
     }
@@ -1059,6 +1064,149 @@ import UIKit
 
     // MARK: - Private methods
 
+    /// Looks up the consumer by email, unless an authenticated session for that email already exists.
+    /// Without an email, keeps the current Link session (if any), so the customer can sign in or continue in Link.
+    private func lookupConsumerIfNeeded(email: String?, completion: @escaping (Error?) -> Void) {
+        guard let email, !email.isEmpty else {
+            completion(nil)
+            return
+        }
+        let alreadyAuthenticated = linkAccount?.sessionState == .verified
+            && linkAccount?.email.lowercased() == email.lowercased()
+        guard !alreadyAuthenticated else {
+            completion(nil)
+            return
+        }
+        lookupConsumer(with: email) { result in
+            switch result {
+            case .failure(let error):
+                completion(error)
+            case .success:
+                completion(nil)
+            }
+        }
+    }
+
+    /// The configuration used to present the Link wallet for the given customer details.
+    private func walletConfiguration(email: String?, phoneNumber: String?) -> PaymentElementConfiguration {
+        var paymentElementConfiguration = self.paymentElementConfiguration
+        paymentElementConfiguration.defaultBillingDetails.email = email
+        if let phoneNumber {
+            paymentElementConfiguration.defaultBillingDetails.phone = phoneNumber
+        }
+        if let billingConfig = configuration?.billingDetailsCollectionConfiguration {
+            paymentElementConfiguration.billingDetailsCollectionConfiguration = billingConfig
+        }
+        return paymentElementConfiguration
+    }
+
+    /// Presents the Link wallet for the customer to select a payment method, then creates it.
+    private func presentWalletForSelection(
+        configuration: PaymentElementConfiguration,
+        from presentingViewController: UIViewController,
+        completion: @escaping (Result<PaymentMethodResult, Error>) -> Void
+    ) {
+        presentingViewController.presentNativeLink(
+            selectedPaymentDetailsID: nil,
+            configuration: configuration,
+            nativeSheetPresentation: nativeSheetPresentation,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper,
+            supportedPaymentMethodTypes: resolvedSupportedPaymentMethodTypes(override: nil),
+            linkAppearance: appearance,
+            linkConfiguration: self.configuration,
+            canContinueWithoutLink: false
+        ) { [weak self] confirmOption, _, error in
+            guard let self else { return }
+            if let error {
+                completion(.failure(error))
+                return
+            }
+            guard let confirmOption else {
+                completion(.success(.canceled))
+                return
+            }
+            self.internalPaymentOption = .link(option: confirmOption)
+            self.createPaymentMethod { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .failure(let error):
+                    completion(.failure(error))
+                case .success(let paymentMethod):
+                    self.lastCreatedPaymentMethod = paymentMethod
+                    completion(.success(.completed(paymentMethod)))
+                }
+            }
+        }
+    }
+
+    /// Presents the Link wallet, which confirms the intent from the merchant's `IntentConfiguration` inside the sheet.
+    private func presentWalletForConfirmation(
+        configuration: PaymentElementConfiguration,
+        recorder: ConfirmedPaymentMethodRecorder,
+        from presentingViewController: UIViewController,
+        completion: @escaping (Result<PaymentMethodResult, Error>) -> Void
+    ) {
+        recorder.paymentMethod = nil
+        // The Link option the customer confirmed with, applied once the payment succeeds so that
+        // `paymentMethodPreview` shows the payment method that was used.
+        var confirmedPaymentOption: PaymentOption?
+        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+        // Confirmation only logs the consumer out for merchants without attestation, which can't use LinkController.
+        let payWithNativeLink = PayWithNativeLinkController(
+            mode: .full,
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            paymentHandler: paymentHandler,
+            nativeSheetPresentation: nativeSheetPresentation,
+            analyticsHelper: analyticsHelper,
+            supportedPaymentMethodTypes: resolvedSupportedPaymentMethodTypes(override: nil),
+            linkAppearance: appearance,
+            linkConfiguration: self.configuration,
+            confirmHandler: { [nativeSheetPresentation, analyticsHelper] authenticationContext, intent, elementsSession, paymentOption, completion in
+                confirmedPaymentOption = paymentOption
+                // Same confirmation the sheet performs without a custom confirm handler
+                PaymentSheet.confirm(
+                    configuration: configuration,
+                    nativeSheetPresentation: nativeSheetPresentation,
+                    authenticationContext: authenticationContext,
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    paymentOption: paymentOption,
+                    paymentHandler: paymentHandler,
+                    analyticsHelper: analyticsHelper,
+                    completion: completion
+                )
+            }
+        )
+        payWithNativeLink.presentAsSheet(
+            from: presentingViewController,
+            shouldOfferApplePay: false,
+            hidingUnderlyingBottomSheet: false,
+            shouldFinishOnClose: true,
+            canContinueWithoutLink: false
+        ) { [weak self] result, _, _ in
+            switch result {
+            case .completed:
+                guard let paymentMethod = recorder.paymentMethod else {
+                    stpAssertionFailure("Link completed without calling the confirmHandler.")
+                    completion(.failure(PaymentSheetError.unknown(debugDescription: "Link completed without a payment method.")))
+                    return
+                }
+                if let confirmedPaymentOption {
+                    self?.internalPaymentOption = confirmedPaymentOption
+                }
+                completion(.success(.completed(paymentMethod)))
+            case .canceled:
+                completion(.success(.canceled))
+            case .failed(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
     private func confirmSetupIntentInternal(
         clientSecret: String,
         paymentMethod: STPPaymentMethod,
@@ -1205,12 +1353,9 @@ import UIKit
         }
     }
 
-    private static func loadElementsSession(
-        paymentElementConfiguration: PaymentElementConfiguration,
-        linkConfiguration: LinkConfiguration? = nil,
-        analyticsHelper: PaymentSheetAnalyticsHelper
-    ) async throws -> PaymentSheetLoader.LoadResult {
-        // Stub path: no real intent, PM creation and confirmation handled externally.
+    /// The intent configuration used when the controller only collects payment methods:
+    /// no real intent, PM creation and confirmation handled externally.
+    static func collectionOnlyIntentConfiguration(linkConfiguration: LinkConfiguration?) -> PaymentSheet.IntentConfiguration {
         var intentConfiguration = PaymentSheet.IntentConfiguration(
             mode: .setup(
                 currency: nil,
@@ -1223,6 +1368,50 @@ import UIKit
             }
         )
         intentConfiguration.financialConnectionsPermissions = linkConfiguration?.financialConnectionsPermissions
+        return intentConfiguration
+    }
+
+    /// The intent configuration to load the elements session with, and the recorder for the payment method passed to the
+    /// merchant's `confirmHandler`. Without a merchant `intentConfiguration`, the controller only collects payment methods.
+    static func makeIntentConfiguration(
+        _ intentConfiguration: PaymentSheet.IntentConfiguration?,
+        linkConfiguration: LinkConfiguration?
+    ) throws -> (PaymentSheet.IntentConfiguration, ConfirmedPaymentMethodRecorder?) {
+        guard var intentConfiguration else {
+            return (collectionOnlyIntentConfiguration(linkConfiguration: linkConfiguration), nil)
+        }
+        // Confirmation tokens and shared payment tokens set a placeholder `confirmHandler` that's never called,
+        // so the payment method couldn't be recorded.
+        guard intentConfiguration.confirmationTokenConfirmHandler == nil,
+              intentConfiguration.preparePaymentMethodHandler == nil,
+              let confirmHandler = intentConfiguration.confirmHandler else {
+            throw IntegrationError.unsupportedIntentConfiguration
+        }
+
+        if let paymentMethodTypes = linkConfiguration?.paymentMethodTypes {
+            assert(
+                intentConfiguration.paymentMethodTypes == nil || intentConfiguration.paymentMethodTypes == paymentMethodTypes,
+                "LinkConfiguration.paymentMethodTypes and IntentConfiguration.paymentMethodTypes are both set. The IntentConfiguration's value is used."
+            )
+            intentConfiguration.paymentMethodTypes = intentConfiguration.paymentMethodTypes ?? paymentMethodTypes
+        }
+        if let financialConnectionsPermissions = linkConfiguration?.financialConnectionsPermissions {
+            intentConfiguration.financialConnectionsPermissions = financialConnectionsPermissions
+        }
+
+        let recorder = ConfirmedPaymentMethodRecorder()
+        intentConfiguration.confirmHandler = { paymentMethod, shouldSavePaymentMethod in
+            recorder.paymentMethod = paymentMethod
+            return try await confirmHandler(paymentMethod, shouldSavePaymentMethod)
+        }
+        return (intentConfiguration, recorder)
+    }
+
+    private static func loadElementsSession(
+        intentConfiguration: PaymentSheet.IntentConfiguration,
+        paymentElementConfiguration: PaymentElementConfiguration,
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) async throws -> PaymentSheetLoader.LoadResult {
         let mode: PaymentSheet.InitializationMode = .deferredIntent(intentConfiguration)
 
         let (result, _) = try await PaymentSheetLoader.load(
@@ -1595,17 +1784,22 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     /// Creates a `LinkController` for collecting a customer's payment method via Link.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance. Defaults to `.shared`.
+    /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent to confirm, and the `confirmHandler`
+    ///   that creates it. If provided, `present` completes the payment or setup inside Link (e.g. with a "Pay $10.99" button).
+    ///   If `nil`, `present` returns the customer's selected payment method, and you complete the payment or setup.
     /// - Parameter appearance: Link UI appearance overrides.
     /// - Parameter configuration: Configuration for Link behaviour.
     /// - Returns: A `LinkController` if successful, or throws an error if creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
+        intentConfiguration: PaymentSheet.IntentConfiguration? = nil,
         appearance: LinkAppearance? = nil,
         configuration: LinkConfiguration? = nil
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
             create(
                 apiClient: apiClient,
+                intentConfiguration: intentConfiguration,
                 appearance: appearance,
                 configuration: configuration
             ) { result in
@@ -1623,22 +1817,19 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
 
 @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public extension LinkController {
 
-    /// Presents the full Link payment method selection flow, handling lookup, authentication or signup,
-    /// wallet display, and payment method creation in a single call.
+    /// Presents the full Link flow, handling lookup, authentication or signup, and wallet display in a single call.
     ///
-    /// Under the hood, this method:
-    /// 1. Looks up the consumer by email.
-    /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
-    ///    If `phoneNumber` is provided, it is prefilled in the signup form.
-    /// 3. Once the user selects a payment method, creates and returns an `STPPaymentMethod`.
+    /// If the `LinkController` was created with an `IntentConfiguration`, the payment or setup is completed inside Link.
+    /// Otherwise, the customer selects a payment method, and you complete the payment or setup.
+    /// See `present(email:phoneNumber:from:completion:)` for details.
     ///
-    /// - Parameter email: The email address to look up and associate with the Link account.
+    /// - Parameter email: The email address to look up and associate with the Link account. If `nil`, the customer enters it in Link.
     /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
-    /// - Returns: `.completed(paymentMethod)` on selection, or `.canceled` if the user dismisses the flow.
-    /// - Throws: An error if the lookup fails or payment method creation fails.
+    /// - Returns: `.completed(paymentMethod)` when the flow completes, or `.canceled` if the user dismisses the flow.
+    /// - Throws: An error if the lookup, payment method creation, or confirmation fails.
     func present(
-        email: String,
+        email: String?,
         phoneNumber: String? = nil,
         from presentingViewController: UIViewController
     ) async throws -> PaymentMethodResult {
@@ -1696,4 +1887,9 @@ private class ViewControllerAuthenticationContext: NSObject, STPAuthenticationCo
     func authenticationPresentingViewController() -> UIViewController {
         viewController ?? UIViewController()
     }
+}
+
+/// Records the payment method passed to the merchant's `confirmHandler` when `LinkController` confirms inside Link.
+final class ConfirmedPaymentMethodRecorder {
+    var paymentMethod: STPPaymentMethod?
 }

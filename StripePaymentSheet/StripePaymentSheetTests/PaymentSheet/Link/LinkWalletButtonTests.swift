@@ -196,6 +196,47 @@ final class LinkWalletButtonTests: XCTestCase {
         XCTAssertEqual(controller.lookupEmails, [])
     }
 
+    func testWithoutEmailSkipsLookupAndHidesAccountDetails() {
+        // Given a signed-in Link account
+        let controller = MockLinkWalletButtonController()
+        controller.linkAccount = Stubs.linkAccount(email: email)
+
+        // When the button is created without an email
+        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+
+        // Then it doesn't look up a customer
+        XCTAssertEqual(controller.lookupEmails, [])
+        // ...and doesn't display any account details, since the merchant didn't identify the customer
+        XCTAssertNil(button.displayedLinkAccount)
+        XCTAssertNil(button.displayedPaymentMethodPreview)
+    }
+
+    func testTapWithoutEmailPresentsLink() {
+        // Given a button without an email
+        let controller = MockLinkWalletButtonController()
+        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        button.presentingViewController = UIViewController()
+
+        // When the button is tapped
+        button.didTap()
+
+        // Then Link is presented without an email, so the customer can sign in or sign up
+        XCTAssertEqual(controller.presentCalls.count, 1)
+        XCTAssertNil(controller.presentCalls.first?.email)
+    }
+
+    func testSettingEmailLooksUpCustomer() {
+        // Given a button created without an email
+        let controller = MockLinkWalletButtonController()
+        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+
+        // When the merchant provides an email
+        button.email = email
+
+        // Then the customer is looked up
+        XCTAssertEqual(controller.lookupEmails, [email])
+    }
+
     func testLooksUpNewEmailAfterInFlightLookupCompletes() {
         // Given a lookup in flight
         let controller = MockLinkWalletButtonController()
@@ -301,7 +342,7 @@ final class LinkWalletButtonTests: XCTestCase {
 @MainActor
 private final class MockLinkWalletButtonController: LinkWalletButtonControlling {
     struct PresentCall {
-        let email: String
+        let email: String?
         let phoneNumber: String?
         let presentingViewController: UIViewController
         let completion: (Result<LinkController.PaymentMethodResult, Error>) -> Void
@@ -327,7 +368,7 @@ private final class MockLinkWalletButtonController: LinkWalletButtonControlling 
     }
 
     func present(
-        email: String,
+        email: String?,
         phoneNumber: String?,
         from presentingViewController: UIViewController,
         completion: @escaping (Result<LinkController.PaymentMethodResult, Error>) -> Void

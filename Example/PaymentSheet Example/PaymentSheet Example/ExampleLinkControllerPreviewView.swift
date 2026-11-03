@@ -25,7 +25,7 @@ struct ExampleLinkControllerPreviewView: View {
                     DemoSection(title: "User Information") {
                         VStack(alignment: .leading, spacing: 16) {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("Email")
+                                Text("Email (optional)")
                                     .font(.subheadline)
                                 TextField("Enter email address", text: $configuration.email)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -117,6 +117,12 @@ struct ExampleLinkControllerPreviewView: View {
                                 Text("The merchant creates a setup intent passes it to the LinkController; the setup intent is automatically confirmed and the payment method is attached to the associated customer.")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
+                            case .serverPaymentIntent:
+                                Text("The LinkController is created with an IntentConfiguration ($10.99 USD). The Link wallet shows a Pay button; the merchant's confirm handler creates the payment intent, and Link confirms it.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Toggle("Save for future use", isOn: $configuration.setupFutureUsage)
+                                Toggle("Confirm on server", isOn: $configuration.confirmOnServer)
                             }
                         }
                     }
@@ -136,11 +142,10 @@ struct ExampleLinkControllerPreviewView: View {
                         Text("Continue")
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(configuration.email.isEmpty ? Color.blue.opacity(0.4) : Color.blue)
+                            .background(Color.blue)
                             .foregroundColor(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
-                    .disabled(configuration.email.isEmpty)
                 }
                 .padding()
         }
