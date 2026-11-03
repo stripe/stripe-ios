@@ -326,7 +326,7 @@ extension STPAPIClient {
         with requestParameters: CheckoutSessionConfirmationRequestParameters
     ) async throws -> CheckoutClientAPIResponse {
         guard let returnURL = requestParameters.returnURL else {
-            throw CheckoutError.unknown(debugDescription: "CheckoutClient confirmation requires a return URL.")
+            throw logUnexpectedCheckoutElementsError("CheckoutClient confirmation requires a return URL.", apiClient: self)
         }
         var parameters = Self.checkoutClientParameters(clientSecret: requestParameters.clientSecret)
         parameters.removeValue(forKey: "timezone")

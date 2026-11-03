@@ -672,7 +672,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     // MARK: - presentation
 
-    func testPresentationFailureReturnsCheckoutError() async {
+    func testPresentationFailureReturnsApplePayError() async {
         // Given PassKit refuses to present the Apple Pay sheet
         let analyticsClient = STPAnalyticsClient.sharedClient
         let previousLogHistory = analyticsClient._testLogHistory
@@ -681,29 +681,20 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let (context, controller) = makeContext()
         controller.presentationSucceeds = false
 
-        // When the unexpected-error assertion is captured by the test utility
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        // When
         let result = await context.presentApplePay()
 
-        // Then confirmation fails with actionable diagnostics
+        // Then confirmation fails with the existing Apple Pay configuration error
         guard case .failed(let error) = result.paymentSheetResult,
-              case .unknown(let message) = error as? CheckoutError else {
-            XCTFail("Expected an Apple Pay Checkout error, got \(result.paymentSheetResult)")
+              case .applePayNotSupportedOrMisconfigured = error as? PaymentSheetError else {
+            XCTFail("Expected an Apple Pay configuration error, got \(result.paymentSheetResult)")
             return
         }
-        XCTAssertTrue(message.contains("app is active"))
-        XCTAssertTrue(message.contains("presenting window is visible"))
-        XCTAssertTrue(error.localizedDescription.contains(message))
-
-        // ...and the failure is logged once and triggers the expected SDK assertion
+        // Device, integration, or presentation failures aren't SDK invariants.
         let events = analyticsClient._testLogHistory.filter {
             $0["event"] as? String == "unexpected_error.checkout_elements"
         }
-        XCTAssertEqual(events.count, 1)
-        XCTAssertEqual(events.first?["error_code"] as? String, "unknown")
-        XCTAssertEqual(events.first?["error_type"] as? String, "StripePaymentSheet.CheckoutError")
-        XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
-        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("unexpected_error.checkout_elements"))
+        XCTAssertTrue(events.isEmpty)
     }
 
     // MARK: - presentationWindow
@@ -876,7 +867,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let (context, controller) = makeContext { parameters in
             confirmedTokens.append(parameters.paymentMethodData?.card?.token)
             if confirmedTokens.count == 1 {
-                return .failed(CheckoutError.unknown(debugDescription: "Declined"))
+                return .failed(CheckoutError.apiError(message: "Declined"))
             }
             return .completed(response)
         }
@@ -969,7 +960,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         checkoutWalletUpdater: CheckoutSessionWalletUpdater? = nil,
         attribution: CheckoutAttributionContext = .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement]),
         confirmationHandler: @escaping CheckoutElementsController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
-            .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
+            .failed(UnexpectedError(nonPIIErrorMessage: "Unexpected Apple Pay confirmation in test."))
         }
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let resolvedAPIClient = apiClient ?? APIStubbedTestCase.stubbedAPIClient()

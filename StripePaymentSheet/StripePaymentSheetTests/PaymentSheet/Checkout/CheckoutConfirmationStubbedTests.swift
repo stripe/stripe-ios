@@ -557,12 +557,16 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         guard case .failed(let error, let response) = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
-        XCTAssertTrue(error.nonGenericDescription.contains("not_started"))
+        let unexpectedError = try XCTUnwrap(error as? UnexpectedError)
+        XCTAssertTrue(unexpectedError.nonPIIErrorMessage.contains("not_started"))
+        XCTAssertEqual(error.localizedDescription, NSError.stp_unexpectedErrorMessage())
         XCTAssertEqual(response?.status, .open)
         XCTAssertEqual(response?.paymentStatus, .noPaymentRequired)
         let events = STPAnalyticsClient.sharedClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.checkout_elements" }
         XCTAssertEqual(events.count, 1)
-        XCTAssertTrue((events.first?["error_message"] as? String)?.contains("not_started") == true)
+        XCTAssertEqual(events.first?["error_message"] as? String, unexpectedError.nonPIIErrorMessage)
+        XCTAssertEqual(events.first?["error_type"] as? String, "UnexpectedError")
+        XCTAssertEqual(events.first?["error_code"] as? String, "")
         XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
         XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("not_started"))
     }
@@ -666,6 +670,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         responseJSON["payment_response"] = ["status": "requires_action"]
 
         // When the Checkout Session is confirmed
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         let result = await confirmCheckoutSession(
             checkout,
             responseJSON: responseJSON,
@@ -676,10 +681,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         guard case .failed(let error, let response) = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
-        XCTAssertTrue(error.nonGenericDescription.contains("without a supported Intent"))
+        let unexpectedError = try XCTUnwrap(error as? UnexpectedError)
+        XCTAssertTrue(unexpectedError.nonPIIErrorMessage.contains("without a supported Intent"))
         XCTAssertEqual(response?.status, .open)
         XCTAssertEqual(response?.paymentStatus, .unpaid)
         XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
+        XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
     }
 
     // MARK: - Payment Method
