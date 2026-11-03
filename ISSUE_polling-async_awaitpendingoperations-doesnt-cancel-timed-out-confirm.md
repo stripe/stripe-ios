@@ -4,12 +4,12 @@
 
 ## Summary
 
-A customer who backgrounds/foregrounds the app, or retries payment method selection, while a confirm is still in flight can hit `CheckoutController.awaitPendingOperations()`'s 30s timeout. When that timeout fires, the merchant's "select payment method" flow dismisses and proceeds **as if everything finished cleanly** — but the original confirm is never canceled and keeps running in the background, later silently overwriting session state.
+If the merchant calls `presentPaymentOptions` (e.g. the customer taps "Select payment method") a second time while a confirm is still running, the resulting wait can hit `CheckoutController.awaitPendingOperations()`'s 30s timeout. When that timeout fires, the flow dismisses and proceeds **as if everything finished cleanly** — but the original confirm is never canceled and keeps running in the background, later silently overwriting session state.
 
 **Repro, from the customer's perspective:**
 
 1. Customer taps **Buy** with a card. Confirm starts, and for whatever reason (slow network, 3DS, slow poll) it's taking a while.
-2. While that confirm is still pending, the customer backgrounds the app and comes back — or just taps **"Select payment method"** again to double check what they picked.
+2. While that confirm is still pending, the customer taps **"Select payment method"** again — to double check what they picked, or because the merchant's UI lets them get back there.
 3. The merchant's screen shows a brief loading spinner, then after ~30s gives up and shows the payment method picker as if nothing was in flight — no error, no indication anything's wrong.
 4. Customer picks a *different* card and taps **Buy** again... but the Buy button is still disabled, because the *first* confirm never actually stopped.
 5. Moments later, the first confirm finishes on its own and silently commits its result — even though the customer has moved on and is trying to pay a different way.
