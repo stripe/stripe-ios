@@ -1,5 +1,5 @@
 //
-//  STPFormEncoderSnapshotTests.swift
+//  STPFormEncoderReferenceTests.swift
 //  StripePaymentsTests
 //
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
@@ -17,7 +17,7 @@ import XCTest
 /// The reference snapshot was recorded with the key-value-coding based encoder that shipped before
 /// the encoder read properties through key paths. Any difference in the encoded parameters, including
 /// a change in the type of a leaf value (for example a boolean becoming an integer), fails the test.
-class STPFormEncoderSnapshotTests: XCTestCase {
+class STPFormEncoderReferenceTests: XCTestCase {
 
     /// Set to a file path to write a new reference snapshot instead of comparing against the existing one.
     static let recordPath: String? = nil
