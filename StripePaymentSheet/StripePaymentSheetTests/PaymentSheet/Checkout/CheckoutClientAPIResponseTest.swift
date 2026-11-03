@@ -966,7 +966,7 @@ class CheckoutClientAPIResponseTest: XCTestCase {
     func testUnifiedModeSessionMapsDecimalOnlyAmountLikeEwCS() throws {
         let json = modifyingOneTimePriceItem { item in
             item.removeValue(forKey: "unit_amount")
-            item["unit_amount_decimal"] = "12.345"
+            item["unit_amount_decimal"] = "12.345678901234"
             var price = item["price"] as! [String: Any]
             price.removeValue(forKey: "unit_amount")
             item["price"] = price
@@ -980,8 +980,8 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         let item = try XCTUnwrap(oneTimePrice.items.first)
         XCTAssertEqual(item.unitAmount.minorUnitsAmount, 0)
         let unitAmountDecimal = try XCTUnwrap(item.unitAmountDecimal)
-        XCTAssertEqual(unitAmountDecimal.minorUnitsAmount, 12.345)
-        XCTAssertEqual(unitAmountDecimal.amount, "$0.12345")
+        XCTAssertEqual(unitAmountDecimal.minorUnitsAmount, Decimal(string: "12.345678901234"))
+        XCTAssertEqual(unitAmountDecimal.amount, "$0.12345678901234")
     }
 
     func testUnifiedModeSessionMapsAdjustableQuantity() throws {

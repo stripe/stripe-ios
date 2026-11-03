@@ -239,7 +239,7 @@ extension CheckoutClientAPIResponse {
         let quantity: Int
         let amountDetails: AmountDetails
         let unitAmount: Int?
-        let unitAmountDecimal: Double?
+        let unitAmountDecimal: Decimal?
         let unitLabel: String?
         let adjustableQuantity: AdjustableQuantity?
 
@@ -277,7 +277,7 @@ extension CheckoutClientAPIResponse {
                 String.self,
                 forKey: .unitAmountDecimal
             ) {
-                guard let parsedUnitAmountDecimal = Double(rawUnitAmountDecimal),
+                guard let parsedUnitAmountDecimal = Decimal(string: rawUnitAmountDecimal),
                       parsedUnitAmountDecimal.isFinite else {
                     throw decoder.dataCorrupted("unit_amount_decimal must be a finite number")
                 }
