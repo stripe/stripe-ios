@@ -117,6 +117,35 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
         XCTAssertEqual(details.display?.label, "Visa Credit")
     }
 
+    func test_decodingDisplayIconType() throws {
+        // Given payment details with each icon type, plus one the SDK doesn't know about
+        let iconTypes = ["card_art", "card_brand", "institution", "generic", "some_new_type"]
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+        // When the payment details are decoded
+        let decodedIconTypes = try iconTypes.map { iconType in
+            let json: [String: Any] = [
+                "id": "csmrpd_test_123",
+                "type": "SEPA",
+                "is_default": false,
+                "display": [
+                    "label": "Label",
+                    "icon": [
+                        "default": "https://b.stripecdn.com/icon.png",
+                        "type": iconType,
+                    ],
+                ],
+            ]
+            let data = try JSONSerialization.data(withJSONObject: json)
+            return try decoder.decode(ConsumerPaymentDetails.self, from: data).display?.icon
+        }
+
+        // Then known types are decoded, and an unknown type doesn't prevent the icon from being decoded
+        XCTAssertEqual(decodedIconTypes.map { $0?.type }, [.cardArt, .cardBrand, .institution, .generic, nil])
+        XCTAssertEqual(decodedIconTypes.map { $0?.main }, Array(repeating: URL(string: "https://b.stripecdn.com/icon.png"), count: iconTypes.count))
+    }
+
     func test_decodingDisplayMetadataWithOptionalFields() throws {
         let json: [String: Any] = [
             "id": "csmrpd_test_abc",

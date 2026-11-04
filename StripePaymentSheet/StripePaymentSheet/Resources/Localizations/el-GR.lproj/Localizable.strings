@@ -32,6 +32,10 @@
 
 "Bank account details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων τραπεζικού λογαριασμού.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Για να μπορέσουμε να στείλουμε έναν κωδικό στο email σας, πρέπει πρώτα να επαληθεύσουμε κάποιες επιπλέον πληροφορίες σχετικά με εσάς. Εισαγάγετε τον αριθμό τηλεφώνου σας που λήγει σε ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Για να μπορέσουμε να στείλουμε έναν κωδικό στο email σας, πρέπει πρώτα να επαληθεύσουμε κάποιες επιπλέον πληροφορίες σχετικά με εσάς. Εισαγάγετε τον αριθμό τηλεφώνου σας.";
+
 "Buy Now, Pay Later with  <img/>" = "Αγορά τώρα, πληρωμή αργότερα με <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Αγορά τώρα, πληρωμή αργότερα με Afterpay";
@@ -116,8 +120,6 @@
 
 "Close card scanner" = "Κλείσιμο σαρωτή κάρτας";
 
-"Code sent" = "Ο κωδικός εστάλη";
-
 "Complete the payment using Pix to finish the purchase." = "Ολοκληρώστε την πληρωμή χρησιμοποιώντας το Pix για να ολοκληρώσετε την αγορά.";
 
 "Confirm" = "Επιβεβαίωση";
@@ -162,7 +164,11 @@
 
 "Edit address" = "Επεξεργασία διεύθυνσης";
 
+"Email code" = "Κωδικός email";
+
 "Enter address manually" = "Πληκτρολογήστε τη διεύθυνση";
+
+"Enter the phone number on your Link account." = "Εισαγάγετε τον αριθμό τηλεφώνου στον λογαριασμό Link.";
 
 "Exchange rate and fees of your bank may apply." = "Ενδέχεται να ισχύουν η συναλλαγματική ισοτιμία και οι χρεώσεις της τράπεζάς σας.";
 
@@ -186,6 +192,8 @@
 
 "Last 4 digits of SSN" = "4 τελευταία ψηφία SSN";
 
+"Log in to another account" = "Συνδεθείτε σε άλλον λογαριασμό";
+
 "Manage SEPA debit" = "Διαχείριση χρέωσης SEPA";
 
 "Manage US bank account" = "Διαχείριση τραπεζικού λογαριασμού στις Ηνωμένες Πολιτείες";
@@ -202,6 +210,8 @@
 
 "Manage your payment methods" = "Διαχειριστείτε τις μεθόδους πληρωμής σας";
 
+"More options" = "Περισσότερες επιλογές";
+
 "Name on card" = "Όνομα στην κάρτα";
 
 "Naver Pay Card" = "Κάρτα Naver Pay";
@@ -213,6 +223,8 @@
 "New payment method" = "Νέα μέθοδος πληρωμής";
 
 "No %@ promo" = "Χωρίς προώθηση %@";
+
+"None of the payment methods in your %@ account work with this business." = "Καμία από τις μεθόδους πληρωμής στον %@ λογαριασμό σας δεν λειτουργεί με αυτήν την επιχείρηση.";
 
 "Not you?" = "Δεν είστε εσείς;";
 
@@ -277,6 +289,8 @@
 "Remove payment method" = "Αφαίρεση μεθόδου πληρωμής";
 
 "Remove payment method?" = "Αφαίρεση μεθόδου πληρωμής;";
+
+"Resend code in %d seconds" = "Επαναποστολή κωδικού σε %li δευτερόλεπτα";
 
 "SEPA debit details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων χρέωσης SEPA.";
 
@@ -358,6 +372,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Αυτή η μέθοδος πληρωμής θα καταργηθεί, αλλά θα παραμείνει διαθέσιμη για %@ συνδρομές.";
 
+"This phone number doesn't match your Link account. Please try again." = "Αυτός ο αριθμός τηλεφώνου δεν αντιστοιχεί στον λογαριασμό Link. Δοκιμάστε ξανά.";
+
 "Too many attempts. Please try again in a few minutes." = "Πραγματοποιήθηκαν πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγα λεπτά.";
 
 "Unavailable for this purchase" = "Δεν είναι διαθέσιμο για αυτήν την αγορά";
@@ -368,9 +384,17 @@
 
 "Use billing address for shipping" = "Χρήση διεύθυνσης χρέωσης για αποστολή";
 
+"Verify your phone number" = "Επαλήθευση του αριθμού τηλεφώνου σας";
+
+"Verifying your account…" = "Επαλήθευση του λογαριασμού σας…";
+
 "View more" = "Προβολή περισσότερων";
 
+"We couldn't verify your account. Please close this window and try again." = "Δεν μπορέσαμε να επαληθεύσουμε τον λογαριασμό σας. Κλείστε αυτό το παράθυρο και δοκιμάστε ξανά.";
+
 "Yes, update" = "Ναι, κάντε ενημέρωση";
+
+"You can't pay with %@ here" = "Η πληρωμή με %@ δεν είναι διαθέσιμη εδώ";
 
 "Your IBAN should start with a two-letter country code." = "Ο κωδικός IBAN σας πρέπει να αρχίζει με έναν διψήφιο κωδικό χώρας.";
 

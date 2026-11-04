@@ -265,10 +265,10 @@ enum CheckoutPlayground {
             country: "US"
         )
 
-        var checkoutShippingDetails: CheckoutController.Configuration.Defaults.ShippingDetails {
-            var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
+        var checkoutShippingDetails: CheckoutElementsController.Configuration.Defaults.ShippingDetails {
+            var shippingDetails = CheckoutElementsController.Configuration.Defaults.ShippingDetails()
             shippingDetails.name = name
-            shippingDetails.address = CheckoutController.Address(
+            shippingDetails.address = CheckoutElementsController.Address(
                 country: country,
                 line1: line1,
                 line2: line2,
@@ -279,16 +279,16 @@ enum CheckoutPlayground {
             return shippingDetails
         }
 
-        var checkoutBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? {
+        var checkoutBillingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails? {
             let billingName = name.trimmingCharacters(in: .whitespacesAndNewlines)
             let billingCountry = country.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !billingName.isEmpty || !billingCountry.isEmpty else {
                 return nil
             }
-            var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
+            var billingDetails = CheckoutElementsController.Configuration.Defaults.BillingDetails()
             billingDetails.name = billingName.isEmpty ? nil : billingName
             if !billingCountry.isEmpty {
-                billingDetails.address = CheckoutController.Address(
+                billingDetails.address = CheckoutElementsController.Address(
                     country: billingCountry.uppercased(),
                     line1: line1.isEmpty ? nil : line1,
                     line2: line2.isEmpty ? nil : line2,
@@ -486,7 +486,7 @@ enum CheckoutPlayground {
         var currencySelectorAppearance = CurrencySelectorElement.Appearance()
         var checkoutEndpointOption: EndpointOption = .hosted
         var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
-        var delayPaymentPagesRequests = false
+        var delayCheckoutClientRequests = false
 
         static let nsUserDefaultsKey = "CheckoutPlaygroundSettings"
     }

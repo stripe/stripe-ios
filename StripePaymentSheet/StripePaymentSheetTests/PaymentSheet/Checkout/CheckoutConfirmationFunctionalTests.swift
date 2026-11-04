@@ -28,9 +28,7 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
 
         // Then confirmation completes without creating an Intent
         assertCompleted(result)
-        // TODO(porter) polling: Expect complete when CheckoutClient polling is available.
-        // Until then, preserve the open Session returned by confirmation.
-        XCTAssertEqual(checkout.session.status, .open)
+        XCTAssertEqual(checkout.session.status, .complete(.noPaymentRequired))
         XCTAssertEqual(checkout.session.paymentStatus, .noPaymentRequired)
     }
 
@@ -117,7 +115,7 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
 
     func test_confirm_with_sepa_debit_and_different_payment_method_email_completes_with_payment_intent() async throws {
         // Given a Checkout Session with customer_email and a SEPA Debit form requiring a different email
-        var defaultBillingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
+        var defaultBillingDetails = CheckoutElementsController.Configuration.Defaults.BillingDetails()
         defaultBillingDetails.name = "Jenny Rosen"
         defaultBillingDetails.address = .init(
             country: "DE",
@@ -176,8 +174,8 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         types: [String] = ["card"],
         currency: String = "usd",
         merchantCountry: String = "us",
-        defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil
-    ) async throws -> CheckoutController {
+        defaultBillingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails? = nil
+    ) async throws -> CheckoutElementsController {
         var customerEmail: String?
         var customerID: String?
         switch serverEmailSource {
@@ -200,7 +198,7 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
             returnURL: "stripe-ios-test://checkout-return",
             customerEmail: customerEmail
         )
-        var configuration = CheckoutController.Configuration(
+        var configuration = CheckoutElementsController.Configuration(
             clientSecret: sessionResponse.clientSecret,
             returnURL: "stripe-ios-test://checkout-return"
         )
@@ -208,10 +206,10 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         configuration.defaults.email = localDefaultEmail
         configuration.defaults.billingDetails = defaultBillingDetails
         configuration.paymentElement = .init()
-        return try await CheckoutController(configuration: configuration)
+        return try await CheckoutElementsController(configuration: configuration)
     }
 
-    private func selectCard(on checkout: CheckoutController, cardNumber: String = "4242424242424242") {
+    private func selectCard(on checkout: CheckoutElementsController, cardNumber: String = "4242424242424242") {
         let paymentElement = checkout.getPaymentElement()
         let confirmParams = IntentConfirmParams(type: .stripe(.card))
         confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
@@ -231,8 +229,8 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
     }
 
     private func assertCompleted(
-        _ result: CheckoutController.ConfirmResult,
-        paymentStatus expectedPaymentStatus: CheckoutController.Session.Status.PaymentStatus = .noPaymentRequired,
+        _ result: CheckoutElementsController.ConfirmResult,
+        paymentStatus expectedPaymentStatus: CheckoutElementsController.Session.Status.PaymentStatus = .noPaymentRequired,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
