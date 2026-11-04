@@ -14,6 +14,7 @@ import UIKit
 protocol PaymentSheetContainer: UIViewController, PaymentSheetAuthenticationContext {
 
     var contentStack: [BottomSheetContentViewController] { get }
+    var appearance: PaymentSheet.Appearance { get }
     var contentOffsetPercentage: CGFloat { get set }
 
     func setViewControllers(_ viewControllers: [BottomSheetContentViewController])

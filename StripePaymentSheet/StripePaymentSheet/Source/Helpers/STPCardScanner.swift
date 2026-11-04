@@ -46,8 +46,24 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         return cardScanningAvailableCameraHasUsageDescription
     }
 
+    /// Whether the camera used for scanning has a torch that can light up the card.
+    static var isTorchAvailable: Bool {
+        return makeCaptureDevice()?.hasTorch ?? false
+    }
+
+    // The triple and dualWide cameras have a 0.5x lens for better macro focus.
+    // If neither are available, use the default wide angle camera.
+    private static func makeCaptureDevice() -> AVCaptureDevice? {
+        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes:
+                                                                    [.builtInTripleCamera, .builtInDualWideCamera, .builtInWideAngleCamera],
+                                                                mediaType: .video, position: .back)
+        return discoverySession.devices.first
+    }
+
     // MARK: - Properties
     weak var cameraView: STPCameraView?
+    /// When true, the camera view keeps showing the final frame after a successful scan instead of going black.
+    var keepsLastFrameAfterSuccess = false
 
     private var feedbackGenerator: UINotificationFeedbackGenerator?
 
@@ -92,6 +108,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // UI changes and delegate notifications run on the main queue.
     private weak var delegate: STPCardScannerDelegate?
     private var captureSession: AVCaptureSession?
+    private var captureDevice: AVCaptureDevice?
     private let captureSessionQueue = DispatchQueue(label: "com.stripe.CardScanning.CaptureSessionQueue")
     private var videoDataOutput: AVCaptureVideoDataOutput?
     private var videoDataOutputQueue: DispatchQueue?
@@ -191,6 +208,20 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         finish(didSucceed: false)
     }
 
+    /// Turns the torch on or off while scanning. Stopping the scan turns the torch off.
+    func setTorchEnabled(_ isEnabled: Bool) {
+        dispatchPrecondition(condition: .onQueue(.main))
+        captureSessionQueue.async { [weak self] in
+            guard let self, self.scanIsActive(), let captureDevice = self.captureDevice, captureDevice.hasTorch else { return }
+            do {
+                try captureDevice.lockForConfiguration()
+                defer { captureDevice.unlockForConfiguration() }
+                captureDevice.torchMode = isEnabled ? .on : .off
+            } catch {
+            }
+        }
+    }
+
     private func finishWithError() {
         finish(didSucceed: false) {
             self.delegate?.cardScannerDidError(self)
@@ -211,14 +242,10 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             self.processVNRequest(request)
         }
 
-        // The triple and dualWide cameras have a 0.5x lens for better macro focus.
-        // If neither are available, use the default wide angle camera.
-        let discoverySession = AVCaptureDevice.DiscoverySession(deviceTypes:
-                                                                    [.builtInTripleCamera, .builtInDualWideCamera, .builtInWideAngleCamera],
-                                                                mediaType: .video, position: .back)
-        guard let captureDevice = discoverySession.devices.first else {
+        guard let captureDevice = Self.makeCaptureDevice() else {
             return false
         }
+        self.captureDevice = captureDevice
 
         captureSession = AVCaptureSession()
         captureSession?.sessionPreset = .hd1920x1080
@@ -495,6 +522,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             // This wait belongs on the capture queue, never the main queue or the frame queue itself.
             self.videoDataOutputQueue?.sync {}
             self.captureSession = nil
+            self.captureDevice = nil
 
             // Report completion only after the session has stopped and in-flight recognition has finished.
             DispatchQueue.main.async {
@@ -505,7 +533,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 }
                 self.feedbackGenerator = nil
                 // Only detach the session we stopped; never clear a different preview session.
-                if self.cameraView?.videoPreviewLayer.session === captureSession {
+                let keepsLastFrame = didSucceed && self.keepsLastFrameAfterSuccess
+                if !keepsLastFrame && self.cameraView?.videoPreviewLayer.session === captureSession {
                     self.cameraView?.captureSession = nil
                 }
                 completion?()

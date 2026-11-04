@@ -510,32 +510,39 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         // Open the card form
         app.buttons["Card"].waitForExistenceAndTap()
 
-        // Wait for the close card scanner button to appear, which indicates the scanner is open and analytics updated
-        let closeScannerButton = app.buttons["Close card scanner"]
-        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 10.0), "Close card scanner button should appear when scanner opens")
+        // Wait for the full-height card scan screen to appear, which indicates the scanner is open and analytics updated
+        let manualEntryButton = app.buttons["Enter card details manually"]
+        XCTAssertTrue(manualEntryButton.waitForExistence(timeout: 10.0), "Card scan screen should appear when the card form opens")
+        XCTAssertFalse(app.textFields["Card number"].exists, "Card fields should be hidden while the card scan screen is shown")
 
         // Verify STPCardScanner IS in analytics product_usage after opening card form
         let updatedProductUsage = analyticsLog.last!["product_usage"] as! [String]
         XCTAssertTrue(updatedProductUsage.contains("STPCardScanner"), "STPCardScanner should be in product_usage after opening card form")
 
-        // Close the card scanner
-        closeScannerButton.tap()
+        // Choose to enter card details manually
+        manualEntryButton.tap()
 
-        // Verify card scanner is closed
-        XCTAssertFalse(closeScannerButton.waitForExistence(timeout: 2.0), "Card scanner should be closed after tapping close button")
+        // Verify we're back on the card form
+        let cardNumberField = app.textFields["Card number"]
+        XCTAssertTrue(cardNumberField.waitForExistence(timeout: 10.0), "Card number field should appear after choosing manual entry")
+        XCTAssertFalse(manualEntryButton.exists, "Card scan screen should be closed after choosing manual entry")
 
         // Verify we can open the scanner again using the scan button
         let scanCardButton = app.buttons["Scan card"]
         XCTAssertTrue(scanCardButton.waitForExistence(timeout: 5.0), "Scan card button should exist")
         scanCardButton.tap()
-        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 10.0), "Card scanner should open when tapping scan button")
+        XCTAssertTrue(manualEntryButton.waitForExistence(timeout: 10.0), "Card scan screen should open when tapping scan button")
 
-        // Verify that editing a form field closes the scanner
-        let cardNumberField = app.textFields["Card number"]
-        XCTAssertTrue(cardNumberField.waitForExistence(timeout: 10.0), "Card number field should exist")
-        cardNumberField.tap()
+        // Return to the form again
+        manualEntryButton.tap()
+        XCTAssertTrue(cardNumberField.waitForExistence(timeout: 10.0), "Card number field should appear after choosing manual entry")
 
-        // Verify scanner is closed after editing form field
-        XCTAssertFalse(closeScannerButton.exists, "Card scanner should be closed when editing form fields")
+        // Verify the back button on the card scan screen returns to the payment method list
+        scanCardButton.tap()
+        XCTAssertTrue(manualEntryButton.waitForExistence(timeout: 10.0), "Card scan screen should open when tapping scan button")
+        app.buttons["Back"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Card"].waitForExistence(timeout: 10.0), "Payment method list should appear after tapping back")
+        XCTAssertFalse(manualEntryButton.exists, "Card scan screen should be closed after tapping back")
+        XCTAssertFalse(cardNumberField.exists, "Card form should be closed after tapping back")
     }
 }

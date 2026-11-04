@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Il-metodu tal-pagament standard ma nbidilx. Jekk jogħġbok erġa' pprova.";
 
+"Enter card details manually" = "Daħħal id-dettalji tal-karta int stess";
+
 "Enter the code sent to %@." = "Daħħal il-kodiċi mibgħut lil %@.";
 
 "Failed to connect" = "Ma rnexxilux jikkonnettja";

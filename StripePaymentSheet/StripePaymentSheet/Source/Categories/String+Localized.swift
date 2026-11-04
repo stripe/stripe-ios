@@ -529,6 +529,27 @@ extension String.Localized {
         )
     }
 
+    static var card_scanned: String {
+        STPLocalizedString(
+            "Card scanned",
+            "Status shown over the camera viewfinder after the customer's card was scanned successfully."
+        )
+    }
+
+    static var looking_for_your_card: String {
+        STPLocalizedString(
+            "Looking for your card",
+            "Status shown over the camera viewfinder while the card scanner is searching for a card."
+        )
+    }
+
+    static var rescan_card: String {
+        STPLocalizedString(
+            "Rescan card",
+            "Button title to open the camera and scan a credit/debit card again after a card was already scanned."
+        )
+    }
+
     static var add_new_card: String {
         STPLocalizedString(
             "Add new card",

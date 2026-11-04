@@ -36,11 +36,4 @@ extension String.Localized {
             "Label to explain that they need to update phone settings to scan"
         )
     }
-
-    static var enter_card_details_manually: String {
-        return STPLocalizedString(
-            "Enter card details manually",
-            "Label for button to enter card details manually instead of scanning"
-        )
-    }
 }

@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Az alapértelmezett fizetési mód nem frissült, próbálja újra.";
 
+"Enter card details manually" = "Kártyaadatok megadása kézzel";
+
 "Enter the code sent to %@." = "Írja be a(z) %@ címre küldött kódot.";
 
 "Failed to connect" = "Nem sikerült csatlakozni";

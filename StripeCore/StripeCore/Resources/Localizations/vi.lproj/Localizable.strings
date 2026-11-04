@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Phương thức thanh toán mặc định chưa cập nhật. Vui lòng thử lại.";
 
+"Enter card details manually" = "Nhập thông tin thẻ theo cách thủ công";
+
 "Enter the code sent to %@." = "Nhập mã đã được gửi tới %@.";
 
 "Failed to connect" = "Không thể kết nối";

@@ -78,7 +78,7 @@ class SheetNavigationBar: UIView {
     var checkoutSessionID: String?
 
     var usesSystemNavigationBar: Bool { systemNavigationItem != nil }
-    private var currentStyle: Style = .close(showAdditionalButton: false)
+    private(set) var currentStyle: Style = .close(showAdditionalButton: false)
     // Bind only while this content is visible; legacy bars continue to render their own controls.
     weak var systemNavigationItem: UINavigationItem? {
         didSet {

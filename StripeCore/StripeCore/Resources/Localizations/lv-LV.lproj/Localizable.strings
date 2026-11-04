@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Noklusējuma maksājumu veids netika atjaunināts. Mēģiniet vēlreiz.";
 
+"Enter card details manually" = "Manuāli ievadiet kartes informāciju";
+
 "Enter the code sent to %@." = "Ievadiet kodu, kas tika nosūtīts uz %@.";
 
 "Failed to connect" = "Neizdevās izveidot savienojumu";
