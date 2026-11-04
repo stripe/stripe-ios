@@ -25,11 +25,14 @@ public struct AddressForm: View {
         if let addressSectionView = state.addressSection?.view {
             AddressFormRepresentable(
                 addressSectionView: addressSectionView,
-                enteredAddress: state.enteredAddress,
                 sizing: sizing
             )
             .frame(maxWidth: .infinity)
             .frame(height: sizing.height)
+            .onChange(of: state.enteredAddress) { _ in
+                // An edit can add or remove fields, such as when the country changes.
+                sizing.updateHeight(of: addressSectionView)
+            }
         }
     }
 }
@@ -81,8 +84,6 @@ final class AddressFormSizing: ObservableObject {
 
 private struct AddressFormRepresentable: UIViewRepresentable {
     let addressSectionView: UIView
-    // Each change re-renders this view, which re-measures fields that may have appeared or disappeared.
-    let enteredAddress: AddressFormState.EnteredAddress?
     let sizing: AddressFormSizing
 
     func makeUIView(context: Context) -> UIView {
