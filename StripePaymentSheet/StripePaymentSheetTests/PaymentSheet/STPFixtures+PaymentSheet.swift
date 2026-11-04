@@ -585,7 +585,7 @@ extension PaymentSheetFormFactory {
 
 extension LinkAccountService {
     static func _testValue() -> Self {
-        .init(apiClient: STPAPIClient(publishableKey: "pk_test"), elementsSession: .emptyElementsSession)
+        .init(apiClient: STPAPIClient(publishableKey: "pk_test"), elementsSession: .emptyElementsSession, analyticsHelper: .init())
     }
 }
 

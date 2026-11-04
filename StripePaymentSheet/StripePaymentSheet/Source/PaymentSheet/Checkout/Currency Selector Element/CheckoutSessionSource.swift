@@ -9,6 +9,6 @@ import Combine
 
 /// Provides Checkout Session state without exposing Checkout itself.
 struct CheckoutSessionSource {
-    let initialSession: CheckoutController.Session
-    let sessionPublisher: Published<CheckoutController.Session>.Publisher
+    let initialSession: CheckoutElementsController.Session
+    let sessionPublisher: Published<CheckoutElementsController.Session>.Publisher
 }

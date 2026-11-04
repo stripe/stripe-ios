@@ -180,7 +180,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
                 "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency, unitAmount: amount),
                 "presentment_currency": currency,
             ]).makePublicSession()
-            let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
                 apiClient: APIStubbedTestCase.stubbedAPIClient()
             )
 
@@ -204,7 +204,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 12000),
             "presentment_currency": "usd",
         ]).makePublicSession()
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
         )
 
@@ -232,7 +232,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
                 XCTFail("Expected checkout intent")
                 return
             }
-            let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+            let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
                 apiClient: APIStubbedTestCase.stubbedAPIClient()
             )
 
@@ -260,7 +260,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             "presentment_currency": "lbp",
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "lbp", unitAmount: 2345),
         ]).makePublicSession()
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
         )
 
@@ -281,7 +281,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequestRequiresShippingAddress() {
         // Given Apple Pay requires a shipping address
         let session = CheckoutTestHelpers.makeSession().makePublicSession()
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
             shippingAddressRequired: true
         )
@@ -300,7 +300,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequestDoesNotRequireShippingAddressByDefault() {
         // Given an Apple Pay confirmation
         let session = CheckoutTestHelpers.makeSession().makePublicSession()
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
         )
 
@@ -317,7 +317,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequestRequiresEmail() {
         // Given Apple Pay needs to collect the customer's email
         let session = CheckoutTestHelpers.makeSession().makePublicSession()
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
         )
 
@@ -335,7 +335,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "customer_email": "customer@example.com"
         ]).makePublicSession()
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
         )
 
@@ -350,7 +350,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequestDoesNotRequireEmailWhenSessionHasMerchantDefaultEmail() {
         var session = CheckoutTestHelpers.makeSession().makePublicSession()
         session.localState.email = "merchant@example.com"
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
         )
 
@@ -364,7 +364,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     func testMakePaymentRequestPrefillsExistingShippingAddress() {
         // Given the Checkout Session already has a shipping address
-        let shippingAddress = CheckoutController.Session.ShippingAddress(
+        let shippingAddress = CheckoutElementsController.Session.ShippingAddress(
             name: "Jane Doe",
             address: .init(
                 country: "US",
@@ -377,7 +377,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         )
         var session = CheckoutTestHelpers.makeSession().makePublicSession()
         session.localState.shippingAddress = shippingAddress
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
             shippingAddressRequired: true
         )
@@ -397,7 +397,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     func testSessionShippingAddressMakesPaymentIntentShippingDetailsParams() {
         // Given a shipping address stored locally on the Checkout Session
-        let shippingAddress = CheckoutController.Session.ShippingAddress(
+        let shippingAddress = CheckoutElementsController.Session.ShippingAddress(
             name: "Jane Doe",
             address: .init(
                 country: "US",
@@ -508,7 +508,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     }
 
     func testCancelWaitsForShippingTaxUpdateAndRestoresTaxRegion() async {
-        let existingTaxRegion = CheckoutController.Address(country: "US", postalCode: "10001")
+        let existingTaxRegion = CheckoutElementsController.Address(country: "US", postalCode: "10001")
 
         for initialTaxRegion in [existingTaxRegion, nil] {
             // Given an in-flight shipping tax update
@@ -564,7 +564,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
                 "address_source": "billing",
             ],
         ]).makePublicSession()
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
         )
 
@@ -581,7 +581,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequest_prefillsCompleteDefaultBillingAddress() {
         // Given default billing details with a street address
         let session = CheckoutTestHelpers.makeSession([:]).makePublicSession()
-        var defaults = CheckoutController.Configuration.Defaults.BillingDetails()
+        var defaults = CheckoutElementsController.Configuration.Defaults.BillingDetails()
         defaults.name = "Jane Doe"
         defaults.address = .init(
             country: "US",
@@ -591,7 +591,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             state: "CA",
             postalCode: "94103"
         )
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
             defaultBillingDetails: defaults
         )
@@ -614,9 +614,9 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequest_doesNotPrefillCountryOnlyDefaultBillingAddress() {
         // Given default billing details without a street address
         let session = CheckoutTestHelpers.makeSession().makePublicSession()
-        var defaults = CheckoutController.Configuration.Defaults.BillingDetails()
+        var defaults = CheckoutElementsController.Configuration.Defaults.BillingDetails()
         defaults.address = .init(country: "GB")
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
             defaultBillingDetails: defaults
         )
@@ -634,10 +634,10 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequest_prefillsDefaultBillingAddressWithLine1Only() {
         // Given default billing details with the minimum street address
         let session = CheckoutTestHelpers.makeSession().makePublicSession()
-        var defaults = CheckoutController.Configuration.Defaults.BillingDetails()
+        var defaults = CheckoutElementsController.Configuration.Defaults.BillingDetails()
         defaults.name = "John Smith"
         defaults.address = .init(country: "US", line1: "123 Main St")
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient(),
             defaultBillingDetails: defaults
         )
@@ -656,7 +656,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     func testMakePaymentRequest_doesNotPrefillMissingDefaultBillingAddress() {
         // Given no default billing address
         let session = CheckoutTestHelpers.makeSession().makePublicSession()
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
         )
 
@@ -828,7 +828,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     }
 
     private func assertAuthorizationConfirmsWithSource(
-        _ confirmationSource: CheckoutController.ConfirmingElement,
+        _ confirmationSource: CheckoutElementsController.ConfirmingElement,
         file: StaticString = #filePath,
         line: UInt = #line
     ) async throws {
@@ -962,13 +962,13 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     private func makeContext(
         sessionId: String = "cs_test_123",
-        checkoutSession: CheckoutController.Session? = nil,
+        checkoutSession: CheckoutElementsController.Session? = nil,
         apiClient: STPAPIClient? = nil,
         presentationWindow: UIWindow? = nil,
         collectsTaxFromBillingAddress: Bool = false,
         checkoutWalletUpdater: CheckoutSessionWalletUpdater? = nil,
         attribution: CheckoutAttributionContext = .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement]),
-        confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
+        confirmationHandler: @escaping CheckoutElementsController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
             .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
         }
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
@@ -983,7 +983,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
                 "address_source": "billing",
             ],
         ]).makePublicSession()
-        let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let applePayConfirmationParameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: resolvedAPIClient,
             presentationWindow: presentationWindow,
             confirmationHandler: confirmationHandler,
@@ -1016,7 +1016,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             ]
         }
         let session = CheckoutTestHelpers.makeSession(overrides).makePublicSession()
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: apiClient,
         )
         let controller = MockPKPaymentAuthorizationController()

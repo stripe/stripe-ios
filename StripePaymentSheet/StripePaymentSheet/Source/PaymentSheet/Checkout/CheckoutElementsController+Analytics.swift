@@ -1,10 +1,10 @@
 //
-//  Checkout+Analytics.swift
+//  CheckoutElementsController+Analytics.swift
 //  StripePaymentSheet
 //
 //  Builds analytics payloads from Checkout configuration and confirmation flows.
 //  Event names, timing, common session fields, and logging live in
-//  CheckoutControllerAnalyticsHelper.
+//  CheckoutElementsControllerAnalyticsHelper.
 //
 //  Configuration payload rules from the Metrics design:
 //  https://docs.google.com/document/d/1CWglcOHR6I8cOWKjztPfnhnVG8axucpv-j5cWIoey7E/edit?tab=t.26k2d65sc5oi
@@ -21,10 +21,10 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
-extension CheckoutController {
+extension CheckoutElementsController {
     func confirmationAnalyticsParams(
         paymentOption: PaymentOption?,
-        source: CheckoutControllerAnalyticsHelper.InvocationSource
+        source: CheckoutElementsControllerAnalyticsHelper.InvocationSource
     ) -> [String: Any] {
         var params: [String: Any] = [
             "invocation_source": source.rawValue,
@@ -43,7 +43,7 @@ extension CheckoutController {
 
 }
 
-extension CheckoutController.Configuration {
+extension CheckoutElementsController.Configuration {
     /// Serialize only presence flags and supported UI settings, never customer details or merchant identifiers.
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
@@ -150,7 +150,7 @@ private extension CurrencySelectorElement.Configuration {
     }
 }
 
-extension CheckoutController.CheckoutConfirmationFlow {
+extension CheckoutElementsController.CheckoutConfirmationFlow {
     var analyticsPaymentOption: PaymentOption? {
         switch self {
         case .withoutPaymentMethod:

@@ -1,5 +1,5 @@
 //
-//  CheckoutController.swift
+//  CheckoutElementsController.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 2/25/26.
@@ -18,7 +18,7 @@ import UIKit
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 @MainActor
-public final class CheckoutController: ObservableObject {
+public final class CheckoutElementsController: ObservableObject {
     // MARK: - Public Properties
 
     /// True while a Checkout Session update or confirmation is in progress or queued.
@@ -37,23 +37,23 @@ public final class CheckoutController: ObservableObject {
 
     // MARK: - Internal Properties
 
-    /// The PaymentElement for this CheckoutController instance
+    /// The PaymentElement for this CheckoutElementsController instance
     private(set) var paymentElement: PaymentElement?
 
-    /// The ExpressCheckoutElement for this CheckoutController instance.
+    /// The ExpressCheckoutElement for this CheckoutElementsController instance.
     private var expressCheckoutElement: ExpressCheckoutElement?
 
-    /// The CurrencySelectorElement for this CheckoutController instance, when Adaptive Pricing is available.
+    /// The CurrencySelectorElement for this CheckoutElementsController instance, when Adaptive Pricing is available.
     private var currencySelectorElement: CurrencySelectorElement?
 
-    /// The ShippingAddressElement for this CheckoutController instance.
+    /// The ShippingAddressElement for this CheckoutElementsController instance.
     private let shippingAddressElement: ShippingAddressElement?
 
     private(set) var confirmationChallenge: ConfirmationChallenge?
 
     let clientSecret: String
     let apiClient: STPAPIClient
-    let analyticsHelper: CheckoutControllerAnalyticsHelper
+    let analyticsHelper: CheckoutElementsControllerAnalyticsHelper
     lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: apiClient)
     var effectiveMerchantDisplayName: String {
         configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? ""
@@ -81,7 +81,7 @@ public final class CheckoutController: ObservableObject {
     /// Guards confirmation across Payment Element and Express Checkout entry points.
     var confirmationInProgress = false
 
-    /// The last tax region successfully sent by this CheckoutController.
+    /// The last tax region successfully sent by this CheckoutElementsController.
     var currentTaxRegion: Address?
 
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
@@ -92,13 +92,13 @@ public final class CheckoutController: ObservableObject {
 
     // MARK: - Initialization
 
-    /// Initializes a CheckoutController instance
+    /// Initializes a CheckoutElementsController instance
     public init(configuration: Configuration) async throws {
         // TODO(MOBILESDK-5054): Own the analytics session in the surface's analytics helper and pass it to other consumers
         // instead of using a singleton.
         AnalyticsHelper.shared.generateSessionID()
         let clientSecret = configuration.clientSecret
-        let analyticsHelper = CheckoutControllerAnalyticsHelper(
+        let analyticsHelper = CheckoutElementsControllerAnalyticsHelper(
             apiClient: configuration.apiClient,
             checkoutSessionId: clientSecret.contains("_secret_") ? Self.extractSessionId(from: clientSecret) : ""
         )
@@ -120,7 +120,7 @@ public final class CheckoutController: ObservableObject {
         var analyticsSession: Session?
         do {
             // 1. Initialize the session
-            let session = try await CheckoutControllerLoader.load(configuration: configuration)
+            let session = try await CheckoutElementsControllerLoader.initCheckoutSession(configuration: configuration)
             self.session = session
             analyticsSession = session
 
@@ -137,9 +137,16 @@ public final class CheckoutController: ObservableObject {
             try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
 
             // 4. The session is now finalized - do post-session-change stuff
-            let handleSessionChangeResult = CheckoutControllerLoader.handleSessionChange(checkout: self)
+            let handleSessionChangeResult = CheckoutElementsControllerLoader.handleSessionChange(checkout: self)
             confirmationChallenge = handleSessionChangeResult.confirmationChallenge
-            // 4a. Initialize PE
+
+            // 5. Resolve Link before constructing payment elements, reusing the prepared PE configuration.
+            await CheckoutElementsControllerLoader.loadLink(
+                session: self.session,
+                configuration: configuration,
+                paymentElementConfiguration: handleSessionChangeResult.paymentElement?.flowController.configuration
+            )
+            // 6. Initialize PE
             if let paymentElementInitParameters = handleSessionChangeResult.paymentElement {
                 self.paymentElement = try PaymentElement(
                     checkout: self,
@@ -150,7 +157,7 @@ public final class CheckoutController: ObservableObject {
                 try await syncBillingAddress(from: paymentElement?.embeddedPaymentElement._paymentOption?.checkoutBillingDetails)
             }
 
-            // 4b. Initialize remaining elements
+            // 7. Initialize remaining elements
             let sessionSource = CheckoutSessionSource(initialSession: self.session, sessionPublisher: $session)
 
             if let expressCheckoutElementConfiguration = configuration.expressCheckoutElement {
@@ -219,6 +226,17 @@ public final class CheckoutController: ObservableObject {
         return (shippingAddressElement, normalizedDefaultShippingAddress)
     }
 
+    // MARK: - Customer
+
+    /// Deletes all persisted authentication state associated with a customer.
+    ///
+    /// You must call this method when the user logs out from your app.
+    /// This will ensure that any persisted authentication state in CheckoutElementsController
+    /// is also cleared during logout.
+    nonisolated public static func resetCustomer() {
+        UserDefaults.standard.clearLinkDefaults()
+    }
+
     // MARK: - Promotion Codes
 
     /// Use this method to apply a promotion code that your customer enters.
@@ -275,7 +293,7 @@ public final class CheckoutController: ObservableObject {
     func updateBillingTaxRegionIfNecessary(
         address: Address?,
         canUpdateWhileSheetPresented: Bool = false,
-        source: CheckoutControllerAnalyticsHelper.InvocationSource = .merchant
+        source: CheckoutElementsControllerAnalyticsHelper.InvocationSource = .merchant
     ) async throws {
         let startedAction = analyticsHelper.logStarted(.updateBillingAddress, session: session, additionalParams: ["invocation_source": source.rawValue])
         var didRequestTaxUpdate = false
@@ -304,7 +322,7 @@ public final class CheckoutController: ObservableObject {
     func updateShippingAddress(
         name: String?,
         address: Address?,
-        source: CheckoutControllerAnalyticsHelper.InvocationSource
+        source: CheckoutElementsControllerAnalyticsHelper.InvocationSource
     ) async throws {
         let startedAction = analyticsHelper.logStarted(.updateShippingAddress, session: session, additionalParams: ["invocation_source": source.rawValue])
         var didRequestTaxUpdate = false
@@ -408,7 +426,7 @@ public final class CheckoutController: ObservableObject {
         return paymentElement!
     }
 
-    /// Returns the ExpressCheckoutElement for this CheckoutController instance.
+    /// Returns the ExpressCheckoutElement for this CheckoutElementsController instance.
     public func getExpressCheckoutElement() -> ExpressCheckoutElement {
         assert(configuration.expressCheckoutElement != nil, "Set Configuration.expressCheckoutElement before calling getExpressCheckoutElement().")
         stpAssert(expressCheckoutElement != nil, "ExpressCheckoutElement should be initialized when Configuration.expressCheckoutElement is set.")
@@ -425,11 +443,11 @@ public final class CheckoutController: ObservableObject {
         return currencySelectorElement
     }
 
-    /// Returns the ShippingAddressElement for this CheckoutController instance.
+    /// Returns the ShippingAddressElement for this CheckoutElementsController instance.
     public func getShippingAddressElement() -> ShippingAddressElement {
         assert(
             configuration.shippingAddressElement != nil,
-            "Set Configuration.shippingAddressElement before initializing the CheckoutController to use ShippingAddressElement."
+            "Set Configuration.shippingAddressElement before initializing the CheckoutElementsController to use ShippingAddressElement."
         )
         return shippingAddressElement!
     }
@@ -442,7 +460,7 @@ public final class CheckoutController: ObservableObject {
     public func confirm(from presentingViewController: UIViewController? = nil) async -> ConfirmResult {
         return await confirm(source: .merchant) {
             guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
-                let errorMessage = "CheckoutController.confirm(from:) could not find a presenting view controller."
+                let errorMessage = "CheckoutElementsController.confirm(from:) could not find a presenting view controller."
                 assertionFailure(errorMessage)
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage)
             }
@@ -472,7 +490,7 @@ public final class CheckoutController: ObservableObject {
 
 // MARK: - Defaults
 
-extension CheckoutController {
+extension CheckoutElementsController {
     func applyDefaults(shippingAddress: Session.ShippingAddress?) async throws {
         let defaults = configuration.defaults
 
@@ -555,7 +573,7 @@ extension CheckoutController {
 // MARK: - Internal session setters
 // These exist here because `session` is private(set) to enforce that session can only be mutated through these sanctioned paths.
 // Normal update paths commit the session, then call updateForSessionChange to update derived state and elements.
-extension CheckoutController {
+extension CheckoutElementsController {
     /// Stores an API response and local state without processing the session or updating elements.
     ///
     /// Existing local state is preserved unless explicitly replaced.
@@ -586,7 +604,7 @@ extension CheckoutController {
     /// Call this after committing a 'normal' session update; not for initialization or confirmation.
     func updateForSessionChange() {
         guard sessionIsOpen else { return }
-        let result = CheckoutControllerLoader.handleSessionChange(checkout: self)
+        let result = CheckoutElementsControllerLoader.handleSessionChange(checkout: self)
         // Update confirmation challenge. I'm not sure if this is necessary, but the intents integration does it too on `update`
         confirmationChallenge = result.confirmationChallenge
         // Update PE

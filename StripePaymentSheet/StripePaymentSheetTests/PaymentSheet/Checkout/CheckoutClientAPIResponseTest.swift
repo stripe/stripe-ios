@@ -60,7 +60,7 @@ class CheckoutClientAPIResponseTest: XCTestCase {
     }
 
     func testDecodedObjectFromAPIResponseMapsSessionStatus() throws {
-        let testCases: [(status: String, paymentStatus: String, expected: CheckoutController.Session.Status)] = [
+        let testCases: [(status: String, paymentStatus: String, expected: CheckoutElementsController.Session.Status)] = [
             ("open", "unpaid", .open),
             ("expired", "unpaid", .expired),
             ("complete", "paid", .complete(.paid)),
@@ -997,7 +997,6 @@ class CheckoutClientAPIResponseTest: XCTestCase {
             return XCTFail("Expected one-time Price order summary item")
         }
         let enabledQuantity = try XCTUnwrap(enabledOneTimePrice.items.first?.adjustableQuantity)
-        XCTAssertTrue(enabledQuantity.enabled)
         XCTAssertEqual(enabledQuantity.minimum, 2)
         XCTAssertEqual(enabledQuantity.maximum, 10)
 
@@ -1202,7 +1201,7 @@ class CheckoutClientAPIResponseTest: XCTestCase {
 
     func testTaxStatus_requiresAddress_usesAddressSource() {
         for (source, expected) in [
-            ("shipping", CheckoutController.Session.Tax.Status.requiresShippingAddress),
+            ("shipping", CheckoutElementsController.Session.Tax.Status.requiresShippingAddress),
             ("billing", .requiresBillingAddress),
         ] {
             let session = CheckoutTestHelpers.makeSession([

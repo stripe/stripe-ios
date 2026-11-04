@@ -399,7 +399,7 @@ extension PayWithLinkViewController {
             with paymentDetails: ConsumerPaymentDetails,
             confirmationExtras: LinkConfirmationExtras?
         ) {
-            coordinator?.allowSheetDismissal(false)
+            setUserInteractionEnabled(false)
             view.endEditing(true)
 
             #if !os(visionOS)
@@ -419,19 +419,19 @@ extension PayWithLinkViewController {
                     self?.feedbackGenerator.notificationOccurred(.success)
                     #endif
                     self?.confirmButton.update(status: .succeeded, animated: true) {
-                        self?.coordinator?.allowSheetDismissal(true)
+                        self?.setUserInteractionEnabled(true)
                         self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                     }
                 case .canceled:
                     self?.confirmButton.update(status: .enabled)
-                    self?.coordinator?.allowSheetDismissal(true)
+                    self?.setUserInteractionEnabled(true)
                 case .failed(let error):
                     #if !os(visionOS)
                     self?.feedbackGenerator.notificationOccurred(.error)
                     #endif
                     self?.updateErrorLabel(for: error)
                     self?.confirmButton.update(status: .enabled)
-                    self?.coordinator?.allowSheetDismissal(true)
+                    self?.setUserInteractionEnabled(true)
                 }
             }
         }

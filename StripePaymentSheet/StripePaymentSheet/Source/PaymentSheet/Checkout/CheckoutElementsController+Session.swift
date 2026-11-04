@@ -1,5 +1,5 @@
 //
-//  Checkout+Session.swift
+//  CheckoutElementsController+Session.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/9/26.
@@ -14,7 +14,7 @@ import UIKit
 
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
-extension CheckoutController {
+extension CheckoutElementsController {
     /// A read-only representation of a Stripe Checkout Session.
     public struct Session: Identifiable {
         // MARK: - Public Properties
@@ -76,7 +76,7 @@ extension CheckoutController {
         public let taxAmounts: [TaxAmount]?
 
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
-        public let totals: CheckoutController.Session.Totals
+        public let totals: CheckoutElementsController.Session.Totals
 
         /// Payment methods available after applying configuration and device eligibility, ordered as displayed by `ExpressCheckoutElement`.
         /// Supported values are `"apple_pay"` and `"link"`.
@@ -123,13 +123,13 @@ extension CheckoutController {
     }
 }
 
-extension CheckoutController.Session {
+extension CheckoutElementsController.Session {
     /// Builds a read-only session snapshot from server-backed and local state.
     init(
         apiResponse: CheckoutClientAPIResponse,
         clientSecret: String,
         localState: LocalState,
-        configuration: CheckoutController.Configuration? = nil
+        configuration: CheckoutElementsController.Configuration? = nil
     ) {
         let elementsSessionValue = apiResponse.elementsSession.value
         let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
@@ -156,7 +156,7 @@ extension CheckoutController.Session {
             currency: apiResponse.currency
         )
         let presentmentDetails = apiResponse.adaptivePricingInfo.map { _ in
-            CheckoutController.Session.PresentmentDetails(presentmentCurrency: apiResponse.currency)
+            CheckoutElementsController.Session.PresentmentDetails(presentmentCurrency: apiResponse.currency)
         }
         let automaticTaxEnabled = apiResponse.automaticTax?.enabled ?? false
         let automaticTaxAddressSource = apiResponse.automaticTax?.addressSource
@@ -201,7 +201,7 @@ extension CheckoutController.Session {
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
             adaptivePricingActive: apiResponse.adaptivePricingInfo != nil,
-            billingAddressCollection: apiResponse.billingAddressCollection.flatMap(CheckoutController.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
+            billingAddressCollection: apiResponse.billingAddressCollection.flatMap(CheckoutElementsController.Session.BillingAddressCollection.init(rawValue:)) ?? .automatic,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
             merchantCountryCode: apiResponse.elementsSession.merchantCountryCode,
@@ -211,7 +211,7 @@ extension CheckoutController.Session {
     }
 }
 
-extension CheckoutController.Session {
+extension CheckoutElementsController.Session {
     /// An item included in the order summary.
     @frozen
     public enum OrderSummaryItem: Identifiable, Sendable, Hashable {
@@ -267,6 +267,7 @@ extension CheckoutController.Session {
                 public let quantity: Int
 
                 /// The allowed quantity range when the customer can adjust the quantity.
+                /// This is `nil` when quantity adjustment is disabled.
                 public let adjustableQuantity: AdjustableQuantity?
 
                 /// The computed amounts for this Price.
@@ -326,9 +327,6 @@ extension CheckoutController.Session {
 
     /// The allowed range for a customer-adjustable quantity.
     public struct AdjustableQuantity: Sendable, Hashable {
-        /// Whether the customer can adjust the quantity.
-        public let enabled: Bool
-
         /// The maximum quantity the customer can select.
         public let maximum: Int
 

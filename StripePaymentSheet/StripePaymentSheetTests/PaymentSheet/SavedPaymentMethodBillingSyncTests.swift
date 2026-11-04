@@ -59,7 +59,7 @@ final class SavedPaymentMethodBillingSyncTests: XCTestCase {
 
     func testHorizontalSelectionWithoutBillingTaxCloses() async throws {
         // Given
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let sut = makeHorizontalController(checkout: checkout)
         let delegate = MockFlowControllerViewControllerDelegate()
         sut.flowControllerDelegate = delegate
@@ -111,7 +111,7 @@ private extension SavedPaymentMethodBillingSyncTests {
     }
 
     func makeHorizontalController(
-        checkout: CheckoutController
+        checkout: CheckoutElementsController
     ) -> PaymentSheetFlowControllerViewController {
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: .checkout(checkout.session),
@@ -159,21 +159,21 @@ private extension SavedPaymentMethodBillingSyncTests {
 private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
     let updateStarted = XCTestExpectation(description: "Billing tax region update started")
 
-    private let session: CheckoutController.Session
+    private let session: CheckoutElementsController.Session
     private let error: Error?
     private let suspendUpdate: Bool
     private var updateContinuation: CheckedContinuation<Void, Never>?
 
-    init(session: CheckoutController.Session, error: Error?, suspendUpdate: Bool) {
+    init(session: CheckoutElementsController.Session, error: Error?, suspendUpdate: Bool) {
         self.session = session
         self.error = error
         self.suspendUpdate = suspendUpdate
     }
 
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
-        address: CheckoutController.Address,
+        address: CheckoutElementsController.Address,
         canUpdateWhileSheetPresented: Bool
-    ) async throws -> CheckoutController.Session {
+    ) async throws -> CheckoutElementsController.Session {
         if suspendUpdate {
             await withCheckedContinuation { continuation in
                 updateContinuation = continuation

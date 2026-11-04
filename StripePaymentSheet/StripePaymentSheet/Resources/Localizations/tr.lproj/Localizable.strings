@@ -32,6 +32,10 @@
 
 "Bank account details cannot be changed." = "Banka hesabı ayrıntıları değiştirilemiyor.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "E-postanıza kod gönderebilmemiz için hakkınızda ek bilgileri doğrulamamız gerekiyor. Lütfen sonu ••%@ ile biten telefon numaranızı girin.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "E-postanıza kod gönderebilmemiz için hakkınızda ek bilgileri doğrulamamız gerekiyor. Lütfen telefon numaranızı girin.";
+
 "Buy Now, Pay Later with  <img/>" = "<img/> ile Şimdi Al Sonra Öde";
 
 "Buy Now, Pay Later with Afterpay" = "Afterpay ile Şimdi Al Sonra Öde";
@@ -116,8 +120,6 @@
 
 "Close card scanner" = "Kart tarayıcısını kapat";
 
-"Code sent" = "Kod gönderildi";
-
 "Complete the payment using Pix to finish the purchase." = "Satın alma işlemini bitirmek için Pix kullanarak ödemeyi tamamlayın.";
 
 "Confirm" = "Onayla";
@@ -162,7 +164,11 @@
 
 "Edit address" = "Adresi düzenle";
 
+"Email code" = "E-posta kodu";
+
 "Enter address manually" = "Adresi manuel olarak girin";
+
+"Enter the phone number on your Link account." = "Link hesabınızdaki telefon numarasını girin.";
 
 "Exchange rate and fees of your bank may apply." = "Bankanızın döviz kuru ve ücretleri geçerli olabilir.";
 
@@ -186,6 +192,8 @@
 
 "Last 4 digits of SSN" = "SSN'nin son 4 hanesi";
 
+"Log in to another account" = "Başka bir hesaba oturum açın";
+
 "Manage SEPA debit" = "SEPA bankamatik hesabını yönet";
 
 "Manage US bank account" = "ABD banka hesabını yönet";
@@ -202,6 +210,8 @@
 
 "Manage your payment methods" = "Ödeme yöntemlerinizi yönetin";
 
+"More options" = "Daha fazla seçenek";
+
 "Name on card" = "Karttaki isim";
 
 "Naver Pay Card" = "Naver Pay Kartı";
@@ -213,6 +223,8 @@
 "New payment method" = "Yeni ödeme yöntemi";
 
 "No %@ promo" = "%@ promosyonu yok";
+
+"None of the payment methods in your %@ account work with this business." = "%@ hesabınızdaki ödeme yöntemlerinden hiçbiri bu işletmeyle çalışmıyor.";
 
 "Not you?" = "Siz değil misiniz?";
 
@@ -277,6 +289,8 @@
 "Remove payment method" = "Ödeme yöntemini kaldır";
 
 "Remove payment method?" = "Ödeme yöntemi kaldırılsın mı?";
+
+"Resend code in %d seconds" = "Kodu %li saniye içinde yeniden gönderin";
 
 "SEPA debit details cannot be changed." = "SEPA bankamatik ayrıntıları değiştirilemiyor.";
 
@@ -358,6 +372,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Bu ödeme yöntemi kaldırılacak ancak %@ abonelikleri için kullanılabilir kalacaktır.";
 
+"This phone number doesn't match your Link account. Please try again." = "Bu telefon numarası Link hesabınızla eşleşmiyor. Lütfen tekrar deneyin.";
+
 "Too many attempts. Please try again in a few minutes." = "Çok fazla deneme yapıldı. Lütfen birkaç dakika içinde tekrar deneyin.";
 
 "Unavailable for this purchase" = "Bu satın alım için kullanılamaz";
@@ -368,9 +384,17 @@
 
 "Use billing address for shipping" = "Gönderim için fatura adresini kullanın";
 
+"Verify your phone number" = "Telefon numaranızı doğrulayın";
+
+"Verifying your account…" = "Hesabınız doğrulanıyor…";
+
 "View more" = "Daha fazla göster";
 
+"We couldn't verify your account. Please close this window and try again." = "Hesabınızı doğrulayamadık. Lütfen bu pencereyi kapatın ve tekrar deneyin.";
+
 "Yes, update" = "Evet, güncelle";
+
+"You can't pay with %@ here" = "Burada %@ ile ödeme yapamazsınız";
 
 "Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
 

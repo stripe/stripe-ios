@@ -1,17 +1,17 @@
 //
-//  Checkout+Session+DebugDescription.swift
+//  CheckoutElementsController+Session+DebugDescription.swift
 //  StripePaymentSheet
 //
 
 import Foundation
 
-extension CheckoutController.Session: CustomDebugStringConvertible {
+extension CheckoutElementsController.Session: CustomDebugStringConvertible {
     /// A human-readable description of the Checkout Session for debugging.
     ///
     /// Customer information and other potentially sensitive values are masked or redacted.
     public var debugDescription: String {
         var lines = [
-            "CheckoutController.Session {",
+            "CheckoutElementsController.Session {",
             "  id: \(String(reflecting: id))",
             "  status: \(status.debugDescription)",
             "  livemode: \(livemode)",
@@ -199,23 +199,23 @@ private extension Optional where Wrapped == Double {
     }
 }
 
-private extension Optional where Wrapped == CheckoutController.Session.AdjustableQuantity {
-    /// Example: `1...99 (enabled: true)`; `nil` remains `nil`.
+private extension Optional where Wrapped == CheckoutElementsController.Session.AdjustableQuantity {
+    /// Example: `1...99`; `nil` remains `nil`.
     var debugValue: String {
         guard let value = self else {
             return "nil"
         }
-        return "\(value.minimum)...\(value.maximum) (enabled: \(value.enabled))"
+        return "\(value.minimum)...\(value.maximum)"
     }
 }
 
-private extension CheckoutController.Session.Amount {
+private extension CheckoutElementsController.Session.Amount {
     var debugValue: String {
         String(reflecting: amount)
     }
 }
 
-extension CheckoutController.Session.Status: CustomDebugStringConvertible {
+extension CheckoutElementsController.Session.Status: CustomDebugStringConvertible {
     /// Examples: `.open`, `.expired`, or `.complete(.paid)`.
     public var debugDescription: String {
         switch self {
@@ -229,7 +229,7 @@ extension CheckoutController.Session.Status: CustomDebugStringConvertible {
     }
 }
 
-extension CheckoutController.Session.Status.PaymentStatus: CustomDebugStringConvertible {
+extension CheckoutElementsController.Session.Status.PaymentStatus: CustomDebugStringConvertible {
     /// Examples: `.paid`, `.unpaid`, or `.noPaymentRequired`.
     public var debugDescription: String {
         switch self {
@@ -243,7 +243,7 @@ extension CheckoutController.Session.Status.PaymentStatus: CustomDebugStringConv
     }
 }
 
-extension CheckoutController.Session.Tax.Status: CustomDebugStringConvertible {
+extension CheckoutElementsController.Session.Tax.Status: CustomDebugStringConvertible {
     /// Examples: `.ready`, `.requiresShippingAddress`, or `.requiresBillingAddress`.
     public var debugDescription: String {
         switch self {

@@ -1,5 +1,5 @@
 //
-//  Checkout+Confirm+ApplePay.swift
+//  CheckoutElementsController+Confirm+ApplePay.swift
 //  StripePaymentSheet
 //
 //  Created by Joyce Qin on 8/10/26.
@@ -10,7 +10,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
 
-extension CheckoutController {
+extension CheckoutElementsController {
     func confirmApplePay(
         checkoutSession: Session,
         parameters: ApplePayConfirmationParameters

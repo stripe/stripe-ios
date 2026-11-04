@@ -264,7 +264,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 CheckoutPlayground.PickerRow(
                     title: "Default Shipping Address",
                     selection: $defaultShippingAddressOption,
-                    tooltip: "Sets `CheckoutController.Configuration.defaults.shippingDetails` before loading Checkout.",
+                    tooltip: "Sets `CheckoutElementsController.Configuration.defaults.shippingDetails` before loading Checkout.",
                     displayText: { $0.displayName }
                 )
                 switch defaultShippingAddressOption {
@@ -284,7 +284,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 CheckoutPlayground.PickerRow(
                     title: "Default Billing Details",
                     selection: $defaultBillingAddressOption,
-                    tooltip: "Sets `CheckoutController.Configuration.defaults.billingDetails` before loading Checkout. Email is configured separately above.",
+                    tooltip: "Sets `CheckoutElementsController.Configuration.defaults.billingDetails` before loading Checkout. Email is configured separately above.",
                     displayText: { $0.displayName }
                 )
                 switch defaultBillingAddressOption {

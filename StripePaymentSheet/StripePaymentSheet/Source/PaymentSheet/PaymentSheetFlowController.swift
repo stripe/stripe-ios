@@ -344,7 +344,7 @@ extension PaymentSheet {
             }
         }
 
-        weak var checkout: CheckoutController?
+        weak var checkout: CheckoutElementsController?
         private var isPresented = false
         private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
@@ -584,7 +584,7 @@ extension PaymentSheet {
         /// then swaps to the payment options view controller on success or dismisses on failure.
         private func presentPaymentOptionsAwaitingMutations(
             from presentingViewController: UIViewController,
-            checkout: CheckoutController,
+            checkout: CheckoutElementsController,
             completion: @escaping (Bool) -> Void
         ) {
             let loadingVC = LoadingViewController(

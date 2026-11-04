@@ -35,6 +35,7 @@ final class LinkInlineSignupViewModel {
     private let resolvedLinkBrand: (PaymentSheetLinkAccount?) -> LinkBrand
 
     let analyticsHelper: PaymentSheetAnalyticsHelper?
+    private var linkAnalytics: LinkAnalyticsHelper { analyticsHelper?.linkAnalytics ?? .init() }
 
     private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
 
@@ -58,7 +59,7 @@ final class LinkInlineSignupViewModel {
                 notifyUpdate()
 
                 if saveCheckboxChecked, mode == .checkbox {
-                    STPAnalyticsClient.sharedClient.logLinkSignupCheckboxChecked()
+                    linkAnalytics.logSignupCheckboxChecked()
                 }
             }
         }
@@ -138,7 +139,7 @@ final class LinkInlineSignupViewModel {
 
                 if let linkAccount = linkAccount,
                    !linkAccount.isRegistered {
-                        STPAnalyticsClient.sharedClient.logLinkSignupStart()
+                        linkAnalytics.logSignupStart()
                 }
             }
         }
@@ -271,7 +272,7 @@ final class LinkInlineSignupViewModel {
         if linkAccount?.isRegistered ?? false {
             // User already has a Link account, they can't sign up
             if !UserDefaults.standard.customerHasUsedLink {
-                STPAnalyticsClient.sharedClient.logLinkSignupFailureAccountExists()
+                linkAnalytics.logSignupFailureAccountExists()
                 // Don't bother them again
                 UserDefaults.standard.markLinkAsUsed()
             }
@@ -437,7 +438,7 @@ final class LinkInlineSignupViewModel {
     }
 
     func logInlineSignupShown() {
-        analyticsHelper?.analyticsClient.logLinkInlineSignupShown(mode: self.mode)
+        analyticsHelper?.linkAnalytics.logInlineSignupShown(mode: self.mode)
     }
 }
 

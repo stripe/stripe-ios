@@ -20,7 +20,7 @@ extension CheckoutSessionBillingAddressUpdater {
             return
         }
         let source = billingDetails.address
-        let address = CheckoutController.Address(
+        let address = CheckoutElementsController.Address(
             country: country,
             line1: source?.line1?.nonEmpty,
             line2: source?.line2?.nonEmpty,

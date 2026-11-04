@@ -160,7 +160,6 @@ private final class MockPayWithLinkCoordinator: PayWithLinkCoordinating {
     func finish(withResult result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {}
     func handlePaymentDetailsSelected(_ paymentDetails: ConsumerPaymentDetails, confirmationExtras: LinkConfirmationExtras) {}
     func bailToWebFlow() {}
-    func allowSheetDismissal(_ enable: Bool) {}
     func cancel3DS2ChallengeFlow() {}
 }
 
