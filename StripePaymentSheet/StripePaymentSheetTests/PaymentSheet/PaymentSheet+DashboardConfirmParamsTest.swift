@@ -90,8 +90,8 @@ final class PaymentSheetConfirmParamsTest: APIStubbedTestCase {
         }
     }
 
-    override func setUp() async throws {
-        try await super.setUp()
+    override func setUp() {
+        super.setUp()
 
         // Stub all API calls that can be made
 
