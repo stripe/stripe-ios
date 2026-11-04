@@ -71,6 +71,7 @@ final class PayWithNativeLinkController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        paymentHandler: STPPaymentHandler,
         nativeSheetPresentation: SheetImplementationResolver? = nil,
         logPayment: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper,
@@ -88,7 +89,7 @@ final class PayWithNativeLinkController {
         self.nativeSheetPresentation = nativeSheetPresentation
         self.analyticsHelper = analyticsHelper
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
-        self.paymentHandler = .init(apiClient: configuration.apiClient)
+        self.paymentHandler = paymentHandler
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
         self.confirmationChallenge = confirmationChallenge

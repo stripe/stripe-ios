@@ -33,6 +33,7 @@ final class LinkSignUpViewController: UIViewController {
 
     private let viewModel: LinkSignUpViewModel
     private let defaultBillingDetails: PaymentSheet.BillingDetails?
+    private let analyticsHelper: LinkAnalyticsHelper
     private let brand: LinkBrand
     private let appearance: LinkAppearance?
     private let theme: ElementsAppearance
@@ -77,7 +78,7 @@ final class LinkSignUpViewController: UIViewController {
 
     private lazy var emailElement = {
         let element = LinkEmailElement(defaultValue: viewModel.emailAddress, theme: theme)
-        element.indicatorTintColor = appearance?.colors?.primary ?? .linkIconBrand
+        element.indicatorTintColor = appearance?.colors?.primary ?? .linkAccent
         return element
     }()
 
@@ -115,7 +116,7 @@ final class LinkSignUpViewController: UIViewController {
 
     private lazy var legalTermsView: LinkLegalTermsView = {
         let legalTermsView = LinkLegalTermsView(textAlignment: .center, brand: brand, isStandalone: true)
-        legalTermsView.tintColor = appearance?.colors?.primary ?? .linkTextBrand
+        legalTermsView.tintColor = appearance?.colors?.primary ?? .linkTextPrimary
         legalTermsView.delegate = self
         return legalTermsView
     }()
@@ -149,7 +150,7 @@ final class LinkSignUpViewController: UIViewController {
         if let cornerRadius = appearance?.primaryButton.cornerRadius {
             configuration.cornerRadius = cornerRadius
         }
-        let button = Button(configuration: configuration, title: viewModel.signUpButtonTitle)
+        let button = Button.linkPrimary(title: viewModel.signUpButtonTitle, configuration: configuration)
         button.addTarget(self, action: #selector(didTapSignUpButton(_:)), for: .touchUpInside)
         button.adjustsFontForContentSizeCategory = true
         button.isEnabled = false
@@ -189,15 +190,18 @@ final class LinkSignUpViewController: UIViewController {
         brand: LinkBrand = .link,
         country: String? = nil,
         defaultBillingDetails: PaymentSheet.BillingDetails?,
-        appearance: LinkAppearance? = nil
+        appearance: LinkAppearance? = nil,
+        analyticsHelper: LinkAnalyticsHelper
     ) {
         self.viewModel = LinkSignUpViewModel(
             accountService: accountService,
             linkAccount: linkAccount,
             legalName: defaultBillingDetails?.name,
-            country: country ?? defaultBillingDetails?.address.country
+            country: country ?? defaultBillingDetails?.address.country,
+            analyticsHelper: analyticsHelper
         )
         self.defaultBillingDetails = defaultBillingDetails
+        self.analyticsHelper = analyticsHelper
         self.brand = brand
         self.appearance = appearance
         var elementTheme = LinkUI.appearance.asElementsTheme
@@ -233,7 +237,7 @@ final class LinkSignUpViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        STPAnalyticsClient.sharedClient.logLinkSignupFlowPresented()
+        self.analyticsHelper.logSignupFlowPresented()
 
         // If the email field is empty, select it
         if emailElement.emailAddressString?.isEmpty ?? false {
@@ -331,7 +335,7 @@ final class LinkSignUpViewController: UIViewController {
                 TappableAttributedLabel.TappableHighlight(
                     text: yesUpdateLocalizedText,
                     font: LinkUI.font(forTextStyle: .caption),
-                    color: .linkTextBrand,
+                    color: .linkTextPrimary,
                     action: { [weak self] in
                         self?.didTapYesUpdate()
                     }
@@ -345,7 +349,7 @@ final class LinkSignUpViewController: UIViewController {
             return
         }
 
-        STPAnalyticsClient.sharedClient.logLinkEmailSuggestionAccepted()
+        self.analyticsHelper.logEmailSuggestionAccepted()
         emailElement.emailAddressElement.setText(suggestedEmail)
         viewModel.emailAddress = suggestedEmail
     }
@@ -366,10 +370,10 @@ final class LinkSignUpViewController: UIViewController {
                 account.phoneNumberUsedInSignup = self.viewModel.phoneNumber?.string(as: .e164)
                 account.nameUsedInSignup = self.viewModel.legalName
                 self.delegate?.signUpController(self, didCompleteSignUpWith: account)
-                STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+                self.analyticsHelper.logSignupComplete()
             case .failure(let error):
                 self.delegate?.signUpController(self, didFailWithError: error)
-                STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
+                self.analyticsHelper.logSignupFailure(error: error)
             }
 
             self.signUpButton.isLoading = false
@@ -395,7 +399,7 @@ extension LinkSignUpViewController: LinkSignUpViewModelDelegate {
             delegate?.signUpController(self, didCompleteSignUpWith: linkAccount)
 
             if !linkAccount.isRegistered {
-                STPAnalyticsClient.sharedClient.logLinkSignupStart()
+                self.analyticsHelper.logSignupStart()
             }
         }
     }

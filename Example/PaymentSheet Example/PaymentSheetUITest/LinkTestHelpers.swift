@@ -35,7 +35,10 @@ extension XCTestCase {
         email: String
     ) {
         app.buttons["Pay with Link"].waitForExistenceAndTap()
+        fillOutLinkSignup(app, email: email)
+    }
 
+    func fillOutLinkSignup(_ app: XCUIApplication, email: String) {
         let emailField = app.textFields["Email"]
         XCTAssertTrue(emailField.waitForExistence(timeout: 10.0))
         emailField.typeText(email)

@@ -32,6 +32,10 @@
 
 "Bank account details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng account sa bangko.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Bago kami makapagpadala ng code sa iyong email, kailangan naming i-verify ang karagdagang impormasyon tungkol sa iyo. Pakilagay ang iyong numero ng telepono na nagtatapos sa ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Bago kami makapagpadala ng code sa iyong email, kailangan naming i-verify ang karagdagang impormasyon tungkol sa iyo. Pakilagay ang iyong numero ng telepono.";
+
 "Buy Now, Pay Later with  <img/>" = "Bumili Ngayon, Magbayad Mamaya gamit ang  <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Bumili Ngayon, Magbayad Mamaya gamit ang Afterpay";
@@ -116,8 +120,6 @@
 
 "Close card scanner" = "Isara ang scanner ng kard";
 
-"Code sent" = "Naipadala na ang code";
-
 "Complete the payment using Pix to finish the purchase." = "Kumpletuhin ang pagbabayad gamit ang Pix para tapusin ang pagbili.";
 
 "Confirm" = "Kumpirmahin";
@@ -162,7 +164,11 @@
 
 "Edit address" = "I-edit ang address";
 
+"Email code" = "Email code";
+
 "Enter address manually" = "Manwal na ilagay ang address";
+
+"Enter the phone number on your Link account." = "Ilagay ang numero ng telepono sa iyong Link account.";
 
 "Exchange rate and fees of your bank may apply." = "Maaaring mag-apply ang rate ng palitan at mga bayarin sa iyong bangko.";
 
@@ -186,6 +192,8 @@
 
 "Last 4 digits of SSN" = "Huling 4 na digit ng SSN";
 
+"Log in to another account" = "Mag-log in sa ibang account";
+
 "Manage SEPA debit" = "Pangasiwaan ang SEPA debit";
 
 "Manage US bank account" = "Pangasiwaan ang account sa bangko sa US";
@@ -202,6 +210,8 @@
 
 "Manage your payment methods" = "Pangasiwaan ang iyong mga paraan ng pagbabayad";
 
+"More options" = "Higit pang opsyon";
+
 "Name on card" = "Pangalan sa kard";
 
 "Naver Pay Card" = "Naver Pay Card";
@@ -213,6 +223,8 @@
 "New payment method" = "Bagong paraan ng pagbabayad";
 
 "No %@ promo" = "Walang %@ promo";
+
+"None of the payment methods in your %@ account work with this business." = "Wala sa mga pamamaraan sa pagbabayad sa iyong %@ account ang gumagana sa negosyong ito.";
 
 "Not you?" = "Hindi ikaw?";
 
@@ -277,6 +289,8 @@
 "Remove payment method" = "Alisin ang paraan ng pagbabayad";
 
 "Remove payment method?" = "Alisin ang paraan ng pagbabayad?";
+
+"Resend code in %d seconds" = "Ipadala muli ang code sa loob ng %li na segundo";
 
 "SEPA debit details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng SEPA debit.";
 
@@ -358,6 +372,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Tatanggalin ang paraan ng pagbabayad na ito pero mananatiling available para sa %@ (na) subskripsiyon.";
 
+"This phone number doesn't match your Link account. Please try again." = "Hindi tumutugma ang numero ng teleponong ito sa iyong Link account. Mangyaring subukang muli.";
+
 "Too many attempts. Please try again in a few minutes." = "Masyado nang marami ang pagtatangka. Pakisubukan muli sa loob ng ilang minuto.";
 
 "Unavailable for this purchase" = "Hindi magamit sa pagbiling ito";
@@ -368,9 +384,17 @@
 
 "Use billing address for shipping" = "Gamitin ang billing address para sa pagpapadala";
 
+"Verify your phone number" = "I-verify ang iyong numero ng telepono";
+
+"Verifying your account…" = "Bine-verify ang iyong account…";
+
 "View more" = "Tingnan ang higit pa";
 
+"We couldn't verify your account. Please close this window and try again." = "Hindi namin ma-verify ang iyong account. Mangyaring isara ang window na ito at subukang muli.";
+
 "Yes, update" = "Oo, update";
+
+"You can't pay with %@ here" = "Hindi ka makakapagbayad gamit ang %@ dito";
 
 "Your IBAN should start with a two-letter country code." = "Ang iyong IBAN ay dapat magsimula sa dalawang letra na code ng bansa.";
 

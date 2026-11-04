@@ -8,7 +8,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
     func testApplyAddressOverrides_shippingApplied() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
         var session = apiResponse.makePublicSession()
-        session.localState.shippingAddress = CheckoutController.Session.ShippingAddress(
+        session.localState.shippingAddress = CheckoutElementsController.Session.ShippingAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
@@ -30,7 +30,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
     func testApplyAddressOverrides_configShippingTakesPrecedence() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
         var session = apiResponse.makePublicSession()
-        session.localState.shippingAddress = CheckoutController.Session.ShippingAddress(
+        session.localState.shippingAddress = CheckoutElementsController.Session.ShippingAddress(
             name: "John Smith",
             address: .init(country: "GB")
         )
@@ -83,7 +83,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_embeddedShipping() {
         let apiResponse = CheckoutTestHelpers.makeOpenSession()
-        let shippingAddress = CheckoutController.Session.ShippingAddress(
+        let shippingAddress = CheckoutElementsController.Session.ShippingAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )

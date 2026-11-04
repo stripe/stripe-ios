@@ -24,7 +24,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     let currencySelectorAppearance: CurrencySelectorElement.Appearance
-    let delayPaymentPagesRequests: Bool
+    let delayCheckoutClientRequests: Bool
 
     func makeUIViewController(context: Context) -> UINavigationController {
         let viewController = CheckoutCartViewController(
@@ -37,7 +37,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             integrationType: integrationType,
             expressCheckoutElementSettings: expressCheckoutElementSettings,
             currencySelectorAppearance: currencySelectorAppearance,
-            delayPaymentPagesRequests: delayPaymentPagesRequests,
+            delayCheckoutClientRequests: delayCheckoutClientRequests,
             closeAction: { dismiss() }
         )
         return UINavigationController(rootViewController: viewController)
@@ -58,11 +58,11 @@ final class CheckoutCartViewController: UIViewController {
     private let integrationType: CheckoutPlayground.IntegrationType
     private let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     private let currencySelectorAppearance: CurrencySelectorElement.Appearance
-    private let delayPaymentPagesRequests: Bool
+    private let delayCheckoutClientRequests: Bool
     private let closeAction: () -> Void
     private let diagnostics = CheckoutSessionDiagnostics()
 
-    private var checkout: CheckoutController?
+    private var checkout: CheckoutElementsController?
     private var cancellables = Set<AnyCancellable>()
     private var isUpdatingShippingAddress = false
 
@@ -93,7 +93,7 @@ final class CheckoutCartViewController: UIViewController {
         integrationType: CheckoutPlayground.IntegrationType,
         expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings,
         currencySelectorAppearance: CurrencySelectorElement.Appearance,
-        delayPaymentPagesRequests: Bool,
+        delayCheckoutClientRequests: Bool,
         closeAction: @escaping () -> Void
     ) {
         self.clientSecret = clientSecret
@@ -105,7 +105,7 @@ final class CheckoutCartViewController: UIViewController {
         self.integrationType = integrationType
         self.expressCheckoutElementSettings = expressCheckoutElementSettings
         self.currencySelectorAppearance = currencySelectorAppearance
-        self.delayPaymentPagesRequests = delayPaymentPagesRequests
+        self.delayCheckoutClientRequests = delayCheckoutClientRequests
         self.closeAction = closeAction
         super.init(nibName: nil, bundle: nil)
     }
@@ -203,7 +203,7 @@ final class CheckoutCartViewController: UIViewController {
         cancellables.removeAll()
 
         do {
-            var configuration = CheckoutController.Configuration(
+            var configuration = CheckoutElementsController.Configuration(
                 clientSecret: clientSecret,
                 returnURL: "payments-example://stripe-redirect"
             )
@@ -243,10 +243,10 @@ final class CheckoutCartViewController: UIViewController {
                 configuration.currencySelectorElement = currencySelectorConfiguration
             }
             configuration.apiClient = diagnostics.makeAPIClient(
-                paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
+                checkoutClientRequestDelay: delayCheckoutClientRequests ? 1 : 0
             )
 
-            let checkout = try await CheckoutController(configuration: configuration)
+            let checkout = try await CheckoutElementsController(configuration: configuration)
             self.checkout = checkout
             navigationItem.rightBarButtonItem = UIBarButtonItem(
                 image: UIImage(systemName: "ladybug"),
@@ -267,7 +267,7 @@ final class CheckoutCartViewController: UIViewController {
         }
     }
 
-    private func observeCheckout(_ checkout: CheckoutController) {
+    private func observeCheckout(_ checkout: CheckoutElementsController) {
         checkout.$session
             .dropFirst()
             .sink { [weak self] session in
@@ -282,7 +282,7 @@ final class CheckoutCartViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    private func renderCheckout(session: CheckoutController.Session? = nil) {
+    private func renderCheckout(session: CheckoutElementsController.Session? = nil) {
         guard let checkout else { return }
         let session = session ?? checkout.session
 
@@ -332,7 +332,7 @@ final class CheckoutCartViewController: UIViewController {
         updateLoadingState()
     }
 
-    private func makeLineItemsSection(session: CheckoutController.Session) -> UIView {
+    private func makeLineItemsSection(session: CheckoutElementsController.Session) -> UIView {
         let itemsStackView = UIStackView()
         itemsStackView.axis = .vertical
 
@@ -361,7 +361,7 @@ final class CheckoutCartViewController: UIViewController {
         return makeSection(title: "Items", content: makeCard(containing: itemsStackView))
     }
 
-    private func makeLineItemRow(item: CheckoutController.Session.OrderSummaryItem.OneTimePrice.Item) -> UIView {
+    private func makeLineItemRow(item: CheckoutElementsController.Session.OrderSummaryItem.OneTimePrice.Item) -> UIView {
         let placeholderView = UIView()
         placeholderView.backgroundColor = .secondarySystemBackground
         placeholderView.layer.cornerRadius = 12
@@ -404,7 +404,7 @@ final class CheckoutCartViewController: UIViewController {
         return makePaddedView(containing: rowStackView)
     }
 
-    private func makeShippingAddressSection(session: CheckoutController.Session) -> UIView {
+    private func makeShippingAddressSection(session: CheckoutElementsController.Session) -> UIView {
         let cardContent: UIView
         if let shippingAddress = session.shippingAddress {
             let iconView = UIImageView(image: UIImage(systemName: "mappin.circle.fill"))
@@ -461,7 +461,7 @@ final class CheckoutCartViewController: UIViewController {
         )
     }
 
-    private func makeOrderSummarySection(session: CheckoutController.Session) -> UIView {
+    private func makeOrderSummarySection(session: CheckoutElementsController.Session) -> UIView {
         let totals = session.totals
         let hasTaxDetails = session.taxAmounts?.isEmpty == false
         let taxAddressPrompt = taxAddressPrompt(for: session.tax?.status)
@@ -547,7 +547,7 @@ final class CheckoutCartViewController: UIViewController {
         return stackView
     }
 
-    private func taxAddressPrompt(for status: CheckoutController.Session.Tax.Status?) -> String? {
+    private func taxAddressPrompt(for status: CheckoutElementsController.Session.Tax.Status?) -> String? {
         switch status {
         case .requiresShippingAddress:
             return "Enter shipping address to calculate"
@@ -594,7 +594,7 @@ final class CheckoutCartViewController: UIViewController {
         return stackView
     }
 
-    private func makePaymentMethodRow(session: CheckoutController.Session) -> UIView {
+    private func makePaymentMethodRow(session: CheckoutElementsController.Session) -> UIView {
         let rowView = UIButton(type: .custom)
         rowView.addTarget(self, action: #selector(paymentMethodButtonTapped), for: .touchUpInside)
 
@@ -665,8 +665,8 @@ final class CheckoutCartViewController: UIViewController {
     }
 
     private func makeCheckoutButton(
-        checkout: CheckoutController,
-        session: CheckoutController.Session
+        checkout: CheckoutElementsController,
+        session: CheckoutElementsController.Session
     ) -> UIView {
         let button = UIButton(type: .system)
         button.backgroundColor = .systemBlue
@@ -781,7 +781,7 @@ final class CheckoutCartViewController: UIViewController {
         return bannerView
     }
 
-    private func addressLines(_ address: CheckoutController.Address) -> [String] {
+    private func addressLines(_ address: CheckoutElementsController.Address) -> [String] {
         var lines = [address.line1, address.line2]
             .compactMap { $0 }
             .filter { !$0.isEmpty }
@@ -837,7 +837,7 @@ final class CheckoutCartViewController: UIViewController {
         isUpdating ? checkoutButtonActivityIndicator?.startAnimating() : checkoutButtonActivityIndicator?.stopAnimating()
     }
 
-    private func makeAddressViewController(checkout: CheckoutController) -> AddressViewController {
+    private func makeAddressViewController(checkout: CheckoutElementsController) -> AddressViewController {
         var configuration = AddressViewController.Configuration()
         configuration.title = "Shipping Address"
         configuration.buttonTitle = "Save Address"
@@ -919,7 +919,7 @@ final class CheckoutCartViewController: UIViewController {
         }
     }
 
-    private func makeEmailSection(session: CheckoutController.Session) -> UIView {
+    private func makeEmailSection(session: CheckoutElementsController.Session) -> UIView {
         let emailLabel = UILabel()
         emailLabel.text = session.email ?? "No email"
         emailLabel.numberOfLines = 0
@@ -981,7 +981,7 @@ final class CheckoutCartViewController: UIViewController {
         }
     }
 
-    private func handleConfirmResult(_ result: CheckoutController.ConfirmResult) {
+    private func handleConfirmResult(_ result: CheckoutElementsController.ConfirmResult) {
         let title: String
         let message: String
         let dismissOnAcknowledgment: Bool
@@ -1044,7 +1044,7 @@ extension CheckoutCartViewController: AddressViewControllerDelegate {
             do {
                 try await checkout.updateShippingAddress(
                     name: address.name,
-                    address: CheckoutController.Address(
+                    address: CheckoutElementsController.Address(
                         country: address.address.country,
                         line1: address.address.line1,
                         line2: address.address.line2,

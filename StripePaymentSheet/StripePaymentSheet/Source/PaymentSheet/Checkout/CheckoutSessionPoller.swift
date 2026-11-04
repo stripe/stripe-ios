@@ -12,8 +12,9 @@ import Foundation
 protocol CheckoutSessionPollingAPIClient {
     func pollCheckoutSession(
         checkoutSessionId: String,
+        clientSecret: String,
         timeout: TimeInterval
-    ) async throws -> PaymentPagePollResponse
+    ) async throws -> CheckoutClientPollResponse
 }
 
 class CheckoutSessionPollingClock {
@@ -33,20 +34,17 @@ class CheckoutSessionPollingClock {
 /// Polls a Checkout Session until confirmation can continue or polling times out.
 struct CheckoutSessionPoller {
     enum Outcome: Equatable {
-        /// Polling observed a state where confirmation can continue.
-        case completed
+        /// Confirmation succeeded, with the latest server-reported Session fields.
+        case succeeded(CheckoutClientPollResponse)
 
-        /// Polling timed out before observing a terminal state.
-        case timedOut
+        /// Confirmation failed, with the latest server-reported Session fields.
+        case failed(CheckoutClientPollResponse)
 
-        /// The payment object requires a new payment method.
-        case requiresPaymentMethod
+        /// No confirmation was recorded after an accepted /confirm. The caller must report an unexpected error.
+        case notStarted(CheckoutClientPollResponse)
 
-        /// The Checkout Session's asynchronous payment failed.
-        case failedAsyncPayment
-
-        /// The Checkout Session state is invalid or expired.
-        case invalidOrExpired
+        /// Polling timed out. Preserve the last decoded response, or the /confirm fields if no poll succeeded.
+        case timedOut(lastResponse: CheckoutClientPollResponse?)
     }
 
     /// The maximum amount of time to poll before giving up and returning.
@@ -68,12 +66,16 @@ struct CheckoutSessionPoller {
         self.clock = clock
     }
 
-    /// Returns the reason polling stopped. Request failures are retried until timeout.
-    func poll(checkoutSessionId: String) async -> Outcome {
+    /// Polls while `confirmationStatus` is pending, up to the polling timeout.
+    /// - Returns: The outcome and response that stopped polling. On timeout, includes the last successfully
+    ///   decoded response, or nil if none succeeded.
+    /// - Note: Request failures are retried until timeout without discarding the last successful response.
+    func poll(checkoutSessionId: String, clientSecret: String) async -> Outcome {
         let startTime = clock.now()
         var lastPollStartElapsedTime: TimeInterval?
         var minimumTimeIntervalBetweenPolls = Self.minimumTimeInterval
         var consecutiveRateLimitCount = 0
+        var lastResponse: CheckoutClientPollResponse?
 
         /// - Returns: Seconds since polling started.
         func elapsedTime() -> TimeInterval {
@@ -97,7 +99,7 @@ struct CheckoutSessionPoller {
 
                 // If another `/poll` cannot start before we time out, give up polling.
                 guard delay < remainingTime else {
-                    return .timedOut
+                    return .timedOut(lastResponse: lastResponse)
                 }
 
                 if delay > 0 {
@@ -106,16 +108,17 @@ struct CheckoutSessionPoller {
             }
 
             // 2. Poll the Checkout Session. Retry request failures until the timeout is reached.
-            let pollResponse: PaymentPagePollResponse
+            let pollResponse: CheckoutClientPollResponse
             do {
                 let remainingTime = Self.timeout - elapsedTime()
                 guard remainingTime > 0 else {
-                    return .timedOut
+                    return .timedOut(lastResponse: lastResponse)
                 }
 
                 lastPollStartElapsedTime = elapsedTime()
                 pollResponse = try await apiClient.pollCheckoutSession(
                     checkoutSessionId: checkoutSessionId,
+                    clientSecret: clientSecret,
                     timeout: remainingTime
                 )
             } catch {
@@ -129,42 +132,26 @@ struct CheckoutSessionPoller {
                 continue
             }
 
+            lastResponse = pollResponse
+
             // At this point, `/poll` succeeded. Reset the interval and consecutive rate-limit count.
             minimumTimeIntervalBetweenPolls = Self.minimumTimeInterval
             consecutiveRateLimitCount = 0
 
-            // 3. Check the /poll status
-            if pollResponse.paymentObjectStatus == .requiresPaymentMethod {
-                return .requiresPaymentMethod
-            }
-
-            switch pollResponse.state {
-            case .active,
-                 .processingSyncPayment,
-                 .processingSubscription:
-                // 3b. Checkout Session is still processing, continue polling
+            // 3. Determine whether we are done polling
+            switch pollResponse.confirmationStatus {
+            case .pending:
                 continue
-            case .succeeded,
-                 .processingAsyncPayment,
-                 .pendingAsyncCustomerAction:
-                // 3b. Checkout Session is client-complete, we're done!
-                return .completed
-            case .failedAsyncPayment:
-                return .failedAsyncPayment
-            case .invalid,
-                 .expired:
-                // Note: EwCS stops polling and ignores these unexpected states, allowing confirmation
-                // to continue as a success:
-                // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/stripe-js-v3/src/checkout/outer/customCheckout/actions/confirm/pollPaymentPage.ts?L84-91
-                // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/stripe-js-v3/src/checkout/outer/customCheckout/actions/confirm/handleNextAction.ts?L200-220
-                // Instead, return a distinct outcome so the caller can retrieve the authoritative
-                // Session and return an error, matching Hosted Checkout:
-                // https://stripe.sourcegraphcloud.com/stripe-internal/mint/-/blob/pay-server/stripe-js-v3/src/checkout/hosted/helpers/pollApi.ts?L119-128
-                return .invalidOrExpired
+            case .succeeded:
+                return .succeeded(pollResponse)
+            case .failed:
+                return .failed(pollResponse)
+            case .notStarted:
+                return .notStarted(pollResponse)
             }
         }
 
-        return .timedOut
+        return .timedOut(lastResponse: lastResponse)
     }
 
     /// Returns an exponentially increasing minimum poll interval of 2, 4, then 8 seconds,

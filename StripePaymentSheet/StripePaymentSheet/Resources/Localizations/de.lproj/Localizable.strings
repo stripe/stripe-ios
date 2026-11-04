@@ -32,6 +32,10 @@
 
 "Bank account details cannot be changed." = "Die Bankkontoangaben können nicht geändert werden.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Bevor wir einen Code an Ihre E-Mail schicken können, müssen wir weitere Angaben zu Ihrer Person verifizieren. Bitte geben Sie Ihre Telefonnummer ein mit den Endziffern ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Bevor wir einen Code an Ihre E-Mail schicken können, müssen wir weitere Angaben zu Ihrer Person verifizieren. Bitte geben Sie Ihre Telefonnummer ein.";
+
 "Buy Now, Pay Later with  <img/>" = "Jetzt kaufen, später bezahlen mit  <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Jetzt kaufen, später bezahlen mit Afterpay";
@@ -116,8 +120,6 @@
 
 "Close card scanner" = "Kartenscanner schließen";
 
-"Code sent" = "Code wurde gesendet";
-
 "Complete the payment using Pix to finish the purchase." = "Führen Sie die Zahlung mit Pix durch, um den Kauf abzuschließen.";
 
 "Confirm" = "Bestätigen";
@@ -162,7 +164,11 @@
 
 "Edit address" = "Adresse bearbeiten";
 
+"Email code" = "E-Mail-Code";
+
 "Enter address manually" = "Adresse manuell eingeben";
+
+"Enter the phone number on your Link account." = "Geben Sie die Telefonnummer ein, die in Ihrem Link-Konto hinterlegt ist.";
 
 "Exchange rate and fees of your bank may apply." = "Beachten Sie den Wechselkurs und mögliche Gebühren Ihrer Bank.";
 
@@ -186,6 +192,8 @@
 
 "Last 4 digits of SSN" = "Letzte 4 Ziffern der IdNr.";
 
+"Log in to another account" = "Anmelden bei einem anderen Konto";
+
 "Manage SEPA debit" = "SEPA-Lastschrift verwalten";
 
 "Manage US bank account" = "US-Bankkonto verwalten";
@@ -202,6 +210,8 @@
 
 "Manage your payment methods" = "Zahlungsmethoden verwalten";
 
+"More options" = "Mehr Optionen";
+
 "Name on card" = "Name auf Karte";
 
 "Naver Pay Card" = "Naver Pay Card";
@@ -213,6 +223,8 @@
 "New payment method" = "Neue Zahlungsmethode";
 
 "No %@ promo" = "Keine %@-Aktionsangebote";
+
+"None of the payment methods in your %@ account work with this business." = "Keine der Zahlungsmethoden in Ihrem %@-Konto funktioniert bei diesem Unternehmen.";
 
 "Not you?" = "Das sind nicht Sie?";
 
@@ -277,6 +289,8 @@
 "Remove payment method" = "Zahlungsmethode entfernen";
 
 "Remove payment method?" = "Zahlungsmethode entfernen?";
+
+"Resend code in %d seconds" = "Code in %li Sekunden erneut senden";
 
 "SEPA debit details cannot be changed." = "Die SEPA-Lastschriftangaben können nicht geändert werden.";
 
@@ -358,6 +372,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Diese Zahlungsmethode wird entfernt, bleibt jedoch für %@ Abos verfügbar.";
 
+"This phone number doesn't match your Link account. Please try again." = "Diese Telefonnummer stimmt nicht mit Ihrem Link-Konto überein. Bitte versuchen Sie es erneut.";
+
 "Too many attempts. Please try again in a few minutes." = "Zu viele Versuche. Versuchen Sie es in ein paar Minuten noch einmal.";
 
 "Unavailable for this purchase" = "Nicht verfügbar für diesen Kauf";
@@ -368,9 +384,17 @@
 
 "Use billing address for shipping" = "Rechnungsadresse für den Versand verwenden";
 
+"Verify your phone number" = "Ihre Telefonnummer bestätigen";
+
+"Verifying your account…" = "Ihr Konto wird gerade verifiziert…";
+
 "View more" = "Mehr anzeigen";
 
+"We couldn't verify your account. Please close this window and try again." = "Wir konnten Ihr Konto nicht verifizieren. Bitte schließen Sie dieses Fenster und versuchen Sie es erneut.";
+
 "Yes, update" = "Ja, aktualisieren";
+
+"You can't pay with %@ here" = "Sie können hier nicht mit %@ bezahlen";
 
 "Your IBAN should start with a two-letter country code." = "Ihre IBAN sollte mit einem zweistelligen Ländercode beginnen.";
 
