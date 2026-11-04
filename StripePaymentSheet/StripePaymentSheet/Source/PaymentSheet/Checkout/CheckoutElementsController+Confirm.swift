@@ -60,7 +60,6 @@ extension CheckoutElementsController {
         // TODO: Lots of stuff in here because current Link code nominally requires it but it may not all really be necessary.
         let confirmOption: PaymentSheet.LinkConfirmOption
         let configuration: PaymentElementConfiguration
-        let returnURL: String
         let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -79,7 +78,6 @@ extension CheckoutElementsController {
 
         let option: Option
         let configuration: PaymentElementConfiguration
-        let returnURL: String
         let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: (any CheckoutConfirmationChallenge)?
         let authenticationContext: STPAuthenticationContext
@@ -230,7 +228,6 @@ extension CheckoutElementsController {
             return .link(.init(
                 confirmOption: confirmOption,
                 configuration: configuration,
-                returnURL: self.configuration.returnURL,
                 nativeSheetPresentation: nativeSheetPresentation,
                 confirmationChallenge: confirmationChallenge,
                 analyticsHelper: analyticsHelper,
@@ -243,7 +240,6 @@ extension CheckoutElementsController {
                 .init(
                     option: .new(confirmParams),
                     configuration: configuration,
-                    returnURL: self.configuration.returnURL,
                     nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
@@ -257,7 +253,6 @@ extension CheckoutElementsController {
                 .init(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
-                    returnURL: self.configuration.returnURL,
                     nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
@@ -490,7 +485,7 @@ extension CheckoutElementsController {
                 confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
                 savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
-                returnURL: paymentMethodParameters.returnURL,
+                returnURL: configuration.returnURL,
                 shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
                 paymentMethodOptions: confirmParams.confirmPaymentMethodOptions,
                 clientAttributionMetadata: clientAttributionMetadata,
@@ -507,7 +502,7 @@ extension CheckoutElementsController {
                 confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
                 expectedPaymentMethodType: savedPaymentMethod.type.identifier,
-                returnURL: paymentMethodParameters.returnURL,
+                returnURL: configuration.returnURL,
                 shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
                 paymentMethodOptions: paymentMethodOptions,
                 clientAttributionMetadata: clientAttributionMetadata,

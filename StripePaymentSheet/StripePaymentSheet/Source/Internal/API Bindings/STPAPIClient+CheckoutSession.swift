@@ -64,7 +64,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     let savePaymentMethod: Bool?
 
     /// CheckoutClient requires a return URL for confirmation.
-    let returnURL: String
+    let returnURL: String?
 
     /// The optional shipping details.
     let shipping: STPPaymentIntentShippingDetailsParams?
@@ -92,7 +92,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         clientSecret: String,
         confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
-        returnURL: String,
+        returnURL: String? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
         customerData: [String: Any]? = nil
     ) -> Self {
@@ -122,7 +122,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         expectedAmount: Int?,
         expectedPaymentMethodType: String,
         savePaymentMethod: Bool? = nil,
-        returnURL: String,
+        returnURL: String? = nil,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
@@ -154,7 +154,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
         savePaymentMethod: Bool? = nil,
-        returnURL: String,
+        returnURL: String? = nil,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,

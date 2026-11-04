@@ -84,7 +84,6 @@ extension CheckoutElementsController {
                     let paymentMethodParameters = PaymentMethodConfirmationParameters(
                         option: .new(confirmParams),
                         configuration: configuration,
-                        returnURL: parameters.returnURL,
                         nativeSheetPresentation: parameters.nativeSheetPresentation,
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
@@ -113,7 +112,6 @@ extension CheckoutElementsController {
                     let paymentMethodParameters = PaymentMethodConfirmationParameters(
                         option: .saved(paymentMethod, nil),
                         configuration: configuration,
-                        returnURL: parameters.returnURL,
                         nativeSheetPresentation: parameters.nativeSheetPresentation,
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
@@ -155,7 +153,6 @@ extension CheckoutElementsController {
                         parameters: LinkConfirmationParameters(
                             confirmOption: confirmOption,
                             configuration: configuration,
-                            returnURL: parameters.returnURL,
                             nativeSheetPresentation: parameters.nativeSheetPresentation,
                             confirmationChallenge: confirmationChallenge,
                             analyticsHelper: parameters.analyticsHelper,
