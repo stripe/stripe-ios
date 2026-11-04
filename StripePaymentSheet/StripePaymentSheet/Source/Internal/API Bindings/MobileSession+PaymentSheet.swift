@@ -13,8 +13,8 @@ extension PaymentSheet {
 
     @_spi(InternalOnlyAPI) public enum MobileSessionFeatureFlags {
 
-        /// Sends the `X-Stripe-Mobile-Config` header on `elements/sessions` and decodes the
-        /// `mobile_session` sidecar from the response. Defaults to off.
+        /// Sends the `X-Stripe-Mobile-Config` header on `elements/sessions` and uses the server's
+        /// `mobile_session.payment_method_availability` when it's present. Defaults to off.
         @_spi(InternalOnlyAPI) public static var serverPaymentMethodAvailabilityEnabled: Bool = false
     }
 }
