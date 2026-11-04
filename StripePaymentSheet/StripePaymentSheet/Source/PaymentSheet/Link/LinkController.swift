@@ -312,10 +312,13 @@ import UIKit
                     analyticsHelper: analyticsHelper
                 )
 
-                guard deviceCanUseNativeLink(
-                    elementsSession: loadResult.elementsSession,
-                    configuration: paymentElementConfiguration
-                ) else {
+                // The playground override wins over Identity's exception, as it does over attestation.
+                let canUseNativeLink = PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride
+                    ?? (requestSurface.skipsAttestation(for: loadResult.elementsSession) || deviceCanUseNativeLink(
+                        elementsSession: loadResult.elementsSession,
+                        configuration: paymentElementConfiguration
+                    ))
+                guard canUseNativeLink else {
                     completion(.failure(IntegrationError.missingAppAttestation))
                     return
                 }

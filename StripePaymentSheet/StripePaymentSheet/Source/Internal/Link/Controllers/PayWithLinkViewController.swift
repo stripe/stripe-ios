@@ -115,7 +115,7 @@ final class PayWithLinkViewController: NSObject {
         /// Set for authentication-only presentations: sign-in and sign-up use this copy and consent, and the
         /// sheet finishes once the session is verified instead of showing the wallet.
         let authenticationContent: LinkController.AuthenticationContent?
-        /// Used by lookups the sign-up screen makes when the email changes.
+        /// Used by lookups the sign-up screen makes when the email changes, and to decide whether to attest.
         let requestSurface: LinkRequestSurface
 
         var isDismissible: Bool = true
@@ -315,6 +315,9 @@ final class PayWithLinkViewController: NSObject {
 
         // Prewarm attestation if needed
         Task {
+            guard !context.requestSurface.skipsAttestation(for: context.elementsSession) else {
+                return
+            }
             // Attempt to attest
             let canAttest = await context.configuration.apiClient.stripeAttest.prepareAttestation()
             // If we can't attest and we're in livemode, let's bail and switch to the web controller
