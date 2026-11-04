@@ -86,7 +86,7 @@ import UIKit
     }
 
     /// Determines the `Stripe-Livemode` header value when the publishable key is a user key
-    @_spi(DashboardOnly) public var userKeyLiveMode = true
+    @_spi(DashboardOnly) @_spi(ReactNativeSDK) public var userKeyLiveMode = true
 
     @_spi(InternalOnlyAPI) public lazy var stripeAttest: StripeAttest = StripeAttest(apiClient: self)
 
