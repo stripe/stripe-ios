@@ -1,0 +1,237 @@
+//
+//  CheckoutElementsControllerLoader.swift
+//  StripePaymentSheet
+//
+
+import Foundation
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+
+@MainActor
+enum CheckoutElementsControllerLoader {
+    struct PaymentElementInitializationParameters {
+        let flowController: FlowControllerInitializationParameters
+        let embedded: EmbeddedPaymentElementInitializationParameters
+    }
+
+    struct FlowControllerInitializationParameters {
+        let configuration: PaymentSheet.Configuration
+        let loadResult: PaymentSheetLoader.LoadResult
+        let analyticsHelper: PaymentSheetAnalyticsHelper
+    }
+
+    struct EmbeddedPaymentElementInitializationParameters {
+        let configuration: EmbeddedPaymentElement.Configuration
+        let loadResult: PaymentSheetLoader.LoadResult
+        let analyticsHelper: PaymentSheetAnalyticsHelper
+    }
+
+    /// Loads the initial Checkout Session and shared resources.
+    static func initCheckoutSession(configuration: CheckoutElementsController.Configuration) async throws -> CheckoutElementsController.Session {
+        // 1a. Load misc. singletons
+        let resources = Task { // Use a Task instead of async let; see PaymentSheetLoader.load.
+            await PaymentSheetLoader.loadMiscellaneousSingletons()
+        }
+        // 1b. Call the /init endpoint
+        let response = try await configuration.apiClient.initCheckoutSession(
+            checkoutSessionId: CheckoutElementsController.extractSessionId(from: configuration.clientSecret),
+            clientSecret: configuration.clientSecret,
+            adaptivePricingAllowed: configuration.currencySelectorElement != nil
+        )
+        let session = CheckoutElementsController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
+        await resources.value
+
+        STPTelemetryClient.shared.sendTelemetryData() // see https://docs.google.com/document/d/18Aamx_KxPZLHOc1x-9MJriEoTiX7l0N-x0cj8Nk_IYM
+        return session
+    }
+
+    /// Loads the shared Link account
+    static func loadLink(
+        session: CheckoutElementsController.Session,
+        configuration: CheckoutElementsController.Configuration,
+        paymentElementConfiguration: PaymentSheet.Configuration?
+    ) async {
+        let paymentElementUsesLink = paymentElementConfiguration.map {
+            PaymentSheet.isLinkEnabled(elementsSession: session.elementsSession, configuration: $0)
+        } ?? false
+        let expressCheckoutUsesLink = session.availableExpressCheckoutPaymentMethods.contains(ExpressCheckoutElement.PaymentMethod.link.rawValue)
+        // Hack: Link experiment exposures send default billing details
+        var defaultBillingDetails = PaymentSheet.BillingDetails()
+        defaultBillingDetails.email = session.email
+        defaultBillingDetails.name = configuration.defaults.billingDetails?.name
+        defaultBillingDetails.phone = configuration.defaults.phone
+        _ = await PaymentSheetLoader.loadLink(
+            elementsSession: session.elementsSession,
+            apiClient: configuration.apiClient,
+            isLinkEnabled: paymentElementUsesLink || expressCheckoutUsesLink,
+            email: defaultBillingDetails.email,
+            defaultBillingDetails: defaultBillingDetails,
+            analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .checkoutElements),
+            prefetchedEmailAndSourceTask: Task { nil },
+            loadTimings: .init(loadingStartDate: Date()),
+            isUpdate: false,
+            linkAnalytics: .init(checkoutSessionID: session.id)
+        )
+    }
+
+    /// This method contains all the stuff we have to do after (1) init and (2) updates i.e. when the session+elements session changes:
+    ///
+    /// - Apply Financial Connections settings
+    /// - Set analytics to R
+    /// - Create a confirmation challenge from the current session settings.
+    /// - If PaymentElement is configured, also derive FC/Embedded configurations and layouts, filter
+    ///   available and saved payment methods, update analytics context, and start a shared promotions
+    ///   fetch in the background.
+    ///
+    /// - Returns: the challenge and FC/Embedded initialization parameters so the caller can create or update PaymentElement.
+    static func handleSessionChange(checkout: CheckoutElementsController) -> (
+        confirmationChallenge: ConfirmationChallenge,
+        paymentElement: PaymentElementInitializationParameters?
+    ) {
+        let session = checkout.session
+        let elementsSession = session.elementsSession
+        PaymentSheetLoader.applyFinancialConnectionsSettings(elementsSession: elementsSession)
+        STPAnalyticsClient.sendAnalyticsToRStripe = elementsSession.isAnalyticsToRStripeEnabled
+        let confirmationChallenge = ConfirmationChallenge(
+            elementsSession: elementsSession,
+            stripeAttest: checkout.apiClient.stripeAttest
+        )
+        guard let paymentElementConfiguration = checkout.configuration.paymentElement else {
+            return (confirmationChallenge: confirmationChallenge, paymentElement: nil)
+        }
+        let fcConfiguration = makeFlowControllerConfiguration(
+            paymentElementConfiguration: paymentElementConfiguration,
+            configuration: checkout.configuration,
+            session: session
+        )
+        let embeddedConfiguration = makeEmbeddedConfiguration(
+            paymentElementConfiguration: paymentElementConfiguration,
+            configuration: checkout.configuration,
+            session: session
+        )
+
+        let intent = Intent.checkout(session)
+        let customerProvider = CustomerProvider(checkoutSession: session)
+        let experimentAnalyticsHelper = ExperimentAnalyticsHelper(integrationShape: .checkoutElements)
+        PaymentSheetLoader.warnAboutUnactivatedPaymentMethods(elementsSession: elementsSession)
+        // Filter PMs
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: elementsSession,
+            configuration: fcConfiguration, // assume this method returns the same result for Embedded
+            logAvailability: true
+        )
+        // TODO: Define PaymentElement behavior when no supported payment methods remain.
+        // Filter saved PMs
+        // TODO: this logic should live on the server
+        let savedPaymentMethods = PaymentSheetLoader.filterSavedPaymentMethods(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: fcConfiguration, // assume this method returns the same result for Embedded
+            customerProvider: customerProvider,
+            prefetchedSPMs: nil
+        )
+        // Create/reuse and update FC analytics helper
+        let flowControllerAnalyticsHelper = checkout.paymentElement?.paymentSheetFlowController.analyticsHelper
+            ?? PaymentSheetAnalyticsHelper(
+                integrationShape: .flowController,
+                configuration: fcConfiguration,
+                checkoutSessionID: session.id,
+                checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
+            )
+        let orientation = fcConfiguration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
+        flowControllerAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
+        flowControllerAnalyticsHelper.paymentMethodOrientation = orientation
+        // Create/reuse and update Embedded analytics helper
+        let embeddedAnalyticsHelper = checkout.paymentElement?.embeddedPaymentElement.analyticsHelper
+        ?? PaymentSheetAnalyticsHelper(
+            integrationShape: .embedded,
+            configuration: embeddedConfiguration,
+            checkoutSessionID: session.id,
+            checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
+        )
+        embeddedAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
+        embeddedAnalyticsHelper.paymentMethodOrientation = .vertical
+        // Deal with PMM Promotions Helper
+        // TODO: Fix Checkout promotions exposure attribution. This uses the FC layout even
+        // when the merchant uses Embedded (vertical) or neither UI; the actual UI is unknown here.
+        // TODO: Restore Checkout promotions fetch/display analytics with the appropriate context.
+        // Leave analyticsHelper nil until then.
+        let promotionsHelper = PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: fcConfiguration,
+            paymentMethodTypes: paymentMethodTypes,
+            experimentAnalyticsHelper: experimentAnalyticsHelper
+        )
+        promotionsHelper?.fetchData()
+        // Return
+        let flowControllerLoadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: paymentMethodTypes,
+            paymentMethodMessagingPromotionsHelper: promotionsHelper,
+            paymentMethodOrientation: orientation,
+            customerProvider: customerProvider
+        )
+        let embeddedLoadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: paymentMethodTypes,
+            paymentMethodMessagingPromotionsHelper: promotionsHelper,
+            paymentMethodOrientation: .vertical,
+            customerProvider: customerProvider
+        )
+        return (
+            confirmationChallenge: confirmationChallenge,
+            paymentElement: .init(
+                flowController: .init(
+                    configuration: fcConfiguration,
+                    loadResult: flowControllerLoadResult,
+                    analyticsHelper: flowControllerAnalyticsHelper
+                ),
+                embedded: .init(
+                    configuration: embeddedConfiguration,
+                    loadResult: embeddedLoadResult,
+                    analyticsHelper: embeddedAnalyticsHelper
+                )
+            )
+        )
+    }
+
+    private static func makeFlowControllerConfiguration(
+        paymentElementConfiguration: PaymentElement.Configuration,
+        configuration: CheckoutElementsController.Configuration,
+        session: CheckoutElementsController.Session
+    ) -> PaymentSheet.Configuration {
+        var paymentSheetConfiguration = paymentElementConfiguration.makeFlowControllerConfiguration(
+            apiClient: configuration.apiClient,
+            returnURL: configuration.returnURL,
+            defaults: configuration.defaults,
+            merchantDisplayName: configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? "",
+            merchantCountryCode: session.merchantCountryCode,
+            userInterfaceStyle: configuration.userInterfaceStyle
+        )
+        session.applyAddressOverrides(to: &paymentSheetConfiguration)
+        return paymentSheetConfiguration
+    }
+
+    private static func makeEmbeddedConfiguration(
+        paymentElementConfiguration: PaymentElement.Configuration,
+        configuration: CheckoutElementsController.Configuration,
+        session: CheckoutElementsController.Session
+    ) -> EmbeddedPaymentElement.Configuration {
+        var embeddedConfiguration = paymentElementConfiguration.makeEmbeddedConfiguration(
+            apiClient: configuration.apiClient,
+            returnURL: configuration.returnURL,
+            defaults: configuration.defaults,
+            merchantDisplayName: configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? "",
+            merchantCountryCode: session.merchantCountryCode,
+            userInterfaceStyle: configuration.userInterfaceStyle
+        )
+        session.applyAddressOverrides(to: &embeddedConfiguration)
+        return embeddedConfiguration
+    }
+}

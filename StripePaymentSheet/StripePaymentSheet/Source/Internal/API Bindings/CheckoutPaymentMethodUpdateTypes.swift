@@ -8,7 +8,7 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
-extension CheckoutController {
+extension CheckoutElementsController {
 
     struct PaymentMethodBillingDetails {
         let name: String?

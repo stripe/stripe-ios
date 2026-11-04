@@ -37,6 +37,7 @@ extension UIViewController {
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
             nativeSheetPresentation: nativeSheetPresentation,
             logPayment: false,
             analyticsHelper: analyticsHelper,

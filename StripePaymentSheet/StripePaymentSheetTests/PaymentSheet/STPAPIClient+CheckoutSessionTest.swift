@@ -54,13 +54,15 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         // When the session is polled
         let response = try await apiClient.pollCheckoutSession(
             checkoutSessionId: sessionId,
+            clientSecret: checkoutSessionResponse.clientSecret,
             timeout: 30
         )
 
         // Then its current poll state is returned
         XCTAssertEqual(response.sessionId, sessionId)
-        XCTAssertEqual(response.state, .active)
-        XCTAssertNil(response.paymentObjectStatus)
+        XCTAssertEqual(response.confirmationStatus, .notStarted)
+        XCTAssertEqual(response.status, .open)
+        XCTAssertEqual(response.paymentStatus, .unpaid)
     }
 
     func testInitCheckoutSessionPayment() async throws {
@@ -219,7 +221,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             setup.paymentMethodID,
             inCheckoutSession: setup.checkoutSessionID,
             clientSecret: setup.clientSecret,
-            expiryDetails: CheckoutController.PaymentMethodExpiryDetails(expMonth: 6, expYear: 2029)
+            expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails(expMonth: 6, expYear: 2029)
         )
 
         // Then CheckoutClient returns the updated saved card, decoded from the session response
@@ -245,11 +247,11 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             setup.paymentMethodID,
             inCheckoutSession: setup.checkoutSessionID,
             clientSecret: setup.clientSecret,
-            billingDetails: CheckoutController.PaymentMethodBillingDetails(
+            billingDetails: CheckoutElementsController.PaymentMethodBillingDetails(
                 name: "Jane Doe",
                 email: "jane@example.com",
                 phone: "+15551234567",
-                address: CheckoutController.PaymentMethodBillingAddress(
+                address: CheckoutElementsController.PaymentMethodBillingAddress(
                     line1: "123 Main St",
                     city: "San Francisco",
                     state: "CA",

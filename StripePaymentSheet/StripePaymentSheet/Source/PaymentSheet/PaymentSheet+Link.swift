@@ -47,7 +47,8 @@ extension PaymentSheet {
             elementsSession: elementsSession,
             configuration: configuration,
             linkAccount: LinkAccountContext.shared.account,
-            checkoutAttribution: analyticsHelper.checkoutAttribution
+            checkoutAttribution: analyticsHelper.checkoutAttribution,
+            analyticsHelper: analyticsHelper.linkAnalytics
         )
 
         payWithLinkVC.payWithLinkDelegate = self
@@ -71,7 +72,7 @@ extension PaymentSheet {
         shouldFinishOnClose: Bool,
         onClose: (() -> Void)? = nil
     ) {
-        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, nativeSheetPresentation: nativeSheetPresentation, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
+        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, paymentHandler: paymentHandler, nativeSheetPresentation: nativeSheetPresentation, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
 
         payWithNativeLink.presentAsSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
             if case let .failed(error) = result {

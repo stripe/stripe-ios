@@ -32,6 +32,10 @@
 
 "Bank account details cannot be changed." = "Les dades del compte bancari no es poden canviar.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Abans que puguem enviar un codi al vostre correu electrònic, cal que verifiquem la vostra informació addicional. Introduïu el vostre número de telèfon acabat en ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Abans que puguem enviar un codi al vostre correu electrònic, cal que verifiquem la vostra informació addicional. Introduïu el vostre número de telèfon.";
+
 "Buy Now, Pay Later with  <img/>" = "Pagament diferit amb  <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Pagament diferit amb Afterpay";
@@ -116,8 +120,6 @@
 
 "Close card scanner" = "Tancar l'escàner de la targeta";
 
-"Code sent" = "Codi enviat";
-
 "Complete the payment using Pix to finish the purchase." = "Completeu el pagament amb Pix per finalitzar la compra.";
 
 "Confirm" = "Confirma";
@@ -162,7 +164,11 @@
 
 "Edit address" = "Edita l'adreça";
 
+"Email code" = "Codi per correu electrònic";
+
 "Enter address manually" = "Introduir l'adreça manualment";
+
+"Enter the phone number on your Link account." = "Introduïu el número de telèfon del vostre compte de Link.";
 
 "Exchange rate and fees of your bank may apply." = "Es poden aplicar la taxa de canvi i les comissions del teu banc.";
 
@@ -201,6 +207,8 @@
 "Manage payment methods" = "Administra els mètodes de pagament";
 
 "Manage your payment methods" = "Administreu els vostres mètodes de pagament";
+
+"More options" = "Més opcions";
 
 "Name on card" = "Nom a la targeta";
 
@@ -277,6 +285,8 @@
 "Remove payment method" = "Elimina el mètode de pagament";
 
 "Remove payment method?" = "Suprimir el mètode de pagament?";
+
+"Resend code in %d seconds" = "Torneu a enviar el codi d'aquí a %li segons";
 
 "SEPA debit details cannot be changed." = "Les dades de la domiciliació SEPA no es poden canviar.";
 
@@ -358,6 +368,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Aquesta forma de pagament se suprimirà, però continuarà disponible per a les subscripcions del %@.";
 
+"This phone number doesn't match your Link account. Please try again." = "Aquest número de telèfon no coincideix amb el vostre compte de Link. Torneu-ho a provar.";
+
 "Too many attempts. Please try again in a few minutes." = "Massa intents. Torneu-ho a provar d'aquí uns minuts.";
 
 "Unavailable for this purchase" = "No disponible per a aquesta compra";
@@ -368,7 +380,13 @@
 
 "Use billing address for shipping" = "Utilitzar l'adreça de facturació per a l'enviament";
 
+"Verify your phone number" = "Verifiqueu el vostre número de telèfon";
+
+"Verifying your account…" = "S'està verificant el vostre compte…";
+
 "View more" = "Visualitza més";
+
+"We couldn't verify your account. Please close this window and try again." = "No hem pogut verificar el vostre compte. Tanqueu aquesta finestra i torneu-ho a provar.";
 
 "Yes, update" = "Sí, actualitzar";
 
