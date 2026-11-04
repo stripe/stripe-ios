@@ -9,9 +9,9 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 
-/// An error returned by ``Checkout``.
+/// An error returned by ``CheckoutElementsController``.
 enum CheckoutError: Error, LocalizedError, Sendable {
-    /// The client secret provided to ``Checkout`` is empty.
+    /// The client secret provided to ``CheckoutElementsController`` is empty.
     case invalidClientSecret
 
     /// A payment sheet or form is currently presented. Dismiss it before making changes.

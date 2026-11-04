@@ -145,6 +145,7 @@ final class LinkSignUpViewModel: NSObject {
     private let accountService: LinkAccountServiceProtocol
     private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
     private let country: String?
+    private let analyticsHelper: LinkAnalyticsHelper
 
     // MARK: Initializer
 
@@ -152,7 +153,8 @@ final class LinkSignUpViewModel: NSObject {
         accountService: LinkAccountServiceProtocol,
         linkAccount: PaymentSheetLinkAccount?,
         legalName: String?,
-        country: String?
+        country: String?,
+        analyticsHelper: LinkAnalyticsHelper
     ) {
         self.accountService = accountService
         self.linkAccount = linkAccount
@@ -160,6 +162,7 @@ final class LinkSignUpViewModel: NSObject {
         self.suggestedEmail = linkAccount?.suggestedEmail
         self.legalName = legalName
         self.country = country
+        self.analyticsHelper = analyticsHelper
         super.init()
     }
 
@@ -176,7 +179,8 @@ final class LinkSignUpViewModel: NSObject {
             with: phoneNumber,
             legalName: requiresNameCollection ? legalName : nil,
             countryCode: nil,
-            consentAction: .clicked_button_mobile_v1
+            consentAction: .clicked_button_mobile_v1,
+            analyticsHelper: analyticsHelper
         ) { [weak self] result in
             switch result {
             case .success:

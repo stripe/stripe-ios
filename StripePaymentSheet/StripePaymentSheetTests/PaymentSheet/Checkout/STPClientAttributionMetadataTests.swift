@@ -12,13 +12,13 @@ import XCTest
 class STPClientAttributionMetadataTests: XCTestCase {
     func testCheckoutMetadataInBothEncoders() throws {
         AnalyticsHelper.shared.generateSessionID()
-        let cases: [(element: CheckoutController.ConfirmingElement, automaticPaymentMethodTypes: Bool?, selectionFlow: String?)] = [
+        let cases: [(element: CheckoutElementsController.ConfirmingElement, automaticPaymentMethodTypes: Bool?, selectionFlow: String?)] = [
             (.paymentElement, true, "automatic"),
             (.expressCheckoutElement, false, "merchant_specified"),
             (.paymentElement, nil, nil),
         ]
         for (confirmingElement, automaticPaymentMethodTypes, selectionFlow) in cases {
-            var configuration = CheckoutController.Configuration(clientSecret: "cs_test_secret_abc", returnURL: "stripe://return")
+            var configuration = CheckoutElementsController.Configuration(clientSecret: "cs_test_secret_abc", returnURL: "stripe://return")
             configuration.paymentElement = .init()
             configuration.expressCheckoutElement = .init { _ in }
             configuration.shippingAddressElement = .init()
@@ -36,7 +36,7 @@ class STPClientAttributionMetadataTests: XCTestCase {
                 configuration.shippingAddressElement = nil
                 configuration.currencySelectorElement = nil
             }
-            let session = CheckoutController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
+            let session = CheckoutElementsController.Session(apiResponse: response, clientSecret: configuration.clientSecret, localState: .empty, configuration: configuration)
             let attribution = CheckoutAttributionContext(confirmingElement: confirmingElement, configuredElements: configuration.configuredElements)
             let metadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
                 intent: .checkout(session),

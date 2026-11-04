@@ -32,6 +32,10 @@
 
 "Bank account details cannot be changed." = "Banko sąskaitos duomenų keisti negalima.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Prieš išsiųsdami kodą į jūsų el. paštą, turime patvirtinti papildomą informaciją apie jus. Įveskite savo telefono numerį, kuris baigiasi ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Kad galėtume išsiųsti kodą į jūsų el. paštą, turime patvirtinti papildomą informaciją apie jus. Įveskite savo telefono numerį.";
+
 "Buy Now, Pay Later with  <img/>" = "Pirkite dabar, mokėkite vėliau naudojant <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Pirkite dabar, mokėkite vėliau naudojant „Afterpay“";
@@ -116,8 +120,6 @@
 
 "Close card scanner" = "Išjungti kortelės skaitytuvą";
 
-"Code sent" = "Kodas išsiųstas";
-
 "Complete the payment using Pix to finish the purchase." = "Atlikite mokėjimą naudodami „Pix”, kad užbaigtumėte pirkimą.";
 
 "Confirm" = "Patvirtinti";
@@ -162,7 +164,11 @@
 
 "Edit address" = "Keisti adresą";
 
+"Email code" = "El. pašto kodas";
+
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
+
+"Enter the phone number on your Link account." = "Įveskite jūsų „Link” paskyros telefono numerį.";
 
 "Exchange rate and fees of your bank may apply." = "Gali būti taikomas jūsų banko valiutų keitimo kursas ir mokesčiai.";
 
@@ -201,6 +207,8 @@
 "Manage payment methods" = "Valdyti mokėjimo būdus";
 
 "Manage your payment methods" = "Valdykite savo mokėjimo būdus";
+
+"More options" = "Daugiau parinkčių";
 
 "Name on card" = "Ant kortelės nurodytas vardas ir pavardė";
 
@@ -277,6 +285,8 @@
 "Remove payment method" = "Pašalinti mokėjimo būdą";
 
 "Remove payment method?" = "Pašalinti mokėjimo būdą?";
+
+"Resend code in %d seconds" = "Išsiųsti kodą iš naujo po %li sek.";
 
 "SEPA debit details cannot be changed." = "SEPA debeto duomenų keisti negalima.";
 
@@ -358,6 +368,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Šis mokėjimo būdas bus pašalintas, tačiau ir toliau bus galima naudotis %@ prenumeratomis.";
 
+"This phone number doesn't match your Link account. Please try again." = "Šis telefono numeris neatitinka jūsų „Link” paskyros. Bandykite dar kartą.";
+
 "Too many attempts. Please try again in a few minutes." = "Per daug bandymų. Bandykite dar kartą po kelių minučių.";
 
 "Unavailable for this purchase" = "Šiam pirkiniui nepasiekiama";
@@ -368,7 +380,13 @@
 
 "Use billing address for shipping" = "Atsiskaitymo adresą naudoti siuntimui";
 
+"Verify your phone number" = "Telefono numerio patvirtinimas";
+
+"Verifying your account…" = "Autentifikuojama jūsų paskyra…";
+
 "View more" = "Peržiūrėti daugiau";
+
+"We couldn't verify your account. Please close this window and try again." = "Nepavyko autentifikuoti jūsų paskyros. Uždarykite šį langą ir bandykite dar kartą.";
 
 "Yes, update" = "Taip, atnaujinti";
 

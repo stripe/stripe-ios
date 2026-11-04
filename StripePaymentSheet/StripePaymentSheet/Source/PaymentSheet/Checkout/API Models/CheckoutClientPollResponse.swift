@@ -11,9 +11,9 @@ struct CheckoutClientPollResponse: Decodable, Equatable {
     /// Determines whether polling should continue
     let confirmationStatus: ConfirmationStatus
     /// The latest Session status
-    let status: CheckoutController.Session.Status
+    let status: CheckoutElementsController.Session.Status
     /// The latest Session payment status
-    let paymentStatus: CheckoutController.Session.Status.PaymentStatus
+    let paymentStatus: CheckoutElementsController.Session.Status.PaymentStatus
 
     enum ConfirmationStatus: String, Decodable {
         /// No confirmation attempt has been recorded. Unexpected after an accepted /confirm; stop polling and send an unexpected error analytic.
@@ -38,9 +38,9 @@ struct CheckoutClientPollResponse: Decodable, Equatable {
         sessionId = try container.decode(String.self, forKey: .sessionId)
         confirmationStatus = try container.decode(ConfirmationStatus.self, forKey: .confirmationStatus)
 
-        paymentStatus = try container.decode(CheckoutController.Session.Status.PaymentStatus.self, forKey: .paymentStatus)
+        paymentStatus = try container.decode(CheckoutElementsController.Session.Status.PaymentStatus.self, forKey: .paymentStatus)
 
-        status = try CheckoutController.Session.Status.decode(
+        status = try CheckoutElementsController.Session.Status.decode(
             from: container,
             forKey: .status,
             paymentStatus: paymentStatus

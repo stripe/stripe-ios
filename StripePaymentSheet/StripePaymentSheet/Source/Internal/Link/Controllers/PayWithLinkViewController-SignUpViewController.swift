@@ -19,14 +19,15 @@ extension PayWithLinkViewController {
         override var requiresFullScreen: Bool { true }
 
         private lazy var signUpViewController: LinkSignUpViewController = {
-            let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
+            let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession, analyticsHelper: context.analyticsHelper.linkAnalytics)
             let viewController = LinkSignUpViewController(
                 accountService: accountService,
                 linkAccount: linkAccount,
                 brand: context.linkBrand,
                 country: context.elementsSession.countryCode,
                 defaultBillingDetails: context.configuration.defaultBillingDetails,
-                appearance: context.linkAppearance
+                appearance: context.linkAppearance,
+                analyticsHelper: context.analyticsHelper.linkAnalytics
             )
             viewController.delegate = self
             viewController.view.backgroundColor = .clear

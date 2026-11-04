@@ -15,7 +15,7 @@ struct CustomerProvider {
     private enum Backing {
 
         case customer(PaymentSheet.CustomerConfiguration?)
-        case checkoutSession(CheckoutController.Session)
+        case checkoutSession(CheckoutElementsController.Session)
     }
 
     private let backing: Backing
@@ -24,7 +24,7 @@ struct CustomerProvider {
         backing = .customer(customer)
     }
 
-    init(checkoutSession: CheckoutController.Session) {
+    init(checkoutSession: CheckoutElementsController.Session) {
         backing = .checkoutSession(checkoutSession)
     }
 

@@ -351,13 +351,13 @@ public final class EmbeddedPaymentElement {
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     /// The form view controller for the currently selected payment method.
     internal var selectedFormViewController: EmbeddedFormViewController?
-    /// The saved payment method waiting for its billing address to sync to CheckoutController.
+    /// The saved payment method waiting for its billing address to sync to CheckoutElementsController.
     internal var pendingBillingAddressSyncSelection: PendingBillingAddressSyncSelection?
     /// Indicates if a payment has been successfully completed.
     internal var hasConfirmedIntent = false
     /// Tracks info about the currently in-flight or most recent update attempt.
     internal var latestUpdateContext: EmbeddedUpdateContext?
-    internal weak var checkout: CheckoutController?
+    internal weak var checkout: CheckoutElementsController?
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif

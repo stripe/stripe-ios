@@ -27,7 +27,7 @@ public struct ExpressCheckoutElementView: View {
     }
 }
 
-/// Bridges ExpressCheckoutElement's UIKit state into SwiftUI without retaining CheckoutController.
+/// Bridges ExpressCheckoutElement's UIKit state into SwiftUI without retaining CheckoutElementsController.
 @MainActor
 final class ExpressCheckoutElementViewModel: ObservableObject {
     let uiView: ExpressCheckoutElementUIView
