@@ -221,6 +221,8 @@ extension PaymentSheet {
                                 label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
                                 sublabel: confirmParams.paymentSheetSublabel
                             )
+                        } else if option.isBankScopedWallet {
+                            self.init(label: .Localized.bank, sublabel: nil)
                         } else {
                             self.init(label: linkBrand.displayName, sublabel: option.displayPaymentSheetSubLabel(brand: linkBrand))
                         }

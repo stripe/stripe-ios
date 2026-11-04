@@ -215,7 +215,12 @@ public final class EmbeddedPaymentElement {
                 return true
             case .applePay:
                 return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
-            case .link:
+            case .link(let option):
+                if option.isBankScopedWallet {
+                    // The bank-scoped wallet comes from the bank row, not the Link row.
+                    return loadResult.paymentMethodTypes.contains(where: \.isLinkBankPayment)
+                        && shouldUseLinkWalletForBankRow(elementsSession: loadResult.elementsSession, configuration: configuration)
+                }
                 return PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
             case .saved(paymentMethod: let paymentMethod, confirmParams: _):
                 return loadResult.savedPaymentMethods.contains(paymentMethod)
@@ -388,6 +393,12 @@ public final class EmbeddedPaymentElement {
             case .external(let type):
                 return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
             case .instantDebits, .linkCardBrand:
+                if shouldUseLinkWalletForBankRow(elementsSession: elementsSession, configuration: configuration) {
+                    return .link(option: .wallet(
+                        brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
+                        supportedPaymentMethodTypes: [.bankAccount]
+                    ))
+                }
                 guard let paymentMethod = params.instantDebitsLinkedBank?.paymentMethod.decode() else {
                     return nil
                 }

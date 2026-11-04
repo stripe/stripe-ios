@@ -299,6 +299,7 @@ struct PaymentSheetTestPlayground: View {
                                     SearchableSettingView(setting: $playgroundController.settings.formSheetAction, searchText: $searchText)
                                     SearchableSettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText, searchText: $searchText)
                                     SearchableSettingView(setting: $playgroundController.settings.rowSelectionBehavior, searchText: $searchText)
+                                    SearchableSettingView(setting: embeddedBankLinkWalletBinding, searchText: $searchText)
                                 }
                             }
                         }
@@ -453,6 +454,14 @@ struct PaymentSheetTestPlayground: View {
         } set: { newOverride in
             // Store Automatic explicitly so it doesn't resolve to the launch default.
             playgroundController.settings.nativeSheetOverride = newOverride
+        }
+    }
+
+    var embeddedBankLinkWalletBinding: Binding<PaymentSheetTestPlaygroundSettings.EmbeddedBankLinkWallet> {
+        Binding<PaymentSheetTestPlaygroundSettings.EmbeddedBankLinkWallet> {
+            return playgroundController.settings.resolvedEmbeddedBankLinkWallet
+        } set: { newValue in
+            playgroundController.settings.embeddedBankLinkWallet = newValue
         }
     }
 

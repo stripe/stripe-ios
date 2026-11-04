@@ -54,6 +54,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
     override func tearDown() {
         super.tearDown()
         STPAnalyticsClient.sharedClient._testLogHistory = []
+        PaymentSheet.LinkFeatureFlags.enableEmbeddedBankLinkWallet = false
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
     }
 
     // MARK: - `update` tests
@@ -1159,6 +1161,131 @@ extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
 
         // Then the completion handler should be called with .canceled
         await fulfillment(of: [expectation], timeout: 1.0)
+    }
+
+    // MARK: - Bank row launches the Link wallet
+
+    func makeBankRowEmbeddedPaymentElement(
+        linkFundingSources: Set<ParsedEnum<LinkSettings.FundingSource>> = [ParsedEnum(.card), ParsedEnum(.bankAccount)]
+    ) async -> EmbeddedPaymentElement {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card", "link"],
+            linkFundingSources: linkFundingSources,
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
+        )
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: .deferredIntent(intentConfig: intentConfig),
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .instantDebits],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
+        )
+        var config = configuration
+        config.embeddedViewDisplaysMandateText = false
+        let sut = EmbeddedPaymentElement(
+            configuration: config,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+        return sut
+    }
+
+    func testBankRowSelectsLinkWallet_whenFlagEnabledAndNativeLinkAvailable() async throws {
+        // Given the flag is enabled and native Link is available
+        PaymentSheet.LinkFeatureFlags.enableEmbeddedBankLinkWallet = true
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
+        let sut = await makeBankRowEmbeddedPaymentElement()
+        delegateDidUpdatePaymentOptionCalled = false
+        delegateWillPresentCalled = false
+
+        // When the bank row is tapped
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Bank"))
+
+        // Then no form is presented...
+        XCTAssertNil(sut.selectedFormViewController)
+        XCTAssertFalse(delegateWillPresentCalled)
+        // ...and the payment option is a Link wallet scoped to bank accounts...
+        guard case .link(let option) = sut._paymentOption, case .wallet(_, let supportedPaymentMethodTypes) = option else {
+            return XCTFail("Expected a Link wallet payment option, got \(String(describing: sut._paymentOption))")
+        }
+        XCTAssertEqual(supportedPaymentMethodTypes, [.bankAccount])
+        // ...and the display data reads "Bank"
+        XCTAssertTrue(delegateDidUpdatePaymentOptionCalled)
+        XCTAssertEqual(sut.paymentOption?.label, "Bank")
+        XCTAssertEqual(sut.paymentOption?.labels.label, "Bank")
+        XCTAssertNil(sut.paymentOption?.labels.sublabel)
+        XCTAssertEqual(sut.paymentOption?.paymentMethodType, "link")
+        XCTAssertNil(sut.paymentOption?.mandateText)
+    }
+
+    func testBankRowShowsForm_whenNativeLinkUnavailable() async throws {
+        // Given the flag is enabled but native Link is unavailable
+        PaymentSheet.LinkFeatureFlags.enableEmbeddedBankLinkWallet = true
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = false
+        let sut = await makeBankRowEmbeddedPaymentElement()
+
+        // When the bank row is tapped
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Bank"))
+
+        // Then the existing bank form is presented
+        XCTAssertNotNil(sut.selectedFormViewController)
+        XCTAssertNil(sut._paymentOption)
+    }
+
+    func testBankRowShowsForm_whenLinkFundingSourcesExcludeBankAccounts() async throws {
+        // Given the flag is enabled and native Link is available, but Link doesn't support bank accounts
+        PaymentSheet.LinkFeatureFlags.enableEmbeddedBankLinkWallet = true
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
+        let sut = await makeBankRowEmbeddedPaymentElement(linkFundingSources: [ParsedEnum(.card)])
+
+        // When the bank row is tapped
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Bank"))
+
+        // Then the existing bank form is presented
+        XCTAssertNotNil(sut.selectedFormViewController)
+    }
+
+    func testBankRowShowsForm_whenFlagDisabled() async throws {
+        // Given the flag is disabled and native Link is available
+        PaymentSheet.LinkFeatureFlags.enableEmbeddedBankLinkWallet = false
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
+        let sut = await makeBankRowEmbeddedPaymentElement()
+
+        // When the bank row is tapped
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Bank"))
+
+        // Then the existing bank form is presented
+        XCTAssertNotNil(sut.selectedFormViewController)
+    }
+
+    func testBankScopedWalletSelectionIsKeptAfterReload() async throws {
+        // Given the bank row is selected in Link wallet mode
+        PaymentSheet.LinkFeatureFlags.enableEmbeddedBankLinkWallet = true
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
+        let sut = await makeBankRowEmbeddedPaymentElement()
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Bank"))
+
+        // When the same load result is applied again (e.g. after `update`)
+        sut.applyLoadResult(sut.loadResult, confirmationChallenge: nil, configuration: sut.configuration)
+
+        // Then the bank row is still selected
+        XCTAssertEqual(sut.embeddedPaymentMethodsView.selectedRowButton?.type, .new(paymentMethodType: .instantDebits))
+        XCTAssertEqual(sut.paymentOption?.label, "Bank")
+    }
+
+    func testLinkConfirmOption_isBankScopedWallet() {
+        XCTAssertTrue(PaymentSheet.LinkConfirmOption.wallet(brand: .link, supportedPaymentMethodTypes: [.bankAccount]).isBankScopedWallet)
+        XCTAssertFalse(PaymentSheet.LinkConfirmOption.wallet(brand: .link).isBankScopedWallet)
+        XCTAssertFalse(PaymentSheet.LinkConfirmOption.wallet(brand: .link, supportedPaymentMethodTypes: [.card, .bankAccount]).isBankScopedWallet)
+        XCTAssertEqual(PaymentSheet.LinkConfirmOption.wallet(brand: .link, supportedPaymentMethodTypes: [.bankAccount]).paymentSheetLabel(brand: .link), "Bank")
+        XCTAssertEqual(PaymentSheet.LinkConfirmOption.wallet(brand: .link).paymentSheetLabel(brand: .link), "Link")
     }
 }
 
