@@ -82,6 +82,7 @@ final class AddressFormSizing: ObservableObject {
 private struct AddressFormRepresentable: UIViewRepresentable {
     let addressSectionView: UIView
     // Each change re-renders this view, which re-measures fields that may have appeared or disappeared.
+    // periphery:ignore
     let enteredAddress: AddressFormState.EnteredAddress?
     let sizing: AddressFormSizing
 
