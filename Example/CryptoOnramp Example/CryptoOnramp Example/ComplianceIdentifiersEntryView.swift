@@ -178,6 +178,7 @@ struct ComplianceIdentifiersEntryView: View {
                 Text("Add each EU country where you are tax-resident, then enter the corresponding tax identification number.")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             ForEach($carfIdentifierInputs) { $input in
