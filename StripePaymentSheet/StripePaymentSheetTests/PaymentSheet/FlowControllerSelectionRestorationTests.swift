@@ -398,9 +398,9 @@ private final class FailingCheckoutSessionBillingAddressUpdater: CheckoutSession
     let updateStarted = XCTestExpectation(description: "Billing tax region update started")
 
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
-        address: CheckoutController.Address,
+        address: CheckoutElementsController.Address,
         canUpdateWhileSheetPresented: Bool
-    ) async throws -> CheckoutController.Session {
+    ) async throws -> CheckoutElementsController.Session {
         updateStarted.fulfill()
         throw CheckoutError.apiError(
             message: NSError.stp_genericErrorOccurredMessage()

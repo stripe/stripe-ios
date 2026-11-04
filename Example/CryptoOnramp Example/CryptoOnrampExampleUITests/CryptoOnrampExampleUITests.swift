@@ -184,10 +184,12 @@ final class CryptoOnrampNewUserCardUITests: CryptoOnrampExampleUITestCase {
         addCardOption.tap()
 
         // Dismiss to test cancelation of the UI, before re-presenting and entering details.
-        let closeCardCollectionButton = app.buttons["Close"].firstMatch
+        // Scope the query to PayWithLinkViewController because the underlying chooser also has a Close button.
+        let linkSheet = app.otherElements["Stripe.Link.PayWithLinkViewController"].firstMatch
+        let closeCardCollectionButton = linkSheet.buttons["Close"].firstMatch
         XCTAssertTrue(closeCardCollectionButton.waitForExistence(timeout: .animationTimeout), "Card collection sheet should appear")
         closeCardCollectionButton.tap()
-        XCTAssertTrue(closeCardCollectionButton.waitForNonExistence(timeout: .animationTimeout), "Card collection sheet should close")
+        XCTAssertTrue(linkSheet.waitForNonExistence(timeout: .animationTimeout), "Card collection sheet should close")
         waitForLoadingToFinish()
 
         addCardOption.tap()
@@ -491,7 +493,7 @@ final class CryptoOnrampNewEUUserUITests: CryptoOnrampExampleUITestCase {
         let verifyWalletNavigationBar = app.navigationBars["Verify Wallet"].firstMatch
         XCTAssertTrue(verifyWalletNavigationBar.waitForExistence(timeout: .networkTimeout), "Wallet verification sheet should appear")
 
-        let signatureField = app.textFields["Paste signature"].firstMatch
+        let signatureField = app.textViews["wallet_signature"].firstMatch
         XCTAssertTrue(signatureField.waitForExistence(timeout: .animationTimeout), "Wallet signature field should appear")
         XCTAssertEqual(signatureField.value as? String, "abcd", "The test-mode signature should be pre-populated")
 

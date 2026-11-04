@@ -787,9 +787,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = customApiClient
-        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
+        let checkout = try await CheckoutElementsController(configuration: checkoutConfiguration)
         PaymentSheetLoader.load(
             mode: .checkout(checkout),
             configuration: configuration,
@@ -828,9 +828,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        var checkoutConfiguration = CheckoutController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
+        var checkoutConfiguration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
         checkoutConfiguration.apiClient = customApiClient
-        let checkout = try await CheckoutController(configuration: checkoutConfiguration)
+        let checkout = try await CheckoutElementsController(configuration: checkoutConfiguration)
 
         PaymentSheetLoader.load(
             mode: .checkout(checkout),

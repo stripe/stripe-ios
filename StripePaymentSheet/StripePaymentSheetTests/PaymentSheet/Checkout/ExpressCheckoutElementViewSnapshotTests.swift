@@ -159,7 +159,7 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         func expressCheckoutElementShouldConfirm(
             _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
             presentationWindow: UIWindow?
-        ) async -> CheckoutController.ConfirmResult {
+        ) async -> CheckoutElementsController.ConfirmResult {
             fatalError("Not used by snapshot tests")
         }
     }

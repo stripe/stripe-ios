@@ -1,5 +1,5 @@
 //
-//  PaymentOption+CheckoutController.swift
+//  PaymentOption+CheckoutElementsController.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 7/16/26.

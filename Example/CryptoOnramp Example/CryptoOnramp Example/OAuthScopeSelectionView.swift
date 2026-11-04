@@ -18,7 +18,7 @@ struct OAuthScopeSelectionView: View {
     // MARK: - View
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(spacing: 8) {
@@ -66,21 +66,18 @@ struct OAuthScopeSelectionView: View {
                         }
                     }
                 }
+                .horizontallyCenteredContent()
                 .padding([.bottom, .horizontal])
             }
             .navigationTitle("OAuth Scopes")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    #if compiler(>=6.2)
-                    if #available(iOS 26.0, visionOS 26.0, *) {
-                        Button(role: .confirm) { dismiss() }
-                    } else {
-                        Button("Done") { dismiss() }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Label("Done", systemImage: "checkmark")
                     }
-                    #else
-                    Button("Done") { dismiss() }
-                    #endif
                 }
             }
         }

@@ -15,7 +15,7 @@
 /// regular enqueued update path.
 @MainActor
 protocol CheckoutSessionWalletUpdater: AnyObject {
-    var currentTaxRegion: CheckoutController.Address? { get }
+    var currentTaxRegion: CheckoutElementsController.Address? { get }
 
     /// Updates tax region for billing and shipping addresses
     /// but does not enqueue behind the checkout's pending session updates.
@@ -24,20 +24,20 @@ protocol CheckoutSessionWalletUpdater: AnyObject {
     /// - Warning: Only call this from a context that's already serialized behind the checkout's
     ///   pending operations. Calling the enqueuing variant there would deadlock.
     func updateTaxRegionWithoutEnqueueing(
-        address: CheckoutController.Address?,
+        address: CheckoutElementsController.Address?,
         canUpdateWhileSheetPresented: Bool,
-        confirmationSource: CheckoutController.ConfirmingElement
-    ) async throws -> CheckoutController.Session
+        confirmationSource: CheckoutElementsController.ConfirmingElement
+    ) async throws -> CheckoutElementsController.Session
 }
 
-extension CheckoutController: CheckoutSessionWalletUpdater {
+extension CheckoutElementsController: CheckoutSessionWalletUpdater {
     func updateTaxRegionWithoutEnqueueing(
         address: Address?,
         canUpdateWhileSheetPresented: Bool,
-        confirmationSource: CheckoutController.ConfirmingElement
+        confirmationSource: CheckoutElementsController.ConfirmingElement
     ) async throws -> Session {
-        let action: CheckoutControllerAnalyticsHelper.CheckoutAction = session.automaticTaxAddressSource == "shipping" ? .updateShippingAddress : .updateBillingAddress
-        let source: CheckoutControllerAnalyticsHelper.InvocationSource = confirmationSource == .expressCheckoutElement
+        let action: CheckoutElementsControllerAnalyticsHelper.CheckoutAction = session.automaticTaxAddressSource == "shipping" ? .updateShippingAddress : .updateBillingAddress
+        let source: CheckoutElementsControllerAnalyticsHelper.InvocationSource = confirmationSource == .expressCheckoutElement
             ? .expressCheckoutElement : (action == .updateBillingAddress ? .paymentElement : .merchant)
         let startedAction = analyticsHelper.logStarted(action, session: session, additionalParams: ["invocation_source": source.rawValue])
         var didRequestTaxUpdate = false

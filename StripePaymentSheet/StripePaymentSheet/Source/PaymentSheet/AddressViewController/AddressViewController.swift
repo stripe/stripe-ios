@@ -46,9 +46,17 @@ public class AddressViewController: UIViewController {
             postalCode: addressSection.postalCode?.text.nonEmpty,
             state: addressSection.state?.rawData.nonEmpty
         )
+        let name: String?
+        switch configuration.nameField {
+        case .auto:
+            name = addressSection.name?.text.nonEmpty
+        case .never:
+            // The customer can't edit a hidden name, so the result keeps the default one.
+            name = configuration.defaultValues.name
+        }
         return .init(
             address: address,
-            name: addressSection.name?.text.nonEmpty,
+            name: name,
             phone: addressSection.phone?.phoneNumber?.string(as: .e164).nonEmpty,
             isCheckboxSelected: checkboxElement?.checkboxButton.isSelected
         )
@@ -553,7 +561,7 @@ extension AddressViewController {
             defaults: .init(from: defaultValues),
             defaultFieldsToCollect: .all,
             countriesSupportingAutocomplete: configuration.autocompleteCountries,
-            additionalFields: .init(from: configuration.additionalFields),
+            additionalFields: .init(from: configuration.additionalFields, nameField: configuration.nameField),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
                 self?.presentAutocomplete()
@@ -775,7 +783,10 @@ extension AddressSectionElement.AddressDetails {
 }
 
 extension AddressSectionElement.AdditionalFields {
-    init(from additionalFields: AddressViewController.Configuration.AdditionalFields) {
+    init(
+        from additionalFields: AddressViewController.Configuration.AdditionalFields,
+        nameField: AddressViewController.Configuration.NameField
+    ) {
         func config(from fieldConfiguration: AddressViewController.Configuration.AdditionalFields.FieldConfiguration) -> FieldConfiguration {
             switch fieldConfiguration {
             case .hidden:
@@ -787,8 +798,15 @@ extension AddressSectionElement.AdditionalFields {
             }
         }
 
+        let name: FieldConfiguration
+        switch nameField {
+        case .auto:
+            name = config(from: .required)
+        case .never:
+            name = .disabled
+        }
         self.init(
-            name: config(from: .required),
+            name: name,
             phone: config(from: additionalFields.phone)
         )
     }
@@ -811,7 +829,7 @@ extension AddressViewController {
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: billingAddress),
             defaultFieldsToCollect: .all,
-            additionalFields: .init(from: configuration.additionalFields),
+            additionalFields: .init(from: configuration.additionalFields, nameField: configuration.nameField),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { /* no-op for comparison */ }
         )

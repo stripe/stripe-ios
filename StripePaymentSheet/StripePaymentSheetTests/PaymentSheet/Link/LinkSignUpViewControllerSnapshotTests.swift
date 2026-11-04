@@ -82,10 +82,11 @@ extension LinkSignUpViewControllerSnapshotTests {
         linkAccount.suggestedEmail = suggestedEmail
 
         return LinkSignUpViewController(
-            accountService: LinkAccountService(elementsSession: elementsSession),
+            accountService: LinkAccountService(elementsSession: elementsSession, analyticsHelper: .init()),
             linkAccount: linkAccount,
             brand: brand,
-            defaultBillingDetails: nil
+            defaultBillingDetails: nil,
+            analyticsHelper: .init()
         )
     }
 }

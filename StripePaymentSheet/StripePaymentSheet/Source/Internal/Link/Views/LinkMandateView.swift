@@ -34,7 +34,7 @@ final class LinkMandateView: UIView {
     }()
 
     init(delegate: LinkMandateViewDelegate? = nil, linkAppearance: LinkAppearance? = nil) {
-        linkTextColor = linkAppearance?.colors?.primary ?? .linkTextBrand
+        linkTextColor = linkAppearance?.colors?.primary ?? .linkTextPrimary
         super.init(frame: .zero)
         self.delegate = delegate
         addAndPinSubview(textView)

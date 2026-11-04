@@ -51,6 +51,65 @@ final class AddressViewControllerTests: XCTestCase {
         XCTAssertEqual(addressDetails.address.state, "CA")
     }
 
+    func testNameFieldIsDisplayedByDefault() {
+        // Given an AddressViewController with the default configuration
+        let viewController = makeViewController(
+            configuration: makeConfiguration(),
+            merchantDelegate: MerchantDelegate()
+        )
+
+        // When its view loads
+        viewController.loadViewIfNeeded()
+
+        // Then the form has a name field
+        XCTAssertNotNil(viewController.addressSection?.name)
+    }
+
+    func testHiddenNameFieldIsNotDisplayed() {
+        // Given an AddressViewController that hides the name field
+        var configuration = makeConfiguration()
+        configuration.nameField = .never
+        let viewController = makeViewController(
+            configuration: configuration,
+            merchantDelegate: MerchantDelegate()
+        )
+
+        // When its view loads
+        viewController.loadViewIfNeeded()
+
+        // Then the form has no name field
+        XCTAssertNil(viewController.addressSection?.name)
+    }
+
+    func testDidContinueWithHiddenNameKeepsDefaultName() async {
+        // Given an AddressViewController that hides the name field and has a default name
+        var configuration = makeConfiguration(defaultAddress: .init(
+            city: "San Francisco",
+            country: "US",
+            line1: "354 Oyster Point Blvd",
+            postalCode: "94080",
+            state: "CA"
+        ))
+        configuration.nameField = .never
+        let integrationDelegate = IntegrationDelegate()
+        integrationDelegate.saveExpectation = expectation(description: "Save address")
+        let viewController = makeViewController(
+            configuration: configuration,
+            merchantDelegate: MerchantDelegate(),
+            integrationDelegate: integrationDelegate
+        )
+        viewController.loadViewIfNeeded()
+
+        // When address collection completes
+        viewController.didContinue()
+        await fulfillment(of: [integrationDelegate.saveExpectation!])
+
+        // Then the saved address keeps the default name
+        let addressDetails = integrationDelegate.receivedAddressDetails[0]
+        XCTAssertEqual(addressDetails.name, "Jane Doe")
+        XCTAssertEqual(addressDetails.address.line1, "354 Oyster Point Blvd")
+    }
+
     func testDefaultIntegrationDelegateLogsAndForwardsValidAddress() async {
         // Given an AddressViewController using the default integration delegate
         let merchantDelegate = MerchantDelegate()

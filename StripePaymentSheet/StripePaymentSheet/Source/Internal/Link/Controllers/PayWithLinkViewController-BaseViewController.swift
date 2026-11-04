@@ -23,6 +23,14 @@ extension PayWithLinkViewController {
 
         private(set) lazy var contentView = UIView()
 
+        /// The sheet's bottom safe area, for padding content above the home indicator.
+        /// Our own safe area only covers the part of the view that overlaps the home indicator, so it shrinks
+        /// whenever the content moves away from the sheet's bottom edge (for example, while a native sheet
+        /// stretches during an upward swipe). Padding with it changes the content's height, which resizes the sheet mid-gesture.
+        var sheetBottomSafeAreaInset: CGFloat {
+            parent?.view.safeAreaInsets.bottom ?? view.safeAreaInsets.bottom
+        }
+
         init(context: Context, navigationTitle: String? = nil) {
             self.context = context
             self.navigationTitle = navigationTitle
@@ -69,6 +77,18 @@ extension PayWithLinkViewController {
             navBar.title = navigationTitle
             return navBar
         }()
+
+        /// Enables or disables input on this screen, including tap or swipe dismissal of the sheet,
+        /// while it performs an operation such as confirmation.
+        func setUserInteractionEnabled(_ enabled: Bool) {
+            // Lock only this screen rather than the whole sheet container: the container is also the
+            // payment handler's authentication context, so screens it pushes during confirmation
+            // (e.g. 3DS challenges) must stay interactive. This screen stays locked after they're dismissed.
+            view.isUserInteractionEnabled = enabled
+            // The navigation bar lives outside `view` in both sheet containers.
+            navigationBar.isUserInteractionEnabled = enabled
+            context.isDismissible = enabled
+        }
 
         func didTapOrSwipeToDismiss() {
             guard context.isDismissible else { return }

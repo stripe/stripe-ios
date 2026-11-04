@@ -222,7 +222,7 @@ extension PayWithLinkViewController {
             feedbackGenerator.prepare()
             #endif
             confirmButton.update(status: .processing)
-            coordinator?.allowSheetDismissal(false)
+            setUserInteractionEnabled(false)
 
             confirmParams.paymentMethodParams.clientAttributionMetadata = context.analyticsHelper.shouldIncludeClientAttributionMetadata
                 ? STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -277,7 +277,7 @@ extension PayWithLinkViewController {
                         self?.feedbackGenerator.notificationOccurred(.success)
                         #endif
                         self?.confirmButton.update(status: status, animated: true) {
-                            self?.coordinator?.allowSheetDismissal(true)
+                            self?.setUserInteractionEnabled(true)
                             if status == .succeeded {
                                 self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                             }
@@ -289,7 +289,7 @@ extension PayWithLinkViewController {
                     #endif
                     self.confirmButton.update(status: .enabled, animated: true)
                     self.updateErrorLabel(for: error)
-                    self.coordinator?.allowSheetDismissal(true)
+                    self.setUserInteractionEnabled(true)
                 }
             }
         }

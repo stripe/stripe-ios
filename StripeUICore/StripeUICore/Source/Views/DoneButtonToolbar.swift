@@ -24,6 +24,9 @@ import UIKit
 
     public weak var doneButtonToolbarDelegate: DoneButtonToolbarDelegate?
 
+    private var doneButton: UIBarButtonItem?
+    private var doneButtonTintColor: UIColor = .systemBlue
+
     // MARK: - Initializers
 
     public init(delegate: DoneButtonToolbarDelegate?, showCancelButton: Bool = false, theme: ElementsAppearance = .default) {
@@ -36,7 +39,9 @@ import UIKit
         self.doneButtonToolbarDelegate = delegate
 
         let doneButton = UIBarButtonItem(systemItem: .done, primaryAction: UIAction { [weak self] _ in self?.didTapDone() })
-        doneButton.tintColor = theme.colors.primary
+        self.doneButton = doneButton
+        self.doneButtonTintColor = theme.colors.primary
+        updateDoneButtonTintColor()
         let cancelButton = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [weak self] _ in self?.didTapCancel() })
         cancelButton.tintColor = theme.colors.secondaryText
 
@@ -56,7 +61,23 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
 
+#if !os(visionOS)
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            updateDoneButtonTintColor()
+        }
+    }
+#endif
+
     // MARK: Internal Methods
+
+    /// Applies the tint resolved for the current traits. On iOS 26, the system picks the done button's
+    /// foreground (checkmark) color based on its tint, but doesn't re-evaluate it when a dynamic tint
+    /// changes with the theme, so we re-assign a resolved color whenever the appearance changes.
+    private func updateDoneButtonTintColor() {
+        doneButton?.tintColor = doneButtonTintColor.resolvedColor(with: traitCollection)
+    }
 
     private func didTapDone() {
         doneButtonToolbarDelegate?.didTapDone(self)

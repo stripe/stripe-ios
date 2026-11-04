@@ -8,6 +8,7 @@
 import Foundation
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+@testable @_spi(InternalOnlyAPI) import StripePayments
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
@@ -16,6 +17,41 @@ import XCTest
 class PayWithLinkViewControllerTests: XCTestCase {
 
     var paymentSheet: PayWithNativeLinkController!
+
+    @MainActor
+    func testSignupUsesCheckoutAnalyticsFromItsParentFlow() throws {
+        // Given a native Link flow with Checkout context and an injected analytics client
+        let analyticsClient = STPTestingAnalyticsClient()
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
+        let configuration = PaymentSheet.Configuration()
+        let context = PayWithLinkViewController.Context(
+            intent: .checkout(session),
+            elementsSession: session.elementsSession,
+            configuration: configuration,
+            linkBrand: .link,
+            shouldOfferApplePay: false,
+            shouldFinishOnClose: false,
+            canContinueWithoutLink: false,
+            initiallySelectedPaymentDetailsID: nil,
+            callToAction: nil,
+            supportedPaymentMethodTypes: [.card],
+            analyticsHelper: PaymentSheetAnalyticsHelper(
+                integrationShape: .complete,
+                configuration: configuration,
+                checkoutSessionID: session.id,
+                analyticsClient: analyticsClient
+            )
+        )
+        let parent = PayWithLinkViewController.SignUpViewController(linkAccount: nil, context: context)
+        let signup = try XCTUnwrap(parent.children.compactMap { $0 as? LinkSignUpViewController }.first)
+
+        // When signup appears
+        signup.viewDidAppear(false)
+
+        // Then the existing signup event reaches that client with the Checkout session ID
+        let event = try XCTUnwrap(analyticsClient._testLogHistory.first { $0["event"] as? String == "link.signup.flow_presented" })
+        XCTAssertEqual(event["checkout_session_id"] as? String, session.id)
+    }
 
     @MainActor
     func testNativeWalletResizesWhenPaymentPickerExpandsAndCollapses() async throws {
@@ -146,7 +182,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
 
         for usesNativeSheet in [false, true] {
             for entryPoint in ["addCard", "editCard", "billingDetails"] {
-                // Given a Link wallet in each sheet implementation, with interaction temporarily disabled
+                // Given a Link wallet in each sheet implementation
                 let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
                 let elementsSession = STPElementsSession._testValue(
                     flags: ["elements_mobile_ios_native_sheet_enabled": usesNativeSheet]
@@ -185,7 +221,6 @@ class PayWithLinkViewControllerTests: XCTestCase {
                     wallet.parent === sheet && wallet.view.alpha == 1
                 }, object: nil)
                 await fulfillment(of: [walletVisible], timeout: 3)
-                sheet.setUserInteractionEnabled(false)
 
                 // When the wallet opens Add Card, Edit Card, or missing billing details through its real entry point
                 switch entryPoint {
@@ -209,7 +244,6 @@ class PayWithLinkViewControllerTests: XCTestCase {
                 XCTAssertFalse(pushedContent === wallet, entryPoint)
                 XCTAssertIdentical(pushedContent.coordinator, coordinator, entryPoint)
                 XCTAssertIdentical(pushedContent.navigationBar.delegate, coordinator, entryPoint)
-                XCTAssertTrue(sheet.view.isUserInteractionEnabled, entryPoint)
                 let backButton = try XCTUnwrap(pushedContent.navigationBar.leadingElement.subviews.first {
                     $0.accessibilityIdentifier == "UIButton.Back"
                 } as? UIButton)
@@ -228,6 +262,93 @@ class PayWithLinkViewControllerTests: XCTestCase {
                 }, object: nil)
                 await fulfillment(of: [popped], timeout: 3)
             }
+        }
+    }
+
+    @MainActor
+    func testAuthenticationAcceptsInputWhileWalletConfirmsInBothContainers() async throws {
+        guard UIDevice.current.userInterfaceIdiom == .phone, !SheetImplementationResolver.isRequiredForDevice else {
+            throw XCTSkip("Both container implementations require a non-Duo phone.")
+        }
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+
+        // A view only receives touches when it and every ancestor allow interaction.
+        func acceptsInput(_ view: UIView) -> Bool {
+            sequence(first: view, next: { $0.superview }).allSatisfy { $0.isUserInteractionEnabled }
+        }
+
+        for usesNativeSheet in [false, true] {
+            // Given a Link wallet in each sheet implementation
+            let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+            let elementsSession = STPElementsSession._testValue(
+                flags: ["elements_mobile_ios_native_sheet_enabled": usesNativeSheet]
+            )
+            let apiClient = STPAPIClient(publishableKey: "pk_test_abc123")
+            apiClient.stripeAttest = StripeAttest(
+                appAttestService: MockAppAttestService(),
+                appAttestBackend: MockAttestBackend(),
+                apiClient: apiClient
+            )
+            var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+            configuration.apiClient = apiClient
+            let coordinator = PayWithLinkViewController(
+                intent: intent,
+                linkAccount: nil,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                nativeSheetPresentation: SheetImplementationResolver(elementsSession: elementsSession),
+                analyticsHelper: ._testValue(),
+                supportedPaymentMethodTypes: [.card]
+            )
+            let delegate = ConfirmationCapturingLinkDelegate()
+            coordinator.payWithLinkDelegate = delegate
+            let sheet = coordinator.sheetContainer
+            XCTAssertEqual(sheet is NativeSheetContainerViewController, usesNativeSheet)
+            let initialContent = try XCTUnwrap(sheet.contentStack.first as? PayWithLinkViewController.BaseViewController)
+            let paymentMethod = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card]
+            let wallet = PayWithLinkViewController.WalletViewController(
+                linkAccount: LinkStubs.account(),
+                context: initialContent.context,
+                paymentMethods: [paymentMethod]
+            )
+            coordinator.setViewControllers([wallet])
+            let walletVisible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                wallet.parent === sheet && wallet.view.alpha == 1
+            }, object: nil)
+            await fulfillment(of: [walletVisible], timeout: 3)
+
+            // When the wallet starts confirming and the payment handler presents a 3DS challenge in the sheet
+            wallet.confirm(for: intent, with: paymentMethod, confirmationExtras: nil)
+            let confirmCompletion = try XCTUnwrap(delegate.confirmCompletion)
+            let challenge = UIViewController()
+            sheet.present(challenge, completion: {})
+            let threeDS = try XCTUnwrap(sheet.contentStack.first as? BottomSheet3DS2ViewController)
+            let challengeVisible = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                threeDS.parent === sheet && threeDS.view.alpha == 1
+            }, object: nil)
+            await fulfillment(of: [challengeVisible], timeout: 3)
+
+            // Then the challenge accepts input
+            XCTAssertTrue(acceptsInput(challenge.view), "usesNativeSheet: \(usesNativeSheet)")
+
+            // When the challenge is dismissed before the confirmation result arrives
+            sheet.dismiss(challenge, completion: nil)
+            let walletRestored = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                threeDS.parent == nil && wallet.parent === sheet && wallet.view.alpha == 1
+            }, object: nil)
+            await fulfillment(of: [walletRestored], timeout: 3)
+
+            // Then the wallet stays locked while confirmation finishes
+            XCTAssertFalse(acceptsInput(wallet.view), "usesNativeSheet: \(usesNativeSheet)")
+            XCTAssertFalse(acceptsInput(wallet.navigationBar), "usesNativeSheet: \(usesNativeSheet)")
+
+            // When confirmation is canceled
+            confirmCompletion(.canceled, nil)
+
+            // Then the wallet accepts input again
+            XCTAssertTrue(acceptsInput(wallet.view), "usesNativeSheet: \(usesNativeSheet)")
+            XCTAssertTrue(acceptsInput(wallet.navigationBar), "usesNativeSheet: \(usesNativeSheet)")
         }
     }
 
@@ -265,6 +386,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
             intent: ._testValue(),
             elementsSession: ._testValue(intent: ._testValue()),
             configuration: config,
+            paymentHandler: STPPaymentHandler(apiClient: config.apiClient),
             analyticsHelper: ._testValue()
         )
 
@@ -298,5 +420,31 @@ class TestViewController: UIViewController {
         onPresentChild(viewControllerToPresent)
         super.present(viewControllerToPresent, animated: flag, completion: completion)
     }
+}
+
+/// Holds the wallet's confirmation completion so a test can finish confirmation after authentication.
+@MainActor
+private final class ConfirmationCapturingLinkDelegate: PayWithLinkViewControllerDelegate {
+
+    private(set) var confirmCompletion: ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)?
+
+    func payWithLinkViewControllerDidConfirm(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        confirmCompletion = completion
+    }
+
+    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, shouldReturnToPaymentSheet: Bool) {}
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        result: PaymentSheetResult,
+        deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
+    ) {}
+    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, confirmOption: PaymentSheet.LinkConfirmOption) {}
+    func payWithLinkViewControllerShouldCancel3DS2ChallengeFlow(_ payWithLinkViewController: PayWithLinkViewController) {}
 }
 #endif

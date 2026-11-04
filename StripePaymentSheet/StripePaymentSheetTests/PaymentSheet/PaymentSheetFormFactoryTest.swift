@@ -55,7 +55,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethodOrientation: .vertical,
             accountService: LinkAccountService(
                 apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
-                elementsSession: ._testValue()
+                elementsSession: ._testValue(),
+                analyticsHelper: .init()
             ),
             analyticsHelper: nil
         )
@@ -3178,7 +3179,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             if let paymentMethodOptions {
                 json["payment_method_options"] = paymentMethodOptions
             }
-            let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+            let checkoutSession = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
             return PaymentSheetFormFactory(
                 intent: .checkout(checkoutSession.makePublicSession()),
                 elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),

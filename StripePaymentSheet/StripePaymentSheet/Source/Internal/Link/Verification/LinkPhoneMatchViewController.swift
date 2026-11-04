@@ -10,7 +10,7 @@ final class LinkPhoneMatchViewController: UIViewController, ElementDelegate {
     private let coordinator: LinkAuthFlowCoordinator
     private let hint: String
     private let errorLabel = UILabel()
-    private let submitButton = Button(configuration: .linkPrimary(), title: String.Localized.continue)
+    private let submitButton = Button.linkPrimary(title: String.Localized.continue)
 
     init(account: PaymentSheetLinkAccount, coordinator: LinkAuthFlowCoordinator, appearance: LinkAppearance?) {
         self.coordinator = coordinator
