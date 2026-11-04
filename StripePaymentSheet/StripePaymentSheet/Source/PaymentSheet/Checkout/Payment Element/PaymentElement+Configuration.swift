@@ -203,7 +203,7 @@ extension PaymentElement {
 
 extension PaymentElement.Configuration {
     /// Configuration related to Apple Pay
-    public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
+    public struct ApplePayConfiguration {
         /// Controls whether Apple Pay is displayed in Payment Element.
         public enum Display: String {
             /// Show Apple Pay when it is available.

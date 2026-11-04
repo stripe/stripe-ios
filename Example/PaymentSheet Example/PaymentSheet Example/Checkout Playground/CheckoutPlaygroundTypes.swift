@@ -18,7 +18,7 @@ extension ExpressCheckoutElement.Configuration.Appearance.ButtonTheme: CaseItera
     public var id: String { rawValue }
 }
 
-extension CheckoutPlayground {
+enum CheckoutPlayground {
     enum PaymentElementApplePayDisplay: String, CaseIterable, Identifiable, Codable {
         case automatic
         case never
@@ -32,9 +32,7 @@ extension CheckoutPlayground {
             }
         }
     }
-}
 
-enum CheckoutPlayground {
     enum ApplePayButtonType: String, CaseIterable, Identifiable, Codable {
         case plain
         case buy
