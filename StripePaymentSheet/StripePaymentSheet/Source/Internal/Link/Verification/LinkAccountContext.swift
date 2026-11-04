@@ -44,6 +44,10 @@ final class LinkAccountContext {
         notificationCenter.removeObserver(observer)
     }
 
+    func resetCustomer() {
+        UserDefaults.standard.clearLinkDefaults()
+        account?.logout()
+    }
 }
 
 final class LinkAccountContextObserver: NSObject {

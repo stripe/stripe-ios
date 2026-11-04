@@ -234,7 +234,7 @@ public final class CheckoutElementsController: ObservableObject {
     /// This will ensure that any persisted authentication state in CheckoutElementsController
     /// is also cleared during logout.
     nonisolated public static func resetCustomer() {
-        UserDefaults.standard.clearLinkDefaults()
+        LinkAccountContext.shared.resetCustomer()
     }
 
     // MARK: - Promotion Codes
