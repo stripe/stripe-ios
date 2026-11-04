@@ -44,7 +44,7 @@ class MobileSessionTests: XCTestCase {
         // Then it matches the golden JSON
         XCTAssertEqual(
             header,
-            #"{"environment":{"has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"attach_defaults_to_payment_method":true,"email":"always"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"7feb8eb5"}"#
+            #"{"environment":{"has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"attach_defaults_to_payment_method":true,"email":"always"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"c1199fb6"}"#
         )
         // ...and never contains customer values
         XCTAssertFalse(header.contains("jane"))
@@ -61,7 +61,7 @@ class MobileSessionTests: XCTestCase {
         // Then it matches the golden JSON, still sending allows_delayed_payment_methods when false
         XCTAssertEqual(
             header,
-            #"{"environment":{"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"attach_defaults_to_payment_method":false,"email":"automatic"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"}},"spec_hash":"7feb8eb5"}"#
+            #"{"environment":{"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"attach_defaults_to_payment_method":false,"email":"automatic"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"}},"spec_hash":"c1199fb6"}"#
         )
     }
 
