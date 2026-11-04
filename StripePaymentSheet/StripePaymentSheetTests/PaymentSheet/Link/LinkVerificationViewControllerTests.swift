@@ -6,7 +6,7 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-import StripeCoreTestUtils
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 import XCTest
 
 @testable @_spi(InternalOnlyAPI) import StripeCore
@@ -26,7 +26,8 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
             LinkVerificationTestHelpers.makeStartVerificationRateLimitResponse()
         }
 
-        let sut = makeSUT()
+        let analyticsClient = STPTestingAnalyticsClient()
+        let sut = makeSUT(analyticsHelper: .init(analyticsClient: analyticsClient, checkoutSessionID: "cs_test_123"))
         sut.onFinish = { _ in
             XCTFail("Delegate should not be called — user must close the view manually")
         }
@@ -40,6 +41,9 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
         wait(for: [errorDisplayedExpectation], timeout: 2.0)
 
         XCTAssertFalse(sut.coordinator.isLoading)
+        let failureEvent = try XCTUnwrap(analyticsClient._testLogHistory.first { $0["event"] as? String == "link.2fa.start_failure" })
+        XCTAssertEqual(failureEvent["checkout_session_id"] as? String, "cs_test_123")
+        XCTAssertEqual(failureEvent["verification_type"] as? String, "SMS")
         XCTAssertEqual(
             sut.coordinator.errorMessage,
             LinkUtils.ConsumerErrorCode.consumerVerificationMaxAttemptsExceeded.localizedDescription
@@ -49,7 +53,7 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
 
 private extension LinkVerificationViewControllerTests {
     @MainActor
-    func makeSUT() -> LinkAuthFlowViewController {
+    func makeSUT(analyticsHelper: LinkAnalyticsHelper) -> LinkAuthFlowViewController {
         let session = ConsumerSession.make(
             clientSecret: "client_secret",
             emailAddress: "jane.diaz@example.com",
@@ -73,7 +77,7 @@ private extension LinkVerificationViewControllerTests {
             canSyncAttestationState: false
         )
 
-        return LinkAuthFlowViewController(linkAccount: linkAccount, brand: .link)
+        return LinkAuthFlowViewController(linkAccount: linkAccount, brand: .link, analyticsHelper: analyticsHelper)
     }
 }
 

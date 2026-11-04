@@ -48,6 +48,10 @@
 
 "Bank account details cannot be changed." = "เปลี่ยนแปลงรายละเอียดบัญชีธนาคารไม่ได้";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "เราจำเป็นต้องยืนยันข้อมูลเพิ่มเติมเกี่ยวกับคุณก่อนที่จะส่งรหัสไปยังอีเมล โปรดป้อนหมายเลขโทรศัพท์ที่ลงท้ายด้วย ••%@";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "เราจำเป็นต้องยืนยันข้อมูลเพิ่มเติมเกี่ยวกับคุณก่อนที่จะส่งรหัสไปยังอีเมล โปรดป้อนหมายเลขโทรศัพท์ของคุณ";
+
 "Buy Now, Pay Later with  <img/>" = "ซื้อตอนนี้ จ่ายทีหลังด้วย <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "ซื้อตอนนี้ จ่ายทีหลังด้วย Afterpay";
@@ -134,8 +138,6 @@
 
 "Close card scanner" = "ปิดโปรแกรมสแกนบัตร";
 
-"Code sent" = "ส่งรหัสแล้ว";
-
 "Complete the payment using Pix to finish the purchase." = "ชำระเงินด้วย Pix เพื่อดำเนินการสั่งซื้อให้เสร็จสิ้น";
 
 "Confirm" = "ยืนยัน";
@@ -182,7 +184,11 @@
 
 "Edit address" = "แก้ไขที่อยู่";
 
+"Email code" = "รหัสอีเมล";
+
 "Enter address manually" = "ป้อนที่อยู่ด้วยตนเอง";
+
+"Enter the phone number on your Link account." = "ป้อนหมายเลขโทรศัพท์ในบัญชี Link ของคุณ";
 
 "Exchange rate and fees of your bank may apply." = "อาจมีอัตราแลกเปลี่ยนและค่าธรรมเนียมจากธนาคาร";
 
@@ -206,6 +212,8 @@
 
 "Last 4 digits of SSN" = "ตัวเลข 4 หลักสุดท้ายของ SSN";
 
+"Log in to another account" = "เข้าสู่ระบบบัญชีอื่น";
+
 "Manage SEPA debit" = "จัดการการหักบัญชีอัตโนมัติแบบ SEPA";
 
 "Manage US bank account" = "จัดการบัญชีธนาคารในสหรัฐอเมริกา";
@@ -222,6 +230,8 @@
 
 "Manage your payment methods" = "จัดการวิธีการชำระเงินของคุณ";
 
+"More options" = "ตัวเลือกเพิ่มเติม";
+
 "Name on card" = "ชื่อบนบัตร";
 
 "Naver Pay Card" = "Naver Pay Card";
@@ -233,6 +243,8 @@
 "New payment method" = "วิธีการชำระเงินใหม่";
 
 "No %@ promo" = "ไม่มีโปรโมชัน %@";
+
+"None of the payment methods in your %@ account work with this business." = "ไม่มีวิธีการชำระเงินใดในบัญชี %@ ของคุณที่ใช้กับธุรกิจนี้ได้";
 
 "Not you?" = "หากไม่ใช่คุณ";
 
@@ -309,6 +321,8 @@
 "Remove payment method" = "นำวิธีการชำระเงินออก";
 
 "Remove payment method?" = "ต้องการลบวิธีการชำระเงินหรือไม่";
+
+"Resend code in %d seconds" = "ส่งรหัสอีกครั้งใน %li วินาที";
 
 "SEPA debit details cannot be changed." = "เปลี่ยนแปลงรายละเอียดการหักบัญชีอัตโนมัติแบบ SEPA ไม่ได้";
 
@@ -394,6 +408,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "วิธีการชำระเงินนี้จะถูกนำออกไปแต่จะยังคงใช้ได้สำหรับการชำระเงินตามรอบบิล %@";
 
+"This phone number doesn't match your Link account. Please try again." = "หมายเลขโทรศัพท์นี้ไม่ตรงกับบัญชี Link ของคุณ โปรดลองอีกครั้ง";
+
 "To scan your card, allow camera access in Settings." = "โปรดให้สิทธิ์เข้าถึงกล้องถ่ายรูปในการตั้งค่าเพื่อสแกนบัตร";
 
 "Too many attempts. Please try again in a few minutes." = "ลองหลายครั้งเกินไป โปรดลองใหม่ในอีกสักครู่";
@@ -406,9 +422,17 @@
 
 "Use billing address for shipping" = "ใช้ที่อยู่เรียกเก็บเงินสำหรับการจัดส่ง";
 
+"Verify your phone number" = "ยืนยันหมายเลขโทรศัพท์ของคุณ";
+
+"Verifying your account…" = "กำลังยืนยันบัญชีของคุณ…";
+
 "View more" = "ดูเพิ่มเติม";
 
+"We couldn't verify your account. Please close this window and try again." = "เรายืนยันบัญชีของคุณไม่สำเร็จ โปรดปิดหน้าต่างนี้แล้วลองอีกครั้ง";
+
 "Yes, update" = "ใช่ อัปเดต";
+
+"You can't pay with %@ here" = "คุณชำระเงินด้วย %@ ที่นี่ไม่ได้";
 
 "Your IBAN should start with a two-letter country code." = "IBAN ควรเริ่มต้นด้วยรหัสประเทศ 2 ตัวอักษร";
 

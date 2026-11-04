@@ -44,6 +44,10 @@
 
 "Bank account details cannot be changed." = "無法更改銀行帳戶詳情。";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "在我們透過電郵向您傳送驗證碼之前，我們需要驗證您的其他資訊。請輸入您尾號 ••%@ 的電話號碼。";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "在我們透過電郵向您傳送驗證碼之前，我們需要驗證您的其他資訊。請輸入您的電話號碼。";
+
 "Buy now or pay later with Klarna" = "用 Klarna 先買後付";
 
 "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "確認使用 GCash 支付，即表示您允許 %@ 按照其條款從您的 GCash 帳戶對未來支付進行扣款。";
@@ -104,8 +108,6 @@
 
 "Close card scanner" = "關閉金融卡掃描器";
 
-"Code sent" = "驗證碼已發送";
-
 "Complete the payment using Pix to finish the purchase." = "使用 Pix 完成支付即可完成購買。";
 
 "Confirm" = "確定";
@@ -144,7 +146,11 @@
 
 "Edit address" = "編輯地址";
 
+"Email code" = "電郵代碼";
+
 "Enter address manually" = "手動輸入地址";
+
+"Enter the phone number on your Link account." = "輸入您 Link 帳戶的電話號碼。";
 
 "FPX Bank" = "FPX Bank";
 
@@ -162,6 +168,8 @@
 
 "Keep Editing" = "繼續編輯";
 
+"Log in to another account" = "登入另一個帳戶";
+
 "Manage SEPA debit" = "管理 SEPA 借記";
 
 "Manage US bank account" = "管理美國銀行帳戶";
@@ -178,6 +186,8 @@
 
 "Manage your payment methods" = "管理您的支付方式";
 
+"More options" = "更多選項";
+
 "Name on card" = "持卡人姓名";
 
 "Naver Pay Card" = "Naver Pay 銀行卡";
@@ -189,6 +199,8 @@
 "New payment method" = "新支付方式";
 
 "No %@ promo" = "無 %@ 促銷";
+
+"None of the payment methods in your %@ account work with this business." = "您的 %@ 帳戶中沒有任何支付方式適用於此商家。";
 
 "Not you?" = "不是您本人？";
 
@@ -241,6 +253,8 @@
 "Remove linked account" = "移除關聯帳戶";
 
 "Remove payment method" = "移除支付方式";
+
+"Resend code in %d seconds" = "%li 秒後重新傳送代碼";
 
 "SEPA debit details cannot be changed." = "無法更改 SEPA 借記詳情。";
 
@@ -318,6 +332,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "此支付方式將被移除，但仍適用於 %@ 項訂閱。";
 
+"This phone number doesn't match your Link account. Please try again." = "此電話號碼與您的 Link 帳戶資訊不相符。請重試。";
+
 "To scan your card, allow camera access in Settings." = "要掃描您的金融卡，在「設定」中啟用網路攝影機。";
 
 "Too many attempts. Please try again in a few minutes." = "嘗試次數過多。請幾分鐘後重試。";
@@ -328,7 +344,15 @@
 
 "Update payment method" = "更新支付方式";
 
+"Verify your phone number" = "驗證您的電話號碼";
+
+"Verifying your account…" = "正在驗證您的帳戶…";
+
 "View more" = "檢視更多";
+
+"We couldn't verify your account. Please close this window and try again." = "我們無法驗證您的帳戶。請關閉此視窗並重試。";
+
+"You can't pay with %@ here" = "您無法在此使用 %@ 支付";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 應以兩個字母的國家代碼開頭。";
 

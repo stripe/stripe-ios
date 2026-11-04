@@ -25,7 +25,7 @@ public struct CurrencySelectorElementView: View {
     }
 }
 
-/// Bridges CurrencySelectorElement's UIKit state into SwiftUI without retaining CheckoutController.
+/// Bridges CurrencySelectorElement's UIKit state into SwiftUI without retaining CheckoutElementsController.
 @MainActor
 final class CurrencySelectorElementViewModel: ObservableObject {
     let uiView: CurrencySelectorElementUIView

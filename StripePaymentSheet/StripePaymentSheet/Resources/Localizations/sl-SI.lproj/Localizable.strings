@@ -48,6 +48,10 @@
 
 "Bank account details cannot be changed." = "Podatkov o bančnem računu ni mogoče spremeniti.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Preden vam lahko na vaš e-poštni naslov pošljemo kodo, moramo preveriti dodatne informacije o vas. Vnesite svojo telefonsko številko, ki se konča na ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Preden vam lahko na vaš e-poštni naslov pošljemo kodo, moramo preveriti dodatne podatke o vas. Prosimo, vnesite svojo telefonsko številko.";
+
 "Buy Now, Pay Later with  <img/>" = "Kupite zdaj in plačajte pozneje z  <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Kupite zdaj in plačajte pozneje z Afterpay";
@@ -134,8 +138,6 @@
 
 "Close card scanner" = "Zapri optični bralnik kartic";
 
-"Code sent" = "Koda je bila poslana";
-
 "Complete the payment using Pix to finish the purchase." = "Dokončajte plačilo z uporabo Pix za zaključek nakupa.";
 
 "Confirm" = "Potrdi";
@@ -182,7 +184,11 @@
 
 "Edit address" = "Uredi naslov";
 
+"Email code" = "E-poštna koda";
+
 "Enter address manually" = "Naslov vnesite ročno";
+
+"Enter the phone number on your Link account." = "Vnesite telefonsko številko, povezano z vašim računom Link.";
 
 "Exchange rate and fees of your bank may apply." = "Lahko veljajo menjalni tečaj in provizije vaše banke.";
 
@@ -206,6 +212,8 @@
 
 "Last 4 digits of SSN" = "Zadnje 4 števke SSN";
 
+"Log in to another account" = "Prijavite se v drug račun";
+
 "Manage SEPA debit" = "Upravljanje obremenitve SEPA";
 
 "Manage US bank account" = "Upravljanje bančnega računa v ZDA";
@@ -222,6 +230,8 @@
 
 "Manage your payment methods" = "Upravljajte svoje načine plačila";
 
+"More options" = "Več možnosti";
+
 "Name on card" = "Ime na kartici";
 
 "Naver Pay Card" = "Naver Pay Card";
@@ -233,6 +243,8 @@
 "New payment method" = "Nov način plačila";
 
 "No %@ promo" = "Brez promocije v višini %@";
+
+"None of the payment methods in your %@ account work with this business." = "Nobeden od načinov plačila v vašem računu %@ ne deluje s tem podjetjem.";
 
 "Not you?" = "To niste vi?";
 
@@ -309,6 +321,8 @@
 "Remove payment method" = "Odstranite način plačila";
 
 "Remove payment method?" = "Želite odstraniti način plačila?";
+
+"Resend code in %d seconds" = "Ponovno pošljite kodo čez %li sekund";
 
 "SEPA debit details cannot be changed." = "Podrobnosti obremenitve SEPA ni mogoče spremeniti.";
 
@@ -394,6 +408,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Ta način plačila bo odstranjen, vendar bo še naprej na voljo za naročnine %@.";
 
+"This phone number doesn't match your Link account. Please try again." = "Ta telefonska številka se ne ujema z vašim računom Link. Prosimo, poskusite znova.";
+
 "To scan your card, allow camera access in Settings." = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
 
 "Too many attempts. Please try again in a few minutes." = "Preveč poskusov. Poskusite znova čez nekaj minut.";
@@ -406,9 +422,17 @@
 
 "Use billing address for shipping" = "Naslov za račun uporabi kot naslov za pošiljanje";
 
+"Verify your phone number" = "Preverjanje telefonske številke";
+
+"Verifying your account…" = "Preverjanje vašega računa …";
+
 "View more" = "Prikaži več";
 
+"We couldn't verify your account. Please close this window and try again." = "Nismo mogli preveriti vašega računa. Prosimo, zaprite to okno in poskusite znova.";
+
 "Yes, update" = "Da, posodobi";
+
+"You can't pay with %@ here" = "Tukaj ne morete plačati z %@";
 
 "Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
 

@@ -48,6 +48,10 @@
 
 "Bank account details cannot be changed." = "Pangakonto andmeid ei saa muuta.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Enne kui saame teie e-posti aadressile koodi saata, peame teie kohta täiendavat teavet kontrollima. Palun sisestage oma telefoninumber, mis lõpeb ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Enne kui saame teie e-posti aadressile koodi saata, peame teie kohta täiendavat teavet kontrollima. Palun sisestage oma telefoninumber.";
+
 "Buy Now, Pay Later with  <img/>" = "Osta kohe, maksa hiljem  <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Osta kohe, maksa hiljem Afterpayga";
@@ -134,8 +138,6 @@
 
 "Close card scanner" = "Kaardiskanneri sulgemine";
 
-"Code sent" = "Kood saadetud";
-
 "Complete the payment using Pix to finish the purchase." = "Ostu lõpetamiseks viige makse Pixi abil lõpule.";
 
 "Confirm" = "Kinnita";
@@ -182,7 +184,11 @@
 
 "Edit address" = "Muuda aadressi";
 
+"Email code" = "E-posti kood";
+
 "Enter address manually" = "Sisestage aadress käsitsi";
+
+"Enter the phone number on your Link account." = "Sisestage oma Linki konto telefoninumber.";
 
 "Exchange rate and fees of your bank may apply." = "Teie panga vahetuskurss ja tasud võivad kehtida.";
 
@@ -221,6 +227,8 @@
 "Manage payment methods" = "Halda makseviise";
 
 "Manage your payment methods" = "Makseviiside haldamine";
+
+"More options" = "Rohkem valikuid";
 
 "Name on card" = "Nimi kaardil";
 
@@ -310,6 +318,8 @@
 
 "Remove payment method?" = "Kas eemaldada makseviis?";
 
+"Resend code in %d seconds" = "Saada kood uuesti %li sekundi pärast";
+
 "SEPA debit details cannot be changed." = "SEPA deebeti andmeid ei saa muuta.";
 
 "Save" = "Salvesta";
@@ -394,6 +404,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "See makseviis eemaldatakse, kuid jääb %@ kordustellimuste jaoks saadavale.";
 
+"This phone number doesn't match your Link account. Please try again." = "See telefoninumber ei ühti teie Linki kontoga. Palun proovige uuesti.";
+
 "To scan your card, allow camera access in Settings." = "Kaardi skannimiseks lubage seadetes juurdepääs kaamerale.";
 
 "Too many attempts. Please try again in a few minutes." = "Liiga palju katseid. Proovige paari minuti pärast uuesti.";
@@ -406,7 +418,13 @@
 
 "Use billing address for shipping" = "Kasutage saatmiseks arveldusaadressi";
 
+"Verify your phone number" = "Kinnitage oma telefoninumber";
+
+"Verifying your account…" = "Teie konto kinnitamine…";
+
 "View more" = "Kuva rohkem";
+
+"We couldn't verify your account. Please close this window and try again." = "Meil ei õnnestunud teie kontot kinnitada. Palun sulgege see aken ja proovige uuesti.";
 
 "Yes, update" = "Jah, uuenda";
 

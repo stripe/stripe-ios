@@ -120,7 +120,7 @@ import UIKit
     let nativeSheetPresentation: SheetImplementationResolver
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
-        LinkAccountService(apiClient: apiClient, elementsSession: elementsSession)
+        LinkAccountService(apiClient: apiClient, elementsSession: elementsSession, analyticsHelper: analyticsHelper.linkAnalytics)
     }()
 
     private var selectedPaymentDetails: ConsumerPaymentDetails? {
@@ -461,6 +461,7 @@ import UIKit
             legalName: fullName,
             countryCode: country,
             consentAction: consentAction,
+            analyticsHelper: analyticsHelper.linkAnalytics,
             completion: { [weak self] result in
                 LinkAccountContext.shared.account = self?.linkAccount
                 completion(result)
@@ -488,7 +489,8 @@ import UIKit
             linkAccount: linkAccount,
             brand: resolvedLinkBrand,
             configuration: paymentElementConfiguration,
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: analyticsHelper.linkAnalytics
         )
 
         verificationController.present(from: viewController) { result in
@@ -1123,7 +1125,8 @@ import UIKit
             brand: resolvedLinkBrand,
             configuration: paymentElementConfiguration,
             appearance: appearance,
-            consentViewModel: consentViewModel
+            consentViewModel: consentViewModel,
+            analyticsHelper: analyticsHelper.linkAnalytics
         )
 
         verificationController.present(from: viewController) { [weak self] result in

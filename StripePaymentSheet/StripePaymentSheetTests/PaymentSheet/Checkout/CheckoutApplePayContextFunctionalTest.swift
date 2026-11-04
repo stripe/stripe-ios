@@ -28,7 +28,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(result.paymentSheetResult, .completed)
             if case .completed(let response) = result {
                 XCTAssertEqual(response.status, .complete(.paid))
-                XCTAssertEqual(response.paymentResponse?.status, "succeeded")
+                XCTAssertEqual(response.paymentResponse?.status, .succeeded)
             }
             didComplete.fulfill()
         }
@@ -46,7 +46,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(result.paymentSheetResult, .completed)
             if case .completed(let response) = result {
                 XCTAssertEqual(response.status, .complete(.noPaymentRequired))
-                XCTAssertEqual(response.paymentResponse?.status, "succeeded")
+                XCTAssertEqual(response.paymentResponse?.status, .succeeded)
             }
             didComplete.fulfill()
         }
@@ -130,12 +130,12 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         let session = initResponse.makePublicSession(clientSecret: sessionResponse.clientSecret)
         let authenticationContext = WindowAuthenticationContext()
         let paymentHandler = STPPaymentHandler(apiClient: apiClient)
-        let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let applePayConfirmationParameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: "Functional Test Merchant",
             confirmationHandler: { requestParameters in
-                await CheckoutController.confirmCheckoutSession(
+                await CheckoutElementsController.confirmCheckoutSession(
                     with: requestParameters,
                     apiClient: apiClient,
                     authenticationContext: authenticationContext,

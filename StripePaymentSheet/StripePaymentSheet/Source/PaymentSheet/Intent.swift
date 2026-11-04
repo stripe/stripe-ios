@@ -20,7 +20,12 @@ enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
-    case checkout(CheckoutController.Session)
+    case checkout(CheckoutElementsController.Session)
+
+    var checkoutSessionID: String? {
+        guard case .checkout(let session) = self else { return nil }
+        return session.id
+    }
 
     var stripeId: String? {
         switch self {

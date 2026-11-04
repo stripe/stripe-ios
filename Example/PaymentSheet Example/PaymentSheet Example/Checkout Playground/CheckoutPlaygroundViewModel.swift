@@ -59,7 +59,7 @@ extension CheckoutPlayground {
         @Published var currencySelectorAppearance: CurrencySelectorElement.Appearance
         @Published var checkoutEndpointOption: EndpointOption
         @Published var checkoutEndpoint: String
-        @Published var delayPaymentPagesRequests: Bool
+        @Published var delayCheckoutClientRequests: Bool
 
         @Published var isCreating = false
         @Published var errorMessage: String?
@@ -94,7 +94,7 @@ extension CheckoutPlayground {
             currencySelectorAppearance = settings.currencySelectorAppearance
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = EndpointOption.normalizedBaseURL(from: settings.checkoutEndpoint)
-            delayPaymentPagesRequests = settings.delayPaymentPagesRequests
+            delayCheckoutClientRequests = settings.delayCheckoutClientRequests
             settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
                 guard let self else {
                     return
@@ -260,7 +260,7 @@ extension CheckoutPlayground {
                 currencySelectorAppearance: currencySelectorAppearance,
                 checkoutEndpointOption: checkoutEndpointOption,
                 checkoutEndpoint: checkoutEndpoint,
-                delayPaymentPagesRequests: delayPaymentPagesRequests
+                delayCheckoutClientRequests: delayCheckoutClientRequests
             )
         }
 
@@ -288,7 +288,7 @@ extension CheckoutPlayground {
             currencySelectorAppearance = settings.currencySelectorAppearance
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = settings.checkoutEndpoint
-            delayPaymentPagesRequests = settings.delayPaymentPagesRequests
+            delayCheckoutClientRequests = settings.delayCheckoutClientRequests
         }
 
         private func serializeSettingsToNSUserDefaults() {

@@ -36,7 +36,7 @@ struct CheckoutPlaygroundView: View {
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
                             checkoutEndpoint: $viewModel.checkoutEndpoint,
-                            delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests,
+                            delayCheckoutClientRequests: $viewModel.delayCheckoutClientRequests,
                             onReset: viewModel.reset
                         )
 
@@ -110,7 +110,7 @@ struct CheckoutPlaygroundView: View {
                             integrationType: viewModel.integrationType,
                             expressCheckoutElementSettings: viewModel.expressCheckoutElement,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
-                            delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
+                            delayCheckoutClientRequests: viewModel.delayCheckoutClientRequests
                         )
                     case .uiKit:
                         CheckoutCartUIKitView(
@@ -123,7 +123,7 @@ struct CheckoutPlaygroundView: View {
                             integrationType: viewModel.integrationType,
                             expressCheckoutElementSettings: viewModel.expressCheckoutElement,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
-                            delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
+                            delayCheckoutClientRequests: viewModel.delayCheckoutClientRequests
                         )
                     }
                 }

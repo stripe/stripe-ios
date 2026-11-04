@@ -48,6 +48,10 @@
 
 "Bank account details cannot be changed." = "Bankkontooplysninger kan ikke ændres.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Før vi kan sende en kode til din e-mail, er vi nødt til at verificere yderligere oplysninger om dig. Indtast dit telefonnummer, der slutter på ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Før vi kan sende en kode til din e-mail, er vi nødt til at verificere yderligere oplysninger om dig. Indtast dit telefonnummer.";
+
 "Buy Now, Pay Later with  <img/>" = "Køb nu, betal senere med <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Køb nu, betal senere med Afterpay";
@@ -134,8 +138,6 @@
 
 "Close card scanner" = "Luk kortscanner";
 
-"Code sent" = "Kode sendt";
-
 "Complete the payment using Pix to finish the purchase." = "Gennemfør betalingen med Pix for at afslutte købet.";
 
 "Confirm" = "Bekræft";
@@ -182,7 +184,11 @@
 
 "Edit address" = "Rediger adresse";
 
+"Email code" = "E-mailkode";
+
 "Enter address manually" = "Indtast adresse manuelt";
+
+"Enter the phone number on your Link account." = "Indtast telefonnummeret på din Link-konto.";
 
 "Exchange rate and fees of your bank may apply." = "Din banks vekselkurs og gebyrer kan være gældende.";
 
@@ -206,6 +212,8 @@
 
 "Last 4 digits of SSN" = "Sidste 4 cifre af SSN";
 
+"Log in to another account" = "Log ind på en anden konto";
+
 "Manage SEPA debit" = "Administrer SEPA-debet";
 
 "Manage US bank account" = "Administrer amerikansk bankkonto";
@@ -222,6 +230,8 @@
 
 "Manage your payment methods" = "Administrer dine betalingsmetoder";
 
+"More options" = "Flere muligheder";
+
 "Name on card" = "Kortholderens navn";
 
 "Naver Pay Card" = "Naver Pay-kort";
@@ -233,6 +243,8 @@
 "New payment method" = "Ny betalingsmetode";
 
 "No %@ promo" = "Ingen %@-kampagne";
+
+"None of the payment methods in your %@ account work with this business." = "Ingen af betalingsmetoderne på din %@-konto fungerer med denne virksomhed.";
 
 "Not you?" = "Ikke dig?";
 
@@ -309,6 +321,8 @@
 "Remove payment method" = "Fjern betalingsmetode";
 
 "Remove payment method?" = "Fjern betalingsmetode?";
+
+"Resend code in %d seconds" = "Send kode igen om %li sekunder";
 
 "SEPA debit details cannot be changed." = "SEPA-debetdetaljer kan ikke ændres.";
 
@@ -394,6 +408,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Denne betalingsmetode vil blive fjernet, men vil fortsat være tilgængelig for %@-abonnementer.";
 
+"This phone number doesn't match your Link account. Please try again." = "Dette telefonnummer stemmer ikke overens med din Link-konto. Prøv igen.";
+
 "To scan your card, allow camera access in Settings." = "Tillad kameraadgang i Indstillinger for at scanne dit kort.";
 
 "Too many attempts. Please try again in a few minutes." = "For mange forsøg. Prøv igen om et par minutter.";
@@ -406,9 +422,17 @@
 
 "Use billing address for shipping" = "Brug faktureringsadresse til forsendelse";
 
+"Verify your phone number" = "Verificer dit telefonnummer";
+
+"Verifying your account…" = "Verificerer din konto …";
+
 "View more" = "Vis mere";
 
+"We couldn't verify your account. Please close this window and try again." = "Vi kunne ikke verificere din konto. Luk dette vindue, og prøv igen.";
+
 "Yes, update" = "Ja, opdater";
+
+"You can't pay with %@ here" = "Du kan ikke betale med %@ her";
 
 "Your IBAN should start with a two-letter country code." = "Dit IBAN-nummer skal starte med en landekode på to bogstaver.";
 

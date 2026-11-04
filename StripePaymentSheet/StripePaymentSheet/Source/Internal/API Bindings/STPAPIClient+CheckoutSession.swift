@@ -51,7 +51,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The Checkout Elements component confirming. Used to tag
     /// `payment_method_data[payment_user_agent]` for payment/attribution purposes. Required on
     /// every factory so all Checkout confirmation paths identify their confirming element.
-    let confirmationSource: CheckoutController.ConfirmingElement
+    let confirmationSource: CheckoutElementsController.ConfirmingElement
 
     /// The expected amount for validation. `nil` for setup-style Sessions.
     let expectedAmount: Int?
@@ -90,7 +90,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     static func createWithoutPaymentMethod(
         sessionId: String,
         clientSecret: String,
-        confirmationSource: CheckoutController.ConfirmingElement,
+        confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
         returnURL: String? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
@@ -118,7 +118,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         sessionId: String,
         clientSecret: String,
         paymentMethodId: String,
-        confirmationSource: CheckoutController.ConfirmingElement,
+        confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
         expectedPaymentMethodType: String,
         savePaymentMethod: Bool? = nil,
@@ -151,7 +151,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         sessionId: String,
         clientSecret: String,
         paymentMethodData: STPPaymentMethodParams,
-        confirmationSource: CheckoutController.ConfirmingElement,
+        confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
         savePaymentMethod: Bool? = nil,
         returnURL: String? = nil,
@@ -190,7 +190,7 @@ extension STPAPIClient {
         checkoutSessionId: String,
         clientSecret: String,
         adaptivePricingAllowed: Bool
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         var parameters = Self.checkoutClientParameters(clientSecret: clientSecret)
         parameters["adaptive_pricing"] = ["allowed": adaptivePricingAllowed]
 
@@ -209,7 +209,7 @@ extension STPAPIClient {
         checkoutSessionId: String,
         clientSecret: String,
         parameters: [String: Any]
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         // TODO(porter) promo codes: CheckoutClient update does not support promotion codes yet.
         var params = Self.checkoutClientParameters(clientSecret: clientSecret)
         params.merge(parameters) { _, value in value }
@@ -222,11 +222,15 @@ extension STPAPIClient {
     /// Retrieves the latest full Checkout Session.
     func retrieveCheckoutSession(
         checkoutSessionId: String,
-        clientSecret: String
-    ) async throws -> PaymentPagesAPIResponse {
+        clientSecret: String,
+        timeout: TimeInterval? = nil,
+        retriesEnabled: Bool = true
+    ) async throws -> CheckoutClientAPIResponse {
         return try await get(
             endpoint: "checkout_client/\(checkoutSessionId)/retrieve",
             parameters: Self.checkoutClientParameters(clientSecret: clientSecret),
+            timeout: timeout,
+            retriesEnabled: retriesEnabled,
             useServerErrorMessage: true
         )
     }
@@ -235,11 +239,12 @@ extension STPAPIClient {
     /// Session transition is still in progress.
     func pollCheckoutSession(
         checkoutSessionId: String,
+        clientSecret: String,
         timeout: TimeInterval
-    ) async throws -> PaymentPagePollResponse {
+    ) async throws -> CheckoutClientPollResponse {
         return try await get(
-            endpoint: "payment_pages/\(checkoutSessionId)/poll",
-            parameters: [:],
+            endpoint: "checkout_client/\(checkoutSessionId)/poll",
+            parameters: ["client_secret": clientSecret],
             timeout: timeout,
             retriesEnabled: false
         )
@@ -252,7 +257,7 @@ extension STPAPIClient {
     ) async throws {
         var params = Self.checkoutClientParameters(clientSecret: clientSecret)
         params["payment_method_to_detach"] = paymentMethodId
-        let _: PaymentPagesAPIResponse = try await post(
+        let _: CheckoutClientAPIResponse = try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
@@ -269,9 +274,9 @@ extension STPAPIClient {
         _ paymentMethodId: String,
         inCheckoutSession checkoutSessionId: String,
         clientSecret: String,
-        billingDetails: CheckoutController.PaymentMethodBillingDetails? = nil,
-        expiryDetails: CheckoutController.PaymentMethodExpiryDetails? = nil
-    ) async throws -> PaymentPagesAPIResponse {
+        billingDetails: CheckoutElementsController.PaymentMethodBillingDetails? = nil,
+        expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails? = nil
+    ) async throws -> CheckoutClientAPIResponse {
         var params = Self.updatePaymentMethodParameters(
             paymentMethodId: paymentMethodId,
             billingDetails: billingDetails,
@@ -286,8 +291,8 @@ extension STPAPIClient {
 
     static func updatePaymentMethodParameters(
         paymentMethodId: String,
-        billingDetails: CheckoutController.PaymentMethodBillingDetails?,
-        expiryDetails: CheckoutController.PaymentMethodExpiryDetails?
+        billingDetails: CheckoutElementsController.PaymentMethodBillingDetails?,
+        expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails?
     ) -> [String: Any] {
         var params: [String: Any] = [
             "payment_method_to_update[payment_method_id]": paymentMethodId,
@@ -319,7 +324,7 @@ extension STPAPIClient {
     /// - Returns: The full confirmed session with expanded intents.
     func confirmCheckoutSession(
         with requestParameters: CheckoutSessionConfirmationRequestParameters
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         guard let returnURL = requestParameters.returnURL else {
             throw CheckoutError.unknown(debugDescription: "CheckoutClient confirmation requires a return URL.")
         }
@@ -336,7 +341,7 @@ extension STPAPIClient {
             // rather than appending to it, so it's never contaminated by whatever classes have
             // registered into the global STPAnalyticsClient.sharedClient.productUsage set (e.g.
             // PaymentSheet.FlowController/EmbeddedPaymentElement, which PaymentElement wraps
-            // internally) — see CheckoutController.ConfirmingElement.
+            // internally) — see CheckoutElementsController.ConfirmingElement.
             data["payment_user_agent"] = requestParameters.confirmationSource.paymentUserAgent
             STPTelemetryClient.shared.addTelemetryFields(toParams: &data)
             parameters["payment_method_data"] = data
@@ -393,7 +398,7 @@ extension STPAPIClient {
     private func post(
         endpoint: String,
         parameters: [String: Any]
-    ) async throws -> PaymentPagesAPIResponse {
+    ) async throws -> CheckoutClientAPIResponse {
         do {
             return try await withCheckedThrowingContinuation { continuation in
                 post(resource: endpoint, parameters: parameters) { result in
@@ -404,7 +409,7 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
             }
             throw error
         }
@@ -447,7 +452,7 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedPaymentPagesParsingError(error, apiClient: self)
+                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
             }
             throw error
         }

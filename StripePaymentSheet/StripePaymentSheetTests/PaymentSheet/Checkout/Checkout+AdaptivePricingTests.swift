@@ -24,7 +24,7 @@ final class Checkout_AdaptivePricingTests: STPNetworkStubbingTestCase {
             merchantCountry: "us_tax",
             customerEmailLocation: "DE"
         )
-        var configuration = CheckoutController.Configuration(
+        var configuration = CheckoutElementsController.Configuration(
             clientSecret: checkoutSessionResponse.clientSecret,
             returnURL: "stripe-ios-test://checkout-return"
         )
@@ -32,7 +32,7 @@ final class Checkout_AdaptivePricingTests: STPNetworkStubbingTestCase {
         configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
 
         // When Checkout loads the session
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
         let eurSession = checkout.session
 
         // Then Checkout keeps the USD integration currency and reflects the EUR presentment details and totals
