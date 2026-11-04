@@ -280,7 +280,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             }
         )
 
-        let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, configuration: configuration)!
+        let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, confirmHandler: configuration.externalPaymentMethodConfirmHandler)!
         let billingDetails = STPPaymentMethodBillingDetails()
 
         let paymentOption = PaymentSheet.PaymentOption.external(paymentMethod: externalPaymentOption, billingDetails: billingDetails)

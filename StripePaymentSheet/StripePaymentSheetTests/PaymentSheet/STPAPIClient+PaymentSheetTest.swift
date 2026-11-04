@@ -38,7 +38,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: config.externalPaymentMethodConfiguration,
+            externalPaymentMethods: config.externalPaymentMethodConfiguration?.externalPaymentMethods ?? [],
             cpmConfiguration: config.customPaymentMethodConfiguration,
             clientDefaultPaymentMethod: "pm_12345",
             customerAccessProvider: .customerSession("cs_12345"),
@@ -74,7 +74,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerAccessProvider: .legacyCustomerEphemeralKey("ek_12345"),
@@ -107,7 +107,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerAccessProvider: nil,
@@ -133,7 +133,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerAccessProvider: nil,
@@ -226,7 +226,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_sendsLegacyCustomerEphemeralKey() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .paymentIntentClientSecret("pi_123_secret_456"),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerAccessProvider: .legacyCustomerEphemeralKey("ek_123"),
@@ -239,7 +239,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_sendsNoLegacyCustomerEphemeralKey() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .paymentIntentClientSecret("pi_123_secret_456"),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerAccessProvider: nil,
@@ -252,7 +252,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_sendsLinkDisallowFundingSourceCreation() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .paymentIntentClientSecret("pi_123_secret_456"),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerAccessProvider: nil,
@@ -265,7 +265,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_doesntSendLinkDisallowFundingSourceCreationIfEmpty() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .paymentIntentClientSecret("pi_123_secret_456"),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerAccessProvider: nil,
@@ -285,7 +285,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerAccessProvider: nil,
@@ -307,7 +307,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerAccessProvider: nil,
