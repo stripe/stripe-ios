@@ -12,8 +12,6 @@ import Foundation
 actor ConfirmationChallenge {
     private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
     private var attestationChallenge: AttestationChallenge?
-    private var requestInProgress = false
-    private var requestWaiters: [(id: UUID, continuation: CheckedContinuation<Void, Error>)] = []
 
     private var timeout: TimeInterval = 6 // same as web
 
@@ -44,74 +42,6 @@ actor ConfirmationChallenge {
         }
         let (hcaptchaToken, assertion) = await fetchTokensWithTimeout()
         return STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
-    }
-
-    /// Owns the challenge until the request carrying its radar options has finished.
-    /// Cleanup is awaited on success, failure, and cancellation before another scoped request begins.
-    func withRadarOptions<Result>(
-        for paymentMethodType: STPPaymentMethodType,
-        operation: (STPRadarOptions?) async throws -> Result
-    ) async throws -> Result {
-        try await acquireSlot()
-        defer {
-            releaseSlot()
-        }
-
-        do {
-            try Task.checkCancellation()
-            let options = await makeRadarOptions(for: paymentMethodType)
-            try Task.checkCancellation()
-            let result = try await operation(options)
-            await complete()
-            return result
-        } catch {
-            await complete()
-            throw error
-        }
-    }
-
-    /// Grants the slot immediately if free, otherwise queues until released.
-    /// Queued waiters are cancellation-aware: canceling a queued caller resumes only that caller,
-    /// without disturbing whoever currently holds the slot.
-    private func acquireSlot() async throws {
-        guard requestInProgress else {
-            requestInProgress = true
-            return
-        }
-        let id = UUID()
-        try await withTaskCancellationHandler {
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                requestWaiters.append((id: id, continuation: continuation))
-            }
-        } onCancel: {
-            Task { await self.cancelWaiter(id) }
-        }
-    }
-
-    private func cancelWaiter(_ id: UUID) {
-        guard let index = requestWaiters.firstIndex(where: { $0.id == id }) else { return }
-        let continuation = requestWaiters.remove(at: index).continuation
-        continuation.resume(throwing: CancellationError())
-    }
-
-    private func releaseSlot() {
-        guard !requestWaiters.isEmpty else {
-            requestInProgress = false
-            return
-        }
-        let next = requestWaiters.removeFirst()
-        next.continuation.resume()
-    }
-
-    /// Convenience for optional challenges: runs `operation` directly (with no radar options) when `challenge` is nil.
-    @MainActor
-    static func withRadarOptions<Result>(
-        for paymentMethodType: STPPaymentMethodType,
-        challenge: (any CheckoutConfirmationChallenge)?,
-        operation: (STPRadarOptions?) async throws -> Result
-    ) async throws -> Result {
-        guard let challenge else { return try await operation(nil) }
-        return try await challenge.withRadarOptions(for: paymentMethodType, operation: operation)
     }
 
     func fetchTokensWithTimeout() async -> ChallengeTokens {

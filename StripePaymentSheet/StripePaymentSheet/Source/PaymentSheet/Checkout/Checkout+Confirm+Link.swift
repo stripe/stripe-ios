@@ -120,6 +120,7 @@ extension CheckoutController {
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
                     }
+                    await confirmationChallenge?.complete()
                     completion(result, nil)
                 }
             }
@@ -196,7 +197,7 @@ extension CheckoutController {
         checkoutSession: Session,
         parameters: PaymentMethodConfirmationParameters
     ) async -> InternalConfirmResult {
-        let requestParameters = makeConfirmationRequestParameters(
+        let requestParameters = await makeConfirmationRequestParameters(
             for: parameters,
             checkoutSession: checkoutSession,
             preconfirmedIntentParams: nil
