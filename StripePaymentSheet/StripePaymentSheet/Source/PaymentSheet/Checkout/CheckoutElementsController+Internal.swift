@@ -17,12 +17,7 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
         presentationWindow: UIWindow?
     ) async -> ConfirmResult {
         return await confirm(source: .expressCheckoutElement) {
-            do {
-                return try makeExpressCheckoutConfirmationFlow(paymentMethod, presentationWindow: presentationWindow)
-            } catch {
-                STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
-                throw error
-            }
+            try makeExpressCheckoutConfirmationFlow(paymentMethod, presentationWindow: presentationWindow)
         }
     }
 
@@ -31,7 +26,7 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
         presentationWindow: UIWindow?
     ) throws -> CheckoutConfirmationFlow {
         guard let expressCheckoutElementConfiguration = configuration.expressCheckoutElement else {
-            throw CheckoutError.unknown(debugDescription: "Express Checkout Element configuration unexpectedly nil.")
+            throw logUnexpectedCheckoutElementsError("Express Checkout Element configuration unexpectedly nil.", apiClient: apiClient)
         }
         let attribution = CheckoutAttributionContext(
             confirmingElement: .expressCheckoutElement,
@@ -40,7 +35,7 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
         switch paymentMethod {
         case .applePay:
             guard let applePayConfiguration = expressCheckoutElementConfiguration.applePayConfiguration else {
-                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Express Checkout Element Apple Pay configuration unexpectedly nil.")
+                throw logUnexpectedCheckoutElementsError("Express Checkout Element Apple Pay configuration unexpectedly nil.", apiClient: apiClient)
             }
             // TODO: Should next actions use an authentication context tied to `presentationWindow`
             // instead of `WindowAuthenticationContext` to avoid presenting in the wrong scene?
@@ -65,7 +60,7 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
             ))
         case .link:
             guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {
-                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller.")
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Could not build a confirmation flow for Link. Could not find a presenting view controller.")
             }
             // TODO: maybe add Link-specific configuration
             var linkConfirmationConfiguration = PaymentSheet.Configuration()

@@ -57,10 +57,10 @@ extension CheckoutElementsController {
                     if let latestSessionResponse {
                         return .completed(latestSessionResponse)
                     }
-                    let error = CheckoutError.unknown(
-                        debugDescription: "Link completed Checkout confirmation without returning the confirmed session."
+                    let error = logUnexpectedCheckoutElementsError(
+                        "Link completed Checkout confirmation without returning the confirmed session.",
+                        apiClient: configuration.apiClient
                     )
-                    stpAssertionFailure(error.nonGenericDescription)
                     return .failed(error)
                 case .canceled:
                     return .canceled(sessionResponse: latestSessionResponse)

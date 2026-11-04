@@ -537,7 +537,7 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
             throw errorToThrow
         }
         guard let sessionToReturn else {
-            throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
+            throw UnexpectedError(nonPIIErrorMessage: "MockCheckoutSessionWalletUpdater has no session configured")
         }
         let session: CheckoutElementsController.Session
         if suspendsFirstUpdate && !didSuspend {
@@ -554,7 +554,7 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
 
     func resume() {
         guard let sessionToReturn else {
-            continuation?.resume(throwing: CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured"))
+            continuation?.resume(throwing: UnexpectedError(nonPIIErrorMessage: "MockCheckoutSessionWalletUpdater has no session configured"))
             continuation = nil
             return
         }
@@ -573,7 +573,7 @@ extension CheckoutElementsController.ApplePayConfirmationParameters {
         defaultBillingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
         confirmationHandler: @escaping CheckoutElementsController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
-            .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
+            .failed(UnexpectedError(nonPIIErrorMessage: "Unexpected Apple Pay confirmation in test."))
         },
         attribution: CheckoutAttributionContext = .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
     ) -> CheckoutElementsController.ApplePayConfirmationParameters {

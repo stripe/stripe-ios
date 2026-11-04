@@ -40,13 +40,10 @@ public final class PaymentElement {
     /// Returns when the sheet is dismissed.
     public func present(from viewController: UIViewController? = nil, completion: (() -> Void)? = nil) {
         guard let presentingViewController = viewController ?? UIWindow.visibleViewController else {
-            let errorMessage = "PaymentElement.present(from:) could not find a presenting view controller."
-            assertionFailure(errorMessage)
-            let analytic = UnexpectedCheckoutElementsErrorAnalytic(
-                errorCode: .paymentElementPresentingViewControllerUnavailable,
-                errorMessage: errorMessage
+            logUnexpectedCheckoutElementsError(
+                "PaymentElement.present(from:) could not find a presenting view controller.",
+                code: "payment_element_presenting_view_controller_unavailable"
             )
-            STPAnalyticsClient.sharedClient.log(analytic: analytic)
             completion?()
             return
         }

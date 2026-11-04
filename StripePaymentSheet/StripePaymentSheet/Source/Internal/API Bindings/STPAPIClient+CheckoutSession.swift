@@ -325,9 +325,6 @@ extension STPAPIClient {
     func confirmCheckoutSession(
         with requestParameters: CheckoutSessionConfirmationRequestParameters
     ) async throws -> CheckoutClientAPIResponse {
-        guard let returnURL = requestParameters.returnURL else {
-            throw CheckoutError.unknown(debugDescription: "CheckoutClient confirmation requires a return URL.")
-        }
         var parameters = Self.checkoutClientParameters(clientSecret: requestParameters.clientSecret)
         parameters.removeValue(forKey: "timezone")
 
@@ -355,7 +352,7 @@ extension STPAPIClient {
             parameters["expected_amount"] = expectedAmount
         }
 
-        parameters["return_url"] = returnURL
+        parameters["return_url"] = requestParameters.returnURL
 
         if let shipping = requestParameters.shipping {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
@@ -409,7 +406,11 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
+                logUnexpectedCheckoutElementsError(
+                    "Failed to parse Checkout Client response: \(String(describing: error))",
+                    code: "checkout_client_response_parsing_failed",
+                    apiClient: self
+                )
             }
             throw error
         }
@@ -452,7 +453,11 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
+                logUnexpectedCheckoutElementsError(
+                    "Failed to parse Checkout Client response: \(String(describing: error))",
+                    code: "checkout_client_response_parsing_failed",
+                    apiClient: self
+                )
             }
             throw error
         }

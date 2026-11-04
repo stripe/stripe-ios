@@ -154,7 +154,7 @@ extension CheckoutElementsController {
         }
 
         guard let paymentElement else {
-            logUnexpectedCheckoutElementsErrorAndAssert(
+            logUnexpectedCheckoutElementsError(
                 "Checkout Session has a payment option without a PaymentElement.",
                 apiClient: apiClient
             )
@@ -168,7 +168,7 @@ extension CheckoutElementsController {
 
         if paymentElement.paymentOptionSourceOfTruthIsFlowController {
             guard let resolvedPaymentOption = paymentElement.paymentSheetFlowController.internalPaymentOption else {
-                logUnexpectedCheckoutElementsErrorAndAssert(
+                logUnexpectedCheckoutElementsError(
                     "Checkout Session payment option and FlowController payment option are out of sync.",
                     apiClient: apiClient
                 )
@@ -180,7 +180,7 @@ extension CheckoutElementsController {
             integrationShape = .flowController
         } else {
             guard let resolvedPaymentOption = paymentElement.embeddedPaymentElement._paymentOption else {
-                logUnexpectedCheckoutElementsErrorAndAssert(
+                logUnexpectedCheckoutElementsError(
                     "Checkout Session payment option and EmbeddedPaymentElement payment option are out of sync.",
                     apiClient: apiClient
                 )
@@ -563,7 +563,7 @@ extension CheckoutElementsController {
                 let error: Error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
-                let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a PaymentIntent.")
+                let error = logUnexpectedCheckoutElementsError("PaymentHandler returned an unknown action status for a PaymentIntent.", apiClient: apiClient)
                 return .failed(error, sessionResponse: response)
             }
         } else if let setupIntentReference = response.paymentResponse?.setupIntent {
@@ -581,11 +581,11 @@ extension CheckoutElementsController {
                 let error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
-                let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a SetupIntent.")
+                let error = logUnexpectedCheckoutElementsError("PaymentHandler returned an unknown action status for a SetupIntent.", apiClient: apiClient)
                 return .failed(error, sessionResponse: response)
             }
         } else {
-            let error = CheckoutError.unknown(debugDescription: "CheckoutClient requires an action without a supported Intent.")
+            let error = logUnexpectedCheckoutElementsError("CheckoutClient requires an action without a supported Intent.", apiClient: apiClient)
             return .failed(error, sessionResponse: response)
         }
 
@@ -615,14 +615,8 @@ extension CheckoutElementsController {
                 let error = latestSession.map { paymentError(from: $0) } ?? CheckoutError.pollFailedAndSessionRetrievalFailed
                 return .failed(error, sessionResponse: latestSession ?? updatedResponse)
             case .notStarted(let pollResponse):
-                let message = "Checkout Session confirmation unexpectedly reported not_started after an accepted /confirm."
-                let error = CheckoutError.unknown(debugDescription: message)
-                STPAnalyticsClient.sharedClient.log(
-                    analytic: ErrorAnalytic(
-                        event: .unexpectedCheckoutElementsError,
-                        error: error,
-                        additionalNonPIIParams: ["error_message": message]
-                    ),
+                let error = logUnexpectedCheckoutElementsError(
+                    "Checkout Session confirmation unexpectedly reported not_started after an accepted /confirm.",
                     apiClient: apiClient
                 )
                 return .failed(error, sessionResponse: applyingPollResponse(pollResponse, to: response))
@@ -630,7 +624,7 @@ extension CheckoutElementsController {
         case .complete:
             return .completed(response)
         case .expired:
-            return .failed(CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly expired after confirmation."), sessionResponse: response)
+            return .failed(logUnexpectedCheckoutElementsError("Checkout Session unexpectedly expired after confirmation.", apiClient: apiClient), sessionResponse: response)
         }
     }
 

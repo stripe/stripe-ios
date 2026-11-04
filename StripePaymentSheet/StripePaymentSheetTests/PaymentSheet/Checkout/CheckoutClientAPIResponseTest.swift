@@ -204,23 +204,26 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         }
     }
 
-    func testUnexpectedParsingErrorReporterAssertsAndSendsAnalytic() {
-        let analyticsClient = MockAnalyticsClient()
+    func testLogUnexpectedCheckoutElementsError() {
+        let analyticsClient = STPAnalyticsClient()
         let error = DecodingError.dataCorrupted(
             .init(codingPath: [], debugDescription: "Invalid customer")
         )
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
 
-        reportUnexpectedCheckoutClientParsingError(
-            error,
+        logUnexpectedCheckoutElementsError(
+            "Failed to parse Checkout Client response: \(String(describing: error))",
+            code: "checkout_client_response_parsing_failed",
             apiClient: STPAPIClient(publishableKey: "pk_test_123"),
             analyticsClient: analyticsClient
         )
 
         XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("Invalid customer"))
-        let analytic = analyticsClient.loggedAnalytics.last as? UnexpectedCheckoutElementsErrorAnalytic
-        XCTAssertEqual(analytic?.errorCode, .checkoutClientResponseParsingFailed)
-        XCTAssertTrue(analytic?.errorMessage.contains("Invalid customer") == true)
+        let analytic = analyticsClient._testLogHistory.last
+        XCTAssertEqual(analytic?["event"] as? String, "unexpected_error.checkout_elements")
+        XCTAssertEqual(analytic?["error_code"] as? String, "checkout_client_response_parsing_failed")
+        XCTAssertEqual(analytic?["publishable_key"] as? String, "pk_test_123")
+        XCTAssertTrue((analytic?["error_message"] as? String)?.contains("Invalid customer") == true)
     }
 
     func testDecodedObjectFromAPIResponseMapping() throws {

@@ -96,13 +96,10 @@ public final class ShippingAddressElement {
         }
 
         guard let presentingViewController = presentingViewController ?? UIWindow.visibleViewController else {
-            let errorMessage = "ShippingAddressElement.present(from:) could not find a presenting view controller."
-            assertionFailure(errorMessage)
-            let analytic = UnexpectedCheckoutElementsErrorAnalytic(
-                errorCode: .shippingAddressElementPresentingViewControllerUnavailable,
-                errorMessage: errorMessage
+            logUnexpectedCheckoutElementsError(
+                "ShippingAddressElement.present(from:) could not find a presenting view controller.",
+                code: "shipping_address_element_presenting_view_controller_unavailable"
             )
-            STPAnalyticsClient.sharedClient.log(analytic: analytic)
             completion?()
             return
         }
