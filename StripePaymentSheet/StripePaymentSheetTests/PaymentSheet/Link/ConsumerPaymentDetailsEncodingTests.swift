@@ -138,6 +138,151 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
         XCTAssertNil(details.display?.icon)
     }
 
+    // MARK: - Bank account decoding
+
+    func test_decodingBankAccountUsesBankAccountName() throws {
+        // Given a bank account with both an account name and a bank name
+        let json = makeBankAccountJSON(bankAccountName: "Total Checking", bankName: "Chase")
+
+        // When decoding
+        let details = try decodePaymentDetails(from: json)
+
+        // Then both names are decoded and the account name is displayed
+        guard case .bankAccount(let bankAccount) = details.details else {
+            return XCTFail("Expected .bankAccount case")
+        }
+        XCTAssertEqual(bankAccount.bankName, "Chase")
+        XCTAssertEqual(bankAccount.accountName, "Total Checking")
+        XCTAssertEqual(bankAccount.name, "Total Checking")
+        XCTAssertEqual(bankAccount.iconCode, "morganchase")
+        XCTAssertEqual(bankAccount.last4, "0644")
+        XCTAssertEqual(bankAccount.country, "COUNTRY_US")
+    }
+
+    func test_decodingBankAccountWithNullBankAccountNameFallsBackToBankName() throws {
+        // Given a bank account whose account name is null
+        let json = makeBankAccountJSON(bankAccountName: NSNull(), bankName: "CHASE Bank")
+
+        // When decoding
+        let details = try decodePaymentDetails(from: json)
+
+        // Then the bank name is displayed instead
+        guard case .bankAccount(let bankAccount) = details.details else {
+            return XCTFail("Expected .bankAccount case")
+        }
+        XCTAssertNil(bankAccount.accountName)
+        XCTAssertEqual(bankAccount.bankName, "CHASE Bank")
+        XCTAssertEqual(bankAccount.name, "CHASE Bank")
+    }
+
+    func test_decodingBankAccountWithMissingBankAccountNameFallsBackToBankName() throws {
+        // Given a bank account with no account name key at all
+        let json = makeBankAccountJSON(bankAccountName: nil, bankName: "CHASE Bank")
+
+        // When decoding
+        let details = try decodePaymentDetails(from: json)
+
+        // Then the bank name is displayed instead
+        guard case .bankAccount(let bankAccount) = details.details else {
+            return XCTFail("Expected .bankAccount case")
+        }
+        XCTAssertNil(bankAccount.accountName)
+        XCTAssertEqual(bankAccount.bankName, "CHASE Bank")
+        XCTAssertEqual(bankAccount.name, "CHASE Bank")
+    }
+
+    func test_decodingBankAccountWithoutBankNameFails() throws {
+        // Given a bank account with neither an account name nor a bank name
+        let json = makeBankAccountJSON(bankAccountName: NSNull(), bankName: NSNull())
+
+        // When decoding, then it throws
+        XCTAssertThrowsError(try decodePaymentDetails(from: json))
+    }
+
+    func test_decodingPaymentDetailsListWithNullBankAccountName() throws {
+        // Given a list response where one bank account has a null account name
+        let json: [String: Any] = [
+            "redacted_payment_details": [
+                makeBankAccountJSON(id: "csmrpd_1", bankAccountName: "Spending Account", bankName: "Ally Bank"),
+                makeBankAccountJSON(id: "csmrpd_2", bankAccountName: NSNull(), bankName: "CHASE Bank"),
+            ],
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+
+        // When decoding with the API client's decoder
+        let response = try StripeJSONDecoder().decode(DetailsListResponse.self, from: data)
+
+        // Then every payment method is decoded
+        XCTAssertEqual(response.redactedPaymentDetails.map(\.stripeID), ["csmrpd_1", "csmrpd_2"])
+        XCTAssertEqual(response.redactedPaymentDetails.map(\.paymentSheetLabel), ["Spending Account", "CHASE Bank"])
+    }
+
+    func test_bankAccountEncodingRoundTrips() throws {
+        // Given a bank account
+        let bankAccount = ConsumerPaymentDetails.Details.BankAccount(
+            iconCode: "ally",
+            bankName: "Ally Bank",
+            accountName: "Savings Account",
+            last4: "4183",
+            country: "COUNTRY_US"
+        )
+
+        // When encoding and decoding it
+        let data = try JSONEncoder().encode(bankAccount)
+        let decoded = try JSONDecoder().decode(ConsumerPaymentDetails.Details.BankAccount.self, from: data)
+
+        // Then the values are preserved
+        XCTAssertEqual(decoded.iconCode, "ally")
+        XCTAssertEqual(decoded.bankName, "Ally Bank")
+        XCTAssertEqual(decoded.accountName, "Savings Account")
+        XCTAssertEqual(decoded.last4, "4183")
+        XCTAssertEqual(decoded.country, "COUNTRY_US")
+    }
+
+    // MARK: - Bank account icon code
+
+    func test_resolvedIconCodePrefersServerIconCode() {
+        // Given a bank account with a server-provided icon code and an account name that doesn't match any bank
+        let bankAccount = ConsumerPaymentDetails.Details.BankAccount(
+            iconCode: "ally",
+            bankName: "Ally Bank",
+            accountName: "Savings Account",
+            last4: "4183",
+            country: "COUNTRY_US"
+        )
+
+        // Then the server-provided icon code is used
+        XCTAssertEqual(bankAccount.resolvedIconCode, "ally")
+    }
+
+    func test_resolvedIconCodeFallsBackToMatchingBankName() {
+        // Given a bank account without an icon code whose account name doesn't match any bank
+        let bankAccount = ConsumerPaymentDetails.Details.BankAccount(
+            iconCode: nil,
+            bankName: "JPMorgan Chase",
+            accountName: "Total Checking",
+            last4: "0644",
+            country: "COUNTRY_US"
+        )
+
+        // Then the icon code is matched from the bank name, not the account name
+        XCTAssertEqual(bankAccount.resolvedIconCode, "morganchase")
+    }
+
+    func test_resolvedIconCodeIsDefaultForUnknownBank() {
+        // Given a bank account without an icon code for an unrecognized bank
+        let bankAccount = ConsumerPaymentDetails.Details.BankAccount(
+            iconCode: nil,
+            bankName: "Unknown Credit Union",
+            accountName: nil,
+            last4: "1234",
+            country: "COUNTRY_US"
+        )
+
+        // Then the default icon code is used
+        XCTAssertEqual(bankAccount.resolvedIconCode, "default")
+    }
+
     func test_genericTypeWithBillingCountryInAllowedCountriesIsSupported() throws {
         let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["CRYPTO"])
         let linkAccount = LinkStubs.account()
@@ -192,4 +337,36 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
         )
     }
 
+    // MARK: - Helpers
+
+    private struct DetailsListResponse: Decodable {
+        let redactedPaymentDetails: [ConsumerPaymentDetails]
+    }
+
+    private func makeBankAccountJSON(
+        id: String = "csmrpd_test_bank",
+        bankAccountName: Any?,
+        bankName: Any
+    ) -> [String: Any] {
+        var bankAccountDetails: [String: Any] = [
+            "bank_icon_code": "morganchase",
+            "bank_name": bankName,
+            "country": "COUNTRY_US",
+            "last4": "0644",
+        ]
+        if let bankAccountName {
+            bankAccountDetails["bank_account_name"] = bankAccountName
+        }
+        return [
+            "id": id,
+            "type": "BANK_ACCOUNT",
+            "is_default": false,
+            "bank_account_details": bankAccountDetails,
+        ]
+    }
+
+    private func decodePaymentDetails(from json: [String: Any]) throws -> ConsumerPaymentDetails {
+        let data = try JSONSerialization.data(withJSONObject: json)
+        return try StripeJSONDecoder().decode(ConsumerPaymentDetails.self, from: data)
+    }
 }

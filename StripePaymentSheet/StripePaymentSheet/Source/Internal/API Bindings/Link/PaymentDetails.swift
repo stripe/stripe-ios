@@ -341,29 +341,25 @@ extension ConsumerPaymentDetails.Details.Card {
 
 // MARK: - Details.BankAccount
 extension ConsumerPaymentDetails.Details {
-    final class BankAccount: Codable {
+    struct BankAccount: Codable {
         let iconCode: String?
-        let name: String
+        let bankName: String
+        /// The account's name (e.g. "Total Checking"). This can be null for some bank accounts.
+        let accountName: String?
         let last4: String
         let country: String
 
-        private enum CodingKeys: String, CodingKey {
-            case iconCode = "bankIconCode"
-            case name = "bankAccountName"
-            case last4
-            case country
+        /// The name to display for this bank account, preferring the account name over the bank name.
+        var name: String {
+            accountName ?? bankName
         }
 
-        init(
-            iconCode: String?,
-            name: String,
-            last4: String,
-            country: String
-        ) {
-            self.iconCode = iconCode
-            self.name = name
-            self.last4 = last4
-            self.country = country
+        private enum CodingKeys: String, CodingKey {
+            case iconCode = "bankIconCode"
+            case bankName
+            case accountName = "bankAccountName"
+            case last4
+            case country
         }
 
         func displayName(with nickname: String?) -> String {
@@ -380,6 +376,11 @@ extension ConsumerPaymentDetails.Details.BankAccount {
     var asPassthroughPaymentMethodType: STPPaymentMethodType? {
         // We don't support non-US bank accounts today.
         country == "COUNTRY_US" ? .USBankAccount : nil
+    }
+
+    /// The code for this bank's icon, preferring the server-provided code over matching on the bank name.
+    var resolvedIconCode: String {
+        iconCode ?? PaymentSheetImageLibrary.bankIconCode(for: bankName)
     }
 }
 
