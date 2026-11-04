@@ -233,7 +233,7 @@ public final class CheckoutElementsController: ObservableObject {
     /// You must call this method when the user logs out from your app.
     /// This will ensure that any persisted authentication state in CheckoutElementsController
     /// is also cleared during logout.
-    nonisolated public static func resetCustomer() {
+    public static func resetCustomer() {
         UserDefaults.standard.clearLinkDefaults()
     }
 
