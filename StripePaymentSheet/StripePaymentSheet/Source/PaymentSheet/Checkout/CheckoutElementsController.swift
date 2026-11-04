@@ -226,6 +226,17 @@ public final class CheckoutElementsController: ObservableObject {
         return (shippingAddressElement, normalizedDefaultShippingAddress)
     }
 
+    // MARK: - Customer
+
+    /// Deletes all persisted authentication state associated with a customer.
+    ///
+    /// You must call this method when the user logs out from your app.
+    /// This will ensure that any persisted authentication state in CheckoutElementsController
+    /// is also cleared during logout.
+    nonisolated public static func resetCustomer() {
+        UserDefaults.standard.clearLinkDefaults()
+    }
+
     // MARK: - Promotion Codes
 
     /// Use this method to apply a promotion code that your customer enters.

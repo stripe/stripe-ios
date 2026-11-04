@@ -274,6 +274,18 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2000)
     }
 
+    func testResetCustomerClearsLinkDefaults() {
+        // Given a customer who has used Link
+        UserDefaults.standard.markLinkAsUsed()
+        XCTAssertTrue(UserDefaults.standard.customerHasUsedLink)
+
+        // When the customer is reset
+        CheckoutElementsController.resetCustomer()
+
+        // Then the persisted Link state is cleared
+        XCTAssertFalse(UserDefaults.standard.customerHasUsedLink)
+    }
+
     private func promotionCode(in session: CheckoutElementsController.Session?) -> String? {
         session?.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
     }
