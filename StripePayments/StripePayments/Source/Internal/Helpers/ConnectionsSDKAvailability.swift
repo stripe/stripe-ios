@@ -70,6 +70,11 @@ import UIKit
         }
     }
 
+    /// Whether the full Financial Connections SDK is linked. Unlike `isFinancialConnectionsSDKAvailable`, this ignores FC Lite.
+    @_spi(InternalOnlyAPI) public static var isFullFinancialConnectionsSDKAvailable: Bool {
+        FinancialConnectionsSDKClass != nil
+    }
+
     @_spi(InternalOnlyAPI) public static func financialConnections() -> FinancialConnectionsSDKInterface? {
         let financialConnectionsStubbedResult = ProcessInfo.processInfo.environment["FinancialConnectionsStubbedResult"] == "true"
         if isUnitTest || (isUITest && financialConnectionsStubbedResult) {

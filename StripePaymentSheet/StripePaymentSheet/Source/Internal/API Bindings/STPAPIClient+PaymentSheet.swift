@@ -117,6 +117,7 @@ extension STPAPIClient {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
+            additionalHeaders: MobileSession.configHeaders(for: configuration),
             parameters: makeElementsSessionsParams(
                 mode: .paymentIntentClientSecret(paymentIntentClientSecret),
                 epmConfiguration: configuration.externalPaymentMethodConfiguration,
@@ -147,6 +148,7 @@ extension STPAPIClient {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
+            additionalHeaders: MobileSession.configHeaders(for: configuration),
             parameters: makeElementsSessionsParams(
                 mode: .setupIntentClientSecret(setupIntentClientSecret),
                 epmConfiguration: configuration.externalPaymentMethodConfiguration,
@@ -186,6 +188,7 @@ extension STPAPIClient {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
+            additionalHeaders: MobileSession.configHeaders(for: configuration),
             parameters: parameters
         )
         try verifyCustomerSessionForPaymentSheet(customerProvider: customerProvider, elementsSession: elementsSession)
