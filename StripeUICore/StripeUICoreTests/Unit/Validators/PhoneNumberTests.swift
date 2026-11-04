@@ -122,6 +122,18 @@ class PhoneNumberTests: XCTestCase {
             format: .international,
             formattedNumber: "+52 123 456 7890"
           ),
+          (
+            number: "2077301234",
+            country: "GB",
+            format: .national,
+            formattedNumber: "20 7730 1234"
+          ),
+          (
+            number: "2077301234",
+            country: "GB",
+            format: .international,
+            formattedNumber: "+44 20 7730 1234"
+          ),
         ]
 
         for c in cases {
