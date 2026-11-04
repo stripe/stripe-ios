@@ -64,7 +64,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     let savePaymentMethod: Bool?
 
     /// CheckoutClient requires a return URL for confirmation.
-    let returnURL: String?
+    let returnURL: String
 
     /// The optional shipping details.
     let shipping: STPPaymentIntentShippingDetailsParams?
@@ -92,7 +92,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         clientSecret: String,
         confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
-        returnURL: String? = nil,
+        returnURL: String,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
         customerData: [String: Any]? = nil
     ) -> Self {
@@ -122,7 +122,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         expectedAmount: Int?,
         expectedPaymentMethodType: String,
         savePaymentMethod: Bool? = nil,
-        returnURL: String? = nil,
+        returnURL: String,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
@@ -154,7 +154,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
         savePaymentMethod: Bool? = nil,
-        returnURL: String? = nil,
+        returnURL: String,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
@@ -325,9 +325,6 @@ extension STPAPIClient {
     func confirmCheckoutSession(
         with requestParameters: CheckoutSessionConfirmationRequestParameters
     ) async throws -> CheckoutClientAPIResponse {
-        guard let returnURL = requestParameters.returnURL else {
-            throw logUnexpectedCheckoutElementsError("CheckoutClient confirmation requires a return URL.", apiClient: self)
-        }
         var parameters = Self.checkoutClientParameters(clientSecret: requestParameters.clientSecret)
         parameters.removeValue(forKey: "timezone")
 
@@ -355,7 +352,7 @@ extension STPAPIClient {
             parameters["expected_amount"] = expectedAmount
         }
 
-        parameters["return_url"] = returnURL
+        parameters["return_url"] = requestParameters.returnURL
 
         if let shipping = requestParameters.shipping {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
