@@ -255,8 +255,8 @@ extension LinkPaymentMethodPicker {
             let remoteIconView: UIImageView
             switch paymentMethod.details {
             case .card:
-                // `card_brand` icons are a generic fallback for cards without card art, so keep the local card brand icon instead.
-                guard icon.type != .cardBrand else {
+                // Only use the remote icon for card art. Otherwise, keep the local card brand icon.
+                guard icon.type == .cardArt else {
                     return
                 }
                 remoteIconView = remoteCardIconView
