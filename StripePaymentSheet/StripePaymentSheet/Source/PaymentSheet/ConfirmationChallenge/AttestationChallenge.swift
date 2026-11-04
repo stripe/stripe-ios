@@ -47,20 +47,20 @@ actor AttestationChallenge {
             STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestToken()
             let startTime = Date()
             do {
-                let assertionHandle = try await stripeAttest.assert(canSyncState: canSyncState)
+                assertionHandle = try await stripeAttest.assert(canSyncState: canSyncState)
                 if Task.isCancelled {
-                    // Release assertions that arrive after cancellation or completion.
-                    await assertionHandle.complete()
+                    // Clean up the queue, as we're not returning it as an AssertionHandle
+                    assertionHandle?.complete()
+                    assertionHandle = nil
                     return nil
                 }
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenSucceeded(duration: Date().timeIntervalSince(startTime))
-                self.assertionHandle = assertionHandle
-                return assertionHandle.assertion
             } catch {
+                assertionHandle = nil
                 if Task.isCancelled { return nil }
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenFailed(duration: Date().timeIntervalSince(startTime))
             }
-            return nil
+            return assertionHandle?.assertion
         }
         self.assertionTask = assertionTask
         return await withTaskCancellationHandler {
@@ -71,13 +71,8 @@ actor AttestationChallenge {
     }
 
     // Must be called after signing request
-    public func complete() async {
-        let handle = assertionHandle
-        assertionHandle = nil
-        // A pending canceled fetch releases its own handle when it finishes.
-        assertionTask?.cancel()
-        assertionTask = nil
-        await handle?.complete()
+    public func complete() {
+        assertionHandle?.complete()
     }
 
 }

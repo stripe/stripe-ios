@@ -532,6 +532,7 @@ extension CheckoutElementsController {
 
         // 1. Call /confirm
         // TODO: Scope Radar option creation and this request with confirmationChallenge.withRadarOptions(for:).
+        // complete() is async, but the underlying AssertionHandle.complete() schedules rather than awaits release.
         let response: CheckoutClientAPIResponse
         do {
             response = try await apiClient.confirmCheckoutSession(with: requestParameters)
