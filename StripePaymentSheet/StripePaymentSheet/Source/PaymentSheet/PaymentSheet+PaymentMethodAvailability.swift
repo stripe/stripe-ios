@@ -218,17 +218,6 @@ extension Intent: PaymentMethodRequirementProvider {
         switch self {
         case let .paymentIntent(paymentIntent):
             var reqs = [PaymentMethodTypeRequirement]()
-            // Shipping address
-            if let shippingInfo = paymentIntent.shipping {
-                if shippingInfo.name != nil,
-                    shippingInfo.address?.line1 != nil,
-                    shippingInfo.address?.country != nil,
-                    shippingInfo.address?.postalCode != nil
-                {
-                    reqs.append(.shippingAddress)
-                }
-            }
-
             // valid us bank verification method
             if let usBankOptions = paymentIntent.paymentMethodOptions?.usBankAccount,
                 usBankOptions.verificationMethod.isValidForPaymentSheet
@@ -252,12 +241,6 @@ extension Intent: PaymentMethodRequirementProvider {
             return [.validUSBankVerificationMethod]
         case let .checkout(session):
             var reqs = [PaymentMethodTypeRequirement]()
-
-            // The session is configured to collect a shipping address, so payment methods
-            // that require one can be offered.
-            if session.requiresShippingAddress {
-                reqs.append(.shippingAddress)
-            }
 
             // Mirror PaymentIntent/SetupIntent: valid us bank verification method
             if let usBankOptions = session.paymentMethodOptions?.usBankAccount,
@@ -299,9 +282,6 @@ extension PaymentSheet {
         /// Indicates that a payment method requires a return URL
         case returnURL
 
-        /// Indicates that a payment method requires shipping information
-        case shippingAddress
-
         /// Requires that the user declare support for asynchronous payment methods
         case userSupportsDelayedPaymentMethods
 
@@ -328,8 +308,6 @@ extension PaymentSheet {
                 return "PaymentSheet does not currently support reusing this saved payment method."
             case .returnURL:
                 return "A return URL must be set, see https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-set-up-return-url"
-            case .shippingAddress:
-                return "A shipping address must be present on the Intent or collected through the Address Element and populated on PaymentSheet.Configuration.shippingDetails. See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping and https://stripe.com/docs/elements/address-element/collect-addresses?platform=ios#ios-pre-fill-billing"
             case .userSupportsDelayedPaymentMethods:
                 return "PaymentSheet.Configuration.allowsDelayedPaymentMethods must be set to true."
             case .financialConnectionsSDK:

@@ -109,7 +109,7 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             case .linkSignUpNotRequired:
                 return "Don't call sign up if not needed"
             case .noPaymentMethodTypesAvailable(intentPaymentMethods: let intentPaymentMethods):
-                return "None of the payment methods on the PaymentIntent/SetupIntent can be used in PaymentSheet: \(intentPaymentMethods). You may need to set `allowsDelayedPaymentMethods` or `allowsPaymentMethodsRequiringShippingAddress` or set `returnURL` in your PaymentSheet.Configuration object."
+                return "None of the payment methods on the PaymentIntent/SetupIntent can be used in PaymentSheet: \(intentPaymentMethods). You may need to set `allowsDelayedPaymentMethods` or `returnURL` in your PaymentSheet.Configuration object."
             case .linkCallVerifyNotRequired:
                 return "Don't call verify if not needed"
             case .linkingWithoutValidSession:

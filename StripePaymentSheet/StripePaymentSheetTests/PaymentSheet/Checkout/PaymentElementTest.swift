@@ -334,9 +334,7 @@ final class PaymentElementTest: XCTestCase {
 
         // Then both presentations allow payment methods supported by Checkout
         XCTAssertTrue(paymentSheetConfiguration.allowsDelayedPaymentMethods)
-        XCTAssertTrue(paymentSheetConfiguration.allowsPaymentMethodsRequiringShippingAddress)
         XCTAssertTrue(embeddedConfiguration.allowsDelayedPaymentMethods)
-        XCTAssertTrue(embeddedConfiguration.allowsPaymentMethodsRequiringShippingAddress)
     }
 
     func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {

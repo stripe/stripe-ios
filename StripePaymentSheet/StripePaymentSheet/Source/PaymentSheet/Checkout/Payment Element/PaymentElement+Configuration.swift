@@ -149,7 +149,6 @@ extension PaymentElement {
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.allowsDelayedPaymentMethods = true
-            configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.apiClient = apiClient
             configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
@@ -175,7 +174,6 @@ extension PaymentElement {
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.allowsDelayedPaymentMethods = true
-            configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.apiClient = apiClient
             configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)

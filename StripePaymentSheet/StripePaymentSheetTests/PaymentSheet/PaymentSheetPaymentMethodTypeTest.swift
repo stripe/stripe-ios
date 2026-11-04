@@ -102,6 +102,59 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
     }
 
+    func testPaymentMethodsAvailableWithoutShippingAddress() {
+        // Given payment methods and configurations without shipping details
+        let paymentMethodTypes: [STPPaymentMethodType] = [.affirm, .afterpayClearpay]
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: paymentMethodTypes, shippingProvided: false)
+        XCTAssertNil(paymentIntent.shipping)
+        let intents: [Intent] = [
+            .paymentIntent(paymentIntent),
+            ._testDeferredIntent(paymentMethodTypes: paymentMethodTypes),
+        ]
+        var paymentSheetConfiguration = PaymentSheet.Configuration()
+        paymentSheetConfiguration.returnURL = "example://return"
+        var embeddedConfiguration = EmbeddedPaymentElement.Configuration()
+        embeddedConfiguration.returnURL = "example://return"
+        let configurations: [PaymentElementConfiguration] = [paymentSheetConfiguration, embeddedConfiguration]
+
+        for configuration in configurations {
+            XCTAssertNil(configuration.shippingDetails())
+            for intent in intents {
+                // When filtering the available payment methods
+                let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+                    from: intent,
+                    elementsSession: ._testValue(intent: intent),
+                    configuration: configuration
+                )
+
+                // Then both payment methods remain available
+                XCTAssertEqual(types, [.stripe(.affirm), .stripe(.afterpayClearpay)])
+            }
+        }
+    }
+
+    func testPaymentMethodsWithoutShippingStillRequireReturnURL() {
+        // Given a payment without shipping details or a return URL
+        let paymentMethodTypes: [STPPaymentMethodType] = [.affirm, .afterpayClearpay]
+        let intent = Intent.paymentIntent(STPFixtures.makePaymentIntent(paymentMethodTypes: paymentMethodTypes, shippingProvided: false))
+        let configurations: [PaymentElementConfiguration] = [PaymentSheet.Configuration(), EmbeddedPaymentElement.Configuration()]
+
+        for configuration in configurations {
+            for paymentMethod in paymentMethodTypes {
+                // When checking payment method availability
+                let availability = PaymentSheet.PaymentMethodType.supportsAdding(
+                    paymentMethod: paymentMethod,
+                    configuration: configuration,
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent)
+                )
+
+                // Then only the return URL requirement is missing
+                XCTAssertEqual(availability, .missingRequirements([.returnURL]))
+            }
+        }
+    }
+
     // MARK: - Pix
 
     func testPixSupportsPaymentPaymentWithSetupFutureUsageAndSetup() {

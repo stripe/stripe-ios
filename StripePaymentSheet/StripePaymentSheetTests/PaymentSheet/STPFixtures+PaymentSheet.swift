@@ -21,7 +21,6 @@ public extension PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "https://foo.com"
         configuration.allowsDelayedPaymentMethods = true
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         if isApplePayEnabled {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
         }
@@ -38,7 +37,6 @@ public extension EmbeddedPaymentElement.Configuration {
         var configuration = EmbeddedPaymentElement.Configuration()
         configuration.returnURL = "https://foo.com"
         configuration.allowsDelayedPaymentMethods = true
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         if isApplePayEnabled {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
         }
