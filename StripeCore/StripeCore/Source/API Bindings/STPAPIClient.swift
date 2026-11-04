@@ -72,8 +72,8 @@ import UIKit
     @objc public static let apiVersion = APIVersion
 
     // MARK: Internal/private properties
-    @_spi(InternalOnlyAPI) public var apiURL: URL! = URL(string: APIBaseURL)
-    @_spi(InternalOnlyAPI) public var urlSession = URLSession(
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var apiURL: URL! = URL(string: APIBaseURL)
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var urlSession = URLSession(
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
 
