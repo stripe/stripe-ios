@@ -167,7 +167,8 @@ public final class AddressFormState: ObservableObject {
 }
 
 // MARK: - ElementDelegate
-@_spi(InternalOnlyAPI) extension AddressFormState: ElementDelegate {
+// Elements call their delegate on the main thread.
+@_spi(InternalOnlyAPI) extension AddressFormState: @preconcurrency ElementDelegate {
     @_spi(InternalOnlyAPI) public func didUpdate(element: Element) {
         updateAddresses()
         // Moving between fields ends one field's editing before the next one begins, so check
