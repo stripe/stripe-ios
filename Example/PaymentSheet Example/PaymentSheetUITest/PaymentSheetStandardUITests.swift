@@ -497,8 +497,18 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
     }
 
     func testCardScannerOpensAutomatically() throws {
+        try _testCardScannerOpensAutomatically(nativeSheet: .off)
+    }
+
+    func testCardScannerOpensAutomaticallyInNativeSheet() throws {
+        try _testCardScannerOpensAutomatically(nativeSheet: .on)
+    }
+
+    private func _testCardScannerOpensAutomatically(nativeSheet: PaymentSheetTestPlaygroundSettings.NativeSheetOverride) throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.opensCardScannerAutomatically = .on
+        settings.layout = .vertical
+        settings.nativeSheetOverride = nativeSheet
 
         loadPlayground(app, settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
@@ -507,35 +517,60 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let initialProductUsage = analyticsLog.last!["product_usage"] as! [String]
         XCTAssertFalse(initialProductUsage.contains("STPCardScanner"), "STPCardScanner should not be in product_usage before opening card form")
 
-        // Open the card form
+        // Open the card form, which shows only the scanner
         app.buttons["Card"].waitForExistenceAndTap()
-
-        // Wait for the close card scanner button to appear, which indicates the scanner is open and analytics updated
-        let closeScannerButton = app.buttons["Close card scanner"]
-        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 10.0), "Close card scanner button should appear when scanner opens")
+        let manualEntryButton = app.buttons["Enter card details manually"]
+        XCTAssertTrue(manualEntryButton.waitForExistence(timeout: 10.0), "The scanner should open in place of the card form")
+        assertFullyVisible(manualEntryButton)
+        XCTAssertFalse(app.textFields["Card number"].exists, "The card form should be hidden while scanning")
 
         // Verify STPCardScanner IS in analytics product_usage after opening card form
         let updatedProductUsage = analyticsLog.last!["product_usage"] as! [String]
         XCTAssertTrue(updatedProductUsage.contains("STPCardScanner"), "STPCardScanner should be in product_usage after opening card form")
 
-        // Close the card scanner
-        closeScannerButton.tap()
+        // Going back and opening card again shows the scanner again
+        app.buttons["Back"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+        XCTAssertTrue(manualEntryButton.waitForExistence(timeout: 10.0), "The scanner should open again")
 
-        // Verify card scanner is closed
-        XCTAssertFalse(closeScannerButton.waitForExistence(timeout: 2.0), "Card scanner should be closed after tapping close button")
+        // Entering card details manually shows the card form
+        manualEntryButton.tap()
+        let cardNumberField = app.textFields["Card number"]
+        XCTAssertTrue(cardNumberField.waitForExistence(timeout: 10.0), "Card number field should exist")
+        XCTAssertFalse(manualEntryButton.waitForExistence(timeout: 2.0), "The scanner should be closed")
 
-        // Verify we can open the scanner again using the scan button
+        // Going back and opening card again shows the form, since the customer chose to enter details manually
+        app.buttons["Back"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+        XCTAssertTrue(cardNumberField.waitForExistence(timeout: 10.0), "Card number field should exist")
+        XCTAssertFalse(manualEntryButton.exists, "The scanner should stay closed")
+
+        // A single tap on "Scan card" reopens the scanner, even while editing a field
+        cardNumberField.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5.0), "The keyboard should be showing")
         let scanCardButton = app.buttons["Scan card"]
         XCTAssertTrue(scanCardButton.waitForExistence(timeout: 5.0), "Scan card button should exist")
         scanCardButton.tap()
-        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 10.0), "Card scanner should open when tapping scan button")
+        XCTAssertTrue(manualEntryButton.waitForExistence(timeout: 5.0), "The scanner should open when tapping the scan button")
+        assertFullyVisible(manualEntryButton)
 
-        // Verify that editing a form field closes the scanner
-        let cardNumberField = app.textFields["Card number"]
-        XCTAssertTrue(cardNumberField.waitForExistence(timeout: 10.0), "Card number field should exist")
-        cardNumberField.tap()
+        // Entering details manually focuses the card number; tapping "Scan card" right away reopens the scanner, and it stays open
+        manualEntryButton.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5.0), "Entering details manually should focus the card number")
+        scanCardButton.tap()
+        XCTAssertTrue(manualEntryButton.waitForExistence(timeout: 5.0), "The scanner should open when tapping the scan button")
+        assertFullyVisible(manualEntryButton)
+        XCTAssertTrue(manualEntryButton.exists, "The scanner should stay open")
+        XCTAssertFalse(app.keyboards.firstMatch.exists, "The keyboard should be dismissed while scanning")
+    }
 
-        // Verify scanner is closed after editing form field
-        XCTAssertFalse(closeScannerButton.exists, "Card scanner should be closed when editing form fields")
+    /// Waits for animations to settle, then checks that `element` is entirely on screen and tappable
+    private func assertFullyVisible(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        let settled = expectation(description: "Settle")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { settled.fulfill() }
+        wait(for: [settled], timeout: 3)
+        let windowFrame = app.windows.firstMatch.frame
+        XCTAssertTrue(element.isHittable, "\(element) should be tappable", file: file, line: line)
+        XCTAssertLessThanOrEqual(element.frame.maxY, windowFrame.maxY, "\(element) should not be cut off: \(element.frame) in \(windowFrame)", file: file, line: line)
     }
 }

@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "未更新默认支付方式，请重试。";
 
+"Enter card details manually" = "手动输入银行卡详情";
+
 "Enter the code sent to %@." = "输入发送到 %@ 的代码。";
 
 "Failed to connect" = "关联失败";

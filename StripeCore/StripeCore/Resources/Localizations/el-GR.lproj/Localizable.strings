@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Η προεπιλεγμένη μέθοδος πληρωμής δεν ενημερώθηκε. Δοκιμάστε ξανά.";
 
+"Enter card details manually" = "Εισαγάγετε τα στοιχεία της κάρτας με μη αυτόματο τρόπο";
+
 "Enter the code sent to %@." = "Εισαγάγετε τον κωδικό που εστάλη στο %@.";
 
 "Failed to connect" = "Αποτυχία σύνδεσης";

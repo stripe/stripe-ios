@@ -54,6 +54,13 @@ import Foundation
             STPLocalizedString("Scan card", "Button title to open camera to scan credit/debit card")
         }
 
+        public static var enter_card_details_manually: String {
+            STPLocalizedString(
+                "Enter card details manually",
+                "Label for button to enter card details manually instead of scanning"
+            )
+        }
+
         public static var scan_card_privacy_link_text: String {
             // THIS STRING SHOULD NOT BE MODIFIED
             STPLocalizedString(

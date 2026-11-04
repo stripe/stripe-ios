@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "未更新預設支付方式，請重試。";
 
+"Enter card details manually" = "手動輸入銀行卡詳情";
+
 "Enter the code sent to %@." = "輸入傳送到 %@ 的驗證碼。";
 
 "Failed to connect" = "關聯失敗";

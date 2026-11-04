@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Varsayılan ödeme yöntemi güncellenmedi. Lütfen tekrar deneyin.";
 
+"Enter card details manually" = "Kart bilgilerini manuel olarak girin";
+
 "Enter the code sent to %@." = "%@’a gönderilen kodu girin.";
 
 "Failed to connect" = "Bağlantı başarısız oldu";

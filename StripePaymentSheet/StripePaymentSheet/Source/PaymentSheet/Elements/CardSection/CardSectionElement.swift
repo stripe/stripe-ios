@@ -378,6 +378,12 @@ internal func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMet
 // MARK: - CardSectionWithScannerViewDelegate
 
 extension CardSectionElement: CardSectionWithScannerViewDelegate {
+    /// Replaces the inline card scanner with one shown elsewhere, e.g. `AutomaticCardScanViewController`.
+    /// Pass scanned cards to `didScanCard(cardParams:)`.
+    func useExternalCardScanner(showsScanButton: Bool, onTapScanButton: @escaping () -> Void) {
+        (view as? CardSectionWithScannerView)?.useExternalCardScanner(showsScanButton: showsScanButton, onTapScanButton: onTapScanButton)
+    }
+
     func didScanCard(cardParams: STPPaymentMethodCardParams) {
         let expiryString: String = {
             guard let expMonth = cardParams.expMonth, let expYear = cardParams.expYear else {

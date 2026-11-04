@@ -8,6 +8,8 @@
 
 "Default payment method was not updated. Please try again." = "Default payment method was not updated. Please try again.";
 
+"Enter card details manually" = "Enter card details manually";
+
 "Enter the code sent to %@." = "Enter the code sent to %@.";
 
 "Failed to connect" = "Failed to connect";
