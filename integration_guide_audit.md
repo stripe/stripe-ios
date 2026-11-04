@@ -1,4 +1,6 @@
-# iOS integration guide audit
+# iOS integration guide audit — snippet checks, not complete workflow coverage
+
+The subsequent [saved-method workflow review](integration_workflow_coverage.md) identified a significant omission this pass missed. This document records completed snippet/section checks; it must not be treated as evidence of complete merchant-workflow coverage.
 
 The earlier bug-bash completion statement overstated the documentation coverage. Reading docs to choose SDK scenarios did not establish that the guide's instructions and samples work. This follow-up directly checked the core iOS integration guide.
 

@@ -2,6 +2,12 @@
 
 Scope: complete the supported-flow pass in `search_strategy.md` and `docs_driven_strategy.md`. Shipping options, tax ID collection, phone collection, promotion-code support, and other documented unfinished preview features are excluded. Baseline: `5efd450a813`. The user subsequently requested committing and pushing the reports and repros for shareable links; that instruction supersedes the earlier uncommitted-only guidance. Production SDK code is unchanged.
 
+## Current status: merchant-workflow audit incomplete
+
+The 2026-11-04 saved-payment-method review found a missing supported workflow after the earlier completeness claims. Those claims are withdrawn. The current list contains **eight reports**, not an exhaustive list of all integration problems. The newly verified [saved-payment-method guide omission](ISSUE_integration-guide_missing-saved-payment-method-workflow.md) covers Customer association, enabling save consent, and reusing the Customer on subsequent Sessions. See [integration_workflow_coverage.md](integration_workflow_coverage.md) for the missing-workflow inventory and checks that remain unperformed.
+
+The original saved-card UI fixture supplied server configuration absent from the guide. Passing it proved the SDK flow worked, not that the guide explained how to build it.
+
 ## Correction and integration-guide follow-up
 
 The earlier completion claim was too broad: the SDK scenario pass used docs as input but had not audited the guide's samples themselves. A subsequent direct audit of the core iOS guide found **three additional guide issues**, bringing the local report count to seven. See [integration_guide_audit.md](integration_guide_audit.md) for exact scope, sources, compiler controls, live checks, and limits.
