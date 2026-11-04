@@ -312,7 +312,7 @@ import UIKit
                     analyticsHelper: analyticsHelper
                 )
 
-                guard deviceCanUseNativeLink(
+                guard requestSurface.skipsAttestation(for: loadResult.elementsSession) || deviceCanUseNativeLink(
                     elementsSession: loadResult.elementsSession,
                     configuration: paymentElementConfiguration
                 ) else {

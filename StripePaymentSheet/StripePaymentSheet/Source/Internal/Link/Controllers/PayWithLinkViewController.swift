@@ -315,6 +315,9 @@ final class PayWithLinkViewController: NSObject {
 
         // Prewarm attestation if needed
         Task {
+            guard !context.requestSurface.skipsAttestation(for: context.elementsSession) else {
+                return
+            }
             // Attempt to attest
             let canAttest = await context.configuration.apiClient.stripeAttest.prepareAttestation()
             // If we can't attest and we're in livemode, let's bail and switch to the web controller
