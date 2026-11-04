@@ -298,7 +298,7 @@ private final class ShippingAddressElementSnapshotDelegate: ShippingAddressEleme
     var updateExpectation: XCTestExpectation?
     private var updateContinuation: CheckedContinuation<Void, Never>?
 
-    func updateShippingAddressFromElement(name: String?, address: CheckoutController.Address?) async throws {
+    func updateShippingAddressFromElement(name: String?, address: CheckoutElementsController.Address?) async throws {
         updateExpectation?.fulfill()
         await withCheckedContinuation { continuation in
             updateContinuation = continuation

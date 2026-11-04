@@ -14,12 +14,12 @@ protocol ExpressCheckoutElementDelegate: AnyObject {
     func expressCheckoutElementShouldConfirm(
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
-    ) async -> CheckoutController.ConfirmResult
+    ) async -> CheckoutElementsController.ConfirmResult
 }
 
 /// An express checkout element backed by a Checkout Session.
 ///
-/// Obtain an instance from ``Checkout/getExpressCheckoutElement()`` and use
+/// Obtain an instance from ``CheckoutElementsController/getExpressCheckoutElement()`` and use
 /// ``view`` in SwiftUI or ``uiView`` in UIKit.
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)

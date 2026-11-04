@@ -144,9 +144,25 @@ extension ConsumerPaymentDetails {
         let icon: Icon?
         struct Icon: Decodable {
             let main: URL?
+            let type: IconType?
+
             enum CodingKeys: String, CodingKey {
                 case main = "default"
+                case type
             }
+        }
+
+        enum IconType: String, SafeEnumDecodable {
+            /// Card art for the specific card program.
+            case cardArt = "card_art"
+            /// A generic fallback icon for cards without card art.
+            case cardBrand = "card_brand"
+            /// The bank account's institution icon.
+            case institution
+            /// An icon for any other payment details type.
+            case generic
+            // Catch all
+            case unparsable = ""
         }
     }
 
@@ -186,6 +202,16 @@ extension ConsumerPaymentDetails {
         case .generic(let rawValue):
             return ParsedEnum(rawValue: rawValue)
         }
+    }
+}
+
+extension ConsumerPaymentDetails.DisplayMetadata.Icon {
+    // Defined in an extension to keep the synthesized memberwise initializer.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.main = try container.decodeIfPresent(URL.self, forKey: .main)
+        // Not every decoder maps unknown values to `.unparsable`, so don't let an unknown type fail decoding the icon.
+        self.type = try? container.decodeIfPresent(ConsumerPaymentDetails.DisplayMetadata.IconType.self, forKey: .type)
     }
 }
 

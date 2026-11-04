@@ -11,13 +11,13 @@ import SwiftUI
 
 struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var checkout: CheckoutController?
+    @State private var checkout: CheckoutElementsController?
     @StateObject private var diagnostics = CheckoutSessionDiagnostics()
     @StateObject private var analyticsLogObserver = AnalyticsLogObserver.shared
 
     @State private var isLoading = false
     @State private var errorMessage: String?
-    @State private var confirmResult: CheckoutController.ConfirmResult?
+    @State private var confirmResult: CheckoutElementsController.ConfirmResult?
     @State private var showsCheckoutDetails = false
 
     let clientSecret: String
@@ -29,7 +29,7 @@ struct CheckoutCartView: View {
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
-    var delayPaymentPagesRequests = false
+    var delayCheckoutClientRequests = false
 
     var body: some View {
         NavigationView {
@@ -145,9 +145,9 @@ struct CheckoutCartView: View {
         isLoading = true
         errorMessage = nil
         do {
-            var config = CheckoutController.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
+            var config = CheckoutElementsController.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.apiClient = diagnostics.makeAPIClient(
-                paymentPagesRequestDelay: delayPaymentPagesRequests ? 1 : 0
+                checkoutClientRequestDelay: delayCheckoutClientRequests ? 1 : 0
             )
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
@@ -187,7 +187,7 @@ struct CheckoutCartView: View {
                 currencySelectorConfiguration.appearance = currencySelectorAppearance
                 config.currencySelectorElement = currencySelectorConfiguration
             }
-            checkout = try await CheckoutController(configuration: config)
+            checkout = try await CheckoutElementsController(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
         }

@@ -117,5 +117,5 @@ extension ExpressCheckoutElement.Configuration {
     }
 
     /// A closure called after a wallet payment confirmation completes.
-    public typealias CompletionHandler = (_ result: CheckoutController.ConfirmResult) -> Void
+    public typealias CompletionHandler = (_ result: CheckoutElementsController.ConfirmResult) -> Void
 }

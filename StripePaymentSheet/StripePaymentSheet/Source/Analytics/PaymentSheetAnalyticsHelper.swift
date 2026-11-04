@@ -18,6 +18,10 @@ final class PaymentSheetAnalyticsHelper {
     /// Checkout attribution shared by Payment Element collection and Link flows. Nil outside Checkout.
     let checkoutAttribution: CheckoutAttributionContext?
 
+    var linkAnalytics: LinkAnalyticsHelper {
+        .init(analyticsClient: analyticsClient, checkoutSessionID: checkoutSessionID)
+    }
+
     /// Logs analytics to `r.stripe.com`.
     let analyticsClientV2: AnalyticsClientV2Protocol
 

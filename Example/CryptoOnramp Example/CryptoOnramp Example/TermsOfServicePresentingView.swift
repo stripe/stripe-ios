@@ -36,41 +36,14 @@ struct TermsOfServicePresentingView: View {
     // MARK: - View
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Image(systemName: "doc.text")
-                    .font(.largeTitle)
-                    .padding()
-                    .background {
-                        Color(.systemGroupedBackground)
-                            .cornerRadius(16)
-                    }
-
-                VStack(spacing: 6) {
-                    Text("Review terms of service")
-                        .font(.title)
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Text("Before continuing, Link needs to check whether you must review and accept the partner terms of service.")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-            .padding()
-        }
-        .safeAreaInset(edge: .bottom) {
-            Button("Continue") {
-                presentTermsOfServiceIfNeeded()
-            }
-            .buttonStyle(PrimaryButtonStyle())
-            .disabled(isLoading.wrappedValue)
-            .opacity(isLoading.wrappedValue ? 0.5 : 1)
-            .padding()
-        }
-        .navigationTitle("Terms of Service")
-        .navigationBarTitleDisplayMode(.inline)
+        FlowStepContainerView(
+            navigationTitle: "Terms of Service",
+            systemImageName: "doc.text",
+            title: "Review terms of service",
+            message: "Before continuing, Link needs to check whether you must review and accept the partner terms of service.",
+            buttonTitle: "Continue",
+            action: presentTermsOfServiceIfNeeded
+        )
         .alert(
             alert?.title ?? "Error",
             isPresented: isPresentingAlert,

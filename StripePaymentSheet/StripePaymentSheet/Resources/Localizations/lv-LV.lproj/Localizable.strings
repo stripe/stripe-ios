@@ -32,6 +32,10 @@
 
 "Bank account details cannot be changed." = "Bankas konta informāciju nevar mainīt.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Pirms mēs varam nosūtīt kodu uz jūsu e-pastu, mums ir jāpārbauda papildu informācija par jums. Lūdzu, ievadiet savu tālruņa numuru, kas beidzas ar ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Pirms mēs varam nosūtīt kodu uz jūsu e-pastu, mums ir jāpārbauda papildu informācija par jums. Lūdzu, ievadiet savu tālruņa numuru.";
+
 "Buy Now, Pay Later with  <img/>" = "Pērciet tūlīt, maksājiet vēlāk ar  <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Pērciet tūlīt, maksājiet vēlāk ar Afterpay";
@@ -116,8 +120,6 @@
 
 "Close card scanner" = "Aizvērt kartes skeneri";
 
-"Code sent" = "Kods nosūtīts";
-
 "Complete the payment using Pix to finish the purchase." = "Veiciet maksājumu, izmantojot Pix, lai pabeigtu pirkumu.";
 
 "Confirm" = "Apstiprināt";
@@ -162,7 +164,11 @@
 
 "Edit address" = "Rediģēt adresi";
 
+"Email code" = "E-pasta kods";
+
 "Enter address manually" = "Ievadīt adresi manuāli";
+
+"Enter the phone number on your Link account." = "Ievadiet sava Link konta tālruņa numuru.";
 
 "Exchange rate and fees of your bank may apply." = "Var tikt piemērots jūsu bankas valūtas kurss un maksas.";
 
@@ -201,6 +207,8 @@
 "Manage payment methods" = "Pārvaldīt maksājuma veidus";
 
 "Manage your payment methods" = "Pārvaldīt savus maksājuma veidus";
+
+"More options" = "Papildu opcijas";
 
 "Name on card" = "Uz kartes norādītais vārds";
 
@@ -277,6 +285,8 @@
 "Remove payment method" = "Noņemt maksājumu veidu";
 
 "Remove payment method?" = "Vai noņemt maksājuma veidu?";
+
+"Resend code in %d seconds" = "Atkārtoti nosūtiet kodu pēc %li sekundēm";
 
 "SEPA debit details cannot be changed." = "SEPA debeta informāciju nevar mainīt.";
 
@@ -358,6 +368,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Šis maksājuma veids tiks noņemts, bet joprojām būs pieejams %@ abonementiem.";
 
+"This phone number doesn't match your Link account. Please try again." = "Šis tālruņa numurs neatbilst jūsu Link kontam. Lūdzu, mēģiniet vēlreiz.";
+
 "Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
 
 "Unavailable for this purchase" = "Nav pieejams šim pirkumam";
@@ -368,7 +380,13 @@
 
 "Use billing address for shipping" = "Piegādei izmantot norēķinu adresi";
 
+"Verify your phone number" = "Verificējiet tālruņa numuru";
+
+"Verifying your account…" = "Verificē jūsu kontu…";
+
 "View more" = "Skatīt vairāk";
+
+"We couldn't verify your account. Please close this window and try again." = "Mums neizdevās verificēt jūsu kontu. Lūdzu, aizveriet šo logu un mēģiniet vēlreiz.";
 
 "Yes, update" = "Jā, atjaunināt";
 

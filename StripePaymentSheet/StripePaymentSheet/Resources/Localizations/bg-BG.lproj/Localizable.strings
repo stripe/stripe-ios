@@ -32,6 +32,10 @@
 
 "Bank account details cannot be changed." = "Данните на банковата сметка не могат да бъдат променяни.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Преди да изпратим код на вашия имейл, трябва да потвърдим допълнителна информация за Вас. Моля, въведете телефонния си номер, завършващ на ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Преди да изпратим код на вашия имейл, трябва да потвърдим допълнителна информация за Вас. Моля, въведете вашия телефонен номер.";
+
 "Buy Now, Pay Later with  <img/>" = "Купете сега, платете по-късно с  <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Купете сега, платете по-късно с Afterpay";
@@ -116,8 +120,6 @@
 
 "Close card scanner" = "Затваряне на скенера за карти";
 
-"Code sent" = "Изпратен е код";
-
 "Complete the payment using Pix to finish the purchase." = "Завършете плащането чрез Pix, за да приключите покупката.";
 
 "Confirm" = "Потвърждаване";
@@ -162,7 +164,11 @@
 
 "Edit address" = "Редактиране на адрес";
 
+"Email code" = "Код по имейл";
+
 "Enter address manually" = "Ръчно въвеждане на адрес";
+
+"Enter the phone number on your Link account." = "Въведете телефонния номер на Вашия Link акаунт.";
 
 "Exchange rate and fees of your bank may apply." = "Обменният курс и таксите на вашата банка може да се прилагат.";
 
@@ -186,6 +192,8 @@
 
 "Last 4 digits of SSN" = "Последни 4 цифри на SSN";
 
+"Log in to another account" = "Влезте в друг акаунт";
+
 "Manage SEPA debit" = "Управление на SEPA дебит";
 
 "Manage US bank account" = "Управление на банкова сметка в САЩ";
@@ -202,6 +210,8 @@
 
 "Manage your payment methods" = "Управление на начините Ви на плащане";
 
+"More options" = "Още опции";
+
 "Name on card" = "Име върху картата";
 
 "Naver Pay Card" = "Карта на Naver Pay";
@@ -213,6 +223,8 @@
 "New payment method" = "Нов начин на плащане";
 
 "No %@ promo" = "Няма %@ промо код";
+
+"None of the payment methods in your %@ account work with this business." = "Нито един от начините на плащане във Вашия %@ акаунт не работи с това дружество.";
 
 "Not you?" = "Не сте вие?";
 
@@ -277,6 +289,8 @@
 "Remove payment method" = "Премахване на начин на плащане";
 
 "Remove payment method?" = "Премахване на метод за плащане?";
+
+"Resend code in %d seconds" = "Повторно изпращане на кода след %li секунди";
 
 "SEPA debit details cannot be changed." = "Данните на SEPA дебит не могат да бъдат променяни.";
 
@@ -358,6 +372,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Този метод на плащане ще бъде премахнат, но ще остане наличен за абонаменти %@.";
 
+"This phone number doesn't match your Link account. Please try again." = "Този телефонен номер не съвпада с Вашия Link акаунт. Моля, опитайте отново.";
+
 "Too many attempts. Please try again in a few minutes." = "Твърде много опити. Моля, опитайте отново след няколко минути.";
 
 "Unavailable for this purchase" = "Недостъпно за тази покупка";
@@ -368,9 +384,17 @@
 
 "Use billing address for shipping" = "Използвайте адреса за фактуриране за доставка";
 
+"Verify your phone number" = "Потвърждаване на телефонния ви номер";
+
+"Verifying your account…" = "Удостоверяване на Вашия акаунт…";
+
 "View more" = "Вижте повече";
 
+"We couldn't verify your account. Please close this window and try again." = "Не успяхме да удостоверим Вашия акаунт. Моля, затворете този прозорец и опитайте отново.";
+
 "Yes, update" = "Да, актуализиране";
+
+"You can't pay with %@ here" = "Не можете да платите с %@ тук";
 
 "Your IBAN should start with a two-letter country code." = "Вашият IBAN трябва да започва с двубуквен код на държава.";
 
