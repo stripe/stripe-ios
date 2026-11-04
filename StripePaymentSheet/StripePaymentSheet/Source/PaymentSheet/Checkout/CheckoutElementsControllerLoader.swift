@@ -212,6 +212,7 @@ enum CheckoutElementsControllerLoader {
             defaults: configuration.defaults,
             merchantDisplayName: configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? "",
             merchantCountryCode: session.merchantCountryCode,
+            applePayMerchantId: configuration.applePayMerchantId,
             userInterfaceStyle: configuration.userInterfaceStyle
         )
         session.applyAddressOverrides(to: &paymentSheetConfiguration)
@@ -229,6 +230,7 @@ enum CheckoutElementsControllerLoader {
             defaults: configuration.defaults,
             merchantDisplayName: configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? "",
             merchantCountryCode: session.merchantCountryCode,
+            applePayMerchantId: configuration.applePayMerchantId,
             userInterfaceStyle: configuration.userInterfaceStyle
         )
         session.applyAddressOverrides(to: &embeddedConfiguration)

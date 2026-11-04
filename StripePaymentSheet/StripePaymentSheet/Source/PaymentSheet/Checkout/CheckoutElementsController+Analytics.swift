@@ -48,6 +48,7 @@ extension CheckoutElementsController.Configuration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
             "merchant_display_name": merchantDisplayName != nil,
+            "apple_pay_config": applePayMerchantId != nil,
             "defaults": [
                 "billing_details": ["name": defaults.billingDetails?.name != nil, "address": defaults.billingDetails?.address != nil],
                 "shipping_details": ["name": defaults.shippingDetails?.name != nil, "address": defaults.shippingDetails?.address != nil],
@@ -55,8 +56,8 @@ extension CheckoutElementsController.Configuration {
                 "phone": defaults.phone != nil,
             ],
         ]
-        params["payment_element"] = paymentElement?.checkoutAnalyticsPayload ?? NSNull()
-        params["express_checkout_element"] = expressCheckoutElement?.checkoutAnalyticsPayload ?? NSNull()
+        params["payment_element"] = paymentElement?.checkoutAnalyticsPayload(applePayMerchantId: applePayMerchantId) ?? NSNull()
+        params["express_checkout_element"] = expressCheckoutElement?.checkoutAnalyticsPayload(applePayMerchantId: applePayMerchantId) ?? NSNull()
         params["currency_selector_element"] = currencySelectorElement?.checkoutAnalyticsPayload ?? NSNull()
         params["shipping_address_element"] = shippingAddressElement?.checkoutAnalyticsPayload ?? NSNull()
         return params
@@ -64,9 +65,9 @@ extension CheckoutElementsController.Configuration {
 }
 
 private extension PaymentElement.Configuration {
-    var checkoutAnalyticsPayload: [String: Any] {
+    func checkoutAnalyticsPayload(applePayMerchantId: String?) -> [String: Any] {
         var params: [String: Any] = [
-            "apple_pay_config": applePayConfiguration != nil,
+            "apple_pay_visibility": (applePayMerchantId == nil || applePayConfiguration.display == .never) ? "never" : "automatic",
             "link_display": linkConfiguration?.display.rawValue ?? "automatic",
             "save_payment_method_opt_in_behavior": savePaymentMethodOptInBehavior.description,
             "appearance": appearance.analyticPayload,
@@ -76,7 +77,7 @@ private extension PaymentElement.Configuration {
             "payment_method_layout": paymentMethodLayout.description,
             "displays_mandate_text": displaysMandateText,
         ]
-        params["apple_pay_button_type"] = applePayConfiguration?.buttonType?.rawValue
+        params["apple_pay_button_type"] = applePayConfiguration.buttonType?.rawValue
         params["preferred_networks"] = preferredNetworks?.map { STPCardBrandUtilities.apiValue(from: $0) }.joined(separator: ", ")
         params["payment_method_order"] = paymentMethodOrder
         switch rowSelectionBehavior {
@@ -88,14 +89,13 @@ private extension PaymentElement.Configuration {
 }
 
 private extension ExpressCheckoutElement.Configuration {
-    var checkoutAnalyticsPayload: [String: Any] {
+    func checkoutAnalyticsPayload(applePayMerchantId: String?) -> [String: Any] {
         var params: [String: Any] = [
-            "apple_pay_config": applePayConfiguration != nil,
-            "apple_pay_visibility": applePayConfiguration == nil ? "never" : "automatic",
+            "apple_pay_visibility": applePayMerchantId == nil ? "never" : "automatic",
             "link_visibility": linkConfiguration.display.rawValue,
             "button_theme": appearance.buttonTheme.rawValue,
         ]
-        params["apple_pay_button_type"] = applePayConfiguration?.buttonType?.rawValue
+        params["apple_pay_button_type"] = applePayConfiguration.buttonType?.rawValue
         params["max_columns"] = appearance.buttonLayout.maxColumns
         params["max_rows"] = appearance.buttonLayout.maxRows
         return params

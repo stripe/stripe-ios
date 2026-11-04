@@ -291,10 +291,10 @@ final class PaymentElementTest: XCTestCase {
         )
         var paymentElementConfiguration = PaymentElement.Configuration()
         paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
-            merchantId: "merchant.com.example",
             buttonType: .donate
         )
         checkoutConfiguration.paymentElement = paymentElementConfiguration
+        checkoutConfiguration.applePayMerchantId = "merchant.com.example"
         var sessionJSON = Self.openSessionJSON(paymentMethodTypes: ["card"])
         sessionJSON["merchant_info"] = ["country": "GB"]
 
@@ -318,6 +318,31 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(embeddedApplePay.merchantCountryCode, "GB")
         XCTAssertEqual(paymentElement.paymentSheetFlowController.paymentOption?.paymentMethodType, "apple_pay")
         XCTAssertEqual(paymentElement.embeddedPaymentElement.paymentOption?.paymentMethodType, "apple_pay")
+    }
+
+    func testApplePayHiddenInPaymentElementWhenDisplayIsNever() async throws {
+        // Given a shared Apple Pay merchant ID, but Payment Element opts out via display = .never
+        var checkoutConfiguration = CheckoutElementsController.Configuration(
+            clientSecret: "cs_test_123_secret_abc",
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        var paymentElementConfiguration = PaymentElement.Configuration()
+        paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(display: .never)
+        checkoutConfiguration.paymentElement = paymentElementConfiguration
+        checkoutConfiguration.applePayMerchantId = "merchant.com.example"
+
+        // When Checkout creates PaymentElement
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card"]),
+                configuration: checkoutConfiguration
+            )
+        )
+        let paymentElement = checkout.getPaymentElement()
+
+        // Then neither presentation configures Apple Pay
+        XCTAssertNil(paymentElement.paymentSheetFlowController.configuration.applePay)
+        XCTAssertNil(paymentElement.embeddedPaymentElement.configuration.applePay)
     }
 
     func testConfigurationAllowsAllCheckoutPaymentMethodRequirements() async throws {

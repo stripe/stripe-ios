@@ -115,14 +115,14 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         linkEmail: String? = nil
     ) -> ExpressCheckoutElementUIView {
         var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
         configuration.appearance = appearance
 
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"], customerEmail: "jenny@example.com")
-            .makePublicSession(expressCheckoutConfiguration: configuration)
+            .makePublicSession(expressCheckoutConfiguration: configuration, applePayMerchantId: "merchant.com.example")
         let view = ExpressCheckoutElementUIView(
             session: session,
             configuration: configuration,
+            applePayMerchantId: "merchant.com.example",
             delegate: Delegate()
         )
         view.update(

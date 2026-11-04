@@ -39,6 +39,7 @@ public final class ExpressCheckoutElement {
     init(
         sessionSource: CheckoutSessionSource,
         configuration: ExpressCheckoutElement.Configuration,
+        applePayMerchantId: String?,
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient
     ) {
@@ -46,6 +47,7 @@ public final class ExpressCheckoutElement {
         let uiView = ExpressCheckoutElementUIView(
             session: sessionSource.initialSession,
             configuration: configuration,
+            applePayMerchantId: applePayMerchantId,
             delegate: delegate,
             apiClient: apiClient
         )

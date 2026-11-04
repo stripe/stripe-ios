@@ -21,7 +21,8 @@ extension CheckoutClientAPIResponse {
     /// Convenience for fixtures that contain no client-local session state.
     func makePublicSession(
         clientSecret: String? = nil,
-        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil,
+        applePayMerchantId: String? = nil
     ) -> CheckoutElementsController.Session {
         let configuration = expressCheckoutConfiguration.map { expressConfiguration in
             var configuration = CheckoutElementsController.Configuration(
@@ -29,6 +30,7 @@ extension CheckoutClientAPIResponse {
                 returnURL: "stripe-ios-test://checkout-return"
             )
             configuration.expressCheckoutElement = expressConfiguration
+            configuration.applePayMerchantId = applePayMerchantId
             return configuration
         }
         return CheckoutElementsController.Session(
@@ -43,11 +45,13 @@ extension CheckoutClientAPIResponse {
 extension ExpressCheckoutElementUtilities {
     static func availablePaymentMethodsWithoutCheckoutRequirements(
         for elementsSession: STPElementsSession,
-        configuration: ExpressCheckoutElement.Configuration
+        configuration: ExpressCheckoutElement.Configuration,
+        applePayMerchantId: String? = nil
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         availablePaymentMethods(
             for: elementsSession,
             configuration: configuration,
+            applePayMerchantId: applePayMerchantId,
             usesWebLink: false,
             requiresShippingAddress: false,
             billingDetailsCollectionRequired: false
@@ -568,7 +572,8 @@ extension CheckoutElementsController.ApplePayConfirmationParameters {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(),
+        merchantId: String = "merchant.com.test",
         shippingAddressRequired: Bool = false,
         defaultBillingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
@@ -579,6 +584,7 @@ extension CheckoutElementsController.ApplePayConfirmationParameters {
     ) -> CheckoutElementsController.ApplePayConfirmationParameters {
         CheckoutElementsController.ApplePayConfirmationParameters(
             applePayConfiguration: applePayConfiguration,
+            merchantId: merchantId,
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: merchantDisplayName,
