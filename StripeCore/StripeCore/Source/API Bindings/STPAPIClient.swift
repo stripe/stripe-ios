@@ -81,7 +81,7 @@ import UIKit
     public var betas: Set<String> = []
 
     /// Returns `true` if `publishableKey` is actually a user key, `false` otherwise.
-    @_spi(InternalOnlyAPI) public var publishableKeyIsUserKey: Bool {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var publishableKeyIsUserKey: Bool {
         return publishableKey?.hasPrefix("uk_") ?? false
     }
 

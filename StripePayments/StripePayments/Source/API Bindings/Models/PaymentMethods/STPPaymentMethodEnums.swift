@@ -422,7 +422,7 @@ import Foundation
         }
     }
 
-    @_spi(InternalOnlyAPI) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
         return allCases.first(where: { $0.identifier == identifier }) ?? .unknown
     }
 
