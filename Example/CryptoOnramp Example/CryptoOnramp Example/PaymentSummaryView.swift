@@ -92,60 +92,66 @@ struct PaymentSummaryView: View {
 
             Spacer()
         }
-        .padding()
-        .background(Color(.systemGroupedBackground))
     }
 
     // MARK: - View
 
     var body: some View {
-        VStack(spacing: 0) {
-            header
+        FoldAvoidingScrollView(alignment: .top, avoidsHorizontalFolds: false) { _ in
+            VStack(alignment: .leading, spacing: 16) {
+                header
 
-            List {
-                Section {
+                VStack(spacing: 0) {
                     makeSummaryRow(
                         title: "You Receive",
                         value: onrampSessionResponse.amountToReceiveText
                     )
+
+                    Divider()
+
                     makeSummaryRow(
                         title: "Fees",
                         value: onrampSessionResponse.totalFeesText
                     )
+
+                    Divider()
+
                     makeSummaryRow(
                         title: "Pay With",
                         value: selectedPaymentMethodDescription
                     )
+
+                    Divider()
+
                     makeSummaryRow(
                         title: "Processing Time",
                         value: processingTimeText
                     )
+
+                    Divider()
+
                     makeSummaryRow(
                         title: "Deposit To",
                         value: onrampSessionResponse.depositToText
                     )
+
+                    Divider()
+
                     makeSummaryRow(
                         title: "Provider",
                         value: "Stripe"
                     )
-                } header: {
-                    // Collapses the excessive top padding of the list.
-                    Spacer(minLength: 8)
-                        .listRowInsets(EdgeInsets())
                 }
-                footer: {
-                    Text("By confirming, you agree to the Terms and Conditions and acknowledge the Privacy Policy.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, 8)
-                        .listRowInsets(EdgeInsets())
-                }
+                .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 10))
+
+                Text("By confirming, you agree to the Terms and Conditions and acknowledge the Privacy Policy.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
-            .listStyle(.insetGrouped)
-            // Also needed to collapse the excessive top padding of the list.
-            .environment(\.defaultMinListHeaderHeight, 0)
+            .horizontallyCenteredContent()
+            .padding()
         }
+        .background(Color(.systemGroupedBackground))
         .navigationTitle("Review")
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
@@ -155,7 +161,10 @@ struct PaymentSummaryView: View {
             .buttonStyle(PrimaryButtonStyle())
             .disabled(isLoading.wrappedValue)
             .opacity(isLoading.wrappedValue ? 0.5 : 1)
+            .horizontallyCenteredContent()
             .padding()
+            .background(Color(.systemGroupedBackground))
+            .avoidingActiveFold()
         }
         .alert(
             alert?.title ?? "Error",
@@ -199,7 +208,8 @@ struct PaymentSummaryView: View {
             Text(value)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, 2)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
     }
 
     private func checkout() {
@@ -223,8 +233,11 @@ struct PaymentSummaryView: View {
                     switch checkoutResult {
                     case .completed:
                         let amount = onrampSessionResponse.amountToReceiveText
-                        let network = onrampSessionResponse.transactionDetails.destinationNetwork.localizedCapitalized
-                        onCheckoutSuccess("You’ve added \(amount) to your \(network) wallet.")
+                        if let network = onrampSessionResponse.transactionDetails.destinationNetwork?.localizedCapitalized {
+                            onCheckoutSuccess("You’ve added \(amount) to your \(network) wallet.")
+                        } else {
+                            onCheckoutSuccess("You’ve added \(amount) to your wallet.")
+                        }
                     case .canceled:
                         break
                     @unknown default:
@@ -291,28 +304,42 @@ private extension CreateOnrampSessionResponse {
     }
 
     var amountToReceiveText: String {
-        let amount = Double(transactionDetails.destinationAmount) ?? 0
+        guard let destinationAmount = transactionDetails.destinationAmount,
+              let destinationCurrency = transactionDetails.destinationCurrency,
+              let amount = Double(destinationAmount) else {
+            return "Unavailable"
+        }
         let formattedAmount = Self.currencyFormatterWithoutSymbol.string(from: NSNumber(value: amount)) ?? "$0"
-        return "\(formattedAmount) \(transactionDetails.destinationCurrency)"
+        return "\(formattedAmount) \(destinationCurrency)"
     }
 
     var totalFeesText: String {
-        let networkFee = Double(transactionDetails.fees.networkFeeAmount) ?? 0
-        let transactionFee = Double(transactionDetails.fees.transactionFeeAmount) ?? 0
+        guard let networkFeeAmount = transactionDetails.fees?.networkFeeAmount,
+              let transactionFeeAmount = transactionDetails.fees?.transactionFeeAmount,
+              let networkFee = Double(networkFeeAmount),
+              let transactionFee = Double(transactionFeeAmount) else {
+            return "Unavailable"
+        }
         let total = networkFee + transactionFee
         return formattedSourceAmount(total)
     }
 
     var depositToText: String {
-        let network = transactionDetails.destinationNetwork.localizedCapitalized
-        let address = transactionDetails.walletAddress
+        guard let destinationNetwork = transactionDetails.destinationNetwork,
+              let address = transactionDetails.walletAddress else {
+            return "Unavailable"
+        }
+        let network = destinationNetwork.localizedCapitalized
         let prefix = String(address.prefix(2))
         let suffix = String(address.suffix(4))
         return "\(network) • \(prefix)••••\(suffix)"
     }
 
     private func formattedSourceAmount(_ amount: Double) -> String {
-        let sourceCurrencyCode = transactionDetails.sourceCurrency.uppercased()
+        guard let sourceCurrency = transactionDetails.sourceCurrency else {
+            return "Unavailable"
+        }
+        let sourceCurrencyCode = sourceCurrency.uppercased()
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = Locale.current
@@ -360,8 +387,7 @@ private extension CreateOnrampSessionResponse {
                     destinationNetworks: [],
                     transactionId: nil,
                     transactionLimit: 74517,
-                    walletAddress: "0123451234512345123545",
-                    walletAddresses: nil
+                    walletAddress: "0123451234512345123545"
                 ),
                 uiMode: "headless"
             ),

@@ -42,7 +42,7 @@ public final class CurrencySelectorElementUIView: UIView {
     }()
 
     init?(
-        session: CheckoutController.Session,
+        session: CheckoutElementsController.Session,
         delegate: CurrencySelectorElementCheckoutDelegate,
         appearance: CurrencySelectorElement.Appearance,
         needsUpdateSuperviewHeight: @escaping () -> Void
@@ -91,7 +91,7 @@ public final class CurrencySelectorElementUIView: UIView {
         containerStackView.addArrangedSubview(errorLabel)
     }
 
-    func update(with session: CheckoutController.Session) {
+    func update(with session: CheckoutElementsController.Session) {
         guard let (_, exchangeRateMeta, rawCurrency) =
                 CurrencySelectorUtilities.adaptivePricingData(from: session)
         else {
@@ -115,8 +115,8 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     private func buildSelectorItems(
-        session: CheckoutController.Session,
-        exchangeRateMeta: CheckoutController.Session.ExchangeRateMeta
+        session: CheckoutElementsController.Session,
+        exchangeRateMeta: CheckoutElementsController.Session.ExchangeRateMeta
     ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
         let resolvedLabelContent = resolveLabelContent()
         let flagFont = appearance.scaledFont(for: appearance.font, style: .footnote)
@@ -131,16 +131,16 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     private func updateSelectorItems(
-        session: CheckoutController.Session,
-        exchangeRateMeta: CheckoutController.Session.ExchangeRateMeta
+        session: CheckoutElementsController.Session,
+        exchangeRateMeta: CheckoutElementsController.Session.ExchangeRateMeta
     ) {
         let (left, right) = buildSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
         selectorView?.updateItems(left: left, right: right)
     }
 
     private func buildSelectorView(
-        session: CheckoutController.Session,
-        exchangeRateMeta: CheckoutController.Session.ExchangeRateMeta,
+        session: CheckoutElementsController.Session,
+        exchangeRateMeta: CheckoutElementsController.Session.ExchangeRateMeta,
         currency: CurrencySelectorUtilities.CurrencyCode
     ) {
         let (left, right) = buildSelectorItems(session: session, exchangeRateMeta: exchangeRateMeta)
@@ -165,7 +165,7 @@ public final class CurrencySelectorElementUIView: UIView {
 
     private func updateCaption(
         currency: CurrencySelectorUtilities.CurrencyCode,
-        exchangeRateMeta: CheckoutController.Session.ExchangeRateMeta
+        exchangeRateMeta: CheckoutElementsController.Session.ExchangeRateMeta
     ) {
         let caption = CurrencySelectorUtilities.caption(
             forSelectedCurrency: currency.apiValue,

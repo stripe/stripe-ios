@@ -136,7 +136,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertNil(presenter.presentedViewController)
     }
 
-    private func makeSavedSEPACheckout(displaysMandateText: Bool? = nil) async throws -> CheckoutController {
+    private func makeSavedSEPACheckout(displaysMandateText: Bool? = nil) async throws -> CheckoutElementsController {
         let session = CheckoutTestHelpers.makeSession([
             "id": "cs_test_123",
             "integration_currency": "eur",
@@ -153,7 +153,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         if let displaysMandateText {
             configuration.displaysMandateText = displaysMandateText
         }
-        return try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+        return try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: session,
             paymentElementConfiguration: configuration
         ))
@@ -408,7 +408,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     func testConfirmRejectsClosedSessionWithoutCallingConfirmAPI() async throws {
         // Given a Checkout Session that is already complete
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: CheckoutTestHelpers.makeClosedSession())
         )
         let confirmRequest = expectation(description: "Confirmation API is not called")
@@ -643,7 +643,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 "status": testCase.status,
                 testCase.key: ["id": intentJSON["id"]!, "client_secret": intentJSON["client_secret"]!],
             ]
-            let confirmedResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: responseJSON)
+            let confirmedResponse = try CheckoutClientAPIResponse.decode(fromAPIResponse: responseJSON)
             let poller = TestCheckoutSessionPoller(outcome: .succeeded(Self.pollResponse()))
 
             // The Intent stub rejects retrieval when /confirm does not require an action.
@@ -730,7 +730,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             checkboxState: .hidden,
             expectedAllowRedisplay: "unspecified",
             expectedSavePaymentMethod: nil,
-            expectedPaymentUserAgent: CheckoutController.ConfirmingElement.paymentElement.paymentUserAgent
+            expectedPaymentUserAgent: CheckoutElementsController.ConfirmingElement.paymentElement.paymentUserAgent
         )
     }
 
@@ -844,14 +844,14 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let apiResponse = CheckoutTestHelpers.makeSession([
             "shipping_address_collection": ["allowed_countries": ["US"]]
         ])
-        var configuration = CheckoutController.Configuration(
+        var configuration = CheckoutElementsController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
         var eceConfiguration = ExpressCheckoutElement.Configuration(completion: { _ in })
         eceConfiguration.applePayConfiguration = .init(merchantId: "merchant.com.test")
         configuration.expressCheckoutElement = eceConfiguration
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 apiResponse: apiResponse,
                 configuration: configuration
@@ -873,18 +873,18 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     func testExpressCheckoutLinkBuildsWalletConfirmationFlow() async throws {
         // Given Checkout and ECE configuration containing values needed by Link
-        var configuration = CheckoutController.Configuration(
+        var configuration = CheckoutElementsController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://custom-return"
         )
         configuration.merchantDisplayName = "Test ECE Merchant"
         configuration.userInterfaceStyle = .alwaysDark
-        var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
+        var billingDetails = CheckoutElementsController.Configuration.Defaults.BillingDetails()
         billingDetails.name = "Jenny Rosen"
         billingDetails.address = .init(country: "US", postalCode: "94107")
         configuration.defaults.billingDetails = billingDetails
         configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(completion: { _ in })
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["customer_email": "jenny@example.com"]),
             configuration: configuration,
             paymentElementConfiguration: nil
@@ -916,14 +916,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(parameters.configuration.defaultBillingDetails.email, "jenny@example.com")
         XCTAssertNil(parameters.nativeSheetPresentation)
         XCTAssertNil(checkout.paymentElement)
+        XCTAssertEqual(parameters.analyticsHelper.checkoutSessionID, checkout.session.id)
         XCTAssertNotNil(parameters.confirmationChallenge)
     }
 
     func testExpressCheckoutLinkCollectsRequiredBillingAddress() async throws {
         // Given Checkout requires a full billing address and has no email
-        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://custom-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://custom-return")
         configuration.expressCheckoutElement = ExpressCheckoutElement.Configuration(completion: { _ in })
-        let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
             apiResponse: CheckoutTestHelpers.makeSession(["billing_address_collection": "required"]),
             configuration: configuration
         ))
@@ -984,7 +985,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             window.isHidden = true
         }
         let flow = try checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: window)
-        var finalCheckoutResult: CheckoutController.ConfirmResult?
+        var finalCheckoutResult: CheckoutElementsController.ConfirmResult?
         let confirmation = Task {
             finalCheckoutResult = await checkout.confirm(flow)
         }
@@ -1075,7 +1076,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func assertLinkPaymentDetailsConfirmsCheckoutSession(
-        confirmationSource: CheckoutController.ConfirmingElement = .paymentElement,
+        confirmationSource: CheckoutElementsController.ConfirmingElement = .paymentElement,
         checksPaymentUserAgent: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -1102,7 +1103,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         )
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
-        let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
+        let flow = CheckoutElementsController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
@@ -1134,7 +1135,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let poll = stubPollCheckoutSession(sessionId: checkout.session.id, clientSecret: checkout.clientSecret)
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
-        let flow = CheckoutController.CheckoutConfirmationFlow.link(.init(
+        let flow = CheckoutElementsController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
@@ -1280,14 +1281,14 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func makeCheckout(
-        apiResponse: PaymentPagesAPIResponse = CheckoutTestHelpers.makeOpenSession()
-    ) async throws -> CheckoutController {
-        try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse))
+        apiResponse: CheckoutClientAPIResponse = CheckoutTestHelpers.makeOpenSession()
+    ) async throws -> CheckoutElementsController {
+        try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: apiResponse))
     }
 
     private func makePaymentMethodFlow(
-        for checkout: CheckoutController
-    ) -> CheckoutController.CheckoutConfirmationFlow {
+        for checkout: CheckoutElementsController
+    ) -> CheckoutElementsController.CheckoutConfirmationFlow {
         makePaymentMethodFlow(
             for: checkout,
             option: .saved(STPPaymentMethod._testCard(), nil)
@@ -1295,12 +1296,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func makePaymentMethodFlow(
-        for checkout: CheckoutController,
-        option: CheckoutController.PaymentMethodConfirmationParameters.Option,
+        for checkout: CheckoutElementsController,
+        option: CheckoutElementsController.PaymentMethodConfirmationParameters.Option,
         confirmationChallenge: (any CheckoutConfirmationChallenge)? = nil
-    ) -> CheckoutController.CheckoutConfirmationFlow {
+    ) -> CheckoutElementsController.CheckoutConfirmationFlow {
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
-        let parameters = CheckoutController.PaymentMethodConfirmationParameters(
+        let parameters = CheckoutElementsController.PaymentMethodConfirmationParameters(
             option: option,
             configuration: configuration,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
@@ -1313,7 +1314,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func assertNewPaymentMethodConfirmation(
-        session: PaymentPagesAPIResponse,
+        session: CheckoutClientAPIResponse,
         paymentMethodType: PaymentSheet.PaymentMethodType,
         checkboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
         expectedAllowRedisplay: String,
@@ -1471,11 +1472,11 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func confirmCheckoutSession(
-        _ checkout: CheckoutController,
+        _ checkout: CheckoutElementsController,
         responseJSON: [AnyHashable: Any],
         intentJSON: [AnyHashable: Any]? = nil,
         poller: any CheckoutSessionPolling = TestCheckoutSessionPoller(outcome: .succeeded(CheckoutConfirmationStubbedTests.pollResponse()))
-    ) async -> CheckoutController.InternalConfirmResult {
+    ) async -> CheckoutElementsController.InternalConfirmResult {
         stubConfirmation(responseJSON: responseJSON, intentJSON: intentJSON)
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let requestParameters = CheckoutSessionConfirmationRequestParameters.createWithPaymentMethodID(
@@ -1489,7 +1490,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
             collectedInformation: .init(email: checkout.session.localState.email)
         )
-        return await CheckoutController.confirmCheckoutSession(
+        return await CheckoutElementsController.confirmCheckoutSession(
             with: requestParameters,
             apiClient: configuration.apiClient,
             authenticationContext: self,
@@ -1699,7 +1700,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func assertSucceeded(
-        _ result: CheckoutController.ConfirmResult,
+        _ result: CheckoutElementsController.ConfirmResult,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -1751,7 +1752,7 @@ private final class TestCheckoutSessionPoller: CheckoutSessionPolling {
     }
 }
 
-private extension CheckoutController {
+private extension CheckoutElementsController {
     func confirm(_ flow: CheckoutConfirmationFlow) async -> ConfirmResult {
         return await confirm(source: .merchant) { flow }
     }

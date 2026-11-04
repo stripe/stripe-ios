@@ -134,7 +134,7 @@ class LinkURLGeneratorTests: XCTestCase {
     }
 
     private func assertURLParamsPaymentUserAgent(
-        _ confirmationSource: CheckoutController.ConfirmingElement
+        _ confirmationSource: CheckoutElementsController.ConfirmingElement
     ) async throws {
         // Given a global product usage set already polluted with the labels PaymentElement
         // wraps internally (simulating FlowController/EmbeddedPaymentElement self-registration)
@@ -164,6 +164,7 @@ class LinkURLGeneratorTests: XCTestCase {
         XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSource, "mobile-checkout")
         XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationSubtype, confirmationSource.rawValue)
         XCTAssertEqual(params.clientAttributionMetadata.checkoutConfigId, "config_checkout")
+        XCTAssertEqual(params.loggerMetadata["checkout_session_id"], session.id)
         XCTAssertEqual(params.clientAttributionMetadata.merchantIntegrationAdditionalElements, ["mobile-payment-element", "mobile-express-checkout-element"])
     }
 

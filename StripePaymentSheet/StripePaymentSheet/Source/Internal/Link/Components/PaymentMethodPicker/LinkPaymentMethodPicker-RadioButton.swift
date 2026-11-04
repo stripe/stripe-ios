@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 extension LinkPaymentMethodPicker {
@@ -45,17 +46,15 @@ extension LinkPaymentMethodPicker {
             layer.bounds = CGRect(x: 0, y: 0, width: Constants.diameter, height: Constants.diameter)
             layer.cornerRadius = Constants.diameter / 2
             layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+            return layer
+        }()
 
-            let innerCircle = CALayer()
-            innerCircle.backgroundColor = UIColor.white.cgColor
-            innerCircle.cornerRadius = Constants.innerDiameter / 2
-            innerCircle.bounds = CGRect(x: 0, y: 0, width: Constants.innerDiameter, height: Constants.innerDiameter)
-            innerCircle.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-
-            // Add and center inner circle
-            layer.addSublayer(innerCircle)
-            innerCircle.position = CGPoint(x: layer.bounds.midX, y: layer.bounds.midY)
-
+        /// Inner circle of the "on" state, colored to contrast with `tintColor`.
+        private let innerCircleLayer: CALayer = {
+            let layer = CALayer()
+            layer.cornerRadius = Constants.innerDiameter / 2
+            layer.bounds = CGRect(x: 0, y: 0, width: Constants.innerDiameter, height: Constants.innerDiameter)
+            layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
             return layer
         }()
 
@@ -67,6 +66,9 @@ extension LinkPaymentMethodPicker {
             super.init(frame: .zero)
             layer.addSublayer(offLayer)
             layer.addSublayer(onLayer)
+            // Add and center inner circle
+            onLayer.addSublayer(innerCircleLayer)
+            innerCircleLayer.position = CGPoint(x: onLayer.bounds.midX, y: onLayer.bounds.midY)
             update()
             applyStyling()
         }
@@ -108,6 +110,7 @@ extension LinkPaymentMethodPicker {
             CATransaction.setDisableActions(true)
             offLayer.borderColor = borderColor.cgColor
             onLayer.backgroundColor = tintColor.cgColor
+            innerCircleLayer.backgroundColor = tintColor.contrastingColor.cgColor
             CATransaction.commit()
         }
 
