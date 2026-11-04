@@ -92,6 +92,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             launchWith(base64String: playgroundData, windowScene: windowScene)
         } else if let playgroundData = ProcessInfo.processInfo.environment["STP_CUSTOMERSHEET_PLAYGROUND_DATA"] {
             launchCustomerSheetWith(base64String: playgroundData, windowScene: windowScene)
+        } else if ProcessInfo.processInfo.environment["STP_CHECKOUT_GUIDE"] != nil {
+            windowScene.windows.first!.rootViewController = UIHostingController(rootView: CheckoutGuideLauncher())
         } else if ProcessInfo.processInfo.environment["STP_CHECKOUT_ELEMENTS"] == "true" {
             launchCheckoutElements(windowScene: windowScene)
         }

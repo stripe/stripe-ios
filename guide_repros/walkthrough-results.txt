@@ -1,0 +1,29 @@
+Fresh guide walkthrough — 2026-11-04
+Xcode 27.1; iOS 18.5; iPhone 12 mini; SDK baseline 9e1bc2b259518ec87ff8d3bd4cf3934ce4f0a6ad.
+
+Completed test outcomes from the controller-lifecycle control run. Xcode hung during final bundle packaging after all tests completed, so the original runner log is the evidence for these controls.
+Test Case '-[PaymentSheetUITest.CheckoutGuideUITests testCurrencySelector]' started.
+Test Case '-[PaymentSheetUITest.CheckoutGuideUITests testCurrencySelector]' passed (7.484 seconds).
+Test Case '-[PaymentSheetUITest.CheckoutGuideUITests testReturnFromOrderDetailsPreservesSelection]' started.
+Test Case '-[PaymentSheetUITest.CheckoutGuideUITests testReturnFromOrderDetailsPreservesSelection]' failed (33.426 seconds).
+Test Case '-[PaymentSheetUITest.CheckoutGuideUITests testReturnFromOrderDetailsWithLoadGuard]' started.
+Test Case '-[PaymentSheetUITest.CheckoutGuideUITests testReturnFromOrderDetailsWithLoadGuard]' passed (42.398 seconds).
+
+Final runnable scenario outcomes (deduplicated across runs):
+PASS: UIKit sheet, UIKit embedded, SwiftUI sheet, SwiftUI embedded.
+PASS: Apple Pay, insufficient-funds decline then replacement-card payment.
+PASS: guide authentication card via web challenge, COMPLETE then Close.
+PASS: SEPA with guide IBAN; returns completed / unpaid.
+PASS: empty-email confirmation error, then valid email + payment reselection + successful payment.
+PASS: EUR -> USD -> EUR through Currency Selector.
+PASS: navigation with load guard; same Session ID and retained selection.
+PASS: email update with Link disabled retains selected card.
+REPRO FAIL: literal SwiftUI container loses selection on navigation return.
+REPRO FAIL: default Payment Element loses selected card after email update, before any confirmation.
+
+Finalized bundles:
+/tmp/checkout-guide-final-assembly.xcresult: 2 tests passed after applying the guide's global shipping-control disabling rule; screenshots inspected.
+/tmp/checkout-guide-walkthrough.xcresult: 10 tests; 6 passed, 4 failed (including initial interaction failures later resolved).
+/tmp/checkout-guide-final-flows.xcresult: 5 tests; 4 passed, 1 reproduced SDK failure.
+
+No full result bundles or raw backend logs are committed. Refer to the test source and screenshots for portable repros.

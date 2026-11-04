@@ -2,13 +2,33 @@
 
 Scope: complete the supported-flow pass in `search_strategy.md` and `docs_driven_strategy.md`. Shipping options, tax ID collection, phone collection, promotion-code support, and other documented unfinished preview features are excluded. Baseline: `5efd450a813`. The user subsequently requested committing and pushing the reports and repros for shareable links; that instruction supersedes the earlier uncommitted-only guidance. Production SDK code is unchanged.
 
-## Current status: merchant-workflow audit incomplete
+## Current status: requested iOS guide walkthrough finished
 
-The 2026-11-04 saved-payment-method review found a missing supported workflow after the earlier completeness claims. Those claims are withdrawn. The current list contains **eight reports**, not an exhaustive list of all integration problems. The newly verified [saved-payment-method guide omission](ISSUE_integration-guide_missing-saved-payment-method-workflow.md) covers Customer association, enabling save consent, and reusing the Customer on subsequent Sessions. See [integration_workflow_coverage.md](integration_workflow_coverage.md) for the missing-workflow inventory and checks that remain unperformed.
+The fresh sentence-by-sentence audit is in [integration_guide_walkthrough.md](integration_guide_walkthrough.md). It assembles and runs a separate example-app screen using the guide's configuration, skips generic Stripe setup as requested, and uses only backend transport helpers. Both UIKit and SwiftUI, sheet and embedded payment collection, completed real payments. Fourteen UI scenarios produced twelve successful flows/controls and two intentionally failing bug repros. Fulfillment requirements were checked against the guide, Stripe's fulfillment contract, and a real SEPA `.completed(.unpaid)` result; no merchant fulfillment server was deployed.
 
-The original saved-card UI fixture supplied server configuration absent from the guide. Passing it proved the SDK flow worked, not that the guide explained how to build it.
+This pass adds **four guide reports and one SDK report**, bringing the branch to **13 reports (8 guide, 5 SDK)**. It also adds guide-only UI evidence to the existing saved-method report. This is completion of the requested core iOS guide walkthrough, not a claim that every sibling guide, platform, or payment method has been tested.
 
-## Correction and integration-guide follow-up
+## Current issue files
+
+| Area | Finding and report |
+| --- | --- |
+| SDK | [Shipping form restores an old address](ISSUE_sub-elements_shipping-address-element-never-resyncs-after-construction.md) |
+| SDK | [Queued shipping clears/reverts are dropped](ISSUE_state-machine_shipping-update-noop-check-drops-queued-reverts.md) |
+| SDK | [COP display rounds away cents](ISSUE_session-model_formatted-cop-total-rounds-away-cents.md) |
+| SDK | [Link web handoff retains old email](ISSUE_config_link-web-handoff-keeps-email-before-update.md) |
+| SDK — new | [Email update clears selected card with Link enabled](ISSUE_config_email-update-clears-selected-card-with-link.md) |
+| Guide | [Preview import does not expose Checkout](ISSUE_integration-guide_ios-preview-import-does-not-expose-checkout.md) |
+| Guide | [Pay requires optional shipping](ISSUE_integration-guide_pay-button-requires-optional-shipping.md) |
+| Guide | [Result switch fails with a resilient Swift 6 framework](ISSUE_integration-guide_result-switch-fails-with-swift6-framework.md) |
+| Guide | [Missing Customer/save/reuse workflow](ISSUE_integration-guide_missing-saved-payment-method-workflow.md) |
+| Guide — new | [Return URL step configures an unused API](ISSUE_integration-guide_return-url-configures-unused-embedded-api.md) |
+| Guide — new | [Pay ignores required email](ISSUE_integration-guide_pay-button-ignores-required-email.md) |
+| Guide — new | [SwiftUI reloads checkout on navigation return](ISSUE_integration-guide_swiftui-reloads-checkout-on-navigation.md) |
+| Guide — new | [Fulfillment omits payment-status and deduplication rules](ISSUE_integration-guide_fulfillment-omits-payment-status-and-deduplication.md) |
+
+New fixtures: `Checkout Guide/CheckoutGuideContainer.swift`, `CheckoutGuideUITests.swift`, and the `STP_CHECKOUT_GUIDE` example-app route. Production SDK code is unchanged. [Portable results](guide_repros/walkthrough-results.txt) and report-linked screenshots distinguish actual failures from corrected harness interactions. Pinned SwiftLint and whitespace checks pass.
+
+## Correction and integration-guide follow-up (earlier pass)
 
 The earlier completion claim was too broad: the SDK scenario pass used docs as input but had not audited the guide's samples themselves. A subsequent direct audit of the core iOS guide found **three additional guide issues**, bringing the local report count to seven. See [integration_guide_audit.md](integration_guide_audit.md) for exact scope, sources, compiler controls, live checks, and limits.
 
