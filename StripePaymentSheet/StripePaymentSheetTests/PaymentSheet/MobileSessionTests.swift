@@ -39,7 +39,7 @@ class MobileSessionTests: XCTestCase {
         configuration.paymentMethodOrder = ["card", "external_paypal"]
 
         // When it's encoded
-        let header = try MobileSession.encode(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: true))
+        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: true))
 
         // Then it matches the golden JSON
         XCTAssertEqual(
@@ -56,13 +56,29 @@ class MobileSessionTests: XCTestCase {
         let configuration = PaymentSheet.Configuration()
 
         // When it's encoded
-        let header = try MobileSession.encode(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false))
+        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false))
 
         // Then it matches the golden JSON, still sending allows_delayed_payment_methods when false
         XCTAssertEqual(
             header,
             #"{"environment":{"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"attach_defaults_to_payment_method":false,"email":"automatic"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"}},"spec_hash":"7feb8eb5"}"#
         )
+    }
+
+    func testConfigHeader_escapesNonASCII() throws {
+        // Given a configuration with non-ASCII payment method types, including one outside the Basic Multilingual Plane
+        var configuration = PaymentSheet.Configuration()
+        configuration.paymentMethodOrder = ["café", "😀"]
+
+        // When it's encoded
+        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false))
+
+        // Then the header is ASCII, with each UTF-16 code unit escaped
+        XCTAssertTrue(header.allSatisfy { $0.isASCII })
+        XCTAssertTrue(header.contains(#""payment_method_order":["caf\u00e9","\ud83d\ude00"]"#))
+        // ...and it still decodes to the original values
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(header.utf8)) as? [String: Any])
+        XCTAssertEqual(json[jsonDict: "payment_element_config"]?["payment_method_order"] as? [String], ["café", "😀"])
     }
 
     func testConfig_blankValuesAreAbsent() {
@@ -89,7 +105,7 @@ class MobileSessionTests: XCTestCase {
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
         let headers = MobileSession.configHeaders(for: configuration)
         XCTAssertEqual(Array(headers.keys), ["X-Stripe-Mobile-Config"])
-        XCTAssertEqual(headers["X-Stripe-Mobile-Config"], try? MobileSession.encode(MobileSession.Config(configuration: configuration)))
+        XCTAssertEqual(headers["X-Stripe-Mobile-Config"], try? MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration)))
     }
 
     // MARK: - Sidecar decoding

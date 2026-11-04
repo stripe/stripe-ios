@@ -5,34 +5,9 @@ import Foundation
 
 // Map SDK configuration fields explicitly; do not encode SDK objects.
 enum MobileSession {
-    /// The `elements/sessions` request header that carries `encode(_:)`.
+    /// The `elements/sessions` request header. The SDK encodes `Config` into it as compact JSON with
+    /// sorted keys and every non-ASCII UTF-16 code unit written as `\uXXXX`, so the header is ASCII.
     static let configHeaderName = "X-Stripe-Mobile-Config"
-
-    /// Returns the header value: compact JSON of the config, with every non-ASCII character written
-    /// as a JSON `\uXXXX` escape so the header is always ASCII.
-    static func encode(_ config: Config) throws -> String {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
-        let data = try encoder.encode(config)
-        guard let json = String(bytes: data, encoding: .utf8) else {
-            throw EncodingError.invalidValue(
-                config,
-                EncodingError.Context(codingPath: [], debugDescription: "JSONEncoder produced invalid UTF-8")
-            )
-        }
-        // Non-ASCII can only appear inside JSON strings, so escaping each UTF-16 code unit
-        // (both halves of a surrogate pair for characters above U+FFFF) keeps the JSON valid.
-        var ascii = ""
-        ascii.reserveCapacity(json.utf16.count)
-        for unit in json.utf16 {
-            if unit < 0x80 {
-                ascii.unicodeScalars.append(Unicode.Scalar(UInt8(unit)))
-            } else {
-                ascii += String(format: "\\u%04x", unit)
-            }
-        }
-        return ascii
-    }
 
     /// Decodes the `mobile_session` sidecar. Open enums decode unknown values to `.unparsable`.
     static func decode(_ data: Data) throws -> Session {

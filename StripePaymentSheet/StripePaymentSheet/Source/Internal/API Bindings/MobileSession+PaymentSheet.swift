@@ -28,11 +28,37 @@ extension MobileSession {
             return [:]
         }
         do {
-            return [configHeaderName: try encode(Config(configuration: configuration))]
+            return [configHeaderName: try encodeHeaderValue(Config(configuration: configuration))]
         } catch {
             stpAssertionFailure("Failed to encode MobileSession.Config: \(error)")
             return [:]
         }
+    }
+
+    /// Returns the header value: compact JSON of the config with sorted keys, and every non-ASCII character
+    /// written as a JSON `\uXXXX` escape so the header is always ASCII.
+    static func encodeHeaderValue(_ config: Config) throws -> String {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let data = try encoder.encode(config)
+        guard let json = String(bytes: data, encoding: .utf8) else {
+            throw EncodingError.invalidValue(
+                config,
+                EncodingError.Context(codingPath: [], debugDescription: "JSONEncoder produced invalid UTF-8")
+            )
+        }
+        // Non-ASCII can only appear inside JSON strings, so escaping each UTF-16 code unit
+        // (both halves of a surrogate pair for characters above U+FFFF) keeps the JSON valid.
+        var ascii = ""
+        ascii.reserveCapacity(json.utf16.count)
+        for unit in json.utf16 {
+            if unit < 0x80 {
+                ascii.unicodeScalars.append(Unicode.Scalar(UInt8(unit)))
+            } else {
+                ascii += String(format: "\\u%04x", unit)
+            }
+        }
+        return ascii
     }
 
     /// Decodes the `mobile_session` sidecar from an `elements/sessions` response.
