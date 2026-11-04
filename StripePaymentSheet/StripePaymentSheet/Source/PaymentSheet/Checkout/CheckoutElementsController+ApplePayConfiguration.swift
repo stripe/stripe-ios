@@ -13,6 +13,6 @@ import PassKit
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
 public protocol CheckoutApplePayConfiguration {
-    /// The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+    /// The type of Apple Pay button to display. 
     var buttonType: PKPaymentButtonType? { get }
 }

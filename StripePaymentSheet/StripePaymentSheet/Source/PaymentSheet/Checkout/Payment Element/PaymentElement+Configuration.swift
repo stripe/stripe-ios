@@ -226,7 +226,7 @@ extension PaymentElement.Configuration {
         /// Creates an Apple Pay configuration.
         /// - Parameters:
         ///   - display: Controls whether Apple Pay is displayed in Payment Element. Defaults to `.automatic`.
-        ///   - buttonType: The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+        ///   - buttonType: The type of Apple Pay button to display.
         public init(
             display: Display = .automatic,
             buttonType: PKPaymentButtonType? = nil

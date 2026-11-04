@@ -247,6 +247,8 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var automaticPaymentMethods: Bool
     @Binding var linkMode: CheckoutPlayground.LinkMode
+    @Binding var applePayEnabled: Bool
+    @Binding var paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay
 
     private var shouldShowAutomaticTax: Bool {
         return customerType != .new
@@ -323,6 +325,20 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
                 )
+                CheckoutPlayground.ToggleRow(
+                    title: "Apple Pay",
+                    isOn: $applePayEnabled,
+                    tooltip: "Sets `CheckoutElementsController.Configuration.applePayMerchantId`, shared by Payment Element and Express Checkout Element."
+                )
+                if applePayEnabled {
+                    CheckoutPlayground.PickerRow(
+                        title: "Apple Pay in Payment Element",
+                        icon: "apple.logo",
+                        selection: $paymentElementApplePayDisplay,
+                        tooltip: "Sets `PaymentElement.Configuration.ApplePayConfiguration.display`. Set to `never` to hide Apple Pay in Payment Element while continuing to show it in Express Checkout Element.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
