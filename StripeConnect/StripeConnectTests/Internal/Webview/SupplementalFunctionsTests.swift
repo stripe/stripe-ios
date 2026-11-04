@@ -37,7 +37,9 @@ final class SupplementalFunctionsTests: XCTestCase {
 
         let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: { _ in })
         let props = Props(testField: 1, supplementalFunctions: supplementalFunctions)
-        let json = String(data: try JSONEncoder().encode(props), encoding: .utf8)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .sortedKeys
+        let json = String(data: try encoder.encode(props), encoding: .utf8)
 
         XCTAssertEqual(json, "{\"setHandleCheckScanSubmitted\":true,\"testField\":1}")
     }
