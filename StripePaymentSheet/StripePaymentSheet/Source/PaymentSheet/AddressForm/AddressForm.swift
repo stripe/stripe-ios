@@ -9,6 +9,8 @@ import UIKit
 
 /// Displays the address fields of an `AddressFormState` without a title, button, or scroll view,
 /// so they can sit inline in the host's own layout. Draws nothing until address formats load.
+// Only the Link app uses this view, and Periphery scans the SDK alone.
+// periphery:ignore
 @_spi(InternalOnlyAPI)
 public struct AddressForm: View {
     @ObservedObject private var state: AddressFormState
