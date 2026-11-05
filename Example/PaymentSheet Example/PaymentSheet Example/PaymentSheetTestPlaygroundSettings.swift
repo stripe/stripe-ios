@@ -365,6 +365,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum MobileSessionSidecar: String, PickerEnum {
+        static var enumName: String { "Enable mobile_session sidecar" }
+
+        case on
+        case off
+    }
+
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
 
@@ -775,6 +782,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkDisplay: LinkDisplay
     var forceOnelink: ForceOnelink
     var forceOnelinkConsumer: ForceOnelinkConsumer
+    var mobileSessionSidecar: MobileSessionSidecar
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -846,6 +854,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkDisplay: .automatic,
             forceOnelink: .off,
             forceOnelinkConsumer: .off,
+            mobileSessionSidecar: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,

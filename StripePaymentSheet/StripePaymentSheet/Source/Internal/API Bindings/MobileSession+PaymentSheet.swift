@@ -83,9 +83,11 @@ extension MobileSession.Config {
     /// Maps each field explicitly. Only booleans and policies go over the wire, never customer values.
     init(
         configuration: PaymentElementConfiguration,
-        hasFinancialConnectionsSdk: Bool = FinancialConnectionsSDKAvailability.isFullFinancialConnectionsSDKAvailable
+        hasFinancialConnectionsSdk: Bool = FinancialConnectionsSDKAvailability.isFullFinancialConnectionsSDKAvailable,
+        usesNativeLink: Bool? = nil
     ) {
         let hasDefaultEmail = !(configuration.defaultBillingDetails.email?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        let billingDetailsCollection = configuration.billingDetailsCollectionConfiguration
         self.init(
             paymentElementConfig: .init(
                 allowsDelayedPaymentMethods: configuration.allowsDelayedPaymentMethods,
@@ -93,14 +95,30 @@ extension MobileSession.Config {
                 hasReturnUrl: !(configuration.returnURL?.isEmpty ?? true),
                 defaultBillingDetails: .init(email: hasDefaultEmail),
                 billingDetailsCollection: .init(
-                    email: .init(configuration.billingDetailsCollectionConfiguration.email),
-                    attachDefaultsToPaymentMethod: configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod
+                    name: .init(billingDetailsCollection.name),
+                    phone: .init(billingDetailsCollection.phone),
+                    email: .init(billingDetailsCollection.email),
+                    address: .init(billingDetailsCollection.address),
+                    attachDefaultsToPaymentMethod: billingDetailsCollection.attachDefaultsToPaymentMethod
                 ),
                 link: .init(displayMode: .init(configuration.link.display)),
-                paymentMethodOrder: configuration.paymentMethodOrder
+                cardBrandAcceptance: .init(configuration.cardBrandAcceptance),
+                paymentMethodOrder: configuration.paymentMethodOrder ?? []
             ),
-            environment: .init(hasFinancialConnectionsSdk: hasFinancialConnectionsSdk)
+            environment: .init(
+                hasFinancialConnectionsSdk: hasFinancialConnectionsSdk,
+                usesNativeLink: usesNativeLink ?? Self.deviceSupportsNativeLink(apiClient: configuration.apiClient)
+            )
         )
+    }
+
+    /// The device half of `deviceCanUseNativeLink`. The other half, `link_settings.link_use_attestation`,
+    /// is only known once `elements/sessions` responds, so the server combines the two.
+    static func deviceSupportsNativeLink(apiClient: STPAPIClient) -> Bool {
+        if let nativeLinkEnabledOverride = PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride {
+            return nativeLinkEnabledOverride
+        }
+        return apiClient.isTestmode || apiClient.stripeAttest.isSupported
     }
 }
 
@@ -114,12 +132,46 @@ extension MobileSession.CollectionMode {
     }
 }
 
+extension MobileSession.AddressCollectionMode {
+    init(_ addressCollectionMode: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode) {
+        switch addressCollectionMode {
+        case .automatic: self = .automatic
+        case .never: self = .never
+        case .full: self = .full
+        }
+    }
+}
+
 extension MobileSession.LinkDisplay {
     init(_ display: PaymentSheet.LinkConfiguration.Display) {
         switch display {
         case .automatic: self = .automatic
         case .never: self = .never
         case .walletButtonHidden: self = .walletButtonHidden
+        }
+    }
+}
+
+extension MobileSession.CardBrandAcceptance {
+    init(_ cardBrandAcceptance: PaymentSheet.CardBrandAcceptance) {
+        switch cardBrandAcceptance {
+        case .all:
+            self.init(filter: .all, brands: [])
+        case .allowed(let brands):
+            self.init(filter: .allowed, brands: brands.map(MobileSession.CardBrandCategory.init))
+        case .disallowed(let brands):
+            self.init(filter: .disallowed, brands: brands.map(MobileSession.CardBrandCategory.init))
+        }
+    }
+}
+
+extension MobileSession.CardBrandCategory {
+    init(_ brandCategory: PaymentSheet.CardBrandAcceptance.BrandCategory) {
+        switch brandCategory {
+        case .visa: self = .visa
+        case .mastercard: self = .mastercard
+        case .amex: self = .amex
+        case .discover: self = .discover
         }
     }
 }
