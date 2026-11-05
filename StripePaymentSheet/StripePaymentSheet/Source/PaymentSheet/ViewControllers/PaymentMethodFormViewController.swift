@@ -192,8 +192,7 @@ class PaymentMethodFormViewController: UIViewController {
         form.clearTextFields()
     }
 
-    /// Sets up the autocomplete button callback for any AddressSectionElement in the form
-    /// TODO(porter) Make this more generic for when we have shipping address section in here too
+    /// Sets up the autocomplete button callback for the billing address section in the form
     private func setupAddressSectionAutocompleteCallback() {
         let formElement = (form as? PaymentMethodElementWrapper<FormElement>)?.element ?? form
         if let addressSection = formElement.getAllUnwrappedSubElements()
