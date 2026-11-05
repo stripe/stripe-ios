@@ -589,7 +589,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession = try await apiClient.retrieveDeferredElementsSession(
                         withIntentConfig: intentConfig,
                         clientDefaultPaymentMethod: nil,
-                        configuration: configuration
+                        configuration: configuration,
+                        customerProvider: CustomerProvider(customer: configuration.customer)
                     )
                 case .checkout:
                     elementsSession = ._testValue(intent: intent)
