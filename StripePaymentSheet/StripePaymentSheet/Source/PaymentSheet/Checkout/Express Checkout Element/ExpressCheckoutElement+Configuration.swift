@@ -39,7 +39,7 @@ extension ExpressCheckoutElement.Configuration {
 
         /// Creates an Apple Pay configuration.
         /// - Parameters:
-        ///   - buttonType: The type of Apple Pay button to display.
+        ///   - buttonType: The type of Apple Pay button to display. Defaults to `nil`.
         public init(
             buttonType: PKPaymentButtonType? = nil
         ) {
