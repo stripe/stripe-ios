@@ -78,14 +78,17 @@ class SessionFetcherTests: XCTestCase {
             accountFetcher: accountFetcher
         )
 
-        fetcher.fetchSession().observe { (result) in
+        let expectation = expectation(description: "fetch")
+        fetcher.fetchSession().observe { result in
             switch result {
             case .success(let session):
                 XCTAssertEqual(session.accounts.data.count, 0)
             case .failure:
                 XCTFail()
             }
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 2)
     }
 
     func testShouldFetchMoreAccountsIfSessionHasMore() {
@@ -97,13 +100,16 @@ class SessionFetcherTests: XCTestCase {
             accountFetcher: accountFetcher
         )
 
-        fetcher.fetchSession().observe { (result) in
+        let expectation = expectation(description: "fetch")
+        fetcher.fetchSession().observe { result in
             switch result {
             case .success(let session):
                 XCTAssertEqual(session.accounts.data.count, 1)
             case .failure:
                 XCTFail()
             }
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 2)
     }
 }

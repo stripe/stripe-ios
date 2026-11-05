@@ -19,9 +19,17 @@ protocol StreamlinedConsentViewControllerDelegate: AnyObject {
         nextPaneOrDrawerOnSecondaryCta: String?
     )
     // periphery:ignore:parameters viewController
+    /// `authSession` is set when the next pane is partner auth and its auth session was created up front.
     func streamlinedConsentViewController(
         _ viewController: StreamlinedConsentViewController,
-        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest,
+        authSession: FinancialConnectionsAuthSession?
+    )
+    // periphery:ignore:parameters viewController
+    func streamlinedConsentViewController(
+        _ viewController: StreamlinedConsentViewController,
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest,
+        failedToCreateAuthSessionWithError error: Error
     )
 }
 
@@ -132,12 +140,28 @@ class StreamlinedConsentViewController: UIViewController {
         )
 
         footer.primaryButton?.isLoading = true
-        dataSource.markConsentAcquired()
+        dataSource.acceptConsent()
             .observe { [weak self] result in
                 guard let self else { return }
                 switch result {
-                case .success(let manifest):
-                    self.delegate?.streamlinedConsentViewController(self, didConsentWithManifest: manifest)
+                case .success(.nextPane(let manifest)):
+                    self.delegate?.streamlinedConsentViewController(
+                        self,
+                        didConsentWithManifest: manifest,
+                        authSession: nil
+                    )
+                case .success(.partnerAuth(let manifest, let authSession)):
+                    self.delegate?.streamlinedConsentViewController(
+                        self,
+                        didConsentWithManifest: manifest,
+                        authSession: authSession
+                    )
+                case .success(.authSessionCreationFailed(let manifest, let error)):
+                    self.delegate?.streamlinedConsentViewController(
+                        self,
+                        didConsentWithManifest: manifest,
+                        failedToCreateAuthSessionWithError: error
+                    )
                 case .failure(let error):
                     // we display no errors on failure
                     self.dataSource
