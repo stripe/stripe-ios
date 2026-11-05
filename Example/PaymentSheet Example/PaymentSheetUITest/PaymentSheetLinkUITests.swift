@@ -655,6 +655,22 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         assertLinkPaymentSuccess(app)
     }
 
+    // MARK: Embedded Link inline signup
+
+    func testLinkEmbedded_disabledSPM_firstTimeLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .embedded
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkPassthroughMode = .pm
+        settings.formSheetAction = .continue
+
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+        fillLinkAndPay(mode: .checkbox, uiStyle: .embedded, showLinkWalletButton: false)
+    }
+
     // MARK: Link test helpers
 
     private enum LinkMode {
@@ -677,8 +693,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
             app.buttons["Continue"].tap()
             app.buttons["Confirm"].waitForExistenceAndTap()
         case .embedded:
-            // TODO(porter) Fill in embedded UI test steps
-            break
+            app.buttons["Continue"].waitForExistenceAndTap()
+            app.buttons["Checkout"].waitForExistenceAndTap()
         }
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
         // Roundabout way to validate that signup completed successfully

@@ -222,9 +222,15 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.integrationType = .normal
         loadPlayground(app, settings)
 
-        // Add one more test card
-        // TODO(porter) Use the vertical mode to save cards when ready
-        setupCards(cards: ["5555555555554444"], settings: settings)
+        // Save another card in vertical mode
+        reload(app, settings: settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        let initialDisplayedPaymentMethodsEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_initial_displayed_payment_methods" })
+        XCTAssertEqual(initialDisplayedPaymentMethodsEvent?[string: "payment_method_orientation"], "vertical")
+        app.buttons["New card"].waitForExistenceAndTap()
+        try! fillCardData(app, cardNumber: "5555555555554444", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
+        app.buttons["Set up"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
         // Scroll down slightly to reveal flow controller:
         app.swipeUp(velocity: 100)
@@ -299,19 +305,6 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.staticTexts["Saved"].waitForExistence(timeout: 0.1))
         // Verify primary button isn't enabled b/c there is no selected PM
         XCTAssertFalse(app.buttons["Set up"].isEnabled)
-    }
-
-    private func setupCards(cards: [String], settings: PaymentSheetTestPlaygroundSettings) {
-        for cardNumber in cards {
-            reload(app, settings: settings)
-            app.buttons["Present PaymentSheet"].tap()
-            let addCardButton = app.buttons["New card"]
-            addCardButton.waitForExistenceAndTap()
-            try! fillCardData(app, cardNumber: cardNumber, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
-            app.buttons["Set up"].tap()
-            let successText = app.staticTexts["Success!"]
-            XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-        }
     }
 
     func testPaymentMethodRemoveLast_verticalMode() {
