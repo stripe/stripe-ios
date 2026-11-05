@@ -104,6 +104,10 @@ struct SeamlessSignInView: View {
                         coordinator: coordinator
                     )
                 }
+            } catch let error as APIClient.APIError where error.requiresLinkReauthorization {
+                APIClient.shared.clearAuthState()
+                isLoading.wrappedValue = false
+                alert = .demoBackendSignInRequired
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false

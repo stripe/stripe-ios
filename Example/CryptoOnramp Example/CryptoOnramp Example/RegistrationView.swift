@@ -103,7 +103,7 @@ struct RegistrationView: View {
                     Button("Authenticate") {
                         resetFocusState()
                         Task {
-                            try await verify()
+                            await verify()
                         }
                     }
                     .buttonStyle(PrimaryButtonStyle())
@@ -182,35 +182,33 @@ struct RegistrationView: View {
         }
     }
 
-    private func verify() async throws {
-        // Authenticate with the demo merchant backend as well.
-        let response = try await APIClient.shared.createAuthIntent(oauthScopes: selectedScopes)
+    private func verify() async {
+        isLoading.wrappedValue = true
+        errorMessage = nil
+        defer { isLoading.wrappedValue = false }
 
-        await MainActor.run {
-            isLoading.wrappedValue = true
-            errorMessage = nil
-        }
-
-        if await presentAuthorization(laiId: response.authIntentId, using: coordinator) {
-            await MainActor.run {
-                isLoading.wrappedValue = false
+        do {
+            let intent = try await APIClient.shared.createAuthIntent(oauthScopes: selectedScopes)
+            if await presentAuthorization(intent: intent) {
                 onCompleted()
             }
-        } else {
-            await MainActor.run {
-                isLoading.wrappedValue = false
-            }
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 
-    private func presentAuthorization(laiId: String, using coordinator: CryptoOnrampCoordinator) async -> Bool {
+    private func presentAuthorization(intent: CreateAuthIntentResponse) async -> Bool {
         if let viewController = UIApplication.shared.findTopNavigationController() {
             do {
-                let result = try await coordinator.authorize(linkAuthIntentId: laiId, from: viewController)
+                let result = try await coordinator.authorize(linkAuthIntentId: intent.authIntentId, from: viewController)
 
                 switch result {
                 case let .consented(customerId):
-                    try await APIClient.shared.saveUser(cryptoCustomerId: customerId)
+                    try await APIClient.shared.saveAuthorizedUser(
+                        cryptoCustomerId: customerId,
+                        intent: intent,
+                        scopes: selectedScopes
+                    )
                     return true
                 case .denied:
                     await MainActor.run {

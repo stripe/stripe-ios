@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum OAuthScopes: String, CaseIterable {
+enum OAuthScopes: String, CaseIterable, Codable {
     static let requiredScopes: [OAuthScopes] = [.cryptoRamp, .kycStatusRead, .authPersistLoginRead]
     static let allScopes: [OAuthScopes] = Self.allCases
 

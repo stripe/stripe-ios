@@ -24,6 +24,8 @@ struct CryptoOnrampExampleView: View {
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
     @State private var isShowingScopesSheet = false
     @State private var alert: Alert?
+    @State private var isShowingLinkRecovery = false
+    @State private var linkRecoveryConfirmation: CheckedContinuation<Bool, Never>?
     @State private var seamlessSignInEmail: String? = APIClient.shared.seamlessSignInEmail
 
     @AppStorage(DefaultsKeys.seamlessSignInDetails) private var storedSeamlessSignInData: Data?
@@ -209,6 +211,29 @@ struct CryptoOnrampExampleView: View {
                 Text(alert.message)
             }
         )
+        .alert("Link verification required", isPresented: $isShowingLinkRecovery, presenting: APIClient.shared.reauthorizationEmail) { _ in
+            Button("Verify with Link") {
+                if !resolveLinkRecoveryConfirmation(accepted: true) {
+                    verifyLinkAgain()
+                }
+            }
+
+            Button("Sign In Again", role: .cancel) {
+                if !resolveLinkRecoveryConfirmation(accepted: false) {
+                    APIClient.shared.clearAuthState()
+                }
+            }
+        } message: { email in
+            Text("Your Link authorization expired. Verify with Link to continue as \(email).")
+        }
+        .onChange(of: isShowingLinkRecovery) { isShowing in
+            if !isShowing {
+                resolveLinkRecoveryConfirmation(accepted: false)
+            }
+        }
+        .onDisappear {
+            resolveLinkRecoveryConfirmation(accepted: false)
+        }
         .onAppear {
             flowCoordinator.isLoading = isLoading
 
@@ -224,6 +249,7 @@ struct CryptoOnrampExampleView: View {
         }
         .onChange(of: livemode) { _ in
             coordinator = nil
+            isShowingLinkRecovery = false
             APIClient.shared.clearAuthState()
             initializeCoordinator()
         }
@@ -272,6 +298,7 @@ struct CryptoOnrampExampleView: View {
 
                 await MainActor.run {
                     self.coordinator = coordinator
+                    configureLinkReauthorization(using: coordinator)
                     self.isLoading.wrappedValue = false
                 }
             } catch {
@@ -282,6 +309,82 @@ struct CryptoOnrampExampleView: View {
                         message: error.localizedDescription
                     )
                 }
+            }
+        }
+    }
+
+    @discardableResult
+    private func resolveLinkRecoveryConfirmation(accepted: Bool) -> Bool {
+        guard let confirmation = linkRecoveryConfirmation else { return false }
+        linkRecoveryConfirmation = nil
+        confirmation.resume(returning: accepted)
+        return true
+    }
+
+    private func verifyLinkAgain() {
+        guard let coordinator else { return }
+
+        isLoading.wrappedValue = true
+
+        Task {
+            defer { isLoading.wrappedValue = false }
+            do {
+                try await APIClient.shared.reauthorizeLink(requiresConfirmation: false)
+                flowCoordinator.startForExistingUser(
+                    kycInfoCollectionMode: isL0KYCModeEnabled ? .kycLevel0 : .original,
+                    coordinator: coordinator
+                )
+            } catch {
+                // The recovery handler already updates the sign-in screen.
+            }
+        }
+    }
+
+    private func configureLinkReauthorization(using coordinator: CryptoOnrampCoordinator) {
+        let client = APIClient.shared
+        client.authorizeLink = { scopes, requiresConfirmation in
+            if requiresConfirmation {
+                let accepted = await withCheckedContinuation { confirmation in
+                    linkRecoveryConfirmation = confirmation
+                    isShowingLinkRecovery = true
+                }
+                guard accepted else { throw APIClient.APIError.linkReauthorizationDeclined }
+            }
+
+            try Task.checkCancellation()
+
+            let intent: CreateAuthIntentResponse
+            do {
+                intent = try await client.createAuthIntent(oauthScopes: scopes)
+            } catch APIClient.APIError.httpError(401, _, _) {
+                throw APIClient.APIError.demoBackendSignInRequired
+            }
+
+            try Task.checkCancellation()
+
+            guard let presenter = UIApplication.shared.findTopViewController() else {
+                throw APIClient.APIError.linkVerificationRequired
+            }
+
+            let result = try await coordinator.authorize(linkAuthIntentId: intent.authIntentId, from: presenter)
+            guard case .consented(let customerId) = result else {
+                throw APIClient.APIError.linkVerificationRequired
+            }
+
+            try await client.saveAuthorizedUser(cryptoCustomerId: customerId, intent: intent, scopes: scopes)
+        }
+
+        client.onLinkAuthorizationLost = { error in
+            seamlessSignInEmail = nil
+            flowCoordinator.path = []
+
+            if case APIClient.APIError.linkReauthorizationDeclined = error {
+                return
+            }
+
+            isShowingLinkRecovery = client.reauthorizationEmail != nil
+            if !isShowingLinkRecovery {
+                alert = .demoBackendSignInRequired
             }
         }
     }

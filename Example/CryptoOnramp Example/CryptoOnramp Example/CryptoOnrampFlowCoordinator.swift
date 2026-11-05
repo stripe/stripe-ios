@@ -202,6 +202,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
                 setIdentifierRequirements(try await coordinator.retrieveMissingIdentifiers())
             }
             advanceToNextStep()
+        } catch APIClient.APIError.linkVerificationRequired {
+            // The app has already returned to the sign-in screen.
         } catch {
             presentAlert(
                 title: "Unable to determine KYC and identity verification statuses",
@@ -228,6 +230,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         do {
             setIdentifierRequirements(try await coordinator.retrieveMissingIdentifiers())
             advanceToNextStep()
+        } catch APIClient.APIError.linkVerificationRequired {
+            // The app has already returned to the sign-in screen.
         } catch {
             presentAlert(
                 title: "Unable to determine identifier requirements",

@@ -25,23 +25,20 @@ extension APIClient {
     }
 
     func createAuthIntent(oauthScopes: [OAuthScopes] = OAuthScopes.requiredScopes) async throws -> CreateAuthIntentResponse {
-        guard let token = authToken else { throw APIError.missingAuthToken }
+        guard let token = authToken else { throw APIError.demoBackendSignInRequired }
         let createAuthIntentRequest = CreateAuthIntentRequest(oauthScopes: oauthScopes)
-        let response: CreateAuthIntentResponse = try await request(
+        return try await request(
             "v1/auth/create",
             method: .POST,
             body: createAuthIntentRequest,
             bearerToken: token
         )
-        setAuthTokenWithLAI(response.token)
-        return response
     }
 
     @discardableResult
-    func saveUser(cryptoCustomerId: String) async throws -> SaveUserResponse {
-        guard let token = authTokenWithLAI else { throw APIError.missingAuthTokenWithLAI }
+    func saveUser(cryptoCustomerId: String, bearerToken: String) async throws -> SaveUserResponse {
         let saveUserRequest = SaveUserRequest(cryptoCustomerId: cryptoCustomerId)
-        return try await request("v1/auth/save_user", method: .POST, body: saveUserRequest, bearerToken: token)
+        return try await request("v1/auth/save_user", method: .POST, body: saveUserRequest, bearerToken: bearerToken)
     }
 
     func createLinkAuthToken() async throws -> CreateLinkAuthTokenResponse {
@@ -50,7 +47,8 @@ extension APIClient {
     }
 
     func fetchCryptoCustomerId() async throws -> CryptoCustomerIdResponse {
-        guard let token = authTokenWithLAI else { throw APIError.missingAuthTokenWithLAI }
-        return try await request("v1/auth/crypto_customer", bearerToken: token)
+        try await withLinkAuthorization { token in
+            try await request("v1/auth/crypto_customer", bearerToken: token)
+        }
     }
 }

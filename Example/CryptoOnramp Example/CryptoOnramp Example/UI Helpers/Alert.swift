@@ -12,4 +12,6 @@ struct Alert: Identifiable {
     var id: String { title + message }
     let title: String
     let message: String
+
+    static let demoBackendSignInRequired = Alert(title: "Sign in again", message: "Your session has expired.")
 }

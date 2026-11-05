@@ -16,4 +16,7 @@ struct SeamlessSignInDetails: Codable {
 
     /// The authentication token with Link auth intent from a prior session.
     let token: String
+
+    /// Scopes used for the last completed Link authorization.
+    let scopes: [OAuthScopes]?
 }
