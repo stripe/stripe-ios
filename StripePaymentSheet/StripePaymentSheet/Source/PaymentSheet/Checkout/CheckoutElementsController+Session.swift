@@ -79,9 +79,9 @@ extension CheckoutElementsController {
         public let totals: CheckoutElementsController.Session.Totals
 
         /// Payment methods available after applying configuration and device eligibility, ordered as displayed by `ExpressCheckoutElement`.
-        /// Supported values are `"apple_pay"` and `"link"`.
+        /// Supported values are `.applePay` and `.link`.
         /// When empty, Express Checkout Element will render empty content.
-        public let availableExpressCheckoutPaymentMethods: [String]
+        public let availableExpressCheckoutPaymentMethods: [ExpressCheckoutElement.PaymentMethod]
 
         // MARK: - Internal Properties
 
@@ -164,7 +164,7 @@ extension CheckoutElementsController.Session {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
         let availableExpressCheckoutPaymentMethods = configuration.map {
-            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0).map(\.rawValue)
+            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0)
         } ?? []
         let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 
