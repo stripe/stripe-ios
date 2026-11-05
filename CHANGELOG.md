@@ -2,10 +2,8 @@ The next release's version bump will so far be:
 MAJOR
 
 ## X.Y.Z - changes pending release
-This major version updates the Stripe API version that the SDK uses. Please see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) to help you migrate.
-
 ### General
-* [Changed] The SDK now uses Stripe API version `2026-10-28.endive` instead of `2020-08-27`, and `STPAPIClient.apiVersion` returns `2026-10-28.endive`. Your server can keep using its current API version. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) for related server-side changes, including the API version for legacy ephemeral keys and `return_url` requirements when your server confirms intents.
+* [Changed] The SDK now uses Stripe API version `2026-10-28.endive` instead of `2020-08-27`. Your server can keep using its current API version. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) and the below changes for more information.
 * [Changed] `allResponseFields` on API objects, such as `STPPaymentIntent`, now reflects API version `2026-10-28.endive`. Some fields were removed or renamed, and some values changed. For example, `cancellation_reason` is `expired` instead of `automatic` when an authorization expires.
 
 ### Payments
@@ -15,7 +13,6 @@ This major version updates the Stripe API version that the SDK uses. Please see 
 
 ### PaymentSheet
 * [Changed] `PaymentSheet.IntentConfiguration.Mode.payment` no longer defaults `captureMethod` to `.automatic`. Pass the capture method of the PaymentIntent your server creates. PaymentIntents created with API version `2024-04-10` or later use `automatic_async` when you don't specify `capture_method`.
-* [Changed] PaymentSheet and PaymentSheet.FlowController now fail to load with an API error when you provide the client secret of a PaymentIntent or SetupIntent that's `succeeded`, `canceled`, `processing`, or `requires_capture`, or that's `requires_action` and accepts Boleto, KNET, OXXO, or US cash voucher payments. Previously, `succeeded`, `canceled`, and `requires_capture` intents failed with `PaymentSheetError.paymentIntentInTerminalState` or `PaymentSheetError.setupIntentInTerminalState`, and other intents loaded. CustomerSheet also fails to save a payment method with an API error when you provide the client secret of such a SetupIntent.
 * [Added] The Link auth flow now natively supports email OTP and multi-factor authentication (MFA) enabled accounts.
 * [Added] Added `returnURL` to `LinkConfiguration`, allowing `LinkController` users to let customers authenticate in their banking app and then return to the merchant's app. Without a `returnURL`, bank authentication happens in a secure webview presented in the merchant's app (private preview).
 * [Fixed] Fixed a horizontal layout bug that caused the sheet to freeze when the bottom form insets were less than the bottom safe area.
