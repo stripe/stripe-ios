@@ -70,7 +70,14 @@ import UIKit
 
     private let linkController: LinkWalletButtonControlling
     private let button: PayWithLinkButton
-    private var isPresenting = false
+    /// Whether a Link flow launched by the button is in progress. The button shows a loading indicator meanwhile,
+    /// e.g. while Link opens, and while the payment method is created or the payment is confirmed after Link closes.
+    private(set) var isPresenting = false {
+        didSet {
+            guard oldValue != isPresenting else { return }
+            updateButton()
+        }
+    }
     private var isLookingUp = false
     private var cancellables: Set<AnyCancellable> = []
 
@@ -120,6 +127,7 @@ import UIKit
     /// The account and payment method preview that the button displays.
     var displayedLinkAccount: PaymentSheetLinkAccount? { button.linkAccount as? PaymentSheetLinkAccount }
     var displayedPaymentMethodPreview: LinkPaymentMethodPreview? { button.paymentMethodPreview }
+    var isDisplayingLoadingIndicator: Bool { button.isLoading }
 
     static func accountMatches(_ linkAccount: PaymentSheetLinkAccount?, email: String?) -> Bool {
         guard let linkAccount, let email else { return false }
@@ -152,10 +160,12 @@ import UIKit
         }
 
         // Animate once the button is on screen, e.g. when the lookup reveals the customer's email
+        let isLoading = isPresenting
         button.performStateChange(animated: window != nil, duration: Self.stateTransitionDuration) { [button] in
             button.brand = brand
             button.linkAccount = linkAccount
             button.paymentMethodPreview = paymentMethodPreview
+            button.isLoading = isLoading
         }
     }
 

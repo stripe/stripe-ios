@@ -38,6 +38,9 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
             let config = try await LinkControllerDemoBackendClient.fetchConfig()
             STPAPIClient.shared.publishableKey = config.publishableKey
 
+            // Read when the controller is created and while Link is presented, so it's reset when the checkout screen disappears
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = configuration.nativeLinkEnabled ? nil : false
+
             // Only read when the controller is created, so reset it to avoid affecting other demos
             LinkController.forcedLinkBrandForTesting = configuration.linkBrand.brand
             defer { LinkController.forcedLinkBrandForTesting = nil }
@@ -220,6 +223,10 @@ struct ExampleLinkWalletButtonCheckoutView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await session.load(configuration: configuration)
+        }
+        .onDisappear {
+            // Don't affect other demos
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
         }
         .alert("Order placed", isPresented: $isShowingOrderConfirmation) {
             Button("OK", role: .cancel) {}

@@ -299,6 +299,28 @@ final class LinkWalletButtonTests: XCTestCase {
         }
     }
 
+    func testShowsLoadingIndicatorWhileLinkFlowIsInProgress() {
+        // Given a button with a signed-in customer
+        let controller = MockLinkWalletButtonController()
+        controller.linkAccount = Stubs.linkAccount(email: email)
+        let button = makeButton(controller: controller)
+        button.presentingViewController = UIViewController()
+        XCTAssertFalse(button.isDisplayingLoadingIndicator)
+
+        // When the button is tapped
+        button.didTap()
+
+        // Then it shows a loading indicator while the Link flow is in progress
+        XCTAssertTrue(button.isDisplayingLoadingIndicator)
+
+        // When the Link flow finishes
+        controller.completePresent(at: 0, with: .success(.canceled))
+
+        // Then it shows the customer's account again
+        XCTAssertFalse(button.isDisplayingLoadingIndicator)
+        XCTAssertEqual(button.displayedLinkAccount?.email, email)
+    }
+
     func testTapWhilePresentingDoesNotPresentAgain() {
         // Given Link is being presented
         let controller = MockLinkWalletButtonController()

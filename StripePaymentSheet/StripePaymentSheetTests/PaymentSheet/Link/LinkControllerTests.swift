@@ -104,6 +104,99 @@ final class LinkControllerTests: XCTestCase {
         }
     }
 
+    // MARK: - Link web popup
+
+    func testWebLinkCanSatisfyDefaultConfiguration() {
+        XCTAssertTrue(LinkController.webLinkCanSatisfy(configuration: PaymentSheet.Configuration(), linkConfiguration: nil))
+        XCTAssertTrue(LinkController.webLinkCanSatisfy(configuration: PaymentSheet.Configuration(), linkConfiguration: LinkConfiguration()))
+        // ...and every payment method type, which isn't a restriction
+        XCTAssertTrue(LinkController.webLinkCanSatisfy(
+            configuration: PaymentSheet.Configuration(),
+            linkConfiguration: LinkConfiguration(supportedPaymentMethodTypes: LinkPaymentMethodType.allCases)
+        ))
+    }
+
+    func testWebLinkCantCollectBillingDetails() {
+        // Given a Link configuration that collects the customer's name
+        var billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration()
+        billingDetailsCollectionConfiguration.name = .always
+        let linkConfiguration = LinkConfiguration(billingDetailsCollectionConfiguration: billingDetailsCollectionConfiguration)
+
+        // Then the web popup can't satisfy it
+        XCTAssertFalse(LinkController.webLinkCanSatisfy(configuration: PaymentSheet.Configuration(), linkConfiguration: linkConfiguration))
+    }
+
+    func testWebLinkCantLimitPaymentMethodTypes() {
+        // Given a Link configuration that only offers cards
+        let linkConfiguration = LinkConfiguration(supportedPaymentMethodTypes: [.card])
+
+        // Then the web popup can't satisfy it
+        XCTAssertFalse(LinkController.webLinkCanSatisfy(configuration: PaymentSheet.Configuration(), linkConfiguration: linkConfiguration))
+    }
+
+    func testWithoutNativeLinkUnsatisfiableConfigurationFailsCreation() {
+        // Given a device that can't use native Link, and a Link session with funding sources
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = false
+        defer { PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil }
+        let elementsSession = STPElementsSession._testValue(intent: ._testValue(), linkFundingSources: [ParsedEnum(.card)])
+
+        // Then the web popup is allowed for the default configuration
+        XCTAssertNil(LinkController.linkUnavailableError(
+            elementsSession: elementsSession,
+            configuration: PaymentSheet.Configuration(),
+            linkConfiguration: nil
+        ))
+        // ...but not for a configuration that needs native Link
+        XCTAssertEqual(
+            LinkController.linkUnavailableError(
+                elementsSession: elementsSession,
+                configuration: PaymentSheet.Configuration(),
+                linkConfiguration: LinkConfiguration(supportedPaymentMethodTypes: [.card])
+            ),
+            .configurationRequiresNativeLink
+        )
+    }
+
+    func testWithNativeLinkAnyConfigurationIsAllowed() {
+        // Given a device that can use native Link
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
+        defer { PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil }
+        let elementsSession = STPElementsSession._testValue(intent: ._testValue(), linkFundingSources: [ParsedEnum(.card)])
+
+        // Then a configuration that the web popup can't satisfy is still allowed
+        XCTAssertNil(LinkController.linkUnavailableError(
+            elementsSession: elementsSession,
+            configuration: PaymentSheet.Configuration(),
+            linkConfiguration: LinkConfiguration(supportedPaymentMethodTypes: [.card])
+        ))
+    }
+
+    func testWithoutFundingSourcesLinkIsUnavailable() {
+        let elementsSession = STPElementsSession._testValue(intent: ._testValue(), linkFundingSources: [])
+        XCTAssertEqual(
+            LinkController.linkUnavailableError(elementsSession: elementsSession, configuration: PaymentSheet.Configuration(), linkConfiguration: nil),
+            .linkUnavailable
+        )
+    }
+
+    func testWebPaymentMethodPreviewShowsCard() {
+        // Given a card payment method returned by the Link web popup
+        let paymentMethod = STPPaymentMethod._testCard()
+        let paymentOption: PaymentOption = .link(option: .withPaymentMethod(brand: .link, paymentMethod: paymentMethod))
+
+        // When making its preview
+        let preview = LinkController.webPaymentMethodPreview(for: paymentOption, linkBrand: .link, reduceLinkBranding: false)
+
+        // Then it shows the card
+        XCTAssertEqual(preview?.paymentMethodType, .card)
+        XCTAssertEqual(preview?.label, LinkBrand.link.displayName)
+        XCTAssertEqual(preview?.sublabel?.hasSuffix(paymentMethod.card?.last4 ?? "-"), true)
+    }
+
+    func testWebPaymentMethodPreviewIsNilWithoutCard() {
+        XCTAssertNil(LinkController.webPaymentMethodPreview(for: nil, linkBrand: .link, reduceLinkBranding: false))
+    }
+
     // MARK: - Helpers
 
     private func makeController(initialLinkBrand: LinkBrand, brandOverride: LinkBrand?) -> LinkController {
