@@ -22,11 +22,10 @@ public final class ExpressCheckoutElementUIView: UIView {
         static let cornerRadius: CGFloat = 6
     }
 
-    let configuration: ExpressCheckoutElement.Configuration
-    let apiClient: STPAPIClient
-
     // MARK: - Private Properties
 
+    private let configuration: ExpressCheckoutElement.Configuration
+    private let apiClient: STPAPIClient
     private let analyticsClient: STPAnalyticsClientProtocol
     private let stackView = UIStackView()
     private var buttons: [UIControl] = []

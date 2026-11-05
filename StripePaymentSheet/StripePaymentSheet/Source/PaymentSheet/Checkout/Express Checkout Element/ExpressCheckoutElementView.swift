@@ -6,6 +6,7 @@
 //
 
 import Combine
+@_spi(InternalOnlyAPI) import StripeCore
 import SwiftUI
 
 /// A SwiftUI view that displays wallet payment buttons (Apple Pay, Link).
@@ -41,10 +42,12 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
 
     init(
         sessionSource: CheckoutSessionSource,
-        uiView: ExpressCheckoutElementUIView
+        uiView: ExpressCheckoutElementUIView,
+        configuration: ExpressCheckoutElement.Configuration,
+        apiClient: STPAPIClient
     ) {
         let initialSession = sessionSource.initialSession
-        let initialButtons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: initialSession, configuration: uiView.configuration, apiClient: uiView.apiClient)
+        let initialButtons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: initialSession, configuration: configuration, apiClient: apiClient)
         self.uiView = uiView
         self.buttons = initialButtons
         uiView.update(with: initialSession, buttons: initialButtons)
@@ -53,7 +56,7 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 guard let self else { return }
-                let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: self.uiView.configuration, apiClient: self.uiView.apiClient)
+                let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: configuration, apiClient: apiClient)
                 self.uiView.update(with: session, buttons: buttons)
                 self.buttons = buttons
             }

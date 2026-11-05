@@ -26,6 +26,7 @@ enum ExpressCheckoutElementUtilities {
         }
         let elementsSession = apiResponse.elementsSession.value
         let usesWebLink = !deviceCanUseNativeLink(elementsSession: elementsSession, apiClient: configuration.apiClient)
+
         return availablePaymentMethods(
             for: elementsSession,
             configuration: expressCheckoutConfiguration,
