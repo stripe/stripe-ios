@@ -14,18 +14,18 @@ extension STPClientAttributionMetadata: STPFormEncodable {
         return "client_attribution_metadata"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: clientSessionId)): "client_session_id",
-            NSStringFromSelector(#selector(getter: elementsSessionConfigId)): "elements_session_config_id",
-            NSStringFromSelector(#selector(getter: checkoutSessionId)): "checkout_session_id",
-            NSStringFromSelector(#selector(getter: checkoutConfigId)): "checkout_config_id",
-            NSStringFromSelector(#selector(getter: merchantIntegrationAdditionalElements)): "merchant_integration_additional_elements",
-            NSStringFromSelector(#selector(getter: merchantIntegrationSource)): "merchant_integration_source",
-            NSStringFromSelector(#selector(getter: merchantIntegrationSubtype)): "merchant_integration_subtype",
-            NSStringFromSelector(#selector(getter: merchantIntegrationVersion)): "merchant_integration_version",
-            NSStringFromSelector(#selector(getter: paymentIntentCreationFlow)): "payment_intent_creation_flow",
-            NSStringFromSelector(#selector(getter: paymentMethodSelectionFlow)): "payment_method_selection_flow",
+            \STPClientAttributionMetadata.clientSessionId: "client_session_id",
+            \STPClientAttributionMetadata.elementsSessionConfigId: "elements_session_config_id",
+            \STPClientAttributionMetadata.checkoutSessionId: "checkout_session_id",
+            \STPClientAttributionMetadata.checkoutConfigId: "checkout_config_id",
+            \STPClientAttributionMetadata.merchantIntegrationAdditionalElements: "merchant_integration_additional_elements",
+            \STPClientAttributionMetadata.merchantIntegrationSource: "merchant_integration_source",
+            \STPClientAttributionMetadata.merchantIntegrationSubtype: "merchant_integration_subtype",
+            \STPClientAttributionMetadata.merchantIntegrationVersion: "merchant_integration_version",
+            \STPClientAttributionMetadata.paymentIntentCreationFlow: "payment_intent_creation_flow",
+            \STPClientAttributionMetadata.paymentMethodSelectionFlow: "payment_method_selection_flow",
         ]
     }
 }

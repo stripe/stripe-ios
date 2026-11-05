@@ -13,23 +13,13 @@ import Foundation
 public class STPConnectAccountCompanyParams: NSObject {
 
     /// The company’s primary address.
-    @objc public var address: STPConnectAccountAddress?
+    public var address: STPConnectAccountAddress?
 
     /// The Kana variation of the company’s primary address (Japan only).
-    @objc public var kanaAddress: STPConnectAccountAddress?
+    public var kanaAddress: STPConnectAccountAddress?
 
     /// The Kanji variation of the company’s primary address (Japan only).
-    @objc public var kanjiAddress: STPConnectAccountAddress?
-
-    /// Whether the company’s directors have been provided.
-    /// Set this Boolean to true after creating all the company’s directors with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.director requirement.
-    /// This value is not automatically set to true after creating directors, so it needs to be updated to indicate all directors have been provided.
-    @objc(directorsProvided)
-    @available(swift, obsoleted: 1.0, renamed: "directorsProvided")
-    public var directorsProvided_objc: NSNumber? {
-        get { directorsProvided.map { NSNumber(value: $0) } }
-        set { directorsProvided = newValue?.boolValue }
-    }
+    public var kanjiAddress: STPConnectAccountAddress?
 
     /// Whether the company’s directors have been provided.
     /// Set this Boolean to true after creating all the company’s directors with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.director requirement.
@@ -37,45 +27,36 @@ public class STPConnectAccountCompanyParams: NSObject {
     public var directorsProvided: Bool?
 
     /// The company’s legal name.
-    @objc public var name: String?
+    public var name: String?
 
     /// The Kana variation of the company’s legal name (Japan only).
-    @objc public var kanaName: String?
+    public var kanaName: String?
 
     /// The Kanji variation of the company’s legal name (Japan only).
-    @objc public var kanjiName: String?
-
-    /// Whether the company’s owners have been provided.
-    /// Set this Boolean to true after creating all the company’s owners with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.owner requirement.
-    @objc(ownersProvided)
-    @available(swift, obsoleted: 1.0, renamed: "ownersProvided")
-    public var ownersProvided_objc: NSNumber? {
-        get { ownersProvided.map { NSNumber(value: $0) } }
-        set { ownersProvided = newValue?.boolValue }
-    }
+    public var kanjiName: String?
 
     /// Whether the company’s owners have been provided.
     /// Set this Boolean to true after creating all the company’s owners with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.owner requirement.
     public var ownersProvided: Bool?
 
     /// The company’s phone number (used for verification).
-    @objc public var phone: String?
+    public var phone: String?
 
     /// The business ID number of the company, as appropriate for the company’s country.
     /// (Examples are an Employer ID Number in the U.S., a Business Number in Canada, or a Company Number in the UK.)
-    @objc public var taxID: String?
+    public var taxID: String?
 
     /// The jurisdiction in which the taxID is registered (Germany-based companies only).
-    @objc public var taxIDRegistrar: String?
+    public var taxIDRegistrar: String?
 
     /// The VAT number of the company.
-    @objc public var vatID: String?
+    public var vatID: String?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPConnectAccountCompanyParams.self), self),
@@ -101,28 +82,26 @@ public class STPConnectAccountCompanyParams: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConnectAccountCompanyParams: STPFormEncodable {
-    @objc private var directorsProvided_apiValue: NSNumber? { directorsProvided.map { NSNumber(value: $0) } }
-    @objc private var ownersProvided_apiValue: NSNumber? { ownersProvided.map { NSNumber(value: $0) } }
+    private var directorsProvided_apiValue: NSNumber? { directorsProvided.map { NSNumber(value: $0) } }
+    private var ownersProvided_apiValue: NSNumber? { ownersProvided.map { NSNumber(value: $0) } }
 
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: address)): "address",
-            NSStringFromSelector(#selector(getter: kanaAddress)): "address_kana",
-            NSStringFromSelector(#selector(getter: kanjiAddress)): "address_kanji",
-            NSStringFromSelector(#selector(getter: directorsProvided_apiValue)): "directors_provided",
-            NSStringFromSelector(#selector(getter: name)): "name",
-            NSStringFromSelector(#selector(getter: kanaName)): "name_kana",
-            NSStringFromSelector(#selector(getter: kanjiName)): "name_kanji",
-            NSStringFromSelector(#selector(getter: ownersProvided_apiValue)): "owners_provided",
-            NSStringFromSelector(#selector(getter: phone)): "phone",
-            NSStringFromSelector(#selector(getter: taxID)): "tax_id",
-            NSStringFromSelector(#selector(getter: taxIDRegistrar)): "tax_id_registrar",
-            NSStringFromSelector(#selector(getter: vatID)): "vat_id",
+            \STPConnectAccountCompanyParams.address: "address",
+            \STPConnectAccountCompanyParams.kanaAddress: "address_kana",
+            \STPConnectAccountCompanyParams.kanjiAddress: "address_kanji",
+            \STPConnectAccountCompanyParams.directorsProvided_apiValue: "directors_provided",
+            \STPConnectAccountCompanyParams.name: "name",
+            \STPConnectAccountCompanyParams.kanaName: "name_kana",
+            \STPConnectAccountCompanyParams.kanjiName: "name_kanji",
+            \STPConnectAccountCompanyParams.ownersProvided_apiValue: "owners_provided",
+            \STPConnectAccountCompanyParams.phone: "phone",
+            \STPConnectAccountCompanyParams.taxID: "tax_id",
+            \STPConnectAccountCompanyParams.taxIDRegistrar: "tax_id_registrar",
+            \STPConnectAccountCompanyParams.vatID: "vat_id",
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }

@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 8/31/23.
 //
 
+import UIKit
 import XCTest
 
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet

@@ -120,9 +120,8 @@ class STPSourceParamsTest: XCTestCase {
 
         let mapping = STPSourceParams.propertyNamesToFormFieldNamesMapping()
 
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(sourceParams.responds(to: NSSelectorFromString(propertyName)))
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((sourceParams as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: sourceParams))")
         }
 
         for formFieldName in mapping.values {

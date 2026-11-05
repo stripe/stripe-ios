@@ -10,10 +10,10 @@ import Foundation
 /// Contains Konbini details necessary for the customer to complete the payment.
 public class STPIntentActionKonbiniDisplayDetails: NSObject, STPAPIResponseDecodable {
     /// The date at which the pending Konbini payment expires.
-    @objc public let expiresAt: Date
+    public let expiresAt: Date
 
     /// The URL for the Konbini payment instructions page, which allows customers to view and print a Konbini voucher.
-    @objc public let hostedVoucherURL: URL
+    public let hostedVoucherURL: URL
 
     internal init(
         expiresAt: Date,

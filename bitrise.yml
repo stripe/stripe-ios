@@ -560,14 +560,6 @@ workflows:
     steps:
     - fastlane@3:
         inputs:
-        - lane: installation_cocoapods_without_frameworks_objc
-        title: fastlane installation_cocoapods_without_frameworks_objc
-    - fastlane@3:
-        inputs:
-        - lane: installation_cocoapods_frameworks_objc
-        title: fastlane installation_cocoapods_frameworks_objc
-    - fastlane@3:
-        inputs:
         - lane: installation_cocoapods_frameworks_swift
         title: fastlane installation_cocoapods_frameworks_swift
   installation-tests-spm:
@@ -586,10 +578,6 @@ workflows:
         machine_type_id: g2.mac.large
   installation-spm-steps:
     steps:
-    - fastlane@3:
-        inputs:
-        - lane: installation_spm_objc
-        title: fastlane installation_spm_objc
     - fastlane@3:
         inputs:
         - lane: installation_spm_swift

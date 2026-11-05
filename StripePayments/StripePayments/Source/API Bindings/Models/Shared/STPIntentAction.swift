@@ -18,7 +18,7 @@ import Foundation
 
 /// Types of next actions for `STPPaymentIntent` and `STPSetupIntent`.
 /// You shouldn't need to inspect this yourself; `STPPaymentHandler` will handle any next actions for you.
-@objc public enum STPIntentActionType: Int {
+public enum STPIntentActionType: Int {
 
     /// This is an unknown action that's been added since the SDK
     /// was last updated.
@@ -182,54 +182,54 @@ public class STPIntentAction: NSObject {
 
     /// The type of action needed. The value of this field determines which
     /// property of this object contains further details about the action.
-    @objc public let type: STPIntentActionType
+    public let type: STPIntentActionType
 
     /// The details for authorizing via URL, when `type == .redirectToURL`
-    @objc public let redirectToURL: STPIntentActionRedirectToURL?
+    public let redirectToURL: STPIntentActionRedirectToURL?
 
     /// The details for displaying OXXO voucher via URL, when `type == .OXXODisplayDetails`
-    @objc public let oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?
+    public let oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?
 
     /// Contains instructions for authenticating a payment by redirecting your customer to Alipay App or website.
-    @objc public let alipayHandleRedirect: STPIntentActionAlipayHandleRedirect?
+    public let alipayHandleRedirect: STPIntentActionAlipayHandleRedirect?
 
     /// Contains instructions for authenticating a payment by redirecting your customer to the WeChat Pay app.
-    @objc public let weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
+    public let weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
 
     /// The details for displaying Boleto voucher via URL, when `type == .boleto`
-    @objc public let boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?
+    public let boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?
 
     /// Contains details describing microdeposits verification flow for US bank accounts
-    @objc public let verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
+    public let verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
 
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
-    @objc public let cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
+    public let cashAppRedirectToApp: STPIntentActionCashAppRedirectToApp?
 
     /// Contains details for displaying the QR code required for PayNow.
-    @objc public let payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
+    public let payNowDisplayQrCode: STPIntentActionPayNowDisplayQrCode?
 
     /// Contains instructions for authenticating a Konbini payment.
-    @objc public let konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
+    public let konbiniDisplayDetails: STPIntentActionKonbiniDisplayDetails?
 
     /// Contains details for displaying the QR code required for PromptPay.
-    @objc public let promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?
+    public let promptPayDisplayQrCode: STPIntentActionPromptPayDisplayQrCode?
 
     /// Contains details for displaying the QR code required for Pix.
-    @objc public let pixDisplayQrCode: STPIntentActionPixDisplayQrCode?
+    public let pixDisplayQrCode: STPIntentActionPixDisplayQrCode?
 
     /// Contains details for redirecting to the Swish app.
-    @objc public let swishHandleRedirect: STPIntentActionSwishHandleRedirect?
+    public let swishHandleRedirect: STPIntentActionSwishHandleRedirect?
 
     /// The details for displaying Multibanco voucher via URL, when `type == .multibanco`
-    @objc public let multibancoDisplayDetails: STPIntentActionMultibancoDisplayDetails?
+    public let multibancoDisplayDetails: STPIntentActionMultibancoDisplayDetails?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         var props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPIntentAction.self), self),
@@ -350,7 +350,6 @@ public class STPIntentAction: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPIntentAction: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let rawType = dict["type"] as? String
@@ -513,7 +512,7 @@ extension STPIntentAction {
     /// The details for authorizing via URL, when `type == STPIntentActionTypeRedirectToURL`
     /// @deprecated Use `redirectToURL` instead.
     @available(*, deprecated, message: "Use `redirectToURL` instead.", renamed: "redirectToURL")
-    @objc public var authorizeWithURL: STPIntentActionRedirectToURL? {
+    public var authorizeWithURL: STPIntentActionRedirectToURL? {
         return redirectToURL
     }
 }

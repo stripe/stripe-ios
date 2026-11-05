@@ -28,7 +28,7 @@ class STPBSBNumberValidator: STPNumericStringValidator {
         }
     }
 
-    @objc(formattedSanitizedTextFromString:) class func formattedSanitizedText(
+    class func formattedSanitizedText(
         from string: String
     )
         -> String?

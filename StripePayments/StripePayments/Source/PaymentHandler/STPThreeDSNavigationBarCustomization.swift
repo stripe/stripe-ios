@@ -16,7 +16,6 @@ import UIKit
 /// A customization object to use to configure a UINavigationBar.
 public class STPThreeDSNavigationBarCustomization: NSObject {
     /// The default settings.
-    @objc
     public class func defaultSettings() -> STPThreeDSNavigationBarCustomization {
         return STPThreeDSNavigationBarCustomization()
     }
@@ -27,7 +26,7 @@ public class STPThreeDSNavigationBarCustomization: NSObject {
     /// The tint color of the navigation bar background.
     /// Defaults to nil.
 
-    @objc public var barTintColor: UIColor? {
+    public var barTintColor: UIColor? {
         get {
             return navigationBarCustomization.barTintColor
         }
@@ -41,7 +40,7 @@ public class STPThreeDSNavigationBarCustomization: NSObject {
     /// to change the `statusBarStyle` to `UIStatusBarStyleLightContent` - even if you also set
     /// `barTintColor` to change the actual color of the navigation bar.
 
-    @objc public var barStyle: UIBarStyle {
+    public var barStyle: UIBarStyle {
         get {
             return navigationBarCustomization.barStyle
         }
@@ -50,8 +49,8 @@ public class STPThreeDSNavigationBarCustomization: NSObject {
         }
     }
     /// A Boolean value indicating whether the navigation bar is translucent or not.
-    /// Defaults to YES.
-    @objc public var translucent: Bool {
+    /// Defaults to true.
+    public var translucent: Bool {
         get {
             return navigationBarCustomization.translucent
         }
@@ -62,7 +61,7 @@ public class STPThreeDSNavigationBarCustomization: NSObject {
     /// The text to display in the title of the navigation bar.
     /// Defaults to "Secure checkout".
 
-    @objc public var headerText: String {
+    public var headerText: String {
         get {
             return navigationBarCustomization.headerText
         }
@@ -72,7 +71,7 @@ public class STPThreeDSNavigationBarCustomization: NSObject {
     }
     /// The text to display for the button in the navigation bar.
     /// Defaults to "Cancel".
-    @objc public var buttonText: String {
+    public var buttonText: String {
         get {
             return navigationBarCustomization.buttonText
         }
@@ -81,7 +80,7 @@ public class STPThreeDSNavigationBarCustomization: NSObject {
         }
     }
     /// The font to use for the title. Defaults to nil.
-    @objc public var font: UIFont? {
+    public var font: UIFont? {
         get {
             return navigationBarCustomization.font
         }
@@ -90,7 +89,7 @@ public class STPThreeDSNavigationBarCustomization: NSObject {
         }
     }
     /// The color to use for the title. Defaults to nil.
-    @objc public var textColor: UIColor? {
+    public var textColor: UIColor? {
         get {
             return navigationBarCustomization.textColor
         }

@@ -12,37 +12,31 @@ import Foundation
 /// - seealso: https://stripe.com/docs/api/setup_intents
 public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     /// The Stripe ID of the SetupIntent.
-    @objc public let stripeID: String
+    public let stripeID: String
     /// The client secret of this SetupIntent. Used for client-side retrieval using a publishable key.
-    @objc public let clientSecret: String
+    public let clientSecret: String
     /// Time at which the object was created.
-    @objc public let created: Date
+    public let created: Date
     /// ID of the Customer this SetupIntent belongs to, if one exists.
-    @objc public let customerID: String?
+    public let customerID: String?
     /// An arbitrary string attached to the object. Often useful for displaying to users.
-    @objc public let stripeDescription: String?
-    /// Has the value `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
-    @objc public let livemode: Bool
+    public let stripeDescription: String?
+    /// Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+    public let livemode: Bool
     /// If present, this property tells you what actions you need to take in order for your customer to set up this payment method.
-    @objc public let nextAction: STPIntentAction?
+    public let nextAction: STPIntentAction?
     /// ID of the payment method used with this SetupIntent.
-    @objc public let paymentMethodID: String?
+    public let paymentMethodID: String?
     /// The optionally expanded PaymentMethod used in this SetupIntent.
-    @objc public let paymentMethod: STPPaymentMethod?
-    /// The list of payment method types (e.g. `[STPPaymentMethodType.card]`) that this SetupIntent is allowed to set up.
-    @objc(paymentMethodTypes)
-    @available(swift, obsoleted: 1.0, renamed: "paymentMethodTypes")
-    public var paymentMethodTypes_objc: [NSNumber] {
-        return paymentMethodTypes.map { NSNumber(value: $0.rawValue) }
-    }
+    public let paymentMethod: STPPaymentMethod?
     /// The list of payment method types that this PaymentIntent is allowed to use.
     public let paymentMethodTypes: [STPPaymentMethodType]
     /// Status of this SetupIntent.
-    @objc public let status: STPSetupIntentStatus
+    public let status: STPSetupIntentStatus
     /// Indicates how the payment method is intended to be used in the future.
-    @objc public let usage: STPSetupIntentUsage
+    public let usage: STPSetupIntentUsage
     /// The setup error encountered in the previous SetupIntent confirmation.
-    @objc public let lastSetupError: STPSetupIntentLastSetupError?
+    public let lastSetupError: STPSetupIntentLastSetupError?
     /// Payment-method-specific configuration for this SetupIntent.
     @_spi(InternalOnlyAPI) public let paymentMethodOptions: STPPaymentMethodOptions?
     /// Automatic payment methods configuration for this SetupIntent
@@ -59,8 +53,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         message:
             "Metadata is not returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )
-    @objc public private(set) var metadata: [String: String]?
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public private(set) var metadata: [String: String]?
+    public let allResponseFields: [AnyHashable: Any]
 
     required init(
         stripeID: String,
@@ -100,7 +94,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     }
 
     /// :nodoc:
-    @objc override public var description: String {
+    override public var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPSetupIntent.self), self),
@@ -157,7 +151,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         return (STPSetupIntentUsage(rawValue: statusNumber.intValue))!
     }
 
-    @objc @_spi(InternalOnlyAPI) public class func id(fromClientSecret clientSecret: String) -> String? {
+    @_spi(InternalOnlyAPI) public class func id(fromClientSecret clientSecret: String) -> String? {
         // see parseClientSecret from stripe-js-v3
         let components = clientSecret.components(separatedBy: "_secret_")
         if components.count >= 2 && components[0].hasPrefix("seti_") {

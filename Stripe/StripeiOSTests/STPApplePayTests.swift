@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import PassKit
+import StripePaymentsTestUtils
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import Stripe

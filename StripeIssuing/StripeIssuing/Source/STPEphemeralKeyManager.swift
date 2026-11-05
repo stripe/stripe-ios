@@ -34,7 +34,7 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
             _expirationInterval = TimeInterval(min(expirationInterval, 60 * 60))
         }
     }
-    /// If this value is YES, the manager will eagerly refresh its key on app foregrounding.
+    /// If this value is true, the manager will eagerly refresh its key on app foregrounding.
     private(set) var performsEagerFetching = false
 
     /// Initializes a new `STPEphemeralKeyManager` with the specified key provider.
@@ -43,7 +43,7 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
     ///   - apiVersion:                The Stripe API version the manager will use.
     ///   - performsEagerFetching:     If the manager should eagerly refresh its key on app foregrounding.
     /// - Returns: the newly-initiated `STPEphemeralKeyManager`.
-    @objc init(
+    init(
         keyProvider: Any?,
         apiVersion: String,
         performsEagerFetching: Bool
@@ -66,7 +66,7 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
         )
     }
 
-    @objc dynamic func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock) {
+    func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock) {
         if currentKeyIsUnexpired() {
             completion(ephemeralKey, nil)
         } else {
@@ -89,10 +89,10 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
         }
     }
 
-    @objc internal var ephemeralKey: STPEphemeralKey?
+    internal var ephemeralKey: STPEphemeralKey?
     private var apiVersion: String?
     private var keyProvider: Any?
-    @objc internal var lastEagerKeyRefresh: Date?
+    internal var lastEagerKeyRefresh: Date?
     private var createKeyPromise: STPPromise<STPEphemeralKey>?
 
     deinit {

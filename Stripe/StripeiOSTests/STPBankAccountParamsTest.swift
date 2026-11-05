@@ -82,9 +82,8 @@ class STPBankAccountParamsTest: XCTestCase {
 
         let mapping = STPBankAccountParams.propertyNamesToFormFieldNamesMapping()
 
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(bankAccountParams.responds(to: NSSelectorFromString(propertyName)))
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((bankAccountParams as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: bankAccountParams))")
         }
 
         for formFieldName in mapping.values {
@@ -98,9 +97,9 @@ class STPBankAccountParamsTest: XCTestCase {
         let bankAccountParams = STPBankAccountParams()
 
         bankAccountParams.accountHolderType = STPBankAccountHolderType.individual
-        XCTAssertEqual(bankAccountParams.accountHolderTypeString(), "individual")
+        XCTAssertEqual(bankAccountParams.accountHolderTypeString, "individual")
 
         bankAccountParams.accountHolderType = .company
-        XCTAssertEqual(bankAccountParams.accountHolderTypeString(), "company")
+        XCTAssertEqual(bankAccountParams.accountHolderTypeString, "company")
     }
 }

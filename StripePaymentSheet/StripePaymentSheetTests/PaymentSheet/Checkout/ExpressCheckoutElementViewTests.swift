@@ -9,6 +9,7 @@ import PassKit
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+import UIKit
 import XCTest
 
 @MainActor

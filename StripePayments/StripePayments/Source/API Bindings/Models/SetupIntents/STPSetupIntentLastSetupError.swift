@@ -10,12 +10,10 @@ import Foundation
 
 /// The type of the error represented by `STPSetupIntentLastSetupError`.
 /// Some STPSetupIntentLastError properties are only populated for certain error types.
-@objc
 public enum STPSetupIntentLastSetupErrorType: UInt {
     /// An unknown error type.
     case unknown
     /// An error connecting to Stripe's API.
-    @objc(STPSetupIntentLastSetupErrorTypeAPIConnection)
     case apiConnection
     /// An error with the Stripe API.
     case API
@@ -40,28 +38,28 @@ public enum STPSetupIntentLastSetupErrorType: UInt {
 public class STPSetupIntentLastSetupError: NSObject, STPAPIResponseDecodable {
     /// For some errors that could be handled programmatically, a short string indicating the error code reported.
     /// - seealso: https://stripe.com/docs/error-codes
-    @objc public private(set) var code: String?
+    public private(set) var code: String?
     /// For card (`STPSetupIntentLastSetupErrorTypeCard`) errors resulting from a card issuer decline,
     /// a short string indicating the card issuer’s reason for the decline if they provide one.
     /// - seealso: https://stripe.com/docs/declines#issuer-declines
-    @objc public private(set) var declineCode: String?
+    public private(set) var declineCode: String?
     /// A URL to more information about the error code reported.
     /// - seealso: https://stripe.com/docs/error-codes
-    @objc public private(set) var docURL: String?
+    public private(set) var docURL: String?
     /// A human-readable message providing more details about the error.
     /// For card (`STPSetupIntentLastSetupErrorTypeCard`) errors, these messages can be shown to your users.
-    @objc public private(set) var message: String?
+    public private(set) var message: String?
     /// If the error is parameter-specific, the parameter related to the error.
     /// For example, you can use this to display a message near the correct form field.
-    @objc public private(set) var param: String?
+    public private(set) var param: String?
     /// The PaymentMethod object for errors returned on a request involving a PaymentMethod.
-    @objc public private(set) var paymentMethod: STPPaymentMethod?
+    public private(set) var paymentMethod: STPPaymentMethod?
     /// The type of error.
-    @objc public private(set) var type: STPSetupIntentLastSetupErrorType = .unknown
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var type: STPSetupIntentLastSetupErrorType = .unknown
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPSetupIntentLastSetupError.self), self),
@@ -78,7 +76,6 @@ public class STPSetupIntentLastSetupError: NSObject, STPAPIResponseDecodable {
         return "<\(props.joined(separator: "; "))>"
     }
 
-    @objc(typeFromString:)
     class func type(from string: String) -> STPSetupIntentLastSetupErrorType {
         let map = [
             "api_connection_error": NSNumber(
@@ -134,7 +131,7 @@ public class STPSetupIntentLastSetupError: NSObject, STPAPIResponseDecodable {
 
 // MARK: - `code` string values
 
-@objc extension STPSetupIntentLastSetupError {
+extension STPSetupIntentLastSetupError {
     /// A possible value for the `error` property.  The provided payment method has failed authentication. Provide a new payment method to attempt to fulfill this SetupIntent again.
     public static let CodeAuthenticationFailure = "setup_intent_authentication_failure"
 }

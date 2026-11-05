@@ -7,6 +7,8 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 @_spi(InternalOnlyAPI) @testable import StripePayments
+import StripePaymentsTestUtils
+import XCTest
 
 class STPSetupIntentTest: XCTestCase {
     // MARK: - Description Tests

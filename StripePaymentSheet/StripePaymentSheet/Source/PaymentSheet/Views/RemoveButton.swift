@@ -15,7 +15,6 @@ import UIKit
 
 /// Remove button
 /// For internal SDK use only
-@objc(STP_Internal_RemoveButton)
 class RemoveButton: UIButton {
     private let appearance: PaymentSheet.Appearance
 

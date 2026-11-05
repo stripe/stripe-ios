@@ -10,7 +10,6 @@
 import UIKit
 
 /// For internal SDK use only
-@objc(STP_Internal_AffirmCopyLabel)
 class AffirmCopyLabel: UIView {
 
     let logo = NSTextAttachment()

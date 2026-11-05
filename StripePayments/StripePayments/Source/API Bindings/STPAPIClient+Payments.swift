@@ -46,7 +46,6 @@ extension STPAPIClient {
     ///   - bankAccount: The user's bank account details.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_bank_account_token)
-    @objc(createTokenWithBankAccount:completion:)
     public func createToken(
         withBankAccount bankAccount: STPBankAccountParams,
         completion: @escaping STPTokenCompletionBlock
@@ -87,7 +86,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - pii: The user's personal identification number. Cannot be nil. - seealso: https://stripe.com/docs/api#create_pii_token
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc(createTokenWithPersonalIDNumber:completion:)
     public func createToken(
         withPersonalIDNumber pii: String,
         completion: STPTokenCompletionBlock?
@@ -109,7 +107,6 @@ extension STPAPIClient {
     ///   - ssnLast4: The last 4 digits of the user's SSN.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_pii_token)
-    @objc(createTokenWithSSNLast4:completion:)
     public func createToken(
         withSSNLast4 ssnLast4: String,
         completion: @escaping STPTokenCompletionBlock
@@ -155,7 +152,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - account: The Connect Account parameters. Cannot be nil.
     ///   - completion: The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc(createTokenWithConnectAccount:completion:)
     public func createToken(
         withConnectAccount account: STPConnectAccountParams,
         completion: STPTokenCompletionBlock?
@@ -186,7 +182,6 @@ extension STPAPIClient {
     ///   - completion: The callback to run with the returned Stripe file
     /// (and any errors that may have occurred).
     /// - seealso: https://stripe.com/docs/file-upload
-    @objc(uploadImage:purpose:completion:)
     public func uploadImage(
         _ image: UIImage,
         purpose: STPFilePurpose,
@@ -256,7 +251,6 @@ extension STPAPIClient {
     ///   - cardParams:  The user's card details.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_card_token)
-    @objc(createTokenWithCard:completion:)
     public func createToken(
         withCard cardParams: STPCardParams,
         completion: @escaping STPTokenCompletionBlock
@@ -292,7 +286,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - cvc:         The CVC/CVV number used to create the token. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc(createTokenForCVCUpdate:completion:)
     public func createToken(forCVCUpdate cvc: String, completion: STPTokenCompletionBlock? = nil) {
         var params: [String: Any] = [
             "cvc_update": [
@@ -319,7 +312,6 @@ extension STPAPIClient {
     ///   - completion:   The callback to run with the returned Source object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_source)
     /// - Seealso: [Creating direct charges on connected accounts](https://stripe.com/docs/sources/connect#creating-direct-charges)
-    @objc(createSourceWithParams:completion:)
     public func createSource(
         with sourceParams: STPSourceParams,
         completion: @escaping STPSourceCompletionBlock
@@ -371,7 +363,6 @@ extension STPAPIClient {
     ///   - secret:      The client secret of the source.
     ///   - completion:  The callback to run with the returned Source object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#retrieve_source)
-    @objc(retrieveSourceWithId:clientSecret:completion:)
     public func retrieveSource(
         withId identifier: String,
         clientSecret secret: String,
@@ -455,7 +446,6 @@ extension STPAPIClient {
     ///   - secret:      The client secret of the payment intent to be retrieved.
     ///   - completion:  The callback to run with the returned PaymentIntent object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#retrieve_payment_intent]
-    @objc(retrievePaymentIntentWithClientSecret:completion:)
     public func retrievePaymentIntent(
         withClientSecret secret: String,
         completion: @escaping STPPaymentIntentCompletionBlock
@@ -473,7 +463,6 @@ extension STPAPIClient {
     ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable.
     ///   - completion:  The callback to run with the returned PaymentIntent object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#retrieve_payment_intent]
-    @objc(retrievePaymentIntentWithClientSecret:expand:completion:)
     public func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
@@ -506,11 +495,12 @@ extension STPAPIClient {
     }
 
     // Internal helper to pass timeout
-    @objc(retrievePaymentIntentWithClientSecret:expand:timeout:completion:)
+    // `@objc` so that test doubles can override this method, which is declared in an extension.
+    @objc
     @_spi(InternalOnlyAPI) public func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
-        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
+        timeout: NSNumber?, // NSNumber rather than TimeInterval so that this can be @objc
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         let endpoint: String = paymentIntentEndpoint(from: secret)
@@ -566,8 +556,10 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(InternalOnlyAPI) @objc public func refreshPaymentIntent(withClientSecret secret: String,
-                                                                  completion: @escaping STPPaymentIntentCompletionBlock) {
+    // `@objc` so that test doubles can override this method, which is declared in an extension.
+    @objc
+    @_spi(InternalOnlyAPI) public func refreshPaymentIntent(withClientSecret secret: String,
+                                                            completion: @escaping STPPaymentIntentCompletionBlock) {
         let endpoint = "\(paymentIntentEndpoint(from: secret))/refresh"
         var parameters: [String: Any] = ["expand": ["payment_method"]]
 
@@ -599,13 +591,12 @@ extension STPAPIClient {
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmPaymentIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - paymentIntentConfirmParams:  The `STPPaymentIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#confirm_payment_intent)
-    @objc(confirmPaymentIntentWithParams:completion:)
     public func confirmPaymentIntent(
         with paymentIntentConfirmParams: STPPaymentIntentConfirmParams,
         completion: @escaping STPPaymentIntentCompletionBlock
@@ -619,7 +610,7 @@ extension STPAPIClient {
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmPaymentIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - paymentIntentConfirmParams:  The `STPPaymentIntentConfirmParams` to pass to `/confirm`
@@ -627,7 +618,6 @@ extension STPAPIClient {
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#confirm_payment_intent)
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/payment_intents/object)
-    @objc(confirmPaymentIntentWithParams:expand:completion:)
     public func confirmPaymentIntent(
         with paymentIntentConfirmParams: STPPaymentIntentConfirmParams,
         expand: [String]?,
@@ -680,7 +670,7 @@ extension STPAPIClient {
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmPaymentIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - paymentIntentParams: The `STPPaymentIntentParams` to pass to `/confirm`
@@ -751,7 +741,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - secret:      The client secret of the SetupIntent to be retrieved. Cannot be nil.
     ///   - completion:  The callback to run with the returned SetupIntent object, or an error.
-    @objc(retrieveSetupIntentWithClientSecret:completion:)
     public func retrieveSetupIntent(
         withClientSecret secret: String,
         completion: @escaping STPSetupIntentCompletionBlock
@@ -770,7 +759,6 @@ extension STPAPIClient {
     ///   - completion: The callback to run with the returned SetupIntent object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/retrieve)
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/object)
-    @objc(retrieveSetupIntentWithClientSecret:expand:completion:)
     public func retrieveSetupIntent(
         withClientSecret secret: String,
         expand: [String]?,
@@ -805,11 +793,12 @@ extension STPAPIClient {
     }
 
     // Internal helper to pass timeout to URL request
+    // `@objc` so that test doubles can override this method, which is declared in an extension.
     @objc
     func retrieveSetupIntent(
         withClientSecret secret: String,
         expand: [String]?,
-        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
+        timeout: NSNumber?, // NSNumber rather than TimeInterval so that this can be @objc
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
 
@@ -857,13 +846,12 @@ extension STPAPIClient {
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmSetupIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/confirm)
-    @objc(confirmSetupIntentWithParams:completion:)
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
         completion: @escaping STPSetupIntentCompletionBlock
@@ -877,7 +865,7 @@ extension STPAPIClient {
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmSetupIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - setupIntentParams: The `STPSetupIntentConfirmParams` to pass to `/confirm`
@@ -885,7 +873,6 @@ extension STPAPIClient {
     ///   - completion: The callback to run with the returned PaymentIntent object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/confirm)
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/object)
-    @objc(confirmSetupIntentWithParams:expand:completion:)
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
         expand: [String]?,
@@ -933,7 +920,7 @@ extension STPAPIClient {
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - Note: Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmSetupIntent(params:authenticationContext:completion:)` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - setupIntentParams: The `STPSetupIntentConfirmParams` to pass to `/confirm`
@@ -976,8 +963,10 @@ extension STPAPIClient {
         }
     }
 
-    @_spi(InternalOnlyAPI) @objc public func refreshSetupIntent(withClientSecret secret: String,
-                                                                completion: @escaping STPSetupIntentCompletionBlock) {
+    // `@objc` so that test doubles can override this method, which is declared in an extension.
+    @objc
+    @_spi(InternalOnlyAPI) public func refreshSetupIntent(withClientSecret secret: String,
+                                                          completion: @escaping STPSetupIntentCompletionBlock) {
         let endpoint = "\(setupIntentEndpoint(from: secret))/refresh"
         var parameters: [String: Any] = ["expand": ["payment_method"]]
 
@@ -1016,7 +1005,6 @@ extension STPAPIClient {
     ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.
     ///   - completion:           The callback to run with the returned PaymentMethod object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/payment_methods/create)
-    @objc(createPaymentMethodWithParams:completion:)
     public func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock

@@ -16,7 +16,7 @@ public class STPPaymentMethodBancontactParams: NSObject, STPFormEncodable {
         return "bancontact"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

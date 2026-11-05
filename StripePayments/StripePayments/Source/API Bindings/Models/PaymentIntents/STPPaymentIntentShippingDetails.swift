@@ -15,25 +15,25 @@ import Foundation
 public class STPPaymentIntentShippingDetails: NSObject {
 
     /// Shipping address.
-    @objc public let address: STPPaymentIntentShippingDetailsAddress?
+    public let address: STPPaymentIntentShippingDetailsAddress?
 
     /// Recipient name.
-    @objc public let name: String?
+    public let name: String?
 
     /// The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
-    @objc public let carrier: String?
+    public let carrier: String?
 
     /// Recipient phone (including extension).
-    @objc public let phone: String?
+    public let phone: String?
 
     /// The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
-    @objc public let trackingNumber: String?
+    public let trackingNumber: String?
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentIntentShippingDetails.self), self),
@@ -69,7 +69,6 @@ public class STPPaymentIntentShippingDetails: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPPaymentIntentShippingDetails: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response else {
             return nil

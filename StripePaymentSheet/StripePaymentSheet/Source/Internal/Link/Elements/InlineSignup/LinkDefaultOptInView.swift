@@ -45,7 +45,7 @@ class LinkDefaultOptInView: UIView {
         changeButton.setTitle(.Localized.change, for: .normal)
         changeButton.titleLabel?.font = theme.fonts.footnote
         changeButton.setTitleColor(theme.colors.primary, for: .normal)
-        changeButton.addTarget(self, action: #selector(onChangeClick), for: .touchUpInside)
+        changeButton.addAction(UIAction { [weak self] _ in self?.onChangeClick() }, for: .touchUpInside)
         changeButton.setContentHuggingPriority(.required, for: .horizontal)
         changeButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
@@ -68,7 +68,7 @@ class LinkDefaultOptInView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc func onChangeClick() {
+    func onChangeClick() {
         delegate?.linkDefaultOptInViewDidSelectChange(self)
     }
 }

@@ -9,11 +9,11 @@ import Foundation
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-vipps
 public class STPPaymentMethodVipps: NSObject, STPAPIResponseDecodable {
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodVipps.self), self)
         ]
@@ -22,7 +22,6 @@ public class STPPaymentMethodVipps: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPAPIResponseDecodeable
-    @objc
     /// :nodoc:
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {

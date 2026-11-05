@@ -8,6 +8,7 @@
 
 @_spi(InternalOnlyAPI) @testable import StripePayments
 
+import UIKit
 import WebKit
 import XCTest
 

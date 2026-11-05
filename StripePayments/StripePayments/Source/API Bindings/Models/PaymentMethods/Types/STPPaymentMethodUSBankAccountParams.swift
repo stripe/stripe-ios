@@ -16,10 +16,10 @@ public class STPPaymentMethodUSBankAccountParams: NSObject {
     /// by the current version of the SDK's `STPPaymentMethodUSBankAccountHolderType` enum.
     /// Setting this to a value not known by the SDK causes `accountHolderType` to
     /// return `.unknown`
-    @objc public var accountHolderTypeString: String?
+    public var accountHolderTypeString: String?
 
     /// Account holder type
-    @objc public var accountHolderType: STPPaymentMethodUSBankAccountHolderType {
+    public var accountHolderType: STPPaymentMethodUSBankAccountHolderType {
         get {
             return STPPaymentMethodUSBankAccountHolderType(string: accountHolderTypeString)
         }
@@ -30,17 +30,17 @@ public class STPPaymentMethodUSBankAccountParams: NSObject {
     }
 
     /// Account number of the bank account
-    @objc public var accountNumber: String?
+    public var accountNumber: String?
 
     /// The raw underlying account type string sent to the server.
     /// You can use this if you want to create a param of a type not yet supported
     /// by the current version of the SDK's `STPPaymentMethodUSBankAccountType` enum.
     /// Setting this to a value not known by the SDK causes `accountType` to
     /// return `.unknown`
-    @objc public var accountTypeString: String?
+    public var accountTypeString: String?
 
     /// Account type
-    @objc public var accountType: STPPaymentMethodUSBankAccountType {
+    public var accountType: STPPaymentMethodUSBankAccountType {
         get {
             return STPPaymentMethodUSBankAccountType(string: accountTypeString)
         }
@@ -51,13 +51,13 @@ public class STPPaymentMethodUSBankAccountParams: NSObject {
     }
 
     /// Routing number of the bank account
-    @objc public var routingNumber: String?
+    public var routingNumber: String?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// Internal-only option to create directly from a link_account_session ID
-    @objc @_spi(InternalOnlyAPI) public var linkAccountSessionID: String?
+    @_spi(InternalOnlyAPI) public var linkAccountSessionID: String?
 
 }
 
@@ -68,13 +68,13 @@ extension STPPaymentMethodUSBankAccountParams: STPFormEncodable {
         return "us_bank_account"
     }
 
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: accountHolderTypeString)): "account_holder_type",
-            NSStringFromSelector(#selector(getter: accountNumber)): "account_number",
-            NSStringFromSelector(#selector(getter: accountTypeString)): "account_type",
-            NSStringFromSelector(#selector(getter: routingNumber)): "routing_number",
-            NSStringFromSelector(#selector(getter: linkAccountSessionID)): "link_account_session",
+            \STPPaymentMethodUSBankAccountParams.accountHolderTypeString: "account_holder_type",
+            \STPPaymentMethodUSBankAccountParams.accountNumber: "account_number",
+            \STPPaymentMethodUSBankAccountParams.accountTypeString: "account_type",
+            \STPPaymentMethodUSBankAccountParams.routingNumber: "routing_number",
+            \STPPaymentMethodUSBankAccountParams.linkAccountSessionID: "link_account_session",
         ]
     }
 }

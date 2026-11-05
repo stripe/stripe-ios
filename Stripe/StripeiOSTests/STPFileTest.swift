@@ -8,6 +8,7 @@
 //
 
 @testable import StripePayments
+import StripePaymentsTestUtils
 import XCTest
 
 class STPFileTest: XCTestCase {

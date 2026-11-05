@@ -140,7 +140,6 @@ class CVCReconfirmationViewController: UIViewController {
         )
     }
 
-    @objc
     private func didTapConfirmButton() {
         updateUI()
         // TODO: Analytics

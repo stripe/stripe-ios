@@ -18,7 +18,7 @@ extension StripeAPI {
 
         /// Time at which the object was created. Measured in seconds since the Unix epoch.
         public var created: Date
-        /// `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
+        /// `true` if the object exists in live mode or the value `false` if the object exists in test mode.
         public var livemode = false
 
         /// The type of the PaymentMethod.  The corresponding, similarly named property contains additional information specific to the PaymentMethod type.

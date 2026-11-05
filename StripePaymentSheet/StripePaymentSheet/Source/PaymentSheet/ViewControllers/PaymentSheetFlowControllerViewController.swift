@@ -540,7 +540,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         updateUI()
     }
 
-    @objc
     private func didTapContinueButton() {
         // The user is continuing with an LPM, so we un-select Link
         isHackyLinkButtonSelected = false

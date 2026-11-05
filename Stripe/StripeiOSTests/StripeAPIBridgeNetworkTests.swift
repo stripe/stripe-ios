@@ -13,6 +13,7 @@ import Stripe
 import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) import StripePayments
 import StripePaymentsTestUtils
+import UIKit
 import XCTest
 
 class StripeAPIBridgeNetworkTests: STPNetworkStubbingTestCase {
@@ -143,7 +144,7 @@ class StripeAPIBridgeNetworkTests: STPNetworkStubbingTestCase {
         let exp = expectation(description: "Fetch")
         let exp2 = expectation(description: "Fetch with expansion")
 
-        let testClient = STPTestingAPIClient.shared()
+        let testClient = STPTestingAPIClient.shared
         testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertTrue(Thread.isMainThread)
             XCTAssertNil(error)
@@ -168,7 +169,7 @@ class StripeAPIBridgeNetworkTests: STPNetworkStubbingTestCase {
     func testConfirmPaymentIntent() {
         let exp = expectation(description: "Confirm")
         let exp2 = expectation(description: "Confirm with expansion")
-        let testClient = STPTestingAPIClient.shared()
+        let testClient = STPTestingAPIClient.shared
 
         let card = STPPaymentMethodCardParams()
         card.number = "4242424242424242"
@@ -209,7 +210,7 @@ class StripeAPIBridgeNetworkTests: STPNetworkStubbingTestCase {
     func testRefreshPaymentIntent() {
         let exp = expectation(description: "Refresh")
 
-        let testClient = STPTestingAPIClient.shared()
+        let testClient = STPTestingAPIClient.shared
         testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
@@ -228,7 +229,7 @@ class StripeAPIBridgeNetworkTests: STPNetworkStubbingTestCase {
     func testRetrieveSetupIntent() {
         let exp = expectation(description: "Fetch")
 
-        let testClient = STPTestingAPIClient.shared()
+        let testClient = STPTestingAPIClient.shared
         testClient.createSetupIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
@@ -245,7 +246,7 @@ class StripeAPIBridgeNetworkTests: STPNetworkStubbingTestCase {
 
     func testConfirmSetupIntent() {
         let exp = expectation(description: "Confirm")
-        let testClient = STPTestingAPIClient.shared()
+        let testClient = STPTestingAPIClient.shared
 
         let card = STPPaymentMethodCardParams()
         card.number = "4242424242424242"
@@ -273,7 +274,7 @@ class StripeAPIBridgeNetworkTests: STPNetworkStubbingTestCase {
     func testRefreshSetupIntent() {
         let exp = expectation(description: "Refresh")
 
-        let testClient = STPTestingAPIClient.shared()
+        let testClient = STPTestingAPIClient.shared
         testClient.createSetupIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 

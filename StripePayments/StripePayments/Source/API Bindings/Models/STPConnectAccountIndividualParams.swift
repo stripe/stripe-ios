@@ -13,69 +13,69 @@ import Foundation
 public class STPConnectAccountIndividualParams: NSObject {
 
     /// The individual’s primary address.
-    @objc public var address: STPConnectAccountAddress?
+    public var address: STPConnectAccountAddress?
 
     /// The Kana variation of the the individual’s primary address (Japan only).
-    @objc public var kanaAddress: STPConnectAccountAddress?
+    public var kanaAddress: STPConnectAccountAddress?
 
     /// The Kanji variation of the the individual’s primary address (Japan only).
-    @objc public var kanjiAddress: STPConnectAccountAddress?
+    public var kanjiAddress: STPConnectAccountAddress?
 
     /// The individual’s date of birth.
     /// Must include `day`, `month`, and `year`, and only those fields are used.
-    @objc public var dateOfBirth: DateComponents?
+    public var dateOfBirth: DateComponents?
 
     /// The individual's email address.
-    @objc public var email: String?
+    public var email: String?
 
     /// The individual’s first name.
-    @objc public var firstName: String?
+    public var firstName: String?
 
     /// The Kana variation of the the individual’s first name (Japan only).
-    @objc public var kanaFirstName: String?
+    public var kanaFirstName: String?
 
     /// The Kanji variation of the individual’s first name (Japan only).
-    @objc public var kanjiFirstName: String?
+    public var kanjiFirstName: String?
 
     /// The individual’s gender
     /// International regulations require either “male” or “female”.
-    @objc public var gender: String?
+    public var gender: String?
 
     /// The government-issued ID number of the individual, as appropriate for the representative’s country.
     /// Examples are a Social Security Number in the U.S., or a Social Insurance Number in Canada.
     /// Instead of the number itself, you can also provide a PII token (see https://stripe.com/docs/api/tokens/create_pii).
-    @objc public var idNumber: String?
+    public var idNumber: String?
 
     /// The individual’s last name.
-    @objc public var lastName: String?
+    public var lastName: String?
 
     /// The Kana varation of the individual’s last name (Japan only).
-    @objc public var kanaLastName: String?
+    public var kanaLastName: String?
 
     /// The Kanji varation of the individual’s last name (Japan only).
-    @objc public var kanjiLastName: String?
+    public var kanjiLastName: String?
 
     /// The individual’s maiden name.
-    @objc public var maidenName: String?
+    public var maidenName: String?
 
     /// Set of key-value pairs that you can attach to an object.
     /// This can be useful for storing additional information about the object in a structured format.
-    @objc public var metadata: [AnyHashable: Any]?
+    public var metadata: [AnyHashable: Any]?
 
     /// The individual’s phone number.
-    @objc public var phone: String?
+    public var phone: String?
 
     /// The last four digits of the individual’s Social Security Number (U.S. only).
-    @objc public var ssnLast4: String?
+    public var ssnLast4: String?
 
     /// The individual’s verification document information.
-    @objc public var verification: STPConnectAccountIndividualVerification?
+    public var verification: STPConnectAccountIndividualVerification?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(
@@ -107,7 +107,7 @@ public class STPConnectAccountIndividualParams: NSObject {
         return "<\(props.joined(separator: "; "))>"
     }
 
-    @objc var _dateOfBirth: STPDateOfBirth? {
+    var _dateOfBirth: STPDateOfBirth? {
         guard let dateOfBirth = dateOfBirth else {
             return nil
         }
@@ -121,31 +121,29 @@ public class STPConnectAccountIndividualParams: NSObject {
 }
 
 extension STPConnectAccountIndividualParams: STPFormEncodable {
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: address)): "address",
-            NSStringFromSelector(#selector(getter: kanaAddress)): "address_kana",
-            NSStringFromSelector(#selector(getter: kanjiAddress)): "address_kanji",
-            NSStringFromSelector(#selector(getter: _dateOfBirth)): "dob",
-            NSStringFromSelector(#selector(getter: email)): "email",
-            NSStringFromSelector(#selector(getter: firstName)): "first_name",
-            NSStringFromSelector(#selector(getter: kanaFirstName)): "first_name_kana",
-            NSStringFromSelector(#selector(getter: kanjiFirstName)): "first_name_kanji",
-            NSStringFromSelector(#selector(getter: gender)): "gender",
-            NSStringFromSelector(#selector(getter: idNumber)): "id_number",
-            NSStringFromSelector(#selector(getter: lastName)): "last_name",
-            NSStringFromSelector(#selector(getter: kanaLastName)): "last_name_kana",
-            NSStringFromSelector(#selector(getter: kanjiLastName)): "last_name_kanji",
-            NSStringFromSelector(#selector(getter: maidenName)): "maiden_name",
-            NSStringFromSelector(#selector(getter: metadata)): "metadata",
-            NSStringFromSelector(#selector(getter: phone)): "phone",
-            NSStringFromSelector(#selector(getter: ssnLast4)): "ssn_last_4",
-            NSStringFromSelector(#selector(getter: verification)): "verification",
+            \STPConnectAccountIndividualParams.address: "address",
+            \STPConnectAccountIndividualParams.kanaAddress: "address_kana",
+            \STPConnectAccountIndividualParams.kanjiAddress: "address_kanji",
+            \STPConnectAccountIndividualParams._dateOfBirth: "dob",
+            \STPConnectAccountIndividualParams.email: "email",
+            \STPConnectAccountIndividualParams.firstName: "first_name",
+            \STPConnectAccountIndividualParams.kanaFirstName: "first_name_kana",
+            \STPConnectAccountIndividualParams.kanjiFirstName: "first_name_kanji",
+            \STPConnectAccountIndividualParams.gender: "gender",
+            \STPConnectAccountIndividualParams.idNumber: "id_number",
+            \STPConnectAccountIndividualParams.lastName: "last_name",
+            \STPConnectAccountIndividualParams.kanaLastName: "last_name_kana",
+            \STPConnectAccountIndividualParams.kanjiLastName: "last_name_kanji",
+            \STPConnectAccountIndividualParams.maidenName: "maiden_name",
+            \STPConnectAccountIndividualParams.metadata: "metadata",
+            \STPConnectAccountIndividualParams.phone: "phone",
+            \STPConnectAccountIndividualParams.ssnLast4: "ssn_last_4",
+            \STPConnectAccountIndividualParams.verification: "verification",
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
@@ -157,24 +155,22 @@ extension STPConnectAccountIndividualParams: STPFormEncodable {
 public class STPConnectAccountIndividualVerification: NSObject {
 
     /// An identifying document, either a passport or local ID card.
-    @objc public var document: STPConnectAccountVerificationDocument?
+    public var document: STPConnectAccountVerificationDocument?
 
     /// A document showing address, either a passport, local ID card, or utility bill from a well-known utility company.
-    @objc public var additionalDocument: STPConnectAccountVerificationDocument?
+    public var additionalDocument: STPConnectAccountVerificationDocument?
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
 extension STPConnectAccountIndividualVerification: STPFormEncodable {
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: document)): "document",
-            NSStringFromSelector(#selector(getter: additionalDocument)): "additional_document",
+            \STPConnectAccountIndividualVerification.document: "document",
+            \STPConnectAccountIndividualVerification.additionalDocument: "additional_document",
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
@@ -187,25 +183,23 @@ public class STPConnectAccountVerificationDocument: NSObject {
 
     /// The back of an ID returned by a file upload with a `purpose` value of `identity_document`.
     /// - seealso: https://stripe.com/docs/api/files/create for file uploads
-    @objc public var back: String?
+    public var back: String?
 
     /// The front of an ID returned by a file upload with a `purpose` value of `identity_document`.
     /// - seealso: https://stripe.com/docs/api/files/create for file uploads
-    @objc public var front: String?
+    public var front: String?
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
 extension STPConnectAccountVerificationDocument: STPFormEncodable {
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: back)): "back",
-            NSStringFromSelector(#selector(getter: front)): "front",
+            \STPConnectAccountVerificationDocument.back: "back",
+            \STPConnectAccountVerificationDocument.front: "front",
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }
@@ -218,28 +212,26 @@ extension STPConnectAccountVerificationDocument: STPFormEncodable {
 public class STPDateOfBirth: NSObject {
 
     /// The day of birth, between 1 and 31.
-    @objc public var day = 0
+    public var day = 0
 
     /// The month of birth, between 1 and 12.
-    @objc public var month = 0
+    public var month = 0
 
     /// The four-digit year of birth.
-    @objc public var year = 0
+    public var year = 0
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 }
 
 extension STPDateOfBirth: STPFormEncodable {
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: day)): "day",
-            NSStringFromSelector(#selector(getter: month)): "month",
-            NSStringFromSelector(#selector(getter: year)): "year",
+            \STPDateOfBirth.day: "day",
+            \STPDateOfBirth.month: "month",
+            \STPDateOfBirth.year: "year",
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return nil
     }

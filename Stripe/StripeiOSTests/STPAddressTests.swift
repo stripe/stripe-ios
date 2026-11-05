@@ -9,6 +9,9 @@
 
 import Contacts
 import PassKit
+import StripePayments
+import StripePaymentsTestUtils
+import XCTest
 
 class STPAddressTests: XCTestCase {
     func testInitWithPKContact_complete() {
@@ -198,9 +201,8 @@ class STPAddressTests: XCTestCase {
 
         let mapping = STPAddress.propertyNamesToFormFieldNamesMapping()
 
-        for propertyName in mapping.keys {
-            XCTAssertFalse(propertyName.contains(":"))
-            XCTAssert(address.responds(to: NSSelectorFromString(propertyName)))
+        for keyPath in mapping.keys {
+            XCTAssertNotNil((address as Any)[keyPath: keyPath], "\(keyPath) does not apply to \(type(of: address))")
         }
 
         for formFieldName in mapping.values {
@@ -218,25 +220,11 @@ class STPAddressTests: XCTestCase {
 
         XCTAssertNotEqual(address, copiedAddress, "should be different objects")
 
-        // The property names we expect to *not* be equal objects
-        let notEqualProperties = [
-                    // these include the object's address, so they won't be the same across copies
-            "debugDescription",
-            "description",
-            "hash",
-        ]
-        // use runtime inspection to find the list of properties. If a new property is
-        // added to the fixture, but not the `copyWithZone:` implementation, this should catch it
-        for property in STPTestUtils.propertyNames(of: address) {
-            if notEqualProperties.contains(property) {
-                XCTAssertNotEqual(
-                    address.value(forKey: property) as! NSObject,
-                    copiedAddress.value(forKey: property) as! NSObject)
-            } else {
-                XCTAssertEqual(
-                    address.value(forKey: property) as! NSObject,
-                    copiedAddress.value(forKey: property) as! NSObject)
-            }
+        // Use reflection to find the list of stored properties. If a new property is
+        // added to the fixture, but not the `copy(with:)` implementation, this should catch it
+        let copiedValues = STPTestUtils.storedPropertyDescriptions(of: copiedAddress)
+        for (property, value) in STPTestUtils.storedPropertyDescriptions(of: address) {
+            XCTAssertEqual(value, copiedValues[property], property)
         }
     }
 }

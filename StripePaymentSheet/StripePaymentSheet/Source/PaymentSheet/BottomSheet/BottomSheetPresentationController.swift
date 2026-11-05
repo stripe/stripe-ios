@@ -15,7 +15,6 @@ import UIKit
 /// - adds a background overlay between the presenting & presented
 /// - Tells the presented view controller when the background view is tapped
 /// - Pins the presented view controller to the bottom of the screen, but doesn't constrain the height (unless `forceFullHeight` is `true`)
-@objc(STPBottomSheetPresentationController)
 class BottomSheetPresentationController: UIPresentationController {
 
     // MARK: - Properties

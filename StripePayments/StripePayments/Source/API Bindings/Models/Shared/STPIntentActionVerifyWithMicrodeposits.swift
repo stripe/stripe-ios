@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc public enum STPMicrodepositType: Int {
+public enum STPMicrodepositType: Int {
 
     /// This is an unknown type that's been added since the SDK
     /// was last updated.
@@ -40,16 +40,16 @@ import UIKit
 public class STPIntentActionVerifyWithMicrodeposits: NSObject {
 
     /// The timestamp when the microdeposits are expected to land
-    @objc public let arrivalDate: Date
+    public let arrivalDate: Date
 
     /// The URL for the hosted verification page, which allows customers to verify their bank account
-    @objc public let hostedVerificationURL: URL
+    public let hostedVerificationURL: URL
 
     /// The type of the microdeposit sent to the customer. Used to distinguish between different verificaion methods.
-    @objc public let microdepositType: STPMicrodepositType
+    public let microdepositType: STPMicrodepositType
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     internal init(
         arrivalDate: Date,

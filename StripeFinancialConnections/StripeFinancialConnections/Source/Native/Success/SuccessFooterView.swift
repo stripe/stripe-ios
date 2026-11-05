@@ -18,7 +18,7 @@ final class SuccessFooterView: UIView {
     private lazy var doneButton: Button = {
         let doneButton = Button.primary(appearance: appearance)
         doneButton.title = "Done"  // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
-        doneButton.addTarget(self, action: #selector(didSelectDoneButton), for: .touchUpInside)
+        doneButton.addAction(UIAction { [weak self] _ in self?.didSelectDoneButton() }, for: .touchUpInside)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             doneButton.heightAnchor.constraint(equalToConstant: 56)
@@ -52,7 +52,7 @@ final class SuccessFooterView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func didSelectDoneButton() {
+    private func didSelectDoneButton() {
         didSelectDone(self)
     }
 

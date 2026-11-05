@@ -10,17 +10,15 @@ import Foundation
 
 /// The type of the error represented by `STPPaymentIntentLastPaymentError`.
 /// Some STPPaymentIntentLastPaymentError properties are only populated for certain error types.
-@objc public enum STPPaymentIntentLastPaymentErrorType: Int {
+public enum STPPaymentIntentLastPaymentErrorType: Int {
 
     /// An unknown error type.
     case unknown
 
     /// An error connecting to Stripe's API.
-    @objc(STPPaymentIntentLastPaymentErrorTypeAPIConnection)
     case apiConnection
 
     /// An error with the Stripe API.
-    @objc(STPPaymentIntentLastPaymentErrorTypeAPI)
     case api
 
     /// A failure to authenticate your customer.
@@ -69,40 +67,40 @@ import Foundation
 public class STPPaymentIntentLastPaymentError: NSObject {
 
     /// A value for `code` indicating the provided payment method failed authentication.
-    @objc public static let ErrorCodeAuthenticationFailure = "payment_intent_authentication_failure"
+    public static let ErrorCodeAuthenticationFailure = "payment_intent_authentication_failure"
 
     /// For some errors that could be handled programmatically, a short string indicating the error code reported.
     /// - seealso: https://stripe.com/docs/error-codes
-    @objc public let code: String?
+    public let code: String?
 
     /// For card (`STPPaymentIntentLastPaymentErrorType.card`) errors resulting from a card issuer decline,
     /// a short string indicating the card issuer’s reason for the decline if they provide one.
     /// - seealso: https://stripe.com/docs/declines#issuer-declines
-    @objc public let declineCode: String?
+    public let declineCode: String?
 
     /// A URL to more information about the error code reported.
     /// - seealso: https://stripe.com/docs/error-codes
-    @objc public let docURL: String?
+    public let docURL: String?
 
     /// A human-readable message providing more details about the error.
     /// For card (`STPPaymentIntentLastPaymentErrorType.card`) errors, these messages can be shown to your users.
-    @objc public let message: String?
+    public let message: String?
 
     /// If the error is parameter-specific, the parameter related to the error.
     /// For example, you can use this to display a message near the correct form field.
-    @objc public let param: String?
+    public let param: String?
 
     /// The PaymentMethod object for errors returned on a request involving a PaymentMethod.
-    @objc public let paymentMethod: STPPaymentMethod?
+    public let paymentMethod: STPPaymentMethod?
 
     /// The type of error.
-    @objc public let type: STPPaymentIntentLastPaymentErrorType
+    public let type: STPPaymentIntentLastPaymentErrorType
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(
@@ -149,7 +147,6 @@ public class STPPaymentIntentLastPaymentError: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPPaymentIntentLastPaymentError: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let typeString = dict["type"] as? String

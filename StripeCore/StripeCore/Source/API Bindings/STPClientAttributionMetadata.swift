@@ -27,28 +27,28 @@ import Foundation
         case merchantSpecified = "merchant_specified"
     }
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The identifier string for the session
-    @objc public let clientSessionId: String?
+    public let clientSessionId: String?
     /// The identifier string for the elements session
-    @objc public let elementsSessionConfigId: String?
+    public let elementsSessionConfigId: String?
     /// The identifier string for the Checkout Session, when present
-    @objc public let checkoutSessionId: String?
+    public let checkoutSessionId: String?
     /// The identifier string for the Checkout configuration, when present
-    @objc public let checkoutConfigId: String?
+    public let checkoutConfigId: String?
     /// The configured Elements
-    @objc public let merchantIntegrationAdditionalElements: [String]?
+    public let merchantIntegrationAdditionalElements: [String]?
     /// The source for the merchant integration
-    @objc public let merchantIntegrationSource: String
+    public let merchantIntegrationSource: String
     /// The subtype for the merchant integration
-    @objc public let merchantIntegrationSubtype: String
+    public let merchantIntegrationSubtype: String
     /// The version for the merchant integration
-    @objc public let merchantIntegrationVersion: String
+    public let merchantIntegrationVersion: String
     /// The intent creation flow for the merchant integration. Can be `standard` or `deferred`
-    @objc public let paymentIntentCreationFlow: String?
+    public let paymentIntentCreationFlow: String?
     /// The payment method selection for the merchant integration. Can be `automatic` or `merchant_specified`
-    @objc public let paymentMethodSelectionFlow: String?
+    public let paymentMethodSelectionFlow: String?
 
     public init(elementsSessionConfigId: String?,
                 checkoutSessionId: String? = nil,

@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import StripePayments
+import XCTest
 
 class STPIntentActionMultibancoDisplayDetailsTest: XCTestCase {
     func testActionDisplayDetails() throws {

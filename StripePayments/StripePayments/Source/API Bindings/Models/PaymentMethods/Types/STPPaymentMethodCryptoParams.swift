@@ -9,16 +9,14 @@ import Foundation
 
 /// An object representing parameters used to create a Crypto Payment Method
 public class STPPaymentMethodCryptoParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     // MARK: - STPFormEncodable
-    @objc
     public class func rootObjectName() -> String? {
         return "crypto"
     }
 
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

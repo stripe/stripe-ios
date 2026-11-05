@@ -7,6 +7,10 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
+import StripePayments
+import StripePaymentsTestUtils
+import XCTest
+
 class STPPaymentMethodCardWalletMasterpassTest: XCTestCase {
     func testDecodedObjectFromAPIResponseMapping() {
         // We reuse the visa checkout JSON because it's identical to the masterpass version

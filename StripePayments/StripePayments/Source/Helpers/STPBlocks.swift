@@ -10,7 +10,7 @@ import Foundation
 import PassKit
 
 /// An enum representing the status of a payment requested from the user.
-@objc public enum STPPaymentStatus: Int {
+public enum STPPaymentStatus: Int {
     /// The payment succeeded.
     case success
     /// The payment failed due to an unforeseen error, such as the user's Internet connection being offline.
@@ -79,7 +79,7 @@ public typealias STPFileCompletionBlock = (STPFile?, Error?) -> Void
 ///   - error:        The error returned from the response, or nil if none occurs.
 public typealias STPCustomerCompletionBlock = (STPCustomer?, Error?) -> Void
 /// An enum representing the success and error states of PIN management
-@objc public enum STPPinStatus: Int {
+public enum STPPinStatus: Int {
     /// The verification object was already redeemed
     case success
     /// The verification object was already redeemed

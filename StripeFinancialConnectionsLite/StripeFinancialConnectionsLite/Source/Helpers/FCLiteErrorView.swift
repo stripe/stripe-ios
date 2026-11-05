@@ -37,7 +37,7 @@ class ErrorView: UIView {
         retryButton.backgroundColor = FCLiteColor.stripe
         retryButton.setTitleColor(.white, for: .normal)
         retryButton.layer.cornerRadius = 8
-        retryButton.addTarget(self, action: #selector(retryButtonTapped), for: .touchUpInside)
+        retryButton.addAction(UIAction { [weak self] _ in self?.retryButtonTapped() }, for: .touchUpInside)
         retryButton.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(errorLabel)
@@ -54,7 +54,7 @@ class ErrorView: UIView {
         ])
     }
 
-    @objc private func retryButtonTapped() {
+    private func retryButtonTapped() {
         onRetryTapped?()
     }
 }

@@ -16,7 +16,6 @@ import UIKit
 /// A customization object to use to configure the UI of a text field.
 public class STPThreeDSTextFieldCustomization: NSObject {
     /// The default settings.
-    @objc
     public class func defaultSettings() -> STPThreeDSTextFieldCustomization {
         return STPThreeDSTextFieldCustomization()
     }
@@ -24,7 +23,7 @@ public class STPThreeDSTextFieldCustomization: NSObject {
     internal var textFieldCustomization = STDSTextFieldCustomization.defaultSettings()
 
     /// The border width of the text field. Defaults to 2.
-    @objc public var borderWidth: CGFloat {
+    public var borderWidth: CGFloat {
         get {
             return textFieldCustomization.borderWidth
         }
@@ -34,7 +33,7 @@ public class STPThreeDSTextFieldCustomization: NSObject {
     }
 
     /// The color of the border of the text field. Defaults to clear.
-    @objc public var borderColor: UIColor {
+    public var borderColor: UIColor {
         get {
             return textFieldCustomization.borderColor
         }
@@ -44,7 +43,7 @@ public class STPThreeDSTextFieldCustomization: NSObject {
     }
 
     /// The corner radius of the edges of the text field. Defaults to 8.
-    @objc public var cornerRadius: CGFloat {
+    public var cornerRadius: CGFloat {
         get {
             return textFieldCustomization.cornerRadius
         }
@@ -54,7 +53,7 @@ public class STPThreeDSTextFieldCustomization: NSObject {
     }
     /// The appearance of the keyboard. Defaults to UIKeyboardAppearanceDefault.
 
-    @objc public var keyboardAppearance: UIKeyboardAppearance {
+    public var keyboardAppearance: UIKeyboardAppearance {
         get {
             return textFieldCustomization.keyboardAppearance
         }
@@ -64,7 +63,7 @@ public class STPThreeDSTextFieldCustomization: NSObject {
     }
     /// The color of the placeholder text. Defaults to light gray.
 
-    @objc public var placeholderTextColor: UIColor {
+    public var placeholderTextColor: UIColor {
         get {
             return textFieldCustomization.placeholderTextColor
         }
@@ -74,7 +73,7 @@ public class STPThreeDSTextFieldCustomization: NSObject {
     }
 
     /// The font to use for text.
-    @objc public var font: UIFont? {
+    public var font: UIFont? {
         get {
             return textFieldCustomization.font
         }
@@ -83,7 +82,7 @@ public class STPThreeDSTextFieldCustomization: NSObject {
         }
     }
     /// The color to use for the text. Defaults to black.
-    @objc public var textColor: UIColor? {
+    public var textColor: UIColor? {
         get {
             return textFieldCustomization.textColor
         }

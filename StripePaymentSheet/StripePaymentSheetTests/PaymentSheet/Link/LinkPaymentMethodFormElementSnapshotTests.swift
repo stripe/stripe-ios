@@ -103,8 +103,7 @@ final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
             return
         }
 
-        let name = params.billingDetails.value(forKey: "name") as? String
-        XCTAssertEqual(name, "Jane Doe")
+        XCTAssertEqual(params.billingDetails.name, "Jane Doe")
     }
 
     func verify(

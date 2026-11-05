@@ -16,7 +16,6 @@ import UIKit
 public class PaymentSheetImageLibrary {
 
     /// An icon representing Afterpay.
-    @objc
     public class func afterpayLogo(currency: String? = nil) -> UIImage {
         if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
             return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
@@ -28,7 +27,6 @@ public class PaymentSheetImageLibrary {
     }
 
     /// This returns the appropriate icon for the affirm logo
-    @objc
     public class func affirmLogo() -> UIImage {
         return Image.affirm_copy.makeImage()
     }

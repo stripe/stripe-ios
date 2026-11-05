@@ -7,9 +7,11 @@
 
 import Foundation
 import StripeCoreTestUtils
+import StripePayments
 import UIKit
 
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+import XCTest
 
 // ☠️ WARNING: These snapshots do not have capsule corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
 // @iOS26

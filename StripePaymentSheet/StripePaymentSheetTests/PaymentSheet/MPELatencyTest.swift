@@ -129,7 +129,7 @@ final class MPELatencyTest: XCTestCase {
 
         // Use a customer w/ saved card and bank account
         // No email to prevent the Link lookup call, otherwise this test is ~identical to test_link_on_with_ek because our code makes the same link lookups regardless of whether link is actually disabled/enabled.
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: customerIDWithoutEmail, merchantCountry: "us")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: customerIDWithoutEmail, merchantCountry: "us")
         configuration.customer = .init(id: customerIDWithoutEmail, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         try await _measureLoadLatency(configuration: configuration)
@@ -145,7 +145,7 @@ final class MPELatencyTest: XCTestCase {
 
         // Use a customer w/ saved card and bank account
         // No email to prevent the Link lookup call. If there was a Link lookup call this test would be ~identical to one that enabled Link, since we look up Link regardless of whether link is enabled today.
-        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared.fetchCustomerAndCustomerSessionClientSecret(
             customerID: customerIDWithoutEmail,
             merchantCountry: "us",
             paymentMethodSave: true,
@@ -179,7 +179,7 @@ final class MPELatencyTest: XCTestCase {
     func test_link_on_with_ek() async throws {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.apiClient = apiClient
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: customerIDWithEmail, merchantCountry: "us")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: customerIDWithEmail, merchantCountry: "us")
         configuration.customer = .init(id: customerIDWithEmail, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         try await _measureLoadLatency(configuration: configuration)
@@ -197,7 +197,7 @@ final class MPELatencyTest: XCTestCase {
         // Use a customer w/ an email
         // Why email? It's very specific to the current link lookup logic. The slowest codepath is when there is (1) no defaultBillingDetails.email (2) customer has email because it retrieves the Customer before doing the link lookup
 
-        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared.fetchCustomerAndCustomerSessionClientSecret(
             customerID: customerIDWithEmail,
             merchantCountry: "us",
             paymentMethodSave: true,
@@ -223,7 +223,7 @@ final class MPELatencyTest: XCTestCase {
         // Use a customer w/ an email
         // Supply default email as well - this should remove the Customer lookup call
         configuration.defaultBillingDetails.email = "yuki@stripe.com"
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: customerIDWithEmail, merchantCountry: "us")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: customerIDWithEmail, merchantCountry: "us")
         configuration.customer = .init(id: customerIDWithEmail, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         try await _measureLoadLatency(configuration: configuration)
@@ -242,7 +242,7 @@ final class MPELatencyTest: XCTestCase {
         // Supply default email as well - this should remove the Customer lookup call
         configuration.defaultBillingDetails.email = "yuki@stripe.com"
 
-        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared.fetchCustomerAndCustomerSessionClientSecret(
             customerID: customerIDWithEmail,
             merchantCountry: "us",
             paymentMethodSave: true,

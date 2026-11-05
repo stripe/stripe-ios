@@ -10,6 +10,7 @@
 import Stripe
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
+import XCTest
 
 class STPPaymentMethodAfterpayClearpayTest: STPNetworkStubbingTestCase {
     var afterpayJSON: [AnyHashable: Any]?

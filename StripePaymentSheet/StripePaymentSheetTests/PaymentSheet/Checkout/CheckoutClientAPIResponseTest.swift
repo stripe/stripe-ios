@@ -10,7 +10,7 @@
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
-import StripePaymentsObjcTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
 @MainActor

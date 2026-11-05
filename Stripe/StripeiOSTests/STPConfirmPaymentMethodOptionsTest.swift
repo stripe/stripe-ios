@@ -8,6 +8,7 @@
 //
 
 @testable@_spi(InternalOnlyAPI) @_spi(KlarnaSDKPrivatePreview) import StripePayments
+import XCTest
 
 class STPConfirmPaymentMethodOptionsTest: XCTestCase {
     func testCardOptions() {
@@ -53,15 +54,15 @@ class STPConfirmPaymentMethodOptionsTest: XCTestCase {
 
     func testFormEncoding() {
         let propertyToFieldMap = STPConfirmPaymentMethodOptions.propertyNamesToFormFieldNamesMapping()
-        let expected = [
-            "cardOptions": "card",
-            "alipayOptions": "alipay",
-            "blikOptions": "blik",
-            "weChatPayOptions": "wechat_pay",
-            "usBankAccountOptions": "us_bank_account",
-            "konbiniOptions": "konbini",
-            "klarnaOptions": "klarna",
-            "linkOptions": "link",
+        let expected: [AnyKeyPath: String] = [
+            \STPConfirmPaymentMethodOptions.cardOptions: "card",
+            \STPConfirmPaymentMethodOptions.alipayOptions: "alipay",
+            \STPConfirmPaymentMethodOptions.blikOptions: "blik",
+            \STPConfirmPaymentMethodOptions.weChatPayOptions: "wechat_pay",
+            \STPConfirmPaymentMethodOptions.usBankAccountOptions: "us_bank_account",
+            \STPConfirmPaymentMethodOptions.konbiniOptions: "konbini",
+            \STPConfirmPaymentMethodOptions.klarnaOptions: "klarna",
+            \STPConfirmPaymentMethodOptions.linkOptions: "link",
         ]
 
         XCTAssertEqual(propertyToFieldMap, expected)
@@ -69,11 +70,11 @@ class STPConfirmPaymentMethodOptionsTest: XCTestCase {
 
     func testAlipayOptionsFormEncoding() {
         let propertyToFieldMap = STPConfirmAlipayOptions.propertyNamesToFormFieldNamesMapping()
-        let expected = [
-            "currency": "currency",
-            "appBundleID": "app_bundle_id",
-            "appVersionKey": "app_version_key",
-            "setupFutureUsageRawString": "setup_future_usage",
+        let expected: [AnyKeyPath: String] = [
+            \STPConfirmAlipayOptions.currency: "currency",
+            \STPConfirmAlipayOptions.appBundleID: "app_bundle_id",
+            \STPConfirmAlipayOptions.appVersionKey: "app_version_key",
+            \STPConfirmAlipayOptions.setupFutureUsageRawString: "setup_future_usage",
         ]
 
         XCTAssertEqual(propertyToFieldMap, expected)

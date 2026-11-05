@@ -11,14 +11,14 @@ import Foundation
 /// A NetBanking Payment Method.
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-netbanking
 public class STPPaymentMethodNetBanking: NSObject, STPAPIResponseDecodable {
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// Customer’s Bank Name
-    @objc public private(set) var bank: String
+    public private(set) var bank: String
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodNetBanking.self), self),
@@ -29,7 +29,6 @@ public class STPPaymentMethodNetBanking: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

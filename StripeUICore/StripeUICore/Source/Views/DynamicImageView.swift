@@ -10,7 +10,6 @@ import UIKit
 
 /// A `UIImageView` that dynamically changes it's `image` according to the brightness of the
 /// `pairedColor`.
-@objc(STP_Internal_DynamicImageView)
 @_spi(InternalOnlyAPI) public class DynamicImageView: UIImageView {
     private let pairedColor: UIColor
     private let dynamicImage: UIImage?

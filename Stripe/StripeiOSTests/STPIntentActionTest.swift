@@ -8,6 +8,7 @@
 //
 
 @_spi(InternalOnlyAPI) import StripePayments
+import XCTest
 
 class STPIntentActionTest: XCTestCase {
     func testDecodedObjectFromAPIResponseRedirectToURL() {

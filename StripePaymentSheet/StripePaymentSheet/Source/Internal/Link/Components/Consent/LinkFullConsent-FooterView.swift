@@ -42,7 +42,7 @@ final class LinkFullConsentFooterView: UIView {
         button.backgroundColor = .linkTextPrimary
         button.layer.cornerRadius = LinkUI.cornerRadius
         button.heightAnchor.constraint(equalToConstant: Self.buttonHeight).isActive = true
-        button.addTarget(self, action: #selector(consentButtonTapped), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.consentButtonTapped() }, for: .touchUpInside)
         return button
     }()
 
@@ -54,7 +54,7 @@ final class LinkFullConsentFooterView: UIView {
         button.backgroundColor = .linkSurfaceSecondary
         button.layer.cornerRadius = LinkUI.cornerRadius
         button.heightAnchor.constraint(equalToConstant: Self.buttonHeight).isActive = true
-        button.addTarget(self, action: #selector(rejectButtonTapped), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.rejectButtonTapped() }, for: .touchUpInside)
         return button
     }()
 
@@ -108,11 +108,11 @@ final class LinkFullConsentFooterView: UIView {
         addAndPinSubview(containerStackView)
     }
 
-    @objc private func rejectButtonTapped() {
+    private func rejectButtonTapped() {
         delegate?.footerViewDidTapReject(self)
     }
 
-    @objc private func consentButtonTapped() {
+    private func consentButtonTapped() {
         delegate?.footerViewDidTapConsent(self)
     }
 }

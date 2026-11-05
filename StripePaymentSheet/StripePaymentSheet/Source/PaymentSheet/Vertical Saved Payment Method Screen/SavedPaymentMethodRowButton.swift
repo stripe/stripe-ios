@@ -115,11 +115,11 @@ final class SavedPaymentMethodRowButton: UIView {
     }
 
     // MARK: Tap handlers
-    @objc private func handleUpdateButtonTapped() {
+    private func handleUpdateButtonTapped() {
         delegate?.didSelectUpdateButton(self, with: paymentMethod)
     }
 
-    @objc private func handleRowButtonTapped(_: RowButton) {
+    private func handleRowButtonTapped(_: RowButton) {
         if isEditing {
             delegate?.didSelectUpdateButton(self, with: paymentMethod)
         } else {

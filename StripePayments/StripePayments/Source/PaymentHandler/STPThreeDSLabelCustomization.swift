@@ -16,7 +16,6 @@ import UIKit
 /// A customization object to use to configure the UI of a text label.
 public class STPThreeDSLabelCustomization: NSObject {
     /// The default settings.
-    @objc
     public class func defaultSettings() -> STPThreeDSLabelCustomization {
         return STPThreeDSLabelCustomization()
     }
@@ -25,7 +24,7 @@ public class STPThreeDSLabelCustomization: NSObject {
 
     /// The font to use for heading text.
 
-    @objc public var headingFont: UIFont {
+    public var headingFont: UIFont {
         get {
             return labelCustomization.headingFont
         }
@@ -35,7 +34,7 @@ public class STPThreeDSLabelCustomization: NSObject {
     }
     /// The color of heading text. Defaults to black.
 
-    @objc public var headingTextColor: UIColor {
+    public var headingTextColor: UIColor {
         get {
             return labelCustomization.headingTextColor
         }
@@ -45,7 +44,7 @@ public class STPThreeDSLabelCustomization: NSObject {
     }
 
     /// The font to use for non-heading text.
-    @objc public var font: UIFont? {
+    public var font: UIFont? {
         get {
             return labelCustomization.font
         }
@@ -55,7 +54,7 @@ public class STPThreeDSLabelCustomization: NSObject {
     }
 
     /// The color to use for non-heading text. Defaults to black.
-    @objc public var textColor: UIColor? {
+    public var textColor: UIColor? {
         get {
             return labelCustomization.textColor
         }

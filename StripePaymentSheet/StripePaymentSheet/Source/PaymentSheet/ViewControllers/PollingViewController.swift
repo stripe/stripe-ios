@@ -15,7 +15,6 @@ import SafariServices
 import UIKit
 
 /// For internal SDK use only
-@objc(STP_Internal_PollingViewController)
 class PollingViewController: UIViewController {
     private enum PollingState {
         case polling
@@ -136,7 +135,7 @@ class PollingViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(.Localized.cancel_pay_another_way, for: .normal)
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, style: .footnote, maximumPointSize: 22)
-        button.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.didTapCancel() }, for: .touchUpInside)
         button.tintColor = appearance.colors.primary
         return button
     }()
@@ -235,7 +234,7 @@ class PollingViewController: UIViewController {
 
     // MARK: Handlers
 
-    @objc func didTapCancel() {
+    func didTapCancel() {
         dismiss {
             // Wait a short amount of time before completing the action to ensure smooth animations
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -246,7 +245,7 @@ class PollingViewController: UIViewController {
 
     private func dismiss(completion: (() -> Void)? = nil) {
         if let authContext = currentAction.authenticationContext as? PaymentSheetAuthenticationContext {
-            authContext.authenticationContextWillDismiss?(self)
+            authContext.authenticationContextWillDismiss(self)
             authContext.dismiss(self, completion: completion)
         }
 

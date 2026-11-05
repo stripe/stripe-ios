@@ -25,11 +25,6 @@ The StripePayments module is compatible with apps targeting iOS 15.0 or above.
 
 Get started with our [📚 integration guides](https://stripe.com/docs/payments/payment-methods/overview) and [example projects](../Example), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/stripe-payments/index.html) for fine-grained documentation of all the classes and methods in the SDK.
 
-#### Example
-
-- [Non-Card Payment Examples](../Example/Non-Card%20Payment%20Examples)
-  - This example demonstrates how to manually accept various payment methods using the Stripe API.
-
 ## Manual linking
 
 If you link this library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:

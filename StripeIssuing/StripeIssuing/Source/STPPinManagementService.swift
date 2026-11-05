@@ -20,7 +20,6 @@ public class STPPinManagementService: NSObject {
     public var apiClient: STPAPIClient = STPAPIClient.shared
 
     /// Create a STPPinManagementService, you must provide an implementation of STPIssuingCardEphemeralKeyProvider
-    @objc
     public init(
         keyProvider: STPIssuingCardEphemeralKeyProvider
     ) {
@@ -34,7 +33,6 @@ public class STPPinManagementService: NSObject {
 
     /// Retrieves a PIN number for a given card,
     /// this call is asynchronous, implement the completion block to receive the updates
-    @objc
     public func retrievePin(
         _ cardId: String,
         verificationId: String,
@@ -87,7 +85,6 @@ public class STPPinManagementService: NSObject {
 
     /// Updates a PIN number for a given card,
     /// this call is asynchronous, implement the completion block to receive the updates
-    @objc
     public func updatePin(
         _ cardId: String,
         newPin: String,

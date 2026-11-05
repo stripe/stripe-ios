@@ -15,15 +15,15 @@ public class STPPaymentMethodAUBECSDebit: NSObject, STPAPIResponseDecodable {
     private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// Six-digit number identifying bank and branch associated with this bank account.
-    @objc public private(set) var bsbNumber: String
+    public private(set) var bsbNumber: String
     /// Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
-    @objc public private(set) var fingerprint: String
+    public private(set) var fingerprint: String
     /// Last four digits of the bank account number.
-    @objc public private(set) var last4: String
+    public private(set) var last4: String
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodAUBECSDebit.self), self),

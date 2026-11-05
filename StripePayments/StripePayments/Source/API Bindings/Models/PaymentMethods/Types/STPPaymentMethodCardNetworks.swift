@@ -13,12 +13,12 @@ public class STPPaymentMethodCardNetworks: NSObject, STPAPIResponseDecodable {
     private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// All available networks for the card.
-    @objc public private(set) var available: [String] = []
+    public private(set) var available: [String] = []
     /// The preferred network for the card if one exists.
-    @objc public private(set) var preferred: String?
+    public private(set) var preferred: String?
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodCardNetworks.self), self),

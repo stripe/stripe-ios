@@ -17,22 +17,22 @@ import XCTest
 class STPTestFormEncodableObject: NSObject, STPFormEncodable {
     var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc var testProperty: String?
-    @objc var testIgnoredProperty: String?
-    @objc var testArrayProperty: [AnyHashable]?
-    @objc var testDictionaryProperty: [AnyHashable: Any]?
-    @objc var testNestedObjectProperty: STPTestFormEncodableObject?
+    var testProperty: String?
+    var testIgnoredProperty: String?
+    var testArrayProperty: [AnyHashable]?
+    var testDictionaryProperty: [AnyHashable: Any]?
+    var testNestedObjectProperty: STPTestFormEncodableObject?
 
     class func rootObjectName() -> String? {
         return "test_object"
     }
 
-    class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            "testProperty": "test_property",
-            "testArrayProperty": "test_array_property",
-            "testDictionaryProperty": "test_dictionary_property",
-            "testNestedObjectProperty": "test_nested_property",
+            \STPTestFormEncodableObject.testProperty: "test_property",
+            \STPTestFormEncodableObject.testArrayProperty: "test_array_property",
+            \STPTestFormEncodableObject.testDictionaryProperty: "test_dictionary_property",
+            \STPTestFormEncodableObject.testNestedObjectProperty: "test_nested_property",
         ]
     }
 }

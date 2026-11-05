@@ -11,6 +11,7 @@ import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(InternalOnlyAPI) @testable import StripeUICore
+import UIKit
 import XCTest
 
 // ☠️ WARNING: These snapshots have selected borders that don't follow the correct curvature on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.

@@ -218,7 +218,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             : Constants.cornerRadius)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
-        button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.handleApplePayTapped() }, for: .touchUpInside)
         return button
     }
 
@@ -234,7 +234,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         }
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
-        button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.handleLinkTapped() }, for: .touchUpInside)
         return button
     }
 
@@ -250,11 +250,11 @@ public final class ExpressCheckoutElementUIView: UIView {
         }
     }
 
-    @objc private func handleApplePayTapped() {
+    private func handleApplePayTapped() {
         confirm(.applePay)
     }
 
-    @objc private func handleLinkTapped() {
+    private func handleLinkTapped() {
         confirm(.link)
     }
 

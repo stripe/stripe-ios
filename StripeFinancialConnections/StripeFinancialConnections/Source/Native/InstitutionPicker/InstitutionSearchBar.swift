@@ -59,11 +59,7 @@ final class InstitutionSearchBar: UIView {
         // also, bank names are not always friendly to autocorrect suggestions
         textField.autocorrectionType = .no
         textField.delegate = self
-        textField.addTarget(
-            self,
-            action: #selector(textFieldTextDidChange),
-            for: .editingChanged
-        )
+        textField.addAction(UIAction { [weak self] _ in self?.textFieldTextDidChange() }, for: .editingChanged)
         textField.accessibilityIdentifier = "search_bar_text_field"
         textField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -77,11 +73,7 @@ final class InstitutionSearchBar: UIView {
         let cancelImage = Image.cancel_circle.makeImage()
             .withTintColor(FinancialConnectionsAppearance.Colors.textSubdued)
         textFieldClearButton.setImage(cancelImage, for: .normal)
-        textFieldClearButton.addTarget(
-            self,
-            action: #selector(didSelectClearButton),
-            for: .touchUpInside
-        )
+        textFieldClearButton.addAction(UIAction { [weak self] _ in self?.didSelectClearButton() }, for: .touchUpInside)
         textFieldClearButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             textFieldClearButton.widthAnchor.constraint(equalToConstant: 16),
@@ -141,12 +133,12 @@ final class InstitutionSearchBar: UIView {
         return textField.resignFirstResponder()
     }
 
-    @objc private func textFieldTextDidChange() {
+    private func textFieldTextDidChange() {
         adjustClearButtonVisibility()
         delegate?.institutionSearchBar(self, didChangeText: text)
     }
 
-    @objc private func didSelectClearButton() {
+    private func didSelectClearButton() {
         FeedbackGeneratorAdapter.buttonTapped()
         text = ""
     }

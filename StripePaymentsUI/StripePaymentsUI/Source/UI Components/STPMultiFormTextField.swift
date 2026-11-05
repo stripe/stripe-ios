@@ -10,7 +10,7 @@
 import UIKit
 
 /// STPMultiFormFieldDelegate provides methods for a delegate to respond to editing and text changes.
-@objc protocol STPMultiFormFieldDelegate: NSObjectProtocol {
+protocol STPMultiFormFieldDelegate: NSObjectProtocol {
     /// Called when the text field becomes the first responder.
     func formTextFieldDidStartEditing(
         _ formTextField: STPFormTextField,
@@ -44,7 +44,6 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     STPFormTextFieldDelegate
 {
     /// :nodoc:
-    @objc
     public func textField(
         _ textField: UITextField,
         shouldChangeCharactersIn range: NSRange,
@@ -77,11 +76,11 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         }
     }
     /// The STPMultiFormTextField's delegate.
-    @objc weak var multiFormFieldDelegate: STPMultiFormFieldDelegate?
+    weak var multiFormFieldDelegate: STPMultiFormFieldDelegate?
 
     /// Calling this method will make the next incomplete STPFormTextField in `formTextFields` become the first responder.
     /// If all of the form text fields are already complete, then the last field in `formTextFields` will become the first responder.
-    @objc public func focusNextForm() {
+    public func focusNextForm() {
         let nextField = _nextFirstResponderField()
         if nextField == _currentFirstResponderField() {
             // If this doesn't actually advance us, resign first responder
@@ -93,7 +92,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
 
     // MARK: - UIResponder
     /// :nodoc:
-    @objc public override var canResignFirstResponder: Bool {
+    public override var canResignFirstResponder: Bool {
         if _currentFirstResponderField() != nil {
             return _currentFirstResponderField()?.canResignFirstResponder ?? false
         } else {
@@ -102,7 +101,6 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     }
 
     /// :nodoc:
-    @objc
     public override func resignFirstResponder() -> Bool {
         super.resignFirstResponder()
         if _currentFirstResponderField() != nil {
@@ -113,17 +111,16 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     }
 
     /// :nodoc:
-    @objc public override var isFirstResponder: Bool {
+    public override var isFirstResponder: Bool {
         return super.isFirstResponder || _currentFirstResponderField()?.isFirstResponder ?? false
     }
 
     /// :nodoc:
-    @objc public override var canBecomeFirstResponder: Bool {
+    public override var canBecomeFirstResponder: Bool {
         return (formTextFields?.count ?? 0) > 0
     }
 
     /// :nodoc:
-    @objc
     public override func becomeFirstResponder() -> Bool {
         // grab the next first responder before calling super (which will cause any current first responder to resign)
         var firstResponder: STPFormTextField?
@@ -141,7 +138,6 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
 
     // MARK: - UITextFieldDelegate
     /// :nodoc:
-    @objc
     public func textFieldDidEndEditing(_ textField: UITextField) {
         let formTextField = (textField is STPFormTextField) ? textField as? STPFormTextField : nil
         textField.layoutIfNeeded()
@@ -152,7 +148,6 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     }
 
     /// :nodoc:
-    @objc
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         let formTextField = (textField is STPFormTextField) ? textField as? STPFormTextField : nil
         if let formTextField = formTextField {
@@ -161,7 +156,6 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     }
 
     /// :nodoc:
-    @objc
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         let nextInSequence = _nextInSequenceFirstResponderField()
         if let nextInSequence = nextInSequence {
@@ -174,7 +168,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     }
 
     // MARK: - STPFormTextFieldDelegate
-    @objc func formTextFieldDidBackspace(onEmpty formTextField: STPFormTextField) {
+    func formTextFieldDidBackspace(onEmpty formTextField: STPFormTextField) {
         let previous = _previousField()
         previous?.becomeFirstResponder()
         UIAccessibility.post(notification: .screenChanged, argument: nil)
@@ -183,7 +177,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
         }
     }
 
-    @objc func formTextField(
+    func formTextField(
         _ formTextField: STPFormTextField,
         modifyIncomingTextChange input: NSAttributedString
     ) -> NSAttributedString {
@@ -195,7 +189,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
             ))!
     }
 
-    @objc func formTextFieldTextDidChange(_ formTextField: STPFormTextField) {
+    func formTextFieldTextDidChange(_ formTextField: STPFormTextField) {
         multiFormFieldDelegate?.formTextFieldTextDidChange(
             formTextField,
             inMultiForm: self
@@ -268,6 +262,7 @@ public class STPMultiFormTextField: UIView, STPFormTextFieldContainer, UITextFie
     }
 
     // MARK: - STPFormTextFieldContainer
+    // These properties are `@objc` so that Interface Builder's user-defined runtime attributes can set them.
     @objc public var formFont: UIFont = UIFont.preferredFont(forTextStyle: .body) {
         didSet {
             if formFont != oldValue {

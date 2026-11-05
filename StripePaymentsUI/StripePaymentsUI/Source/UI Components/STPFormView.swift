@@ -181,7 +181,6 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
 
     // MARK: - UIResponder
     /// :nodoc:
-    @objc
     public override var canResignFirstResponder: Bool {
         if let currentFirstResponderField = currentFirstResponderField() {
             return currentFirstResponderField.canResignFirstResponder
@@ -191,7 +190,6 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
     }
 
     /// :nodoc:
-    @objc
     public override func resignFirstResponder() -> Bool {
         let ret = super.resignFirstResponder()
         if let currentFirstResponderField = currentFirstResponderField() {
@@ -202,19 +200,16 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
     }
 
     /// :nodoc:
-    @objc
     public override var isFirstResponder: Bool {
         return super.isFirstResponder || currentFirstResponderField()?.isFirstResponder ?? false
     }
 
     /// :nodoc:
-    @objc
     public override var canBecomeFirstResponder: Bool {
         return sequentialFields.count > 0
     }
 
     /// :nodoc:
-    @objc
     public override func becomeFirstResponder() -> Bool {
         // grab the next first responder before calling super (which will cause any current first responder to resign)
         var firstResponder: STPFormInput?
@@ -236,7 +231,6 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
     }
 
     /// :nodoc:
-    @objc
     public override var isUserInteractionEnabled: Bool {
         didSet {
             for sectionView in sectionViews {
@@ -550,7 +544,6 @@ extension STPFormView {
             return footerLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
         }()
 
-        @objc
         override var isUserInteractionEnabled: Bool {
             didSet {
                 stackView.isUserInteractionEnabled = isUserInteractionEnabled

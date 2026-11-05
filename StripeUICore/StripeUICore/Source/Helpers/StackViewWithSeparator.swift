@@ -9,7 +9,6 @@
 import UIKit
 
 /// For internal SDK use only
-@objc(STP_Internal_StackViewWithSeparator)
 @_spi(InternalOnlyAPI) public class StackViewWithSeparator: UIStackView {
 
     public static let borderlessInset: CGFloat = 10
@@ -78,7 +77,6 @@ import UIKit
         }
     }
 
-    @objc
     override public var isUserInteractionEnabled: Bool {
         didSet {
             if isUserInteractionEnabled {

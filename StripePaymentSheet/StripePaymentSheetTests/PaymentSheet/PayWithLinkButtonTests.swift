@@ -5,6 +5,7 @@
 
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
+import UIKit
 import XCTest
 
 final class PayWithLinkButtonTests: XCTestCase {

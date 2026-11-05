@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import StripePayments
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import StripeCore

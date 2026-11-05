@@ -11,7 +11,6 @@ import UIKit
 /// • Matches the loading indicator used in connect embed
 /// • Uses time to match movement between native and web for a seamless transition.
 /// For internal SDK use only
-@objc(STP_Internal_ConnectActivityIndicator)
 @_spi(InternalOnlyAPI) public final class ConnectActivityIndicator: UIView {
 
     #if DEBUG

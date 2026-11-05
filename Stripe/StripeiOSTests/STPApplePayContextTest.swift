@@ -6,15 +6,18 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+import PassKit
 @_spi(InternalOnlyAPI) import StripePayments
 
 @testable@_spi(InternalOnlyAPI) import Stripe
 @testable@_spi(InternalOnlyAPI) import StripeApplePay
 @testable@_spi(InternalOnlyAPI) import StripeCore
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
+import XCTest
 
-class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
+class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate, _stpinternal_STPApplePayContextPaymentMethodSelectionDelegate {
     var didChangeCouponCodeCalled: Bool = false
     func applePayContext(
         _ context: STPApplePayContext,

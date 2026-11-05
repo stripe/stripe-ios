@@ -19,7 +19,7 @@ class ConsentFooterView: HitTestView {
     private lazy var agreeButton: StripeUICore.Button = {
         let agreeButton = Button.primary(appearance: appearance)
         agreeButton.title = agreeButtonText
-        agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
+        agreeButton.addAction(UIAction { [weak self] _ in self?.didSelectAgreeButton() }, for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             agreeButton.heightAnchor.constraint(equalToConstant: 56)
@@ -94,7 +94,7 @@ class ConsentFooterView: HitTestView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func didSelectAgreeButton() {
+    private func didSelectAgreeButton() {
         didSelectAgree()
     }
 

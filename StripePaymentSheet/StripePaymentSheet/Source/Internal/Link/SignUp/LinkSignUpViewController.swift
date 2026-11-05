@@ -26,7 +26,6 @@ protocol LinkSignUpViewControllerDelegate: AnyObject {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkSignUpViewController)
 final class LinkSignUpViewController: UIViewController {
 
     weak var delegate: LinkSignUpViewControllerDelegate?

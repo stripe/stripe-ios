@@ -14,6 +14,7 @@ import UIKit
 @testable import Stripe
 @testable import StripeCore
 @testable import StripePaymentSheet
+import XCTest
 
 // @iOS26
 class ConfirmButtonSnapshotTests: STPSnapshotTestCase {

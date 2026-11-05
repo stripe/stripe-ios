@@ -11,8 +11,8 @@ import Foundation
 /// A [Radar Session](https://stripe.com/docs/radar/radar-session).
 public final class STPRadarSession: NSObject, STPAPIResponseDecodable {
     /// The Stripe identifier of the RadarSession
-    @objc public let id: String
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let id: String
+    public let allResponseFields: [AnyHashable: Any]
 
     init(
         id: String,

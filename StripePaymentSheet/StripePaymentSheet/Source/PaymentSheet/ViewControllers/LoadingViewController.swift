@@ -16,7 +16,6 @@ protocol LoadingViewControllerDelegate: AnyObject {
 
 /// This just displays a spinner
 /// For internal SDK use only
-@objc(STP_Internal_LoadingViewController)
 class LoadingViewController: UIViewController, BottomSheetContentViewController {
 
     enum Constants {

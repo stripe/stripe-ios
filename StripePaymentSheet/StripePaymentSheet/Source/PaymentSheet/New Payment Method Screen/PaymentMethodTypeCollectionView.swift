@@ -24,7 +24,6 @@ final class RightToLeftCollectionViewFlowLayout: UICollectionViewFlowLayout {
 
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
 /// For internal SDK use only
-@objc(STP_Internal_PaymentMethodTypeCollectionView)
 class PaymentMethodTypeCollectionView: UICollectionView {
     enum Error: Swift.Error {
         case unableToDequeueReusableCell

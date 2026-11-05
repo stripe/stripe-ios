@@ -10,6 +10,7 @@ import OHHTTPStubsSwift
 @testable@_spi(InternalOnlyAPI) import StripePayments
 @testable@_spi(InternalOnlyAPI) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripeUICore
+import UIKit
 import XCTest
 
 @MainActor

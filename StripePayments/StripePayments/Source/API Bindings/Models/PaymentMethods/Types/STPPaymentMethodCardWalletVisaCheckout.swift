@@ -12,13 +12,13 @@ import Foundation
 /// - seealso: https://stripe.com/docs/visa-checkout
 public class STPPaymentMethodCardWalletVisaCheckout: NSObject, STPAPIResponseDecodable {
     /// Owner’s verified email. Values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement.
-    @objc public private(set) var email: String?
+    public private(set) var email: String?
     /// Owner’s verified email. Values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement.
-    @objc public private(set) var name: String?
+    public private(set) var name: String?
     /// Owner’s verified billing address. Values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement.
-    @objc public private(set) var billingAddress: STPPaymentMethodAddress?
+    public private(set) var billingAddress: STPPaymentMethodAddress?
     /// Owner’s verified shipping address. Values are verified or provided by the payment method directly (and if supported) at the time of authorization or settlement.
-    @objc public private(set) var shippingAddress: STPPaymentMethodAddress?
+    public private(set) var shippingAddress: STPPaymentMethodAddress?
     private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     override required init() {

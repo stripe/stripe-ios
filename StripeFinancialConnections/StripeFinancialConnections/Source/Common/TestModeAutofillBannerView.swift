@@ -77,7 +77,7 @@ class TestModeAutofillBannerView: UIView {
         button.titleLabel?.font = FinancialConnectionsFont.label(.mediumEmphasized).uiFont
         button.titleLabel?.numberOfLines = 0
         button.titleLabel?.lineBreakMode = .byWordWrapping
-        button.addTarget(self, action: #selector(autofillTapped), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.autofillTapped() }, for: .touchUpInside)
         button.accessibilityIdentifier = "test_mode_autofill_button"
         return button
     }()
@@ -126,7 +126,7 @@ class TestModeAutofillBannerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func autofillTapped() {
+    private func autofillTapped() {
         didTapAutofill()
     }
 }

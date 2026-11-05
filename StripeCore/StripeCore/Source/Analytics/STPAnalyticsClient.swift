@@ -24,7 +24,7 @@ import UIKit
 }
 
 @_spi(InternalOnlyAPI) public class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
-    @objc public static let sharedClient = STPAnalyticsClient()
+    public static let sharedClient = STPAnalyticsClient()
 
     /// When `true`, sends analytics directly to r.stripe.com via POST.
     /// When `false`, sends to q.stripe.com via GET (legacy path).
@@ -52,7 +52,7 @@ import UIKit
     }
     public weak var delegate: STPAnalyticsClientDelegate?
 
-    @objc public var productUsage: Set<String> = Set()
+    public var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
     let urlSession: URLSession
     private let analyticsEventTranslator = STPAnalyticsEventTranslator()
@@ -63,7 +63,7 @@ import UIKit
         self.urlSession = urlSession
     }
 
-    @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
+    public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
 
         // Before SDK 23.0.0, this returned "card" for some Apple Pay payments.

@@ -12,7 +12,6 @@ import UIKit
 /// This is a vertical animation that
 /// - Animates up from the bottom of the screen
 /// - Dismisses from the top to the bottom of the screen
-@objc(STPBottomSheetPresentationAnimator)
 class BottomSheetPresentationAnimator: NSObject {
 
     enum TransitionStyle {

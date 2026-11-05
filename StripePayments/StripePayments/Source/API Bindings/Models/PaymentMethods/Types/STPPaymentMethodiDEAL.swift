@@ -12,13 +12,13 @@ import Foundation
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-ideal
 public class STPPaymentMethodiDEAL: NSObject, STPAPIResponseDecodable {
     /// The customer’s bank.
-    @objc public private(set) var bankName: String?
+    public private(set) var bankName: String?
     /// The Bank Identifier Code of the customer’s bank.
-    @objc public private(set) var bankIdentifierCode: String?
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var bankIdentifierCode: String?
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodiDEAL.self), self),
@@ -35,7 +35,6 @@ public class STPPaymentMethodiDEAL: NSObject, STPAPIResponseDecodable {
         super.init()
     }
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

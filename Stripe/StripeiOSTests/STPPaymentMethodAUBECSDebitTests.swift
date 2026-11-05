@@ -14,6 +14,7 @@ import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePayments
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
+import XCTest
 
 private var kAUBECSDebitPaymentIntentClientSecret =
     "pi_1GaRLjF7QokQdxByYgFPQEi0_secret_z76otRQH2jjOIEQYsA9vxhuKn"

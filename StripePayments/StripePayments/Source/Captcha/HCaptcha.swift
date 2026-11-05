@@ -13,7 +13,6 @@ import WebKit
 /**
   hCaptcha SDK facade (entry point)
 */
-@objc
 @_spi(InternalOnlyAPI) public class HCaptcha: NSObject {
     fileprivate struct Constants {
         struct InfoDictKeys {
@@ -58,7 +57,6 @@ import WebKit
          Info.plist.
      - Throws: Rethrows any exceptions thrown by `String(contentsOfFile:)`
      */
-    @objc
     public convenience init(
         apiKey: String? = nil,
         passiveApiKey: Bool = false,
@@ -123,7 +121,6 @@ import WebKit
 
        onEvent allow to subscribe to SDK's events
      */
-    @objc
     func onEvent(_ reciever: ((HCaptchaEvent, Any?) -> Void)? = nil) {
         Log.debug(".onEvent")
 
@@ -138,7 +135,6 @@ import WebKit
 
      Starts the challenge validation
     */
-    @objc
     public func validate(on view: UIView? = nil, resetOnError: Bool = true, completion: @escaping (HCaptchaResult) -> Void) {
         Log.debug(".validate on: \(String(describing: view)) resetOnError: \(resetOnError)")
 
@@ -149,7 +145,6 @@ import WebKit
     }
 
     /// Stops the execution of the webview
-    @objc
     public func stop() {
         Log.debug(".stop")
 
@@ -164,7 +159,6 @@ import WebKit
      If presentation is required, the webview will already be a subview of `presenterView` if one is provided. Otherwise
      it might need to be added in a view currently visible.
     */
-    @objc
     func configureWebView(_ configure: @escaping (WKWebView) -> Void) {
         Log.debug(".configureWebView")
 
@@ -176,7 +170,6 @@ import WebKit
 
      The reset is achieved by calling `hcaptcha.reset()` on the JS API.
     */
-    @objc
     func reset() {
         Log.debug(".reset")
 
@@ -192,7 +185,6 @@ import WebKit
      in case of error or reset. This may also be immediately called if the resources have already
      finished loading when you set the closure.
     */
-    @objc
     func didFinishLoading(_ closure: (() -> Void)?) {
         Log.debug(".didFinishLoading")
         manager.onDidFinishLoading = closure
@@ -203,49 +195,40 @@ import WebKit
 
      This may be useful if you need to modify the layout of hCaptcha.
     */
-    @objc
     func redrawView() {
         manager.configureWebView?(manager.webView)
     }
 
-    // MARK: - Objective-C 'convenience' inits
+    // MARK: - Convenience inits
 
-    @objc
     convenience init(locale: Locale) throws {
         try self.init(locale: locale, size: .invisible)
     }
 
-    @objc
     convenience init(size: HCaptchaSize) throws {
         try self.init(locale: nil, size: size)
     }
 
-    @objc
     convenience init(passiveApiKey: Bool) throws {
         try self.init(passiveApiKey: passiveApiKey, locale: nil)
     }
 
-    @objc
     convenience init(apiKey: String) throws {
         try self.init(apiKey: apiKey, locale: nil)
     }
 
-    @objc
     convenience init(apiKey: String, baseURL: URL) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: nil)
     }
 
-    @objc
     convenience init(apiKey: String, passiveApiKey: Bool) throws {
         try self.init(apiKey: apiKey, passiveApiKey: passiveApiKey, locale: nil)
     }
 
-    @objc
     convenience init(apiKey: String, baseURL: URL, locale: Locale) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: locale, size: .invisible)
     }
 
-    @objc
     convenience init(apiKey: String, baseURL: URL, locale: Locale, size: HCaptchaSize) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: locale, size: size, rqdata: nil)
     }

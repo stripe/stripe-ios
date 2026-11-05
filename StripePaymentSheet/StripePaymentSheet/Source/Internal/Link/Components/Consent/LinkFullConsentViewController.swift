@@ -17,7 +17,6 @@ protocol LinkFullConsentViewControllerDelegate: AnyObject {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkFullConsentViewController)
 final class LinkFullConsentViewController: UIViewController, BottomSheetContentViewController {
 
     weak var delegate: LinkFullConsentViewControllerDelegate?

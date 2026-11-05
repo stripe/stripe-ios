@@ -15,7 +15,7 @@ public class STPPaymentMethodEPS: NSObject, STPAPIResponseDecodable {
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodEPS.self), self)

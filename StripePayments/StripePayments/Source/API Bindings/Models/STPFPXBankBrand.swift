@@ -9,7 +9,7 @@
 import Foundation
 
 /// The various bank brands available for FPX payments.
-@objc public enum STPFPXBankBrand: Int {
+public enum STPFPXBankBrand: Int {
     /// Maybank2U
     case maybank2U
     /// CIMB Clicks
@@ -64,7 +64,7 @@ public class STPFPXBank: NSObject {
     /// i.e. `STPFPXBank.stringFrom(brand:.uob) == "UOB Bank"`.
     /// - Parameter brand: The brand you want to convert to a string
     /// - Returns: A string representing the brand, suitable for displaying to a user.
-    @objc public static func stringFrom(_ brand: STPFPXBankBrand) -> String? {
+    public static func stringFrom(_ brand: STPFPXBankBrand) -> String? {
         return displayNames[brand]
     }
 
@@ -72,7 +72,7 @@ public class STPFPXBank: NSObject {
     /// i.e. `STPFPXBankBrandFromIdentifier(@"uob") == STPCardBrandUob`.
     /// - Parameter identifier: The identifier for the brand
     /// - Returns: The STPFPXBankBrand enum value
-    @objc public static func brandFrom(_ identifier: String?) -> STPFPXBankBrand {
+    public static func brandFrom(_ identifier: String?) -> STPFPXBankBrand {
         guard let brand = identifier?.lowercased() else {
             return .unknown
         }
@@ -83,7 +83,7 @@ public class STPFPXBank: NSObject {
     /// i.e. `STPIdentifierFromFPXBankBrand(STPCardBrandUob) ==  @"uob"`.
     /// - Parameter brand: The brand you want to convert to a string
     /// - Returns: A string representing the brand, suitable for using with the Stripe API.
-    @objc public static func identifierFrom(_ brand: STPFPXBankBrand) -> String? {
+    public static func identifierFrom(_ brand: STPFPXBankBrand) -> String? {
         return identifiers[brand]
     }
 
@@ -93,7 +93,7 @@ public class STPFPXBank: NSObject {
     ///   - brand: The brand you want to convert to an FPX bank code
     ///   - isBusiness: Requests the code for the business version of this bank brand, which may be different from the code used for individual accounts
     /// - Returns: A string representing the brand, suitable for checking against the FPX status API.
-    @objc public static func bankCodeFrom(_ brand: STPFPXBankBrand, _ isBusiness: Bool) -> String? {
+    public static func bankCodeFrom(_ brand: STPFPXBankBrand, _ isBusiness: Bool) -> String? {
         guard let codes = bankCodes[brand] else {
             return nil
         }

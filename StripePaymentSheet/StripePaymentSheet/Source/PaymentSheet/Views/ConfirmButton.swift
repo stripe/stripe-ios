@@ -174,7 +174,7 @@ class ConfirmButton: UIControl {
         self.didTap = didTap
         self.didTapWhenDisabled = didTapWhenDisabled
         super.init(frame: .zero)
-        addTarget(self, action: #selector(handleTap), for: .touchUpInside)
+        addAction(UIAction { [weak self] _ in self?.handleTap() }, for: .touchUpInside)
 
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
         // primaryButton.backgroundColor takes priority over appearance.colors.primary
@@ -260,7 +260,6 @@ class ConfirmButton: UIControl {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc
     private func handleTap() {
         if case .enabled = status {
             didTap()

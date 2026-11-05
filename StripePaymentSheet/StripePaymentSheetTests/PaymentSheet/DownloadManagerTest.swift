@@ -8,6 +8,7 @@ import StripeCoreTestUtils
 //  StripeCoreTests
 //
 //
+import UIKit
 import XCTest
 
 class DownloadManagerTest: APIStubbedTestCase {

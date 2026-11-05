@@ -12,13 +12,13 @@ import Foundation
 public class STPIntentActionSwishHandleRedirect: NSObject {
 
     /// The native URL you must redirect your customer to in order to authenticate the payment.
-    @objc public let mobileAuthURL: URL
+    public let mobileAuthURL: URL
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(
@@ -45,7 +45,6 @@ public class STPIntentActionSwishHandleRedirect: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPIntentActionSwishHandleRedirect: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard
             let dict = response,

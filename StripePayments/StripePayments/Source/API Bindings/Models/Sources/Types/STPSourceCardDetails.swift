@@ -10,7 +10,6 @@ import Foundation
 
 /// The status of this card's 3D Secure support.
 /// - seealso: https://stripe.com/docs/sources/three-d-secure#check-requirement
-@objc
 public enum STPSourceCard3DSecureStatus: Int {
     /// 3D Secure is required. This card must be converted into a 3D Secure
     /// source for a charge on it to be successful.
@@ -31,22 +30,22 @@ public enum STPSourceCard3DSecureStatus: Int {
 /// dictionary for card sources.
 public class STPSourceCardDetails: NSObject, STPAPIResponseDecodable {
     /// The last 4 digits of the card.
-    @objc public private(set) var last4: String?
+    public private(set) var last4: String?
     /// The card's expiration month. 1-indexed (i.e. 1 == January)
-    @objc public private(set) var expMonth: UInt = 0
+    public private(set) var expMonth: UInt = 0
     /// The card's expiration year.
-    @objc public private(set) var expYear: UInt = 0
+    public private(set) var expYear: UInt = 0
     /// The issuer of the card.
-    @objc public private(set) var brand: STPCardBrand = .unknown
+    public private(set) var brand: STPCardBrand = .unknown
     /// The funding source for the card (credit, debit, prepaid, or other)
-    @objc public private(set) var funding: STPCardFundingType = .other
+    public private(set) var funding: STPCardFundingType = .other
     /// Two-letter ISO code representing the issuing country of the card.
-    @objc public private(set) var country: String?
+    public private(set) var country: String?
     /// Whether 3D Secure is supported or required by the card.
-    @objc public private(set) var threeDSecure: STPSourceCard3DSecureStatus = .unknown
+    public private(set) var threeDSecure: STPSourceCard3DSecureStatus = .unknown
     /// True if this card was created through Apple Pay, false otherwise.
-    @objc public private(set) var isApplePayCard = false
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var isApplePayCard = false
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     // See STPSourceCardDetails+Private.h
 
@@ -115,7 +114,7 @@ public class STPSourceCardDetails: NSObject, STPAPIResponseDecodable {
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPSourceCardDetails.self), self),

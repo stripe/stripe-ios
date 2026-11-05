@@ -12,14 +12,14 @@ import Foundation
 /// - seealso: https://docs.stripe.com/payments/naver-pay/accept-a-payment
 public class STPPaymentMethodNaverPay: NSObject, STPAPIResponseDecodable {
     /// Uniquely identifies this Naver Pay account.
-    @objc public private(set) var buyerId: String?
+    public private(set) var buyerId: String?
     /// Whether the transaction is funded with a card or Naver Pay points.
-    @objc public private(set) var funding: STPPaymentMethodNaverPayFunding = .unknown
+    public private(set) var funding: STPPaymentMethodNaverPayFunding = .unknown
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodNaverPay.self), self),
             "buyerId = \(buyerId ?? "")",
@@ -29,7 +29,7 @@ public class STPPaymentMethodNaverPay: NSObject, STPAPIResponseDecodable {
     }
 
     /// :nodoc:
-    @objc public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response else {
             return nil
         }
@@ -45,7 +45,7 @@ public class STPPaymentMethodNaverPay: NSObject, STPAPIResponseDecodable {
 }
 
 /// The source used to fund a Naver Pay Payment Method.
-@objc public enum STPPaymentMethodNaverPayFunding: Int {
+public enum STPPaymentMethodNaverPayFunding: Int {
     /// An unknown funding source.
     case unknown
     /// A card.

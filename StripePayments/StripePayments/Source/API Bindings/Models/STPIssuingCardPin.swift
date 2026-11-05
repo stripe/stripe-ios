@@ -11,10 +11,10 @@ import Foundation
 /// Information related to a Stripe Issuing card, including the PIN
 public class STPIssuingCardPin: NSObject {
     /// The PIN for the card
-    @objc public let pin: String?
+    public let pin: String?
     /// If the PIN failed to be created, this error might be present
-    @objc public let error: [AnyHashable: Any]?
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let error: [AnyHashable: Any]?
+    public let allResponseFields: [AnyHashable: Any]
 
     convenience override init() {
         self.init(pin: nil, error: nil, allResponseFields: [:])

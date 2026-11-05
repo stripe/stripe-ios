@@ -15,7 +15,6 @@ import UIKit
 /// A view that displays a horizontal collection of card brand images.
 ///
 /// For internal SDK use only
-@objc(STP_Internal_RotatingCardBrandsView)
 class RotatingCardBrandsView: UIView {
     static let MaxStaticBrands: Int = 3
     static let LogoSpacing: CGFloat = 3

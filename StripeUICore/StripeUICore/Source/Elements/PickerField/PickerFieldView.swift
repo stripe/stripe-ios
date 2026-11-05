@@ -21,7 +21,6 @@ protocol PickerFieldViewDelegate: AnyObject {
  - Note: This view has padding according to `directionalLayoutMargins`.
  For internal SDK use only
  */
-@objc(STP_Internal_PickerFieldView)
 final class PickerFieldView: UIView {
 
     // MARK: - Views

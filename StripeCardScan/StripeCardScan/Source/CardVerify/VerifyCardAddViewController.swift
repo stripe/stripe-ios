@@ -125,11 +125,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
             for: .normal
         )
         VerifyCardAddViewController.manualCardEntryButton.titleLabel?.textColor = .white
-        VerifyCardAddViewController.manualCardEntryButton.addTarget(
-            self,
-            action: #selector(manualCardEntryButtonPress),
-            for: .touchUpInside
-        )
+        VerifyCardAddViewController.manualCardEntryButton.addAction(UIAction { [weak self] _ in self?.manualCardEntryButtonPress() }, for: .touchUpInside)
     }
 
     func setUpManualCardEntryButtonConstraints() {
@@ -192,7 +188,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
         verifyDelegate?.verifyViewControllerDidCancel(self, with: .back)
     }
 
-    @objc func manualCardEntryButtonPress() {
+    func manualCardEntryButtonPress() {
         /// User canceled the exited before the main loop completed, log with a failure
         mainLoopDurationTask.trackResult(.failure)
         ScanAnalyticsManager.shared.trackMainLoopDuration(task: mainLoopDurationTask)

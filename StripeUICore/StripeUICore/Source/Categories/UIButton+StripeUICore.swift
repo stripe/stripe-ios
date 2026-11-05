@@ -28,7 +28,7 @@ import UIKit
             var didTap: () -> Void = {}
             public override init(frame: CGRect) {
                 super.init(frame: frame)
-                addTarget(self, action: #selector(didTapSelector), for: .touchUpInside)
+                addAction(UIAction { [weak self] _ in self?.didTap() }, for: .touchUpInside)
             }
             required init?(coder: NSCoder) {
                 fatalError("init(coder:) has not been implemented")
@@ -38,9 +38,6 @@ import UIKit
                     dx: -(Self.minimumTapSize.width - bounds.width) / 2,
                     dy: -(Self.minimumTapSize.height - bounds.height) / 2)
                 return newArea.contains(point)
-            }
-            @objc func didTapSelector() {
-               didTap()
             }
         }
 

@@ -10,7 +10,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 
 /// The type of the PaymentMethod.
-@objc public enum STPPaymentMethodType: Int {
+public enum STPPaymentMethodType: Int {
     /// A card payment method.
     case card
     /// An Alipay payment method.
@@ -18,33 +18,32 @@ import Foundation
     /// A GrabPay payment method.
     case grabPay
     /// An iDEAL payment method.
-    @objc(STPPaymentMethodTypeiDEAL) case iDEAL
+    case iDEAL
     /// An FPX payment method.
     case FPX
     /// A card present payment method.
     case cardPresent
     /// A SEPA Debit payment method.
-    @objc(STPPaymentMethodTypeSEPADebit) case SEPADebit
+    case SEPADebit
     /// An AU BECS Debit payment method.
-    @objc(STPPaymentMethodTypeAUBECSDebit) case AUBECSDebit
+    case AUBECSDebit
     /// A Bacs Debit payment method.
     case bacsDebit
     /// A Przelewy24 Debit payment method.
     case przelewy24
     /// An EPS payment method.
-    @objc(STPPaymentMethodTypeEPS) case EPS
+    case EPS
     /// A Bancontact payment method.
     case bancontact
     /// A NetBanking payment method.
     case netBanking
     /// An OXXO payment method.
-    @objc(STPPaymentMethodTypeOXXO) case OXXO
+    case OXXO
     /// A PayPal payment method. :nodoc:
     case payPal
     /// An AfterpayClearpay payment method
     case afterpayClearpay
     /// A BLIK payment method
-    @objc(STPPaymentMethodTypeBLIK)
     case blik
     /// A WeChat Pay payment method
     case weChatPay

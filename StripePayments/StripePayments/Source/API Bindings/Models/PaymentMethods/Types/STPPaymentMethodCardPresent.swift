@@ -14,7 +14,7 @@ public class STPPaymentMethodCardPresent: NSObject, STPAPIResponseDecodable {
     public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodCardPresent.self), self)

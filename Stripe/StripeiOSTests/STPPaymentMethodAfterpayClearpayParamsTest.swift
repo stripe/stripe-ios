@@ -7,8 +7,11 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import StripeCore
 import StripeCoreTestUtils
+import StripePayments
 import StripePaymentsTestUtils
+import XCTest
 
 class STPPaymentMethodAfterpayClearpayParamsTest: STPNetworkStubbingTestCase {
     func testCreateAfterpayClearpayPaymentMethod() {

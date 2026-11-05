@@ -11,7 +11,6 @@ import UIKit
 
 /// The custom button used throughout the Stripe SDK.
 /// For internal SDK use only
-@objc(STP_Internal_Button)
 @_spi(InternalOnlyAPI) public class Button: UIControl {
     struct Constants {
         // TODO(ramont): move to `Configuration`

@@ -8,7 +8,6 @@
 
 import Foundation
 
-@objc
 enum STPIntentActionUseStripeSDKType: Int {
     case unknown = 0
     case threeDS2Fingerprint
@@ -155,7 +154,7 @@ class STPIntentActionUseStripeSDK: NSObject {
         )
     }
 
-    @objc override var description: String {
+    override var description: String {
         let props: [String] = [
             // Object
             String(format: "%@: %p", String(describing: STPIntentActionUseStripeSDK.self), self),

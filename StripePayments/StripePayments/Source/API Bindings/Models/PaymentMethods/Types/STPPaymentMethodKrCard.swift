@@ -12,14 +12,14 @@ import Foundation
 /// - seealso: https://docs.stripe.com/payments/kr-card/accept-a-payment?payment-ui=direct-api
 public class STPPaymentMethodKrCard: NSObject, STPAPIResponseDecodable {
     /// The local credit or debit card brand.
-    @objc public private(set) var brand: STPPaymentMethodKrCardBrand = .unknown
+    public private(set) var brand: STPPaymentMethodKrCardBrand = .unknown
     /// The last four digits of the card. This may not be present for American Express cards.
-    @objc public private(set) var last4: String?
+    public private(set) var last4: String?
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodKrCard.self), self),
             "brand = \(brand.stringValue ?? "")",
@@ -29,7 +29,7 @@ public class STPPaymentMethodKrCard: NSObject, STPAPIResponseDecodable {
     }
 
     /// :nodoc:
-    @objc public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response else {
             return nil
         }
@@ -45,7 +45,7 @@ public class STPPaymentMethodKrCard: NSObject, STPAPIResponseDecodable {
 }
 
 /// The local brand of a Korean cards Payment Method.
-@objc public enum STPPaymentMethodKrCardBrand: Int {
+public enum STPPaymentMethodKrCardBrand: Int {
     /// An unknown card brand.
     case unknown
     case bc

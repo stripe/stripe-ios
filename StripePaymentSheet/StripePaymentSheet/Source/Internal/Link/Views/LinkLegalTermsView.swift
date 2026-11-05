@@ -26,7 +26,6 @@ protocol LinkLegalTermsViewDelegate: AnyObject {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkLegalTermsView)
 final class LinkLegalTermsView: UIView {
     struct Constants {
         static let lineHeight: CGFloat = 1.0

@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(InternalOnlyAPI) @testable import StripePayments
+import UIKit
 import WebKit
 
 extension HCaptchaWebViewManager {

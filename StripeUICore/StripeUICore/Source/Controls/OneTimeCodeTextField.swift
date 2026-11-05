@@ -10,7 +10,6 @@ import UIKit
 
 /// A field for collecting one-time codes (OTCs).
 /// For internal SDK use only
-@objc(STP_Internal_OneTimeCodeTextField)
 @_spi(InternalOnlyAPI) public final class OneTimeCodeTextField: UIControl {
 
     public struct Configuration {

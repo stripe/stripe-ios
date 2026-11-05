@@ -23,7 +23,7 @@ class PKPayment_StripeTest: XCTestCase {
         // #pragma clang diagnostic push
         // #pragma clang diagnostic ignored "-Wundeclared-selector"
         paymentToken.perform(Selector(("setTransactionIdentifier:")), with: "Simulated Identifier")
-        payment.perform(#selector(setter: STPPaymentMethodCardParams.token), with: paymentToken)
+        payment.perform(NSSelectorFromString("setToken:"), with: paymentToken)
         // #pragma clang diagnostic pop
 
         XCTAssertTrue(payment.stp_isSimulated())

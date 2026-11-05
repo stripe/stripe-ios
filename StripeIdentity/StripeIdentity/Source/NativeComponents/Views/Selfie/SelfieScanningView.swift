@@ -493,7 +493,7 @@ final class SelfieScanningView: UIView {
             "Retake Photos",
             "Button text displayed to the user to retake photo"
         ))
-        retakeSelfieButton.addTarget(self, action: #selector(didTapRetakeSelfie), for: .touchUpInside)
+        retakeSelfieButton.addAction(UIAction { [weak self] _ in self?.didTapRetakeSelfie() }, for: .touchUpInside)
         return retakeSelfieButton
     }()
 
@@ -516,7 +516,7 @@ final class SelfieScanningView: UIView {
     private(set) lazy var consentCheckboxButton: CheckboxButton = {
         let checkbox = CheckboxButton(theme: Styling.consentCheckboxTheme(tintColor: tintColor))
         checkbox.isSelected = false
-        checkbox.addTarget(self, action: #selector(didToggleConsent), for: .touchUpInside)
+        checkbox.addAction(UIAction { [weak self] _ in self?.didToggleConsent() }, for: .touchUpInside)
         checkbox.delegate = self
         return checkbox
     }()
@@ -1025,11 +1025,11 @@ extension SelfieScanningView {
         NSLayoutConstraint.activate(constraints)
     }
 
-    @objc fileprivate func didToggleConsent() {
+    fileprivate func didToggleConsent() {
         consentHandler?(consentCheckboxButton.isSelected)
     }
 
-    @objc fileprivate func didTapRetakeSelfie() {
+    fileprivate func didTapRetakeSelfie() {
         retakeSelfieHandler?()
     }
 }

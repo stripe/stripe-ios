@@ -268,7 +268,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         return
     }
 
-    @objc func didTapAccessoryButton() {
+    func didTapAccessoryButton() {
         delegate?.didTapSavedPaymentMethodAccessoryButton()
     }
 

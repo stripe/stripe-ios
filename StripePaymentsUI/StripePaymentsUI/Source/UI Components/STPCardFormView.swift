@@ -12,7 +12,6 @@
 import UIKit
 
 /// Options for configuring the display of an `STPCardFormView` instance.
-@objc
 public enum STPCardFormViewStyle: Int {
     /// Draws the form in a rounded rect with full separators between
     /// each input field.
@@ -25,7 +24,6 @@ public enum STPCardFormViewStyle: Int {
 
 /// `STPCardFormViewDelegate` defines the interface that should be adopted to receive
 /// updates from `STPCardFormView` instances.
-@objc
 @MainActor @preconcurrency
 public protocol STPCardFormViewDelegate: NSObjectProtocol {
     /// Delegate method that is called when all of the form view's required inputs
@@ -109,7 +107,6 @@ public class STPCardFormView: STPFormView {
 
     /// The delegate to notify when the card form transitions to or from being complete.
     /// - seealso: STPCardFormViewDelegate
-    @objc
     public weak var delegate: STPCardFormViewDelegate?
 
     internal var internalDelegate: STPCardFormViewInternalDelegate? {
@@ -119,7 +116,6 @@ public class STPCardFormView: STPFormView {
     var _backgroundColor: UIColor?
 
     /// :nodoc:
-    @objc
     public override var backgroundColor: UIColor? {
         get {
             switch style {
@@ -152,7 +148,6 @@ public class STPCardFormView: STPFormView {
     /// The background color that is automatically applied to the input fields when  `isUserInteractionEnabled` is set to `false.
     /// @note `STPCardFormView` uses text colors, most of which are iOS system colors, that are designed to be as
     /// accessible as possible, so any customization should avoid decreasing contrast between the text and background.
-    @objc
     public var disabledBackgroundColor: UIColor? {
         get {
             switch style {
@@ -182,7 +177,6 @@ public class STPCardFormView: STPFormView {
     /// You can monitor when `STPCardFormView` has complete details by implementing
     /// `STPFormViewDelegate` and setting the `STPCardFormView's` `delegate`
     /// property.
-    @objc
     public internal(set) var cardParams: STPPaymentMethodParams? {
         get {
             guard case .valid = numberField.validator.validationState,
@@ -298,7 +292,6 @@ public class STPCardFormView: STPFormView {
         }
     }
 
-    @objc
     public override var isUserInteractionEnabled: Bool {
         didSet {
             updateCurrentBackgroundColor()
@@ -312,7 +305,6 @@ public class STPCardFormView: STPFormView {
 
     /// Public initializer for `STPCardFormView`.
     /// @param style The visual style to use for this instance. @see STPCardFormViewStyle
-    @objc
     public convenience init(
         style: STPCardFormViewStyle = .standard
     ) {
@@ -524,7 +516,7 @@ public class STPCardFormView: STPFormView {
         updateBindedPaymentMethodParams()
     }
 
-    @objc func scanButtonTapped(sender: UIButton) {
+    func scanButtonTapped(sender: UIButton) {
         self.formViewInternalDelegate?.formView(self, didTapAccessoryButton: sender)
     }
 
@@ -583,45 +575,6 @@ public class STPCardFormView: STPFormView {
         set {
             numberField.preferredNetworks = newValue
         }
-    }
-
-    /// The list of preferred networks that should be used to process
-    /// payments made with a co-branded card if your user hasn't selected a
-    /// network themselves.
-    ///
-    /// The first preferred network that matches any available network will
-    /// be offered to the customer. If no preferred network is applicable, the
-    /// customer will select the network.
-    ///
-    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
-    /// For example:
-    /// [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
-    @available(swift, obsoleted: 1.0)
-    @objc(preferredNetworks) open func preferredNetworks_objc() -> [NSNumber]? {
-        guard let preferredNetworks = self.preferredNetworks else {
-            return nil
-        }
-        return preferredNetworks.map { NSNumber(value: $0.rawValue) }
-    }
-
-    /// The list of preferred networks that should be used to process
-    /// payments made with a co-branded card if your user hasn't selected a
-    /// network themselves.
-    ///
-    /// The first preferred network that matches any available network will
-    /// be offered to the customer. If no preferred network is applicable, the
-    /// customer will select the network.
-    ///
-    /// In Objective-C, this is an array of NSNumbers representing STPCardBrands.
-    /// For example:
-    /// [textField setPreferredNetworks:@[[NSNumber numberWithInt:STPCardBrandVisa]]];
-    @available(swift, obsoleted: 1.0)
-    @objc(setPreferredNetworks:) open func setPreferredNetworks_objc(preferredNetworks: [NSNumber]?) {
-        guard let preferredNetworks = preferredNetworks else {
-            self.preferredNetworks = nil
-            return
-        }
-        self.preferredNetworks = preferredNetworks.map { STPCardBrand(rawValue: $0.intValue) ?? .unknown }
     }
 
     /// The account (if any) for which the funds of the intent are intended.

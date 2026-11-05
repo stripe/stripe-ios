@@ -7,6 +7,10 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+import StripePayments
+import StripePaymentsTestUtils
+import XCTest
+
 class STPCustomerTest: XCTestCase {
     func testDecoding_invalidJSON() {
         let sut = STPCustomer.decodedObject(fromAPIResponse: [:])

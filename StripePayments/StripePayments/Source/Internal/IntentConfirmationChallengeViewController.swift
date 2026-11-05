@@ -176,7 +176,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         }
 
         // Add action
-        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.addAction(UIAction { [weak self] _ in self?.closeButtonTapped() }, for: .touchUpInside)
 
         // Accessibility
         closeButton.accessibilityLabel = String.Localized.close
@@ -206,7 +206,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: "onError")
     }
 
-    @objc func closeButtonTapped() {
+    func closeButtonTapped() {
         closeButton.isEnabled = false
         self.completion(.failure(ChallengeError.userCanceled))
         switch intentType {

@@ -7,6 +7,10 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
+import StripePayments
+import StripePaymentsTestUtils
+import XCTest
+
 class STPPaymentMethodCardWalletVisaCheckoutTest: XCTestCase {
     func testDecodedObjectFromAPIResponseMapping() {
         let response = ((STPTestUtils.jsonNamed(STPTestJSONPaymentMethodCard)["card"] as! [AnyHashable: Any])["wallet"] as! [AnyHashable: Any])["visa_checkout"] as? [AnyHashable: Any]

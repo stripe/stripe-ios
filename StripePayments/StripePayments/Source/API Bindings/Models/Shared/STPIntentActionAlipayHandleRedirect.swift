@@ -13,19 +13,19 @@ import Foundation
 public class STPIntentActionAlipayHandleRedirect: NSObject {
 
     /// The native URL you must redirect your customer to in order to authenticate the payment.
-    @objc public let nativeURL: URL?
+    public let nativeURL: URL?
 
     /// If the customer does not exit their browser while authenticating, they will be redirected to this specified URL after completion.
-    @objc public let returnURL: URL
+    public let returnURL: URL
 
     /// The URL you must redirect your customer to in order to authenticate the payment.
-    @objc public let url: URL
+    public let url: URL
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(
@@ -59,7 +59,6 @@ public class STPIntentActionAlipayHandleRedirect: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPIntentActionAlipayHandleRedirect: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let urlString = dict["url"] as? String,

@@ -15,41 +15,41 @@ public class STPConfirmPaymentMethodOptions: NSObject {
 
     /// Options to update a Card PaymentMethod.
     /// - seealso: STPConfirmCardOptions
-    @objc public var cardOptions: STPConfirmCardOptions?
+    public var cardOptions: STPConfirmCardOptions?
 
     /// Options for an Alipay Payment Method.
-    @objc public var alipayOptions: STPConfirmAlipayOptions?
+    public var alipayOptions: STPConfirmAlipayOptions?
 
     /// Options for a BLIK Payment Method.
-    @objc public var blikOptions: STPConfirmBLIKOptions?
+    public var blikOptions: STPConfirmBLIKOptions?
 
     /// Options for a WeChat Pay Payment Method.
-    @objc public var weChatPayOptions: STPConfirmWeChatPayOptions?
+    public var weChatPayOptions: STPConfirmWeChatPayOptions?
 
     /// Options for a US Bank Account Payment Method.
-    @objc public var usBankAccountOptions: STPConfirmUSBankAccountOptions?
+    public var usBankAccountOptions: STPConfirmUSBankAccountOptions?
 
     /// Options for a Link Payment Method.
-    @_spi(InternalOnlyAPI) @objc public var linkOptions: STPConfirmLinkOptions?
+    @_spi(InternalOnlyAPI) public var linkOptions: STPConfirmLinkOptions?
 
     /// Options for a Konbini Payment Method.
-    @objc public var konbiniOptions: STPConfirmKonbiniOptions?
+    public var konbiniOptions: STPConfirmKonbiniOptions?
 
     /// Options for a Klarna Payment Method.
-    @objc @_spi(KlarnaSDKPrivatePreview) public var klarnaOptions: STPConfirmKlarnaOptions?
+    @_spi(KlarnaSDKPrivatePreview) public var klarnaOptions: STPConfirmKlarnaOptions?
 
     /// Initializes payment method options with Klarna options.
     /// - Parameter klarnaOptions: Options for a Klarna Payment Method.
-    @objc @_spi(KlarnaSDKPrivatePreview) public convenience init(klarnaOptions: STPConfirmKlarnaOptions) {
+    @_spi(KlarnaSDKPrivatePreview) public convenience init(klarnaOptions: STPConfirmKlarnaOptions) {
         self.init()
         self.klarnaOptions = klarnaOptions
     }
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(format: "%@: %p", NSStringFromClass(type(of: self)), self),
@@ -68,21 +68,19 @@ public class STPConfirmPaymentMethodOptions: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConfirmPaymentMethodOptions: STPFormEncodable {
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: alipayOptions)): "alipay",
-            NSStringFromSelector(#selector(getter: cardOptions)): "card",
-            NSStringFromSelector(#selector(getter: blikOptions)): "blik",
-            NSStringFromSelector(#selector(getter: weChatPayOptions)): "wechat_pay",
-            NSStringFromSelector(#selector(getter: usBankAccountOptions)): "us_bank_account",
-            NSStringFromSelector(#selector(getter: konbiniOptions)): "konbini",
-            NSStringFromSelector(#selector(getter: klarnaOptions)): "klarna",
-            NSStringFromSelector(#selector(getter: linkOptions)): "link",
+            \STPConfirmPaymentMethodOptions.alipayOptions: "alipay",
+            \STPConfirmPaymentMethodOptions.cardOptions: "card",
+            \STPConfirmPaymentMethodOptions.blikOptions: "blik",
+            \STPConfirmPaymentMethodOptions.weChatPayOptions: "wechat_pay",
+            \STPConfirmPaymentMethodOptions.usBankAccountOptions: "us_bank_account",
+            \STPConfirmPaymentMethodOptions.konbiniOptions: "konbini",
+            \STPConfirmPaymentMethodOptions.klarnaOptions: "klarna",
+            \STPConfirmPaymentMethodOptions.linkOptions: "link",
         ]
     }
 
-    @objc
     public class func rootObjectName() -> String? {
         return "payment_method_options"
     }

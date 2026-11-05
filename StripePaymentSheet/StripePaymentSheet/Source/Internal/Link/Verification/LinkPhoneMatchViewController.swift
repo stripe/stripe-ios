@@ -78,7 +78,7 @@ final class LinkPhoneMatchViewController: UIViewController, ElementDelegate {
         errorLabel.textColor = .systemRed
         errorLabel.numberOfLines = 0
         errorLabel.adjustsFontForContentSizeCategory = true
-        submitButton.addTarget(self, action: #selector(submit), for: .touchUpInside)
+        submitButton.addAction(UIAction { [weak self] _ in self?.submit() }, for: .touchUpInside)
         let stack = UIStackView(
             arrangedSubviews: [
                 title,
@@ -112,7 +112,7 @@ final class LinkPhoneMatchViewController: UIViewController, ElementDelegate {
 
     func focusPhone() { _ = phoneNumberElement.beginEditing() }
 
-    @objc private func submit() {
+    private func submit() {
         guard phoneNumberElement.validationState.isValid, let phone = phoneNumberElement.phoneNumber?.string(as: .e164) else { return }
         coordinator.submitPhoneNumber(phone)
     }

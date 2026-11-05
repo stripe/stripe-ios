@@ -153,7 +153,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
 
     func testCreateConfirmationTokenWithAttachedPaymentMethod() async throws {
         // Part 1: Use legacy fetchCustomerAndEphemeralKey for payment method attachment
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(
             customerID: nil,
             merchantCountry: "us"
         )
@@ -181,7 +181,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         )
 
         // Part 2: Use customer sessions for confirmation token creation
-        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared.fetchCustomerAndCustomerSessionClientSecret(
             customerID: customerAndEphemeralKey.customer, // Use existing customer from part 1
             merchantCountry: "us",
             paymentMethodSave: true

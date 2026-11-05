@@ -18,14 +18,13 @@ public class STPPushProvisioningContext: NSObject {
     public var apiClient: STPAPIClient = .shared
 
     /// This is a helper method to generate a PKAddPaymentPassRequestConfiguration that will work with
-    /// Stripe's Issuing APIs. Pass the returned configuration object to `PKAddPaymentPassViewController`'s `initWithRequestConfiguration:delegate:` initializer.
+    /// Stripe's Issuing APIs. Pass the returned configuration object to `PKAddPaymentPassViewController`'s `init(requestConfiguration:delegate:)` initializer.
     /// @deprecated Use requestConfiguration(withName:description:last4:brand:primaryAccountIdentifier:) instead.
     /// - Parameters:
     ///   - name: Your cardholder's name. Example: John Appleseed
     ///   - description: A localized description of your card's name. This will appear in Apple's UI as "{description} will be available in Wallet". Example: Platinum Rewards Card
     ///   - last4: The last 4 of the card to be added to the user's Apple Pay wallet. Example: 4242
     ///   - brand: The brand of the card. Example: `STPCardBrandVisa`
-    @objc
     @available(
         *,
         deprecated,
@@ -49,14 +48,13 @@ public class STPPushProvisioningContext: NSObject {
     }
 
     /// This is a helper method to generate a PKAddPaymentPassRequestConfiguration that will work with
-    /// Stripe's Issuing APIs. Pass the returned configuration object to `PKAddPaymentPassViewController`'s `initWithRequestConfiguration:delegate:` initializer.
+    /// Stripe's Issuing APIs. Pass the returned configuration object to `PKAddPaymentPassViewController`'s `init(requestConfiguration:delegate:)` initializer.
     /// - Parameters:
     ///   - name: Your cardholder's name. Example: John Appleseed
     ///   - description: A localized description of your card's name. This will appear in Apple's UI as "{description} will be available in Wallet". Example: Platinum Rewards Card
     ///   - last4: The last 4 of the card to be added to the user's Apple Pay wallet. Example: 4242
     ///   - brand: The brand of the card. Example: `STPCardBrandVisa`
     ///   - primaryAccountIdentifier: The `primary_account_identifier` value from the issued card.
-    @objc
     public class func requestConfiguration(
         withName name: String,
         description: String?,
@@ -80,7 +78,6 @@ public class STPPushProvisioningContext: NSObject {
     }
 
     /// In order to retreive the encrypted payload that PKAddPaymentPassViewController expects, the Stripe SDK must talk to the Stripe API. As this requires privileged access, you must write a "key provider" that generates an Ephemeral Key on your backend and provides it to the SDK when requested. For more information, see https://stripe.com/docs/mobile/ios/basic#ephemeral-key
-    @objc
     public init(
         keyProvider: STPIssuingCardEphemeralKeyProvider
     ) {
@@ -94,7 +91,6 @@ public class STPPushProvisioningContext: NSObject {
     }
 
     /// This method lines up with the method of the same name on `PKAddPaymentPassViewControllerDelegate`. You should implement that protocol in your own app, and when that method is called, call this method on your `STPPushProvisioningContext`. This in turn will first initiate a call to your `keyProvider` (see above) to obtain an Ephemeral Key, then make a call to the Stripe Issuing API to fetch an encrypted payload for the card in question, then return that payload to iOS.
-    @objc
     public func addPaymentPassViewController(
         _ controller: PKAddPaymentPassViewController,
         generateRequestWithCertificateChain certificates: [Data],

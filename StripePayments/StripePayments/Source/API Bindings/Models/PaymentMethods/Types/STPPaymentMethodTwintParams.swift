@@ -15,7 +15,7 @@ public class STPPaymentMethodTwintParams: NSObject, STPFormEncodable {
         return "twint"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

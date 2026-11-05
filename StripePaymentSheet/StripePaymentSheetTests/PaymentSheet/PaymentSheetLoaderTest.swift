@@ -224,7 +224,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let testCustomerID = "cus_U3FLpV6ipkWrJe"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         let allSPMIDs = [
@@ -274,7 +274,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let testCustomerID = "cus_U3FLpV6ipkWrJe"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         let allSPMIDs = [
@@ -325,7 +325,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let testCustomerID = "cus_OtOGvD0ZVacBoj"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "jp")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "jp")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // This is a saved Apple Pay card:
@@ -373,7 +373,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let testCustomerID = "cus_TZCcZWKC57HHmr"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         let savedPms = ["pm_1Sc4CpFY0qyl6XeWThu3QpWE", // card
@@ -425,7 +425,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let testCustomerID = "cus_TZCcZWKC57HHmr"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // Set the card as default
@@ -581,7 +581,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let testCustomerID = "cus_OtOGvD0ZVacBoj"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "jp")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "jp")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // This is a Visa saved card:
@@ -627,7 +627,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let testCustomerID = "cus_OtOGvD0ZVacBoj"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "jp")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "jp")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // This is a credit Visa saved card:
@@ -671,7 +671,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let testCustomerID = "cus_TqanA973bOrpoP"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
         // This should disable us bank account, a delayed payment method
         configuration.allowsDelayedPaymentMethods = false
@@ -696,7 +696,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let testCustomerID = "cus_TqanA973bOrpoP"
 
         // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared.fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
         configuration.defaultBillingDetails.email = "davidestes@stripe.com"
 
@@ -727,7 +727,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let testCustomerID = "cus_TqanA973bOrpoP"
 
         // Create a new CS for the Customer
-        let customerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: testCustomerID, merchantCountry: "us")
+        let customerSession = try await STPTestingAPIClient.shared.fetchCustomerAndCustomerSessionClientSecret(customerID: testCustomerID, merchantCountry: "us")
         configuration.customer = .init(id: testCustomerID, customerSessionClientSecret: customerSession.customerSessionClientSecret)
         // This should disable us bank account, a delayed payment method
         configuration.allowsDelayedPaymentMethods = false

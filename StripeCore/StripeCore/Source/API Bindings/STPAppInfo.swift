@@ -14,7 +14,7 @@ import Foundation
 /// This information is passed to Stripe so that we can contact you about future issues or
 /// critical updates.
 /// - seealso: https://stripe.com/docs/building-plugins#setappinfo
-@objc public class STPAppInfo: NSObject {
+public class STPAppInfo: NSObject {
     /// Initializes an instance of `STPAppInfo`.
     ///
     /// - Parameters:
@@ -22,7 +22,7 @@ import Foundation
     ///   - partnerId:   Your Stripe Partner ID (e.g. "pp_partner_1234"). Required for Stripe Verified Partners, optional otherwise.
     ///   - version:     The version of your library (e.g. "1.2.34"). Optional.
     ///   - url:         The website for your library (e.g. "https://myawesomelibrary.info"). Optional.
-    @objc public init(
+    public init(
         name: String,
         partnerId: String?,
         version: String?,
@@ -35,11 +35,11 @@ import Foundation
     }
 
     /// The name of your library (e.g. "MyAwesomeLibrary").
-    @objc public private(set) var name: String
+    public private(set) var name: String
     /// Your Stripe Partner ID (e.g. "pp_partner_1234").
-    @objc public private(set) var partnerId: String?
+    public private(set) var partnerId: String?
     /// The version of your library (e.g. "1.2.34").
-    @objc public private(set) var version: String?
+    public private(set) var version: String?
     /// The website for your library (e.g. "https://myawesomelibrary.info").
-    @objc public private(set) var url: String?
+    public private(set) var url: String?
 }

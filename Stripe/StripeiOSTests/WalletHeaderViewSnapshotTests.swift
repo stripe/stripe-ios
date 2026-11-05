@@ -13,6 +13,7 @@ import UIKit
 @testable@_spi(InternalOnlyAPI) import Stripe
 @testable@_spi(InternalOnlyAPI) import StripeCore
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+import XCTest
 
 // @iOS26
 class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {

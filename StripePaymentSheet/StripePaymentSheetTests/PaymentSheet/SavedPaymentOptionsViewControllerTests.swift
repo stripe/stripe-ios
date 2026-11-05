@@ -6,6 +6,7 @@
 import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) import StripePayments
 @testable import StripePaymentSheet
+import UIKit
 import XCTest
 
 class SavedPaymentOptionsViewControllerTests: XCTestCase {

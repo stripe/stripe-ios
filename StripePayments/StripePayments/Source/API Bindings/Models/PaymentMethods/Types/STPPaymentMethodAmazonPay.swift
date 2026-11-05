@@ -11,11 +11,11 @@ import Foundation
 /// - seealso: https://docs.stripe.com/payments/amazon-pay/accept-a-payment
 public class STPPaymentMethodAmazonPay: NSObject {
     /// :nodoc:
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodAmazonPay.self), self)
@@ -25,7 +25,6 @@ public class STPPaymentMethodAmazonPay: NSObject {
     }
 
     // MARK: - STPAPIResponseDecodeable
-    @objc
     /// :nodoc:
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {

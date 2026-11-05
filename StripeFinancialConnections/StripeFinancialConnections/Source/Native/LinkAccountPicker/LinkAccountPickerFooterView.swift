@@ -20,7 +20,7 @@ final class LinkAccountPickerFooterView: UIView {
         let connectAccountButton = Button.primary(appearance: appearance)
         connectAccountButton.title = defaultCta
         connectAccountButton.isEnabled = false // disable by default
-        connectAccountButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
+        connectAccountButton.addAction(UIAction { [weak self] _ in self?.didSelectLinkAccountsButton() }, for: .touchUpInside)
         connectAccountButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             connectAccountButton.heightAnchor.constraint(equalToConstant: 56)
@@ -75,7 +75,7 @@ final class LinkAccountPickerFooterView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc private func didSelectLinkAccountsButton() {
+    private func didSelectLinkAccountsButton() {
         didSelectConnectAccount()
     }
 

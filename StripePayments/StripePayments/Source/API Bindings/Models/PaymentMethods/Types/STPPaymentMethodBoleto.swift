@@ -13,13 +13,13 @@ import Foundation
 public class STPPaymentMethodBoleto: NSObject, STPAPIResponseDecodable {
 
     /// The tax ID of the customer (CPF for individuals or CNPJ for businesses).
-    @objc public let taxID: String
+    public let taxID: String
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodBoleto.self), self),
@@ -45,7 +45,6 @@ public class STPPaymentMethodBoleto: NSObject, STPAPIResponseDecodable {
         super.init()
     }
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

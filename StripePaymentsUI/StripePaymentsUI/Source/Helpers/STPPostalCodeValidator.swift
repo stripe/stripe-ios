@@ -11,13 +11,13 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 @_spi(InternalOnlyAPI) import StripeUICore
 
-@objc enum STPPostalCodeIntendedUsage: Int {
+enum STPPostalCodeIntendedUsage: Int {
     case billingAddress
     case shippingAddress
     case cardField
 }
 
-@objc @_spi(InternalOnlyAPI) public enum STPPostalCodeRequirement: Int {
+@_spi(InternalOnlyAPI) public enum STPPostalCodeRequirement: Int {
     case standard
     case upe
 }
@@ -71,7 +71,6 @@ import Foundation
         }
     }
 
-    @objc(formattedSanitizedPostalCodeFromString:countryCode:usage:)
     class func formattedSanitizedPostalCode(
         from postalCode: String?,
         countryCode: String?,

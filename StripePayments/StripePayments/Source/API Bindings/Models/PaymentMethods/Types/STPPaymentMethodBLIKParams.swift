@@ -11,17 +11,14 @@ import Foundation
 /// An object representing parameters used to create a BLIK Payment Method
 /// There are currently no parameters to pass.
 /// - seealso: https://site-admin.stripe.com/docs/api/payment_methods/create#create_payment_method-blik
-@objc
 public class STPPaymentMethodBLIKParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc
     public class func rootObjectName() -> String? {
         return "blik"
     }
 
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

@@ -9,7 +9,6 @@
 import UIKit
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkHintMessageView)
 final class LinkHintMessageView: UIView {
     private struct Constants {
         static let spacing: CGFloat = LinkUI.smallContentSpacing

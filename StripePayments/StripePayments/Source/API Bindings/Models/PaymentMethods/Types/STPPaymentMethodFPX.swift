@@ -12,11 +12,11 @@ import Foundation
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-fpx
 public class STPPaymentMethodFPX: NSObject, STPAPIResponseDecodable {
     /// The customer’s bank identifier code.
-    @objc public private(set) var bankIdentifierCode: String?
+    public private(set) var bankIdentifierCode: String?
     private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodFPX.self), self),

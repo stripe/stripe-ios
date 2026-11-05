@@ -19,27 +19,27 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     }
 
     /// The amount associated with the source.
-    @objc public private(set) var amount: NSNumber?
+    public private(set) var amount: NSNumber?
     /// The client secret of the source. Used for client-side fetching of a source
     /// using a publishable key.
-    @objc public private(set) var clientSecret: String?
+    public private(set) var clientSecret: String?
     /// When the source was created.
-    @objc public private(set) var created: Date = Date(timeIntervalSince1970: TimeInterval(0))
+    public private(set) var created: Date = Date(timeIntervalSince1970: TimeInterval(0))
     /// The currency associated with the source.
-    @objc public private(set) var currency: String?
+    public private(set) var currency: String?
     /// Whether or not this source was created in livemode.
-    @objc public private(set) var livemode = false
+    public private(set) var livemode = false
     /// The status of the source.
-    @objc public private(set) var status: STPSourceStatus = .unknown
+    public private(set) var status: STPSourceStatus = .unknown
     /// The type of the source.
-    @objc public private(set) var type: STPSourceType = .unknown
+    public private(set) var type: STPSourceType = .unknown
     /// Whether this source should be reusable or not.
-    @objc public private(set) var usage: STPSourceUsage = .unknown
+    public private(set) var usage: STPSourceUsage = .unknown
     /// Information about the source specific to its type
-    @objc public private(set) var details: [AnyHashable: Any]?
+    public private(set) var details: [AnyHashable: Any]?
     /// If this is a card source, this property provides typed access to the
     /// contents of the `details` dictionary.
-    @objc public private(set) var cardDetails: STPSourceCardDetails?
+    public private(set) var cardDetails: STPSourceCardDetails?
     // MARK: - Deprecated
 
     /// A set of key/value pairs associated with the source object.
@@ -51,9 +51,9 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         message:
             "Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead."
     )
-    @objc public private(set) var metadata: [String: String]?
-    @objc public var stripeID = ""
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var metadata: [String: String]?
+    public var stripeID = ""
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - STPSourceType
     class func stringToTypeMapping() -> [String: NSNumber] {
@@ -62,7 +62,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         ]
     }
 
-    @objc(typeFromString:)
     class func type(from string: String) -> STPSourceType {
         let key = string.lowercased()
         let typeNumber = self.stringToTypeMapping()[key]
@@ -74,7 +73,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         return .unknown
     }
 
-    @objc(stringFromType:)
     class func string(from type: STPSourceType) -> String? {
         return
             (self.stringToTypeMapping() as NSDictionary).allKeys(
@@ -94,7 +92,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         ]
     }
 
-    @objc(statusFromString:)
     class func status(from string: String) -> STPSourceStatus {
         let key = string.lowercased()
         let statusNumber = self.stringToStatusMapping()[key]
@@ -106,7 +103,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         return .unknown
     }
 
-    @objc(stringFromStatus:)
     class func string(from status: STPSourceStatus) -> String? {
         return
             (self.stringToStatusMapping() as NSDictionary).allKeys(
@@ -123,7 +119,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         ]
     }
 
-    @objc(usageFromString:)
     class func usage(from string: String) -> STPSourceUsage {
         let key = string.lowercased()
         let usageNumber = self.stringToUsageMapping()[key]
@@ -135,7 +130,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         return .unknown
     }
 
-    @objc(stringFromUsage:)
     class func string(from usage: STPSourceUsage) -> String? {
         return
             (self.stringToUsageMapping() as NSDictionary).allKeys(
@@ -146,13 +140,12 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
 
     // MARK: - Equality
     /// :nodoc:
-    @objc
     public override func isEqual(_ object: Any?) -> Bool {
         return isEqual(to: object as? STPSource)
     }
 
     /// :nodoc:
-    @objc public override var hash: Int {
+    public override var hash: Int {
         return stripeID.hash
     }
 
@@ -170,7 +163,7 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPSource.self), self),
@@ -191,11 +184,10 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc func stripeObject() -> String {
+    func stripeObject() -> String {
         return "source"
     }
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

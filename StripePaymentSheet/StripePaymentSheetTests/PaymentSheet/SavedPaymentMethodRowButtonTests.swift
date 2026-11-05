@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+import UIKit
 import XCTest
 
 final class SavedPaymentMethodRowButtonTests: XCTestCase {

@@ -12,11 +12,12 @@ import PassKit
 
 /// STPAPIClient extensions to create Stripe Tokens, Sources, or PaymentMethods from Apple Pay PKPayment objects.
 extension STPAPIClient {
+    // `@objc` so that test doubles can override this method, which is declared in an extension.
     /// Converts a PKPayment object into a Stripe token using the Stripe API.
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
-    @objc(createTokenWithPayment:completion:)
+    @objc
     public func createToken(with payment: PKPayment, completion: @escaping STPTokenCompletionBlock)
     {
         var params = payment.stp_tokenParameters(apiClient: self)
@@ -32,7 +33,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
-    @objc(createSourceWithPayment:completion:)
     public func createSource(
         with payment: PKPayment,
         completion: @escaping STPSourceCompletionBlock
@@ -53,7 +53,6 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
-    @objc(createPaymentMethodWithPayment:completion:)
     public func createPaymentMethod(
         with payment: PKPayment,
         completion: @escaping STPPaymentMethodCompletionBlock
@@ -66,7 +65,6 @@ extension STPAPIClient {
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - metadata:    Additional data to be included with the payment method
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
-    @objc(createPaymentMethodWithPayment:metadata:completion:)
     public func createPaymentMethod(
         with payment: PKPayment,
         metadata: [String: String],

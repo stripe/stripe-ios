@@ -15,28 +15,28 @@ import Foundation
 public class STPPaymentIntentShippingDetailsAddress: NSObject {
 
     /// City/District/Suburb/Town/Village.
-    @objc public let city: String?
+    public let city: String?
 
     /// Two-letter country code (ISO 3166-1 alpha-2).
-    @objc public let country: String?
+    public let country: String?
 
     /// Address line 1 (Street address/PO Box/Company name).
-    @objc public let line1: String?
+    public let line1: String?
 
     /// Address line 2 (Apartment/Suite/Unit/Building).
-    @objc public let line2: String?
+    public let line2: String?
 
     /// ZIP or postal code.
-    @objc public let postalCode: String?
+    public let postalCode: String?
 
     /// State/County/Province/Region.
-    @objc public let state: String?
+    public let state: String?
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(
@@ -79,7 +79,6 @@ public class STPPaymentIntentShippingDetailsAddress: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPPaymentIntentShippingDetailsAddress: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response else {
             return nil

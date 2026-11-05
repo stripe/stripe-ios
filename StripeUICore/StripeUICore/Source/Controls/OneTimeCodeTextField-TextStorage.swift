@@ -103,7 +103,6 @@ extension OneTimeCodeTextField {
     /// Represents a position within our text storage.
     ///
     /// For internal SDK use only
-    @objc(STP_Internal_OneTimeCodeTextField_TextPosition)
     final class TextPosition: UITextPosition {
         let index: Int
 
@@ -148,7 +147,6 @@ extension OneTimeCodeTextField {
     /// A range within our text storage.
     ///
     /// For internal SDK use only.
-    @objc(STP_Internal_OneTimeCodeTextField_TextRange)
     final class TextRange: UITextRange {
         let _start: TextPosition
         let _end: TextPosition

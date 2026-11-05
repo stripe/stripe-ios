@@ -11,25 +11,23 @@ import UIKit
 /// An object representing parameters used to create an Link Payment Method
 public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
     /// :nodoc:
-    @objc @_spi(InternalOnlyAPI) public var paymentDetailsID: String?
+    @_spi(InternalOnlyAPI) public var paymentDetailsID: String?
 
     /// :nodoc:
-    @objc @_spi(InternalOnlyAPI) public var credentials: [AnyHashable: Any]?
+    @_spi(InternalOnlyAPI) public var credentials: [AnyHashable: Any]?
 
     /// :nodoc:
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     // MARK: - STPFormEncodable
-    @objc
     public class func rootObjectName() -> String? {
         return "link"
     }
 
-    @objc
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public static func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: credentials)): "credentials",
-            NSStringFromSelector(#selector(getter: paymentDetailsID)): "payment_details_id",
+            \STPPaymentMethodLinkParams.credentials: "credentials",
+            \STPPaymentMethodLinkParams.paymentDetailsID: "payment_details_id",
         ]
     }
 }

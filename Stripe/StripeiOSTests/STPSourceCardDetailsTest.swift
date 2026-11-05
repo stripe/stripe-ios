@@ -6,6 +6,7 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
+import StripePaymentsTestUtils
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import Stripe

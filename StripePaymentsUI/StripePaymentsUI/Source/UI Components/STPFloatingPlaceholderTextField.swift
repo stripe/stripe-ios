@@ -249,7 +249,7 @@ import UIKit
 extension STPFloatingPlaceholderTextField {
 
     /// :nodoc:
-    @objc public override var placeholder: String? {
+    public override var placeholder: String? {
         get {
             return placeholderLabel.text
         }
@@ -262,7 +262,7 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override var attributedPlaceholder: NSAttributedString? {
+    public override var attributedPlaceholder: NSAttributedString? {
         get {
             return placeholderLabel.attributedText
         }
@@ -275,21 +275,21 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override var font: UIFont? {
+    public override var font: UIFont? {
         didSet {
             placeholderLabel.font = font
         }
     }
 
     /// :nodoc:
-    @objc public override var textAlignment: NSTextAlignment {
+    public override var textAlignment: NSTextAlignment {
         didSet {
             placeholderLabel.textAlignment = textAlignment
         }
     }
 
     /// :nodoc:
-    @objc public override var leftViewMode: UITextField.ViewMode {
+    public override var leftViewMode: UITextField.ViewMode {
         get {
             return super.leftViewMode
         }
@@ -304,7 +304,7 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override var rightViewMode: UITextField.ViewMode {
+    public override var rightViewMode: UITextField.ViewMode {
         get {
             return super.rightViewMode
         }
@@ -319,7 +319,7 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         // internally, becoming first responder triggers a layout which we want to suppress
         // so we can animate
@@ -329,7 +329,7 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override func becomeFirstResponder() -> Bool {
+    public override func becomeFirstResponder() -> Bool {
         changingFirstResponderStatus = true
         let ret = super.becomeFirstResponder()
         layoutPlaceholder(animated: true)
@@ -338,7 +338,7 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override func resignFirstResponder() -> Bool {
+    public override func resignFirstResponder() -> Bool {
         changingFirstResponderStatus = true
         let ret = super.resignFirstResponder()
         layoutPlaceholder(animated: true)
@@ -347,28 +347,28 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override func textRect(forBounds bounds: CGRect) -> CGRect {
+    public override func textRect(forBounds bounds: CGRect) -> CGRect {
         // N.B. The bounds passed here are not the same as self.bounds
         // which is why we don't just use textEntryFrame()
         return bounds.inset(by: textEntryFieldInset())
     }
 
     /// :nodoc:
-    @objc public override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+    public override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         // N.B. The bounds passed here are not the same as self.bounds
         // which is why we don't just use textEntryFrame()
         return bounds.inset(by: textEntryFieldInset())
     }
 
     /// :nodoc:
-    @objc public override func editingRect(forBounds bounds: CGRect) -> CGRect {
+    public override func editingRect(forBounds bounds: CGRect) -> CGRect {
         // N.B. The bounds passed here are not the same as self.bounds
         // which is why we don't just use textEntryFrame()
         return bounds.inset(by: textEntryFieldInset())
     }
 
     /// :nodoc:
-    @objc public override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+    public override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
         var leftViewRect = super.leftViewRect(forBounds: bounds)
         leftViewRect.origin.x =
             leftViewRect.origin.x + STPFloatingPlaceholderTextField.LayoutConstants.horizontalMargin
@@ -376,7 +376,7 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+    public override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
         var rightViewRect = super.rightViewRect(forBounds: bounds)
         rightViewRect.origin.x =
             rightViewRect.origin.x
@@ -385,7 +385,7 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override var intrinsicContentSize: CGSize {
+    public override var intrinsicContentSize: CGSize {
         let height = UIFontMetrics.default.scaledValue(
             for: STPFloatingPlaceholderTextField.LayoutConstants.defaultHeight
         )
@@ -398,7 +398,7 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override func sizeThatFits(_ size: CGSize) -> CGSize {
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
         var size = super.sizeThatFits(size)
         size.height = max(size.height, intrinsicContentSize.height)
         size.width = max(size.width, intrinsicContentSize.width)
@@ -406,7 +406,7 @@ extension STPFloatingPlaceholderTextField {
     }
 
     /// :nodoc:
-    @objc public override func systemLayoutSizeFitting(
+    public override func systemLayoutSizeFitting(
         _ targetSize: CGSize,
         withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
         verticalFittingPriority: UILayoutPriority

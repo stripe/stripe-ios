@@ -8,6 +8,7 @@
 
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
+import UIKit
 
 @testable@_spi(InternalOnlyAPI) import Stripe
 @testable@_spi(InternalOnlyAPI) import StripeCore

@@ -12,16 +12,14 @@ import Foundation
 /// There are currently no parameters to pass.
 /// - seealso: https://site-admin.stripe.com/docs/api/payment_methods/create#create_payment_method-alipay
 public class STPPaymentMethodAlipayParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     // MARK: - STPFormEncodable
-    @objc
     public class func rootObjectName() -> String? {
         return "alipay"
     }
 
-    @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

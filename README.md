@@ -117,9 +117,6 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 - [Prebuilt UI](Example/PaymentSheet%20Example) (Recommended)
   - This example demonstrates how to build a payment flow using [`PaymentSheet`](https://stripe.com/docs/payments/accept-a-payment?platform=ios), an embeddable native UI component that lets you accept [10+ payment methods](https://stripe.com/docs/payments/payment-methods/integration-options#payment-method-product-support) with a single integration.
 
-- [Non-Card Payment Examples](Example/Non-Card%20Payment%20Examples)
-  - This example demonstrates how to manually accept various payment methods using the Stripe API.
-
 ## Card scanning
 
 [PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) offers built-in card scanning. To enable card scanning, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards").

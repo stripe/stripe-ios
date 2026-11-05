@@ -11,6 +11,7 @@ import OHHTTPStubsSwift
 
 import StripeCoreTestUtils
 @testable import StripeIssuing
+import XCTest
 
 class TestEphemeralKeyProvider: NSObject, STPIssuingCardEphemeralKeyProvider {
     func createIssuingCardKey(

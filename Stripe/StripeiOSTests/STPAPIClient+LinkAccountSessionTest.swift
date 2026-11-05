@@ -5,7 +5,9 @@
 //  Created by Yuki Tokuhiro on 4/26/23.
 //
 
+import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripePayments
+import StripePaymentsTestUtils
 import XCTest
 
 final class STPAPIClient_LinkAccountSessionTest: XCTestCase {

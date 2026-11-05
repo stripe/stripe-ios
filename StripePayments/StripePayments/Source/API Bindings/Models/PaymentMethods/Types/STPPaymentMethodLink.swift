@@ -11,12 +11,12 @@ import Foundation
 /// A Link Payment Method.
 public class STPPaymentMethodLink: NSObject, STPAPIResponseDecodable {
 
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodLink.self), self)

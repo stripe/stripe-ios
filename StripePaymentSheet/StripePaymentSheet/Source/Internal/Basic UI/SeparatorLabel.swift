@@ -10,7 +10,6 @@ import UIKit
 
 /// A separator with label.
 /// For internal SDK use only
-@objc(STP_Internal_SeparatorLabel)
 final class SeparatorLabel: UIView {
 
     struct Constants {

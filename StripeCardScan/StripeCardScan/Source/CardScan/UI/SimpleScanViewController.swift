@@ -283,11 +283,7 @@ class SimpleScanViewController: ScanBaseViewController {
         enableCameraPermissionsButton.setAttributedTitle(attributedString, for: .normal)
         enableCameraPermissionsButton.isHidden = true
 
-        enableCameraPermissionsButton.addTarget(
-            self,
-            action: #selector(enableCameraPermissionsPress),
-            for: .touchUpInside
-        )
+        enableCameraPermissionsButton.addAction(UIAction { [weak self] _ in self?.enableCameraPermissionsPress() }, for: .touchUpInside)
 
         enableCameraPermissionsText.text =
             SimpleScanViewController.enableCameraPermissionsDescriptionString
@@ -522,7 +518,7 @@ class SimpleScanViewController: ScanBaseViewController {
     }
 
     /// Warning: if the user navigates to settings and updates the setting, it'll suspend your app.
-    @objc func enableCameraPermissionsPress() {
+    func enableCameraPermissionsPress() {
         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString),
             UIApplication.shared.canOpenURL(settingsUrl)
         else {

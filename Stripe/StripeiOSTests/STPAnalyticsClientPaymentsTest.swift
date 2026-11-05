@@ -7,6 +7,7 @@
 //
 
 import StripeApplePay
+import StripePaymentsTestUtils
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import Stripe

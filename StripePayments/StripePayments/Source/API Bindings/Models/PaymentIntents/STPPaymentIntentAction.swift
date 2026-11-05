@@ -13,4 +13,4 @@ import Foundation
 /// it is, and then use the related property for the details necessary to handle it.
 /// @deprecated Use `STPIntentAction` instead.
 @available(*, deprecated, message: "Use `STPIntentAction` instead.", renamed: "STPIntentAction")
-@objc public final class STPPaymentIntentAction: STPIntentAction {}
+public final class STPPaymentIntentAction: STPIntentAction {}

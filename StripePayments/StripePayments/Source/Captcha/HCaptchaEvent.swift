@@ -9,7 +9,6 @@ import Foundation
 
 /** Events which can be received from HCaptcha SDK
  */
-@objc
 enum HCaptchaEvent: Int, RawRepresentable {
     case open
     case expired

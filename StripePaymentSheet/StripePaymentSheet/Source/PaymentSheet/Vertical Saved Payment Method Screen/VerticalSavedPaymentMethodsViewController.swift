@@ -143,7 +143,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         navBar.setStyle(navigationBarStyle())
         navBar.delegate = self
         navBar.configureEditButton(isEditingPaymentMethods: isEditingPaymentMethods)
-        navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
+        navBar.additionalButton.addAction(UIAction { [weak self] _ in self?.didSelectEditSavedPaymentMethodsButton() }, for: .touchUpInside)
         return navBar
     }()
 
@@ -266,7 +266,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         }
     }
 
-    @objc func didSelectEditSavedPaymentMethodsButton() {
+    func didSelectEditSavedPaymentMethodsButton() {
         isEditingPaymentMethods = !isEditingPaymentMethods
     }
 

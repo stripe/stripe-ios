@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Checks that the `Identity` package trait controls the Identity dependency.
 #
-#   with_objc  links no Identity product and sets no trait  -> must NOT resolve it
-#   with_swift links StripeIdentity and sets the trait      -> must resolve it
+#   without_identity links no Identity product and sets no trait -> must NOT resolve it
+#   with_swift       links StripeIdentity and sets the trait     -> must resolve it
 #
 # Without this, someone could make the Identity dependency unconditional again
 # and every Swift Package Manager consumer would silently fetch it.
@@ -27,8 +27,8 @@ resolved_packages() {
 }
 
 echo "Checking that a payments-only app does not resolve the Identity dependency..."
-if resolved_packages with_objc | grep -qx "${IDENTITY_PACKAGE}"; then
-  echo "error: with_objc resolved '${IDENTITY_PACKAGE}' with the Identity trait off." >&2
+if resolved_packages without_identity | grep -qx "${IDENTITY_PACKAGE}"; then
+  echo "error: without_identity resolved '${IDENTITY_PACKAGE}' with the Identity trait off." >&2
   echo "The Identity dependency must stay behind .when(traits: [\"Identity\"])." >&2
   exit 1
 fi

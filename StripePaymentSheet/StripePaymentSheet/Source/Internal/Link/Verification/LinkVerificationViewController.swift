@@ -39,7 +39,7 @@ final class LinkVerificationViewController: UIViewController {
         )
         super.init(nibName: nil, bundle: nil)
         verificationView.delegate = self
-        verificationView.codeField.addTarget(self, action: #selector(codeFieldChanged), for: .valueChanged)
+        verificationView.codeField.addAction(UIAction { [weak self] _ in self?.codeFieldChanged() }, for: .valueChanged)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -115,7 +115,7 @@ final class LinkVerificationViewController: UIViewController {
         verificationView.codeField.becomeFirstResponder()
     }
 
-    @objc private func codeFieldChanged() {
+    private func codeFieldChanged() {
         coordinator.codeDidChange()
     }
 

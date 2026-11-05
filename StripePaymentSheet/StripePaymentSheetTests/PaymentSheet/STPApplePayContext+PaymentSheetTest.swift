@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 8/2/23.
 //
 
+import PassKit
 @testable @_spi(InternalOnlyAPI) import StripeApplePay
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments

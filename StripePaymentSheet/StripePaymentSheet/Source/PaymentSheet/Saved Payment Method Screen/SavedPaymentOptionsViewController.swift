@@ -33,7 +33,6 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_SavedPaymentOptionsViewController)
 class SavedPaymentOptionsViewController: UIViewController {
     enum Error: Swift.Error {
         case collectionViewDidSelectItemAtAdd

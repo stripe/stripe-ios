@@ -65,7 +65,7 @@ final class ListItemView: UIView {
         let button = UIButton(type: .system)
         button.titleLabel?.font = Styling.font
         button.titleLabel?.adjustsFontForContentSizeCategory = true
-        button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.didTapButton() }, for: .touchUpInside)
         return button
     }()
 
@@ -227,7 +227,7 @@ final class ListItemView: UIView {
         itemTapHandler?()
     }
 
-    @objc private func didTapButton() {
+    private func didTapButton() {
         buttonTapHandler?(button)
     }
 }

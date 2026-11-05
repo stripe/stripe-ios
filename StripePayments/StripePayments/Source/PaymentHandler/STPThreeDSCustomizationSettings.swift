@@ -24,7 +24,6 @@ public class STPThreeDSCustomizationSettings: NSObject {
         message:
             "Use STPThreeDSCustomizationSettings() instead of STPThreeDSCustomizationSettings.defaultSettings()."
     )
-    @objc
     public class func defaultSettings() -> STPThreeDSCustomizationSettings {
         return STPThreeDSCustomizationSettings()
     }
@@ -36,9 +35,9 @@ public class STPThreeDSCustomizationSettings: NSObject {
     /// The API makes a copy of the customization settings you provide; it ignores any subsequent changes you
     /// make to your `STPThreeDSUICustomization` instance.
     /// Defaults to `STPThreeDSUICustomization.defaultSettings()`.
-    @objc public var uiCustomization = STPThreeDSUICustomization.defaultSettings()
+    public var uiCustomization = STPThreeDSUICustomization.defaultSettings()
     /// `authenticationTimeout` is the total time allowed for a user to complete a 3DS2 authentication
     /// interaction, in minutes.  This value *must* be at least 5 minutes.
     /// Defaults to 10 minutes.
-    @objc public var authenticationTimeout = 10
+    public var authenticationTimeout = 10
 }

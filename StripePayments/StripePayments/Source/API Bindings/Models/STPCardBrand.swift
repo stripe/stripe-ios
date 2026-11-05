@@ -9,7 +9,7 @@
 import Foundation
 
 /// The various card brands to which a payment card can belong.
-@objc public enum STPCardBrand: Int {
+public enum STPCardBrand: Int {
     /// Visa card
     case visa
     /// American Express card
@@ -41,7 +41,7 @@ extension STPCardBrand: CaseIterable, Codable {
     deprecated,
     message: "STPStringFromCardBrand has been replaced with STPCardBrandUtilities.stringFrom(brand)"
 )
-@objc public class STPStringFromCardBrand: NSObject {
+public class STPStringFromCardBrand: NSObject {
 }
 
 /// Contains `STPStringFromCardBrand`
@@ -50,7 +50,7 @@ public class STPCardBrandUtilities: NSObject {
     /// i.e. `STPCardBrandUtilities.stringFrom(brand: .visa) == "Visa"`.
     /// - Parameter brand: the brand you want to convert to a string
     /// - Returns: A string representing the brand, suitable for displaying to a user.
-    @objc(stringFromCardBrand:) public static func stringFrom(_ brand: STPCardBrand) -> String? {
+    public static func stringFrom(_ brand: STPCardBrand) -> String? {
         switch brand {
         case .amex:
             return "American Express"
@@ -77,7 +77,7 @@ public class STPCardBrandUtilities: NSObject {
     ///
     /// - Parameter brand: The `STPCardBrand` to transform into a string.
     /// - Returns: A `String` representing the card brand. This could be "visa",
-    @objc(apiValueFromCardBrand:) public static func apiValue(from brand: STPCardBrand) -> String {
+    public static func apiValue(from brand: STPCardBrand) -> String {
         switch brand {
         case .visa:
             return "visa"

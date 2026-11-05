@@ -41,7 +41,6 @@ import UIKit
     /// selected and the placeholder text displays correctly for a dropdown/picker style input.
     ///
     /// For internal SDK use only
-    @objc(STP_Internal_GenericInputPickerFieldFormatter)
     class Formatter: STPInputTextFieldFormatter {
 
         override func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool
@@ -68,14 +67,14 @@ import UIKit
         super.init(formatter: formatter, validator: validator)
     }
 
-    @objc public override var accessibilityAttributedValue: NSAttributedString? {
+    public override var accessibilityAttributedValue: NSAttributedString? {
         get {
             return nil
         }
         set {}
     }
 
-    @objc public override var accessibilityAttributedLabel: NSAttributedString? {
+    public override var accessibilityAttributedLabel: NSAttributedString? {
         get {
             return nil
         }
@@ -211,7 +210,6 @@ extension STPGenericInputPickerField: DoneButtonToolbarDelegate {
 
 /// Wraps `STPGenericInputPickerFieldDataSource` into `UIPickerViewDataSource`
 /// For internal SDK use only
-@objc(STP_Internal_DataSourceWrapper)
 internal class DataSourceWrapper: NSObject, UIPickerViewDataSource {
     let inputDataSource: STPGenericInputPickerFieldDataSource
 

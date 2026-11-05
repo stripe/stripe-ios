@@ -11,11 +11,11 @@ import Foundation
 /// A PayPal Payment Method. :nodoc:
 /// - seealso: https://stripe.com/docs/payments/paypal
 public class STPPaymentMethodPayPal: NSObject, STPAPIResponseDecodable {
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodPayPal.self), self)
@@ -25,7 +25,6 @@ public class STPPaymentMethodPayPal: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

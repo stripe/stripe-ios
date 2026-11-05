@@ -9,7 +9,9 @@
 
 import StripeCore
 import StripeCoreTestUtils
+import StripePayments
 import StripePaymentsTestUtils
+import XCTest
 
 class STPPaymentMethodOXXOTests: STPNetworkStubbingTestCase {
     private(set) var oxxoJSON: [AnyHashable: Any]?

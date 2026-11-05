@@ -20,7 +20,6 @@ protocol AutoCompleteViewControllerDelegate: AnyObject {
     func didSelectManualEntry(_ line1: String)
 }
 
-@objc(STP_Internal_AutoCompleteViewController)
 class AutoCompleteViewController: UIViewController {
     let configuration: AddressViewController.Configuration
     private let checkoutSessionID: String?
@@ -98,7 +97,7 @@ class AutoCompleteViewController: UIViewController {
     }()
     lazy var manualEntryButton: UIButton = {
         let button = UIButton.makeManualEntryButton(appearance: configuration.appearance)
-        button.addTarget(self, action: #selector(manualEntryButtonTapped), for: .touchUpInside)
+        button.addAction(UIAction { [weak self] _ in self?.manualEntryButtonTapped() }, for: .touchUpInside)
         return button
     }()
     lazy var separatorView: UIView = {
@@ -311,7 +310,7 @@ class AutoCompleteViewController: UIViewController {
         return Date().timeIntervalSince(autocompleteStartTime)
     }
 
-    @objc private func manualEntryButtonTapped() {
+    private func manualEntryButtonTapped() {
         // Populate address with partial for line 1
         delegate?.didSelectManualEntry(autoCompleteLine.text)
     }

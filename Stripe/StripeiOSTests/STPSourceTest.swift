@@ -8,6 +8,7 @@
 //
 
 @testable import StripePayments
+import StripePaymentsTestUtils
 @testable import StripePaymentsUI
 import XCTest
 
@@ -176,6 +177,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertNotNil(STPSource.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("CardSource")))
     }
 
+    @available(*, deprecated, message: "Tests deprecated properties")
     func testDecodingSource_3ds() {
         let response = STPTestUtils.jsonNamed(STPTestJSONSource3DS)
         let source = STPSource.decodedObject(fromAPIResponse: response)
@@ -185,7 +187,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.created.timeIntervalSince1970 ?? 0, 1483663790.0, accuracy: 1.0)
         XCTAssertEqual(source?.currency, "eur")
         XCTAssertEqual(source?.livemode, false)
-        XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
+        XCTAssertNil(source?.metadata)
         XCTAssertEqual(source?.status, STPSourceStatus.pending)
         XCTAssertEqual(source?.usage, STPSourceUsage.singleUse)
         var threedsecure = response?["three_d_secure"] as? [AnyHashable: Any]
@@ -195,6 +197,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertNil(source?.cardDetails) // STPSourceCardDetailsTest
     }
 
+    @available(*, deprecated, message: "Tests deprecated properties")
     func testDecodingSource_card() {
         let response = STPTestUtils.jsonNamed(STPTestJSONSourceCard)
         let source = STPSource.decodedObject(fromAPIResponse: response)
@@ -204,7 +207,7 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.created.timeIntervalSince1970 ?? 0, 1483575790.0, accuracy: 1.0)
         XCTAssertNil(source?.currency)
         XCTAssertEqual(source?.livemode, false)
-        XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
+        XCTAssertNil(source?.metadata)
         XCTAssertEqual(source?.status, STPSourceStatus.chargeable)
         XCTAssertEqual(source?.type, STPSourceType.card)
         XCTAssertEqual(source?.usage, STPSourceUsage.reusable)

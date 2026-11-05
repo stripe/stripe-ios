@@ -7,6 +7,10 @@
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
+import StripePayments
+import StripePaymentsTestUtils
+import XCTest
+
 class STPPaymentMethodBillingDetailsTest: XCTestCase {
     // MARK: - STPAPIResponseDecodable Tests
 

@@ -11,6 +11,7 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 import SafariServices
 import StripeCoreTestUtils
+import UIKit
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import Stripe

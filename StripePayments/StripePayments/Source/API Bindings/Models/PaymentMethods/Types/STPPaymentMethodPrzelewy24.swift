@@ -11,11 +11,11 @@ import Foundation
 /// A Przelewy24 Payment Method.
 /// - seealso: https://stripe.com/docs/payments/p24
 public class STPPaymentMethodPrzelewy24: NSObject, STPAPIResponseDecodable {
-    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+    private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodPrzelewy24.self), self)
@@ -25,7 +25,6 @@ public class STPPaymentMethodPrzelewy24: NSObject, STPAPIResponseDecodable {
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil

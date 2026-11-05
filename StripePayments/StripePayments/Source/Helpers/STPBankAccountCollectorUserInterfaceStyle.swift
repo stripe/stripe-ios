@@ -9,7 +9,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 
 /// Style options for colors in the bank account collector.
-@objc @frozen public enum STPBankAccountCollectorUserInterfaceStyle: Int {
+@frozen public enum STPBankAccountCollectorUserInterfaceStyle: Int {
     /// (default) The bank account collector will automatically switch between light and dark mode compatible colors based on device settings.
     case automatic = 0
 

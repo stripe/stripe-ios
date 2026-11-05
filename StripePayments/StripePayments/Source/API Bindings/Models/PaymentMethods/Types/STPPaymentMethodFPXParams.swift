@@ -10,11 +10,11 @@ import Foundation
 
 /// An object representing parameters used to create an FPX Payment Method
 public class STPPaymentMethodFPXParams: NSObject, STPFormEncodable {
-    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The customer's bank. Required.
 
-    @objc public var bank: STPFPXBankBrand {
+    public var bank: STPFPXBankBrand {
         get {
             return STPFPXBank.brandFrom(rawBankString)
         }
@@ -31,7 +31,7 @@ public class STPPaymentMethodFPXParams: NSObject, STPFormEncodable {
     /// by the current version of the SDK's `STPFPXBankBrand` enum.
     /// Setting this to a value not known by the SDK causes `bank` to
     /// return `STPFPXBankBrandUnknown`
-    @objc public var rawBankString: String?
+    public var rawBankString: String?
 
     // MARK: - STPFormEncodable
 
@@ -39,9 +39,9 @@ public class STPPaymentMethodFPXParams: NSObject, STPFormEncodable {
         return "fpx"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [
-            NSStringFromSelector(#selector(getter: rawBankString)): "bank"
+            \STPPaymentMethodFPXParams.rawBankString: "bank"
         ]
     }
 }

@@ -14,7 +14,6 @@ protocol CustomerAddPaymentMethodViewControllerDelegate: AnyObject {
     func updateErrorLabel(for: Swift.Error?)
 }
 
-@objc(STP_Internal_CustomerAddPaymentMethodViewController)
 class CustomerAddPaymentMethodViewController: UIViewController {
     enum Error: Swift.Error {
         case paymentMethodTypesEmpty

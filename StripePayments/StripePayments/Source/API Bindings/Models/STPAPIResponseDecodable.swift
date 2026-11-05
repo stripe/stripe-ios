@@ -10,7 +10,7 @@ import Foundation
 
 /// Objects conforming to STPAPIResponseDecodable can be automatically converted
 /// from a JSON dictionary that was returned from the Stripe API.
-@objc public protocol STPAPIResponseDecodable: NSObjectProtocol {
+public protocol STPAPIResponseDecodable: NSObjectProtocol {
     /// Parses an response from the Stripe API (in JSON format; represented as
     /// an `NSDictionary`) into an instance of the class.
     /// - Parameter response: The JSON dictionary that represents an object of this type

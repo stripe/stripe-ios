@@ -17,7 +17,7 @@ public class STPPaymentMethodGrabPayParams: NSObject, STPFormEncodable {
         return "grabpay"
     }
 
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+    public class func propertyNamesToFormFieldNamesMapping() -> [AnyKeyPath: String] {
         return [:]
     }
 }

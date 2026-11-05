@@ -13,7 +13,7 @@ import XCTest
 /// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run using the `AllStripeFrameworks-NetworkRecordMode` scheme and save it to disk. Otherwise, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
 /// ⚠️ Warning: `STPAPIClient`s created before `setUp` is called are not recorded!
 /// To write manual requests, try APIStubbedTestCase instead.
-@objc(STPNetworkStubbingTestCase) open class STPNetworkStubbingTestCase: XCTestCase {
+open class STPNetworkStubbingTestCase: XCTestCase {
 
     /// Set this to YES to disable network mocking entirely (e.g. in a nightly test)
     open var disableMocking = false
@@ -84,20 +84,20 @@ import XCTest
                 assert(false, "Tests executed in recording mode must be run in the simulator.")
             #endif
             let config = StripeAPIConfiguration.sharedUrlSessionConfiguration
-            let recorder = SWHttpTrafficRecorder.shared()
+            let recorder = SWHttpTrafficRecorder.shared
 
             // Creates filenames like `post_v1_tokens_0.tail`.
             var count = 0
             if strictParamsEnforcement {
-                recorder?.urlRegexPatternBlock = { request, _ in
+                recorder.urlRegexPatternBlock = { request, _ in
                     // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
-                    let escapedRequest = NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
+                    let escapedRequest = NSRegularExpression.escapedPattern(for: request.url?.absoluteString ?? "")
                     // Then remove any params that may contain UUIDs or other random data
                     return replaceNondeterministicParams(escapedRequest, componentsToFilter: ["mobile_session_id", "locale", "mobile_app_id", "timezone"])
                 }
-                recorder?.postBodyTransformBlock = { _, postBody in
+                recorder.postBodyTransformBlock = { _, postBody in
                     // Regex filter these:
-                    let escapedBody = NSRegularExpression.escapedPattern(for: postBody ?? "")
+                    let escapedBody = NSRegularExpression.escapedPattern(for: postBody)
                     // Then remove any params that may contain UUIDs or other random data
                     let componentsToFilter = [
                         "guid=", // Fraud detection data
@@ -127,15 +127,15 @@ import XCTest
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }
             } else {
-                recorder?.urlRegexPatternBlock = nil
-                recorder?.postBodyTransformBlock = { _, _ in
+                recorder.urlRegexPatternBlock = nil
+                recorder.postBodyTransformBlock = { _, _ in
                     return ""
                 }
             }
-            recorder?.followRedirects = followRedirects
-            recorder?.fileNamingBlock = { request, _, _ in
-                let method = request!.httpMethod?.lowercased()
-                let urlPath = request!.url?.path.replacingOccurrences(of: "/", with: "_")
+            recorder.followRedirects = followRedirects
+            recorder.fileNamingBlock = { request, _, _ in
+                let method = request.httpMethod?.lowercased()
+                let urlPath = request.url?.path.replacingOccurrences(of: "/", with: "_")
                 var fileName = "\(String(format: "%04d", count))_\(method ?? "")\(urlPath ?? "")"
                 fileName =
                     URL(fileURLWithPath: fileName).appendingPathExtension("tail").lastPathComponent
@@ -155,7 +155,7 @@ import XCTest
             } catch {
             }
             guard
-                (try? SWHttpTrafficRecorder.shared().startRecording(
+                (try? recorder.startRecording(
                     atPath: recordingPath,
                     for: config
                 )) != nil
@@ -204,7 +204,7 @@ import XCTest
         }
 
         // Additional calls to `setFileNamingBlock` will be ignored if you don't do this
-        SWHttpTrafficRecorder.shared().stopRecording()
+        SWHttpTrafficRecorder.shared.stopRecording()
 
         // Don't accidentally keep any stubs around during the next test run
         HTTPStubs.removeAllStubs()

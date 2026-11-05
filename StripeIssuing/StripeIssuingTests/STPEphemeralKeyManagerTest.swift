@@ -8,6 +8,9 @@
 //
 
 @testable@_spi(InternalOnlyAPI) import StripeIssuing
+import StripePaymentsTestUtils
+import UIKit
+import XCTest
 
 class FakeEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
     var response: [AnyHashable: Any]?

@@ -8,6 +8,7 @@
 //
 
 @testable import StripePayments
+import XCTest
 
 class STPSetupIntentLastSetupErrorTest: XCTestCase {
     func testTypeFromString() {

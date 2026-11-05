@@ -12,13 +12,13 @@ import Foundation
 public class STPIntentActionPromptPayDisplayQrCode: NSObject {
 
     /// The URL to open which contains instructions on how to complete the payment.
-    @objc public let hostedInstructionsURL: URL?
+    public let hostedInstructionsURL: URL?
 
     /// :nodoc:
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             // Object
             String(
@@ -45,7 +45,6 @@ public class STPIntentActionPromptPayDisplayQrCode: NSObject {
 // MARK: - STPAPIResponseDecodable
 extension STPIntentActionPromptPayDisplayQrCode: STPAPIResponseDecodable {
 
-    @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let hostedInstructionsURLString = dict["hosted_instructions_url"] as? String,

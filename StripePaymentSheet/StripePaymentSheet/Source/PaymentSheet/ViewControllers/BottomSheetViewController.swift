@@ -24,7 +24,6 @@ protocol BottomSheetContentViewController: UIViewController {
 
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
-@objc(STP_Internal_BottomSheetViewController)
 class BottomSheetViewController: UIViewController, BottomSheetPresentable, PaymentSheetContainer {
 
     struct Constants {
@@ -449,7 +448,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable, Payme
         }
     }
 
-    @objc
     private func adjustForKeyboard(notification: Notification, animations: @escaping () -> Void) {
         guard presentedViewController == nil else {
             // The presentedVC handles the keyboard, not us.
