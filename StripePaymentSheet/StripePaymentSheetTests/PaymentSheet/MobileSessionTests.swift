@@ -44,12 +44,12 @@ class MobileSessionTests: XCTestCase {
         configuration.paymentMethodOrder = ["card", "external_paypal"]
 
         // When it's encoded
-        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: true, usesNativeLink: true))
+        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: true, deviceSupportsNativeLink: true))
 
         // Then it matches the golden JSON, which is the spec's fully populated iOS example
         XCTAssertEqual(
             header,
-            #"{"environment":{"has_financial_connections_sdk":true,"uses_native_link":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"address":"full","attach_defaults_to_payment_method":true,"email":"always","name":"always","phone":"never"},"card_brand_acceptance":{"brands":["amex"],"filter":"disallowed"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"f7b83e61"}"#
+            #"{"environment":{"device_supports_native_link":true,"has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"address":"full","attach_defaults_to_payment_method":true,"email":"always","name":"always","phone":"never"},"card_brand_acceptance":{"brands":["amex"],"filter":"disallowed"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"4cd250cb"}"#
         )
         // ...and never contains customer values
         XCTAssertFalse(header.contains("jane"))
@@ -61,12 +61,12 @@ class MobileSessionTests: XCTestCase {
         let configuration = PaymentSheet.Configuration()
 
         // When it's encoded
-        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false, usesNativeLink: false))
+        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false, deviceSupportsNativeLink: false))
 
         // Then it matches the golden JSON, with every field present
         XCTAssertEqual(
             header,
-            #"{"environment":{"has_financial_connections_sdk":false,"uses_native_link":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"address":"automatic","attach_defaults_to_payment_method":false,"email":"automatic","name":"automatic","phone":"automatic"},"card_brand_acceptance":{"brands":[],"filter":"all"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"},"payment_method_order":[]},"spec_hash":"f7b83e61"}"#
+            #"{"environment":{"device_supports_native_link":false,"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"address":"automatic","attach_defaults_to_payment_method":false,"email":"automatic","name":"automatic","phone":"automatic"},"card_brand_acceptance":{"brands":[],"filter":"all"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"},"payment_method_order":[]},"spec_hash":"4cd250cb"}"#
         )
     }
 
@@ -76,7 +76,7 @@ class MobileSessionTests: XCTestCase {
         configuration.paymentMethodOrder = ["café", "😀"]
 
         // When it's encoded
-        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false, usesNativeLink: false))
+        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false, deviceSupportsNativeLink: false))
 
         // Then the header is ASCII, with each UTF-16 code unit escaped
         XCTAssertTrue(header.allSatisfy { $0.isASCII })
@@ -93,7 +93,7 @@ class MobileSessionTests: XCTestCase {
         configuration.returnURL = ""
 
         // When the config is built
-        let config = MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false, usesNativeLink: false)
+        let config = MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false, deviceSupportsNativeLink: false)
 
         // Then neither counts as present
         XCTAssertEqual(config.paymentElementConfig.defaultBillingDetails.email, false)
@@ -105,14 +105,14 @@ class MobileSessionTests: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.cardBrandAcceptance = .allowed(brands: [.visa, .mastercard, .discover])
         XCTAssertEqual(
-            MobileSession.Config(configuration: configuration, usesNativeLink: false).paymentElementConfig.cardBrandAcceptance,
+            MobileSession.Config(configuration: configuration, deviceSupportsNativeLink: false).paymentElementConfig.cardBrandAcceptance,
             .init(filter: .allowed, brands: [.visa, .mastercard, .discover])
         )
 
         // Accepting all brands sends no brands
         configuration.cardBrandAcceptance = .all
         XCTAssertEqual(
-            MobileSession.Config(configuration: configuration, usesNativeLink: false).paymentElementConfig.cardBrandAcceptance,
+            MobileSession.Config(configuration: configuration, deviceSupportsNativeLink: false).paymentElementConfig.cardBrandAcceptance,
             .init(filter: .all, brands: [])
         )
     }
@@ -144,11 +144,11 @@ class MobileSessionTests: XCTestCase {
     func testSidecar_present() {
         // Given the flag is on and the response has a sidecar
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
-        let elementsSession = makeElementsSession(mobileSession: ["payment_method_availability": ["payment_method_types": ["card", "klarna"], "link_enabled": true] as [String: Any]])
+        let elementsSession = makeElementsSession(mobileSession: ["payment_method_availability": ["payment_method_types": ["card", "klarna"], "wallets": ["link"]] as [String: Any]])
 
         // Then it's decoded
         XCTAssertEqual(elementsSession.mobileSession?.paymentMethodAvailability?.paymentMethodTypes, ["card", "klarna"])
-        XCTAssertEqual(elementsSession.mobileSession?.paymentMethodAvailability?.linkEnabled, true)
+        XCTAssertEqual(elementsSession.mobileSession?.paymentMethodAvailability?.wallets, [.link])
         XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionDecodeFailed.rawValue))
     }
 
@@ -195,7 +195,7 @@ class MobileSessionTests: XCTestCase {
 
     func testSidecar_flagOff() {
         // Given the flag is off and the response has a sidecar
-        let elementsSession = makeElementsSession(mobileSession: ["payment_method_availability": ["payment_method_types": ["card"], "link_enabled": true] as [String: Any]])
+        let elementsSession = makeElementsSession(mobileSession: ["payment_method_availability": ["payment_method_types": ["card"], "wallets": ["link"]] as [String: Any]])
 
         // Then it isn't decoded
         XCTAssertNil(elementsSession.mobileSession)

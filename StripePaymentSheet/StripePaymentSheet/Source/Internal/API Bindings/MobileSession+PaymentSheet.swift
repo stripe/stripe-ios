@@ -84,7 +84,7 @@ extension MobileSession.Config {
     init(
         configuration: PaymentElementConfiguration,
         hasFinancialConnectionsSdk: Bool = FinancialConnectionsSDKAvailability.isFullFinancialConnectionsSDKAvailable,
-        usesNativeLink: Bool? = nil
+        deviceSupportsNativeLink: Bool? = nil
     ) {
         let hasDefaultEmail = !(configuration.defaultBillingDetails.email?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
         let billingDetailsCollection = configuration.billingDetailsCollectionConfiguration
@@ -107,13 +107,13 @@ extension MobileSession.Config {
             ),
             environment: .init(
                 hasFinancialConnectionsSdk: hasFinancialConnectionsSdk,
-                usesNativeLink: usesNativeLink ?? Self.deviceSupportsNativeLink(apiClient: configuration.apiClient)
+                deviceSupportsNativeLink: deviceSupportsNativeLink ?? Self.deviceSupportsNativeLink(apiClient: configuration.apiClient)
             )
         )
     }
 
-    /// The device half of `deviceCanUseNativeLink`. The other half, `link_settings.link_use_attestation`,
-    /// is only known once `elements/sessions` responds, so the server combines the two.
+    /// The device half of `deviceCanUseNativeLink`. The server combines it with the merchant's
+    /// `link_mobile_use_attestation_endpoints` setting, which the client only learns from the response.
     static func deviceSupportsNativeLink(apiClient: STPAPIClient) -> Bool {
         if let nativeLinkEnabledOverride = PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride {
             return nativeLinkEnabledOverride
