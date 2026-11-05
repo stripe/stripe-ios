@@ -9,7 +9,6 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
@@ -393,7 +392,7 @@ extension SavedPaymentMethodCollectionView {
                         if let cardArtURL = paymentMethod.cardArtCDNURL() {
                             if paymentMethodLogo.tag != cardArtURL.hashValue {
                                 paymentMethodLogo.tag = cardArtURL.hashValue
-                                paymentMethodLogo.image = STPImageLibrary.cardBrandChoiceImage()
+                                paymentMethodLogo.image = PaymentSheetImageLibrary.cardBrandChoiceImage()
                                 paymentMethodLogoHeightConstraint.constant = CGFloat(STPPaymentMethod.cardArtHeight)
                                 paymentMethodLogo.addShimmer()
                             }

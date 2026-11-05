@@ -10,7 +10,6 @@ import UIKit
 
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 @_spi(InternalOnlyAPI) import StripeUICore
 
 /// A button for paying with Link.
@@ -173,7 +172,7 @@ final class PayWithLinkButton: UIControl {
     private lazy var cardLogoView = makeLogoView()
     private lazy var cardBrandSeparatorView: UIView = Self.makeSeparatorView()
     private lazy var cardBrandView: UIImageView = {
-        let brandView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
+        let brandView = UIImageView(image: PaymentSheetImageLibrary.unknownCardCardImage())
         brandView.translatesAutoresizingMaskIntoConstraints = false
         brandView.contentMode = .scaleAspectFill
 
@@ -399,7 +398,7 @@ private extension PayWithLinkButton {
         }
         switch linkAccountState {
         case .hasCard(let last4, let brand):
-            let cardImage = STPImageLibrary.cardBrandImage(for: brand)
+            let cardImage = PaymentSheetImageLibrary.cardBrandImage(for: brand)
                 .withAlignmentRectInsets(
                     Constants.cardBrandInsets
                 )

@@ -6,7 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePayments
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 

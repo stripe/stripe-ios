@@ -847,10 +847,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         expirationField.tag = STPCardFieldType.expiration.rawValue
         expirationField.alpha = 0
         expirationField.isAccessibilityElement = false
-        expirationField.accessibilityLabel = STPLocalizedString(
-            "expiration date",
-            "accessibility label for text field"
-        )
+        expirationField.accessibilityLabel = String.Localized.expiration_date_accessibility_label
         expirationPlaceholder = STPLocalizedString(
             "MM/YY",
             "label for text field to enter card expiry"

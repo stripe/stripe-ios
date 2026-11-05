@@ -10,6 +10,11 @@ import UIKit
 
 extension NSAttributedString {
 
+    /// A range covering from the start to the end of the attributed string.
+    @_spi(InternalOnlyAPI) public var extent: NSRange {
+        return NSRange(location: 0, length: self.length)
+    }
+
     /// Returns true if this attributed string has a text attachment
     var hasTextAttachment: Bool {
         return attributes(at: 0, longestEffectiveRange: nil, in: NSRange(location: 0, length: length)).contains(where: { (key, value) -> Bool in

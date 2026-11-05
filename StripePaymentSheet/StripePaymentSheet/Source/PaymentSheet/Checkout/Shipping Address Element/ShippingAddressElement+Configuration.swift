@@ -4,7 +4,7 @@
 //
 //  Created by George Birch on 8/4/26.
 
-@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePayments
 
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)

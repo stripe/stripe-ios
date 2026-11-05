@@ -11,7 +11,6 @@ import UIKit
 @testable@_spi(InternalOnlyAPI) import StripeCore
 @testable@_spi(InternalOnlyAPI) import StripePayments
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
-@testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 // @iOS26
 class LinkHintMessageViewSnapshotTests: STPSnapshotTestCase {

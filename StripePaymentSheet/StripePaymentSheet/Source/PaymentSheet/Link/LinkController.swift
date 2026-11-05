@@ -10,7 +10,6 @@ import UIKit
 
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 @_spi(InternalOnlyAPI) import StripeUICore
 
 /// A controller that presents the Link flow to collect and create a customer's payment method.
@@ -210,7 +209,7 @@ import UIKit
 
         switch paymentDetails.details {
         case .card(let card):
-            return STPImageLibrary.cardBrandImage(for: card.stpBrand)
+            return PaymentSheetImageLibrary.cardBrandImage(for: card.stpBrand)
         case .bankAccount(let bankAccount):
             let iconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.name)
             return PaymentSheetImageLibrary.bankIcon(for: iconCode, iconStyle: .filled)

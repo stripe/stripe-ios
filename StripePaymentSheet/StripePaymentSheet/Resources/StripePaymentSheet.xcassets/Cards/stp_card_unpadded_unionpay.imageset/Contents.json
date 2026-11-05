@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "stp_card_unpadded_unionpay.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -1,5 +1,5 @@
 //
-//  STPImageLibrary.swift
+//  PaymentSheetImageLibrary.swift
 //  StripePaymentSheet
 //
 //  Created by David Estes on 7/6/22.
@@ -8,7 +8,7 @@
 
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
-@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePayments
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
@@ -89,7 +89,78 @@ public class PaymentSheetImageLibrary {
     }
 
     class func linkBankIcon() -> UIImage {
-        STPImageLibrary.linkBankIcon()
+        return safeImageNamed("stp_icon_bank_link", templateIfAvailable: true)
+    }
+
+    // MARK: - Card brand images
+
+    /// Returns the appropriate icon for the specified card brand.
+    class func cardBrandImage(for brand: STPCardBrand) -> UIImage {
+        let imageName: String
+        switch brand {
+        case .amex:
+            imageName = "stp_card_amex"
+        case .dinersClub:
+            imageName = "stp_card_diners"
+        case .discover:
+            imageName = "stp_card_discover"
+        case .JCB:
+            imageName = "stp_card_jcb"
+        case .mastercard:
+            imageName = "stp_card_mastercard"
+        case .unionPay:
+            imageName = "stp_card_unionpay"
+        case .cartesBancaires:
+            imageName = "stp_card_cartes_bancaires"
+        case .visa:
+            imageName = "stp_card_visa"
+        case .unknown:
+            imageName = "stp_card_unknown"
+        @unknown default:
+            imageName = "stp_card_unknown"
+        }
+        return safeImageNamed(imageName)
+    }
+
+    /// Returns an unpadded image for the specified card brand if available.
+    class func unpaddedCardBrandImage(for brand: STPCardBrand) -> UIImage {
+        switch brand {
+        case .cartesBancaires:
+            return safeImageNamed("stp_card_unpadded_cartes_bancaires")
+        case .visa:
+            return safeImageNamed("stp_card_unpadded_visa")
+        case .amex:
+            return safeImageNamed("stp_card_unpadded_amex")
+        case .mastercard:
+            return safeImageNamed("stp_card_unpadded_mastercard")
+        case .dinersClub:
+            return safeImageNamed("stp_card_unpadded_diners_club")
+        case .unionPay:
+            return safeImageNamed("stp_card_unpadded_unionpay")
+        case .discover:
+            return safeImageNamed("stp_card_unpadded_discover")
+        case .JCB:
+            return safeImageNamed("stp_card_unpadded_jcb")
+        case .unknown:
+            fallthrough
+        @unknown default:
+            return cardBrandImage(for: brand)
+        }
+    }
+
+    /// An icon to use when the type of the card is unknown.
+    class func unknownCardCardImage() -> UIImage {
+        return cardBrandImage(for: .unknown)
+    }
+
+    /// Returns the icon for an unselected brand when multiple card brands are available.
+    class func cardBrandChoiceImage() -> UIImage {
+        return safeImageNamed("stp_card_cbc", templateIfAvailable: false)
+    }
+
+    /// Returns a small icon indicating the CVC location for the given card brand.
+    class func cvcImage(for brand: STPCardBrand) -> UIImage {
+        return safeImageNamed(brand == .amex ? "stp_card_cvc_amex" : "stp_card_cvc")
     }
 }
 

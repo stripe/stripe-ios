@@ -7,7 +7,6 @@
 
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
@@ -607,7 +606,7 @@ extension RowButton {
         imageView.setImage(with: paymentMethod.cardArtCDNURL(),
                            processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
                            fallbackImage: savedPaymentMethodRowImage,
-                           shimmeringImage: STPImageLibrary.cardBrandChoiceImage())
+                           shimmeringImage: PaymentSheetImageLibrary.cardBrandChoiceImage())
         let text = paymentMethod.isLinkPassthroughMode
             ? linkBrand.displayName
             : paymentMethod.paymentSheetLabel(brand: linkBrand)

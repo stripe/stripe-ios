@@ -7,7 +7,6 @@
 //
 
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 import UIKit
 
 protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {

@@ -117,7 +117,7 @@ import UIKit
     override func setupSubviews() {
         super.setupSubviews()
         accessibilityIdentifier = "Card number"
-        placeholder = STPLocalizedString("Card number", "Label for card number entry text field")
+        placeholder = String.Localized.card_number
     }
 
     func updateRightView() {

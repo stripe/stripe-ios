@@ -10,7 +10,6 @@ import Foundation
 import PassKit
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 import UIKit
 
 /// The result of an attempt to confirm a PaymentIntent or SetupIntent

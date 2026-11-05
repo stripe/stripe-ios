@@ -36,7 +36,6 @@ If you link this library manually, use a version from our [releases](https://git
 - `StripeUICore.xcframework`
 - `Stripe3DS2.xcframework`
 - `StripePayments.xcframework`
-- `StripePaymentsUI.xcframework`
 - `StripeApplePay.xcframework`
 - `StripeFinancialConnectionsLite.xcframework`
 - `StripePaymentSheet.xcframework`

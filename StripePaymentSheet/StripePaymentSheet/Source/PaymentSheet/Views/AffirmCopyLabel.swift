@@ -5,7 +5,7 @@
 //  Created by Reshma Karthikeyan on 2/22/22.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
-@_spi(InternalOnlyAPI) import StripePaymentsUI
+@_spi(InternalOnlyAPI) import StripePayments
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 

@@ -8,7 +8,6 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
@@ -121,7 +120,7 @@ extension STPCardBrand {
     func makeCardBrandItem() -> SegmentedSelectorItem {
         return SegmentedSelectorItem(
             rawData: STPCardBrandUtilities.apiValue(from: self),
-            image: STPImageLibrary.unpaddedCardBrandImage(for: self),
+            image: PaymentSheetImageLibrary.unpaddedCardBrandImage(for: self),
             accessibilityLabel: STPCardBrandUtilities.stringFrom(self) ?? ""
         )
     }

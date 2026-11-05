@@ -8,7 +8,6 @@
 import Foundation
 import PassKit
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentsUI
 
 struct CardFundingFilter: Equatable {
 
