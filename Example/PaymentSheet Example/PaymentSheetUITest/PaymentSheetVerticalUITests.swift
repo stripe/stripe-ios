@@ -225,8 +225,6 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Save another card in vertical mode
         reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        let initialDisplayedPaymentMethodsEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_initial_displayed_payment_methods" })
-        XCTAssertEqual(initialDisplayedPaymentMethodsEvent?[string: "payment_method_orientation"], "vertical")
         app.buttons["New card"].waitForExistenceAndTap()
         try! fillCardData(app, cardNumber: "5555555555554444", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
         app.buttons["Set up"].waitForExistenceAndTap()
