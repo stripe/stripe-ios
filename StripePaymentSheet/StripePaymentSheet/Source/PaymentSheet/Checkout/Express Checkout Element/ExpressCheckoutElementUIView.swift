@@ -22,10 +22,11 @@ public final class ExpressCheckoutElementUIView: UIView {
         static let cornerRadius: CGFloat = 6
     }
 
+    let configuration: ExpressCheckoutElement.Configuration
+    let apiClient: STPAPIClient
+
     // MARK: - Private Properties
 
-    private let configuration: ExpressCheckoutElement.Configuration
-    private let apiClient: STPAPIClient
     private let analyticsClient: STPAnalyticsClientProtocol
     private let stackView = UIStackView()
     private var buttons: [UIControl] = []
@@ -117,7 +118,7 @@ public final class ExpressCheckoutElementUIView: UIView {
                 event: .expressCheckoutElementInit,
                 additionalParams: [
                     "checkout_session_id": session.id,
-                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.map(\.rawValue).joined(separator: ","),
+                    "ordered_lpms": ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: configuration, apiClient: apiClient).map(\.rawValue).joined(separator: ","),
                     "ece_config": [
                         "link_visibility": configuration.linkConfiguration.display.rawValue,
                         "apple_pay_visibility": configuration.applePayConfiguration == nil ? "never" : "automatic",

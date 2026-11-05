@@ -179,7 +179,10 @@ public final class CheckoutElementsController: ObservableObject {
             }
             var params = configurationParams
             params["ordered_lpms"] = paymentElement?.embeddedPaymentElement.loadResult.paymentMethodTypes.map { $0.identifier }.joined(separator: ",")
-                ?? self.session.availableExpressCheckoutPaymentMethods.map(\.rawValue).joined(separator: ",")
+                ?? configuration.expressCheckoutElement.map {
+                    ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: $0, apiClient: apiClient)
+                        .map(\.rawValue).joined(separator: ",")
+                }
             analyticsHelper.logSucceeded(startedAction, session: self.session, additionalParams: params)
         } catch {
             analyticsHelper.logFailed(startedAction, error: error, session: analyticsSession, additionalParams: configurationParams)

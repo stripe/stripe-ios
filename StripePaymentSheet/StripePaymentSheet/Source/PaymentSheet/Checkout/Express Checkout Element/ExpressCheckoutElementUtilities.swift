@@ -26,13 +26,26 @@ enum ExpressCheckoutElementUtilities {
         }
         let elementsSession = apiResponse.elementsSession.value
         let usesWebLink = !deviceCanUseNativeLink(elementsSession: elementsSession, apiClient: configuration.apiClient)
-
         return availablePaymentMethods(
             for: elementsSession,
             configuration: expressCheckoutConfiguration,
             usesWebLink: usesWebLink,
             requiresShippingAddress: apiResponse.shippingAddressCollection != nil,
             billingDetailsCollectionRequired: apiResponse.billingAddressCollection == "required"
+        )
+    }
+
+    static func availablePaymentMethods(
+        for session: CheckoutElementsController.Session,
+        configuration: ExpressCheckoutElement.Configuration,
+        apiClient: STPAPIClient
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        availablePaymentMethods(
+            for: session.elementsSession,
+            configuration: configuration,
+            usesWebLink: !deviceCanUseNativeLink(elementsSession: session.elementsSession, apiClient: apiClient),
+            requiresShippingAddress: session.requiresShippingAddress,
+            billingDetailsCollectionRequired: session.billingAddressCollection == .required
         )
     }
 

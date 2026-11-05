@@ -44,7 +44,7 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
         uiView: ExpressCheckoutElementUIView
     ) {
         let initialSession = sessionSource.initialSession
-        let initialButtons = initialSession.availableExpressCheckoutPaymentMethods
+        let initialButtons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: initialSession, configuration: uiView.configuration, apiClient: uiView.apiClient)
         self.uiView = uiView
         self.buttons = initialButtons
         uiView.update(with: initialSession, buttons: initialButtons)
@@ -53,7 +53,7 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 guard let self else { return }
-                let buttons = session.availableExpressCheckoutPaymentMethods
+                let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: self.uiView.configuration, apiClient: self.uiView.apiClient)
                 self.uiView.update(with: session, buttons: buttons)
                 self.buttons = buttons
             }
