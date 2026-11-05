@@ -82,12 +82,7 @@ extension MobileSession {
 }
 
 extension MobileSession.Config {
-    /// Maps each field explicitly. Only booleans and policies go over the wire, never customer values.
-    init(
-        configuration: PaymentElementConfiguration,
-        hasFinancialConnectionsSdk: Bool = FinancialConnectionsSDKAvailability.isFullFinancialConnectionsSDKAvailable,
-        deviceSupportsNativeLink: Bool? = nil
-    ) {
+    init(configuration: PaymentElementConfiguration) {
         let hasDefaultEmail = !(configuration.defaultBillingDetails.email?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
         let billingDetailsCollection = configuration.billingDetailsCollectionConfiguration
         self.init(
@@ -108,8 +103,8 @@ extension MobileSession.Config {
                 paymentMethodOrder: configuration.paymentMethodOrder ?? []
             ),
             environment: .init(
-                hasFinancialConnectionsSdk: hasFinancialConnectionsSdk,
-                deviceSupportsNativeLink: deviceSupportsNativeLink ?? Self.deviceSupportsNativeLink(apiClient: configuration.apiClient)
+                hasFinancialConnectionsSdk: FinancialConnectionsSDKAvailability.isFullFinancialConnectionsSDKAvailable,
+                deviceSupportsNativeLink: Self.deviceSupportsNativeLink(apiClient: configuration.apiClient)
             )
         )
     }

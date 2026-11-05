@@ -46,8 +46,10 @@ class MobileSessionTests: XCTestCase {
         configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
         configuration.paymentMethodOrder = ["card", "external_paypal"]
 
-        // When it's encoded
-        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: true, deviceSupportsNativeLink: true))
+        // When it's encoded, with a fixed environment since that depends on the test host
+        var config = MobileSession.Config(configuration: configuration)
+        config.environment = .init(hasFinancialConnectionsSdk: true, deviceSupportsNativeLink: true)
+        let header = try MobileSession.encodeHeaderValue(config)
 
         // Then it matches the golden JSON, which is the spec's fully populated iOS example
         XCTAssertEqual(
@@ -63,8 +65,10 @@ class MobileSessionTests: XCTestCase {
         // Given a default configuration
         let configuration = PaymentSheet.Configuration()
 
-        // When it's encoded
-        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false, deviceSupportsNativeLink: false))
+        // When it's encoded, with a fixed environment since that depends on the test host
+        var config = MobileSession.Config(configuration: configuration)
+        config.environment = .init(hasFinancialConnectionsSdk: false, deviceSupportsNativeLink: false)
+        let header = try MobileSession.encodeHeaderValue(config)
 
         // Then it matches the golden JSON, with every field present
         XCTAssertEqual(
@@ -79,7 +83,7 @@ class MobileSessionTests: XCTestCase {
         configuration.paymentMethodOrder = ["café", "😀"]
 
         // When it's encoded
-        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false, deviceSupportsNativeLink: false))
+        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration))
 
         // Then the header is ASCII, with each UTF-16 code unit escaped
         XCTAssertTrue(header.allSatisfy { $0.isASCII })
@@ -96,7 +100,7 @@ class MobileSessionTests: XCTestCase {
         configuration.returnURL = ""
 
         // When the config is built
-        let config = MobileSession.Config(configuration: configuration, hasFinancialConnectionsSdk: false, deviceSupportsNativeLink: false)
+        let config = MobileSession.Config(configuration: configuration)
 
         // Then neither counts as present
         XCTAssertEqual(config.paymentElementConfig.defaultBillingDetails.email, false)
@@ -108,14 +112,14 @@ class MobileSessionTests: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.cardBrandAcceptance = .allowed(brands: [.visa, .mastercard, .discover])
         XCTAssertEqual(
-            MobileSession.Config(configuration: configuration, deviceSupportsNativeLink: false).paymentElementConfig.cardBrandAcceptance,
+            MobileSession.Config(configuration: configuration).paymentElementConfig.cardBrandAcceptance,
             .init(filter: .allowed, brands: [.visa, .mastercard, .discover])
         )
 
         // Accepting all brands sends no brands
         configuration.cardBrandAcceptance = .all
         XCTAssertEqual(
-            MobileSession.Config(configuration: configuration, deviceSupportsNativeLink: false).paymentElementConfig.cardBrandAcceptance,
+            MobileSession.Config(configuration: configuration).paymentElementConfig.cardBrandAcceptance,
             .init(filter: .all, brands: [])
         )
     }
