@@ -5,9 +5,12 @@
 //  Created by David Estes on 11/4/26.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePayments
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
@@ -211,5 +214,72 @@ class MobileSessionTests: XCTestCase {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json["mobile_session"] = mobileSession
         return STPElementsSession.decodedObject(fromAPIResponse: json)!
+    }
+}
+
+class MobileSessionHeaderStubbedTests: APIStubbedTestCase {
+
+    func testPaymentSheetLoadSendsConfigHeader() async throws {
+        // Given the flag is on
+        enableFlag()
+        let sentHeaders = stubElementsSessionsCapturingConfigHeader()
+        StubbedBackend.stubLookup()
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = stubbedAPIClient()
+
+        // When PaymentSheet loads
+        _ = try await PaymentSheetLoader.load(
+            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+            configuration: configuration,
+            analyticsHelper: ._testValue(configuration: configuration),
+            integrationShape: .paymentSheet
+        )
+
+        // Then its elements/sessions request carries the config header
+        let header = try XCTUnwrap(sentHeaders.values.first.flatMap { $0 })
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(header.utf8)) as? [String: Any])
+        XCTAssertNotNil(json["spec_hash"])
+    }
+
+    func testElementsSessionOmitsConfigHeaderByDefault() async throws {
+        // Given the flag is on
+        enableFlag()
+        let sentHeaders = stubElementsSessionsCapturingConfigHeader()
+
+        // When elements/sessions is fetched without opting in, as CustomerSheet and the Link brand fetch do
+        _ = try await stubbedAPIClient().retrieveElementsSession(
+            paymentIntentClientSecret: "pi_12345_secret_54321",
+            clientDefaultPaymentMethod: nil,
+            configuration: PaymentSheet.Configuration(),
+            customerProvider: CustomerProvider(customer: nil)
+        )
+
+        // Then the request has no config header
+        XCTAssertEqual(sentHeaders.values, [nil])
+    }
+
+    private func enableFlag() {
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        addTeardownBlock {
+            PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = false
+        }
+    }
+
+    /// Stubs elements/sessions and records the `X-Stripe-Mobile-Config` header of each request.
+    private func stubElementsSessionsCapturingConfigHeader() -> SentHeaders {
+        let sentHeaders = SentHeaders()
+        stub { $0.url?.path == "/v1/elements/sessions" } response: { request in
+            sentHeaders.values.append(request.value(forHTTPHeaderField: MobileSession.configHeaderName))
+            let data = StubbedBackend.updatePaymentMethodDetail(
+                data: try! FileMock.elementsSessionsPaymentMethod_200.data(),
+                variables: ["<paymentMethods>": "\"card\"", "<currency>": "\"usd\""]
+            )
+            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+        }
+        return sentHeaders
+    }
+
+    private final class SentHeaders {
+        var values: [String?] = []
     }
 }

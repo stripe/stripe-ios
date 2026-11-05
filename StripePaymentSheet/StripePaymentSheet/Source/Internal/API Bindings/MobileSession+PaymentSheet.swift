@@ -23,6 +23,8 @@ extension MobileSession {
     static let sidecarResponseKey = "mobile_session"
 
     /// Returns the `X-Stripe-Mobile-Config` header for `configuration`, or no headers when the feature flag is off.
+    /// Only the PaymentSheet, FlowController and Embedded load sends it (`sendsMobileSessionConfig`); other
+    /// `elements/sessions` callers, like CustomerSheet, don't describe a real payment element configuration.
     static func configHeaders(for configuration: PaymentElementConfiguration) -> [String: String] {
         guard PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled else {
             return [:]
