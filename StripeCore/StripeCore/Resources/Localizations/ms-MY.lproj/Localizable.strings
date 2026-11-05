@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Penyahpepijat dilampirkan pada Apl.";
+
+"An emulator is being used to run the App." = "Emulator sedang digunakan untuk menjalankan Apl.";
+
 "An error occurred. Please try again." = "Ada ralat berlaku. Sila cuba lagi.";
+
+"Cancel" = "Batal";
 
 "Card brand was not updated. Please try again." = "Jenama kad tidak dikemaskinikan. Sila cuba lagi.";
 
 "Close" = "Tutup";
+
+"Collapsed" = "Diriutkan";
 
 "Confirm it's you" = "Sahkan andalah orangnya";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Masukkan kod yang dihantar kepada %@.";
 
+"Expanded" = "Dikembangkan";
+
 "Failed to connect" = "Gagal menyambung";
+
+"Loading" = "Memuatkan";
+
+"No" = "Tidak";
 
 "Resend code" = "Hantar semula kod";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Imbas kad";
 
+"Secure checkout" = "Proses bayar dan keluar selamat";
+
+"Selected" = "Dipilih";
+
 "The IBAN you entered is invalid." = "IBAN yang anda masukkan tidak sah.";
+
+"The OS or the OS Version is not supported." = "OS atau Versi OS tidak disokong.";
+
+"The device is jailbroken." = "Peranti telah di-jailbreak.";
+
+"The integrity of the SDK has been tampered." = "Integriti SDK telah diubah suai.";
 
 "There was an error processing your card -- try again in a few seconds" = "Ada ralat ketika memproses kad anda -- cuba lagi dalam masa beberapa saat";
 
 "There was an unexpected error -- try again in a few seconds" = "Ada ralat yang tidak dijangka -- cuba lagi dalam masa beberapa saat";
 
+"Timeout" = "Masa tamat";
+
 "Try again" = "Cuba lagi";
 
+"Unselected" = "Tidak dipilih";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Kami menggunakan Stripe untuk mengesahkan butiran kad anda. Stripe mungkin menggunakan dan menyimpan data anda menurut dasar privasi Stripe. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Ketahui selanjutnya</u></a>";
+
+"Yes" = "Ya";
 
 "Your card has expired" = "Kad anda telah tamat tempoh";
 

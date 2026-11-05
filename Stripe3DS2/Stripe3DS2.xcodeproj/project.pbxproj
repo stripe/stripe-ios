@@ -400,11 +400,8 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				"ar-SA",
 				Base,
-				"cy-GB",
 				en,
-				th,
 			);
 			mainGroup = 18B6E1F5666C797A11E2BE03;
 			packageReferences = (

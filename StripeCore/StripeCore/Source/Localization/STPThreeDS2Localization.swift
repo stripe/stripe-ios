@@ -10,7 +10,7 @@ import Foundation
 /// Stripe3DS2 strings stored in StripeCore's localization table.
 @objc(STPThreeDS2Localization)
 @objcMembers
-@_spi(STP) public final class STPThreeDS2Localization: NSObject {
+@_spi(InternalOnlyAPI) public final class STPThreeDS2Localization: NSObject {
     public static var debuggerWarning: String {
         return STPLocalizedString("A debugger is attached to the App.", "The text for warning when a debugger is currently attached to the process.")
     }
