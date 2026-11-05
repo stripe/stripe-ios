@@ -104,6 +104,83 @@ extension PaymentSheet {
         @MainActor
         static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
+            guard let serverPaymentMethodAvailability = elementsSession.serverPaymentMethodAvailability else {
+                return locallyFilteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: logAvailability)
+            }
+            // The server already applied `paymentMethodOrder`, so use its list as-is.
+            let availablePaymentMethodTypes = paymentMethodTypes(fromServerAvailability: serverPaymentMethodAvailability.paymentMethodTypes, elementsSession: elementsSession, configuration: configuration)
+
+            // Shadow the local logic so we can find where it disagrees with the server before deleting it.
+            // This runs once per load, so it also covers Link, whose `isLinkEnabled` is called too often to compare there.
+            let serverIdentifiers = availablePaymentMethodTypes.map { $0.identifier }
+            let localIdentifiers = locallyFilteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration).map { $0.identifier }
+            let serverLinkEnabled = serverPaymentMethodAvailability.linkEnabled
+            let localLinkEnabled = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
+            if serverIdentifiers != localIdentifiers || serverLinkEnabled != localLinkEnabled {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                    event: .paymentSheetMobileSessionAvailabilityMismatch,
+                    params: [
+                        "server_payment_method_types": serverIdentifiers,
+                        "local_payment_method_types": localIdentifiers,
+                        "server_link_enabled": serverLinkEnabled,
+                        "local_link_enabled": localLinkEnabled,
+                    ]
+                )
+            }
+            return availablePaymentMethodTypes
+        }
+
+        /// Maps the server's `payment_method_availability` to `PaymentMethodType`s.
+        /// The server should only return payment methods the client can render, so anything else is a Stripe bug.
+        static func paymentMethodTypes(fromServerAvailability serverPaymentMethodTypes: [String], elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> [PaymentMethodType] {
+            return serverPaymentMethodTypes.compactMap { type in
+                let paymentMethodType: PaymentMethodType? = {
+                    switch type {
+                    case "instant_debits":
+                        return .instantDebits
+                    case "link_card_brand":
+                        return .linkCardBrand
+                    case _ where type.hasPrefix("external_"):
+                        guard
+                            configuration.externalPaymentMethodConfiguration != nil,
+                            let externalPaymentMethod = elementsSession.externalPaymentMethods.first(where: { $0.type == type }),
+                            let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, configuration: configuration.externalPaymentMethodConfiguration)
+                        else {
+                            return nil
+                        }
+                        return .external(externalPaymentOption)
+                    case _ where type.hasPrefix("cpmt_"):
+                        guard
+                            configuration.customPaymentMethodConfiguration?.customPaymentMethods.contains(where: { $0.id == type }) == true,
+                            let customPaymentMethod = elementsSession.customPaymentMethods.first(where: { $0.type == type }),
+                            let externalPaymentOption = ExternalPaymentOption.from(customPaymentMethod, configuration: configuration.customPaymentMethodConfiguration)
+                        else {
+                            return nil
+                        }
+                        return .external(externalPaymentOption)
+                    default:
+                        let stripePaymentMethodType = STPPaymentMethod.type(from: type)
+                        guard PaymentSheet.supportedPaymentMethods.contains(stripePaymentMethodType) else {
+                            return nil
+                        }
+                        return .stripe(stripePaymentMethodType)
+                    }
+                }()
+                if paymentMethodType == nil {
+                    // TODO: Remove once PaymentSheet can render arbitrary payment method types from the server.
+                    stpAssertionFailure("Server returned a payment method type the client can't render: \(type)")
+                    STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                        event: .paymentSheetMobileSessionPaymentMethodDropped,
+                        params: ["payment_method_type": type]
+                    )
+                }
+                return paymentMethodType
+            }
+        }
+
+        @MainActor
+        private static func locallyFilteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
+        {
             func logIfNecessary(_ message: String) {
                 if logAvailability {
                     #if DEBUG

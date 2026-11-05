@@ -251,6 +251,8 @@ import Foundation
     case paymentSheetElementsSessionEPMLoadFailed = "mc_elements_session_epms_load_failed"
     case paymentSheetElementsSessionCPMLoadFailed = "mc_elements_session_cpms_load_failed"
     case paymentSheetMobileSessionDecodeFailed = "mc_mobile_session_decode_failed"
+    case paymentSheetMobileSessionPaymentMethodDropped = "mc_mobile_session_payment_method_dropped"
+    case paymentSheetMobileSessionAvailabilityMismatch = "mc_mobile_session_availability_mismatch"
 
     // MARK: - PaymentSheet card brand choice
     case paymentSheetDisplayCardBrandChoiceIndicator = "mc_display_cbc_selector"
