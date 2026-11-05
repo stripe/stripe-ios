@@ -693,7 +693,19 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
             app.buttons["Continue"].tap()
             app.buttons["Confirm"].waitForExistenceAndTap()
         case .embedded:
+            let phoneField = app.textFields["Phone number"]
+            let phoneDigits = (phoneField.value as? String ?? "").filter(\.isNumber)
+            if phoneDigits.count > 10 {
+                phoneField.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: phoneDigits.count - 10))
+            }
+            XCTAssertEqual((phoneField.value as? String ?? "").filter(\.isNumber), "3105551234")
+            app.stp_dismissKeyboard()
+            XCTAssertTrue(app.buttons["Continue"].isEnabled)
             app.buttons["Continue"].waitForExistenceAndTap()
+            XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+            XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+            app.swipeUp()
+            XCTAssertTrue(app.buttons["Checkout"].isEnabled)
             app.buttons["Checkout"].waitForExistenceAndTap()
         }
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
