@@ -30,7 +30,8 @@ final class PaymentSheetAnalyticsHelper {
     // Vars set later as PaymentSheet successfully loads, etc.
     var intent: Intent?
     var elementsSession: STPElementsSession?
-    /// Resolved once a load result is accepted; nil before that.
+    /// Resolved after each successful initial load or update; nil before initial loading completes.
+    /// Included in subsequent analytics events.
     private(set) var paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
@@ -82,14 +83,6 @@ final class PaymentSheetAnalyticsHelper {
         self.checkoutAttribution = checkoutAttribution
         self.analyticsClient = analyticsClient
         self.analyticsClientV2 = analyticsClientV2
-    }
-
-    /// Updates interaction analytics after the payment surface accepts this load result.
-    func didLoad(_ loadResult: PaymentSheetLoader.LoadResult) {
-        intent = loadResult.intent
-        elementsSession = loadResult.elementsSession
-        customerProvider = loadResult.customerProvider
-        paymentMethodOrientation = loadResult.paymentMethodOrientation
     }
 
     func logInitialized() {
@@ -155,6 +148,14 @@ final class PaymentSheetAnalyticsHelper {
             ],
             customerProvider: customerProvider
         )
+    }
+
+    /// Updates interaction analytics after the payment surface accepts this load result.
+    func didLoad(_ loadResult: PaymentSheetLoader.LoadResult) {
+        intent = loadResult.intent
+        elementsSession = loadResult.elementsSession
+        customerProvider = loadResult.customerProvider
+        paymentMethodOrientation = loadResult.paymentMethodOrientation
     }
 
     @MainActor

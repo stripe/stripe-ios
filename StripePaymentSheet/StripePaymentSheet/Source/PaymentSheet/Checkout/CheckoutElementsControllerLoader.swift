@@ -131,7 +131,7 @@ enum CheckoutElementsControllerLoader {
             customerProvider: customerProvider,
             prefetchedSPMs: nil
         )
-        // Create/reuse FC analytics helper
+        // Create/reuse and update FC analytics helper
         let flowControllerAnalyticsHelper = checkout.paymentElement?.paymentSheetFlowController.analyticsHelper
             ?? PaymentSheetAnalyticsHelper(
                 integrationShape: .flowController,
