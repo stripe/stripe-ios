@@ -45,9 +45,11 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
 
     func reset() {
         didReset = true
+        mockAverageFPSMetric = nil
+        mockNumFramesScannedMetric = 0
     }
 
-    func getPerformanceMetrics() async -> (
+    func getPerformanceMetrics() -> (
         averageFPS: Double?,
         numFramesScanned: Int
     ) {

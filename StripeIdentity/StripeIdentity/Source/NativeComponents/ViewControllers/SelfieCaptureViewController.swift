@@ -825,13 +825,12 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     }
 
     func imageScanningSessionWillStopScanning(_ scanningSession: SelfieImageScanningSession) {
-        let concurrencyManager = scanningSession.concurrencyManager
-        Task { @MainActor [weak sheetController] in
-            let metrics = await concurrencyManager.getPerformanceMetrics()
-            guard let averageFPS = metrics.averageFPS, let sheetController else {
-                return
-            }
-
+        // Read the metrics before returning: `stopScanning` resets the trackers next.
+        guard let sheetController else {
+            return
+        }
+        let metrics = scanningSession.concurrencyManager.getPerformanceMetrics()
+        if let averageFPS = metrics.averageFPS {
             sheetController.analyticsClient.logAverageFramesPerSecond(
                 averageFPS: averageFPS,
                 numFrames: metrics.numFramesScanned,
@@ -839,17 +838,10 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
                 sheetController: sheetController
             )
         }
-        let metricsTrackers = scanningSession.scanner.mlModelMetricsTrackers
-        Task { @MainActor [weak sheetController] in
-            guard let sheetController else {
-                return
-            }
-
-            await sheetController.analyticsClient.logModelPerformance(
-                mlModelMetricsTrackers: metricsTrackers,
-                sheetController: sheetController
-            )
-        }
+        sheetController.analyticsClient.logModelPerformance(
+            mlModelMetricsTrackers: scanningSession.scanner.mlModelMetricsTrackers,
+            sheetController: sheetController
+        )
     }
 
     func imageScanningSessionDidStopScanning(_ scanningSession: SelfieImageScanningSession) {

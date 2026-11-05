@@ -1134,6 +1134,46 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssert(analytic: modelPerfAnalytic, hasMetadata: "ml_model", withValue: "mock_model")
         XCTAssert(analytic: modelPerfAnalytic, hasMetadata: "frames", withValue: 50)
     }
+
+    @MainActor
+    func testStopScanningLogsMetricsRecordedBeforeTrackersReset() async {
+        // Given a scan whose trackers recorded metrics
+        mockConcurrencyManager.mockAverageFPSMetric = 30
+        mockConcurrencyManager.mockNumFramesScannedMetric = 50
+        let metricsTracker = MLDetectorMetricsTrackerMock(
+            modelName: "mock_model",
+            mockAverageMetrics: .init(inference: 0.005, postProcess: 0.01),
+            mockNumFrames: 50
+        )
+        mockDocumentScanner.mlModelMetricsTrackers = [metricsTracker]
+        let vc = makeViewController(state: .scanning(.front, nil))
+
+        // When scanning stops and the trackers reset right after, as `stopScanning` does
+        vc.imageScanningSessionWillStopScanning(vc.imageScanningSession)
+        mockConcurrencyManager.reset()
+        metricsTracker.reset()
+
+        // Then the FPS and model performance of the finished scan are logged
+        let analyticsClient: MockAnalyticsClientV2 = mockAnalyticsClient
+        let metricsLogged = expectation(
+            for: NSPredicate(block: { _, _ in
+                !analyticsClient.loggedAnalyticPayloads(withEventName: "average_fps").isEmpty
+                    && !analyticsClient.loggedAnalyticPayloads(withEventName: "model_performance").isEmpty
+            }),
+            evaluatedWith: nil
+        )
+        await fulfillment(of: [metricsLogged], timeout: 4)
+        XCTAssert(
+            analytic: analyticsClient.loggedAnalyticPayloads(withEventName: "average_fps").first,
+            hasMetadata: "frames",
+            withValue: 50
+        )
+        XCTAssert(
+            analytic: analyticsClient.loggedAnalyticPayloads(withEventName: "model_performance").first,
+            hasMetadata: "frames",
+            withValue: 50
+        )
+    }
 }
 
 extension DocumentCaptureViewControllerTest {

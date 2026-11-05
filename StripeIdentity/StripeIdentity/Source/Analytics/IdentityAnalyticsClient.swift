@@ -530,11 +530,11 @@ final class IdentityAnalyticsClient {
     func logModelPerformance(
         mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol],
         sheetController: VerificationSheetControllerProtocol
-    ) async {
+    ) {
         for metricsTracker in mlModelMetricsTrackers {
             // Cache values to avoid weakly capturing performanceTracker
             let modelName = metricsTracker.modelName
-            let metrics = await metricsTracker.getPerformanceMetrics()
+            let metrics = metricsTracker.getPerformanceMetrics()
             guard metrics.numFrames > 0 else {
                 continue
             }

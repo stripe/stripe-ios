@@ -20,7 +20,8 @@ protocol MLDetectorMetricsTrackerProtocol {
 
     func reset()
 
-    func getPerformanceMetrics() async -> (
+    /// Synchronous, so a read made before `reset()` sees the metrics from before the reset.
+    func getPerformanceMetrics() -> (
         averageMetrics: MLDetectorMetricsTracker.Metrics,
         numFrames: Int
     )
@@ -65,21 +66,16 @@ final class MLDetectorMetricsTracker: MLDetectorMetricsTrackerProtocol {
             }
         }
 
-        func getPerformanceMetrics() async -> (
+        func getPerformanceMetrics() -> (
             averageMetrics: Metrics,
             numFrames: Int
         ) {
-            await withCheckedContinuation { continuation in
-                queue.async {
-                    let averageMetrics = Metrics(
-                        inference: self.scanMetrics.average(with: { $0.inference }),
-                        postProcess: self.scanMetrics.average(with: { $0.postProcess })
-                    )
-
-                    continuation.resume(
-                        returning: (averageMetrics, self.scanMetrics.count)
-                    )
-                }
+            queue.sync {
+                let averageMetrics = Metrics(
+                    inference: self.scanMetrics.average(with: { $0.inference }),
+                    postProcess: self.scanMetrics.average(with: { $0.postProcess })
+                )
+                return (averageMetrics, self.scanMetrics.count)
             }
         }
     }
@@ -111,10 +107,10 @@ final class MLDetectorMetricsTracker: MLDetectorMetricsTrackerProtocol {
         state.reset()
     }
 
-    func getPerformanceMetrics() async -> (
+    func getPerformanceMetrics() -> (
         averageMetrics: Metrics,
         numFrames: Int
     ) {
-        await state.getPerformanceMetrics()
+        state.getPerformanceMetrics()
     }
 }
