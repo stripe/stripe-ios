@@ -378,15 +378,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 return
             }
 
-            let didRegisterCompletion = transitionCoordinator.animate(
+            // Resume only from the completion: UIKit can run it even when `animate` returns false.
+            transitionCoordinator.animate(
                 alongsideTransition: nil,
                 completion: { _ in continuation.resume() }
             )
-            if !didRegisterCompletion {
-                DispatchQueue.main.async {
-                    continuation.resume()
-                }
-            }
         }
     }
 
