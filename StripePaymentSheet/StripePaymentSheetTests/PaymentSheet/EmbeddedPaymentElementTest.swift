@@ -32,7 +32,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
             STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"],
                                                           currency: "USD",
                                                           paymentMethodID: paymentMethod.stripeId,
-                                                          confirm: true) { result in
+                                                          confirm: true,
+                                                          otherParams: ["capture_method": "automatic"]) { result in
                 continuation.resume(with: result)
             }
         }

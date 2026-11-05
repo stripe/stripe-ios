@@ -58,7 +58,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         // 1. For client-side confirmation, we set the PMO SFU value of the IntentConfiguration on /confirm
         // 2. For server-side confirmation, we set `shouldSavePaymentMethod` to `true` if PMO SFU is set.
         // Note - we don't send shouldSavePM = true to the server b/c then it will write PMO SFU, and we want to test that our own /confirm call sets PMO SFU.
-        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"], currency: "USD", amount: 100, shouldSavePM: false, customerID: nil)
+        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"], currency: "USD", amount: 100, shouldSavePM: false, customerID: nil, otherParams: ["capture_method": "automatic"])
 
         // Given an IntentConfiguration that sets PMO SFU on card...
         let intentConfig = PaymentSheet.IntentConfiguration(

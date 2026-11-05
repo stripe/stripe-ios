@@ -668,12 +668,15 @@ extension PaymentSheetGDPRConfirmFlowTests {
             }()
             return .paymentIntent(paymentIntent)
         case .paymentIntent_deferredIntent_csc:
+            // Deferred PaymentIntents are created with the same capture method as their IntentConfiguration, because
+            // PaymentIntents use `automatic_async` by default on the SDK's API version.
             let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, captureMethod: .automatic)) { _, _ in
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
                     merchantCountry: merchantCountry.rawValue,
-                    customerID: customerID
+                    customerID: customerID,
+                    otherParams: ["capture_method": "automatic"]
                 )
                 clientSecretCallback(clientSecret)
                 return clientSecret
@@ -689,7 +692,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
                     shouldSavePM: shouldSavePM,
                     customerID: customerID,
                     confirm: true,
-                    otherParams: self.paramsForServerSideConfirmation
+                    otherParams: self.paramsForServerSideConfirmation.merging(["capture_method": "automatic"]) { _, b in b }
                 )
                 clientSecretCallback(clientSecret)
                 return clientSecret
@@ -717,7 +720,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
                     currency: currency,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customerID,
-                    otherParams: ["setup_future_usage": "off_session"]
+                    otherParams: ["setup_future_usage": "off_session", "capture_method": "automatic"]
                 )
                 clientSecretCallback(clientSecret)
                 return clientSecret
@@ -727,6 +730,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession, captureMethod: .automatic)) { paymentMethod, shouldSavePM in
                 let otherParams = [
                     "setup_future_usage": "off_session",
+                    "capture_method": "automatic",
                 ].merging(self.paramsForServerSideConfirmation) { _, b in b }
 
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
@@ -765,7 +769,8 @@ extension PaymentSheetGDPRConfirmFlowTests {
                     currency: currency,
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customerID,
-                    paymentMethodOptions: ["card": ["setup_future_usage": "off_session"]]
+                    paymentMethodOptions: ["card": ["setup_future_usage": "off_session"]],
+                    otherParams: ["capture_method": "automatic"]
                 )
                 clientSecretCallback(clientSecret)
                 return clientSecret
@@ -782,7 +787,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
                     customerID: customerID,
                     confirm: true,
                     paymentMethodOptions: ["card": ["setup_future_usage": "off_session"]],
-                    otherParams: self.paramsForServerSideConfirmation
+                    otherParams: self.paramsForServerSideConfirmation.merging(["capture_method": "automatic"]) { _, b in b }
                 )
                 clientSecretCallback(clientSecret)
                 return clientSecret
@@ -811,7 +816,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
                     merchantCountry: merchantCountry.rawValue,
                     customerID: customerID,
                     paymentMethodOptions: ["card": ["setup_future_usage": "none"]],
-                    otherParams: ["setup_future_usage": "off_session"]
+                    otherParams: ["setup_future_usage": "off_session", "capture_method": "automatic"]
                 )
                 clientSecretCallback(clientSecret)
                 return clientSecret
@@ -821,6 +826,7 @@ extension PaymentSheetGDPRConfirmFlowTests {
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession, captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { paymentMethod, shouldSavePM in
                 let otherParams = [
                     "setup_future_usage": "off_session",
+                    "capture_method": "automatic",
                 ].merging(self.paramsForServerSideConfirmation) { _, b in b }
 
                 let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(

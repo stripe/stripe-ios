@@ -30,7 +30,8 @@ class EmbeddedPaymentElementViewModelTests: XCTestCase {
                 types: ["card"],
                 currency: "USD",
                 paymentMethodID: paymentMethod.stripeId,
-                confirm: true
+                confirm: true,
+                otherParams: ["capture_method": "automatic"]
             ) { result in
                 continuation.resume(with: result)
             }
