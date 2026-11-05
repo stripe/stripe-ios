@@ -93,6 +93,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
         returnURL: String? = nil,
+        shipping: STPPaymentIntentShippingDetailsParams? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
         customerData: [String: Any]? = nil
     ) -> Self {
@@ -105,7 +106,7 @@ struct CheckoutSessionConfirmationRequestParameters {
             expectedPaymentMethodType: nil,
             savePaymentMethod: nil,
             returnURL: returnURL,
-            shipping: nil,
+            shipping: shipping,
             paymentMethodOptions: nil,
             clientAttributionMetadata: clientAttributionMetadata,
             passiveCaptchaToken: nil,
