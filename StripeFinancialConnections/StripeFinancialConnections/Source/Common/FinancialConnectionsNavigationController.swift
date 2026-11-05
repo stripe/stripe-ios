@@ -154,7 +154,8 @@ extension FinancialConnectionsNavigationController {
         _ navigationItem: UINavigationItem?,
         closeItem: UIBarButtonItem,
         shouldHideLogo: Bool,
-        appearance: FinancialConnectionsAppearance
+        appearance: FinancialConnectionsAppearance,
+        didSelectLogo: (() -> Void)? = nil
     ) {
         let iconHeight: CGFloat = 20
         let logoView: UIView? = {
@@ -172,7 +173,12 @@ extension FinancialConnectionsNavigationController {
                 height: iconHeight
             )
             // Use a container to preserve the logo's size when used as a title view.
-            let containerView = UIView(frame: logoImage.bounds)
+            let containerView: UIView
+            if let didSelectLogo {
+                containerView = LogoButtonView(frame: logoImage.bounds, didSelect: didSelectLogo)
+            } else {
+                containerView = UIView(frame: logoImage.bounds)
+            }
             containerView.addSubview(logoImage)
             return containerView
         }()
@@ -209,5 +215,29 @@ private final class FinancialConnectionsLogoImageView: UIImageView {
 
     private func updateImage() {
         image = appearance.logoImage(for: traitCollection.userInterfaceStyle)
+    }
+}
+
+// A navigation bar title view that makes the logo tappable.
+private final class LogoButtonView: UIView {
+    private let didSelect: () -> Void
+
+    init(frame: CGRect, didSelect: @escaping () -> Void) {
+        self.didSelect = didSelect
+        super.init(frame: frame)
+        isUserInteractionEnabled = true
+        isAccessibilityElement = true
+        accessibilityTraits = .button
+        accessibilityLabel = String.Localized.learn_more
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap)))
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc private func didTap() {
+        FeedbackGeneratorAdapter.buttonTapped()
+        didSelect()
     }
 }
