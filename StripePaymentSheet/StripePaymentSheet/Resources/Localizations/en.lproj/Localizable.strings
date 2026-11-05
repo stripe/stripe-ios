@@ -291,6 +291,9 @@ with the transaction. */
 /* Label for displaying the last 4 digits of the user's social security number */
 "Last 4 digits of SSN" = "Last 4 digits of SSN";
 
+/* Label of a button that signs the user out of their current Link account so they can log in to a different one. */
+"Log in to another account" = "Log in to another account";
+
 /* Title shown above a view containing the customer's bank account that they can delete */
 "Manage bank account" = "Manage bank account";
 
@@ -335,6 +338,9 @@ with the transaction. */
 
 /* Label for when the user is not eligible for a promo. */
 "No %@ promo" = "No %@ promo";
+
+/* Message on a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+"None of the payment methods in your %@ account work with this business." = "None of the payment methods in your %@ account work with this business.";
 
 /* Title for a button that allows the user to use a different email in the signup flow. */
 "Not you?" = "Not you?";
@@ -593,6 +599,9 @@ the heading the screen itself. */
 
 /* Text for a tappable link that will update the email field with a suggested email address. */
 "Yes, update" = "Yes, update";
+
+/* Title of a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+"You can't pay with %@ here" = "You can't pay with %@ here";
 
 /* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
 "Your address changes won't be saved." = "Your address changes won't be saved.";

@@ -71,34 +71,6 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         XCTAssertEqual(fetchCount, 1)
     }
 
-    func testContentHeightRequiresTrustedDocument() async throws {
-        // Given a controller using the production content-height registration
-        let trustedHeight = expectation(description: "Trusted content height is delivered")
-        let foreignHeight = expectation(description: "Foreign content height is ignored")
-        foreignHeight.isInverted = true
-        var expectedHeight: CGFloat?
-        let controller = makeController(
-            secretProvider: SecretProvider(secret: "unused-secret"),
-            layoutMode: .sizesToContent { height in
-                if height == 321 {
-                    expectedHeight = height
-                    trustedHeight.fulfill()
-                } else if height == 987 {
-                    foreignHeight.fulfill()
-                }
-            }
-        )
-
-        // When trusted content posts the registered height message
-        _ = try await loadBridgeFixture(in: controller.webView, baseURL: StripeConnectConstants.connectJSBaseURL, html: Self.contentHeightFixtureHTML(height: 321))
-        await fulfillment(of: [trustedHeight], timeout: TestHelpers.defaultTimeout)
-
-        // And foreign content posts the same message
-        _ = try await loadBridgeFixture(in: controller.webView, baseURL: URL(string: "https://foreign.test/height.html")!, html: Self.contentHeightFixtureHTML(height: 987))
-        await fulfillment(of: [foreignHeight], timeout: TestHelpers.defaultTimeout)
-        XCTAssertEqual(expectedHeight, 321)
-    }
-
     func testControllerAndWebViewAreNotRetainedBySourcePolicy() async throws {
         weak var controller: ConnectComponentWebViewController?
         weak var webView: WKWebView?
@@ -117,50 +89,6 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         }
         XCTAssertNil(webView)
         XCTAssertFalse(policy.isAuthorized(source: nil, scheme: "https", host: "connect-js.stripe.com", port: 443))
-    }
-
-    func testForeignNotificationBannerTaskMessageDoesNotPresentTask() async throws {
-        let banner = makeNotificationBanner()
-        let host = BridgePresentationHost()
-        host.addChild(banner)
-        host.view.addSubview(banner.view)
-        banner.didMove(toParent: host)
-        let window = UIWindow()
-        window.rootViewController = host
-        window.makeKeyAndVisible()
-        defer {
-            host.dismiss(animated: false)
-            window.isHidden = true
-        }
-
-        XCTAssertNotNil(banner.view.window)
-        _ = try await loadBridgeFixture(in: banner.webVC.webView, baseURL: URL(string: "https://foreign.test/banner.html")!, html: Self.notificationBannerTaskFixtureHTML)
-        try await assertNoPresentationDuringWindow(from: host)
-        XCTAssertNil(host.requestedPresentation)
-    }
-
-    func testTrustedNotificationBannerTaskMessagePresentsTask() async throws {
-        let banner = makeNotificationBanner()
-        let host = BridgePresentationHost()
-        host.addChild(banner)
-        host.view.addSubview(banner.view)
-        banner.didMove(toParent: host)
-        let window = UIWindow()
-        window.rootViewController = host
-        window.makeKeyAndVisible()
-        defer {
-            host.dismiss(animated: false)
-            window.isHidden = true
-        }
-
-        XCTAssertNotNil(banner.view.window)
-        _ = try await withFixturePhase("trusted banner document and submission") {
-            try await loadBridgeFixture(in: banner.webVC.webView, baseURL: StripeConnectConstants.connectJSBaseURL, html: Self.notificationBannerTaskFixtureHTML)
-        }
-        let taskNavigation = try await withFixturePhase("trusted banner task presentation") {
-            try await waitForPresentation(from: host)
-        }
-        XCTAssertTrue(taskNavigation.topViewController is ConnectComponentWebViewController)
     }
 
     func testForeignMainDocumentCannotFetchClientSecret() async throws {
@@ -529,8 +457,7 @@ private extension ConnectBridgeSourceValidationTests {
         secretProvider: SecretProvider,
         authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
         analyticsTransport: AnalyticsTransport = .init(),
-        baseURL: URL = StripeConnectConstants.connectJSBaseURL,
-        layoutMode: ConnectComponentWebViewController.LayoutMode = .fillsAvailableSpace
+        baseURL: URL = StripeConnectConstants.connectJSBaseURL
     ) -> BridgePresentationComponentController {
         let componentManager = EmbeddedComponentManager(
             apiClient: .init(publishableKey: "test"),
@@ -549,18 +476,10 @@ private extension ConnectBridgeSourceValidationTests {
                     commonFields: commonFields
                 )
             },
-            layoutMode: layoutMode,
             fetchInitProps: VoidPayload.init,
             didFailLoadWithError: { _ in },
             authenticatedWebViewManager: authenticatedWebViewManager
         )
-    }
-
-    func makeNotificationBanner() -> NotificationBannerViewController {
-        let manager = EmbeddedComponentManager(apiClient: .init(publishableKey: "test"), fetchClientSecret: { nil })
-        manager.shouldLoadContent = false
-        manager.analyticsClientFactory = { ComponentAnalyticsClient(client: AnalyticsTransport(), commonFields: $0) }
-        return manager.createNotificationBannerViewController()
     }
 
     func withFixturePhase<Value>(_ phase: String, operation: () async throws -> Value) async throws -> Value {
@@ -568,27 +487,6 @@ private extension ConnectBridgeSourceValidationTests {
             return try await operation()
         } catch {
             throw BridgeFixturePhaseError(phase: phase, underlyingError: error)
-        }
-    }
-
-    func waitForPresentation(from controller: BridgePresentationHost) async throws -> UINavigationController {
-        try await TestHelpers.withTimeout {
-            while true {
-                if let navigation = controller.requestedPresentation as? UINavigationController {
-                    return navigation
-                }
-                try await Task.sleep(nanoseconds: 10_000_000)
-            }
-        }
-    }
-
-    func assertNoPresentationDuringWindow(from controller: BridgePresentationHost) async throws {
-        let deadline = Date().addingTimeInterval(0.2)
-        while Date() < deadline {
-            guard controller.requestedPresentation == nil else {
-                throw NotificationBannerPresentationError.unexpectedPresentation
-            }
-            try await Task.sleep(nanoseconds: 10_000_000)
         }
     }
 
@@ -779,21 +677,6 @@ private extension ConnectBridgeSourceValidationTests {
     </script>'></iframe>
     """
 
-    static func contentHeightFixtureHTML(height: Int) -> String {
-        """
-        <!doctype html>
-        <script>
-        window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({ kind: "ready" });
-        window.webkit.messageHandlers.connectContentHeight.postMessage({ height: \(height) });
-        window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({
-          kind: "result",
-          locationOrigin: window.location.origin,
-          result: { kind: "resolved", value: "submitted" }
-        });
-        </script>
-        """
-    }
-
     static let accountSessionClaimedFixtureHTML = """
     <!doctype html>
     <script>
@@ -812,19 +695,6 @@ private extension ConnectBridgeSourceValidationTests {
     <script>
     window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({ kind: "ready" });
     window.webkit.messageHandlers.onSetterFunctionCalled.postMessage({ setter: "setOnExit" });
-    window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({
-      kind: "result",
-      locationOrigin: window.location.origin,
-      result: { kind: "resolved", value: "submitted" }
-    });
-    </script>
-    """
-
-    static let notificationBannerTaskFixtureHTML = """
-    <!doctype html>
-    <script>
-    window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({ kind: "ready" });
-    window.webkit.messageHandlers.openNotificationBannerForm.postMessage({ testField: "fixture" });
     window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({
       kind: "result",
       locationOrigin: window.location.origin,
@@ -1201,16 +1071,7 @@ private extension WKWebView {
 }
 
 // Capture UIKit presentation requests in hostless XCTest. The production handlers
-// still create the task/popup controllers and their real WebViews.
-private final class BridgePresentationHost: UIViewController {
-    private(set) var requestedPresentation: UIViewController?
-
-    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
-        requestedPresentation = viewControllerToPresent
-        completion?()
-    }
-}
-
+// still create the popup controllers and their real WebViews.
 private final class BridgePresentationComponentController: ConnectComponentWebViewController {
     private(set) var requestedPresentation: UIViewController?
 
@@ -1227,10 +1088,6 @@ private struct BridgeFixturePhaseError: LocalizedError {
     var errorDescription: String? {
         "Connect bridge fixture failed during \(phase): \(underlyingError)"
     }
-}
-
-private enum NotificationBannerPresentationError: Error {
-    case unexpectedPresentation
 }
 
 private enum BridgeEventObserverError: Error {

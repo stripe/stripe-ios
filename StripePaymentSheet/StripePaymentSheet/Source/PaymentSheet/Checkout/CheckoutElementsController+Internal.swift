@@ -1,0 +1,298 @@
+//
+//  CheckoutElementsController+Internal.swift
+//  StripePaymentSheet
+//
+//  Created by Nick Porter on 5/5/26.
+//
+
+import Foundation
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+@_spi(InternalOnlyAPI) import StripeUICore
+import UIKit
+
+extension CheckoutElementsController: ExpressCheckoutElementDelegate {
+    func expressCheckoutElementShouldConfirm(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentationWindow: UIWindow?
+    ) async -> ConfirmResult {
+        return await confirm(source: .expressCheckoutElement) {
+            do {
+                return try makeExpressCheckoutConfirmationFlow(paymentMethod, presentationWindow: presentationWindow)
+            } catch {
+                STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
+                throw error
+            }
+        }
+    }
+
+    func makeExpressCheckoutConfirmationFlow(
+        _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
+        presentationWindow: UIWindow?
+    ) throws -> CheckoutConfirmationFlow {
+        guard let expressCheckoutElementConfiguration = configuration.expressCheckoutElement else {
+            throw CheckoutError.unknown(debugDescription: "Express Checkout Element configuration unexpectedly nil.")
+        }
+        let attribution = CheckoutAttributionContext(
+            confirmingElement: .expressCheckoutElement,
+            configuredElements: configuration.configuredElements
+        )
+        switch paymentMethod {
+        case .applePay:
+            guard let applePayConfiguration = expressCheckoutElementConfiguration.applePayConfiguration else {
+                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Express Checkout Element Apple Pay configuration unexpectedly nil.")
+            }
+            // TODO: Should next actions use an authentication context tied to `presentationWindow`
+            // instead of `WindowAuthenticationContext` to avoid presenting in the wrong scene?
+            let authenticationContext = WindowAuthenticationContext()
+            return .applePay(.init(
+                applePayConfiguration: applePayConfiguration,
+                apiClient: apiClient,
+                returnURL: configuration.returnURL,
+                merchantDisplayName: effectiveMerchantDisplayName,
+                shippingAddressRequired: session.requiresShippingAddress,
+                defaultBillingDetails: configuration.defaults.billingDetails,
+                presentationWindow: presentationWindow,
+                confirmationHandler: { [apiClient, paymentHandler] requestParameters in
+                    await Self.confirmCheckoutSession(
+                        with: requestParameters,
+                        apiClient: apiClient,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: paymentHandler
+                    )
+                },
+                attribution: attribution
+            ))
+        case .link:
+            guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {
+                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller.")
+            }
+            // TODO: maybe add Link-specific configuration
+            var linkConfirmationConfiguration = PaymentSheet.Configuration()
+            linkConfirmationConfiguration.apiClient = apiClient
+            linkConfirmationConfiguration.returnURL = configuration.returnURL
+            linkConfirmationConfiguration.merchantDisplayName = effectiveMerchantDisplayName
+            linkConfirmationConfiguration.style = configuration.userInterfaceStyle
+            if let billingDetails = configuration.defaults.billingDetails {
+                linkConfirmationConfiguration.defaultBillingDetails.set(billingDetails)
+            }
+            linkConfirmationConfiguration.defaultBillingDetails.email = session.email
+            if session.billingAddressCollection == .required {
+                linkConfirmationConfiguration.billingDetailsCollectionConfiguration.address = .full
+            }
+            switch expressCheckoutElementConfiguration.linkConfiguration.display {
+            case .automatic:
+                linkConfirmationConfiguration.link.display = .automatic
+            case .never:
+                linkConfirmationConfiguration.link.display = .never
+            }
+            // TODO: maybe separate out a LinkAnalyticsHelper
+            let analyticsHelper = PaymentSheetAnalyticsHelper(
+                integrationShape: .complete, // Wallet Link analytics don't log integrationShape, so it's not worth adding an .expressCheckout case.
+                configuration: linkConfirmationConfiguration,
+                checkoutSessionID: session.id,
+                checkoutAttribution: attribution
+            )
+            let authenticationContext = AuthenticationContext(
+                presentingViewController: presentingViewController,
+                appearance: linkConfirmationConfiguration.appearance
+            )
+            return .link(.init(
+                confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
+                configuration: linkConfirmationConfiguration,
+                nativeSheetPresentation: nil,
+                confirmationChallenge: confirmationChallenge,
+                analyticsHelper: analyticsHelper,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler,
+                attribution: attribution))
+        }
+    }
+}
+
+extension CheckoutElementsController: CurrencySelectorElementCheckoutDelegate {}
+extension CheckoutElementsController: ShippingAddressElementDelegate {
+    func updateShippingAddressFromElement(name: String?, address: Address?) async throws {
+        try await updateShippingAddress(name: name, address: address, source: .shippingAddressElement)
+    }
+}
+
+extension CheckoutElementsController {
+
+    // MARK: - Currency
+
+    /// Selects a currency for the session (adaptive pricing).
+    /// - Parameter currency: The three-letter ISO currency code to switch to (e.g. "gbp").
+    /// - Throws: ``CheckoutError`` if the update fails.
+    func selectCurrency(_ currency: String) async throws {
+        try await analyticsHelper.track(.updateCurrency, checkout: self, additionalParams: ["requested_currency": currency]) {
+            try await performQueuedUpdate(.setCurrency(currency))
+        }
+    }
+
+    // MARK: - Payment Option
+
+    func dangerouslySetPaymentOptionDirectly(_ paymentOption: Session.PaymentOptionDisplayData?) {
+        var updatedSession = session
+        updatedSession.localState.paymentOption = paymentOption
+        dangerouslySetSessionDirectly(updatedSession)
+    }
+
+    // MARK: - Session Updates
+
+    /// Waits for all in-flight session updates (mutations, etc.) to complete.
+    ///
+    /// - Returns immediately if no operations are pending.
+    /// - Waits for the operations pending when this method is called; operations
+    ///   enqueued afterward are not included in this wait.
+    /// - If any pending operation throws, the first such error is rethrown.
+    /// - If the wait exceeds `timeout`, throws ``CheckoutError.timedOut``.
+    ///
+    /// - Parameters:
+    ///   - timeout: Maximum time to wait, in seconds.
+    func awaitPendingOperations(
+        timeout: TimeInterval = CheckoutElementsController.defaultPendingOperationsTimeout
+    ) async throws {
+        let snapshot = pendingOperations
+        guard !snapshot.isEmpty else { return }
+
+        let result = await withTimeout(timeout) {
+            var firstError: Error?
+            for operation in snapshot {
+                do {
+                    try await operation.value
+                } catch {
+                    firstError = firstError ?? error
+                }
+            }
+            if let firstError { throw firstError }
+        }
+        if case .failure(let error) = result {
+            throw error is TimeoutError ? CheckoutError.timedOut : error
+        }
+    }
+
+    /// Runs `body` as a tracked session update, serialized behind any in-flight ops.
+    ///
+    /// `body` can be of any return type, including `Void`, and  `enqueueSessionUpdate`
+    /// will return that value to the caller.
+    ///
+    /// Operations execute in strict FIFO order: each task waits for the previous
+    /// task before running its body. While the queue is non-empty, ``isUpdating``
+    /// is `true`; once the queue drains it returns to `false.`
+    /// - Throws: Any error thrown by `body`.
+    /// - Returns: The value returned by `body`.
+    func enqueueSessionUpdate<T>(
+        _ body: @MainActor @escaping () async throws -> T
+    ) async throws -> T {
+        let predecessor = pendingOperations.last
+
+        // The typed task does the actual work, preserving the return type T.
+        let typedOperation = Task<T, Error> { @MainActor in
+            // Wait for the previous operation, if one exists, to finish.
+            // Use `try?` so that we still continue even if the predecessor throws an error.
+            if let predecessor { _ = try? await predecessor.value }
+            return try await body()
+        }
+
+        // The erased task discards T so it can be stored in the homogeneous
+        // pendingOperations array. It forwards completion/errors so downstream
+        // predecessors still serialize correctly.
+        let erasedOperation = Task<Void, Error> { _ = try await typedOperation.value }
+        pendingOperations.append(erasedOperation)
+
+        defer {
+            pendingOperations.removeAll { $0 == erasedOperation }
+        }
+
+        return try await typedOperation.value
+    }
+
+    /// Enqueues a serialized session update.
+    ///
+    /// - If `update` is non-nil, the API mutation is performed, then the session is updated from
+    ///   the response and the local state mutation is applied.
+    /// - If `update` is nil, the local state mutation is applied without making a network request.
+    ///
+    /// - Warning: Calling this from a context that's already queued will deadlock.
+    /// - Parameters:
+    ///   - update: The API mutation to perform, or nil for a local-only update.
+    ///   - canUpdateWhileSheetPresented: Bypasses the sheet-presented guard (e.g. billing sync on dismiss).
+    ///   - onRequest: Called after validation, immediately before sending an API mutation.
+    ///   - mutateLocalState: A local state change to apply after the API call (or on its own).
+    func performQueuedUpdate(
+        _ update: SessionUpdate? = nil,
+        canUpdateWhileSheetPresented: Bool = false,
+        onRequest: (@MainActor () -> Void)? = nil,
+        mutateLocalState: @escaping LocalStateMutation = { _ in }
+    ) async throws {
+        try await enqueueSessionUpdate {
+            try await self.performUnqueuedUpdate(
+                update,
+                canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
+                onRequest: onRequest,
+                mutateLocalState: mutateLocalState
+            )
+        }
+    }
+
+    /// Same work as `performQueuedUpdate`, without enqueuing.
+    /// - Warning: Only call this within a queued context, to prevent concurrent updates from applying responses out of order.
+    func performUnqueuedUpdate(
+        _ update: SessionUpdate? = nil,
+        canUpdateWhileSheetPresented: Bool = false,
+        onRequest: (@MainActor () -> Void)? = nil,
+        mutateLocalState: LocalStateMutation = { _ in }
+    ) async throws {
+        if !canUpdateWhileSheetPresented {
+            try requireSheetNotPresented()
+        }
+        do {
+            let updatedSessionAPIResponse: CheckoutClientAPIResponse?
+            if let update {
+                let sessionId = CheckoutElementsController.extractSessionId(from: clientSecret)
+                onRequest?()
+                updatedSessionAPIResponse = try await apiClient.updateCheckoutSession(
+                    checkoutSessionId: sessionId,
+                    clientSecret: clientSecret,
+                    parameters: update.parameters
+                )
+                if case .setTaxRegion(let address) = update {
+                    currentTaxRegion = address
+                }
+            } else {
+                updatedSessionAPIResponse = nil
+            }
+
+            commitSession(updatedSessionAPIResponse, mutateLocalState: mutateLocalState)
+        } catch {
+            throw CheckoutError.apiError(message: error.nonGenericDescription, underlyingError: error)
+        }
+        updateForSessionChange()
+    }
+
+    /// True if the session is still actionable.
+    var sessionIsOpen: Bool {
+        session.status == .open
+    }
+
+    // MARK: - Validation
+
+    func requireSheetNotPresented() throws {
+        guard paymentElement?.isPresentingPaymentUI != true else {
+            throw CheckoutError.sheetCurrentlyPresented
+        }
+    }
+
+    // MARK: - Client Secrets
+
+    /// Returns the session ID portion of a client secret.
+    ///
+    /// Client secrets use the format `cs_xxx_secret_yyy`; this method returns `cs_xxx`.
+    nonisolated static func extractSessionId(from clientSecret: String) -> String {
+        guard let range = clientSecret.range(of: "_secret_") else {
+            return clientSecret
+        }
+        return String(clientSecret[..<range.lowerBound])
+    }
+}

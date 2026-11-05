@@ -223,9 +223,14 @@ extension PayWithLinkViewController {
             feedbackGenerator.prepare()
             #endif
             confirmButton.update(status: .processing)
-            coordinator?.allowSheetDismissal(false)
+            setUserInteractionEnabled(false)
 
-            confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+            confirmParams.paymentMethodParams.clientAttributionMetadata = context.analyticsHelper.shouldIncludeClientAttributionMetadata
+                ? STPClientAttributionMetadata.makeClientAttributionMetadata(
+                    intent: context.intent,
+                    elementsSession: context.elementsSession,
+                    checkoutAttribution: context.analyticsHelper.checkoutAttribution
+                ) : nil
 
             linkAccount.createPaymentDetails(
                 with: confirmParams.paymentMethodParams,
@@ -273,7 +278,7 @@ extension PayWithLinkViewController {
                         self?.feedbackGenerator.notificationOccurred(.success)
                         #endif
                         self?.confirmButton.update(status: status, animated: true) {
-                            self?.coordinator?.allowSheetDismissal(true)
+                            self?.setUserInteractionEnabled(true)
                             if status == .succeeded {
                                 self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                             }
@@ -285,7 +290,7 @@ extension PayWithLinkViewController {
                     #endif
                     self.confirmButton.update(status: .enabled, animated: true)
                     self.updateErrorLabel(for: error)
-                    self.coordinator?.allowSheetDismissal(true)
+                    self.setUserInteractionEnabled(true)
                 }
             }
         }

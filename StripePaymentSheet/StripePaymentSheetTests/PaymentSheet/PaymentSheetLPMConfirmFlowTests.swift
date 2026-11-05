@@ -68,25 +68,31 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
-    /// Mock stand-in for a full `Checkout` object.
+    /// Mock stand-in for a full `CheckoutElementsController` object.
     final class TestCheckoutSessionUpdater: CheckoutSessionBillingAddressUpdater {
-        private(set) var session: CheckoutController.Session
+        private(set) var session: CheckoutElementsController.Session
 
-        init(session: CheckoutController.Session) {
+        init(session: CheckoutElementsController.Session) {
             self.session = session
         }
 
         func updateBillingTaxRegionIfNecessaryForPaymentSheet(
-            address: CheckoutController.Address,
+            address: CheckoutElementsController.Address,
             canUpdateWhileSheetPresented: Bool
-        ) async throws -> CheckoutController.Session {
+        ) async throws -> CheckoutElementsController.Session {
             return session
         }
     }
 
     struct CompletedCheckoutSessionPoller: CheckoutSessionPolling {
-        func poll(checkoutSessionId: String) async -> CheckoutSessionPoller.Outcome {
-            return .completed
+        func poll(checkoutSessionId: String, clientSecret: String) async -> CheckoutSessionPoller.Outcome {
+            let data = try! JSONSerialization.data(withJSONObject: [
+                "id": checkoutSessionId,
+                "confirmation_status": "succeeded",
+                "status": "complete",
+                "payment_status": "unpaid",
+            ])
+            return .succeeded(try! StripeJSONDecoder().decode(CheckoutClientPollResponse.self, from: data))
         }
     }
 
@@ -583,7 +589,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession = try await apiClient.retrieveDeferredElementsSession(
                         withIntentConfig: intentConfig,
                         clientDefaultPaymentMethod: nil,
-                        configuration: configuration
+                        configuration: configuration,
+                        customerProvider: CustomerProvider(customer: configuration.customer)
                     )
                 case .checkout:
                     elementsSession = ._testValue(intent: intent)
@@ -1117,15 +1124,15 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     private func confirmCheckoutApplePay(
-        session: CheckoutController.Session,
+        session: CheckoutElementsController.Session,
         configuration: PaymentSheet.Configuration,
         description: String
     ) async {
-        let parameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: configuration.apiClient,
             returnURL: configuration.returnURL!,
             confirmationHandler: { requestParameters in
-                await CheckoutController.confirmCheckoutSession(
+                await CheckoutElementsController.confirmCheckoutSession(
                     with: requestParameters,
                     apiClient: configuration.apiClient,
                     authenticationContext: self,
@@ -2073,31 +2080,31 @@ extension PaymentSheetLPMConfirmFlowTests {
         }
 
         Task { @MainActor in
-            let result: CheckoutController.InternalConfirmResult
+            let result: CheckoutElementsController.InternalConfirmResult
             switch paymentOption {
             case .new(let confirmParams):
-                let parameters = CheckoutController.PaymentMethodConfirmationParameters(
+                let parameters = CheckoutElementsController.PaymentMethodConfirmationParameters(
                     option: .new(confirmParams),
                     configuration: configuration,
                     nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     authenticationContext: self,
                     paymentHandler: paymentHandler,
-                    confirmationSource: .paymentElement
+                    attribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
                 )
-                let preconfirmResult = await CheckoutController.handlePaymentMethodPreconfirmActions(
+                let preconfirmResult = await CheckoutElementsController.handlePaymentMethodPreconfirmActions(
                     checkoutSession: checkoutSession,
                     parameters: parameters,
                     preconfirmIntegrationShape: .complete
                 )
                 switch preconfirmResult {
                 case .succeeded(let intentConfirmParams):
-                    let confirmRequestParameters = await CheckoutController.makeConfirmationRequestParameters(
+                    let confirmRequestParameters = await CheckoutElementsController.makeConfirmationRequestParameters(
                         for: parameters,
                         checkoutSession: checkoutSession,
                         preconfirmedIntentParams: intentConfirmParams
                     )
-                    result = await CheckoutController.confirmCheckoutSession(
+                    result = await CheckoutElementsController.confirmCheckoutSession(
                         with: confirmRequestParameters,
                         apiClient: configuration.apiClient,
                         authenticationContext: self,
@@ -2110,28 +2117,28 @@ extension PaymentSheetLPMConfirmFlowTests {
                     result = .failed(error)
                 }
             case .saved(let paymentMethod, let confirmParams):
-                let parameters = CheckoutController.PaymentMethodConfirmationParameters(
+                let parameters = CheckoutElementsController.PaymentMethodConfirmationParameters(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
                     nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     authenticationContext: self,
                     paymentHandler: paymentHandler,
-                    confirmationSource: .paymentElement
+                    attribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
                 )
-                let preconfirmResult = await CheckoutController.handlePaymentMethodPreconfirmActions(
+                let preconfirmResult = await CheckoutElementsController.handlePaymentMethodPreconfirmActions(
                     checkoutSession: checkoutSession,
                     parameters: parameters,
                     preconfirmIntegrationShape: .complete
                 )
                 switch preconfirmResult {
                 case .succeeded(let intentConfirmParams):
-                    let confirmRequestParameters = await CheckoutController.makeConfirmationRequestParameters(
+                    let confirmRequestParameters = await CheckoutElementsController.makeConfirmationRequestParameters(
                         for: parameters,
                         checkoutSession: checkoutSession,
                         preconfirmedIntentParams: intentConfirmParams
                     )
-                    result = await CheckoutController.confirmCheckoutSession(
+                    result = await CheckoutElementsController.confirmCheckoutSession(
                         with: confirmRequestParameters,
                         apiClient: configuration.apiClient,
                         authenticationContext: self,
@@ -2144,7 +2151,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     result = .failed(error)
                 }
             case .link(let confirmOption):
-                let parameters = CheckoutController.LinkConfirmationParameters(
+                let parameters = CheckoutElementsController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
                     configuration: configuration,
                     nativeSheetPresentation: nil,
@@ -2152,9 +2159,9 @@ extension PaymentSheetLPMConfirmFlowTests {
                     analyticsHelper: analyticsHelper,
                     authenticationContext: self,
                     paymentHandler: paymentHandler,
-                    confirmationSource: .paymentElement
+                    attribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
                 )
-                result = await CheckoutController.confirmLink(
+                result = await CheckoutElementsController.confirmLink(
                     checkoutSession: checkoutSession,
                     parameters: parameters
                 )

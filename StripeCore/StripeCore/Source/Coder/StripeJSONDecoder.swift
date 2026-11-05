@@ -9,17 +9,17 @@
 
 import Foundation
 
-@_spi(InternalOnlyAPI) public class StripeJSONDecoder {
+@_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public class StripeJSONDecoder {
     /// The Stripe request ID associated with the decoded response.
     @_spi(InternalOnlyAPI) public static let requestIDKey = CodingUserInfoKey(rawValue: "stripe_request_id")!
 
-    @_spi(InternalOnlyAPI) public init() {}
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public init() {}
 
     @_spi(InternalOnlyAPI) public var userInfo: [CodingUserInfoKey: Any] = [:]
 
     @_spi(InternalOnlyAPI) public var inputFormatting: JSONSerialization.ReadingOptions = []
 
-    @_spi(InternalOnlyAPI) public func decode<T>(_ type: T.Type, from data: Data) throws -> T
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public func decode<T>(_ type: T.Type, from data: Data) throws -> T
     where T: Decodable {
         var inputFormatting = self.inputFormatting
         // We always allow fragments. (Though we mostly only use these for tests.)

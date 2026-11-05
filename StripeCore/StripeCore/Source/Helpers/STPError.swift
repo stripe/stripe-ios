@@ -141,7 +141,7 @@ extension NSError {
 
 /// NSError extensions for creating error objects from Stripe API responses.
 extension NSError {
-    @_spi(InternalOnlyAPI) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
         switch modernStripeError {
         case .apiError(let stripeAPIError):
             // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-3965 We're dropping some info in this conversion w/o http response

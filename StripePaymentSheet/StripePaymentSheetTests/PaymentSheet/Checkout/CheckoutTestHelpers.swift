@@ -17,21 +17,21 @@ import PassKit
 import UIKit
 import XCTest
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     /// Convenience for fixtures that contain no client-local session state.
     func makePublicSession(
         clientSecret: String? = nil,
         expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
-    ) -> CheckoutController.Session {
+    ) -> CheckoutElementsController.Session {
         let configuration = expressCheckoutConfiguration.map { expressConfiguration in
-            var configuration = CheckoutController.Configuration(
+            var configuration = CheckoutElementsController.Configuration(
                 clientSecret: "\(sessionId)_secret_abc",
                 returnURL: "stripe-ios-test://checkout-return"
             )
             configuration.expressCheckoutElement = expressConfiguration
             return configuration
         }
-        return CheckoutController.Session(
+        return CheckoutElementsController.Session(
             apiResponse: self,
             clientSecret: clientSecret ?? "\(sessionId)_secret_abc",
             localState: .empty,
@@ -68,12 +68,12 @@ extension ExpressCheckoutElementUtilities {
     }
 }
 
-extension PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
     static func decode(
         fromAPIResponse response: [AnyHashable: Any]
-    ) throws -> PaymentPagesAPIResponse {
+    ) throws -> CheckoutClientAPIResponse {
         let data = try JSONSerialization.data(withJSONObject: response)
-        return try StripeJSONDecoder().decode(PaymentPagesAPIResponse.self, from: data)
+        return try StripeJSONDecoder().decode(CheckoutClientAPIResponse.self, from: data)
     }
 
 }
@@ -82,11 +82,11 @@ extension PaymentPagesAPIResponse {
 
 @MainActor
 class CheckoutEmissionRecorder {
-    var sessions: [CheckoutController.Session] = []
+    var sessions: [CheckoutElementsController.Session] = []
     var loading: [Bool] = []
     private var subscriptions = Set<AnyCancellable>()
 
-    init(_ checkout: CheckoutController) {
+    init(_ checkout: CheckoutElementsController) {
         checkout.$session.dropFirst().sink { [weak self] in self?.sessions.append($0) }
             .store(in: &subscriptions)
         checkout.$isUpdating.dropFirst().sink { [weak self] in self?.loading.append($0) }
@@ -205,11 +205,11 @@ enum CheckoutTestHelpers {
         "ordered_payment_method_types_and_wallets": ["card"],
     ]
 
-    /// Creates a `PaymentPagesAPIResponse` from `baseSessionJSON` with top-level key overrides.
+    /// Creates a `CheckoutClientAPIResponse` from `baseSessionJSON` with top-level key overrides.
     /// To test field *absence*, mutate `baseSessionJSON` directly instead.
-    static func makeSession(_ overrides: [String: Any] = [:]) -> PaymentPagesAPIResponse {
+    static func makeSession(_ overrides: [String: Any] = [:]) -> CheckoutClientAPIResponse {
         let json = makeSessionJSON(overrides)
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeSessionWithWalletTypes(
@@ -218,7 +218,7 @@ enum CheckoutTestHelpers {
         linkUseAttestation: Bool? = nil,
         automaticTaxAddressSource: String? = nil,
         customerEmail: String? = nil
-    ) -> PaymentPagesAPIResponse {
+    ) -> CheckoutClientAPIResponse {
         var session: [String: Any] = [
             "ordered_payment_method_types_and_wallets": walletTypes,
         ]
@@ -250,7 +250,7 @@ enum CheckoutTestHelpers {
 
     // MARK: - Checkout-flow helpers
 
-    /// Builds a `CheckoutController.Configuration`, replacing its `apiClient` with one that uses test stubs.
+    /// Builds a `CheckoutElementsController.Configuration`, replacing its `apiClient` with one that uses test stubs.
     ///
     /// - Parameters:
     ///   - apiResponse: The Checkout Session response returned by the stubbed `/init` request.
@@ -259,17 +259,17 @@ enum CheckoutTestHelpers {
     ///   - stubAllOutgoingRequests: Whether to stub every outgoing API request made by the client, or only the initialization request.
     @MainActor
     static func makeConfiguration(
-        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
-        configuration: CheckoutController.Configuration? = nil,
+        apiResponse: CheckoutClientAPIResponse = makeOpenSession(),
+        configuration: CheckoutElementsController.Configuration? = nil,
         paymentElementConfiguration: PaymentElement.Configuration? = .init(),
         expressCheckoutElementConfiguration: ExpressCheckoutElement.Configuration? = .init { _ in },
         stubAllOutgoingRequests: Bool = true
-    ) -> CheckoutController.Configuration {
+    ) -> CheckoutElementsController.Configuration {
         // Use the production Checkout initializer with a test-controlled API client.
         let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration =
             configuration
-            ?? CheckoutController.Configuration(
+            ?? CheckoutElementsController.Configuration(
                 clientSecret: clientSecret,
                 returnURL: "stripe-ios-test://checkout-return"
             )
@@ -290,13 +290,13 @@ enum CheckoutTestHelpers {
     /// Builds a stubbed Checkout configuration that enables Currency Selector Element.
     @MainActor
     static func makeCurrencySelectorConfiguration(
-        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
-        configuration: CheckoutController.Configuration? = nil
-    ) -> CheckoutController.Configuration {
+        apiResponse: CheckoutClientAPIResponse = makeOpenSession(),
+        configuration: CheckoutElementsController.Configuration? = nil
+    ) -> CheckoutElementsController.Configuration {
         let clientSecret = configuration?.clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
         var resolvedConfiguration =
             configuration
-            ?? CheckoutController.Configuration(
+            ?? CheckoutElementsController.Configuration(
                 clientSecret: clientSecret,
                 returnURL: "stripe-ios-test://checkout-return"
             )
@@ -308,12 +308,12 @@ enum CheckoutTestHelpers {
 
     @MainActor
     static func makeStubbedAPIClient(
-        apiResponse: PaymentPagesAPIResponse = makeOpenSession(),
+        apiResponse: CheckoutClientAPIResponse = makeOpenSession(),
         clientSecret: String? = nil,
         stubAllOutgoingRequests: Bool = true
     ) -> STPAPIClient {
         let resolvedClientSecret = clientSecret ?? "\(apiResponse.sessionId)_secret_abc"
-        let sessionId = CheckoutController.extractSessionId(from: resolvedClientSecret)
+        let sessionId = CheckoutElementsController.extractSessionId(from: resolvedClientSecret)
         let apiClient = APIStubbedTestCase.stubbedAPIClient()
         apiClient.publishableKey = "pk_test_123"
 
@@ -333,7 +333,7 @@ enum CheckoutTestHelpers {
             request.httpMethod == "POST"
                 && request.url?.path == "/v1/checkout_client/\(sessionId)/init"
         }) { _ in
-            // Feed CheckoutController(configuration:) the session fixture this test requested.
+            // Feed CheckoutElementsController(configuration:) the session fixture this test requested.
             var responseJSON = jsonObject(apiResponse.allResponseFields) as? [String: Any] ?? [:]
             responseJSON["id"] = responseJSON["id"] ?? sessionId
             let data = try! JSONSerialization.data(
@@ -370,7 +370,7 @@ enum CheckoutTestHelpers {
     ///     sessionJSON: { CheckoutTestHelpers.openSessionJSON }
     /// )
     ///
-    /// _ = try await CheckoutController(configuration: configuration)
+    /// _ = try await CheckoutElementsController(configuration: configuration)
     /// XCTAssertEqual(recorder.requests.map(\.kind), [.initSession, .updateSession])
     /// XCTAssertEqual(recorder.requests[1].params["tax_region[country]"], "US")
     /// ```
@@ -415,34 +415,34 @@ enum CheckoutTestHelpers {
         }
     }
 
-    /// Presents the shared Payment Pages test session using the CheckoutClient init field names.
+    /// Presents the shared Checkout Client test session using the CheckoutClient init field names.
     static let openSessionJSON: [AnyHashable: Any] = baseSessionJSON.merging(["id": "cs_test_123"]) { _, new in new }
 
-    static func makeOpenSession(customerEmail: String? = nil, billingAddressCollection: String? = nil) -> PaymentPagesAPIResponse {
+    static func makeOpenSession(customerEmail: String? = nil, billingAddressCollection: String? = nil) -> CheckoutClientAPIResponse {
         var json = openSessionJSON
         json["customer_email"] = customerEmail
         json["billing_address_collection"] = billingAddressCollection
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 
-    static func makeClosedSession() -> PaymentPagesAPIResponse {
+    static func makeClosedSession() -> CheckoutClientAPIResponse {
         var json = openSessionJSON
         json["status"] = "complete"
         json["payment_status"] = "paid"
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 
-    static func makeOpenSession(allowedCountries: [String]) -> PaymentPagesAPIResponse {
+    static func makeOpenSession(allowedCountries: [String]) -> CheckoutClientAPIResponse {
         var json = openSessionJSON
         json["shipping_address_collection"] = ["allowed_countries": allowedCountries]
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 
     static func makeAdaptivePricingSession(
         currency: String = "usd",
         integrationAmount: Int = 1200,
         localAmount: Int = 1000
-    ) -> PaymentPagesAPIResponse {
+    ) -> CheckoutClientAPIResponse {
         var json: [AnyHashable: Any] = openSessionJSON
         json["presentment_currency"] = currency
         json["items"] = makeOneTimePriceCheckoutItems(
@@ -462,7 +462,7 @@ enum CheckoutTestHelpers {
             "local_currency_options": [localCurrencyOption],
         ]
 
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 
     private static func jsonObject(_ value: Any) -> Any {
@@ -499,14 +499,14 @@ class MockPKPaymentAuthorizationController: PKPaymentAuthorizationController {
 
 @MainActor
 class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
-    private(set) var currentTaxRegion: CheckoutController.Address?
+    private(set) var currentTaxRegion: CheckoutElementsController.Address?
     private(set) var updateCallCount = 0
-    private(set) var lastAddress: CheckoutController.Address?
+    private(set) var lastAddress: CheckoutElementsController.Address?
     private(set) var lastCanUpdateWhileSheetPresented: Bool?
-    private let sessionToReturn: CheckoutController.Session?
+    private let sessionToReturn: CheckoutElementsController.Session?
     private let errorToThrow: Error?
     private let suspendsFirstUpdate: Bool
-    private var continuation: CheckedContinuation<CheckoutController.Session, Error>?
+    private var continuation: CheckedContinuation<CheckoutElementsController.Session, Error>?
     private var didSuspend = false
 
     var isWaiting: Bool {
@@ -514,9 +514,9 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     }
 
     init(
-        sessionToReturn: CheckoutController.Session? = nil,
+        sessionToReturn: CheckoutElementsController.Session? = nil,
         errorToThrow: Error? = nil,
-        currentTaxRegion: CheckoutController.Address? = nil,
+        currentTaxRegion: CheckoutElementsController.Address? = nil,
         suspendsFirstUpdate: Bool = false
     ) {
         self.sessionToReturn = sessionToReturn
@@ -526,10 +526,10 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     }
 
     func updateTaxRegionWithoutEnqueueing(
-        address: CheckoutController.Address?,
+        address: CheckoutElementsController.Address?,
         canUpdateWhileSheetPresented: Bool,
-        confirmationSource: CheckoutController.ConfirmingElement
-    ) async throws -> CheckoutController.Session {
+        confirmationSource: CheckoutElementsController.ConfirmingElement
+    ) async throws -> CheckoutElementsController.Session {
         updateCallCount += 1
         lastAddress = address
         lastCanUpdateWhileSheetPresented = canUpdateWhileSheetPresented
@@ -539,7 +539,7 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
         guard let sessionToReturn else {
             throw CheckoutError.unknown(debugDescription: "MockCheckoutSessionWalletUpdater has no session configured")
         }
-        let session: CheckoutController.Session
+        let session: CheckoutElementsController.Session
         if suspendsFirstUpdate && !didSuspend {
             didSuspend = true
             session = try await withCheckedThrowingContinuation { continuation in
@@ -563,21 +563,21 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     }
 }
 
-extension CheckoutController.ApplePayConfirmationParameters {
+extension CheckoutElementsController.ApplePayConfirmationParameters {
     static func makeMock(
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
         applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.test"),
         shippingAddressRequired: Bool = false,
-        defaultBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? = nil,
+        defaultBillingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
-        confirmationHandler: @escaping CheckoutController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
+        confirmationHandler: @escaping CheckoutElementsController.ApplePayConfirmationParameters.ConfirmationHandler = { _ in
             .failed(CheckoutError.unknown(debugDescription: "Unexpected Apple Pay confirmation in test."))
         },
-        confirmationSource: CheckoutController.ConfirmingElement = .paymentElement
-    ) -> CheckoutController.ApplePayConfirmationParameters {
-        CheckoutController.ApplePayConfirmationParameters(
+        attribution: CheckoutAttributionContext = .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
+    ) -> CheckoutElementsController.ApplePayConfirmationParameters {
+        CheckoutElementsController.ApplePayConfirmationParameters(
             applePayConfiguration: applePayConfiguration,
             apiClient: apiClient,
             returnURL: returnURL,
@@ -586,24 +586,24 @@ extension CheckoutController.ApplePayConfirmationParameters {
             defaultBillingDetails: defaultBillingDetails,
             presentationWindow: presentationWindow,
             confirmationHandler: confirmationHandler,
-            confirmationSource: confirmationSource
+            attribution: attribution
         )
     }
 }
 
-// MARK: - PaymentPagesAPIResponse decorator helpers
+// MARK: - CheckoutClientAPIResponse decorator helpers
 
-extension PaymentPagesAPIResponse {
-    func withCustomer(id: String = "cus_123") -> PaymentPagesAPIResponse {
+extension CheckoutClientAPIResponse {
+    func withCustomer(id: String = "cus_123") -> CheckoutClientAPIResponse {
         withOverrides(["customer": ["id": id]])
     }
 
-    func withSessionId(_ id: String) -> PaymentPagesAPIResponse {
+    func withSessionId(_ id: String) -> CheckoutClientAPIResponse {
         withOverrides(["id": id])
     }
 
-    private func withOverrides(_ overrides: [String: Any]) -> PaymentPagesAPIResponse {
+    private func withOverrides(_ overrides: [String: Any]) -> CheckoutClientAPIResponse {
         let json = allResponseFields.merging(overrides) { _, new in new }
-        return try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 }

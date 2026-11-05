@@ -131,8 +131,8 @@ final class LinkAuthAPITests: STPNetworkStubbingTestCase {
         XCTAssertEqual(enabled.linkSupportedVerificationTypes, [.sms, .email])
 
         // ...and the account service carries them into lookups and accounts
-        XCTAssertEqual(LinkAccountService(elementsSession: enabled).supportedVerificationTypes, [.sms, .email])
-        XCTAssertEqual(LinkAccountService(elementsSession: disabled).supportedVerificationTypes, [.sms])
+        XCTAssertEqual(LinkAccountService(elementsSession: enabled, analyticsHelper: .init()).supportedVerificationTypes, [.sms, .email])
+        XCTAssertEqual(LinkAccountService(elementsSession: disabled, analyticsHelper: .init()).supportedVerificationTypes, [.sms])
     }
 
     private func assertRefreshDeclares(_ types: [SupportedVerificationType], expected: Set<String>, file: StaticString = #filePath, line: UInt = #line) {

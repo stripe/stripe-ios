@@ -398,7 +398,7 @@ extension Intent {
                 ],
             ]
         }
-        let checkoutSession = try! PaymentPagesAPIResponse.decode(fromAPIResponse: json)
+        let checkoutSession = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
         return .checkout(checkoutSession.makePublicSession())
     }
 }
@@ -585,7 +585,7 @@ extension PaymentSheetFormFactory {
 
 extension LinkAccountService {
     static func _testValue() -> Self {
-        .init(apiClient: STPAPIClient(publishableKey: "pk_test"), elementsSession: .emptyElementsSession)
+        .init(apiClient: STPAPIClient(publishableKey: "pk_test"), elementsSession: .emptyElementsSession, analyticsHelper: .init())
     }
 }
 

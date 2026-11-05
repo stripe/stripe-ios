@@ -32,6 +32,10 @@
 
 "Bank account details cannot be changed." = "Bankrekeninggegevens kunnen niet worden gewijzigd.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Voordat we een code naar je e-mailadres kunnen sturen, moeten we aanvullende informatie over jou verifiëren. Voer je telefoonnummer in dat eindigt op ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Voordat we een code naar je e-mailadres kunnen sturen, moeten we aanvullende informatie over jou verifiëren. Voer je telefoonnummer in.";
+
 "Buy Now, Pay Later with  <img/>" = "Koop nu, betaal later met <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Koop nu, betaal later met Afterpay";
@@ -116,8 +120,6 @@
 
 "Close card scanner" = "Kaartscanner afsluiten";
 
-"Code sent" = "Code verstuurd";
-
 "Complete the payment using Pix to finish the purchase." = "Rond de betaling af met Pix om de aankoop te voltooien.";
 
 "Confirm" = "Bevestigen";
@@ -162,7 +164,11 @@
 
 "Edit address" = "Adres bewerken";
 
+"Email code" = "E-mailcode";
+
 "Enter address manually" = "Adres handmatig invoeren";
+
+"Enter the phone number on your Link account." = "Voer het telefoonnummer van je Link-account in.";
 
 "Exchange rate and fees of your bank may apply." = "Er kunnen wisselkoersen en bankkosten van toepassing zijn.";
 
@@ -186,6 +192,8 @@
 
 "Last 4 digits of SSN" = "Laatste 4 cijfers van BSN";
 
+"Log in to another account" = "Meld je aan bij een ander account";
+
 "Manage SEPA debit" = "SEPA-incasso beheren";
 
 "Manage US bank account" = "Amerikaanse bankrekening beheren";
@@ -202,6 +210,8 @@
 
 "Manage your payment methods" = "Uw betaalmethoden beheren";
 
+"More options" = "Meer opties";
+
 "Name on card" = "Naam op betaalkaart";
 
 "Naver Pay Card" = "Naver Pay Card";
@@ -213,6 +223,8 @@
 "New payment method" = "Nieuwe betaalmethode";
 
 "No %@ promo" = "Geen %@-promo";
+
+"None of the payment methods in your %@ account work with this business." = "Geen van de betaalmethoden in je %@-account werkt met deze onderneming.";
 
 "Not you?" = "Ben jij dit niet?";
 
@@ -277,6 +289,8 @@
 "Remove payment method" = "Betaalmethode verwijderen";
 
 "Remove payment method?" = "Betaalmethode verwijderen?";
+
+"Resend code in %d seconds" = "Code opnieuw verzenden over %li seconden";
 
 "SEPA debit details cannot be changed." = "SEPA-incassogegevens kunnen niet worden gewijzigd.";
 
@@ -358,6 +372,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Deze betaalmethode wordt verwijderd, maar blijft beschikbaar voor %@ abonnementen.";
 
+"This phone number doesn't match your Link account. Please try again." = "Dit telefoonnummer komt niet overeen met je Link-account. Probeer het opnieuw.";
+
 "Too many attempts. Please try again in a few minutes." = "Te veel pogingen. Probeer het over een paar minuten opnieuw.";
 
 "Unavailable for this purchase" = "Niet beschikbaar voor deze aankoop";
@@ -368,9 +384,17 @@
 
 "Use billing address for shipping" = "Gebruik factuuradres voor verzending";
 
+"Verify your phone number" = "Je telefoonnummer verifiëren";
+
+"Verifying your account…" = "Je account wordt geverifieerd…";
+
 "View more" = "Meer weergeven";
 
+"We couldn't verify your account. Please close this window and try again." = "We hebben je account niet kunnen verifiëren. Sluit dit venster en probeer het opnieuw.";
+
 "Yes, update" = "Ja, bijwerken";
+
+"You can't pay with %@ here" = "Je kunt hier niet met %@ betalen";
 
 "Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
 

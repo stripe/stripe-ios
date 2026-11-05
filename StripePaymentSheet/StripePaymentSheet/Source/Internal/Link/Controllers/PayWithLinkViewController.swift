@@ -62,7 +62,6 @@ protocol PayWithLinkCoordinating: AnyObject {
     func handlePaymentDetailsSelected(_ paymentDetails: ConsumerPaymentDetails, confirmationExtras: LinkConfirmationExtras)
     func logout(cancel: Bool)
     func bailToWebFlow()
-    func allowSheetDismissal(_ enable: Bool)
     func cancel3DS2ChallengeFlow()
 }
 
@@ -76,14 +75,11 @@ final class PayWithLinkViewController: NSObject {
 
     enum LinkAccountError: LocalizedError {
         case noLinkAccount
-        case noFundingSources
 
         var errorDescription: String? {
             switch self {
             case .noLinkAccount:
                 return "No Link account is set"
-            case .noFundingSources:
-                return "No supported payment methods available for this Link session"
             }
         }
     }
@@ -105,7 +101,6 @@ final class PayWithLinkViewController: NSObject {
         var analyticsHelper: PaymentSheetAnalyticsHelper
         let linkAppearance: LinkAppearance?
         let linkConfiguration: LinkConfiguration?
-        let confirmationSource: CheckoutController.ConfirmingElement?
 
         var isDismissible: Bool = true
 
@@ -152,7 +147,6 @@ final class PayWithLinkViewController: NSObject {
         ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
         ///   - linkAppearance: Optional appearance overrides for Link UI.
         ///   - linkConfiguration: Configuration for Link behavior and content.
-        ///   - confirmationSource: The confirming Checkout element, preserved if native Link falls back to web.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
@@ -167,8 +161,7 @@ final class PayWithLinkViewController: NSObject {
             supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             linkAppearance: LinkAppearance? = nil,
-            linkConfiguration: LinkConfiguration? = nil,
-            confirmationSource: CheckoutController.ConfirmingElement? = nil
+            linkConfiguration: LinkConfiguration? = nil
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -184,7 +177,6 @@ final class PayWithLinkViewController: NSObject {
             self.analyticsHelper = analyticsHelper
             self.linkAppearance = linkAppearance
             self.linkConfiguration = linkConfiguration
-            self.confirmationSource = confirmationSource
         }
     }
 
@@ -225,8 +217,7 @@ final class PayWithLinkViewController: NSObject {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
-        linkConfiguration: LinkConfiguration? = nil,
-        confirmationSource: CheckoutController.ConfirmingElement? = nil
+        linkConfiguration: LinkConfiguration? = nil
     ) {
         LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
 
@@ -245,8 +236,7 @@ final class PayWithLinkViewController: NSObject {
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 analyticsHelper: analyticsHelper,
                 linkAppearance: linkAppearance,
-                linkConfiguration: linkConfiguration,
-                confirmationSource: confirmationSource
+                linkConfiguration: linkConfiguration
             ),
             linkAccount: linkAccount,
             nativeSheetPresentation: nativeSheetPresentation
@@ -343,10 +333,6 @@ final class PayWithLinkViewController: NSObject {
             contentViewController.navigationBar.setStyle(.back(showAdditionalButton: false))
         }
 
-        // Re-enable user interaction when presenting a new controller.
-        if !sheetContainer.view.isUserInteractionEnabled {
-            setUserInteractionEnabled(true)
-        }
         sheetContainer.pushContentViewController(contentViewController)
     }
 
@@ -432,7 +418,9 @@ private extension PayWithLinkViewController {
         let supportedPaymentDetailsTypesSet = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
 
         guard !supportedPaymentDetailsTypesSet.isEmpty else {
-            finish(withResult: .failed(error: LinkAccountError.noFundingSources), deferredIntentConfirmationType: nil)
+            // We only learn which payment details types the consumer can use after they authenticate,
+            // so let them pick another account or payment method instead of dismissing Link.
+            setViewControllers([NoFundingSourcesViewController(context: context)])
             return
         }
 
@@ -486,7 +474,7 @@ private extension PayWithLinkViewController {
 
     private func attemptReauthentication() async -> PaymentSheetLinkAccount? {
         // Tell the LinkAccountService to lookup again
-        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
+        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession, analyticsHelper: context.analyticsHelper.linkAnalytics)
 
         return await withCheckedContinuation { continuation in
             accountService.lookupAccount(
@@ -679,7 +667,12 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             linkBrand: consumerSession.linkBrand
         )
 
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+        let clientAttributionMetadata = context.analyticsHelper.shouldIncludeClientAttributionMetadata
+            ? STPClientAttributionMetadata.makeClientAttributionMetadata(
+                intent: context.intent,
+                elementsSession: context.elementsSession,
+                checkoutAttribution: context.analyticsHelper.checkoutAttribution
+            ) : nil
 
         func createPaymentDetails(linkedAccountId: String) {
             linkAccount.createPaymentDetails(
@@ -792,11 +785,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         )
     }
 
-    func allowSheetDismissal(_ enable: Bool) {
-        setUserInteractionEnabled(enable)
-        context.isDismissible = enable
-    }
-
     func confirmWithApplePay() {
         payWithLinkDelegate?.payWithLinkViewControllerDidConfirm(
             self,
@@ -872,7 +860,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             configuration: context.configuration,
             linkAccount: linkAccount,
             alwaysUseEphemeralSession: true,
-            confirmationSource: context.confirmationSource
+            checkoutAttribution: context.analyticsHelper.checkoutAttribution,
+            analyticsHelper: context.analyticsHelper.linkAnalytics
         )
         payWithLinkVC.payWithLinkDelegate = payWithLinkWebDelegate
         // Dismiss ourselves...
@@ -880,7 +869,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             // ... and present the web controller. (This presentation will be handled by ASWebAuthenticationSession)
             payWithLinkVC.present(over: presentingViewController)
         }
-        STPAnalyticsClient.sharedClient.logLinkBailedToWebFlow()
+        context.analyticsHelper.linkAnalytics.logBailedToWebFlow()
     }
 
     func cancel3DS2ChallengeFlow() {
@@ -892,7 +881,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, any Error>) -> Void) {
         // Tell the LinkAccountService to lookup again
-        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
+        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession, analyticsHelper: context.analyticsHelper.linkAnalytics)
         accountService.lookupAccount(
             withEmail: linkAccount?.email,
             emailSource: .prefilledEmail,
@@ -910,7 +899,8 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                         linkAccount: account,
                         brand: account.linkBrand ?? self.context.linkBrand,
                         configuration: self.context.configuration,
-                        appearance: self.context.linkAppearance
+                        appearance: self.context.linkAppearance,
+                        analyticsHelper: self.context.analyticsHelper.linkAnalytics
                     )
                     verificationController.present(from: self.sheetContainer) { result in
                         switch result {

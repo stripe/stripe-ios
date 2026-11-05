@@ -48,7 +48,7 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkout(CheckoutController)
+        case checkout(CheckoutElementsController)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
@@ -166,7 +166,8 @@ public class PaymentSheet {
                             mode: .inlineLogin,
                             linkAccount: linkAccount,
                             brand: self.configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: linkAccount),
-                            configuration: self.configuration
+                            configuration: self.configuration,
+                            analyticsHelper: self.analyticsHelper.linkAnalytics
                         )
 
                         verificationController.present(from: self.bottomSheetViewController) { result in

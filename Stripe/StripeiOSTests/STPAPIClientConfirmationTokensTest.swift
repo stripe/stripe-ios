@@ -200,7 +200,8 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
                                         return ""
                                     }),
             clientDefaultPaymentMethod: nil,
-            configuration: configuration
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer)
         )
 
         // Get ephemeral key from customer session

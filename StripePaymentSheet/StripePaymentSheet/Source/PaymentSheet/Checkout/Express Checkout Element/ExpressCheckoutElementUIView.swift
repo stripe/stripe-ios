@@ -32,13 +32,13 @@ public final class ExpressCheckoutElementUIView: UIView {
     private var displayedPaymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
     private var hasReportedInit = false
     private var linkBrand: LinkBrand
-    private var session: CheckoutController.Session
+    private var session: CheckoutElementsController.Session
     private weak var delegate: ExpressCheckoutElementDelegate?
 
     // MARK: - Init
 
     init(
-        session: CheckoutController.Session,
+        session: CheckoutElementsController.Session,
         configuration: ExpressCheckoutElement.Configuration,
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient = .shared,
@@ -74,7 +74,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     // MARK: - Internal Methods
 
     func update(
-        with session: CheckoutController.Session,
+        with session: CheckoutElementsController.Session,
         buttons: [ExpressCheckoutElement.PaymentMethod]
     ) {
         self.session = session

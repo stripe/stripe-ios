@@ -72,8 +72,8 @@ import UIKit
     @objc public static let apiVersion = APIVersion
 
     // MARK: Internal/private properties
-    @_spi(InternalOnlyAPI) public var apiURL: URL! = URL(string: APIBaseURL)
-    @_spi(InternalOnlyAPI) public var urlSession = URLSession(
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var apiURL: URL! = URL(string: APIBaseURL)
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var urlSession = URLSession(
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
 
@@ -81,12 +81,12 @@ import UIKit
     public var betas: Set<String> = []
 
     /// Returns `true` if `publishableKey` is actually a user key, `false` otherwise.
-    @_spi(InternalOnlyAPI) public var publishableKeyIsUserKey: Bool {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var publishableKeyIsUserKey: Bool {
         return publishableKey?.hasPrefix("uk_") ?? false
     }
 
     /// Determines the `Stripe-Livemode` header value when the publishable key is a user key
-    @_spi(DashboardOnly) public var userKeyLiveMode = true
+    @_spi(DashboardOnly) @_spi(ReactNativeSDK) public var userKeyLiveMode = true
 
     @_spi(InternalOnlyAPI) public lazy var stripeAttest: StripeAttest = StripeAttest(apiClient: self)
 
