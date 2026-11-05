@@ -660,6 +660,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
     func testLinkEmbedded_disabledSPM_firstTimeLinkUser() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.uiStyle = .embedded
+        settings.integrationType = .deferred_csc
         settings.customerMode = .guest
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
