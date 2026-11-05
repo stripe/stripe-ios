@@ -102,6 +102,7 @@ class NativeFlowController {
 
         let showConfirmationAlert = !(
             navigationController.topViewController is ConsentViewController
+            || navigationController.topViewController is StreamlinedConsentViewController
             || navigationController.topViewController is SuccessViewController
             || navigationController.topViewController is TerminalErrorViewController
             || ((navigationController.topViewController as? ErrorViewController)?.isTerminal == true)
@@ -164,7 +165,8 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    appearance: self.dataManager.manifest.appearance
+                    appearance: self.dataManager.manifest.appearance,
+                    didSelectLogo: self.navigationBarLogoAction(forViewController: viewController)
                 )
             }
             self.navigationController.setViewControllers(viewControllers, animated: animated)
@@ -218,7 +220,8 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    appearance: dataManager.manifest.appearance
+                    appearance: dataManager.manifest.appearance,
+                    didSelectLogo: self.navigationBarLogoAction(forViewController: viewController)
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
             } else {
@@ -226,6 +229,20 @@ extension NativeFlowController {
                 // show a terminal error
                 self.showTerminalError()
             }
+        }
+    }
+
+    private func navigationBarLogoAction(forViewController viewController: UIViewController) -> (() -> Void)? {
+        guard let streamlinedConsentViewController = viewController as? StreamlinedConsentViewController else {
+            return nil
+        }
+        return { [weak self, weak streamlinedConsentViewController] in
+            guard let self, let streamlinedConsentViewController else { return }
+            self.dataManager.analyticsClient.log(
+                eventName: "click.nav_bar.logo",
+                pane: .streamlinedConsent
+            )
+            streamlinedConsentViewController.didSelectNavigationBarLogo()
         }
     }
 
@@ -833,6 +850,44 @@ extension NativeFlowController: IDConsentContentViewControllerDelegate {
     }
 }
 
+// MARK: - StreamlinedConsentViewControllerDelegate
+
+extension NativeFlowController: StreamlinedConsentViewControllerDelegate {
+    func streamlinedConsentViewController(
+        _ viewController: StreamlinedConsentViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        nextPaneOrDrawerOnSecondaryCta: String?
+    ) {
+        let parameters = CreatePaneParameters(
+            nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+        )
+        if nextPane == .networkingLinkLoginWarmup {
+            presentPaneAsSheet(nextPane, parameters: parameters)
+        } else {
+            pushPane(nextPane, parameters: parameters, animated: true)
+        }
+    }
+
+    func streamlinedConsentViewController(
+        _ viewController: StreamlinedConsentViewController,
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            didReceiveEvent: FinancialConnectionsEventPayload(name: .consentAcquired)
+        )
+
+        dataManager.manifest = manifest
+
+        let nextPane = manifest.nextPane
+        if nextPane == .networkingLinkLoginWarmup {
+            presentPaneAsSheet(nextPane)
+        } else {
+            pushPane(nextPane, animated: true)
+        }
+    }
+}
+
 // MARK: - InstitutionPickerViewControllerDelegate
 
 extension NativeFlowController: InstitutionPickerViewControllerDelegate {
@@ -885,8 +940,16 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
         dataManager.institution = institution
         dataManager.manifest = payload.manifest
         dataManager.idConsentContent = payload.text?.idConsentContentPane
+        dataManager.streamlinedConsentPane = payload.text?.streamlinedConsentPane
 
-        pushPane(payload.manifest.nextPane, animated: true, clearNavigationStack: true)
+        let nextPane = payload.manifest.nextPane
+        pushPane(
+            nextPane,
+            animated: true,
+            // Streamlined consent is tied to the selected institution, so we
+            // let the user go back to the institution picker to choose another one.
+            clearNavigationStack: nextPane != .streamlinedConsent
+        )
     }
 
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
@@ -1492,7 +1555,8 @@ private func CreatePaneViewController(
                 institution: institution,
                 analyticsClient: dataManager.analyticsClient,
                 reduceManualEntryProminenceInErrors: dataManager.reduceManualEntryProminenceInErrors,
-                dataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice,
+                dataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice
+                    ?? dataManager.streamlinedConsentPane?.dataAccessNotice,
                 consumerSessionClientSecret: dataManager.consumerSession?.clientSecret,
                 isRelink: dataManager.pendingRelinkAuthorization != nil
             )
@@ -1602,6 +1666,7 @@ private func CreatePaneViewController(
                 clientSecret: dataManager.clientSecret,
                 consumerSession: consumerSession,
                 dataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice
+                    ?? dataManager.streamlinedConsentPane?.dataAccessNotice
             )
             let linkAccountPickerViewController = LinkAccountPickerViewController(
                 dataSource: linkAccountPickerDataSource
@@ -1713,6 +1778,25 @@ private func CreatePaneViewController(
             )
             partnerAuthViewController.delegate = nativeFlowController
             viewController = partnerAuthViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
+    case .streamlinedConsent:
+        if let streamlinedConsentPane = dataManager.streamlinedConsentPane {
+            let streamlinedConsentDataSource = StreamlinedConsentDataSourceImplementation(
+                manifest: dataManager.manifest,
+                streamlinedConsentPane: streamlinedConsentPane,
+                consentPaneDataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let streamlinedConsentViewController = StreamlinedConsentViewController(
+                dataSource: streamlinedConsentDataSource
+            )
+            streamlinedConsentViewController.delegate = nativeFlowController
+            viewController = streamlinedConsentViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil
