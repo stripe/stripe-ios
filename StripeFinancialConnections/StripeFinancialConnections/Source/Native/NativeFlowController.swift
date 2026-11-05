@@ -870,14 +870,21 @@ extension NativeFlowController: StreamlinedConsentViewControllerDelegate {
 
     func streamlinedConsentViewController(
         _ viewController: StreamlinedConsentViewController,
-        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest,
+        authSession: FinancialConnectionsAuthSession?
     ) {
-        delegate?.nativeFlowController(
-            self,
-            didReceiveEvent: FinancialConnectionsEventPayload(name: .consentAcquired)
-        )
+        didAcquireStreamlinedConsent(manifest: manifest)
 
-        dataManager.manifest = manifest
+        if let authSession {
+            // Like the institution picker, OAuth institutions present the prepane as a sheet.
+            dataManager.authSession = authSession
+            if authSession.isOauthNonOptional {
+                presentPaneAsSheet(.partnerAuth)
+            } else {
+                pushPane(.partnerAuth, animated: true)
+            }
+            return
+        }
 
         let nextPane = manifest.nextPane
         if nextPane == .networkingLinkLoginWarmup {
@@ -885,6 +892,23 @@ extension NativeFlowController: StreamlinedConsentViewControllerDelegate {
         } else {
             pushPane(nextPane, animated: true)
         }
+    }
+
+    func streamlinedConsentViewController(
+        _ viewController: StreamlinedConsentViewController,
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest,
+        failedToCreateAuthSessionWithError error: Error
+    ) {
+        didAcquireStreamlinedConsent(manifest: manifest)
+        showErrorPane(forError: error, referrerPane: .streamlinedConsent)
+    }
+
+    private func didAcquireStreamlinedConsent(manifest: FinancialConnectionsSessionManifest) {
+        delegate?.nativeFlowController(
+            self,
+            didReceiveEvent: FinancialConnectionsEventPayload(name: .consentAcquired)
+        )
+        dataManager.manifest = manifest
     }
 }
 
@@ -1787,6 +1811,7 @@ private func CreatePaneViewController(
             let streamlinedConsentDataSource = StreamlinedConsentDataSourceImplementation(
                 manifest: dataManager.manifest,
                 streamlinedConsentPane: streamlinedConsentPane,
+                institution: dataManager.institution,
                 consentPaneDataAccessNotice: dataManager.consentPaneModel?.dataAccessNotice,
                 apiClient: dataManager.apiClient,
                 clientSecret: dataManager.clientSecret,
