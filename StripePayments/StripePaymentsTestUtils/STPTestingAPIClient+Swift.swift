@@ -149,6 +149,8 @@ extension STPTestingAPIClient {
         let params = [
             "customer_id": customerID,
             "account": merchantCountry,
+            // Create the ephemeral key with the SDK's API version
+            "version": STPAPIClient.apiVersion,
         ]
         return try await makeRequest(endpoint: "create_ephemeral_key", params: params)
     }

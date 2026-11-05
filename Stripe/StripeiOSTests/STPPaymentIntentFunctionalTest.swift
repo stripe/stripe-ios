@@ -1670,6 +1670,9 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             "mode": "payment",
             "automatic_payment_methods": false,
             "supported_payment_methods": ["klarna"],
+            // Create the PaymentIntent with the SDK's API version, which doesn't accept `payment_method_types`
+            "stripe_version": STPAPIClient.apiVersion,
+            "use_allowed_payment_method_types": true,
         ])
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 

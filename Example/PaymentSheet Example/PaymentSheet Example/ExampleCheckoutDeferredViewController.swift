@@ -210,6 +210,8 @@ class ExampleDeferredCheckoutViewController: UIViewController {
             "hot_dog_count": hotDogStepper.value,
             "salad_count": saladStepper.value,
             "is_subscribing": subscribeSwitch.isOn,
+            // Create the ephemeral key with the SDK's API version
+            "stripe_version": STPAPIClient.apiVersion,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
@@ -262,6 +264,8 @@ class ExampleDeferredCheckoutViewController: UIViewController {
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
             "customer_id": paymentSheetConfiguration.customer?.id,
+            // Create the PaymentIntent with the SDK's API version
+            "stripe_version": STPAPIClient.apiVersion,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])

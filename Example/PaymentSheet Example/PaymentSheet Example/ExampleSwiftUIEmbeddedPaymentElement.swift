@@ -37,6 +37,8 @@ class BackendViewModel: ObservableObject {
             "hot_dog_count": 5,
             "salad_count": 0,
             "is_subscribing": false,
+            // Create the ephemeral key with the SDK's API version
+            "stripe_version": STPAPIClient.apiVersion,
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
 
@@ -110,6 +112,8 @@ class BackendViewModel: ObservableObject {
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
             "customer_id": self.response?.customerID,
+            // Create the PaymentIntent with the SDK's API version
+            "stripe_version": STPAPIClient.apiVersion,
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
 

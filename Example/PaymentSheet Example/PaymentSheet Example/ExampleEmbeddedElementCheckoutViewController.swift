@@ -234,6 +234,8 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             "hot_dog_count": hotDogStepper.value,
             "salad_count": saladStepper.value,
             "is_subscribing": subscribeSwitch.isOn,
+            // Create the ephemeral key with the SDK's API version
+            "stripe_version": STPAPIClient.apiVersion,
         ]
 
         do {
@@ -316,6 +318,8 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
             "customer_id": embeddedPaymentElement.configuration.customer?.id,
+            // Create the PaymentIntent with the SDK's API version
+            "stripe_version": STPAPIClient.apiVersion,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
