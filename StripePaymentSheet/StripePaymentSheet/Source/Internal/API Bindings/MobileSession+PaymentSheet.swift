@@ -81,6 +81,16 @@ extension MobileSession {
     }
 }
 
+extension STPElementsSession {
+    /// The server's payment method availability, when the feature flag is on and the server sent it.
+    var serverPaymentMethodAvailability: MobileSession.PaymentMethodAvailability? {
+        guard PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled else {
+            return nil
+        }
+        return mobileSession?.paymentMethodAvailability
+    }
+}
+
 extension MobileSession.Config {
     init(configuration: PaymentElementConfiguration) {
         let hasDefaultEmail = !(configuration.defaultBillingDetails.email?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)

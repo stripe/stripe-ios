@@ -104,24 +104,26 @@ extension PaymentSheet {
         @MainActor
         static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
-            guard
-                PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled,
-                let serverPaymentMethodTypes = elementsSession.mobileSession?.paymentMethodAvailability?.paymentMethodTypes
-            else {
+            guard let serverPaymentMethodAvailability = elementsSession.serverPaymentMethodAvailability else {
                 return locallyFilteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: logAvailability)
             }
             // The server already applied `paymentMethodOrder`, so use its list as-is.
-            let availablePaymentMethodTypes = paymentMethodTypes(fromServerAvailability: serverPaymentMethodTypes, elementsSession: elementsSession, configuration: configuration)
+            let availablePaymentMethodTypes = paymentMethodTypes(fromServerAvailability: serverPaymentMethodAvailability.paymentMethodTypes, elementsSession: elementsSession, configuration: configuration)
 
             // Shadow the local logic so we can find where it disagrees with the server before deleting it.
+            // This runs once per load, so it also covers Link, whose `isLinkEnabled` is called too often to compare there.
             let serverIdentifiers = availablePaymentMethodTypes.map { $0.identifier }
             let localIdentifiers = locallyFilteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration).map { $0.identifier }
-            if serverIdentifiers != localIdentifiers {
+            let serverLinkEnabled = serverPaymentMethodAvailability.linkEnabled
+            let localLinkEnabled = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
+            if serverIdentifiers != localIdentifiers || serverLinkEnabled != localLinkEnabled {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
                     event: .paymentSheetMobileSessionAvailabilityMismatch,
                     params: [
                         "server_payment_method_types": serverIdentifiers,
                         "local_payment_method_types": localIdentifiers,
+                        "server_link_enabled": serverLinkEnabled,
+                        "local_link_enabled": localLinkEnabled,
                     ]
                 )
             }
