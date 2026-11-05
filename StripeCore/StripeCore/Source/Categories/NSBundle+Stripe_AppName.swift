@@ -9,11 +9,11 @@
 import Foundation
 
 extension Bundle {
-    @_spi(InternalOnlyAPI) public class func stp_applicationName() -> String? {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public class func stp_applicationName() -> String? {
         return self.main.infoDictionary?[kCFBundleNameKey as String] as? String
     }
 
-    @_spi(InternalOnlyAPI) public class func stp_applicationVersion() -> String? {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public class func stp_applicationVersion() -> String? {
         return self.main.infoDictionary?["CFBundleShortVersionString"] as? String
     }
 

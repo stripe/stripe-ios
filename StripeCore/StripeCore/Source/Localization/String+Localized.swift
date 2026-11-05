@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(InternalOnlyAPI) extension String {
+@_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) extension String {
     public enum Localized {
         public static var close: String {
             return STPLocalizedString("Close", "Text for close button")
