@@ -203,7 +203,8 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
                                         return "" // not executed
                                     }),
             clientDefaultPaymentMethod: paymentMethod2.stripeId,
-            configuration: configuration)
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer))
 
         // Requires FF: elements_enable_read_allow_redisplay, to return "1", otherwise 0
         XCTAssertEqual(elementSession.customer?.paymentMethods.count, 1)
@@ -302,7 +303,8 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
                                         return "" // not executed
                                     }),
             clientDefaultPaymentMethod: nil,
-            configuration: configuration)
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer))
 
         XCTAssertEqual(elementSession.customer?.paymentMethods.count, 1)
         XCTAssertEqual(elementSession.customer?.paymentMethods.first?.stripeId, sepaPaymentMethod.stripeId)
