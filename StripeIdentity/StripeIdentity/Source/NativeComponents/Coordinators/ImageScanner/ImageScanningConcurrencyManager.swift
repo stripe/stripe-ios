@@ -26,7 +26,8 @@ protocol ImageScanningConcurrencyManagerProtocol {
 
     func reset()
 
-    func getPerformanceMetrics() async -> (
+    /// Synchronous, so a read made before `reset()` sees the metrics from before the reset.
+    func getPerformanceMetrics() -> (
         averageFPS: Double?,
         numFramesScanned: Int
     )
@@ -67,25 +68,20 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
             }
         }
 
-        func getPerformanceMetrics() async -> (
+        func getPerformanceMetrics() -> (
             averageFPS: Double?,
             numFramesScanned: Int
         ) {
-            await withCheckedContinuation { continuation in
-                queue.async {
-                    var averageFPS: Double?
-                    if let firstScanStartTime = self.firstScanStartTime,
-                        let lastScanEndTime = self.lastScanEndTime
-                    {
-                        averageFPS =
-                            Double(self.numFramesScanned)
-                            / lastScanEndTime.timeIntervalSince(firstScanStartTime)
-                    }
-
-                    continuation.resume(
-                        returning: (averageFPS, self.numFramesScanned)
-                    )
+            queue.sync {
+                var averageFPS: Double?
+                if let firstScanStartTime = self.firstScanStartTime,
+                    let lastScanEndTime = self.lastScanEndTime
+                {
+                    averageFPS =
+                        Double(self.numFramesScanned)
+                        / lastScanEndTime.timeIntervalSince(firstScanStartTime)
                 }
+                return (averageFPS, self.numFramesScanned)
             }
         }
     }
@@ -198,10 +194,10 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         performanceMetricsTracker.reset()
     }
 
-    func getPerformanceMetrics() async -> (
+    func getPerformanceMetrics() -> (
         averageFPS: Double?,
         numFramesScanned: Int
     ) {
-        await performanceMetricsTracker.getPerformanceMetrics()
+        performanceMetricsTracker.getPerformanceMetrics()
     }
 }

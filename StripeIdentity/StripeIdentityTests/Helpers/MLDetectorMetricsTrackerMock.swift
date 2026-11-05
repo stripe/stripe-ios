@@ -28,9 +28,11 @@ final class MLDetectorMetricsTrackerMock: MLDetectorMetricsTrackerProtocol {
 
     func trackScan(inferenceStart: Date, inferenceEnd: Date, postProcessEnd: Date) {}
 
-    func reset() {}
+    func reset() {
+        mockNumFrames = 0
+    }
 
-    func getPerformanceMetrics() async -> (
+    func getPerformanceMetrics() -> (
         averageMetrics: MLDetectorMetricsTracker.Metrics,
         numFrames: Int
     ) {
