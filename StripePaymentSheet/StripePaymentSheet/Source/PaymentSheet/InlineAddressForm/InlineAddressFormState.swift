@@ -1,5 +1,5 @@
 //
-//  AddressFormState.swift
+//  InlineAddressFormState.swift
 //  StripePaymentSheet
 //
 
@@ -9,11 +9,11 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-/// Holds the input of an `AddressForm`. Keep one instance for the life of the screen that shows the
-/// form, so input survives SwiftUI view updates.
+/// Holds the input of an `InlineAddressFormView`. Keep one instance for the life of the screen that
+/// shows the form, so input survives SwiftUI view updates.
 @_spi(InternalOnlyAPI)
 @MainActor
-public final class AddressFormState: ObservableObject {
+public final class InlineAddressFormState: ObservableObject {
     /// An address as entered so far. Any field can be empty or invalid.
     public struct EnteredAddress: Equatable {
         /// The address fields.
@@ -168,7 +168,7 @@ public final class AddressFormState: ObservableObject {
 
 // MARK: - ElementDelegate
 // Elements call their delegate on the main thread.
-@_spi(InternalOnlyAPI) extension AddressFormState: @preconcurrency ElementDelegate {
+@_spi(InternalOnlyAPI) extension InlineAddressFormState: @preconcurrency ElementDelegate {
     @_spi(InternalOnlyAPI) public func didUpdate(element: Element) {
         updateAddresses()
         // Moving between fields ends one field's editing before the next one begins, so check

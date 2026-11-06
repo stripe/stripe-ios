@@ -1,5 +1,5 @@
 //
-//  AddressFormStateTests.swift
+//  InlineAddressFormStateTests.swift
 //  StripePaymentSheetTests
 //
 
@@ -9,7 +9,7 @@
 import XCTest
 
 @MainActor
-final class AddressFormStateTests: XCTestCase {
+final class InlineAddressFormStateTests: XCTestCase {
     func testPrefilledValidAddressIsComplete() {
         // Given a form prefilled with a valid address and name
         let state = makeState(defaultValues: .init(address: Self.validAddress, name: "Jane Doe"))
@@ -92,8 +92,8 @@ final class AddressFormStateTests: XCTestCase {
     private func makeState(
         defaultValues: AddressViewController.Configuration.DefaultAddressDetails,
         nameField: AddressViewController.Configuration.NameField = .auto
-    ) -> AddressFormState {
-        AddressFormState(
+    ) -> InlineAddressFormState {
+        InlineAddressFormState(
             defaultValues: defaultValues,
             allowedCountries: ["US"],
             nameField: nameField,

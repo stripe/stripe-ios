@@ -1,5 +1,5 @@
 //
-//  AddressForm.swift
+//  InlineAddressFormView.swift
 //  StripePaymentSheet
 //
 
@@ -7,23 +7,22 @@
 import SwiftUI
 import UIKit
 
-// Only the Link app uses this view, and Periphery scans the SDK alone.
 // periphery:ignore
-/// Displays the address fields of an `AddressFormState` without a title, button, or scroll view,
-/// so they can sit inline in the host's own layout. Draws nothing until address formats load.
+/// Displays the address fields of an `InlineAddressFormState` without a title, button, or scroll
+/// view, so they can sit inline in the host's own layout. Draws nothing until address formats load.
 @_spi(InternalOnlyAPI)
-public struct AddressForm: View {
-    @ObservedObject private var state: AddressFormState
-    @StateObject private var sizing = AddressFormSizing()
+public struct InlineAddressFormView: View {
+    @ObservedObject private var state: InlineAddressFormState
+    @StateObject private var sizing = InlineAddressFormSizing()
 
     /// Creates a form that displays and edits `state`.
-    public init(state: AddressFormState) {
+    public init(state: InlineAddressFormState) {
         self.state = state
     }
 
     public var body: some View {
         if let addressSectionView = state.addressSection?.view {
-            AddressFormRepresentable(
+            InlineAddressFormRepresentable(
                 addressSectionView: addressSectionView,
                 sizing: sizing
             )
@@ -39,7 +38,7 @@ public struct AddressForm: View {
 
 /// Measures the fields' UIKit view, whose height changes as fields appear and disappear.
 @MainActor
-final class AddressFormSizing: ObservableObject {
+final class InlineAddressFormSizing: ObservableObject {
     @Published private(set) var height: CGFloat?
 
     private var width: CGFloat = 0
@@ -82,9 +81,9 @@ final class AddressFormSizing: ObservableObject {
     }
 }
 
-private struct AddressFormRepresentable: UIViewRepresentable {
+private struct InlineAddressFormRepresentable: UIViewRepresentable {
     let addressSectionView: UIView
-    let sizing: AddressFormSizing
+    let sizing: InlineAddressFormSizing
 
     func makeUIView(context: Context) -> UIView {
         sizing.updateHeight(of: addressSectionView, animated: false)
