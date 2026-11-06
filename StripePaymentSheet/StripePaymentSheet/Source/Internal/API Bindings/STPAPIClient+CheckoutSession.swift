@@ -11,6 +11,13 @@ import Foundation
 
 /// The parameters sent to the Checkout Session `/confirm` endpoint.
 struct CheckoutSessionConfirmationRequestParameters {
+    /// Legacy customer information sent when confirming without a PaymentMethod.
+    /// TODO: Remove this once the server can construct no-PaymentMethod CustomerInfo from
+    /// fixed and independently collected information.
+    struct CustomerData {
+        let email: String?
+    }
+
     struct CollectedInformation {
         let email: String?
 
@@ -30,7 +37,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     let clientSecret: String
 
     private enum ConfirmationInput {
-        case withoutPaymentMethod(customerData: [String: Any]?)
+        case withoutPaymentMethod(customerData: CustomerData)
         case withPaymentMethodID(id: String, expectedType: String, details: PaymentMethodConfirmationDetails, passiveCaptchaToken: String?)
         case withPaymentMethodData(data: STPPaymentMethodParams, details: PaymentMethodConfirmationDetails)
     }
@@ -96,7 +103,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     var inputParameters: [String: Any] {
         switch input {
         case .withoutPaymentMethod(let customerData):
-            return customerData.map { ["customer_data": $0] } ?? [:]
+            return customerData.email.map { ["customer_data": ["email": $0]] } ?? [:]
         case .withPaymentMethodID(let id, let expectedType, let details, let passiveCaptchaToken):
             var parameters = details.parameters
             parameters["payment_method"] = id
@@ -143,7 +150,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         returnURL: String,
         shipping: STPPaymentIntentShippingDetailsParams?,
         clientAttributionMetadata: STPClientAttributionMetadata,
-        customerData: [String: Any]?
+        customerData: CustomerData
     ) -> Self {
         Self(
             sessionId: sessionId,

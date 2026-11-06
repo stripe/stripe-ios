@@ -53,6 +53,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
             XCTAssertNil(params["payment_method"])
             XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") })
+            XCTAssertEqual(params["customer_data[email]"], "jane@example.com")
             XCTAssertEqual(params["shipping[name]"], "Jane Doe")
             XCTAssertEqual(params["shipping[address][line1]"], "510 Townsend St")
             XCTAssertEqual(params["shipping[address][line2]"], "Apt 2")
