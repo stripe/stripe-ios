@@ -287,6 +287,7 @@ struct WalletButtonsFlowControllerView: View {
     }
 }
 
+@MainActor
 class ExampleWalletButtonsModel: ObservableObject {
     let email: String
     let disableLink: Bool

@@ -63,6 +63,7 @@ extension CustomerSheet {
             context.coordinator.presented = presented
         }
 
+        @MainActor
         class Coordinator {
 
             var parent: CustomerSheetPresenter
