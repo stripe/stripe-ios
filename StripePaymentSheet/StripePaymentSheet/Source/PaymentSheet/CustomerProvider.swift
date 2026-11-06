@@ -90,4 +90,13 @@ struct CustomerProvider {
             break
         }
     }
+
+    var analyticValue: String? {
+        switch backing {
+        case .customer(let customer):
+            return customer?.customerAccessProvider.analyticValue
+        case .checkoutSession:
+            return "checkout_session"
+        }
+    }
 }

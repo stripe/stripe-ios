@@ -76,7 +76,7 @@ final class PaymentSheetLoader {
         }
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
-        analyticsHelper.logLoadStarted(isUpdate: isUpdate)
+        analyticsHelper.logLoadStarted(isUpdate: isUpdate, customerProvider: customerProvider)
         loadTimings.logEnd("logLoadStarted")
         // Note loadTimings isn't on PaymentSheetAnalyticsHelper because of an issue where multiple `update` calls can trigger concurrent loads, overwriting the storage of the single analytics helper. We need storage specific to *this* load.
         do {
@@ -218,12 +218,13 @@ final class PaymentSheetLoader {
                 paymentMethodOrientation: loadResult.paymentMethodOrientation,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate,
+                customerProvider: customerProvider,
                 hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods),
                 didLinkLookupTimeOut: didLinkLookupTimeOut
             )
             return (loadResult, confirmationChallenge)
         } catch {
-            analyticsHelper.logLoadFailed(error: error, loadTimings: loadTimings, isUpdate: isUpdate)
+            analyticsHelper.logLoadFailed(error: error, loadTimings: loadTimings, isUpdate: isUpdate, customerProvider: customerProvider)
             throw error
         }
     }
@@ -273,7 +274,7 @@ final class PaymentSheetLoader {
                                                                                                              configuration: configuration,
                                                                                                              customerProvider: customerProvider)
             } catch let error {
-                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)
                 guard shouldFallback(for: error) else {
                     throw error
                 }
@@ -294,7 +295,7 @@ final class PaymentSheetLoader {
                                                                                                            configuration: configuration,
                                                                                                            customerProvider: customerProvider)
             } catch let error {
-                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)
                 guard shouldFallback(for: error) else {
                     throw error
                 }
@@ -315,7 +316,7 @@ final class PaymentSheetLoader {
                                                                                                 customerProvider: customerProvider)
                 intent = .deferredIntent(intentConfig: intentConfig)
             } catch {
-                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)
                 guard shouldFallback(for: error) else {
                     throw error
                 }

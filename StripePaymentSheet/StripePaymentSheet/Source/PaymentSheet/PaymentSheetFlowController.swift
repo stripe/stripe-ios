@@ -368,6 +368,7 @@ extension PaymentSheet {
             )
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
+            self.analyticsHelper.didLoad(loadResult)
             self.analyticsHelper.logInitialized()
             self.analyticsHelper.startTimeMeasurement(.checkout)
             self.viewController = Self.makeViewController(
@@ -802,6 +803,7 @@ extension PaymentSheet {
             confirmationChallenge: ConfirmationChallenge?
         ) {
             // Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+            self.analyticsHelper.didLoad(loadResult)
 
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,

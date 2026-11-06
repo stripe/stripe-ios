@@ -140,9 +140,7 @@ enum CheckoutElementsControllerLoader {
                 checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
             )
         let orientation = fcConfiguration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
-        flowControllerAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
-        flowControllerAnalyticsHelper.paymentMethodOrientation = orientation
-        // Create/reuse and update Embedded analytics helper
+        // Create/reuse Embedded analytics helper
         let embeddedAnalyticsHelper = checkout.paymentElement?.embeddedPaymentElement.analyticsHelper
         ?? PaymentSheetAnalyticsHelper(
             integrationShape: .embedded,
@@ -150,8 +148,6 @@ enum CheckoutElementsControllerLoader {
             checkoutSessionID: session.id,
             checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
         )
-        embeddedAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
-        embeddedAnalyticsHelper.paymentMethodOrientation = .vertical
         // Deal with PMM Promotions Helper
         // TODO: Fix Checkout promotions exposure attribution. This uses the FC layout even
         // when the merchant uses Embedded (vertical) or neither UI; the actual UI is unknown here.
