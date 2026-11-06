@@ -16,8 +16,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
     func testReportsInitWhenAddedToWindowOnce() throws {
         // Given
-        var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
+        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         let session = CheckoutTestHelpers.makeSession([
             "customer_email": "jenny@example.com",
                 "ordered_payment_method_types_and_wallets": ["link"],
@@ -26,12 +25,14 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
                 "country": "US"
             ],
         ]).makePublicSession(
-            expressCheckoutConfiguration: configuration
+            expressCheckoutConfiguration: configuration,
+            applePayMerchantId: "merchant.com.example"
         )
         let analyticsClient = MockAnalyticsClient()
         let view = ExpressCheckoutElementUIView(
             session: session,
             configuration: configuration,
+            applePayMerchantId: "merchant.com.example",
             delegate: FakeExpressCheckoutElementDelegate(),
             analyticsClient: analyticsClient
         )
@@ -157,14 +158,12 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
     func testAvailablePaymentMethodsStoredOnSession() {
         // Given a session listing Link before Apple Pay
-        var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
-            merchantId: "merchant.com.example"
-        )
+        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
 
         // When the public session is created with the ECE configuration
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"], customerEmail: "jenny@example.com").makePublicSession(
-            expressCheckoutConfiguration: configuration
+            expressCheckoutConfiguration: configuration,
+            applePayMerchantId: "merchant.com.example"
         )
 
         // Then it reports the available methods
@@ -184,13 +183,13 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         ]
         for layout in layouts {
             var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-            configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
             configuration.appearance.buttonLayout.maxColumns = layout.maxColumns
             configuration.appearance.buttonLayout.maxRows = layout.maxRows
 
             // When the public session is created with the layout
             let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"], customerEmail: "jenny@example.com").makePublicSession(
-                expressCheckoutConfiguration: configuration
+                expressCheckoutConfiguration: configuration,
+                applePayMerchantId: "merchant.com.example"
             )
 
             // Then it reports only as many methods as the layout can display
@@ -202,14 +201,14 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     func testAvailablePaymentMethodsApplyEligibilityBeforeButtonLayout() {
         // Given a single-button layout where the first wallet is disabled
         var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
         configuration.linkConfiguration.display = .never
         configuration.appearance.buttonLayout.maxColumns = 1
         configuration.appearance.buttonLayout.maxRows = 1
 
         // When the public session is created
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"], customerEmail: "jenny@example.com").makePublicSession(
-            expressCheckoutConfiguration: configuration
+            expressCheckoutConfiguration: configuration,
+            applePayMerchantId: "merchant.com.example"
         )
 
         // Then the remaining eligible wallet fills the available slot
@@ -237,12 +236,11 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     }
 
     func testApplePayButtonWithApplePayConfiguration() {
-        // Given a session with apple_pay and an applePayConfiguration
+        // Given a session with apple_pay and an applePayMerchantId
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["apple_pay"]).makePublicSession()
-        var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.example")
+        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
 
-        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration, applePayMerchantId: "merchant.com.example")
         XCTAssertEqual(buttons.contains(.applePay), StripeAPI.deviceSupportsApplePay())
     }
 
@@ -377,22 +375,20 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
     }
 
     func testApplePayButtonHiddenWhenDisabledOnSession() {
-        // Given a session where Apple Pay is disabled server-side, but the merchant has configured applePayConfiguration
+        // Given a session where Apple Pay is disabled server-side, but the merchant has configured applePayMerchantId
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["apple_pay"], applePayPreference: "disabled").makePublicSession()
-        var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.example")
+        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
 
-        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration, applePayMerchantId: "merchant.com.example")
         XCTAssertFalse(buttons.contains(.applePay))
     }
 
     func testBothButtonsShownInSessionOrder() {
         // Given a session listing link before apple_pay, with both configured
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"]).makePublicSession()
-        var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.example")
+        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
 
-        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
+        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration, applePayMerchantId: "merchant.com.example")
 
         // The order should match the session's wallet ordering, with Apple Pay's inclusion depending on device support
         let expectedButtons: [ExpressCheckoutElement.PaymentMethod] = StripeAPI.deviceSupportsApplePay() ? [.link, .applePay] : [.link]

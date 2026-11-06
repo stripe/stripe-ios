@@ -30,6 +30,7 @@ enum ExpressCheckoutElementUtilities {
         return availablePaymentMethods(
             for: elementsSession,
             configuration: expressCheckoutConfiguration,
+            applePayMerchantId: configuration.applePayMerchantId,
             usesWebLink: usesWebLink,
             requiresShippingAddress: apiResponse.shippingAddressCollection != nil,
             billingDetailsCollectionRequired: apiResponse.billingAddressCollection == "required"
@@ -39,11 +40,13 @@ enum ExpressCheckoutElementUtilities {
     static func availablePaymentMethods(
         for session: CheckoutElementsController.Session,
         configuration: ExpressCheckoutElement.Configuration,
+        applePayMerchantId: String?,
         apiClient: STPAPIClient
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         availablePaymentMethods(
             for: session.elementsSession,
             configuration: configuration,
+            applePayMerchantId: applePayMerchantId,
             usesWebLink: !deviceCanUseNativeLink(elementsSession: session.elementsSession, apiClient: apiClient),
             requiresShippingAddress: session.requiresShippingAddress,
             billingDetailsCollectionRequired: session.billingAddressCollection == .required
@@ -53,6 +56,7 @@ enum ExpressCheckoutElementUtilities {
     static func availablePaymentMethods(
         for elementsSession: STPElementsSession,
         configuration: ExpressCheckoutElement.Configuration,
+        applePayMerchantId: String?,
         usesWebLink: Bool,
         requiresShippingAddress: Bool,
         billingDetailsCollectionRequired: Bool
@@ -61,7 +65,7 @@ enum ExpressCheckoutElementUtilities {
         for paymentMethod in availablePaymentMethodTypes(for: elementsSession) {
             switch paymentMethod {
             case .applePay:
-                if configuration.applePayConfiguration != nil,
+                if applePayMerchantId != nil,
                    StripeAPI.deviceSupportsApplePay() {
                     paymentMethods.append(paymentMethod)
                 }

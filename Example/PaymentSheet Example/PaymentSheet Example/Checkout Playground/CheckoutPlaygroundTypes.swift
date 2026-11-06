@@ -19,6 +19,20 @@ extension ExpressCheckoutElement.Configuration.Appearance.ButtonTheme: CaseItera
 }
 
 enum CheckoutPlayground {
+    enum PaymentElementApplePayDisplay: String, CaseIterable, Identifiable, Codable {
+        case automatic
+        case never
+
+        var id: String { rawValue }
+
+        var sdkValue: PaymentElement.Configuration.ApplePayConfiguration.Display {
+            switch self {
+            case .automatic: return .automatic
+            case .never: return .never
+            }
+        }
+    }
+
     enum ApplePayButtonType: String, CaseIterable, Identifiable, Codable {
         case plain
         case buy
@@ -466,6 +480,8 @@ enum CheckoutPlayground {
         var uiFramework: UIFramework = .swiftUI
         var integrationType: IntegrationType = .flowController
         var expressCheckoutElement = ExpressCheckoutElementSettings()
+        var applePayEnabled = true
+        var paymentElementApplePayDisplay: PaymentElementApplePayDisplay = .automatic
         var linkMode: LinkMode = .native
         var currency: Currency = .usd
         var customerType: CustomerType = .guest

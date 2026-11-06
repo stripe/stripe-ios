@@ -44,10 +44,11 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
         sessionSource: CheckoutSessionSource,
         uiView: ExpressCheckoutElementUIView,
         configuration: ExpressCheckoutElement.Configuration,
+        applePayMerchantId: String?,
         apiClient: STPAPIClient
     ) {
         let initialSession = sessionSource.initialSession
-        let initialButtons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: initialSession, configuration: configuration, apiClient: apiClient)
+        let initialButtons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: initialSession, configuration: configuration, applePayMerchantId: applePayMerchantId, apiClient: apiClient)
         self.uiView = uiView
         self.buttons = initialButtons
         uiView.update(with: initialSession, buttons: initialButtons)
@@ -56,7 +57,7 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 guard let self else { return }
-                let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: configuration, apiClient: apiClient)
+                let buttons = ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: configuration, applePayMerchantId: applePayMerchantId, apiClient: apiClient)
                 self.uiView.update(with: session, buttons: buttons)
                 self.buttons = buttons
             }
