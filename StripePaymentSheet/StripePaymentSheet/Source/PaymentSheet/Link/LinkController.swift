@@ -124,7 +124,7 @@ import UIKit
         LinkAccountService(apiClient: apiClient, elementsSession: elementsSession, analyticsHelper: analyticsHelper.linkAnalytics)
     }()
 
-    private var selectedPaymentDetails: ConsumerPaymentDetails? {
+    var selectedPaymentDetails: ConsumerPaymentDetails? {
         guard case .link(let confirmOption) = internalPaymentOption else {
             return nil
         }
@@ -148,8 +148,14 @@ import UIKit
     /// A preview of the currently selected Link payment method.
     @Published @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
-    private var resolvedLinkBrand: LinkBrand {
-        linkAccount?.linkBrand ?? LinkAccountContext.shared.account?.linkBrand ?? initialLinkBrand
+    /// Forces the Link brand of `LinkController`s created afterwards, for testing. In production, the brand is chosen by Stripe.
+    @_spi(InternalOnlyAPI) public static var forcedLinkBrandForTesting: LinkBrand?
+
+    var resolvedLinkBrand: LinkBrand {
+        paymentElementConfiguration.link.brand
+            ?? linkAccount?.linkBrand
+            ?? LinkAccountContext.shared.account?.linkBrand
+            ?? initialLinkBrand
     }
 
     @_spi(InternalOnlyAPI) public var elementsSessionID: String {
@@ -283,6 +289,7 @@ import UIKit
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
                 paymentElementConfiguration.returnURL = configuration?.returnURL
+                paymentElementConfiguration.link.brand = Self.forcedLinkBrandForTesting
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,
@@ -348,6 +355,7 @@ import UIKit
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
                 paymentElementConfiguration.returnURL = configuration?.returnURL
+                paymentElementConfiguration.link.brand = Self.forcedLinkBrandForTesting
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,
