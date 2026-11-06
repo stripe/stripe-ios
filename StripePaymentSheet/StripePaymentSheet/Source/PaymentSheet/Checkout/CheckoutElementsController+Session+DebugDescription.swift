@@ -215,6 +215,12 @@ private extension CheckoutElementsController.Session.Amount {
     }
 }
 
+private extension CheckoutElementsController.Session.DecimalAmount {
+    var debugValue: String {
+        String(reflecting: amount)
+    }
+}
+
 extension CheckoutElementsController.Session.Status: CustomDebugStringConvertible {
     /// Examples: `.open`, `.expired`, or `.complete(.paid)`.
     public var debugDescription: String {
