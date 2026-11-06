@@ -310,6 +310,7 @@ extension CheckoutElementsController {
                         confirmationSource: .paymentElement,
                         expectedAmount: self.session.amount,
                         returnURL: self.configuration.returnURL,
+                        shipping: self.session.shippingAddress?.shippingDetailsParams,
                         clientAttributionMetadata: STPClientAttributionMetadata.makeClientAttributionMetadata(
                             checkoutSession: self.session,
                             attribution: .init(confirmingElement: .paymentElement, configuredElements: self.configuration.configuredElements)
