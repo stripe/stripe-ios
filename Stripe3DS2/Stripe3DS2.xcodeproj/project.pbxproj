@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1469551DB874336B68F6C39D /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE4030C50383B488C97F4B56 /* Stripe3DS2.framework */; };
 		31FDD52B2F50A73500927B42 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31FDD52A2F50A73500927B42 /* StripeCore.framework */; };
+		31FDD52C2F50A73500927B42 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31FDD52A2F50A73500927B42 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3C6D16D8E7B5BC865D956A0B /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 0118969F6608A92583CC6C98 /* iOSSnapshotTestCase */; };
 		4D73C2FBAC9B96ECB45BDC94 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE4030C50383B488C97F4B56 /* Stripe3DS2.framework */; };
 		4D79F0CFC54E8B923E9238CF /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CE4030C50383B488C97F4B56 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -56,6 +57,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4D79F0CFC54E8B923E9238CF /* Stripe3DS2.framework in Embed Frameworks */,
+				31FDD52C2F50A73500927B42 /* StripeCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
