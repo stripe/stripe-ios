@@ -71,6 +71,10 @@ import UIKit
     /// The API version used to communicate with Stripe.
     @objc public static let apiVersion = APIVersion
 
+    /// Overrides the `bindings_version` sent in `X-Stripe-User-Agent`, so test apps can exercise
+    /// server behavior that depends on the SDK version. Nil reports `STPSDKVersion`.
+    @_spi(InternalOnlyAPI) public static var userAgentSDKVersionOverride: String?
+
     // MARK: Internal/private properties
     @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var apiURL: URL! = URL(string: APIBaseURL)
     @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var urlSession = URLSession(
@@ -193,7 +197,7 @@ import UIKit
             // This SDK isn't in Objective-C anymore, but we sometimes check for
             // 'objective-c' to enable iOS SDK-specific behavior in the API.
             "lang": "objective-c",
-            "bindings_version": STPSDKVersion,
+            "bindings_version": userAgentSDKVersionOverride ?? STPSDKVersion,
         ]
         let version = UIDevice.current.systemVersion
         if version != "" {
