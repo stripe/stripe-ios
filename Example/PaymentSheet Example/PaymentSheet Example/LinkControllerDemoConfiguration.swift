@@ -12,6 +12,11 @@ struct LinkControllerDemoConfiguration {
     var supportedPaymentMethodTypes: Set<LinkPaymentMethodType> = Set(LinkPaymentMethodType.allCases)
     var paymentMethodTypesMode: PaymentMethodTypesMode = .automatic
     var intentMode: IntentMode = .sdkManaged
+    var setupFutureUsage: Bool = false
+    var confirmOnServer: Bool = false
+
+    let amount = 1099
+    let currency = "usd"
     var useCustomAppearance: Bool = false
     var requestedFCPermissions: Set<FCPermission> = []
 
@@ -63,5 +68,6 @@ struct LinkControllerDemoConfiguration {
     enum IntentMode: String, CaseIterable {
         case sdkManaged = "SDK Managed"
         case serverSetupIntent = "Server SetupIntent"
+        case serverPaymentIntent = "Server PaymentIntent"
     }
 }

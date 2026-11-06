@@ -27,8 +27,12 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
     @Published private(set) var paymentMethod: STPPaymentMethod?
     @Published private(set) var message: Message?
 
+    private var configuration = LinkWalletButtonDemoConfiguration()
+    private var customerId: String?
+
     func load(configuration: LinkWalletButtonDemoConfiguration) async {
         guard case .loading = phase else { return }
+        self.configuration = configuration
 
         do {
             let config = try await LinkControllerDemoBackendClient.fetchConfig()
@@ -38,6 +42,7 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
             LinkController.forcedLinkBrandForTesting = configuration.linkBrand.brand
             defer { LinkController.forcedLinkBrandForTesting = nil }
             let linkController = try await LinkController.create(
+                intentConfiguration: makeIntentConfiguration(),
                 appearance: configuration.appearance,
                 configuration: .init(
                     supportedPaymentMethodTypes: Array(configuration.supportedPaymentMethodTypes),
@@ -47,7 +52,7 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
 
             let button = LinkWalletButton(
                 linkController: linkController,
-                email: configuration.email,
+                email: configuration.email.isEmpty ? nil : configuration.email,
                 phoneNumber: configuration.phone.isEmpty ? nil : configuration.phone
             )
             button.delegate = self
@@ -57,6 +62,43 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
         } catch {
             phase = .error(error.localizedDescription)
         }
+    }
+
+    /// With "Pay in Link", an intent configuration whose confirm handler creates the PaymentIntent on the demo backend,
+    /// so the button completes the payment inside Link. Otherwise `nil`, so the button returns the selected payment method.
+    private func makeIntentConfiguration() -> PaymentSheet.IntentConfiguration? {
+        guard configuration.integration == .payInLink else {
+            return nil
+        }
+        let configuration = configuration
+        return .init(mode: .payment(amount: configuration.amount, currency: configuration.currency)) { [weak self] paymentMethod, _ in
+            guard let self else { throw CancellationError() }
+            let customerId = try await self.resolveCustomerId(for: paymentMethod)
+            let paymentIntent = try await LinkControllerDemoBackendClient.createDeferredPaymentIntent(
+                paymentMethodId: paymentMethod.stripeId,
+                customerId: customerId,
+                amount: configuration.amount,
+                currency: configuration.currency,
+                setupFutureUsage: nil,
+                confirmOnServer: configuration.confirmOnServer
+            )
+            return paymentIntent.clientSecret
+        }
+    }
+
+    /// The demo backend's customer, created from the entered email, or, if none was entered,
+    /// from the email Link attaches to the payment method.
+    private func resolveCustomerId(for paymentMethod: STPPaymentMethod) async throws -> String {
+        if let customerId {
+            return customerId
+        }
+        let email = configuration.email.isEmpty ? paymentMethod.billingDetails?.email : configuration.email
+        guard let email, !email.isEmpty else {
+            throw LinkControllerDemoError.missingCustomerEmail
+        }
+        let customerId = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: email)
+        self.customerId = customerId
+        return customerId
     }
 
     // MARK: - LinkWalletButtonDelegate
@@ -72,7 +114,12 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
         switch result {
         case .success(.completed(let paymentMethod)):
             self.paymentMethod = paymentMethod
-            message = .init(text: "Payment method selected", tint: .green)
+            switch configuration.integration {
+            case .collectPaymentMethod:
+                message = .init(text: "Payment method selected", tint: .green)
+            case .payInLink:
+                message = .init(text: "Payment succeeded!", tint: .green)
+            }
         case .success(.canceled):
             message = .init(text: "Link flow canceled", tint: .orange)
         case .failure(let error):
@@ -153,12 +200,19 @@ struct ExampleLinkWalletButtonCheckoutView: View {
                     }
                 }
 
-                Button("Place order") {
-                    isShowingOrderConfirmation = true
+                switch configuration.integration {
+                case .collectPaymentMethod:
+                    Button("Place order") {
+                        isShowingOrderConfirmation = true
+                    }
+                    .buttonStyle(PreviewPrimaryButtonStyle())
+                    .disabled(session.paymentMethod == nil)
+                    .opacity(session.paymentMethod == nil ? 0.4 : 1)
+                case .payInLink:
+                    Text("Tap the Link button to pay. The payment completes inside Link.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
-                .buttonStyle(PreviewPrimaryButtonStyle())
-                .disabled(session.paymentMethod == nil)
-                .opacity(session.paymentMethod == nil ? 0.4 : 1)
             }
             .padding()
         }

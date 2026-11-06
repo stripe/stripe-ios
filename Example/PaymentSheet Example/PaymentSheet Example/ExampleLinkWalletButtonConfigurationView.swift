@@ -17,6 +17,16 @@ struct LinkWalletButtonDemoConfiguration {
     var uiFramework: UIFramework = .swiftUI
     var showsPaymentMethodPreviewOnButton: Bool = true
     var linkBrand: LinkBrandOverride = .automatic
+    var integration: Integration = .collectPaymentMethod
+    var confirmOnServer: Bool = false
+
+    let amount = 1099
+    let currency = "usd"
+
+    enum Integration: String, CaseIterable {
+        case collectPaymentMethod = "Collect payment method"
+        case payInLink = "Pay in Link"
+    }
 
     enum UIFramework: String, CaseIterable {
         case swiftUI = "SwiftUI"
@@ -60,7 +70,7 @@ struct ExampleLinkWalletButtonConfigurationView: View {
                 DemoSection(title: "User Information") {
                     VStack(alignment: .leading, spacing: 16) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Email")
+                            Text("Email (optional)")
                                 .font(.subheadline)
                             TextField("Enter email address", text: $configuration.email)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -98,6 +108,29 @@ struct ExampleLinkWalletButtonConfigurationView: View {
                                 }
                             }
                             .buttonStyle(.plain)
+                        }
+                    }
+                }
+
+                DemoSection(title: "Intent Integration") {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Picker("Intent Integration", selection: $configuration.integration) {
+                            ForEach(LinkWalletButtonDemoConfiguration.Integration.allCases, id: \.self) { integration in
+                                Text(integration.rawValue).tag(integration)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+
+                        switch configuration.integration {
+                        case .collectPaymentMethod:
+                            Text("The LinkController is created without an IntentConfiguration. The button returns the selected payment method, and the merchant places the order.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        case .payInLink:
+                            Text("The LinkController is created with a PaymentIntent IntentConfiguration ($10.99 USD). The Link wallet shows a Pay button; the confirm handler creates the payment intent, and Link confirms it.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Toggle("Confirm on server", isOn: $configuration.confirmOnServer)
                         }
                     }
                 }
@@ -157,8 +190,6 @@ struct ExampleLinkWalletButtonConfigurationView: View {
                     isShowingCheckout = true
                 }
                 .buttonStyle(PreviewPrimaryButtonStyle())
-                .disabled(configuration.email.isEmpty)
-                .opacity(configuration.email.isEmpty ? 0.4 : 1)
             }
             .padding()
         }
