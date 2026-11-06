@@ -38,7 +38,7 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     private enum ConfirmationInput {
         case withoutPaymentMethod(customerData: CustomerData)
-        case withPaymentMethodID(id: String, expectedType: String, details: PaymentMethodConfirmationDetails, passiveCaptchaToken: String?)
+        case withPaymentMethodID(id: String, expectedType: String, details: PaymentMethodConfirmationDetails)
         case withPaymentMethodData(data: STPPaymentMethodParams, details: PaymentMethodConfirmationDetails)
     }
 
@@ -70,7 +70,7 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     /// The ID of the PaymentMethod to use for confirmation.
     var paymentMethodId: String? {
-        guard case .withPaymentMethodID(let id, _, _, _) = input else { return nil }
+        guard case .withPaymentMethodID(let id, _, _) = input else { return nil }
         return id
     }
 
@@ -84,7 +84,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         switch input {
         case .withoutPaymentMethod:
             return nil
-        case .withPaymentMethodID(_, let expectedType, _, _):
+        case .withPaymentMethodID(_, let expectedType, _):
             return expectedType
         case .withPaymentMethodData(let data, _):
             return data.rawTypeString
@@ -95,7 +95,7 @@ struct CheckoutSessionConfirmationRequestParameters {
         switch input {
         case .withoutPaymentMethod:
             return nil
-        case .withPaymentMethodID(_, _, let details, _), .withPaymentMethodData(_, let details):
+        case .withPaymentMethodID(_, _, let details), .withPaymentMethodData(_, let details):
             return details.savePaymentMethod
         }
     }
@@ -104,13 +104,10 @@ struct CheckoutSessionConfirmationRequestParameters {
         switch input {
         case .withoutPaymentMethod(let customerData):
             return customerData.email.map { ["customer_data": ["email": $0]] } ?? [:]
-        case .withPaymentMethodID(let id, let expectedType, let details, let passiveCaptchaToken):
+        case .withPaymentMethodID(let id, let expectedType, let details):
             var parameters = details.parameters
             parameters["payment_method"] = id
             parameters["expected_payment_method_type"] = expectedType
-            if let passiveCaptchaToken {
-                parameters["passive_captcha_token"] = passiveCaptchaToken
-            }
             return parameters
         case .withPaymentMethodData(let paymentMethodData, let details):
             var parameters = details.parameters
@@ -176,7 +173,6 @@ struct CheckoutSessionConfirmationRequestParameters {
         shipping: STPPaymentIntentShippingDetailsParams?,
         paymentMethodOptions: STPConfirmPaymentMethodOptions?,
         clientAttributionMetadata: STPClientAttributionMetadata,
-        passiveCaptchaToken: String? = nil,
         collectedInformation: CollectedInformation
     ) -> Self {
         Self(
@@ -189,8 +185,7 @@ struct CheckoutSessionConfirmationRequestParameters {
                     savePaymentMethod: savePaymentMethod,
                     paymentMethodOptions: paymentMethodOptions,
                     collectedInformation: collectedInformation
-                ),
-                passiveCaptchaToken: passiveCaptchaToken
+                )
             ),
             confirmationSource: confirmationSource,
             expectedAmount: expectedAmount,
