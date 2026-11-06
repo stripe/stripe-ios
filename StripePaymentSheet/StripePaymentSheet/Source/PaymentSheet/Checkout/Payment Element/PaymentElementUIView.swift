@@ -10,6 +10,7 @@ import UIKit
 
 /// A view that displays payment methods.
 @_spi(InternalOnlyAPI)
+@_spi(ReactNativeSDK)
 public final class PaymentElementUIView: UIView {
     /// A delegate for the view.
     public weak var delegate: PaymentElementViewDelegate?
@@ -95,6 +96,7 @@ public final class PaymentElementUIView: UIView {
 
 @MainActor
 @_spi(InternalOnlyAPI)
+@_spi(ReactNativeSDK)
 public protocol PaymentElementViewDelegate: AnyObject {
     /// Called inside an animation block when the PaymentElement view is updating its height.
     func paymentElementViewDidUpdateHeight(paymentElementView: PaymentElementUIView)

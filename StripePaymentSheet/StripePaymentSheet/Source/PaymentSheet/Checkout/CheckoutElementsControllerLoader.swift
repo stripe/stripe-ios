@@ -54,7 +54,7 @@ enum CheckoutElementsControllerLoader {
         let paymentElementUsesLink = paymentElementConfiguration.map {
             PaymentSheet.isLinkEnabled(elementsSession: session.elementsSession, configuration: $0)
         } ?? false
-        let expressCheckoutUsesLink = session.availableExpressCheckoutPaymentMethods.contains(ExpressCheckoutElement.PaymentMethod.link.rawValue)
+        let expressCheckoutUsesLink = session.availableExpressCheckoutPaymentMethods.contains(.link)
         // Hack: Link experiment exposures send default billing details
         var defaultBillingDetails = PaymentSheet.BillingDetails()
         defaultBillingDetails.email = session.email

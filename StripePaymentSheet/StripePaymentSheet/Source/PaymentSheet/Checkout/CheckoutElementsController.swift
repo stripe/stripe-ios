@@ -180,7 +180,10 @@ public final class CheckoutElementsController: ObservableObject {
             }
             var params = configurationParams
             params["ordered_lpms"] = paymentElement?.embeddedPaymentElement.loadResult.paymentMethodTypes.map { $0.identifier }.joined(separator: ",")
-                ?? self.session.availableExpressCheckoutPaymentMethods.joined(separator: ",")
+                ?? configuration.expressCheckoutElement.map {
+                    ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: $0, apiClient: apiClient)
+                        .map(\.rawValue).joined(separator: ",")
+                }
             analyticsHelper.logSucceeded(startedAction, session: self.session, additionalParams: params)
         } catch {
             analyticsHelper.logFailed(startedAction, error: error, session: analyticsSession, additionalParams: configurationParams)
@@ -235,7 +238,7 @@ public final class CheckoutElementsController: ObservableObject {
     /// This will ensure that any persisted authentication state in CheckoutElementsController
     /// is also cleared during logout.
     nonisolated public static func resetCustomer() {
-        UserDefaults.standard.clearLinkDefaults()
+        LinkAccountContext.shared.resetCustomer()
     }
 
     // MARK: - Promotion Codes

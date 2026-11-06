@@ -9,7 +9,7 @@
 import Foundation
 
 /// Error codes returned from STPAPIClient.
-@_spi(InternalOnlyAPI) public enum StripeError: Error {
+@_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public enum StripeError: Error {
     /// The server returned an API error.
     case apiError(StripeAPIError)
 

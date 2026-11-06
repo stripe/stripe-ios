@@ -166,8 +166,8 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             applePayMerchantId: "merchant.com.example"
         )
 
-        // Then it stores the available methods in display order
-        let expectedPaymentMethods = StripeAPI.deviceSupportsApplePay() ? ["link", "apple_pay"] : ["link"]
+        // Then it reports the available methods
+        let expectedPaymentMethods: Set<ExpressCheckoutElement.PaymentMethod> = StripeAPI.deviceSupportsApplePay() ? [.link, .applePay] : [.link]
         XCTAssertEqual(session.availableExpressCheckoutPaymentMethods, expectedPaymentMethods)
     }
 
@@ -212,7 +212,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
 
         // Then the remaining eligible wallet fills the available slot
-        XCTAssertEqual(session.availableExpressCheckoutPaymentMethods, StripeAPI.deviceSupportsApplePay() ? ["apple_pay"] : [])
+        XCTAssertEqual(session.availableExpressCheckoutPaymentMethods, StripeAPI.deviceSupportsApplePay() ? [.applePay] : [])
     }
 
     func testNoButtonsWhenSessionHasNoWalletTypes() {
@@ -286,7 +286,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
         // Then Link is hidden because it cannot update billing-based automatic tax
         XCTAssertTrue(session.elementsSession.disableLinkForAutomaticTaxBilling)
-        XCTAssertFalse(session.availableExpressCheckoutPaymentMethods.contains("link"))
+        XCTAssertFalse(session.availableExpressCheckoutPaymentMethods.contains(.link))
         XCTAssertTrue(reasons.contains(.automaticTaxAddress))
         XCTAssertFalse(
             ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
@@ -317,7 +317,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
         // Then shipping hides Link
         XCTAssertTrue(reasons.contains(.shippingAddressRequired))
-        XCTAssertFalse(session.availableExpressCheckoutPaymentMethods.contains("link"))
+        XCTAssertFalse(session.availableExpressCheckoutPaymentMethods.contains(.link))
     }
 
     func testLinkButtonShownWhenAutomaticTaxUsesShippingAddress() {
@@ -332,7 +332,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         // Then shipping-based automatic tax alone does not hide Link
         let session = apiResponse.makePublicSession(expressCheckoutConfiguration: configuration)
         XCTAssertFalse(session.elementsSession.disableLinkForAutomaticTaxBilling)
-        XCTAssertTrue(session.availableExpressCheckoutPaymentMethods.contains("link"))
+        XCTAssertTrue(session.availableExpressCheckoutPaymentMethods.contains(.link))
     }
 
     func testWebLinkShownWhenCheckoutEmailIsMissing() {
@@ -393,18 +393,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         // The order should match the session's wallet ordering, with Apple Pay's inclusion depending on device support
         let expectedButtons: [ExpressCheckoutElement.PaymentMethod] = StripeAPI.deviceSupportsApplePay() ? [.link, .applePay] : [.link]
         XCTAssertEqual(buttons, expectedButtons)
-    }
-
-    func testAvailablePaymentMethodsStoredOnSessionPreserveSessionOrder() {
-        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-
-        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["apple_pay", "link"], customerEmail: "jenny@example.com").makePublicSession(
-            expressCheckoutConfiguration: configuration,
-            applePayMerchantId: "merchant.com.example"
-        )
-
-        let expectedPaymentMethods = StripeAPI.deviceSupportsApplePay() ? ["apple_pay", "link"] : ["link"]
-        XCTAssertEqual(session.availableExpressCheckoutPaymentMethods, expectedPaymentMethods)
     }
 
     // MARK: - Helpers
