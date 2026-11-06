@@ -56,7 +56,7 @@ class BackendModel {
           guard let unwrappedData = data,
                 let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String: Any] else {
             if let data = data {
-                print("\(String(decoding: data, as: UTF8.self))")
+                print(String(bytes: data, encoding: .utf8) ?? "Response data is not valid UTF-8")
             } else {
                 print("\(error ?? NSError())")  // swiftlint:disable:this discouraged_direct_init
             }
