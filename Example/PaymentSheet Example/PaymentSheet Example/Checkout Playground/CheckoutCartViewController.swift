@@ -870,6 +870,8 @@ final class CheckoutCartViewController: UIViewController {
         guard let checkout else { return }
 
         switch integrationType {
+        case .checkoutSheet:
+            break  // The playground routes Checkout Sheet to its dedicated example.
         case .flowController:
             Task {
                 await checkout.getPaymentElement().present(from: self)

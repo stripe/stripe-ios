@@ -56,8 +56,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         windowScene.windows.first!.rootViewController = navController
     }
 
-    func launchCheckoutElements(windowScene: UIWindowScene) {
-        let hostingController = UIHostingController(rootView: CheckoutPlaygroundView())
+    func launchCheckoutElements(windowScene: UIWindowScene, checkoutSheet: Bool = false) {
+        let hostingController = UIHostingController(rootView: CheckoutPlaygroundView(initialIntegrationType: checkoutSheet ? .checkoutSheet : nil))
         let navigationController = UINavigationController(rootViewController: hostingController)
         windowScene.windows.first!.rootViewController = navigationController
     }
@@ -89,6 +89,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             launchWith(base64String: playgroundData, windowScene: windowScene)
         } else if let playgroundData = ProcessInfo.processInfo.environment["STP_CUSTOMERSHEET_PLAYGROUND_DATA"] {
             launchCustomerSheetWith(base64String: playgroundData, windowScene: windowScene)
+        } else if ProcessInfo.processInfo.environment["STP_CHECKOUT_SHEET"] == "true" {
+            launchCheckoutElements(windowScene: windowScene, checkoutSheet: true)
         } else if ProcessInfo.processInfo.environment["STP_CHECKOUT_ELEMENTS"] == "true" {
             launchCheckoutElements(windowScene: windowScene)
         }

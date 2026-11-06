@@ -196,10 +196,12 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Present the current selection's form VC
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         let bottomSheet = bottomSheetController(with: selectedFormViewController)
-        let presentingViewController = resolvedPresentingViewController
-        assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+        assert(
+            paymentUIHost != nil || resolvedPresentingViewController != nil,
+            "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController."
+        )
         stpAssert(selectedFormViewController.delegate != nil)
-        presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+        presentPaymentUI(bottomSheet)
     }
 
     private func handleSelectionWithoutForm() {
@@ -326,7 +328,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
-            resolvedPresentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+            presentPaymentUI(bottomSheetVC)
             return
         }
 
@@ -342,7 +344,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
-        resolvedPresentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+        presentPaymentUI(bottomSheetVC)
     }
 
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {
@@ -382,7 +384,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: false,
                                                                accessoryType: accessoryType)
-        presentingViewController?.dismiss(animated: true)
+        dismissPaymentUI()
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
@@ -419,7 +421,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
-        presentingViewController?.dismiss(animated: true)
+        dismissPaymentUI()
         return .success
     }
 
@@ -450,7 +452,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
-        presentingViewController?.dismiss(animated: true)
+        dismissPaymentUI()
     }
 
     private func getAccessoryButton(savedPaymentMethods: [STPPaymentMethod]) -> RowButton.RightAccessoryButton.AccessoryType? {
@@ -489,7 +491,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
-        presentingViewController?.dismiss(animated: true)
+        dismissPaymentUI()
     }
 }
 
@@ -542,7 +544,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
 
     func embeddedFormViewControllerDidCompleteConfirmation(_ embeddedFormViewController: EmbeddedFormViewController, result: PaymentSheetResult) {
-        embeddedFormViewController.dismiss(animated: true) {
+        dismissPaymentUI(from: embeddedFormViewController) {
             if case let .confirm(completion) = self.configuration.formSheetAction {
                 completion(result)
             }
@@ -598,7 +600,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             updateChangeButtonAndSublabelState(for: currentSelection)
         }
 
-        embeddedFormViewController.dismiss(animated: true) {
+        dismissPaymentUI(from: embeddedFormViewController) {
             if case let .confirm(completion) = self.configuration.formSheetAction {
                 completion(.canceled)
             }
@@ -612,7 +614,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         if let newSelectedType = embeddedPaymentMethodsView.selectedRowButton?.type {
             updateChangeButtonAndSublabelState(for: newSelectedType)
         }
-        embeddedFormViewController.dismiss(animated: true)
+        dismissPaymentUI(from: embeddedFormViewController)
         informDelegateIfPaymentOptionUpdated()
         if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
             didSelectPaymentOption()

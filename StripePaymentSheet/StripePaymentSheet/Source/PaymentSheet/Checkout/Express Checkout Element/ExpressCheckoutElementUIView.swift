@@ -22,6 +22,8 @@ public final class ExpressCheckoutElementUIView: UIView {
     private let stackView = UIStackView()
     private var linkBrand: LinkBrand
     private weak var delegate: ExpressCheckoutElementDelegate?
+    var onConfirmStarted: (() -> Void)?
+    private var isConfirming = false
 
     // MARK: - Init
 
@@ -87,9 +89,9 @@ public final class ExpressCheckoutElementUIView: UIView {
         let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
         let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: .automatic)
         // TODO: Appearance
-        button.cornerRadius = 6
+        button.cornerRadius = configuration.buttonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: configuration.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleApplePayTapped), for: .touchUpInside)
         return button
     }
@@ -97,9 +99,9 @@ public final class ExpressCheckoutElementUIView: UIView {
     private func makeLinkButton() -> UIView {
         let button = PayWithLinkButton(brand: linkBrand)
         // TODO: Appearance
-        button.cornerRadius = 6
+        button.cornerRadius = configuration.buttonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: configuration.buttonHeight).isActive = true
         button.addTarget(self, action: #selector(handleLinkTapped), for: .touchUpInside)
         return button
     }
@@ -113,8 +115,12 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     private func confirm(_ paymentMethod: ExpressCheckoutElement.PaymentMethod) {
+        guard !isConfirming else { return }
+        isConfirming = true
+        onConfirmStarted?()
         Task { @MainActor [weak self] in
             guard let self else { return }
+            defer { self.isConfirming = false }
             guard let result = await self.delegate?.expressCheckoutElementShouldConfirm(
                 paymentMethod,
                 presentationWindow: window

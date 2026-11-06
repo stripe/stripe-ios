@@ -4,10 +4,13 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutPlaygroundView: View {
+    var initialIntegrationType: CheckoutPlayground.IntegrationType?
     @StateObject private var viewModel = CheckoutPlayground.ViewModel()
+    @State private var appliedInitialIntegration = false
     @State private var showCurrencySelectorAppearance = false
 
     var body: some View {
@@ -53,7 +56,8 @@ struct CheckoutPlaygroundView: View {
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods,
-                            linkMode: $viewModel.linkMode
+                            linkMode: $viewModel.linkMode,
+                            usesCheckoutSheet: viewModel.integrationType == .checkoutSheet
                         )
 
                         CheckoutPlaygroundExpressCheckoutElementSection(
@@ -65,7 +69,7 @@ struct CheckoutPlaygroundView: View {
 
                         currencySelectorAppearanceSection
 
-                        if !viewModel.automaticPaymentMethods {
+                        if !viewModel.automaticPaymentMethods && viewModel.integrationType != .checkoutSheet {
                             CheckoutPlaygroundPaymentMethodSection(
                                 selectedMethods: $viewModel.paymentMethodTypes,
                                 availableMethods: CheckoutPlayground.ViewModel.availablePaymentMethods
@@ -92,31 +96,44 @@ struct CheckoutPlaygroundView: View {
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $viewModel.navigateToCheckout) {
                 if let clientSecret = viewModel.clientSecret {
-                    switch viewModel.uiFramework {
-                    case .swiftUI:
-                        CheckoutCartView(
+                    if viewModel.integrationType == .checkoutSheet, #available(iOS 16.0, *) {
+                        CheckoutSheetExampleView(
                             clientSecret: clientSecret,
                             emailSettings: viewModel.resolvedEmail,
-                            shippingAddressCollection: viewModel.shippingAddressCollection,
                             defaultShippingAddress: viewModel.defaultShippingAddress,
-                            adaptivePricing: true,
-                            integrationType: viewModel.integrationType,
-                            expressCheckoutElementSettings: viewModel.expressCheckoutElement,
-                            currencySelectorAppearance: viewModel.currencySelectorAppearance,
+                            allowsLink: viewModel.expressCheckoutElement.isEnabled
+                                && viewModel.expressCheckoutElement.linkDisplay != .never,
+                            allowsApplePay: viewModel.expressCheckoutElement.isEnabled
+                                && viewModel.expressCheckoutElement.applePayDisplay != .never,
                             delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
                         )
-                    case .uiKit:
-                        CheckoutCartUIKitView(
-                            clientSecret: clientSecret,
-                            emailSettings: viewModel.resolvedEmail,
-                            shippingAddressCollection: viewModel.shippingAddressCollection,
-                            defaultShippingAddress: viewModel.defaultShippingAddress,
-                            adaptivePricing: true,
-                            integrationType: viewModel.integrationType,
-                            expressCheckoutElementSettings: viewModel.expressCheckoutElement,
-                            currencySelectorAppearance: viewModel.currencySelectorAppearance,
-                            delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
-                        )
+                    } else {
+                        switch viewModel.uiFramework {
+                        case .swiftUI:
+                            CheckoutCartView(
+                                clientSecret: clientSecret,
+                                emailSettings: viewModel.resolvedEmail,
+                                shippingAddressCollection: viewModel.shippingAddressCollection,
+                                defaultShippingAddress: viewModel.defaultShippingAddress,
+                                adaptivePricing: true,
+                                integrationType: viewModel.integrationType,
+                                expressCheckoutElementSettings: viewModel.expressCheckoutElement,
+                                currencySelectorAppearance: viewModel.currencySelectorAppearance,
+                                delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
+                            )
+                        case .uiKit:
+                            CheckoutCartUIKitView(
+                                clientSecret: clientSecret,
+                                emailSettings: viewModel.resolvedEmail,
+                                shippingAddressCollection: viewModel.shippingAddressCollection,
+                                defaultShippingAddress: viewModel.defaultShippingAddress,
+                                adaptivePricing: true,
+                                integrationType: viewModel.integrationType,
+                                expressCheckoutElementSettings: viewModel.expressCheckoutElement,
+                                currencySelectorAppearance: viewModel.currencySelectorAppearance,
+                                delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
+                            )
+                        }
                     }
                 }
             }
@@ -130,6 +147,10 @@ struct CheckoutPlaygroundView: View {
                 )
             }
             .onAppear {
+                if !appliedInitialIntegration {
+                    if let initialIntegrationType { viewModel.integrationType = initialIntegrationType }
+                    appliedInitialIntegration = true
+                }
                 viewModel.activateLinkModeOverride()
             }
             .onDisappear {

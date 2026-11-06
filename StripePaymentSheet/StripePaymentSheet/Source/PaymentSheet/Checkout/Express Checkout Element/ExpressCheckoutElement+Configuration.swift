@@ -15,6 +15,14 @@ extension ExpressCheckoutElement {
     public struct Configuration {
         /// Whether to require collecting a shipping address. Default: `false`.
         public var shippingAddressRequired: Bool = false
+        /// Complete checkout surfaces derive fulfillment requirements from the session.
+        var collectsShippingAddressIfRequired = false
+        var buttonHeight: CGFloat = 44
+        var buttonCornerRadius: CGFloat = 6
+
+        func requiresShippingAddress(in session: CheckoutController.Session) -> Bool {
+            shippingAddressRequired || (collectsShippingAddressIfRequired && session.requiresShippingAddress)
+        }
         /// Sets the configuration for Apple Pay.
         public var applePayConfiguration: ApplePayConfiguration?
         /// Sets the configuration for Link.

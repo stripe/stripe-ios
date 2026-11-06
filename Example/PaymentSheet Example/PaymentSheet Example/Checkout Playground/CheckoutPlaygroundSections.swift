@@ -245,6 +245,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var automaticPaymentMethods: Bool
     @Binding var linkMode: CheckoutPlayground.LinkMode
+    var usesCheckoutSheet = false
 
     private var shouldShowAutomaticTax: Bool {
         return customerType != .new
@@ -279,11 +280,16 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     tooltip: "Sets `billing_address_collection` to `auto` or `required`.",
                     displayText: { $0.displayName }
                 )
-                CheckoutPlayground.ToggleRow(
-                    title: "Automatic Payment Methods",
-                    isOn: $automaticPaymentMethods,
-                    tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
-                )
+                if usesCheckoutSheet {
+                    Text("Payment methods are configured in your Stripe Dashboard.")
+                        .font(.footnote).foregroundColor(.secondary).padding(16)
+                } else {
+                    CheckoutPlayground.ToggleRow(
+                        title: "Automatic Payment Methods",
+                        isOn: $automaticPaymentMethods,
+                        tooltip: "Sends `automatic_payment_methods: true` instead of an explicit `payment_method_types` array. Stripe selects the best payment methods for the session."
+                    )
+                }
                 CheckoutPlayground.PickerRow(
                     title: "Link Mode",
                     selection: $linkMode,

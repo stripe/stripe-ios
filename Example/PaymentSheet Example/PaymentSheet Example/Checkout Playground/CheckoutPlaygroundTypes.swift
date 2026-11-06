@@ -253,6 +253,7 @@ enum CheckoutPlayground {
     }
 
     enum IntegrationType: String, CaseIterable, Identifiable, Codable {
+        case checkoutSheet
         case flowController
         case embedded
         case eceOnly
@@ -261,6 +262,7 @@ enum CheckoutPlayground {
 
         var displayName: String {
             switch self {
+            case .checkoutSheet: return "Checkout Sheet"
             case .flowController: return "sheet"
             case .embedded: return "view"
             case .eceOnly: return "ece only"

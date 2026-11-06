@@ -93,6 +93,8 @@ struct PaymentSheetExampleAppRootView: View {
         case walletButtonsView_swiftUI
         case addressCollection_swiftUI
 
+        case checkoutSheet
+
         case paymentSheet_playground
         case customerSheet_playground
         case pmme_playground
@@ -122,7 +124,8 @@ struct PaymentSheetExampleAppRootView: View {
                      .embeddedPaymentElement,
                      .embeddedPaymentElement_swiftUI,
                      .walletButtonsView_swiftUI,
-                     .addressCollection_swiftUI:
+                     .addressCollection_swiftUI,
+                     .checkoutSheet:
                     result[.examples]?.append(destination)
                 case .paymentSheet_playground,
                      .customerSheet_playground,
@@ -170,6 +173,8 @@ struct PaymentSheetExampleAppRootView: View {
                 return "WalletButtonsView (SwiftUI)"
             case .addressCollection_swiftUI:
                 return "AddressElement (SwiftUI)"
+            case .checkoutSheet:
+                return "Checkout Sheet"
             case .checkout_playground:
                 return "Checkout Elements"
             case .customerSheet_playground:
@@ -269,6 +274,8 @@ struct PaymentSheetExampleAppRootView: View {
             AddressElementExampleView()
         case .checkout_playground:
             CheckoutPlaygroundView()
+        case .checkoutSheet:
+            CheckoutPlaygroundView(initialIntegrationType: .checkoutSheet)
 
         // Playgrounds
         case .customerSheet_playground:

@@ -23,6 +23,9 @@ public final class EmbeddedPaymentElement {
     /// A view controller to present on.
     public var presentingViewController: UIViewController?
 
+    /// An SDK-owned container can keep payment editors in its existing checkout navigation.
+    weak var paymentUIHost: EmbeddedPaymentElementUIHost?
+
     /// This contains the `configuration` you passed in to `create`.
     /// - Note: `internal(set)` because checkout session updates may apply address overrides to the configuration.
     public internal(set) var configuration: Configuration
@@ -493,7 +496,8 @@ public final class EmbeddedPaymentElement {
 
 extension EmbeddedPaymentElement {
     var isPresentingPaymentUI: Bool {
-        return presentingViewController?.presentedViewController is BottomSheetViewController
+        return paymentUIHost?.isPresentingPaymentUI == true
+            || presentingViewController?.presentedViewController is BottomSheetViewController
     }
 
     /// Returns the explicitly configured presenting view controller or tries to find one if nil.

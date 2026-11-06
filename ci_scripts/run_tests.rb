@@ -192,6 +192,9 @@ parser = OptionParser.new do |opts|
   opts.on("--result-bundle-path PATH", "Path for xcresult bundle (default: #{DEFAULT_RESULT_BUNDLE})") do |v|
     options[:result_bundle_path] = v
   end
+  opts.on("--derived-data-path PATH", "Use an isolated Xcode build directory") do |v|
+    options[:derived_data_path] = v
+  end
   opts.on("--failures [PATH]", "Inspect failures from xcresult bundle (default: last run)") do |v|
     options[:failures] = v || options[:result_bundle_path]
   end
@@ -292,6 +295,7 @@ cmd = [
 cmd << "-quiet" unless options[:verbose]
 
 cmd += %w[SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO]
+cmd += ["-derivedDataPath", options[:derived_data_path]] if options[:derived_data_path]
 
 options[:tests].each { |spec| cmd << "-only-testing:#{spec}" }
 options[:skip_tests].each { |spec| cmd << "-skip-testing:#{spec}" }

@@ -50,7 +50,7 @@ enum ExpressCheckoutElementUtilities {
         if configuration.linkConfiguration.display == .never {
             reasons.append(.linkConfiguration)
         }
-        if configuration.shippingAddressRequired {
+        if configuration.requiresShippingAddress(in: session) {
             reasons.append(.shippingAddressCollection)
         }
         if session.elementsSession.disableLinkForAutomaticTaxBilling {

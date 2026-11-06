@@ -106,6 +106,8 @@ struct CheckoutCartPaymentMethodSection: View {
 
     private func presentPaymentElement() {
         switch integrationType {
+        case .checkoutSheet:
+            break  // The playground routes Checkout Sheet to its dedicated example.
         case .flowController:
             Task { @MainActor in
                 await checkout.getPaymentElement().present()

@@ -19,6 +19,8 @@ import UIKit
 enum Image: String, CaseIterable, ImageMaker {
     typealias BundleLocator = StripePaymentSheetBundleLocator
 
+    case stripe_wordmark
+
     /// https://developer.apple.com/apple-pay/marketing/
     case apple_pay_mark = "apple_pay_mark"
 

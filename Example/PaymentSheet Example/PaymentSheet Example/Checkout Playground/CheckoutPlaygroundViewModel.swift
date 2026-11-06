@@ -30,6 +30,7 @@ extension CheckoutPlayground {
                 if integrationType == .eceOnly && !expressCheckoutElement.isEnabled {
                     expressCheckoutElement.isEnabled = true
                 }
+                if integrationType == .checkoutSheet { automaticPaymentMethods = true }
             }
         }
         @Published var expressCheckoutElement = ExpressCheckoutElementSettings() {
@@ -201,7 +202,7 @@ extension CheckoutPlayground {
                     paymentMethodSave: checkoutSessionPaymentMethodSave,
                     paymentMethodRemove: checkoutSessionPaymentMethodRemove,
                     email: resolvedEmail,
-                    automaticPaymentMethods: automaticPaymentMethods,
+                    automaticPaymentMethods: integrationType == .checkoutSheet || automaticPaymentMethods,
                     paymentMethodTypes: paymentMethodTypes
                 )
 

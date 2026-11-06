@@ -99,6 +99,7 @@ extension CheckoutController {
         let automaticTaxAddressSource: String?
         let merchantCountryCode: String
         let elementsSession: STPElementsSession
+        var allowsPromotionCodes = false
 
         enum BillingAddressCollection: String {
             case automatic = "auto"
@@ -200,6 +201,7 @@ extension CheckoutController.Session {
             merchantCountryCode: apiResponse.elementsSession.merchantCountryCode,
             elementsSession: elementsSessionValue
         )
+        allowsPromotionCodes = apiResponse.allResponseFields["allow_promotion_codes"] as? Bool ?? false
     }
 }
 
