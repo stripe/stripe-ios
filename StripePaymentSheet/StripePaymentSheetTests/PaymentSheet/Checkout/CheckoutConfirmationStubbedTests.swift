@@ -1157,6 +1157,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let flow = CheckoutElementsController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
+            returnURL: checkout.configuration.returnURL,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
@@ -1189,6 +1190,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let flow = CheckoutElementsController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
+            returnURL: checkout.configuration.returnURL,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: nil,
             analyticsHelper: ._testValue(),
@@ -1355,6 +1357,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let parameters = CheckoutElementsController.PaymentMethodConfirmationParameters(
             option: option,
             configuration: configuration,
+            returnURL: checkout.configuration.returnURL,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: confirmationChallenge,
             authenticationContext: self,
@@ -1537,8 +1540,14 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             confirmationSource: .paymentElement,
             expectedAmount: checkout.session.amount,
             expectedPaymentMethodType: "card",
-            returnURL: configuration.returnURL,
+            savePaymentMethod: nil,
+            returnURL: checkout.configuration.returnURL,
             shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
+            paymentMethodOptions: nil,
+            clientAttributionMetadata: .makeClientAttributionMetadata(
+                checkoutSession: checkout.session,
+                attribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
+            ),
             collectedInformation: .init(email: checkout.session.localState.email)
         )
         return await CheckoutElementsController.confirmCheckoutSession(

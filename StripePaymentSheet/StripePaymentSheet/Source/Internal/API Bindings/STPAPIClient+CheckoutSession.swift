@@ -64,7 +64,7 @@ struct CheckoutSessionConfirmationRequestParameters {
     let savePaymentMethod: Bool?
 
     /// CheckoutClient requires a return URL for confirmation.
-    let returnURL: String?
+    let returnURL: String
 
     /// The optional shipping details.
     let shipping: STPPaymentIntentShippingDetailsParams?
@@ -73,8 +73,8 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// top-level `blik_code` parameter.
     let paymentMethodOptions: STPConfirmPaymentMethodOptions?
 
-    /// The optional client attribution metadata for analytics.
-    let clientAttributionMetadata: STPClientAttributionMetadata?
+    /// The client attribution metadata for analytics.
+    let clientAttributionMetadata: STPClientAttributionMetadata
 
     /// The optional hCaptcha challenge response token.
     let passiveCaptchaToken: String?
@@ -92,10 +92,10 @@ struct CheckoutSessionConfirmationRequestParameters {
         clientSecret: String,
         confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
-        returnURL: String? = nil,
-        shipping: STPPaymentIntentShippingDetailsParams? = nil,
-        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
-        customerData: [String: Any]? = nil
+        returnURL: String,
+        shipping: STPPaymentIntentShippingDetailsParams?,
+        clientAttributionMetadata: STPClientAttributionMetadata,
+        customerData: [String: Any]?
     ) -> Self {
         Self(
             sessionId: sessionId,
@@ -122,13 +122,13 @@ struct CheckoutSessionConfirmationRequestParameters {
         confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
         expectedPaymentMethodType: String,
-        savePaymentMethod: Bool? = nil,
-        returnURL: String? = nil,
-        shipping: STPPaymentIntentShippingDetailsParams? = nil,
-        paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
-        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
+        savePaymentMethod: Bool?,
+        returnURL: String,
+        shipping: STPPaymentIntentShippingDetailsParams?,
+        paymentMethodOptions: STPConfirmPaymentMethodOptions?,
+        clientAttributionMetadata: STPClientAttributionMetadata,
         passiveCaptchaToken: String? = nil,
-        collectedInformation: CollectedInformation? = nil
+        collectedInformation: CollectedInformation
     ) -> Self {
         Self(
             sessionId: sessionId,
@@ -154,12 +154,12 @@ struct CheckoutSessionConfirmationRequestParameters {
         paymentMethodData: STPPaymentMethodParams,
         confirmationSource: CheckoutElementsController.ConfirmingElement,
         expectedAmount: Int?,
-        savePaymentMethod: Bool? = nil,
-        returnURL: String? = nil,
-        shipping: STPPaymentIntentShippingDetailsParams? = nil,
-        paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
-        clientAttributionMetadata: STPClientAttributionMetadata? = nil,
-        collectedInformation: CollectedInformation? = nil
+        savePaymentMethod: Bool?,
+        returnURL: String,
+        shipping: STPPaymentIntentShippingDetailsParams?,
+        paymentMethodOptions: STPConfirmPaymentMethodOptions?,
+        clientAttributionMetadata: STPClientAttributionMetadata,
+        collectedInformation: CollectedInformation
     ) -> Self {
         Self(
             sessionId: sessionId,
@@ -326,9 +326,6 @@ extension STPAPIClient {
     func confirmCheckoutSession(
         with requestParameters: CheckoutSessionConfirmationRequestParameters
     ) async throws -> CheckoutClientAPIResponse {
-        guard let returnURL = requestParameters.returnURL else {
-            throw CheckoutError.unknown(debugDescription: "CheckoutClient confirmation requires a return URL.")
-        }
         var parameters = Self.checkoutClientParameters(clientSecret: requestParameters.clientSecret)
         parameters.removeValue(forKey: "timezone")
 
@@ -356,7 +353,7 @@ extension STPAPIClient {
             parameters["expected_amount"] = expectedAmount
         }
 
-        parameters["return_url"] = returnURL
+        parameters["return_url"] = requestParameters.returnURL
 
         if let shipping = requestParameters.shipping {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
@@ -367,9 +364,7 @@ extension STPAPIClient {
             parameters["blik_code"] = blikCode
         }
 
-        if let clientAttributionMetadata = requestParameters.clientAttributionMetadata {
-            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
-        }
+        parameters["client_attribution_metadata"] = try requestParameters.clientAttributionMetadata.encodeJSONDictionary()
 
         if let passiveCaptchaToken = requestParameters.passiveCaptchaToken {
             parameters["passive_captcha_token"] = passiveCaptchaToken
