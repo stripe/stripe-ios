@@ -99,4 +99,22 @@ struct CustomerProvider {
             return "checkout_session"
         }
     }
+
+    func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
+        switch backing {
+        case .checkoutSession(let session):
+            return session.canDetachPaymentMethod
+        case .customer:
+            return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        }
+    }
+
+    func allowsPaymentMethodUpdate(elementsSession: STPElementsSession) -> Bool {
+        switch backing {
+        case .checkoutSession:
+            return true
+        case .customer:
+            return elementsSession.paymentMethodUpdateForPaymentSheet
+        }
+    }
 }

@@ -256,7 +256,6 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
             ],
             configuration: configuration,
             paymentSheetConfiguration: paymentSheetConfiguration,
-            intent: Intent._testValue(),
             appearance: .default,
             elementsSession: .emptyElementsSession,
             analyticsHelper: ._testValue()
@@ -326,7 +325,6 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
         let controller = SavedPaymentOptionsViewController(savedPaymentMethods: savedPaymentMethods,
                                                            configuration: configuration,
                                                            paymentSheetConfiguration: paymentSheetConfiguration,
-                                                           intent: Intent._testValue(),
                                                            appearance: .default,
                                                            elementsSession: .emptyElementsSession,
                                                            cbcEligible: cbcEligible,
