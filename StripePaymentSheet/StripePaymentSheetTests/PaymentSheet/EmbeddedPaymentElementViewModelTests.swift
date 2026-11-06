@@ -22,7 +22,7 @@ class EmbeddedPaymentElementViewModelTests: XCTestCase {
     }()
 
     let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(
-        mode: .payment(amount: 1000, currency: "USD"),
+        mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic),
         paymentMethodTypes: ["card", "cashapp"]
     ) { paymentMethod, _ in
         try await withCheckedThrowingContinuation { continuation in
@@ -30,7 +30,8 @@ class EmbeddedPaymentElementViewModelTests: XCTestCase {
                 types: ["card"],
                 currency: "USD",
                 paymentMethodID: paymentMethod.stripeId,
-                confirm: true
+                confirm: true,
+                otherParams: ["capture_method": "automatic"]
             ) { result in
                 continuation.resume(with: result)
             }
@@ -38,7 +39,7 @@ class EmbeddedPaymentElementViewModelTests: XCTestCase {
     }
 
     let paymentIntentConfigUpdated = EmbeddedPaymentElement.IntentConfiguration(
-        mode: .payment(amount: 1001, currency: "USD"),
+        mode: .payment(amount: 1001, currency: "USD", captureMethod: .automatic),
         paymentMethodTypes: ["card", "cashapp"]
     ) { _, _ in
         // no-op
@@ -46,7 +47,7 @@ class EmbeddedPaymentElementViewModelTests: XCTestCase {
     }
 
     let brokenPaymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(
-        mode: .payment(amount: -1000, currency: "bad currency"),
+        mode: .payment(amount: -1000, currency: "bad currency", captureMethod: .automatic),
         paymentMethodTypes: ["card", "cashapp"]
     ) { _, _ in
         // no-op, this should fail due to invalid amounts/currency

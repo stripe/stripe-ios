@@ -35,7 +35,11 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     private func loadBackend() {
         token += 1
         let thisToken = token
-        makeRequest(with: backendCheckoutUrl, body: ["mode": "payment", "use_link": true]) {
+        // Create the PaymentIntent with the SDK's API version, which doesn't accept `payment_method_types`
+        makeRequest(with: backendCheckoutUrl, body: ["mode": "payment",
+                                                     "use_link": true,
+                                                     "stripe_version": STPAPIClient.apiVersion,
+                                                     "use_allowed_payment_method_types": true, ]) {
             [weak self] (data, _, _) in
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data, options: [])
@@ -55,7 +59,8 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                 if self.deferredSwitch.isOn {
                     let intentConfiguration = PaymentSheet
                         .IntentConfiguration(
-                            mode: .payment(amount: 100, currency: "usd"),
+                            // PaymentIntents created with the SDK's API version use `automatic_async` by default
+                            mode: .payment(amount: 100, currency: "usd", captureMethod: .automaticAsync),
                             paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod in
                                 try await withCheckedThrowingContinuation { continuation in
                                     self?.handleDeferredIntent(clientSecret: paymentIntentClientSecret,
@@ -177,7 +182,8 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                                                   "payment_method_id": paymentMethod.stripeId,
                                                   "should_save_payment_method": shouldSavePaymentMethod,
                                                   "merchant_country_code": "US",
-                                                  "return_url": "payments-example://stripe-redirect", ], completionHandler: { data, response, error in
+                                                  "return_url": "payments-example://stripe-redirect",
+                                                  "stripe_version": STPAPIClient.apiVersion, ], completionHandler: { data, response, error in
             guard
                 error == nil,
                 let data = data,

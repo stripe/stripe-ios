@@ -1,7 +1,18 @@
 The next release's version bump will so far be:
-PATCH
+MAJOR
 
 ## X.Y.Z - changes pending release
+### General
+* [Changed] The SDK now uses Stripe API version `2026-10-28.endive` instead of `2020-08-27`. Your server can keep using its current API version. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) and the below changes for more information.
+* [Changed] `allResponseFields` on API objects, such as `STPPaymentIntent`, now reflects API version `2026-10-28.endive`. Some fields were removed or renamed, and some values changed. For example, `cancellation_reason` is `expired` instead of `automatic` when an authorization expires.
+
+### Payments
+* [Changed] For failed Bancontact, EPS, iDEAL, Klarna, and Przelewy24 payments, `STPPaymentIntentLastPaymentError.code` now returns specific codes, such as `payment_method_customer_decline`, instead of `payment_intent_authentication_failure`. For failed Bancontact and iDEAL setups, `STPSetupIntentLastSetupError.code` returns the specific codes instead of `setup_intent_authentication_failure`. `STPPaymentHandler` now reports these failures with `STPPaymentHandlerErrorCode.paymentErrorCode` instead of `.notAuthenticatedErrorCode`, and PaymentSheet shows customers a different error message. Errors from confirming some TWINT and Zip payments also have the specific codes instead of `payment_intent_authentication_failure`. Expired Klarna payments return `payment_intent_payment_attempt_expired` instead of `payment_intent_payment_attempt_failed`.
+* [Changed] For failed BLIK payments, `declineCode` on `STPPaymentIntentLastPaymentError` and `STPSetupIntentLastSetupError` now returns specific values, such as `code_invalid`, instead of `generic_decline`.
+* [Changed] When you set `STPAPIClient.stripeAccount` and use a platform's publishable key, `fingerprint` on `STPPaymentMethodUSBankAccount`, `STPPaymentMethodSEPADebit`, `STPPaymentMethodBacsDebit`, and `STPPaymentMethodAUBECSDebit`, and in the `acss_debit` hash of `STPPaymentMethod.allResponseFields`, is now scoped to the platform instead of the connected account.
+
+### PaymentSheet
+* [Changed] `PaymentSheet.IntentConfiguration.Mode.payment` no longer defaults `captureMethod` to `.automatic`. Pass the capture method of the PaymentIntent your server creates. PaymentIntents created with API version `2024-04-10` or later use `automatic_async` when you don't specify `capture_method`.
 
 ## 26.16.0 2026-11-02
 ### PaymentSheet

@@ -110,7 +110,7 @@
         XCTAssertNil(error);
         NSDictionary *pi_params = @{
             @"confirm": @"true",
-            @"payment_method_types": @[@"oxxo"],
+            @"allowed_payment_method_types": @[@"oxxo"],
             @"currency": @"mxn",
             @"amount": @1099,
             @"payment_method": paymentMethod.stripeId,

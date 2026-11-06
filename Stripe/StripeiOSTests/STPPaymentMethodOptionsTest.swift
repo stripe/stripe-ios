@@ -33,7 +33,7 @@ class STPPaymentMethodOptionsTest: STPNetworkStubbingTestCase {
             let createPIExpectation = expectation(description: "Create PaymentIntent")
             STPTestingAPIClient.shared.createPaymentIntent(
                 withParams: [
-                    "payment_method_types": ["us_bank_account"],
+                    "allowed_payment_method_types": ["us_bank_account"],
                     "payment_method_options": [
                         "us_bank_account": ["verification_method": verificationMethod]
                     ],
@@ -90,7 +90,7 @@ class STPPaymentMethodOptionsTest: STPNetworkStubbingTestCase {
             let createPIExpectation = expectation(description: "Create SetupIntent")
             STPTestingAPIClient.shared.createSetupIntent(
                 withParams: [
-                    "payment_method_types": ["us_bank_account"],
+                    "allowed_payment_method_types": ["us_bank_account"],
                     "payment_method_options": [
                         "us_bank_account": ["verification_method": verificationMethod]
                     ],

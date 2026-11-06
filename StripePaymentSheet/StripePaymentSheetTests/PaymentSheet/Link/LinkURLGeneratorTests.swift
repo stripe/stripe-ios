@@ -94,7 +94,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsFromConfig() async {
         let config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic)) { _, _ in
             // Nothing
             return ""
         }
@@ -170,7 +170,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsPaymentMethodOptionsSetupFutureUsage() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.link: .offSession]))) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.link: .offSession]))) { _, _ in
             // Nothing
             return ""
         }
@@ -203,7 +203,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsPaymentMethodOptionsSetupFutureUsage_passthrough() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { _, _ in
             return ""
             // Nothing
         }
@@ -236,7 +236,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsTopLevelSFUPaymentMethodOptionsSetupFutureUsageNone() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.link: .none]))) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.link: .none]))) { _, _ in
             // Nothing
             return ""
         }
@@ -269,7 +269,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsTopLevelSFUPaymentMethodOptionsSetupFutureUsageNone_passthrough() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { _, _ in
             // Nothing
             return ""
         }
@@ -302,7 +302,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsWithCBC() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR", captureMethod: .automatic)) { _, _ in
             // Nothing
             return ""
         }
@@ -340,7 +340,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsWithCardFundingSource() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR", captureMethod: .automatic)) { _, _ in
             // Nothing
             return ""
         }
@@ -376,7 +376,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsWithCardAndBankFundingSources() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR", captureMethod: .automatic)) { _, _ in
             // Nothing
             return ""
         }
@@ -412,7 +412,7 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testIgnoresApplePrivateRelayEmails() {
         var config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR", captureMethod: .automatic)) { _, _ in
             // Nothing
             return ""
         }
