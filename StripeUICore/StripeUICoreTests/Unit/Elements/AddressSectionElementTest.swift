@@ -8,6 +8,7 @@
 
 @_spi(InternalOnlyAPI) @testable import StripeCore
 @_spi(InternalOnlyAPI) @testable import StripeUICore
+import UIKit
 import XCTest
 
 class AddressSectionElementTest: XCTestCase {
@@ -74,7 +75,7 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(addressSection.selectedCountryCode, defaultAddress.address.country)
     }
 
-    func testAddressFieldsChangeWithCountry() {
+    func testAddressFieldsChangeWithCountry() throws {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
@@ -103,9 +104,12 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(USTextFields.map { $0.configuration.label }, expectedUSFields.map { $0.label })
         XCTAssertEqual(USTextFields.map { $0.configuration.isOptional }, expectedUSFields.map { $0.isOptional })
 
-        // Hack to switch the country
-        country.pickerView(country.pickerView, didSelectRow: 1, inComponent: 0)
-        country.didFinish(country.pickerFieldView, shouldAutoAdvance: true)
+        // When a country is selected from its menu
+        var updateCount = 0
+        sut.didUpdate = { _ in updateCount += 1 }
+        let button = try XCTUnwrap(country.menuButton)
+        button.sendAction(try XCTUnwrap(button.menu?.children[1] as? UIAction))
+        XCTAssertEqual(updateCount, 1)
         let ZZTextFields = section.elements.compactMap { $0 as? TextFieldElement }
         let expectedZZFields = [
             Expected(label: "Postal code", isOptional: true),
@@ -117,6 +121,70 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(country.selectedIndex, 1)
         XCTAssertEqual(ZZTextFields.map { $0.configuration.label }, expectedZZFields.map { $0.label })
         XCTAssertEqual(ZZTextFields.map { $0.configuration.isOptional }, expectedZZFields.map { $0.isOptional })
+    }
+
+    func testCountryMenuRecreatesStateMenu() throws {
+        // Given two countries with predefined regions
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACS", require: "AS", cityNameType: .city, stateNameType: .state, zip: nil, zipNameType: .zip, subKeys: ["CA"], subLabels: ["California"]),
+            "CA": AddressSpec(format: "SAC", require: "AS", cityNameType: .city, stateNameType: .province, zip: nil, zipNameType: .postal_code, subKeys: ["ON", "QC"], subLabels: ["Ontario", "Quebec"]),
+        ]
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["US", "CA"],
+            locale: locale_enUS,
+            addressSpecProvider: specProvider,
+            defaults: .init(address: .init(country: "US", state: "CA")),
+            disableAutocomplete: true
+        )
+        let originalState = try XCTUnwrap(sut.state as? DropdownFieldElement)
+        XCTAssertNotNil(originalState.menuButton)
+        XCTAssertEqual(originalState.selectedItem.rawData, "CA")
+        XCTAssertTrue(originalState.validationState.isValid)
+        var updates = 0
+        sut.didUpdate = { _ in updates += 1 }
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 600))
+        let controller = UIViewController()
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        controller.view.addSubview(sut.view)
+        sut.view.frame = controller.view.bounds
+        sut.view.layoutIfNeeded()
+
+        // When the country menu commits a different country
+        let button = try XCTUnwrap(sut.country.menuButton)
+        let index = try XCTUnwrap(sut.country.items.firstIndex { $0.rawData == "CA" })
+        button.sendAction(try XCTUnwrap(button.menu?.children[index] as? UIAction))
+
+        // Then the new region menu starts empty and retains the original item indices
+        XCTAssertEqual(updates, 1)
+        XCTAssertEqual(sut.selectedCountryCode, "CA")
+        let state = try XCTUnwrap(sut.state as? DropdownFieldElement)
+        XCTAssertFalse(state === originalState)
+        XCTAssertEqual(state.label, "Province")
+        XCTAssertEqual(state.selectedIndex, 0)
+        XCTAssertFalse(state.validationState.isValid)
+        let stateButton = try XCTUnwrap(state.menuButton)
+        XCTAssertTrue(stateButton.isFirstResponder)
+        XCTAssertFalse(state.isEditing)
+        sut.view.removeFromSuperview()
+        window.isHidden = true
+        let actions = try XCTUnwrap(stateButton.menu).children.compactMap { $0 as? UIAction }
+        XCTAssertEqual(actions.map { $0.title }, ["Ontario", "Quebec"])
+        stateButton.sendAction(actions[0])
+        XCTAssertEqual(state.selectedIndex, 1)
+        XCTAssertTrue(state.validationState.isValid)
+        XCTAssertEqual(sut.addressDetails.address.state, "ON")
+        XCTAssertEqual(updates, 2)
+
+        // Reselecting the country preserves the existing region.
+        button.sendAction(try XCTUnwrap(button.menu?.children[index] as? UIAction))
+        XCTAssertTrue(sut.state === state)
+        XCTAssertEqual(sut.addressDetails.address.state, "ON")
+        XCTAssertEqual(updates, 2)
     }
 
     func testMinimumFieldsToCollectResolveInitialAndCountryChanges() throws {
