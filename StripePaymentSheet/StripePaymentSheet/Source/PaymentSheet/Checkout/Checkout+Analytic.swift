@@ -14,8 +14,6 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
             "payment_element_presenting_view_controller_unavailable"
         case shippingAddressElementPresentingViewControllerUnavailable =
             "shipping_address_element_presenting_view_controller_unavailable"
-        case checkoutClientResponseParsingFailed =
-            "checkout_client_response_parsing_failed"
     }
 
     let errorCode: ErrorCode
@@ -49,20 +47,4 @@ func logUnexpectedCheckoutElementsErrorAndAssert(
         apiClient: apiClient
     )
     stpAssertionFailure(message, file: file, line: line)
-}
-
-func reportUnexpectedCheckoutClientParsingError(
-    _ error: Error,
-    apiClient: STPAPIClient,
-    analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
-) {
-    let errorMessage = "Failed to parse Checkout Client response: \(String(describing: error))"
-    stpAssertionFailure(errorMessage)
-    analyticsClient.log(
-        analytic: UnexpectedCheckoutElementsErrorAnalytic(
-            errorCode: .checkoutClientResponseParsingFailed,
-            errorMessage: errorMessage
-        ),
-        apiClient: apiClient
-    )
 }

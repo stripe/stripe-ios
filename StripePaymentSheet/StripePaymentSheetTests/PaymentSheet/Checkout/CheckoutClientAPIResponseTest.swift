@@ -204,25 +204,6 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         }
     }
 
-    func testUnexpectedParsingErrorReporterAssertsAndSendsAnalytic() {
-        let analyticsClient = MockAnalyticsClient()
-        let error = DecodingError.dataCorrupted(
-            .init(codingPath: [], debugDescription: "Invalid customer")
-        )
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
-
-        reportUnexpectedCheckoutClientParsingError(
-            error,
-            apiClient: STPAPIClient(publishableKey: "pk_test_123"),
-            analyticsClient: analyticsClient
-        )
-
-        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("Invalid customer"))
-        let analytic = analyticsClient.loggedAnalytics.last as? UnexpectedCheckoutElementsErrorAnalytic
-        XCTAssertEqual(analytic?.errorCode, .checkoutClientResponseParsingFailed)
-        XCTAssertTrue(analytic?.errorMessage.contains("Invalid customer") == true)
-    }
-
     func testDecodedObjectFromAPIResponseMapping() throws {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
         let apiResponse = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
