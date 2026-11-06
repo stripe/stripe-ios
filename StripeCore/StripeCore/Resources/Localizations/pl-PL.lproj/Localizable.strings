@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Do aplikacji podłączono debugger.";
+
+"An emulator is being used to run the App." = "Do uruchomienia aplikacji użyto emulatora.";
+
 "An error occurred. Please try again." = "Wystąpił błąd. Spróbuj ponownie.";
+
+"Cancel" = "Anuluj";
 
 "Card brand was not updated. Please try again." = "Marka karty nie została zaktualizowana. Spróbuj ponownie.";
 
 "Close" = "Zamknij";
+
+"Collapsed" = "Zwinięte";
 
 "Confirm it's you" = "Potwierdź, że to Ty";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Wprowadź kod wysłany na: %@.";
 
+"Expanded" = "Rozwinięte";
+
 "Failed to connect" = "Nie udało się połączyć";
+
+"Loading" = "Ładowanie";
+
+"No" = "Nie";
 
 "Resend code" = "Wyślij kod ponownie";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Skanuj kartę";
 
+"Secure checkout" = "Bezpieczna finalizacja";
+
+"Selected" = "Wybrane";
+
 "The IBAN you entered is invalid." = "Podany IBAN jest nieprawidłowy.";
+
+"The OS or the OS Version is not supported." = "System operacyjny lub jego wersja nie są obsługiwane.";
+
+"The device is jailbroken." = "Na urządzeniu wykonano jailbreak.";
+
+"The integrity of the SDK has been tampered." = "Integralność zestawu SDK została naruszona.";
 
 "There was an error processing your card -- try again in a few seconds" = "Podczas przetwarzania Twojej karty wystąpił błąd – spróbuj ponownie za kilka sekund";
 
 "There was an unexpected error -- try again in a few seconds" = "Wystąpił nieoczekiwany błąd – spróbuj ponownie za kilka sekund";
 
+"Timeout" = "Przekroczenie limitu czasu";
+
 "Try again" = "Spróbuj ponownie";
 
+"Unselected" = "Niewybrane";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Korzystamy ze Stripe, aby weryfikować szczegóły Twojej karty. Stripe może używać Twoich danych i przechowywać je zgodnie ze swoją polityką prywatności. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Dowiedz się więcej</u></a>";
+
+"Yes" = "Tak";
 
 "Your card has expired" = "Ważność Twojej karty wygasła";
 

@@ -6,7 +6,7 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
-#import "STDSLocalizedString.h"
+@import StripeCore;
 #import "STDSBundleLocator.h"
 #import "STDSChallengeSelectionView.h"
 #import "STDSStackView.h"
@@ -127,7 +127,7 @@ typedef void (^STDSChallengeResponseRowSelectedBlock)(STDSChallengeResponseSelec
 }
 
 - (nullable NSString *)accessibilityValue {
-    return self.selected ? STDSLocalizedString(@"Selected", @"Indicates that a button is selected.") : STDSLocalizedString(@"Unselected", @"Indicates that a button is not selected.");
+    return self.selected ? STPThreeDS2Localization.selected : STPThreeDS2Localization.unselected;
 }
 
 - (UIAccessibilityTraits)accessibilityTraits {
