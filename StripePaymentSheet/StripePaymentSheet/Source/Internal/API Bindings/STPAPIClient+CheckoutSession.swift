@@ -29,23 +29,93 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The full client secret supplied by the merchant for this Checkout Session.
     let clientSecret: String
 
-    private enum PaymentMethod {
-        case id(String)
-        case data(STPPaymentMethodParams)
+    private enum ConfirmationInput {
+        case withoutPaymentMethod(customerData: [String: Any]?)
+        case withPaymentMethodID(id: String, expectedType: String, details: PaymentMethodConfirmationDetails, passiveCaptchaToken: String?)
+        case withPaymentMethodData(data: STPPaymentMethodParams, details: PaymentMethodConfirmationDetails)
     }
 
-    private let paymentMethod: PaymentMethod?
+    private struct PaymentMethodConfirmationDetails {
+        /// Omit when no save checkbox is shown; false represents an explicit choice not to save.
+        let savePaymentMethod: Bool?
+        let paymentMethodOptions: STPConfirmPaymentMethodOptions?
+        /// Email collected independently of PaymentMethod billing details.
+        let collectedInformation: CollectedInformation
+
+        var parameters: [String: Any] {
+            var parameters: [String: Any] = [:]
+            // TODO(porter) BLIK: CheckoutClient /confirm does not support BLIK's blik_code yet.
+            if let blikCode = paymentMethodOptions?.blikOptions?.code {
+                parameters["blik_code"] = blikCode
+            }
+            var collectedInformation = collectedInformation.parameters
+            if let savePaymentMethod {
+                collectedInformation["save_payment_method"] = savePaymentMethod
+            }
+            if !collectedInformation.isEmpty {
+                parameters["collected_information"] = collectedInformation
+            }
+            return parameters
+        }
+    }
+
+    private let input: ConfirmationInput
 
     /// The ID of the PaymentMethod to use for confirmation.
     var paymentMethodId: String? {
-        guard case .id(let id) = paymentMethod else { return nil }
+        guard case .withPaymentMethodID(let id, _, _, _) = input else { return nil }
         return id
     }
 
     /// The data used to create a new PaymentMethod during confirmation, instead of a PaymentMethod ID.
     var paymentMethodData: STPPaymentMethodParams? {
-        guard case .data(let data) = paymentMethod else { return nil }
+        guard case .withPaymentMethodData(let data, _) = input else { return nil }
         return data
+    }
+
+    var expectedPaymentMethodType: String? {
+        switch input {
+        case .withoutPaymentMethod:
+            return nil
+        case .withPaymentMethodID(_, let expectedType, _, _):
+            return expectedType
+        case .withPaymentMethodData(let data, _):
+            return data.rawTypeString
+        }
+    }
+
+    var savePaymentMethod: Bool? {
+        switch input {
+        case .withoutPaymentMethod:
+            return nil
+        case .withPaymentMethodID(_, _, let details, _), .withPaymentMethodData(_, let details):
+            return details.savePaymentMethod
+        }
+    }
+
+    var inputParameters: [String: Any] {
+        switch input {
+        case .withoutPaymentMethod(let customerData):
+            return customerData.map { ["customer_data": $0] } ?? [:]
+        case .withPaymentMethodID(let id, let expectedType, let details, let passiveCaptchaToken):
+            var parameters = details.parameters
+            parameters["payment_method"] = id
+            parameters["expected_payment_method_type"] = expectedType
+            if let passiveCaptchaToken {
+                parameters["passive_captcha_token"] = passiveCaptchaToken
+            }
+            return parameters
+        case .withPaymentMethodData(let paymentMethodData, let details):
+            var parameters = details.parameters
+            var data = STPFormEncoder.dictionary(forObject: paymentMethodData)
+            // Build payment_user_agent fresh for the confirming Checkout Elements component,
+            // rather than inheriting identifiers from unrelated SDK components.
+            data["payment_user_agent"] = confirmationSource.paymentUserAgent
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &data)
+            parameters["payment_method_data"] = data
+            parameters["expected_payment_method_type"] = paymentMethodData.rawTypeString
+            return parameters
+        }
     }
 
     /// The Checkout Elements component confirming. Used to tag
@@ -56,36 +126,14 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The expected amount for validation. `nil` for setup-style Sessions.
     let expectedAmount: Int?
 
-    /// The expected PaymentMethod type (e.g., `card`).
-    let expectedPaymentMethodType: String?
-
-    /// The optional buyer save-checkbox choice, sent as `collected_information[save_payment_method]`.
-    /// Omit it when no checkbox is shown; the server applies merchant-configured saving separately.
-    let savePaymentMethod: Bool?
-
     /// CheckoutClient requires a return URL for confirmation.
     let returnURL: String
 
     /// The optional shipping details.
     let shipping: STPPaymentIntentShippingDetailsParams?
 
-    /// The optional PaymentMethod options. The BLIK code is extracted and passed as the
-    /// top-level `blik_code` parameter.
-    let paymentMethodOptions: STPConfirmPaymentMethodOptions?
-
     /// The client attribution metadata for analytics.
     let clientAttributionMetadata: STPClientAttributionMetadata
-
-    /// The optional hCaptcha challenge response token.
-    let passiveCaptchaToken: String?
-
-    /// Customer information collected independently of PaymentMethod billing details.
-    let collectedInformation: CollectedInformation?
-
-    /// Legacy customer information required today when confirming without a PaymentMethod.
-    /// TODO: Remove this once the server can construct no-PaymentMethod `CustomerInfo` entirely
-    /// from fixed and independently collected information.
-    let customerData: [String: Any]?
 
     static func createWithoutPaymentMethod(
         sessionId: String,
@@ -100,18 +148,12 @@ struct CheckoutSessionConfirmationRequestParameters {
         Self(
             sessionId: sessionId,
             clientSecret: clientSecret,
-            paymentMethod: nil,
+            input: .withoutPaymentMethod(customerData: customerData),
             confirmationSource: confirmationSource,
             expectedAmount: expectedAmount,
-            expectedPaymentMethodType: nil,
-            savePaymentMethod: nil,
             returnURL: returnURL,
             shipping: shipping,
-            paymentMethodOptions: nil,
-            clientAttributionMetadata: clientAttributionMetadata,
-            passiveCaptchaToken: nil,
-            collectedInformation: nil,
-            customerData: customerData
+            clientAttributionMetadata: clientAttributionMetadata
         )
     }
 
@@ -133,18 +175,21 @@ struct CheckoutSessionConfirmationRequestParameters {
         Self(
             sessionId: sessionId,
             clientSecret: clientSecret,
-            paymentMethod: .id(paymentMethodId),
+            input: .withPaymentMethodID(
+                id: paymentMethodId,
+                expectedType: expectedPaymentMethodType,
+                details: .init(
+                    savePaymentMethod: savePaymentMethod,
+                    paymentMethodOptions: paymentMethodOptions,
+                    collectedInformation: collectedInformation
+                ),
+                passiveCaptchaToken: passiveCaptchaToken
+            ),
             confirmationSource: confirmationSource,
             expectedAmount: expectedAmount,
-            expectedPaymentMethodType: expectedPaymentMethodType,
-            savePaymentMethod: savePaymentMethod,
             returnURL: returnURL,
             shipping: shipping,
-            paymentMethodOptions: paymentMethodOptions,
-            clientAttributionMetadata: clientAttributionMetadata,
-            passiveCaptchaToken: passiveCaptchaToken,
-            collectedInformation: collectedInformation,
-            customerData: nil
+            clientAttributionMetadata: clientAttributionMetadata
         )
     }
 
@@ -164,18 +209,19 @@ struct CheckoutSessionConfirmationRequestParameters {
         Self(
             sessionId: sessionId,
             clientSecret: clientSecret,
-            paymentMethod: .data(paymentMethodData),
+            input: .withPaymentMethodData(
+                data: paymentMethodData,
+                details: .init(
+                    savePaymentMethod: savePaymentMethod,
+                    paymentMethodOptions: paymentMethodOptions,
+                    collectedInformation: collectedInformation
+                )
+            ),
             confirmationSource: confirmationSource,
             expectedAmount: expectedAmount,
-            expectedPaymentMethodType: paymentMethodData.rawTypeString,
-            savePaymentMethod: savePaymentMethod,
             returnURL: returnURL,
             shipping: shipping,
-            paymentMethodOptions: paymentMethodOptions,
-            clientAttributionMetadata: clientAttributionMetadata,
-            passiveCaptchaToken: nil,
-            collectedInformation: collectedInformation,
-            customerData: nil
+            clientAttributionMetadata: clientAttributionMetadata
         )
     }
 }
@@ -329,25 +375,7 @@ extension STPAPIClient {
         var parameters = Self.checkoutClientParameters(clientSecret: requestParameters.clientSecret)
         parameters.removeValue(forKey: "timezone")
 
-        if let paymentMethodId = requestParameters.paymentMethodId {
-            parameters["payment_method"] = paymentMethodId
-        }
-
-        if let paymentMethodData = requestParameters.paymentMethodData {
-            var data = STPFormEncoder.dictionary(forObject: paymentMethodData)
-            // Build payment_user_agent fresh for the confirming Checkout Elements component,
-            // rather than appending to it, so it's never contaminated by whatever classes have
-            // registered into the global STPAnalyticsClient.sharedClient.productUsage set (e.g.
-            // PaymentSheet.FlowController/EmbeddedPaymentElement, which PaymentElement wraps
-            // internally) — see CheckoutElementsController.ConfirmingElement.
-            data["payment_user_agent"] = requestParameters.confirmationSource.paymentUserAgent
-            STPTelemetryClient.shared.addTelemetryFields(toParams: &data)
-            parameters["payment_method_data"] = data
-        }
-
-        if let expectedPaymentMethodType = requestParameters.expectedPaymentMethodType {
-            parameters["expected_payment_method_type"] = expectedPaymentMethodType
-        }
+        parameters.merge(requestParameters.inputParameters) { _, value in value }
 
         if let expectedAmount = requestParameters.expectedAmount {
             parameters["expected_amount"] = expectedAmount
@@ -359,31 +387,7 @@ extension STPAPIClient {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
         }
 
-        // TODO(porter) BLIK: CheckoutClient /confirm does not support BLIK's blik_code yet.
-        if let blikCode = requestParameters.paymentMethodOptions?.blikOptions?.code {
-            parameters["blik_code"] = blikCode
-        }
-
         parameters["client_attribution_metadata"] = try requestParameters.clientAttributionMetadata.encodeJSONDictionary()
-
-        if let passiveCaptchaToken = requestParameters.passiveCaptchaToken {
-            parameters["passive_captcha_token"] = passiveCaptchaToken
-        }
-
-        if let collectedInformation = requestParameters.collectedInformation?.parameters,
-           !collectedInformation.isEmpty {
-            parameters["collected_information"] = collectedInformation
-        }
-
-        if let savePaymentMethod = requestParameters.savePaymentMethod {
-            var collectedInformation = parameters["collected_information"] as? [String: Any] ?? [:]
-            collectedInformation["save_payment_method"] = savePaymentMethod
-            parameters["collected_information"] = collectedInformation
-        }
-
-        if let customerData = requestParameters.customerData {
-            parameters["customer_data"] = customerData
-        }
 
         return try await post(
             endpoint: "checkout_client/\(requestParameters.sessionId)/confirm",
