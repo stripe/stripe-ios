@@ -84,6 +84,7 @@ class AccountFetcherTests: XCTestCase {
             api: PaginatedAPIClient(count: 120, limit: 1),
             clientSecret: ""
         )
+        let expectation = expectation(description: "fetch")
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
@@ -91,7 +92,9 @@ class AccountFetcherTests: XCTestCase {
             case .failure:
                 XCTFail()
             }
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 2)
     }
 
     func testPaginationUnderLimit() {
@@ -99,6 +102,7 @@ class AccountFetcherTests: XCTestCase {
             api: PaginatedAPIClient(count: 3, limit: 1),
             clientSecret: ""
         )
+        let expectation = expectation(description: "fetch")
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
@@ -106,7 +110,9 @@ class AccountFetcherTests: XCTestCase {
             case .failure:
                 XCTFail()
             }
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 2)
     }
 
     func testPaginationUnderLimitLargePageSize() {
@@ -114,6 +120,7 @@ class AccountFetcherTests: XCTestCase {
             api: PaginatedAPIClient(count: 3, limit: 10),
             clientSecret: ""
         )
+        let expectation = expectation(description: "fetch")
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
@@ -123,7 +130,9 @@ class AccountFetcherTests: XCTestCase {
             case .failure:
                 XCTFail()
             }
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 2)
     }
 
     func testPaginationUnderLimitSmallPageSize() {
@@ -131,6 +140,7 @@ class AccountFetcherTests: XCTestCase {
             api: PaginatedAPIClient(count: 80, limit: 10),
             clientSecret: ""
         )
+        let expectation = expectation(description: "fetch")
         fetcher.fetchAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
@@ -138,6 +148,8 @@ class AccountFetcherTests: XCTestCase {
             case .failure:
                 XCTFail()
             }
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 2)
     }
 }
