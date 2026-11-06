@@ -13,6 +13,7 @@ import XCTest
 
 @_spi(InternalOnlyAPI) @testable import StripeIdentity
 
+@MainActor
 final class BiometricConsentViewControllerTest: XCTestCase {
 
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
@@ -32,24 +33,55 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         )
     }
 
-    func testAccept() {
+    func testAccept() async {
+        let saveExp = expectation(description: "Consent saved")
+        mockSheetController.saveAndTransitionCallback = {
+            saveExp.fulfill()
+        }
         vc.scrolledToBottom = true
         // Tap accept button
         vc.flowViewModel.buttons.first?.didTap()
+
+        await fulfillment(of: [saveExp], timeout: 1)
 
         // Verify biometricConsent is saved
         XCTAssertEqual(mockSheetController.savedData?.biometricConsent, true)
     }
 
-    func testDeny() {
+    func testSecondTapWhileSavingDoesNotSaveAgain() async {
+        // Given the user has read the consent
+        let secondSaveExp = expectation(description: "Consent saved twice")
+        secondSaveExp.expectedFulfillmentCount = 2
+        secondSaveExp.isInverted = true
+        mockSheetController.saveAndTransitionCallback = {
+            secondSaveExp.fulfill()
+        }
+        vc.scrolledToBottom = true
+
+        // When the user taps accept twice before the save finishes
+        vc.flowViewModel.buttons.first?.didTap()
+        vc.flowViewModel.buttons.first?.didTap()
+
+        // Then consent is saved once
+        await fulfillment(of: [secondSaveExp], timeout: 0.5)
+        XCTAssertEqual(mockSheetController.saveAndTransitionCallCount, 1)
+    }
+
+    func testDeny() async {
         XCTAssertEqual(
             vc.flowViewModel.buttons.last?.text,
             BiometricConsentViewControllerTest.mockVerificationPage.biometricConsent
                 .declineButtonText
         )
 
+        let saveExp = expectation(description: "Consent saved")
+        mockSheetController.saveAndTransitionCallback = {
+            saveExp.fulfill()
+        }
         // Tap decline button
         vc.flowViewModel.buttons.last?.didTap()
+
+        await fulfillment(of: [saveExp], timeout: 1)
 
         // Verify biometricConsent is saved
         XCTAssertEqual(mockSheetController.savedData?.biometricConsent, false)
@@ -200,7 +232,7 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         XCTAssertEqual(declineButton.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height, 52)
     }
 
-    func testCustomContinueButtonIsDisabledUntilScrolled() throws {
+    func testCustomContinueButtonIsDisabledUntilScrolled() async throws {
         // Given unread consent with custom button colors
         let controller = try makeViewController(
             primaryButtonStyle: .custom(backgroundColor: .purple, textColor: .yellow)
@@ -220,7 +252,12 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         // When the user finishes reading and continues
         controller.scrolledToBottom = true
         XCTAssertTrue(button.isEnabled)
+        let saveExp = expectation(description: "Consent saved")
+        mockSheetController.saveAndTransitionCallback = {
+            saveExp.fulfill()
+        }
         controller.flowViewModel.buttons.first?.didTap()
+        await fulfillment(of: [saveExp], timeout: 1)
 
         // Then consent is saved as usual
         XCTAssertEqual(mockSheetController.savedData?.biometricConsent, true)

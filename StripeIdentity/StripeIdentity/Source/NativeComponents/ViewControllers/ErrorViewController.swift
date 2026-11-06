@@ -147,10 +147,21 @@ extension ErrorViewController {
         }
     }
 
+    @MainActor
     fileprivate func didTapContinueButton(requirementToForceCofirm: StripeAPI.VerificationPageFieldType) {
-        self.isSaving = true
-        if requirementToForceCofirm == .idDocumentFront {
-            self.sheetController?.forceDocumentFrontAndDecideBack(from: .error) { isBackRequired in
+        guard let sheetController else { return }
+        guard !isSaving else { return }
+        isSaving = true
+
+        Task { @MainActor in
+            if requirementToForceCofirm == .idDocumentFront {
+                let isBackRequired: Bool
+                do {
+                    isBackRequired = try await sheetController.forceDocumentFrontAndDecideBack(from: .error)
+                } catch {
+                    self.isSaving = false
+                    return
+                }
                 self.isSaving = false
                 if isBackRequired {
                     // popTo either Upload or Capture screen without resetting to continue from back
@@ -159,15 +170,18 @@ extension ErrorViewController {
                         shouldResetViewController: false
                     )
                 }
-               // otherwise already checkSubmitAndTransition
-            }
-        } else if requirementToForceCofirm == .idDocumentBack {
-            self.sheetController?.forceDocumentBackAndTransition(from: .error) {
+                // otherwise already checkSubmitAndTransition
+            } else if requirementToForceCofirm == .idDocumentBack {
+                do {
+                    try await sheetController.forceDocumentBackAndTransition(from: .error)
+                } catch {
+                    self.isSaving = false
+                    return
+                }
                 self.isSaving = false
             }
+            // no other values possible, only idDocumentFront and idDocumentBack supports forceConfirm
         }
-        // no other values possible, only idDocumentFront and idDocumentBack supports forceConfirm
-
     }
 
     fileprivate func logError(filePath: StaticString, line: UInt) {
