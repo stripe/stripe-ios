@@ -51,7 +51,7 @@ public final class ExpressCheckoutElement {
             delegate: delegate,
             apiClient: apiClient
         )
-        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, uiView: uiView, configuration: configuration, apiClient: apiClient)
+        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, uiView: uiView, configuration: configuration, applePayMerchantId: applePayMerchantId, apiClient: apiClient)
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
     }

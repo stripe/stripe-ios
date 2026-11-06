@@ -181,7 +181,7 @@ public final class CheckoutElementsController: ObservableObject {
             var params = configurationParams
             params["ordered_lpms"] = paymentElement?.embeddedPaymentElement.loadResult.paymentMethodTypes.map { $0.identifier }.joined(separator: ",")
                 ?? configuration.expressCheckoutElement.map {
-                    ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: $0, apiClient: apiClient)
+                    ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: $0, applePayMerchantId: configuration.applePayMerchantId, apiClient: apiClient)
                         .map(\.rawValue).joined(separator: ",")
                 }
             analyticsHelper.logSucceeded(startedAction, session: self.session, additionalParams: params)
