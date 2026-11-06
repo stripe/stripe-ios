@@ -250,6 +250,7 @@ import Foundation
     case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"
     case paymentSheetElementsSessionEPMLoadFailed = "mc_elements_session_epms_load_failed"
     case paymentSheetElementsSessionCPMLoadFailed = "mc_elements_session_cpms_load_failed"
+    case paymentSheetMobileSessionDecodeFailed = "mc_mobile_session_decode_failed"
 
     // MARK: - PaymentSheet card brand choice
     case paymentSheetDisplayCardBrandChoiceIndicator = "mc_display_cbc_selector"

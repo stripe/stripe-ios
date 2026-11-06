@@ -66,7 +66,6 @@ extension CheckoutClientAPIResponse {
                        let maximum = rawAdjustableQuantity.maximum,
                        let minimum = rawAdjustableQuantity.minimum {
                         adjustableQuantity = CheckoutElementsController.Session.AdjustableQuantity(
-                            enabled: true,
                             maximum: maximum,
                             minimum: minimum
                         )

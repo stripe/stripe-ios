@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "アプリにデバッガーが添付されています。";
+
+"An emulator is being used to run the App." = "アプリの実行にエミュレーターが使用されています。";
+
 "An error occurred. Please try again." = "エラーが発生しました。もう一度お試しください。";
+
+"Cancel" = "キャンセル";
 
 "Card brand was not updated. Please try again." = "カードブランドは更新されていません。もう一度お試しください。";
 
 "Close" = "閉じる";
+
+"Collapsed" = "縮小";
 
 "Confirm it's you" = "本人であると確定";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "%@ に送信されたコードを入力してください。";
 
+"Expanded" = "拡大";
+
 "Failed to connect" = "接続に失敗しました";
+
+"Loading" = "読み込み中";
+
+"No" = "いいえ";
 
 "Resend code" = "コードを再送";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "カードをスキャン";
 
+"Secure checkout" = "安全なチェックアウト";
+
+"Selected" = "選択済み";
+
 "The IBAN you entered is invalid." = "入力した IBAN が無効です。";
+
+"The OS or the OS Version is not supported." = "OS または OS のバージョンがサポートされていません。";
+
+"The device is jailbroken." = "このデバイスは脱獄状態です。";
+
+"The integrity of the SDK has been tampered." = "SDK の完全性が改ざんされています。";
 
 "There was an error processing your card -- try again in a few seconds" = "クレジットカード情報の処理中にエラーが発生しました。数秒後にもう一度お試しください";
 
 "There was an unexpected error -- try again in a few seconds" = "予期しないエラーが発生しました。数秒後にもう一度お試しください";
 
+"Timeout" = "タイムアウト";
+
 "Try again" = "もう一度お試しください";
 
+"Unselected" = "選択解除済み";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Stripe を使用してカード詳細を確認します。Stripe はプライバシーポリシーに従ってお客様のデータを使用および保管することがあります。<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>もっと知る</u></a>";
+
+"Yes" = "はい";
 
 "Your card has expired" = "クレジットカードの有効期限が切れています";
 

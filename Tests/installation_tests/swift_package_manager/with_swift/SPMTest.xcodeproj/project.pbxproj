@@ -15,6 +15,7 @@
 		3BD9802A2741640900B09BCD /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD980292741640900B09BCD /* ModelTests.swift */; };
 		3BD980892743194F00B09BCD /* StripeCardScan in Frameworks */ = {isa = PBXBuildFile; productRef = 3BD980882743194F00B09BCD /* StripeCardScan */; };
 		3C4D20A9273C644500BC6444 /* StripeFinancialConnections in Frameworks */ = {isa = PBXBuildFile; productRef = 3C4D20A8273C644500BC6444 /* StripeFinancialConnections */; };
+		5387A92B687819E87C7664D6 /* Stripe3DS2LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB5E11E423A632DAD6512A0 /* Stripe3DS2LocalizationTests.swift */; };
 		A2613FD12EF2268700DD8FBD /* StripeIssuing in Frameworks */ = {isa = PBXBuildFile; productRef = A2613FD02EF2268700DD8FBD /* StripeIssuing */; };
 		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
 		C176899020616C7E003DE895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C176898F20616C7E003DE895 /* Assets.xcassets */; };
@@ -111,6 +112,7 @@
 		C176898F20616C7E003DE895 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C176899220616C7E003DE895 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C176899420616C7E003DE895 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CBB5E11E423A632DAD6512A0 /* Stripe3DS2LocalizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Stripe3DS2LocalizationTests.swift; path = ../../shared_unit_tests/Stripe3DS2/Stripe3DS2LocalizationTests.swift; sourceTree = "<group>"; };
 		E63B8ED127DDBA91000A7243 /* StripeIdentityAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeIdentityAssetTests.swift; path = ../../../shared_unit_tests/StripeIdentity/StripeIdentityAssetTests.swift; sourceTree = "<group>"; };
 		E6E0262426BA187800CE4304 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E6E0262626BA195D00CE4304 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				3BD9801F274163F200B09BCD /* SPMTestTests */,
 				C176898420616C7E003DE895 /* Products */,
 				CBB4622869490C3C489194BF /* Frameworks */,
+				CBB5E11E423A632DAD6512A0 /* Stripe3DS2LocalizationTests.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -444,6 +447,7 @@
 				E63B8ED227DDBA91000A7243 /* StripeIdentityAssetTests.swift in Sources */,
 				3B3F01B927444C5800C53D34 /* StripeUICoreAssetTests.swift in Sources */,
 				3BD9802A2741640900B09BCD /* ModelTests.swift in Sources */,
+				5387A92B687819E87C7664D6 /* Stripe3DS2LocalizationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

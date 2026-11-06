@@ -365,6 +365,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum MobileSessionSidecar: String, PickerEnum {
+        static var enumName: String { "Enable mobile_session sidecar" }
+
+        case on
+        case off
+    }
+
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
 
@@ -736,32 +743,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    // MARK: - Checkout Session enums
-    enum CSAllowPromotionCodes: String, PickerEnum {
-        static var enumName: String { "Allow Promotion Codes" }
-        case on, off
-    }
-    enum CSAutomaticTax: String, PickerEnum {
-        static var enumName: String { "Automatic Tax" }
-        case on, off
-    }
-    enum CSAdaptivePricing: String, PickerEnum {
-        static var enumName: String { "Adaptive Pricing" }
-        case on, off
-    }
-    enum CSDisplayShippingRates: String, PickerEnum {
-        static var enumName: String { "Display Shipping Rates" }
-        case on, off
-    }
-    enum CSAdjustableQuantity: String, PickerEnum {
-        static var enumName: String { "Adjustable Quantity" }
-        case on, off
-    }
-    enum CSManualCapture: String, PickerEnum {
-        static var enumName: String { "Manual Capture" }
-        case on, off
-    }
-
     var uiStyle: UIStyle
     // Keep this optional so saved settings and QR payloads from older builds remain decodable.
     var nativeSheetOverride: NativeSheetOverride?
@@ -801,20 +782,11 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkDisplay: LinkDisplay
     var forceOnelink: ForceOnelink
     var forceOnelinkConsumer: ForceOnelinkConsumer
+    var mobileSessionSidecar: MobileSessionSidecar
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
     var checkoutEndpoint: String
-
-    // MARK: - Checkout Session settings
-    var csAllowPromotionCodes: CSAllowPromotionCodes
-    var csAutomaticTax: CSAutomaticTax
-    var csAdaptivePricing: CSAdaptivePricing
-    var csDisplayShippingRates: CSDisplayShippingRates
-    var csAdjustableQuantity: CSAdjustableQuantity
-    var csManualCapture: CSManualCapture
-    var csPaymentMethodConfiguration: String?
-    var csCustomerEmail: String?
 
     var autoreload: Autoreload
     var shakeAmbiguousViews: ShakeAmbiguousViews
@@ -882,18 +854,11 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkDisplay: .automatic,
             forceOnelink: .off,
             forceOnelinkConsumer: .off,
+            mobileSessionSidecar: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
-            csAllowPromotionCodes: .off,
-            csAutomaticTax: .off,
-            csAdaptivePricing: .off,
-            csDisplayShippingRates: .off,
-            csAdjustableQuantity: .off,
-            csManualCapture: .off,
-            csPaymentMethodConfiguration: nil,
-            csCustomerEmail: nil,
             autoreload: .on,
             shakeAmbiguousViews: .off,
             instantDebitsIncentives: .off,

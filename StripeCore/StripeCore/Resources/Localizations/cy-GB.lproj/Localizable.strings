@@ -1,0 +1,75 @@
+"A debugger is attached to the App." = "Mae nodwedd difa chwilod wedi’i chysylltu â’r Ap.";
+
+"An emulator is being used to run the App." = "Mae efelychydd yn cael ei ddefnyddio i redeg yr Ap.";
+
+"An error occurred. Please try again." = "Aeth rhywbeth o'i le. Rhowch gynnig arall arni.";
+
+"Cancel" = "Canslo";
+
+"Card brand was not updated. Please try again." = "Heb ddiweddaru brand y cerdyn. Rhowch gynnig arall arni.";
+
+"Close" = "Cau";
+
+"Collapsed" = "Wedi crebachu";
+
+"Confirm it's you" = "Cadarnhau mai chi sydd yno";
+
+"Default payment method was not updated. Please try again." = "Heb ddiweddaru'r dull talu diofyn. Rhowch gynnig arall arni.";
+
+"Enter the code sent to %@." = "Rhowch y cod a anfonwyd i %@.";
+
+"Expanded" = "Wedi ehangu";
+
+"Failed to connect" = "Wedi methu cysylltu";
+
+"Loading" = "Wrthi’n llwytho";
+
+"No" = "Na";
+
+"Resend code" = "Ailanfon y cod";
+
+"Scan Card" = "Sganio Cerdyn";
+
+"Scan card" = "Sganio cerdyn";
+
+"Secure checkout" = "Talu’n ddiogel";
+
+"Selected" = "Wedi’i ddewis";
+
+"The IBAN you entered is invalid." = "Mae'r IBAN a roddwyd yn annilys.";
+
+"The OS or the OS Version is not supported." = "Does dim modd delio â’r OS na’r Fersiwn OS.";
+
+"The device is jailbroken." = "Mae’r ddyfais wedi’i dad-gyfyngu.";
+
+"The integrity of the SDK has been tampered." = "Mae rhywbeth wedi ymyrryd ag uniondeb yr SDK.";
+
+"There was an error processing your card -- try again in a few seconds" = "Aeth rhywbeth o'i le wrth brosesu eich cerdyn – rhowch gynnig arall arni mewn ychydig eiliadau";
+
+"There was an unexpected error -- try again in a few seconds" = "Cafwyd gwall annisgwyl – rhowch gynnig arall arni mewn ychydig eiliadau";
+
+"Timeout" = "Terfyn amser";
+
+"Try again" = "Rhoi cynnig arall arni";
+
+"Unselected" = "Heb ddewis";
+
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Rydyn ni'n defnyddio Stripe i ddilysu'ch manylion cerdyn. Gall Stripe ddefnyddio a storio'ch data yn unol â'i bolisi preifatrwydd. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Dysgu mwy</u></a>";
+
+"Yes" = "Ie";
+
+"Your card has expired" = "Mae eich cerdyn wedi dod i ben";
+
+"Your card was declined" = "Gwrthodwyd eich cerdyn";
+
+"Your card's expiration month is invalid" = "Mae mis dod i ben eich cerdyn yn annilys";
+
+"Your card's expiration year is invalid" = "Mae blwyddyn dod i ben eich cerdyn yn annilys";
+
+"Your card's number is invalid" = "Mae rhif eich cerdyn yn annilys";
+
+"Your card's security code is invalid" = "Mae cod diogelwch eich cerdyn yn annilys";
+
+"Your name is invalid." = "Mae eich enw'n annilys.";
+
+"Your payment method was declined." = "Gwrthodwyd eich dull talu.";

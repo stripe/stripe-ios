@@ -192,29 +192,29 @@ extension String.Localized {
         )
     }
 
-    @_spi(InternalOnlyAPI) public enum Funding {
-        @_spi(InternalOnlyAPI) public static var credit: String {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public enum Funding {
+        @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public static var credit: String {
             STPLocalizedString(
                 "%1$@ Credit",
                 "Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte'"
             )
         }
 
-        @_spi(InternalOnlyAPI) public static var debit: String {
+        @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public static var debit: String {
             STPLocalizedString(
                 "%1$@ Debit",
                 "Label a debit funding source. E.g. 'Visa Debit'"
             )
         }
 
-        @_spi(InternalOnlyAPI) public static var prepaid: String {
+        @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public static var prepaid: String {
             STPLocalizedString(
                 "%1$@ Prepaid",
                 "Label a prepaid funding source. E.g. 'Visa Prepaid'"
             )
         }
 
-        @_spi(InternalOnlyAPI) public static var `default`: String {
+        @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public static var `default`: String {
             STPLocalizedString(
                 "%1$@ Card",
                 "Label a default funding source, which we treat as a generic card. E.g. 'Visa Card'"

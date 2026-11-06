@@ -55,6 +55,7 @@ struct PaymentSheetTestPlayground: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+        SearchableSettingView(setting: $playgroundController.settings.mobileSessionSidecar, searchText: searchText)
         if playgroundController.settings.uiStyle != .embedded {
             SearchableSettingView(setting: $playgroundController.settings.layout, searchText: searchText)
         }

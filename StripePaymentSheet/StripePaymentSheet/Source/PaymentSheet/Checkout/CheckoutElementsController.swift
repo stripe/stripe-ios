@@ -179,7 +179,10 @@ public final class CheckoutElementsController: ObservableObject {
             }
             var params = configurationParams
             params["ordered_lpms"] = paymentElement?.embeddedPaymentElement.loadResult.paymentMethodTypes.map { $0.identifier }.joined(separator: ",")
-                ?? self.session.availableExpressCheckoutPaymentMethods.joined(separator: ",")
+                ?? configuration.expressCheckoutElement.map {
+                    ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: $0, apiClient: apiClient)
+                        .map(\.rawValue).joined(separator: ",")
+                }
             analyticsHelper.logSucceeded(startedAction, session: self.session, additionalParams: params)
         } catch {
             analyticsHelper.logFailed(startedAction, error: error, session: analyticsSession, additionalParams: configurationParams)
@@ -224,6 +227,17 @@ public final class CheckoutElementsController: ObservableObject {
         }
 
         return (shippingAddressElement, normalizedDefaultShippingAddress)
+    }
+
+    // MARK: - Customer
+
+    /// Deletes all persisted authentication state associated with a customer.
+    ///
+    /// You must call this method when the user logs out from your app.
+    /// This will ensure that any persisted authentication state in CheckoutElementsController
+    /// is also cleared during logout.
+    nonisolated public static func resetCustomer() {
+        LinkAccountContext.shared.resetCustomer()
     }
 
     // MARK: - Promotion Codes

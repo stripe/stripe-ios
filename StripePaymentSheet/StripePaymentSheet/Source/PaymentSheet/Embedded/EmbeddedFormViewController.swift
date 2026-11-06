@@ -241,7 +241,6 @@ class EmbeddedFormViewController: UIViewController {
         animateHeightChange({ [self] in
             errorLabel.setHiddenIfNecessary(error == nil)
             if error != nil {
-                // TODO(porter) Don't think we need this
                 // Without this, setting `contentOffsetPercentage = 1` uses the height of the scroll view without accounting for the error label
                 errorLabel.setNeedsLayout()
                 errorLabel.layoutIfNeeded()

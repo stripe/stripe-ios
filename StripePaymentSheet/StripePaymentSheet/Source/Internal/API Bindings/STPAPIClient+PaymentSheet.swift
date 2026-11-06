@@ -18,7 +18,7 @@ extension STPAPIClient {
         epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
         cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
         clientDefaultPaymentMethod: String?,
-        customerAccessProvider: PaymentSheet.CustomerAccessProvider?,
+        customerProvider: CustomerProvider,
         linkDisallowFundingSourceCreation: Set<String>,
         userOverrideCountry: String? = nil
     ) -> [String: Any] {
@@ -41,11 +41,7 @@ extension STPAPIClient {
         if let appId = Bundle.main.bundleIdentifier {
             parameters["mobile_app_id"] = appId
         }
-        if case .customerSession(let clientSecret) = customerAccessProvider {
-            parameters["customer_session_client_secret"] = clientSecret
-        } else if case .legacyCustomerEphemeralKey(let ephemeralKey) = customerAccessProvider {
-            parameters["legacy_customer_ephemeral_key"] = ephemeralKey
-        }
+        customerProvider.addElementsSessionParams(to: &parameters)
         if let clientDefaultPaymentMethod {
             parameters["client_default_payment_method"] = clientDefaultPaymentMethod
         }
@@ -115,17 +111,20 @@ extension STPAPIClient {
     func retrieveElementsSession(
         paymentIntentClientSecret: String,
         clientDefaultPaymentMethod: String?,
-        configuration: PaymentElementConfiguration
+        configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
+        sendsMobileSessionConfig: Bool = false
     ) async throws -> (STPPaymentIntent, STPElementsSession) {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
+            additionalHeaders: sendsMobileSessionConfig ? MobileSession.configHeaders(for: configuration) : [:],
             parameters: makeElementsSessionsParams(
                 mode: .paymentIntentClientSecret(paymentIntentClientSecret),
                 epmConfiguration: configuration.externalPaymentMethodConfiguration,
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                customerAccessProvider: configuration.customer?.customerAccessProvider,
+                customerProvider: customerProvider,
                 linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
                 userOverrideCountry: configuration.userOverrideCountry
             )
@@ -137,24 +136,27 @@ extension STPAPIClient {
         else {
             throw PaymentSheetError.unknown(debugDescription: "PaymentIntent missing from v1/elements/sessions response")
         }
-        try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        try verifyCustomerSessionForPaymentSheet(customerProvider: customerProvider, elementsSession: elementsSession)
         return (paymentIntent, elementsSession)
     }
 
     func retrieveElementsSession(
         setupIntentClientSecret: String,
         clientDefaultPaymentMethod: String?,
-        configuration: PaymentElementConfiguration
+        configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
+        sendsMobileSessionConfig: Bool = false
     ) async throws -> (STPSetupIntent, STPElementsSession) {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
+            additionalHeaders: sendsMobileSessionConfig ? MobileSession.configHeaders(for: configuration) : [:],
             parameters: makeElementsSessionsParams(
                 mode: .setupIntentClientSecret(setupIntentClientSecret),
                 epmConfiguration: configuration.externalPaymentMethodConfiguration,
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                customerAccessProvider: configuration.customer?.customerAccessProvider,
+                customerProvider: customerProvider,
                 linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
                 userOverrideCountry: configuration.userOverrideCountry
             )
@@ -166,35 +168,38 @@ extension STPAPIClient {
         else {
             throw PaymentSheetError.unknown(debugDescription: "SetupIntent missing from v1/elements/sessions response")
         }
-        try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        try verifyCustomerSessionForPaymentSheet(customerProvider: customerProvider, elementsSession: elementsSession)
         return (setupIntent, elementsSession)
     }
 
     func retrieveDeferredElementsSession(
         withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
         clientDefaultPaymentMethod: String?,
-        configuration: PaymentElementConfiguration
+        configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
+        sendsMobileSessionConfig: Bool = false
     ) async throws -> STPElementsSession {
         let parameters = makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
             epmConfiguration: configuration.externalPaymentMethodConfiguration,
             cpmConfiguration: configuration.customPaymentMethodConfiguration,
             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-            customerAccessProvider: configuration.customer?.customerAccessProvider,
+            customerProvider: customerProvider,
             linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
             userOverrideCountry: configuration.userOverrideCountry
         )
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
+            additionalHeaders: sendsMobileSessionConfig ? MobileSession.configHeaders(for: configuration) : [:],
             parameters: parameters
         )
-        try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        try verifyCustomerSessionForPaymentSheet(customerProvider: customerProvider, elementsSession: elementsSession)
         return elementsSession
     }
 
-    func verifyCustomerSessionForPaymentSheet(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) throws {
-        if case .customerSession = configuration.customer?.customerAccessProvider {
+    func verifyCustomerSessionForPaymentSheet(customerProvider: CustomerProvider, elementsSession: STPElementsSession) throws {
+        if customerProvider.usesCustomerSession {
             // User passed in a customerSessionClient secret
             if let customer = elementsSession.customer {
                 // If claimed, customer will be not nil.

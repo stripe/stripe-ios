@@ -49,6 +49,17 @@ extension PaymentElement {
             }
         }
 
+        /// By default, PaymentElement accepts all card brands supported by Stripe.
+        /// You can specify which card brands to allow or disallow.
+        /// - Note: This is only a client-side solution.
+        /// - Note: Card brand filtering is not currently supported by Apple Pay or Link.
+        public var cardBrandAcceptance: CardBrandAcceptance = .all {
+            didSet {
+                paymentSheetConfiguration.cardBrandAcceptance = cardBrandAcceptance
+                embeddedConfiguration.cardBrandAcceptance = cardBrandAcceptance
+            }
+        }
+
         /// Optional configuration to display a custom message when a saved payment method is removed.
         public var removeSavedPaymentMethodMessage: String? {
             didSet {
@@ -273,6 +284,8 @@ extension PaymentElement {
     public typealias Appearance = PaymentSheet.Appearance
     public typealias SavePaymentMethodOptInBehavior = PaymentSheet.SavePaymentMethodOptInBehavior
     public typealias PaymentMethodLayout = PaymentSheet.PaymentMethodLayout
+    public typealias CardBrandAcceptance = PaymentSheet.CardBrandAcceptance
+    public typealias BrandCategory = PaymentSheet.CardBrandAcceptance.BrandCategory
 }
 
 private extension PaymentElement.Configuration {

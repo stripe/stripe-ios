@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "偵錯程式已附加至 App。";
+
+"An emulator is being used to run the App." = "正在使用模擬器執行 App。";
+
 "An error occurred. Please try again." = "發生了錯誤，請重試。";
+
+"Cancel" = "取消";
 
 "Card brand was not updated. Please try again." = "銀行卡品牌未更新，請重試。";
 
 "Close" = "關閉";
+
+"Collapsed" = "已摺疊";
 
 "Confirm it's you" = "確認本人身份";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "輸入傳送到 %@ 的驗證碼。";
 
+"Expanded" = "已展開";
+
 "Failed to connect" = "關聯失敗";
+
+"Loading" = "正在載入";
+
+"No" = "否";
 
 "Resend code" = "重新傳送驗證碼";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "掃描卡";
 
+"Secure checkout" = "安全結賬";
+
+"Selected" = "已選取";
+
 "The IBAN you entered is invalid." = "您輸入的 IBAN 無效。";
+
+"The OS or the OS Version is not supported." = "不支援此 OS 或 OS 版本。";
+
+"The device is jailbroken." = "裝置已越獄。";
+
+"The integrity of the SDK has been tampered." = "SDK 的完整性已遭破壞。";
 
 "There was an error processing your card -- try again in a few seconds" = "處理您的卡時發生了錯誤 -- 請稍候再試";
 
 "There was an unexpected error -- try again in a few seconds" = "發生了意外錯誤 -- 請稍候再試";
 
+"Timeout" = "逾時";
+
 "Try again" = "重試";
 
+"Unselected" = "未選取";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "我們用 Stripe 來驗證您的銀行卡資訊。Stripe 可能會根據其私隱政策使用並存儲您的資料。<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>瞭解更多</u></a>";
+
+"Yes" = "是";
 
 "Your card has expired" = "您的卡已過期";
 

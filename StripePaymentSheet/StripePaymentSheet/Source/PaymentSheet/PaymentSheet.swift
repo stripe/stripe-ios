@@ -258,7 +258,7 @@ public class PaymentSheet {
     /// This will ensure that any persisted authentication state in PaymentSheet
     /// is also cleared during logout.
     public nonisolated static func resetCustomer() {
-        UserDefaults.standard.clearLinkDefaults()
+        LinkAccountContext.shared.resetCustomer()
     }
 
     // MARK: - Internal Properties

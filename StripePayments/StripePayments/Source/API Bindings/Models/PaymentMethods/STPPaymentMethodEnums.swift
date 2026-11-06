@@ -144,7 +144,7 @@ import Foundation
     case unknown
 
     /// Localized display name for this payment method type
-    @_spi(InternalOnlyAPI) public var displayName: String {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var displayName: String {
         switch self {
         case .alipay:
             return STPLocalizedString("Alipay", "Payment Method type brand name")
@@ -422,7 +422,7 @@ import Foundation
         }
     }
 
-    @_spi(InternalOnlyAPI) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
         return allCases.first(where: { $0.identifier == identifier }) ?? .unknown
     }
 

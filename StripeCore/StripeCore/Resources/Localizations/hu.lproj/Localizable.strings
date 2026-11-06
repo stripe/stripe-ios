@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Egy hibakereső csatlakozik az alkalmazáshoz.";
+
+"An emulator is being used to run the App." = "Az alkalmazás futtatásához emulátort használnak.";
+
 "An error occurred. Please try again." = "Hiba történt, próbálja újra.";
+
+"Cancel" = "Mégse";
 
 "Card brand was not updated. Please try again." = "A kártyatípus frissítése nem sikerült, próbálja újra.";
 
 "Close" = "Bezárás";
+
+"Collapsed" = "Összecsukva";
 
 "Confirm it's you" = "Igazolja személyazonosságát";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Írja be a(z) %@ címre küldött kódot.";
 
+"Expanded" = "Kibontva";
+
 "Failed to connect" = "Nem sikerült csatlakozni";
+
+"Loading" = "Betöltés";
+
+"No" = "Nem";
 
 "Resend code" = "Kód újraküldése";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Kártya beolvasása";
 
+"Secure checkout" = "Biztonságos fizetés";
+
+"Selected" = "Kiválasztva";
+
 "The IBAN you entered is invalid." = "A beírt IBAN-szám érvénytelen.";
+
+"The OS or the OS Version is not supported." = "Az operációs rendszer vagy annak verziója nem támogatott.";
+
+"The device is jailbroken." = "Az eszköz fel van törve.";
+
+"The integrity of the SDK has been tampered." = "Az SDK integritása sérült.";
 
 "There was an error processing your card -- try again in a few seconds" = "Hiba történt kártyája feldolgozása során, próbálja újra néhány másodperc múlva";
 
 "There was an unexpected error -- try again in a few seconds" = "Váratlan hiba lépett fel, próbálja újra néhány másodperc múlva";
 
+"Timeout" = "Időtúllépés";
+
 "Try again" = "Próbálja újra";
 
+"Unselected" = "Nincs kiválasztva";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "A Stripe-ot használjuk a kártyájának az ellenőrzésére. A Stripe az adatvédelmi szabályzatának megfelelően használhatja és tárolhatja az Ön adatait. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>További tudnivalók</u></a>";
+
+"Yes" = "Igen";
 
 "Your card has expired" = "A kártyája lejárt";
 

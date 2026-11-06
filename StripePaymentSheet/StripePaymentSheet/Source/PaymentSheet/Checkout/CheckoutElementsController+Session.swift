@@ -78,10 +78,10 @@ extension CheckoutElementsController {
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
         public let totals: CheckoutElementsController.Session.Totals
 
-        /// Payment methods available after applying configuration and device eligibility, ordered as displayed by `ExpressCheckoutElement`.
-        /// Supported values are `"apple_pay"` and `"link"`.
+        /// Payment methods available after applying configuration and device eligibility.
+        /// Supported values are `.applePay` and `.link`.
         /// When empty, Express Checkout Element will render empty content.
-        public let availableExpressCheckoutPaymentMethods: [String]
+        public let availableExpressCheckoutPaymentMethods: Set<ExpressCheckoutElement.PaymentMethod>
 
         // MARK: - Internal Properties
 
@@ -163,9 +163,9 @@ extension CheckoutElementsController.Session {
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
-        let availableExpressCheckoutPaymentMethods = configuration.map {
-            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0).map(\.rawValue)
-        } ?? []
+        let availableExpressCheckoutPaymentMethods = Set(configuration.map {
+            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0)
+        } ?? [])
         let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 
         self.init(
@@ -267,6 +267,7 @@ extension CheckoutElementsController.Session {
                 public let quantity: Int
 
                 /// The allowed quantity range when the customer can adjust the quantity.
+                /// This is `nil` when quantity adjustment is disabled.
                 public let adjustableQuantity: AdjustableQuantity?
 
                 /// The computed amounts for this Price.
@@ -326,9 +327,6 @@ extension CheckoutElementsController.Session {
 
     /// The allowed range for a customer-adjustable quantity.
     public struct AdjustableQuantity: Sendable, Hashable {
-        /// Whether the customer can adjust the quantity.
-        public let enabled: Bool
-
         /// The maximum quantity the customer can select.
         public let maximum: Int
 
