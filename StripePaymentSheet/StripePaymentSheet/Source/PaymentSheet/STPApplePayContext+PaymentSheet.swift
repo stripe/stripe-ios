@@ -246,6 +246,14 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
 extension STPApplePayContext {
 
+    static func normalizeEMVCapabilityForChinaUnionPay(for paymentRequest: PKPaymentRequest) {
+        if paymentRequest.supportedNetworks.contains(.chinaUnionPay) {
+            paymentRequest.merchantCapabilities.insert(.capabilityEMV)
+        } else {
+            paymentRequest.merchantCapabilities.remove(.capabilityEMV)
+        }
+    }
+
     @MainActor
     static func create(
         intent: Intent,
@@ -267,6 +275,7 @@ extension STPApplePayContext {
         if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler {
             paymentRequest = paymentRequestHandler(paymentRequest)
         }
+        normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
 
         let delegate = ApplePayContextClosureDelegate(
             intent: intent,
