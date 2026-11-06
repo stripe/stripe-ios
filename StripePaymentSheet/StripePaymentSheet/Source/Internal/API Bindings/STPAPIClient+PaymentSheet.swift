@@ -15,7 +15,7 @@ extension STPAPIClient {
 
     func makeElementsSessionsParams(
         mode: PaymentSheet.InitializationMode,
-        epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
+        externalPaymentMethods: [String],
         cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
         clientDefaultPaymentMethod: String?,
         customerProvider: CustomerProvider,
@@ -24,7 +24,7 @@ extension STPAPIClient {
     ) -> [String: Any] {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
-            "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
+            "external_payment_methods": externalPaymentMethods.compactMap { $0.lowercased() },
             "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id } ?? [],
         ]
         if !linkDisallowFundingSourceCreation.isEmpty {
@@ -121,7 +121,7 @@ extension STPAPIClient {
             additionalHeaders: sendsMobileSessionConfig ? MobileSession.configHeaders(for: configuration) : [:],
             parameters: makeElementsSessionsParams(
                 mode: .paymentIntentClientSecret(paymentIntentClientSecret),
-                epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                externalPaymentMethods: configuration._externalPaymentMethods,
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                 customerProvider: customerProvider,
@@ -153,7 +153,7 @@ extension STPAPIClient {
             additionalHeaders: sendsMobileSessionConfig ? MobileSession.configHeaders(for: configuration) : [:],
             parameters: makeElementsSessionsParams(
                 mode: .setupIntentClientSecret(setupIntentClientSecret),
-                epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                externalPaymentMethods: configuration._externalPaymentMethods,
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                 customerProvider: customerProvider,
@@ -181,7 +181,7 @@ extension STPAPIClient {
     ) async throws -> STPElementsSession {
         let parameters = makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: configuration.externalPaymentMethodConfiguration,
+            externalPaymentMethods: configuration._externalPaymentMethods,
             cpmConfiguration: configuration.customPaymentMethodConfiguration,
             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
             customerProvider: customerProvider,

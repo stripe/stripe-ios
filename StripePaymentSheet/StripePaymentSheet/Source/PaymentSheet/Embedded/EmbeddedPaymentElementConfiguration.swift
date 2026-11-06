@@ -113,8 +113,28 @@ extension EmbeddedPaymentElement {
         /// Optional configuration to display a custom message when a saved payment method is removed.
         public var removeSavedPaymentMethodMessage: String?
 
+        // Internal, nondeprecated storage backing the deprecated `externalPaymentMethodConfiguration` API below.
+        // SDK-internal code should read these instead of `externalPaymentMethodConfiguration` to avoid
+        // depending on a deprecated public type.
+        var _externalPaymentMethods: [String] = []
+        var _externalPaymentMethodConfirmHandler: ((_ externalPaymentMethodType: String, _ billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult)?
+
         /// Configuration for external payment methods.
-        public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
+        @available(
+            *,
+            deprecated,
+            message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+        )
+        public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration? {
+            get {
+                guard let handler = _externalPaymentMethodConfirmHandler else { return nil }
+                return ExternalPaymentMethodConfiguration(externalPaymentMethods: _externalPaymentMethods, externalPaymentMethodConfirmHandler: handler)
+            }
+            set {
+                _externalPaymentMethods = newValue?.externalPaymentMethods ?? []
+                _externalPaymentMethodConfirmHandler = newValue?.externalPaymentMethodConfirmHandler
+            }
+        }
 
         /// Configuration for custom payment methods.
         public var customPaymentMethodConfiguration: CustomPaymentMethodConfiguration?
