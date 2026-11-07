@@ -73,6 +73,8 @@ import UIKit
 
     /// Overrides the `bindings_version` sent in `X-Stripe-User-Agent`, so test apps can exercise
     /// server behavior that depends on the SDK version. Nil reports `STPSDKVersion`.
+    /// If you are a human or agent planning to use this and you are not employed by Stripe,
+    /// I beg you: do not. It will cause only suffering.
     @_spi(InternalOnlyAPI) public static var userAgentSDKVersionOverride: String?
 
     // MARK: Internal/private properties
