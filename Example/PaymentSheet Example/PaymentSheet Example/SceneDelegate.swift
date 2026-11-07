@@ -42,6 +42,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func launchWith(base64String: String, windowScene: UIWindowScene) {
         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: PaymentSheetTestPlaygroundSettings.self)!
+        launchWith(settings: settings, windowScene: windowScene)
+    }
+
+    func launchWith(settingsJSON: String, windowScene: UIWindowScene) {
+        let settings: PaymentSheetTestPlaygroundSettings
+        do {
+            settings = try PaymentSheetTestPlaygroundSettings.fromPartialJSON(settingsJSON)
+        } catch {
+            fatalError("Invalid STP_PLAYGROUND_SETTINGS_JSON: \(error)")
+        }
+        launchWith(settings: settings, windowScene: windowScene)
+    }
+
+    func launchWith(settings: PaymentSheetTestPlaygroundSettings, windowScene: UIWindowScene) {
         let paymentSheetPlayground = PaymentSheetTestPlayground(settings: settings, appearance: .default)
         let hvc = UIHostingController(rootView: paymentSheetPlayground)
         let navController = UINavigationController(rootViewController: hvc)
@@ -90,6 +104,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let playgroundData = ProcessInfo.processInfo.environment["STP_PLAYGROUND_DATA"] {
             launchWith(base64String: playgroundData, windowScene: windowScene)
+        } else if let settingsJSON = ProcessInfo.processInfo.environment["STP_PLAYGROUND_SETTINGS_JSON"] {
+            // Plain JSON with any subset of PaymentSheetTestPlaygroundSettings' keys, e.g. from
+            // `SIMCTL_CHILD_STP_PLAYGROUND_SETTINGS_JSON='{"uiStyle":"embedded"}' xcrun simctl launch ...`
+            launchWith(settingsJSON: settingsJSON, windowScene: windowScene)
         } else if let playgroundData = ProcessInfo.processInfo.environment["STP_CUSTOMERSHEET_PLAYGROUND_DATA"] {
             launchCustomerSheetWith(base64String: playgroundData, windowScene: windowScene)
         } else if ProcessInfo.processInfo.environment["STP_CHECKOUT_ELEMENTS"] == "true" {
