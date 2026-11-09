@@ -94,7 +94,7 @@ final class SavedPaymentMethodManager {
 
             if let customerAccessProvider = configuration.customer?.customerAccessProvider,
                case .customerSession(let customerSessionClientSecret) = customerAccessProvider,
-               let customerId = configuration.customer?.id {
+               let customerId = configuration.customer?.resolvedID(elementsSession: elementsSession) {
                 if paymentMethod.type == .card {
                     configuration.apiClient.detachPaymentMethodRemoveDuplicates(
                         paymentMethod.stripeId,
@@ -127,7 +127,7 @@ final class SavedPaymentMethodManager {
         guard let ephemeralKey else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while setting a payment method as default.")
         }
-        guard let customerId = configuration.customer?.id else {
+        guard let customerId = configuration.customer?.resolvedID(elementsSession: elementsSession) else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read customerId while setting a payment method as default.")
         }
         return try await configuration.apiClient.setAsDefaultPaymentMethod(defaultPaymentMethodId, for: customerId, using: ephemeralKey)

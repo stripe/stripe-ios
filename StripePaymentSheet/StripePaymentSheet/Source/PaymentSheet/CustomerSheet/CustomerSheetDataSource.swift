@@ -151,8 +151,8 @@ extension CustomerSheetDataSource {
         case .customerAdapter(let customerAdapter):
             try await customerAdapter.setSelectedPaymentOption(paymentOption: paymentOption)
         case .customerSession(let customerSessionAdapter):
-            let customerSessionClientSecret = try await customerSessionAdapter.customerSessionClientSecretProvider()
-            CustomerPaymentOption.setDefaultPaymentMethod(paymentOption, forCustomer: customerSessionClientSecret.customerId)
+            let cachedCustomerSessionClientSecret = try await customerSessionAdapter.cachedCustomerSessionClientSecret()
+            CustomerPaymentOption.setDefaultPaymentMethod(paymentOption, forCustomer: cachedCustomerSessionClientSecret.customerId)
         }
     }
 

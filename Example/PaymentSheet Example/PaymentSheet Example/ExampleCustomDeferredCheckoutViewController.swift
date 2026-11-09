@@ -28,6 +28,10 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
 
     private var paymentSheetFlowController: PaymentSheet.FlowController!
 
+    // `PaymentSheet.CustomerConfiguration.id` is internal, so we keep our own copy of the
+    // customer ID to send along with our confirm-intent request.
+    private var customerId: String?
+
     private let backendCheckoutUrl = URL(string: baseUrl + "/checkout")!
     private let confirmIntentUrl = URL(string: baseUrl + "/confirm_intent")!
     private let computeTotalsUrl = URL(string: baseUrl + "/compute_totals")!
@@ -264,6 +268,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 }
 
                 self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
+                self.customerId = customerId
                 // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
                 STPAPIClient.shared.publishableKey = publishableKey
 
@@ -317,7 +322,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
-            "customer_id": paymentSheetFlowController.configuration.customer?.id,
+            "customer_id": customerId,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])

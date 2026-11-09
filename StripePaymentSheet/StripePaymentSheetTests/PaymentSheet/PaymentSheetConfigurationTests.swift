@@ -97,6 +97,25 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssertEqual(key, "ek_11223344")
     }
 
+    func testResolvedID_prefersExplicitID() {
+        let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", customerSessionClientSecret: "cuss_12345")
+        let resolvedID = customerConfig.resolvedID(elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"))
+        XCTAssertEqual(resolvedID, "cus_12345")
+    }
+
+    func testResolvedID_fallsBackToElementsSessionWhenIDOmitted() {
+        let customerConfig = PaymentSheet.CustomerConfiguration(customerSessionClientSecret: "cuss_12345")
+        let resolvedID = customerConfig.resolvedID(elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"))
+        XCTAssertEqual(resolvedID, "cus_456")
+    }
+
+    func testResolvedID_noFallbackForEphemeralKeyWhenIDOmitted() {
+        // The ephemeral key path always has an explicit ID, so this exercises the `nil`-id branch defensively.
+        let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", ephemeralKeySecret: "ek_12345")
+        let resolvedID = customerConfig.resolvedID(elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"))
+        XCTAssertEqual(resolvedID, "cus_12345")
+    }
+
     func testBillingDetailsCollectionConfiguration_allowedCountries_default() {
         let configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
         XCTAssertTrue(configuration.allowedCountries.isEmpty)

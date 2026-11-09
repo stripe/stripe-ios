@@ -448,7 +448,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         }
         CustomerPaymentOption.setDefaultPaymentMethod(
             .stripeId(paymentMethod.stripeId),
-            forCustomer: customerProvider.customerID
+            forCustomer: customerProvider.customerID(elementsSession: elementsSession)
         )
     }
 

@@ -522,7 +522,7 @@ extension PaymentSheet {
             // Capture the accepted selection before presenting payment options.
             selectionSnapshotBeforePresentation = FlowControllerSelectionSnapshot(
                 viewController: viewController,
-                customerID: viewController.loadResult.customerProvider.customerID
+                customerID: viewController.loadResult.customerID
             )
 
             // Overwrite completion closure to retain self until called
@@ -732,7 +732,7 @@ extension PaymentSheet {
                     )
                     if case .completed = result, case .link = paymentOption {
                         // Remember Link as default payment method for users who just created an account.
-                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.viewController.loadResult.customerProvider.customerID)
+                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.viewController.loadResult.customerID)
                     }
 
                     completion(result)
