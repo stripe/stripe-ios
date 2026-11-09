@@ -1,75 +1,80 @@
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "ตัวแก้ไขข้อบกพร่องเชื่อมต่อกับแอปแล้ว";
-
+/* The text for warning when an emulator is being used to run the application. */
 "An emulator is being used to run the App." = "มีการใช้โปรแกรมจำลองเพื่อเรียกใช้แอปอยู่";
-
+/* An error message displayed when an error occurred. */
 "An error occurred. Please try again." = "เกิดข้อผิดพลาด โปรดลองอีกครั้ง";
-
+/* Button title to cancel action in an alert */
 "Cancel" = "ยกเลิก";
-
+/* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "ระบบไม่ได้อัปเดตแบรนด์ของบัตร โปรดลองอีกครั้ง";
-
+/* Text for close button */
 "Close" = "ปิด";
-
+/* Accessibility label for expandable text control to indicate text is hidden. */
 "Collapsed" = "ยุบแล้ว";
-
+/* Two factor authentication screen heading */
 "Confirm it's you" = "ยืนยันว่าเป็นคุณจริงๆ";
-
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not changed. Please try again." = "วิธีการชำระเงินเริ่มต้นไม่มีการเปลี่ยนแปลง โปรดลองอีกครั้ง";
+/* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "ระบบไม่ได้อัปเดตวิธีการชำระเงินเริ่มต้น โปรดลองอีกครั้ง";
-
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "ป้อนรายละเอียดของบัตรด้วยตนเอง";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "ป้อนรหัสที่ส่งไปยัง %@";
-
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
 "Expanded" = "ขยายแล้ว";
-
+/* Label shown when a network-related error has occured. */
 "Failed to connect" = "เชื่อมต่อไม่สำเร็จ";
-
+/* Status while screen is loading */
 "Loading" = "กำลังโหลด";
-
+/* The no answer to a yes or no question. */
 "No" = "ไม่";
-
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "ส่งรหัสอีกครั้ง";
-
+/* Text for button to scan a credit card */
 "Scan Card" = "สแกนบัตร";
-
+/* Button title to open camera to scan credit/debit card */
 "Scan card" = "สแกนบัตร";
-
+/* The title for the challenge response step of an authenticated checkout. */
 "Secure checkout" = "การชำระเงินที่ปลอดภัย";
-
+/* Indicates that a button is selected. */
 "Selected" = "เลือกแล้ว";
-
+/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "IBAN ที่คุณป้อนไม่ถูกต้อง";
-
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
 "The OS or the OS Version is not supported." = "ระบบไม่รองรับระบบปฏิบัติการหรือเวอร์ชันของระบบปฏิบัติการ";
-
+/* The text for warning when a device is jailbroken. */
 "The device is jailbroken." = "อุปกรณ์ถูกเจลเบรค";
-
+/* The text for warning when the integrity of the SDK has been tampered with. */
 "The integrity of the SDK has been tampered." = "ความสมบูรณ์ของ SDK ถูกดัดแปลงแล้ว";
-
+/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "เกิดข้อผิดพลาดขณะประมวลผลบัตร โปรดลองอีกครั้งในอีกสักครู่";
-
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "เกิดข้อผิดพลาดที่ไม่คาดคิด โปรดลองอีกครั้งในอีกสักครู่";
-
+/* Error description for when a network request times out. English value is as required by UL certification. */
 "Timeout" = "หมดเวลา";
-
+/* Button to reload web view if we were unable to connect. */
 "Try again" = "โปรดลองอีกครั้ง";
-
+/* Indicates that a button is not selected. */
 "Unselected" = "ไม่ได้เลือก";
-
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "เราใช้ Stripe เพื่อยืนยันรายละเอียดบัตรของคุณ ดังนั้น Stripe อาจจะใช้และจัดเก็บข้อมูลของคุณไว้ตามนโยบายความเป็นส่วนตัวของบริษัท <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>ดูข้อมูลเพิ่มเติม</u></a>";
-
+/* The yes answer to a yes or no question. */
 "Yes" = "ใช่";
-
+/* Error when the card has already expired */
 "Your card has expired" = "บัตรของคุณหมดอายุแล้ว";
-
+/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "บัตรของคุณถูกปฏิเสธ";
-
+/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "เดือนที่หมดอายุของบัตรไม่ถูกต้อง";
-
+/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "ปีที่หมดอายุของบัตรไม่ถูกต้อง";
-
+/* Error when the card number is not valid */
 "Your card's number is invalid" = "หมายเลขบัตรไม่ถูกต้อง";
-
+/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "รหัสความปลอดภัยของบัตรไม่ถูกต้อง";
-
+/* Error when customer's name is invalid */
 "Your name is invalid." = "ชื่อไม่ถูกต้อง";
-
+/* Error message when a payment method gets declined. */
 "Your payment method was declined." = "การชำระเงินของคุณถูกปฏิเสธ";

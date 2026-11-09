@@ -1,77 +1,104 @@
+/* Error message shown when the user tries to create a Link account for an email that already has one */
+"A Link account already exists for this email. Log in instead." = "Diġà jeżisti kont ta’ Link għal din l-email. Idħol fil-kont minflok.";
+/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
 "Add %ld documents" = "Żid %ld dokumenti";
-
+/* Action to add exactly one uploaded document to a source of funds */
 "Add 1 document" = "Żid dokument 1";
-
+/* Action to add documents for another source of funds */
 "Add documents" = "Żid dokumenti";
-
+/* Error when camera access is denied or restricted during document collection */
 "Allow camera access in Settings to take a photo." = "Ippermetti l-aċċess għall-kamera mis-Settings biex tieħu ritratt.";
-
+/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
+"An error occurred while automatically signing in to your Link account. Please sign in manually." = "Seħħ errur waqt li kont qed tidħol fil-kont ta’ Link tiegħek awtomatikament. Jekk jogħġbok iffirma manwalment.";
+/* Label and placeholder for a questionnaire answer field */
 "Answer" = "Tweġiba";
-
+/* Action to open the system document picker to select a file */
 "Choose File…" = "Agħżel fajl";
-
+/* Action to open the system photo picker to select a photo */
 "Choose Photo…" = "Agħżel Ritratt…";
-
+/* Button asking the owner to open its support destination */
+"Contact support" = "Ikkuntattja lit-tim tal-appoġġ";
+/* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Il-karti tad-debitu huma l-aktar probabbli li jiġu aċċettati.";
-
+/* Label and picker title for a document's category */
 "Document type" = "Tip ta’ dokument";
-
+/* Heading confirming a document was uploaded successfully */
 "Document uploaded successfully" = "Dokument ittella' b'suċċess";
-
+/* Error message shown when the SDK needs a crypto customer ID before continuing */
+"Finish verifying your Link account before continuing." = "Temm il-verifika tal-kont tiegħek ta’ Link qabel tkompli.";
+/* Label for the selected source of funds in the document editor */
 "Funds source" = "Sors tal-fondi";
-
+/* Explanation above the summary of source-of-funds documents. */
 "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Kif qed tiffinanzja t-tranżazzjonijiet tiegħek? Jekk jogħġbok elenka s-sorsi kollha tiegħek. Pereżempju, salarju, tfaddil, dħul minn investimenti, eċċ.";
-
+/* Error message shown when the provided phone number is not in the expected format */
+"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "Format tat-telefon invalidu. Jekk jogħġbok uża l-format E.164 (eż., +12125551234).";
+/* Explanation above the document upload control */
 "Make sure your document meets following requirements." = "Kun żgur li d-dokument jissodisfa r-rekwiżiti li ġejjin.";
-
+/* Error message shown when there is no usable payment method selected */
+"No payment method is ready to use. Please collect a payment method and try again." = "L-ebda metodu ta’ ħlas mhu lest biex jintuża. Jekk jogħġbok iġbor metodu ta’ ħlas u erġa’ pprova.";
+/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
 "Please select your Apple Pay payment method again to continue." = "Jekk jogħġbok agħżel il-metodu ta' ħlas ta' Apple Pay mill-ġdid biex tkompli.";
-
+/* Instruction after an unavailable operation */
 "Please try again later." = "Jekk jogħġbok erġa’ pprova aktar tard.";
-
+/* Error message shown when the SDK is missing required information from the server */
+"Required information was missing. Please try again later." = "L-informazzjoni meħtieġa kienet nieqsa. Jekk jogħġbok erġa’ pprova aktar tard.";
+/* Heading confirming documents were submitted for review */
 "Submitted for review" = "Sottomess għar-reviżjoni";
-
+/* Action to open the system camera to take a photo of a document */
 "Take Photo…" = "Ħu Ritratt…";
-
+/* Heading introducing source of funds collection */
 "Tell us about your source of funds" = "Għidilna dwar is-sors tal-fondi tiegħek";
-
+/* Message shown when a previous document has a requirement error */
 "There was a problem with your previous document. Please upload a new one." = "Kien hemm problema bid-dokument preċedenti. Jekk jogħġbok tella' wieħed ġdid.";
-
+/* Error message shown when app attestation fails */
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Din l-app ma setgħetx tiġi vverifikata minħabba żball ta’ attestazzjoni. Jekk jogħġbok erġa’ pprova aktar tard jew ikkuntattja lill-iżviluppatur jekk il-problema tibqa’.";
-
+/* Error message shown when app attestation is not configured for crypto onramp */
 "This app couldn't be verified. Contact the app developer for help." = "Din l-app ma setgħetx tiġi vverifikata. Ikkuntattja lill-iżviluppatur tal-app għall-għajnuna.";
-
+/* Validation error for a document exceeding the size limit */
 "This file is larger than %@. Choose a file that is %@ or smaller." = "Dan il-fajl huwa akbar minn %1$@. Agħżel fajl li huwa %2$@ jew iżgħar.";
-
+/* Validation error when no document formats are available */
 "This file type isn’t supported." = "Dan it-tip ta' fajl mhux appoġġjat.";
-
+/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
 "This file type isn’t supported. Upload a %@ file." = "Dan it-tip ta' fajl mhux appoġġjat. Tella' fajl %@.";
-
+/* Error message shown when the wallet is not registered for crypto onramp */
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Din il-kartiera ma setgħetx tinstab. Jekk jogħġbok agħżel jew żid kartiera u erġa' pprova.";
-
+/* Error message shown when the wallet network is not supported for crypto onramp */
 "This wallet network isn't supported. Please choose a different network." = "In-network ta' din il-kartiera mhuwiex appoġġjat. Jekk jogħġbok agħżel network differenti.";
-
+/* Error message shown when the wallet ownership challenge has expired */
 "This wallet verification request expired. Please try again." = "Din it-talba għal verifika tal-kartiera skadiet. Jekk jogħġbok erġa' pprova.";
-
+/* Error message shown when the wallet ownership challenge is invalid */
 "This wallet verification request is invalid. Please try again." = "Din it-talba ta' verifika tal-kartiera hija invalida. Jekk jogħġbok erġa' pprova.";
-
+/* Error message shown when the wallet ownership challenge is invalid */
+"This wallet verification request is no longer valid. Please try again." = "Din it-talba għal verifika tal-kartiera m'għadhiex valida. Jekk jogħġbok erġa' pprova.";
+/* Action to select an existing document for upload */
 "Upload document" = "Tella’ dokument";
-
+/* Heading introducing proof of address collection */
 "Upload your proof of address" = "Tella' l-prova tal-indirizz tiegħek";
-
+/* Status after a document has uploaded successfully */
 "Uploaded" = "Ittella'";
-
+/* Status while a document is uploading */
 "Uploading…" = "Qed jittella'…";
-
+/* Error message shown when the user's Link account is not verified */
+"Verify your Link account before continuing." = "Ivverifika l-kont tiegħek ta’ Link qabel tkompli.";
+/* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "Ma stajniex nivverifikaw is-sjieda ta' din il-kartiera. Jekk jogħġbok erġa' pprova.";
-
+/* Error when a file provider cannot supply a document */
 "We couldn’t open this document. Please choose it again." = "Ma stajniex niftħu dan id-dokument. Jekk jogħġbok agħżlu mill-ġdid.";
-
+/* Error after a document upload fails */
 "We couldn’t upload this file. Please try again." = "Ma stajniex intellgħu dan il-fajl. Jekk jogħġbok ipprova mill-ġdid.";
-
+/* Explanation introducing proof of address collection. */
 "We may request proof of address for larger transactions." = "Jaf nitolbu prova tal-indirizz għal tranżazzjonijiet akbar.";
-
+/* Explanation introducing source of funds collection. */
 "We may request source of funds for larger transactions." = "Jaf nitolbu sors ta' fondi għal tranżazzjonijiet akbar.";
-
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to confirm your address to enable spending over %@." = "Aħna mitluba nikkonfermaw l-indirizz tiegħek biex nippermettu l-infiq ta' aktar minn %@.";
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to understand where your funds come from to enable spending over %@." = "Aħna mitluba nifhmu minn fejn ġejjin il-fondi tiegħek biex nippermettu l-infiq ta' aktar minn %@.";
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We’re required to confirm your address to enable spending over %@." = "Aħna mitluba nikkonfermaw l-indirizz tiegħek biex nippermettu l-infiq ta' aktar minn %@.";
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We’re required to understand where your funds come from to enable spending over %@." = "Aħna mitluba nifhmu minn fejn ġejjin il-fondi tiegħek biex nippermettu l-infiq ta' aktar minn %@.";
+/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Qegħdin nirrevedu d-dokumenti tiegħek. Se ninfurmawk meta titlesta l-verifika.";
-
+/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
 "You can continue while we verify your document in the background." = "Tista' tkompli waqt li nivverifikaw id-dokument tiegħek fl-isfond.";

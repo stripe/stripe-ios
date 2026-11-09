@@ -1,153 +1,199 @@
+/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (isteğe bağlı)";
-
+/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
+"%@ is incomplete." = "%@ eksik.";
+/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
 "(not accepted)" = "(kabul edilmedi)";
-
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Hesap numarası";
-
+/* Caption for Address field on address form */
 "Address" = "Adres";
-
+/* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Adres satırı 1";
-
+/* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Adres satırı 2";
-
+/* Label of an address field in hk */
 "Area" = "Bölge";
-
+/* Label for BLIK code number field on form */
 "BLIK code" = "BLIK kodu";
-
+/* Placeholder for AU BECS BSB number */
 "BSB number" = "BSB numarası";
-
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Banka Hesabı";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
 "Bank account •••• %@" = "Banka hesabı •••• %@";
-
+/* Billing address section title for card form entry. */
+"Billing address" = "Fatura adresi";
+/* Label for a checkbox that makes customers billing address same as their shipping address */
 "Billing address is same as shipping" = "Faturalama adresi, gönderim adresiyle aynı";
-
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+/* Button title to cancel action in an alert */
 "Cancel" = "İptal";
-
+/* Label an input field to update card brand */
 "Card brand" = "Kartın markası";
-
+/* Label for card number entry text field */
+"Card number" = "Kart numarası";
+/* Caption for City field on address form */
 "City" = "Şehir";
-
+/* Accessibility label describing a field for entering a login code */
 "Code field" = "Kod alanı";
-
+/* Label for Company field on form */
 "Company" = "Şirket";
-
+/* Text for alert message when user needs to confirm payment in their banking app */
+"Confirm the payment in your bank's app to complete the purchase." = "Satın almayı tamamlamak için ödemeyi bankanızın uygulamasında onaylayın.";
+/* Text for continue button */
 "Continue" = "Devam et";
-
+/* Caption for Country field on address form */
 "Country" = "Ülke";
-
+/* Country selector and postal code entry form header title */
 "Country or region" = "Ülke veya bölge";
-
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Ülke";
-
+/* Error message for empty date. */
+"Date is empty." = "Tarih boş.";
+/* Label for Date of birth field */
 "Date of Birth" = "Doğum Tarihi";
-
+/* Label of an address field */
 "Department" = "İdari Bölüm";
-
+/* Label for the district field on an address form */
 "District" = "İlçe";
-
+/* Label of an address field */
 "Do Si" = "Do Si";
-
+/* Used as the title for prompting the user if they want to close the sheet */
 "Do you want to close this form?" = "Bu formu kapatmak istiyor musunuz?";
-
+/* Done button title */
 "Done" = "Tamam";
-
+/* Accessibility hint for a text field */
 "Double tap to edit" = "Düzenlemek için iki kez dokunun";
-
+/* Button title to enter editing mode */
 "Edit" = "Düzenle";
-
+/* Label of an address field */
 "Eircode" = "Eircode";
-
+/* Caption for Email field on address form */
 "Email" = "E-posta";
-
+/* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirlik";
-
+/* Text for error labels */
 "Error" = "Hata";
-
+/* Label for first (given) name field */
 "First" = "Ad";
-
+/* Placeholder string for name entry field. */
 "Full name" = "Ad ve soyadınız";
-
+/* Error description for incomplete phone number */
 "Incomplete phone number" = "Eksik telefon numarası";
-
+/* Error message when UPI ID is invalid */
+"Invalid UPI ID" = "Geçersiz UPI Numarası";
+/* Label of an address field */
 "Island" = "Ada";
-
+/* Label for last (family) name field */
 "Last" = "Soyadı";
-
+/* label for text field to enter card expiry */
+"MM / YY" = "AA / YY";
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Cep telefonu numarası";
+/* Caption for Name field on address form */
 "Name" = "Ad";
-
+/* Label for Name on account field on form */
 "Name on account" = "Hesaptaki ad";
-
+/* No comment provided by engineer. */
 "OK" = "TAMAM";
-
+/* Label of an address field */
 "Oblast" = "Oblast";
-
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "Diğer";
-
+/* Label of an address field */
 "Parish" = "Dini bölge";
-
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+/* Caption for Phone number field on address form */
 "Phone number" = "Telefon numarası";
-
+/* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Posta kodu";
-
+/* Label of an address field */
 "Prefecture" = "İdari bölge";
-
+/* Label of a disabled button while its action is processing */
 "Processing..." = "İşleniyor...";
-
+/* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "İlçe";
-
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Kaldır";
-
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Banka hesabını kaldır";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "%@ ile biten banka hesabını kaldır";
+/* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account?" = "Banka hesabı kaldırılsın mı?";
-
+/* Title for a button that when tapped removes a saved card. */
 "Remove card" = "Kartı kaldır";
-
+/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
 "Search" = "Ara";
-
+/* Message when a user is selecting a card brand in a dropdown */
 "Select card brand (optional)" = "Kart markasını seçin (isteğe bağlı)";
-
+/* Error message for empty dropdown selection. */
 "Selection is empty." = "Seçim boş.";
-
+/* Heading for a generic error when an operation fails */
 "Something went wrong" = "Bir sorun oluştu";
-
+/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
 "Sort code" = "Şube kodu";
-
+/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Eyalet";
-
+/* Button that submits the information entered on a screen */
 "Submit" = "Gönder";
-
+/* Label of an address field */
 "Suburb" = "Banliyö";
-
+/* Label of an address field */
 "Suburb or city" = "Banliyö veya şehir";
-
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Girdiğiniz BSB eksik.";
-
+/* An error message. */
 "The ID number you entered is incomplete." = "Girdiğiniz kimlik numarası eksik.";
-
+/* Error description for incomplete account number */
 "The account number you entered is incomplete." = "Girdiğiniz hesap numarası eksik.";
-
+/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
 "The sort code you entered is invalid." = "Girdiğiniz banka/şube kodu geçersiz.";
-
+/* Label of an address field */
 "Town or city" = "Kasaba veya şehir";
-
+/* Label for UPI ID number field on form */
+"UPI ID" = "UPI Numarası";
+/* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Telefon numaranızı ayrıştırılamadı";
-
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Linklere erişmek için rotoru kullanın.";
-
+/* Error message when BLIK code is invalid */
 "Your BLIK code is incomplete." = "BLIK kodunuz eksik.";
-
+/* Error message when BLIK code is invalid */
 "Your BLIK code is invalid." = "BLIK kodunuz geçersiz.";
-
+/* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP code is incomplete." = "Posta kodunuz eksik.";
-
+/* Error message for when ZIP code in form is invalid (US only) */
 "Your ZIP code is invalid." = "Posta kodunuz geçersiz.";
-
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Posta kodunuz eksik.";
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Kart numaranız eksik.";
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Kart numaranız geçersiz.";
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "Kartınızın son kullanım tarihi eksik.";
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Kartınızın son kullanım tarihi geçersiz.";
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Kartınızın son kullanım ayı geçersiz.";
+/* Error message for card entry form when CVC is incomplete. */
+"Your card's security code is incomplete." = "Kartınızın güvenlik kodu eksik.";
+/* Error message when email is invalid */
 "Your email is invalid." = "E-postanız geçersiz.";
-
+/* Used as the title for prompting the user if they want to close the sheet */
 "Your payment information will not be saved." = "Ödeme bilgileriniz kaydedilmeyecek.";
-
+/* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Posta kodunuz eksik.";
-
+/* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Posta kodunuz geçersiz.";
-
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Posta Kodu";
+/* accessibility label for text field */
+"expiration date" = "son kullanım tarihi";

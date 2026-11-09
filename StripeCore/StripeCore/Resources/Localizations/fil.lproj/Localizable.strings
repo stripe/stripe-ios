@@ -1,75 +1,80 @@
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "May naka-attach na debugger sa App.";
-
+/* The text for warning when an emulator is being used to run the application. */
 "An emulator is being used to run the App." = "May ginagamit na emulator para patakbuhin ang App.";
-
+/* An error message displayed when an error occurred. */
 "An error occurred. Please try again." = "May nangyaring error. Pakisubukan muli.";
-
+/* Button title to cancel action in an alert */
 "Cancel" = "Kanselahin";
-
+/* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "Hindi na-update ang brand ng kard. Pakisubukan muli.";
-
+/* Text for close button */
 "Close" = "Isara";
-
+/* Accessibility label for expandable text control to indicate text is hidden. */
 "Collapsed" = "Naka-collapse";
-
+/* Two factor authentication screen heading */
 "Confirm it's you" = "Kumpirmahin na ikaw ito";
-
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not changed. Please try again." = "Hindi nabago ang default na paraan ng pagbabayad. Pakisubukan muli.";
+/* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "Hindi na-update ang default na paraan ng pagbabayad. Pakisubukan muli.";
-
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Mano-manong ilagay ang mga detalye ng card";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "Ilagay ang code na ipinadala sa %@.";
-
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
 "Expanded" = "Naka-expand";
-
+/* Label shown when a network-related error has occured. */
 "Failed to connect" = "Nabigong kumonekta";
-
+/* Status while screen is loading */
 "Loading" = "Nilo-load";
-
+/* The no answer to a yes or no question. */
 "No" = "Hindi";
-
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "Ipadala ulit ang code";
-
+/* Text for button to scan a credit card */
 "Scan Card" = "I-scan ang kard";
-
+/* Button title to open camera to scan credit/debit card */
 "Scan card" = "I-scan ang kard";
-
+/* The title for the challenge response step of an authenticated checkout. */
 "Secure checkout" = "Ligtas na pag-checkout";
-
+/* Indicates that a button is selected. */
 "Selected" = "Napili";
-
+/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "Ang IBAN na iniligay mo ay imbalido.";
-
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
 "The OS or the OS Version is not supported." = "Hindi suportado ang OS o ang Bersyon ng OS.";
-
+/* The text for warning when a device is jailbroken. */
 "The device is jailbroken." = "Naka-jailbreak ang device.";
-
+/* The text for warning when the integrity of the SDK has been tampered with. */
 "The integrity of the SDK has been tampered." = "Na-tamper na ang integridad ng SDK.";
-
+/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Nagkaroon ng kamalian sa pagproseso ng iyong kard -- subukin muli sa ilang segundo";
-
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Nagkaroon ng di-inaasahang kamalian -- subukin muli sa ilang segundo";
-
+/* Error description for when a network request times out. English value is as required by UL certification. */
 "Timeout" = "Timeout";
-
+/* Button to reload web view if we were unable to connect. */
 "Try again" = "Subukan muli";
-
+/* Indicates that a button is not selected. */
 "Unselected" = "Hindi napili";
-
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Gumagamit kami ng Stripe para i-verify ang mga detalye ng iyong kard. Maaaring gamitin at imbakin ng Stripe ang iyong data ayon sa patakaran sa privacy nito. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Alamin ang higit pa</u></a>";
-
+/* The yes answer to a yes or no question. */
 "Yes" = "Oo";
-
+/* Error when the card has already expired */
 "Your card has expired" = "Napaso na ang iyong kard";
-
+/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "Tinanggihan ang iyong kard";
-
+/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Ang buwan ng pagkapaso ng iyong kard ay di balido";
-
+/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Ang taon ng pagkapaso ng iyong kard ay di balido";
-
+/* Error when the card number is not valid */
 "Your card's number is invalid" = "Ang numero ng iyong kard ay di balido";
-
+/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "Ang security code ng iyong kard ay di balido";
-
+/* Error when customer's name is invalid */
 "Your name is invalid." = "Ang iyong pangalan ay imbalido.";
-
+/* Error message when a payment method gets declined. */
 "Your payment method was declined." = "Tinanggihan ang iyong paraan ng pagbabayad.";

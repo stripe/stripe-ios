@@ -1,153 +1,199 @@
+/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (ระบุหรือไม่ก็ได้)";
-
+/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
+"%@ is incomplete." = "%@ ไม่ครบถ้วน";
+/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
 "(not accepted)" = "(ไม่รองรับ)";
-
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "หมายเลขบัญชี";
-
+/* Caption for Address field on address form */
 "Address" = "ที่อยู่";
-
+/* Address line 1 placeholder for billing address form. */
 "Address line 1" = "ที่อยู่บรรทัดที่ 1";
-
+/* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "ที่อยู่บรรทัดที่ 2";
-
+/* Label of an address field in hk */
 "Area" = "พื้นที่";
-
+/* Label for BLIK code number field on form */
 "BLIK code" = "รหัส BLIK";
-
+/* Placeholder for AU BECS BSB number */
 "BSB number" = "หมายเลข BSB";
-
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "บัญชีธนาคาร";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
 "Bank account •••• %@" = "บัญชีธนาคาร •••• %@";
-
+/* Billing address section title for card form entry. */
+"Billing address" = "ที่อยู่ในการเรียกเก็บเงิน";
+/* Label for a checkbox that makes customers billing address same as their shipping address */
 "Billing address is same as shipping" = "ที่อยู่ในการเรียกเก็บเงินเหมือนกันกับที่อยู่ในการจัดส่ง";
-
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+/* Button title to cancel action in an alert */
 "Cancel" = "ยกเลิก";
-
+/* Label an input field to update card brand */
 "Card brand" = "แบรนด์ของบัตร";
-
+/* Label for card number entry text field */
+"Card number" = "หมายเลขบัตร";
+/* Caption for City field on address form */
 "City" = "เมือง";
-
+/* Accessibility label describing a field for entering a login code */
 "Code field" = "ช่องข้อมูลรหัส";
-
+/* Label for Company field on form */
 "Company" = "บริษัท";
-
+/* Text for alert message when user needs to confirm payment in their banking app */
+"Confirm the payment in your bank's app to complete the purchase." = "ยืนยันการชำระเงินในแอปของธนาคารเพื่อชำระเงินให้เสร็จสิ้น";
+/* Text for continue button */
 "Continue" = "ดำเนินการต่อ";
-
+/* Caption for Country field on address form */
 "Country" = "ประเทศ";
-
+/* Country selector and postal code entry form header title */
 "Country or region" = "ประเทศหรือภูมิภาค";
-
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "เคาน์ตี";
-
+/* Error message for empty date. */
+"Date is empty." = "วันที่ว่างอยู่";
+/* Label for Date of birth field */
 "Date of Birth" = "วันเกิด";
-
+/* Label of an address field */
 "Department" = "แผนก";
-
+/* Label for the district field on an address form */
 "District" = "เขต";
-
+/* Label of an address field */
 "Do Si" = "เมือง";
-
+/* Used as the title for prompting the user if they want to close the sheet */
 "Do you want to close this form?" = "แน่ใจไหมว่าต้องการปิดแบบฟอร์มนี้";
-
+/* Done button title */
 "Done" = "เสร็จสิ้น";
-
+/* Accessibility hint for a text field */
 "Double tap to edit" = "แตะสองครั้งเพื่อแก้ไข";
-
+/* Button title to enter editing mode */
 "Edit" = "แก้ไข";
-
+/* Label of an address field */
 "Eircode" = "รหัสไปรษณีย์";
-
+/* Caption for Email field on address form */
 "Email" = "อีเมล";
-
+/* Used to describe address in United Arab Emirates */
 "Emirate" = "เอมิเรต";
-
+/* Text for error labels */
 "Error" = "ข้อผิดพลาด";
-
+/* Label for first (given) name field */
 "First" = "ชื่อ";
-
+/* Placeholder string for name entry field. */
 "Full name" = "ชื่อ-นามสกุล";
-
+/* Error description for incomplete phone number */
 "Incomplete phone number" = "หมายเลขโทรศัพท์ไม่ครบถ้วน";
-
+/* Error message when UPI ID is invalid */
+"Invalid UPI ID" = "UPI ID ไม่ถูกต้อง";
+/* Label of an address field */
 "Island" = "เกาะ";
-
+/* Label for last (family) name field */
 "Last" = "นามสกุล";
-
+/* label for text field to enter card expiry */
+"MM / YY" = "ดด / ปป";
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "หมายเลขโทรศัพท์มือถือ";
+/* Caption for Name field on address form */
 "Name" = "ชื่อ";
-
+/* Label for Name on account field on form */
 "Name on account" = "ชื่อในบัญชี";
-
+/* No comment provided by engineer. */
 "OK" = "ตกลง";
-
+/* Label of an address field */
 "Oblast" = "ภูมิภาค";
-
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "อื่นๆ";
-
+/* Label of an address field */
 "Parish" = "ตำบล";
-
+/* Caption for Phone field on address form */
+"Phone" = "โทรศัพท์";
+/* Caption for Phone number field on address form */
 "Phone number" = "หมายเลขโทรศัพท์";
-
+/* Short string for postal code (text used in non-US countries) */
 "Postal code" = "รหัสไปรษณีย์";
-
+/* Label of an address field */
 "Prefecture" = "อำเภอ";
-
+/* Label of a disabled button while its action is processing */
 "Processing..." = "กำลังประมวลผล...";
-
+/* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "จังหวัด";
-
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "นำออก";
-
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "นำบัญชีธนาคารออก";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "ลบบัญชีธนาคารที่ลงท้ายด้วย %@";
+/* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account?" = "นำบัญชีธนาคารออกหรือไม่";
-
+/* Title for a button that when tapped removes a saved card. */
 "Remove card" = "นำบัตรออก";
-
+/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
 "Search" = "ค้นหา";
-
+/* Message when a user is selecting a card brand in a dropdown */
 "Select card brand (optional)" = "เลือกแบรนด์บัตร (ไม่บังคับ)";
-
+/* Error message for empty dropdown selection. */
 "Selection is empty." = "การเลือกว่างเปล่า";
-
+/* Heading for a generic error when an operation fails */
 "Something went wrong" = "เกิดข้อผิดพลาดบางอย่าง";
-
+/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
 "Sort code" = "Sort Code";
-
+/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "รัฐ";
-
+/* Button that submits the information entered on a screen */
 "Submit" = "ส่ง";
-
+/* Label of an address field */
 "Suburb" = "ชานเมือง";
-
+/* Label of an address field */
 "Suburb or city" = "ชานเมืองหรือเมือง";
-
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "BSB ที่คุณป้อนไม่ครบถ้วน";
-
+/* An error message. */
 "The ID number you entered is incomplete." = "หมายเลขประจำตัวประชาชนที่คุณป้อนไม่ครบถ้วน";
-
+/* Error description for incomplete account number */
 "The account number you entered is incomplete." = "หมายเลขบัญชีที่คุณป้อนไม่ครบถ้วน";
-
+/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
 "The sort code you entered is invalid." = "Sort Code ที่คุณป้อนไม่ถูกต้อง";
-
+/* Label of an address field */
 "Town or city" = "เมืองหรือจังหวัด";
-
+/* Label for UPI ID number field on form */
+"UPI ID" = "UPI ID";
+/* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "ไม่สามารถแยกวิเคราะห์หมายเลขโทรศัพท์ได้";
-
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "ใช้ตัวหมุนเพื่อเข้าถึงลิงก์";
-
+/* Error message when BLIK code is invalid */
 "Your BLIK code is incomplete." = "รหัส BLIK ไม่ครบถ้วน";
-
+/* Error message when BLIK code is invalid */
 "Your BLIK code is invalid." = "รหัส BLIK ไม่ถูกต้อง";
-
+/* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP code is incomplete." = "รหัสไปรษณีย์ของคุณไม่สมบูรณ์";
-
+/* Error message for when ZIP code in form is invalid (US only) */
 "Your ZIP code is invalid." = "รหัสไปรษณีย์ของคุณไม่ถูกต้อง";
-
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "รหัสไปรษณีย์ไม่ครบถ้วน";
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "หมายเลขบัตรไม่ครบถ้วน";
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "หมายเลขบัตรของคุณไม่ถูกต้อง";
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "วันที่หมดอายุของบัตรไม่ครบถ้วน";
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "วันที่หมดอายุของบัตรไม่ถูกต้อง";
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "เดือนที่หมดอายุของบัตรไม่ถูกต้อง";
+/* Error message for card entry form when CVC is incomplete. */
+"Your card's security code is incomplete." = "รหัสความปลอดภัยของบัตรไม่ครบถ้วน";
+/* Error message when email is invalid */
 "Your email is invalid." = "อีเมลไม่ถูกต้อง";
-
+/* Used as the title for prompting the user if they want to close the sheet */
 "Your payment information will not be saved." = "ข้อมูลการชำระเงินของคุณจะไม่ได้รับการบันทึก";
-
+/* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "รหัสไปรษณีย์ไม่ครบถ้วน";
-
+/* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "รหัสไปรษณีย์ไม่ถูกต้อง";
-
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "รหัสไปรษณีย์";
+/* accessibility label for text field */
+"expiration date" = "วันหมดอายุ";

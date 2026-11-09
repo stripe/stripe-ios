@@ -1,399 +1,624 @@
+/* Label a default funding source, which we treat as a generic card. E.g. 'Visa Card' */
+"%1$@ Card" = "Карта %1$@";
+/* Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte' */
+"%1$@ Credit" = "Кредитная карта %1$@";
+/* Label a debit funding source. E.g. 'Visa Debit' */
+"%1$@ Debit" = "Дебетовая карта %1$@";
+/* Label a prepaid funding source. E.g. 'Visa Prepaid' */
+"%1$@ Prepaid" = "Предоплаченная карта %1$@";
+/* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
+"%1$@ account ending in %2$@" = "Счет %1$@, оканчивающийся на %2$@";
+/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
+"%1$@ ending in %2$@" = "%1$@ с номером, оканчивающимся на %2$@";
+/* String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted */
+"%1$@ is not accepted" = "%1$@ не принимается";
+/* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
-
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
+"%1$d interest-free payments of %2$@" = "%1$li беспроцентных платежей по %2$@";
+/* Disclaimer for when a promotion is available for setting up a bank account. e.g. '$5 back on […]' */
+"%@ back on a qualifying purchase when you pay by bank. <terms>View terms</terms>" = "Возврат %@ за соответствующую требованиям покупку при оплате через банк. <terms>Посмотреть условия</terms>";
+/* Disclaimer for when a promotion is available for paying with a bank account. e.g. '$5 back when […]' */
+"%@ back when you pay by bank. <terms>View terms</terms>" = "Возврат %@ при оплате через банк. <terms>Посмотреть условия</terms>";
+/* Message shown in a confirmation prompt when removing a saved payment method. */
 "%@ will no longer be saved to your wallet." = "%@ более не хранится в вашем кошельке.";
-
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
+"%d interest-free payments of %@" = "%1$li беспроцентных платежа(-ей) по %2$@";
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Добавить";
-
+/* Exchange rate with conversion fee disclosure, e.g. '1 GBP = 1.2871 USD (includes 4% conversion fee).' */
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (включая сбор за конвертацию %4$@%%).";
+/* Exchange rate caption, e.g. '1 GBP = 1.2871 USD' */
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+/* Label for a button that confirms the user accepts a declaration */
 "Accept" = "Принять";
-
+/* Title shown above a view allowing the customer to save a US bank account. */
 "Add US bank account" = "Добавить банковский счет в США";
-
+/* Title shown above a card entry form */
 "Add a card" = "Добавьте карту";
-
+/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
 "Add a payment method" = "Добавьте способ оплаты";
-
+/* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Добавить банковский счет";
-
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Добавить карту";
+/* Title shown above a view allowing the customer to save a card. */
 "Add new card" = "Добавить новую карту";
-
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Добавить новый метод оплаты";
-
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Укажите платежные данные";
-
+/* Label for a button that confirms the user agrees to and accepts a declaration */
+"Agree and accept" = "Согласиться и принять";
+/* Title for a button that when tapped creates a Link account for the user. */
+"Agree and continue" = "Согласиться и продолжить";
+/* Instructions shown above the card scanner while the customer is asked for camera access. */
+"Allow camera permissions and get your card ready for scanning." = "Предоставьте доступ к камере и подготовьте карту для сканирования.";
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+/* Text on a screen asking the user to approve a payment */
 "Approve payment" = "Подтвердить платеж";
-
+/* Title of confirmation prompt when removing a saved card. */
+"Are you sure you want to remove this card?" = "Вы уверены, что хотите удалить эту карту?";
+/* Title of confirmation prompt when removing a linked bank account. */
+"Are you sure you want to remove this linked account?" = "Вы уверены, что хотите удалить этот привязанный счет?";
+/* Text for back button */
 "Back" = "Назад";
-
+/* Title for a bank account payment method */
 "Bank" = "Банк";
-
+/* Title for collected bank account information */
 "Bank account" = "Банковский счет";
-
+/* Text on a screen that indicates bank account details cannot be changed. */
 "Bank account details cannot be changed." = "Реквизиты банковского счета нельзя изменить.";
-
+/* Phone-match instruction before Link email OTP. Placeholder is the last two phone digits. */
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Перед отправкой кода на вашу эл. почту нам нужно проверить дополнительную информацию. Введите свой номер телефона, заканчивающийся на ••%@.";
-
+/* Phone-match instruction before Link email OTP. */
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Перед отправкой кода на вашу эл. почту нам нужно проверить дополнительную информацию. Введите свой номер телефона.";
-
+/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
 "Buy Now, Pay Later with  <img/>" = "Покупка в рассрочку с помощью <img/>";
-
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
 "Buy Now, Pay Later with Afterpay" = "Покупка в рассрочку с помощью Afterpay";
-
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
 "Buy Now, Pay Later with Cash App Afterpay" = "Покупка в рассрочку с помощью Cash App Afterpay";
-
+/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
 "Buy Now, Pay Later with Clearpay" = "Покупка в рассрочку с помощью Clearpay";
-
+/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
+"Buy Now, Pay Later with Klarna" = "Покупка в рассрочку с помощью Klarna";
+/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
+"Buy now or pay later with  <img/>" = "Купите сейчас или оплатите позже через <img/>";
+/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
+"Buy now or pay later with <img/>" = "Купить сейчас или оплатить позже через систему <img/>";
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+"Buy now or pay later with Afterpay" = "Купите сейчас или оплатите позже через систему Afterpay";
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+"Buy now or pay later with Cash App Afterpay" = "Купите сейчас или оплатите позже через Cash App Afterpay";
+/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
+"Buy now or pay later with Clearpay" = "Купите сейчас или оплатите позже через систему Clearpay";
+/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
 "Buy now or pay later with Klarna" = "Купите сейчас или оплатите позже через систему Klarna";
-
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Купить немедленно или оплатить позже через систему Klarna.";
+/* GCash mandate text. The placeholder is the merchant's name. */
 "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Подтверждая платеж через GCash, вы разрешаете компании %@ списывать с вашего счета GCash суммы будущих платежей согласно ее условиям.";
-
+/* Korean payment method mandate text */
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Подтверждая платеж через NICEPAY, вы тем самым разрешаете %@ списывать средства с этого способа оплаты для будущих платежей согласно условиям компании.";
-
+/* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Подтверждая платеж через PayPal, вы тем самым разрешаете компании %@ списывать с вашего счета PayPal суммы будущих платежей согласно условиям.";
-
+/* Satispay mandate text */
+"By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Подтверждая платеж через Satispay, вы разрешаете %@ списывать средства с вашего счета Satispay для будущих платежей в соответствии с их условиями.";
+/* Touch 'n Go mandate text. The placeholder is the merchant's name. */
 "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Подтверждая платеж через Touch 'n Go, вы разрешаете компании %@ списывать с вашего счета Touch 'n Go суммы будущих платежей согласно ее условиям.";
-
+/* TrueMoney mandate text. The placeholder is the merchant's name. */
 "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Подтверждая платеж через TrueMoney, вы разрешаете компании %@ списывать с вашего счета TrueMoney суммы будущих платежей согласно ее условиям.";
-
+/* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Подтверждая платеж, вы соглашаетесь с тем, что ваша транзакция будет обработана компанией Global Stack Services Limited в роли зарегистрированного продавца согласно ее <terms>условиям использования</terms>.";
-
+/* Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms. */
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Подтверждая платеж, вы соглашаетесь с тем, что ваша транзакция будет обработана компанией Global Stack Services Limited в роли зарегистрированного продавца согласно ее <terms>условиям</terms>.";
-
+/* Amazon Pay mandate text */
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Перейдя к Amazon Pay, вы тем самым разрешаете компании %@ списывать с вашего счета в Amazon Pay суммы будущих платежей согласно условиям компании.";
-
+/* Klarna mandate text */
 "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Перейдя к Klarna, вы тем самым разрешаете компании %1$@ списывать с вашего счета в Klarna суммы будущих платежей согласно условиям компании и Klarna. Это разрешение можно отозвать в любой момент в вашем приложении Klarna или связавшись с %2$@.";
-
+/* Klarna mandate text */
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms." = "Перейдя к Klarna, вы тем самым разрешаете компании %@ списывать с вашего счета в Klarna суммы будущих платежей согласно условиям компании.";
+/* Paypal mandate text */
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Подтверждая платеж через PayPal, вы тем самым разрешаете компании %@ списывать с вашего счета PayPal суммы будущих платежей согласно условиям.";
-
+/* Revolut Pay mandate text */
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Подтверждая платеж через Revolut Pay, вы тем самым разрешаете компании %@ списывать с вашего счета Revolut Pay суммы будущих платежей согласно условиям.";
-
+/* Satispay mandate text */
+"By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Продолжая использовать Satispay, вы разрешаете %@ списывать средства с вашего счета Satispay для будущих платежей в соответствии с их условиями.";
+/* Legal text shown when creating a Link account. */
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Продолжая, вы тем самым принимаете соответствующие <terms>Условия</terms> и <privacy>политику конфиденциальности</privacy>.";
-
+/* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продолжая, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
-
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Продолжая использование, вы тем самым соглашаетесь авторизовать платежи согласно данным <terms>условиям</terms>.";
+/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to the Link brand. The first placeholder is a merchant name. The second placeholder is a Stripe brand name and should not be translated. */
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Продолжая, вы соглашаетесь сохранить свои данные для будущих покупок с помощью %1$@ и <link>%2$@</link> согласно <terms>Условиям</terms> и <privacy>Политике конфиденциальности</privacy> %2$@.";
-
+/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> (see <terms>Terms</terms> and <privacy>Privacy</privacy>)." = "Продолжая, вы соглашаетесь сохранить вашу информацию для будущих покупок через %@ и <link>Ссылка</link> (см. <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>).";
+/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Продолжая, вы соглашаетесь сохранить свою информацию для будущих покупок через %@ и <link>Link</link> в соответствии с <terms>условиями</terms> и <privacy>политикой конфиденциальности</privacy> Link.";
+/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Продолжая, вы соглашаетесь сохранить вашу информацию для будущих покупок через %@ и <link>Link</link>. Вы также соглашаетесь с <terms>условиями</terms> и <privacy>политикой конфиденциальности</privacy> Link.";
+/* Text displayed below a credit card entry form when the card will be saved with the merchant. */
 "By continuing, you agree to save your information for future purchases with %@." = "Продолжая, вы соглашаетесь сохранить вашу информацию для будущих покупок через %@.";
-
+/* Satispay mandate text */
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Продолжая, вы разрешаете %@ автоматически списывать средства с баланса Satispay на регулярной основе в соответствии с вашим планом покупки или подписки.";
-
+/* Twint mandate text */
 "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Продолжая использование, вы тем самым разрешаете %@ периодически списывать с вашего счета Twint суммы согласно вашему плану покупок или подписок.";
-
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
-
+/* Cash App mandate text */
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы авторизируете %1$@ на списание средств с вашего счета Cash App для этого и будущих платежей в соответствии с условиями %2$@, пока данная авторизация не будет отозвана. Вы можете изменить это в любое время в настройках Cash App.";
+/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Присоединяясь к %@, вы принимаете <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
-
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
+/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя номер телефона и электронный адрес, вы соглашаетесь создать учетную запись %1$@, на которую распространяются <terms>Условия</terms> и <privacy>Политика конфиденциальности</privacy> %1$@.";
+/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя номер телефона и электронный адрес, вы соглашаетесь создать учетную запись %1$@, на которую распространяются <terms>Условия</terms> и <privacy>Политика конфиденциальности</privacy> %1$@.";
-
+/* Legal text shown when creating a Link account. */
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя номер телефона и электронный адрес, вы соглашаетесь создать учетную запись Link, на которую распространяются <terms>Условия использования</terms> и <privacy>Условия конфиденциальности</privacy> Link.";
+/* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Предоставляя реквизиты вашего банковского счета и подтверждая этот платеж, вы принимаете этот запрос на прямое дебетование и <terms>сервисное соглашение о запросе прямого списания</terms>, а также разрешаете компании Stripe Payments Australia Pty Ltd ACN 160 180 343 с идентификационным номером пользователя системы прямого дебетования 507156 (далее — «Stripe») списывать средства с вашего счета через систему массовых электронных платежей (Bulk Electronic Clearing System, BECS) от имени %@ (далее — «Торговец») на любые суммы в соответствии с условиями вашего соглашения с Торговцем. Вы подтверждаете, что являетесь либо владельцем счета, либо уполномоченным лицом с правом подписи в отношении указанного выше счета.";
-
+/* Text displayed below a credit card entry form when the card will be saved to make future payments. */
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Указывая реквизиты карты, вы разрешаете компании %@ списывать средства с карты в рамках будущих платежей в соответствии с условиями компании.";
-
+/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Указывая адрес электронной почты, вы соглашаетесь создать учетную запись %1$@ и сохранить свои платежные реквизиты в %1$@ согласно <terms>Условиям</terms> и <privacy>Политике конфиденциальности</privacy> %1$@.";
-
+/* Legal text shown when creating a Link account. */
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой электронный адрес, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
+/* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Указав свои платежные данные и подтвердив платеж, вы уполномочиваете (A) %@ и Stripe, нашего поставщика платежных услуг, на отправку вашему банку инструкций на списание средств с вашего счета и (B) ваш банк на списание средств с вашего счета согласно данным инструкциям. Вы имеете право на возврат средств от вашего банка согласно положениям и условиям Вашего соглашения с банком. Подать заявку на возврат средств следует в течение 8 недель с даты списания средств с вашего счета. Ваши права объясняются в выписке, которую вы можете получить в своем банке. Вы даете согласие на получение уведомлений о будущих дебетованиях в срок до 2 дней до их поступления.";
-
+/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой номер телефона, вы соглашаетесь создать учетную запись %1$@ и сохранить свои платежные реквизиты в %1$@ согласно <terms>Условиям</terms> и <privacy>Политике конфиденциальности</privacy> %1$@.";
-
+/* Legal text shown when creating a Link account. */
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой номер телефона, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Сохраняя реквизиты своего банковского счета у %@, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
-
+/* Alipay mandate text */
 "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Сохраняя платежные данные, вы разрешаете %@ списывать с вас средства за будущие платежи в соответствии с их условиями.";
-
+/* Text providing link to terms for bank payments when seller information is provided */
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Отправляя заказ на %1$@ и %2$@, вы соглашаетесь сохранить вашу информацию в %3$@ для будущих покупок, а также соглашаетесь разрешить платежи в соответствии с <terms>этими условиями</terms>.";
-
+/* Text providing link to terms for bank payments */
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Отправляя заказ в %@, вы соглашаетесь разрешить платежи в соответствии с <terms>этими условиями</terms>.";
-
+/* Label for CPF/CPNJ (Brazil tax ID) field */
 "CPF/CPNJ" = "CPF/CPNJ";
-
+/* Button text on a screen asking the user to approve a payment */
 "Cancel and pay another way" = "Отменить платеж и оплатить другим способом";
-
+/* Text on a screen that indicates card details cannot be changed. */
 "Card details cannot be changed." = "Реквизиты карты нельзя изменить.";
-
+/* Card details entry form header title */
+"Card information" = "Реквизиты карты";
+/* Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa') */
+"Card number. Card brand: %@" = "Номер карты. Бренд карты: %@";
+/* Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
 "Card number. Supported cards include %@" = "Номер карты. В число поддерживаемых карт входят %@";
-
+/* Status shown over the camera after a payment card was scanned successfully. */
+"Card scanned" = "Карта отсканирована";
+/* Label for a button that lets you change the details of a payment method */
 "Change" = "Изменить";
-
+/* Title for a button that allows the user to use a different email in the signup flow. */
+"Change email" = "Изменить адрес электронной почты";
+/* Tooltip prompting user to select their card brand when a co-branded card is detected */
 "Choose a card brand" = "Выберите бренд карты";
-
+/* Title shown above a carousel containing available payment methods */
 "Choose a payment method" = "Выберите метод оплаты";
-
+/* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Закрыть сканер карт";
-
+/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
+"Code sent" = "Код отправлен";
+/* Instructions shown while waiting for a Pix payment authorization */
 "Complete the payment using Pix to finish the purchase." = "Оплатите покупку с помощью Pix, чтобы завершить оформление.";
-
+/* A button used to confirm selecting a saved payment method */
 "Confirm" = "Подтвердить";
-
+/* Two factor authentication screen heading */
+"Confirm it's you" = "Подтвердите, что это вы";
+/* Title of a screen where the user can update their payment method before continuing
+with the transaction. */
 "Confirm payment details" = "Подтвердить реквизиты платежа";
-
+/* Instructions shown while waiting for a Bizum payment authorization */
 "Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Чтобы завершить покупку, подтвердите оплату через Bizum в мобильном банковском приложении в течение %@.";
-
+/* Instructions shown while waiting for an MB WAY payment authorization */
 "Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Чтобы завершить покупку, подтвердите оплату в приложении MB WAY в течение %@.";
-
+/* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Чтобы завершить оформление покупки, подтвердите платеж в своем банковском или платежном приложении в течение %@.";
-
+/* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Подтвердите платеж в вашем банковском приложении в течение %@ для оформления покупки.";
-
+/* Section title for entering your CVC. e.g. 'Confirm your CVC' */
+"Confirm your %@" = "Подтвердите %@";
+/* Title for prompting for a card's CVC on confirming the payment */
 "Confirm your CVC" = "Подтвердить код CVV карты";
-
+/* Title for prompting for a card's CVV on confirming the payment */
+"Confirm your CVV" = "Подтвердить код CVV карты";
+/* Title label for a know-your-customer (KYC) verification screen */
 "Confirm your information" = "Подтвердите свою информацию";
-
+/* Title for the contact information section */
 "Contact information" = "Контактные данные";
-
+/* Label of a button that when tapped allows the user to select a different form of payment. */
 "Continue another way" = "Продолжить другим способом";
-
+/* Label for a checkbox that when checked allows the payment information
+to be saved and used in future checkout sessions. */
+"Create a Link account for fast checkout across the web" = "Создайте учетную запись Link для быстрого оформления заказов в Интернете";
+/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
 "Create an account with %@ for faster checkout across the web" = "Создание учетной записи в %@ для ускоренного оформления заказов в интернете";
-
+/* Label for a checkbox that when checked allows the payment information
+to be saved and used in future checkout sessions. */
+"Create an account with Link for faster checkout across the web" = "Создайте учетную запись в Link для более быстрого оформления заказов в Интернете";
+/* Label for a payment method type that only accepts credit cards. */
+"Credit card" = "Кредитная карта";
+/* Label for a payment method type that only accepts debit cards. */
+"Debit card" = "Дебетовая карта";
+/* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Дебетовая или кредитная карта";
-
+/* Title label for a screen showing CRS/CARF tax declarations */
 "Declarations" = "Заявления";
-
+/* Label for identifying the default payment method. */
 "Default" = "По умолчанию";
-
+/* Label for a disabled checked checkbox identifying the default payment method. */
 "Default payment method" = "Способ оплаты по умолчанию";
-
+/* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
 "Did you mean %@? %@." = "Вы имели в виду %1$@? %2$@.";
-
+/* Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form. */
 "Discard Changes" = "Отменить изменения";
-
+/* Title of a confirmation alert shown when the customer tries to close the address form after making changes. */
 "Discard changes?" = "Отменить изменения?";
-
+/* Label for the discount row in an order summary, applied as a negative amount. */
 "Discount" = "Скидка";
-
+/* Label title for EPS Bank */
 "EPS Bank" = "Банк EPS";
-
+/* Accessibility label for a button that lets the user update their address */
 "Edit address" = "Изменить адрес";
-
+/* Link authentication action to receive an email verification code. */
 "Email code" = "Код, отправленный на эл. почту";
-
+/* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Введите адрес вручную";
-
+/* Instructs the user to enter the code sent to their phone number in order to login to Link */
+"Enter the code sent to %@ to use Link to pay by default." = "Введите код, отправленный на адрес %@, для оплаты с помощью Link по умолчанию.";
+/* Instructs the user to enter the code sent to their phone number in order to login to Link */
+"Enter the code sent to %@ to use your saved information." = "Чтобы использовать ранее сохраненные данные, введите код, отправленный на %@.";
+/* Instructs the user to enter the code sent to their phone number in order to login to Link */
+"Enter the code sent to %@." = "Введите код, отправленный на %@.";
+/* Error when Link email verification requires a phone number. */
 "Enter the phone number on your Link account." = "Введите номер телефона, указанный в вашей учетной записи Link.";
-
+/* Two factor authentication screen heading */
+"Enter your verification code" = "Введите проверочный код";
+/* Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion */
 "Exchange rate and fees of your bank may apply." = "Могут применяться обменный курс и комиссии вашего банка.";
-
+/* Select a bank dropdown for FPX */
 "FPX Bank" = "Банк FPX";
-
+/* Error message that displays when we're unable to connect to the server. */
+"Failed to connect" = "Не удалось подключиться";
+/* Title for the Link signup screen */
 "Fast, secure checkout" = "Быстрое и безопасное оформление заказа";
-
+/* Title for the Link signup screen */
+"Fast, secure, 1⁠-⁠click checkout" = "Быстрое, безопасное оформление оплаты одним щелчком";
+/* Accessibility label for a button that turns the flashlight on or off while scanning a card. */
+"Flashlight" = "Фонарик";
+/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
+"For security, please re-enter your card’s security code." = "В целях безопасности введите заново код CVV/CVC карты.";
+/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Получите возврат в сумме %@, когда впервые оплатите заказ с банковского счета. <terms>См. условия</terms>";
-
+/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Получите возврат в сумме %@ при оплате с банковского счета. <terms>См. условия</terms>";
-
+/* Button label to collapse and hide additional exchange rate details */
 "Hide details" = "Скрыть подробности";
-
+/* Instructions shown above the card scanner while it looks for a payment card. */
+"Hold your card with the number visible in the frame to scan it automatically." = "Для автоматического сканирования держите карту так, чтобы ее номер был в рамке.";
+/* Bacs Debit mandate text */
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Я понимаю, что Stripe будет принимать прямые дебетования от имени %@, и подтверждаю, что являюсь владельцем счета и единственным лицом, согласие которого требуется для проведения дебетований с этого счета.";
-
+/* IBAN placeholder – don&apos;t translate */
 "IBAN" = "IBAN";
-
+/* Message shown when Mondu is selected */
 "Invoice payment for business buyers." = "Оплата по счету для корпоративных покупателей.";
-
+/* Title for a button that when tapped creates a Link account for the user. */
+"Join Link" = "Подключиться к Link";
+/* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
 "Keep Editing" = "Продолжить изменение";
-
+/* Label for displaying the last 4 digits of the user's social security number */
 "Last 4 digits of SSN" = "Последние 4 цифры SSN";
-
+/* Title for a button that indicates a user can log in or sign up. */
+"Log in or sign up" = "Войдите или зарегистрируйтесь";
+/* Label of a button that signs the user out of their current Link account so they can log in to a different one. */
 "Log in to another account" = "Войдите в другой счет";
-
+/* Title of the logout action. The placeholder is a Stripe brand name and should not be translated. */
+"Log out of %@" = "Выйти из %@";
+/* Title of the logout action. */
+"Log out of Link" = "Выйти из Link";
+/* Status shown over the camera while it looks for a payment card to scan. */
+"Looking for your card" = "Поиск карты";
+/* Title shown above a view containing the customer's SEPA debit that they can delete or update */
 "Manage SEPA debit" = "Управление дебетованием SEPA";
-
+/* Title shown above a view containing the customer's bank account that they can delete or update */
 "Manage US bank account" = "Управление банковским счетом в США";
-
+/* Title shown above a view containing the customer's bank account that they can delete */
 "Manage bank account" = "Управление банковским счетом";
-
+/* Title for a screen for managing a card. */
 "Manage card" = "Управление картой";
-
+/* Title shown above a view containing a list of the customer's cards that they can delete or update */
 "Manage cards" = "Управление картами";
-
+/* Title shown above a view containing the customer's payment method that they can delete or update */
 "Manage payment method" = "Управление способом оплаты";
-
+/* Title shown above a view containing the customer's card payment methods that they can delete or update */
 "Manage payment methods" = "Управление способами оплаты";
-
+/* Title shown above a carousel containing the customer's payment methods */
 "Manage your payment methods" = "Управление способами оплаты";
-
+/* Button opening Link authentication actions. */
 "More options" = "Другие варианты";
-
+/* Label for name on card field */
 "Name on card" = "Имя и фамилия, указанные на карте";
-
+/* Naver Pay card funding source */
 "Naver Pay Card" = "Карта Naver Pay";
-
+/* Naver Pay money or points funding source */
 "Naver Pay Money/Point" = "Средства/баллы Naver Pay";
-
+/* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
 "New card" = "Новая карта";
-
+/* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
 "New payment method" = "Новый способ оплаты";
-
+/* Label for when the user is not eligible for a promo. */
 "No %@ promo" = "Нет промоакции %@";
-
+/* Message on a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
 "None of the payment methods in your %@ account work with this business." = "Ни один из способов оплаты в вашем счете %@ не поддерживается этой компанией.";
-
+/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
+"Not %@?" = "Не %@?";
+/* Title for a button that allows the user to use a different email in the signup flow. */
 "Not you?" = "Это не вы?";
-
+/* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
 "Only card brand can be changed." = "Изменить можно только бренд карты.";
-
+/* Warning shown when only credit and prepaid cards are accepted */
+"Only credit and prepaid cards are accepted" = "Принимаются только кредитные и предоплаченные карты";
+/* Warning shown when only credit cards are accepted */
+"Only credit cards are accepted" = "Принимаются только кредитные карты";
+/* Warning shown when only debit and credit cards are accepted */
+"Only debit and credit cards are accepted" = "Принимаются только дебетовые и кредитные карты";
+/* Warning shown when only debit and prepaid cards are accepted */
+"Only debit and prepaid cards are accepted" = "Принимаются только дебетовые и предоплаченные карты";
+/* Warning shown when only debit cards are accepted */
+"Only debit cards are accepted" = "Принимаются только дебетовые карты";
+/* Warning shown when only prepaid cards are accepted */
+"Only prepaid cards are accepted" = "Принимаются только предоплаченные карты";
+/* Accessibility hint to tell the user that they can open a form sheet with more information. */
 "Open to see more information." = "Откройте, чтобы увидеть дополнительную информацию.";
-
+/* Separator label between two options */
 "Or" = "Или";
-
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "Или оплатить с помощью";
-
+/* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Или оплатить картой";
-
+/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up. */
 "Or use" = "Или используйте";
-
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up. */
 "Or use a card" = "Или используйте карту";
-
+/* Label of a button that initiates payment when tapped */
 "Pay %@" = "Оплатить %@";
-
+/* Label of a button that when tapped allows the user to select a different form of payment. */
 "Pay another way" = "Оплатить другим способом";
-
+/* Label describing the benefit of signing up for Link.
+Pay faster at {Merchant Name} and thousands of businesses
+e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 "Pay faster at %@ and thousands of businesses." = "Ускоренная оплата продавцу %@ и тысячам других предприятий.";
-
+/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
+"Pay faster at %@ and thousands of merchants." = "Ускоренная оплата на сайте %@ и тысячах других вебсайтов";
+/* Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated. */
 "Pay faster everywhere %@ is accepted." = "Платите быстрее везде, где принимают %@.";
-
+/* Subtitle for the Link signup screen */
 "Pay faster everywhere Link is accepted." = "Платите быстрее везде, где принимают Link.";
-
+/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Оплатить в беспроцентную рассрочку <num_installments/> выплатами по <installment_price/> через <img/>";
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Оплатить позже через систему Klarna.";
+/* Pay over time with Affirm copy */
 "Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
-
+/* Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm */
 "Pay over time with Affirm" = "Оплатить в рассрочку через систему Affirm";
-
+/* Promotional text for Affirm, displayed in a button that lets the customer pay with Afterpay */
+"Pay over time with Afterpay" = "Оплатить в рассрочку через систему Afterpay";
+/* Promotional text for Clearpay, displayed in a button that lets the customer pay with Clearpay */
+"Pay over time with Clearpay" = "Оплатить в рассрочку через систему Clearpay";
+/* Title shown above a section containing various payment options */
+"Pay using" = "Оплатить с помощью";
+/* Pay with {payment method} */
 "Pay with %@" = "Оплатить с помощью %@";
-
+/* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
 "Pay with Link" = "Оплатить с помощью Link";
-
+/* US Bank Account copy title for Mobile payment element form */
 "Pay with your bank account in just a few steps." = "Платите с использованием своего банковского счета в несколько простых действий.";
-
+/* Label for a section displaying payment details. */
 "Payment" = "Платеж";
-
+/* Text on a screen that indicates a payment has failed */
 "Payment failed" = "Выполнить платеж не удалось";
-
+/* Text on a screen that indicates payment method details cannot be changed. */
 "Payment method details cannot be changed." = "Реквизиты способа оплаты невозможно изменить.";
-
+/* Title for a section listing one or more payment methods. */
 "Payment methods" = "Способы оплаты";
-
+/* Error message that's displayed when you try to confirm a payment without a valid payment method */
 "Please choose a valid payment method." = "Выберите действительный способ оплаты.";
-
+/* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
 "Please go back and select another payment method" = "Вернитесь назад и выберите другой способ оплаты";
-
+/* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Направьте камеру телефона на карту.";
-
+/* Label for a payment method type that only accepts prepaid cards. */
+"Prepaid card" = "Предоплаченная карта";
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Идет обработка...";
+/* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 Bank";
-
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
+"Remove %1$@ ending in %2$@" = "Удалить карту %1$@, оканчивающуюся на %2$@";
+/* Title of confirmation prompt when removing a saved payment method. */
 "Remove %@" = "Удалить %@";
-
+/* Title for confirmation alert to remove a card */
+"Remove Card" = "Удалить карту";
+/* Title for confirmation alert to remove a bank account */
 "Remove bank?" = "Удалить банк?";
-
+/* Title for confirmation alert to remove a card */
 "Remove card?" = "Удалить карту?";
-
+/* Title for a button that when tapped removes a linked bank account. */
 "Remove linked account" = "Удалить привязанный счет";
-
+/* Title shown above a view containing a customer's payment method that they can delete */
 "Remove payment method" = "Удалить способ оплаты";
-
+/* Title for confirmation alert to remove a payment method */
 "Remove payment method?" = "Удалить способ оплаты?";
-
+/* Title for a button that opens the camera to scan a payment card again, after one was already scanned. */
+"Rescan card" = "Отсканировать карту повторно";
+/* Label for a button that re-sends the a login code when tapped */
+"Resend code" = "Послать код вторично";
+/* Link OTP resend cooldown, in seconds. */
 "Resend code in %d seconds" = "Отправить код повторно через %li с.";
-
+/* Text on a screen that indicates SEPA debit details cannot be changed. */
 "SEPA debit details cannot be changed." = "Реквизиты платежа дебетованием SEPA нельзя изменить.";
-
+/* A button used for saving a new payment method */
 "Save" = "Сохранить";
-
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Save a new payment method" = "Сохраните новый способ оплаты";
-
+/* Title for a button that when pressed saves the provided address. */
 "Save address" = "Сохранить адрес";
-
+/* The label of a switch indicating whether to save the payment method for future payments. */
 "Save for future payments" = "Сохранить данные для будущих платежей";
-
+/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
 "Save my info for faster checkout with %@" = "Сохранить данные для ускоренной процедуры выписки с помощью %@";
-
+/* Label for a checkbox that when checked allows the payment information
+to be saved and used in future checkout sessions. */
+"Save my info for faster checkout with Link" = "Сохранить мои данные для ускоренного оформления покупок с помощью Link";
+/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
+"Save my info for secure 1-click checkout" = "Сохраните свои данные в Link для безопасного оформления покупок нажатием одной кнопки";
+/* The label of a switch indicating whether to save the user's payment details for future payment */
 "Save payment details to %@ for future purchases" = "Сохранить реквизиты платежа в адрес %@ для будущих покупок";
-
+/* Prompt next to checkbox to save bank account. */
 "Save this account for future %@ payments" = "Сохранить этот счет для будущих платежей %@";
-
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+"Save this card for future %@ payments" = "Сохранить данные этой карты для будущих платежей %@";
+/* US Bank Account copy title for Mobile payment element form */
 "Save your bank account in just a few steps." = "Сохраните реквизиты своего банковского счета всего за несколько шагов.";
-
+/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
 "Save your info for secure 1-click checkout with %@" = "Сохраните свои данные для безопасного оформления покупок одним щелчком с помощью %@";
-
+/* Label for a checkbox that when checked allows the payment information
+to be saved and used in future checkout sessions. */
+"Save your info for secure 1-click checkout with Link" = "Сохраните свои данные в Link для безопасного оформления покупок нажатием одной кнопки";
+/* Label describing the benefit of signing up for Link. */
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Сохраните платежные реквизиты в Link, чтобы безопасно оформлять заказы одним щелчком на всех сайтах, поддерживающих Link.";
+/* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
 "Saved" = "Сохранено";
-
+/* Title for the Link signup screen */
+"Secure 1⁠-⁠click checkout" = "Безопасное оформление и оплата заказа одним щелчком";
+/* Title shown above a view containing the customer's card payment methods */
 "Select card" = "Выберите карту";
-
+/* Label for the Naver Pay funding source selector */
 "Select how you want to pay:" = "Выберите способ оплаты:";
-
+/* Title shown above a view containing the customer's payment methods */
 "Select payment method" = "Выберите способ оплаты";
-
+/* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "Выберите способ оплаты";
-
+/* Label for a button that sends the code to the user's email when tapped */
+"Send code to email instead" = "Отправить код на электронную почту";
+/* Label for a button or menu item that sets a payment method as default when tapped. */
 "Set as default" = "Назначить способом по умолчанию";
-
+/* Label of a checkbox that when checked makes a payment method as the default one. */
 "Set as default payment method" = "Назначить способом оплаты по умолчанию";
-
+/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 "Set up" = "Настроить";
-
+/* Label for the shipping cost row in an order summary. */
+"Shipping" = "Доставка";
+/* Title for shipping address entry section */
+"Shipping Address" = "Адрес для доставки";
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant. Example: Shipping to Canada is not supported. */
 "Shipping to %@ is not supported." = "Доставка в страну «%@» не поддерживается.";
-
+/* Button label to expand and show additional exchange rate details */
 "Show details" = "Показать подробности";
-
+/* Accessibility label for an action or a button that shows a menu. */
 "Show menu" = "Показать меню";
-
+/* Title for a button that indicates a user can sign in or sign up. */
 "Sign in or sign up" = "Войти или зарегистрироваться";
-
+/* Two factor authentication screen heading */
+"Sign in to your Link account" = "Войти в учетную запись Link";
+/* Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated. */
 "Sign out of %@" = "Выйти из %@";
-
+/* Title of the sign-out action. */
+"Sign out of Link" = "Выйти из Link";
+/* Subtitle shown on a button allowing a user to select to pay with Link. */
 "Simple, secure one-click payments" = "Защищенные безопасные платежи одним нажатием";
-
+/* Error message when an error case happens when linking your account */
 "Something went wrong when linking your account.\nPlease try again later." = "Во время привязки счета произошла ошибка.\nПовторите попытку позже.";
-
+/* Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Через 1-2 рабочих дня Stripe зачислит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями, которые помогут вам закончить сохранение реквизитов своего банковского счета у %@.";
-
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Через 1-2 рабочих дня Stripe положит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями по завершению платежа в адрес %@.";
-
+/* Label for the subtotal row in an order summary, before tax/shipping/discounts. */
 "Subtotal" = "Сумма без учета дополнительных сборов";
-
+/* Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
+"Supported cards: %@" = "Поддерживаемые карты: %@";
+/* Accessibility hint to tell the user that they can tap to hide additional content. */
 "Tap to close" = "Коснитесь, чтобы закрыть";
-
+/* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "Коснитесь, чтобы развернуть";
-
+/* Label for the tax row in an order summary. */
 "Tax" = "Налог";
-
+/* Title label for a screen showing terms and conditions */
 "Terms and Conditions" = "Условия и положения";
-
+/* Title label for a screen showing terms of service */
 "Terms of Service" = "Условия обслуживания";
-
+/* test */
+"Test123" = "Test123";
+/* An error message displayed when the customer's IBAN is incomplete. */
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
-
+/* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Введенный вами номер IBAN недействителен, «%@» не является поддерживаемым кодом страны.";
-
+/* Error message shown when the user enters an expired verification code. */
 "The provided verification code has expired." = "Указанный код подтверждения уже недействителен.";
-
+/* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
-
-"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Это международная покупка, которая не облагается сбором IOF в размере 3,5 %. Продолжая, вы подтверждаете и принимаете <terms>условия и положения Ebanx</terms>.";
-
+/* String to inform a user that specific card brands are not accepted. */
+"The selected brand is not allowed" = "Выбранный бренд не поддерживается";
+/* Disclaimer for when a bank account is not eligible for a promotion. */
+"This bank account is ineligible for promotions. <terms>View terms</terms>" = "Этот банковский счет не подходит для участия в промоакциях. <terms>Посмотреть условия</terms>";
+/* A text notice shown when the user selects an expired card. */
+"This card has expired. Update your card info or choose a different payment method." = "Срок действия этой карты истек. Обновите данные карты или выберите другой способ оплаты.";
+/* Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms. */
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Это международная покупка. Сбор IOF в размере 3,5 % не включен в сумму. Продолжая, вы подтверждаете и принимаете <terms>условия и положения Ebanx</terms>.";
+/* Text of a label indicating that a payment method is the default. */
 "This is your default" = "Это ваше значение по умолчанию";
-
+/* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
 "This payment method will be removed but will remain available for %@ subscriptions." = "Этот способ оплаты будет удален, но останется доступным для подписок (%@).";
-
+/* Error when the phone number entered before Link email verification does not match the account. */
 "This phone number doesn't match your Link account. Please try again." = "Этот номер телефона не соответствует вашей учетной записи Link. Повторите попытку.";
-
+/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
+"To scan your card, allow camera access in Settings." = "Чтобы отсканировать карту, предоставьте доступ к камере в настройках.";
+/* Error message shown when the user enters an incorrect verification code too many times. */
 "Too many attempts. Please try again in a few minutes." = "Превышено разрешенное число попыток. Попробуйте еще раз через несколько минут.";
-
+/* Accessibility label for a button that turns off the flashlight while scanning a card. */
+"Turn off flashlight" = "Выключить фонарик";
+/* Accessibility label for a button that turns on the flashlight while scanning a card. */
+"Turn on flashlight" = "Включить фонарик";
+/* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Не предусмотрено для этой покупки";
-
+/* Title for a button that when tapped, updates a card brand. */
+"Update" = "Обновить";
+/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
 "Update card" = "Обновить реквизиты карты";
-
+/* Title for a screen for updating a card brand. */
+"Update card brand" = "Изменить бренд карты";
+/* Accessibility label for a button that leads to a screen for updating a payment method. */
 "Update payment method" = "Обновить способ оплаты";
-
+/* Label for checkbox in address form allowing user to use billing address */
 "Use billing address for shipping" = "Использовать для доставки адрес для выставления счетов";
-
+/* Two factor authentication screen heading */
+"Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
+/* Heading for the Link phone-match screen. */
 "Verify your phone number" = "Подтвердите свой номер телефона";
-
+/* Link authentication in progress. */
 "Verifying your account…" = "Проверка аккаунта…";
-
+/* Text shown on a button that when tapped opens a user's screen with their payment methods. */
 "View more" = "Показать ещё";
-
+/* Link authentication cannot continue with the available verification methods. */
 "We couldn't verify your account. Please close this window and try again." = "Не удалось проверить аккаунт. Закройте это окно и повторите попытку.";
-
+/* Text for a tappable link that will update the email field with a suggested email address. */
 "Yes, update" = "Да, обновить";
-
+/* Title of a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
 "You can't pay with %@ here" = "Оплата через %@ здесь недоступна";
-
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
-
+/* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
 "Your address changes won't be saved." = "Изменения адреса не будут сохранены.";
+/* Error message for card details form when expiration date has passed */
+"Your card has expired." = "Срок действия вашей карты истек.";
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "Банк в системе iDEAL";

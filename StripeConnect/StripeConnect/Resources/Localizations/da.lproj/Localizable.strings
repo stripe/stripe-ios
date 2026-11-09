@@ -1,3 +1,4 @@
+/* Subtitle for error message when component fails to load indicating there may be an issue with the internet connection. */
 "Please check your connection or try again later." = "Kontroller din forbindelse, eller prøv igen senere.";
-
+/* Title for error message when component fails to load */
 "Something went wrong." = "Noget gik galt.";

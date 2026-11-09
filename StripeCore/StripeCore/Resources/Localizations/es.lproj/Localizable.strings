@@ -1,75 +1,80 @@
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "Se ha asociado un depurador a la aplicación.";
-
+/* The text for warning when an emulator is being used to run the application. */
 "An emulator is being used to run the App." = "Se está usando un emulador para ejecutar la aplicación.";
-
+/* An error message displayed when an error occurred. */
 "An error occurred. Please try again." = "Se ha producido un error. Vuelve a intentarlo.";
-
+/* Button title to cancel action in an alert */
 "Cancel" = "Cancelar";
-
+/* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "La marca de la tarjeta no se ha actualizado. Vuelve a intentarlo.";
-
+/* Text for close button */
 "Close" = "Cerrar";
-
+/* Accessibility label for expandable text control to indicate text is hidden. */
 "Collapsed" = "Contraído";
-
+/* Two factor authentication screen heading */
 "Confirm it's you" = "Confirma que eres tú";
-
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not changed. Please try again." = "El método de pago predeterminado no se ha cambiado. Vuelve a intentarlo.";
+/* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "El método de pago predeterminado no se ha actualizado. Vuelve a intentarlo.";
-
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Introducir manualmente los datos de la tarjeta";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "Introduce el código enviado a %@.";
-
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
 "Expanded" = "Expandido";
-
+/* Label shown when a network-related error has occured. */
 "Failed to connect" = "Error al establecer conexión";
-
+/* Status while screen is loading */
 "Loading" = "Cargando";
-
+/* The no answer to a yes or no question. */
 "No" = "No";
-
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "Reenviar código";
-
+/* Text for button to scan a credit card */
 "Scan Card" = "Escanear tarjeta";
-
+/* Button title to open camera to scan credit/debit card */
 "Scan card" = "Escanear tarjeta";
-
+/* The title for the challenge response step of an authenticated checkout. */
 "Secure checkout" = "Proceso de compra seguro";
-
+/* Indicates that a button is selected. */
 "Selected" = "Elegidos";
-
+/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "El IBAN introducido no es válido.";
-
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
 "The OS or the OS Version is not supported." = "El SO o la versión del SO no son compatibles.";
-
+/* The text for warning when a device is jailbroken. */
 "The device is jailbroken." = "El dispositivo ha sido liberado.";
-
+/* The text for warning when the integrity of the SDK has been tampered with. */
 "The integrity of the SDK has been tampered." = "Se ha alterado la integridad del SDK.";
-
+/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Error al procesar la tarjeta. Vuelve a intentarlo en unos segundos.";
-
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Se ha producido un error inesperado. Vuelve a intentarlo en unos segundos";
-
+/* Error description for when a network request times out. English value is as required by UL certification. */
 "Timeout" = "Tiempo de espera agotado";
-
+/* Button to reload web view if we were unable to connect. */
 "Try again" = "Reintentar";
-
+/* Indicates that a button is not selected. */
 "Unselected" = "No seleccionado";
-
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Usamos Stripe para verificar los datos de tu tarjeta. Stripe puede usar y almacenar tus datos de acuerdo con la política de privacidad. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Más información</a></u>";
-
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Usamos Stripe para verificar los datos de tu tarjeta. Stripe puede usar y almacenar tus datos de acuerdo con la política de privacidad. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Más información</u></a>";
+/* The yes answer to a yes or no question. */
 "Yes" = "Sí";
-
+/* Error when the card has already expired */
 "Your card has expired" = "La tarjeta ha caducado";
-
+/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "La tarjeta ha sido rechazada";
-
+/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "El mes de caducidad de tu tarjeta no es válido";
-
+/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "El año de caducidad de tu tarjeta no es válido";
-
+/* Error when the card number is not valid */
 "Your card's number is invalid" = "El número de tarjeta no es válido";
-
+/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "El código de seguridad de tu tarjeta no es válido";
-
+/* Error when customer's name is invalid */
 "Your name is invalid." = "El nombre no es válido.";
-
+/* Error message when a payment method gets declined. */
 "Your payment method was declined." = "Se ha rechazado tu método de pago.";

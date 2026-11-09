@@ -1,153 +1,199 @@
+/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (オプション)";
-
+/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
+"%@ is incomplete." = "%@ は不完全です。";
+/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
 "(not accepted)" = "(受け付けられません)";
-
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "アカウント番号";
-
+/* Caption for Address field on address form */
 "Address" = "住所";
-
+/* Address line 1 placeholder for billing address form. */
 "Address line 1" = "住所 (1 行目)";
-
+/* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "住所 (2 行目)";
-
+/* Label of an address field in hk */
 "Area" = "地域";
-
+/* Label for BLIK code number field on form */
 "BLIK code" = "BLIK コード";
-
+/* Placeholder for AU BECS BSB number */
 "BSB number" = "BSB 番号";
-
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "銀行口座";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
 "Bank account •••• %@" = "銀行口座 •••• %@";
-
+/* Billing address section title for card form entry. */
+"Billing address" = "請求先住所";
+/* Label for a checkbox that makes customers billing address same as their shipping address */
 "Billing address is same as shipping" = "請求先住所は配送先住所と同じ";
-
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+/* Button title to cancel action in an alert */
 "Cancel" = "キャンセル";
-
+/* Label an input field to update card brand */
 "Card brand" = "カードブランド";
-
+/* Label for card number entry text field */
+"Card number" = "カード番号";
+/* Caption for City field on address form */
 "City" = "市";
-
+/* Accessibility label describing a field for entering a login code */
 "Code field" = "コードフィールド";
-
+/* Label for Company field on form */
 "Company" = "会社";
-
+/* Text for alert message when user needs to confirm payment in their banking app */
+"Confirm the payment in your bank's app to complete the purchase." = "購入を完了するには、銀行のアプリで支払いを確定してください。";
+/* Text for continue button */
 "Continue" = "続ける";
-
+/* Caption for Country field on address form */
 "Country" = "国";
-
+/* Country selector and postal code entry form header title */
 "Country or region" = "国または地域";
-
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "群";
-
+/* Error message for empty date. */
+"Date is empty." = "カートは空です。";
+/* Label for Date of birth field */
 "Date of Birth" = "生年月日";
-
+/* Label of an address field */
 "Department" = "県";
-
+/* Label for the district field on an address form */
 "District" = "地区";
-
+/* Label of an address field */
 "Do Si" = "Do Si";
-
+/* Used as the title for prompting the user if they want to close the sheet */
 "Do you want to close this form?" = "このフォームを閉じてもよいですか？";
-
+/* Done button title */
 "Done" = "完了";
-
+/* Accessibility hint for a text field */
 "Double tap to edit" = "ダブルタップして編集します";
-
+/* Button title to enter editing mode */
 "Edit" = "編集";
-
+/* Label of an address field */
 "Eircode" = "郵便番号 (アイルランド)";
-
+/* Caption for Email field on address form */
 "Email" = "メールアドレス";
-
+/* Used to describe address in United Arab Emirates */
 "Emirate" = "首長国";
-
+/* Text for error labels */
 "Error" = "エラー";
-
+/* Label for first (given) name field */
 "First" = "名";
-
+/* Placeholder string for name entry field. */
 "Full name" = "名前";
-
+/* Error description for incomplete phone number */
 "Incomplete phone number" = "電話番号の不備";
-
+/* Error message when UPI ID is invalid */
+"Invalid UPI ID" = "UPI ID が無効です";
+/* Label of an address field */
 "Island" = "島しょ";
-
+/* Label for last (family) name field */
 "Last" = "姓";
-
+/* label for text field to enter card expiry */
+"MM / YY" = "MM / YY";
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "携帯電話番号";
+/* Caption for Name field on address form */
 "Name" = "名前";
-
+/* Label for Name on account field on form */
 "Name on account" = "口座名義人";
-
+/* No comment provided by engineer. */
 "OK" = "OK";
-
+/* Label of an address field */
 "Oblast" = "州 (ロシア)";
-
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "その他";
-
+/* Label of an address field */
 "Parish" = "郡";
-
+/* Caption for Phone field on address form */
+"Phone" = "電話番号";
+/* Caption for Phone number field on address form */
 "Phone number" = "電話番号";
-
+/* Short string for postal code (text used in non-US countries) */
 "Postal code" = "郵便番号";
-
+/* Label of an address field */
 "Prefecture" = "都道府県";
-
+/* Label of a disabled button while its action is processing */
 "Processing..." = "処理中...";
-
+/* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "都道府県";
-
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "削除";
-
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "銀行口座を削除";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "末尾が %@ の銀行口座を削除する";
+/* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account?" = "銀行口座を削除しますか？";
-
+/* Title for a button that when tapped removes a saved card. */
 "Remove card" = "カードを削除";
-
+/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
 "Search" = "検索";
-
+/* Message when a user is selecting a card brand in a dropdown */
 "Select card brand (optional)" = "カードブランドを選択 (任意)";
-
+/* Error message for empty dropdown selection. */
 "Selection is empty." = "項目が選択されていません。";
-
+/* Heading for a generic error when an operation fails */
 "Something went wrong" = "問題が発生しました";
-
+/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
 "Sort code" = "銀行コード";
-
+/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "都道府県";
-
+/* Button that submits the information entered on a screen */
 "Submit" = "送信";
-
+/* Label of an address field */
 "Suburb" = "近郊";
-
+/* Label of an address field */
 "Suburb or city" = "市外または市内";
-
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "入力した BSB コードに不備があります。";
-
+/* An error message. */
 "The ID number you entered is incomplete." = "入力した ID 番号に不備があります。";
-
+/* Error description for incomplete account number */
 "The account number you entered is incomplete." = "入力した口座番号に不備があります。";
-
+/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
 "The sort code you entered is invalid." = "入力したソートコードが無効です。";
-
+/* Label of an address field */
 "Town or city" = "市区町村";
-
+/* Label for UPI ID number field on form */
+"UPI ID" = "UPI ID";
+/* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "電話番号を解析できません";
-
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "ローターを使用してリンクにアクセスします";
-
+/* Error message when BLIK code is invalid */
 "Your BLIK code is incomplete." = "BLIK コードの入力に不備があります。";
-
+/* Error message when BLIK code is invalid */
 "Your BLIK code is invalid." = "BLIK コードが無効です。";
-
+/* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP code is incomplete." = "郵便番号が不完全です。";
-
+/* Error message for when ZIP code in form is invalid (US only) */
 "Your ZIP code is invalid." = "あなたの郵便番号は無効です。";
-
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "郵便番号の入力に不備があります。";
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "カード番号が未入力です。";
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "カード番号が無効です。";
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "カードの有効期限に不備があります。";
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "カードの有効期限の日付が無効です。";
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "カードの有効期限の月が無効です。";
+/* Error message for card entry form when CVC is incomplete. */
+"Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
+/* Error message when email is invalid */
 "Your email is invalid." = "メールアドレスが無効です。";
-
+/* Used as the title for prompting the user if they want to close the sheet */
 "Your payment information will not be saved." = "支払い情報は保存されません。";
-
+/* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "郵便番号の入力に不備があります。";
-
+/* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "郵便番号が無効です";
-
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "郵便番号";
+/* accessibility label for text field */
+"expiration date" = "有効期限";

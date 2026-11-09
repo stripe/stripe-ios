@@ -1,75 +1,80 @@
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "هناك مصحح أخطاء متصل بالتطبيق.";
-
+/* The text for warning when an emulator is being used to run the application. */
 "An emulator is being used to run the App." = "يتم استخدام محاكٍ لتشغيل التطبيق.";
-
+/* An error message displayed when an error occurred. */
 "An error occurred. Please try again." = "حدث خطأ ما. يُرجى المحاولة مرة أخرى.";
-
+/* Button title to cancel action in an alert */
 "Cancel" = "إلغاء";
-
+/* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "لم يتم تحديث العلامة التجارية للبطاقة. يُرجى المحاولة مرة أخرى.";
-
+/* Text for close button */
 "Close" = "إغلاق";
-
+/* Accessibility label for expandable text control to indicate text is hidden. */
 "Collapsed" = "مطوي";
-
+/* Two factor authentication screen heading */
 "Confirm it's you" = "يُرجى تأكيد هويتك";
-
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not changed. Please try again." = "لم يتم تغيير طريقة الدفع الافتراضية. يُرجى المحاولة مرة أخرى.";
+/* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "لم يتم تحديث طريقة الدفع الافتراضية. يُرجى المحاولة مرة أخرى.";
-
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "إدخال تفاصيل البطاقة يدويًا";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "أدخل الرمز المُرسَل إلى %@.";
-
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
 "Expanded" = "موسع";
-
+/* Label shown when a network-related error has occured. */
 "Failed to connect" = "فشل الاتصال";
-
+/* Status while screen is loading */
 "Loading" = "جارٍ التحميل";
-
+/* The no answer to a yes or no question. */
 "No" = "لا";
-
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "إعادة إرسال الرمز";
-
+/* Text for button to scan a credit card */
 "Scan Card" = "امسح البطاقة ضوئيًا";
-
+/* Button title to open camera to scan credit/debit card */
 "Scan card" = "امسح البطاقة ضوئيًا";
-
+/* The title for the challenge response step of an authenticated checkout. */
 "Secure checkout" = "الدفع الآمن";
-
+/* Indicates that a button is selected. */
 "Selected" = "محدد";
-
+/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "رقم IBAN الذي أدخلته غير صالح.";
-
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
 "The OS or the OS Version is not supported." = "نظام التشغيل أو إصدار نظام التشغيل غير مدعوم.";
-
+/* The text for warning when a device is jailbroken. */
 "The device is jailbroken." = "تم اختراق حماية الجهاز.";
-
+/* The text for warning when the integrity of the SDK has been tampered with. */
 "The integrity of the SDK has been tampered." = "تم العبث بسلامة حزمة تطوير البرامج (SDK).";
-
+/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "حدث خطأ ما في أثناء معالجة بطاقتك -- حاول مرة أخرى بعد بضع ثوانٍ";
-
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "حدث خطأ غير متوقع -- حاول مرة أخرى بعد بضع ثوانٍ";
-
+/* Error description for when a network request times out. English value is as required by UL certification. */
 "Timeout" = "انتهت المهلة";
-
+/* Button to reload web view if we were unable to connect. */
 "Try again" = "حاول مرة أخرى";
-
+/* Indicates that a button is not selected. */
 "Unselected" = "غير محدد";
-
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "نستخدم Stripe للتحقق من تفاصيل بطاقتك. قد تستخدم Stripe بياناتك وتخزنها وفقًا لسياسة الخصوصية الخاصة بها. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>تعرّف على المزيد</u></a>";
-
+/* The yes answer to a yes or no question. */
 "Yes" = "نعم";
-
+/* Error when the card has already expired */
 "Your card has expired" = "انتهت صلاحية بطاقتك";
-
+/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "تم رفض بطاقتك";
-
+/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "شهر انتهاء صلاحية بطاقتك غير صالح";
-
+/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "سنة انتهاء صلاحية بطاقتك غير صالحة";
-
+/* Error when the card number is not valid */
 "Your card's number is invalid" = "رقم بطاقتك غير صالح";
-
+/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "رمز أمان بطاقتك غير صالح";
-
+/* Error when customer's name is invalid */
 "Your name is invalid." = "اسمك غير صالح.";
-
+/* Error message when a payment method gets declined. */
 "Your payment method was declined." = "تم رفض طريقة الدفع الخاصة بك.";

@@ -1,75 +1,80 @@
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "앱에 디버거가 연결되어 있습니다.";
-
+/* The text for warning when an emulator is being used to run the application. */
 "An emulator is being used to run the App." = "앱을 실행하는 데 에뮬레이터가 사용되고 있습니다.";
-
+/* An error message displayed when an error occurred. */
 "An error occurred. Please try again." = "오류가 발생했습니다. 다시 시도하십시오.";
-
+/* Button title to cancel action in an alert */
 "Cancel" = "취소";
-
+/* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "카드 브랜드가 업데이트되지 않았습니다. 다시 시도하십시오.";
-
+/* Text for close button */
 "Close" = "닫기";
-
+/* Accessibility label for expandable text control to indicate text is hidden. */
 "Collapsed" = "축소됨";
-
+/* Two factor authentication screen heading */
 "Confirm it's you" = "본인 확인";
-
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not changed. Please try again." = "기본 결제 방식이 변경되지 않았습니다. 다시 시도하십시오.";
+/* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "기본 결제 방식이 업데이트되지 않았습니다. 다시 시도하십시오.";
-
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "카드 세부사항을 직접 입력하십시오";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "%@(으)로 전송된 코드를 입력하십시오.";
-
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
 "Expanded" = "확장됨";
-
+/* Label shown when a network-related error has occured. */
 "Failed to connect" = "연결 실패";
-
+/* Status while screen is loading */
 "Loading" = "로딩 중";
-
+/* The no answer to a yes or no question. */
 "No" = "아니요";
-
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "코드 재전송";
-
+/* Text for button to scan a credit card */
 "Scan Card" = "카드 스캔";
-
+/* Button title to open camera to scan credit/debit card */
 "Scan card" = "카드 스캔";
-
+/* The title for the challenge response step of an authenticated checkout. */
 "Secure checkout" = "안전한 결제";
-
+/* Indicates that a button is selected. */
 "Selected" = "선택됨";
-
+/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "입력한 IBAN이 잘못되었습니다.";
-
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
 "The OS or the OS Version is not supported." = "OS 또는 OS 버전이 지원되지 않습니다.";
-
+/* The text for warning when a device is jailbroken. */
 "The device is jailbroken." = "장치가 탈옥되었습니다.";
-
+/* The text for warning when the integrity of the SDK has been tampered with. */
 "The integrity of the SDK has been tampered." = "SDK의 무결성이 손상되었습니다.";
-
+/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "카드를 처리하는 동안 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
-
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "예기치 않은 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
-
+/* Error description for when a network request times out. English value is as required by UL certification. */
 "Timeout" = "시간 초과";
-
+/* Button to reload web view if we were unable to connect. */
 "Try again" = "다시 시도";
-
+/* Indicates that a button is not selected. */
 "Unselected" = "선택 해제됨";
-
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Stripe를 통해 카드 세부사항을 확인합니다. Stripe에서 자사 개인정보정책에 따라 귀하의 데이터를 사용하고 저장할 수 있습니다. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>자세히 알아보기</u></a>";
-
+/* The yes answer to a yes or no question. */
 "Yes" = "예";
-
+/* Error when the card has already expired */
 "Your card has expired" = "카드가 만료되었습니다";
-
+/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "카드가 거절되었습니다";
-
+/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "카드의 만료 월이 유효하지 않습니다";
-
+/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "카드의 만료 연도가 유효하지 않습니다";
-
+/* Error when the card number is not valid */
 "Your card's number is invalid" = "카드 번호가 유효하지 않습니다";
-
+/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "카드의 보안 코드가 유효하지 않습니다";
-
+/* Error when customer's name is invalid */
 "Your name is invalid." = "이름이 잘못되었습니다.";
-
+/* Error message when a payment method gets declined. */
 "Your payment method was declined." = "결제 방식이 거부되었습니다.";

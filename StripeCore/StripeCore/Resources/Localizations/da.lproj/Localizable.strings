@@ -1,75 +1,80 @@
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "En debugger er knyttet til appen.";
-
+/* The text for warning when an emulator is being used to run the application. */
 "An emulator is being used to run the App." = "Der bruges en emulator til at køre appen.";
-
+/* An error message displayed when an error occurred. */
 "An error occurred. Please try again." = "Der opstod en fejl. Prøv igen.";
-
+/* Button title to cancel action in an alert */
 "Cancel" = "Annuller";
-
+/* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "Kortbrandet blev ikke opdateret. Prøv igen.";
-
+/* Text for close button */
 "Close" = "Luk";
-
+/* Accessibility label for expandable text control to indicate text is hidden. */
 "Collapsed" = "Lukket";
-
+/* Two factor authentication screen heading */
 "Confirm it's you" = "Bekræft, at det er dig";
-
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not changed. Please try again." = "Standardbetalingsmetoden blev ikke ændret. Prøv igen.";
+/* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "Standardbetalingsmetoden blev ikke opdateret. Prøv igen.";
-
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Indtast kortoplysninger manuelt";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "Indtast koden, der blev sendt til %@.";
-
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
 "Expanded" = "Udvidet";
-
+/* Label shown when a network-related error has occured. */
 "Failed to connect" = "Kunne ikke oprette forbindelse";
-
+/* Status while screen is loading */
 "Loading" = "Indlæser";
-
+/* The no answer to a yes or no question. */
 "No" = "Nej";
-
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "Send koden igen";
-
+/* Text for button to scan a credit card */
 "Scan Card" = "Scan kort";
-
+/* Button title to open camera to scan credit/debit card */
 "Scan card" = "Scan kort";
-
+/* The title for the challenge response step of an authenticated checkout. */
 "Secure checkout" = "Sikker betaling";
-
+/* Indicates that a button is selected. */
 "Selected" = "Valgt";
-
+/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "Det indtastede IBAN-nummer er ugyldigt.";
-
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
 "The OS or the OS Version is not supported." = "OS’et eller OS-versionen understøttes ikke.";
-
+/* The text for warning when a device is jailbroken. */
 "The device is jailbroken." = "Enheden er jailbreaket.";
-
+/* The text for warning when the integrity of the SDK has been tampered with. */
 "The integrity of the SDK has been tampered." = "SDK’ets integritet er blevet manipuleret.";
-
+/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Der opstod en fejl under behandling af dit kort – prøv igen om et par sekunder";
-
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Der opstod en uventet fejl – prøv igen om et par sekunder";
-
+/* Error description for when a network request times out. English value is as required by UL certification. */
 "Timeout" = "Timeout";
-
+/* Button to reload web view if we were unable to connect. */
 "Try again" = "Prøv igen";
-
+/* Indicates that a button is not selected. */
 "Unselected" = "Ikke valgt";
-
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Vi bruger Stripe til at bekræfte dine kortoplysninger. Stripe kan bruge og gemme dine oplysninger i henhold til selskabets Privatlivspolitik. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Lær mere</u></a>";
-
+/* The yes answer to a yes or no question. */
 "Yes" = "Ja";
-
+/* Error when the card has already expired */
 "Your card has expired" = "Dit kort er udløbet";
-
+/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "Dit kort blev afvist";
-
+/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Kortets udløbsmåned er ugyldig";
-
+/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Kortets udløbsår er ugyldigt";
-
+/* Error when the card number is not valid */
 "Your card's number is invalid" = "Kortnummeret er ugyldigt";
-
+/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "Kortets sikkerhedskode er ugyldig";
-
+/* Error when customer's name is invalid */
 "Your name is invalid." = "Dit navn er ugyldigt.";
-
+/* Error message when a payment method gets declined. */
 "Your payment method was declined." = "Din betalingsmetode blev afvist.";

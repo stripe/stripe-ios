@@ -1,75 +1,80 @@
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "Debugger terpasang pada Aplikasi.";
-
+/* The text for warning when an emulator is being used to run the application. */
 "An emulator is being used to run the App." = "Emulator sedang digunakan untuk menjalankan Aplikasi.";
-
+/* An error message displayed when an error occurred. */
 "An error occurred. Please try again." = "Terjadi kesalahan. Cobalah lagi.";
-
+/* Button title to cancel action in an alert */
 "Cancel" = "Batalkan";
-
+/* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "Brand kartu tidak diperbarui. Cobalah lagi.";
-
+/* Text for close button */
 "Close" = "Tutup";
-
+/* Accessibility label for expandable text control to indicate text is hidden. */
 "Collapsed" = "Diciutkan";
-
+/* Two factor authentication screen heading */
 "Confirm it's you" = "Konfirmasikan diri Anda";
-
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not changed. Please try again." = "Metode pembayaran default tidak diubah. Cobalah lagi.";
+/* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "Metode pembayaran default tidak diperbarui. Cobalah lagi.";
-
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Masukkan detail kartu secara manual";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "Masukkan kode yang dikirim ke %@.";
-
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
 "Expanded" = "Perluasan";
-
+/* Label shown when a network-related error has occured. */
 "Failed to connect" = "Gagal menghubungkan";
-
+/* Status while screen is loading */
 "Loading" = "Memuat";
-
+/* The no answer to a yes or no question. */
 "No" = "Tidak";
-
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "Kirim ulang kode";
-
+/* Text for button to scan a credit card */
 "Scan Card" = "Pindai Kartu";
-
+/* Button title to open camera to scan credit/debit card */
 "Scan card" = "Pindai kartu";
-
+/* The title for the challenge response step of an authenticated checkout. */
 "Secure checkout" = "Checkout aman";
-
+/* Indicates that a button is selected. */
 "Selected" = "Dipilih";
-
+/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "IBAN yang Anda masukkan tidak valid.";
-
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
 "The OS or the OS Version is not supported." = "OS atau Versi OS tidak didukung.";
-
+/* The text for warning when a device is jailbroken. */
 "The device is jailbroken." = "Perangkat telah di-jailbreak.";
-
+/* The text for warning when the integrity of the SDK has been tampered with. */
 "The integrity of the SDK has been tampered." = "Integritas SDK telah dimanipulasi.";
-
+/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Ada kesalahan saat memproses kartu Anda -- cobalah lagi dalam beberapa detik";
-
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Ada kesalahan tak terduga -- cobalah lagi dalam beberapa detik";
-
+/* Error description for when a network request times out. English value is as required by UL certification. */
 "Timeout" = "Waktu habis";
-
+/* Button to reload web view if we were unable to connect. */
 "Try again" = "Coba lagi";
-
+/* Indicates that a button is not selected. */
 "Unselected" = "Tidak dipilih";
-
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Kami menggunakan Stripe untuk memverifikasi detail kartu Anda. Stripe mungkin menggunakan dan menyimpan data Anda sesuai dengan kebijakan privasi mereka. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Pelajari selengkapnya</u></a>";
-
+/* The yes answer to a yes or no question. */
 "Yes" = "Ya";
-
+/* Error when the card has already expired */
 "Your card has expired" = "Kartu Anda telah kedaluwarsa";
-
+/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "Kartu Anda ditolak";
-
+/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Bulan kedaluwarsa kartu Anda tidak valid";
-
+/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Tahun kedaluwarsa kartu Anda tidak valid";
-
+/* Error when the card number is not valid */
 "Your card's number is invalid" = "Nomor kartu Anda tidak valid";
-
+/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "Kode keamanan kartu Anda tidak valid";
-
+/* Error when customer's name is invalid */
 "Your name is invalid." = "Nama Anda tidak valid.";
-
+/* Error message when a payment method gets declined. */
 "Your payment method was declined." = "Metode pembayaran Anda ditolak.";

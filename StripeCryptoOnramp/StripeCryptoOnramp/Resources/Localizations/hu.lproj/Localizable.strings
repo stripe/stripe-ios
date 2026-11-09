@@ -1,77 +1,104 @@
+/* Error message shown when the user tries to create a Link account for an email that already has one */
+"A Link account already exists for this email. Log in instead." = "Ehhez az e-mail-címhez már létezik Link számla. Inkább jelentkezzen be.";
+/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
 "Add %ld documents" = "%ld dokumentum hozzáadása";
-
+/* Action to add exactly one uploaded document to a source of funds */
 "Add 1 document" = "1 dokumentum hozzáadása";
-
+/* Action to add documents for another source of funds */
 "Add documents" = "Dokumentumok hozzáadása";
-
+/* Error when camera access is denied or restricted during document collection */
 "Allow camera access in Settings to take a photo." = "Fénykép készítéséhez engedélyezze a kamera-hozzáférést a Beállításokban.";
-
+/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
+"An error occurred while automatically signing in to your Link account. Please sign in manually." = "Hiba történt a Link számlájára való automatikus bejelentkezéskor. Jelentkezzen be manuálisan.";
+/* Label and placeholder for a questionnaire answer field */
 "Answer" = "Válasz";
-
+/* Action to open the system document picker to select a file */
 "Choose File…" = "Fájl kiválasztása…";
-
+/* Action to open the system photo picker to select a photo */
 "Choose Photo…" = "Fénykép kiválasztása…";
-
+/* Button asking the owner to open its support destination */
+"Contact support" = "Lépjen kapcsolatba az ügyfélszolgálattal";
+/* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "A legnagyobb valószínűséggel a betéti kártyák lesznek elfogadva.";
-
+/* Label and picker title for a document's category */
 "Document type" = "Dokumentum típusa";
-
+/* Heading confirming a document was uploaded successfully */
 "Document uploaded successfully" = "Dokumentum sikeresen feltöltve";
-
+/* Error message shown when the SDK needs a crypto customer ID before continuing */
+"Finish verifying your Link account before continuing." = "A folytatás előtt fejezze be Link számlája ellenőrzését.";
+/* Label for the selected source of funds in the document editor */
 "Funds source" = "Alapok forrása";
-
+/* Explanation above the summary of source-of-funds documents. */
 "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Hogyan finanszírozza a tranzakcióit? Kérjük, sorolja fel az összes forrását. Például fizetés, megtakarítások, befektetésből származó nyereség stb.";
-
+/* Error message shown when the provided phone number is not in the expected format */
+"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "Érvénytelen telefonformátum. Használja az E.164 formátumot (pl. +12125551234).";
+/* Explanation above the document upload control */
 "Make sure your document meets following requirements." = "Győződjön meg arról, hogy a dokumentum megfelel a következő követelményeknek.";
-
+/* Error message shown when there is no usable payment method selected */
+"No payment method is ready to use. Please collect a payment method and try again." = "Egy fizetési mód sem áll készen a használatra. Gyűjtsön be egy fizetési módot, és próbálja meg újra.";
+/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
 "Please select your Apple Pay payment method again to continue." = "Kérjük, a folytatáshoz válassza ki ismét az Apple Pay fizetési módját.";
-
+/* Instruction after an unavailable operation */
 "Please try again later." = "Kérjük, próbálja újra később.";
-
+/* Error message shown when the SDK is missing required information from the server */
+"Required information was missing. Please try again later." = "A szükséges adatok hiányoznak, próbálja újra később.";
+/* Heading confirming documents were submitted for review */
 "Submitted for review" = "Felülvizsgálatra beküldve";
-
+/* Action to open the system camera to take a photo of a document */
 "Take Photo…" = "Fénykép készítése…";
-
+/* Heading introducing source of funds collection */
 "Tell us about your source of funds" = "Adjon információt az alapok forrásáról";
-
+/* Message shown when a previous document has a requirement error */
 "There was a problem with your previous document. Please upload a new one." = "Probléma merült fel a korábbi dokumentummal. Kérjük, töltsön fel újat.";
-
+/* Error message shown when app attestation fails */
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Ez az alkalmazás igazolási hiba miatt nem ellenőrizhető. Próbálja újra később, vagy ha a probléma továbbra is fennáll, lépjen kapcsolatba a fejlesztővel.";
-
+/* Error message shown when app attestation is not configured for crypto onramp */
 "This app couldn't be verified. Contact the app developer for help." = "Ez az alkalmazás nem ellenőrizhető. Segítségért lépjen kapcsolatba az alkalmazás fejlesztőjével.";
-
+/* Validation error for a document exceeding the size limit */
 "This file is larger than %@. Choose a file that is %@ or smaller." = "Ez a fájl nagyobb, mint %1$@. Válasszon olyan fájlt, amely legfeljebb %2$@.";
-
+/* Validation error when no document formats are available */
 "This file type isn’t supported." = "Ez a fájltípus nem támogatott.";
-
+/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
 "This file type isn’t supported. Upload a %@ file." = "Ez a fájltípus nem támogatott. Töltsön fel %@ fájlt.";
-
+/* Error message shown when the wallet is not registered for crypto onramp */
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Ez a pénztárca nem található. Kérjük, válasszon vagy adjon hozzá egy pénztárcát, és próbálja újra.";
-
+/* Error message shown when the wallet network is not supported for crypto onramp */
 "This wallet network isn't supported. Please choose a different network." = "Ez a pénztárcahálózat nem támogatott. Kérjük, válasszon egy másik hálózatot.";
-
+/* Error message shown when the wallet ownership challenge has expired */
 "This wallet verification request expired. Please try again." = "A pénztárca ellenőrzési kérelme lejárt. Kérjük, próbálja újra.";
-
+/* Error message shown when the wallet ownership challenge is invalid */
 "This wallet verification request is invalid. Please try again." = "Ez a pénztárca-hitelesítési kérés érvénytelen. Kérjük, próbálja újra.";
-
+/* Error message shown when the wallet ownership challenge is invalid */
+"This wallet verification request is no longer valid. Please try again." = "A pénztárca ellenőrzési kérelme már nem érvényes. Kérjük, próbálja újra.";
+/* Action to select an existing document for upload */
 "Upload document" = "Dokumentum feltöltése";
-
+/* Heading introducing proof of address collection */
 "Upload your proof of address" = "Töltse fel lakcímigazolását";
-
+/* Status after a document has uploaded successfully */
 "Uploaded" = "Feltöltve";
-
+/* Status while a document is uploading */
 "Uploading…" = "Feltöltés…";
-
+/* Error message shown when the user's Link account is not verified */
+"Verify your Link account before continuing." = "A folytatás előtt igazolja Link számláját.";
+/* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "Nem tudtuk ellenőrizni ennek a pénztárcának a tulajdonjogát. Kérjük, próbálja újra.";
-
+/* Error when a file provider cannot supply a document */
 "We couldn’t open this document. Please choose it again." = "Nem sikerült megnyitni ezt a dokumentumot. Kérjük, válassza ki újra.";
-
+/* Error after a document upload fails */
 "We couldn’t upload this file. Please try again." = "Nem sikerült feltölteni ezt a fájlt. Kérjük, próbálja újra.";
-
+/* Explanation introducing proof of address collection. */
 "We may request proof of address for larger transactions." = "Nagyobb tranzakciók esetén lakcímigazolást kérhetünk.";
-
+/* Explanation introducing source of funds collection. */
 "We may request source of funds for larger transactions." = "Nagyobb tranzakciók esetén kérhetjük az alapok forrásának megadását.";
-
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to confirm your address to enable spending over %@." = "A(z) %@ feletti költés engedélyezéséhez meg kell erősítenünk a címét.";
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to understand where your funds come from to enable spending over %@." = "A(z) %@ feletti költés engedélyezéséhez meg kell értenünk, honnan származnak az alapjai.";
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We’re required to confirm your address to enable spending over %@." = "A(z) %@ feletti költés engedélyezéséhez meg kell erősítenünk a címét.";
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We’re required to understand where your funds come from to enable spending over %@." = "A(z) %@ feletti költés engedélyezéséhez meg kell értenünk, honnan származnak az alapjai.";
+/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Vizsgáljuk a dokumentumait. Értesítjük, amint az ellenőrzés befejeződött.";
-
+/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
 "You can continue while we verify your document in the background." = "Folytathatja, amíg a háttérben ellenőrizzük a dokumentumot.";

@@ -1,75 +1,80 @@
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "Et feilsøkingsprogram er koblet til appen.";
-
+/* The text for warning when an emulator is being used to run the application. */
 "An emulator is being used to run the App." = "En emulator brukes til å kjøre appen.";
-
+/* An error message displayed when an error occurred. */
 "An error occurred. Please try again." = "En feil har oppstått. Prøv igjen senere.";
-
+/* Button title to cancel action in an alert */
 "Cancel" = "Avbryt";
-
+/* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "Kortmerket ble ikke oppdatert. Prøv igjen.";
-
+/* Text for close button */
 "Close" = "Lukk";
-
+/* Accessibility label for expandable text control to indicate text is hidden. */
 "Collapsed" = "Lukket";
-
+/* Two factor authentication screen heading */
 "Confirm it's you" = "Bekreft at det er deg";
-
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not changed. Please try again." = "Standard betalingsmetode ble ikke endret. Prøv igjen.";
+/* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "Standard betalingsmetode ble ikke oppdatert. Prøv igjen.";
-
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Skriv inn kortdetaljer manuelt";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "Skriv inn koden som ble sendt til %@.";
-
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
 "Expanded" = "Utvidet";
-
+/* Label shown when a network-related error has occured. */
 "Failed to connect" = "Kan ikke koble til";
-
+/* Status while screen is loading */
 "Loading" = "Laster inn";
-
+/* The no answer to a yes or no question. */
 "No" = "Nei";
-
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "Send kode på nytt";
-
+/* Text for button to scan a credit card */
 "Scan Card" = "Skann kort";
-
+/* Button title to open camera to scan credit/debit card */
 "Scan card" = "Skann kort";
-
+/* The title for the challenge response step of an authenticated checkout. */
 "Secure checkout" = "Sikker betaling";
-
+/* Indicates that a button is selected. */
 "Selected" = "Valgt";
-
+/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "IBAN-nummeret du la inn er ugyldig.";
-
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
 "The OS or the OS Version is not supported." = "Operativsystemet eller operativsystemversjonen støttes ikke.";
-
+/* The text for warning when a device is jailbroken. */
 "The device is jailbroken." = "Enheten er jailbreaket.";
-
+/* The text for warning when the integrity of the SDK has been tampered with. */
 "The integrity of the SDK has been tampered." = "Integriteten til SDK-en har blitt manipulert.";
-
+/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Det oppstod en feil ved prosessering av kortet -- prøv igjen om et par sekunder";
-
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "En uventet feil har oppstått -- prøv igjen om et par sekunder";
-
+/* Error description for when a network request times out. English value is as required by UL certification. */
 "Timeout" = "Tidsavbrudd";
-
+/* Button to reload web view if we were unable to connect. */
 "Try again" = "Prøv igjen";
-
+/* Indicates that a button is not selected. */
 "Unselected" = "Ikke valgt";
-
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Vi bruker Stripe til å verifisere kontoopplysningene. Stripe kan bruke og lagre opplysningene dine i henhold til personvernerklæringen sin. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Finn ut mer</u></a>";
-
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Vi bruker Stripe til å bekrefte kortdetaljene dine. Stripe kan bruke og lagre opplysningene dine i henhold til personvernerklæringen sin. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Finn ut mer</u></a>";
+/* The yes answer to a yes or no question. */
 "Yes" = "Ja";
-
+/* Error when the card has already expired */
 "Your card has expired" = "Kortet ditt har utløpt";
-
+/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "Kortet ditt ble avvist";
-
+/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Kortet sin utløpsmåned er ugyldig";
-
+/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Kortet sitt utløpsår er ugyldig";
-
+/* Error when the card number is not valid */
 "Your card's number is invalid" = "Ugyldig kortnummer";
-
+/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "Ugyldig sikkerhetskode";
-
+/* Error when customer's name is invalid */
 "Your name is invalid." = "Navnet er ugyldig.";
-
+/* Error message when a payment method gets declined. */
 "Your payment method was declined." = "Betalingsmetoden din ble avvist.";

@@ -1,75 +1,80 @@
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "Към Приложението е прикачен дебъгер.";
-
+/* The text for warning when an emulator is being used to run the application. */
 "An emulator is being used to run the App." = "За стартиране на Приложението се използва емулатор.";
-
+/* An error message displayed when an error occurred. */
 "An error occurred. Please try again." = "Възникна грешка. Моля, опитайте отново.";
-
+/* Button title to cancel action in an alert */
 "Cancel" = "Отменете";
-
+/* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "Брандът на картата не е актуализиран. Моля, опитайте отново.";
-
+/* Text for close button */
 "Close" = "Затваряне";
-
+/* Accessibility label for expandable text control to indicate text is hidden. */
 "Collapsed" = "Свито";
-
+/* Two factor authentication screen heading */
 "Confirm it's you" = "Потвърдете, че сте вие";
-
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not changed. Please try again." = "Начинът на плащане по подразбиране не беше променен. Моля, опитайте отново.";
+/* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "Начинът на плащане по подразбиране не беше актуализиран. Моля, опитайте отново.";
-
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Въведете ръчно данни за карта";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "Въведете кода, изпратен до %@.";
-
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
 "Expanded" = "Разгънато";
-
+/* Label shown when a network-related error has occured. */
 "Failed to connect" = "Неуспешно свързване";
-
+/* Status while screen is loading */
 "Loading" = "Зареждане";
-
+/* The no answer to a yes or no question. */
 "No" = "Не";
-
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "Повторно изпращане на код";
-
+/* Text for button to scan a credit card */
 "Scan Card" = "Сканиране на картата";
-
+/* Button title to open camera to scan credit/debit card */
 "Scan card" = "Сканиране на карта";
-
+/* The title for the challenge response step of an authenticated checkout. */
 "Secure checkout" = "Сигурно финализиране на плащане";
-
+/* Indicates that a button is selected. */
 "Selected" = "Избрано";
-
+/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "IBAN, който сте въвели, е невалиден.";
-
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
 "The OS or the OS Version is not supported." = "ОС или версията на ОС не се поддържа.";
-
+/* The text for warning when a device is jailbroken. */
 "The device is jailbroken." = "Устройството е с премахнати софтуерни ограничения.";
-
+/* The text for warning when the integrity of the SDK has been tampered with. */
 "The integrity of the SDK has been tampered." = "Цялостта на SDK е нарушена.";
-
+/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Възникна грешка при обработката на Вашата карта -- опитайте отново след няколко секунди";
-
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Това беше неочаквана грешка -- опитайте отново след няколко секунди";
-
+/* Error description for when a network request times out. English value is as required by UL certification. */
 "Timeout" = "Изтекло време";
-
+/* Button to reload web view if we were unable to connect. */
 "Try again" = "Опитайте отново";
-
+/* Indicates that a button is not selected. */
 "Unselected" = "Неизбрано";
-
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Използваме Stripe, за да потвърдим данните на картата Ви. Stripe може да използва и съхранява данните Ви в съответствие с правилата си за защита на личните данни. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Научете повече</u></a>";
-
+/* The yes answer to a yes or no question. */
 "Yes" = "Да";
-
+/* Error when the card has already expired */
 "Your card has expired" = "Вашата карта е изтекла";
-
+/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "Вашата карта бе отхвърлена";
-
+/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Месецът на валидност на Вашата карта е невалиден";
-
+/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Годината на валидност на Вашата карта е невалидна";
-
+/* Error when the card number is not valid */
 "Your card's number is invalid" = "Номерът на Вашата карта е невалиден";
-
+/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "Кодът за сигурност на Вашата карта е невалиден";
-
+/* Error when customer's name is invalid */
 "Your name is invalid." = "Името Ви е невалидно.";
-
+/* Error message when a payment method gets declined. */
 "Your payment method was declined." = "Начинът Ви на плащане беше отказан.";

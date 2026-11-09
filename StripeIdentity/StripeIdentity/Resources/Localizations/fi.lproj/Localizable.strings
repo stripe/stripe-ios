@@ -1,235 +1,400 @@
+/* Body for selfie warmup page */
+"A few photos will be taken automatically on the next step to verify it's you" = "Seuraavassa vaiheessa otetaan automaattisesti muutama kuva sen vahvistamiseksi, että kyseessä olet sinä";
+/* Title for accepted types of ids */
 "Accepted forms of ID include" = "Hyväksyttyjä henkilöllisyystodistusmuotoja ovat";
-
+/* Button text to allow the optional training consent choice */
 "Allow" = "Salli";
-
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Voit vaihtoehtoisesti ladata henkilöllisyysasiakirjan kuvan manuaalisesti.";
-
+/* Opens the app's settings in the Settings app */
 "App Settings" = "Sovelluksen asetukset";
-
+/* Segmented control option for automatic identity document capture */
 "Auto" = "Automaattinen";
-
+/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
 "Back %@ photo successfully uploaded" = "Kohteen %@ taustapuolen kuvan lataus onnistui";
-
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "Ajokortin takapuolen kuva ladattu onnistuneesti";
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "Henkilökortin takapuolen kuva ladattu onnistuneesti";
+/* Accessibility label when back identity document photo has successfully uploaded */
 "Back identity document photo successfully uploaded" = "Henkilöllisyystodistuksen taustapuolen kuvan lataus onnistui";
-
+/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
 "Back of %@" = "Kohteen %@ taustapuoli";
-
+/* Instructional text when the user is expected to scan the back of their ID but the camera is seeing the front or a passport instead */
 "Back of ID not detected" = "Henkilökortin takapuolta ei havaittu";
-
+/* Description of back of driver's license image */
+"Back of driver's license" = "Ajokortin takapuoli";
+/* Back of driver's license or government-issued photo ID */
 "Back of driver's license or government-issued photo ID" = "Ajokortin tai valtion myöntämän kuvallisen henkilötodistuksen kääntöpuoli.";
-
+/* Back of driver's license or passport */
+"Back of driver's license or passport" = "Ajokortin tai passin kääntöpuoli";
+/* Back of driver's license, passport, or government-issued photo ID */
+"Back of driver's license, passport, or government-issued photo ID" = "Ajokortin, passin tai valtion myöntämän kuvallisen henkilötodistuksen kääntöpuoli.";
+/* Description of back of identity card image */
+"Back of identity card" = "Henkilökortin takapuoli";
+/* Title of ID document scanning screen when scanning the back of an identity card */
 "Back of identity document" = "Henkilötodistuksen takapuoli";
-
+/* Back of passport or government-issued photo ID */
+"Back of passport or government-issued photo ID" = "Passin tai valtion myöntämän kuvallisen henkilötodistuksen kääntöpuoli";
+/* Title displayed when requesting camera permissions */
 "Camera permission" = "Kameran käyttöoikeus";
-
+/* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Kamera ei käytössä";
-
+/* Status text displayed over the selfie viewfinder after capturing the front of a face */
 "Captured front" = "Kuvattu etuosa";
-
+/* Status text displayed over the selfie viewfinder after capturing the left side of a face */
 "Captured left" = "Kuvattu vasemmalta";
-
+/* Status text displayed over the selfie viewfinder after capturing the right side of a face */
 "Captured right" = "Kuvattu oikealta";
-
+/* Instructional text during selfie is being captured */
 "Capturing…" = "Otetaan kuvaa...";
-
+/* Instructional text when the document is not centered in the frame */
 "Center ID in view" = "Keskuksen tunnus näkyvillä";
-
+/* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Valitse tiedosto";
-
+/* Title of the list of IDs saved to the user's Link account */
+"Choose a saved ID" = "Valitse tallennettu henkilötodistus";
+/* Back button title for returning to consent screen of Identity verification */
 "Consent" = "Suostumus";
-
+/* Button to sign in to Link to share or save an ID */
+"Continue with Link" = "Jatka Linkillä";
+/* Status while continuing to verify identity with a new document instead of an ID saved to Link */
+"Continuing with manual verification…" = "Jatketaan manuaalista todentamista…";
+/* Loading title when skipping Link identity reuse */
+"Continuing without Link" = "Jatketaan ilman Linkiä";
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Kuvaa ei voitu ottaa";
-
+/* Title when saving the user's ID to Link failed */
+"Couldn't save your ID" = "Henkilötodistustasi ei voitu tallentaa";
+/* Label for Date of birth field */
+"Date of Birth" = "Syntymäaika";
+/* Label for Date of birth field */
+"Date of birth" = "Syntymäaika";
+/* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Syntymäaika ei näytä kelvolliselta";
-
+/* Button text to decline the optional training consent choice */
 "Decline" = "Hylkää";
-
+/* Instructional text when environement is too bright
+   Instructional text when the document is too glarry
+   Instructional text when user needs remove anything blocking the document */
 "Details not visible" = "Tiedot eivät ole näkyvillä";
-
+/* Accessibility label of the button that hides the notice about an ID saved to Link */
+"Dismiss" = "Ohita";
+/* Type of an ID saved to Link */
+"Driver's license" = "Ajokortti";
+/* Button that opens file upload screen */
+"File Upload" = "Tiedoston lataus";
+/* Title of identity document file upload screen */
+"File upload" = "Tiedoston lataus";
+/* Button to finish the verification without saving the user's ID to Link */
+"Finish without saving" = "Lopeta tallentamatta";
+/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
 "Flip your %@ over to the other side" = "Käännä %@ ylösalaisin";
-
+/* Flip your driver's license or government-issued photo ID over to the other side */
 "Flip your driver's license or government-issued photo ID over to the other side" = "Käännä ajokortti tai valtion myöntämä kuvallinen henkilötodistus toisin päin";
-
+/* Flip your driver's license or passport over to the other side */
+"Flip your driver's license or passport over to the other side" = "Käännä ajokortti tai passi toisin päin";
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Käännä ajokortti toisinpäin";
+/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
+"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "Käännä ajokortti, passi tai valtion myöntämä kuvallinen henkilötodistus toisin päin";
+/* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Käännä henkilökortti toisinpäin";
-
+/* Flip your passport or government-issued photo ID over to the other side */
+"Flip your passport or government-issued photo ID over to the other side" = "Käännä passi tai valtion myöntämä kuvallinen henkilötodistus toisin päin.";
+/* Body for selfie warmup page */
 "Follow the instructions to take selfies to compare against the image on your photo ID." = "Seuraa ohjeita ja ota selfieitä, joita verrataan kuvallisen henkilöllisyystodistuksesi kuvaan.";
-
+/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Kohteen %@ etupuolen kuvan lataus onnistui";
-
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "Ajokortin etupuolen kuva ladattu onnistuneesti";
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "Henkilökortin etupuolen kuva ladattu onnistuneesti";
+/* Accessibility label when front identity document photo has successfully uploaded */
 "Front identity document photo successfully uploaded" = "Henkilöllisyystodistuksen etupuolen kuvan lataus onnistui";
-
+/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
 "Front of %@" = "Kohteen %@ etupuoli";
-
+/* Instructional text when the user is expected to scan the front of their ID but the camera is seeing the back instead */
 "Front of ID not detected" = "Henkilökortin etupuolta ei havaittu";
-
+/* Description of front of driver's license image */
+"Front of driver's license" = "Ajokortin etupuoli";
+/* Front of driver's license or government-issued photo ID */
 "Front of driver's license or government-issued photo ID" = "Ajokortin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli.";
-
+/* Front of driver's license or passport */
 "Front of driver's license or passport" = "Ajokortin tai passin etupuoli";
-
+/* Front of driver's license, passport, or government-issued photo ID */
 "Front of driver's license, passport, or government-issued photo ID" = "Ajokortin, passin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli.";
-
+/* Description of front of identity card image */
+"Front of identity card" = "Henkilökortin etupuoli";
+/* Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity document" = "Henkilötodistuksen etupuoli";
-
+/* Front of passport or government-issued photo ID */
 "Front of passport or government-issued photo ID" = "Passin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli";
-
+/* Title for document front warmup page */
 "Get ready to scan your photo ID" = "Valmistaudu skannaamaan kuvallinen henkilöllisyystodistus";
-
+/* Title for selfie warmup page */
 "Get ready to take a selfie" = "Valmistaudu selfien ottoon";
-
+/* Button to go back to the previous screen */
 "Go Back" = "Siirry takaisin";
-
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
 "Great! Checking your images...." = "Hienoa! Tarkistetaan kuviasi....";
-
+/* Title for the optional training consent section on the selfie warmup page */
 "Help us improve verifications" = "Auta meitä parantamaan varmennuksia";
-
+/* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Odota, skannaus kesken";
-
+/* Status text displayed over the selfie viewfinder while capturing selfies */
 "Hold still..." = "Pysy paikallaan...";
-
+/* Ready button text on warmup screen */
 "I'm ready" = "Olen valmis";
-
+/* Label for ID number section */
 "ID Number" = "Tunnusnumero";
-
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "Henkilökortin tyyppi";
+/* Title after the user's ID and selfie were saved to Link */
+"ID and selfie saved" = "Henkilötodistus ja selfie tallennettu";
+/* Title after the user's ID was saved to Link */
+"ID saved" = "Henkilötodistus tallennettu";
+/* Label of the ID Card option for document type selection */
+"Identity card" = "Henkilöllisyysasiakirja";
+/* Type of an ID saved to Link that the app doesn't recognize */
+"Identity document" = "Henkilöllisyystodistus";
+/* Instructional text when the document is too blurry */
 "Image is blurry. Hold your phone steady and try again." = "Kuva on sumea. Pidä puhelimesi paikoillaan ja yritä uudelleen.";
-
+/* Description of passport image */
+"Image of passport" = "Passin kuva";
+/* State when a manual identity document image has been captured */
 "Image taken" = "Kuva otettu";
-
+/* Label for the ID field to collect individual CPF for Brazilian ID */
 "Individual CPF" = "Yksityishenkilön CPF";
-
+/* Instructional text when the scanned document appears not to be a valid ID document */
 "Invalid document" = "Virheellinen asiakirja";
-
+/* Body text after the user's ID was saved to Link */
+"It's encrypted and ready to reuse with your Link wallet." = "Se on salattu ja valmis uudelleenkäyttöön Link-lompakkosi kanssa.";
+/* Instructional text when user align the edge with camera
+   Instructional text when user needs to rorate to document to align with camera */
 "Keep ID level" = "Pidä henkilöllisyystodistus tasaisena";
-
+/* Label for the ID field to collect last 4 of social security number for US ID */
 "Last 4 of Social Security number" = "Sosiaaliturvatunnuksen 4 viimeistä merkkiä";
-
+/* Point in the offer to save the user's ID to Link */
+"Link encrypts your saved information for your protection." = "Link salaa tallennetut tietosi turvaksesi.";
+/* Status while screen is loading */
 "Loading" = "Ladataan";
-
+/* Status while loading the IDs saved to the user's Link account */
+"Loading your saved IDs…" = "Ladataan tallennettuja henkilötodistuksiasi…";
+/* Instructional text when the document is too blurry */
+"Make sure all details are visible and focus" = "Varmista, että kaikki tiedot ovat näkyvissä ja tarkennettuja";
+/* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Varmista, että olet hyvin valaistussa tilassa.";
-
+/* Segmented control option for manual identity document upload */
 "Manual" = "Manuaalinen";
-
+/* Button to verify identity with a new document instead of an ID saved to Link */
+"Manually verify identity" = "Todenna henkilöllisyys manuaalisesti";
+/* Button to verify identity with a new document instead of an ID saved to Link */
+"Manually verify instead" = "Todenna sen sijaan manuaalisesti";
+/* Instructional text when camera is too far from a document */
 "Move closer" = "Siirry lähemmäs";
-
+/* Instructional text when camera is too close to a document */
 "Move farther" = "Siirrä kauemmas";
-
+/* Instructional text when environement is too bright */
 "Move to a darker area" = "Siirry hämärämpään tilaan";
-
+/* Instructional text when environement is too dark */
 "Move to a well-lit area" = "Siirry hyvin valaistuun tilaan";
-
+/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
 "NRIC or FIN" = "NRIC tai FIN";
-
+/* Instructional text when there is no document in camera frame */
 "No document detected" = "Ei havaittuja asiakirjoja";
-
+/* Label of the passport option for document type selection */
+"Passport" = "Passi";
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "Passikuva ladattu onnistuneesti";
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Henkilötunnus";
-
+/* Back button title for returning to the individual's perssonal infomation screen */
 "Personal Information" = "Henkilötiedot";
-
+/* Section title for collection phone number */
 "Phone Number" = "Puhelinnumero";
-
+/* Back button title for returning to the phone verification page */
 "Phone Verification" = "Vahvistus puhelimella";
-
+/* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Kuvakirjasto";
-
+/* Status text displayed over the selfie viewfinder while positioning a face */
 "Place your face within the frame" = "Aseta kasvosi kehysten sisään";
-
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Lataa kuva passista";
+/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
 "Please upload images of the front and back of your %@" = "Lataa kohteen %@ etu- ja taustapuolen kuvat";
-
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Lataa ajokortin etu- ja takapuolen kuvat";
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Lataa henkilökortin etu- ja takapuolen kuvat";
+/* Instructions for uploading images of identity document */
 "Please upload images of the front and back of your identity document" = "Lataa kuvat henkilöllisyystodistuksesi etu- ja takapuolesta";
-
+/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
 "Position your %@ in the center of the frame" = "Aseta %@ ruudun keskelle";
-
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Aseta ajokortti kehyksen keskelle";
+/* Position your driver's license or government-issued photo ID in the center of the frame */
 "Position your driver's license or government-issued photo ID in the center of the frame" = "Aseta ajokortti tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
-
+/* Position your driver's license or passport in the center of the frame */
 "Position your driver's license or passport in the center of the frame" = "Aseta ajokortti tai passi kehyksen keskelle";
-
+/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Aseta ajokortti, passi tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
-
+/* Instructional text for capturing selfie */
 "Position your face in the center of the frame." = "Aseta kasvosi kuvan keskelle.";
-
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Aseta henkilökortti kehyksen keskelle";
+/* Instructional text for scanning front of a identity document */
 "Position your identity document in the center of the frame" = "Aseta henkilöllisyystodistus ruudun keskelle";
-
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Aseta passi kehyksen keskelle";
+/* Position your passport or government-issued photo ID in the center of the frame */
 "Position your passport or government-issued photo ID in the center of the frame" = "Aseta passi tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
-
+/* Button text displayed to the user to retake photo */
 "Retake Photos" = "Ota kuvat uudelleen";
-
+/* Loading title when attaching a saved identity document */
+"Reusing your identity document" = "Käytetään henkilöllisyystodistustasi uudelleen";
+/* Button title followed by the Link logo, read as 'Save with Link' */
+"Save with" = "Tallenna käyttäen";
+/* Accessibility label of the button that saves the user's ID to Link */
+"Save with Link" = "Tallenna Linkillä";
+/* Point in the offer to save the user's ID and selfie to Link */
+"Save your ID and selfie for the next time you need to verify." = "Tallenna henkilötodistuksesi ja selfiesi seuraavaa todentamiskertaa varten.";
+/* Subtitle of the offer to save the user's ID and selfie to Link */
+"Save your ID and selfie with Link." = "Tallenna henkilötodistuksesi ja selfiesi Linkillä.";
+/* Point in the offer to save the user's ID to Link */
+"Save your ID for the next time you need to verify." = "Tallenna henkilötodistuksesi seuraavaa todentamiskertaa varten.";
+/* Subtitle of the offer to save the user's ID to Link */
+"Save your ID with Link." = "Tallenna henkilötodistuksesi Linkillä.";
+/* Notice that the user has an ID saved to Link */
+"Saved ID" = "Tallennettu henkilötodistus";
+/* Notice that the user has an ID saved to Link, followed by their email address */
+"Saved ID · %@" = "Tallennettu henkilötodistus · %@";
+/* Status while saving the user's ID to Link */
+"Saving your ID…" = "Tallennetaan henkilötodistustasi…";
+/* Back button title for returning to the document scan screen */
 "Scan" = "Skannaa";
-
+/* State when identity document has been successfully scanned */
 "Scanned" = "Skannattu";
-
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Valitse";
-
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
 "Select a location to upload the back of your identity document from" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan takapuolen";
-
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan etupuolen";
-
+/* Instructions above the list of IDs saved to the user's Link account */
+"Select an ID to continue." = "Valitse henkilötodistus jatkaaksesi.";
+/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
 "Select back %@ photo" = "Valitse kohteen %@ taustapuolen kuva";
-
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Valitse ajokortin takapuolen kuva";
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Valitse henkilökortin takapuolen kuva";
+/* Accessibility label to select a photo of back of identity document */
 "Select back identity document photo" = "Valitse henkilöllisyystodistuksen taustapuolen kuva";
-
+/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
 "Select front %@ photo" = "Valitse kohteen %@ etupuolen kuva";
-
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Valitse ajokortin etupuolen kuva";
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Valitse henkilökortin etupuolen kuva";
+/* Accessibility label to select a photo of front of identity document */
 "Select front identity document photo" = "Valitse henkilöllisyystodistuksen etupuolen kuva";
-
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Valitse passikuva";
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
 "Selfie" = "Selfie";
-
+/* Title of selfie capture screen */
+"Selfie captures" = "Selfiet";
+/* Instructional text when selfie is captured */
 "Selfie captures are complete" = "Selfien ottaminen suortitettu";
-
+/* Button to share the selected ID saved to Link with this verification */
+"Share ID" = "Jaa henkilötodistus";
+/* Status while sharing an ID saved to Link with this verification */
+"Sharing your ID…" = "Jaetaan henkilötodistustasi…";
+/* Subtitle of the Link sign-in screen when saving the user's ID to Link */
+"Sign in or create an account to save ID." = "Kirjaudu sisään tai luo tili tallentaaksesi henkilötodistuksen.";
+/* Subtitle of the Link sign-in screen when sharing an ID saved to Link */
+"Sign in to use a saved ID." = "Kirjaudu sisään käyttääksesi tallennettua henkilötodistusta.";
+/* Body text when saving the user's ID to Link failed */
+"Something went wrong while saving your ID to Link. Your verification isn't affected." = "Jotakin meni pieleen tallennettaessa henkilötodistustasi Linkiin. Se ei vaikuta todentamiseesi.";
+/* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Ota kuva";
-
+/* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "Henkilöllisyysasiakirjan kuvia ei ole tallennettu. Haluatko poistua?";
-
+/* Error message shown when the user enters an incorrect verification code. */
+"The verification code you entered is incorrect." = "Syöttämäsi vahvistuskoodi on virheellinen.";
+/* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "Kameran käytössä tapahtui virhe.";
-
+/* Body text after the user's ID and selfie were saved to Link */
+"They are encrypted and ready to reuse with your Link wallet." = "Ne on salattu ja valmiita uudelleenkäyttöön Link-lompakkosi kanssa.";
+/* Body text after the user shared an ID saved to Link with this verification */
+"This ID will be used for your verification." = "Tätä henkilötodistusta käytetään todentamiseesi.";
+/* Button to attempt to re-scan identity document image */
 "Try Again" = "Yritä uudelleen";
-
+/* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Yritä vähentää häikäisyä niin että henkilöllisyystodistus näkyy";
-
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
 "Turn head left" = "Käännä päätä vasemmalle";
-
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
 "Turn head right" = "Käännä päätä oikealle";
-
+/* Instructional text for scanning the left side of a selfie */
 "Turn your head left." = "Käännä päätäsi vasemmalle.";
-
+/* Instructional text for scanning the right side of a selfie */
 "Turn your head right." = "Käännä päätäsi oikealle.";
-
+/* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Yhteyttä ei voida muodostaa.";
-
+/* Title for warning alert */
 "Unsaved changes" = "Tallentamattomat muutokset";
-
+/* Back button label for the identity document file upload screen */
 "Upload" = "Lataa";
-
+/* Button to upload a photo */
 "Upload a Photo" = "Lataa kuva";
-
+/* Title of document upload screen */
 "Upload your %@" = "Lataa %@";
-
+/* Title of document upload screen */
 "Upload your photo ID" = "Lataa kuvallinen henkilöllisyystodistus";
-
+/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
 "Uploading back %@ photo" = "Kohteen %@ taustapuolen kuvaa ladataan";
-
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "Ladataan ajokortin takapuolen kuvaa";
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "Ladataan henkilökortin takapuolen kuvaa";
+/* Accessibility label while photo of back of identity document is uploading */
 "Uploading back identity document photo" = "Henkilöllisyystodistuksen taustapuolen kuvaa ladataan";
-
+/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
 "Uploading front %@ photo" = "Kohteen %@ etupuolen kuvaa ladataan";
-
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "Ladataan ajokortin etupuolen kuvaa";
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "Ladataan henkilökortin etupuolen kuvaa";
+/* Accessibility label while photo of front of identity document is uploading */
 "Uploading front identity document photo" = "Henkilöllisyystodistuksen etupuolen kuvaa ladataan";
-
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "Ladataan passikuvaa";
+/* Title of the offer to save the user's ID to Link */
+"Verify faster next time" = "Todenna nopeammin ensi kerralla";
+/* Title for selfie warmup page with biometric training consent */
 "Verify with a selfie" = "Todenna selfiellä";
-
+/* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Vahvista henkilöllisyytesi";
-
+/* Line1 body text of error screen when live capture fails */
 "We could not capture a high-quality image." = "Emme kyenneet ottamaan korkealaatuista kuvaa.";
-
+/* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "Tarvitsemme kameran käyttöoikeuden. Salli käyttöoikeus sovelluksen asetuksissa.";
-
+/* Back button title for returning to welcome screen of Identity verification */
 "Welcome" = "Tervetuloa";
-
+/* Body for selfie warmup page with biometric training consent */
 "With your permission, Stripe may use your images to improve fraud detection. Declining doesn't affect your verification." = "Luvallasi Stripe voi käyttää kuviasi petosten tunnistamisen parantamiseen. Kieltäytyminen ei vaikuta todentamiseesi.";
-
+/* Line2 body text of error screen when live capture fails */
 "You can either try again or upload an image from your device." = "Voit joko yrittää uudelleen tai ladata kuvan laitteestasi.";
-
+/* Title after the user shared an ID saved to Link with this verification */
+"You shared your ID" = "Jaoit henkilötodistuksesi";
+/* Text for message of warning alert when selfie is not yet saved */
 "Your selfie images have not been saved. Do you want to leave?" = "Selfiekuviasi ei ole tallennettu. Haluatko poistua?";
-
+/* driver's license */
 "driver's license" = "ajokortti";
-
+/* id issued by government */
 "government-issued photo ID" = "valtion myöntämä kuvallinen henkilöllisyystodistus";
-
+/* passport */
 "passport" = "passi";

@@ -1,77 +1,104 @@
+/* Error message shown when the user tries to create a Link account for an email that already has one */
+"A Link account already exists for this email. Log in instead." = "Já existe uma conta Link para este e-mail. Faça login.";
+/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
 "Add %ld documents" = "Adicione %ld documentos";
-
+/* Action to add exactly one uploaded document to a source of funds */
 "Add 1 document" = "Adicione 1 documento";
-
+/* Action to add documents for another source of funds */
 "Add documents" = "Adicione documentos";
-
+/* Error when camera access is denied or restricted during document collection */
 "Allow camera access in Settings to take a photo." = "Permita o acesso à câmera nas Configurações para tirar uma foto.";
-
+/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
+"An error occurred while automatically signing in to your Link account. Please sign in manually." = "Ocorreu um erro ao fazer login automaticamente na sua conta Link. Faça login manualmente.";
+/* Label and placeholder for a questionnaire answer field */
 "Answer" = "Resposta";
-
+/* Action to open the system document picker to select a file */
 "Choose File…" = "Escolher arquivo...";
-
+/* Action to open the system photo picker to select a photo */
 "Choose Photo…" = "Escolher foto...";
-
+/* Button asking the owner to open its support destination */
+"Contact support" = "Falar com o suporte";
+/* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Os cartões de débito têm maior probabilidade de serem aceitos.";
-
+/* Label and picker title for a document's category */
 "Document type" = "Tipo de documento";
-
+/* Heading confirming a document was uploaded successfully */
 "Document uploaded successfully" = "Documento enviado com sucesso";
-
+/* Error message shown when the SDK needs a crypto customer ID before continuing */
+"Finish verifying your Link account before continuing." = "Conclua a verificação da sua conta Link antes de continuar.";
+/* Label for the selected source of funds in the document editor */
 "Funds source" = "Origem dos fundos";
-
+/* Explanation above the summary of source-of-funds documents. */
 "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Como você está financiando suas transações? Liste todas as suas fontes. Por exemplo, salário, poupança, receitas de investimentos etc.";
-
+/* Error message shown when the provided phone number is not in the expected format */
+"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "Formato de telefone inválido. Use o formato E.164, por exemplo, +12125551234.";
+/* Explanation above the document upload control */
 "Make sure your document meets following requirements." = "Certifique-se de que seu documento atenda aos seguintes requisitos.";
-
+/* Error message shown when there is no usable payment method selected */
+"No payment method is ready to use. Please collect a payment method and try again." = "Nenhuma forma de pagamento está pronta para uso. Recolha uma forma de pagamento e tente novamente.";
+/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
 "Please select your Apple Pay payment method again to continue." = "Selecione sua forma de pagamento Apple Pay novamente para continuar.";
-
+/* Instruction after an unavailable operation */
 "Please try again later." = "Tente novamente mais tarde.";
-
+/* Error message shown when the SDK is missing required information from the server */
+"Required information was missing. Please try again later." = "Faltaram informações obrigatórias. Tente novamente mais tarde.";
+/* Heading confirming documents were submitted for review */
 "Submitted for review" = "Enviado para revisão";
-
+/* Action to open the system camera to take a photo of a document */
 "Take Photo…" = "Tirar foto";
-
+/* Heading introducing source of funds collection */
 "Tell us about your source of funds" = "Conte-nos sobre a origem dos fundos";
-
+/* Message shown when a previous document has a requirement error */
 "There was a problem with your previous document. Please upload a new one." = "Ocorreu um problema com seu documento anterior. Carregue um novo.";
-
+/* Error message shown when app attestation fails */
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Não foi possível verificar este aplicativo devido a um erro de atestação. Tente novamente mais tarde ou entre em contato com o desenvolvedor se o problema persistir.";
-
+/* Error message shown when app attestation is not configured for crypto onramp */
 "This app couldn't be verified. Contact the app developer for help." = "Não foi possível verificar este aplicativo. Entre em contato com o desenvolvedor do aplicativo para obter ajuda.";
-
+/* Validation error for a document exceeding the size limit */
 "This file is larger than %@. Choose a file that is %@ or smaller." = "Este arquivo é maior que %1$@. Escolha um arquivo de %2$@ ou menor.";
-
+/* Validation error when no document formats are available */
 "This file type isn’t supported." = "Este tipo de arquivo não é compatível.";
-
+/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
 "This file type isn’t supported. Upload a %@ file." = "Este tipo de arquivo não é compatível. Carregue um arquivo %@.";
-
+/* Error message shown when the wallet is not registered for crypto onramp */
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Não foi possível encontrar esta carteira. Escolha ou adicione uma carteira e tente novamente.";
-
+/* Error message shown when the wallet network is not supported for crypto onramp */
 "This wallet network isn't supported. Please choose a different network." = "Esta rede de carteira não é aceita. Escolha uma rede diferente.";
-
+/* Error message shown when the wallet ownership challenge has expired */
 "This wallet verification request expired. Please try again." = "Esta solicitação de verificação de carteira expirou. Tente novamente.";
-
+/* Error message shown when the wallet ownership challenge is invalid */
 "This wallet verification request is invalid. Please try again." = "Esta solicitação de verificação de carteira é inválida. Tente novamente.";
-
+/* Error message shown when the wallet ownership challenge is invalid */
+"This wallet verification request is no longer valid. Please try again." = "Esta solicitação de verificação de carteira não é mais válida. Tente novamente.";
+/* Action to select an existing document for upload */
 "Upload document" = "Carregar documento";
-
+/* Heading introducing proof of address collection */
 "Upload your proof of address" = "Envie o comprovante de endereço";
-
+/* Status after a document has uploaded successfully */
 "Uploaded" = "Carregada";
-
+/* Status while a document is uploading */
 "Uploading…" = "Carregando...";
-
+/* Error message shown when the user's Link account is not verified */
+"Verify your Link account before continuing." = "Verifique sua conta Link antes de continuar.";
+/* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "Não foi possível verificar a propriedade desta carteira. Tente novamente.";
-
+/* Error when a file provider cannot supply a document */
 "We couldn’t open this document. Please choose it again." = "Não conseguimos abrir este documento. Escolha-o novamente.";
-
+/* Error after a document upload fails */
 "We couldn’t upload this file. Please try again." = "Não conseguimos carregar este arquivo. Tente novamente.";
-
+/* Explanation introducing proof of address collection. */
 "We may request proof of address for larger transactions." = "Podemos solicitar um comprovante de endereço para transações maiores.";
-
+/* Explanation introducing source of funds collection. */
 "We may request source of funds for larger transactions." = "Podemos solicitar a origem dos fundos para transações maiores.";
-
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to confirm your address to enable spending over %@." = "Precisamos confirmar seu endereço para permitir gastos acima de %@.";
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to understand where your funds come from to enable spending over %@." = "Precisamos entender a origem dos seus fundos para permitir gastos acima de %@.";
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We’re required to confirm your address to enable spending over %@." = "Precisamos confirmar seu endereço para permitir gastos acima de %@.";
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We’re required to understand where your funds come from to enable spending over %@." = "Precisamos entender a origem dos seus fundos para permitir gastos acima de %@.";
+/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Estamos analisando seus documentos. Avisaremos quando a verificação for concluída.";
-
+/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
 "You can continue while we verify your document in the background." = "Você pode continuar enquanto verificamos seu documento em segundo plano.";

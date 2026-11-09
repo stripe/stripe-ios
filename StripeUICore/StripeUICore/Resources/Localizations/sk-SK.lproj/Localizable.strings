@@ -1,153 +1,199 @@
+/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (voliteľné)";
-
+/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
+"%@ is incomplete." = "Položka %@ je neúplná.";
+/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
 "(not accepted)" = "(neprijaté)";
-
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Číslo účtu";
-
+/* Caption for Address field on address form */
 "Address" = "Adresa";
-
+/* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Riadok adresy 1";
-
+/* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Riadok adresy 2";
-
+/* Label of an address field in hk */
 "Area" = "Okres";
-
+/* Label for BLIK code number field on form */
 "BLIK code" = "Kód BLIK";
-
+/* Placeholder for AU BECS BSB number */
 "BSB number" = "BSB číslo";
-
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Bankový účet";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
 "Bank account •••• %@" = "Bankový účet •••• %@";
-
+/* Billing address section title for card form entry. */
+"Billing address" = "Fakturačná adresa";
+/* Label for a checkbox that makes customers billing address same as their shipping address */
 "Billing address is same as shipping" = "Fakturačná adresa je totožná s dodacou";
-
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+/* Button title to cancel action in an alert */
 "Cancel" = "Zrušiť";
-
+/* Label an input field to update card brand */
 "Card brand" = "Značka karty";
-
+/* Label for card number entry text field */
+"Card number" = "Číslo karty";
+/* Caption for City field on address form */
 "City" = "Mesto";
-
+/* Accessibility label describing a field for entering a login code */
 "Code field" = "Pole kódu";
-
+/* Label for Company field on form */
 "Company" = "Spoločnosť";
-
+/* Text for alert message when user needs to confirm payment in their banking app */
+"Confirm the payment in your bank's app to complete the purchase." = "Dokončite nákup potvrdením platby v aplikácii vašej banky.";
+/* Text for continue button */
 "Continue" = "Pokračovať";
-
+/* Caption for Country field on address form */
 "Country" = "Krajina";
-
+/* Country selector and postal code entry form header title */
 "Country or region" = "Krajina alebo región";
-
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Kraj";
-
+/* Error message for empty date. */
+"Date is empty." = "Dátum je prázdny.";
+/* Label for Date of birth field */
 "Date of Birth" = "Dátum narodenia";
-
+/* Label of an address field */
 "Department" = "Oddelenie";
-
+/* Label for the district field on an address form */
 "District" = "Obvod";
-
+/* Label of an address field */
 "Do Si" = "Do Si";
-
+/* Used as the title for prompting the user if they want to close the sheet */
 "Do you want to close this form?" = "Chcete zatvoriť tento formulár?";
-
+/* Done button title */
 "Done" = "Hotovo";
-
+/* Accessibility hint for a text field */
 "Double tap to edit" = "Dvojitým ťuknutím upravte";
-
+/* Button title to enter editing mode */
 "Edit" = "Upraviť";
-
+/* Label of an address field */
 "Eircode" = "Kód Eir";
-
+/* Caption for Email field on address form */
 "Email" = "E-mail";
-
+/* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirát";
-
+/* Text for error labels */
 "Error" = "Chyba";
-
+/* Label for first (given) name field */
 "First" = "Meno";
-
+/* Placeholder string for name entry field. */
 "Full name" = "Celé meno";
-
+/* Error description for incomplete phone number */
 "Incomplete phone number" = "Neúplné telefónne číslo";
-
+/* Error message when UPI ID is invalid */
+"Invalid UPI ID" = "Neplatné identifikačné číslo UPI";
+/* Label of an address field */
 "Island" = "Island";
-
+/* Label for last (family) name field */
 "Last" = "Priezvisko";
-
+/* label for text field to enter card expiry */
+"MM / YY" = "MM/RR";
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Číslo mobilného telefónu";
+/* Caption for Name field on address form */
 "Name" = "Meno";
-
+/* Label for Name on account field on form */
 "Name on account" = "Meno uvedené v účte";
-
+/* No comment provided by engineer. */
 "OK" = "OK";
-
+/* Label of an address field */
 "Oblast" = "Oblasť";
-
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "Iné";
-
+/* Label of an address field */
 "Parish" = "Parish";
-
+/* Caption for Phone field on address form */
+"Phone" = "Telefón";
+/* Caption for Phone number field on address form */
 "Phone number" = "Telefónne číslo";
-
+/* Short string for postal code (text used in non-US countries) */
 "Postal code" = "PSČ";
-
+/* Label of an address field */
 "Prefecture" = "Prefektúra";
-
+/* Label of a disabled button while its action is processing */
 "Processing..." = "Prebieha spracovanie...";
-
+/* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provincia";
-
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Odstrániť";
-
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Odstrániť bankový účet";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Odstrániť bankový účet končiaci na %@";
+/* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account?" = "Odstrániť bankový účet?";
-
+/* Title for a button that when tapped removes a saved card. */
 "Remove card" = "Odstrániť kartu";
-
+/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
 "Search" = "Vyhľadať";
-
+/* Message when a user is selecting a card brand in a dropdown */
 "Select card brand (optional)" = "Vybrať značku karty (voliteľne)";
-
+/* Error message for empty dropdown selection. */
 "Selection is empty." = "Výber je prázdny.";
-
+/* Heading for a generic error when an operation fails */
 "Something went wrong" = "Niečo sa pokazilo";
-
+/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
 "Sort code" = "Triediaci kód";
-
+/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Štát";
-
+/* Button that submits the information entered on a screen */
 "Submit" = "Odoslať";
-
+/* Label of an address field */
 "Suburb" = "Predmestie";
-
+/* Label of an address field */
 "Suburb or city" = "Predmestie alebo mesto";
-
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Zadané BSB je neúplné.";
-
+/* An error message. */
 "The ID number you entered is incomplete." = "Zadané identifikačné číslo je neúplné.";
-
+/* Error description for incomplete account number */
 "The account number you entered is incomplete." = "Zadané číslo účtu je neúplné.";
-
+/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
 "The sort code you entered is invalid." = "Zadaný triediaci kód je neplatný.";
-
+/* Label of an address field */
 "Town or city" = "Obec alebo mesto";
-
+/* Label for UPI ID number field on form */
+"UPI ID" = "Identifikačné číslo UPI";
+/* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Nepodarilo sa analyzovať telefónne číslo";
-
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Použite funkciu rotora na prístup k odkazom";
-
+/* Error message when BLIK code is invalid */
 "Your BLIK code is incomplete." = "Váš kód BLIK je neúplný.";
-
+/* Error message when BLIK code is invalid */
 "Your BLIK code is invalid." = "Váš kód BLIK je neplatný.";
-
+/* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP code is incomplete." = "Vaše PSČ je neúplné.";
-
+/* Error message for when ZIP code in form is invalid (US only) */
 "Your ZIP code is invalid." = "Vaše PSČ je neplatné.";
-
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Vaše PSČ je neúplné.";
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Číslo vašej karty je neúplné.";
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Číslo vašej karty je neplatné.";
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "Dátum konca platnosti vašej karty je neúplný.";
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Dátum konca platnosti vašej karty je neplatný.";
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Mesiac konca platnosti vašej karty je neplatný.";
+/* Error message for card entry form when CVC is incomplete. */
+"Your card's security code is incomplete." = "Bezpečnostný kód vašej karty je neúplný.";
+/* Error message when email is invalid */
 "Your email is invalid." = "Váš e-mail je neplatný.";
-
+/* Used as the title for prompting the user if they want to close the sheet */
 "Your payment information will not be saved." = "Vaše informácie o platbe nebudú uložené.";
-
+/* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Vaše poštové smerovacie číslo je neúplné.";
-
+/* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Vaše PSČ je neplatné.";
-
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "PSČ";
+/* accessibility label for text field */
+"expiration date" = "dátum konca platnosti";

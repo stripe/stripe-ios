@@ -1,77 +1,104 @@
+/* Error message shown when the user tries to create a Link account for an email that already has one */
+"A Link account already exists for this email. Log in instead." = "Der findes allerede en Link-konto for denne e-mail. Log ind i stedet.";
+/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
 "Add %ld documents" = "Tilføj %ld dokumenter";
-
+/* Action to add exactly one uploaded document to a source of funds */
 "Add 1 document" = "Tilføj et dokument";
-
+/* Action to add documents for another source of funds */
 "Add documents" = "Tilføj dokumenter";
-
+/* Error when camera access is denied or restricted during document collection */
 "Allow camera access in Settings to take a photo." = "Tillad kameraadgang i Indstillinger for at tage et billede.";
-
+/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
+"An error occurred while automatically signing in to your Link account. Please sign in manually." = "Der opstod en fejl under automatisk login på din Link-konto. Log ind manuelt.";
+/* Label and placeholder for a questionnaire answer field */
 "Answer" = "Svar";
-
+/* Action to open the system document picker to select a file */
 "Choose File…" = "Vælg fil";
-
+/* Action to open the system photo picker to select a photo */
 "Choose Photo…" = "Vælg foto …";
-
+/* Button asking the owner to open its support destination */
+"Contact support" = "Kontakt support";
+/* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Debetkort vil højst sandsynligt blive accepteret.";
-
+/* Label and picker title for a document's category */
 "Document type" = "Dokumenttype";
-
+/* Heading confirming a document was uploaded successfully */
 "Document uploaded successfully" = "Dokumentet blev uploadet";
-
+/* Error message shown when the SDK needs a crypto customer ID before continuing */
+"Finish verifying your Link account before continuing." = "Færdiggør verifikation af din Link-konto, før du fortsætter.";
+/* Label for the selected source of funds in the document editor */
 "Funds source" = "Midlernes kilde";
-
+/* Explanation above the summary of source-of-funds documents. */
 "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Hvordan finansierer du dine transaktioner? Angiv alle dine kilder. F.eks. løn, opsparing, investeringsindtjening osv.";
-
+/* Error message shown when the provided phone number is not in the expected format */
+"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "Ugyldigt telefonnummer. Brug E.164-format (f.eks. +12125551234).";
+/* Explanation above the document upload control */
 "Make sure your document meets following requirements." = "Sørg for, at dit dokument opfylder følgende krav.";
-
+/* Error message shown when there is no usable payment method selected */
+"No payment method is ready to use. Please collect a payment method and try again." = "Ingen betalingsmetode er klar til brug. Indhent en betalingsmetode, og prøv igen.";
+/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
 "Please select your Apple Pay payment method again to continue." = "Vælg din Apple Pay-betalingsmetode igen for at fortsætte.";
-
+/* Instruction after an unavailable operation */
 "Please try again later." = "Prøv igen senere.";
-
+/* Error message shown when the SDK is missing required information from the server */
+"Required information was missing. Please try again later." = "Påkrævede oplysninger manglede. Prøv igen senere.";
+/* Heading confirming documents were submitted for review */
 "Submitted for review" = "Indsendt til gennemgang";
-
+/* Action to open the system camera to take a photo of a document */
 "Take Photo…" = "Tag billede …";
-
+/* Heading introducing source of funds collection */
 "Tell us about your source of funds" = "Fortæl os om kilden til dine midler";
-
+/* Message shown when a previous document has a requirement error */
 "There was a problem with your previous document. Please upload a new one." = "Der opstod et problem med dit tidligere dokument. Upload et nyt.";
-
+/* Error message shown when app attestation fails */
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Denne app kunne ikke verificeres på grund af en attestationsfejl. Prøv igen senere, eller kontakt udvikleren, hvis problemet fortsætter.";
-
+/* Error message shown when app attestation is not configured for crypto onramp */
 "This app couldn't be verified. Contact the app developer for help." = "Denne app kunne ikke verificeres. Kontakt appudvikleren for at få hjælp.";
-
+/* Validation error for a document exceeding the size limit */
 "This file is larger than %@. Choose a file that is %@ or smaller." = "Denne fil er større end %1$@. Vælg en fil, der er %2$@ eller mindre.";
-
+/* Validation error when no document formats are available */
 "This file type isn’t supported." = "Denne filtype understøttes ikke.";
-
+/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
 "This file type isn’t supported. Upload a %@ file." = "Denne filtype understøttes ikke. Upload en %@-fil.";
-
+/* Error message shown when the wallet is not registered for crypto onramp */
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Denne wallet kunne ikke findes. Vælg eller tilføj en wallet, og prøv igen.";
-
+/* Error message shown when the wallet network is not supported for crypto onramp */
 "This wallet network isn't supported. Please choose a different network." = "Dette wallet-netværk understøttes ikke. Vælg et andet netværk.";
-
+/* Error message shown when the wallet ownership challenge has expired */
 "This wallet verification request expired. Please try again." = "Denne anmodning om verifikation af wallet er udløbet. Prøv igen.";
-
+/* Error message shown when the wallet ownership challenge is invalid */
 "This wallet verification request is invalid. Please try again." = "Denne forespørgsel om verifikation af wallet er ugyldig. Prøv igen.";
-
+/* Error message shown when the wallet ownership challenge is invalid */
+"This wallet verification request is no longer valid. Please try again." = "Denne anmodning om verifikation af wallet er ikke længere gyldig. Prøv igen.";
+/* Action to select an existing document for upload */
 "Upload document" = "Upload dokument";
-
+/* Heading introducing proof of address collection */
 "Upload your proof of address" = "Upload dit dokument til bekræftelse af adresse";
-
+/* Status after a document has uploaded successfully */
 "Uploaded" = "Uploadet";
-
+/* Status while a document is uploading */
 "Uploading…" = "Uploader …";
-
+/* Error message shown when the user's Link account is not verified */
+"Verify your Link account before continuing." = "Verificer din Link-konto, før du fortsætter.";
+/* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "Vi kunne ikke verificere ejerskabet af denne wallet. Prøv igen.";
-
+/* Error when a file provider cannot supply a document */
 "We couldn’t open this document. Please choose it again." = "Vi kunne ikke åbne dette dokument. Vælg det igen.";
-
+/* Error after a document upload fails */
 "We couldn’t upload this file. Please try again." = "Vi kunne ikke uploade denne fil. Prøv igen.";
-
+/* Explanation introducing proof of address collection. */
 "We may request proof of address for larger transactions." = "Vi anmoder muligvis om adressebevis ved større transaktioner.";
-
+/* Explanation introducing source of funds collection. */
 "We may request source of funds for larger transactions." = "Vi anmoder muligvis om oplysninger om midlernes oprindelse ved større transaktioner.";
-
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to confirm your address to enable spending over %@." = "Vi er forpligtet til at bekræfte din adresse for at muliggøre forbrug over %@.";
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to understand where your funds come from to enable spending over %@." = "Vi er forpligtet til at forstå, hvor dine midler kommer fra, for at muliggøre forbrug over %@.";
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We’re required to confirm your address to enable spending over %@." = "Vi er forpligtet til at bekræfte din adresse for at muliggøre forbrug over %@.";
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We’re required to understand where your funds come from to enable spending over %@." = "Vi er forpligtet til at forstå, hvor dine midler kommer fra, for at muliggøre forbrug over %@.";
+/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Vi gennemgår i øjeblikket dine dokumenter. Vi giver dig besked, når verificeringen er fuldført.";
-
+/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
 "You can continue while we verify your document in the background." = "Du kan fortsætte, mens vi verificerer dit dokument i baggrunden.";

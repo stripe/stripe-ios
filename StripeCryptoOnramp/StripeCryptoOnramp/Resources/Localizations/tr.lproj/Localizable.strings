@@ -1,77 +1,104 @@
+/* Error message shown when the user tries to create a Link account for an email that already has one */
+"A Link account already exists for this email. Log in instead." = "Bu e-posta için zaten bir Link hesabı mevcut. Bunun yerine giriş yapın.";
+/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
 "Add %ld documents" = "%ld belge ekleyin";
-
+/* Action to add exactly one uploaded document to a source of funds */
 "Add 1 document" = "1 belge ekleyin";
-
+/* Action to add documents for another source of funds */
 "Add documents" = "Belgeleri ekleyin";
-
+/* Error when camera access is denied or restricted during document collection */
 "Allow camera access in Settings to take a photo." = "Fotoğraf çekmek için Ayarlar'dan kamera erişimine izin verin.";
-
+/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
+"An error occurred while automatically signing in to your Link account. Please sign in manually." = "Link hesabınıza otomatik olarak giriş yapılırken bir hata oluştu. Lütfen manuel olarak giriş yapın.";
+/* Label and placeholder for a questionnaire answer field */
 "Answer" = "Yanıt";
-
+/* Action to open the system document picker to select a file */
 "Choose File…" = "Dosya Seç…";
-
+/* Action to open the system photo picker to select a photo */
 "Choose Photo…" = "Fotoğraf Seç…";
-
+/* Button asking the owner to open its support destination */
+"Contact support" = "Destekle iletişime geçin";
+/* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Bankamatik kartlarının kabul edilme olasılığı en yüksektir.";
-
+/* Label and picker title for a document's category */
 "Document type" = "Belge türü";
-
+/* Heading confirming a document was uploaded successfully */
 "Document uploaded successfully" = "Belge başarıyla yüklendi";
-
+/* Error message shown when the SDK needs a crypto customer ID before continuing */
+"Finish verifying your Link account before continuing." = "Devam etmeden önce Link hesabınızı doğrulamayı tamamlayın.";
+/* Label for the selected source of funds in the document editor */
 "Funds source" = "Fonların kaynağı";
-
+/* Explanation above the summary of source-of-funds documents. */
 "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "İşlemlerinizi nasıl fonluyorsunuz? Lütfen tüm kaynaklarınızı listeleyin. Örneğin, maaş, birikim, yatırım kazançları vb.";
-
+/* Error message shown when the provided phone number is not in the expected format */
+"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "Geçersiz telefon biçimi. Lütfen E.164 biçimini (ör. +12125551234) kullanın.";
+/* Explanation above the document upload control */
 "Make sure your document meets following requirements." = "Belgenizin aşağıdaki gereksinimleri karşıladığından emin olun.";
-
+/* Error message shown when there is no usable payment method selected */
+"No payment method is ready to use. Please collect a payment method and try again." = "Kullanıma hazır bir ödeme yöntemi yok. Lütfen bir ödeme yöntemi edinin ve tekrar deneyin.";
+/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
 "Please select your Apple Pay payment method again to continue." = "Devam etmek için lütfen Apple Pay ödeme yönteminizi tekrar seçin.";
-
+/* Instruction after an unavailable operation */
 "Please try again later." = "Lütfen daha sonra tekrar deneyin.";
-
+/* Error message shown when the SDK is missing required information from the server */
+"Required information was missing. Please try again later." = "Gerekli bilgiler eksik. Lütfen daha sonra tekrar deneyin.";
+/* Heading confirming documents were submitted for review */
 "Submitted for review" = "İncelemeye gönderildi";
-
+/* Action to open the system camera to take a photo of a document */
 "Take Photo…" = "Fotoğraf Çek…";
-
+/* Heading introducing source of funds collection */
 "Tell us about your source of funds" = "Bize fonlarınızın kaynağı hakkında bilgi verin";
-
+/* Message shown when a previous document has a requirement error */
 "There was a problem with your previous document. Please upload a new one." = "Önceki belgenizle ilgili bir sorun oluştu. Lütfen yeni bir belge yükleyin.";
-
+/* Error message shown when app attestation fails */
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Bir doğrulama hatası nedeniyle bu uygulama doğrulanamadı. Lütfen daha sonra tekrar deneyin veya sorun devam ederse geliştiriciyle iletişime geçin.";
-
+/* Error message shown when app attestation is not configured for crypto onramp */
 "This app couldn't be verified. Contact the app developer for help." = "Bu uygulama doğrulanamadı. Yardım için uygulama geliştiricisi ile iletişime geçin.";
-
+/* Validation error for a document exceeding the size limit */
 "This file is larger than %@. Choose a file that is %@ or smaller." = "Bu dosya %1$@ boyutundan daha büyük. %2$@ veya daha küçük bir dosya seçin.";
-
+/* Validation error when no document formats are available */
 "This file type isn’t supported." = "Bu dosya türü desteklenmiyor.";
-
+/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
 "This file type isn’t supported. Upload a %@ file." = "Bu dosya türü desteklenmiyor. Bir %@ dosyası yükleyin.";
-
+/* Error message shown when the wallet is not registered for crypto onramp */
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Bu cüzdan bulunamadı. Lütfen bir cüzdan seçin veya ekleyin ve tekrar deneyin.";
-
+/* Error message shown when the wallet network is not supported for crypto onramp */
 "This wallet network isn't supported. Please choose a different network." = "Bu cüzdan ağı desteklenmiyor. Lütfen farklı bir ağ seçin.";
-
+/* Error message shown when the wallet ownership challenge has expired */
 "This wallet verification request expired. Please try again." = "Bu cüzdan doğrulama talebinin süresi doldu. Lütfen tekrar deneyin.";
-
+/* Error message shown when the wallet ownership challenge is invalid */
 "This wallet verification request is invalid. Please try again." = "Bu cüzdan doğrulama talebi geçerli değil. Lütfen tekrar deneyin.";
-
+/* Error message shown when the wallet ownership challenge is invalid */
+"This wallet verification request is no longer valid. Please try again." = "Bu cüzdan doğrulama talebi artık geçerli değil. Lütfen tekrar deneyin.";
+/* Action to select an existing document for upload */
 "Upload document" = "Belge yükle";
-
+/* Heading introducing proof of address collection */
 "Upload your proof of address" = "Adres kanıtınızı yükleyin";
-
+/* Status after a document has uploaded successfully */
 "Uploaded" = "Yüklendi";
-
+/* Status while a document is uploading */
 "Uploading…" = "Yükleniyor…";
-
+/* Error message shown when the user's Link account is not verified */
+"Verify your Link account before continuing." = "Devam etmeden önce Link hesabınızı doğrulayın.";
+/* Error message shown when the submitted wallet ownership signature is invalid */
 "We couldn't verify ownership of this wallet. Please try again." = "Bu cüzdanın sahipliğini doğrulayamadık. Lütfen tekrar deneyin.";
-
+/* Error when a file provider cannot supply a document */
 "We couldn’t open this document. Please choose it again." = "Bu belgeyi açamadık. Lütfen belgeyi tekrar seçin.";
-
+/* Error after a document upload fails */
 "We couldn’t upload this file. Please try again." = "Bu dosyayı yükleyemedik. Lütfen tekrar deneyin.";
-
+/* Explanation introducing proof of address collection. */
 "We may request proof of address for larger transactions." = "Daha büyük işlemler için adres kanıtı talep edebiliriz.";
-
+/* Explanation introducing source of funds collection. */
 "We may request source of funds for larger transactions." = "Daha büyük işlemler için fonların kaynağını talep edebiliriz.";
-
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to confirm your address to enable spending over %@." = "%@ üzeri harcamaları etkinleştirmek için adresinizi onaylamamız gerekiyor.";
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We're required to understand where your funds come from to enable spending over %@." = "%@ üzeri harcamaları etkinleştirmek için fonlarınızın nereden geldiğini anlamamız gerekiyor.";
+/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We’re required to confirm your address to enable spending over %@." = "%@ üzeri harcamaları etkinleştirmek için adresinizi onaylamamız gerekiyor.";
+/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
+"We’re required to understand where your funds come from to enable spending over %@." = "%@ üzeri harcamaları etkinleştirmek için fonlarınızın nereden geldiğini anlamamız gerekiyor.";
+/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Belgelerinizi inceliyoruz. Doğrulama tamamlandığında sizi bilgilendireceğiz.";
-
+/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
 "You can continue while we verify your document in the background." = "Arka planda belgenizi doğrularken devam edebilirsiniz.";

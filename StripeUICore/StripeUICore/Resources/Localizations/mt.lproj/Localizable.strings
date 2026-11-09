@@ -1,153 +1,199 @@
+/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (mhux obbligatorja)";
-
+/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
+"%@ is incomplete." = "%@ mhux komplut.";
+/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
 "(not accepted)" = "(ma tistax tintuża)";
-
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "In-numru tal-kont";
-
+/* Caption for Address field on address form */
 "Address" = "Indirizz";
-
+/* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Indirizz linja 1";
-
+/* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "It-tieni linja tal-indirizz";
-
+/* Label of an address field in hk */
 "Area" = "Żona";
-
+/* Label for BLIK code number field on form */
 "BLIK code" = "Kodiċi BLIK";
-
+/* Placeholder for AU BECS BSB number */
 "BSB number" = "Numru BSB";
-
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Kont Bankarju";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
 "Bank account •••• %@" = "Kont tal-bank •••• %@";
-
+/* Billing address section title for card form entry. */
+"Billing address" = "Indirizz tal-ħruġ tal-fatturi";
+/* Label for a checkbox that makes customers billing address same as their shipping address */
 "Billing address is same as shipping" = "L-indirizz tal-fatturazzjoni huwa l-istess bħall-indirizz tal-posta";
-
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+/* Button title to cancel action in an alert */
 "Cancel" = "Ikkanċella";
-
+/* Label an input field to update card brand */
 "Card brand" = "Id-ditta tal-karta";
-
+/* Label for card number entry text field */
+"Card number" = "Numru tal-karta";
+/* Caption for City field on address form */
 "City" = "Belt";
-
+/* Accessibility label describing a field for entering a login code */
 "Code field" = "Taqsima tal-kodiċi";
-
+/* Label for Company field on form */
 "Company" = "Kumpanija";
-
+/* Text for alert message when user needs to confirm payment in their banking app */
+"Confirm the payment in your bank's app to complete the purchase." = "Biex tlesti x-xirja kkonferma l-pagament fl-app tal-bank tiegħek.";
+/* Text for continue button */
 "Continue" = "Kompli";
-
+/* Caption for Country field on address form */
 "Country" = "Pajjiż";
-
+/* Country selector and postal code entry form header title */
 "Country or region" = "Pajjiż jew reġjun";
-
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Kontea";
-
+/* Error message for empty date. */
+"Date is empty." = "Id-data hija battala.";
+/* Label for Date of birth field */
 "Date of Birth" = "Data tat-Twelid";
-
+/* Label of an address field */
 "Department" = "Dipartiment";
-
+/* Label for the district field on an address form */
 "District" = "Distrett";
-
+/* Label of an address field */
 "Do Si" = "Do Si";
-
+/* Used as the title for prompting the user if they want to close the sheet */
 "Do you want to close this form?" = "Trid tagħlaq din il-formola?";
-
+/* Done button title */
 "Done" = "Bil-lest";
-
+/* Accessibility hint for a text field */
 "Double tap to edit" = "Taptap biex tibdel";
-
+/* Button title to enter editing mode */
 "Edit" = "Editja";
-
+/* Label of an address field */
 "Eircode" = "Eircode";
-
+/* Caption for Email field on address form */
 "Email" = "Email";
-
+/* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirat";
-
+/* Text for error labels */
 "Error" = "Żball";
-
+/* Label for first (given) name field */
 "First" = "Ismek";
-
+/* Placeholder string for name entry field. */
 "Full name" = "Isem sħiħ";
-
+/* Error description for incomplete phone number */
 "Incomplete phone number" = "In-numru tat-telefon mhuwiex komplut";
-
+/* Error message when UPI ID is invalid */
+"Invalid UPI ID" = "L-ID UPI mhix tajba";
+/* Label of an address field */
 "Island" = "Gżira";
-
+/* Label for last (family) name field */
 "Last" = "L-aħħar";
-
+/* label for text field to enter card expiry */
+"MM / YY" = "XX / SS";
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Numru tal-mowbajl";
+/* Caption for Name field on address form */
 "Name" = "Isem";
-
+/* Label for Name on account field on form */
 "Name on account" = "Isem sid il-kont";
-
+/* No comment provided by engineer. */
 "OK" = "Tajjeb";
-
+/* Label of an address field */
 "Oblast" = "Oblast";
-
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "Oħrajn";
-
+/* Label of an address field */
 "Parish" = "Parroċċa";
-
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+/* Caption for Phone number field on address form */
 "Phone number" = "In-numru tal-mowbajl";
-
+/* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Kodiċi postali";
-
+/* Label of an address field */
 "Prefecture" = "Prefettura";
-
+/* Label of a disabled button while its action is processing */
 "Processing..." = "Qed jipproċessa...";
-
+/* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provinċja";
-
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Neħħi";
-
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Neħħi l-kont tal-bank";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Neħħi l-kont tal-bank li jispiċċa b'%@";
+/* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account?" = "Tixtieq tneħħi l-kont tal-bank?";
-
+/* Title for a button that when tapped removes a saved card. */
 "Remove card" = "Neħħi l-karta";
-
+/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
 "Search" = "Fittex";
-
+/* Message when a user is selecting a card brand in a dropdown */
 "Select card brand (optional)" = "Agħżel id-ditta tal-karta (mhux obbligatorja)";
-
+/* Error message for empty dropdown selection. */
 "Selection is empty." = "L-għażla hija vojta.";
-
+/* Heading for a generic error when an operation fails */
 "Something went wrong" = "Xi ħaġa marret ħażin";
-
+/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
 "Sort code" = "Il-kodiċi Sort";
-
+/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Stat";
-
+/* Button that submits the information entered on a screen */
 "Submit" = "Issottometti";
-
+/* Label of an address field */
 "Suburb" = "Subborg";
-
+/* Label of an address field */
 "Suburb or city" = "Subborg jew belt";
-
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Il-BSB li daħħalt mhux komplut.";
-
+/* An error message. */
 "The ID number you entered is incomplete." = "In-numru tal-ID li daħħalt mhuwiex komplut.";
-
+/* Error description for incomplete account number */
 "The account number you entered is incomplete." = "In-numru tal-kont li daħħalt mhux komplut.";
-
+/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
 "The sort code you entered is invalid." = "Il-kodiċi sort li daħħalt mhux tajjeb.";
-
+/* Label of an address field */
 "Town or city" = "Belt";
-
+/* Label for UPI ID number field on form */
+"UPI ID" = "ID UPI";
+/* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Ma jistax jaqra n-numru tat-telefown";
-
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Uża r-rotor biex tiftaħ il-ħoloq";
-
+/* Error message when BLIK code is invalid */
 "Your BLIK code is incomplete." = "Il-kodiċi BLIK li ktibt mhux komplut.";
-
+/* Error message when BLIK code is invalid */
 "Your BLIK code is invalid." = "Il-kodiċi BLIK li ktibt mhux tajjeb.";
-
+/* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP code is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
-
+/* Error message for when ZIP code in form is invalid (US only) */
 "Your ZIP code is invalid." = "Il-kodiċi ZIP tiegħek huwa invalidu.";
-
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "In-numru tal-karta tiegħek mhuwiex komplut.";
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "In-numru tal-karta tiegħek mhuwiex validu.";
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "Id-data ta' skadenza tal-karta tiegħek mhijiex kompluta.";
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Id-data ta' skadenza tal-karta tiegħek mhijiex valida.";
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Ix-xahar ta' skadenza tal-karta tiegħek mhuwiex validu.";
+/* Error message for card entry form when CVC is incomplete. */
+"Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhuwiex komplut.";
+/* Error message when email is invalid */
 "Your email is invalid." = "L-indirizz tal-email li daħħalt mhux tajjeb.";
-
+/* Used as the title for prompting the user if they want to close the sheet */
 "Your payment information will not be saved." = "L-informazzjoni tal-pagament tiegħek mhux se tiġi merfugħa.";
-
+/* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
-
+/* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
-
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Kodiċi Postali";
+/* accessibility label for text field */
+"expiration date" = "data ta' skadenza";

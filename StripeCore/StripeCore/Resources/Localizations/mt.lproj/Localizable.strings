@@ -1,75 +1,80 @@
+/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "Hemm debugger imqabbad mal-App.";
-
+/* The text for warning when an emulator is being used to run the application. */
 "An emulator is being used to run the App." = "Qed jintuża emulator biex titħaddem l-App.";
-
+/* An error message displayed when an error occurred. */
 "An error occurred. Please try again." = "Seħħ żball. Jekk jogħġbok erġa' pprova.";
-
+/* Button title to cancel action in an alert */
 "Cancel" = "Ikkanċella";
-
+/* An error message displayed when changing a card brand fails. */
 "Card brand was not updated. Please try again." = "Id-ditta tal-karti ma nbidlitx. Jekk jogħġbok erġa' pprova.";
-
+/* Text for close button */
 "Close" = "Agħlaq";
-
+/* Accessibility label for expandable text control to indicate text is hidden. */
 "Collapsed" = "Ikkollassat";
-
+/* Two factor authentication screen heading */
 "Confirm it's you" = "Ikkonferma li int min qed tgħid li int";
-
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not changed. Please try again." = "Il-metodu tal-pagament standard ma nbidilx. Jekk jogħġbok erġa' pprova.";
+/* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "Il-metodu tal-pagament standard ma nbidilx. Jekk jogħġbok erġa' pprova.";
-
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Daħħal id-dettalji tal-karta manwalment";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "Daħħal il-kodiċi mibgħut lil %@.";
-
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
 "Expanded" = "Estiż";
-
+/* Label shown when a network-related error has occured. */
 "Failed to connect" = "Ma rnexxilux jikkonnettja";
-
+/* Status while screen is loading */
 "Loading" = "Qed jillowdja";
-
+/* The no answer to a yes or no question. */
 "No" = "Le";
-
+/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "Erġa’ ibgħat il-kodiċi";
-
+/* Text for button to scan a credit card */
 "Scan Card" = "Skennja l-Karta";
-
+/* Button title to open camera to scan credit/debit card */
 "Scan card" = "Skennja l-karta";
-
+/* The title for the challenge response step of an authenticated checkout. */
 "Secure checkout" = "Checkout sigur";
-
+/* Indicates that a button is selected. */
 "Selected" = "Magħżul";
-
+/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "L-IBAN li daħħalt mhux tajjeb.";
-
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
 "The OS or the OS Version is not supported." = "L-OS jew il-Verżjoni tal-OS mhix appoġġjata.";
-
+/* The text for warning when a device is jailbroken. */
 "The device is jailbroken." = "L-apparat huwa jailbroken.";
-
+/* The text for warning when the integrity of the SDK has been tampered with. */
 "The integrity of the SDK has been tampered." = "L-integrità tal-SDK ġiet imbagħbsa.";
-
+/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Seħħ żball aħna u nipproċessaw il-karta tiegħek -- erġa' pprova wara ftit sekondi";
-
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Kien hemm żball mhux mistenni -- erġa' pprova wara ftit sekondi";
-
+/* Error description for when a network request times out. English value is as required by UL certification. */
 "Timeout" = "Timeout";
-
+/* Button to reload web view if we were unable to connect. */
 "Try again" = "Erġa' pprova";
-
+/* Indicates that a button is not selected. */
 "Unselected" = "Mhux magħżul";
-
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Aħna naħdmu ma' Stripe biex nivverifikaw id-dettalji tal-karta tiegħek. Stripe tista' tuża u taħżen id-dejta tiegħek skont il-politika tal-privatezza tagħha. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Sir af iktar</u></a>";
-
+/* The yes answer to a yes or no question. */
 "Yes" = "Iva";
-
+/* Error when the card has already expired */
 "Your card has expired" = "Il-karta tiegħek skadiet";
-
+/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "Il-karta tiegħek m'għaddietx";
-
+/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Ix-xahar tal-iskadenza tal-karta tiegħek mhux tajjeb";
-
+/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Is-sena tal-iskadenza tal-karta tiegħek mhix tajba";
-
+/* Error when the card number is not valid */
 "Your card's number is invalid" = "In-numru tal-karta tiegħek mhux tajjeb";
-
+/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux tajjeb";
-
+/* Error when customer's name is invalid */
 "Your name is invalid." = "L-isem li daħħalt mhux tajjeb.";
-
+/* Error message when a payment method gets declined. */
 "Your payment method was declined." = "Il-metodu tal-pagament tiegħek m'għaddiex.";
