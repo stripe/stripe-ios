@@ -112,11 +112,13 @@ extension STPAPIClient {
         paymentIntentClientSecret: String,
         clientDefaultPaymentMethod: String?,
         configuration: PaymentElementConfiguration,
-        customerProvider: CustomerProvider
+        customerProvider: CustomerProvider,
+        sendsMobileSessionConfig: Bool = false
     ) async throws -> (STPPaymentIntent, STPElementsSession) {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
+            additionalHeaders: sendsMobileSessionConfig ? MobileSession.configHeaders(for: configuration) : [:],
             parameters: makeElementsSessionsParams(
                 mode: .paymentIntentClientSecret(paymentIntentClientSecret),
                 epmConfiguration: configuration.externalPaymentMethodConfiguration,
@@ -142,11 +144,13 @@ extension STPAPIClient {
         setupIntentClientSecret: String,
         clientDefaultPaymentMethod: String?,
         configuration: PaymentElementConfiguration,
-        customerProvider: CustomerProvider
+        customerProvider: CustomerProvider,
+        sendsMobileSessionConfig: Bool = false
     ) async throws -> (STPSetupIntent, STPElementsSession) {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
+            additionalHeaders: sendsMobileSessionConfig ? MobileSession.configHeaders(for: configuration) : [:],
             parameters: makeElementsSessionsParams(
                 mode: .setupIntentClientSecret(setupIntentClientSecret),
                 epmConfiguration: configuration.externalPaymentMethodConfiguration,
@@ -172,7 +176,8 @@ extension STPAPIClient {
         withIntentConfig intentConfig: PaymentSheet.IntentConfiguration,
         clientDefaultPaymentMethod: String?,
         configuration: PaymentElementConfiguration,
-        customerProvider: CustomerProvider
+        customerProvider: CustomerProvider,
+        sendsMobileSessionConfig: Bool = false
     ) async throws -> STPElementsSession {
         let parameters = makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
@@ -186,6 +191,7 @@ extension STPAPIClient {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
+            additionalHeaders: sendsMobileSessionConfig ? MobileSession.configHeaders(for: configuration) : [:],
             parameters: parameters
         )
         try verifyCustomerSessionForPaymentSheet(customerProvider: customerProvider, elementsSession: elementsSession)

@@ -14,7 +14,7 @@ info "Executing tests (iPhone 12 mini @ iOS 16.4)..."
 
 xcodebuild clean test \
   -quiet \
-  -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
+  -workspace "Stripe.xcworkspace" \
   -scheme "Stripe3DS2" \
   -sdk "iphonesimulator" \
   -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=16.4"
@@ -26,4 +26,3 @@ if [[ "${exit_code}" != 0 ]]; then
 fi
 
 info "All good!"
-

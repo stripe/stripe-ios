@@ -24,6 +24,57 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
     // MARK: - Coordinator
 
+    func testConfirmWithoutPaymentMethodSendsShippingAddress() async throws {
+        // Given a free Checkout Session with a locally updated shipping address
+        let sessionJSON = CheckoutTestHelpers.makeSessionJSON([
+            "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 0),
+            "payment_status": "no_payment_required",
+            "customer_email": "jane@example.com",
+            "shipping_address_collection": ["allowed_countries": ["US"]],
+        ])
+        let checkout = try await makeCheckout(apiResponse: CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON))
+        try await checkout.updateShippingAddress(
+            name: "Jane Doe",
+            address: .init(
+                country: "US",
+                line1: "510 Townsend St",
+                line2: "Apt 2",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94103"
+            )
+        )
+        XCTAssertNil(checkout.session.paymentOption)
+        let confirmRequested = expectation(description: "Confirmation includes shipping without a payment method")
+        let responseJSON = sessionJSON.merging(["status": "complete"]) { _, new in new }
+        stub { request in
+            request.url?.path.hasSuffix("/checkout_client/\(checkout.session.id)/confirm") == true
+        } response: { request in
+            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+            XCTAssertNil(params["payment_method"])
+            XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") })
+            XCTAssertEqual(params["shipping[name]"], "Jane Doe")
+            XCTAssertEqual(params["shipping[address][line1]"], "510 Townsend St")
+            XCTAssertEqual(params["shipping[address][line2]"], "Apt 2")
+            XCTAssertEqual(params["shipping[address][city]"], "San Francisco")
+            XCTAssertEqual(params["shipping[address][state]"], "CA")
+            XCTAssertEqual(params["shipping[address][postal_code]"], "94103")
+            XCTAssertEqual(params["shipping[address][country]"], "US")
+            confirmRequested.fulfill()
+            return HTTPStubsResponse(jsonObject: responseJSON, statusCode: 200, headers: nil)
+        }
+
+        // When confirming without selecting a payment method
+        let result = await checkout.confirm(from: UIViewController())
+
+        // Then confirmation sends the full shipping address and completes
+        guard case .completed(.noPaymentRequired) = result else {
+            return XCTFail("Expected confirmation to complete without payment, got \(result)")
+        }
+        await fulfillment(of: [confirmRequested], timeout: 5)
+        XCTAssertEqual(checkout.session.status, .complete(.noPaymentRequired))
+    }
+
     func testSavedSEPARequiresMandateBeforeConfirmingWithoutPresentingPaymentElement() async throws {
         try await assertSavedSEPAMandate(accept: true)
     }

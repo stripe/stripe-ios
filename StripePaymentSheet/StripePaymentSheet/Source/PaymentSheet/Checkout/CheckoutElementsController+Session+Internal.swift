@@ -33,7 +33,7 @@ extension CheckoutElementsController.Session {
     }
 
     var amount: Int {
-        return Int(totals.total.minorUnitsAmount)
+        return totals.total.minorUnitsAmount
     }
 
     /// The currency associated with the session's amounts.

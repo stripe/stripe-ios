@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "K aplikácii je pripojený debugger.";
+
+"An emulator is being used to run the App." = "Na spustenie aplikácie sa používa emulátor.";
+
 "An error occurred. Please try again." = "Vyskytla sa chyba. Skúste to znova.";
+
+"Cancel" = "Zrušiť";
 
 "Card brand was not updated. Please try again." = "Značka karty nebola aktualizovaná. Skúste to znova.";
 
 "Close" = "Zatvoriť";
+
+"Collapsed" = "Zbalené";
 
 "Confirm it's you" = "Potvrdenie vašej totožnosti";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Zadajte kód odoslaný na telefónne číslo %@.";
 
+"Expanded" = "Rozbalené";
+
 "Failed to connect" = "Nepodarilo sa pripojiť";
+
+"Loading" = "Načítava sa";
+
+"No" = "Nie";
 
 "Resend code" = "Opätovne odoslať kód";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Naskenovať kartu";
 
+"Secure checkout" = "Bezpečná platba";
+
+"Selected" = "Vybraté";
+
 "The IBAN you entered is invalid." = "Zadaný IBAN je neplatný.";
+
+"The OS or the OS Version is not supported." = "OS alebo verzia OS nie je podporovaná.";
+
+"The device is jailbroken." = "Zariadenie má odstránené systémové obmedzenia.";
+
+"The integrity of the SDK has been tampered." = "Integrita SDK bola narušená.";
 
 "There was an error processing your card -- try again in a few seconds" = "Pri spracovaní vašej karty sa vyskytla chyba -- skúste znova o niekoľko sekúnd";
 
 "There was an unexpected error -- try again in a few seconds" = "Vyskytla sa neočakávaná chyba -- skúste znova o niekoľko sekúnd";
 
+"Timeout" = "Časový limit";
+
 "Try again" = "Skúsiť znova";
 
+"Unselected" = "Nevybraté";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Na overenie údajov o vašej karte používame službu Stripe. Spoločnosť Stripe môže používať a uchovávať vaše údaje v súlade so zásadami ochrany osobných údajov. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Ďalšie informácie</u></a>";
+
+"Yes" = "Áno";
 
 "Your card has expired" = "Platnosť vašej karty vypršala";
 

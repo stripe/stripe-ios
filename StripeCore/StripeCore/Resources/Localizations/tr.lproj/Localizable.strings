@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Uygulamaya bir hata ayıklayıcı bağlandı.";
+
+"An emulator is being used to run the App." = "Uygulamayı çalıştırmak için bir emülatör kullanılıyor.";
+
 "An error occurred. Please try again." = "Bir hata oluştu. Lütfen tekrar deneyin.";
+
+"Cancel" = "İptal et";
 
 "Card brand was not updated. Please try again." = "Kart markası güncellenmedi. Lütfen tekrar deneyin.";
 
 "Close" = "Kapat";
+
+"Collapsed" = "Daraltılmış";
 
 "Confirm it's you" = "Siz olduğunuzu teyit edin";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "%@’a gönderilen kodu girin.";
 
+"Expanded" = "Genişletilmiş";
+
 "Failed to connect" = "Bağlantı başarısız oldu";
+
+"Loading" = "Yükleniyor";
+
+"No" = "Hayır";
 
 "Resend code" = "Kodu tekrar gönder";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Kartı tara";
 
+"Secure checkout" = "Güvenli ödeme";
+
+"Selected" = "Seçili";
+
 "The IBAN you entered is invalid." = "Girdiğiniz IBAN geçersiz.";
+
+"The OS or the OS Version is not supported." = "İS veya İS Sürümü desteklenmiyor.";
+
+"The device is jailbroken." = "Cihaza jailbreak yapılmış.";
+
+"The integrity of the SDK has been tampered." = "SDK'nın bütünlüğüne müdahale edilmiş.";
 
 "There was an error processing your card -- try again in a few seconds" = "Kartınızla işlem yapılırken bir hata oluştu -- birazdan tekrar deneyin";
 
 "There was an unexpected error -- try again in a few seconds" = "Beklenmedik bir hata oluştu -- birazdan tekrar deneyin";
 
+"Timeout" = "Zaman aşımı";
+
 "Try again" = "Tekrar dene";
 
+"Unselected" = "Seçili değil";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Kart bilgilerinizi doğrulamak için Stripe kullanıyoruz. Stripe verilerinizi gizlilik politikasına uygun şekilde kullanabilir ve saklayabilir.<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Daha fazlasını öğrenin</u></a>";
+
+"Yes" = "Evet";
 
 "Your card has expired" = "Kartınızın kullanım süresi dolmuş";
 

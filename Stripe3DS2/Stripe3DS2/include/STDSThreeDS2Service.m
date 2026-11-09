@@ -17,7 +17,7 @@
 #import "STDSDirectoryServerCertificate.h"
 #import "STDSException+Internal.h"
 #import "STDSInvalidInputException.h"
-#import "STDSLocalizedString.h"
+@import StripeCore;
 #import "STDSJailbreakChecker.h"
 #import "STDSIntegrityChecker.h"
 #import "STDSNotInitializedException.h"
@@ -72,27 +72,27 @@ static NSString * const kUseULTestLOAParam = @"kUseULTestLOAParam";
     
     NSMutableArray *warnings = [NSMutableArray array];
     if ([STDSJailbreakChecker isJailbroken]) {
-        STDSWarning *jailbrokenWarning = [[STDSWarning alloc] initWithIdentifier:@"SW01" message:STDSLocalizedString(@"The device is jailbroken.", @"The text for warning when a device is jailbroken") severity:STDSWarningSeverityHigh];
+        STDSWarning *jailbrokenWarning = [[STDSWarning alloc] initWithIdentifier:@"SW01" message:STPThreeDS2Localization.jailbrokenWarning severity:STDSWarningSeverityHigh];
         [warnings addObject:jailbrokenWarning];
     }
 
     if (![STDSIntegrityChecker SDKIntegrityIsValid]) {
-        STDSWarning *integrityWarning = [[STDSWarning alloc] initWithIdentifier:@"SW02" message:STDSLocalizedString(@"The integrity of the SDK has been tampered.", @"The text for warning when the integrity of the SDK has been tampered with") severity:STDSWarningSeverityHigh];
+        STDSWarning *integrityWarning = [[STDSWarning alloc] initWithIdentifier:@"SW02" message:STPThreeDS2Localization.tamperedWarning severity:STDSWarningSeverityHigh];
         [warnings addObject:integrityWarning];
     }
 
     if ([STDSSimulatorChecker isRunningOnSimulator]) {
-        STDSWarning *simulatorWarning = [[STDSWarning alloc] initWithIdentifier:@"SW03" message:STDSLocalizedString(@"An emulator is being used to run the App.", @"The text for warning when an emulator is being used to run the application.") severity:STDSWarningSeverityHigh];
+        STDSWarning *simulatorWarning = [[STDSWarning alloc] initWithIdentifier:@"SW03" message:STPThreeDS2Localization.emulatorWarning severity:STDSWarningSeverityHigh];
         [warnings addObject:simulatorWarning];
     }
 
     if ([STDSDebuggerChecker processIsCurrentlyAttachedToDebugger]) {
-        STDSWarning *debuggerWarning = [[STDSWarning alloc] initWithIdentifier:@"SW04" message:STDSLocalizedString(@"A debugger is attached to the App.", @"The text for warning when a debugger is currently attached to the process.") severity:STDSWarningSeverityMedium];
+        STDSWarning *debuggerWarning = [[STDSWarning alloc] initWithIdentifier:@"SW04" message:STPThreeDS2Localization.debuggerWarning severity:STDSWarningSeverityMedium];
         [warnings addObject:debuggerWarning];
     }
     
     if (![STDSOSVersionChecker isSupportedOSVersion]) {
-        STDSWarning *versionWarning = [[STDSWarning alloc] initWithIdentifier:@"SW05" message:STDSLocalizedString(@"The OS or the OS Version is not supported.", "The text for warning when the SDK is running on an unsupported OS or OS version.") severity:STDSWarningSeverityHigh];
+        STDSWarning *versionWarning = [[STDSWarning alloc] initWithIdentifier:@"SW05" message:STPThreeDS2Localization.unsupportedOSWarning severity:STDSWarningSeverityHigh];
         [warnings addObject:versionWarning];
     }
     

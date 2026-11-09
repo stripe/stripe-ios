@@ -387,7 +387,7 @@ final class CheckoutCartViewController: UIViewController {
         nameLabel.numberOfLines = 0
 
         let unitAmountLabel = UILabel()
-        unitAmountLabel.text = "\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)"
+        unitAmountLabel.text = "\(item.unitAmountDecimal?.amount ?? item.unitAmount.amount) × \(item.quantity)"
         unitAmountLabel.font = .preferredFont(forTextStyle: .subheadline)
         unitAmountLabel.textColor = .secondaryLabel
         unitAmountLabel.accessibilityIdentifier = "checkout_line_item_amount"
