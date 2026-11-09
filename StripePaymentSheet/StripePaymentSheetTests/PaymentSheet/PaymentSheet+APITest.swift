@@ -15,12 +15,13 @@ import XCTest
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripeUICore
 
+@MainActor
 class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     var apiClient: STPAPIClient!
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
         self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
     }
     lazy var paymentHandler: STPPaymentHandler = {
@@ -1770,7 +1771,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     // MARK: - Set default payment method tests
 
-    @MainActor
     func testSetsNewlySavedPMAsDefault_PI() async throws {
         // A PI w/o SFU shouldn't set its PM as default
         func makePaymentIntent() async throws -> STPPaymentIntent {

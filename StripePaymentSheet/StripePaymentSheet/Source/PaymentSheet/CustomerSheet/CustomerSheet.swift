@@ -16,6 +16,7 @@ internal enum InternalCustomerSheetResult {
     case failed(error: Error)
 }
 
+@MainActor @preconcurrency
 public class CustomerSheet {
     private enum IntegrationType {
         case customerAdapter
@@ -121,10 +122,8 @@ public class CustomerSheet {
 
     public func present(from presentingViewController: UIViewController) async -> CustomerSheetResult {
         await withCheckedContinuation { continuation in
-            Task { @MainActor in
-                present(from: presentingViewController) { result in
-                    continuation.resume(returning: result)
-                }
+            present(from: presentingViewController) { result in
+                continuation.resume(returning: result)
             }
         }
     }
@@ -329,7 +328,7 @@ extension CustomerSheet: LoadingViewControllerDelegate {
 }
 
 @_spi(InternalOnlyAPI) extension CustomerSheet: STPAnalyticsProtocol {
-    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier = "CustomerSheet"
+    @_spi(InternalOnlyAPI) public nonisolated static let stp_analyticsIdentifier = "CustomerSheet"
 }
 
 extension StripeCustomerAdapter {

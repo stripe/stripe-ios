@@ -1252,12 +1252,11 @@ private func PresentPaymentSheet(
     // disable app-to-app for UI tests
     configuration.returnURL = isUITest ? nil : PlaygroundViewModel.returnUrl
 
-    let paymentSheet = PaymentSheet(
-        paymentIntentClientSecret: paymentIntent.clientSecret,
-        configuration: configuration
-    )
-
     DispatchQueue.main.async {
+        let paymentSheet = PaymentSheet(
+            paymentIntentClientSecret: paymentIntent.clientSecret,
+            configuration: configuration
+        )
         let topMostViewController = UIViewController.topMostViewController()!
         paymentSheet.present(
             from: topMostViewController,
