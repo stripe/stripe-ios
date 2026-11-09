@@ -33,6 +33,43 @@ final class PaymentElementTest: XCTestCase {
         super.tearDown()
     }
 
+    func testEmbeddedPresentationUsesCurrentScreen() async throws {
+        // Given Checkout has resolved a presenter on its first screen
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let element = checkout.getPaymentElement()
+        let embedded = element.embeddedPaymentElement
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let previousKeyWindow = scene.windows.first { $0.isKeyWindow }
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        let firstViewController = UIViewController()
+        window.rootViewController = firstViewController
+        window.makeKeyAndVisible()
+        defer {
+            window.isHidden = true
+            previousKeyWindow?.makeKeyAndVisible()
+        }
+        XCTAssertTrue(embedded.resolvedPresentingViewController === firstViewController)
+
+        // When the payment element moves to another screen and is about to present again
+        let secondViewController = UIViewController()
+        window.rootViewController = secondViewController
+
+        // Then it resolves the current presenter instead of retaining the dismissed screen
+        XCTAssertTrue(embedded.resolvedPresentingViewController === secondViewController)
+        XCTAssertTrue(embedded.presentingViewController === secondViewController)
+
+        // Explicit configuration still takes precedence until it is cleared
+        embedded.presentingViewController = firstViewController
+        XCTAssertTrue(embedded.resolvedPresentingViewController === firstViewController)
+        embedded.presentingViewController = nil
+        XCTAssertTrue(embedded.resolvedPresentingViewController === secondViewController)
+    }
+
     func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
         // Given Checkout billing defaults
         var checkoutConfiguration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")

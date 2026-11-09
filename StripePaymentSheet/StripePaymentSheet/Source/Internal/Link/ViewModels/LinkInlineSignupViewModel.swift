@@ -398,6 +398,7 @@ final class LinkInlineSignupViewModel {
         allowsDefaultOptIn: Bool,
         signupOptInFeatureEnabled: Bool,
         signupOptInInitialValue: Bool,
+        previouslyOptedOut: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
         country: String? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper? = nil
@@ -426,6 +427,7 @@ final class LinkInlineSignupViewModel {
         self.country = country
 
         self.saveCheckboxChecked = {
+            guard !previouslyOptedOut else { return false }
             switch mode {
             case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
                 return false

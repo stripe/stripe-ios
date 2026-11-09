@@ -858,6 +858,100 @@ class EmbeddedPaymentElementTest: XCTestCase {
         }
     }
 
+    func testApplyLoadResultPreservesCardAfterOptingOutOfLink() async throws {
+        try await assertLinkOptOutSurvivesReload(signupOptInFeatureEnabled: false)
+    }
+
+    func testApplyLoadResultPreservesLinkSignupOptOutAndMandate() async throws {
+        try await assertLinkOptOutSurvivesReload(signupOptInFeatureEnabled: true)
+    }
+
+    private func assertLinkOptOutSurvivesReload(signupOptInFeatureEnabled: Bool) async throws {
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        // Given a Checkout card form with a prefilled email and default Link opt-in
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        LinkAccountContext.shared.account = ._testValue(email: "jenny.rosen@example.com", isRegistered: false)
+        var config = EmbeddedPaymentElement.Configuration()
+        config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        config.defaultBillingDetails.email = "jenny.rosen@example.com"
+        let elementsSession = STPElementsSession._testValue(
+            orderedPaymentMethodTypes: [.card, .link],
+            countryCode: "US",
+            linkSettings: .decodedObject(fromAPIResponse: [
+                "link_funding_sources": ["CARD"],
+                "link_sign_up_opt_in_feature_enabled": signupOptInFeatureEnabled,
+                "link_sign_up_opt_in_initial_value": true,
+            ]),
+            flags: ["elements_mobile_force_setup_future_use_behavior_and_new_mandate_text": signupOptInFeatureEnabled]
+        )
+        func makeLoadResult(amount: Int) -> PaymentSheetLoader.LoadResult {
+            let session = CheckoutTestHelpers.makeSession([
+                "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: amount),
+            ])
+            return .init(
+                intent: .checkout(session.makePublicSession()),
+                elementsSession: elementsSession,
+                savedPaymentMethods: [],
+                paymentMethodTypes: [.stripe(.card)],
+                paymentMethodMessagingPromotionsHelper: nil,
+                paymentMethodOrientation: .vertical,
+                customerProvider: CustomerProvider(customer: nil)
+            )
+        }
+        let sut = EmbeddedPaymentElement(
+            configuration: config,
+            loadResult: makeLoadResult(amount: 1000),
+            analyticsHelper: ._testValue()
+        )
+        sut.presentingViewController = UIViewController()
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        )
+        let cardForm = try XCTUnwrap(sut.formCache[.stripe(.card)])
+        let signup = try XCTUnwrap(cardForm.getAllUnwrappedSubElements().compactMap { $0 as? LinkInlineSignupElement }.first)
+        XCTAssertEqual(signup.viewModel.mode, signupOptInFeatureEnabled ? .signupOptIn : .checkboxWithDefaultOptIn)
+        XCTAssertTrue(signup.isChecked)
+        XCTAssertFalse(signup.viewModel.phoneNumber?.isComplete ?? false)
+
+        // When the customer opts out and selects a completed card
+        signup.viewModel.saveCheckboxChecked = false
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1240")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("94103")
+        cardForm.getMandateElement()?.mandateTextView.handleEvent(.viewDidAppear)
+        try XCTUnwrap(sut.selectedFormViewController).didTapPrimaryButton()
+        XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
+
+        // ...and a shipping update reloads Checkout with a different total
+        sut.applyLoadResult(makeLoadResult(amount: 1100), confirmationChallenge: nil, configuration: config)
+
+        // Then the card remains selected and the rebuilt form preserves the opt-out
+        XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
+        let restoredForm = try XCTUnwrap(sut.formCache[.stripe(.card)])
+        XCTAssertFalse(cardForm === restoredForm)
+        let restoredSignup = try XCTUnwrap(restoredForm.getAllUnwrappedSubElements().compactMap { $0 as? LinkInlineSignupElement }.first)
+        XCTAssertEqual(restoredSignup.viewModel.mode, signup.viewModel.mode)
+        XCTAssertFalse(restoredSignup.isChecked)
+        XCTAssertEqual(restoredSignup.action, .continueWithoutLink)
+        XCTAssertEqual(restoredForm.getTextFieldElement("Card number").text, "4242424242424242")
+        XCTAssertEqual(restoredForm.getTextFieldElement("CVC").text, "123")
+        XCTAssertNotNil(sut.selectedFormViewController?.selectedPaymentOption)
+        if signupOptInFeatureEnabled {
+            let expectedMandate = PaymentSheetFormFactory.makeMandateText(
+                variant: .updated(shouldSignUpToLink: false),
+                merchantName: config.merchantDisplayName
+            )
+            XCTAssertEqual(restoredForm.getMandateText()?.string, expectedMandate.string)
+        }
+
+        // ...and another reload keeps the same selection and opt-out
+        sut.applyLoadResult(makeLoadResult(amount: 1200), confirmationChallenge: nil, configuration: config)
+        XCTAssertEqual(sut.paymentOption?.label, "•••• 4242")
+        XCTAssertNotNil(sut.selectedFormViewController?.selectedPaymentOption)
+    }
+
     func testCancelingFormResetsPaymentOption() async throws {
         // Create our EmbeddedPaymentElement
         let sut = try await EmbeddedPaymentElement.create(

@@ -33,6 +33,8 @@ final class IntentConfirmParams {
     var saveForFutureUseCheckboxState: SaveForFutureUseCheckboxState = .hidden
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
+    /// Whether the customer continued with the Link signup checkbox unchecked. Used when rebuilding the form.
+    var didOptOutOfLink: Bool = false
 
     var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
     var instantDebitsLinkedBank: InstantDebitsLinkedBank?

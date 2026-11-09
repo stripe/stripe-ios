@@ -21,7 +21,17 @@ public final class EmbeddedPaymentElement {
     }
 
     /// A view controller to present on.
-    public var presentingViewController: UIViewController?
+    public var presentingViewController: UIViewController? {
+        get { configuredPresentingViewController ?? automaticallyResolvedPresentingViewController }
+        set {
+            configuredPresentingViewController = newValue
+            automaticallyResolvedPresentingViewController = nil
+        }
+    }
+
+    private var configuredPresentingViewController: UIViewController?
+    // Keep the automatic presenter available for dismissal without treating it as explicit configuration.
+    private weak var automaticallyResolvedPresentingViewController: UIViewController?
 
     /// This contains the `configuration` you passed in to `create`.
     /// - Note: `internal(set)` because checkout session updates may apply address overrides to the configuration.
@@ -461,10 +471,10 @@ extension EmbeddedPaymentElement {
         return presentingViewController?.presentedViewController?.bottomSheetController != nil
     }
 
-    /// Returns the explicitly configured presenting view controller or tries to find one if nil.
+    /// Returns the configured presenter, or resolves the current visible view controller for this presentation.
     var resolvedPresentingViewController: UIViewController? {
-        guard presentingViewController == nil else {
-            return presentingViewController
+        if let configuredPresentingViewController {
+            return configuredPresentingViewController
         }
 
         guard let visibleViewController = UIWindow.visibleViewController else {
@@ -481,7 +491,7 @@ extension EmbeddedPaymentElement {
             return nil
         }
 
-        presentingViewController = visibleViewController
+        automaticallyResolvedPresentingViewController = visibleViewController
         return visibleViewController
     }
 }
