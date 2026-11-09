@@ -97,6 +97,7 @@ extension ExpressCheckoutElement.Configuration {
         params["apple_pay_button_type"] = applePayConfiguration.buttonType?.rawValue
         params["max_columns"] = appearance.buttonLayout.maxColumns
         params["max_rows"] = appearance.buttonLayout.maxRows
+        params["corner_radius"] = appearance.cornerRadius
         return params
     }
 }
