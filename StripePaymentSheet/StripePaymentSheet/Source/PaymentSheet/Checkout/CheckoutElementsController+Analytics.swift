@@ -67,7 +67,7 @@ extension CheckoutElementsController.Configuration {
 private extension PaymentElement.Configuration {
     func checkoutAnalyticsPayload(applePayMerchantId: String?) -> [String: Any] {
         var params: [String: Any] = [
-            "apple_pay_visibility": (applePayMerchantId == nil || applePayConfiguration.display == .never) ? "never" : "automatic",
+            "apple_pay_display": applePayConfiguration.display.rawValue,
             "link_display": linkConfiguration?.display.rawValue ?? "automatic",
             "save_payment_method_opt_in_behavior": savePaymentMethodOptInBehavior.description,
             "appearance": appearance.analyticPayload,
@@ -91,7 +91,6 @@ private extension PaymentElement.Configuration {
 extension ExpressCheckoutElement.Configuration {
     func checkoutAnalyticsPayload(applePayMerchantId: String?) -> [String: Any] {
         var params: [String: Any] = [
-            "apple_pay_visibility": applePayMerchantId == nil ? "never" : "automatic",
             "link_visibility": linkConfiguration.display.rawValue,
             "button_theme": appearance.buttonTheme.rawValue,
         ]

@@ -56,7 +56,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             analytic.params["ece_config"] as? [String: String],
             [
                 "link_visibility": "automatic",
-                "apple_pay_visibility": "automatic",
                 "button_theme": "automatic",
             ]
         )
