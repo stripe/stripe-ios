@@ -39,6 +39,9 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".
 
+### CryptoOnramp (Alpha)
+* [Fixed] Fixed a build failure with Xcode 27.0 when linking StripeCryptoOnramp.
+
 ## 26.16.0 2026-11-02
 ### PaymentSheet
 * [Added] The Link auth flow now natively supports email OTP and multi-factor authentication (MFA) enabled accounts.
