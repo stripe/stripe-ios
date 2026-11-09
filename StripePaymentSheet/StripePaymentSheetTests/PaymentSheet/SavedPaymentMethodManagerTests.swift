@@ -196,7 +196,10 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "cuss_test")
 
-        let listPaymentMethodsExpectation = stubListPaymentMethods(customerId: "cus_test123",
+        // The customer ID resolved from the Elements Session (the fixture's `customer_session.customer`,
+        // "cus_123") is authoritative, matching Android/web, even though the configuration above explicitly
+        // supplies a different ID ("cus_test123").
+        let listPaymentMethodsExpectation = stubListPaymentMethods(customerId: "cus_123",
                                                                    ephemeralKey: "ek_12345")
 
         let detachExpectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),

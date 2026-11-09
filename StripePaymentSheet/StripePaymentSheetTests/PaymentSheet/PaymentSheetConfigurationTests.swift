@@ -97,20 +97,30 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssertEqual(key, "ek_11223344")
     }
 
-    func testResolvedID_prefersExplicitID() {
+    func testResolvedID_customerSession_prefersSessionResolvedIDOverExplicitID() {
+        // Matches Android/web: the server-resolved customer is authoritative for CustomerSession integrations,
+        // even if a (possibly stale) explicit ID was also provided.
         let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", customerSessionClientSecret: "cuss_12345")
         let resolvedID = customerConfig.resolvedID(elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"))
+        XCTAssertEqual(resolvedID, "cus_456")
+    }
+
+    func testResolvedID_customerSession_fallsBackToExplicitIDWhenElementsSessionUnavailable() {
+        // Before the Elements Session has loaded, fall back to the explicit ID (if any) so pre-fetch usages
+        // (e.g. the default payment method request param) still work.
+        let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", customerSessionClientSecret: "cuss_12345")
+        let resolvedID = customerConfig.resolvedID(elementsSession: nil)
         XCTAssertEqual(resolvedID, "cus_12345")
     }
 
-    func testResolvedID_fallsBackToElementsSessionWhenIDOmitted() {
+    func testResolvedID_customerSession_fallsBackToElementsSessionWhenIDOmitted() {
         let customerConfig = PaymentSheet.CustomerConfiguration(customerSessionClientSecret: "cuss_12345")
         let resolvedID = customerConfig.resolvedID(elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"))
         XCTAssertEqual(resolvedID, "cus_456")
     }
 
-    func testResolvedID_noFallbackForEphemeralKeyWhenIDOmitted() {
-        // The ephemeral key path always has an explicit ID, so this exercises the `nil`-id branch defensively.
+    func testResolvedID_ephemeralKey_alwaysUsesExplicitID() {
+        // The legacy ephemeral key path always uses the explicit ID, regardless of the Elements Session.
         let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", ephemeralKeySecret: "ek_12345")
         let resolvedID = customerConfig.resolvedID(elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"))
         XCTAssertEqual(resolvedID, "cus_12345")

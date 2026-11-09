@@ -29,9 +29,10 @@ class CustomerSessionAdapter {
              elementsSession: STPElementsSession,
              timeProvider: @escaping () -> Date = Date.init) {
             self.customerSessionClientSecret = customerSessionClientSecret
-            // Prefer the explicitly provided customer ID, falling back to the customer resolved
-            // server-side from the CustomerSession when the merchant didn't provide one.
-            self.customerId = customerSessionClientSecret.customerId ?? elementsSession.customer?.customerSession.customer
+            // The customer resolved server-side from the CustomerSession is authoritative, matching the
+            // Android and web SDKs. Only fall back to the explicitly provided customer ID if the response
+            // is missing it.
+            self.customerId = elementsSession.customer?.customerSession.customer ?? customerSessionClientSecret.customerId
             self.cacheDate = timeProvider()
             self.apiKey = apiKey
             self.timeProvider = timeProvider

@@ -365,16 +365,15 @@ extension PaymentSheet {
                       "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
         }
 
-        /// Resolves the customer ID, preferring the explicitly provided `id` and otherwise falling back to
-        /// the customer resolved server-side from the CustomerSession, once available.
+        /// Resolves the customer ID. For CustomerSession integrations, this matches the Android and web SDKs:
+        /// the customer resolved server-side from the CustomerSession is authoritative once available, even if
+        /// an `id` was also explicitly provided. The explicit `id` is only used as a fallback before the
+        /// Elements Session has loaded, and always for the legacy ephemeral key integration.
         func resolvedID(elementsSession: STPElementsSession?) -> String? {
-            if let id {
+            guard case .customerSession = customerAccessProvider else {
                 return id
             }
-            guard case .customerSession = customerAccessProvider else {
-                return nil
-            }
-            return elementsSession?.customer?.customerSession.customer
+            return elementsSession?.customer?.customerSession.customer ?? id
         }
     }
     /// TermsDisplay controls how mandates or other legal agreements are displayed. Use 'never' to never display legal agreements.

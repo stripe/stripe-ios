@@ -73,7 +73,9 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         // Then the same credentials are returned without calling the provider or API again
         XCTAssertEqual(providerCallCount, 1)
         XCTAssertEqual(elementsSessionRequestCount, 1)
-        XCTAssertEqual(cachedSession.customerId, "cus_123")
+        // The customer ID resolved from the server response (the fixture's `customer_session.customer`) is
+        // authoritative, matching Android/web, even though the provider explicitly supplied "cus_123".
+        XCTAssertEqual(cachedSession.customerId, "cus_123456")
         XCTAssertEqual(cachedSession.customerSessionClientSecret.clientSecret, "cuss_123")
         XCTAssertEqual(cachedSession.apiKey, originalSession.apiKey)
         XCTAssertEqual(cachedSession.cacheDate, originalSession.cacheDate)
@@ -101,7 +103,9 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         // Then the API is called again using the cached customer session without calling the provider
         XCTAssertEqual(providerCallCount, 1)
         XCTAssertEqual(elementsSessionRequestCount, 2)
-        XCTAssertEqual(cachedSession.customerId, "cus_123")
+        // The customer ID resolved from the server response (the fixture's `customer_session.customer`) is
+        // authoritative, matching Android/web, even though the provider explicitly supplied "cus_123".
+        XCTAssertEqual(cachedSession.customerId, "cus_123456")
         XCTAssertEqual(cachedSession.customerSessionClientSecret.clientSecret, "cuss_123")
         XCTAssertEqual(cachedSession.apiKey, originalSession.apiKey)
         XCTAssertEqual(cachedSession.cacheDate, originalSession.cacheDate)
