@@ -740,6 +740,176 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
     }
 }
 
+class STPPaymentHandlerServerDrivenBehaviorTests: XCTestCase {
+
+    func testProcessingIsSuccessCompletesWithSuccess() {
+        // Given an untyped PM whose behavior says processing is success
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        paymentHandler.serverDrivenPaymentMethodBehaviors = ["demo_pay": .init(processingIsSuccess: true, pollingDuration: nil)]
+        let paymentIntent = makePaymentIntent(paymentMethodType: "demo_pay", status: .processing)
+        var callCount = 0
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            completion(paymentIntent, nil)
+        }
+
+        // When the intent is retrieved after the next action
+        let (status, error) = retrieveAndCheck(paymentHandler: paymentHandler, paymentIntent: paymentIntent)
+
+        // Then it succeeds without polling
+        XCTAssertEqual(status, .succeeded)
+        XCTAssertNil(error)
+        XCTAssertEqual(callCount, 1)
+    }
+
+    func testProcessingIsNotSuccessFails() {
+        // Given an untyped PM whose behavior says processing is not success
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        paymentHandler.serverDrivenPaymentMethodBehaviors = ["demo_pay": .init(processingIsSuccess: false, pollingDuration: nil)]
+        let paymentIntent = makePaymentIntent(paymentMethodType: "demo_pay", status: .processing)
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            completion(paymentIntent, nil)
+        }
+
+        // When the intent stays processing until the polling budget runs out
+        let (status, error) = retrieveAndCheck(
+            paymentHandler: paymentHandler,
+            paymentIntent: paymentIntent,
+            pollingBudget: PollingBudget(startDate: Date(), duration: 1)
+        )
+
+        // Then it fails
+        XCTAssertEqual(status, .failed)
+        XCTAssertEqual(error?.code, STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue)
+    }
+
+    func testRequiresActionPollsThenSucceeds() {
+        // Given an untyped PM with a post-redirect polling duration
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        paymentHandler.serverDrivenPaymentMethodBehaviors = ["demo_pay": .init(processingIsSuccess: false, pollingDuration: 5)]
+        let paymentIntent = makePaymentIntent(paymentMethodType: "demo_pay", status: .requiresAction)
+        let succeededPaymentIntent = makePaymentIntent(paymentMethodType: "demo_pay", status: .succeeded)
+        var callCount = 0
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            completion(callCount >= 2 ? succeededPaymentIntent : paymentIntent, nil)
+        }
+
+        // When the intent is still requires_action on the first retrieve
+        let (status, error) = retrieveAndCheck(paymentHandler: paymentHandler, paymentIntent: paymentIntent)
+
+        // Then it polls and succeeds once the intent updates
+        XCTAssertEqual(status, .succeeded)
+        XCTAssertNil(error)
+        XCTAssertEqual(callCount, 2)
+    }
+
+    func testRequiresActionPollingTimesOutAndCancels() {
+        // Given an untyped PM with a short post-redirect polling duration
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        paymentHandler.serverDrivenPaymentMethodBehaviors = ["demo_pay": .init(processingIsSuccess: false, pollingDuration: 1)]
+        let paymentIntent = makePaymentIntent(paymentMethodType: "demo_pay", status: .requiresAction)
+        var callCount = 0
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            completion(paymentIntent, nil)
+        }
+
+        // When the intent never leaves requires_action
+        let (status, error) = retrieveAndCheck(paymentHandler: paymentHandler, paymentIntent: paymentIntent)
+
+        // Then it polls until the budget runs out, then cancels
+        XCTAssertEqual(status, .canceled)
+        XCTAssertNil(error)
+        XCTAssertGreaterThan(callCount, 1)
+    }
+
+    func testRequiresActionWithoutBehaviorCancelsWithoutPolling() {
+        // Given an untyped PM with no behavior entry
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let paymentIntent = makePaymentIntent(paymentMethodType: "demo_pay", status: .requiresAction)
+        var callCount = 0
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            completion(paymentIntent, nil)
+        }
+
+        // When the intent is still requires_action
+        let (status, _) = retrieveAndCheck(paymentHandler: paymentHandler, paymentIntent: paymentIntent)
+
+        // Then it cancels immediately, as before
+        XCTAssertEqual(status, .canceled)
+        XCTAssertEqual(callCount, 1)
+    }
+
+    func testKnownTypeIgnoresBehaviors() {
+        // Given a behavior entry for a known type that says processing is success
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        paymentHandler.serverDrivenPaymentMethodBehaviors = ["amazon_pay": .init(processingIsSuccess: true, pollingDuration: nil)]
+        let paymentIntent = makePaymentIntent(paymentMethodType: "amazon_pay", status: .processing)
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            completion(paymentIntent, nil)
+        }
+
+        // When the intent stays processing
+        let (status, error) = retrieveAndCheck(
+            paymentHandler: paymentHandler,
+            paymentIntent: paymentIntent,
+            pollingBudget: PollingBudget(startDate: Date(), duration: 1)
+        )
+
+        // Then the native behavior applies and it fails
+        XCTAssertEqual(status, .failed)
+        XCTAssertEqual(error?.code, STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue)
+    }
+
+    // MARK: - Helpers
+
+    private func makePaymentIntent(paymentMethodType: String, status: STPPaymentIntentStatus) -> STPPaymentIntent {
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: [paymentMethodType],
+            status: status,
+            paymentMethod: ["id": "pm_test", "type": paymentMethodType, "created": Date().timeIntervalSince1970]
+        )
+        let responseDict = paymentIntent.allResponseFields.merging([
+            "next_action": [
+                "type": "redirect_to_url",
+                "redirect_to_url": ["url": "https://stripe.com", "return_url": "payments-example://stripe-redirect"],
+            ],
+        ]) { _, new in new }
+        return STPPaymentIntent.decodedObject(fromAPIResponse: responseDict)!
+    }
+
+    private func retrieveAndCheck(
+        paymentHandler: STPPaymentHandler,
+        paymentIntent: STPPaymentIntent,
+        pollingBudget: PollingBudget? = nil
+    ) -> (STPPaymentHandlerActionStatus?, NSError?) {
+        let expectation = expectation(description: "Action completes")
+        var result: (STPPaymentHandlerActionStatus?, NSError?) = (nil, nil)
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: paymentHandler.apiClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            result = (status, error)
+            expectation.fulfill()
+        }
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction, pollingBudget: pollingBudget)
+        wait(for: [expectation], timeout: 10)
+        return result
+    }
+}
+
 // MARK: - Mock Classes
 class STPAPIClientPollingMock: STPAPIClient {
     var retrievePaymentIntentHandler: ((String, [String]?, @escaping STPPaymentIntentCompletionBlock) -> Void)?
@@ -761,6 +931,12 @@ extension STPPaymentHandlerTests: STPAuthenticationContext {
 }
 
 extension STPPaymentHandlerStubbedTests: STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        return UIViewController()
+    }
+}
+
+extension STPPaymentHandlerServerDrivenBehaviorTests: STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
     }

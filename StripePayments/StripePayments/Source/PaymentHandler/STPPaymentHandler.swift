@@ -156,6 +156,23 @@ public class STPPaymentHandler: NSObject {
     /// Defaults to `STPThreeDSCustomizationSettings()`.
     @objc public var threeDSCustomizationSettings: STPThreeDSCustomizationSettings
 
+    /// How to treat the intent after a next action for a payment method type the SDK doesn't model.
+    @_spi(InternalOnlyAPI) public struct ServerDrivenPaymentMethodBehavior {
+        /// Whether a `processing` PaymentIntent counts as a successful payment.
+        public let processingIsSuccess: Bool
+        /// How long to poll an intent that is still `requires_action` after a redirect, or nil to not poll.
+        public let pollingDuration: TimeInterval?
+
+        public init(processingIsSuccess: Bool, pollingDuration: TimeInterval?) {
+            self.processingIsSuccess = processingIsSuccess
+            self.pollingDuration = pollingDuration
+        }
+    }
+
+    /// Behaviors keyed by raw payment method type (e.g. "demo_pay").
+    /// Only consulted when the intent's payment method type is `.unknown`, so known types are unaffected.
+    @_spi(InternalOnlyAPI) public var serverDrivenPaymentMethodBehaviors: [String: ServerDrivenPaymentMethodBehavior] = [:]
+
     internal var _simulateAppToAppRedirect: Bool = false
 
     /// When this flag is enabled, STPPaymentHandler will confirm certain PaymentMethods using
@@ -237,8 +254,8 @@ public class STPPaymentHandler: NSObject {
                 let successIntentState =
                     paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture
                     || (paymentIntent.status == .processing
-                        && STPPaymentHandler._isProcessingIntentSuccess(
-                            for: paymentIntent.paymentMethod?.type ?? .unknown
+                        && strongSelf._isProcessingIntentSuccess(
+                            for: paymentIntent.paymentMethod
                         )
                         || (paymentIntent.status == .requiresAction
                             && strongSelf.isNextActionSuccessState(
@@ -481,7 +498,7 @@ public class STPPaymentHandler: NSObject {
             {
                 let successIntentState =
                 paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture || paymentIntent.status == .requiresConfirmation
-                || (paymentIntent.status == .processing && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
+                || (paymentIntent.status == .processing && strongSelf._isProcessingIntentSuccess(for: paymentIntent.paymentMethod))
                 || (paymentIntent.status == .requiresAction && strongSelf.isNextActionSuccessState(nextAction: paymentIntent.nextAction))
 
                 if error == nil && successIntentState {
@@ -813,6 +830,34 @@ public class STPPaymentHandler: NSObject {
 
     // MARK: - Private Helpers
 
+    func _serverDrivenBehavior(for paymentMethod: STPPaymentMethod?) -> ServerDrivenPaymentMethodBehavior? {
+        guard let paymentMethod, paymentMethod.type == .unknown,
+              let rawType = paymentMethod.allResponseFields["type"] as? String
+        else {
+            return nil
+        }
+        return serverDrivenPaymentMethodBehaviors[rawType]
+    }
+
+    /// `_isProcessingIntentSuccess(for:)`, falling back to `serverDrivenPaymentMethodBehaviors` for `.unknown` types.
+    func _isProcessingIntentSuccess(for paymentMethod: STPPaymentMethod?) -> Bool {
+        if let behavior = _serverDrivenBehavior(for: paymentMethod) {
+            return behavior.processingIsSuccess
+        }
+        return STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod?.type ?? .unknown)
+    }
+
+    /// The polling budget for an intent still in `requires_action`, falling back to `serverDrivenPaymentMethodBehaviors` for `.unknown` types.
+    func _pollingBudget(startDate: Date, paymentMethodType: STPPaymentMethodType, paymentMethod: STPPaymentMethod?) -> PollingBudget? {
+        if paymentMethodType == .unknown,
+           let duration = _serverDrivenBehavior(for: paymentMethod)?.pollingDuration,
+           duration > 0
+        {
+            return PollingBudget(startDate: startDate, duration: duration)
+        }
+        return PollingBudget(startDate: startDate, paymentMethodType: paymentMethodType)
+    }
+
     /// Depending on the PaymentMethod Type, after handling next action and confirming,
     /// we should either expect a success state on the PaymentIntent, or for certain asynchronous
     /// PaymentMethods like SEPA Debit, processing is considered a completed PaymentIntent flow
@@ -1096,9 +1141,7 @@ public class STPPaymentHandler: NSObject {
             return true
 
         case .processing:
-            if let type = paymentIntent.paymentMethod?.type,
-                STPPaymentHandler._isProcessingIntentSuccess(for: type)
-            {
+            if _isProcessingIntentSuccess(for: paymentIntent.paymentMethod) {
                 action.complete(with: STPPaymentHandlerActionStatus.succeeded, error: nil)
             } else {
                 action.complete(
@@ -1657,7 +1700,7 @@ public class STPPaymentHandler: NSObject {
                         // This could happen if, for example, a payment is approved in an SFSafariViewController, the user closes the sheet, and the approval races with this fetch.
                         if
                             let paymentMethod = paymentIntent.paymentMethod,
-                            !STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod.type) || (paymentMethod.type == .card && safariViewControllerDismissedManually),
+                            !self._isProcessingIntentSuccess(for: paymentMethod) || (paymentMethod.type == .card && safariViewControllerDismissedManually),
                             paymentIntent.status == .processing,
                             pollingBudget?.canPoll ?? true
                         {
@@ -1699,7 +1742,7 @@ public class STPPaymentHandler: NSObject {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                     // Also retry a few times for certain LPMs that experience latency updating the intent status after returning to the merchant's app
                                     let shouldRetryForCard = paymentMethodType == .card && paymentIntent.nextAction?.type == .useStripeSDK
-                                    if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethodType), pollingBudget.canPoll {
+                                    if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? self._pollingBudget(startDate: startDate, paymentMethodType: paymentMethodType, paymentMethod: paymentIntent.paymentMethod), pollingBudget.canPoll {
                                         pollingBudget.pollAfter {
                                             self._retrieveAndCheckIntentForCurrentAction(
                                                 pollingBudget: pollingBudget
@@ -1785,7 +1828,7 @@ public class STPPaymentHandler: NSObject {
                             // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
                             // Also retry a few times for certain LPMs that experience latency updating the intent status after returning to the merchant's app
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
-                            if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethod.type), pollingBudget.canPoll {
+                            if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? self._pollingBudget(startDate: startDate, paymentMethodType: paymentMethod.type, paymentMethod: paymentMethod), pollingBudget.canPoll {
                                 pollingBudget.pollAfter {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         pollingBudget: pollingBudget
