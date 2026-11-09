@@ -740,16 +740,18 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_singleAmount() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["total_summary"] = [
-            "total_tax_amounts": [
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            subtotal: 12000,
+            taxExclusive: 1185,
+            totalTaxAmounts: [
                 [
                     "amount": 1185,
                     "inclusive": false,
                     "display_name": "Sales Tax",
                     "percentage": 9.875,
                 ],
-            ],
-        ]
+            ]
+        )
         setOneTimePriceAmounts(
             in: &json,
             subtotal: 12000,
@@ -763,8 +765,10 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_multipleAmounts() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["total_summary"] = [
-            "total_tax_amounts": [
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            subtotal: 10000,
+            taxExclusive: 700,
+            totalTaxAmounts: [
                 [
                     "amount": 500,
                     "inclusive": false,
@@ -777,8 +781,8 @@ final class CheckoutUnitTests: XCTestCase {
                     "display_name": "County Tax",
                     "percentage": 2.0,
                 ],
-            ],
-        ]
+            ]
+        )
         setOneTimePriceAmounts(
             in: &json,
             subtotal: 10000,
@@ -790,25 +794,10 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(session.taxAmounts?.count, 2)
     }
 
-    func testTotalTaxAmounts_absent_isNil() {
-        // Given a total summary without total_tax_amounts
-        var json = CheckoutTestHelpers.openSessionJSON
-        json["total_summary"] = ["total": 1000]
-
-        // When decoding the public Session
-        let session = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession()
-
-        // Then taxAmounts is nil
-        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 0)
-        XCTAssertNil(session.taxAmounts)
-    }
-
     func testTotalTaxAmounts_presentButEmpty_isEmpty() {
         // Given a response with an explicitly empty session-level total_tax_amounts array
         var json = CheckoutTestHelpers.openSessionJSON
-        json["total_summary"] = [
-            "total_tax_amounts": []
-        ]
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON()
 
         // When decoding the public Session
         let session = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession()
@@ -828,9 +817,10 @@ final class CheckoutUnitTests: XCTestCase {
             "percentage": 9.75,
             "rate_type": "percentage",
         ]
-        json["total_summary"] = [
-            "total_tax_amounts": [totalTaxAmount]
-        ]
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            taxExclusive: 195,
+            totalTaxAmounts: [totalTaxAmount]
+        )
 
         // When decoding the public Session
         let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession()
@@ -854,9 +844,10 @@ final class CheckoutUnitTests: XCTestCase {
         ]
         var json = CheckoutTestHelpers.openSessionJSON
         json["automatic_tax"] = ["enabled": true, "status": "ready", "address_source": "shipping"]
-        json["total_summary"] = [
-            "total_tax_amounts": [zeroTaxAmount]
-        ]
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            subtotal: 12000,
+            totalTaxAmounts: [zeroTaxAmount]
+        )
         setOneTimePriceAmounts(
             in: &json,
             subtotal: 12000,
@@ -897,9 +888,7 @@ final class CheckoutUnitTests: XCTestCase {
                 "currency": "usd",
             ],
         ]
-        sessionJSON["total_summary"] = [
-            "total_tax_amounts": []
-        ]
+        sessionJSON["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON()
         var session = try! CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON)
             .makePublicSession()
         session.localState.shippingAddress = .init(
@@ -1023,18 +1012,12 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(session.debugDescription.contains("sublabel: nil"))
     }
 
-    func testSessionDebugDescription_preservesAbsentAndEmptyTaxAmounts() {
-        // Given sessions with absent and present-but-empty tax amounts
-        let absent = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        var emptyJSON = CheckoutTestHelpers.openSessionJSON
-        emptyJSON["total_summary"] = [
-            "total_tax_amounts": []
-        ]
-        let empty = try! CheckoutClientAPIResponse.decode(fromAPIResponse: emptyJSON).makePublicSession()
+    func testSessionDebugDescription_includesEmptyTaxAmountCount() {
+        // Given a session with empty tax amounts
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
 
-        // Then their debug descriptions preserve the distinction
-        XCTAssertTrue(absent.debugDescription.contains("taxAmountCount: nil"))
-        XCTAssertTrue(empty.debugDescription.contains("taxAmountCount: 0"))
+        // Then its debug description reports zero tax amounts
+        XCTAssertTrue(session.debugDescription.contains("taxAmountCount: 0"))
     }
 
     // MARK: - Requires Shipping Address Tests
@@ -1058,16 +1041,18 @@ final class CheckoutUnitTests: XCTestCase {
         var json = CheckoutTestHelpers.openSessionJSON
         json["billing_address_collection"] = "required"
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "GB"]]
-        json["total_summary"] = [
-            "total_tax_amounts": [
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            subtotal: 20000,
+            taxExclusive: 1000,
+            totalTaxAmounts: [
                 [
                     "amount": 1000,
                     "inclusive": false,
                     "display_name": "Sales Tax",
                     "percentage": 5.0,
                 ],
-            ],
-        ]
+            ]
+        )
         setOneTimePriceAmounts(
             in: &json,
             subtotal: 20000,

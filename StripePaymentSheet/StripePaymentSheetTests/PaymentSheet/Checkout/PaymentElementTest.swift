@@ -117,6 +117,7 @@ final class PaymentElementTest: XCTestCase {
         json["presentment_currency"] = "sgd"
         json["integration_currency"] = "sgd"
         json["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "sgd", unitAmount: 2500)
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 2500)
         CheckoutTestHelpers.stubCheckoutSessionRequests(
             sessionId: checkout.session.id,
             requestRecorder: CheckoutSessionRequestRecorder(),
@@ -222,6 +223,7 @@ final class PaymentElementTest: XCTestCase {
         json["presentment_currency"] = "gbp"
         json["integration_currency"] = "gbp"
         json["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "gbp", unitAmount: 2500)
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 2500)
         json["experiments_data"] = [
             "arb_id": "arb_test",
             "experiment_assignments": [PaymentMethodMessagingPromotionsExperiment.experimentName: "treatment"],

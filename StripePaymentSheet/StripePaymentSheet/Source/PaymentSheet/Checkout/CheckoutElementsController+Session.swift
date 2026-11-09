@@ -132,7 +132,7 @@ extension CheckoutElementsController.Session {
         configuration: CheckoutElementsController.Configuration? = nil
     ) {
         let elementsSessionValue = apiResponse.elementsSession.value
-        let publicTaxAmounts = apiResponse.totalSummary?.totalTaxAmounts?.map {
+        let publicTaxAmounts = apiResponse.totalSummary.totalTaxAmounts.map {
             CheckoutClientAPIResponse.makeSessionTaxAmount(
                 from: $0,
                 currency: apiResponse.currency,
@@ -144,7 +144,7 @@ extension CheckoutElementsController.Session {
             locale: .autoupdatingCurrent
         )
         let publicTotals = CheckoutClientAPIResponse.makeTotals(
-            from: apiResponse.checkoutItems,
+            from: apiResponse.totalSummary,
             currency: apiResponse.currency
         )
         let publicTax = CheckoutClientAPIResponse.makeTax(from: apiResponse.automaticTax)

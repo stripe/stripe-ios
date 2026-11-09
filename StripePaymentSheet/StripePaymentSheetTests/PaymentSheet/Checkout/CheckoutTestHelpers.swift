@@ -191,6 +191,24 @@ enum CheckoutTestHelpers {
         ]
     }
 
+    static func makeTotalSummaryJSON(
+        subtotal: Int = 1000,
+        total: Int? = nil,
+        taxExclusive: Int = 0,
+        taxInclusive: Int = 0,
+        totalTaxAmounts: [[String: Any]] = []
+    ) -> [String: Any] {
+        let total = total ?? subtotal + taxExclusive
+        return [
+            "subtotal": subtotal,
+            "total": total,
+            "due": total,
+            "tax_exclusive": taxExclusive,
+            "tax_inclusive": taxInclusive,
+            "total_tax_amounts": totalTaxAmounts,
+        ]
+    }
+
     static let baseSessionJSON: [String: Any] = [
         "id": "cs_test",
         "ui_mode": "mobile_elements",
@@ -200,6 +218,7 @@ enum CheckoutTestHelpers {
         "presentment_currency": "usd",
         "integration_currency": "usd",
         "items": makeOneTimePriceCheckoutItems(),
+        "total_summary": makeTotalSummaryJSON(),
         "merchant_info": ["country": "US"],
         "elements_session_id": "es_test",
         "ordered_payment_method_types_and_wallets": ["card"],
@@ -449,6 +468,7 @@ enum CheckoutTestHelpers {
             currency: currency,
             unitAmount: integrationAmount
         )
+        json["total_summary"] = makeTotalSummaryJSON(subtotal: integrationAmount)
         let localCurrencyOption: [AnyHashable: Any] = [
             "currency": "gbp",
             "amount": localAmount,
