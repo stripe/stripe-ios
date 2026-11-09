@@ -57,6 +57,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             [
                 "link_visibility": "automatic",
                 "apple_pay_visibility": "automatic",
+                "button_theme": "automatic",
             ]
         )
     }

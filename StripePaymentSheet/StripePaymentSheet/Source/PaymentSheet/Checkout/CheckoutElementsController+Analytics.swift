@@ -88,7 +88,7 @@ private extension PaymentElement.Configuration {
     }
 }
 
-private extension ExpressCheckoutElement.Configuration {
+extension ExpressCheckoutElement.Configuration {
     func checkoutAnalyticsPayload(applePayMerchantId: String?) -> [String: Any] {
         var params: [String: Any] = [
             "apple_pay_visibility": applePayMerchantId == nil ? "never" : "automatic",

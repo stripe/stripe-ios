@@ -213,9 +213,6 @@ extension PaymentElement.Configuration {
         }
 
         /// Controls whether Apple Pay is displayed in Payment Element.
-        ///
-        /// Set this to `.never` to hide Apple Pay in Payment Element while continuing to show
-        /// it in Express Checkout Element.
         public var display: Display = .automatic
 
         /// Defines the label that will be displayed in the Apple Pay button.
