@@ -19,8 +19,6 @@ extension CheckoutElementsController.Session {
         public enum Status: Sendable, Hashable {
             /// The final tax amount is computed and the session is ready for confirmation.
             case ready
-            /// The tax calculation failed.
-            case failed
             /// A shipping address must be provided to calculate tax.
             case requiresShippingAddress
             /// A billing address must be provided to calculate tax.

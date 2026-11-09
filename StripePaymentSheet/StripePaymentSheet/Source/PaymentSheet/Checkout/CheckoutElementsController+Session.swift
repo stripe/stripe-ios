@@ -158,6 +158,7 @@ extension CheckoutElementsController.Session {
         let presentmentDetails = apiResponse.adaptivePricingInfo.map { _ in
             CheckoutElementsController.Session.PresentmentDetails(presentmentCurrency: apiResponse.currency)
         }
+        // A failed calculation still needs the tax configuration for address updates and Link eligibility.
         let automaticTaxEnabled = apiResponse.automaticTax?.enabled ?? false
         let automaticTaxAddressSource = apiResponse.automaticTax?.addressSource
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {

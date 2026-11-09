@@ -1229,8 +1229,8 @@ class CheckoutClientAPIResponseTest: XCTestCase {
             // When creating the public Session
             let session = response.makePublicSession()
 
-            // Then the failure and automatic tax configuration are available independently
-            XCTAssertEqual(session.tax?.status, .failed)
+            // Then the calculation status is unavailable, but the configuration remains available
+            XCTAssertNil(session.tax)
             XCTAssertTrue(session.automaticTaxEnabled)
             XCTAssertEqual(session.automaticTaxAddressSource, source)
             XCTAssertEqual(session.shouldSendTaxRegion(for: "billing"), source == "billing")
