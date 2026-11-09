@@ -238,7 +238,7 @@ public final class CheckoutElementsController: ObservableObject {
     /// is also cleared during logout.
     nonisolated public static func clearLocalCustomerData() {
         STPAnalyticsClient.sharedClient.log(
-            analytic: PaymentSheetAnalytic(event: .checkoutElementsClearLocalCustomerData)
+            analytic: PaymentSheetAnalytic(event: .checkoutElementsClearLocalCustomerData, additionalParams: [:])
         )
         LinkAccountContext.shared.resetCustomer()
     }
