@@ -10,9 +10,11 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
 final class PaymentSheetAnalyticsHelper {
+
     let analyticsClient: STPAnalyticsClient
     let integrationShape: IntegrationShape
     let configuration: PaymentElementConfiguration
+    private var customerProvider: CustomerProvider
     // Checkout-specific context lives here because Checkout's PaymentElement reuses MPE UI analytics.
     let checkoutSessionID: String?
     /// Checkout attribution shared by Payment Element collection and Link flows. Nil outside Checkout.
@@ -30,7 +32,7 @@ final class PaymentSheetAnalyticsHelper {
     var elementsSession: STPElementsSession?
     /// Resolved after each successful initial load or update; nil before initial loading completes.
     /// Included in subsequent analytics events.
-    var paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
+    private(set) var paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
     enum IntegrationShape {
@@ -76,6 +78,7 @@ final class PaymentSheetAnalyticsHelper {
     ) {
         self.integrationShape = integrationShape
         self.configuration = configuration
+        self.customerProvider = CustomerProvider(customer: configuration.customer)
         self.checkoutSessionID = checkoutSessionID
         self.checkoutAttribution = checkoutAttribution
         self.analyticsClient = analyticsClient
@@ -86,7 +89,7 @@ final class PaymentSheetAnalyticsHelper {
         let event: STPAnalyticEvent = {
             switch integrationShape {
             case .flowController:
-                switch (configuration.customer != nil, configuration.applePay != nil) {
+                switch (customerProvider.hasCustomer, configuration.applePay != nil) {
                 case (false, false):
                     return .mcInitCustomDefault
                 case (true, false):
@@ -97,7 +100,7 @@ final class PaymentSheetAnalyticsHelper {
                     return .mcInitCustomCustomerApplePay
                 }
             case .complete, .linkController:
-                switch (configuration.customer != nil, configuration.applePay != nil) {
+                switch (customerProvider.hasCustomer, configuration.applePay != nil) {
                 case (false, false):
                     return .mcInitCompleteDefault
                 case (true, false):
@@ -115,13 +118,14 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     @MainActor
-    func logLoadStarted(isUpdate: Bool) {
+    func logLoadStarted(isUpdate: Bool, customerProvider: CustomerProvider) {
         log(
             event: .paymentSheetLoadStarted,
             params: [
                 "integration_shape": integrationShape.analyticsValue,
                 "is_update": isUpdate,
-            ]
+            ],
+            customerProvider: customerProvider
         )
     }
 
@@ -129,7 +133,8 @@ final class PaymentSheetAnalyticsHelper {
     func logLoadFailed(
         error: Error,
         loadTimings: PaymentSheetLoader.LoadTimings,
-        isUpdate: Bool
+        isUpdate: Bool,
+        customerProvider: CustomerProvider
     ) {
         let duration = Date().timeIntervalSince(loadTimings.loadingStartDate)
         log(
@@ -140,19 +145,17 @@ final class PaymentSheetAnalyticsHelper {
                 "integration_shape": integrationShape.analyticsValue,
                 "load_timings": loadTimings.jsonObject,
                 "is_update": isUpdate,
-            ]
+            ],
+            customerProvider: customerProvider
         )
     }
 
-    /// Updates the context used by subsequent analytics events without emitting an event.
-    /// Call after each successful initial load or update, before applying the result to the payment UI.
-    @MainActor
-    func didLoad(
-        intent: Intent,
-        elementsSession: STPElementsSession
-    ) {
-        self.intent = intent
-        self.elementsSession = elementsSession
+    /// Updates interaction analytics after the payment surface accepts this load result.
+    func didLoad(_ loadResult: PaymentSheetLoader.LoadResult) {
+        intent = loadResult.intent
+        elementsSession = loadResult.elementsSession
+        customerProvider = loadResult.customerProvider
+        paymentMethodOrientation = loadResult.paymentMethodOrientation
     }
 
     @MainActor
@@ -164,11 +167,10 @@ final class PaymentSheetAnalyticsHelper {
         paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         loadTimings: PaymentSheetLoader.LoadTimings,
         isUpdate: Bool,
+        customerProvider: CustomerProvider,
         hasCardArt: Bool,
         didLinkLookupTimeOut: Bool?
     ) {
-        didLoad(intent: intent, elementsSession: elementsSession)
-        self.paymentMethodOrientation = paymentMethodOrientation
         let defaultPaymentMethodAnalyticsValue: String = {
             switch defaultPaymentMethod {
             case .applePay:
@@ -197,7 +199,7 @@ final class PaymentSheetAnalyticsHelper {
             params["link_mode"] = linkMode.rawValue
         }
         params["link_display"] = configuration.link.display.rawValue
-        if elementsSession.customer?.customerSession != nil {
+        if customerProvider.usesCustomerSession {
             let setAsDefaultEnabled = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
             params["set_as_default_enabled"] = setAsDefaultEnabled
             if setAsDefaultEnabled {
@@ -216,7 +218,11 @@ final class PaymentSheetAnalyticsHelper {
         log(
             event: .paymentSheetLoadSucceeded,
             duration: duration,
-            params: params
+            params: params,
+            customerProvider: customerProvider,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentMethodOrientation: paymentMethodOrientation
         )
     }
 
@@ -503,8 +509,16 @@ final class PaymentSheetAnalyticsHelper {
         selectedLPM: String? = nil,
         linkContext: String? = nil,
         linkUI: String? = nil,
-        params: [String: Any] = [:]
+        params: [String: Any] = [:],
+        customerProvider: CustomerProvider? = nil,
+        intent: Intent? = nil,
+        elementsSession: STPElementsSession? = nil,
+        paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout? = nil
     ) {
+        let customerProvider = customerProvider ?? self.customerProvider
+        let intent = intent ?? self.intent
+        let elementsSession = elementsSession ?? self.elementsSession
+        let paymentMethodOrientation = paymentMethodOrientation ?? self.paymentMethodOrientation
         let linkEnabled: Bool? = {
             guard let elementsSession else { return nil }
             return PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
@@ -517,7 +531,12 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["link_session_type"] = elementsSession?.linkPopupWebviewOption.rawValue
         additionalParams["link_use_attestation"] = elementsSession?.linkSettings?.useAttestationEndpoints
         additionalParams["link_mobile_suppress_2fa_modal"] = elementsSession?.linkSettings?.suppress2FAModal
-        additionalParams["mpe_config"] = configuration.analyticPayload
+        var configurationPayload = configuration.analyticPayload
+        // Customer fields come from the load's CustomerProvider rather than the configuration,
+        // since the customer may be provided by a source other than `configuration.customer`, like a Checkout Session.
+        configurationPayload["customer"] = customerProvider.hasCustomer
+        configurationPayload["customer_access_provider"] = customerProvider.analyticValue
+        additionalParams["mpe_config"] = configurationPayload
         additionalParams["currency"] = intent?.currency
         additionalParams["is_decoupled"] = intent?.intentConfig != nil
         additionalParams["is_spt"] = intent?.intentConfig?.preparePaymentMethodHandler != nil
@@ -603,13 +622,12 @@ extension EmbeddedPaymentElement.Configuration {
 }
 
 extension PaymentElementConfiguration {
+
     var commonAnalyticPayload: [String: Any] {
         var payload = [String: Any]()
         payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
         payload["apple_pay_config"] = applePay != nil
         payload["style"] = style.rawValue
-        payload["customer"] = customer != nil
-        payload["customer_access_provider"] = customer?.customerAccessProvider.analyticValue
         payload["return_url"] = returnURL != nil
         payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
         payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
