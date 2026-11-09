@@ -21,7 +21,7 @@ extension PaymentElement {
         public var applePayConfiguration: ApplePayConfiguration = .init()
 
         /// Configuration for Link.
-        public var linkConfiguration: LinkConfiguration = .init()
+        public var linkConfiguration: LinkConfiguration?
 
         /// PaymentSheet offers users an option to save some payment methods for later use.
         /// Default value is `.automatic`.
@@ -267,9 +267,9 @@ private extension PaymentElement.Configuration.ApplePayConfiguration {
 }
 
 private extension PaymentSheet.Configuration {
-    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration) {
-        switch linkConfiguration.display {
-        case .automatic:
+    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration?) {
+        switch linkConfiguration?.display {
+        case .none, .automatic:
             link.display = .automatic
         case .never:
             link.display = .never
@@ -280,9 +280,9 @@ private extension PaymentSheet.Configuration {
 }
 
 private extension EmbeddedPaymentElement.Configuration {
-    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration) {
-        switch linkConfiguration.display {
-        case .automatic:
+    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration?) {
+        switch linkConfiguration?.display {
+        case .none, .automatic:
             link.display = .automatic
         case .never:
             link.display = .never

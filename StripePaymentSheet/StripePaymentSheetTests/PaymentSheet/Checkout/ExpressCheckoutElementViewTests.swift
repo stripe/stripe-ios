@@ -57,6 +57,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
                 "link_display": "automatic",
                 "appearance": [
                     "button_theme": "automatic",
+                    "button_layout": [String: String](),
                 ],
             ] as NSDictionary
         )

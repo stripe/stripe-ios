@@ -68,7 +68,7 @@ private extension PaymentElement.Configuration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
             "apple_pay_display": applePayConfiguration.display.rawValue,
-            "link_display": linkConfiguration.display.rawValue,
+            "link_display": linkConfiguration?.display.rawValue ?? "automatic",
             "save_payment_method_opt_in_behavior": savePaymentMethodOptInBehavior.description,
             "appearance": appearance.analyticPayload,
             "remove_saved_payment_method_message": removeSavedPaymentMethodMessage != nil,
@@ -103,10 +103,18 @@ private extension ExpressCheckoutElement.Configuration.Appearance {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
             "button_theme": buttonTheme.rawValue,
+            "button_layout": buttonLayout.checkoutAnalyticsPayload,
         ]
-        params["max_columns"] = buttonLayout.maxColumns
-        params["max_rows"] = buttonLayout.maxRows
         params["corner_radius"] = cornerRadius
+        return params
+    }
+}
+
+private extension ExpressCheckoutElement.Configuration.Appearance.ButtonLayout {
+    var checkoutAnalyticsPayload: [String: Any] {
+        var params: [String: Any] = [:]
+        params["max_columns"] = maxColumns
+        params["max_rows"] = maxRows
         return params
     }
 }
