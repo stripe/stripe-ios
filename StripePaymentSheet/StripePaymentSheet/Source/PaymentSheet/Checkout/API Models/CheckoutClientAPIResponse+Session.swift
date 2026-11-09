@@ -175,6 +175,8 @@ extension CheckoutClientAPIResponse {
         switch automaticTax.status {
         case "ready":
             return CheckoutElementsController.Session.Tax(status: .ready)
+        case "failed":
+            return CheckoutElementsController.Session.Tax(status: .failed)
         case "requires_address":
             switch automaticTax.addressSource {
             case "shipping":

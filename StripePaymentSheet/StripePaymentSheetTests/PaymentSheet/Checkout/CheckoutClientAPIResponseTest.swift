@@ -1215,20 +1215,25 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         XCTAssertNil(session.tax)
     }
 
-    func testTax_automaticFailed_isNil() {
-        // Given automatic tax failed
+    func testTax_automaticFailed_preservesBillingConfiguration() {
+        // Given automatic tax failed for a billing address
         let response = CheckoutTestHelpers.makeSession([
             "automatic_tax": [
                 "enabled": true,
                 "status": "failed",
+                "address_source": "billing",
             ],
         ]).withCustomer()
 
         // When creating the public Session
         let session = response.makePublicSession()
 
-        // Then the public Session has no tax state
-        XCTAssertNil(session.tax)
+        // Then the failure and automatic tax configuration are available independently
+        XCTAssertEqual(session.tax?.status, .failed)
+        XCTAssertTrue(session.automaticTaxEnabled)
+        XCTAssertEqual(session.automaticTaxAddressSource, "billing")
+        XCTAssertTrue(session.shouldSendTaxRegion(for: "billing"))
+        XCTAssertTrue(session.elementsSession.disableLinkForAutomaticTaxBilling)
     }
 
     func testTax_automaticUnsupportedStatus_isNil() {

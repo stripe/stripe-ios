@@ -250,11 +250,13 @@ extension CheckoutElementsController.Session.Status.PaymentStatus: CustomDebugSt
 }
 
 extension CheckoutElementsController.Session.Tax.Status: CustomDebugStringConvertible {
-    /// Examples: `.ready`, `.requiresShippingAddress`, or `.requiresBillingAddress`.
+    /// Examples: `.ready`, `.failed`, `.requiresShippingAddress`, or `.requiresBillingAddress`.
     public var debugDescription: String {
         switch self {
         case .ready:
             return ".ready"
+        case .failed:
+            return ".failed"
         case .requiresShippingAddress:
             return ".requiresShippingAddress"
         case .requiresBillingAddress:

@@ -553,7 +553,7 @@ final class CheckoutCartViewController: UIViewController {
             return "Enter shipping address to calculate"
         case .requiresBillingAddress:
             return "Enter billing address to calculate"
-        case .ready, nil:
+        case .ready, .failed, nil:
             return nil
         }
     }
