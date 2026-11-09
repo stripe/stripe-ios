@@ -56,8 +56,8 @@ extension CheckoutElementsController.Configuration {
                 "phone": defaults.phone != nil,
             ],
         ]
-        params["payment_element"] = paymentElement?.checkoutAnalyticsPayload(applePayMerchantId: applePayMerchantId) ?? NSNull()
-        params["express_checkout_element"] = expressCheckoutElement?.checkoutAnalyticsPayload(applePayMerchantId: applePayMerchantId) ?? NSNull()
+        params["payment_element"] = paymentElement?.checkoutAnalyticsPayload ?? NSNull()
+        params["express_checkout_element"] = expressCheckoutElement?.checkoutAnalyticsPayload ?? NSNull()
         params["currency_selector_element"] = currencySelectorElement?.checkoutAnalyticsPayload ?? NSNull()
         params["shipping_address_element"] = shippingAddressElement?.checkoutAnalyticsPayload ?? NSNull()
         return params
@@ -65,7 +65,7 @@ extension CheckoutElementsController.Configuration {
 }
 
 private extension PaymentElement.Configuration {
-    func checkoutAnalyticsPayload(applePayMerchantId: String?) -> [String: Any] {
+    var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
             "apple_pay_display": applePayConfiguration.display.rawValue,
             "link_display": linkConfiguration?.display.rawValue ?? "automatic",
@@ -89,7 +89,7 @@ private extension PaymentElement.Configuration {
 }
 
 extension ExpressCheckoutElement.Configuration {
-    func checkoutAnalyticsPayload(applePayMerchantId: String?) -> [String: Any] {
+    var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
             "link_visibility": linkConfiguration.display.rawValue,
             "button_theme": appearance.buttonTheme.rawValue,
