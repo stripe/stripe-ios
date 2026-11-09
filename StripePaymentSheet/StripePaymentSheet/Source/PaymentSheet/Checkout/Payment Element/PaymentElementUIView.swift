@@ -20,7 +20,7 @@ public final class PaymentElementUIView: UIView {
     // Remember attachment so confirming on a later screen does not repeat the mandate.
     private(set) var hasBeenAttachedToWindow = false
 
-    init(contentView: UIView, userInterfaceStyle: PaymentSheet.UserInterfaceStyle) {
+    init(contentView: UIView, userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle) {
         self.contentView = contentView
         super.init(frame: .zero)
         userInterfaceStyle.configure(self)
