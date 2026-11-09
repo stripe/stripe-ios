@@ -68,7 +68,7 @@ private extension PaymentElement.Configuration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
             "apple_pay_display": applePayConfiguration.display.rawValue,
-            "link_display": linkConfiguration?.display.rawValue ?? "automatic",
+            "link_display": linkConfiguration.display.rawValue,
             "save_payment_method_opt_in_behavior": savePaymentMethodOptInBehavior.description,
             "appearance": appearance.analyticPayload,
             "remove_saved_payment_method_message": removeSavedPaymentMethodMessage != nil,
@@ -92,12 +92,21 @@ extension ExpressCheckoutElement.Configuration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
             "link_visibility": linkConfiguration.display.rawValue,
-            "button_theme": appearance.buttonTheme.rawValue,
+            "appearance": appearance.checkoutAnalyticsPayload,
         ]
         params["apple_pay_button_type"] = applePayConfiguration.buttonType?.rawValue
-        params["max_columns"] = appearance.buttonLayout.maxColumns
-        params["max_rows"] = appearance.buttonLayout.maxRows
-        params["corner_radius"] = appearance.cornerRadius
+        return params
+    }
+}
+
+private extension ExpressCheckoutElement.Configuration.Appearance {
+    var checkoutAnalyticsPayload: [String: Any] {
+        var params: [String: Any] = [
+            "button_theme": buttonTheme.rawValue,
+        ]
+        params["max_columns"] = buttonLayout.maxColumns
+        params["max_rows"] = buttonLayout.maxRows
+        params["corner_radius"] = cornerRadius
         return params
     }
 }

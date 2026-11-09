@@ -127,7 +127,7 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         )
         view.update(
             with: session,
-            buttons: buttons ?? ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: configuration, applePayMerchantId: "merchant.com.example", apiClient: .shared)
+            buttons: buttons ?? session.availableExpressCheckoutPaymentMethodsOrdered
         )
         let stackView = view.subviews.first as? UIStackView
         for row in stackView?.arrangedSubviews ?? [] {

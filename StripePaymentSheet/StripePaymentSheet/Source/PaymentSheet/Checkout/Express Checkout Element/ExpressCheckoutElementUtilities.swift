@@ -38,22 +38,6 @@ enum ExpressCheckoutElementUtilities {
     }
 
     static func availablePaymentMethods(
-        for session: CheckoutElementsController.Session,
-        configuration: ExpressCheckoutElement.Configuration,
-        applePayMerchantId: String?,
-        apiClient: STPAPIClient
-    ) -> [ExpressCheckoutElement.PaymentMethod] {
-        availablePaymentMethods(
-            for: session.elementsSession,
-            configuration: configuration,
-            applePayMerchantId: applePayMerchantId,
-            usesWebLink: !deviceCanUseNativeLink(elementsSession: session.elementsSession, apiClient: apiClient),
-            requiresShippingAddress: session.requiresShippingAddress,
-            billingDetailsCollectionRequired: session.billingAddressCollection == .required
-        )
-    }
-
-    static func availablePaymentMethods(
         for elementsSession: STPElementsSession,
         configuration: ExpressCheckoutElement.Configuration,
         applePayMerchantId: String?,

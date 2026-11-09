@@ -53,11 +53,13 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertEqual(analytic.params["ocr_type"] as? String, PaymentsSDKVariant.ocrTypeString)
         XCTAssertEqual(analytic.params["pay_var"] as? String, PaymentsSDKVariant.variant)
         XCTAssertEqual(
-            analytic.params["ece_config"] as? [String: String],
+            analytic.params["ece_config"] as? NSDictionary,
             [
                 "link_visibility": "automatic",
-                "button_theme": "automatic",
-            ]
+                "appearance": [
+                    "button_theme": "automatic",
+                ],
+            ] as NSDictionary
         )
     }
 

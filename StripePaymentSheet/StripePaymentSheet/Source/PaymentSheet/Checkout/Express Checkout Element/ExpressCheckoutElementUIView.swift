@@ -120,7 +120,7 @@ public final class ExpressCheckoutElementUIView: UIView {
                 event: .expressCheckoutElementInit,
                 additionalParams: [
                     "checkout_session_id": session.id,
-                    "ordered_lpms": ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: configuration, applePayMerchantId: applePayMerchantId, apiClient: apiClient).map(\.rawValue).joined(separator: ","),
+                    "ordered_lpms": session.availableExpressCheckoutPaymentMethodsOrdered.map(\.rawValue).joined(separator: ","),
                     "ece_config": configuration.checkoutAnalyticsPayload,
                 ]
             ),
