@@ -164,6 +164,7 @@ public final class CheckoutElementsController: ObservableObject {
                 self.expressCheckoutElement = ExpressCheckoutElement(
                     sessionSource: sessionSource,
                     configuration: expressCheckoutElementConfiguration,
+                    userInterfaceStyle: configuration.userInterfaceStyle,
                     delegate: self,
                     apiClient: apiClient
                 )
@@ -174,14 +175,10 @@ public final class CheckoutElementsController: ObservableObject {
                 self.currencySelectorElement = await CurrencySelectorElement(
                     sessionSource: sessionSource,
                     configuration: currencySelectorConfiguration,
+                    userInterfaceStyle: configuration.userInterfaceStyle,
                     delegate: self
                 )
             }
-            let inlineStyle = configuration.userInterfaceStyle.overrideUserInterfaceStyle ?? .unspecified
-            paymentElement?.uiView.overrideUserInterfaceStyle = inlineStyle
-            expressCheckoutElement?.uiView.overrideUserInterfaceStyle = inlineStyle
-            currencySelectorElement?.uiView.overrideUserInterfaceStyle = inlineStyle
-
             var params = configurationParams
             params["ordered_lpms"] = paymentElement?.embeddedPaymentElement.loadResult.paymentMethodTypes.map { $0.identifier }.joined(separator: ",")
                 ?? configuration.expressCheckoutElement.map {

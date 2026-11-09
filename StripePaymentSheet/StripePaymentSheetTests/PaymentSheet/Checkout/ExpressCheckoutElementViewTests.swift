@@ -32,6 +32,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let view = ExpressCheckoutElementUIView(
             session: session,
             configuration: configuration,
+            userInterfaceStyle: .automatic,
             delegate: FakeExpressCheckoutElementDelegate(),
             analyticsClient: analyticsClient
         )
@@ -102,6 +103,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let view = ExpressCheckoutElementUIView(
             session: session,
             configuration: .init(completion: { _ in }),
+            userInterfaceStyle: .automatic,
             delegate: FakeExpressCheckoutElementDelegate()
         )
         view.update(with: session, buttons: [.applePay, .link])

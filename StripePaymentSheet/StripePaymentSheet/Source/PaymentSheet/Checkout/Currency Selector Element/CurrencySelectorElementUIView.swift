@@ -45,6 +45,7 @@ public final class CurrencySelectorElementUIView: UIView {
         session: CheckoutElementsController.Session,
         delegate: CurrencySelectorElementCheckoutDelegate,
         appearance: CurrencySelectorElement.Appearance,
+        userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
         needsUpdateSuperviewHeight: @escaping () -> Void
     ) async {
         guard let (_, exchangeRateMeta, rawCurrency) = CurrencySelectorUtilities.adaptivePricingData(from: session) else {
@@ -57,6 +58,7 @@ public final class CurrencySelectorElementUIView: UIView {
         let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
         self.sessionCurrency = currency.apiValue
         super.init(frame: .zero)
+        userInterfaceStyle.configure(self)
 
         await flagImageManager.prefetchFlagImages(for: session)
         setupContainerStackView()

@@ -41,6 +41,12 @@ extension PaymentSheet {
                 viewController.overrideUserInterfaceStyle = overrideUserInterfaceStyle
             }
         }
+
+        func configure(_ view: UIView) {
+            if let overrideUserInterfaceStyle {
+                view.overrideUserInterfaceStyle = overrideUserInterfaceStyle
+            }
+        }
     }
 
     /// Options for the default state of save payment method controls

@@ -40,6 +40,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     init(
         session: CheckoutElementsController.Session,
         configuration: ExpressCheckoutElement.Configuration,
+        userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient = .shared,
         analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
@@ -51,6 +52,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         self.linkBrand = session.elementsSession.linkBrand ?? .link
         self.session = session
         super.init(frame: .zero)
+        userInterfaceStyle.configure(self)
 
         stackView.axis = .vertical
         stackView.alignment = .center
