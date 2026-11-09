@@ -18,6 +18,7 @@ struct LinkWalletButtonDemoConfiguration {
     var showsPaymentMethodPreviewOnButton: Bool = true
     var linkBrand: LinkBrandOverride = .automatic
     var integration: Integration = .collectPaymentMethod
+    var nativeLinkEnabled: Bool = true
     var confirmOnServer: Bool = false
 
     let amount = 1099
@@ -157,6 +158,15 @@ struct ExampleLinkWalletButtonConfigurationView: View {
 
                         Toggle("Show PM preview on button", isOn: $configuration.showsPaymentMethodPreviewOnButton)
                         Text("When off, the button shows the customer's email instead of their payment method.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                DemoSection(title: "Native Link") {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Toggle("Native Link enabled", isOn: $configuration.nativeLinkEnabled)
+                        Text("When off, Link opens in the web popup, as it does on devices that can't use native Link.")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

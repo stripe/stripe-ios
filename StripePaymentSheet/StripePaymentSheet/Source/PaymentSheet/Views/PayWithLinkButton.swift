@@ -71,6 +71,17 @@ final class PayWithLinkButton: UIControl {
         }
     }
 
+    /// Whether the button shows a loading indicator next to the Link logo, e.g. while Link opens.
+    /// The button also appears disabled to VoiceOver while loading. Defaults to `false`.
+    var isLoading: Bool = false {
+        didSet {
+            guard oldValue != isLoading else {
+                return
+            }
+            updateUI()
+        }
+    }
+
     var cornerRadius: CGFloat = ElementsUI.defaultCornerRadius {
         didSet {
             setNeedsLayout()
@@ -203,6 +214,37 @@ final class PayWithLinkButton: UIControl {
         return brandView
     }()
 
+    private lazy var loadingLogoView = makeLogoView()
+    private lazy var compactLoadingLogoView: UIImageView = {
+        let imageView = UIImageView(image: Image.link_mark_bw.makeImage(template: false))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: Constants.logoSize.height),
+            imageView.heightAnchor.constraint(equalToConstant: Constants.logoSize.height),
+        ])
+        return imageView
+    }()
+    private lazy var loadingSeparatorView: UIView = Self.makeSeparatorView()
+    private lazy var loadingIndicator: ActivityIndicator = {
+        let indicator = ActivityIndicator(size: .medium)
+        indicator.hidesWhenStopped = false
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    private lazy var loadingStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            loadingLogoView,
+            loadingSeparatorView,
+            loadingIndicator,
+        ])
+        stackView.spacing = 10
+        stackView.setCustomSpacing(12, after: loadingLogoView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .fill
+        stackView.alignment = .center
+        return stackView
+    }()
+
     private lazy var cardStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             cardLogoView,
@@ -223,9 +265,16 @@ final class PayWithLinkButton: UIControl {
         case noValidAccount
         case hasPaymentMethod(LinkPaymentMethodPreview)
         case hasEmail(email: String)
+        case loading
     }
 
+    /// The content the button displays.
     var linkAccountState: LinkAccountState {
+        isLoading ? .loading : accountState
+    }
+
+    /// The state of the Link account, regardless of whether the button is loading.
+    private var accountState: LinkAccountState {
         Self.linkAccountState(linkAccount: linkAccount, paymentMethodPreview: paymentMethodPreview)
     }
 
@@ -417,6 +466,7 @@ private extension PayWithLinkButton {
         addSubview(payWithStackView)
         addSubview(emailStackView)
         addSubview(cardStackView)
+        addSubview(loadingStackView)
         addSubview(compactLogoView)
 
         NSLayoutConstraint.activate([
@@ -438,6 +488,9 @@ private extension PayWithLinkButton {
             cardStackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             cardStackView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
 
+            loadingStackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            loadingStackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            loadingStackView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
         ])
     }
 
@@ -452,6 +505,17 @@ private extension PayWithLinkButton {
             emailStackView.insertArrangedSubview(emailLogo, at: 0)
             emailStackView.setCustomSpacing(isCompact ? 10 : 12, after: emailLogo)
         }
+        let loadingLogo = isCompact ? compactLoadingLogoView : loadingLogoView
+        if loadingStackView.arrangedSubviews.first !== loadingLogo {
+            loadingStackView.arrangedSubviews.first?.removeFromSuperview()
+            loadingStackView.insertArrangedSubview(loadingLogo, at: 0)
+            loadingStackView.setCustomSpacing(isCompact ? 10 : 12, after: loadingLogo)
+        }
+        if isLoading {
+            loadingIndicator.startAnimating()
+        } else {
+            loadingIndicator.stopAnimating()
+        }
         switch linkAccountState {
         case .hasPaymentMethod(let paymentMethodPreview):
             cardBrandView.image = paymentMethodPreview.icon
@@ -461,7 +525,7 @@ private extension PayWithLinkButton {
             last4Label.text = paymentMethodPreview.last4
         case .hasEmail(let email):
             emailLabel.text = email
-        case .noValidAccount:
+        case .noValidAccount, .loading:
             break
         }
         // An in-flight transition shows both the old and new content, and updates the visibility when it finishes
@@ -479,12 +543,14 @@ private extension PayWithLinkButton {
             return emailStackView
         case .noValidAccount:
             return isCompact ? compactLogoView : payWithStackView
+        case .loading:
+            return loadingStackView
         }
     }
 
     func updateContentVisibility() {
         let visibleContentView = contentView(for: linkAccountState)
-        for contentView in [payWithStackView, emailStackView, cardStackView, compactLogoView] {
+        for contentView in [payWithStackView, emailStackView, cardStackView, loadingStackView, compactLogoView] {
             contentView.isHidden = contentView !== visibleContentView
         }
         payWithLinkView.isHidden = isCompact
@@ -495,6 +561,7 @@ private extension PayWithLinkButton {
         payWithLinkView.attributedText = makePayWithLinkAttributedText(for: payWithLinkView.font)
         updateLogoView(emailLogoView)
         updateLogoView(cardLogoView)
+        updateLogoView(loadingLogoView)
         updateLogoView(compactLogoView)
         updateAccessibilityContent()
         setNeedsLayout()
@@ -615,6 +682,8 @@ extension PayWithLinkButton {
             return emailLogoView.convert(emailLogoView.bounds, to: self)
         case .noValidAccount:
             return payWithLinkLogoFrame()
+        case .loading:
+            return loadingLogoView.convert(loadingLogoView.bounds, to: self)
         }
     }
 
@@ -626,6 +695,8 @@ extension PayWithLinkButton {
             emailLogoView.alpha = isHidden ? 0 : 1
         case .noValidAccount:
             payWithLinkView.attributedText = makePayWithLinkAttributedText(for: payWithLinkView.font, hidesLogo: isHidden)
+        case .loading:
+            loadingLogoView.alpha = isHidden ? 0 : 1
         }
     }
 
@@ -730,6 +801,8 @@ private extension PayWithLinkButton {
         cardStackView.tintColor = foregroundColor
         compactLogoView.tintColor = foregroundColor
         emailLabel.textColor = foregroundColor
+        last4Label.textColor = foregroundColor
+        loadingIndicator.color = foregroundColor
 
         // Background
         backgroundColor = backgroundColor(for: state)
@@ -737,6 +810,7 @@ private extension PayWithLinkButton {
         // Separators
         emailSeparatorView.backgroundColor = separatorColor(for: state)
         cardBrandSeparatorView.backgroundColor = separatorColor(for: state)
+        loadingSeparatorView.backgroundColor = separatorColor(for: state)
     }
 
     func applyCornerRadius() {
@@ -783,7 +857,8 @@ private extension PayWithLinkButton {
 private extension PayWithLinkButton {
 
     func updateAccessibilityContent() {
-        if isEnabled {
+        // The button ignores taps while loading
+        if isEnabled && !isLoading {
             accessibilityTraits = [.button]
         } else {
             accessibilityTraits = [.button, .notEnabled]
@@ -792,12 +867,13 @@ private extension PayWithLinkButton {
         // To use Xcode SwiftUI Previews, comment out the following `accessibilityLabel` setter:
         accessibilityLabel = brand.accessibilityText(from: String.Localized.pay_with_link(brand: brand))
 
-        switch linkAccountState {
+        // While loading, describe the account the button showed before
+        switch accountState {
         case .hasPaymentMethod(let paymentMethodPreview):
             accessibilityValue = paymentMethodPreview.accessibilityValue
         case .hasEmail(let email):
             accessibilityValue = email
-        case .noValidAccount:
+        case .noValidAccount, .loading:
             accessibilityValue = nil
         }
     }

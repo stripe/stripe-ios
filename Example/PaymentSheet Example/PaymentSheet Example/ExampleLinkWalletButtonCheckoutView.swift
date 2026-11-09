@@ -38,6 +38,9 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
             let config = try await LinkControllerDemoBackendClient.fetchConfig()
             STPAPIClient.shared.publishableKey = config.publishableKey
 
+            // Read when the controller is created and while Link is presented, so it's reset when the checkout screen disappears
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = configuration.nativeLinkEnabled ? nil : false
+
             // Only read when the controller is created, so reset it to avoid affecting other demos
             LinkController.forcedLinkBrandForTesting = configuration.linkBrand.brand
             defer { LinkController.forcedLinkBrandForTesting = nil }
@@ -87,15 +90,12 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
     }
 
     /// The demo backend's customer, created from the entered email, or, if none was entered,
-    /// from the email Link attaches to the payment method.
+    /// from the email Link attaches to the payment method, or else a shared guest customer.
     private func resolveCustomerId(for paymentMethod: STPPaymentMethod) async throws -> String {
         if let customerId {
             return customerId
         }
-        let email = configuration.email.isEmpty ? paymentMethod.billingDetails?.email : configuration.email
-        guard let email, !email.isEmpty else {
-            throw LinkControllerDemoError.missingCustomerEmail
-        }
+        let email = LinkControllerDemoBackendClient.customerEmail(enteredEmail: configuration.email, paymentMethod: paymentMethod)
         let customerId = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: email)
         self.customerId = customerId
         return customerId
@@ -220,6 +220,10 @@ struct ExampleLinkWalletButtonCheckoutView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await session.load(configuration: configuration)
+        }
+        .onDisappear {
+            // Don't affect other demos
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
         }
         .alert("Order placed", isPresented: $isShowingOrderConfirmation) {
             Button("OK", role: .cancel) {}

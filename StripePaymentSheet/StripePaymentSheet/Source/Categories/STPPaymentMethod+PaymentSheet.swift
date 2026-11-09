@@ -74,6 +74,15 @@ extension STPPaymentMethod {
         }
     }
 
+    /// Whether this is a Link card-brand token, e.g. returned by the Link web popup: a card with the Link brand that stands in
+    /// for the payment method selected in Link, without describing it (its last 4 and expiry are placeholders).
+    var isLinkCardBrandToken: Bool {
+        guard let card else {
+            return false
+        }
+        return card.wallet?.type == .link && card.brand == .unknown
+    }
+
     var linkPaymentDetailsFormattedString: String? {
         guard let linkPaymentDetails else {
             return nil

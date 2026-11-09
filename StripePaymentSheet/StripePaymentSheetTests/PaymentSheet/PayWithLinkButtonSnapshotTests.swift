@@ -5,6 +5,7 @@
 
 import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
 @MainActor
@@ -76,6 +77,17 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         )
     }
 
+    func testLoggedInCardPaymentMethodLinkDarkMode() {
+        // The button's colors don't depend on the system appearance
+        verify(
+            brand: .link,
+            email: "user@example.com",
+            paymentMethodType: .card,
+            userInterfaceStyle: .dark,
+            identifier: "logged_in_card_payment_method_link_dark"
+        )
+    }
+
     func testLoggedInBankPaymentMethodLink() {
         verify(
             brand: .link,
@@ -94,16 +106,32 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         )
     }
 
+    func testLoadingLink() {
+        verify(brand: .link, email: "user@example.com", isLoading: true, identifier: "loading_link")
+    }
+
+    func testLoadingOnelink() {
+        verify(brand: .onelink, email: "user@example.com", isLoading: true, identifier: "loading_onelink")
+    }
+
+    func testLoadingCompactLink() {
+        verify(brand: .link, isLoading: true, width: 150, identifier: "loading_compact_link")
+    }
+
     private func verify(
         brand: LinkBrand,
         email: String? = nil,
         paymentMethodType: ConsumerSession.DisplayablePaymentDetails.PaymentType? = nil,
+        isLoading: Bool = false,
+        width: CGFloat = 260,
+        userInterfaceStyle: UIUserInterfaceStyle = .unspecified,
         identifier: String,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
         let button = PayWithLinkButton(brand: brand)
-        button.frame = CGRect(origin: .zero, size: CGSize(width: 260, height: 44))
+        button.frame = CGRect(origin: .zero, size: CGSize(width: width, height: 44))
+        button.overrideUserInterfaceStyle = userInterfaceStyle
 
         if let email {
             button.linkAccount = LinkAccountStub(
@@ -122,7 +150,14 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
             )
         }
 
+        if isLoading {
+            // Keep the loading indicator still, so the snapshot is stable
+            ActivityIndicator.isAnimationEnabled = false
+            button.isLoading = true
+        }
+
         button.layoutIfNeeded()
         STPSnapshotVerifyView(button, identifier: identifier, file: file, line: line)
+        ActivityIndicator.isAnimationEnabled = true
     }
 }

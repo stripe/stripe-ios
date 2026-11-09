@@ -55,6 +55,26 @@ struct LinkPaymentMethodPreview: Equatable {
         }
     }
 
+    /// A preview of a card or bank account payment method, e.g. one returned by the Link web popup.
+    /// Returns `nil` for a Link card-brand token, which doesn't describe the payment method it stands in for.
+    init?(from paymentMethod: STPPaymentMethod) {
+        if paymentMethod.isLinkCardBrandToken {
+            return nil
+        } else if let card = paymentMethod.card, let last4 = card.last4 {
+            let icon = STPImageLibrary.unpaddedCardBrandImage(for: card.brand)
+            self.init(icon: icon, last4: last4, accessibilityName: STPCardBrandUtilities.stringFrom(card.brand))
+        } else if let bankAccount = paymentMethod.usBankAccount {
+            let bankIconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.bankName)
+            guard let icon = PaymentSheetImageLibrary.bankInstitutionIcon(for: bankIconCode)
+                    ?? PaymentSheetImageLibrary.bankInstitutionIcon(for: PaymentSheetImageLibrary.bankIconCode(for: nil)) else {
+                return nil
+            }
+            self.init(icon: icon, last4: bankAccount.last4, accessibilityName: bankAccount.bankName)
+        } else {
+            return nil
+        }
+    }
+
     init?(from paymentDetails: ConsumerPaymentDetails) {
         switch paymentDetails.details {
         case .card(let card):

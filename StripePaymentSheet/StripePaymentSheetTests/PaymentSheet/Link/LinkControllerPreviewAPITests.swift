@@ -28,6 +28,7 @@ final class LinkControllerPreviewAPITests: XCTestCase {
             .missingAppAttestation,
             .linkUnavailable,
             .unsupportedIntentConfiguration,
+            .configurationRequiresNativeLink,
         ]
         _ = integrationErrors.map(\.errorDescription)
 

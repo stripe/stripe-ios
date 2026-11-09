@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import StripePayments
 
 enum LinkControllerDemoBackendClient {
 
@@ -23,6 +24,20 @@ enum LinkControllerDemoBackendClient {
 
     struct CustomerResponse: Decodable {
         let customerId: String
+    }
+
+    /// The demo backend needs an email to create a customer. Without an entered email, uses the email Link attaches to the
+    /// payment method. Payment methods from the Link web popup have none, so fall back to a shared guest customer.
+    static let guestCustomerEmail = "link-controller-demo-guest@example.com"
+
+    static func customerEmail(enteredEmail: String, paymentMethod: STPPaymentMethod) -> String {
+        if !enteredEmail.isEmpty {
+            return enteredEmail
+        }
+        if let billingEmail = paymentMethod.billingDetails?.email, !billingEmail.isEmpty {
+            return billingEmail
+        }
+        return guestCustomerEmail
     }
 
     static func fetchOrCreateCustomer(email: String) async throws -> String {
