@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### PaymentSheet
+* [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".
+
 ## 26.16.0 2026-11-02
 ### PaymentSheet
 * [Added] The Link auth flow now natively supports email OTP and multi-factor authentication (MFA) enabled accounts.
