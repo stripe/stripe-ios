@@ -138,7 +138,7 @@ final class InstitutionTableView: UIView {
                 top: 0,
                 left: 0,
                 bottom: 0,
-                right: -Constants.Layout.defaultHorizontalMargin
+                right: -Constants.Layout.navigationBarAlignedHorizontalMargin
             )
             tableView.separatorStyle = .none
         } else {

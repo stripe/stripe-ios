@@ -159,7 +159,7 @@ final class InstitutionSearchBar: UIView {
         if appearance.colors == .link {
             if shouldHighlightBorder {
                 backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
-                layer.borderColor = appearance.colors.textFieldFocused.cgColor
+                layer.borderColor = appearance.colors.textFieldFocused.resolvedColor(with: traitCollection).cgColor
                 layer.borderWidth = 2
             } else {
                 backgroundColor = appearance.colors.iconBackground
@@ -180,7 +180,7 @@ final class InstitutionSearchBar: UIView {
                 searchBarBorderWidth = 1
                 shadowOpacity = 0
             }
-            layer.borderColor = searchBarBorderColor.cgColor
+            layer.borderColor = searchBarBorderColor.resolvedColor(with: traitCollection).cgColor
             layer.borderWidth = searchBarBorderWidth
             layer.shadowOpacity = shadowOpacity
             layer.shadowColor = UIColor.black.cgColor
@@ -198,6 +198,7 @@ final class InstitutionSearchBar: UIView {
         guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
 
         layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
+        highlightBorder(textField.isFirstResponder)
     }
 }
 

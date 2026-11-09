@@ -191,10 +191,10 @@ final class RoundedTextField: UIView {
 
     private func updateBorder(highlighted: Bool) {
         if errorText != nil && !highlighted {
-            containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.textCritical.cgColor
+            containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.textCritical.resolvedColor(with: traitCollection).cgColor
             containerHorizontalStackView.layer.borderWidth = 2.0
         } else if highlighted {
-            containerHorizontalStackView.layer.borderColor = appearance.colors.textFieldFocused.cgColor
+            containerHorizontalStackView.layer.borderColor = appearance.colors.textFieldFocused.resolvedColor(with: traitCollection).cgColor
             containerHorizontalStackView.layer.borderWidth = 2.0
             if appearance.colors == .link {
                 containerHorizontalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
@@ -205,7 +205,7 @@ final class RoundedTextField: UIView {
                 containerHorizontalStackView.layer.borderColor = UIColor.clear.cgColor
                 containerHorizontalStackView.backgroundColor = appearance.colors.iconBackground
             } else {
-                containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
+                containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.resolvedColor(with: traitCollection).cgColor
                 containerHorizontalStackView.layer.borderWidth = 1.0
             }
         }
@@ -221,7 +221,7 @@ final class RoundedTextField: UIView {
         guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
 
         updateBorder(highlighted: textField.isFirstResponder)
-        containerHorizontalStackView.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
+        containerHorizontalStackView.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.resolvedColor(with: traitCollection).cgColor
     }
 }
 

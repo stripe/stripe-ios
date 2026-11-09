@@ -157,9 +157,9 @@ class InstitutionPickerViewController: UIViewController {
                 institutionTableView,
                 insets: NSDirectionalEdgeInsets(
                     top: 0,
-                    leading: Constants.Layout.defaultHorizontalMargin,
+                    leading: Constants.Layout.navigationBarAlignedHorizontalMargin,
                     bottom: 0,
-                    trailing: Constants.Layout.defaultHorizontalMargin
+                    trailing: Constants.Layout.navigationBarAlignedHorizontalMargin
                 )
             )
         } else {

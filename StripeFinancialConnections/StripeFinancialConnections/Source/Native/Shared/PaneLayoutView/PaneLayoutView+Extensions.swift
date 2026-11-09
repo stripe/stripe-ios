@@ -337,9 +337,11 @@ extension PaneLayoutView {
             )
             secondaryButton.translatesAutoresizingMaskIntoConstraints = false
             if useHorizontalLayout {
-                secondaryButton.layer.borderWidth = 1 / stp_screenNativeScale
-                secondaryButton.layer.borderColor = appearance.colors.border.cgColor
-                secondaryButton.layer.cornerRadius = appearance.buttonHeight / 2
+                // Set the border through the configuration so `Button` re-resolves the
+                // dynamic color on trait changes (a raw `layer.borderColor` stays light-mode).
+                secondaryButton.configuration.borderWidth = 1 / stp_screenNativeScale
+                secondaryButton.configuration.borderColor = appearance.colors.border
+                secondaryButton.configuration.cornerRadius = appearance.buttonHeight / 2
                 secondaryButton.clipsToBounds = true
                 NSLayoutConstraint.activate([
                     secondaryButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
