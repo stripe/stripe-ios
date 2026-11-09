@@ -67,8 +67,8 @@ extension CheckoutElementsController.Configuration {
 private extension PaymentElement.Configuration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
-            "apple_pay_display": applePayConfiguration.display.rawValue,
-            "link_display": linkConfiguration?.display.rawValue ?? "automatic",
+            "apple_pay_configuration": applePayConfiguration.checkoutAnalyticsPayload,
+            "link_configuration": (linkConfiguration ?? .init()).checkoutAnalyticsPayload,
             "save_payment_method_opt_in_behavior": savePaymentMethodOptInBehavior.description,
             "appearance": appearance.analyticPayload,
             "remove_saved_payment_method_message": removeSavedPaymentMethodMessage != nil,
@@ -77,7 +77,6 @@ private extension PaymentElement.Configuration {
             "payment_method_layout": paymentMethodLayout.description,
             "displays_mandate_text": displaysMandateText,
         ]
-        params["apple_pay_button_type"] = applePayConfiguration.buttonType?.rawValue
         params["preferred_networks"] = preferredNetworks?.map { STPCardBrandUtilities.apiValue(from: $0) }.joined(separator: ", ")
         params["payment_method_order"] = paymentMethodOrder
         switch rowSelectionBehavior {
@@ -88,13 +87,42 @@ private extension PaymentElement.Configuration {
     }
 }
 
-extension ExpressCheckoutElement.Configuration {
+private extension PaymentElement.Configuration.ApplePayConfiguration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
-            "link_display": linkConfiguration.display.rawValue,
+            "display": display.rawValue,
+        ]
+        params["button_type"] = buttonType?.rawValue
+        return params
+    }
+}
+
+private extension PaymentElement.Configuration.LinkConfiguration {
+    var checkoutAnalyticsPayload: [String: Any] {
+        ["display": display.rawValue]
+    }
+}
+
+extension ExpressCheckoutElement.Configuration {
+    var checkoutAnalyticsPayload: [String: Any] {
+        [
+            "link_configuration": linkConfiguration.checkoutAnalyticsPayload,
+            "apple_pay_configuration": applePayConfiguration.checkoutAnalyticsPayload,
             "appearance": appearance.checkoutAnalyticsPayload,
         ]
-        params["apple_pay_button_type"] = applePayConfiguration.buttonType?.rawValue
+    }
+}
+
+private extension ExpressCheckoutElement.Configuration.LinkConfiguration {
+    var checkoutAnalyticsPayload: [String: Any] {
+        ["display": display.rawValue]
+    }
+}
+
+private extension ExpressCheckoutElement.Configuration.ApplePayConfiguration {
+    var checkoutAnalyticsPayload: [String: Any] {
+        var params: [String: Any] = [:]
+        params["button_type"] = buttonType?.rawValue
         return params
     }
 }

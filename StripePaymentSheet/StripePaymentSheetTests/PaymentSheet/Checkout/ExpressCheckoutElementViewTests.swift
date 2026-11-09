@@ -54,7 +54,8 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertEqual(
             analytic.params["ece_config"] as? NSDictionary,
             [
-                "link_display": "automatic",
+                "link_configuration": ["display": "automatic"],
+                "apple_pay_configuration": [String: String](),
                 "appearance": [
                     "button_theme": "automatic",
                     "button_layout": [String: String](),
