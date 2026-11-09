@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Virheenkorjain on liitetty Sovellukseen.";
+
+"An emulator is being used to run the App." = "Emulaattoria käytetään Sovelluksen suorittamiseen.";
+
 "An error occurred. Please try again." = "Tapahtui virhe. Yritä uudelleen.";
+
+"Cancel" = "Peruuta";
 
 "Card brand was not updated. Please try again." = "Korttimerkkiä ei päivitetty. Yritä uudelleen.";
 
 "Close" = "Sulje";
+
+"Collapsed" = "Tiivistetty";
 
 "Confirm it's you" = "Vahvista, että se olet sinä";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Syötä kohteeseen %@ lähetetty koodi.";
 
+"Expanded" = "Laajennettu";
+
 "Failed to connect" = "Yhteyden muodostaminen epäonnistui";
+
+"Loading" = "Ladataan";
+
+"No" = "Ei";
 
 "Resend code" = "Lähetä koodi uudelleen";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Skannaa kortti";
 
+"Secure checkout" = "Turvallinen maksaminen";
+
+"Selected" = "Valittu";
+
 "The IBAN you entered is invalid." = "Antamasi IBAN on virheellinen.";
+
+"The OS or the OS Version is not supported." = "Käyttöjärjestelmää tai käyttöjärjestelmän versiota ei tueta.";
+
+"The device is jailbroken." = "Laite on murrettu.";
+
+"The integrity of the SDK has been tampered." = "SDK:n eheyttä on peukaloitu.";
 
 "There was an error processing your card -- try again in a few seconds" = "Kortin käsittelyssä tapahtui virhe – kokeile uudelleen muutaman sekunnin kuluttua";
 
 "There was an unexpected error -- try again in a few seconds" = "Odottamaton virhe – kokeile uudelleen muutaman sekunnin kuluttua";
 
+"Timeout" = "Aikakatkaisu";
+
 "Try again" = "Yritä uudelleen";
 
+"Unselected" = "Ei valittu";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Käytämme Stripeä korttitietojen vahvistamiseen. Stripe voi käyttää ja säilyttää tietojasi heidän tietosuojaselosteensa mukaisesti. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Lue lisää</u></a>";
+
+"Yes" = "Kyllä";
 
 "Your card has expired" = "Korttisi on vanhentunut";
 

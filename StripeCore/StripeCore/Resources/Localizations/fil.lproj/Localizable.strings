@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "May naka-attach na debugger sa App.";
+
+"An emulator is being used to run the App." = "May ginagamit na emulator para patakbuhin ang App.";
+
 "An error occurred. Please try again." = "May nangyaring error. Pakisubukan muli.";
+
+"Cancel" = "Kanselahin";
 
 "Card brand was not updated. Please try again." = "Hindi na-update ang brand ng kard. Pakisubukan muli.";
 
 "Close" = "Isara";
+
+"Collapsed" = "Naka-collapse";
 
 "Confirm it's you" = "Kumpirmahin na ikaw ito";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Ilagay ang code na ipinadala sa %@.";
 
+"Expanded" = "Naka-expand";
+
 "Failed to connect" = "Nabigong kumonekta";
+
+"Loading" = "Nilo-load";
+
+"No" = "Hindi";
 
 "Resend code" = "Ipadala ulit ang code";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "I-scan ang kard";
 
+"Secure checkout" = "Ligtas na pag-checkout";
+
+"Selected" = "Napili";
+
 "The IBAN you entered is invalid." = "Ang IBAN na iniligay mo ay imbalido.";
+
+"The OS or the OS Version is not supported." = "Hindi suportado ang OS o ang Bersyon ng OS.";
+
+"The device is jailbroken." = "Naka-jailbreak ang device.";
+
+"The integrity of the SDK has been tampered." = "Na-tamper na ang integridad ng SDK.";
 
 "There was an error processing your card -- try again in a few seconds" = "Nagkaroon ng kamalian sa pagproseso ng iyong kard -- subukin muli sa ilang segundo";
 
 "There was an unexpected error -- try again in a few seconds" = "Nagkaroon ng di-inaasahang kamalian -- subukin muli sa ilang segundo";
 
+"Timeout" = "Timeout";
+
 "Try again" = "Subukan muli";
 
+"Unselected" = "Hindi napili";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Gumagamit kami ng Stripe para i-verify ang mga detalye ng iyong kard. Maaaring gamitin at imbakin ng Stripe ang iyong data ayon sa patakaran sa privacy nito. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Alamin ang higit pa</u></a>";
+
+"Yes" = "Oo";
 
 "Your card has expired" = "Napaso na ang iyong kard";
 

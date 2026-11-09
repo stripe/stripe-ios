@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Um depurador está conectado ao App.";
+
+"An emulator is being used to run the App." = "Um emulador está sendo usado para executar o App.";
+
 "An error occurred. Please try again." = "Ocorreu um erro. Tente outra vez.";
+
+"Cancel" = "Cancelar";
 
 "Card brand was not updated. Please try again." = "A bandeira do cartão não foi atualizada. Tente novamente.";
 
 "Close" = "Fechar";
+
+"Collapsed" = "Recolhido";
 
 "Confirm it's you" = "Confirme sua identidade";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Insira o código enviado para %@.";
 
+"Expanded" = "Expandido";
+
 "Failed to connect" = "Falha ao conectar";
+
+"Loading" = "Carregando";
+
+"No" = "Não";
 
 "Resend code" = "Reenviar código";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Ler cartão";
 
+"Secure checkout" = "Checkout seguro";
+
+"Selected" = "Selecionado";
+
 "The IBAN you entered is invalid." = "O IBAN inserido é inválido.";
+
+"The OS or the OS Version is not supported." = "O SO ou a versão do SO não é compatível.";
+
+"The device is jailbroken." = "O dispositivo foi desbloqueado.";
+
+"The integrity of the SDK has been tampered." = "A integridade do SDK foi comprometida.";
 
 "There was an error processing your card -- try again in a few seconds" = "Erro ao processar o cartão – tente novamente em alguns segundos";
 
 "There was an unexpected error -- try again in a few seconds" = "Erro inesperado – tente novamente em alguns segundos";
 
+"Timeout" = "Tempo limite";
+
 "Try again" = "Tentar novamente";
 
+"Unselected" = "Não selecionado";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Usamos a Stripe para verificar os dados do seu cartão. A Stripe pode usar e armazenar seus dados de acordo com a política de privacidade da empresa. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Saiba mais</u></a>";
+
+"Yes" = "Sim";
 
 "Your card has expired" = "O cartão expirou";
 

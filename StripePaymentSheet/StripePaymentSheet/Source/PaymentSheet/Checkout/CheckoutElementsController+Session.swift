@@ -78,10 +78,10 @@ extension CheckoutElementsController {
         /// Aggregate subtotal, tax, discount, and total amounts for the Checkout Session.
         public let totals: CheckoutElementsController.Session.Totals
 
-        /// Payment methods available after applying configuration and device eligibility, ordered as displayed by `ExpressCheckoutElement`.
-        /// Supported values are `"apple_pay"` and `"link"`.
+        /// Payment methods available after applying configuration and device eligibility.
+        /// Supported values are `.applePay` and `.link`.
         /// When empty, Express Checkout Element will render empty content.
-        public let availableExpressCheckoutPaymentMethods: [String]
+        public let availableExpressCheckoutPaymentMethods: Set<ExpressCheckoutElement.PaymentMethod>
 
         // MARK: - Internal Properties
 
@@ -163,9 +163,9 @@ extension CheckoutElementsController.Session {
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
-        let availableExpressCheckoutPaymentMethods = configuration.map {
-            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0).map(\.rawValue)
-        } ?? []
+        let availableExpressCheckoutPaymentMethods = Set(configuration.map {
+            ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0)
+        } ?? [])
         let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 
         self.init(
@@ -258,7 +258,7 @@ extension CheckoutElementsController.Session {
                 public let unitAmount: Amount
 
                 /// The unit amount with additional decimal precision, if available.
-                public let unitAmountDecimal: Amount?
+                public let unitAmountDecimal: DecimalAmount?
 
                 /// The label that describes how units of the product are named.
                 public let unitLabel: String?
@@ -304,7 +304,21 @@ extension CheckoutElementsController.Session {
         /// The numeric, unformatted representation of the amount in minor units.
         ///
         /// For example, `"$10.00"` is represented as `1000`.
-        public let minorUnitsAmount: Double
+        public let minorUnitsAmount: Int
+    }
+
+    /// A monetary amount with a localized display string and a value in fractional minor units.
+    public struct DecimalAmount: Sendable, Hashable {
+        /// The localized, formatted representation of the amount.
+        ///
+        /// For example, an amount of `12.345` in `usd` is formatted as `"$0.12345"`.
+        public let amount: String
+
+        /// The numeric, unformatted representation of the amount in minor units,
+        /// including fractional minor units.
+        ///
+        /// For example, `"$0.12345"` is represented as `12.345`.
+        public let minorUnitsAmount: Decimal
     }
 
     /// A tax amount included in an order summary item or aggregated across the session.
@@ -313,7 +327,7 @@ extension CheckoutElementsController.Session {
         public let amount: String
 
         /// The numeric, unformatted representation of the tax amount in minor units.
-        public let minorUnitsAmount: Double
+        public let minorUnitsAmount: Int
 
         /// Whether the tax amount is included in the price.
         public let inclusive: Bool

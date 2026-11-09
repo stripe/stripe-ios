@@ -6,7 +6,7 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
-#import "STDSLocalizedString.h"
+@import StripeCore;
 #import "STDSWhitelistView.h"
 #import "STDSStackView.h"
 #import "STDSChallengeResponseSelectionInfoObject.h"
@@ -66,10 +66,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id<STDSChallengeResponseSelectionInfo> _Nullable)selectedResponse {
     if (self.selectionButton.selected) {
-        return [[STDSChallengeResponseSelectionInfoObject alloc] initWithName:@"Y" value:STDSLocalizedString(@"Yes", @"The yes answer to a yes or no question.")];;
+        return [[STDSChallengeResponseSelectionInfoObject alloc] initWithName:@"Y" value:STPThreeDS2Localization.yes];;
     }
     
-    return [[STDSChallengeResponseSelectionInfoObject alloc] initWithName:@"N" value:STDSLocalizedString(@"No", @"The no answer to a yes or no question.")];
+    return [[STDSChallengeResponseSelectionInfoObject alloc] initWithName:@"N" value:STPThreeDS2Localization.no];
 }
 
 - (void)setLabelCustomization:(STDSLabelCustomization * _Nullable)labelCustomization {

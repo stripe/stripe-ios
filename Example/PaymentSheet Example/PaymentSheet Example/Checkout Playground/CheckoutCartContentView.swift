@@ -142,7 +142,7 @@ struct CheckoutCartContentView: View {
                                 Text(item.displayName)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text("\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)")
+                                Text("\(item.unitAmountDecimal?.amount ?? item.unitAmount.amount) × \(item.quantity)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .accessibilityIdentifier("checkout_line_item_amount")

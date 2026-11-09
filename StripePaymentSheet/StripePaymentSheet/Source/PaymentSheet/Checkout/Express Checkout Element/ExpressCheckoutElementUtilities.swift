@@ -37,6 +37,20 @@ enum ExpressCheckoutElementUtilities {
     }
 
     static func availablePaymentMethods(
+        for session: CheckoutElementsController.Session,
+        configuration: ExpressCheckoutElement.Configuration,
+        apiClient: STPAPIClient
+    ) -> [ExpressCheckoutElement.PaymentMethod] {
+        availablePaymentMethods(
+            for: session.elementsSession,
+            configuration: configuration,
+            usesWebLink: !deviceCanUseNativeLink(elementsSession: session.elementsSession, apiClient: apiClient),
+            requiresShippingAddress: session.requiresShippingAddress,
+            billingDetailsCollectionRequired: session.billingAddressCollection == .required
+        )
+    }
+
+    static func availablePaymentMethods(
         for elementsSession: STPElementsSession,
         configuration: ExpressCheckoutElement.Configuration,
         usesWebLink: Bool,
