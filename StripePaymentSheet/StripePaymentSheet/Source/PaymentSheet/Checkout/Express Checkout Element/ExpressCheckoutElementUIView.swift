@@ -52,7 +52,6 @@ public final class ExpressCheckoutElementUIView: UIView {
         self.linkBrand = session.elementsSession.linkBrand ?? .link
         self.session = session
         super.init(frame: .zero)
-        userInterfaceStyle.configure(self)
 
         stackView.axis = .vertical
         stackView.alignment = .center
@@ -66,6 +65,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+        userInterfaceStyle.configure(self)
     }
 
     @available(*, unavailable)
