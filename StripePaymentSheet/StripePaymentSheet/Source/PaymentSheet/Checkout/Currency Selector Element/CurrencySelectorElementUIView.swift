@@ -18,8 +18,8 @@ public final class CurrencySelectorElementUIView: UIView {
 
     /// Updates interaction and disabled styling while retaining UIKit's native state as the source of truth.
     func setEnabled(_ enabled: Bool) {
-        isUserInteractionEnabled = enabled
-        selectorView?.setEnabled(enabled)
+        isEnabledByEnvironment = enabled
+        updateEnabledState()
     }
 
     private let needsUpdateSuperviewHeight: () -> Void
@@ -31,6 +31,9 @@ public final class CurrencySelectorElementUIView: UIView {
     private let flagImageManager = AdaptivePricingFlagImageManager()
     private var selectorView: TwoOptionSelectorView?
     private var sessionCurrency: String
+    private var sessionIsOpen: Bool
+    private var isEnabledByEnvironment = true
+    private var isSelectingCurrency = false
     private let containerStackView = UIStackView()
     private lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(
@@ -56,6 +59,7 @@ public final class CurrencySelectorElementUIView: UIView {
         self.needsUpdateSuperviewHeight = needsUpdateSuperviewHeight
         let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
         self.sessionCurrency = currency.apiValue
+        self.sessionIsOpen = session.status == .open
         super.init(frame: .zero)
 
         await flagImageManager.prefetchFlagImages(for: session)
@@ -92,10 +96,14 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     func update(with session: CheckoutElementsController.Session) {
+        sessionIsOpen = session.status == .open
+        updateEnabledState()
         guard let (_, exchangeRateMeta, rawCurrency) =
                 CurrencySelectorUtilities.adaptivePricingData(from: session)
         else {
-            assertionFailure("Adaptive Pricing data unexpectedly became unavailable")
+            if sessionIsOpen {
+                assertionFailure("Adaptive Pricing data unexpectedly became unavailable")
+            }
             return
         }
 
@@ -159,8 +167,14 @@ public final class CurrencySelectorElementUIView: UIView {
         containerStackView.insertArrangedSubview(newSelector, at: 0)
 
         selectorView = newSelector
-        newSelector.setEnabled(isUserInteractionEnabled)
+        updateEnabledState()
         invalidateContentSize()
+    }
+
+    private func updateEnabledState() {
+        let enabled = isEnabledByEnvironment && sessionIsOpen
+        isUserInteractionEnabled = enabled
+        selectorView?.setEnabled(enabled && !isSelectingCurrency)
     }
 
     private func updateCaption(
@@ -202,10 +216,17 @@ public final class CurrencySelectorElementUIView: UIView {
 
 extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
     func twoOptionSelectorView(_: TwoOptionSelectorView, didSelectItemWithId id: String) {
-        selectorView?.setEnabled(false)
+        guard sessionIsOpen else { return }
+        isSelectingCurrency = true
+        updateEnabledState()
 
         Task { [weak self] in
-            guard let self, let currencySelectionDelegate else { return }
+            guard let self else { return }
+            defer {
+                isSelectingCurrency = false
+                updateEnabledState()
+            }
+            guard let currencySelectionDelegate else { return }
             do {
                 try await currencySelectionDelegate.selectCurrency(id)
                 STPAnalyticsClient.sharedClient.log(
@@ -227,7 +248,6 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                 )
                 showError(error.localizedDescription)
             }
-            selectorView?.setEnabled(isUserInteractionEnabled)
         }
     }
 }
