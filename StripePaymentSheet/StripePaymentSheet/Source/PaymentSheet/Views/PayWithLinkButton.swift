@@ -801,6 +801,7 @@ private extension PayWithLinkButton {
         cardStackView.tintColor = foregroundColor
         compactLogoView.tintColor = foregroundColor
         emailLabel.textColor = foregroundColor
+        last4Label.textColor = foregroundColor
         loadingIndicator.color = foregroundColor
 
         // Background

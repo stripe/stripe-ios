@@ -313,16 +313,13 @@ struct LinkControllerDemoView: View {
     }
 
     /// The demo backend's customer for this session. Created from the entered email, or, if none was entered,
-    /// from the email Link attaches to the payment method once the customer signs in.
+    /// from the email Link attaches to the payment method once the customer signs in, or else a shared guest customer.
     @MainActor
     private func resolveCustomerId(for paymentMethod: STPPaymentMethod) async throws -> String {
         if let customerId {
             return customerId
         }
-        let email = configuration.email.isEmpty ? paymentMethod.billingDetails?.email : configuration.email
-        guard let email, !email.isEmpty else {
-            throw LinkControllerDemoError.missingCustomerEmail
-        }
+        let email = LinkControllerDemoBackendClient.customerEmail(enteredEmail: configuration.email, paymentMethod: paymentMethod)
         let customerId = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: email)
         self.customerId = customerId
         return customerId
@@ -459,15 +456,4 @@ struct LinkControllerDemoView: View {
     var config = LinkControllerDemoConfiguration()
     config.email = "test@example.com"
     return LinkControllerDemoView(configuration: config)
-}
-
-enum LinkControllerDemoError: LocalizedError {
-    case missingCustomerEmail
-
-    var errorDescription: String? {
-        switch self {
-        case .missingCustomerEmail:
-            return "Couldn't find the customer's email on the Link payment method, so the demo backend can't create a customer. Enter an email on the configuration screen."
-        }
-    }
 }

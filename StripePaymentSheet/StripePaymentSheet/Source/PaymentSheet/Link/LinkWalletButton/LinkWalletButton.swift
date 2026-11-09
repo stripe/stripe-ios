@@ -48,12 +48,27 @@ import UIKit
 
     /// The customer's email address. The button looks up the associated Link account to display its details.
     /// If `nil`, the button shows "Pay with Link", and tapping it lets the customer sign in to or sign up for Link.
+    /// Once they complete the Link flow, the button shows their Link account.
     public var email: String? {
         didSet {
             guard oldValue != email else { return }
+            // The merchant identified the customer, so stop showing the customer who signed in through the button
+            signedInEmail = nil
             updateButton()
             lookUpIfNeeded()
         }
+    }
+
+    /// Without an `email`, the email of the customer who completed a Link flow launched by the button.
+    private var signedInEmail: String?
+
+    /// The email of the customer whose Link account the button shows: the merchant-provided `email`, or else the
+    /// customer who signed in through the button. The button never shows other Link accounts on the device.
+    private var displayedEmail: String? {
+        if let email, !email.isEmpty {
+            return email
+        }
+        return signedInEmail
     }
 
     /// The customer's phone number in E.164 format, used to prefill the Link signup form.
@@ -134,25 +149,36 @@ import UIKit
         return linkAccount.email.lowercased() == email.lowercased()
     }
 
-    /// Returns the payment method to display, in order of preference:
-    /// the payment method selected in this session, then the account's default payment method.
+    /// Returns the payment method to display, in order of preference: the payment method selected in this session
+    /// (in native Link, or else in the Link web popup), then the account's default payment method.
     static func paymentMethodPreview(
         selectedPaymentDetails: ConsumerPaymentDetails?,
+        selectedWebPaymentMethod: STPPaymentMethod? = nil,
         linkAccount: PaymentSheetLinkAccount
     ) -> LinkPaymentMethodPreview? {
-        selectedPaymentDetails.flatMap(LinkPaymentMethodPreview.init(from:))
-            ?? LinkPaymentMethodPreview(from: linkAccount.displayablePaymentDetails)
+        if let preview = selectedPaymentDetails.flatMap(LinkPaymentMethodPreview.init(from:)) {
+            return preview
+        }
+        if let selectedWebPaymentMethod {
+            // Don't fall back to the default payment method, which may not be the one the customer selected
+            return LinkPaymentMethodPreview(from: selectedWebPaymentMethod)
+        }
+        return LinkPaymentMethodPreview(from: linkAccount.displayablePaymentDetails)
     }
 
     func updateButton() {
         let brand = linkController.resolvedLinkBrand
         let linkAccount: PaymentSheetLinkAccount?
         let paymentMethodPreview: LinkPaymentMethodPreview?
-        // Only show account details for the customer the merchant provided
-        if let account = linkController.linkAccount, Self.accountMatches(account, email: email) {
+        // Only show account details for the customer the merchant provided, or who signed in through the button
+        if let account = linkController.linkAccount, Self.accountMatches(account, email: displayedEmail) {
             linkAccount = account
             paymentMethodPreview = showsPaymentMethodPreview
-                ? Self.paymentMethodPreview(selectedPaymentDetails: linkController.selectedPaymentDetails, linkAccount: account)
+                ? Self.paymentMethodPreview(
+                    selectedPaymentDetails: linkController.selectedPaymentDetails,
+                    selectedWebPaymentMethod: linkController.selectedWebPaymentMethod,
+                    linkAccount: account
+                )
                 : nil
         } else {
             linkAccount = nil
@@ -173,7 +199,7 @@ import UIKit
         // Re-evaluated when the in-flight lookup completes
         guard !isLookingUp else { return }
 
-        guard let email, !email.isEmpty, !Self.accountMatches(linkController.linkAccount, email: email) else {
+        guard let email = displayedEmail, !email.isEmpty, !Self.accountMatches(linkController.linkAccount, email: email) else {
             return
         }
 
@@ -182,7 +208,7 @@ import UIKit
             // Errors are ignored: the button keeps showing "Pay with Link", and `present` looks up the customer again.
             guard let self else { return }
             self.isLookingUp = false
-            if self.email != email {
+            if self.displayedEmail != email {
                 self.lookUpIfNeeded()
             }
         }
@@ -204,8 +230,28 @@ import UIKit
         delegate?.linkWalletButtonWillPresent(self)
         linkController.present(email: email, phoneNumber: phoneNumber, from: presentingViewController) { [weak self] result in
             guard let self else { return }
+            // Adopt the customer before leaving the loading state, so the button changes to their account in one transition
+            self.adoptSignedInCustomerIfNeeded(after: result)
             self.isPresenting = false
+            self.lookUpIfNeeded()
             self.delegate?.linkWalletButton(self, didCompleteWith: result)
+        }
+    }
+}
+
+extension LinkWalletButton {
+    /// Without a merchant-provided `email`, remembers the customer who completed the Link flow, so the button shows their
+    /// Link account: the signed-in account with native Link, or the email on the payment method from the Link web popup.
+    func adoptSignedInCustomerIfNeeded(after result: Result<LinkController.PaymentMethodResult, Error>) {
+        guard email?.isEmpty ?? true else {
+            return
+        }
+        if let account = linkController.linkAccount, account.sessionState == .verified {
+            signedInEmail = account.email
+        } else if case .success(.completed(let paymentMethod)) = result,
+                  let paymentMethodEmail = paymentMethod.billingDetails?.email,
+                  !paymentMethodEmail.isEmpty {
+            signedInEmail = paymentMethodEmail
         }
     }
 }
@@ -217,6 +263,8 @@ import UIKit
 protocol LinkWalletButtonControlling: AnyObject {
     var linkAccount: PaymentSheetLinkAccount? { get }
     var selectedPaymentDetails: ConsumerPaymentDetails? { get }
+    /// The payment method selected in the Link web popup, which has no `selectedPaymentDetails`.
+    var selectedWebPaymentMethod: STPPaymentMethod? { get }
     var resolvedLinkBrand: LinkBrand { get }
     /// Emits when `linkAccount` or `selectedPaymentDetails` may have changed.
     var stateDidChange: AnyPublisher<Void, Never> { get }

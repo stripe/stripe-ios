@@ -90,15 +90,12 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
     }
 
     /// The demo backend's customer, created from the entered email, or, if none was entered,
-    /// from the email Link attaches to the payment method.
+    /// from the email Link attaches to the payment method, or else a shared guest customer.
     private func resolveCustomerId(for paymentMethod: STPPaymentMethod) async throws -> String {
         if let customerId {
             return customerId
         }
-        let email = configuration.email.isEmpty ? paymentMethod.billingDetails?.email : configuration.email
-        guard let email, !email.isEmpty else {
-            throw LinkControllerDemoError.missingCustomerEmail
-        }
+        let email = LinkControllerDemoBackendClient.customerEmail(enteredEmail: configuration.email, paymentMethod: paymentMethod)
         let customerId = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: email)
         self.customerId = customerId
         return customerId

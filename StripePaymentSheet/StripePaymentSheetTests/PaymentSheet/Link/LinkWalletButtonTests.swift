@@ -4,6 +4,8 @@
 //
 
 import Combine
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 import UIKit
 import XCTest
@@ -196,6 +198,122 @@ final class LinkWalletButtonTests: XCTestCase {
         XCTAssertEqual(controller.lookupEmails, [])
     }
 
+    func testWithoutEmailShowsCustomerWhoSignedInWithNativeLink() {
+        // Given a button without an email
+        let controller = MockLinkWalletButtonController()
+        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        button.presentingViewController = UIViewController()
+
+        // When the customer signs in with native Link and selects a payment method
+        button.didTap()
+        controller.linkAccount = verifiedLinkAccount(email: email)
+        controller.completePresent(at: 0, with: .success(.completed(._testCard())))
+
+        // Then the button shows their account
+        XCTAssertEqual(button.displayedLinkAccount?.email, email)
+    }
+
+    func testWithoutEmailShowsCustomerWhoSignedInButCanceled() {
+        // Given a button without an email
+        let controller = MockLinkWalletButtonController()
+        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        button.presentingViewController = UIViewController()
+
+        // When the customer signs in with native Link, then closes it without selecting a payment method
+        button.didTap()
+        controller.linkAccount = verifiedLinkAccount(email: email)
+        controller.completePresent(at: 0, with: .success(.canceled))
+
+        // Then the button still shows their account
+        XCTAssertEqual(button.displayedLinkAccount?.email, email)
+    }
+
+    func testWithoutEmailLooksUpCustomerFromWebPopupPaymentMethod() {
+        // Given a button without an email, and no native Link session
+        let controller = MockLinkWalletButtonController()
+        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        button.presentingViewController = UIViewController()
+
+        // When the Link web popup returns a payment method with the customer's email
+        button.didTap()
+        controller.completePresent(at: 0, with: .success(.completed(paymentMethod(withBillingEmail: email))))
+
+        // Then the button looks up the customer
+        XCTAssertEqual(controller.lookupEmails, [email])
+
+        // When the lookup finds their account
+        controller.linkAccount = Stubs.linkAccount(email: email)
+        controller.completeLookup(at: 0, with: .success(true))
+        waitForMainQueue()
+
+        // Then the button shows it
+        XCTAssertEqual(button.displayedLinkAccount?.email, email)
+    }
+
+    func testWithoutEmailDoesNotShowUnverifiedAccountAfterCanceling() {
+        // Given a button without an email, and an unverified Link account on the device
+        let controller = MockLinkWalletButtonController()
+        controller.linkAccount = Stubs.linkAccount(email: email)
+        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        button.presentingViewController = UIViewController()
+
+        // When the customer closes Link without signing in
+        button.didTap()
+        controller.completePresent(at: 0, with: .success(.canceled))
+
+        // Then the button doesn't show the account
+        XCTAssertNil(button.displayedLinkAccount)
+    }
+
+    func testMerchantEmailReplacesCustomerWhoSignedIn() {
+        // Given a button showing a customer who signed in through it
+        let controller = MockLinkWalletButtonController()
+        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        button.presentingViewController = UIViewController()
+        button.didTap()
+        controller.linkAccount = verifiedLinkAccount(email: email)
+        controller.completePresent(at: 0, with: .success(.canceled))
+        XCTAssertEqual(button.displayedLinkAccount?.email, email)
+
+        // When the merchant provides a different email
+        let merchantEmail = "someone.else@example.com"
+        button.email = merchantEmail
+
+        // Then the button stops showing the signed-in customer, and looks up the merchant's customer
+        XCTAssertNil(button.displayedLinkAccount)
+        XCTAssertEqual(controller.lookupEmails, [merchantEmail])
+    }
+
+    func testShowsBankAccountSelectedInWebPopupInsteadOfDefaultCard() {
+        // Given an account whose default payment method is a card
+        let controller = MockLinkWalletButtonController()
+        controller.linkAccount = Stubs.linkAccount(email: email, paymentMethodType: .card)
+        let button = makeButton(controller: controller)
+
+        // When the customer selects a bank account in the Link web popup
+        controller.selectedWebPaymentMethod = Self.bankAccountPaymentMethod()
+        waitForMainQueue()
+
+        // Then the button shows the bank account, not the default card
+        XCTAssertEqual(button.displayedPaymentMethodPreview?.last4, "6789")
+        XCTAssertEqual(button.displayedPaymentMethodPreview?.accessibilityName, "STRIPE TEST BANK")
+    }
+
+    func testDoesNotShowDefaultPaymentMethodForLinkCardBrandTokenFromWebPopup() {
+        // Given an account whose default payment method is a card
+        let controller = MockLinkWalletButtonController()
+        controller.linkAccount = Stubs.linkAccount(email: email, paymentMethodType: .card)
+        let button = makeButton(controller: controller)
+
+        // When the Link web popup returns a card-brand token, which doesn't describe the selected payment method
+        controller.selectedWebPaymentMethod = Self.linkCardBrandTokenPaymentMethod()
+        waitForMainQueue()
+
+        // Then the button shows the customer's email, not the default card they may not have selected
+        XCTAssertEqual(button.displayedLinkAccount?.email, email)
+        XCTAssertNil(button.displayedPaymentMethodPreview)
+    }
+
     func testWithoutEmailSkipsLookupAndHidesAccountDetails() {
         // Given a signed-in Link account
         let controller = MockLinkWalletButtonController()
@@ -351,6 +469,74 @@ final class LinkWalletButtonTests: XCTestCase {
         LinkWalletButton(controller: controller, email: email ?? self.email, phoneNumber: "+15555555555")
     }
 
+    private func verifiedLinkAccount(email: String) -> PaymentSheetLinkAccount {
+        PaymentSheetLinkAccount(
+            email: email,
+            session: .make(
+                clientSecret: "cs_123",
+                emailAddress: email,
+                redactedFormattedPhoneNumber: "(•••) ••• ••70",
+                unredactedPhoneNumber: "+17070707070",
+                phoneNumberCountry: "US",
+                verificationSessions: [.init(type: .sms, state: .verified)],
+                supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+                mobileFallbackWebviewParams: nil,
+                currentAuthenticationLevel: .twoFactorAuth,
+                minimumAuthenticationLevel: .oneFactorAuth
+            ),
+            publishableKey: "pk_test_123",
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
+        )
+    }
+
+    /// A card-brand token as returned by the Link web popup, e.g. for a bank account selected in Link.
+    static func linkCardBrandTokenPaymentMethod() -> STPPaymentMethod {
+        STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_789",
+            "created": 1_700_000_000,
+            "type": "card",
+            "billing_details": ["email": NSNull()],
+            "card": [
+                "brand": "link",
+                "display_brand": "other",
+                "funding": "credit",
+                "last4": "0000",
+                "exp_month": 12,
+                "exp_year": 2040,
+                "networks": ["available": ["link"]],
+                "wallet": ["type": "link", "link": [String: Any]()],
+            ],
+        ])!
+    }
+
+    static func bankAccountPaymentMethod() -> STPPaymentMethod {
+        STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_456",
+            "created": 1_700_000_000,
+            "type": "us_bank_account",
+            "us_bank_account": [
+                "account_holder_type": "individual",
+                "account_type": "checking",
+                "bank_name": "STRIPE TEST BANK",
+                "fingerprint": "fp_123",
+                "last4": "6789",
+                "routing_number": "110000000",
+            ],
+        ])!
+    }
+
+    private func paymentMethod(withBillingEmail email: String) -> STPPaymentMethod {
+        STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123",
+            "created": 1_700_000_000,
+            "type": "card",
+            "billing_details": ["email": email],
+            "card": ["brand": "visa", "last4": "4242", "exp_month": 12, "exp_year": 2040],
+        ])!
+    }
+
     /// Waits for state changes delivered on the main queue to be applied.
     private func waitForMainQueue() {
         let expectation = expectation(description: "main queue")
@@ -374,6 +560,9 @@ private final class MockLinkWalletButtonController: LinkWalletButtonControlling 
         didSet { stateSubject.send() }
     }
     var selectedPaymentDetails: ConsumerPaymentDetails? {
+        didSet { stateSubject.send() }
+    }
+    var selectedWebPaymentMethod: STPPaymentMethod? {
         didSet { stateSubject.send() }
     }
     var resolvedLinkBrand: LinkBrand = .link

@@ -77,6 +77,17 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         )
     }
 
+    func testLoggedInCardPaymentMethodLinkDarkMode() {
+        // The button's colors don't depend on the system appearance
+        verify(
+            brand: .link,
+            email: "user@example.com",
+            paymentMethodType: .card,
+            userInterfaceStyle: .dark,
+            identifier: "logged_in_card_payment_method_link_dark"
+        )
+    }
+
     func testLoggedInBankPaymentMethodLink() {
         verify(
             brand: .link,
@@ -113,12 +124,14 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         paymentMethodType: ConsumerSession.DisplayablePaymentDetails.PaymentType? = nil,
         isLoading: Bool = false,
         width: CGFloat = 260,
+        userInterfaceStyle: UIUserInterfaceStyle = .unspecified,
         identifier: String,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
         let button = PayWithLinkButton(brand: brand)
         button.frame = CGRect(origin: .zero, size: CGSize(width: width, height: 44))
+        button.overrideUserInterfaceStyle = userInterfaceStyle
 
         if let email {
             button.linkAccount = LinkAccountStub(

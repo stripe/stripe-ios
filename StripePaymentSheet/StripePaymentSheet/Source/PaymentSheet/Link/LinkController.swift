@@ -309,21 +309,46 @@ import UIKit
         )
     }
 
-    /// The preview of a card payment method returned by the Link web popup, which has no Link payment details.
+    /// The payment method returned by the Link web popup, which has no Link payment details.
+    var selectedWebPaymentMethod: STPPaymentMethod? {
+        guard case .link(.withPaymentMethod(_, let paymentMethod)) = internalPaymentOption else {
+            return nil
+        }
+        return paymentMethod
+    }
+
+    /// The preview of a card or bank account payment method returned by the Link web popup, which has no Link payment
+    /// details. Formatted like the preview of the equivalent Link payment details.
     static func webPaymentMethodPreview(
         for paymentOption: PaymentOption?,
         linkBrand: LinkBrand,
         reduceLinkBranding: Bool
     ) -> PaymentMethodPreview? {
-        guard case .link(.withPaymentMethod(_, let paymentMethod)) = paymentOption, let card = paymentMethod.card else {
+        guard case .link(.withPaymentMethod(_, let paymentMethod)) = paymentOption else {
             return nil
         }
-        return .init(
-            paymentMethodType: .card,
-            icon: reduceLinkBranding ? STPImageLibrary.cardBrandImage(for: card.brand) : linkIcon,
-            label: linkBrand.displayName,
-            sublabel: formattedCardDetails(brand: card.brand, funding: card.funding, last4: card.last4 ?? "")
-        )
+        if paymentMethod.isLinkCardBrandToken {
+            // The token doesn't describe the payment method it stands in for, so only show Link
+            return .init(paymentMethodType: .card, icon: linkIcon, label: linkBrand.displayName, sublabel: nil)
+        }
+        if let card = paymentMethod.card {
+            return .init(
+                paymentMethodType: .card,
+                icon: reduceLinkBranding ? STPImageLibrary.cardBrandImage(for: card.brand) : linkIcon,
+                label: linkBrand.displayName,
+                sublabel: formattedCardDetails(brand: card.brand, funding: card.funding, last4: card.last4 ?? "")
+            )
+        }
+        if let bankAccount = paymentMethod.usBankAccount {
+            let bankIconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.bankName)
+            return .init(
+                paymentMethodType: .bankAccount,
+                icon: reduceLinkBranding ? PaymentSheetImageLibrary.bankIcon(for: bankIconCode, iconStyle: .filled) : linkIcon,
+                label: linkBrand.displayName,
+                sublabel: "\(bankAccount.bankName) •••• \(bankAccount.last4)"
+            )
+        }
+        return nil
     }
 
     /// Creates a `LinkController` for the specified `mode`.

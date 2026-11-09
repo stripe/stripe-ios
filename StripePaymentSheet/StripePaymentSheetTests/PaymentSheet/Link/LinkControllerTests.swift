@@ -193,6 +193,39 @@ final class LinkControllerTests: XCTestCase {
         XCTAssertEqual(preview?.sublabel?.hasSuffix(paymentMethod.card?.last4 ?? "-"), true)
     }
 
+    func testWebPaymentMethodPreviewShowsBankAccount() {
+        // Given a bank account payment method returned by the Link web popup
+        let paymentMethod = LinkWalletButtonTests.bankAccountPaymentMethod()
+        let paymentOption: PaymentOption = .link(option: .withPaymentMethod(brand: .link, paymentMethod: paymentMethod))
+
+        // When making its preview
+        let preview = LinkController.webPaymentMethodPreview(for: paymentOption, linkBrand: .link, reduceLinkBranding: false)
+
+        // Then it shows the bank account like native Link does
+        XCTAssertEqual(preview?.paymentMethodType, .bankAccount)
+        XCTAssertEqual(preview?.label, LinkBrand.link.displayName)
+        XCTAssertEqual(preview?.sublabel, "STRIPE TEST BANK •••• 6789")
+    }
+
+    func testWebPaymentMethodPreviewOnlyShowsLinkForCardBrandToken() {
+        // Given a card-brand token returned by the Link web popup, e.g. for a bank account selected in Link
+        let paymentMethod = LinkWalletButtonTests.linkCardBrandTokenPaymentMethod()
+        XCTAssertTrue(paymentMethod.isLinkCardBrandToken)
+        let paymentOption: PaymentOption = .link(option: .withPaymentMethod(brand: .link, paymentMethod: paymentMethod))
+
+        // When making its preview
+        let preview = LinkController.webPaymentMethodPreview(for: paymentOption, linkBrand: .link, reduceLinkBranding: false)
+
+        // Then it only shows Link, rather than the token's placeholder card details
+        XCTAssertEqual(preview?.label, LinkBrand.link.displayName)
+        XCTAssertNil(preview?.sublabel)
+    }
+
+    func testRegularCardIsNotLinkCardBrandToken() {
+        XCTAssertFalse(STPPaymentMethod._testCard().isLinkCardBrandToken)
+        XCTAssertFalse(LinkWalletButtonTests.bankAccountPaymentMethod().isLinkCardBrandToken)
+    }
+
     func testWebPaymentMethodPreviewIsNilWithoutCard() {
         XCTAssertNil(LinkController.webPaymentMethodPreview(for: nil, linkBrand: .link, reduceLinkBranding: false))
     }
