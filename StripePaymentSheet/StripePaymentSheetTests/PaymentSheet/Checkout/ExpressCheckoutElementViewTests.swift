@@ -32,7 +32,6 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         let view = ExpressCheckoutElementUIView(
             session: session,
             configuration: configuration,
-            applePayMerchantId: "merchant.com.example",
             delegate: FakeExpressCheckoutElementDelegate(),
             analyticsClient: analyticsClient
         )
@@ -55,7 +54,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertEqual(
             analytic.params["ece_config"] as? NSDictionary,
             [
-                "link_visibility": "automatic",
+                "link_display": "automatic",
                 "appearance": [
                     "button_theme": "automatic",
                 ],

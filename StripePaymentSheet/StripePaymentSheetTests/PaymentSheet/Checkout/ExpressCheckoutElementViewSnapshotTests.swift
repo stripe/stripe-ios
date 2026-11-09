@@ -122,7 +122,6 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         let view = ExpressCheckoutElementUIView(
             session: session,
             configuration: configuration,
-            applePayMerchantId: "merchant.com.example",
             delegate: Delegate()
         )
         view.update(

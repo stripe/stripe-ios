@@ -25,7 +25,6 @@ public final class ExpressCheckoutElementUIView: UIView {
     // MARK: - Private Properties
 
     private let configuration: ExpressCheckoutElement.Configuration
-    private let applePayMerchantId: String?
     private let apiClient: STPAPIClient
     private let analyticsClient: STPAnalyticsClientProtocol
     private let stackView = UIStackView()
@@ -41,13 +40,11 @@ public final class ExpressCheckoutElementUIView: UIView {
     init(
         session: CheckoutElementsController.Session,
         configuration: ExpressCheckoutElement.Configuration,
-        applePayMerchantId: String? = nil,
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient = .shared,
         analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
     ) {
         self.configuration = configuration
-        self.applePayMerchantId = applePayMerchantId
         self.apiClient = apiClient
         self.analyticsClient = analyticsClient
         self.delegate = delegate

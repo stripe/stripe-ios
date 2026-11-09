@@ -164,7 +164,6 @@ public final class CheckoutElementsController: ObservableObject {
                 self.expressCheckoutElement = ExpressCheckoutElement(
                     sessionSource: sessionSource,
                     configuration: expressCheckoutElementConfiguration,
-                    applePayMerchantId: configuration.applePayMerchantId,
                     delegate: self,
                     apiClient: apiClient
                 )

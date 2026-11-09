@@ -91,7 +91,7 @@ private extension PaymentElement.Configuration {
 extension ExpressCheckoutElement.Configuration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
-            "link_visibility": linkConfiguration.display.rawValue,
+            "link_display": linkConfiguration.display.rawValue,
             "appearance": appearance.checkoutAnalyticsPayload,
         ]
         params["apple_pay_button_type"] = applePayConfiguration.buttonType?.rawValue
