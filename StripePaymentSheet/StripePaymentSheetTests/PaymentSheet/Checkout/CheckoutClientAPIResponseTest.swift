@@ -1215,25 +1215,28 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         XCTAssertNil(session.tax)
     }
 
-    func testTax_automaticFailed_preservesBillingConfiguration() {
-        // Given automatic tax failed for a billing address
-        let response = CheckoutTestHelpers.makeSession([
-            "automatic_tax": [
-                "enabled": true,
-                "status": "failed",
-                "address_source": "billing",
-            ],
-        ]).withCustomer()
+    func testTax_automaticFailed_preservesAddressSource() {
+        for source in ["billing", "shipping", "customer"] {
+            // Given automatic tax failed for the resolved address source
+            let response = CheckoutTestHelpers.makeSession([
+                "automatic_tax": [
+                    "enabled": true,
+                    "status": "failed",
+                    "address_source": source,
+                ],
+            ]).withCustomer()
 
-        // When creating the public Session
-        let session = response.makePublicSession()
+            // When creating the public Session
+            let session = response.makePublicSession()
 
-        // Then the failure and automatic tax configuration are available independently
-        XCTAssertEqual(session.tax?.status, .failed)
-        XCTAssertTrue(session.automaticTaxEnabled)
-        XCTAssertEqual(session.automaticTaxAddressSource, "billing")
-        XCTAssertTrue(session.shouldSendTaxRegion(for: "billing"))
-        XCTAssertTrue(session.elementsSession.disableLinkForAutomaticTaxBilling)
+            // Then the failure and automatic tax configuration are available independently
+            XCTAssertEqual(session.tax?.status, .failed)
+            XCTAssertTrue(session.automaticTaxEnabled)
+            XCTAssertEqual(session.automaticTaxAddressSource, source)
+            XCTAssertEqual(session.shouldSendTaxRegion(for: "billing"), source == "billing")
+            XCTAssertEqual(session.shouldSendTaxRegion(for: "shipping"), source == "shipping")
+            XCTAssertEqual(session.elementsSession.disableLinkForAutomaticTaxBilling, source == "billing")
+        }
     }
 
     func testTax_automaticUnsupportedStatus_isNil() {
