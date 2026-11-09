@@ -33,7 +33,6 @@ public final class CurrencySelectorElementUIView: UIView {
     private var sessionCurrency: String
     private var sessionIsOpen: Bool
     private var isEnabledByEnvironment = true
-    private var isSelectingCurrency = false
     private let containerStackView = UIStackView()
     private lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(
@@ -96,8 +95,11 @@ public final class CurrencySelectorElementUIView: UIView {
     }
 
     func update(with session: CheckoutElementsController.Session) {
-        sessionIsOpen = session.status == .open
-        updateEnabledState()
+        let isOpen = session.status == .open
+        if sessionIsOpen != isOpen {
+            sessionIsOpen = isOpen
+            updateEnabledState()
+        }
         guard let (_, exchangeRateMeta, rawCurrency) =
                 CurrencySelectorUtilities.adaptivePricingData(from: session)
         else {
@@ -174,7 +176,7 @@ public final class CurrencySelectorElementUIView: UIView {
     private func updateEnabledState() {
         let enabled = isEnabledByEnvironment && sessionIsOpen
         isUserInteractionEnabled = enabled
-        selectorView?.setEnabled(enabled && !isSelectingCurrency)
+        selectorView?.setEnabled(enabled)
     }
 
     private func updateCaption(
@@ -217,16 +219,10 @@ public final class CurrencySelectorElementUIView: UIView {
 extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
     func twoOptionSelectorView(_: TwoOptionSelectorView, didSelectItemWithId id: String) {
         guard sessionIsOpen else { return }
-        isSelectingCurrency = true
-        updateEnabledState()
+        selectorView?.setEnabled(false)
 
         Task { [weak self] in
-            guard let self else { return }
-            defer {
-                isSelectingCurrency = false
-                updateEnabledState()
-            }
-            guard let currencySelectionDelegate else { return }
+            guard let self, let currencySelectionDelegate else { return }
             do {
                 try await currencySelectionDelegate.selectCurrency(id)
                 STPAnalyticsClient.sharedClient.log(
@@ -248,6 +244,7 @@ extension CurrencySelectorElementUIView: TwoOptionSelectorViewDelegate {
                 )
                 showError(error.localizedDescription)
             }
+            selectorView?.setEnabled(isUserInteractionEnabled)
         }
     }
 }
