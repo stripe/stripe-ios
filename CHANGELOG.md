@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### PaymentsUI
+* [Fixed] Fixed `STPPaymentCardTextField.cornerRadius` returning the previous value after it was set.
+
 ## 26.16.1 2026-11-09
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".

@@ -198,7 +198,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             _cornerRadius
         }
         set {
-            _cornerRadius = cornerRadius
+            _cornerRadius = newValue
             layer.cornerRadius = newValue
         }
     }
