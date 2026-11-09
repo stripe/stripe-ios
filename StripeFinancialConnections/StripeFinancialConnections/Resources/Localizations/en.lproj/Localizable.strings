@@ -60,11 +60,11 @@
 /* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@" = "Enter the code sent to %@";
 
-/* The title of a sheet that appears when the user attempts to exit the bank linking screen. */
-"Exit without connecting?" = "Exit without connecting?";
-
 /* A button title. Pressing it exits the bank account connection flow. */
 "Exit" = "Exit";
+
+/* The title of a sheet that appears when the user attempts to exit the bank linking screen. */
+"Exit without connecting?" = "Exit without connecting?";
 
 /* Error message when one-time-passcode (OTP) is invalid. */
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, that code didn’t work. Double check it and try again.";
@@ -231,12 +231,6 @@
 /* The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what. */
 "Your account can’t be connected at this time. Please try again later." = "Your account can’t be connected at this time. Please try again later.";
 
-/* The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen. */
-"Your bank account won’t be connected and all progress will be lost." = "Your bank account won’t be connected and all progress will be lost.";
-
-/* The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen. '%@' is replaced by the business name. */
-"Your bank account won’t be connected to %@ and all progress will be lost." = "Your bank account won’t be connected to %@ and all progress will be lost.";
-
 /* The title of a screen that shows an error. The error appears after we failed to access users bank account. */
 "Your account number couldn’t be accessed at this time" = "Your account number couldn’t be accessed at this time";
 
@@ -261,6 +255,12 @@
 /* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
 "Your accounts were connected." = "Your accounts were connected.";
 
+/* The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen. */
+"Your bank account won’t be connected and all progress will be lost." = "Your bank account won’t be connected and all progress will be lost.";
+
+/* The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen. '%@' is replaced by the business name. */
+"Your bank account won’t be connected to %@ and all progress will be lost." = "Your bank account won’t be connected to %@ and all progress will be lost.";
+
 /* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
 "Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported.";
 
@@ -272,3 +272,4 @@
 
 /* An error message that instructs the user to keep typing their phone number in a user-input field. */
 "Your mobile phone number is incomplete." = "Your mobile phone number is incomplete.";
+
