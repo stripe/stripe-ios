@@ -1339,6 +1339,22 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         }
     }
 
+    func testElementsSessionAccountIDDecoding() throws {
+        var json = CheckoutTestHelpers.makeSessionJSON()
+        var merchantInfo = try XCTUnwrap(json["merchant_info"] as? [String: Any])
+        merchantInfo["account_id"] = "acct_123"
+        json["merchant_info"] = merchantInfo
+
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
+        XCTAssertEqual(response.makePublicSession().elementsSession.accountID, "acct_123")
+
+        merchantInfo.removeValue(forKey: "account_id")
+        json["merchant_info"] = merchantInfo
+
+        let responseWithoutAccountID = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
+        XCTAssertNil(responseWithoutAccountID.makePublicSession().elementsSession.accountID)
+    }
+
     func testElementsSessionDecoding() {
         let session = CheckoutTestHelpers.makeSession([
             "checkout_session_config_id": "csc_123",
