@@ -35,6 +35,9 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 ### Identity
 * [Changed] If you install with Swift Package Manager, StripeIdentity now requires the `Identity` package trait. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700).
 
+### PaymentsUI
+* [Fixed] Fixed `STPPaymentCardTextField.cornerRadius` returning the previous value after it was set.
+
 ## 26.16.1 2026-11-09
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".
