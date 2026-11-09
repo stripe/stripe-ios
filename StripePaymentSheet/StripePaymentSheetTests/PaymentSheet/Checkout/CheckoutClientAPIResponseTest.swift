@@ -966,7 +966,7 @@ class CheckoutClientAPIResponseTest: XCTestCase {
     func testUnifiedModeSessionMapsDecimalOnlyAmountLikeEwCS() throws {
         let json = modifyingOneTimePriceItem { item in
             item.removeValue(forKey: "unit_amount")
-            item["unit_amount_decimal"] = "12.345"
+            item["unit_amount_decimal"] = "12.345678901234"
             var price = item["price"] as! [String: Any]
             price.removeValue(forKey: "unit_amount")
             item["price"] = price
@@ -980,8 +980,8 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         let item = try XCTUnwrap(oneTimePrice.items.first)
         XCTAssertEqual(item.unitAmount.minorUnitsAmount, 0)
         let unitAmountDecimal = try XCTUnwrap(item.unitAmountDecimal)
-        XCTAssertEqual(unitAmountDecimal.minorUnitsAmount, 12.345)
-        XCTAssertEqual(unitAmountDecimal.amount, "$0.12345")
+        XCTAssertEqual(unitAmountDecimal.minorUnitsAmount, Decimal(string: "12.345678901234"))
+        XCTAssertEqual(unitAmountDecimal.amount, "$0.12345678901234")
     }
 
     func testUnifiedModeSessionMapsAdjustableQuantity() throws {
@@ -1345,7 +1345,8 @@ class CheckoutClientAPIResponseTest: XCTestCase {
             "ordered_payment_method_types_and_wallets": ["card"],
             "elements_session_id": "es_123",
             "merchant_info": [
-                "country": "US"
+                "account_id": "acct_123",
+                "country": "US",
             ],
             "automatic_tax": [
                 "enabled": true,
@@ -1354,6 +1355,7 @@ class CheckoutClientAPIResponseTest: XCTestCase {
             ],
         ]).withCustomer().makePublicSession()
         XCTAssertEqual(session.checkoutConfigID, "csc_123")
+        XCTAssertEqual(session.elementsSession.accountID, "acct_123")
         XCTAssertTrue(session.elementsSession.disableLinkForAutomaticTaxBilling)
 
         let sessionWithoutTax = CheckoutTestHelpers.makeSession([
@@ -1364,6 +1366,7 @@ class CheckoutClientAPIResponseTest: XCTestCase {
             ],
         ]).withCustomer().makePublicSession()
         XCTAssertNil(sessionWithoutTax.checkoutConfigID)
+        XCTAssertNil(sessionWithoutTax.elementsSession.accountID)
         XCTAssertFalse(sessionWithoutTax.elementsSession.disableLinkForAutomaticTaxBilling)
 
         var jsonWithoutES = CheckoutTestHelpers.baseSessionJSON

@@ -274,16 +274,31 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2000)
     }
 
-    func testResetCustomerClearsLinkDefaults() {
+    func testClearLocalCustomerDataClearsLinkState() {
         // Given a customer who has used Link
         UserDefaults.standard.markLinkAsUsed()
         XCTAssertTrue(UserDefaults.standard.customerHasUsedLink)
+        // ...and has a Link account in memory
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
 
         // When the customer is reset
-        CheckoutElementsController.resetCustomer()
+        CheckoutElementsController.clearLocalCustomerData()
 
         // Then the persisted Link state is cleared
         XCTAssertFalse(UserDefaults.standard.customerHasUsedLink)
+        // ...and the in-memory Link account is cleared
+        XCTAssertNil(LinkAccountContext.shared.account)
     }
 
     private func promotionCode(in session: CheckoutElementsController.Session?) -> String? {

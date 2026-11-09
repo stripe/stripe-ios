@@ -239,7 +239,7 @@ extension CheckoutClientAPIResponse {
         let quantity: Int
         let amountDetails: AmountDetails
         let unitAmount: Int?
-        let unitAmountDecimal: Double?
+        let unitAmountDecimal: Decimal?
         let unitLabel: String?
         let adjustableQuantity: AdjustableQuantity?
 
@@ -277,7 +277,7 @@ extension CheckoutClientAPIResponse {
                 String.self,
                 forKey: .unitAmountDecimal
             ) {
-                guard let parsedUnitAmountDecimal = Double(rawUnitAmountDecimal),
+                guard let parsedUnitAmountDecimal = Decimal(string: rawUnitAmountDecimal),
                       parsedUnitAmountDecimal.isFinite else {
                     throw decoder.dataCorrupted("unit_amount_decimal must be a finite number")
                 }
@@ -468,6 +468,7 @@ extension CheckoutClientAPIResponse {
         }
 
         private struct MerchantInfo: Decodable {
+            let accountId: String?
             let displayName: String?
             let country: String
             let logoUrl: String?
@@ -525,8 +526,7 @@ extension CheckoutClientAPIResponse {
                 countryCode: try container.decodeIfPresent(String.self, forKey: .countryCode),
                 merchantCountryCode: merchant.country,
                 merchantLogoUrl: merchant.logoUrl.flatMap(URL.init(string:)),
-                // TODO(porter) account ID: Decode CheckoutClient's resolved account_id once the backend returns it.
-                accountID: nil,
+                accountID: merchant.accountId,
                 linkSettings: try container.decodeIfPresent(LegacyLinkSettings.self, forKey: .linkSettings)?.value,
                 experimentsData: try container.decodeIfPresent(LegacyDecoded<ExperimentsData>.self, forKey: .experimentsData)?.value,
                 flags: flags,

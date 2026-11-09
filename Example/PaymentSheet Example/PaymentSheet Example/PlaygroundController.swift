@@ -653,6 +653,7 @@ import UIKit
         self.currentlyRenderedSettings = .defaultValues()
         updateNativeSheetOverride(settings)
         updateForcedConsumerLinkBrand(settings)
+        updateMobileSessionFlag(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
             self?.updateNativeSheetOverride(newValue)
@@ -679,6 +680,7 @@ import UIKit
             FinancialConnectionsSDKAvailability.localFcLiteOverride = enableFcLite
 
             self?.updateForcedConsumerLinkBrand(newValue)
+            self?.updateMobileSessionFlag(newValue)
         }.store(in: &subscribers)
 
         // Listen for analytics
@@ -695,6 +697,11 @@ import UIKit
     private func updateForcedConsumerLinkBrand(_ settings: PaymentSheetTestPlaygroundSettings) {
         PaymentSheetLinkAccount.forcedConsumerLinkBrandForTesting =
             settings.forceOnelinkConsumer == .on ? .onelink : nil
+    }
+
+    private func updateMobileSessionFlag(_ settings: PaymentSheetTestPlaygroundSettings) {
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled =
+            settings.mobileSessionSidecar == .on
     }
 
     private func updateNativeSheetOverride(_ settings: PaymentSheetTestPlaygroundSettings) {

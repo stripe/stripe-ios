@@ -142,6 +142,32 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(session.amount, 6952)
     }
 
+    func testMakeSummaryItemsPreservesDecimalPrecisionBeforeRounding() {
+        // Given three units whose combined price is just above 1000 LBP
+        var checkoutItems = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "lbp", unitAmount: 33333)
+        var oneTimePrice = checkoutItems[0]["one_time_price"] as! [String: Any]
+        var priceItems = oneTimePrice["items"] as! [[String: Any]]
+        priceItems[0]["unit_amount_decimal"] = "33333.333333333334"
+        priceItems[0]["quantity"] = 3
+        priceItems[0]["amount_details"] = [
+            "subtotal": 100000, "total": 100000,
+            "tax_inclusive": 0, "tax_exclusive": 0,
+        ]
+        oneTimePrice["items"] = priceItems
+        checkoutItems[0]["one_time_price"] = oneTimePrice
+        let session = CheckoutTestHelpers.makeSession([
+            "items": checkoutItems,
+            "presentment_currency": "lbp",
+            "integration_currency": "lbp",
+        ]).makePublicSession()
+
+        // When building the Apple Pay summary
+        let items = CheckoutApplePayContext.makeSummaryItems(for: session, label: "Test Store")
+
+        // Then the line item rounds up to a whole pound after exact decimal multiplication
+        XCTAssertEqual(items.first?.amount, NSDecimalNumber(string: "1001"))
+    }
+
     func testMakeSummaryItemsWithNoAmount() {
         // Given a no-payment-required session (e.g. free order)
         let session = CheckoutTestHelpers.makeSession(["payment_status": "no_payment_required"]).makePublicSession()

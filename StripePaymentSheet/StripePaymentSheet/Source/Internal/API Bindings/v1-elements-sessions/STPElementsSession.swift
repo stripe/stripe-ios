@@ -67,6 +67,9 @@ import Foundation
     /// Customer details, returned when v1/elements/sessions is called with CustomerSession info
     let customer: ElementsCustomer?
 
+    /// The `mobile_session` sidecar. Only decoded when `PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled` is on.
+    let mobileSession: MobileSession.Session?
+
     // TODO(joyceqin) Re-enable as part of the ECE workstream
     // Link doesn't support automatic tax from billing address
     var disableLinkForAutomaticTaxBilling: Bool = false
@@ -92,7 +95,8 @@ import Foundation
         externalPaymentMethods: [ExternalPaymentMethod],
         customPaymentMethods: [CustomPaymentMethod],
         passiveCaptchaData: PassiveCaptchaData?,
-        customer: ElementsCustomer?
+        customer: ElementsCustomer?,
+        mobileSession: MobileSession.Session? = nil
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -113,6 +117,7 @@ import Foundation
         self.customPaymentMethods = customPaymentMethods
         self.passiveCaptchaData = passiveCaptchaData
         self.customer = customer
+        self.mobileSession = mobileSession
         super.init()
     }
 
@@ -246,6 +251,13 @@ extension STPElementsSession: STPAPIResponseDecodable {
             return cpms
         }()
 
+        let mobileSession: MobileSession.Session? = {
+            guard PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled else {
+                return nil
+            }
+            return MobileSession.decodeSidecar(fromAPIResponse: response)
+        }()
+
         return self.init(
             allResponseFields: response,
             sessionID: sessionID,
@@ -267,7 +279,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
             externalPaymentMethods: externalPaymentMethods,
             customPaymentMethods: customPaymentMethods,
             passiveCaptchaData: passiveCaptchaData,
-            customer: customer
+            customer: customer,
+            mobileSession: mobileSession
         )
     }
 }

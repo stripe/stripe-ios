@@ -279,10 +279,6 @@ import Foundation
         return STPLocalizedString("Error", "Text for error labels")
     }
 
-    static var cancel: String {
-        STPLocalizedString("Cancel", "Button title to cancel action in an alert")
-    }
-
     static var closeFormTitle: String {
         STPLocalizedString("Do you want to close this form?",
                            "Used as the title for prompting the user if they want to close the sheet")

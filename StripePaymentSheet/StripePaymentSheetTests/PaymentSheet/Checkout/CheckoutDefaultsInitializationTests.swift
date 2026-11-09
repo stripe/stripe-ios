@@ -101,8 +101,8 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
                 "phone": false,
             ],
             "payment_element": [
-                "apple_pay_config": false,
-                "link_display": "automatic",
+                "apple_pay_configuration": ["display": "automatic"],
+                "link_configuration": ["display": "automatic"],
                 "save_payment_method_opt_in_behavior": "automatic",
                 "appearance": try XCTUnwrap(configuration.paymentElement).appearance.analyticPayload,
                 "remove_saved_payment_method_message": true,

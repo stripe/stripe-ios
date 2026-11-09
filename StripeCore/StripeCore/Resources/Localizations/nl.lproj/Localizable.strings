@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Er is een foutopsporingsprogramma gekoppeld aan de app.";
+
+"An emulator is being used to run the App." = "Er wordt een emulator gebruikt om de app uit te voeren.";
+
 "An error occurred. Please try again." = "Er is iets misgegaan. Probeer het opnieuw.";
+
+"Cancel" = "Annuleer";
 
 "Card brand was not updated. Please try again." = "Het merk van de betaalkaart is niet bijgewerkt. Probeer het opnieuw.";
 
 "Close" = "Sluiten";
+
+"Collapsed" = "Samengevouwen";
 
 "Confirm it's you" = "Bevestig dat jij het bent";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Voer de code in die is verstuurd naar %@.";
 
+"Expanded" = "Uitgevouwen";
+
 "Failed to connect" = "Kan geen verbinding maken";
+
+"Loading" = "Aan het laden";
+
+"No" = "Nee";
 
 "Resend code" = "Code opnieuw verzenden";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Betaalkaart scannen";
 
+"Secure checkout" = "Beveiligd afrekenen";
+
+"Selected" = "Geselecteerd";
+
 "The IBAN you entered is invalid." = "Het opgegeven IBAN-nummer is ongeldig.";
+
+"The OS or the OS Version is not supported." = "Het besturingssysteem of de versie wordt niet ondersteund.";
+
+"The device is jailbroken." = "Het apparaat is opengebroken via een jailbreak.";
+
+"The integrity of the SDK has been tampered." = "De integriteit van de SDK is niet meer intact.";
 
 "There was an error processing your card -- try again in a few seconds" = "Er is een fout met de verwerking van je kaart. Probeer het over enkele seconden opnieuw";
 
 "There was an unexpected error -- try again in a few seconds" = "Er is een onverwachte fout opgetreden. Probeer het over enkele seconden opnieuw";
 
+"Timeout" = "Time-out";
+
 "Try again" = "Opnieuw proberen";
 
+"Unselected" = "Niet geselecteerd";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "We gebruiken Stripe om je kaartgegevens te verifiëren. Stripe kan je gegevens gebruiken en bewaren volgens hun privacybeleid. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Meer informatie</u></a>";
+
+"Yes" = "Ja";
 
 "Your card has expired" = "Je kaart is vervallen";
 

@@ -272,7 +272,8 @@ final class PaymentSheetLoader {
                 (paymentIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(paymentIntentClientSecret: clientSecret,
                                                                                                              clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                              configuration: configuration,
-                                                                                                             customerProvider: customerProvider)
+                                                                                                             customerProvider: customerProvider,
+                                                                                                             sendsMobileSessionConfig: true)
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)
                 guard shouldFallback(for: error) else {
@@ -293,7 +294,8 @@ final class PaymentSheetLoader {
                 (setupIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret,
                                                                                                            clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                            configuration: configuration,
-                                                                                                           customerProvider: customerProvider)
+                                                                                                           customerProvider: customerProvider,
+                                                                                                           sendsMobileSessionConfig: true)
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)
                 guard shouldFallback(for: error) else {
@@ -313,7 +315,8 @@ final class PaymentSheetLoader {
                 elementsSession = try await configuration.apiClient.retrieveDeferredElementsSession(withIntentConfig: intentConfig,
                                                                                                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                 configuration: configuration,
-                                                                                                customerProvider: customerProvider)
+                                                                                                customerProvider: customerProvider,
+                                                                                                sendsMobileSessionConfig: true)
                 intent = .deferredIntent(intentConfig: intentConfig)
             } catch {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)

@@ -53,11 +53,10 @@ class InstantBankPaymentsControllerUITest: XCTestCase {
             .firstMatch
             .waitForExistenceAndTap(timeout: 10)
         let email = "instantbankpaymentscontrolleruitest-\(UUID().uuidString)@example.com"
-        app.typeText(email + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Phone number"].tap()
-        // the `XCUIKeyboardKey.return.rawValue` will automatically
-        // press the "Continue with Link" button to proceed to next
-        // screen
+        app.typeText(email)
+        app.stp_dismissKeyboard()
+        app.buttons["Continue with Link"].scrollToAndTap(in: app)
+        XCTAssertTrue(app.textFields["Phone number"].waitForExistenceAndTap(timeout: timeout))
         app.typeText("4015006000" + XCUIKeyboardKey.return.rawValue)
 
         // "Account Picker" pane
