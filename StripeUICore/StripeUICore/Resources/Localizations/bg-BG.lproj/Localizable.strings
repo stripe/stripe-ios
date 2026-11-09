@@ -1,199 +1,151 @@
-/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@••••%2$@";
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+
 "%@ (optional)" = "%@ (по желание)";
-/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
-"%@ is incomplete." = "%@ е непълен.";
-/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
+
 "(not accepted)" = "(не се приема)";
-/* Placeholder text for Account number entry field for BECS Debit. */
+
 "Account number" = "Номер на сметката";
-/* Caption for Address field on address form */
+
 "Address" = "Адрес";
-/* Address line 1 placeholder for billing address form. */
+
 "Address line 1" = "Ред 1 на адреса";
-/* Label for input requesting address line 2, used for international addresses */
+
 "Address line 2" = "Ред 2 на адреса";
-/* Label of an address field in hk */
+
 "Area" = "Район";
-/* Label for BLIK code number field on form */
+
 "BLIK code" = "BLIK код";
-/* Placeholder for AU BECS BSB number */
+
 "BSB number" = "BSB номер";
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Банкова сметка";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
+
 "Bank account •••• %@" = "Банкова сметка •••• %@";
-/* Billing address section title for card form entry. */
-"Billing address" = "Адрес за фактуриране";
-/* Label for a checkbox that makes customers billing address same as their shipping address */
+
 "Billing address is same as shipping" = "Адресът за фактуриране е същият като за доставка";
-/* Label for entering CVC in text field */
-"CVC" = "CVC";
-/* Button title to cancel action in an alert */
-"Cancel" = "Отмяна";
-/* Label an input field to update card brand */
+
 "Card brand" = "Марка на картата";
-/* Label for card number entry text field */
-"Card number" = "Номер на банкова карта";
-/* Caption for City field on address form */
+
 "City" = "Град";
-/* Accessibility label describing a field for entering a login code */
+
 "Code field" = "Поле за код";
-/* Label for Company field on form */
+
 "Company" = "Компания";
-/* Text for alert message when user needs to confirm payment in their banking app */
-"Confirm the payment in your bank's app to complete the purchase." = "Потвърдете плащането в приложението на банката си, за да завършите покупката.";
-/* Text for continue button */
+
 "Continue" = "Продължаване";
-/* Caption for Country field on address form */
+
 "Country" = "Държава";
-/* Country selector and postal code entry form header title */
+
 "Country or region" = "Държава или регион";
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+
 "County" = "Окръг";
-/* Error message for empty date. */
-"Date is empty." = "Датата е празна.";
-/* Label for Date of birth field */
+
 "Date of Birth" = "Дата на раждане";
-/* Label of an address field */
+
 "Department" = "Отдел";
-/* Label for the district field on an address form */
+
 "District" = "Окръг";
-/* Label of an address field */
+
 "Do Si" = "Do Si";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Do you want to close this form?" = "Искате ли да затворите този формуляр?";
-/* Done button title */
+
 "Done" = "Готово";
-/* Accessibility hint for a text field */
+
 "Double tap to edit" = "Докоснете два пъти, за да редактирате";
-/* Button title to enter editing mode */
+
 "Edit" = "Редактиране";
-/* Label of an address field */
+
 "Eircode" = "Eircode";
-/* Caption for Email field on address form */
+
 "Email" = "Имейл";
-/* Used to describe address in United Arab Emirates */
+
 "Emirate" = "Емирство";
-/* Text for error labels */
+
 "Error" = "Грешка";
-/* Label for first (given) name field */
+
 "First" = "Собствено";
-/* Placeholder string for name entry field. */
+
 "Full name" = "Трите имена";
-/* Error description for incomplete phone number */
+
 "Incomplete phone number" = "Непълен телефонен номер";
-/* Error message when UPI ID is invalid */
-"Invalid UPI ID" = "Невалиден идентификационен номер на UPI";
-/* Label of an address field */
+
 "Island" = "Остров";
-/* Label for last (family) name field */
+
 "Last" = "Фамилия";
-/* label for text field to enter card expiry */
-"MM / YY" = "ММ / ГГ";
-/* Form field header for entering a mobile phone number */
-"Mobile number" = "Мобилен номер";
-/* Caption for Name field on address form */
+
 "Name" = "Име";
-/* Label for Name on account field on form */
+
 "Name on account" = "Име на сметката";
-/* No comment provided by engineer. */
+
 "OK" = "OK";
-/* Label of an address field */
+
 "Oblast" = "Област";
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+
 "Other" = "Друга";
-/* Label of an address field */
+
 "Parish" = "Енория";
-/* Caption for Phone field on address form */
-"Phone" = "Телефон";
-/* Caption for Phone number field on address form */
+
 "Phone number" = "Телефонен номер";
-/* Short string for postal code (text used in non-US countries) */
+
 "Postal code" = "Пощенски код";
-/* Label of an address field */
+
 "Prefecture" = "Префектура";
-/* Label of a disabled button while its action is processing */
+
 "Processing..." = "Обработва се...";
-/* Caption for Province field on address form (only countries that use province, like Canada) */
+
 "Province" = "Област";
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
+
 "Remove" = "Премахване";
-/* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "Премахване на банкова сметка";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "Премахване на банкова сметка, завършваща на %@";
-/* Title for confirmation alert to remove a saved bank account payment method */
+
 "Remove bank account?" = "Премахване на банкова сметка?";
-/* Title for a button that when tapped removes a saved card. */
+
 "Remove card" = "Премахване на банкова карта";
-/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
+
 "Search" = "Търсене";
-/* Message when a user is selecting a card brand in a dropdown */
+
 "Select card brand (optional)" = "Изберете марка на картата (по избор)";
-/* Error message for empty dropdown selection. */
+
 "Selection is empty." = "Изборът е празен.";
-/* Heading for a generic error when an operation fails */
+
 "Something went wrong" = "Нещо се е объркало";
-/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
+
 "Sort code" = "Идентификационен банков код";
-/* Caption for State field on address form (only countries that use state , like United States) */
+
 "State" = "Щат";
-/* Button that submits the information entered on a screen */
+
 "Submit" = "Подаване";
-/* Label of an address field */
+
 "Suburb" = "Предградие";
-/* Label of an address field */
+
 "Suburb or city" = "Предградие или град";
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
 "The BSB you entered is incomplete." = "BSB, който сте въвели, е непълен.";
-/* An error message. */
+
 "The ID number you entered is incomplete." = "Идентификационният номер, който сте въвели, е непълен.";
-/* Error description for incomplete account number */
+
 "The account number you entered is incomplete." = "Въведеният от Вас номер на сметката е невалиден.";
-/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
+
 "The sort code you entered is invalid." = "Идентификационният банков код, който въведохте, е невалиден.";
-/* Label of an address field */
+
 "Town or city" = "Град";
-/* Label for UPI ID number field on form */
-"UPI ID" = "UPI ID";
-/* Error string when we can't parse a phone number */
+
 "Unable to parse phone number" = "Неуспешно анализиране на телефонния номер";
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+
 "Use rotor to access links" = "Използване на ротор за достъп до връзки";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is incomplete." = "Вашият BLIK код е непълен.";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is invalid." = "Вашият BLIK код е невалиден.";
-/* Error message for when ZIP code in form is incomplete (US only) */
+
 "Your ZIP code is incomplete." = "Вашият пощенски код е непълен.";
-/* Error message for when ZIP code in form is invalid (US only) */
+
 "Your ZIP code is invalid." = "Вашият пощенски код е невалиден.";
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Вашият ZIP код е непълен.";
-/* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "Номерът на картата Ви е непълен.";
-/* Error message for card form when card number is invalid */
-"Your card number is invalid." = "Номерът на картата Ви е невалиден.";
-/* Error message for card details form when expiration date isn't entered completely */
-"Your card's expiration date is incomplete." = "Срокът на валидност на картата Ви е непълен.";
-/* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "Срокът на валидност на Вашата банкова карта е невалиден.";
-/* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "Месецът от срока на валидност на Вашата банкова карта е невалиден.";
-/* Error message for card entry form when CVC is incomplete. */
-"Your card's security code is incomplete." = "Кодът за сигурност на картата Ви е непълен.";
-/* Error message when email is invalid */
+
 "Your email is invalid." = "Вашият имейл е невалиден.";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Your payment information will not be saved." = "Вашата информация за плащане няма да бъде запазена.";
-/* Error message for when postal code in form is incomplete */
+
 "Your postal code is incomplete." = "Вашият пощенски код е непълен.";
-/* Error message for when postal code in form is invalid */
+
 "Your postal code is invalid." = "Вашият пощенски код е невалиден.";
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+
 "ZIP" = "п.к.";
-/* accessibility label for text field */
-"expiration date" = "Срок на валидност";

@@ -1,199 +1,151 @@
-/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+
 "%@ (optional)" = "%@ (optional)";
-/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
-"%@ is incomplete." = "%@ ist unvollständig.";
-/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
+
 "(not accepted)" = "(nicht akzeptiert)";
-/* Placeholder text for Account number entry field for BECS Debit. */
+
 "Account number" = "Kontonummer";
-/* Caption for Address field on address form */
+
 "Address" = "Adresse";
-/* Address line 1 placeholder for billing address form. */
+
 "Address line 1" = "Adresszeile 1";
-/* Label for input requesting address line 2, used for international addresses */
+
 "Address line 2" = "Adresszeile 2";
-/* Label of an address field in hk */
+
 "Area" = "Region";
-/* Label for BLIK code number field on form */
+
 "BLIK code" = "BLIK-Code";
-/* Placeholder for AU BECS BSB number */
+
 "BSB number" = "BSB-Nummer";
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Bankkonto";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
+
 "Bank account •••• %@" = "Bankkonto •••• %@";
-/* Billing address section title for card form entry. */
-"Billing address" = "Rechnungsadresse";
-/* Label for a checkbox that makes customers billing address same as their shipping address */
+
 "Billing address is same as shipping" = "Rechnungsadresse und Versandadresse sind identisch.";
-/* Label for entering CVC in text field */
-"CVC" = "Prüfziffer/CVC";
-/* Button title to cancel action in an alert */
-"Cancel" = "Abbrechen";
-/* Label an input field to update card brand */
+
 "Card brand" = "Kartenmarke";
-/* Label for card number entry text field */
-"Card number" = "Kartennummer";
-/* Caption for City field on address form */
+
 "City" = "Ort";
-/* Accessibility label describing a field for entering a login code */
+
 "Code field" = "Code-Feld";
-/* Label for Company field on form */
+
 "Company" = "Unternehmen";
-/* Text for alert message when user needs to confirm payment in their banking app */
-"Confirm the payment in your bank's app to complete the purchase." = "Bestätigen Sie die Zahlung in Ihrer Banking-App, um den Kaufvorgang abzuschließen.";
-/* Text for continue button */
+
 "Continue" = "Weiter";
-/* Caption for Country field on address form */
+
 "Country" = "Land";
-/* Country selector and postal code entry form header title */
+
 "Country or region" = "Land oder Region";
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+
 "County" = "Kreis/Bezirk";
-/* Error message for empty date. */
-"Date is empty." = "Datum ist leer.";
-/* Label for Date of birth field */
+
 "Date of Birth" = "Geburtsdatum";
-/* Label of an address field */
+
 "Department" = "Departement";
-/* Label for the district field on an address form */
+
 "District" = "Distrikt";
-/* Label of an address field */
+
 "Do Si" = "Do Si";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Do you want to close this form?" = "Möchten Sie dieses Formular schließen?";
-/* Done button title */
+
 "Done" = "Fertig";
-/* Accessibility hint for a text field */
+
 "Double tap to edit" = "Doppelklick zum Bearbeiten";
-/* Button title to enter editing mode */
+
 "Edit" = "Bearbeiten";
-/* Label of an address field */
+
 "Eircode" = "Eircode";
-/* Caption for Email field on address form */
+
 "Email" = "E-Mail";
-/* Used to describe address in United Arab Emirates */
+
 "Emirate" = "Emirat";
-/* Text for error labels */
+
 "Error" = "Fehler";
-/* Label for first (given) name field */
+
 "First" = "Vorname";
-/* Placeholder string for name entry field. */
+
 "Full name" = "Vollständiger Name";
-/* Error description for incomplete phone number */
+
 "Incomplete phone number" = "Unvollständige Telefonnummer";
-/* Error message when UPI ID is invalid */
-"Invalid UPI ID" = "Ungültige UPI-ID";
-/* Label of an address field */
+
 "Island" = "Insel";
-/* Label for last (family) name field */
+
 "Last" = "Name";
-/* label for text field to enter card expiry */
-"MM / YY" = "MM/JJ";
-/* Form field header for entering a mobile phone number */
-"Mobile number" = "Mobilnummer";
-/* Caption for Name field on address form */
+
 "Name" = "Name";
-/* Label for Name on account field on form */
+
 "Name on account" = "Name des/der Kontoinhaber/in";
-/* No comment provided by engineer. */
+
 "OK" = "OK";
-/* Label of an address field */
+
 "Oblast" = "Oblast";
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+
 "Other" = "Sonstiges";
-/* Label of an address field */
+
 "Parish" = "Parish";
-/* Caption for Phone field on address form */
-"Phone" = "Telefon";
-/* Caption for Phone number field on address form */
+
 "Phone number" = "Telefonnummer";
-/* Short string for postal code (text used in non-US countries) */
+
 "Postal code" = "Postleitzahl";
-/* Label of an address field */
+
 "Prefecture" = "Präfektur";
-/* Label of a disabled button while its action is processing */
+
 "Processing..." = "Wird bearbeitet …";
-/* Caption for Province field on address form (only countries that use province, like Canada) */
+
 "Province" = "Provinz / Kanton";
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
+
 "Remove" = "Entfernen";
-/* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "Bankkonto entfernen";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "Bankkonto mit den Endziffern %@ entfernen";
-/* Title for confirmation alert to remove a saved bank account payment method */
+
 "Remove bank account?" = "Bankkonto entfernen?";
-/* Title for a button that when tapped removes a saved card. */
+
 "Remove card" = "Karte entfernen";
-/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
+
 "Search" = "Suchen";
-/* Message when a user is selecting a card brand in a dropdown */
+
 "Select card brand (optional)" = "Kartenmarke auswählen (optional)";
-/* Error message for empty dropdown selection. */
+
 "Selection is empty." = "Die Auswahl ist leer.";
-/* Heading for a generic error when an operation fails */
+
 "Something went wrong" = "Es ist ein Fehler aufgetreten";
-/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
+
 "Sort code" = "Bankleitzahl";
-/* Caption for State field on address form (only countries that use state , like United States) */
+
 "State" = "Bundesland";
-/* Button that submits the information entered on a screen */
+
 "Submit" = "Absenden";
-/* Label of an address field */
+
 "Suburb" = "Vorort";
-/* Label of an address field */
+
 "Suburb or city" = "Vorort oder Stadt";
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
 "The BSB you entered is incomplete." = "Die eingegebene BSB-Nummer ist unvollständig.";
-/* An error message. */
+
 "The ID number you entered is incomplete." = "Die eingegebene Ausweisnummer ist unvollständig.";
-/* Error description for incomplete account number */
+
 "The account number you entered is incomplete." = "Die von Ihnen eingegebene Kontonummer ist unvollständig.";
-/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
+
 "The sort code you entered is invalid." = "Die eingegebene Bankleitzahl ist ungültig.";
-/* Label of an address field */
+
 "Town or city" = "Stadt oder Ort";
-/* Label for UPI ID number field on form */
-"UPI ID" = "UPI-ID";
-/* Error string when we can't parse a phone number */
+
 "Unable to parse phone number" = "Telefonnummer kann nicht geparst werden";
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+
 "Use rotor to access links" = "Rotor zum Zugriff auf Links nutzen";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is incomplete." = "Ihr BLIK-Code ist unvollständig.";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is invalid." = "Ihr BLIK code ist ungültig.";
-/* Error message for when ZIP code in form is incomplete (US only) */
+
 "Your ZIP code is incomplete." = "Ihre Postleitzahl ist unvollständig.";
-/* Error message for when ZIP code in form is invalid (US only) */
+
 "Your ZIP code is invalid." = "Ihre Postleitzahl ist ungültig.";
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "PLZ ist unvollständig.";
-/* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "Ihre Kartennummer ist unvollständig.";
-/* Error message for card form when card number is invalid */
-"Your card number is invalid." = "Ihre Kartennummer ist ungültig.";
-/* Error message for card details form when expiration date isn't entered completely */
-"Your card's expiration date is incomplete." = "Das Ablaufdatum der Karte ist unvollständig.";
-/* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "Das Ablaufdatum der Karte ist ungültig.";
-/* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "Der Ablaufmonat Ihrer Karte ist ungültig.";
-/* Error message for card entry form when CVC is incomplete. */
-"Your card's security code is incomplete." = "Der Sicherheitscode Ihrer Karte ist unvollständig.";
-/* Error message when email is invalid */
+
 "Your email is invalid." = "Ihre E-Mail-Adresse ist ungültig.";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Your payment information will not be saved." = "Ihre Zahlungsinformationen werden nicht gespeichert.";
-/* Error message for when postal code in form is incomplete */
+
 "Your postal code is incomplete." = "Postleitzahl ist unvollständig.";
-/* Error message for when postal code in form is invalid */
+
 "Your postal code is invalid." = "Postleitzahl ist ungültig";
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+
 "ZIP" = "ZIP";
-/* accessibility label for text field */
-"expiration date" = "Gültig bis";

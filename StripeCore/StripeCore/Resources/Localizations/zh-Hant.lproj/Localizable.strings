@@ -1,74 +1,69 @@
-/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "已將偵錯器附加至應用程式。";
-/* The text for warning when an emulator is being used to run the application. */
+
 "An emulator is being used to run the App." = "正在使用模擬器執行應用程式。";
-/* An error message displayed when an error occurred. */
+
 "An error occurred. Please try again." = "出錯了，請稍後重試。";
-/* Button title to cancel action in an alert */
+
 "Cancel" = "取消";
-/* An error message displayed when changing a card brand fails. */
+
 "Card brand was not updated. Please try again." = "金融卡品牌未更新，請重試。";
-/* Text for close button */
+
 "Close" = "關閉";
-/* Accessibility label for expandable text control to indicate text is hidden. */
+
 "Collapsed" = "已收疊";
-/* Two factor authentication screen heading */
+
 "Confirm it's you" = "確認是您本人";
-/* An error message displayed when setting a default payment method fails. */
-"Default payment method was not changed. Please try again." = "未更改預設支付方式，請重試。";
-/* An error message displayed when setting a default payment method fails. */
+
 "Default payment method was not updated. Please try again." = "未更新預設支付方式，請重試。";
-/* Label for button to enter card details manually instead of scanning */
-"Enter card details manually" = "手動輸入銀行卡詳細資料";
-/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
+
 "Expanded" = "已展開";
-/* Status while screen is loading */
+
 "Loading" = "載入中";
-/* The no answer to a yes or no question. */
+
 "No" = "否";
-/* Text for button to scan a credit card */
+
 "Scan Card" = "掃描金融卡";
-/* Button title to open camera to scan credit/debit card */
+
 "Scan card" = "掃描卡";
-/* The title for the challenge response step of an authenticated checkout. */
+
 "Secure checkout" = "安全結帳";
-/* Indicates that a button is selected. */
+
 "Selected" = "已選取";
-/* An error message displayed when the customer's iban is invalid. */
+
 "The IBAN you entered is invalid." = "您輸入的 IBAN 無效。";
-/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+
 "The OS or the OS Version is not supported." = "不支援該作業系統或作業系統版本。";
-/* The text for warning when a device is jailbroken. */
+
 "The device is jailbroken." = "裝置已越獄。";
-/* The text for warning when the integrity of the SDK has been tampered with. */
+
 "The integrity of the SDK has been tampered." = "SDK 的完整性已遭竄改。";
-/* Error when there is a problem processing the credit card */
+
 "There was an error processing your card -- try again in a few seconds" = "處理您的卡時發生錯誤 -- 請等待幾秒後再試";
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
 "There was an unexpected error -- try again in a few seconds" = "發生了意外錯誤 -- 請等待幾秒後再試一次";
-/* Error description for when a network request times out. English value is as required by UL certification. */
+
 "Timeout" = "逾時";
-/* Button to reload web view if we were unable to connect. */
+
 "Try again" = "重試";
-/* Indicates that a button is not selected. */
+
 "Unselected" = "未選取";
-/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "我們用 Stripe 來驗證您的金融卡資訊。Stripe 可能會根據其隱私政策使用並存儲您的資料。<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>瞭解更多</u></a>";
-/* The yes answer to a yes or no question. */
+
 "Yes" = "是";
-/* Error when the card has already expired */
+
 "Your card has expired" = "您的卡已過期";
-/* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "您的卡已被拒絕";
-/* Error when the card&apos;s expiration month is not valid */
+
 "Your card's expiration month is invalid" = "您的金融卡的到期月份無效";
-/* Error when the card&apos;s expiration year is not valid */
+
 "Your card's expiration year is invalid" = "您的金融卡的到期年份無效";
-/* Error when the card number is not valid */
+
 "Your card's number is invalid" = "您的卡號無效";
-/* Error when the card&apos;s CVC is not valid */
+
 "Your card's security code is invalid" = "您的金融卡的安全碼無效";
-/* Error when customer's name is invalid */
+
 "Your name is invalid." = "您的名稱無效。";
-/* Error message when a payment method gets declined. */
+
 "Your payment method was declined." = "您的支付方式被拒絕了。";

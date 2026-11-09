@@ -1,80 +1,75 @@
-/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "Um depurador está conectado ao App.";
-/* The text for warning when an emulator is being used to run the application. */
+
 "An emulator is being used to run the App." = "Um emulador está sendo usado para executar o App.";
-/* An error message displayed when an error occurred. */
+
 "An error occurred. Please try again." = "Ocorreu um erro. Tente outra vez.";
-/* Button title to cancel action in an alert */
+
 "Cancel" = "Cancelar";
-/* An error message displayed when changing a card brand fails. */
+
 "Card brand was not updated. Please try again." = "A bandeira do cartão não foi atualizada. Tente novamente.";
-/* Text for close button */
+
 "Close" = "Fechar";
-/* Accessibility label for expandable text control to indicate text is hidden. */
+
 "Collapsed" = "Recolhido";
-/* Two factor authentication screen heading */
+
 "Confirm it's you" = "Confirme sua identidade";
-/* An error message displayed when setting a default payment method fails. */
-"Default payment method was not changed. Please try again." = "A forma de pagamento padrão não foi alterada. Tente novamente.";
-/* An error message displayed when setting a default payment method fails. */
+
 "Default payment method was not updated. Please try again." = "A forma de pagamento padrão não foi atualizada. Tente novamente.";
-/* Label for button to enter card details manually instead of scanning */
-"Enter card details manually" = "Inserir manualmente os dados do cartão";
-/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+
 "Enter the code sent to %@." = "Insira o código enviado para %@.";
-/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
+
 "Expanded" = "Expandido";
-/* Label shown when a network-related error has occured. */
+
 "Failed to connect" = "Falha ao conectar";
-/* Status while screen is loading */
+
 "Loading" = "Carregando";
-/* The no answer to a yes or no question. */
+
 "No" = "Não";
-/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
+
 "Resend code" = "Reenviar código";
-/* Text for button to scan a credit card */
+
 "Scan Card" = "Digitalizar cartão";
-/* Button title to open camera to scan credit/debit card */
+
 "Scan card" = "Ler cartão";
-/* The title for the challenge response step of an authenticated checkout. */
+
 "Secure checkout" = "Checkout seguro";
-/* Indicates that a button is selected. */
+
 "Selected" = "Selecionado";
-/* An error message displayed when the customer's iban is invalid. */
+
 "The IBAN you entered is invalid." = "O IBAN inserido é inválido.";
-/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+
 "The OS or the OS Version is not supported." = "O SO ou a versão do SO não é compatível.";
-/* The text for warning when a device is jailbroken. */
+
 "The device is jailbroken." = "O dispositivo foi desbloqueado.";
-/* The text for warning when the integrity of the SDK has been tampered with. */
+
 "The integrity of the SDK has been tampered." = "A integridade do SDK foi comprometida.";
-/* Error when there is a problem processing the credit card */
+
 "There was an error processing your card -- try again in a few seconds" = "Erro ao processar o cartão – tente novamente em alguns segundos";
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
 "There was an unexpected error -- try again in a few seconds" = "Erro inesperado – tente novamente em alguns segundos";
-/* Error description for when a network request times out. English value is as required by UL certification. */
+
 "Timeout" = "Tempo limite";
-/* Button to reload web view if we were unable to connect. */
+
 "Try again" = "Tentar novamente";
-/* Indicates that a button is not selected. */
+
 "Unselected" = "Não selecionado";
-/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Usamos a Stripe para verificar os dados do seu cartão. A Stripe pode usar e armazenar seus dados de acordo com a política de privacidade da empresa. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Saiba mais</u></a>";
-/* The yes answer to a yes or no question. */
+
 "Yes" = "Sim";
-/* Error when the card has already expired */
+
 "Your card has expired" = "O cartão expirou";
-/* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "O cartão foi recusado";
-/* Error when the card&apos;s expiration month is not valid */
+
 "Your card's expiration month is invalid" = "O mês de expiração doi cartão é inválido";
-/* Error when the card&apos;s expiration year is not valid */
+
 "Your card's expiration year is invalid" = "O ano de expiração do cartão é inválido";
-/* Error when the card number is not valid */
+
 "Your card's number is invalid" = "O número do cartão é inválido";
-/* Error when the card&apos;s CVC is not valid */
+
 "Your card's security code is invalid" = "O código de segurança do cartão é inválido";
-/* Error when customer's name is invalid */
+
 "Your name is invalid." = "Nome inválido.";
-/* Error message when a payment method gets declined. */
+
 "Your payment method was declined." = "A forma de pagamento foi recusada.";

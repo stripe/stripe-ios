@@ -1,199 +1,151 @@
-/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+
 "%@ (optional)" = "%@ (neobavezno)";
-/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
-"%@ is incomplete." = "%@ je nepotpuno.";
-/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
+
 "(not accepted)" = "(nije prihvaćena)";
-/* Placeholder text for Account number entry field for BECS Debit. */
+
 "Account number" = "Broj računa";
-/* Caption for Address field on address form */
+
 "Address" = "Adresa";
-/* Address line 1 placeholder for billing address form. */
+
 "Address line 1" = "Ulica i kućni broj 1";
-/* Label for input requesting address line 2, used for international addresses */
+
 "Address line 2" = "Broj stana, kat ili poštanski pretinac";
-/* Label of an address field in hk */
+
 "Area" = "Područje";
-/* Label for BLIK code number field on form */
+
 "BLIK code" = "BLIK kod";
-/* Placeholder for AU BECS BSB number */
+
 "BSB number" = "BSB broj";
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Bankovni račun";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
+
 "Bank account •••• %@" = "Bankovni račun •••• %@";
-/* Billing address section title for card form entry. */
-"Billing address" = "Adresa fakturiranja";
-/* Label for a checkbox that makes customers billing address same as their shipping address */
+
 "Billing address is same as shipping" = "Adresa računa jednaka je adresi dostave";
-/* Label for entering CVC in text field */
-"CVC" = "CVC";
-/* Button title to cancel action in an alert */
-"Cancel" = "Otkaži";
-/* Label an input field to update card brand */
+
 "Card brand" = "Robna marka kartice";
-/* Label for card number entry text field */
-"Card number" = "Broj kartice";
-/* Caption for City field on address form */
+
 "City" = "Grad";
-/* Accessibility label describing a field for entering a login code */
+
 "Code field" = "Polje za kod";
-/* Label for Company field on form */
+
 "Company" = "Poduzeće";
-/* Text for alert message when user needs to confirm payment in their banking app */
-"Confirm the payment in your bank's app to complete the purchase." = "Potvrdite plaćanje u aplikaciji svoje banke da biste dovršili kupnju.";
-/* Text for continue button */
+
 "Continue" = "Nastavi";
-/* Caption for Country field on address form */
+
 "Country" = "Zemlja";
-/* Country selector and postal code entry form header title */
+
 "Country or region" = "Zemlja ili regija";
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+
 "County" = "Grofovija";
-/* Error message for empty date. */
-"Date is empty." = "Datum je prazan.";
-/* Label for Date of birth field */
+
 "Date of Birth" = "Datum rođenja";
-/* Label of an address field */
+
 "Department" = "Administrativna jedinica";
-/* Label for the district field on an address form */
+
 "District" = "Okrug";
-/* Label of an address field */
+
 "Do Si" = "Do Si";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Do you want to close this form?" = "Želite li zatvoriti ovaj obrazac?";
-/* Done button title */
+
 "Done" = "Gotovo";
-/* Accessibility hint for a text field */
+
 "Double tap to edit" = "Dodirnite dva puta za uređivanje";
-/* Button title to enter editing mode */
+
 "Edit" = "Uredi";
-/* Label of an address field */
+
 "Eircode" = "Eircode";
-/* Caption for Email field on address form */
+
 "Email" = "E-mail";
-/* Used to describe address in United Arab Emirates */
+
 "Emirate" = "Emirat";
-/* Text for error labels */
+
 "Error" = "Greška";
-/* Label for first (given) name field */
+
 "First" = "Ime";
-/* Placeholder string for name entry field. */
+
 "Full name" = "Puno ime";
-/* Error description for incomplete phone number */
+
 "Incomplete phone number" = "Nepotpuni telefonski broj";
-/* Error message when UPI ID is invalid */
-"Invalid UPI ID" = "Nevažeći UPI ID";
-/* Label of an address field */
+
 "Island" = "Otok";
-/* Label for last (family) name field */
+
 "Last" = "Prezime";
-/* label for text field to enter card expiry */
-"MM / YY" = "MM / GG";
-/* Form field header for entering a mobile phone number */
-"Mobile number" = "Broj mobitela";
-/* Caption for Name field on address form */
+
 "Name" = "Ime";
-/* Label for Name on account field on form */
+
 "Name on account" = "Ime na računu";
-/* No comment provided by engineer. */
+
 "OK" = "U redu";
-/* Label of an address field */
+
 "Oblast" = "Oblast";
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+
 "Other" = "Ostalo";
-/* Label of an address field */
+
 "Parish" = "Župa";
-/* Caption for Phone field on address form */
-"Phone" = "Telefon";
-/* Caption for Phone number field on address form */
+
 "Phone number" = "Telefonski broj";
-/* Short string for postal code (text used in non-US countries) */
+
 "Postal code" = "Poštanski broj";
-/* Label of an address field */
+
 "Prefecture" = "Prefektura";
-/* Label of a disabled button while its action is processing */
+
 "Processing..." = "Obrada…";
-/* Caption for Province field on address form (only countries that use province, like Canada) */
+
 "Province" = "Provincija";
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
+
 "Remove" = "Ukloni";
-/* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "Ukloni bankovni račun";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "Ukloni bankovni račun koji završava na %@";
-/* Title for confirmation alert to remove a saved bank account payment method */
+
 "Remove bank account?" = "Ukloniti bankovni račun?";
-/* Title for a button that when tapped removes a saved card. */
+
 "Remove card" = "Ukloni karticu";
-/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
+
 "Search" = "Pretraži";
-/* Message when a user is selecting a card brand in a dropdown */
+
 "Select card brand (optional)" = "Odaberite marku kartice (nije obavezno)";
-/* Error message for empty dropdown selection. */
+
 "Selection is empty." = "Odabir je prazan.";
-/* Heading for a generic error when an operation fails */
+
 "Something went wrong" = "Došlo je do pogreške";
-/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
+
 "Sort code" = "Bankovni kod za razvrstavanje (UK)";
-/* Caption for State field on address form (only countries that use state , like United States) */
+
 "State" = "Država";
-/* Button that submits the information entered on a screen */
+
 "Submit" = "Pošalji";
-/* Label of an address field */
+
 "Suburb" = "Predgrađe";
-/* Label of an address field */
+
 "Suburb or city" = "Predgrađe ili grad";
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
 "The BSB you entered is incomplete." = "Uneseni BSB nije kompletan.";
-/* An error message. */
+
 "The ID number you entered is incomplete." = "Uneseni identifikacijski broj nije potpun.";
-/* Error description for incomplete account number */
+
 "The account number you entered is incomplete." = "Uneseni broj računa je nepotpun.";
-/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
+
 "The sort code you entered is invalid." = "Bankovni kod za razvrstavanje koji ste unijeli nije važeći.";
-/* Label of an address field */
+
 "Town or city" = "Gradić ili grad";
-/* Label for UPI ID number field on form */
-"UPI ID" = "UPI ID";
-/* Error string when we can't parse a phone number */
+
 "Unable to parse phone number" = "Broj telefona nije moguće pročitati";
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+
 "Use rotor to access links" = "Upotrijebite rotor za pristup poveznicama";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is incomplete." = "Vaš BLIK kod je nepotpun.";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is invalid." = "Vaš BLIK kod je nevažeći.";
-/* Error message for when ZIP code in form is incomplete (US only) */
+
 "Your ZIP code is incomplete." = "Vaš poštanski broj nepotpun je.";
-/* Error message for when ZIP code in form is invalid (US only) */
+
 "Your ZIP code is invalid." = "Vaš poštanski broj nije valjan.";
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Vaš ZIP broj nije kompletan.";
-/* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "Broj vaše kartice nije potpun.";
-/* Error message for card form when card number is invalid */
-"Your card number is invalid." = "Broj vaše kartice nije valjan.";
-/* Error message for card details form when expiration date isn't entered completely */
-"Your card's expiration date is incomplete." = "Datum isteka vaše kartice nije potpun.";
-/* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "Datum isteka vaše kartice nije valjan.";
-/* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "Mjesec isteka vaše kartice nije valjan.";
-/* Error message for card entry form when CVC is incomplete. */
-"Your card's security code is incomplete." = "Sigurnosni kôd vaše kartice nije potpun.";
-/* Error message when email is invalid */
+
 "Your email is invalid." = "Vaš e-mail je neispravan.";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Your payment information will not be saved." = "Vaši podaci o plaćanju neće biti spremljeni.";
-/* Error message for when postal code in form is incomplete */
+
 "Your postal code is incomplete." = "Vaš poštanski broj nije kompletan.";
-/* Error message for when postal code in form is invalid */
+
 "Your postal code is invalid." = "Vaš poštanski broj nije valjan.";
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+
 "ZIP" = "ZIP";
-/* accessibility label for text field */
-"expiration date" = "datum isteka";

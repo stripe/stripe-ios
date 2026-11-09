@@ -1,80 +1,75 @@
-/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "Rakendusega on ühendatud silur.";
-/* The text for warning when an emulator is being used to run the application. */
+
 "An emulator is being used to run the App." = "Rakenduse käitamiseks kasutatakse emulaatorit.";
-/* An error message displayed when an error occurred. */
+
 "An error occurred. Please try again." = "Ilmnes tõrge. Palun proovige uuesti.";
-/* Button title to cancel action in an alert */
+
 "Cancel" = "Tühista";
-/* An error message displayed when changing a card brand fails. */
+
 "Card brand was not updated. Please try again." = "Kaardi kaubamärki ei värskendatud. Palun proovige uuesti.";
-/* Text for close button */
+
 "Close" = "Sule";
-/* Accessibility label for expandable text control to indicate text is hidden. */
+
 "Collapsed" = "Ahendatud";
-/* Two factor authentication screen heading */
+
 "Confirm it's you" = "Kinnitage, et see olete teie";
-/* An error message displayed when setting a default payment method fails. */
-"Default payment method was not changed. Please try again." = "Vaikemakseviisi ei muudetud. Proovige uuesti.";
-/* An error message displayed when setting a default payment method fails. */
+
 "Default payment method was not updated. Please try again." = "Vaikemakseviisi ei värskendatud. Palun proovige uuesti.";
-/* Label for button to enter card details manually instead of scanning */
-"Enter card details manually" = "Sisesta kaardi andmed käsitsi";
-/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+
 "Enter the code sent to %@." = "Sisestage numbrile %@ saadetud kood.";
-/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
+
 "Expanded" = "Laiendatud";
-/* Label shown when a network-related error has occured. */
+
 "Failed to connect" = "Ühenduse loomine ebaõnnestus";
-/* Status while screen is loading */
+
 "Loading" = "Laeb";
-/* The no answer to a yes or no question. */
+
 "No" = "Ei";
-/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
+
 "Resend code" = "Saada kood uuesti";
-/* Text for button to scan a credit card */
+
 "Scan Card" = "Skanni kaart";
-/* Button title to open camera to scan credit/debit card */
+
 "Scan card" = "Skanni kaart";
-/* The title for the challenge response step of an authenticated checkout. */
+
 "Secure checkout" = "Turvaline makse lõpuleviimine";
-/* Indicates that a button is selected. */
+
 "Selected" = "Valitud";
-/* An error message displayed when the customer's iban is invalid. */
+
 "The IBAN you entered is invalid." = "Sisestatud IBAN on kehtetu.";
-/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+
 "The OS or the OS Version is not supported." = "OS-i või OS-i versiooni ei toetata.";
-/* The text for warning when a device is jailbroken. */
+
 "The device is jailbroken." = "Seade on lahti murtud.";
-/* The text for warning when the integrity of the SDK has been tampered with. */
+
 "The integrity of the SDK has been tampered." = "SDK terviklikkust on rikutud.";
-/* Error when there is a problem processing the credit card */
+
 "There was an error processing your card -- try again in a few seconds" = "Kaardi töötlemisel esines tõrge – proovige mõne sekundi pärast uuesti";
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
 "There was an unexpected error -- try again in a few seconds" = "Esines ootamatu tõrge – proovige mõne sekundi pärast uuesti";
-/* Error description for when a network request times out. English value is as required by UL certification. */
+
 "Timeout" = "Ajalõpp";
-/* Button to reload web view if we were unable to connect. */
+
 "Try again" = "Proovi uuesti";
-/* Indicates that a button is not selected. */
+
 "Unselected" = "Valimata";
-/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Kasutame teie kaardiandmete kontrollimiseks Stripe'i. Stripe võib teie andmeid kasutada ja säilitada vastavalt oma privaatsuspoliitikale. <a href='https://support.stripe.com/questions/stripes-card-image-verification'>Vaata lähemalt</u></a><u>";
-/* The yes answer to a yes or no question. */
+
 "Yes" = "Jah";
-/* Error when the card has already expired */
+
 "Your card has expired" = "Kaart on aegunud";
-/* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "Kaart lükati tagasi";
-/* Error when the card&apos;s expiration month is not valid */
+
 "Your card's expiration month is invalid" = "Kaardi aegumiskuu on kehtetu";
-/* Error when the card&apos;s expiration year is not valid */
+
 "Your card's expiration year is invalid" = "Kaardi aegumisaasta on kehtetu";
-/* Error when the card number is not valid */
+
 "Your card's number is invalid" = "Kaardi number on kehtetu";
-/* Error when the card&apos;s CVC is not valid */
+
 "Your card's security code is invalid" = "Kaardi turvakood on kehtetu";
-/* Error when customer's name is invalid */
+
 "Your name is invalid." = "Teie nimi on kehtetu.";
-/* Error message when a payment method gets declined. */
+
 "Your payment method was declined." = "Teie makseviis lükati tagasi.";

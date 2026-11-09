@@ -1,199 +1,151 @@
-/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+
 "%@ (optional)" = "%@ (opțional)";
-/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
-"%@ is incomplete." = "%@ este incomplet.";
-/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
+
 "(not accepted)" = "(nu este acceptat)";
-/* Placeholder text for Account number entry field for BECS Debit. */
+
 "Account number" = "Număr cont";
-/* Caption for Address field on address form */
+
 "Address" = "Adresa";
-/* Address line 1 placeholder for billing address form. */
+
 "Address line 1" = "Rândul 1 pentru adresă";
-/* Label for input requesting address line 2, used for international addresses */
+
 "Address line 2" = "Rândul 2 pentru adresă";
-/* Label of an address field in hk */
+
 "Area" = "Zonă";
-/* Label for BLIK code number field on form */
+
 "BLIK code" = "Cod BLIK";
-/* Placeholder for AU BECS BSB number */
+
 "BSB number" = "Număr BSB";
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Cont bancar";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
+
 "Bank account •••• %@" = "Cont bancar •••• %@";
-/* Billing address section title for card form entry. */
-"Billing address" = "Adresă de facturare";
-/* Label for a checkbox that makes customers billing address same as their shipping address */
+
 "Billing address is same as shipping" = "Adresa de facturare este la fel cu cea de expediere";
-/* Label for entering CVC in text field */
-"CVC" = "CVC";
-/* Button title to cancel action in an alert */
-"Cancel" = "Anulare";
-/* Label an input field to update card brand */
+
 "Card brand" = "Marcă card";
-/* Label for card number entry text field */
-"Card number" = "Numărul cardului";
-/* Caption for City field on address form */
+
 "City" = "Oraș";
-/* Accessibility label describing a field for entering a login code */
+
 "Code field" = "Câmp pentru introducerea codului";
-/* Label for Company field on form */
+
 "Company" = "Companie";
-/* Text for alert message when user needs to confirm payment in their banking app */
-"Confirm the payment in your bank's app to complete the purchase." = "Confirmați plata în aplicația băncii dvs. pentru a finaliza achiziția.";
-/* Text for continue button */
+
 "Continue" = "Continuare";
-/* Caption for Country field on address form */
+
 "Country" = "Țară";
-/* Country selector and postal code entry form header title */
+
 "Country or region" = "Țară sau regiune";
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+
 "County" = "Județ";
-/* Error message for empty date. */
-"Date is empty." = "Data nu este completată.";
-/* Label for Date of birth field */
+
 "Date of Birth" = "Data nașterii";
-/* Label of an address field */
+
 "Department" = "Departament";
-/* Label for the district field on an address form */
+
 "District" = "District";
-/* Label of an address field */
+
 "Do Si" = "Do Si";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Do you want to close this form?" = "Doriți să închideți acest formular?";
-/* Done button title */
+
 "Done" = "Efectuat";
-/* Accessibility hint for a text field */
+
 "Double tap to edit" = "Atingeți de două ori pentru a edita";
-/* Button title to enter editing mode */
+
 "Edit" = "Editare";
-/* Label of an address field */
+
 "Eircode" = "Eircode";
-/* Caption for Email field on address form */
+
 "Email" = "E-mail";
-/* Used to describe address in United Arab Emirates */
+
 "Emirate" = "Emirat";
-/* Text for error labels */
+
 "Error" = "Eroare";
-/* Label for first (given) name field */
+
 "First" = "Prenume";
-/* Placeholder string for name entry field. */
+
 "Full name" = "Nume complet";
-/* Error description for incomplete phone number */
+
 "Incomplete phone number" = "Număr de telefon incomplet";
-/* Error message when UPI ID is invalid */
-"Invalid UPI ID" = "ID UPI nevalid";
-/* Label of an address field */
+
 "Island" = "Insulă";
-/* Label for last (family) name field */
+
 "Last" = "Nume de familie";
-/* label for text field to enter card expiry */
-"MM / YY" = "LL/AA";
-/* Form field header for entering a mobile phone number */
-"Mobile number" = "Număr de telefon mobil";
-/* Caption for Name field on address form */
+
 "Name" = "Nume";
-/* Label for Name on account field on form */
+
 "Name on account" = "Numele contului";
-/* No comment provided by engineer. */
+
 "OK" = "OK";
-/* Label of an address field */
+
 "Oblast" = "Oblast";
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+
 "Other" = "Altele";
-/* Label of an address field */
+
 "Parish" = "Parohie";
-/* Caption for Phone field on address form */
-"Phone" = "Număr de telefon";
-/* Caption for Phone number field on address form */
+
 "Phone number" = "Număr de telefon";
-/* Short string for postal code (text used in non-US countries) */
+
 "Postal code" = "Cod poștal";
-/* Label of an address field */
+
 "Prefecture" = "Prefectură";
-/* Label of a disabled button while its action is processing */
+
 "Processing..." = "Se procesează...";
-/* Caption for Province field on address form (only countries that use province, like Canada) */
+
 "Province" = "Provincie";
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
+
 "Remove" = "Eliminare";
-/* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "Eliminați contul bancar";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "Eliminați contul bancar care se termină în %@";
-/* Title for confirmation alert to remove a saved bank account payment method */
+
 "Remove bank account?" = "Eliminați contul bancar?";
-/* Title for a button that when tapped removes a saved card. */
+
 "Remove card" = "Eliminare card";
-/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
+
 "Search" = "Căutare";
-/* Message when a user is selecting a card brand in a dropdown */
+
 "Select card brand (optional)" = "Selectare marcă card (opțional)";
-/* Error message for empty dropdown selection. */
+
 "Selection is empty." = "Selecția este goală.";
-/* Heading for a generic error when an operation fails */
+
 "Something went wrong" = "Ceva nu a mers bine";
-/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
+
 "Sort code" = "Cod de sortare";
-/* Caption for State field on address form (only countries that use state , like United States) */
+
 "State" = "Stat";
-/* Button that submits the information entered on a screen */
+
 "Submit" = "Trimitere";
-/* Label of an address field */
+
 "Suburb" = "Suburbie";
-/* Label of an address field */
+
 "Suburb or city" = "Suburbie sau oraș";
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
 "The BSB you entered is incomplete." = "Numărul BSB pe care l-ați introdus nu este complet.";
-/* An error message. */
+
 "The ID number you entered is incomplete." = "Numărul de identificare pe care l-ați introdus nu este complet.";
-/* Error description for incomplete account number */
+
 "The account number you entered is incomplete." = "Numărul de cont pe care l-ați introdus nu este complet.";
-/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
+
 "The sort code you entered is invalid." = "Codul de identificare a băncii pe care l-ați introdus nu este valid.";
-/* Label of an address field */
+
 "Town or city" = "Municipalitate sau oraș";
-/* Label for UPI ID number field on form */
-"UPI ID" = "ID UPI";
-/* Error string when we can't parse a phone number */
+
 "Unable to parse phone number" = "Nu se poate analiza numărul de telefon";
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+
 "Use rotor to access links" = "Utilizați rotorul pentru a accesa linkurile";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is incomplete." = "Codul dvs. BLIK nu este complet.";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is invalid." = "Codul dvs. BLIK nu este valid.";
-/* Error message for when ZIP code in form is incomplete (US only) */
+
 "Your ZIP code is incomplete." = "Codul dvs. poștal este incomplet.";
-/* Error message for when ZIP code in form is invalid (US only) */
+
 "Your ZIP code is invalid." = "Codul dvs. poștal este nevalid.";
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Codul dvs. poștal nu este complet.";
-/* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "Numărul cardului dvs. este incomplet.";
-/* Error message for card form when card number is invalid */
-"Your card number is invalid." = "Numărul cardului dvs. este nevalid.";
-/* Error message for card details form when expiration date isn't entered completely */
-"Your card's expiration date is incomplete." = "Data de expirare a cardului dvs. este incompletă.";
-/* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "Data de expirare a cardului dvs. este nevalidă.";
-/* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "Luna de expirare a cardului dvs. este nevalidă.";
-/* Error message for card entry form when CVC is incomplete. */
-"Your card's security code is incomplete." = "Codul de securitate al cardului dvs. este incomplet.";
-/* Error message when email is invalid */
+
 "Your email is invalid." = "E-mailul nu este valid.";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Your payment information will not be saved." = "Informațiile dvs. de plată nu vor fi salvate.";
-/* Error message for when postal code in form is incomplete */
+
 "Your postal code is incomplete." = "Codul dvs. poștal nu este complet.";
-/* Error message for when postal code in form is invalid */
+
 "Your postal code is invalid." = "Codul dvs. poștal nu este valid.";
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+
 "ZIP" = "Cod poștal";
-/* accessibility label for text field */
-"expiration date" = "data de expirare";

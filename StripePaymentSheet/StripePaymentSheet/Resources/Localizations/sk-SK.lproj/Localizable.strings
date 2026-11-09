@@ -1,624 +1,399 @@
-/* Label a default funding source, which we treat as a generic card. E.g. 'Visa Card' */
-"%1$@ Card" = "Karta %1$@";
-/* Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte' */
-"%1$@ Credit" = "Kreditná platba %1$@";
-/* Label a debit funding source. E.g. 'Visa Debit' */
-"%1$@ Debit" = "[Debetná platba %1$@";
-/* Label a prepaid funding source. E.g. 'Visa Prepaid' */
-"%1$@ Prepaid" = "Predplatená platba %1$@";
-/* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
-"%1$@ account ending in %2$@" = "%1$@ účet s koncovým štvorčíslím %2$@";
-/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
-"%1$@ ending in %2$@" = "%1$@ s koncovým štvorčíslím %2$@";
-/* String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted */
-"%1$@ is not accepted" = "%1$@ sa neakceptuje";
-/* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%1$d interest-free payments of %2$@" = "%1$li platby/platieb bez úrokov vo výške %2$@";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. '$5 back on […]' */
-"%@ back on a qualifying purchase when you pay by bank. <terms>View terms</terms>" = "%@ späť za oprávnený nákup pri platbe cez banku. <terms>Zobraziť podmienky</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. '$5 back when […]' */
-"%@ back when you pay by bank. <terms>View terms</terms>" = "%@ späť pri platbe cez banku. <terms>Zobraziť podmienky</terms>";
-/* Message shown in a confirmation prompt when removing a saved payment method. */
+
 "%@ will no longer be saved to your wallet." = "Položka %@ už nebude uložená vo vašej peňaženke.";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%d interest-free payments of %@" = "%1$li platby/platieb bez úrokov vo výške %2$@";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "+ Add" = "+ Pridať";
-/* Exchange rate with conversion fee disclosure, e.g. '1 GBP = 1.2871 USD (includes 4% conversion fee).' */
-"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (zahŕňa %4$@%% poplatok za konverziu).";
-/* Exchange rate caption, e.g. '1 GBP = 1.2871 USD' */
-"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
-/* Label for a button that confirms the user accepts a declaration */
+
 "Accept" = "Prijať";
-/* Title shown above a view allowing the customer to save a US bank account. */
+
 "Add US bank account" = "Pridať americký bankový účet";
-/* Title shown above a card entry form */
+
 "Add a card" = "Pridať kartu";
-/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
+
 "Add a payment method" = "Pridať spôsob platby";
-/* Button prompt to add a bank account as a payment method. */
+
 "Add bank account" = "Pridať bankový účet";
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Pridať kartu";
-/* Title shown above a view allowing the customer to save a card. */
+
 "Add new card" = "Pridať novú kartu";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "Add new payment method" = "Pridajte nový spôsob platby";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Add your payment information" = "Pridajte svoje informácie o platbe";
-/* Label for a button that confirms the user agrees to and accepts a declaration */
-"Agree and accept" = "Súhlasím a prijímam";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Agree and continue" = "Súhlasiť a pokračovať";
-/* Instructions shown above the card scanner while the customer is asked for camera access. */
-"Allow camera permissions and get your card ready for scanning." = "Povoľte prístup k fotoaparátu a pripravte si kartu na skenovanie.";
-/* Text for Apple Pay payment method */
-"Apple Pay" = "Apple Pay";
-/* Text on a screen asking the user to approve a payment */
+
 "Approve payment" = "Schváliť platbu";
-/* Title of confirmation prompt when removing a saved card. */
-"Are you sure you want to remove this card?" = "Naozaj chcete odstrániť túto kartu?";
-/* Title of confirmation prompt when removing a linked bank account. */
-"Are you sure you want to remove this linked account?" = "Naozaj chcete odstrániť tento prepojený účet?";
-/* Text for back button */
+
 "Back" = "Späť";
-/* Title for a bank account payment method */
+
 "Bank" = "Banka";
-/* Title for collected bank account information */
+
 "Bank account" = "Bankový účet";
-/* Text on a screen that indicates bank account details cannot be changed. */
+
 "Bank account details cannot be changed." = "Informácie o bankovom účte nie je možné meniť.";
-/* Phone-match instruction before Link email OTP. Placeholder is the last two phone digits. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Predtým, ako vám zašleme kód na váš e-mail, musíme overiť dodatočné informácie o vás. Zadajte svoje telefónne číslo končiace na ••%@.";
-/* Phone-match instruction before Link email OTP. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Predtým, ako vám zašleme kód na váš e-mail, musíme overiť dodatočné informácie o vás. Zadajte svoje telefónne číslo.";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
+
 "Buy Now, Pay Later with  <img/>" = "Kúpte teraz, zaplaťte neskôr pomocou služby <img/>";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Afterpay" = "Kúpte teraz, zaplaťte neskôr pomocou služby Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Cash App Afterpay" = "Kúpte teraz, zaplaťte neskôr pomocou aplikácie Cash App Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
+
 "Buy Now, Pay Later with Clearpay" = "Kúpte teraz, zaplaťte neskôr pomocou služby Clearpay";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
-"Buy Now, Pay Later with Klarna" = "Kúpte teraz, zaplaťte neskôr pomocou služby Klarna";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with  <img/>" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby <img/>";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with <img/>" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby <img/>";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Afterpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Cash App Afterpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou aplikácie Cash App Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
-"Buy now or pay later with Clearpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Clearpay";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
+
 "Buy now or pay later with Klarna" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Klarna";
-/* Klarna buy now or pay later copy */
-"Buy now or pay later with Klarna." = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Klarna.";
-/* GCash mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby GCash umožňujete spoločnosti %@ spoplatniť váš účet GCash za budúce platby v súlade s jej podmienkami.";
-/* Korean payment method mandate text */
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby NICEPAY umožňujete spoločnosti %@ spoplatniť tento spôsob platby pri budúcich platbách v súlade s jej podmienkami.";
-/* Paypal mandate text */
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby PayPal povolíte spoločnosti %@, aby z vášho účtu PayPal účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
-/* Satispay mandate text */
-"By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby Satispay umožníte spoločnosti %@ účtovať poplatky z vášho účtu Satispay za budúce platby v súlade s ich podmienkami.";
-/* Touch 'n Go mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby Touch 'n Go umožňujete spoločnosti %@ spoplatniť váš účet Touch 'n Go za budúce platby v súlade s jej podmienkami.";
-/* TrueMoney mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby TrueMoney umožňujete spoločnosti %@ spoplatniť váš účet TrueMoney za budúce platby v súlade s jej podmienkami.";
-/* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Potvrdením platby súhlasíte s tým, že vašu transakciu spracuje spoločnosť Global Stack Services Limited ako registrovaný obchodník v súlade s jej <terms>podmienkami používania</terms>.";
-/* Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Potvrdením platby súhlasíte s tým, že vašu transakciu spracuje spoločnosť Global Stack Services Limited ako registrovaný obchodník v súlade s jej <terms>podmienkami</terms>.";
-/* Amazon Pay mandate text */
+
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračovaním na službu Amazon Pay povolíte spoločnosti %@, aby z vášho účtu Amazon Pay účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
-/* Klarna mandate text */
+
 "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Pokračovaním na službu Klarna povolíte spoločnosti %1$@, aby z vášho účtu Klarna účtovala budúce platby v súlade s ich podmienkami a podmienkami služby Klarna. Toto môžete kedykoľvek zmeniť vo svojej aplikácii Klarna alebo oslovením spoločnosti %2$@.";
-/* Klarna mandate text */
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms." = "Pokračovaním na službu Karna povolíte spoločnosti %@, aby z vášho účtu Klarna účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
-/* Paypal mandate text */
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pokračovaním na službu PayPal povolíte spoločnosti %@, aby z vášho účtu PayPal účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
-/* Revolut Pay mandate text */
+
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pokračovaním na službu Revolut Pay povolíte spoločnosti %@, aby z vášho účtu Revolut Pay účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
-/* Satispay mandate text */
-"By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Pokračovaním v používaní služby Satispay umožníte spoločnosti %@ účtovať z vášho účtu Satispay budúce platby v súlade s ich podmienkami.";
-/* Legal text shown when creating a Link account. */
+
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pokračovaním súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
-/* Text providing link to terms for ACH payments */
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
-/* Mandate text displayed when paying via Link instant debit. */
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa týchto <terms>podmienok</terms>.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to the Link brand. The first placeholder is a merchant name. The second placeholder is a Stripe brand name and should not be translated. */
+
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Pokračovaním súhlasíte s uložením svojich informácií pre budúce nákupy v spoločnosti %1$@ a <link>%2$@</link> podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> spoločnosti %2$@.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> (see <terms>Terms</terms> and <privacy>Privacy</privacy>)." = "Pokračovaním súhlasíte s uložením svojich údajov pre budúce nákupy v spoločnosti %@ a <link>službe Link</link> (pozrite si <terms>podmienky</terms> a <privacy>zásady ochrany osobných údajov</privacy>).";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Pokračovaním súhlasíte s uložením svojich údajov pre budúce nákupy v spoločnosti %@ a <link>službe Link</link> podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> služby Link.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Pokračovaním súhlasíte s uložením svojich údajov pre budúce nákupy v spoločnosti %@ a <link>službe Link</link>Súhlasíte aj s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy> služby Link.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant. */
+
 "By continuing, you agree to save your information for future purchases with %@." = "Pokračovaním súhlasíte s uložením svojich údajov pre budúce nákupy v spoločnosti %@.";
-/* Satispay mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Pokračovaním oprávňujete %@ na automatické opakované odpísanie vášho zostatku Satispay v súlade s vaším nákupom alebo plánom predplatného.";
-/* Twint mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Pokračovaním oprávňujete %@ na automatické opakované odpísanie vášho zostatku Twint Balance v súlade s vaším nákupom alebo plánom predplatného.";
-/* Cash App mandate text */
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračovaním oprávňujete spoločnosť %1$@, aby zaúčtovala túto platbu a budúce platby na debet vášho účtu Cash App v súlade s podmienkami spoločnosti %2$@, až do odvolania tohto oprávnenia. Toto oprávnenie môžete kedykoľvek zmeniť v nastaveniach aplikácie Cash App.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pripojením sa k spoločnosti %@ súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
-/* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pripojením k službe Link súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím telefónneho čísla a e-mailu súhlasíte s vytvorením účtu %1$@, ktorý podlieha <terms>podmienkam</terms> a <privacy>zásadám ochrany osobných údajov</privacy> spoločnosti %1$@.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím telefónneho čísla a e-mailu súhlasíte s vytvorením účtu %1$@, ktorý podlieha <terms>podmienkam</terms> a <privacy>zásadám ochrany osobných údajov</privacy> spoločnosti %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím telefónneho čísla a e-mailu súhlasíte s vytvorením účtu Link, ktoré podlieha <terms>podmienkam</terms> a <privacy>zásadám ochrany osobných údajov</privacy> služby Link.";
-/* Legal text shown when using AUBECS. */
+
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Poskytnutím údajov o svojom bankovom účte a potvrdením tejto platby súhlasíte s touto žiadosťou o inkaso a <terms>zmluvou o poskytovaní služieb žiadosti o inkaso</terms> a oprávňujete spoločnosť Stripe Payments Australia Pty Ltd ACN 160 180 343 inkaso ID používateľa 507156 („Stripe“) na odpísanie žiadosti z vášho účtu prostredníctvom hromadného elektronického zúčtovacieho systému (BECS) v mene spoločnosti %@ (ďalej len „obchodník“) o akékoľvek sumy, ktoré vám obchodník osobitne oznámi. Potvrdzujete, že ste majiteľom účtu alebo oprávnenou signatárskou osobou na účte uvedenom vyššie.";
-/* Text displayed below a credit card entry form when the card will be saved to make future payments. */
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poskytnutím informácií o karte povolíte spoločnosti %@ účtovať na vašej karte budúce platby v súlade s ich podmienkami.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím e-mailu súhlasíte s vytvorením účtu %1$@ a s uložením platobných údajov na %1$@ v súlade s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy> %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svojho e-mailu súhlasíte s vytvorením účtu Link a s uložením svojich platobných informácií do služby Link podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> služby Link.";
-/* SEPA mandate text */
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Poskytnutím informácií o platbe a potvrdením tejto platby splnomocňujete (A) spoločnosti %@ a Stripe, nášho poskytovateľa platobných služieb, na posielanie platobných príkazov do vašej banky na odpísanie finančných prostriedkov z vášho účtu a (B) vašu banku na odpísanie finančných prostriedkov z vášho účtu v súlade s pokynmi. V rámci vašich práv máte právo na refundáciu od vašej banky podľa zmluvných podmienok uvedených v zmluve s vašou bankou. Refundáciu si musíte vyžiadať do 8 týždňov odo dňa, kedy boli finančné prostriedky odpísané z vášho účtu. Vaše práva sú vysvetlené vo vyhlásení, ktoré môžete získať od svojej banky. Súhlasíte s tým, že budete dostávať oznámenia o budúcich debetných platbách až 2 dni pred ich uskutočnením.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím telefónneho čísla súhlasíte s vytvorením účtu %1$@ a s uložením platobných informácií na %1$@ v súlade s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy> %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svojho telefónneho čísla súhlasíte s vytvorením účtu Link a s uložením svojich platobných informácií do služby Link podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> služby Link.";
-/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankového účtu pre spoločnosť %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
-/* Alipay mandate text */
+
 "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Uložením svojich platobných údajov umožňujete spoločnosti %@, aby vám účtovala za budúce platby v súlade s ich podmienkami.";
-/* Text providing link to terms for bank payments when seller information is provided */
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Odoslaním objednávky do %1$@ a %2$@ súhlasíte s uložením vašich údajov v %3$@ pre budúce nákupy a súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
-/* Text providing link to terms for bank payments */
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Odoslaním objednávky na %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
-/* Label for CPF/CPNJ (Brazil tax ID) field */
+
 "CPF/CPNJ" = "CPF/CPNJ";
-/* Button text on a screen asking the user to approve a payment */
+
 "Cancel and pay another way" = "Zrušiť a zaplatiť iným spôsobom";
-/* Text on a screen that indicates card details cannot be changed. */
+
 "Card details cannot be changed." = "Informácie o karte nie je možné meniť.";
-/* Card details entry form header title */
-"Card information" = "Informácie o karte";
-/* Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa') */
-"Card number. Card brand: %@" = "Číslo karty. Značka karty: %@";
-/* Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
+
 "Card number. Supported cards include %@" = "Číslo karty. K podporovaným kartám patria karty %@";
-/* Status shown over the camera after a payment card was scanned successfully. */
-"Card scanned" = "Karta naskenovaná";
-/* Label for a button that lets you change the details of a payment method */
+
 "Change" = "Zmeniť";
-/* Title for a button that allows the user to use a different email in the signup flow. */
-"Change email" = "Zmeniť e-mail";
-/* Tooltip prompting user to select their card brand when a co-branded card is detected */
+
 "Choose a card brand" = "Vybrať značku karty";
-/* Title shown above a carousel containing available payment methods */
+
 "Choose a payment method" = "Vyberte spôsob platby";
-/* Accessibility label for the button to close the card scanner. */
+
 "Close card scanner" = "Zatvoriť snímačku kariet";
-/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
-"Code sent" = "Kód odoslaný";
-/* Instructions shown while waiting for a Pix payment authorization */
+
 "Complete the payment using Pix to finish the purchase." = "Na dokončenie nákupu zrealizujte platbu pomocou služby Pix.";
-/* A button used to confirm selecting a saved payment method */
+
 "Confirm" = "Potvrdiť";
-/* Two factor authentication screen heading */
-"Confirm it's you" = "Potvrdenie vašej totožnosti";
-/* Title of a screen where the user can update their payment method before continuing
-with the transaction. */
+
 "Confirm payment details" = "Potvrdiť informácie o platbe";
-/* Instructions shown while waiting for a Bizum payment authorization */
+
 "Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Potvrďte platbu Bizum vo vašej žiadosti mobilného bankovníctva do %@ na dokončenie nákupu.";
-/* Instructions shown while waiting for an MB WAY payment authorization */
+
 "Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v aplikácii MB WAY do %@.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v banke alebo platobnej aplikácii v priebehu %@.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v aplikácii vašej banky v priebehu %@.";
-/* Section title for entering your CVC. e.g. 'Confirm your CVC' */
-"Confirm your %@" = "Potvrďte %@";
-/* Title for prompting for a card's CVC on confirming the payment */
+
 "Confirm your CVC" = "Potvrďte CVC";
-/* Title for prompting for a card's CVV on confirming the payment */
-"Confirm your CVV" = "Potvrďte CVV";
-/* Title label for a know-your-customer (KYC) verification screen */
+
 "Confirm your information" = "Potvrďte informácie";
-/* Title for the contact information section */
+
 "Contact information" = "Kontaktné informácie";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Continue another way" = "Pokračovať iným spôsobom";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create a Link account for fast checkout across the web" = "Vytvoriť prepojený účet na rýchlu platbu na internete";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Create an account with %@ for faster checkout across the web" = "Vytvorte si účet pomocou %@ na rýchlejšiu platbu na internete";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create an account with Link for faster checkout across the web" = "Vytvorte si účet pomocou služby Link pre rýchlejšiu platbu na internete";
-/* Label for a payment method type that only accepts credit cards. */
-"Credit card" = "Kreditná karta";
-/* Label for a payment method type that only accepts debit cards. */
-"Debit card" = "Debetná karta";
-/* Label shown in the payment type picker describing a card payment */
+
 "Debit or credit card" = "Debetná alebo kreditná karta";
-/* Title label for a screen showing CRS/CARF tax declarations */
+
 "Declarations" = "Vyhlásenia";
-/* Label for identifying the default payment method. */
+
 "Default" = "Predvolené";
-/* Label for a disabled checked checkbox identifying the default payment method. */
+
 "Default payment method" = "Predvolený spôsob platby";
-/* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
+
 "Did you mean %@? %@." = "Mysleli ste %1$@? %2$@.";
-/* Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form. */
+
 "Discard Changes" = "Zahodiť zmeny";
-/* Title of a confirmation alert shown when the customer tries to close the address form after making changes. */
+
 "Discard changes?" = "Zahodiť zmeny?";
-/* Label for the discount row in an order summary, applied as a negative amount. */
+
 "Discount" = "Zľava";
-/* Label title for EPS Bank */
+
 "EPS Bank" = "EPS Bank";
-/* Accessibility label for a button that lets the user update their address */
+
 "Edit address" = "Upraviť adresu";
-/* Link authentication action to receive an email verification code. */
+
 "Email code" = "E-mail s kódom";
-/* Text for a button that allows manual entry of an address */
+
 "Enter address manually" = "Zadať adresu manuálne";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use Link to pay by default." = "Zadajte kód odoslaný na telefónne číslo %@ a používajte službu Link ako predvolenú platobnú službu.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use your saved information." = "Zadajte kód zaslaný na telefónne číslo %@ a používajte svoje uložené údaje.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@." = "Zadajte kód zaslaný na %@.";
-/* Error when Link email verification requires a phone number. */
+
 "Enter the phone number on your Link account." = "Zadajte telefónne číslo svojho účtu Link.";
-/* Two factor authentication screen heading */
-"Enter your verification code" = "Zadajte overovací kód";
-/* Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion */
+
 "Exchange rate and fees of your bank may apply." = "Môžu sa účtovať výmenný kurz a poplatky vašej banky.";
-/* Select a bank dropdown for FPX */
+
 "FPX Bank" = "FPX Bank";
-/* Error message that displays when we're unable to connect to the server. */
-"Failed to connect" = "Pripojenie sa nepodarilo";
-/* Title for the Link signup screen */
+
 "Fast, secure checkout" = "Rýchla, bezpečná platba";
-/* Title for the Link signup screen */
-"Fast, secure, 1⁠-⁠click checkout" = "Rýchla, bezpečná platba jedným kliknutím";
-/* Accessibility label for a button that turns the flashlight on or off while scanning a card. */
-"Flashlight" = "Baterka";
-/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
-"For security, please re-enter your card’s security code." = "Z dôvodu bezpečnosti znovu zadajte bezpečnostný kód vašej karty.";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Získajte %@ späť pri prvej platbe so svojou bankou. <terms>Pozrite si podmienky</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Získajte %@ späť pri platbe prostredníctvom vašej banky. <terms>Pozrite si podmienky</terms>";
-/* Button label to collapse and hide additional exchange rate details */
+
 "Hide details" = "Skryť podrobnosti";
-/* Instructions shown above the card scanner while it looks for a payment card. */
-"Hold your card with the number visible in the frame to scan it automatically." = "Podržte kartu s číslom viditeľným v ráme, aby sa automaticky naskenovala.";
-/* Bacs Debit mandate text */
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumiem, že spoločnosť Stripe bude inkasovať priame inkasá v mene spoločnosti %@ a potvrdzujem, že som majiteľom účtu a som jediná osoba, ktorá musí autorizovať inkasá z tohto účtu.";
-/* IBAN placeholder – don&apos;t translate */
+
 "IBAN" = "IBAN";
-/* Message shown when Mondu is selected */
+
 "Invoice payment for business buyers." = "Platba faktúrou pre firemných kupujúcich.";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Join Link" = "Pripojiť sa do služby Link";
-/* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
+
 "Keep Editing" = "Pokračovať v úpravách";
-/* Label for displaying the last 4 digits of the user's social security number */
+
 "Last 4 digits of SSN" = "Posledné 4 číslice SSN";
-/* Title for a button that indicates a user can log in or sign up. */
-"Log in or sign up" = "Prihlásiť sa alebo zaregistrovať";
-/* Label of a button that signs the user out of their current Link account so they can log in to a different one. */
+
 "Log in to another account" = "Prihláste sa do iného účtu";
-/* Title of the logout action. The placeholder is a Stripe brand name and should not be translated. */
-"Log out of %@" = "Odhlásiť sa z %@";
-/* Title of the logout action. */
-"Log out of Link" = "Odhlásiť sa zo služby Link";
-/* Status shown over the camera while it looks for a payment card to scan. */
-"Looking for your card" = "Hľadá sa vaša karta";
-/* Title shown above a view containing the customer's SEPA debit that they can delete or update */
+
 "Manage SEPA debit" = "Spravovať SEPA inkaso";
-/* Title shown above a view containing the customer's bank account that they can delete or update */
+
 "Manage US bank account" = "Spravovať americký bankový účet";
-/* Title shown above a view containing the customer's bank account that they can delete */
+
 "Manage bank account" = "Spravovať bankový účet";
-/* Title for a screen for managing a card. */
+
 "Manage card" = "Spravovať kartu";
-/* Title shown above a view containing a list of the customer's cards that they can delete or update */
+
 "Manage cards" = "Spravovať karty";
-/* Title shown above a view containing the customer's payment method that they can delete or update */
+
 "Manage payment method" = "Spravovať spôsob platby";
-/* Title shown above a view containing the customer's card payment methods that they can delete or update */
+
 "Manage payment methods" = "Spravovať spôsoby platby";
-/* Title shown above a carousel containing the customer's payment methods */
+
 "Manage your payment methods" = "Spravovať spôsoby platby";
-/* Button opening Link authentication actions. */
+
 "More options" = "Viac možností";
-/* Label for name on card field */
+
 "Name on card" = "Meno na karte";
-/* Naver Pay card funding source */
+
 "Naver Pay Card" = "Karta Naver Pay";
-/* Naver Pay money or points funding source */
+
 "Naver Pay Money/Point" = "Naver Pay Money/Point";
-/* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
+
 "New card" = "Nová karta";
-/* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
+
 "New payment method" = "Nový spôsob platby";
-/* Label for when the user is not eligible for a promo. */
+
 "No %@ promo" = "Bez %@ propagácie";
-/* Message on a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "None of the payment methods in your %@ account work with this business." = "Žiadny zo spôsobov platby vo vašom účte %@ nefunguje s touto spoločnosťou.";
-/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
-"Not %@?" = "E-mailová adresa %@ nie je vaša?";
-/* Title for a button that allows the user to use a different email in the signup flow. */
+
 "Not you?" = "Nie ste to vy?";
-/* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
+
 "Only card brand can be changed." = "Je možné zmeniť len značku banky.";
-/* Warning shown when only credit and prepaid cards are accepted */
-"Only credit and prepaid cards are accepted" = "Akceptujú sa len kreditné a predplatené karty";
-/* Warning shown when only credit cards are accepted */
-"Only credit cards are accepted" = "Akceptujú sa iba kreditné karty";
-/* Warning shown when only debit and credit cards are accepted */
-"Only debit and credit cards are accepted" = "Akceptujú sa iba debetné a kreditné karty";
-/* Warning shown when only debit and prepaid cards are accepted */
-"Only debit and prepaid cards are accepted" = "Akceptujú sa iba debetné a predplatené karty";
-/* Warning shown when only debit cards are accepted */
-"Only debit cards are accepted" = "Akceptujú sa iba debetné karty";
-/* Warning shown when only prepaid cards are accepted */
-"Only prepaid cards are accepted" = "Akceptujú sa iba predplatené karty";
-/* Accessibility hint to tell the user that they can open a form sheet with more information. */
+
 "Open to see more information." = "Otvorte a zobrazte viac informácií.";
-/* Separator label between two options */
+
 "Or" = "Alebo";
-/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+
 "Or pay using" = "Alebo zaplaťte pomocou";
-/* Title of a section containing a card form that will collect the payment information from the user. */
+
 "Or pay with a card" = "Alebo zaplaťte kartou";
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up. */
+
 "Or use" = "Alebo použite";
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up. */
+
 "Or use a card" = "Alebo použite kartu";
-/* Label of a button that initiates payment when tapped */
+
 "Pay %@" = "Zaplatiť %@";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Pay another way" = "Zaplatiť iným spôsobom";
-/* Label describing the benefit of signing up for Link.
-Pay faster at {Merchant Name} and thousands of businesses
-e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
+
 "Pay faster at %@ and thousands of businesses." = "Plaťte rýchlejšie u obchodníka %@ a tisícov ďalších spoločností.";
-/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
-"Pay faster at %@ and thousands of merchants." = "Plaťte rýchlejšie v spoločnosti %@ a u tisícoch ďalších obchodníkov.";
-/* Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated. */
+
 "Pay faster everywhere %@ is accepted." = "Plaťte rýchlejšie všade tam, kde je akceptovaná služba %@.";
-/* Subtitle for the Link signup screen */
+
 "Pay faster everywhere Link is accepted." = "Plaťte rýchlejšie všade tam, kde je akceptovaná služba Link.";
-/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zaplaťte v <num_installments/>bezúročných splátkach čiastku <installment_price/> pomocou <img/>";
-/* Klarna pay later copy */
-"Pay later with Klarna." = "Zaplatiť neskôr pomocou služby Klarna";
-/* Pay over time with Affirm copy */
+
 "Pay over time with %@" = "Zaplatiť postupne pomocou %@";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm */
+
 "Pay over time with Affirm" = "Zaplaťte postupne pomocou služby Affirm";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Afterpay */
-"Pay over time with Afterpay" = "Zaplaťte postupne pomocou služby Afterpay";
-/* Promotional text for Clearpay, displayed in a button that lets the customer pay with Clearpay */
-"Pay over time with Clearpay" = "Zaplaťte postupne pomocou služby Clearpay";
-/* Title shown above a section containing various payment options */
-"Pay using" = "Zaplatiť pomocou";
-/* Pay with {payment method} */
+
 "Pay with %@" = "Zaplaťte prostredníctvom %@";
-/* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
+
 "Pay with Link" = "Zaplatiť pomocou služby Link";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Pay with your bank account in just a few steps." = "Zaplaťte pomocou bankového účtu v niekoľkých jednoduchých krokoch.";
-/* Label for a section displaying payment details. */
+
 "Payment" = "Platba";
-/* Text on a screen that indicates a payment has failed */
+
 "Payment failed" = "Platba zlyhala";
-/* Text on a screen that indicates payment method details cannot be changed. */
+
 "Payment method details cannot be changed." = "Podrobnosti o spôsobe platby nie je možné meniť.";
-/* Title for a section listing one or more payment methods. */
+
 "Payment methods" = "Spôsoby platby";
-/* Error message that's displayed when you try to confirm a payment without a valid payment method */
+
 "Please choose a valid payment method." = "Vyberte platný spôsob platby.";
-/* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
+
 "Please go back and select another payment method" = "Vráťte sa späť a vyberte iný spôsob platby";
-/* Accessibility instructions for card scanning. */
+
 "Point the camera at your card." = "Nasmerujte kameru na svoju kartu.";
-/* Label for a payment method type that only accepts prepaid cards. */
-"Prepaid card" = "Predplatená karta";
-/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
-"Processing..." = "Prebieha spracovanie…";
-/* Label title for Przelewy24 Bank */
+
 "Przelewy24 Bank" = "Przelewy24 Bank";
-/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-"Remove %1$@ ending in %2$@" = "Odstrániť %1$@ končiace na %2$@";
-/* Title of confirmation prompt when removing a saved payment method. */
+
 "Remove %@" = "Odstrániť %@";
-/* Title for confirmation alert to remove a card */
-"Remove Card" = "Odstrániť kartu";
-/* Title for confirmation alert to remove a bank account */
+
 "Remove bank?" = "Odstrániť banku?";
-/* Title for confirmation alert to remove a card */
+
 "Remove card?" = "Odstrániť kartu?";
-/* Title for a button that when tapped removes a linked bank account. */
+
 "Remove linked account" = "Odstrániť prepojený účet";
-/* Title shown above a view containing a customer's payment method that they can delete */
+
 "Remove payment method" = "Odstrániť spôsob platby";
-/* Title for confirmation alert to remove a payment method */
+
 "Remove payment method?" = "Odstrániť spôsob platby?";
-/* Title for a button that opens the camera to scan a payment card again, after one was already scanned. */
-"Rescan card" = "Znova naskenujte kartu";
-/* Label for a button that re-sends the a login code when tapped */
-"Resend code" = "Znovu odoslať kód";
-/* Link OTP resend cooldown, in seconds. */
+
 "Resend code in %d seconds" = "Znova odoslať kód o %li sekúnd";
-/* Text on a screen that indicates SEPA debit details cannot be changed. */
+
 "SEPA debit details cannot be changed." = "Informácie o SEPA inkase nie je možné meniť.";
-/* A button used for saving a new payment method */
+
 "Save" = "Uložiť";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Save a new payment method" = "Uložiť nový spôsob platby";
-/* Title for a button that when pressed saves the provided address. */
+
 "Save address" = "Uložiť adresu";
-/* The label of a switch indicating whether to save the payment method for future payments. */
+
 "Save for future payments" = "Uložiť pre budúce platby";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save my info for faster checkout with %@" = "Uloženie mojich informácií pre rýchlejšiu platbu pomocou %@";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save my info for faster checkout with Link" = "Uložiť moje údaje pre rýchlejšiu platbu so službou Link";
-/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-"Save my info for secure 1-click checkout" = "Uložte svoje údaje pre bezpečnú platbu jedným kliknutím pomocou služby Link";
-/* The label of a switch indicating whether to save the user's payment details for future payment */
+
 "Save payment details to %@ for future purchases" = "Uložiť údaje o platbe na %@ pre budúce nákupy";
-/* Prompt next to checkbox to save bank account. */
+
 "Save this account for future %@ payments" = "Uložiť tento účet pre budúce platby obchodníkovi %@";
-/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-"Save this card for future %@ payments" = "Uložiť túto kartu pre budúce platby obchodníkovi %@";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Save your bank account in just a few steps." = "Uložte svoj bankový účet v niekoľkých krokoch.";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save your info for secure 1-click checkout with %@" = "Uložte si údaje pre bezpečnú platbu jedným kliknutím pomocou %@";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save your info for secure 1-click checkout with Link" = "Uložte svoje údaje pre bezpečnú platbu jedným kliknutím pomocou služby Link";
-/* Label describing the benefit of signing up for Link. */
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Uložte si svoje platobné údaje pomocou služby Link a bezpečne plaťte jedným kliknutím na stránkach podporovaných službou Link.";
-/* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
+
 "Saved" = "Uložené";
-/* Title for the Link signup screen */
-"Secure 1⁠-⁠click checkout" = "Bezpečná platba jedným kliknutím";
-/* Title shown above a view containing the customer's card payment methods */
+
 "Select card" = "Vybrať kartu";
-/* Label for the Naver Pay funding source selector */
+
 "Select how you want to pay:" = "Vyberte, ako chcete platiť:";
-/* Title shown above a view containing the customer's payment methods */
+
 "Select payment method" = "Vybrať spôsob platby";
-/* Title shown above a carousel containing the customer&apos;s payment methods */
+
 "Select your payment method" = "Vyberte svoj spôsob platby";
-/* Label for a button that sends the code to the user's email when tapped */
-"Send code to email instead" = "Namiesto toho odoslať kód na e-mail";
-/* Label for a button or menu item that sets a payment method as default when tapped. */
+
 "Set as default" = "Nastaviť ako predvolený spôsob";
-/* Label of a checkbox that when checked makes a payment method as the default one. */
+
 "Set as default payment method" = "Nastaviť ako predvolený spôsob platby";
-/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
 "Set up" = "Nastaviť";
-/* Label for the shipping cost row in an order summary. */
-"Shipping" = "Dodanie";
-/* Title for shipping address entry section */
-"Shipping Address" = "Dodacia adresa";
-/* Text for an error that is shown when a user selects a shipping address that
-is not supported by the merchant. Example: Shipping to Canada is not supported. */
+
 "Shipping to %@ is not supported." = "Dodanie na/do %@ sa nepodporuje.";
-/* Button label to expand and show additional exchange rate details */
+
 "Show details" = "Zobraziť podrobnosti";
-/* Accessibility label for an action or a button that shows a menu. */
+
 "Show menu" = "Zobraziť ponuku";
-/* Title for a button that indicates a user can sign in or sign up. */
+
 "Sign in or sign up" = "Prihlásiť sa alebo zaregistrovať";
-/* Two factor authentication screen heading */
-"Sign in to your Link account" = "Prihláste sa do svojho účtu Link";
-/* Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated. */
+
 "Sign out of %@" = "Odhlásiť sa zo služby %@";
-/* Title of the sign-out action. */
-"Sign out of Link" = "Odhlásiť sa zo služby Link";
-/* Subtitle shown on a button allowing a user to select to pay with Link. */
+
 "Simple, secure one-click payments" = "Jednoduché, bezpečné platby jedným kliknutím";
-/* Error message when an error case happens when linking your account */
+
 "Something went wrong when linking your account.\nPlease try again later." = "Pri prepájaní vášho účtu sa vyskytla chyba.\nSkúste to znova neskôr.";
-/* Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "V priebehu 1 až 2 pracovných dní vloží Stripe na váš účet vklad vo výške 0,01 USD. Potom dostanete e-mail s pokynmi na dokončenie uloženia svojho účtu prostredníctvom %@.";
-/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V priebehu 1 až 2 pracovných dní vloží Stripe na váš účet vklad vo výške 0,01 USD. Potom dostanete e-mail s pokynmi na dokončenie platby spoločnosti %@.";
-/* Label for the subtotal row in an order summary, before tax/shipping/discounts. */
+
 "Subtotal" = "Medzisúčet";
-/* Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
-"Supported cards: %@" = "Podporované karty: %@";
-/* Accessibility hint to tell the user that they can tap to hide additional content. */
+
 "Tap to close" = "Ťuknutím zatvorte";
-/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+
 "Tap to expand" = "Ťuknutím rozbaľte";
-/* Label for the tax row in an order summary. */
+
 "Tax" = "Daň";
-/* Title label for a screen showing terms and conditions */
+
 "Terms and Conditions" = "Zmluvné podmienky";
-/* Title label for a screen showing terms of service */
+
 "Terms of Service" = "Podmienky služby";
-/* test */
-"Test123" = "Test123";
-/* An error message displayed when the customer's IBAN is incomplete. */
+
 "The IBAN you entered is incomplete." = "Zadaný IBAN je neúplný.";
-/* An error message. */
+
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadaný IBAN je neplatný, „%@“ nie je podporovaný kód krajiny.";
-/* Error message shown when the user enters an expired verification code. */
+
 "The provided verification code has expired." = "Platnosť zadaného overovacieho kódu skončila.";
-/* Error message shown when the user enters an incorrect verification code. */
+
 "The provided verification code is incorrect." = "Zadaný overovací kód je nesprávny.";
-/* String to inform a user that specific card brands are not accepted. */
-"The selected brand is not allowed" = "Vybraná značka nie je povolená";
-/* Disclaimer for when a bank account is not eligible for a promotion. */
-"This bank account is ineligible for promotions. <terms>View terms</terms>" = "Tento bankový účet nie je oprávnený na propagačné akcie. <terms>Zobraziť podmienky</terms>";
-/* A text notice shown when the user selects an expired card. */
-"This card has expired. Update your card info or choose a different payment method." = "Platnosť tejto karty vypršala. Aktualizujte údaje karty alebo zvoľte iný spôsob platby.";
-/* Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms. */
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ide o medzinárodný nákup, ktorý nezahŕňa 3,5 % poplatok IOF. Pokračovaním beriete na vedomie a akceptujete <terms>podmienky spoločnosti Ebanx</terms>.";
-/* Text of a label indicating that a payment method is the default. */
+
 "This is your default" = "Toto je váš predvolený spôsob platby";
-/* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
+
 "This payment method will be removed but will remain available for %@ subscriptions." = "Tento spôsob platby sa odstráni, ale ostane k dispozícii pre predplatné %@.";
-/* Error when the phone number entered before Link email verification does not match the account. */
+
 "This phone number doesn't match your Link account. Please try again." = "Toto telefónne číslo sa nezhoduje s vaším účtom Link. Skúste to znova.";
-/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
-"To scan your card, allow camera access in Settings." = "Ak chcete naskenovať kartu, povoľte prístup k fotoaparátu v časti Nastavenia.";
-/* Error message shown when the user enters an incorrect verification code too many times. */
+
 "Too many attempts. Please try again in a few minutes." = "Príliš veľa pokusov. Skúste to znova o niekoľko minút.";
-/* Accessibility label for a button that turns off the flashlight while scanning a card. */
-"Turn off flashlight" = "Vypnite baterku";
-/* Accessibility label for a button that turns on the flashlight while scanning a card. */
-"Turn on flashlight" = "Zapnite baterku";
-/* Label shown when a payment method cannot be used for the current transaction. */
+
 "Unavailable for this purchase" = "Nie je k dispozícii pre tento nákup";
-/* Title for a button that when tapped, updates a card brand. */
-"Update" = "Aktualizovať";
-/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
+
 "Update card" = "Aktualizovať kartu";
-/* Title for a screen for updating a card brand. */
-"Update card brand" = "Aktualizovať značku karty";
-/* Accessibility label for a button that leads to a screen for updating a payment method. */
+
 "Update payment method" = "Aktualizovať spôsob platby";
-/* Label for checkbox in address form allowing user to use billing address */
+
 "Use billing address for shipping" = "Použiť fakturačnú adresu na doručenie";
-/* Two factor authentication screen heading */
-"Use your saved info to check out faster" = "Použite vaše uložené údaje a plaťte rýchlejšie";
-/* Heading for the Link phone-match screen. */
+
 "Verify your phone number" = "Overiť telefónne číslo";
-/* Link authentication in progress. */
+
 "Verifying your account…" = "Overujeme váš účet…";
-/* Text shown on a button that when tapped opens a user's screen with their payment methods. */
+
 "View more" = "Zobraziť viac";
-/* Link authentication cannot continue with the available verification methods. */
+
 "We couldn't verify your account. Please close this window and try again." = "Nepodarilo sa nám overiť váš účet. Zatvorte toto okno a skúste to znova.";
-/* Text for a tappable link that will update the email field with a suggested email address. */
+
 "Yes, update" = "Áno, aktualizovať";
-/* Title of a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "You can't pay with %@ here" = "Tu nemôžete platiť pomocou služby %@";
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
+
 "Your IBAN should start with a two-letter country code." = "Váš IBAN by mal začínať dvojpísmenovým kódom krajiny.";
-/* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
+
 "Your address changes won't be saved." = "Zmeny vašej adresy sa neuložia.";
-/* Error message for card details form when expiration date has passed */
-"Your card has expired." = "Platnosť vašej karty vypršala.";
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL banka";

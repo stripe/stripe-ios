@@ -1,80 +1,75 @@
-/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "アプリにデバッガーが添付されています。";
-/* The text for warning when an emulator is being used to run the application. */
+
 "An emulator is being used to run the App." = "アプリの実行にエミュレーターが使用されています。";
-/* An error message displayed when an error occurred. */
+
 "An error occurred. Please try again." = "エラーが発生しました。もう一度お試しください。";
-/* Button title to cancel action in an alert */
+
 "Cancel" = "キャンセル";
-/* An error message displayed when changing a card brand fails. */
+
 "Card brand was not updated. Please try again." = "カードブランドは更新されていません。もう一度お試しください。";
-/* Text for close button */
+
 "Close" = "閉じる";
-/* Accessibility label for expandable text control to indicate text is hidden. */
+
 "Collapsed" = "縮小";
-/* Two factor authentication screen heading */
+
 "Confirm it's you" = "本人であると確定";
-/* An error message displayed when setting a default payment method fails. */
-"Default payment method was not changed. Please try again." = "デフォルトの支払い方法は変更されませんでした。もう一度お試しください。";
-/* An error message displayed when setting a default payment method fails. */
+
 "Default payment method was not updated. Please try again." = "デフォルトの決済手段は更新されていません。もう一度お試しください。";
-/* Label for button to enter card details manually instead of scanning */
-"Enter card details manually" = "カード詳細を手動で入力する";
-/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+
 "Enter the code sent to %@." = "%@ に送信されたコードを入力してください。";
-/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
+
 "Expanded" = "拡大";
-/* Label shown when a network-related error has occured. */
+
 "Failed to connect" = "接続に失敗しました";
-/* Status while screen is loading */
+
 "Loading" = "読み込み中";
-/* The no answer to a yes or no question. */
+
 "No" = "いいえ";
-/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
+
 "Resend code" = "コードを再送";
-/* Text for button to scan a credit card */
+
 "Scan Card" = "クレジットカードをスキャン";
-/* Button title to open camera to scan credit/debit card */
+
 "Scan card" = "カードをスキャン";
-/* The title for the challenge response step of an authenticated checkout. */
+
 "Secure checkout" = "安全なチェックアウト";
-/* Indicates that a button is selected. */
+
 "Selected" = "選択済み";
-/* An error message displayed when the customer's iban is invalid. */
+
 "The IBAN you entered is invalid." = "入力した IBAN が無効です。";
-/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+
 "The OS or the OS Version is not supported." = "OS または OS のバージョンがサポートされていません。";
-/* The text for warning when a device is jailbroken. */
+
 "The device is jailbroken." = "このデバイスは脱獄状態です。";
-/* The text for warning when the integrity of the SDK has been tampered with. */
+
 "The integrity of the SDK has been tampered." = "SDK の完全性が改ざんされています。";
-/* Error when there is a problem processing the credit card */
+
 "There was an error processing your card -- try again in a few seconds" = "クレジットカード情報の処理中にエラーが発生しました。数秒後にもう一度お試しください";
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
 "There was an unexpected error -- try again in a few seconds" = "予期しないエラーが発生しました。数秒後にもう一度お試しください";
-/* Error description for when a network request times out. English value is as required by UL certification. */
+
 "Timeout" = "タイムアウト";
-/* Button to reload web view if we were unable to connect. */
+
 "Try again" = "もう一度お試しください";
-/* Indicates that a button is not selected. */
+
 "Unselected" = "選択解除済み";
-/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Stripe を使用してカード詳細を確認します。Stripe はプライバシーポリシーに従ってお客様のデータを使用および保管することがあります。<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>もっと知る</u></a>";
-/* The yes answer to a yes or no question. */
+
 "Yes" = "はい";
-/* Error when the card has already expired */
+
 "Your card has expired" = "クレジットカードの有効期限が切れています";
-/* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "クレジットカードが拒否されました";
-/* Error when the card&apos;s expiration month is not valid */
+
 "Your card's expiration month is invalid" = "指定したクレジットカードの有効期限の月が無効です";
-/* Error when the card&apos;s expiration year is not valid */
+
 "Your card's expiration year is invalid" = "指定したクレジットカードの有効期限の年が無効です";
-/* Error when the card number is not valid */
+
 "Your card's number is invalid" = "指定したクレジットカードの番号が無効です";
-/* Error when the card&apos;s CVC is not valid */
+
 "Your card's security code is invalid" = "指定したクレジットカードのセキュリティコードが無効です";
-/* Error when customer's name is invalid */
+
 "Your name is invalid." = "名前が無効です。";
-/* Error message when a payment method gets declined. */
+
 "Your payment method was declined." = "お客様の支払い方法が拒否されました。";

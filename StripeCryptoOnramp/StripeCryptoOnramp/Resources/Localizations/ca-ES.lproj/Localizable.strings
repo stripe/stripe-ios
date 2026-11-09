@@ -1,104 +1,77 @@
-/* Error message shown when the user tries to create a Link account for an email that already has one */
-"A Link account already exists for this email. Log in instead." = "Ja existeix un compte de Link associat a aquest correu electrònic. Alternativament, inicieu sessió.";
-/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
 "Add %ld documents" = "Afegiu %ld documents";
-/* Action to add exactly one uploaded document to a source of funds */
+
 "Add 1 document" = "Afegiu 1 document";
-/* Action to add documents for another source of funds */
+
 "Add documents" = "Afegiu documents";
-/* Error when camera access is denied or restricted during document collection */
+
 "Allow camera access in Settings to take a photo." = "Permeteu l'accés a la càmera a Configuració per fer una foto.";
-/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
-"An error occurred while automatically signing in to your Link account. Please sign in manually." = "S'ha produït un error en iniciar la sessió automàticament al vostre compte de Link. Inicieu-la manualment.";
-/* Label and placeholder for a questionnaire answer field */
+
 "Answer" = "Responeu";
-/* Action to open the system document picker to select a file */
+
 "Choose File…" = "Tria un fitxer…";
-/* Action to open the system photo picker to select a photo */
+
 "Choose Photo…" = "Tria una foto…";
-/* Button asking the owner to open its support destination */
-"Contact support" = "Contacteu amb atenció al client";
-/* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
+
 "Debit cards are most likely to be accepted." = "És molt probable que s'acceptin les targetes de dèbit.";
-/* Label and picker title for a document's category */
+
 "Document type" = "Tipus de document";
-/* Heading confirming a document was uploaded successfully */
+
 "Document uploaded successfully" = "El document s'ha carregat correctament";
-/* Error message shown when the SDK needs a crypto customer ID before continuing */
-"Finish verifying your Link account before continuing." = "Finalitzeu la verificació del vostre compte de Link abans de continuar.";
-/* Label for the selected source of funds in the document editor */
+
 "Funds source" = "Origen dels fons";
-/* Explanation above the summary of source-of-funds documents. */
+
 "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Com financeu les vostres transaccions? Indiqueu totes les vostres fonts. Per exemple, salari, estalvis, beneficis d'inversions, etc.";
-/* Error message shown when the provided phone number is not in the expected format */
-"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "El format del telèfon no és vàlid. Utilitzeu el format E.164 (per exemple, +12125551234).";
-/* Explanation above the document upload control */
+
 "Make sure your document meets following requirements." = "Assegureu-vos que el vostre document compleix els requisits següents.";
-/* Error message shown when there is no usable payment method selected */
-"No payment method is ready to use. Please collect a payment method and try again." = "No hi ha cap mètode de pagament a punt per utilitzar. Introduïu un mètode de pagament i torneu-ho a provar.";
-/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
+
 "Please select your Apple Pay payment method again to continue." = "Torneu a seleccionar el vostre mètode de pagament amb Apple Pay per continuar.";
-/* Instruction after an unavailable operation */
+
 "Please try again later." = "Torneu-ho a provar més tard.";
-/* Error message shown when the SDK is missing required information from the server */
-"Required information was missing. Please try again later." = "Falta informació obligatòria. Torneu-ho a provar més tard.";
-/* Heading confirming documents were submitted for review */
+
 "Submitted for review" = "Enviat per a revisar";
-/* Action to open the system camera to take a photo of a document */
+
 "Take Photo…" = "Feu una foto…";
-/* Heading introducing source of funds collection */
+
 "Tell us about your source of funds" = "Parleu-nos sobre l'origen dels vostres fons";
-/* Message shown when a previous document has a requirement error */
+
 "There was a problem with your previous document. Please upload a new one." = "Hi ha hagut un problema amb el vostre document anterior. Carregueu-ne un de nou.";
-/* Error message shown when app attestation fails */
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Aquesta aplicació no s'ha pogut verificar a causa d'un error d'atestació. Torneu-ho a provar més tard o poseu-vos en contacte amb el desenvolupador si el problema persisteix.";
-/* Error message shown when app attestation is not configured for crypto onramp */
+
 "This app couldn't be verified. Contact the app developer for help." = "Aquesta aplicació no s'ha pogut verificar. Contacteu amb la persona que la va desenvolupar per a demanar ajuda.";
-/* Validation error for a document exceeding the size limit */
+
 "This file is larger than %@. Choose a file that is %@ or smaller." = "Aquest fitxer és més gran que %1$@. Trieu un fitxer de %2$@ o més petit.";
-/* Validation error when no document formats are available */
+
 "This file type isn’t supported." = "No s'admet aquest tipus de fitxer.";
-/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
+
 "This file type isn’t supported. Upload a %@ file." = "No s'admet aquest tipus de fitxer. Carregueu un fitxer %@.";
-/* Error message shown when the wallet is not registered for crypto onramp */
+
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "No s'ha pogut trobar aquesta cartera. Trieu o afegiu una cartera i torneu-ho a provar.";
-/* Error message shown when the wallet network is not supported for crypto onramp */
+
 "This wallet network isn't supported. Please choose a different network." = "Aquesta xarxa de carteres no és compatible. Trieu una xarxa diferent.";
-/* Error message shown when the wallet ownership challenge has expired */
+
 "This wallet verification request expired. Please try again." = "Aquesta sol·licitud de verificació de la cartera ha caducat. Torneu-ho a provar.";
-/* Error message shown when the wallet ownership challenge is invalid */
+
 "This wallet verification request is invalid. Please try again." = "Aquesta sol·licitud de verificació de la cartera no és vàlida. Torneu-ho a provar.";
-/* Error message shown when the wallet ownership challenge is invalid */
-"This wallet verification request is no longer valid. Please try again." = "Aquesta sol·licitud de verificació de la cartera ja no és vàlida. Torneu-ho a provar.";
-/* Action to select an existing document for upload */
+
 "Upload document" = "Carrega el document";
-/* Heading introducing proof of address collection */
+
 "Upload your proof of address" = "Pugeu el vostre comprovant d'adreça";
-/* Status after a document has uploaded successfully */
+
 "Uploaded" = "S'ha carregat";
-/* Status while a document is uploading */
+
 "Uploading…" = "Carregant…";
-/* Error message shown when the user's Link account is not verified */
-"Verify your Link account before continuing." = "Verifiqueu el vostre compte de Link abans de continuar.";
-/* Error message shown when the submitted wallet ownership signature is invalid */
+
 "We couldn't verify ownership of this wallet. Please try again." = "No hem pogut verificar la propietat d'aquesta cartera. Torneu-ho a provar.";
-/* Error when a file provider cannot supply a document */
+
 "We couldn’t open this document. Please choose it again." = "No hem pogut obrir aquest document. Torneu-lo a triar.";
-/* Error after a document upload fails */
+
 "We couldn’t upload this file. Please try again." = "No hem pogut carregar aquest fitxer. Torneu-ho a provar.";
-/* Explanation introducing proof of address collection. */
+
 "We may request proof of address for larger transactions." = "És possible que sol·licitem un justificant de domicili per a transaccions més grans.";
-/* Explanation introducing source of funds collection. */
+
 "We may request source of funds for larger transactions." = "És possible que sol·licitem l'origen dels fons per a transaccions més grans.";
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We're required to confirm your address to enable spending over %@." = "Hem de confirmar la vostra adreça per habilitar la despesa superior a %@.";
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We're required to understand where your funds come from to enable spending over %@." = "Hem d'entendre d'on provenen els vostres fons per habilitar la despesa superior a %@.";
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to confirm your address to enable spending over %@." = "Hem de confirmar la vostra adreça per habilitar la despesa superior a %@.";
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to understand where your funds come from to enable spending over %@." = "Hem d'entendre d'on provenen els vostres fons per habilitar la despesa superior a %@.";
-/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
+
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Estem revisant els vostres documents. Us avisarem quan la verificació s'hagi completat.";
-/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
+
 "You can continue while we verify your document in the background." = "Podeu continuar mentre verifiquem el vostre document en segon pla.";

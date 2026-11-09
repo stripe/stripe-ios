@@ -1,199 +1,151 @@
-/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+
 "%@ (optional)" = "%@ (προαιρετικό)";
-/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
-"%@ is incomplete." = "Το %@ είναι ελλιπές.";
-/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
+
 "(not accepted)" = "(μη αποδεκτή)";
-/* Placeholder text for Account number entry field for BECS Debit. */
+
 "Account number" = "Αριθμός λογαριασμού";
-/* Caption for Address field on address form */
+
 "Address" = "Διεύθυνση";
-/* Address line 1 placeholder for billing address form. */
+
 "Address line 1" = "Γραμμή διεύθυνσης 1";
-/* Label for input requesting address line 2, used for international addresses */
+
 "Address line 2" = "Γραμμή διεύθυνσης 2";
-/* Label of an address field in hk */
+
 "Area" = "Περιοχή";
-/* Label for BLIK code number field on form */
+
 "BLIK code" = "Κωδικός BLIK";
-/* Placeholder for AU BECS BSB number */
+
 "BSB number" = "Αριθμός BSB";
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Τραπεζικός λογαριασμός";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
+
 "Bank account •••• %@" = "Τραπεζικός λογαριασμός •••• %@";
-/* Billing address section title for card form entry. */
-"Billing address" = "Διεύθυνση τιμολόγησης";
-/* Label for a checkbox that makes customers billing address same as their shipping address */
+
 "Billing address is same as shipping" = "Η διεύθυνση τιμολόγησης είναι ίδια με τη διεύθυνση αποστολής";
-/* Label for entering CVC in text field */
-"CVC" = "CVC";
-/* Button title to cancel action in an alert */
-"Cancel" = "Ακύρωση";
-/* Label an input field to update card brand */
+
 "Card brand" = "Επωνυμία κάρτας";
-/* Label for card number entry text field */
-"Card number" = "Αριθμός κάρτας";
-/* Caption for City field on address form */
+
 "City" = "Πόλη";
-/* Accessibility label describing a field for entering a login code */
+
 "Code field" = "Πεδίο κωδικού";
-/* Label for Company field on form */
+
 "Company" = "Εταιρεία";
-/* Text for alert message when user needs to confirm payment in their banking app */
-"Confirm the payment in your bank's app to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή της τράπεζάς σας για να ολοκληρώσετε την αγορά.";
-/* Text for continue button */
+
 "Continue" = "Συνέχεια";
-/* Caption for Country field on address form */
+
 "Country" = "Χώρα";
-/* Country selector and postal code entry form header title */
+
 "Country or region" = "Χώρα ή περιοχή";
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+
 "County" = "Κομητεία";
-/* Error message for empty date. */
-"Date is empty." = "Η ημερομηνία είναι κενή.";
-/* Label for Date of birth field */
+
 "Date of Birth" = "Ημερομηνία γέννησης";
-/* Label of an address field */
+
 "Department" = "Τμήμα";
-/* Label for the district field on an address form */
+
 "District" = "Περιφέρεια";
-/* Label of an address field */
+
 "Do Si" = "Do Si";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Do you want to close this form?" = "Θέλετε να κλείσετε αυτή τη φόρμα;";
-/* Done button title */
+
 "Done" = "Τέλος";
-/* Accessibility hint for a text field */
+
 "Double tap to edit" = "Πατήστε δύο φορές για επεξεργασία";
-/* Button title to enter editing mode */
+
 "Edit" = "Επεξεργασία";
-/* Label of an address field */
+
 "Eircode" = "Ταχυδρομικός κώδικας";
-/* Caption for Email field on address form */
+
 "Email" = "Διεύθυνση ηλεκτρονικού ταχυδρομείου";
-/* Used to describe address in United Arab Emirates */
+
 "Emirate" = "Εμιράτο";
-/* Text for error labels */
+
 "Error" = "Σφάλμα";
-/* Label for first (given) name field */
+
 "First" = "Όνομα";
-/* Placeholder string for name entry field. */
+
 "Full name" = "Πλήρες όνομα";
-/* Error description for incomplete phone number */
+
 "Incomplete phone number" = "Ελλιπής αριθμός τηλεφώνου";
-/* Error message when UPI ID is invalid */
-"Invalid UPI ID" = "Μη έγκυρο αναγνωριστικό UPI";
-/* Label of an address field */
+
 "Island" = "Νησί";
-/* Label for last (family) name field */
+
 "Last" = "Επώνυμο";
-/* label for text field to enter card expiry */
-"MM / YY" = "ΜΜ / ΕΕ";
-/* Form field header for entering a mobile phone number */
-"Mobile number" = "Αριθμός κινητού τηλεφώνου";
-/* Caption for Name field on address form */
+
 "Name" = "Όνομα";
-/* Label for Name on account field on form */
+
 "Name on account" = "Όνομα στον λογαριασμό";
-/* No comment provided by engineer. */
+
 "OK" = "OK";
-/* Label of an address field */
+
 "Oblast" = "Περιφέρεια";
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+
 "Other" = "Άλλο";
-/* Label of an address field */
+
 "Parish" = "Δήμος";
-/* Caption for Phone field on address form */
-"Phone" = "Τηλέφωνο";
-/* Caption for Phone number field on address form */
+
 "Phone number" = "Αριθμός τηλεφώνου";
-/* Short string for postal code (text used in non-US countries) */
+
 "Postal code" = "Ταχυδρομικός κώδικας";
-/* Label of an address field */
+
 "Prefecture" = "Νομός";
-/* Label of a disabled button while its action is processing */
+
 "Processing..." = "Επεξεργασία...";
-/* Caption for Province field on address form (only countries that use province, like Canada) */
+
 "Province" = "Επαρχία";
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
+
 "Remove" = "Αφαίρεση";
-/* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "Αφαίρεση τραπεζικού λογαριασμού";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "Αφαίρεση του τραπεζικού λογαριασμού που λήγει σε %@";
-/* Title for confirmation alert to remove a saved bank account payment method */
+
 "Remove bank account?" = "Αφαίρεση τραπεζικού λογαριασμού;";
-/* Title for a button that when tapped removes a saved card. */
+
 "Remove card" = "Αφαίρεση κάρτας";
-/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
+
 "Search" = "Αναζήτηση";
-/* Message when a user is selecting a card brand in a dropdown */
+
 "Select card brand (optional)" = "Επιλέξτε επωνυμία κάρτας (προαιρετικό)";
-/* Error message for empty dropdown selection. */
+
 "Selection is empty." = "Η επιλογή είναι κενή.";
-/* Heading for a generic error when an operation fails */
+
 "Something went wrong" = "Κάτι πήγε στραβά";
-/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
+
 "Sort code" = "Κωδικός sort";
-/* Caption for State field on address form (only countries that use state , like United States) */
+
 "State" = "Πολιτεία";
-/* Button that submits the information entered on a screen */
+
 "Submit" = "Υποβολή";
-/* Label of an address field */
+
 "Suburb" = "Προάστιο";
-/* Label of an address field */
+
 "Suburb or city" = "Προάστιο ή πόλη";
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
 "The BSB you entered is incomplete." = "Ο κωδικός BSB που εισάγατε είναι ατελής.";
-/* An error message. */
+
 "The ID number you entered is incomplete." = "Ο αριθμός ταυτότητας που εισαγάγατε είναι ελλιπής.";
-/* Error description for incomplete account number */
+
 "The account number you entered is incomplete." = "Ο αριθμός λογαριασμού που εισαγάγατε είναι ελλιπής.";
-/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
+
 "The sort code you entered is invalid." = "Ο κωδικός sort που εισαγάγατε δεν είναι έγκυρος.";
-/* Label of an address field */
+
 "Town or city" = "Κωμόπολη ή πόλη";
-/* Label for UPI ID number field on form */
-"UPI ID" = "Αναγνωριστικό UPI";
-/* Error string when we can't parse a phone number */
+
 "Unable to parse phone number" = "Δεν ήταν δυνατή η ανάλυση του αριθμού τηλεφώνου";
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+
 "Use rotor to access links" = "Χρησιμοποιήστε τον ρότορα για να προσπελάσετε τους συνδέσμους";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is incomplete." = "Ο κωδικός σας BLIK είναι ελλιπής.";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is invalid." = "Ο κωδικός σας BLIK δεν είναι έγκυρος.";
-/* Error message for when ZIP code in form is incomplete (US only) */
+
 "Your ZIP code is incomplete." = "Ο ταχυδρομικός κώδικας είναι ελλιπής.";
-/* Error message for when ZIP code in form is invalid (US only) */
+
 "Your ZIP code is invalid." = "Ο ταχυδρομικός κώδικας δεν είναι έγκυρος.";
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Ο ταχυδρομικός σας κώδικας είναι ελλιπής.";
-/* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "Ο αριθμός της κάρτας σας είναι ελλιπής.";
-/* Error message for card form when card number is invalid */
-"Your card number is invalid." = "Ο αριθμός της κάρτας σας δεν είναι έγκυρος.";
-/* Error message for card details form when expiration date isn't entered completely */
-"Your card's expiration date is incomplete." = "Η ημερομηνία λήξης της κάρτας σας είναι ελλιπής.";
-/* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "Η ημερομηνία λήξης της κάρτας σας δεν είναι έγκυρη.";
-/* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "Ο μήνας λήξης της κάρτας σας δεν είναι έγκυρος.";
-/* Error message for card entry form when CVC is incomplete. */
-"Your card's security code is incomplete." = "Ο κωδικός ασφαλείας της κάρτας σας είναι ελλιπής.";
-/* Error message when email is invalid */
+
 "Your email is invalid." = "Η διεύθυνση email σας δεν είναι έγκυρη.";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Your payment information will not be saved." = "Τα στοιχεία πληρωμής δε θα αποθηκευτούν.";
-/* Error message for when postal code in form is incomplete */
+
 "Your postal code is incomplete." = "Ο ταχυδρομικός κώδικάς σας είναι ελλιπής.";
-/* Error message for when postal code in form is invalid */
+
 "Your postal code is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+
 "ZIP" = "Τ.Κ.";
-/* accessibility label for text field */
-"expiration date" = "ημερομηνία λήξης";

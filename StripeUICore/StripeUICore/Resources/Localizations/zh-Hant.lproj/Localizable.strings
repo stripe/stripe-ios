@@ -1,193 +1,147 @@
-/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+
 "%@ (optional)" = "%@（可選）";
-/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
+
 "(not accepted)" = "（未接受）";
-/* Placeholder text for Account number entry field for BECS Debit. */
+
 "Account number" = "帳號";
-/* Caption for Address field on address form */
+
 "Address" = "地址";
-/* Address line 1 placeholder for billing address form. */
+
 "Address line 1" = "地址第 1 行";
-/* Label for input requesting address line 2, used for international addresses */
+
 "Address line 2" = "地址第 2 行";
-/* Label of an address field in hk */
+
 "Area" = "地區";
-/* Label for BLIK code number field on form */
+
 "BLIK code" = "BLIK 驗證碼";
-/* Placeholder for AU BECS BSB number */
+
 "BSB number" = "BSB 號碼";
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "銀行帳戶";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
+
 "Bank account •••• %@" = "銀行帳戶 •••• %@";
-/* Billing address section title for card form entry. */
-"Billing address" = "帳單地址";
-/* Label for a checkbox that makes customers billing address same as their shipping address */
+
 "Billing address is same as shipping" = "帳單地址與送貨地址相同";
-/* Label for entering CVC in text field */
-"CVC" = "卡安全碼 (CVC)";
-/* Button title to cancel action in an alert */
-"Cancel" = "取消";
-/* Label an input field to update card brand */
+
 "Card brand" = "金融卡品牌";
-/* Label for card number entry text field */
-"Card number" = "銀行卡號碼";
-/* Caption for City field on address form */
+
 "City" = "城市";
-/* Accessibility label describing a field for entering a login code */
+
 "Code field" = "驗證碼欄位";
-/* Label for Company field on form */
+
 "Company" = "公司";
-/* Text for alert message when user needs to confirm payment in their banking app */
-"Confirm the payment in your bank's app to complete the purchase." = "在您的銀行應用程式中確認付款，完成購物。";
-/* Text for continue button */
+
 "Continue" = "繼續";
-/* Caption for Country field on address form */
+
 "Country" = "國家";
-/* Country selector and postal code entry form header title */
+
 "Country or region" = "國家或地區";
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+
 "County" = "縣";
-/* Error message for empty date. */
-"Date is empty." = "日期為空值。";
-/* Label of an address field */
+
 "Department" = "部門";
-/* Label for the district field on an address form */
+
 "District" = "地區";
-/* Label of an address field */
+
 "Do Si" = "道/縣";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Do you want to close this form?" = "您要關閉此表單嗎？";
-/* Done button title */
+
 "Done" = "完成";
-/* Accessibility hint for a text field */
+
 "Double tap to edit" = "按兩下可編輯";
-/* Button title to enter editing mode */
+
 "Edit" = "編輯";
-/* Label of an address field */
+
 "Eircode" = "愛爾蘭郵遞區號";
-/* Caption for Email field on address form */
+
 "Email" = "電郵地址";
-/* Used to describe address in United Arab Emirates */
+
 "Emirate" = "大公國";
-/* Text for error labels */
+
 "Error" = "錯誤";
-/* Label for first (given) name field */
+
 "First" = "名字";
-/* Placeholder string for name entry field. */
+
 "Full name" = "全名";
-/* Error description for incomplete phone number */
+
 "Incomplete phone number" = "電話號碼不完整";
-/* Error message when UPI ID is invalid */
-"Invalid UPI ID" = "UPI ID 無效";
-/* Label of an address field */
+
 "Island" = "島";
-/* Label for last (family) name field */
+
 "Last" = "姓氏";
-/* label for text field to enter card expiry */
-"MM / YY" = "月 / 年";
-/* Form field header for entering a mobile phone number */
-"Mobile number" = "手機號碼";
-/* Caption for Name field on address form */
+
 "Name" = "姓名";
-/* Label for Name on account field on form */
+
 "Name on account" = "帳戶上的姓名";
-/* No comment provided by engineer. */
+
 "OK" = "確認";
-/* Label of an address field */
+
 "Oblast" = "州";
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+
 "Other" = "其他";
-/* Label of an address field */
+
 "Parish" = "堂區";
-/* Caption for Phone field on address form */
-"Phone" = "電話";
-/* Caption for Phone number field on address form */
+
 "Phone number" = "手機號碼";
-/* Short string for postal code (text used in non-US countries) */
+
 "Postal code" = "郵遞區號";
-/* Label of an address field */
+
 "Prefecture" = "轄區";
-/* Label of a disabled button while its action is processing */
+
 "Processing..." = "處理中…";
-/* Caption for Province field on address form (only countries that use province, like Canada) */
+
 "Province" = "省";
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
+
 "Remove" = "移除";
-/* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "移除銀行帳戶";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "移除尾號為 %@ 的銀行帳戶";
-/* Title for confirmation alert to remove a saved bank account payment method */
+
 "Remove bank account?" = "移除銀行帳戶？";
-/* Title for a button that when tapped removes a saved card. */
+
 "Remove card" = "解除綁定";
-/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
+
 "Search" = "搜尋";
-/* Message when a user is selecting a card brand in a dropdown */
+
 "Select card brand (optional)" = "選擇金融卡品牌（可選）";
-/* Error message for empty dropdown selection. */
+
 "Selection is empty." = "選擇為空。";
-/* Heading for a generic error when an operation fails */
+
 "Something went wrong" = "出現問題";
-/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
+
 "Sort code" = "分類代碼";
-/* Caption for State field on address form (only countries that use state , like United States) */
+
 "State" = "州";
-/* Button that submits the information entered on a screen */
+
 "Submit" = "提交";
-/* Label of an address field */
+
 "Suburb" = "郊區";
-/* Label of an address field */
+
 "Suburb or city" = "市郊或城市";
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
 "The BSB you entered is incomplete." = "您輸入的 BSB 不完整。";
-/* An error message. */
+
 "The ID number you entered is incomplete." = "您輸入的證件號碼不完整。";
-/* Error description for incomplete account number */
+
 "The account number you entered is incomplete." = "您輸入的帳號不完整。";
-/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
+
 "The sort code you entered is invalid." = "您輸入的分類代碼無效。";
-/* Label of an address field */
+
 "Town or city" = "城鎮或城市";
-/* Label for UPI ID number field on form */
-"UPI ID" = "UPI ID";
-/* Error string when we can't parse a phone number */
+
 "Unable to parse phone number" = "無法粘貼手機號碼";
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+
 "Use rotor to access links" = "用轉子訪問連結";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is incomplete." = "您的 BLIK 驗證碼不完整。";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is invalid." = "您的 BLIK 驗證碼無效。";
-/* Error message for when ZIP code in form is incomplete (US only) */
+
 "Your ZIP code is incomplete." = "您的郵遞區號不完整。";
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "您的郵遞區號不完整。";
-/* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "您的銀行卡號碼不完整。";
-/* Error message for card form when card number is invalid */
-"Your card number is invalid." = "您的銀行卡號碼無效。";
-/* Error message for card details form when expiration date isn't entered completely */
-"Your card's expiration date is incomplete." = "您的銀行卡有效日期不完整。";
-/* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "您的銀行卡有效日期無效。";
-/* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "您的銀行卡有效月份無效。";
-/* Error message for card entry form when CVC is incomplete. */
-"Your card's security code is incomplete." = "您的銀行卡安全碼不完整。";
-/* Error message when email is invalid */
+
 "Your email is invalid." = "您的電郵地址無效。";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Your payment information will not be saved." = "不會儲存您的付款資訊。";
-/* Error message for when postal code in form is incomplete */
+
 "Your postal code is incomplete." = "您的郵遞區號不完整。";
-/* Error message for when postal code in form is invalid */
+
 "Your postal code is invalid." = "您的郵遞區號無效。";
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+
 "ZIP" = "郵遞區號";
-/* accessibility label for text field */
-"expiration date" = "有效日期";

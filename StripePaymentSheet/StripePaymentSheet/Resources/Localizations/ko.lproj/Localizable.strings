@@ -1,624 +1,399 @@
-/* Label a default funding source, which we treat as a generic card. E.g. 'Visa Card' */
-"%1$@ Card" = "%1$@ 카드";
-/* Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte' */
-"%1$@ Credit" = "%1$@ 신용";
-/* Label a debit funding source. E.g. 'Visa Debit' */
-"%1$@ Debit" = "%1$@ 직불";
-/* Label a prepaid funding source. E.g. 'Visa Prepaid' */
-"%1$@ Prepaid" = "%1$@ 선불";
-/* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
-"%1$@ account ending in %2$@" = "%2$@(으)로 끝나는 %1$@ 계좌";
-/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
-"%1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@";
-/* String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted */
-"%1$@ is not accepted" = "%1$@은(는) 허용되지 않습니다";
-/* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%1$d interest-free payments of %2$@" = "%1$li%2$@회 무이자 결제";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. '$5 back on […]' */
-"%@ back on a qualifying purchase when you pay by bank. <terms>View terms</terms>" = "은행 계좌로 결제하면 조건을 충족하는 구매에 대해 %@을(를) 돌려받을 수 있습니다. <terms>약관 보기</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. '$5 back when […]' */
-"%@ back when you pay by bank. <terms>View terms</terms>" = "은행 계좌로 결제하면 %@을(를) 돌려받을 수 있습니다. <terms>약관 보기</terms>";
-/* Message shown in a confirmation prompt when removing a saved payment method. */
+
 "%@ will no longer be saved to your wallet." = "%@은(는) 더 이상 간편결제에 저장되지 않습니다.";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%d interest-free payments of %@" = "%1$li%2$@회 무이자 결제";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "+ Add" = "+ 추가";
-/* Exchange rate with conversion fee disclosure, e.g. '1 GBP = 1.2871 USD (includes 4% conversion fee).' */
-"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (%4$@%%의 환전 수수료 포함).";
-/* Exchange rate caption, e.g. '1 GBP = 1.2871 USD' */
-"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
-/* Label for a button that confirms the user accepts a declaration */
+
 "Accept" = "수락";
-/* Title shown above a view allowing the customer to save a US bank account. */
+
 "Add US bank account" = "미국 은행 계좌 추가";
-/* Title shown above a card entry form */
+
 "Add a card" = "카드 추가";
-/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
+
 "Add a payment method" = "결제 방식 추가";
-/* Button prompt to add a bank account as a payment method. */
+
 "Add bank account" = "은행 계좌 추가";
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "카드 추가";
-/* Title shown above a view allowing the customer to save a card. */
+
 "Add new card" = "새 카드 추가";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "Add new payment method" = "새 결제 방식 추가";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Add your payment information" = "결제 정보를 추가하세요.";
-/* Label for a button that confirms the user agrees to and accepts a declaration */
-"Agree and accept" = "동의 및 수락";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Agree and continue" = "동의하고 계속";
-/* Instructions shown above the card scanner while the customer is asked for camera access. */
-"Allow camera permissions and get your card ready for scanning." = "카메라 권한을 허용하고 스캔할 카드를 준비하십시오.";
-/* Text for Apple Pay payment method */
-"Apple Pay" = "Apple Pay";
-/* Text on a screen asking the user to approve a payment */
+
 "Approve payment" = "결제 승인";
-/* Title of confirmation prompt when removing a saved card. */
-"Are you sure you want to remove this card?" = "이 카드를 삭제하시겠습니까?";
-/* Title of confirmation prompt when removing a linked bank account. */
-"Are you sure you want to remove this linked account?" = "연결된 해당 계좌를 삭제하시겠습니까?";
-/* Text for back button */
+
 "Back" = "뒤로";
-/* Title for a bank account payment method */
+
 "Bank" = "은행";
-/* Title for collected bank account information */
+
 "Bank account" = "은행 계좌";
-/* Text on a screen that indicates bank account details cannot be changed. */
+
 "Bank account details cannot be changed." = "은행 계좌 세부사항은 설정되면 변경할 수 없습니다.";
-/* Phone-match instruction before Link email OTP. Placeholder is the last two phone digits. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "이메일에 인증 코드를 보내드리기 전에, 귀하의 추가 정보를 확인해야 합니다. ••%@로 끝나는 전화번호를 입력하십시오.";
-/* Phone-match instruction before Link email OTP. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "이메일에 인증 코드를 보내드리기 전에, 귀하의 추가 정보를 확인해야 합니다. 휴대폰 번호를 입력하십시오.";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
+
 "Buy Now, Pay Later with  <img/>" = "<img/>(으)로 선구매 후지불";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Afterpay" = "Afterpay로 선구매 후지불";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Cash App Afterpay" = "현금결제 앱 Afterpay로 선구매 후지불";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
+
 "Buy Now, Pay Later with Clearpay" = "Clearpay로 선구매 후지불";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
-"Buy Now, Pay Later with Klarna" = "Klarna로 선구매 후지불";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with  <img/>" = "<img/>(으)로 지금 구매하거나 나중에 결제";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with <img/>" = "<img/>(으)로 지금 구매하거나 나중에 결제하십시오.";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Afterpay" = "지금 구매하거나 Afterpay로 나중에 결제";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Cash App Afterpay" = "지금 구매하거나 Cash App Afterpay로 나중에 결제";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
-"Buy now or pay later with Clearpay" = "지금 구매하거나 Clearpay로 나중에 결제";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
+
 "Buy now or pay later with Klarna" = "지금 구매하거나 Klarna로 나중에 결제";
-/* Klarna buy now or pay later copy */
-"Buy now or pay later with Klarna." = "지금 구매하거나 Klarna로 나중에 결제";
-/* GCash mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "GCash로 결제를 확인하시면 %@ 이(가) 해당 약관에 따라 향후 결제에 대해 귀하의 GCash 계정에 대금 청구하는 것을 허용하시는 것입니다.";
-/* Korean payment method mandate text */
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY로 결제를 확인하면 %@에서 해당 약관에 따라 향후 결제에 대해 이 결제 방식으로 대금 청구하는 것을 허용하시는 것입니다.";
-/* Paypal mandate text */
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal로 결제를 확인하면 %@에서 해당 약관에 따라 향후 결제를 위해 귀하의 PayPal 계정에 대금을 청구하는 것을 허용하게 됩니다.";
-/* Satispay mandate text */
-"By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Satispay로 결제를 확인함으로써 귀하는 %@이(가) 자사 약관에 따라 향후 결제에 대해 귀하의 Satispay 계좌로 청구하는 것을 허용하는 것입니다.";
-/* Touch 'n Go mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Touch 'n Go로 결제를 확인하시면 %@ 이(가) 해당 약관에 따라 향후 결제에 대해 귀하의 Touch 'n Go 계정에 대금 청구하는 것을 허용하시는 것입니다.";
-/* TrueMoney mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "TrueMoney로 결제를 확인하시면 %@ 이(가) 해당 약관에 따라 향후 결제에 대해 귀하의 TrueMoney 계정에 대금 청구하는 것을 허용하시는 것입니다.";
-/* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "결제를 확인하시면 Global Stack Services Limited가 기록상 판매자로서 <terms>이용 약관</terms>에 따라 귀하의 거래를 처리하는 데 동의하시는 것입니다.";
-/* Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "결제를 확인하시면 Global Stack Services Limited가 기록상 판매자로서 <terms>약관</terms>에 따라 귀하의 거래를 처리하는 데 동의하시는 것입니다.";
-/* Amazon Pay mandate text */
+
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 Amazon Pay 계정에 결제 대금을 청구할 수 있습니다.";
-/* Klarna mandate text */
+
 "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Klarna를 계속 사용하면 %1$@에서 해당 회사 및 Klarna의 약관에 따라 향후 Klarna 계정에 결제 대금을 청구할 수 있습니다. 이 설정은 언제든지 Klarna 앱에서 또는 %2$@에 문의하여 변경할 수 있습니다.";
-/* Klarna mandate text */
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms." = "Klarna를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 Klarna 계정에 결제 대금을 청구할 수 있습니다.";
-/* Paypal mandate text */
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal을 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
-/* Revolut Pay mandate text */
+
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 Revolut Pay 계정에 대금을 청구할 수 있습니다.";
-/* Satispay mandate text */
-"By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Satispay를 계속 이용함으로써 귀하는 %@이(가) 자사 약관에 따라 향후 결제에 대해 귀하의 Satispay 계좌로 청구하는 것을 허용하는 것입니다.";
-/* Legal text shown when creating a Link account. */
+
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "계속하면 <terms>약관</terms>과 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
-/* Text providing link to terms for ACH payments */
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "계속하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
-/* Mandate text displayed when paying via Link instant debit. */
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "계속하면 해당 <terms>약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to the Link brand. The first placeholder is a merchant name. The second placeholder is a Stripe brand name and should not be translated. */
+
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "계속 진행하시면, %2$@의 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 향후 %1$@ 및 <link>%2$@</link>에서 구매 시 귀하의 정보를 저장하는 데 동의하는 것으로 간주됩니다.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> (see <terms>Terms</terms> and <privacy>Privacy</privacy>)." = "계속 진행하시면, 향후 구매 시 사용하기 위해 귀하의 정보를 %@ 및 <link>Link</link> (<terms>약관</terms> 및 <privacy>개인정보 보호</privacy> 참조)에 저장하는 데 동의하시는 것입니다.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "계속 진행하시면, 향후 구매 시 사용하기 위해 귀하의 정보를 %@ 및 <link>Link</link> 에 Link <terms>약관</terms> 및 <privacy>개인정보 보호</privacy>에 따라 저장하시는 데 동의하시는 것입니다.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "계속 진행하시면, 향후 구매 시 사용하기 위해 귀하의 정보를 %@ 및 <link>Link</link>에 저장하는 데 동의하는 것입니다. 또한 Link의 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하시는 것입니다.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant. */
+
 "By continuing, you agree to save your information for future purchases with %@." = "계속 진행하시면, 향후 구매 시 사용하기 위해 귀하의 정보를 %@에 저장하는 데 동의하시는 것입니다.";
-/* Satispay mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "계속 진행함으로써 귀하는 %@이(가) 귀하의 구매 또는 구독 플랜에 따라 귀하의 Satispay 잔고에서 정기적으로 자동 출금하도록 승인하는 것입니다.";
-/* Twint mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "계속 진행하시면, 귀하는 %@이(가) 귀하의 구매 또는 구독 플랜에 따라 정기적으로 Twint 잔액을 자동으로 출금하는 것을 승인하는 것입니다.";
-/* Cash App mandate text */
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "계속하면 이 승인이 취소될 때까지 %2$@의 약관에 따라 이 결제 및 향후 결제에 대해 %1$@이(가) Cash App 계좌에서 인출하도록 승인하는 것입니다. 이는 Cash App 설정에서 언제든지 변경할 수 있습니다.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "%@에 가입하시면 귀하는 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것으로 간주됩니다.";
-/* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "전화번호와 이메일을 제공하시면 귀하는 %1$@ <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 %1$@ 계정을 생성하는 데 동의하는 것으로 간주됩니다.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "전화번호와 이메일을 제공하시면 귀하는 %1$@ <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 %1$@ 계정을 생성하는 데 동의하는 것으로 간주됩니다.";
-/* Legal text shown when creating a Link account. */
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "전화번호와 이메일 주소를 제공하면 Link <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 Link 계정을 생성하는 데 동의하는 것입니다.";
-/* Legal text shown when using AUBECS. */
+
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "귀하의 은행 계좌 세부사항을 제공하고 이 결제를 확인함으로써, 귀하는 본 자동 이체 요청 및 <terms>자동 이체 요청 서비스 계약</terms>에 동의하며, Stripe Payments Australia Pty Ltd (ACN 160 180 343, 자동 이체 사용자 ID 번호 507156) (“Stripe”)가 %@ (이하 “판매자”)을 대신하여 Bulk Electronic Clearing System (BECS)을 통해 판매자가 귀하에게 별도로 통지한 금액을 귀하의 계좌에서 인출할 수 있도록 승인합니다. 귀하는 귀하가 상기 기재된 계좌의 소유자이거나 해당 계좌의 권한 있는 서명권자임을 확인합니다.";
-/* Text displayed below a credit card entry form when the card will be saved to make future payments. */
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "카드 정보를 제공하면 %@에서 향후 결제에 대해 해당 약관에 따라 귀하의 카드에 대금을 청구할 수 있습니다.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "이메일 주소를 제공하시면 귀하는 %1$@ <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 %1$@ 계정을 생성하고 결제 정보를 %1$@에 저장하는 데 동의하는 것으로 간주됩니다.";
-/* Legal text shown when creating a Link account. */
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link의 <terms>약관</terms> 및 <privacy>개인정보처리방침</privacy>에 따라, 이메일을 제공하면 Link 계정을 생성하고 Link에 결제 정보를 저장하게 됩니다.";
-/* SEPA mandate text */
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "결제 정보를 제공하고 이 결제를 확인하면 (A) %@ 및 결제 서비스 공급업체 Stripe가 은행에 계좌 출금에 관련한 지침을 전송하고 (B) 은행이 해당 지침에 따라 출금하도록 승인하는 것입니다. 귀하의 권리 중 일부로, 은행에 대한 이용 약관 동의 하에 은행에서 환불을 받을 자격을 부여받게 됩니다. 환불은 계좌에서 출금이 이루어진 날짜로부터 8주 이내에 요청해야 합니다. 귀하의 권리는 은행에서 받으시는 명세서에 설명되어 있습니다. 귀하는 향후 출금 시 최대 2일 전에 알림을 받겠다고 동의하는 것입니다.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "전화번호를 제공하시면 귀하는 %1$@ <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 %1$@ 계정을 생성하고 결제 정보를 %1$@에 저장하는 데 동의하는 것으로 간주됩니다.";
-/* Legal text shown when creating a Link account. */
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link의 <terms>약관</terms> 및 <privacy>개인정보처리방침</privacy>에 따라, 전화번호를 제공하면 Link 계정을 생성하고 Link에 결제 정보를 저장하게 됩니다.";
-/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 대해 귀하의 은행 계좌를 저장하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
-/* Alipay mandate text */
+
 "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "결제 정보를 저장하면 %@에서 해당 약관에 따라 향후 결제 시 귀하에게 대금을 청구하도록 허용하시게 됩니다.";
-/* Text providing link to terms for bank payments when seller information is provided */
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "%1$@ 및 %2$@에 주문을 제출하면 귀하는 향후 구매 시 사용하기 위해 귀하의 정보를 %3$@에 저장하고 <terms>이 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
-/* Text providing link to terms for bank payments */
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 주문을 제출하면 귀하는 <terms>이 약관</terms>에 따라 결제 승인을 동의하는 것입니다.";
-/* Label for CPF/CPNJ (Brazil tax ID) field */
+
 "CPF/CPNJ" = "CPF/CPNJ";
-/* Button text on a screen asking the user to approve a payment */
+
 "Cancel and pay another way" = "취소 및 다른 방법으로 결제";
-/* Text on a screen that indicates card details cannot be changed. */
+
 "Card details cannot be changed." = "카드 세부사항은 설정되면 변경할 수 없습니다.";
-/* Card details entry form header title */
-"Card information" = "카드 정보";
-/* Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa') */
-"Card number. Card brand: %@" = "카드 번호. 카드 브랜드: %@";
-/* Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
+
 "Card number. Supported cards include %@" = "카드 번호. 지원되는 카드에는 %@가 포함됩니다";
-/* Status shown over the camera after a payment card was scanned successfully. */
-"Card scanned" = "카드 스캔됨";
-/* Label for a button that lets you change the details of a payment method */
+
 "Change" = "변경";
-/* Title for a button that allows the user to use a different email in the signup flow. */
-"Change email" = "이메일 변경";
-/* Tooltip prompting user to select their card brand when a co-branded card is detected */
+
 "Choose a card brand" = "카드 브랜드 선택";
-/* Title shown above a carousel containing available payment methods */
+
 "Choose a payment method" = "결제 방식 선택";
-/* Accessibility label for the button to close the card scanner. */
+
 "Close card scanner" = "카드 스캐너 닫기";
-/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
-"Code sent" = "코드 전송 완료";
-/* Instructions shown while waiting for a Pix payment authorization */
+
 "Complete the payment using Pix to finish the purchase." = "구매를 마치려면 Pix를 사용하여 결제를 완료하십시오.";
-/* A button used to confirm selecting a saved payment method */
+
 "Confirm" = "확인";
-/* Two factor authentication screen heading */
-"Confirm it's you" = "본인 확인";
-/* Title of a screen where the user can update their payment method before continuing
-with the transaction. */
+
 "Confirm payment details" = "결제 세부사항 확인";
-/* Instructions shown while waiting for a Bizum payment authorization */
+
 "Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "구매를 완료하려면 %@ 내에 모바일 뱅킹 앱에서 Bizum 결제를 확인하십시오.";
-/* Instructions shown while waiting for an MB WAY payment authorization */
+
 "Confirm the payment in your MB WAY app within %@ to complete the purchase." = "구매를 완료하려면 %@ 내에 MB WAY 앱에서 결제를 확인하십시오.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 이내에 은행 또는 결제 앱에서 결제를 확인하여 구매를 완료하십시오.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ 이내에 은행 앱에서 결제를 확인하여 구매를 완료하십시오.";
-/* Section title for entering your CVC. e.g. 'Confirm your CVC' */
-"Confirm your %@" = "%@을(를) 확인하십시오";
-/* Title for prompting for a card's CVC on confirming the payment */
+
 "Confirm your CVC" = "CVC 확인";
-/* Title for prompting for a card's CVV on confirming the payment */
-"Confirm your CVV" = "CVV 확인";
-/* Title label for a know-your-customer (KYC) verification screen */
+
 "Confirm your information" = "귀하의 정보 확인";
-/* Title for the contact information section */
+
 "Contact information" = "연락처 정보";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Continue another way" = "다른 방식으로 계속";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create a Link account for fast checkout across the web" = "웹에서 빠른 체크아웃을 위한 Link 계정 생성하기";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Create an account with %@ for faster checkout across the web" = "%@ 계정을 생성하여 웹 전반에서 더 빠르게 체크아웃하세요";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create an account with Link for faster checkout across the web" = "Link 계정을 생성하여 웹 전반에서 더 빠르게 체크아웃하세요";
-/* Label for a payment method type that only accepts credit cards. */
-"Credit card" = "신용카드";
-/* Label for a payment method type that only accepts debit cards. */
-"Debit card" = "직불 카드";
-/* Label shown in the payment type picker describing a card payment */
+
 "Debit or credit card" = "직불 또는 신용 카드";
-/* Title label for a screen showing CRS/CARF tax declarations */
+
 "Declarations" = "신고";
-/* Label for identifying the default payment method. */
+
 "Default" = "기본값";
-/* Label for a disabled checked checkbox identifying the default payment method. */
+
 "Default payment method" = "기본 결제 방식";
-/* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
+
 "Did you mean %@? %@." = "%1$@을(를) 의미하는 건가요? %2$@.";
-/* Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form. */
+
 "Discard Changes" = "변경 사항 폐기";
-/* Title of a confirmation alert shown when the customer tries to close the address form after making changes. */
+
 "Discard changes?" = "변경 사항을 폐기하시겠습니까？";
-/* Label for the discount row in an order summary, applied as a negative amount. */
+
 "Discount" = "할인";
-/* Label title for EPS Bank */
+
 "EPS Bank" = "EPS 은행";
-/* Accessibility label for a button that lets the user update their address */
+
 "Edit address" = "주소 편집";
-/* Link authentication action to receive an email verification code. */
+
 "Email code" = "이메일 코드";
-/* Text for a button that allows manual entry of an address */
+
 "Enter address manually" = "주소 직접 입력";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use Link to pay by default." = "Link를 기본값으로 결제하려면 %@에 전송된 코드를 입력해 주십시오.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use your saved information." = "저장된 정보를 사용하려면 %@(으)로 보낸 코드를 입력하십시오.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@." = "%@번으로 보낸 코드를 입력해 주십시오.";
-/* Error when Link email verification requires a phone number. */
+
 "Enter the phone number on your Link account." = "Link 계정의 전화번호를 입력하십시오.";
-/* Two factor authentication screen heading */
-"Enter your verification code" = "확인 코드 입력";
-/* Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion */
+
 "Exchange rate and fees of your bank may apply." = "귀하가 이용하시는 은행의 환율 및 수수료가 적용될 수 있습니다.";
-/* Select a bank dropdown for FPX */
+
 "FPX Bank" = "FPX 은행";
-/* Error message that displays when we're unable to connect to the server. */
-"Failed to connect" = "연결 실패";
-/* Title for the Link signup screen */
+
 "Fast, secure checkout" = "빠르고 안전한 체크아웃";
-/* Title for the Link signup screen */
-"Fast, secure, 1⁠-⁠click checkout" = "빠른 보안 원클릭 체크아웃";
-/* Accessibility label for a button that turns the flashlight on or off while scanning a card. */
-"Flashlight" = "플래시라이트";
-/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
-"For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "은행으로 처음 결제할 때 %@의 금액을 돌려받으십시오. <terms>약관 참조</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "은행으로 결제할 때 %@의 금액을 돌려받으십시오. <terms>약관 참조</terms>";
-/* Button label to collapse and hide additional exchange rate details */
+
 "Hide details" = "세부사항 숨기기";
-/* Instructions shown above the card scanner while it looks for a payment card. */
-"Hold your card with the number visible in the frame to scan it automatically." = "자동으로 스캔되도록 프레임 안에 번호가 보이게 카드를 고정하십시오.";
-/* Bacs Debit mandate text */
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "본인은 Stripe가 %@을(를) 대신하여 자동 이체로 수금한다는 것을 이해하며, 본인이 계좌 소유자이고 이 계좌에서 출금을 승인해야 하는 유일한 사람임을 확인합니다.";
-/* IBAN placeholder – don&apos;t translate */
+
 "IBAN" = "IBAN";
-/* Message shown when Mondu is selected */
+
 "Invoice payment for business buyers." = "비즈니스 구매자를 위한 청구서 결제";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Join Link" = "Link 가입";
-/* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
+
 "Keep Editing" = "계속 편집";
-/* Label for displaying the last 4 digits of the user's social security number */
+
 "Last 4 digits of SSN" = "SSN의 마지막 4자리";
-/* Title for a button that indicates a user can log in or sign up. */
-"Log in or sign up" = "로그인 또는 등록";
-/* Label of a button that signs the user out of their current Link account so they can log in to a different one. */
+
 "Log in to another account" = "다른 계정으로 로그인";
-/* Title of the logout action. The placeholder is a Stripe brand name and should not be translated. */
-"Log out of %@" = "%@에서 로그아웃";
-/* Title of the logout action. */
-"Log out of Link" = "Link 로그아웃";
-/* Status shown over the camera while it looks for a payment card to scan. */
-"Looking for your card" = "카드를 찾는 중";
-/* Title shown above a view containing the customer's SEPA debit that they can delete or update */
+
 "Manage SEPA debit" = "SEPA 자동 이체 관리";
-/* Title shown above a view containing the customer's bank account that they can delete or update */
+
 "Manage US bank account" = "미국 은행 계좌 관리";
-/* Title shown above a view containing the customer's bank account that they can delete */
+
 "Manage bank account" = "은행 계좌 관리";
-/* Title for a screen for managing a card. */
+
 "Manage card" = "카드 관리";
-/* Title shown above a view containing a list of the customer's cards that they can delete or update */
+
 "Manage cards" = "카드 관리";
-/* Title shown above a view containing the customer's payment method that they can delete or update */
+
 "Manage payment method" = "결제 방식 관리";
-/* Title shown above a view containing the customer's card payment methods that they can delete or update */
+
 "Manage payment methods" = "결제 방식 관리";
-/* Title shown above a carousel containing the customer's payment methods */
+
 "Manage your payment methods" = "내 결제 방식 관리";
-/* Button opening Link authentication actions. */
+
 "More options" = "추가 옵션";
-/* Label for name on card field */
+
 "Name on card" = "카드 명의자";
-/* Naver Pay card funding source */
+
 "Naver Pay Card" = "네이버페이 카드";
-/* Naver Pay money or points funding source */
+
 "Naver Pay Money/Point" = "네이버페이 머니/포인트";
-/* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
+
 "New card" = "새 카드";
-/* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
+
 "New payment method" = "새 결제 방식";
-/* Label for when the user is not eligible for a promo. */
+
 "No %@ promo" = "%@ 프로모션 없음";
-/* Message on a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "None of the payment methods in your %@ account work with this business." = "%@ 계정의 어떤 결제 방식도 이 비즈니스에서 사용할 수 없습니다.";
-/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
-"Not %@?" = "%@ 님이 아니십니까?";
-/* Title for a button that allows the user to use a different email in the signup flow. */
+
 "Not you?" = "본인이 아닙니까?";
-/* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
+
 "Only card brand can be changed." = "카드 브랜드만 변경할 수 있습니다.";
-/* Warning shown when only credit and prepaid cards are accepted */
-"Only credit and prepaid cards are accepted" = "신용 카드 및 선불 카드만 허용됨";
-/* Warning shown when only credit cards are accepted */
-"Only credit cards are accepted" = "신용 카드만 허용됨";
-/* Warning shown when only debit and credit cards are accepted */
-"Only debit and credit cards are accepted" = "직불 카드 및 신용 카드만 허용됨";
-/* Warning shown when only debit and prepaid cards are accepted */
-"Only debit and prepaid cards are accepted" = "직불 카드 및 선불 카드만 허용됨";
-/* Warning shown when only debit cards are accepted */
-"Only debit cards are accepted" = "직불 카드만 허용됨";
-/* Warning shown when only prepaid cards are accepted */
-"Only prepaid cards are accepted" = "선불 카드만 허용됨";
-/* Accessibility hint to tell the user that they can open a form sheet with more information. */
+
 "Open to see more information." = "열어서 더 많은 정보를 확인하세요.";
-/* Separator label between two options */
+
 "Or" = "또는";
-/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+
 "Or pay using" = "또는 다음 결제 방식 사용";
-/* Title of a section containing a card form that will collect the payment information from the user. */
+
 "Or pay with a card" = "또는 카드 결제";
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up. */
+
 "Or use" = "또는 다음 결제 방식을 사용하기";
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up. */
+
 "Or use a card" = "또는 카드를 사용하기";
-/* Label of a button that initiates payment when tapped */
+
 "Pay %@" = "%@ 결제";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Pay another way" = "다른 방법으로 결제";
-/* Label describing the benefit of signing up for Link.
-Pay faster at {Merchant Name} and thousands of businesses
-e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
+
 "Pay faster at %@ and thousands of businesses." = "%@사를 비롯하여 수많은 비즈니스에서 더 빠르게 결제할 수 있습니다.";
-/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
-"Pay faster at %@ and thousands of merchants." = "%@ 및 수많은 가맹점에서 더 빠르게 결제하십시오.";
-/* Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated. */
+
 "Pay faster everywhere %@ is accepted." = "%@가 허용되는 모든 곳에서 더 빠르게 결제하십시오.";
-/* Subtitle for the Link signup screen */
+
 "Pay faster everywhere Link is accepted." = "Link가 허용되는 모든 곳에서 더 빠르게 결제하십시오.";
-/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/>로 <installment_price/>의 <num_installments/>회 무이자 결제로 대금을 지급하십시오.";
-/* Klarna pay later copy */
-"Pay later with Klarna." = "Klarna로 나중에 결제";
-/* Pay over time with Affirm copy */
+
 "Pay over time with %@" = "%@으로 할부 결제";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm */
+
 "Pay over time with Affirm" = "Affirm으로 할부 결제";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Afterpay */
-"Pay over time with Afterpay" = "Afterpay로 할부 결제";
-/* Promotional text for Clearpay, displayed in a button that lets the customer pay with Clearpay */
-"Pay over time with Clearpay" = "ClearPay로 할부 결제";
-/* Title shown above a section containing various payment options */
-"Pay using" = "사용할 결제 수단";
-/* Pay with {payment method} */
+
 "Pay with %@" = "%@으로 지불";
-/* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
+
 "Pay with Link" = "Link로 결제";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Pay with your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌로 결제하십시오.";
-/* Label for a section displaying payment details. */
+
 "Payment" = "결제";
-/* Text on a screen that indicates a payment has failed */
+
 "Payment failed" = "결제 실패";
-/* Text on a screen that indicates payment method details cannot be changed. */
+
 "Payment method details cannot be changed." = "결제 방식 세부사항은 변경할 수 없습니다.";
-/* Title for a section listing one or more payment methods. */
+
 "Payment methods" = "결제 방식";
-/* Error message that's displayed when you try to confirm a payment without a valid payment method */
+
 "Please choose a valid payment method." = "유효한 결제 방식을 선택해 주십시오.";
-/* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
+
 "Please go back and select another payment method" = "뒤로 돌아가서 다른 결제 방식을 선택해 주십시오.";
-/* Accessibility instructions for card scanning. */
+
 "Point the camera at your card." = "카메라가 카드를 향하도록 하세요.";
-/* Label for a payment method type that only accepts prepaid cards. */
-"Prepaid card" = "선불 카드";
-/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
-"Processing..." = "처리 중...";
-/* Label title for Przelewy24 Bank */
+
 "Przelewy24 Bank" = "Przelewy24 은행";
-/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-"Remove %1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@ 제거";
-/* Title of confirmation prompt when removing a saved payment method. */
+
 "Remove %@" = "%@ 제거";
-/* Title for confirmation alert to remove a card */
-"Remove Card" = "카드 제거";
-/* Title for confirmation alert to remove a bank account */
+
 "Remove bank?" = "은행을 제거하시겠습니까?";
-/* Title for confirmation alert to remove a card */
+
 "Remove card?" = "카드를 삭제하시겠습니까?";
-/* Title for a button that when tapped removes a linked bank account. */
+
 "Remove linked account" = "연결된 계좌 제거";
-/* Title shown above a view containing a customer's payment method that they can delete */
+
 "Remove payment method" = "결제 방식 삭제";
-/* Title for confirmation alert to remove a payment method */
+
 "Remove payment method?" = "결제 방식을 삭제하시겠습니까?";
-/* Title for a button that opens the camera to scan a payment card again, after one was already scanned. */
-"Rescan card" = "카드를 다시 스캔하십시오";
-/* Label for a button that re-sends the a login code when tapped */
-"Resend code" = "코드 재전송";
-/* Link OTP resend cooldown, in seconds. */
+
 "Resend code in %d seconds" = "%li초 후 코드 재전송";
-/* Text on a screen that indicates SEPA debit details cannot be changed. */
+
 "SEPA debit details cannot be changed." = "SEPA 자동 이체 세부사항은 설정되면 변경할 수 없습니다.";
-/* A button used for saving a new payment method */
+
 "Save" = "저장";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Save a new payment method" = "새 결제 방식 저장";
-/* Title for a button that when pressed saves the provided address. */
+
 "Save address" = "주소 저장";
-/* The label of a switch indicating whether to save the payment method for future payments. */
+
 "Save for future payments" = "향후 결제에 사용하도록 저장";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save my info for faster checkout with %@" = "%@로 체크아웃을 빠르게 진행하기 위해 내 정보 저장";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save my info for faster checkout with Link" = "Link로 더 빠르게 체크아웃할 수 있도록 내 정보 저장";
-/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-"Save my info for secure 1-click checkout" = "Link로 안전한 원클릭 결제를 위해 사용자 정보 저장";
-/* The label of a switch indicating whether to save the user's payment details for future payment */
+
 "Save payment details to %@ for future purchases" = "향후 구매를 위해 결제 세부사항 %@에 저장";
-/* Prompt next to checkbox to save bank account. */
+
 "Save this account for future %@ payments" = "이 계좌를 향후 %@ 결제에 사용하도록 저장";
-/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-"Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Save your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌를 저장하십시오.";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save your info for secure 1-click checkout with %@" = "%@를 통해 안전한 원클릭 체크아웃를 위해 정보를 저장합니다";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save your info for secure 1-click checkout with Link" = "Link로 안전한 원클릭 결제를 위해 사용자 정보 저장";
-/* Label describing the benefit of signing up for Link. */
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Link에서 결제 정보를 저장하고 Link 지원 사이트에서 원클릭으로 안전하게 체크아웃하십시오.";
-/* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
+
 "Saved" = "저장함";
-/* Title for the Link signup screen */
-"Secure 1⁠-⁠click checkout" = "보안 원클릭 체크아웃";
-/* Title shown above a view containing the customer's card payment methods */
+
 "Select card" = "카드 선택";
-/* Label for the Naver Pay funding source selector */
+
 "Select how you want to pay:" = "원하는 결제 방식 선택:";
-/* Title shown above a view containing the customer's payment methods */
+
 "Select payment method" = "결제 방식 선택";
-/* Title shown above a carousel containing the customer&apos;s payment methods */
+
 "Select your payment method" = "결제 수단을 선택하세요.";
-/* Label for a button that sends the code to the user's email when tapped */
-"Send code to email instead" = "대신 이메일로 코드 전송";
-/* Label for a button or menu item that sets a payment method as default when tapped. */
+
 "Set as default" = "기본값으로 설정";
-/* Label of a checkbox that when checked makes a payment method as the default one. */
+
 "Set as default payment method" = "결제 방식 기본값으로 설정";
-/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
 "Set up" = "설정";
-/* Label for the shipping cost row in an order summary. */
-"Shipping" = "배송";
-/* Title for shipping address entry section */
-"Shipping Address" = "배송 주소";
-/* Text for an error that is shown when a user selects a shipping address that
-is not supported by the merchant. Example: Shipping to Canada is not supported. */
+
 "Shipping to %@ is not supported." = "%@ 배송은 지원되지 않습니다.";
-/* Button label to expand and show additional exchange rate details */
+
 "Show details" = "세부사항 표시";
-/* Accessibility label for an action or a button that shows a menu. */
+
 "Show menu" = "메뉴 표시";
-/* Title for a button that indicates a user can sign in or sign up. */
+
 "Sign in or sign up" = "로그인 또는 등록";
-/* Two factor authentication screen heading */
-"Sign in to your Link account" = "Link 계정에 로그인";
-/* Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated. */
+
 "Sign out of %@" = "%@에서 로그아웃";
-/* Title of the sign-out action. */
-"Sign out of Link" = "Link에서 로그아웃";
-/* Subtitle shown on a button allowing a user to select to pay with Link. */
+
 "Simple, secure one-click payments" = "간단하고 안전한 원클릭 결제";
-/* Error message when an error case happens when linking your account */
+
 "Something went wrong when linking your account.\nPlease try again later." = "계좌를 연결하는 중에 문제가 발생했습니다.\n나중에 다시 시도해 주십시오.";
-/* Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe는 영업일 기준 1~2일 후에 계좌에 0.01$를 예금할 예정입니다. 이후 %@에 은행 계좌 저장을 완료하라는 지침이 포함된 이메일이 전송됩니다.";
-/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe에서 영업일 기준 1~2일 후에 계좌로 0.01$를 입금할 예정입니다. 그런 다음 %@에 대한 결제를 완료하기 위한 지침이 포함된 이메일을 전송할 것입니다.";
-/* Label for the subtotal row in an order summary, before tax/shipping/discounts. */
+
 "Subtotal" = "소계";
-/* Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
-"Supported cards: %@" = "지원되는 카드: %@";
-/* Accessibility hint to tell the user that they can tap to hide additional content. */
+
 "Tap to close" = "탭하여 닫기";
-/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+
 "Tap to expand" = "탭하여 확장";
-/* Label for the tax row in an order summary. */
+
 "Tax" = "세금";
-/* Title label for a screen showing terms and conditions */
+
 "Terms and Conditions" = "이용 약관";
-/* Title label for a screen showing terms of service */
+
 "Terms of Service" = "서비스 약관";
-/* test */
-"Test123" = "테스트123";
-/* An error message displayed when the customer's IBAN is incomplete. */
+
 "The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
-/* An error message. */
+
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "입력하신 IBAN이 유효하지 않습니다. “%@”은(는) 지원되는 국가 코드가 아닙니다.";
-/* Error message shown when the user enters an expired verification code. */
+
 "The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
-/* Error message shown when the user enters an incorrect verification code. */
+
 "The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
-/* String to inform a user that specific card brands are not accepted. */
-"The selected brand is not allowed" = "선택한 브랜드는 허용되지 않습니다";
-/* Disclaimer for when a bank account is not eligible for a promotion. */
-"This bank account is ineligible for promotions. <terms>View terms</terms>" = "이 은행 계좌는 프로모션 적용 대상이 아닙니다. <terms>약관 보기</terms>";
-/* A text notice shown when the user selects an expired card. */
-"This card has expired. Update your card info or choose a different payment method." = "이 카드의 유효기간이 만료되었습니다. 카드 정보를 업데이트하거나 다른 결제 방식을 선택하십시오.";
-/* Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms. */
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "이는 국제 구매이며 3.5%의 IOF 비용이 제외됩니다. 진행하시면 귀하는 <terms>Ebanx의 이용 약관</terms>을 인정하고 이에 동의하는 것입니다.";
-/* Text of a label indicating that a payment method is the default. */
+
 "This is your default" = "기본값입니다";
-/* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
+
 "This payment method will be removed but will remain available for %@ subscriptions." = "이 결제 방식은 제거되지만 %@ 구독에는 계속 사용할 수 있습니다.";
-/* Error when the phone number entered before Link email verification does not match the account. */
+
 "This phone number doesn't match your Link account. Please try again." = "이 전화번호는 Link 계정과 일치하지 않습니다. 다시 시도하십시오.";
-/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
-"To scan your card, allow camera access in Settings." = "카드를 스캔하려면 설정에서 카메라 접근을 허용하십시오.";
-/* Error message shown when the user enters an incorrect verification code too many times. */
+
 "Too many attempts. Please try again in a few minutes." = "너무 많이 시도했습니다. 몇 분 후에 다시 시도해 주십시오.";
-/* Accessibility label for a button that turns off the flashlight while scanning a card. */
-"Turn off flashlight" = "플래시라이트 끄기";
-/* Accessibility label for a button that turns on the flashlight while scanning a card. */
-"Turn on flashlight" = "플래시라이트 켜기";
-/* Label shown when a payment method cannot be used for the current transaction. */
+
 "Unavailable for this purchase" = "해당 구매에는 사용 불가능";
-/* Title for a button that when tapped, updates a card brand. */
-"Update" = "업데이트";
-/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
+
 "Update card" = "카드 업데이트";
-/* Title for a screen for updating a card brand. */
-"Update card brand" = "카드 브랜드 업데이트";
-/* Accessibility label for a button that leads to a screen for updating a payment method. */
+
 "Update payment method" = "결제 방식 업데이트";
-/* Label for checkbox in address form allowing user to use billing address */
+
 "Use billing address for shipping" = "배송에 청구지 주소 사용";
-/* Two factor authentication screen heading */
-"Use your saved info to check out faster" = "저장된 정보를 사용하여 더 빠르게 체크아웃";
-/* Heading for the Link phone-match screen. */
+
 "Verify your phone number" = "전화번호 인증";
-/* Link authentication in progress. */
+
 "Verifying your account…" = "계정 인증 중…";
-/* Text shown on a button that when tapped opens a user's screen with their payment methods. */
+
 "View more" = "자세히 보기";
-/* Link authentication cannot continue with the available verification methods. */
+
 "We couldn't verify your account. Please close this window and try again." = "계정을 인증할 수 없습니다. 이 창을 닫고 다시 시도하십시오.";
-/* Text for a tappable link that will update the email field with a suggested email address. */
+
 "Yes, update" = "예, 업데이트합니다";
-/* Title of a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "You can't pay with %@ here" = "여기에서는 %@ 방식으로 결제할 수 없습니다";
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
+
 "Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
-/* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
+
 "Your address changes won't be saved." = "주소 변경 사항이 저장되지 않습니다.";
-/* Error message for card details form when expiration date has passed */
-"Your card has expired." = "카드가 만료되었습니다.";
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL 은행";

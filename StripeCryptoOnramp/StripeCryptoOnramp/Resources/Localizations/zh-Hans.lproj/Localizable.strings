@@ -1,104 +1,77 @@
-/* Error message shown when the user tries to create a Link account for an email that already has one */
-"A Link account already exists for this email. Log in instead." = "此邮箱已有 Link 账户，请直接登录。";
-/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
 "Add %ld documents" = "添加 %ld 份文件";
-/* Action to add exactly one uploaded document to a source of funds */
+
 "Add 1 document" = "添加 1 份文件";
-/* Action to add documents for another source of funds */
+
 "Add documents" = "添加文件";
-/* Error when camera access is denied or restricted during document collection */
+
 "Allow camera access in Settings to take a photo." = "在“设置”中授予相机访问权限，以便拍摄照片。";
-/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
-"An error occurred while automatically signing in to your Link account. Please sign in manually." = "自动登录您的 Link 账户时发生了错误。请手动登录。";
-/* Label and placeholder for a questionnaire answer field */
+
 "Answer" = "回答";
-/* Action to open the system document picker to select a file */
+
 "Choose File…" = "选择文件...";
-/* Action to open the system photo picker to select a photo */
+
 "Choose Photo…" = "选择照片...";
-/* Button asking the owner to open its support destination */
-"Contact support" = "联系支持团队";
-/* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
+
 "Debit cards are most likely to be accepted." = "借记卡最有可能被接受。";
-/* Label and picker title for a document's category */
+
 "Document type" = "单据类型";
-/* Heading confirming a document was uploaded successfully */
+
 "Document uploaded successfully" = "文件上传成功";
-/* Error message shown when the SDK needs a crypto customer ID before continuing */
-"Finish verifying your Link account before continuing." = "请先完成 Link 账户验证，再继续操作。";
-/* Label for the selected source of funds in the document editor */
+
 "Funds source" = "资金来源";
-/* Explanation above the summary of source-of-funds documents. */
+
 "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "您用什么方式为交易注资？请列出您的所有资金来源。例如，薪水、储蓄、投资收益等。";
-/* Error message shown when the provided phone number is not in the expected format */
-"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "手机格式无效。请使用 E.164 格式（例如 +12125551234）。";
-/* Explanation above the document upload control */
+
 "Make sure your document meets following requirements." = "确保您的文档符合以下要求。";
-/* Error message shown when there is no usable payment method selected */
-"No payment method is ready to use. Please collect a payment method and try again." = "暂无可用的付款方式，请添加付款方式后重试。";
-/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
+
 "Please select your Apple Pay payment method again to continue." = "请再次选择您的 Apple Pay 支付方式以继续。";
-/* Instruction after an unavailable operation */
+
 "Please try again later." = "请稍后重试。";
-/* Error message shown when the SDK is missing required information from the server */
-"Required information was missing. Please try again later." = "所需信息缺失。请稍后再试。";
-/* Heading confirming documents were submitted for review */
+
 "Submitted for review" = "已提交审核";
-/* Action to open the system camera to take a photo of a document */
+
 "Take Photo…" = "拍照…";
-/* Heading introducing source of funds collection */
+
 "Tell us about your source of funds" = "请说明资金来源";
-/* Message shown when a previous document has a requirement error */
+
 "There was a problem with your previous document. Please upload a new one." = "您之前的文档存在问题。请上传新文档。";
-/* Error message shown when app attestation fails */
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "因认证校验异常，应用无法完成验证。请稍后重试，若问题持续存在，可联系应用开发者。";
-/* Error message shown when app attestation is not configured for crypto onramp */
+
 "This app couldn't be verified. Contact the app developer for help." = "此应用无法通过验证。请联系应用开发者寻求帮助。";
-/* Validation error for a document exceeding the size limit */
+
 "This file is larger than %@. Choose a file that is %@ or smaller." = "此文件大于 %1$@。请选择大小不超过 %2$@ 的文件。";
-/* Validation error when no document formats are available */
+
 "This file type isn’t supported." = "不支持此文件类型。";
-/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
+
 "This file type isn’t supported. Upload a %@ file." = "不支持此文件类型。请上传 %@ 文件。";
-/* Error message shown when the wallet is not registered for crypto onramp */
+
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "无法找到该钱包。请选择或添加一个钱包，然后重试。";
-/* Error message shown when the wallet network is not supported for crypto onramp */
+
 "This wallet network isn't supported. Please choose a different network." = "不支持此钱包网络。请选择其他网络。";
-/* Error message shown when the wallet ownership challenge has expired */
+
 "This wallet verification request expired. Please try again." = "此钱包验证请求已过期，请重试。";
-/* Error message shown when the wallet ownership challenge is invalid */
+
 "This wallet verification request is invalid. Please try again." = "此钱包验证请求无效。请重试。";
-/* Error message shown when the wallet ownership challenge is invalid */
-"This wallet verification request is no longer valid. Please try again." = "此钱包验证请求不再有效，请重试。";
-/* Action to select an existing document for upload */
+
 "Upload document" = "上传单据";
-/* Heading introducing proof of address collection */
+
 "Upload your proof of address" = "请上传地址证明";
-/* Status after a document has uploaded successfully */
+
 "Uploaded" = "已上传";
-/* Status while a document is uploading */
+
 "Uploading…" = "正在上传...";
-/* Error message shown when the user's Link account is not verified */
-"Verify your Link account before continuing." = "请先验证 Link 账户，再继续操作。";
-/* Error message shown when the submitted wallet ownership signature is invalid */
+
 "We couldn't verify ownership of this wallet. Please try again." = "我们无法验证此钱包的所有权，请重试。";
-/* Error when a file provider cannot supply a document */
+
 "We couldn’t open this document. Please choose it again." = "我们无法打开此文档。请重新选择。";
-/* Error after a document upload fails */
+
 "We couldn’t upload this file. Please try again." = "我们无法上传此文件。请重试。";
-/* Explanation introducing proof of address collection. */
+
 "We may request proof of address for larger transactions." = "对于大额交易，我们可能会要求您提供地址证明。";
-/* Explanation introducing source of funds collection. */
+
 "We may request source of funds for larger transactions." = "对于大额交易，我们可能会要求您提供资金来源证明。";
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We're required to confirm your address to enable spending over %@." = "我们需要确认您的地址，才允许进行超过 %@ 的消费。";
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We're required to understand where your funds come from to enable spending over %@." = "我们需要了解您的资金来源，才允许进行超过 %@ 的消费。";
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to confirm your address to enable spending over %@." = "我们需要确认您的地址，才允许进行超过 %@ 的消费。";
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to understand where your funds come from to enable spending over %@." = "我们需要了解您的资金来源，才允许进行超过 %@ 的消费。";
-/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
+
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "我们正在审核您的文件。验证完成后，我们会通知您。";
-/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
+
 "You can continue while we verify your document in the background." = "在我们后台验证您的文件期间，您可以继续操作。";

@@ -1,104 +1,77 @@
-/* Error message shown when the user tries to create a Link account for an email that already has one */
-"A Link account already exists for this email. Log in instead." = "Mayroon nang Link account para sa email na ito. Mag-log in sa halip.";
-/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
 "Add %ld documents" = "Magdagdag ng %ld na dokumento";
-/* Action to add exactly one uploaded document to a source of funds */
+
 "Add 1 document" = "Magdagdag ng 1 dokumento";
-/* Action to add documents for another source of funds */
+
 "Add documents" = "Magdagdag ng mga dokumento";
-/* Error when camera access is denied or restricted during document collection */
+
 "Allow camera access in Settings to take a photo." = "Payagan ang access sa camera sa Mga Setting para kumuha ng larawan.";
-/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
-"An error occurred while automatically signing in to your Link account. Please sign in manually." = "Nagkaroon ng error habang awtomatikong nagsa-sign in sa iyong Link account. Mangyaring mag-sign in nang mano-mano.";
-/* Label and placeholder for a questionnaire answer field */
+
 "Answer" = "Sagot";
-/* Action to open the system document picker to select a file */
+
 "Choose File…" = "Pumili ng File…";
-/* Action to open the system photo picker to select a photo */
+
 "Choose Photo…" = "Pumili ng Larawan…";
-/* Button asking the owner to open its support destination */
-"Contact support" = "Makipag-ugnayan sa suporta";
-/* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
+
 "Debit cards are most likely to be accepted." = "Malamang na tanggapin ang mga debit card.";
-/* Label and picker title for a document's category */
+
 "Document type" = "Uri ng dokumento";
-/* Heading confirming a document was uploaded successfully */
+
 "Document uploaded successfully" = "Matagumpay na na-upload ang dokumento";
-/* Error message shown when the SDK needs a crypto customer ID before continuing */
-"Finish verifying your Link account before continuing." = "Tapusin ang pag-verify ng iyong Link account bago magpatuloy.";
-/* Label for the selected source of funds in the document editor */
+
 "Funds source" = "Pinagmumulan ng pondo";
-/* Explanation above the summary of source-of-funds documents. */
+
 "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Paano mo pinopondohan ang iyong mga transaksyon? Mangyaring ilista ang lahat ng iyong mga pinagmumulan. Halimbawa, suweldo, mga ipon, mga kita sa pamumuhunan, atbp.";
-/* Error message shown when the provided phone number is not in the expected format */
-"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "Hindi valid na format ng telepono. Mangyaring gamitin ang format na E.164 (hal., +12125551234).";
-/* Explanation above the document upload control */
+
 "Make sure your document meets following requirements." = "Tiyaking natutugunan ng iyong dokumento ang mga sumusunod na kinakailangan.";
-/* Error message shown when there is no usable payment method selected */
-"No payment method is ready to use. Please collect a payment method and try again." = "Walang paraan ng pagbabayad na handang gamitin. Mangyaring mangolekta ng paraan ng pagbabayad at subukang muli.";
-/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
+
 "Please select your Apple Pay payment method again to continue." = "Pakipili muli ang iyong paraan ng pagbabayad sa Apple Pay para magpatuloy.";
-/* Instruction after an unavailable operation */
+
 "Please try again later." = "Mangyaring subukang muli mamaya.";
-/* Error message shown when the SDK is missing required information from the server */
-"Required information was missing. Please try again later." = "Nawawala ang kinakailangang impormasyon. Mangyaring subukang muli mamaya.";
-/* Heading confirming documents were submitted for review */
+
 "Submitted for review" = "Isinumite para sa pagrepaso";
-/* Action to open the system camera to take a photo of a document */
+
 "Take Photo…" = "Kumuha ng Larawan…";
-/* Heading introducing source of funds collection */
+
 "Tell us about your source of funds" = "Sabihin sa amin ang tungkol sa pinagmulan ng iyong mga pondo";
-/* Message shown when a previous document has a requirement error */
+
 "There was a problem with your previous document. Please upload a new one." = "May problema sa nauna mong dokumento. Mangyaring mag-upload ng bago.";
-/* Error message shown when app attestation fails */
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Hindi ma-verify ang app na ito dahil sa isang error sa pagpapatunay. Mangyaring subukang muli mamaya o makipag-ugnayan sa developer kung magpapatuloy ang isyu.";
-/* Error message shown when app attestation is not configured for crypto onramp */
+
 "This app couldn't be verified. Contact the app developer for help." = "Hindi ma-verify ang app na ito. Makipag-ugnayan sa developer ng app para sa tulong.";
-/* Validation error for a document exceeding the size limit */
+
 "This file is larger than %@. Choose a file that is %@ or smaller." = "Ang file na ito ay mas malaki sa %1$@. Pumili ng file na %2$@ o mas maliit.";
-/* Validation error when no document formats are available */
+
 "This file type isn’t supported." = "Hindi sinusuportahan ang uri ng file na ito.";
-/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
+
 "This file type isn’t supported. Upload a %@ file." = "Hindi sinusuportahan ang uri ng file na ito. Mag-upload ng %@ na file.";
-/* Error message shown when the wallet is not registered for crypto onramp */
+
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Hindi mahanap ang wallet na ito. Mangyaring pumili o magdagdag ng wallet at subukang muli.";
-/* Error message shown when the wallet network is not supported for crypto onramp */
+
 "This wallet network isn't supported. Please choose a different network." = "Hindi sinusuportahan ang network ng wallet na ito. Mangyaring pumili ng ibang network.";
-/* Error message shown when the wallet ownership challenge has expired */
+
 "This wallet verification request expired. Please try again." = "Nag-expire na ang kahilingan sa pag-verify ng wallet na ito. Mangyaring subukang muli.";
-/* Error message shown when the wallet ownership challenge is invalid */
+
 "This wallet verification request is invalid. Please try again." = "Hindi valid ang kahilingan sa pag-verify ng wallet na ito. Mangyaring subukang muli.";
-/* Error message shown when the wallet ownership challenge is invalid */
-"This wallet verification request is no longer valid. Please try again." = "Hindi na valid ang kahilingan sa pag-verify ng wallet na ito. Mangyaring subukang muli.";
-/* Action to select an existing document for upload */
+
 "Upload document" = "Mag-upload ng dokumento";
-/* Heading introducing proof of address collection */
+
 "Upload your proof of address" = "I-upload ang iyong katibayan ng address";
-/* Status after a document has uploaded successfully */
+
 "Uploaded" = "Na-upload";
-/* Status while a document is uploading */
+
 "Uploading…" = "Ina-upload…";
-/* Error message shown when the user's Link account is not verified */
-"Verify your Link account before continuing." = "I-verify ang iyong Link account bago magpatuloy.";
-/* Error message shown when the submitted wallet ownership signature is invalid */
+
 "We couldn't verify ownership of this wallet. Please try again." = "Hindi namin ma-verify ang pagmamay-ari ng wallet na ito. Mangyaring subukang muli.";
-/* Error when a file provider cannot supply a document */
+
 "We couldn’t open this document. Please choose it again." = "Hindi namin mabuksan ang dokumentong ito. Mangyaring piliin itong muli.";
-/* Error after a document upload fails */
+
 "We couldn’t upload this file. Please try again." = "Hindi namin ma-upload ang file na ito. Mangyaring subukan muli.";
-/* Explanation introducing proof of address collection. */
+
 "We may request proof of address for larger transactions." = "Maaari kaming humiling ng katibayan ng address para sa mas malalaking transaksyon.";
-/* Explanation introducing source of funds collection. */
+
 "We may request source of funds for larger transactions." = "Maaari kaming humiling ng pinagmulan ng mga pondo para sa mas malalaking transaksyon.";
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We're required to confirm your address to enable spending over %@." = "Kailangan naming kumpirmahin ang iyong address para paganahin ang paggastos nang higit sa %@.";
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We're required to understand where your funds come from to enable spending over %@." = "Kailangan naming maunawaan kung saan nagmumula ang iyong mga pondo para paganahin ang paggastos nang higit sa %@.";
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to confirm your address to enable spending over %@." = "Kailangan naming kumpirmahin ang iyong address para paganahin ang paggastos nang higit sa %@.";
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to understand where your funds come from to enable spending over %@." = "Kailangan naming maunawaan kung saan nagmumula ang iyong mga pondo para paganahin ang paggastos nang higit sa %@.";
-/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
+
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Sinusuri namin ang iyong mga dokumento. Ipapaalam namin sa iyo kapag nakumpleto na ang pag-verify.";
-/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
+
 "You can continue while we verify your document in the background." = "Maaari kang magpatuloy habang bini-verify namin ang iyong dokumento sa background.";

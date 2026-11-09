@@ -1,624 +1,399 @@
-/* Label a default funding source, which we treat as a generic card. E.g. 'Visa Card' */
-"%1$@ Card" = "%1$@-kort";
-/* Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte' */
-"%1$@ Credit" = "%1$@-kreditt";
-/* Label a debit funding source. E.g. 'Visa Debit' */
-"%1$@ Debit" = "%1$@-debet";
-/* Label a prepaid funding source. E.g. 'Visa Prepaid' */
-"%1$@ Prepaid" = "%1$@ forhåndsbetalt";
-/* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
-"%1$@ account ending in %2$@" = "%1$@-konto som slutter på %2$@";
-/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
-"%1$@ ending in %2$@" = "%1$@ som slutter på %2$@";
-/* String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted */
-"%1$@ is not accepted" = "%1$@ godtas ikke";
-/* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%1$d interest-free payments of %2$@" = "%1$li rentefri betalinger på %2$@";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. '$5 back on […]' */
-"%@ back on a qualifying purchase when you pay by bank. <terms>View terms</terms>" = "Få %@ tilbake på et kvalifisert kjøp når du betaler med bank. <terms>Se vilkår</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. '$5 back when […]' */
-"%@ back when you pay by bank. <terms>View terms</terms>" = "Få %@ tilbake når du betaler med bank. <terms>Se vilkår</terms>";
-/* Message shown in a confirmation prompt when removing a saved payment method. */
+
 "%@ will no longer be saved to your wallet." = "%@ vil ikke lenger bli lagret i lommeboken din.";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%d interest-free payments of %@" = "%1$li rentefri betalinger på %2$@";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "+ Add" = "+ Legg til";
-/* Exchange rate with conversion fee disclosure, e.g. '1 GBP = 1.2871 USD (includes 4% conversion fee).' */
-"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (inkluderer et påslag på %4$@%%).";
-/* Exchange rate caption, e.g. '1 GBP = 1.2871 USD' */
-"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
-/* Label for a button that confirms the user accepts a declaration */
+
 "Accept" = "Godta";
-/* Title shown above a view allowing the customer to save a US bank account. */
+
 "Add US bank account" = "Legg til bankkonto i USA";
-/* Title shown above a card entry form */
+
 "Add a card" = "Legg til et kort";
-/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
+
 "Add a payment method" = "Legg til betalingsmetode";
-/* Button prompt to add a bank account as a payment method. */
+
 "Add bank account" = "Legg til bankkonto";
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Legg til kort";
-/* Title shown above a view allowing the customer to save a card. */
+
 "Add new card" = "Legg til nytt kort";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "Add new payment method" = "Legg til ny betalingsmetode";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Add your payment information" = "Legg til betalingsinformasjon";
-/* Label for a button that confirms the user agrees to and accepts a declaration */
-"Agree and accept" = "Godta og fortsett";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Agree and continue" = "Godta og fortsett";
-/* Instructions shown above the card scanner while the customer is asked for camera access. */
-"Allow camera permissions and get your card ready for scanning." = "Tillat kameratilgang og gjør kortet klart for skanning.";
-/* Text for Apple Pay payment method */
-"Apple Pay" = "Apple Pay";
-/* Text on a screen asking the user to approve a payment */
+
 "Approve payment" = "Godkjenn betaling";
-/* Title of confirmation prompt when removing a saved card. */
-"Are you sure you want to remove this card?" = "Er du sikker på at du vil fjerne dette kortet?";
-/* Title of confirmation prompt when removing a linked bank account. */
-"Are you sure you want to remove this linked account?" = "Er du sikker på at du vil fjerne denne tilkoblede kontoen?";
-/* Text for back button */
+
 "Back" = "Tilbake";
-/* Title for a bank account payment method */
+
 "Bank" = "Bank";
-/* Title for collected bank account information */
+
 "Bank account" = "Bankkonto";
-/* Text on a screen that indicates bank account details cannot be changed. */
+
 "Bank account details cannot be changed." = "Bankkontoopplysninger kan ikke endres.";
-/* Phone-match instruction before Link email OTP. Placeholder is the last two phone digits. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Før vi kan sende en kode til e-postadressen din, må vi bekrefte tilleggsinformasjon om deg. Oppgi telefonnummeret ditt som slutter på ••%@.";
-/* Phone-match instruction before Link email OTP. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Før vi kan sende en kode til e-postadressen din, må vi bekrefte tilleggsinformasjon om deg. Oppgi telefonnummeret ditt.";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
+
 "Buy Now, Pay Later with  <img/>" = "Kjøp nå, betal senere med <img/>";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Afterpay" = "Kjøp nå, betal senere med Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Cash App Afterpay" = "Kjøp nå, betal senere med Cash App Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
+
 "Buy Now, Pay Later with Clearpay" = "Kjøp nå, betal senere med Clearpay";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
-"Buy Now, Pay Later with Klarna" = "Kjøp nå, betal senere med Klarna";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with  <img/>" = "Kjøp nå eller betal senere med  <img/>";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with <img/>" = "Kjøp nå eller betal senere med <img/>";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Afterpay" = "Kjøp nå eller betal senere med Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Cash App Afterpay" = "Kjøp nå eller betal senere med Cash App Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
-"Buy now or pay later with Clearpay" = "Kjøp nå eller betal senere med Clearpay";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
+
 "Buy now or pay later with Klarna" = "Kjøp nå eller betal senere med Klarna";
-/* Klarna buy now or pay later copy */
-"Buy now or pay later with Klarna." = "Kjøp nå eller betal senere med Klarna.";
-/* GCash mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Når du bekrefter betalingen med GCash, godtar du at %@ belaster GCash-kontoen din for fremtidige betalinger i henhold til vilkårene deres.";
-/* Korean payment method mandate text */
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Når du bekrefter betalingen din med NICEPAY, tillater du at %@ belaster denne betalingsmetoden for fremtidige betalinger i henhold til deres vilkår.";
-/* Paypal mandate text */
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å bekrefte betalingen med PayPal, gir du %@ tillatelse til å belaste PayPal-kontoen din for fremtidige betalinger i henhold til deres vilkår.";
-/* Satispay mandate text */
-"By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Ved å bekrefte betalingen din med Satispay, tillater du %@ å belaste Satispay-kontoen din for fremtidige betalinger i samsvar med deres vilkår.";
-/* Touch 'n Go mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Når du bekrefter betalingen med Touch ’n Go, godtar du at %@ belaster Touch ’n Go-kontoen din for fremtidige betalinger i henhold til vilkårene deres.";
-/* TrueMoney mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Når du bekrefter betalingen med TrueMoney, godtar du at %@ belaster TrueMoney-kontoen din for fremtidige betalinger i henhold til vilkårene deres.";
-/* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Når du bekrefter betalingen din, godtar du at transaksjonen din vil bli håndtert av Global Stack Services Limited som registrert selger og i samsvar med deres <terms>bruksvilkår</terms>.";
-/* Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Når du bekrefter betalingen din, godtar du at transaksjonen din vil bli håndtert av Global Stack Services Limited som registrert selger og i samsvar med deres <terms>vilkår</terms>.";
-/* Amazon Pay mandate text */
+
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved å fortsette til Amazon Pay, tillater du %@ å belaste Amazon Pay-kontoen din for fremtidige betalinger i samsvar med vilkårene deres.";
-/* Klarna mandate text */
+
 "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Ved å fortsette til Klarna tillater du at %1$@ belaster Klarna-kontoen din for fremtidige betalinger i samsvar med deres vilkår og Klarnas vilkår. Du kan når som helst endre dette i Klarna-appen din eller ved å kontakte %2$@.";
-/* Klarna mandate text */
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms." = "Ved å fortsette til Klarna, tillater du %@ å belaste Klarna-kontoen din for fremtidige betalinger i samsvar med vilkårene deres.";
-/* Paypal mandate text */
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å fortsette til PayPal, tillater du %@ å belaste PayPal-kontoen din for fremtidige betalinger i samsvar med vilkårene deres.";
-/* Revolut Pay mandate text */
+
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Ved å fortsette til Revolut Pay, tillater du %@ å belaste Revolut Pay-kontoen din for fremtidige betalinger i samsvar med vilkårene deres.";
-/* Satispay mandate text */
-"By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Ved å fortsette til Satispay tillater du %@ å belaste Satispay-kontoen din for fremtidige betalinger i samsvar med deres vilkår.";
-/* Legal text shown when creating a Link account. */
+
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å fortsette godtar du <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy>.";
-/* Text providing link to terms for ACH payments */
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å fortsette godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
-/* Mandate text displayed when paying via Link instant debit. */
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ved å fortsette godtar du å autorisere betalinger i samsvar med <terms>vilkårene</terms>.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to the Link brand. The first placeholder is a merchant name. The second placeholder is a Stripe brand name and should not be translated. */
+
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Når du fortsetter, godtar du at opplysningene dine lagres for fremtidige kjøp med %1$@ og <link>%2$@</link> i henhold til <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy> til %2$@.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> (see <terms>Terms</terms> and <privacy>Privacy</privacy>)." = "Ved å fortsette godtar du å lagre informasjonen din for fremtidige kjøp med %@ og <link>Link</link> (se <terms>vilkår</terms> og <privacy>personvern</privacy>).";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Ved å fortsette godtar du å lagre informasjonen din for fremtidige kjøp med %@ og <link>Link</link> ifølge Links <terms>vilkår</terms> og <privacy>personvern</privacy>.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Ved å fortsette godtar du å lagre informasjonen din for fremtidige kjøp med %@ og <link>Link</link>. Du godtar også Links <terms>vilkår</terms> og <privacy>personvern</privacy>.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant. */
+
 "By continuing, you agree to save your information for future purchases with %@." = "Ved å fortsette godtar du å lagre informasjonen din for fremtidige kjøp med %@.";
-/* Satispay mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Ved å fortsette autoriserer du %@ til automatisk å debitere din Satispay-saldo på regelmessig basis i samsvar med kjøpet ditt eller abonnementsplanen din.";
-/* Twint mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Når du fortsetter, gir du %@ tillatelse til å automatisk belaste Twint-saldoen din på gjentakende basis i samsvar med kjøps- eller abonnementsplanen din.";
-/* Cash App mandate text */
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved å fortsette, godkjenner du at %1$@ belaster Cash App-kontoen din for denne og fremtidige betalinger, i henhold til vilkårene fra %2$@, frem til autorisasjonen er tilbakekalt. Du kan når som helst endre dette i Cash App-innstillingene.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du blir med i %@, godtar du <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy>.";
-/* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å bli med i Link, godtar du <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy>.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du oppgir telefonnummer og e-postadresse, godtar du å opprette en %1$@-konto underlagt <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy> til %1$@.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du oppgir telefonnummer og e-postadresse, godtar du å opprette en %1$@-konto underlagt <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy> til %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å oppgi telefonnummer og e-postadresse godtar du å opprette en Link-konto underlagt Links <terms>vilkår</terms> og <privacy>personvernerklæring</privacy>.";
-/* Legal text shown when using AUBECS. */
+
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Når du oppgir bank dine og bekrefter denne betalingen, godtar du denne forespørselen om direkte belastning og <terms>tjenesteavtalen om direkte belastning</terms>, og gir Stripe Payments Australia Pty Ltd ACN 160 180 343 bruker-ID for direkte belastning 507156 («Stripe») tillatelse til å debitere kontoen din via Bulk Electronic Clearing System (BECS) på vegne av %@ («forhandleren») for beløp som kommuniseres separat til deg av forhandleren. Du bekrefter at du enten er kontoinnehaver eller autorisert signatar for kontoen som er angitt ovenfor.";
-/* Text displayed below a credit card entry form when the card will be saved to make future payments. */
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Ved å oppgi kortinformasjonen din tillater du %@ å belaste kortet ditt for fremtidige betalinger i samsvar med vilkårene deres.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du oppgir en e-postadresse, godtar du å opprette en %1$@-konto og lagre betalingsinformasjonen din hos %1$@, i henhold til <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy> til %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å oppgi e-postadressen din godtar du å opprette en Link-konto og lagre betalingsinformasjonen din hos Link i henhold til Links <terms>vilkår</terms> og <privacy>personvernerklæring</privacy>.";
-/* SEPA mandate text */
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved å oppgi betalingsinformasjonen din og bekrefte denne betalingen gir du tillatelse til at (A) %@ og Stripe, vår leverandør for betalingstjenesten, sende anmodning til banken din om å belaste kontoen din og (B) banken din belaster kontoen din i samsvar med anmodningen. Som del av dine rettigheter kan du kreve å få beløpet tilbakeført i henhold til avtalen du har med banken. Tilbakeføringskrav må fremsettes innen 8 uker etter at kontoen ble belastet. Rettighetene dine blir forklart i en erklæring som du kan få fra banken. Du godtar å motta varsler om fremtidige belastninger opptil to dager før de skjer.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du oppgir telefonnummeret ditt, godtar du å opprette en %1$@-konto og lagre betalingsinformasjonen din hos %1$@, i henhold til <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy> til %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å oppgi telefonnummeret ditt godtar du å opprette en Link-konto og lagre betalingsinformasjonen din hos Link i henhold til Links <terms>vilkår</terms> og <privacy>personvernerklæring</privacy>.";
-/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å lagre bankkontoen for %@ godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
-/* Alipay mandate text */
+
 "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Når du lagrer betalingsopplysningene dine, gir du %@ tillatelse til å belaste deg for fremtidige betalinger i samsvar med deres vilkår.";
-/* Text providing link to terms for bank payments when seller information is provided */
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å sende inn bestillingen til %1$@ og %2$@ godtar du å lagre informasjonen din hos %3$@ for fremtidige kjøp, og godtar å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
-/* Text providing link to terms for bank payments */
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å sende inn bestillingen til %@ godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
-/* Label for CPF/CPNJ (Brazil tax ID) field */
+
 "CPF/CPNJ" = "CPF/CPNJ";
-/* Button text on a screen asking the user to approve a payment */
+
 "Cancel and pay another way" = "Avbryt og betal på en annen måte";
-/* Text on a screen that indicates card details cannot be changed. */
+
 "Card details cannot be changed." = "Kortopplysninger kan ikke endres.";
-/* Card details entry form header title */
-"Card information" = "Kortinformasjon";
-/* Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa') */
-"Card number. Card brand: %@" = "Kortnummer. Kortmerke: %@";
-/* Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
+
 "Card number. Supported cards include %@" = "Kortnummer. Støttede kort inkluderer %@";
-/* Status shown over the camera after a payment card was scanned successfully. */
-"Card scanned" = "Kort skannet";
-/* Label for a button that lets you change the details of a payment method */
+
 "Change" = "Endre";
-/* Title for a button that allows the user to use a different email in the signup flow. */
-"Change email" = "Endre e-post";
-/* Tooltip prompting user to select their card brand when a co-branded card is detected */
+
 "Choose a card brand" = "Velg et kortmerke";
-/* Title shown above a carousel containing available payment methods */
+
 "Choose a payment method" = "Velg en betalingsmetode";
-/* Accessibility label for the button to close the card scanner. */
+
 "Close card scanner" = "Lukk kortskanner";
-/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
-"Code sent" = "Kode sendt";
-/* Instructions shown while waiting for a Pix payment authorization */
+
 "Complete the payment using Pix to finish the purchase." = "Fullfør betalingen med Pix for å fullføre kjøpet.";
-/* A button used to confirm selecting a saved payment method */
+
 "Confirm" = "Bekreft";
-/* Two factor authentication screen heading */
-"Confirm it's you" = "Bekreft at det er deg";
-/* Title of a screen where the user can update their payment method before continuing
-with the transaction. */
+
 "Confirm payment details" = "Bekreft betalingsopplysninger";
-/* Instructions shown while waiting for a Bizum payment authorization */
+
 "Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Bekreft Bizum-betalingen i mobilbank-appen din innen %@ for å fullføre kjøpet.";
-/* Instructions shown while waiting for an MB WAY payment authorization */
+
 "Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Bekreft betalingen i MB WAY-appen din innen %@ for å fullføre kjøpet.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekreft betalingen i bankens app eller i betalingsapp innen %@ for å fullføre kjøpet.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bekreft betalingen i bankens app innen %@ for å fullføre kjøpet.";
-/* Section title for entering your CVC. e.g. 'Confirm your CVC' */
-"Confirm your %@" = "Bekreft %@";
-/* Title for prompting for a card's CVC on confirming the payment */
+
 "Confirm your CVC" = "Bekreft CVC-koden din";
-/* Title for prompting for a card's CVV on confirming the payment */
-"Confirm your CVV" = "Bekreft CVV-koden din";
-/* Title label for a know-your-customer (KYC) verification screen */
+
 "Confirm your information" = "Bekreft opplysningene dine";
-/* Title for the contact information section */
+
 "Contact information" = "Kontaktinformasjon";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Continue another way" = "Fortsett på annen måte";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create a Link account for fast checkout across the web" = "Opprett en Link-konto for rask betaling på nettet";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Create an account with %@ for faster checkout across the web" = "Opprett en konto med %@ for raskere betaling på nett";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create an account with Link for faster checkout across the web" = "Opprett en konto med Link for raskere betaling på nett";
-/* Label for a payment method type that only accepts credit cards. */
-"Credit card" = "Kredittkort";
-/* Label for a payment method type that only accepts debit cards. */
-"Debit card" = "Debetkort";
-/* Label shown in the payment type picker describing a card payment */
+
 "Debit or credit card" = "Debet- eller kredittkort";
-/* Title label for a screen showing CRS/CARF tax declarations */
+
 "Declarations" = "Erklæringer";
-/* Label for identifying the default payment method. */
+
 "Default" = "Standard";
-/* Label for a disabled checked checkbox identifying the default payment method. */
+
 "Default payment method" = "Standard betalingsmetode";
-/* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
+
 "Did you mean %@? %@." = "Mente du %1$@? %2$@.";
-/* Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form. */
+
 "Discard Changes" = "Forkast endringer";
-/* Title of a confirmation alert shown when the customer tries to close the address form after making changes. */
+
 "Discard changes?" = "Forkaste endringer?";
-/* Label for the discount row in an order summary, applied as a negative amount. */
+
 "Discount" = "Rabatt";
-/* Label title for EPS Bank */
+
 "EPS Bank" = "EPS Bank";
-/* Accessibility label for a button that lets the user update their address */
+
 "Edit address" = "Rediger adresse";
-/* Link authentication action to receive an email verification code. */
+
 "Email code" = "E-postkode";
-/* Text for a button that allows manual entry of an address */
+
 "Enter address manually" = "Skriv inn adresse manuelt";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use Link to pay by default." = "Skriv inn koden sendt til %@ for å bruke Link til å betale som standard.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use your saved information." = "Skriv inn koden som ble sendt til %@ for å bruke den lagrede informasjonen.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@." = "Angi koden som er sendt til %@.";
-/* Error when Link email verification requires a phone number. */
+
 "Enter the phone number on your Link account." = "Skriv inn telefonnummeret på Link-kontoen din.";
-/* Two factor authentication screen heading */
-"Enter your verification code" = "Skriv inn verifiseringskoden";
-/* Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion */
+
 "Exchange rate and fees of your bank may apply." = "Bankens vekslingskurs og gebyrer kan påløpe.";
-/* Select a bank dropdown for FPX */
+
 "FPX Bank" = "FPX Bank";
-/* Error message that displays when we're unable to connect to the server. */
-"Failed to connect" = "Kunne ikke koble til";
-/* Title for the Link signup screen */
+
 "Fast, secure checkout" = "Rask og sikker utsjekking";
-/* Title for the Link signup screen */
-"Fast, secure, 1⁠-⁠click checkout" = "Rask og sikker betaling med ett klikk";
-/* Accessibility label for a button that turns the flashlight on or off while scanning a card. */
-"Flashlight" = "Lommelykt";
-/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
-"For security, please re-enter your card’s security code." = "For sikkerhets skyld må du skrive inn sikkerhetskoden for kortet ditt på nytt.";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Få %@ tilbake når du betaler for første gang med banken din.<terms>Se vilkår</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Få %@ tilbake når du betaler med banken din. <terms>Se vilkår</terms>";
-/* Button label to collapse and hide additional exchange rate details */
+
 "Hide details" = "Skjul detaljer";
-/* Instructions shown above the card scanner while it looks for a payment card. */
-"Hold your card with the number visible in the frame to scan it automatically." = "Hold kortet med nummeret synlig i rammen for å skanne det automatisk.";
-/* Bacs Debit mandate text */
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg forstår at Stripe vil direktedebitere på vegne av %@ og bekrefter at jeg er kontoinnehaver og den eneste personen som må godkjenne debiteringer fra denne kontoen.";
-/* IBAN placeholder – don&apos;t translate */
+
 "IBAN" = "IBAN";
-/* Message shown when Mondu is selected */
+
 "Invoice payment for business buyers." = "Fakturabetaling for bedriftskjøpere";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Join Link" = "Bli med i Link";
-/* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
+
 "Keep Editing" = "Fortsett å redigere";
-/* Label for displaying the last 4 digits of the user's social security number */
+
 "Last 4 digits of SSN" = "De siste 4 sifrene i personnummeret ditt";
-/* Title for a button that indicates a user can log in or sign up. */
-"Log in or sign up" = "Logg inn eller registrer deg";
-/* Label of a button that signs the user out of their current Link account so they can log in to a different one. */
+
 "Log in to another account" = "Logg inn på en annen konto";
-/* Title of the logout action. The placeholder is a Stripe brand name and should not be translated. */
-"Log out of %@" = "Logg ut av %@";
-/* Title of the logout action. */
-"Log out of Link" = "Logg ut av Link";
-/* Status shown over the camera while it looks for a payment card to scan. */
-"Looking for your card" = "Leter etter kortet ditt";
-/* Title shown above a view containing the customer's SEPA debit that they can delete or update */
+
 "Manage SEPA debit" = "Administrer SEPA-debet";
-/* Title shown above a view containing the customer's bank account that they can delete or update */
+
 "Manage US bank account" = "Administrer bankkonto i USA";
-/* Title shown above a view containing the customer's bank account that they can delete */
+
 "Manage bank account" = "Administrer bankkonto";
-/* Title for a screen for managing a card. */
+
 "Manage card" = "Administrer kort";
-/* Title shown above a view containing a list of the customer's cards that they can delete or update */
+
 "Manage cards" = "Administrer kort";
-/* Title shown above a view containing the customer's payment method that they can delete or update */
+
 "Manage payment method" = "Administrer betalingsmetode";
-/* Title shown above a view containing the customer's card payment methods that they can delete or update */
+
 "Manage payment methods" = "Administrer betalingsmetoder";
-/* Title shown above a carousel containing the customer's payment methods */
+
 "Manage your payment methods" = "Administrer betalingsmetodene dine";
-/* Button opening Link authentication actions. */
+
 "More options" = "Flere alternativer";
-/* Label for name on card field */
+
 "Name on card" = "Navn på kort";
-/* Naver Pay card funding source */
+
 "Naver Pay Card" = "Naver Pay-kort";
-/* Naver Pay money or points funding source */
+
 "Naver Pay Money/Point" = "Naver Pay Money/Point";
-/* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
+
 "New card" = "Nytt kort";
-/* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
+
 "New payment method" = "Ny betalingsmetode";
-/* Label for when the user is not eligible for a promo. */
+
 "No %@ promo" = "Ingen %@-kampanje";
-/* Message on a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "None of the payment methods in your %@ account work with this business." = "Ingen av betalingsmetodene på %@-kontoen din fungerer med denne bedriften.";
-/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
-"Not %@?" = "Er du ikke %@?";
-/* Title for a button that allows the user to use a different email in the signup flow. */
+
 "Not you?" = "Ikke deg?";
-/* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
+
 "Only card brand can be changed." = "Bare kortmerket kan endres.";
-/* Warning shown when only credit and prepaid cards are accepted */
-"Only credit and prepaid cards are accepted" = "Bare kredittkort og forhåndsbetalte kort godtas";
-/* Warning shown when only credit cards are accepted */
-"Only credit cards are accepted" = "Bare kredittkort godtas";
-/* Warning shown when only debit and credit cards are accepted */
-"Only debit and credit cards are accepted" = "Bare debet- og kredittkort godtas";
-/* Warning shown when only debit and prepaid cards are accepted */
-"Only debit and prepaid cards are accepted" = "Bare debetkort og forhåndsbetalte kort godtas";
-/* Warning shown when only debit cards are accepted */
-"Only debit cards are accepted" = "Bare debetkort godtas";
-/* Warning shown when only prepaid cards are accepted */
-"Only prepaid cards are accepted" = "Bare forhåndsbetalte kort godtas";
-/* Accessibility hint to tell the user that they can open a form sheet with more information. */
+
 "Open to see more information." = "Åpne for å se mer informasjon.";
-/* Separator label between two options */
+
 "Or" = "Eller";
-/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+
 "Or pay using" = "Eller betal med";
-/* Title of a section containing a card form that will collect the payment information from the user. */
+
 "Or pay with a card" = "Eller betal med et kort";
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up. */
+
 "Or use" = "Eller bruk";
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up. */
+
 "Or use a card" = "Eller bruk et kort";
-/* Label of a button that initiates payment when tapped */
+
 "Pay %@" = "Betal %@";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Pay another way" = "Betal på en annen måte";
-/* Label describing the benefit of signing up for Link.
-Pay faster at {Merchant Name} and thousands of businesses
-e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
+
 "Pay faster at %@ and thousands of businesses." = "Betal raskere hos %@ og hos tusenvis av bedrifter.";
-/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
-"Pay faster at %@ and thousands of merchants." = "Betal raskere hos %@ og tusenvis av andre forhandlere.";
-/* Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated. */
+
 "Pay faster everywhere %@ is accepted." = "Betal raskere overalt hvor %@ godtas.";
-/* Subtitle for the Link signup screen */
+
 "Pay faster everywhere Link is accepted." = "Betal raskere overalt hvor Link aksepteres.";
-/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Betal med <num_installments/> rentefri avdrag på <installment_price/> med <img/>";
-/* Klarna pay later copy */
-"Pay later with Klarna." = "Betal senere med Klarna.";
-/* Pay over time with Affirm copy */
+
 "Pay over time with %@" = "Betal over tid med%@";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm */
+
 "Pay over time with Affirm" = "Betal over tid med Affirm";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Afterpay */
-"Pay over time with Afterpay" = "Betal over tid med Afterpay";
-/* Promotional text for Clearpay, displayed in a button that lets the customer pay with Clearpay */
-"Pay over time with Clearpay" = "Betal over tid med Clearpay";
-/* Title shown above a section containing various payment options */
-"Pay using" = "Betal ved å bruke";
-/* Pay with {payment method} */
+
 "Pay with %@" = "Betal med %@";
-/* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
+
 "Pay with Link" = "Betal med Link";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Pay with your bank account in just a few steps." = "Betal med bankkontoen din med noen få trinn.";
-/* Label for a section displaying payment details. */
+
 "Payment" = "Betaling";
-/* Text on a screen that indicates a payment has failed */
+
 "Payment failed" = "Betaling mislyktes";
-/* Text on a screen that indicates payment method details cannot be changed. */
+
 "Payment method details cannot be changed." = "Betalingsmetodedetaljer kan ikke endres.";
-/* Title for a section listing one or more payment methods. */
+
 "Payment methods" = "Betalingsmetoder";
-/* Error message that's displayed when you try to confirm a payment without a valid payment method */
+
 "Please choose a valid payment method." = "Velg en gyldig betalingsmetode.";
-/* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
+
 "Please go back and select another payment method" = "Gå tilbake og velg en annen betalingsmetode";
-/* Accessibility instructions for card scanning. */
+
 "Point the camera at your card." = "Rett kameraet mot kortet.";
-/* Label for a payment method type that only accepts prepaid cards. */
-"Prepaid card" = "Forhåndsbetalt kort";
-/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
-"Processing..." = "Behandler …";
-/* Label title for Przelewy24 Bank */
+
 "Przelewy24 Bank" = "Przelewy24 Bank";
-/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-"Remove %1$@ ending in %2$@" = "Fjern %1$@ som slutter på %2$@";
-/* Title of confirmation prompt when removing a saved payment method. */
+
 "Remove %@" = "Fjern %@";
-/* Title for confirmation alert to remove a card */
-"Remove Card" = "Fjern kort";
-/* Title for confirmation alert to remove a bank account */
+
 "Remove bank?" = "Vil du fjerne banken?";
-/* Title for confirmation alert to remove a card */
+
 "Remove card?" = "Vil du fjerne kortet?";
-/* Title for a button that when tapped removes a linked bank account. */
+
 "Remove linked account" = "Fjern tilkoblet konto";
-/* Title shown above a view containing a customer's payment method that they can delete */
+
 "Remove payment method" = "Fjern betalingsmetode";
-/* Title for confirmation alert to remove a payment method */
+
 "Remove payment method?" = "Fjerne betalingsmetode?";
-/* Title for a button that opens the camera to scan a payment card again, after one was already scanned. */
-"Rescan card" = "Skann kort på nytt";
-/* Label for a button that re-sends the a login code when tapped */
-"Resend code" = "Send koden på nytt";
-/* Link OTP resend cooldown, in seconds. */
+
 "Resend code in %d seconds" = "Send kode på nytt om %li sekunder";
-/* Text on a screen that indicates SEPA debit details cannot be changed. */
+
 "SEPA debit details cannot be changed." = "SEPA-debetopplysninger kan ikke endres.";
-/* A button used for saving a new payment method */
+
 "Save" = "Lagre";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Save a new payment method" = "Lagre en ny betalingsmetode";
-/* Title for a button that when pressed saves the provided address. */
+
 "Save address" = "Lagre adresse";
-/* The label of a switch indicating whether to save the payment method for future payments. */
+
 "Save for future payments" = "Lagre til fremtidige betalinger";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save my info for faster checkout with %@" = "Lagre informasjonen min for raskere betaling med %@";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save my info for faster checkout with Link" = "Lagre informasjonen min for raskere betaling med Link";
-/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-"Save my info for secure 1-click checkout" = "Lagre informasjonen din for sikker 1-klikk-utsjekking med Link";
-/* The label of a switch indicating whether to save the user's payment details for future payment */
+
 "Save payment details to %@ for future purchases" = "Lagre betalingsinformasjonen hos %@ for fremtidige kjøp";
-/* Prompt next to checkbox to save bank account. */
+
 "Save this account for future %@ payments" = "Lagre kontoen til fremtidige betalinger hos %@";
-/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-"Save this card for future %@ payments" = "Lagre kortet til fremtidige betalinger hos %@";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Save your bank account in just a few steps." = "Lagre bankkontoen din med bare noen få trinn.";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save your info for secure 1-click checkout with %@" = "Lagre informasjonen din for sikker betaling med ett klikk med %@";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save your info for secure 1-click checkout with Link" = "Lagre informasjonen din for sikker 1-klikk-utsjekking med Link";
-/* Label describing the benefit of signing up for Link. */
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Lagre betalingsinformasjonen din med Link, og sjekk ut sikkert med ett klikk på Link-støttede nettsteder.";
-/* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
+
 "Saved" = "Lagret";
-/* Title for the Link signup screen */
-"Secure 1⁠-⁠click checkout" = "Sikker 1-klikk-utsjekking";
-/* Title shown above a view containing the customer's card payment methods */
+
 "Select card" = "Velg kort";
-/* Label for the Naver Pay funding source selector */
+
 "Select how you want to pay:" = "Velg hvordan du vil betale:";
-/* Title shown above a view containing the customer's payment methods */
+
 "Select payment method" = "Velg betalingsmetode";
-/* Title shown above a carousel containing the customer&apos;s payment methods */
+
 "Select your payment method" = "Velg betalingsmetode";
-/* Label for a button that sends the code to the user's email when tapped */
-"Send code to email instead" = "Send koden til e-post i stedet";
-/* Label for a button or menu item that sets a payment method as default when tapped. */
+
 "Set as default" = "Angi som standard";
-/* Label of a checkbox that when checked makes a payment method as the default one. */
+
 "Set as default payment method" = "Angi som standard betalingsmetode";
-/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
 "Set up" = "Konfigurer";
-/* Label for the shipping cost row in an order summary. */
-"Shipping" = "Frakt";
-/* Title for shipping address entry section */
-"Shipping Address" = "Leveringsadresse";
-/* Text for an error that is shown when a user selects a shipping address that
-is not supported by the merchant. Example: Shipping to Canada is not supported. */
+
 "Shipping to %@ is not supported." = "Levering til %@ støttes ikke.";
-/* Button label to expand and show additional exchange rate details */
+
 "Show details" = "Vis detaljer";
-/* Accessibility label for an action or a button that shows a menu. */
+
 "Show menu" = "Vis meny";
-/* Title for a button that indicates a user can sign in or sign up. */
+
 "Sign in or sign up" = "Logg inn eller registrer deg";
-/* Two factor authentication screen heading */
-"Sign in to your Link account" = "Logg inn på Link-kontoen din";
-/* Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated. */
+
 "Sign out of %@" = "Logg ut av %@";
-/* Title of the sign-out action. */
-"Sign out of Link" = "Logg ut av Link";
-/* Subtitle shown on a button allowing a user to select to pay with Link. */
+
 "Simple, secure one-click payments" = "Enkle, trygge betalinger med ett klikk";
-/* Error message when an error case happens when linking your account */
+
 "Something went wrong when linking your account.\nPlease try again later." = "Noe gikk galt under kobling av kontoen din.\nPrøv igjen senere.";
-/* Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe setter inn $0,01 på kontoen din i løpet av 1–2 virkedager. Deretter får du en e-post med instruksjoner for å fullføre lagringen av bankkontoen din med %@.";
-/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sette inn et innskudd på USD 0,01 på kontoen din innen 1–2 virkedager. Deretter vil du få en e-post med instruksjoner for å fullføre betalingen til %@.";
-/* Label for the subtotal row in an order summary, before tax/shipping/discounts. */
+
 "Subtotal" = "Delsum";
-/* Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
-"Supported cards: %@" = "Støttede kort: %@";
-/* Accessibility hint to tell the user that they can tap to hide additional content. */
+
 "Tap to close" = "Trykk for å lukke";
-/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+
 "Tap to expand" = "Trykk for å utvide";
-/* Label for the tax row in an order summary. */
+
 "Tax" = "Avgifter";
-/* Title label for a screen showing terms and conditions */
+
 "Terms and Conditions" = "Vilkår";
-/* Title label for a screen showing terms of service */
+
 "Terms of Service" = "Tjenestevilkår";
-/* test */
-"Test123" = "Test123";
-/* An error message displayed when the customer's IBAN is incomplete. */
+
 "The IBAN you entered is incomplete." = "IBAN-nummeret du la inn er ufullstendig.";
-/* An error message. */
+
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Du oppga et ugyldig IBAN-nummer, «%@» er ikke en støttet landskode.";
-/* Error message shown when the user enters an expired verification code. */
+
 "The provided verification code has expired." = "Den oppgitte verifiseringskoden er utløpt.";
-/* Error message shown when the user enters an incorrect verification code. */
+
 "The provided verification code is incorrect." = "Den oppgitte verifiseringskoden er ikke korrekt.";
-/* String to inform a user that specific card brands are not accepted. */
-"The selected brand is not allowed" = "Det valgte merket er ikke tillatt";
-/* Disclaimer for when a bank account is not eligible for a promotion. */
-"This bank account is ineligible for promotions. <terms>View terms</terms>" = "Denne bankkontoen er ikke kvalifisert for kampanjer. <terms>Se vilkår</terms>";
-/* A text notice shown when the user selects an expired card. */
-"This card has expired. Update your card info or choose a different payment method." = "Dette kortet er utløpt. Oppdater kortinformasjonen eller velg en annen betalingsmetode.";
-/* Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms. */
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Dette er et internasjonalt kjøp og ekskludert en IOF-avgift på 3,5 %. Når du fortsetter, bekrefter og godtar du <terms>Ebanx’ vilkår</terms>.";
-/* Text of a label indicating that a payment method is the default. */
+
 "This is your default" = "Dette er standarden din";
-/* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
+
 "This payment method will be removed but will remain available for %@ subscriptions." = "Denne betalingsmåten vil bli fjernet, men vil fortsatt være tilgjengelig for %@ abonnementer.";
-/* Error when the phone number entered before Link email verification does not match the account. */
+
 "This phone number doesn't match your Link account. Please try again." = "Dette telefonnummeret samsvarer ikke med Link-kontoen din. Prøv på nytt.";
-/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
-"To scan your card, allow camera access in Settings." = "Du må tillate kameratilgang i Innstillinger for å skanne kortet.";
-/* Error message shown when the user enters an incorrect verification code too many times. */
+
 "Too many attempts. Please try again in a few minutes." = "For mange forsøk. Prøv på nytt om noen få minutter.";
-/* Accessibility label for a button that turns off the flashlight while scanning a card. */
-"Turn off flashlight" = "Slå av lommelykten";
-/* Accessibility label for a button that turns on the flashlight while scanning a card. */
-"Turn on flashlight" = "Slå på lommelykten";
-/* Label shown when a payment method cannot be used for the current transaction. */
+
 "Unavailable for this purchase" = "Utilgjengelig for dette kjøpet";
-/* Title for a button that when tapped, updates a card brand. */
-"Update" = "Oppdater";
-/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
+
 "Update card" = "Oppdater kort";
-/* Title for a screen for updating a card brand. */
-"Update card brand" = "Oppdater kortmerke";
-/* Accessibility label for a button that leads to a screen for updating a payment method. */
+
 "Update payment method" = "Oppdater betalingsmetode";
-/* Label for checkbox in address form allowing user to use billing address */
+
 "Use billing address for shipping" = "Bruk faktureringsadressen for frakt";
-/* Two factor authentication screen heading */
-"Use your saved info to check out faster" = "Bruk den lagrede informasjonen din til å betale raskere";
-/* Heading for the Link phone-match screen. */
+
 "Verify your phone number" = "Bekreft telefonnummeret ditt";
-/* Link authentication in progress. */
+
 "Verifying your account…" = "Bekrefter kontoen din …";
-/* Text shown on a button that when tapped opens a user's screen with their payment methods. */
+
 "View more" = "Se mer";
-/* Link authentication cannot continue with the available verification methods. */
+
 "We couldn't verify your account. Please close this window and try again." = "Vi kan ikke bekrefte kontoen din. Lukk dette vinduet og prøv på nytt.";
-/* Text for a tappable link that will update the email field with a suggested email address. */
+
 "Yes, update" = "Ja, oppdater";
-/* Title of a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "You can't pay with %@ here" = "Du kan ikke betale med %@ her";
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
+
 "Your IBAN should start with a two-letter country code." = "IBAN-nummeret skal starte med en tosifret landskode.";
-/* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
+
 "Your address changes won't be saved." = "Adresseendringene dine vil ikke bli lagret.";
-/* Error message for card details form when expiration date has passed */
-"Your card has expired." = "Kortet ditt har utløpt.";
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL Bank";

@@ -1,624 +1,399 @@
-/* Label a default funding source, which we treat as a generic card. E.g. 'Visa Card' */
-"%1$@ Card" = "Kartu %1$@";
-/* Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte' */
-"%1$@ Credit" = "Kredit %1$@";
-/* Label a debit funding source. E.g. 'Visa Debit' */
-"%1$@ Debit" = "Debit %1$@";
-/* Label a prepaid funding source. E.g. 'Visa Prepaid' */
-"%1$@ Prepaid" = "Prabayar %1$@";
-/* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
-"%1$@ account ending in %2$@" = "Rekening %1$@ berakhiran dengan %2$@";
-/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
-"%1$@ ending in %2$@" = "%1$@ berakhiran %2$@";
-/* String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted */
-"%1$@ is not accepted" = "%1$@ tidak diterima";
-/* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%1$d interest-free payments of %2$@" = "%1$li pembayaran bebas bunga sebesar %2$@";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. '$5 back on […]' */
-"%@ back on a qualifying purchase when you pay by bank. <terms>View terms</terms>" = "%@ kembali untuk pembelian yang memenuhi syarat saat Anda membayar melalui bank. <terms>Lihat ketentuan</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. '$5 back when […]' */
-"%@ back when you pay by bank. <terms>View terms</terms>" = "%@ kembali saat Anda membayar melalui bank. <terms>Lihat ketentuan</terms>";
-/* Message shown in a confirmation prompt when removing a saved payment method. */
+
 "%@ will no longer be saved to your wallet." = "%@ tidak akan lagi disimpan ke dompet digital Anda.";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%d interest-free payments of %@" = "%1$li pembayaran bebas bunga sebesar %2$@";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "+ Add" = "+ Tambahkan";
-/* Exchange rate with conversion fee disclosure, e.g. '1 GBP = 1.2871 USD (includes 4% conversion fee).' */
-"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (termasuk %4$@%% biaya konversi).";
-/* Exchange rate caption, e.g. '1 GBP = 1.2871 USD' */
-"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
-/* Label for a button that confirms the user accepts a declaration */
+
 "Accept" = "Terima";
-/* Title shown above a view allowing the customer to save a US bank account. */
+
 "Add US bank account" = "Tambahkan rekening bank AS";
-/* Title shown above a card entry form */
+
 "Add a card" = "Tambahkan sebuah kartu";
-/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
+
 "Add a payment method" = "Tambahkan metode pembayaran";
-/* Button prompt to add a bank account as a payment method. */
+
 "Add bank account" = "Tambahkan rekening bank";
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Tambahkan kartu";
-/* Title shown above a view allowing the customer to save a card. */
+
 "Add new card" = "Tambahkan kartu baru";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "Add new payment method" = "Tambahkan metode pembayaran baru";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Add your payment information" = "Tambahkan informasi pembayaran Anda";
-/* Label for a button that confirms the user agrees to and accepts a declaration */
-"Agree and accept" = "Setuju dan terima";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Agree and continue" = "Setuju dan lanjutkan";
-/* Instructions shown above the card scanner while the customer is asked for camera access. */
-"Allow camera permissions and get your card ready for scanning." = "Izinkan akses kamera dan siapkan kartu Anda untuk dipindai.";
-/* Text for Apple Pay payment method */
-"Apple Pay" = "Apple Pay";
-/* Text on a screen asking the user to approve a payment */
+
 "Approve payment" = "Setujui pembayaran";
-/* Title of confirmation prompt when removing a saved card. */
-"Are you sure you want to remove this card?" = "Anda yakin ingin menghapus kartu ini?";
-/* Title of confirmation prompt when removing a linked bank account. */
-"Are you sure you want to remove this linked account?" = "Anda yakin ingin menghapus rekening tertaut ini?";
-/* Text for back button */
+
 "Back" = "Kembali";
-/* Title for a bank account payment method */
+
 "Bank" = "Bank";
-/* Title for collected bank account information */
+
 "Bank account" = "Rekening bank";
-/* Text on a screen that indicates bank account details cannot be changed. */
+
 "Bank account details cannot be changed." = "Detail rekening bank tidak dapat diubah.";
-/* Phone-match instruction before Link email OTP. Placeholder is the last two phone digits. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Sebelum kami dapat mengirim kode ke email Anda, kami perlu memverifikasi informasi tambahan tentang Anda. Masukkan nomor telepon Anda yang berakhiran ••%@.";
-/* Phone-match instruction before Link email OTP. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Sebelum kami dapat mengirim kode ke email Anda, kami perlu memverifikasi informasi tambahan tentang Anda. Masukkan nomor telepon Anda.";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
+
 "Buy Now, Pay Later with  <img/>" = "Beli Sekarang, Bayar Nanti dengan  <img/>";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Afterpay" = "Beli Sekarang, Bayar Nanti dengan Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Cash App Afterpay" = "Beli Sekarang, Bayar Nanti dengan Cash App Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
+
 "Buy Now, Pay Later with Clearpay" = "Beli Sekarang, Bayar Nanti dengan Clearpay";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
-"Buy Now, Pay Later with Klarna" = "Beli Sekarang, Bayar Nanti dengan Klarna";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with  <img/>" = "Beli sekarang atau bayar nanti dengan  <img/>";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with <img/>" = "Beli sekarang atau bayar nanti dengan <img/>";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Afterpay" = "Beli sekarang atau bayar nanti dengan Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Cash App Afterpay" = "Beli sekarang atau bayar nanti dengan Cash App Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
-"Buy now or pay later with Clearpay" = "Beli sekarang atau bayar nanti dengan Clearpay";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
+
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar nanti dengan Klarna";
-/* Klarna buy now or pay later copy */
-"Buy now or pay later with Klarna." = "Beli sekarang atau bayar nanti dengan Klarna.";
-/* GCash mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda dengan GCash, Anda mengizinkan %@ untuk men-charge akun GCash Anda untuk pembayaran mendatang sesuai dengan ketentuan mereka.";
-/* Korean payment method mandate text */
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda dengan NICEPAY, Anda mengizinkan %@ untuk men-charge metode pembayaran ini untuk pembayaran di masa mendatang sesuai dengan ketentuan mereka.";
-/* Paypal mandate text */
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran menggunakan PayPal, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun PayPal Anda sesuai dengan ketentuan mereka.";
-/* Satispay mandate text */
-"By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda melalui Satispay, Anda memberikan izin kepada %@ untuk menagih akun Satispay Anda untuk pembayaran di masa depan sesuai dengan syarat dan ketentuan mereka.";
-/* Touch 'n Go mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda dengan Touch 'n Go, Anda mengizinkan %@ untuk men-charge akun Touch 'n Go Anda untuk pembayaran mendatang sesuai dengan ketentuan mereka.";
-/* TrueMoney mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Dengan mengonfirmasi pembayaran Anda dengan TrueMoney, Anda mengizinkan %@ untuk men-charge akun TrueMoney Anda untuk pembayaran mendatang sesuai dengan ketentuan mereka.";
-/* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Dengan mengonfirmasi pembayaran Anda, Anda setuju bahwa transaksi Anda akan ditangani oleh Global Stack Services Limited sebagai pedagang tercatat dan sesuai dengan <terms>ketentuan penggunaan</terms> mereka.";
-/* Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Dengan mengonfirmasi pembayaran Anda, Anda setuju bahwa transaksi Anda akan ditangani oleh Global Stack Services Limited sebagai pedagang tercatat dan sesuai dengan <terms>ketentuan</terms> mereka.";
-/* Amazon Pay mandate text */
+
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Dengan melanjutkan ke Amazon Pay, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun Amazon Pay Anda sesuai dengan ketentuan mereka.";
-/* Klarna mandate text */
+
 "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Dengan melanjutkan ke Klarna, berarti Anda mengizinkan %1$@ mengenakan charge untuk pembayaran mendatang pada akun Klarna Anda sesuai dengan ketentuan mereka dan ketentuan Klarna. Anda dapat mengubahnya kapan saja di aplikasi Klarna atau dengan menghubungi %2$@.";
-/* Klarna mandate text */
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms." = "Dengan melanjutkan ke Klarna, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun Klarna Anda sesuai dengan ketentuan mereka.";
-/* Paypal mandate text */
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan melanjutkan ke PayPal, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun PayPal Anda sesuai dengan ketentuan mereka.";
-/* Revolut Pay mandate text */
+
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Dengan melanjutkan ke Revolut Pay, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun Revolut Pay Anda sesuai dengan ketentuan mereka.";
-/* Satispay mandate text */
-"By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Dengan melanjutkan ke Satispay, Anda mengizinkan %@ untuk menagih akun Satispay Anda untuk pembayaran di masa mendatang sesuai dengan syarat dan ketentuan mereka.";
-/* Legal text shown when creating a Link account. */
+
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan melanjutkan, berarti Anda menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
-/* Text providing link to terms for ACH payments */
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan melanjutkan, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
-/* Mandate text displayed when paying via Link instant debit. */
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Dengan melanjutkan, berarti Anda setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan</terms> ini.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to the Link brand. The first placeholder is a merchant name. The second placeholder is a Stripe brand name and should not be translated. */
+
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Dengan melanjutkan, berarti Anda setuju untuk menyimpan informasi untuk pembelian mendatang dengan %1$@ dan <link>%2$@</link> sesuai dengan <terms>ketentuan</terms> dan <privacy>privasi</privacy> %2$@.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> (see <terms>Terms</terms> and <privacy>Privacy</privacy>)." = "Dengan melanjutkan, Anda menyetujui informasi Anda disimpan untuk pembelian di masa mendatang dengan %@ dan <link>Tautan</link> (lihat <terms>Ketentuan</terms> dan <privacy>Privasi</privacy>).";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Dengan melanjutkan, Anda menyetujui informasi Anda disimpan untuk pembelian di masa mendatang dengan %@ dan <link>Link</link> sesuai dengan <terms>ketentuan</terms> dan <privacy>privasi</privacy> Link.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Dengan melanjutkan, Anda setuju untuk menyimpan informasi Anda untuk pembelian di masa mendatang dengan %@ dan <link>Link</link>. Anda juga menyetujui <terms>Ketentuan</terms> dan <privacy>Privasi</privacy> Link.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant. */
+
 "By continuing, you agree to save your information for future purchases with %@." = "Dengan melanjutkan, Anda setuju untuk menyimpan informasi Anda untuk pembelian di masa mendatang dengan %@.";
-/* Satispay mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Dengan melanjutkan, Anda mengizinkan %@ untuk secara otomatis mendebit Saldo Satispay Anda secara berkala sesuai dengan paket pembelian atau langganan Anda.";
-/* Twint mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Dengan melanjutkan, Anda mengizinkan %@ untuk secara otomatis mendebit Saldo Twint Anda secara rutin sesuai dengan paket pembelian atau langganan Anda.";
-/* Cash App mandate text */
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan melanjutkan, berarti Anda memberi %1$@ otorisasi untuk mendebit akun Cash App Anda bagi pembayaran ini dan pembayaran mendatang sesuai dengan ketentuan %2$@, hingga otorisasi ini dicabut. Anda dapat mengubahnya kapan saja di Pengaturan Cash App.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan bergabung dengan %@, berarti Anda menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
-/* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan bergabung ke Link, Anda berarti menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon dan email, berarti Anda setuju untuk membuat akun %1$@ yang tunduk pada <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> %1$@.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon dan email, berarti Anda setuju untuk membuat akun %1$@ yang tunduk pada <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon dan email, berarti Anda menyetujui pembuatan akun Link yang tunduk pada <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
-/* Legal text shown when using AUBECS. */
+
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Dengan memberikan detail rekening bank Anda dan mengonfirmasi pembayaran ini, Anda menyetujui Permintaan Debit Langsung ini serta <terms>perjanjian layanan Permintaan Debit Langsung</terms>, dan memberikan wewenang kepada Stripe Payments Australia Pty Ltd ACN 160 180 343 dengan nomor ID Pengguna Debit Langsung 507156 (“Stripe”) untuk mendebit rekening Anda melalui Bulk Electronic Clearing System (BECS) atas nama %@ (\"Pedagang\") untuk jumlah apa pun yang disampaikan secara terpisah kepada Anda oleh Pedagang. Anda menyatakan bahwa Anda adalah pemilik akun atau penandatangan resmi pada rekening yang tercantum di atas.";
-/* Text displayed below a credit card entry form when the card will be saved to make future payments. */
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Dengan memberikan informasi kartu, Anda berarti mengizinkan %@ mengenakan charge pada kartu Anda untuk pembayaran mendatang sesuai dengan ketentuan mereka.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan email, berarti Anda setuju untuk membuat akun %1$@ dan menyimpan informasi pembayaran ke %1$@, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan email, berarti Anda menyetujui pembuatan akun Link serta penyimpanan informasi pembayaran pada Link, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
-/* SEPA mandate text */
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Dengan memberikan informasi pembayaran dan mengonfirmasi pembayaran ini, berarti Anda mengotorisasi (A) %@ dan Stripe, penyedia layanan pembayaran kami, untuk mengirim instruksi kepada bank untuk mendebit rekening Anda dan (B) kepada bank untuk mendebit rekening Anda sesuai instruksi itu. Sebagai bagian dari hak Anda, Anda berhak mendapat pengembalian dana dari bank berdasarkan ketentuan dan persyaratan perjanjian Anda dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu sejak tanggal pendebitan rekening Anda. Hak Anda dijelaskan dalam pernyataan yang dapat Anda peroleh dari bank Anda. Anda setuju untuk menerima notifikasi pendebitan di masa mendatang hingga 2 hari sebelum dilakukan.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon, berarti Anda setuju untuk membuat akun %1$@ dan menyimpan info pembayaran Anda ke %1$@, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi </privacy> %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon, berarti Anda menyetujui pembuatan akun Link serta penyimpanan informasi pembayaran pada Link, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
-/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan rekening bank Anda untuk %@, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
-/* Alipay mandate text */
+
 "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Dengan menyimpan informasi pembayaran Anda, Anda mengizinkan %@ untuk men-charge Anda atas pembayaran mendatang sesuai dengan ketentuannya.";
-/* Text providing link to terms for bank payments when seller information is provided */
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan mengirimkan pesanan ke %1$@ dan %2$@, Anda setuju untuk menyimpan informasi Anda dengan %3$@ untuk pembelian di masa mendatang, dan setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan ini</terms>.";
-/* Text providing link to terms for bank payments */
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan mengirimkan pesanan Anda ke %@, Anda setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan ini</terms>.";
-/* Label for CPF/CPNJ (Brazil tax ID) field */
+
 "CPF/CPNJ" = "CPF/CPNJ";
-/* Button text on a screen asking the user to approve a payment */
+
 "Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
-/* Text on a screen that indicates card details cannot be changed. */
+
 "Card details cannot be changed." = "Detail kartu tidak dapat diubah.";
-/* Card details entry form header title */
-"Card information" = "Informasi kartu";
-/* Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa') */
-"Card number. Card brand: %@" = "Nomor kartu. Merek kartu: %@";
-/* Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
+
 "Card number. Supported cards include %@" = "Nomor kartu. Kartu yang didukung meliputi %@";
-/* Status shown over the camera after a payment card was scanned successfully. */
-"Card scanned" = "Kartu dipindai";
-/* Label for a button that lets you change the details of a payment method */
+
 "Change" = "Ubah";
-/* Title for a button that allows the user to use a different email in the signup flow. */
-"Change email" = "Ubah email";
-/* Tooltip prompting user to select their card brand when a co-branded card is detected */
+
 "Choose a card brand" = "Pilih merek kartu";
-/* Title shown above a carousel containing available payment methods */
+
 "Choose a payment method" = "Pilih metode pembayaran";
-/* Accessibility label for the button to close the card scanner. */
+
 "Close card scanner" = "Tutup pemindai kartu";
-/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
-"Code sent" = "Kode dikirim";
-/* Instructions shown while waiting for a Pix payment authorization */
+
 "Complete the payment using Pix to finish the purchase." = "Selesaikan pembayaran menggunakan Pix untuk menyelesaikan pembelian.";
-/* A button used to confirm selecting a saved payment method */
+
 "Confirm" = "Konfirmasikan";
-/* Two factor authentication screen heading */
-"Confirm it's you" = "Konfirmasikan diri Anda";
-/* Title of a screen where the user can update their payment method before continuing
-with the transaction. */
+
 "Confirm payment details" = "Konfirmasikan detail pembayaran";
-/* Instructions shown while waiting for a Bizum payment authorization */
+
 "Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Konfirmasikan pembayaran Bizum di aplikasi perbankan seluler Anda dalam %@ untuk menyelesaikan pembelian.";
-/* Instructions shown while waiting for an MB WAY payment authorization */
+
 "Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Konfirmasikan pembayaran di aplikasi MB WAY Anda dalam %@ untuk menyelesaikan pembelian.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Konfirmasikan pembayaran di aplikasi pembayaran atau bank Anda dalam %@ untuk menyelesaikan pembelian.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Konfirmasikan pembayaran di aplikasi bank Anda dalam %@ untuk menyelesaikan pembelian.";
-/* Section title for entering your CVC. e.g. 'Confirm your CVC' */
-"Confirm your %@" = "Konfirmasikan %@ Anda";
-/* Title for prompting for a card's CVC on confirming the payment */
+
 "Confirm your CVC" = "Konfirmasikan CVC Anda";
-/* Title for prompting for a card's CVV on confirming the payment */
-"Confirm your CVV" = "Konfirmasikan CVV Anda";
-/* Title label for a know-your-customer (KYC) verification screen */
+
 "Confirm your information" = "Konfirmasikan informasi Anda";
-/* Title for the contact information section */
+
 "Contact information" = "Informasi kontak";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Continue another way" = "Lanjutkan dengan cara lain";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create a Link account for fast checkout across the web" = "Buat rekening Link untuk checkout cepat di seluruh web";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Create an account with %@ for faster checkout across the web" = "Buat akun dengan %@ agar checkout lebih cepat di seluruh web";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create an account with Link for faster checkout across the web" = "Buat rekening dengan Link untuk checkout yang lebih cepat di seluruh web";
-/* Label for a payment method type that only accepts credit cards. */
-"Credit card" = "Kartu kredit";
-/* Label for a payment method type that only accepts debit cards. */
-"Debit card" = "Kartu debit";
-/* Label shown in the payment type picker describing a card payment */
+
 "Debit or credit card" = "Kartu debit atau kredit";
-/* Title label for a screen showing CRS/CARF tax declarations */
+
 "Declarations" = "Deklarasi";
-/* Label for identifying the default payment method. */
+
 "Default" = "Default";
-/* Label for a disabled checked checkbox identifying the default payment method. */
+
 "Default payment method" = "Metode pembayaran default";
-/* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
+
 "Did you mean %@? %@." = "Apakah yang Anda maksud %1$@? %2$@.";
-/* Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form. */
+
 "Discard Changes" = "Buang Perubahan";
-/* Title of a confirmation alert shown when the customer tries to close the address form after making changes. */
+
 "Discard changes?" = "Buang perubahan?";
-/* Label for the discount row in an order summary, applied as a negative amount. */
+
 "Discount" = "Diskon";
-/* Label title for EPS Bank */
+
 "EPS Bank" = "Bank EPS";
-/* Accessibility label for a button that lets the user update their address */
+
 "Edit address" = "Edit alamat";
-/* Link authentication action to receive an email verification code. */
+
 "Email code" = "Kode email";
-/* Text for a button that allows manual entry of an address */
+
 "Enter address manually" = "Masukkan alamat secara manual";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use Link to pay by default." = "Masukkan kode yang dikirim ke %@ untuk menggunakan Link untuk membayar secara default.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use your saved information." = "Masukkan kode yang dikirim ke %@ untuk menggunakan informasi tersimpan Anda.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@." = "Masukkan kode yang dikirim ke %@.";
-/* Error when Link email verification requires a phone number. */
+
 "Enter the phone number on your Link account." = "Masukkan nomor telepon di akun Link Anda.";
-/* Two factor authentication screen heading */
-"Enter your verification code" = "Masukkan kode verifikasi Anda";
-/* Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion */
+
 "Exchange rate and fees of your bank may apply." = "Nilai tukar dan biaya bank Anda mungkin berlaku.";
-/* Select a bank dropdown for FPX */
+
 "FPX Bank" = "FPX Bank";
-/* Error message that displays when we're unable to connect to the server. */
-"Failed to connect" = "Gagal menghubungkan";
-/* Title for the Link signup screen */
+
 "Fast, secure checkout" = "Checkout yang cepat dan aman";
-/* Title for the Link signup screen */
-"Fast, secure, 1⁠-⁠click checkout" = "Checkout sekali klik yang aman dan cepat";
-/* Accessibility label for a button that turns the flashlight on or off while scanning a card. */
-"Flashlight" = "Senter";
-/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
-"For security, please re-enter your card’s security code." = "Untuk keamanan, masukkan lagi kode keamanan kartu Anda.";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dapatkan %@ kembali saat membayar pertama kalinya pada bank Anda. <terms>Lihat ketentuan</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Dapatkan %@ kembali saat membayar pada bank Anda. <terms>Lihat ketentuan</terms>";
-/* Button label to collapse and hide additional exchange rate details */
+
 "Hide details" = "Sembunyikan detail";
-/* Instructions shown above the card scanner while it looks for a payment card. */
-"Hold your card with the number visible in the frame to scan it automatically." = "Pegang kartu Anda hingga nomornya terlihat di dalam bingkai untuk memindainya secara otomatis.";
-/* Bacs Debit mandate text */
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya memahami bahwa Stripe akan menagih Debit Langsung atas nama %@ serta mengonfirmasikan bahwa sayalah pemilik akun dan satu-satunya orang yang diperlukan untuk mengotorisasi debit dari akun ini.";
-/* IBAN placeholder – don&apos;t translate */
+
 "IBAN" = "IBAN";
-/* Message shown when Mondu is selected */
+
 "Invoice payment for business buyers." = "Pembayaran invoice untuk pembeli bisnis.";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Join Link" = "Bergabunglah dengan Link";
-/* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
+
 "Keep Editing" = "Terus Mengedit";
-/* Label for displaying the last 4 digits of the user's social security number */
+
 "Last 4 digits of SSN" = "4 angka terakhir SSN";
-/* Title for a button that indicates a user can log in or sign up. */
-"Log in or sign up" = "Masuk atau daftar";
-/* Label of a button that signs the user out of their current Link account so they can log in to a different one. */
+
 "Log in to another account" = "Masuk ke akun lain";
-/* Title of the logout action. The placeholder is a Stripe brand name and should not be translated. */
-"Log out of %@" = "Keluar dari %@";
-/* Title of the logout action. */
-"Log out of Link" = "Keluar dari Link";
-/* Status shown over the camera while it looks for a payment card to scan. */
-"Looking for your card" = "Mencari kartu Anda";
-/* Title shown above a view containing the customer's SEPA debit that they can delete or update */
+
 "Manage SEPA debit" = "Kelola debit SEPA";
-/* Title shown above a view containing the customer's bank account that they can delete or update */
+
 "Manage US bank account" = "Kelola rekening bank AS";
-/* Title shown above a view containing the customer's bank account that they can delete */
+
 "Manage bank account" = "Kelola rekening bank";
-/* Title for a screen for managing a card. */
+
 "Manage card" = "Kelola kartu";
-/* Title shown above a view containing a list of the customer's cards that they can delete or update */
+
 "Manage cards" = "Kelola kartu";
-/* Title shown above a view containing the customer's payment method that they can delete or update */
+
 "Manage payment method" = "Kelola metode pembayaran";
-/* Title shown above a view containing the customer's card payment methods that they can delete or update */
+
 "Manage payment methods" = "Kelola metode pembayaran";
-/* Title shown above a carousel containing the customer's payment methods */
+
 "Manage your payment methods" = "Kelola metode pembayaran Anda";
-/* Button opening Link authentication actions. */
+
 "More options" = "Opsi lainnya";
-/* Label for name on card field */
+
 "Name on card" = "Nama pada kartu";
-/* Naver Pay card funding source */
+
 "Naver Pay Card" = "Naver Pay Card";
-/* Naver Pay money or points funding source */
+
 "Naver Pay Money/Point" = "Naver Pay Money/Point";
-/* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
+
 "New card" = "Kartu baru";
-/* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
+
 "New payment method" = "Metode pembayaran baru";
-/* Label for when the user is not eligible for a promo. */
+
 "No %@ promo" = "Tidak ada promo %@";
-/* Message on a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "None of the payment methods in your %@ account work with this business." = "Tidak ada metode pembayaran di akun %@ Anda yang berfungsi dengan bisnis ini.";
-/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
-"Not %@?" = "Bukan %@?";
-/* Title for a button that allows the user to use a different email in the signup flow. */
+
 "Not you?" = "Bukan Anda?";
-/* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
+
 "Only card brand can be changed." = "Hanya brand kartu yang dapat diubah.";
-/* Warning shown when only credit and prepaid cards are accepted */
-"Only credit and prepaid cards are accepted" = "Hanya kartu kredit dan prabayar yang diterima";
-/* Warning shown when only credit cards are accepted */
-"Only credit cards are accepted" = "Hanya kartu kredit yang diterima";
-/* Warning shown when only debit and credit cards are accepted */
-"Only debit and credit cards are accepted" = "Hanya kartu debit dan kredit yang diterima";
-/* Warning shown when only debit and prepaid cards are accepted */
-"Only debit and prepaid cards are accepted" = "Hanya kartu debit dan prabayar yang diterima";
-/* Warning shown when only debit cards are accepted */
-"Only debit cards are accepted" = "Hanya kartu debit yang diterima";
-/* Warning shown when only prepaid cards are accepted */
-"Only prepaid cards are accepted" = "Hanya kartu prabayar yang diterima";
-/* Accessibility hint to tell the user that they can open a form sheet with more information. */
+
 "Open to see more information." = "Buka untuk melihat informasi selengkapnya.";
-/* Separator label between two options */
+
 "Or" = "Atau";
-/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+
 "Or pay using" = "Atau bayar menggunakan";
-/* Title of a section containing a card form that will collect the payment information from the user. */
+
 "Or pay with a card" = "Atau bayar dengan kartu";
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up. */
+
 "Or use" = "Atau gunakan";
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up. */
+
 "Or use a card" = "Atau gunakan kartu";
-/* Label of a button that initiates payment when tapped */
+
 "Pay %@" = "Bayar %@";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Pay another way" = "Bayar dengan cara lain";
-/* Label describing the benefit of signing up for Link.
-Pay faster at {Merchant Name} and thousands of businesses
-e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
+
 "Pay faster at %@ and thousands of businesses." = "Bayar lebih cepat di %@ dan ribuan bisnis.";
-/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
-"Pay faster at %@ and thousands of merchants." = "Bayar lebih cepat di %@ dan ribuan merchant lainnya.";
-/* Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated. */
+
 "Pay faster everywhere %@ is accepted." = "Bayar lebih cepat di mana saja %@ diterima.";
-/* Subtitle for the Link signup screen */
+
 "Pay faster everywhere Link is accepted." = "Bayar lebih cepat di mana saja Link diterima.";
-/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Bayar dalam <num_installments/> angsuran bebas bunga sebesar <installment_price/> dengan <img/>";
-/* Klarna pay later copy */
-"Pay later with Klarna." = "Bayar nanti dengan Klarna.";
-/* Pay over time with Affirm copy */
+
 "Pay over time with %@" = "Bayar dengan jangka waktu dengan %@";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm */
+
 "Pay over time with Affirm" = "Bayar seiring waktu dengan Affirm";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Afterpay */
-"Pay over time with Afterpay" = "Bayar seiring waktu dengan Afterpay";
-/* Promotional text for Clearpay, displayed in a button that lets the customer pay with Clearpay */
-"Pay over time with Clearpay" = "Bayar seiring waktu dengan Clearpay";
-/* Title shown above a section containing various payment options */
-"Pay using" = "Bayar menggunakan";
-/* Pay with {payment method} */
+
 "Pay with %@" = "Bayar dengan %@";
-/* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
+
 "Pay with Link" = "Bayar dengan Link";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Pay with your bank account in just a few steps." = "Bayar dengan rekening bank Anda hanya dalam beberapa langkah.";
-/* Label for a section displaying payment details. */
+
 "Payment" = "Pembayaran";
-/* Text on a screen that indicates a payment has failed */
+
 "Payment failed" = "Pembayaran gagal";
-/* Text on a screen that indicates payment method details cannot be changed. */
+
 "Payment method details cannot be changed." = "Detail metode pembayaran tidak dapat diubah.";
-/* Title for a section listing one or more payment methods. */
+
 "Payment methods" = "Metode pembayaran";
-/* Error message that's displayed when you try to confirm a payment without a valid payment method */
+
 "Please choose a valid payment method." = "Pilihlah metode pembayaran yang valid.";
-/* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
+
 "Please go back and select another payment method" = "Harap kembali dan pilih metode pembayaran lain";
-/* Accessibility instructions for card scanning. */
+
 "Point the camera at your card." = "Arahkan kamera pada kartu Anda";
-/* Label for a payment method type that only accepts prepaid cards. */
-"Prepaid card" = "Kartu prabayar";
-/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
-"Processing..." = "Memproses...";
-/* Label title for Przelewy24 Bank */
+
 "Przelewy24 Bank" = "Bank Przelewy24";
-/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-"Remove %1$@ ending in %2$@" = "Hapus %1$@ yang berakhiran %2$@";
-/* Title of confirmation prompt when removing a saved payment method. */
+
 "Remove %@" = "Hapus %@";
-/* Title for confirmation alert to remove a card */
-"Remove Card" = "Hapus Kartu";
-/* Title for confirmation alert to remove a bank account */
+
 "Remove bank?" = "Hapus bank?";
-/* Title for confirmation alert to remove a card */
+
 "Remove card?" = "Hapus kartu?";
-/* Title for a button that when tapped removes a linked bank account. */
+
 "Remove linked account" = "Hapus rekening tertaut";
-/* Title shown above a view containing a customer's payment method that they can delete */
+
 "Remove payment method" = "Hapus metode pembayaran";
-/* Title for confirmation alert to remove a payment method */
+
 "Remove payment method?" = "Hapus metode pembayaran?";
-/* Title for a button that opens the camera to scan a payment card again, after one was already scanned. */
-"Rescan card" = "Pindai ulang kartu";
-/* Label for a button that re-sends the a login code when tapped */
-"Resend code" = "Kirim ulang kode";
-/* Link OTP resend cooldown, in seconds. */
+
 "Resend code in %d seconds" = "Kirim ulang kode dalam %li detik";
-/* Text on a screen that indicates SEPA debit details cannot be changed. */
+
 "SEPA debit details cannot be changed." = "Detail debit SEPA tidak dapat diubah.";
-/* A button used for saving a new payment method */
+
 "Save" = "Simpan";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Save a new payment method" = "Simpan metode pembayaran baru";
-/* Title for a button that when pressed saves the provided address. */
+
 "Save address" = "Simpan alamat";
-/* The label of a switch indicating whether to save the payment method for future payments. */
+
 "Save for future payments" = "Simpan untuk pembayaran mendatang";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save my info for faster checkout with %@" = "Simpan informasi saya untuk checkout lebih cepat dengan %@";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save my info for faster checkout with Link" = "Simpan info saya untuk checkout lebih cepat dengan Link";
-/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-"Save my info for secure 1-click checkout" = "Simpan info Anda untuk checkout aman dengan 1 klik dengan Link";
-/* The label of a switch indicating whether to save the user's payment details for future payment */
+
 "Save payment details to %@ for future purchases" = "Simpan detail pembayaran pada %@ untuk pembelian mendatang";
-/* Prompt next to checkbox to save bank account. */
+
 "Save this account for future %@ payments" = "Simpan rekening ini untuk pembayaran %@ mendatang";
-/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-"Save this card for future %@ payments" = "Simpan kartu ini untuk pembayaran %@ mendatang";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Save your bank account in just a few steps." = "Simpan rekening bank Anda hanya dalam beberapa langkah.";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save your info for secure 1-click checkout with %@" = "Simpan informasi Anda untuk checkout sekali klik yang aman dengan %@";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save your info for secure 1-click checkout with Link" = "Simpan info Anda untuk checkout aman dengan 1 klik dengan Link";
-/* Label describing the benefit of signing up for Link. */
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Simpan informasi pembayaran Anda dengan Link, dan proses pembayaran secara aman dalam sekali klik pada situs yang didukung Link.";
-/* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
+
 "Saved" = "Disimpan";
-/* Title for the Link signup screen */
-"Secure 1⁠-⁠click checkout" = "Checkout 1-klik dengan aman";
-/* Title shown above a view containing the customer's card payment methods */
+
 "Select card" = "Pilih kartu";
-/* Label for the Naver Pay funding source selector */
+
 "Select how you want to pay:" = "Pilih cara Anda ingin membayar:";
-/* Title shown above a view containing the customer's payment methods */
+
 "Select payment method" = "Pilih metode pembayaran";
-/* Title shown above a carousel containing the customer&apos;s payment methods */
+
 "Select your payment method" = "Pilih metode pembayaran Anda";
-/* Label for a button that sends the code to the user's email when tapped */
-"Send code to email instead" = "Kirim kode ke email sebagai gantinya";
-/* Label for a button or menu item that sets a payment method as default when tapped. */
+
 "Set as default" = "Atur sebagai default";
-/* Label of a checkbox that when checked makes a payment method as the default one. */
+
 "Set as default payment method" = "Atur sebagai metode pembayaran default";
-/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
 "Set up" = "Siapkan";
-/* Label for the shipping cost row in an order summary. */
-"Shipping" = "Pengiriman";
-/* Title for shipping address entry section */
-"Shipping Address" = "Alamat Pengiriman";
-/* Text for an error that is shown when a user selects a shipping address that
-is not supported by the merchant. Example: Shipping to Canada is not supported. */
+
 "Shipping to %@ is not supported." = "Pengiriman ke %@ tidak didukung.";
-/* Button label to expand and show additional exchange rate details */
+
 "Show details" = "Tampilkan detail";
-/* Accessibility label for an action or a button that shows a menu. */
+
 "Show menu" = "Tampilkan menu";
-/* Title for a button that indicates a user can sign in or sign up. */
+
 "Sign in or sign up" = "Masuk atau mendaftar";
-/* Two factor authentication screen heading */
-"Sign in to your Link account" = "Masuk ke akun Link Anda";
-/* Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated. */
+
 "Sign out of %@" = "Keluar dari %@";
-/* Title of the sign-out action. */
-"Sign out of Link" = "Keluar dari Link";
-/* Subtitle shown on a button allowing a user to select to pay with Link. */
+
 "Simple, secure one-click payments" = "Pembayaran sekali klik yang mudah dan aman";
-/* Error message when an error case happens when linking your account */
+
 "Something went wrong when linking your account.\nPlease try again later." = "Terjadi kesalahan saat menautkan Akun Anda.\nCoba lagi nanti.";
-/* Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe akan menyetorkan $0,01 ke rekening Anda dalam waktu 1–2 hari kerja. Kemudian Anda akan mendapatkan email yang berisi instruksi untuk menyelesaikan penyimpanan rekening bank pada %@.";
-/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan menyetorkan $0,01 ke rekening Anda dalam waktu 1–2 hari kerja. Kemudian Anda akan mendapatkan email yang berisi petunjuk untuk menyelesaikan pembayaran kepada %@.";
-/* Label for the subtotal row in an order summary, before tax/shipping/discounts. */
+
 "Subtotal" = "Subtotal";
-/* Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
-"Supported cards: %@" = "Kartu yang didukung: %@";
-/* Accessibility hint to tell the user that they can tap to hide additional content. */
+
 "Tap to close" = "Sentuh untuk menutup";
-/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+
 "Tap to expand" = "Sentuh untuk memperluas";
-/* Label for the tax row in an order summary. */
+
 "Tax" = "Pajak";
-/* Title label for a screen showing terms and conditions */
+
 "Terms and Conditions" = "Ketentuan dan Persyaratan";
-/* Title label for a screen showing terms of service */
+
 "Terms of Service" = "Ketentuan Layanan";
-/* test */
-"Test123" = "Percobaan123";
-/* An error message displayed when the customer's IBAN is incomplete. */
+
 "The IBAN you entered is incomplete." = "IBAN yang Anda masukkan tidak lengkap.";
-/* An error message. */
+
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang Anda masukkan tidak valid. \"%@\" bukan kode negara yang didukung.";
-/* Error message shown when the user enters an expired verification code. */
+
 "The provided verification code has expired." = "Kode verifikasi yang diberikan telah kedaluwarsa.";
-/* Error message shown when the user enters an incorrect verification code. */
+
 "The provided verification code is incorrect." = "Kode verifikasi yang diberikan salah.";
-/* String to inform a user that specific card brands are not accepted. */
-"The selected brand is not allowed" = "Merek yang dipilih tidak diizinkan";
-/* Disclaimer for when a bank account is not eligible for a promotion. */
-"This bank account is ineligible for promotions. <terms>View terms</terms>" = "Rekening bank ini tidak memenuhi syarat untuk promosi. <terms>Lihat ketentuan</terms>";
-/* A text notice shown when the user selects an expired card. */
-"This card has expired. Update your card info or choose a different payment method." = "Kartu ini telah kedaluwarsa. Perbarui info kartu Anda atau pilih metode pembayaran yang lain.";
-/* Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms. */
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Ini adalah pembelian internasional dan tidak termasuk biaya IOF 3,5%. Dengan melanjutkan, Anda mengakui dan menerima <terms>syarat dan ketentuan Ebanx</terms>.";
-/* Text of a label indicating that a payment method is the default. */
+
 "This is your default" = "Ini default Anda";
-/* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
+
 "This payment method will be removed but will remain available for %@ subscriptions." = "Metode pembayaran ini akan dihapus tetapi akan tetap tersedia untuk langganan %@.";
-/* Error when the phone number entered before Link email verification does not match the account. */
+
 "This phone number doesn't match your Link account. Please try again." = "Nomor telepon ini tidak cocok dengan akun Link Anda. Silakan coba lagi.";
-/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
-"To scan your card, allow camera access in Settings." = "Untuk memindai kartu Anda, izinkan akses kamera di Pengaturan.";
-/* Error message shown when the user enters an incorrect verification code too many times. */
+
 "Too many attempts. Please try again in a few minutes." = "Terlalu banyak percobaan. Cobalah lagi sebentar lagi.";
-/* Accessibility label for a button that turns off the flashlight while scanning a card. */
-"Turn off flashlight" = "Matikan senter";
-/* Accessibility label for a button that turns on the flashlight while scanning a card. */
-"Turn on flashlight" = "Nyalakan senter";
-/* Label shown when a payment method cannot be used for the current transaction. */
+
 "Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
-/* Title for a button that when tapped, updates a card brand. */
-"Update" = "Perbarui";
-/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
+
 "Update card" = "Perbarui kartu";
-/* Title for a screen for updating a card brand. */
-"Update card brand" = "Perbarui brand kartu";
-/* Accessibility label for a button that leads to a screen for updating a payment method. */
+
 "Update payment method" = "Perbarui metode pembayaran";
-/* Label for checkbox in address form allowing user to use billing address */
+
 "Use billing address for shipping" = "Gunakan alamat penagihan untuk pengiriman";
-/* Two factor authentication screen heading */
-"Use your saved info to check out faster" = "Gunakan info yang tersimpan untuk memproses pembayaran dengan lebih cepat";
-/* Heading for the Link phone-match screen. */
+
 "Verify your phone number" = "Verifikasikan nomor telepon Anda";
-/* Link authentication in progress. */
+
 "Verifying your account…" = "Memverifikasi akun Anda…";
-/* Text shown on a button that when tapped opens a user's screen with their payment methods. */
+
 "View more" = "Lihat selengkapnya";
-/* Link authentication cannot continue with the available verification methods. */
+
 "We couldn't verify your account. Please close this window and try again." = "Kami tidak dapat memverifikasi akun Anda. Harap tutup jendela ini dan coba lagi.";
-/* Text for a tappable link that will update the email field with a suggested email address. */
+
 "Yes, update" = "Ya, perbarui";
-/* Title of a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "You can't pay with %@ here" = "Anda tidak dapat membayar dengan %@ di sini";
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
+
 "Your IBAN should start with a two-letter country code." = "IBAN Anda harus diawali dengan kode negara dua-huruf.";
-/* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
+
 "Your address changes won't be saved." = "Perubahan alamat Anda tidak akan disimpan.";
-/* Error message for card details form when expiration date has passed */
-"Your card has expired." = "Kartu Anda telah kedaluwarsa.";
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL Bank";

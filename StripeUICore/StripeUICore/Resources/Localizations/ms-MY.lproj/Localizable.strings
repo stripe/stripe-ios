@@ -1,199 +1,151 @@
-/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+
 "%@ (optional)" = "%@ (opsyenal)";
-/* Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete' */
-"%@ is incomplete." = "%@ tidak lengkap.";
-/* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
+
 "(not accepted)" = "(tidak diterima)";
-/* Placeholder text for Account number entry field for BECS Debit. */
+
 "Account number" = "Nombor akaun";
-/* Caption for Address field on address form */
+
 "Address" = "Alamat";
-/* Address line 1 placeholder for billing address form. */
+
 "Address line 1" = "Alamat baris 1";
-/* Label for input requesting address line 2, used for international addresses */
+
 "Address line 2" = "Alamat baris 2";
-/* Label of an address field in hk */
+
 "Area" = "Kawasan";
-/* Label for BLIK code number field on form */
+
 "BLIK code" = "Kod BLIK";
-/* Placeholder for AU BECS BSB number */
+
 "BSB number" = "Nombor BSB";
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Akaun Bank";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
+
 "Bank account •••• %@" = "Akaun bank •••• %@";
-/* Billing address section title for card form entry. */
-"Billing address" = "Alamat pengebilan";
-/* Label for a checkbox that makes customers billing address same as their shipping address */
+
 "Billing address is same as shipping" = "Alamat pengebilan sama dengan alamat penghantaran";
-/* Label for entering CVC in text field */
-"CVC" = "CVC";
-/* Button title to cancel action in an alert */
-"Cancel" = "Batalkan";
-/* Label an input field to update card brand */
+
 "Card brand" = "Jenama kad";
-/* Label for card number entry text field */
-"Card number" = "Nombor kad";
-/* Caption for City field on address form */
+
 "City" = "Bandar";
-/* Accessibility label describing a field for entering a login code */
+
 "Code field" = "Medan kod";
-/* Label for Company field on form */
+
 "Company" = "Syarikat";
-/* Text for alert message when user needs to confirm payment in their banking app */
-"Confirm the payment in your bank's app to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank anda untuk menyelesaikan pembelian.";
-/* Text for continue button */
+
 "Continue" = "Teruskan";
-/* Caption for Country field on address form */
+
 "Country" = "Negara";
-/* Country selector and postal code entry form header title */
+
 "Country or region" = "Negara atau rantau";
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+
 "County" = "Kaunti";
-/* Error message for empty date. */
-"Date is empty." = "Tarikh kosong.";
-/* Label for Date of birth field */
+
 "Date of Birth" = "Tarikh Lahir";
-/* Label of an address field */
+
 "Department" = "Jabatan";
-/* Label for the district field on an address form */
+
 "District" = "Daerah";
-/* Label of an address field */
+
 "Do Si" = "Do Si";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Do you want to close this form?" = "Adakah anda ingin menutup borang ini?";
-/* Done button title */
+
 "Done" = "Selesai";
-/* Accessibility hint for a text field */
+
 "Double tap to edit" = "Ketik dua kali untuk edit";
-/* Button title to enter editing mode */
+
 "Edit" = "Edit";
-/* Label of an address field */
+
 "Eircode" = "Eircode";
-/* Caption for Email field on address form */
+
 "Email" = "E-mel";
-/* Used to describe address in United Arab Emirates */
+
 "Emirate" = "Amiriah";
-/* Text for error labels */
+
 "Error" = "Ralat";
-/* Label for first (given) name field */
+
 "First" = "Pertama";
-/* Placeholder string for name entry field. */
+
 "Full name" = "Nama penuh";
-/* Error description for incomplete phone number */
+
 "Incomplete phone number" = "Nombor telefon tidak lengkap";
-/* Error message when UPI ID is invalid */
-"Invalid UPI ID" = "ID UPI tidak sah";
-/* Label of an address field */
+
 "Island" = "Pulau";
-/* Label for last (family) name field */
+
 "Last" = "Akhir";
-/* label for text field to enter card expiry */
-"MM / YY" = "BB / TT";
-/* Form field header for entering a mobile phone number */
-"Mobile number" = "Nombor telefon mudah alih";
-/* Caption for Name field on address form */
+
 "Name" = "Nama";
-/* Label for Name on account field on form */
+
 "Name on account" = "Nama pada akaun";
-/* No comment provided by engineer. */
+
 "OK" = "OK";
-/* Label of an address field */
+
 "Oblast" = "Oblast";
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+
 "Other" = "Lain-lain";
-/* Label of an address field */
+
 "Parish" = "Kariah";
-/* Caption for Phone field on address form */
-"Phone" = "Telefon";
-/* Caption for Phone number field on address form */
+
 "Phone number" = "Nombor telefon";
-/* Short string for postal code (text used in non-US countries) */
+
 "Postal code" = "Poskod";
-/* Label of an address field */
+
 "Prefecture" = "Wilayah";
-/* Label of a disabled button while its action is processing */
+
 "Processing..." = "Pemprosesan...";
-/* Caption for Province field on address form (only countries that use province, like Canada) */
+
 "Province" = "Wilayah";
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
+
 "Remove" = "Alih Keluar";
-/* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "Alih keluar akaun bank";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "Alih keluar akaun bank yang berakhir dengan %@";
-/* Title for confirmation alert to remove a saved bank account payment method */
+
 "Remove bank account?" = "Alih keluar akaun bank?";
-/* Title for a button that when tapped removes a saved card. */
+
 "Remove card" = "Alih keluar kad";
-/* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
+
 "Search" = "Cari";
-/* Message when a user is selecting a card brand in a dropdown */
+
 "Select card brand (optional)" = "Pilih jenama kad (opsyenal)";
-/* Error message for empty dropdown selection. */
+
 "Selection is empty." = "Tiada pilihan dibuat.";
-/* Heading for a generic error when an operation fails */
+
 "Something went wrong" = "Ada masalah berlaku";
-/* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
+
 "Sort code" = "Kod isihan";
-/* Caption for State field on address form (only countries that use state , like United States) */
+
 "State" = "Negeri";
-/* Button that submits the information entered on a screen */
+
 "Submit" = "Hantar";
-/* Label of an address field */
+
 "Suburb" = "Pinggir Bandar";
-/* Label of an address field */
+
 "Suburb or city" = "Pinggir bandar atau bandar";
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+
 "The BSB you entered is incomplete." = "BSB yang anda masukkan tidak lengkap.";
-/* An error message. */
+
 "The ID number you entered is incomplete." = "Nombor ID yang anda masukkan tidak lengkap.";
-/* Error description for incomplete account number */
+
 "The account number you entered is incomplete." = "Nombor akaun yang anda masukkan tidak lengkap.";
-/* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
+
 "The sort code you entered is invalid." = "Kod isihan yang anda masukkan tidak sah.";
-/* Label of an address field */
+
 "Town or city" = "Pekan atau bandar";
-/* Label for UPI ID number field on form */
-"UPI ID" = "ID UPI";
-/* Error string when we can't parse a phone number */
+
 "Unable to parse phone number" = "Nombor telefon tidak dapat dihuraikan";
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+
 "Use rotor to access links" = "Gunakan rotor untuk mengakses pautan";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is incomplete." = "Kod BLIK anda tidak lengkap.";
-/* Error message when BLIK code is invalid */
+
 "Your BLIK code is invalid." = "Kod BLIK anda tidak sah.";
-/* Error message for when ZIP code in form is incomplete (US only) */
+
 "Your ZIP code is incomplete." = "Poskod ZIP tidak lengkap.";
-/* Error message for when ZIP code in form is invalid (US only) */
+
 "Your ZIP code is invalid." = "Poskod anda tidak sah.";
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Kod ZIP anda tidak lengkap.";
-/* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "Nombor kad anda tidak lengkap.";
-/* Error message for card form when card number is invalid */
-"Your card number is invalid." = "Nombor kad anda tidak sah.";
-/* Error message for card details form when expiration date isn't entered completely */
-"Your card's expiration date is incomplete." = "Tarikh tamat tempoh kad anda tidak lengkap.";
-/* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "Tarikh tamat tempoh kad anda tidak sah.";
-/* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "Bulan tamat tempoh kad anda tidak sah.";
-/* Error message for card entry form when CVC is incomplete. */
-"Your card's security code is incomplete." = "Kod keselamatan kad anda tidak lengkap.";
-/* Error message when email is invalid */
+
 "Your email is invalid." = "E-mel anda tidak sah.";
-/* Used as the title for prompting the user if they want to close the sheet */
+
 "Your payment information will not be saved." = "Maklumat pembayaran anda tidak akan disimpan.";
-/* Error message for when postal code in form is incomplete */
+
 "Your postal code is incomplete." = "Poskod anda tidak lengkap.";
-/* Error message for when postal code in form is invalid */
+
 "Your postal code is invalid." = "Poskod anda tidak sah.";
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+
 "ZIP" = "ZIP";
-/* accessibility label for text field */
-"expiration date" = "tarikh tamat tempoh";

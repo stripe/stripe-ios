@@ -1,104 +1,77 @@
-/* Error message shown when the user tries to create a Link account for an email that already has one */
-"A Link account already exists for this email. Log in instead." = "Вече съществува Link акаунт за този имейл. Вместо това влезте.";
-/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
 "Add %ld documents" = "Добавете %ld документа";
-/* Action to add exactly one uploaded document to a source of funds */
+
 "Add 1 document" = "Добавете 1 документ";
-/* Action to add documents for another source of funds */
+
 "Add documents" = "Добавете документи";
-/* Error when camera access is denied or restricted during document collection */
+
 "Allow camera access in Settings to take a photo." = "Разрешете достъп до камерата в Настройки, за да направите снимка.";
-/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
-"An error occurred while automatically signing in to your Link account. Please sign in manually." = "Възникна грешка при автоматично влизане във Вашия Link акаунт. Моля, влезте ръчно.";
-/* Label and placeholder for a questionnaire answer field */
+
 "Answer" = "Отговор";
-/* Action to open the system document picker to select a file */
+
 "Choose File…" = "Избиране на файл...";
-/* Action to open the system photo picker to select a photo */
+
 "Choose Photo…" = "Изберете снимка…";
-/* Button asking the owner to open its support destination */
-"Contact support" = "Свържете се с екипа по поддръжката";
-/* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
+
 "Debit cards are most likely to be accepted." = "Най-вероятно ще бъдат приемани дебитни карти.";
-/* Label and picker title for a document's category */
+
 "Document type" = "Тип документ";
-/* Heading confirming a document was uploaded successfully */
+
 "Document uploaded successfully" = "Документът е качен успешно";
-/* Error message shown when the SDK needs a crypto customer ID before continuing */
-"Finish verifying your Link account before continuing." = "Завършете потвърждаването на Link акаунта си, преди да продължите.";
-/* Label for the selected source of funds in the document editor */
+
 "Funds source" = "Източник на средства";
-/* Explanation above the summary of source-of-funds documents. */
+
 "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "Как финансирате Вашите трансакции? Моля, посочете всички Ваши източници. Например заплата, спестявания, доходи от инвестиции и др.";
-/* Error message shown when the provided phone number is not in the expected format */
-"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "Невалиден формат на телефона. Моля, използвайте формат E.164 (например +12125551234).";
-/* Explanation above the document upload control */
+
 "Make sure your document meets following requirements." = "Уверете се, че Вашият документ отговаря на следните изисквания.";
-/* Error message shown when there is no usable payment method selected */
-"No payment method is ready to use. Please collect a payment method and try again." = "Няма наличен платежен метод, готов за използване. Моля, добавете платежен метод и опитайте отново.";
-/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
+
 "Please select your Apple Pay payment method again to continue." = "Моля, изберете отново Вашия начин на плащане с Apple Pay, за да продължите.";
-/* Instruction after an unavailable operation */
+
 "Please try again later." = "Моля, опитайте отново по-късно.";
-/* Error message shown when the SDK is missing required information from the server */
-"Required information was missing. Please try again later." = "Необходимата информация липсваше. Моля, опитайте отново по-късно.";
-/* Heading confirming documents were submitted for review */
+
 "Submitted for review" = "Изпратено за преглед";
-/* Action to open the system camera to take a photo of a document */
+
 "Take Photo…" = "Снимане…";
-/* Heading introducing source of funds collection */
+
 "Tell us about your source of funds" = "Разкажете ни за Вашия източник на средства";
-/* Message shown when a previous document has a requirement error */
+
 "There was a problem with your previous document. Please upload a new one." = "Възникна проблем с предишния Ви документ. Моля, качете нов.";
-/* Error message shown when app attestation fails */
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "Това приложение не можа да бъде потвърдено поради грешка в атестацията. Моля, опитайте отново по-късно или се свържете с разработчика, ако проблемът продължи.";
-/* Error message shown when app attestation is not configured for crypto onramp */
+
 "This app couldn't be verified. Contact the app developer for help." = "Това приложение не можеше да бъде потвърдено. Свържете се с разработчика на приложението за помощ.";
-/* Validation error for a document exceeding the size limit */
+
 "This file is larger than %@. Choose a file that is %@ or smaller." = "Този файл е по-голям от %1$@. Изберете файл, който е %2$@ или по-малък.";
-/* Validation error when no document formats are available */
+
 "This file type isn’t supported." = "Този тип файл не се поддържа.";
-/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
+
 "This file type isn’t supported. Upload a %@ file." = "Този тип файл не се поддържа. Качете %@ файл.";
-/* Error message shown when the wallet is not registered for crypto onramp */
+
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "Този портфейл не можа да бъде намерен. Моля, изберете или добавете портфейл и опитайте отново.";
-/* Error message shown when the wallet network is not supported for crypto onramp */
+
 "This wallet network isn't supported. Please choose a different network." = "Мрежата на този портфейл не се поддържа. Моля, изберете друга мрежа.";
-/* Error message shown when the wallet ownership challenge has expired */
+
 "This wallet verification request expired. Please try again." = "Това искане за удостоверяване на портфейл изтече. Моля, опитайте отново.";
-/* Error message shown when the wallet ownership challenge is invalid */
+
 "This wallet verification request is invalid. Please try again." = "Това искане за удостоверяване на портфейл е валидно. Моля, опитайте отново.";
-/* Error message shown when the wallet ownership challenge is invalid */
-"This wallet verification request is no longer valid. Please try again." = "Това искане за удостоверяване на портфейл вече не е валидно. Моля, опитайте отново.";
-/* Action to select an existing document for upload */
+
 "Upload document" = "Качване на документ";
-/* Heading introducing proof of address collection */
+
 "Upload your proof of address" = "Качете Вашето доказателство за адрес";
-/* Status after a document has uploaded successfully */
+
 "Uploaded" = "Качено";
-/* Status while a document is uploading */
+
 "Uploading…" = "Качване…";
-/* Error message shown when the user's Link account is not verified */
-"Verify your Link account before continuing." = "Потвърдете акаунта си в Link, преди да продължите.";
-/* Error message shown when the submitted wallet ownership signature is invalid */
+
 "We couldn't verify ownership of this wallet. Please try again." = "Не можахме да удостоверим собствеността на този портфейл. Моля, опитайте отново.";
-/* Error when a file provider cannot supply a document */
+
 "We couldn’t open this document. Please choose it again." = "Не успяхме да отворим този документ. Моля, изберете го отново.";
-/* Error after a document upload fails */
+
 "We couldn’t upload this file. Please try again." = "Не успяхме да качим този файл. Моля, опитайте отново.";
-/* Explanation introducing proof of address collection. */
+
 "We may request proof of address for larger transactions." = "Може да изискаме доказателство за адрес за по-големи трансакции.";
-/* Explanation introducing source of funds collection. */
+
 "We may request source of funds for larger transactions." = "Може да изискаме произход на средствата за по-големи трансакции.";
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We're required to confirm your address to enable spending over %@." = "Задължени сме да потвърдим Вашия адрес, за да разрешим разходи над %@.";
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We're required to understand where your funds come from to enable spending over %@." = "Задължени сме да разберем откъде идват Вашите средства, за да разрешим разходи над %@.";
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to confirm your address to enable spending over %@." = "Задължени сме да потвърдим Вашия адрес, за да разрешим разходи над %@.";
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to understand where your funds come from to enable spending over %@." = "Задължени сме да разберем откъде идват Вашите средства, за да разрешим разходи над %@.";
-/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
+
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "Преглеждаме Вашите документи. Ще Ви уведомим, когато проверката приключи.";
-/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
+
 "You can continue while we verify your document in the background." = "Можете да продължите, докато удостоверяваме Вашия документ във фонов режим.";

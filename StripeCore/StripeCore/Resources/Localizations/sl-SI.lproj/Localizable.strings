@@ -1,80 +1,75 @@
-/* The text for warning when a debugger is currently attached to the process. */
 "A debugger is attached to the App." = "Na aplikacijo je priključen razhroščevalnik.";
-/* The text for warning when an emulator is being used to run the application. */
+
 "An emulator is being used to run the App." = "Za zagon aplikacije se uporablja emulator.";
-/* An error message displayed when an error occurred. */
+
 "An error occurred. Please try again." = "Prišlo je do napake. Poskusite znova.";
-/* Button title to cancel action in an alert */
+
 "Cancel" = "Prekliči";
-/* An error message displayed when changing a card brand fails. */
+
 "Card brand was not updated. Please try again." = "Blagovna znamka kartice ni bila posodobljena. Poskusite znova.";
-/* Text for close button */
+
 "Close" = "Zapri";
-/* Accessibility label for expandable text control to indicate text is hidden. */
+
 "Collapsed" = "Strnjeno";
-/* Two factor authentication screen heading */
+
 "Confirm it's you" = "Potrdite svojo identiteto";
-/* An error message displayed when setting a default payment method fails. */
-"Default payment method was not changed. Please try again." = "Privzet način plačila ni bil spremenjen. Poskusite znova.";
-/* An error message displayed when setting a default payment method fails. */
+
 "Default payment method was not updated. Please try again." = "Privzet način plačila ni bil posodobljen. Poskusite znova.";
-/* Label for button to enter card details manually instead of scanning */
-"Enter card details manually" = "Ročno vnesite podrobnosti kartice";
-/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+
 "Enter the code sent to %@." = "Vnesite kodo, poslano v %@.";
-/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
+
 "Expanded" = "Razširjeno";
-/* Label shown when a network-related error has occured. */
+
 "Failed to connect" = "Povezava ni bila vzpostavljena";
-/* Status while screen is loading */
+
 "Loading" = "Nalaganje";
-/* The no answer to a yes or no question. */
+
 "No" = "Ne";
-/* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
+
 "Resend code" = "Ponovno pošljite kodo";
-/* Text for button to scan a credit card */
+
 "Scan Card" = "Optično preberi kartico";
-/* Button title to open camera to scan credit/debit card */
+
 "Scan card" = "Optično preberi kartico";
-/* The title for the challenge response step of an authenticated checkout. */
+
 "Secure checkout" = "Varna izvedba plačila";
-/* Indicates that a button is selected. */
+
 "Selected" = "Izbrano";
-/* An error message displayed when the customer's iban is invalid. */
+
 "The IBAN you entered is invalid." = "Vnesena koda IBAN ni veljavna.";
-/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+
 "The OS or the OS Version is not supported." = "OS ali različica OS ni podprta.";
-/* The text for warning when a device is jailbroken. */
+
 "The device is jailbroken." = "Naprava je »jailbroken«.";
-/* The text for warning when the integrity of the SDK has been tampered with. */
+
 "The integrity of the SDK has been tampered." = "V celovitost SDK-ja je bilo poseženo.";
-/* Error when there is a problem processing the credit card */
+
 "There was an error processing your card -- try again in a few seconds" = "Pri obdelavi vaše kartice je prišlo do napake. Poskusite znova čez nekaj sekund.";
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+
 "There was an unexpected error -- try again in a few seconds" = "Prišlo je do nepričakovane napake. Poskusite znova čez nekaj sekund.";
-/* Error description for when a network request times out. English value is as required by UL certification. */
+
 "Timeout" = "Časovna omejitev";
-/* Button to reload web view if we were unable to connect. */
+
 "Try again" = "Poskusi znova";
-/* Indicates that a button is not selected. */
+
 "Unselected" = "Neizbrano";
-/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Za preverjanje podatkov o vaši kartici uporabljamo storitev Stripe. Stripe lahko vaše podatke uporablja in hrani v skladu s svojim pravilnikom o zasebnosti. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Več informacij</u></a>";
-/* The yes answer to a yes or no question. */
+
 "Yes" = "Da";
-/* Error when the card has already expired */
+
 "Your card has expired" = "Vaša kartica je potekla";
-/* Error when the card was declined by the credit card networks */
+
 "Your card was declined" = "Vaša kartica je bila zavrnjena";
-/* Error when the card&apos;s expiration month is not valid */
+
 "Your card's expiration month is invalid" = "Mesec poteka vaše kartice ni veljaven";
-/* Error when the card&apos;s expiration year is not valid */
+
 "Your card's expiration year is invalid" = "Leto poteka vaše kartice ni veljavno";
-/* Error when the card number is not valid */
+
 "Your card's number is invalid" = "Številka vaše kartice ni veljavna";
-/* Error when the card&apos;s CVC is not valid */
+
 "Your card's security code is invalid" = "Varnostna koda vaše kartice ni veljavna";
-/* Error when customer's name is invalid */
+
 "Your name is invalid." = "Vaše ime ni veljavno.";
-/* Error message when a payment method gets declined. */
+
 "Your payment method was declined." = "Vaš način plačila je bil zavrnjen.";

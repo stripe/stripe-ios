@@ -1,104 +1,77 @@
-/* Error message shown when the user tries to create a Link account for an email that already has one */
-"A Link account already exists for this email. Log in instead." = "이 이메일 주소로 등록된 Link 계정이 이미 존재합니다. 대신 로그인하십시오.";
-/* Action to add multiple uploaded documents to a source of funds. The placeholder is the document count. */
 "Add %ld documents" = "문서 %ld개 추가";
-/* Action to add exactly one uploaded document to a source of funds */
+
 "Add 1 document" = "문서 1개 추가";
-/* Action to add documents for another source of funds */
+
 "Add documents" = "문서 추가";
-/* Error when camera access is denied or restricted during document collection */
+
 "Allow camera access in Settings to take a photo." = "사진을 촬영하려면 설정에서 카메라 액세스를 허용하십시오.";
-/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
-"An error occurred while automatically signing in to your Link account. Please sign in manually." = "Link 계정에 자동 로그인하는 과정에서 오류가 발생했습니다. 수동으로 로그인하십시오.";
-/* Label and placeholder for a questionnaire answer field */
+
 "Answer" = "답변";
-/* Action to open the system document picker to select a file */
+
 "Choose File…" = "파일 선택...";
-/* Action to open the system photo picker to select a photo */
+
 "Choose Photo…" = "사진 선택…";
-/* Button asking the owner to open its support destination */
-"Contact support" = "지원팀에 문의";
-/* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
+
 "Debit cards are most likely to be accepted." = "직불 카드가 더 널리 사용될 것으로 예상됩니다.";
-/* Label and picker title for a document's category */
+
 "Document type" = "문서 유형";
-/* Heading confirming a document was uploaded successfully */
+
 "Document uploaded successfully" = "문서가 성공적으로 업로드되었습니다";
-/* Error message shown when the SDK needs a crypto customer ID before continuing */
-"Finish verifying your Link account before continuing." = "계속하기 전에 Link 계정 인증을 완료하십시오.";
-/* Label for the selected source of funds in the document editor */
+
 "Funds source" = "자금 출처";
-/* Explanation above the summary of source-of-funds documents. */
+
 "How are you funding your transactions? Please list all of your sources. For example, salary, savings, investment earnings, etc." = "거래 자금을 어떻게 조달하십니까? 모든 출처를 기재하십시오. 예: 급여, 저축, 투자 수익 등.";
-/* Error message shown when the provided phone number is not in the expected format */
-"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "전화번호 형식이 유효하지 않습니다. E.164 형식(예: +12125551234)을 사용하십시오.";
-/* Explanation above the document upload control */
+
 "Make sure your document meets following requirements." = "문서가 다음 요구사항을 충족하는지 확인하십시오.";
-/* Error message shown when there is no usable payment method selected */
-"No payment method is ready to use. Please collect a payment method and try again." = "사용 가능한 결제 방식이 없습니다. 결제 방식을 등록한 후 다시 시도해 주십시오.";
-/* Error message shown when an Apple Pay payment method must be collected again because the platform key changed */
+
 "Please select your Apple Pay payment method again to continue." = "계속하려면 Apple Pay 결제 방식을 다시 선택하십시오.";
-/* Instruction after an unavailable operation */
+
 "Please try again later." = "나중에 다시 시도해 주십시오.";
-/* Error message shown when the SDK is missing required information from the server */
-"Required information was missing. Please try again later." = "필요한 정보가 누락되었습니다. 나중에 다시 시도해 주십시오.";
-/* Heading confirming documents were submitted for review */
+
 "Submitted for review" = "검토를 위해 제출됨";
-/* Action to open the system camera to take a photo of a document */
+
 "Take Photo…" = "사진 촬영…";
-/* Heading introducing source of funds collection */
+
 "Tell us about your source of funds" = "자금 출처에 대해 알려주십시오";
-/* Message shown when a previous document has a requirement error */
+
 "There was a problem with your previous document. Please upload a new one." = "이전 문서에 문제가 발생했습니다. 새 문서를 업로드하십시오.";
-/* Error message shown when app attestation fails */
+
 "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "증명 오류로 인해 이 앱을 확인할 수 없습니다. 나중에 다시 시도하시거나, 문제가 지속되면 개발자에게 문의해 주십시오.";
-/* Error message shown when app attestation is not configured for crypto onramp */
+
 "This app couldn't be verified. Contact the app developer for help." = "이 앱을 확인할 수 없습니다. 앱 개발자에게 문의하여 도움을 받으십시오.";
-/* Validation error for a document exceeding the size limit */
+
 "This file is larger than %@. Choose a file that is %@ or smaller." = "이 파일은 %1$@를 초과합니다. 용량이 %2$@ 이하인 파일을 선택하십시오.";
-/* Validation error when no document formats are available */
+
 "This file type isn’t supported." = "이 파일 형식은 지원되지 않습니다.";
-/* Validation error for an unsupported document format. The placeholder is a locale-aware formatted list of one or more accepted document formats. */
+
 "This file type isn’t supported. Upload a %@ file." = "이 파일 형식은 지원되지 않습니다. %@ 파일을 업로드하십시오.";
-/* Error message shown when the wallet is not registered for crypto onramp */
+
 "This wallet couldn't be found. Please choose or add a wallet and try again." = "이 간편결제를 찾을 수 없습니다. 간편결제를 선택하거나 추가하고 다시 시도해 주십시오.";
-/* Error message shown when the wallet network is not supported for crypto onramp */
+
 "This wallet network isn't supported. Please choose a different network." = "이 간편결제 네트워크는 지원되지 않습니다. 다른 네트워크를 선택해 주십시오.";
-/* Error message shown when the wallet ownership challenge has expired */
+
 "This wallet verification request expired. Please try again." = "이 간편결제 인증 요청은 만료되었습니다. 다시 시도해 주십시오.";
-/* Error message shown when the wallet ownership challenge is invalid */
+
 "This wallet verification request is invalid. Please try again." = "이 간편결제 인증 요청은 유효하지 않습니다. 다시 시도해 주십시오.";
-/* Error message shown when the wallet ownership challenge is invalid */
-"This wallet verification request is no longer valid. Please try again." = "이 간편결제 인증 요청은 더 이상 유효하지 않습니다. 다시 시도해 주십시오.";
-/* Action to select an existing document for upload */
+
 "Upload document" = "문서 업로드";
-/* Heading introducing proof of address collection */
+
 "Upload your proof of address" = "주소지 증빙을 업로드하십시오";
-/* Status after a document has uploaded successfully */
+
 "Uploaded" = "업로드됨";
-/* Status while a document is uploading */
+
 "Uploading…" = "업로드 중…";
-/* Error message shown when the user's Link account is not verified */
-"Verify your Link account before continuing." = "계속하기 전에 Link 계정을 확인하십시오.";
-/* Error message shown when the submitted wallet ownership signature is invalid */
+
 "We couldn't verify ownership of this wallet. Please try again." = "이 간편결제의 소유권을 확인할 수 없습니다. 다시 시도해 주십시오.";
-/* Error when a file provider cannot supply a document */
+
 "We couldn’t open this document. Please choose it again." = "이 문서를 열 수 없습니다. 다시 선택하십시오.";
-/* Error after a document upload fails */
+
 "We couldn’t upload this file. Please try again." = "이 파일을 업로드할 수 없습니다. 다시 시도하십시오.";
-/* Explanation introducing proof of address collection. */
+
 "We may request proof of address for larger transactions." = "대규모 거래의 경우 주소 증명을 요청할 수 있습니다.";
-/* Explanation introducing source of funds collection. */
+
 "We may request source of funds for larger transactions." = "대규모 거래의 경우 자금 출처를 요청할 수 있습니다.";
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We're required to confirm your address to enable spending over %@." = "%@을(를) 초과하여 지출하려면 주소를 확인해야 합니다.";
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We're required to understand where your funds come from to enable spending over %@." = "%@을(를) 초과하여 지출하려면 자금 출처를 파악해야 합니다.";
-/* Explanation introducing proof of address collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to confirm your address to enable spending over %@." = "%@을(를) 초과하여 지출하려면 주소를 확인해야 합니다.";
-/* Explanation introducing source of funds collection. %@ is a formatted monetary threshold, such as €1,000. */
-"We’re required to understand where your funds come from to enable spending over %@." = "%@을(를) 초과하여 지출하려면 자금 출처를 파악해야 합니다.";
-/* Message confirming documents are being reviewed and the user will be notified when verification is complete. */
+
 "We’re reviewing your documents. We’ll let you know when verification is complete." = "문서를 검토 중입니다. 확인이 완료되면 알려드리겠습니다.";
-/* Message confirming the document was uploaded and the user can continue while verification happens in the background. */
+
 "You can continue while we verify your document in the background." = "백그라운드에서 문서를 확인하는 동안 계속 진행하실 수 있습니다.";

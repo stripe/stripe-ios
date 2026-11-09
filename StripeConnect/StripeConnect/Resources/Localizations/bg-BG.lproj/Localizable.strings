@@ -1,4 +1,3 @@
-/* Subtitle for error message when component fails to load indicating there may be an issue with the internet connection. */
 "Please check your connection or try again later." = "Моля, проверете връзката си и опитайте отново по-късно.";
-/* Title for error message when component fails to load */
+
 "Something went wrong." = "Възникна грешка.";

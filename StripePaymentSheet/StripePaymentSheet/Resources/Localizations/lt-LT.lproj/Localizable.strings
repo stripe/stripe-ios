@@ -1,624 +1,399 @@
-/* Label a default funding source, which we treat as a generic card. E.g. 'Visa Card' */
-"%1$@ Card" = "%1$@ kortelė";
-/* Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte' */
-"%1$@ Credit" = "%1$@ kreditas";
-/* Label a debit funding source. E.g. 'Visa Debit' */
-"%1$@ Debit" = "%1$@ debetas";
-/* Label a prepaid funding source. E.g. 'Visa Prepaid' */
-"%1$@ Prepaid" = "%1$@ išankstinis apmokėjimas";
-/* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
-"%1$@ account ending in %2$@" = "%1$@ sąskaita, kurios numeris baigiasi %2$@";
-/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
-"%1$@ ending in %2$@" = "%1$@ baigiasi %2$@";
-/* String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted */
-"%1$@ is not accepted" = "%1$@ nepriimama";
-/* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%1$d interest-free payments of %2$@" = "%1$li %2$@ mokėjimai be palūkanų";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. '$5 back on […]' */
-"%@ back on a qualifying purchase when you pay by bank. <terms>View terms</terms>" = "Jei mokate naudodamiesi banko paslaugomis, %@ bus grąžinta už reikalavimus atitinkantį pirkimą. <terms>Peržiūrėkite sąlygas</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. '$5 back when […]' */
-"%@ back when you pay by bank. <terms>View terms</terms>" = "Jei mokate naudodamiesi banko paslaugomis, %@ bus grąžinta. <terms>Peržiūrėkite sąlygas</terms>";
-/* Message shown in a confirmation prompt when removing a saved payment method. */
+
 "%@ will no longer be saved to your wallet." = "%@ nebebus išsaugota jūsų piniginėje.";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%d interest-free payments of %@" = "%1$li %2$@ mokėjimai be palūkanų";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "+ Add" = "+ Pridėti";
-/* Exchange rate with conversion fee disclosure, e.g. '1 GBP = 1.2871 USD (includes 4% conversion fee).' */
-"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (įskaitant %4$@%% konvertavimo mokestį).";
-/* Exchange rate caption, e.g. '1 GBP = 1.2871 USD' */
-"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
-/* Label for a button that confirms the user accepts a declaration */
+
 "Accept" = "Sutikti";
-/* Title shown above a view allowing the customer to save a US bank account. */
+
 "Add US bank account" = "Pridėti JAV banko sąskaitą";
-/* Title shown above a card entry form */
+
 "Add a card" = "Pridėti kortelę";
-/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
+
 "Add a payment method" = "Pridėkite mokėjimo būdą";
-/* Button prompt to add a bank account as a payment method. */
+
 "Add bank account" = "Pridėti banko sąskaitą";
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Pridėti kortelę";
-/* Title shown above a view allowing the customer to save a card. */
+
 "Add new card" = "Pridėti naują kortelę";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "Add new payment method" = "Pridėti naują mokėjimo būdą";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Add your payment information" = "Pridėkite mokėjimo informaciją";
-/* Label for a button that confirms the user agrees to and accepts a declaration */
-"Agree and accept" = "Sutinku ir priimu";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Agree and continue" = "Sutikti ir tęsti";
-/* Instructions shown above the card scanner while the customer is asked for camera access. */
-"Allow camera permissions and get your card ready for scanning." = "Suteikite leidimą naudoti fotoaparatą ir paruoškite kortelę nuskaityti.";
-/* Text for Apple Pay payment method */
-"Apple Pay" = "„Apple Pay“";
-/* Text on a screen asking the user to approve a payment */
+
 "Approve payment" = "Patvirtinti mokėjimą";
-/* Title of confirmation prompt when removing a saved card. */
-"Are you sure you want to remove this card?" = "Ar tikrai norite pašalinti šią kortelę?";
-/* Title of confirmation prompt when removing a linked bank account. */
-"Are you sure you want to remove this linked account?" = "Ar tikrai norite pašalinti šią susietą paskyrą?";
-/* Text for back button */
+
 "Back" = "Atgal";
-/* Title for a bank account payment method */
+
 "Bank" = "Bankas";
-/* Title for collected bank account information */
+
 "Bank account" = "Banko sąskaita";
-/* Text on a screen that indicates bank account details cannot be changed. */
+
 "Bank account details cannot be changed." = "Banko sąskaitos duomenų keisti negalima.";
-/* Phone-match instruction before Link email OTP. Placeholder is the last two phone digits. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Prieš išsiųsdami kodą į jūsų el. paštą, turime patvirtinti papildomą informaciją apie jus. Įveskite savo telefono numerį, kuris baigiasi ••%@.";
-/* Phone-match instruction before Link email OTP. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Kad galėtume išsiųsti kodą į jūsų el. paštą, turime patvirtinti papildomą informaciją apie jus. Įveskite savo telefono numerį.";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
+
 "Buy Now, Pay Later with  <img/>" = "Pirkite dabar, mokėkite vėliau naudojant <img/>";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Afterpay" = "Pirkite dabar, mokėkite vėliau naudojant „Afterpay“";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Cash App Afterpay" = "Pirkite dabar, mokėkite vėliau naudojant „Cash App Afterpay“";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
+
 "Buy Now, Pay Later with Clearpay" = "Pirkite dabar, mokėkite vėliau naudojant „Clearpay“";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
-"Buy Now, Pay Later with Klarna" = "Pirkite dabar, mokėkite vėliau naudojant „Klarna“";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with  <img/>" = "Pirkite dabar arba mokėkite vėliau naudodami \"<img/>\"";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with <img/>" = "Pirkite dabar arba mokėkite vėliau naudodami \"<img/>\"";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Afterpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Afterpay\"";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Cash App Afterpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Cash App Afterpay\"";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
-"Buy now or pay later with Clearpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Clearpay\"";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
+
 "Buy now or pay later with Klarna" = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\"";
-/* Klarna buy now or pay later copy */
-"Buy now or pay later with Klarna." = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\".";
-/* GCash mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą per „GCash“, jūs suteikiate leidimą %@ periodiškai nurašyti lėšas iš jūsų „GCash“ sąskaitos pagal jų nustatytas sąlygas.";
-/* Korean payment method mandate text */
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą naudojant „NICEPAY“, suteikiate leidimą %@ periodiškai nurašyti lėšas iš jūsų sąskaitos pagal jų nustatytas sąlygas.";
-/* Paypal mandate text */
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą \"PayPal\" leidžiate \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
-/* Satispay mandate text */
-"By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą per „Satispay“, jūs suteikiate leidimą %@ periodiškai nurašyti lėšas iš jūsų „Satispay“ sąskaitos pagal jų nustatytas sąlygas.";
-/* Touch 'n Go mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą per „Touch 'n Go“, jūs suteikiate leidimą %@ periodiškai nurašyti lėšas iš jūsų „Touch 'n Go“ sąskaitos pagal jų nustatytas sąlygas.";
-/* TrueMoney mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą per „TrueMoney“, jūs suteikiate leidimą %@ periodiškai nurašyti lėšas iš jūsų „TrueMoney“ sąskaitos pagal jų nustatytas sąlygas.";
-/* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Patvirtindami mokėjimą, sutinkate, kad jūsų operaciją kaip registruotas prekybininkas tvarkys „Global Stack Services Limited“ pagal įmonės <terms>naudojimo sąlygas</terms>.";
-/* Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Patvirtindami mokėjimą, sutinkate, kad jūsų operaciją kaip registruotas prekybininkas tvarkys „Global Stack Services Limited“ pagal įmonės <terms>sąlygas</terms>.";
-/* Amazon Pay mandate text */
+
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pereidami prie \"Amazon Pay\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"Amazon Pay\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
-/* Klarna mandate text */
+
 "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Pereidami prie \"Klarna\" leidžiate \"%1$@\" nuskaityti mokestį nuo jūsų \"Klarna\" sąskaitos vėlesniems mokėjimams pagal jų ir \"Klarna\" sąlygas. Galite bet kada tai pakeisti \"Klarna\" programėlėje arba susisiekdami su \"%2$@\".";
-/* Klarna mandate text */
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms." = "Pereidami prie \"Klarna\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"Klarna\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
-/* Paypal mandate text */
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pereidami į \"PayPal\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
-/* Revolut Pay mandate text */
+
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pereidami į \"Revolut Pay\" leisite %@ nuskaityti mokestį nuo jūsų \"Revolut Pay\" sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
-/* Satispay mandate text */
-"By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Tęsdami su „Satispay“, jūs suteikiate leidimą %@ nuskaičiuoti lėšas iš jūsų „Satispay“ sąskaitos būsimiesiems mokėjimams pagal jų sąlygas.";
-/* Legal text shown when creating a Link account. */
+
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Tęsdami sutinkate su <terms>sąlygomis</terms> ir <privacy>privatumo politika</privacy>.";
-/* Text providing link to terms for ACH payments */
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
-/* Mandate text displayed when paying via Link instant debit. */
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to the Link brand. The first placeholder is a merchant name. The second placeholder is a Stripe brand name and should not be translated. */
+
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Tęsdami sutinkate, kad laikantis %2$@ <terms>sąlygų</terms> ir <privacy>privatumo politikos</privacy> jūsų duomenys būtų išsaugoti būsimų pirkimų su %1$@ ir <link>%2$@</link> svetainėse tikslais.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> (see <terms>Terms</terms> and <privacy>Privacy</privacy>)." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkimams naudojant %@ ir <link>„Link“</link> (žr. <terms>Sąlygos</terms> ir <privacy>Privatumo politika</privacy>).";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkimams naudojant %@ ir <link>„Link“</link> pagal „Link“ <terms>Sąlygas</terms> ir <privacy>Privatumo politiką</privacy>.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkimams naudojant %@ ir <link>Nuoroda</link>. Taip pat sutinkate su „Link“ <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant. */
+
 "By continuing, you agree to save your information for future purchases with %@." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkiniams naudojant %@.";
-/* Satispay mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Tęsdami jūs suteikiate leidimą %@ automatiškai nurašyti lėšas nuo jūsų „Satispay Balance“ likučio periodiškai, pagal jūsų pirkimo arba prenumeratos planą.";
-/* Twint mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Tęsdami, autorizuojate %@ pagal jūsų pirkimo arba prenumeratos planą automatiškai ir periodiškai nurašyti lėšas nuo jūsų „Twint“ likučio.";
-/* Cash App mandate text */
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate \"%1$@\" nurašyti mokestį nuo jūsų \"Cash App\" sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal \"%2$@\" sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti \"Cash App\" nuostatose.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prisijungdami prie %@ sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
-/* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jungdamiesi prie Link sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Nurodydami telefono numerį ir el. pašto adresą, sutinkate sukurti %1$@ paskyrą, kuriai taikomos %1$@ <terms>Sąlygos</terms> ir <privacy>Privatumo politika</privacy>.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Nurodydami telefono numerį ir el. pašto adresą, sutinkate sukurti %1$@ paskyrą, kuriai taikomos %1$@ <terms>Sąlygos</terms> ir <privacy>Privatumo politika</privacy>.";
-/* Legal text shown when creating a Link account. */
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami telefono numerį ir el. pašto adresą sutinkate susikurti „Link“ paskyrą pagal „Link“ <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
-/* Legal text shown when using AUBECS. */
+
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Pateikdami savo banko sąskaitos duomenis ir patvirtindami šį mokėjimą, jūs sutinkate su šiuo tiesioginio nurašymo prašymu ir <terms>tiesioginio nurašymo paslaugų teikimo sutartimi</terms> bei suteikiate leidimą bendrovei „Stripe Payments Australia Pty Ltd“ (ACN 160 180 343), tiesioginio nurašymo naudotojo ID Nr. 507156 („Stripe“), nurašyti lėšas iš jūsų sąskaitos per Bendrąją elektroninių atsiskaitymų sistemą (BECS) %@ (toliau – „Prekybininko“) vardu pagal bet kokias sumas, apie kurias jums atskirai praneš Prekybininkas. Jūs patvirtinate, kad esate šios sąskaitos savininkas arba įgaliotas (-a) ją naudoti.";
-/* Text displayed below a credit card entry form when the card will be saved to make future payments. */
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Pateikdami kortelės duomenis sutinkate, kad \"%@\" nuskaičiuotų nuo jūsų kortelės būsimus mokėjimus pagal jų sąlygas.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo el. pašto adresą, sutinkate pagal %1$@ <terms>Sąlygas</terms> ir <privacy>Privatumo politiką</privacy> sukurti %1$@ paskyrą ir įrašyti mokėjimo informaciją į %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo el. pašto adresą sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
-/* SEPA mandate text */
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Pateikdami mokėjimo duomenis ir patvirtindami šį mokėjimą, leidžiate (A) \"%@\" ir \"Stripe\" (mūsų mokėjimo paslaugų teikėjui) jūsų bankui siųsti nurodymus nurašyti pinigus iš jūsų sąskaitos ir (B) leidžiate savo bankui, gavus tokius nurodymus, nurašyti pinigus iš jūsų sąskaitos. Pagal jūsų su banku sudarytos sutarties sąlygas turite teisę iš banko reikalauti pinigų grąžinimo. Prašymą grąžinti pinigus turite pateikti per 8 savaites nuo pinigų iš jūsų sąskaitos nurašymo dienos. Jūsų teisės paaiškintos pareiškime, kurį galite gauti iš savo banko. Sutinkate gauti pranešimus apie būsimus nurašymus likus iki 2 dienų iki jų įvykdymo momento.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Nurodydami savo telefono numerį, sutinkate pagal %1$@ <terms>Sąlygas</terms> ir <privacy>Privatumo politiką</privacy> sukurti %1$@ paskyrą ir įrašyti mokėjimo informaciją į %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo telefono numerį sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
-/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
-/* Alipay mandate text */
+
 "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Išsaugodami su mokėjimais susijusią informaciją, leidžiate %@ pagal atitinkamas sąlygas iš jūsų sąskaitos išskaičiuoti mokesčius už būsimus mokėjimus.";
-/* Text providing link to terms for bank payments when seller information is provided */
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Pateikdami užsakymą %1$@ ir %2$@, sutinkate išsaugoti savo informaciją %3$@ būsimiems pirkiniams ir sutinkate pagal <terms>šias sąlygas</terms> autorizuoti mokėjimus.";
-/* Text providing link to terms for bank payments */
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pateikdami užsakymą %@, sutinkate mokėjimus autorizuoti pagal <terms>šias sąlygas</terms>.";
-/* Label for CPF/CPNJ (Brazil tax ID) field */
+
 "CPF/CPNJ" = "CPF/CPNJ";
-/* Button text on a screen asking the user to approve a payment */
+
 "Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
-/* Text on a screen that indicates card details cannot be changed. */
+
 "Card details cannot be changed." = "Kortelės duomenų keisti negalima.";
-/* Card details entry form header title */
-"Card information" = "Kortelės informacija";
-/* Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa') */
-"Card number. Card brand: %@" = "Kortelės numeris. Kortelės prekių ženklas: %@";
-/* Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
+
 "Card number. Supported cards include %@" = "Kortelės numeris. Palaikomos kortelės: %@";
-/* Status shown over the camera after a payment card was scanned successfully. */
-"Card scanned" = "Kortelė nuskaityta";
-/* Label for a button that lets you change the details of a payment method */
+
 "Change" = "Keisti";
-/* Title for a button that allows the user to use a different email in the signup flow. */
-"Change email" = "Pakeiskite el. paštą";
-/* Tooltip prompting user to select their card brand when a co-branded card is detected */
+
 "Choose a card brand" = "Pasirinkite kortelės prekių ženklą";
-/* Title shown above a carousel containing available payment methods */
+
 "Choose a payment method" = "Pasirinkite mokėjimo būdą";
-/* Accessibility label for the button to close the card scanner. */
+
 "Close card scanner" = "Išjungti kortelės skaitytuvą";
-/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
-"Code sent" = "Kodas išsiųstas";
-/* Instructions shown while waiting for a Pix payment authorization */
+
 "Complete the payment using Pix to finish the purchase." = "Atlikite mokėjimą naudodami „Pix”, kad užbaigtumėte pirkimą.";
-/* A button used to confirm selecting a saved payment method */
+
 "Confirm" = "Patvirtinti";
-/* Two factor authentication screen heading */
-"Confirm it's you" = "Patvirtinkite, kad tai jūs";
-/* Title of a screen where the user can update their payment method before continuing
-with the transaction. */
+
 "Confirm payment details" = "Patvirtinti mokėjimo duomenis";
-/* Instructions shown while waiting for a Bizum payment authorization */
+
 "Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Per %@ naudodamiesi mobiliosios bankininkystės programėle patvirtinkite „Bizum“ mokėjimą, kad užbaigtumėte pirkimą.";
-/* Instructions shown while waiting for an MB WAY payment authorization */
+
 "Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Per %@ naudodamiesi „MB WAY“ programėle patvirtinkite mokėjimą, kad užbaigtumėte pirkimą.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Patvirtinkite mokėjimą savo banko programėlėje per %@ ir užbaikite pirkimą.";
-/* Section title for entering your CVC. e.g. 'Confirm your CVC' */
-"Confirm your %@" = "Patvirtinkite savo %@";
-/* Title for prompting for a card's CVC on confirming the payment */
+
 "Confirm your CVC" = "Patvirtinkite savo CVC";
-/* Title for prompting for a card's CVV on confirming the payment */
-"Confirm your CVV" = "Patvirtinkite savo CVV";
-/* Title label for a know-your-customer (KYC) verification screen */
+
 "Confirm your information" = "Patvirtinkite informaciją";
-/* Title for the contact information section */
+
 "Contact information" = "Kontaktinė informacija";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Continue another way" = "Tęsti kitu būdu";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create a Link account for fast checkout across the web" = "Sukurkite „Link“ paskyrą, kad naudodamiesi žiniatinkliu galėtumėte greitai užbaigti pirkimą";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Create an account with %@ for faster checkout across the web" = "Sukurkite %@ paskyrą, kad galėtumėte greičiau atlikti užsakymą visame tinkle";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create an account with Link for faster checkout across the web" = "Sukurkite paskyrą naudodami „Link”, kad galėtumėte greičiau atsiskaityti žiniatinklyje";
-/* Label for a payment method type that only accepts credit cards. */
-"Credit card" = "Kreditinė kortelė";
-/* Label for a payment method type that only accepts debit cards. */
-"Debit card" = "Debeto kortelė";
-/* Label shown in the payment type picker describing a card payment */
+
 "Debit or credit card" = "Debeto arba kredito kortelė";
-/* Title label for a screen showing CRS/CARF tax declarations */
+
 "Declarations" = "Deklaracijos";
-/* Label for identifying the default payment method. */
+
 "Default" = "Numatytasis";
-/* Label for a disabled checked checkbox identifying the default payment method. */
+
 "Default payment method" = "Numatytasis mokėjimo būdas";
-/* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
+
 "Did you mean %@? %@." = "Ar norėjote %1$@? %2$@.";
-/* Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form. */
+
 "Discard Changes" = "Atšaukti pakeitimus";
-/* Title of a confirmation alert shown when the customer tries to close the address form after making changes. */
+
 "Discard changes?" = "Atšaukti pakeitimus?";
-/* Label for the discount row in an order summary, applied as a negative amount. */
+
 "Discount" = "Nuolaida";
-/* Label title for EPS Bank */
+
 "EPS Bank" = "EPS bankas";
-/* Accessibility label for a button that lets the user update their address */
+
 "Edit address" = "Keisti adresą";
-/* Link authentication action to receive an email verification code. */
+
 "Email code" = "El. pašto kodas";
-/* Text for a button that allows manual entry of an address */
+
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use Link to pay by default." = "Įveskite kodą, išsiųstą numeriu %@, kad pagal numatytuosius nustatymus galėtumėte mokėti naudodami \"Link\".";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use your saved information." = "Norėdami naudoti savo išsaugotą informaciją, įveskite %@ gautą kodą.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@." = "Įveskite kodą, išsiųstą %@.";
-/* Error when Link email verification requires a phone number. */
+
 "Enter the phone number on your Link account." = "Įveskite jūsų „Link” paskyros telefono numerį.";
-/* Two factor authentication screen heading */
-"Enter your verification code" = "Įveskite patvirtinimo kodą";
-/* Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion */
+
 "Exchange rate and fees of your bank may apply." = "Gali būti taikomas jūsų banko valiutų keitimo kursas ir mokesčiai.";
-/* Select a bank dropdown for FPX */
+
 "FPX Bank" = "FPX bankas";
-/* Error message that displays when we're unable to connect to the server. */
-"Failed to connect" = "Nepavyko prisijungti";
-/* Title for the Link signup screen */
+
 "Fast, secure checkout" = "Greitas ir saugus pirkimo užbaigimas";
-/* Title for the Link signup screen */
-"Fast, secure, 1⁠-⁠click checkout" = "Greitas ir saugus atsiskaitymas vienu spustelėjimu";
-/* Accessibility label for a button that turns the flashlight on or off while scanning a card. */
-"Flashlight" = "Blykstė";
-/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
-"For security, please re-enter your card’s security code." = "Saugumo sumetimais dar kartą įveskite kortelės saugumo kodą.";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Atgaukite %@ pirmą kartą mokėdami per savo banką. <terms>Žr. sąlygas</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Atgaukite %@ mokėdami per savo banką. <terms>Žr. sąlygas</terms>";
-/* Button label to collapse and hide additional exchange rate details */
+
 "Hide details" = "Slėpti išsamią informaciją";
-/* Instructions shown above the card scanner while it looks for a payment card. */
-"Hold your card with the number visible in the frame to scan it automatically." = "Laikykite kortelę taip, kad jos numeris būtų matomas rėmelyje, ir ji bus nuskaityta automatiškai.";
-/* Bacs Debit mandate text */
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Suprantu, kad \"Stripe\" atliks tiesioginio debeto nuskaitymus \"%@\" vardu ir patvirtinu, kad esu sąskaitos turėtojas bei vienintelis asmuo, galintis leisti atlikti debeto nuskaitymus nuo šios sąskaitos.";
-/* IBAN placeholder – don&apos;t translate */
+
 "IBAN" = "IBAN";
-/* Message shown when Mondu is selected */
+
 "Invoice payment for business buyers." = "Sąskaitos faktūros apmokėjimas verslo pirkėjams";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Join Link" = "Prisijungti prie \"Link\"";
-/* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
+
 "Keep Editing" = "Tęsti taisymą";
-/* Label for displaying the last 4 digits of the user's social security number */
+
 "Last 4 digits of SSN" = "Paskutiniai 4 SSN skaitmenys";
-/* Title for a button that indicates a user can log in or sign up. */
-"Log in or sign up" = "Prisijungti arba prisiregistruoti";
-/* Label of a button that signs the user out of their current Link account so they can log in to a different one. */
+
 "Log in to another account" = "Prisijunkite prie kitos paskyros";
-/* Title of the logout action. The placeholder is a Stripe brand name and should not be translated. */
-"Log out of %@" = "Atsijungti nuo %@?";
-/* Title of the logout action. */
-"Log out of Link" = "Atsijungti nuo \"Link\"";
-/* Status shown over the camera while it looks for a payment card to scan. */
-"Looking for your card" = "Ieškoma jūsų kortelės";
-/* Title shown above a view containing the customer's SEPA debit that they can delete or update */
+
 "Manage SEPA debit" = "Tvarkyti SEPA debetą";
-/* Title shown above a view containing the customer's bank account that they can delete or update */
+
 "Manage US bank account" = "Tvarkyti JAV banko sąskaitą";
-/* Title shown above a view containing the customer's bank account that they can delete */
+
 "Manage bank account" = "Tvarkyti banko sąskaitą";
-/* Title for a screen for managing a card. */
+
 "Manage card" = "Tvarkyti kortelę";
-/* Title shown above a view containing a list of the customer's cards that they can delete or update */
+
 "Manage cards" = "Tvarkyti korteles";
-/* Title shown above a view containing the customer's payment method that they can delete or update */
+
 "Manage payment method" = "Tvarkyti mokėjimo būdą";
-/* Title shown above a view containing the customer's card payment methods that they can delete or update */
+
 "Manage payment methods" = "Valdyti mokėjimo būdus";
-/* Title shown above a carousel containing the customer's payment methods */
+
 "Manage your payment methods" = "Valdykite savo mokėjimo būdus";
-/* Button opening Link authentication actions. */
+
 "More options" = "Daugiau parinkčių";
-/* Label for name on card field */
+
 "Name on card" = "Ant kortelės nurodytas vardas ir pavardė";
-/* Naver Pay card funding source */
+
 "Naver Pay Card" = "„Naver Pay“ kortelė";
-/* Naver Pay money or points funding source */
+
 "Naver Pay Money/Point" = "„Naver Pay” pinigai / taškai";
-/* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
+
 "New card" = "Nauja kortelė";
-/* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
+
 "New payment method" = "Naujas mokėjimo būdas";
-/* Label for when the user is not eligible for a promo. */
+
 "No %@ promo" = "Nėra %@ akcijos";
-/* Message on a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "None of the payment methods in your %@ account work with this business." = "Nė vienas jūsų %@ paskyros mokėjimo būdas neveikia su šia įmone.";
-/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
-"Not %@?" = "Ne %@?";
-/* Title for a button that allows the user to use a different email in the signup flow. */
+
 "Not you?" = "Ne jūs?";
-/* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
+
 "Only card brand can be changed." = "Galima keisti tik kortelės prekės ženklą.";
-/* Warning shown when only credit and prepaid cards are accepted */
-"Only credit and prepaid cards are accepted" = "Priimamos tik kredito ir išankstinio mokėjimo kortelės";
-/* Warning shown when only credit cards are accepted */
-"Only credit cards are accepted" = "Priimamos tik kredito kortelės";
-/* Warning shown when only debit and credit cards are accepted */
-"Only debit and credit cards are accepted" = "Priimamos tik debeto ir kredito kortelės";
-/* Warning shown when only debit and prepaid cards are accepted */
-"Only debit and prepaid cards are accepted" = "Priimamos tik debeto ir išankstinio mokėjimo kortelės";
-/* Warning shown when only debit cards are accepted */
-"Only debit cards are accepted" = "Priimamos tik debeto kortelės";
-/* Warning shown when only prepaid cards are accepted */
-"Only prepaid cards are accepted" = "Priimamos tik išankstinio mokėjimo kortelės";
-/* Accessibility hint to tell the user that they can open a form sheet with more information. */
+
 "Open to see more information." = "Atidarykite, kad pamatytumėte daugiau informacijos.";
-/* Separator label between two options */
+
 "Or" = "Arba";
-/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+
 "Or pay using" = "Arba mokėti naudojant";
-/* Title of a section containing a card form that will collect the payment information from the user. */
+
 "Or pay with a card" = "Arba mokėti kortele";
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up. */
+
 "Or use" = "Arba naudokite";
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up. */
+
 "Or use a card" = "Arba naudokite kortelę";
-/* Label of a button that initiates payment when tapped */
+
 "Pay %@" = "Mokėti %@";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Pay another way" = "Mokėkite kitu būdu";
-/* Label describing the benefit of signing up for Link.
-Pay faster at {Merchant Name} and thousands of businesses
-e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
+
 "Pay faster at %@ and thousands of businesses." = "Mokėkite greičiau \"%@\" ir daugybei kitų įmonių.";
-/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
-"Pay faster at %@ and thousands of merchants." = "Mokėkite greičiau \"%@\" ir daugybei kitų prekybininkų.";
-/* Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated. */
+
 "Pay faster everywhere %@ is accepted." = "Mokėti greičiau visur, kur priimama %@.";
-/* Subtitle for the Link signup screen */
+
 "Pay faster everywhere Link is accepted." = "Mokėkite greičiau visur, kur priimama „Link“.";
-/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Mokėti <num_installments/> be palūkanų <installment_price/> mokėjimus naudojant <img/>";
-/* Klarna pay later copy */
-"Pay later with Klarna." = "Mokėkite vėliau naudodami \"Klarna\".";
-/* Pay over time with Affirm copy */
+
 "Pay over time with %@" = "Mokėkite vėliau naudodami %@";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm */
+
 "Pay over time with Affirm" = "Mokėkite per tam tikrą laikotarpį naudodami \"Affirm\"";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Afterpay */
-"Pay over time with Afterpay" = "Mokėkite per tam tikrą laikotarpį naudodami \"Afterpay\"";
-/* Promotional text for Clearpay, displayed in a button that lets the customer pay with Clearpay */
-"Pay over time with Clearpay" = "Mokėkite per tam tikrą laikotarpį naudodami \"Clearpay\"";
-/* Title shown above a section containing various payment options */
-"Pay using" = "Mokėkite naudodami";
-/* Pay with {payment method} */
+
 "Pay with %@" = "Mokėti naudojant %@";
-/* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
+
 "Pay with Link" = "Mokėti naudojant \"Link\"";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Pay with your bank account in just a few steps." = "Mokėkite naudodami savo banko sąskaitą vos keliais veiksmais.";
-/* Label for a section displaying payment details. */
+
 "Payment" = "Mokėjimas";
-/* Text on a screen that indicates a payment has failed */
+
 "Payment failed" = "Sumokėti nepavyko";
-/* Text on a screen that indicates payment method details cannot be changed. */
+
 "Payment method details cannot be changed." = "Mokėjimo būdo duomenų keisti negalima.";
-/* Title for a section listing one or more payment methods. */
+
 "Payment methods" = "Mokėjimo būdai";
-/* Error message that's displayed when you try to confirm a payment without a valid payment method */
+
 "Please choose a valid payment method." = "Pasirinkite galiojantį mokėjimo būdą.";
-/* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
+
 "Please go back and select another payment method" = "Grįžkite atgal ir pasirinkite kitą mokėjimo būdą";
-/* Accessibility instructions for card scanning. */
+
 "Point the camera at your card." = "Nukreipkite fotoaparatą į kortelę.";
-/* Label for a payment method type that only accepts prepaid cards. */
-"Prepaid card" = "Išankstinio mokėjimo kortelė";
-/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
-"Processing..." = "Apdorojama...";
-/* Label title for Przelewy24 Bank */
+
 "Przelewy24 Bank" = "Bankas \"Przelewy24\"";
-/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-"Remove %1$@ ending in %2$@" = "Pašalinti %1$@, kuri baigiasi %2$@";
-/* Title of confirmation prompt when removing a saved payment method. */
+
 "Remove %@" = "Šalinti %@";
-/* Title for confirmation alert to remove a card */
-"Remove Card" = "Šalinti kortelę";
-/* Title for confirmation alert to remove a bank account */
+
 "Remove bank?" = "Pašalinti banką?";
-/* Title for confirmation alert to remove a card */
+
 "Remove card?" = "Ištraukti kortelę?";
-/* Title for a button that when tapped removes a linked bank account. */
+
 "Remove linked account" = "Pašalinti susietą paskyrą";
-/* Title shown above a view containing a customer's payment method that they can delete */
+
 "Remove payment method" = "Pašalinti mokėjimo būdą";
-/* Title for confirmation alert to remove a payment method */
+
 "Remove payment method?" = "Pašalinti mokėjimo būdą?";
-/* Title for a button that opens the camera to scan a payment card again, after one was already scanned. */
-"Rescan card" = "Nuskaitykite kortelę iš naujo";
-/* Label for a button that re-sends the a login code when tapped */
-"Resend code" = "Pakartotinai siųsti kodą";
-/* Link OTP resend cooldown, in seconds. */
+
 "Resend code in %d seconds" = "Išsiųsti kodą iš naujo po %li sek.";
-/* Text on a screen that indicates SEPA debit details cannot be changed. */
+
 "SEPA debit details cannot be changed." = "SEPA debeto duomenų keisti negalima.";
-/* A button used for saving a new payment method */
+
 "Save" = "Išsaugoti";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Save a new payment method" = "Išsaugoti naują mokėjimo būdą";
-/* Title for a button that when pressed saves the provided address. */
+
 "Save address" = "išsaugoti adresą";
-/* The label of a switch indicating whether to save the payment method for future payments. */
+
 "Save for future payments" = "Išsaugokite vėlesniems mokėjimams";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save my info for faster checkout with %@" = "Įrašyti informaciją, kad būtų galima greičiau atsiskaityti su %@";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save my info for faster checkout with Link" = "Išsaugoti mano informaciją greitesniam atsiskaitymui su „Link“";
-/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-"Save my info for secure 1-click checkout" = "Išsaugokite savo informaciją saugiam atsiskaitymui vienu spustelėjimu su \"Link\"";
-/* The label of a switch indicating whether to save the user's payment details for future payment */
+
 "Save payment details to %@ for future purchases" = "Išsaugoti mokėjimo duomenis \"%@” būsimiems pirkimams";
-/* Prompt next to checkbox to save bank account. */
+
 "Save this account for future %@ payments" = "Išsaugoti šią sąskaitą vėlesniems %@ mokėjimams";
-/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-"Save this card for future %@ payments" = "Išsaugoti kortelę vėlesniems %@ mokėjimams";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Save your bank account in just a few steps." = "Vos keliais veiksmais įrašykite savo banko sąskaitą.";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save your info for secure 1-click checkout with %@" = "Išsaugokite informaciją, kad galėtumėte saugiai atsiskaityti 1 spustelėjimu su %@";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save your info for secure 1-click checkout with Link" = "Išsaugokite savo informaciją saugiam atsiskaitymui vienu spustelėjimu su \"Link\"";
-/* Label describing the benefit of signing up for Link. */
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Išsaugokite savo mokėjimų informaciją naudodami \"Link\" ir saugiai atsiskaitykite vienu spustelėjimu \"Link\" palaikomose svetainėse.";
-/* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
+
 "Saved" = "Įrašyta";
-/* Title for the Link signup screen */
-"Secure 1⁠-⁠click checkout" = "Saugus atsiskaitymas vienu spustelėjimu";
-/* Title shown above a view containing the customer's card payment methods */
+
 "Select card" = "Pasirinkti kortelę";
-/* Label for the Naver Pay funding source selector */
+
 "Select how you want to pay:" = "Pasirinkite, kaip norite mokėti:";
-/* Title shown above a view containing the customer's payment methods */
+
 "Select payment method" = "Pasirinkti mokėjimo būdą";
-/* Title shown above a carousel containing the customer&apos;s payment methods */
+
 "Select your payment method" = "Pasirinkite mokėjimo būdą";
-/* Label for a button that sends the code to the user's email when tapped */
-"Send code to email instead" = "Vietoj to siųskite kodą į el. paštą";
-/* Label for a button or menu item that sets a payment method as default when tapped. */
+
 "Set as default" = "Nustatyti kaip numatytąjį";
-/* Label of a checkbox that when checked makes a payment method as the default one. */
+
 "Set as default payment method" = "Nustatyti kaip numatytąjį mokėjimo būdą";
-/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
 "Set up" = "Nustatyti";
-/* Label for the shipping cost row in an order summary. */
-"Shipping" = "Siuntimas";
-/* Title for shipping address entry section */
-"Shipping Address" = "Siuntimo adresas";
-/* Text for an error that is shown when a user selects a shipping address that
-is not supported by the merchant. Example: Shipping to Canada is not supported. */
+
 "Shipping to %@ is not supported." = "Siuntimas į %@ nepalaikomas.";
-/* Button label to expand and show additional exchange rate details */
+
 "Show details" = "Rodyti išsamią informaciją";
-/* Accessibility label for an action or a button that shows a menu. */
+
 "Show menu" = "Rodyti meniu";
-/* Title for a button that indicates a user can sign in or sign up. */
+
 "Sign in or sign up" = "Prisijungti arba prisiregistruoti";
-/* Two factor authentication screen heading */
-"Sign in to your Link account" = "Prisijunkite prie savo \"Link\" paskyros";
-/* Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated. */
+
 "Sign out of %@" = "Atsijungti nuo %@";
-/* Title of the sign-out action. */
-"Sign out of Link" = "Atsijungti nuo „Link”";
-/* Subtitle shown on a button allowing a user to select to pay with Link. */
+
 "Simple, secure one-click payments" = "Paprasti ir saugūs mokėjimai vienu spustelėjimu";
-/* Error message when an error case happens when linking your account */
+
 "Something went wrong when linking your account.\nPlease try again later." = "Susiejant sąskaitą kažkas nutiko ne taip.\nPabandykite dar kartą vėliau.";
-/* Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Per 1–2 darbo dienas \"Stripe\" į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip baigti įrašyti savo banko sąskaitą naudojant \"%@\".";
-/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Po 1–2 darbo dienas \"Stripe\" į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip užbaigti mokėjimą %@.";
-/* Label for the subtotal row in an order summary, before tax/shipping/discounts. */
+
 "Subtotal" = "Tarpinė suma";
-/* Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
-"Supported cards: %@" = "Palaikomos kortelės: %@";
-/* Accessibility hint to tell the user that they can tap to hide additional content. */
+
 "Tap to close" = "Bakstelėkite, kad uždarytumėte";
-/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+
 "Tap to expand" = "Bakstelėkite, kad išplėstumėte";
-/* Label for the tax row in an order summary. */
+
 "Tax" = "Mokestis";
-/* Title label for a screen showing terms and conditions */
+
 "Terms and Conditions" = "Sąlygos ir nuostatos";
-/* Title label for a screen showing terms of service */
+
 "Terms of Service" = "Paslaugų sąlygos";
-/* test */
-"Test123" = "Test123";
-/* An error message displayed when the customer's IBAN is incomplete. */
+
 "The IBAN you entered is incomplete." = "Įvedėte ne visą IBAN.";
-/* An error message. */
+
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Jūsų įvestas IBAN yra neteisingas, „%@“ nėra palaikomas šalies kodas.";
-/* Error message shown when the user enters an expired verification code. */
+
 "The provided verification code has expired." = "Pateiktas patvirtinimo kodas nebegalioja.";
-/* Error message shown when the user enters an incorrect verification code. */
+
 "The provided verification code is incorrect." = "Nurodytas neteisingas patikrinimo kodas.";
-/* String to inform a user that specific card brands are not accepted. */
-"The selected brand is not allowed" = "Pasirinktas kortelių prekių ženklas neleidžiamas";
-/* Disclaimer for when a bank account is not eligible for a promotion. */
-"This bank account is ineligible for promotions. <terms>View terms</terms>" = "Ši banko sąskaita neatitinka akcijoms taikomų reikalavimų. <terms>Peržiūrėkite sąlygas</terms>";
-/* A text notice shown when the user selects an expired card. */
-"This card has expired. Update your card info or choose a different payment method." = "Ši kortelė nebegalioja. Atnaujinkite savo kortelės informaciją arba pasirinkite kitą mokėjimo būdą.";
-/* Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms. */
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Tai – tarptautinis pirkinys, kuriam netaikomas 3,5 % IOF mokestis. Tęsdami, patvirtinate ir sutinkate su <terms>„Ebanx“ sąlygomis ir nuostatomis</terms>.";
-/* Text of a label indicating that a payment method is the default. */
+
 "This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
-/* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
+
 "This payment method will be removed but will remain available for %@ subscriptions." = "Šis mokėjimo būdas bus pašalintas, tačiau ir toliau bus galima naudotis %@ prenumeratomis.";
-/* Error when the phone number entered before Link email verification does not match the account. */
+
 "This phone number doesn't match your Link account. Please try again." = "Šis telefono numeris neatitinka jūsų „Link” paskyros. Bandykite dar kartą.";
-/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
-"To scan your card, allow camera access in Settings." = "Norėdami nuskaityti savo kortelę, nustatymuose suteikite prieigą prie fotoaparato.";
-/* Error message shown when the user enters an incorrect verification code too many times. */
+
 "Too many attempts. Please try again in a few minutes." = "Per daug bandymų. Bandykite dar kartą po kelių minučių.";
-/* Accessibility label for a button that turns off the flashlight while scanning a card. */
-"Turn off flashlight" = "Išjunkite blykstę";
-/* Accessibility label for a button that turns on the flashlight while scanning a card. */
-"Turn on flashlight" = "Įjunkite blykstę";
-/* Label shown when a payment method cannot be used for the current transaction. */
+
 "Unavailable for this purchase" = "Šiam pirkiniui nepasiekiama";
-/* Title for a button that when tapped, updates a card brand. */
-"Update" = "Atnaujinti";
-/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
+
 "Update card" = "Atnaujinti kortelę";
-/* Title for a screen for updating a card brand. */
-"Update card brand" = "Atnaujinti kortelės prekės ženklą";
-/* Accessibility label for a button that leads to a screen for updating a payment method. */
+
 "Update payment method" = "Atnaujinti mokėjimo būdą";
-/* Label for checkbox in address form allowing user to use billing address */
+
 "Use billing address for shipping" = "Atsiskaitymo adresą naudoti siuntimui";
-/* Two factor authentication screen heading */
-"Use your saved info to check out faster" = "Naudokite išsaugotą informaciją, kad atsiskaitytumėte greičiau";
-/* Heading for the Link phone-match screen. */
+
 "Verify your phone number" = "Telefono numerio patvirtinimas";
-/* Link authentication in progress. */
+
 "Verifying your account…" = "Autentifikuojama jūsų paskyra…";
-/* Text shown on a button that when tapped opens a user's screen with their payment methods. */
+
 "View more" = "Peržiūrėti daugiau";
-/* Link authentication cannot continue with the available verification methods. */
+
 "We couldn't verify your account. Please close this window and try again." = "Nepavyko autentifikuoti jūsų paskyros. Uždarykite šį langą ir bandykite dar kartą.";
-/* Text for a tappable link that will update the email field with a suggested email address. */
+
 "Yes, update" = "Taip, atnaujinti";
-/* Title of a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "You can't pay with %@ here" = "Čia negalite atsiskaityti naudodami %@";
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
+
 "Your IBAN should start with a two-letter country code." = "Jūsų IBAN turėtų prasidėti šalies kodu iš dviejų raidžių.";
-/* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
+
 "Your address changes won't be saved." = "Su adresu susiję pakeitimai nebus išsaugoti.";
-/* Error message for card details form when expiration date has passed */
-"Your card has expired." = "Jūsų kortelė nebegalioja.";
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL bankas";

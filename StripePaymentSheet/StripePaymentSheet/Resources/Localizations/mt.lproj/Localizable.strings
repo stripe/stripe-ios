@@ -1,624 +1,399 @@
-/* Label a default funding source, which we treat as a generic card. E.g. 'Visa Card' */
-"%1$@ Card" = "%1$@ Karta";
-/* Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte' */
-"%1$@ Credit" = "%1$@ Kreditu";
-/* Label a debit funding source. E.g. 'Visa Debit' */
-"%1$@ Debit" = "%1$@ Debitu";
-/* Label a prepaid funding source. E.g. 'Visa Prepaid' */
-"%1$@ Prepaid" = "%1$@ Imħallsa minn qabel";
-/* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
-"%1$@ account ending in %2$@" = "Kont %1$@ li jispiċċa b'%2$@";
-/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
-"%1$@ ending in %2$@" = "%1$@ li jispiċċa b'%2$@";
-/* String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted */
-"%1$@ is not accepted" = "%1$@ mhux aċċettat";
-/* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$li";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%1$d interest-free payments of %2$@" = "%1$li pagamenti bla imgħax  ta' %2$@";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. '$5 back on […]' */
-"%@ back on a qualifying purchase when you pay by bank. <terms>View terms</terms>" = "%@ lura fuq xiri eliġibbli meta tħallas bil-bank. <terms>Ara t-termini</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. '$5 back when […]' */
-"%@ back when you pay by bank. <terms>View terms</terms>" = "%@ lura meta tħallas bil-bank. <terms>Ara t-termini</terms>";
-/* Message shown in a confirmation prompt when removing a saved payment method. */
+
 "%@ will no longer be saved to your wallet." = "%@ mhux se jibqa' ssejvjat fil-kartiera tiegħek.";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. E.g. 4 interest-free payments of $24.99 */
-"%d interest-free payments of %@" = "%1$li pagamenti bla imgħax  ta' %2$@";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "+ Add" = "+ Żid";
-/* Exchange rate with conversion fee disclosure, e.g. '1 GBP = 1.2871 USD (includes 4% conversion fee).' */
-"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (inkluż tariffa tal-konverżjoni %4$@%%).";
-/* Exchange rate caption, e.g. '1 GBP = 1.2871 USD' */
-"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
-/* Label for a button that confirms the user accepts a declaration */
+
 "Accept" = "Aċċetta";
-/* Title shown above a view allowing the customer to save a US bank account. */
+
 "Add US bank account" = "Żid kont tal-bank ibbażat ġewwa l-Istati Uniti tal-Amerka";
-/* Title shown above a card entry form */
+
 "Add a card" = "Żid karta";
-/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
+
 "Add a payment method" = "Żid metodu tal-pagament";
-/* Button prompt to add a bank account as a payment method. */
+
 "Add bank account" = "Żid kont tal-bank";
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Żid karta";
-/* Title shown above a view allowing the customer to save a card. */
+
 "Add new card" = "Żid karta ġdida";
-/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+
 "Add new payment method" = "Żid metodu tal-ħlas ġdid";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Add your payment information" = "Żid l-informazzjoni dwar il-pagament tiegħek";
-/* Label for a button that confirms the user agrees to and accepts a declaration */
-"Agree and accept" = "Aqbel u aċċetta";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Agree and continue" = "Aqbel u kompli";
-/* Instructions shown above the card scanner while the customer is asked for camera access. */
-"Allow camera permissions and get your card ready for scanning." = "Ippermetti l-aċċess għall-kamera u lesti l-karta tiegħek għall-iskennjar.";
-/* Text for Apple Pay payment method */
-"Apple Pay" = "Apple Pay";
-/* Text on a screen asking the user to approve a payment */
+
 "Approve payment" = "Approva l-pagament";
-/* Title of confirmation prompt when removing a saved card. */
-"Are you sure you want to remove this card?" = "Żgur li tixtieq tneħħi dil-karta?";
-/* Title of confirmation prompt when removing a linked bank account. */
-"Are you sure you want to remove this linked account?" = "Żgur li tixtieq tneħħi dal-kont marbut?";
-/* Text for back button */
+
 "Back" = "Lura";
-/* Title for a bank account payment method */
+
 "Bank" = "Bank";
-/* Title for collected bank account information */
+
 "Bank account" = "Kont tal-bank";
-/* Text on a screen that indicates bank account details cannot be changed. */
+
 "Bank account details cannot be changed." = "Id-dettalji tal-kont tal-bank ma jistgħux jinbidlu.";
-/* Phone-match instruction before Link email OTP. Placeholder is the last two phone digits. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Qabel ma nkunu nistgħu nibagħtu kodiċi lill-email tiegħek, irridu nivverifikaw informazzjoni addizzjonali dwarek. Jekk jogħġbok daħħal in-numru telefoniku tiegħek li jispiċċa f’••%@.";
-/* Phone-match instruction before Link email OTP. */
+
 "Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Qabel ma nkunu nistgħu nibagħtu kodiċi lill-email tiegħek, irridu nivverifikaw informazzjoni addizzjonali dwarek. Jekk jogħġbok daħħal in-numru telefoniku tiegħek.";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
+
 "Buy Now, Pay Later with  <img/>" = "Ixtri Issa, Ħallas Wara ma’  <img/>";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Afterpay" = "Ixtri Issa, Ħallas Wara ma’ Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+
 "Buy Now, Pay Later with Cash App Afterpay" = "Ixtri Issa, Ħallas Wara ma’ Cash App Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
+
 "Buy Now, Pay Later with Clearpay" = "Ixtri Issa, Ħallas Wara ma’ Clearpay";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
-"Buy Now, Pay Later with Klarna" = "Ixtri Issa, Ħallas Wara ma’ Klarna";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with  <img/>" = "Ixtri issa jew ħallas iktar tard grazzi għal <img/>";
-/* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with <img/>" = "Ixtri issa jew ħallas iktar tard grazzi għal <img/>";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Afterpay" = "Ixtri issa jew ħallas iktar tard b'Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Cash App Afterpay" = "Ixtri issa jew ħallas iktar tard b'Cash App Afterpay";
-/* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
-"Buy now or pay later with Clearpay" = "Ixtri issa jew ħallas iktar tard bi Clearpay";
-/* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
+
 "Buy now or pay later with Klarna" = "Ixtri issa jew ħallas iktar tard bi Klarna";
-/* Klarna buy now or pay later copy */
-"Buy now or pay later with Klarna." = "Ixtri issa jew ħallas iktar tard bil-Klarna.";
-/* GCash mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with GCash, you allow %@ to charge your GCash account for future payments in accordance with their terms." = "Meta tikkonferma l-ħlas tiegħek permezz ta' GCash, tkun qed tippermetti lil %@ jiġbor il-ħlas mill-kont ta' GCash tiegħek għal ħlasijiet fil-futur skont ir-regoli tagħhom.";
-/* Korean payment method mandate text */
+
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Billi tikkonferma l-pagament tiegħek ma' NICEPAY, int qed tħalli lil %@ tiġbor il-ħlas minn dan il-metodu ta' pagament għal pagamenti futuri skont ir-regoli tagħhom.";
-/* Paypal mandate text */
+
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tikkonferma l-pagament b'PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
-/* Satispay mandate text */
-"By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Billi tikkonferma l-ħlas tiegħek b’Satispay, inti tippermetti lil %@ tiċċarġja l-kont ta’ Satispay tiegħek għal pagamenti futuri skont it-termini tagħhom.";
-/* Touch 'n Go mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Meta tikkonferma l-ħlas tiegħek permezz ta' Touch 'n Go, tkun qed tippermetti lil %@ jiġbor il-ħlas mill-kont ta' Touch 'n Go tiegħek għal ħlasijiet fil-futur skont it-termini tagħhom.";
-/* TrueMoney mandate text. The placeholder is the merchant's name. */
+
 "By confirming your payment with TrueMoney, you allow %@ to charge your TrueMoney account for future payments in accordance with their terms." = "Meta tikkonferma l-ħlas tiegħek permezz ta' TrueMoney, tkun qed tippermetti lil %@ jiġbor il-ħlas mill-kont ta' TrueMoney tiegħek għal ħlasijiet fil-futur skont it-termini tagħhom.";
-/* Nigerian payment method disclosure. The terms tags mark the link to the merchant of record's terms of use. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms of use</terms>." = "Meta tikkonferma l-ħlas tiegħek, taqbel li t-tranżazzjoni tiegħek se tiġi ġestita minn Global Stack Services Limited bħala n-negozjant reġistrat u skont it-<terms>termini tal-użu</terms> tagħhom";
-/* Naira Wallet disclosure. The terms tags mark the link to the merchant of record's terms. */
+
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Meta tikkonferma l-ħlas tiegħek, taqbel li t-tranżazzjoni tiegħek se tiġi ġestita minn Global Stack Services Limited bħala n-negozjant reġistrat u skont it-<terms>termini</terms> tagħhom.";
-/* Amazon Pay mandate text */
+
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Meta tkompli għal fuq Amazon Pay, tkun qed tagħti permess lil %@ biex fil-ġejjieni tiġbor il-pagamenti mill-kont Amazon Pay tiegħek skont ir-regoli tagħha.";
-/* Klarna mandate text */
+
 "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Meta tkompli għal Klarna, tkun qed tagħti permess lil %1$@ biex fil-ġejjieni tiġbor il-pagamenti mill-kont Klarna tiegħek skont ir-regoli tagħha u ta' Klarna. Tista' tibdel dal-permess meta trid mill-app ta' Klarna tiegħek jew billi tikkuntattja lil %2$@.";
-/* Klarna mandate text */
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms." = "Meta tkompli għal fuq Klarna, tkun qed tagħti permess lil %@ biex fil-ġejjieni tiġbor il-pagamenti mill-kont Klarna tiegħek skont ir-regoli tagħha.";
-/* Paypal mandate text */
+
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tkompli għal PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
-/* Revolut Pay mandate text */
+
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Meta tkompli għal Revolut Pay tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' Revolut Pay tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
-/* Satispay mandate text */
-"By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "Billi tgħaddi għal Satispay, inti tippermetti lil %@ tiċċarġja l-kont ta’ Satispay tiegħek għal pagamenti futuri skont it-termini tagħhom.";
-/* Legal text shown when creating a Link account. */
+
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tkompli tkun qed taqbel mar-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
-/* Text providing link to terms for ACH payments */
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tkompli tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
-/* Mandate text displayed when paying via Link instant debit. */
-"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Meta tkompli tkun qed taqbel li tawtorizza l-pagamenti skont dar-<terms>regoli</terms>.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to the Link brand. The first placeholder is a merchant name. The second placeholder is a Stripe brand name and should not be translated. */
+
 "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Billi tkompli, qed taqbel li tissejvja l-informazzjoni tiegħek għal xirjiet futuri ma’ %1$@ u <link>%2$@</link> skont <terms>it-termini</terms> u <privacy>l-privatezza</privacy> ta’ %2$@.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> (see <terms>Terms</terms> and <privacy>Privacy</privacy>)." = "Billi tkompli, int taqbel li tissejvja l-informazzjoni tiegħek għal xirjiet futuri ma' %@ u <link>Ħolqa</link> (ara t-<terms>Termini</terms> u l-<privacy>Privatezza</privacy>).";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Billi tkompli, int taqbel li tissejvja l-informazzjoni tiegħek għal xirjiet futuri ma' %@ u <link>Ħolqa</link> skont il-Ħolqa <terms>termini</terms> u <privacy>privatezza</privacy>.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Billi tkompli, taqbel li tissejvja l-informazzjoni tiegħek għal xiri futur ma' %@ u <link>Link</link>. Inti taqbel ukoll mat-<terms>Termini</terms> u <privacy>l-Privatezza</privacy> ta’ Link.";
-/* Text displayed below a credit card entry form when the card will be saved with the merchant. */
+
 "By continuing, you agree to save your information for future purchases with %@." = "Billi tkompli, taqbel li tissejvja l-informazzjoni tiegħek għal xiri futur ma' %@.";
-/* Satispay mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Billi tkompli, tawtorizza lil %@ biex awtomatikament tiddebita l-Bilanċ ta’ Satispay tiegħek fuq bażi rikorrenti skont il-pjan tax-xiri jew l-abbonament tiegħek.";
-/* Twint mandate text */
+
 "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Billi tkompli, tawtorizza %@ biex awtomatikament tħallas il-Bilanċ tiegħek ta' Twint b'mod ripetut skont il-pjan tax-xiri jew l-abbonament tiegħek.";
-/* Cash App mandate text */
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Meta tkompli tkun qed tagħti permess lil %1$@ biex, sakemm dal-permess jitneħħa, tkun tista' tiġbor il-flus mill-kont Cash App tiegħek għal dal-pagament u għall-pagamenti tal-ġejjieni skont ir-regoli ta' %2$@. Tista' tibdel dil-ħaġa meta trid mill-Għażliet ta' Cash App.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Billi tingħaqad ma’ %@, qed taqbel mat-<terms>Termini</terms> u <privacy>d-Dikjarazzjoni ta’ Privatezza</privacy>.";
-/* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tingħaqad ma' Link tkun qed taqbel mar-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Billi tipprovdi numru telefoniku u email, qed taqbel li toħloq kont %1$@ suġġett għat-<terms>Termini</terms> u <privacy>d-Dikjarazzjoni ta’ Privatezza</privacy> ta’ %1$@.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Billi tipprovdi numru telefoniku u email, qed taqbel li toħloq kont %1$@ suġġett għat-<terms>Termini</terms> u <privacy>d-Dikjarazzjoni ta’ Privatezza</privacy> %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tagħtina n-numru tal-mowbajl u l-indirizz tal-email, tkun qed taqbel li toħloq kont Link skont ir-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy> ta' Link.";
-/* Legal text shown when using AUBECS. */
+
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Billi tipprovdi d-dettalji tal-kont bankarju tiegħek u tikkonferma dan il-ħlas, qed taqbel ma’ din it-Talba tad-Debitu Dirett u <terms>l-ftehim ta' servizz tat-Talba tad-Debitu Dirett</terms>, u tawtorizza lil Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID numru 507156 (\"Stripe\") biex tiddebita l-kont tiegħek permezz tal-Bulk Electronic Clearing System (BECS) f'isem %@ (in-\"Negozjant\") għal kwalunkwe ammont ikko0munikat separatament lilek min-Negozjant. Qed tiċċertifika li int jew detentur ta’ kont jew firmatarju awtorizzat fuq il-kont imsemmi hawn fuq.";
-/* Text displayed below a credit card entry form when the card will be saved to make future payments. */
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Meta tagħti l-informazzjoni tal-karta tiegħek, tkun qed tħalli lil %@ tiġbor il-pagamenti tal-ġejjieni mill-karta tiegħek skont ir-regoli tagħha.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Billi tipprovdi l-email tiegħek, qed taqbel li toħloq kont ta’ %1$@ u tissejvja l-informazzjoni tal-ħlas tiegħek għal %1$@, skont it-<terms>Termini</terms> u <privacy>d-Dikjarazzjoni ta’ Privatezza</privacy> ta’ %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tagħti l-indirizz tal-email tiegħek, tkun qed taqbel li toħloq kont Link u li terfa' l-informazzjoni tal-pagament tiegħek ma' Link, skont ir-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy> ta' Link.";
-/* SEPA mandate text */
+
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Meta tagħti l-informazzjoni tal-pagament tiegħek u tikkonferma dan il-pagament, tkun qed tawtorizza lil (A) %@ u lil Stripe, l-operatur tas-servizz tal-pagamenti tagħna, biex jibagħtu struzzjonijiet lill-bank tiegħek biex jieħu l-fondi mill-kont tiegħek u (B) lill-bank tiegħek biex jieħu l-fondi mill-kont tiegħek skont dawn l-istruzzjonijiet. Bħala parti mid-drittijiet tiegħek, inti għandek dritt għall-ħlas lura mill-bank tiegħek skont ir-regoli u l-kundizzjonijiet tal-ftehim tiegħek mal-bank tiegħek. Ħlas lura għandu jintalab fi żmien 8 ġimgħat, li jibdew jgħoddu mid-data li fiha l-fondi jittieħdu mill-kont tiegħek. Il-jeddijiet tiegħek imfissra fi stqarrija li tista' tikseb mingħand il-bank tiegħek. Int taqbel li, sa jumejn qabel, tikseb tagħrif kull darba li l-fondi jkunu se jittieħdu mill-kont tiegħek.";
-/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Billi tipprovdi n-numru telefoniku tiegħek, qed taqbel li toħloq kont ta’ %1$@ u tissejvja l-informazzjoni tal-ħlas tiegħek għal %1$@, skont it-<terms>Termini</terms> u <privacy>d-Dikjarazzjoni ta’ Privatezza</privacy> ta’ %1$@.";
-/* Legal text shown when creating a Link account. */
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tagħti n-numru tal-mowbajl tiegħek, tkun qed taqbel li toħloq kont Link u li terfa' l-informazzjoni tal-pagament tiegħek ma' Link, skont ir-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy> ta' Link.";
-/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tissejvja l-kont tal-bank tiegħek għal %@ tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
-/* Alipay mandate text */
+
 "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Billi tissejvja l-informazzjoni tal-pagament tiegħek, qed tippermetti lil %@ jiġbru l-ħlas mingħandek għal pagamenti futuri skont it-termini tagħhom.";
-/* Text providing link to terms for bank payments when seller information is provided */
+
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Billi tissottometti l-ordni tiegħek lil %1$@ u %2$@, inti taqbel li tissejvja l-informazzjoni tiegħek ma’ %3$@ għal xirjiet futuri, u taqbel li tawtorizza pagamenti skont <terms>dawn it-termini</terms>.";
-/* Text providing link to terms for bank payments */
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Billi tissottometti l-ordni tiegħek lil %@ inti taqbel li tawtorizza pagamenti skont <terms>dawn it-termini</terms>.";
-/* Label for CPF/CPNJ (Brazil tax ID) field */
+
 "CPF/CPNJ" = "CPF/CPNJ";
-/* Button text on a screen asking the user to approve a payment */
+
 "Cancel and pay another way" = "Ikkanċella u ħallas mod ieħor";
-/* Text on a screen that indicates card details cannot be changed. */
+
 "Card details cannot be changed." = "Id-dettalji tal-karta ma jistgħux jinbidlu.";
-/* Card details entry form header title */
-"Card information" = "Informazzjoni dwar il-karta";
-/* Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa') */
-"Card number. Card brand: %@" = "Numru tal-kard. Marka tal-kard: %@";
-/* Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
+
 "Card number. Supported cards include %@" = "Numru tal-kard. Il-kards appoġġjati jinkludu %@";
-/* Status shown over the camera after a payment card was scanned successfully. */
-"Card scanned" = "Il-karta ġiet skennjata";
-/* Label for a button that lets you change the details of a payment method */
+
 "Change" = "Ibdel";
-/* Title for a button that allows the user to use a different email in the signup flow. */
-"Change email" = "Ibdel l-indirizz tal-email";
-/* Tooltip prompting user to select their card brand when a co-branded card is detected */
+
 "Choose a card brand" = "Agħżel marka tal-karta";
-/* Title shown above a carousel containing available payment methods */
+
 "Choose a payment method" = "Agħżel metodu tal-ħlas";
-/* Accessibility label for the button to close the card scanner. */
+
 "Close card scanner" = "Agħlaq l-iskenner tal-karta";
-/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
-"Code sent" = "Il-kodiċi ntbagħat";
-/* Instructions shown while waiting for a Pix payment authorization */
+
 "Complete the payment using Pix to finish the purchase." = "Lesti l-ħlas permezz ta' Pix biex tiffinalizza x-xiri.";
-/* A button used to confirm selecting a saved payment method */
+
 "Confirm" = "Ikkonferma";
-/* Two factor authentication screen heading */
-"Confirm it's you" = "Ikkonferma li int min qed tgħid li int";
-/* Title of a screen where the user can update their payment method before continuing
-with the transaction. */
+
 "Confirm payment details" = "Ikkonferma d-dettalji tal-pagament";
-/* Instructions shown while waiting for a Bizum payment authorization */
+
 "Confirm the Bizum payment in your mobile banking application within %@ to complete the purchase." = "Ikkonferma l-pagament ta' Bizum fl-applikazzjoni tal-ibbankjar bil-mowbajl tiegħek fi żmien %@ biex tlesti x-xirja.";
-/* Instructions shown while waiting for an MB WAY payment authorization */
+
 "Confirm the payment in your MB WAY app within %@ to complete the purchase." = "Ikkonferma l-pagament fl-app tiegħek ta' MB WAY fi żmien %@ biex tlesti x-xirja.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Biex tlesti x-xirja kkonferma l-pagament, fl-app tal-bank jew fl-app tal-pagamenti, fi żmien %@.";
-/* Text for alert message when user needs to confirm payment in their banking app */
+
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ikkonferma l-pagament fl-app tal-bank fi żmien %@ biex tlesti x-xirja.";
-/* Section title for entering your CVC. e.g. 'Confirm your CVC' */
-"Confirm your %@" = "Ikkonferma l-%@ tiegħek";
-/* Title for prompting for a card's CVC on confirming the payment */
+
 "Confirm your CVC" = "Ikkonferma l-kodiċi CVC tiegħek";
-/* Title for prompting for a card's CVV on confirming the payment */
-"Confirm your CVV" = "Ikkonferma l-kodiċi CVV tiegħek";
-/* Title label for a know-your-customer (KYC) verification screen */
+
 "Confirm your information" = "Ikkonferma l-informazzjoni tiegħek";
-/* Title for the contact information section */
+
 "Contact information" = "Id-dettalji tal-kuntatt";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Continue another way" = "Kompli mod ieħor";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create a Link account for fast checkout across the web" = "Oħloq kont Link għal checkout mgħaġġel fuq il-web";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Create an account with %@ for faster checkout across the web" = "Oħloq kont ma’ %@ għal checkout aktar malajr fuq il-web";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Create an account with Link for faster checkout across the web" = "Oħloq kont ma’ Link għal pagament aktar mgħaġġel fuq il-web";
-/* Label for a payment method type that only accepts credit cards. */
-"Credit card" = "Kard ta' kreditu";
-/* Label for a payment method type that only accepts debit cards. */
-"Debit card" = "Kard ta' debitu";
-/* Label shown in the payment type picker describing a card payment */
+
 "Debit or credit card" = "Karta tad-debitu jew tal-kreditu";
-/* Title label for a screen showing CRS/CARF tax declarations */
+
 "Declarations" = "Dikjarazzjonijiet";
-/* Label for identifying the default payment method. */
+
 "Default" = "Standard";
-/* Label for a disabled checked checkbox identifying the default payment method. */
+
 "Default payment method" = "Metodu tal-pagament standard";
-/* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
+
 "Did you mean %@? %@." = "Ridt tfisser %1$@? %2$@.";
-/* Button title in a confirmation alert that discards the customer's unsaved address changes and closes the form. */
+
 "Discard Changes" = "Warrab il-Bidliet";
-/* Title of a confirmation alert shown when the customer tries to close the address form after making changes. */
+
 "Discard changes?" = "Trid Twarrab il-Bidliet?";
-/* Label for the discount row in an order summary, applied as a negative amount. */
+
 "Discount" = "Skont";
-/* Label title for EPS Bank */
+
 "EPS Bank" = "EPS Bank";
-/* Accessibility label for a button that lets the user update their address */
+
 "Edit address" = "Editja l-indirizz";
-/* Link authentication action to receive an email verification code. */
+
 "Email code" = "Kodiċi tal-email";
-/* Text for a button that allows manual entry of an address */
+
 "Enter address manually" = "Ikteb l-indirizz int stess";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use Link to pay by default." = "Daħħal il-kodiċi li bgħatna fuq %@ biex tuża Link u tħallas bil-metodu tal-pagament standard.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use your saved information." = "Daħħal il-kodiċi li bgħatna fuq %@ biex tuża l-informazzjoni merfugħa tiegħek.";
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@." = "Daħħal il-kodiċi li bgħatna lil %@.";
-/* Error when Link email verification requires a phone number. */
+
 "Enter the phone number on your Link account." = "Daħħal in-numru tat-telefon tal-kont ta' Link tiegħek.";
-/* Two factor authentication screen heading */
-"Enter your verification code" = "Daħħal il-kodiċi ta' verifika tiegħek";
-/* Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion */
+
 "Exchange rate and fees of your bank may apply." = "Ir-rata tal-kambju u l-miżati tal-bank tiegħek jistgħu japplikaw.";
-/* Select a bank dropdown for FPX */
+
 "FPX Bank" = "FPX Bank";
-/* Error message that displays when we're unable to connect to the server. */
-"Failed to connect" = "Ma nistgħux naqbdu";
-/* Title for the Link signup screen */
+
 "Fast, secure checkout" = "Ħlas għax-xirja veloċi u sigur";
-/* Title for the Link signup screen */
-"Fast, secure, 1⁠-⁠click checkout" = "Ħallas malajr, b'mod sigur, b'mossa waħda";
-/* Accessibility label for a button that turns the flashlight on or off while scanning a card. */
-"Flashlight" = "Torċ";
-/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
-"For security, please re-enter your card’s security code." = "Għal raġunijiet ta' sigurtà, jekk jogħġbok erġa' daħħal il-kodiċi tas-sigurtà tal-karta tiegħek.";
-/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Ikseb %@ lura meta tħallas bil-bank għall-ewwel darba. <terms>Aqra r-regoli</terms>";
-/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
+
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Ikseb %@ lura meta tħallas bil-bank. <terms>Aqra r-regoli</terms>";
-/* Button label to collapse and hide additional exchange rate details */
+
 "Hide details" = "Aħbi d-dettalji";
-/* Instructions shown above the card scanner while it looks for a payment card. */
-"Hold your card with the number visible in the frame to scan it automatically." = "Żomm il-karta tiegħek bin-numru jidher fil-frejm biex tiskennjaha awtomatikament.";
-/* Bacs Debit mandate text */
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jiena nifhem li Stripe se tkun qed tiġbor id-Debiti Diretti f'isem %@ u nikkonferma li jiena d-detentur tal-kont u l-unika persuna meħtieġa biex tawtorizza d-debiti minn dan il-kont.";
-/* IBAN placeholder – don&apos;t translate */
+
 "IBAN" = "IBAN";
-/* Message shown when Mondu is selected */
+
 "Invoice payment for business buyers." = "Ħlas ta' Fattura għal xerrejja ta' negozji.";
-/* Title for a button that when tapped creates a Link account for the user. */
-"Join Link" = "Ingħaqad ma' Link";
-/* Button title in a confirmation alert that dismisses the alert and returns the customer to editing their address. */
+
 "Keep Editing" = "Kompli Editja";
-/* Label for displaying the last 4 digits of the user's social security number */
+
 "Last 4 digits of SSN" = "L-aħħar 4 ċifri tal-SSN";
-/* Title for a button that indicates a user can log in or sign up. */
-"Log in or sign up" = "Idħol jew irreġistra";
-/* Label of a button that signs the user out of their current Link account so they can log in to a different one. */
+
 "Log in to another account" = "Idħol f'kont ieħor";
-/* Title of the logout action. The placeholder is a Stripe brand name and should not be translated. */
-"Log out of %@" = "Oħroġ minn %@";
-/* Title of the logout action. */
-"Log out of Link" = "Oħroġ minn Link";
-/* Status shown over the camera while it looks for a payment card to scan. */
-"Looking for your card" = "Qed infittxu l-karta tiegħek";
-/* Title shown above a view containing the customer's SEPA debit that they can delete or update */
+
 "Manage SEPA debit" = "Ħu ħsieb id-debitu SEPA";
-/* Title shown above a view containing the customer's bank account that they can delete or update */
+
 "Manage US bank account" = "Ħu ħsieb il-kont tal-bank tal-Istati Uniti tal-Amerka";
-/* Title shown above a view containing the customer's bank account that they can delete */
+
 "Manage bank account" = "Ħu ħsieb il-kont tal-bank";
-/* Title for a screen for managing a card. */
+
 "Manage card" = "Ħu ħsieb il-karta";
-/* Title shown above a view containing a list of the customer's cards that they can delete or update */
+
 "Manage cards" = "Ħu ħsieb il-karti";
-/* Title shown above a view containing the customer's payment method that they can delete or update */
+
 "Manage payment method" = "Ħu ħsieb il-metodu tal-pagament";
-/* Title shown above a view containing the customer's card payment methods that they can delete or update */
+
 "Manage payment methods" = "Ħu ħsieb il-metodi tal-pagament";
-/* Title shown above a carousel containing the customer's payment methods */
+
 "Manage your payment methods" = "Ħu ħsieb il-metodi tal-pagament tiegħek";
-/* Button opening Link authentication actions. */
+
 "More options" = "Aktar għażliet";
-/* Label for name on card field */
+
 "Name on card" = "L-isem fuq il-karta";
-/* Naver Pay card funding source */
+
 "Naver Pay Card" = "Kard ta’ Naver Pay";
-/* Naver Pay money or points funding source */
+
 "Naver Pay Money/Point" = "Naver Pay Money/Point";
-/* Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button. */
+
 "New card" = "Karta ġdida";
-/* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
+
 "New payment method" = "Metodu tal-pagament ġdid";
-/* Label for when the user is not eligible for a promo. */
+
 "No %@ promo" = "L-ebda offerta %@";
-/* Message on a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "None of the payment methods in your %@ account work with this business." = "L-ebda mill-metodi tal-pagament fil-kont %@ tiegħek ma jaħdmu ma' dan in-negozju.";
-/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
-"Not %@?" = "M'intix %@?";
-/* Title for a button that allows the user to use a different email in the signup flow. */
+
 "Not you?" = "Mhux l-indirizz tal-email tiegħek?";
-/* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
+
 "Only card brand can be changed." = "Tista' tibdel biss ix-xorta tal-karta.";
-/* Warning shown when only credit and prepaid cards are accepted */
-"Only credit and prepaid cards are accepted" = "Huma aċċettati biss karti tal-kreditu u karti mħallsa minn qabel";
-/* Warning shown when only credit cards are accepted */
-"Only credit cards are accepted" = "Huma aċċettati biss karti tal-kreditu";
-/* Warning shown when only debit and credit cards are accepted */
-"Only debit and credit cards are accepted" = "Huma aċċettati biss karti tad-debitu u tal-kreditu";
-/* Warning shown when only debit and prepaid cards are accepted */
-"Only debit and prepaid cards are accepted" = "Huma aċċettati biss karti tad-debitu u karti mħallsa minn qabel";
-/* Warning shown when only debit cards are accepted */
-"Only debit cards are accepted" = "Huma aċċettati biss karti tad-debitu";
-/* Warning shown when only prepaid cards are accepted */
-"Only prepaid cards are accepted" = "Huma aċċettati biss karti mħallsa minn qabel";
-/* Accessibility hint to tell the user that they can open a form sheet with more information. */
+
 "Open to see more information." = "Iftaħ biex tara aktar informazzjoni.";
-/* Separator label between two options */
+
 "Or" = "Jew";
-/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+
 "Or pay using" = "Jew ħallas bil-";
-/* Title of a section containing a card form that will collect the payment information from the user. */
+
 "Or pay with a card" = "Jew ħallas bil-karta";
-/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up. */
+
 "Or use" = "Jew uża";
-/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up. */
+
 "Or use a card" = "Jew uża karta";
-/* Label of a button that initiates payment when tapped */
+
 "Pay %@" = "Ħallas %@";
-/* Label of a button that when tapped allows the user to select a different form of payment. */
+
 "Pay another way" = "Ħallas mod ieħor";
-/* Label describing the benefit of signing up for Link.
-Pay faster at {Merchant Name} and thousands of businesses
-e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
+
 "Pay faster at %@ and thousands of businesses." = "Ħallas lil %@ u lil eluf ta' negozji oħra iktar malajr.";
-/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
-"Pay faster at %@ and thousands of merchants." = "Ħallas lil %@ u lil eluf ta' negozjanti oħra iktar malajr.";
-/* Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated. */
+
 "Pay faster everywhere %@ is accepted." = "Ħallas aktar malajr kullimkien fejn %@ huwa aċċettat.";
-/* Subtitle for the Link signup screen */
+
 "Pay faster everywhere Link is accepted." = "Ħallas aktar malajr kullimkien fejn Link huwa aċċettat.";
-/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Ħallas f'dan-numru ta' pagamenti: <num_installments/> ta' <installment_price/> mingħajr imgħax grazzi għal <img/>";
-/* Klarna pay later copy */
-"Pay later with Klarna." = "Ħlas aktar tard bil-Klarna.";
-/* Pay over time with Affirm copy */
+
 "Pay over time with %@" = "Ħallas bin-nifs grazzi għal %@";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm */
+
 "Pay over time with Affirm" = "Ħallas bin-nifs b'Affirm";
-/* Promotional text for Affirm, displayed in a button that lets the customer pay with Afterpay */
-"Pay over time with Afterpay" = "Ħallas bin-nifs grazzi b'Afterpay";
-/* Promotional text for Clearpay, displayed in a button that lets the customer pay with Clearpay */
-"Pay over time with Clearpay" = "Ħallas bin-nifs grazzi bi Clearpay";
-/* Title shown above a section containing various payment options */
-"Pay using" = "Ħallas b'dal-metodu tal-pagament:";
-/* Pay with {payment method} */
+
 "Pay with %@" = "Ħallas ma’ %@";
-/* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
+
 "Pay with Link" = "Ħallas b'Link";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Pay with your bank account in just a few steps." = "Ħallas bil-kont tal-bank tiegħek fi ftit passi.";
-/* Label for a section displaying payment details. */
+
 "Payment" = "Pagament";
-/* Text on a screen that indicates a payment has failed */
+
 "Payment failed" = "Il-pagament ma rnexxiex";
-/* Text on a screen that indicates payment method details cannot be changed. */
+
 "Payment method details cannot be changed." = "Id-dettalji tal-metodi tal-ħlas ma jistgħux jinbidlu.";
-/* Title for a section listing one or more payment methods. */
+
 "Payment methods" = "Metodi tal-pagament";
-/* Error message that's displayed when you try to confirm a payment without a valid payment method */
+
 "Please choose a valid payment method." = "Jekk jogħġbok agħżel metodu tal-pagament tajjeb.";
-/* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
+
 "Please go back and select another payment method" = "Jekk jogħġbok mur lura u agħżel metodu tal-pagament ieħor";
-/* Accessibility instructions for card scanning. */
+
 "Point the camera at your card." = "Ipponta l-kamera lejn il-karta tiegħek.";
-/* Label for a payment method type that only accepts prepaid cards. */
-"Prepaid card" = "Kard imħallsa minn qabel";
-/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
-"Processing..." = "Qed jiġi pproċessat...";
-/* Label title for Przelewy24 Bank */
+
 "Przelewy24 Bank" = "Bank permezz ta' Przelewy24";
-/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-"Remove %1$@ ending in %2$@" = "Neħħi %1$@ li jispiċċa %2$@";
-/* Title of confirmation prompt when removing a saved payment method. */
+
 "Remove %@" = "Neħħi %@";
-/* Title for confirmation alert to remove a card */
-"Remove Card" = "Neħħi l-Karta";
-/* Title for confirmation alert to remove a bank account */
+
 "Remove bank?" = "Trid tneħħi l-bank?";
-/* Title for confirmation alert to remove a card */
+
 "Remove card?" = "Tixtieq tneħħi l-karta?";
-/* Title for a button that when tapped removes a linked bank account. */
+
 "Remove linked account" = "Neħħi l-kont marbut";
-/* Title shown above a view containing a customer's payment method that they can delete */
+
 "Remove payment method" = "Neħħi l-metodu tal-pagament";
-/* Title for confirmation alert to remove a payment method */
+
 "Remove payment method?" = "Trid tneħħi l-metodu tal-pagament?";
-/* Title for a button that opens the camera to scan a payment card again, after one was already scanned. */
-"Rescan card" = "Erġa' skennja l-karta";
-/* Label for a button that re-sends the a login code when tapped */
-"Resend code" = "Erġa' ibgħat il-kodiċi";
-/* Link OTP resend cooldown, in seconds. */
+
 "Resend code in %d seconds" = "Ibgħat mill-ġdid il-kodiċi fi %li sekondi";
-/* Text on a screen that indicates SEPA debit details cannot be changed. */
+
 "SEPA debit details cannot be changed." = "Id-dettalji tad-debitu SEPA ma jistgħux jinbidlu.";
-/* A button used for saving a new payment method */
+
 "Save" = "Erfa'";
-/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+
 "Save a new payment method" = "Erfa' metodu tal-pagament ġdid";
-/* Title for a button that when pressed saves the provided address. */
+
 "Save address" = "Erfa' l-indirizz";
-/* The label of a switch indicating whether to save the payment method for future payments. */
+
 "Save for future payments" = "Erfa' għall-pagamenti fil-ġejjieni";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save my info for faster checkout with %@" = "Issejvja l-informazzjoni tiegħi għal checkout aktar malajr ma’ %@";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save my info for faster checkout with Link" = "Erfgħu l-informazzjoni tiegħi biex inkun nista' nħallas iktar malajr b'Link";
-/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-"Save my info for secure 1-click checkout" = "Erfa' l-informazzjoni tiegħek biex tkun tista' tħallas f'pass wieħed grazzi għal Link";
-/* The label of a switch indicating whether to save the user's payment details for future payment */
+
 "Save payment details to %@ for future purchases" = "Erfa' d-dettalji tal-pagamenti f'%@ għax-xirjiet tal-ġejjieni";
-/* Prompt next to checkbox to save bank account. */
+
 "Save this account for future %@ payments" = "Erfa' dal-kont għall-pagament lil %@ tal-ġejjieni";
-/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-"Save this card for future %@ payments" = "Erfa' din il-karta għall-pagamenti tal-ġejjieni fuq %@";
-/* US Bank Account copy title for Mobile payment element form */
+
 "Save your bank account in just a few steps." = "Erfa' l-kont tal-bank tiegħek fi ftit passi.";
-/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+
 "Save your info for secure 1-click checkout with %@" = "Issejvja l-informazzjoni tiegħek għal checkout sigur bi klikk wieħed ma’ %@";
-/* Label for a checkbox that when checked allows the payment information
-to be saved and used in future checkout sessions. */
-"Save your info for secure 1-click checkout with Link" = "Erfa' l-informazzjoni tiegħek biex tkun tista' tħallas f'pass wieħed grazzi għal Link";
-/* Label describing the benefit of signing up for Link. */
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Erfa' l-informazzjoni dwar il-pagament tiegħek permezz ta' Link u ħallas b'mod sigur b'mossa waħda fuq siti tal-internet li jaċċettaw Link.";
-/* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
+
 "Saved" = "Merfugħ";
-/* Title for the Link signup screen */
-"Secure 1⁠-⁠click checkout" = "Ħlas sigur b'mossa waħda";
-/* Title shown above a view containing the customer's card payment methods */
+
 "Select card" = "Agħżel karta";
-/* Label for the Naver Pay funding source selector */
+
 "Select how you want to pay:" = "Agħżel kif trid tħallas:";
-/* Title shown above a view containing the customer's payment methods */
+
 "Select payment method" = "Agħżel metodu tal-pagament";
-/* Title shown above a carousel containing the customer&apos;s payment methods */
+
 "Select your payment method" = "Agħżel il-metodu tal-ħlas tiegħek";
-/* Label for a button that sends the code to the user's email when tapped */
-"Send code to email instead" = "Ibgħat kodiċi lill-email minflok";
-/* Label for a button or menu item that sets a payment method as default when tapped. */
+
 "Set as default" = "Qiegħed bħala standard";
-/* Label of a checkbox that when checked makes a payment method as the default one. */
+
 "Set as default payment method" = "Qiegħed bħala l-metodu tal-pagament standard";
-/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
 "Set up" = "Stabilixxi";
-/* Label for the shipping cost row in an order summary. */
-"Shipping" = "Kunsinna";
-/* Title for shipping address entry section */
-"Shipping Address" = "Indirizz tal-konsenja";
-/* Text for an error that is shown when a user selects a shipping address that
-is not supported by the merchant. Example: Shipping to Canada is not supported. */
+
 "Shipping to %@ is not supported." = "Ma nistgħux nibagħtu l-affarijiet lejn: %@";
-/* Button label to expand and show additional exchange rate details */
+
 "Show details" = "Uri d-dettalji";
-/* Accessibility label for an action or a button that shows a menu. */
+
 "Show menu" = "Uri l-menù";
-/* Title for a button that indicates a user can sign in or sign up. */
+
 "Sign in or sign up" = "Idħol jew irreġistra";
-/* Two factor authentication screen heading */
-"Sign in to your Link account" = "Idħol fil-kont Link tiegħek";
-/* Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated. */
+
 "Sign out of %@" = "Oħroġ minn %@";
-/* Title of the sign-out action. */
-"Sign out of Link" = "Oħroġ minn Link";
-/* Subtitle shown on a button allowing a user to select to pay with Link. */
+
 "Simple, secure one-click payments" = "Pagamenti sempliċi u siguri b'mossa waħda";
-/* Error message when an error case happens when linking your account */
+
 "Something went wrong when linking your account.\nPlease try again later." = "Xi ħaġa marret ħażin meta kont qed tgħaqqad il-kont tiegħek.\nJekk jogħġbok erġa’ pprova aktar tard.";
-/* Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tlesti l-proċess li terfa' l-kont tiegħek ma' %@.";
-/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tagħmel il-pagament lil %@.";
-/* Label for the subtotal row in an order summary, before tax/shipping/discounts. */
+
 "Subtotal" = "Subtotal";
-/* Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
-"Supported cards: %@" = "Karti appoġġjati: %@";
-/* Accessibility hint to tell the user that they can tap to hide additional content. */
+
 "Tap to close" = "Agħfas biex tagħlaq";
-/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+
 "Tap to expand" = "Agħfas biex tkabbar";
-/* Label for the tax row in an order summary. */
+
 "Tax" = "Taxxa";
-/* Title label for a screen showing terms and conditions */
+
 "Terms and Conditions" = "Termini u kundizzjonijiet";
-/* Title label for a screen showing terms of service */
+
 "Terms of Service" = "Termini tas-Servizz";
-/* test */
-"Test123" = "Prova123";
-/* An error message displayed when the customer's IBAN is incomplete. */
+
 "The IBAN you entered is incomplete." = "L-IBAN li daħħalt mhux komplut.";
-/* An error message. */
+
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L-IBAN li daħħalt huwa invalidu, \"%@\" mhuwiex kodiċi ta’ pajjiż appoġġjat.";
-/* Error message shown when the user enters an expired verification code. */
+
 "The provided verification code has expired." = "Il-kodiċi tal-verifika mogħti skada.";
-/* Error message shown when the user enters an incorrect verification code. */
+
 "The provided verification code is incorrect." = "Il-kodiċi tal-verifika mogħti mhuwiex tajjeb.";
-/* String to inform a user that specific card brands are not accepted. */
-"The selected brand is not allowed" = "Id-ditta magħżula mhijiex permessa";
-/* Disclaimer for when a bank account is not eligible for a promotion. */
-"This bank account is ineligible for promotions. <terms>View terms</terms>" = "Dan il-kont bankarju mhuwiex eliġibbli għal promozzjonijiet. <terms>Ara t-termini</terms>";
-/* A text notice shown when the user selects an expired card. */
-"This card has expired. Update your card info or choose a different payment method." = "Dil-karta skadiet. Aġġorna d-dettalji tal-karta tiegħek jew agħżel metodu tal-pagament ieħor.";
-/* Disclosure for an international Pix payment. The terms tags enclose a link to Ebanx's terms. */
+
 "This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Din hija xirja internazzjonali u teskludi tariffa IOF ta’ 3.5%. Billi tipproċedi, inti qed tirrikonoxxi u taċċetta t-<terms>termini u l-kundizzjonijiet ta’ Ebanx</terms>.";
-/* Text of a label indicating that a payment method is the default. */
+
 "This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
-/* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
+
 "This payment method will be removed but will remain available for %@ subscriptions." = "Dan il-metodu ta' pagament se jitneħħa iżda se jibqa' disponibbli għal abbonamenti ta' %@.";
-/* Error when the phone number entered before Link email verification does not match the account. */
+
 "This phone number doesn't match your Link account. Please try again." = "Dan in-numru tat-telefon ma jaqbilx mal-kont ta' Link tiegħek. Jekk jogħġbok ipprova mill-ġdid.";
-/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
-"To scan your card, allow camera access in Settings." = "Biex tiskennja l-karta tiegħek, ippermetti l-aċċess għall-kamera fis-Settings.";
-/* Error message shown when the user enters an incorrect verification code too many times. */
+
 "Too many attempts. Please try again in a few minutes." = "Ippruvajt wisq drabi. Jekk jogħġbok erġa' pprova wara ftit minuti.";
-/* Accessibility label for a button that turns off the flashlight while scanning a card. */
-"Turn off flashlight" = "Itfi t-torċ";
-/* Accessibility label for a button that turns on the flashlight while scanning a card. */
-"Turn on flashlight" = "Ixgħel it-torċ";
-/* Label shown when a payment method cannot be used for the current transaction. */
+
 "Unavailable for this purchase" = "Mhux disponibbli għal dix-xirja";
-/* Title for a button that when tapped, updates a card brand. */
-"Update" = "Ibdel";
-/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
+
 "Update card" = "Aġġorna l-karta";
-/* Title for a screen for updating a card brand. */
-"Update card brand" = "Ibdel id-ditta tal-karta";
-/* Accessibility label for a button that leads to a screen for updating a payment method. */
+
 "Update payment method" = "Ibdel il-metodu tal-pagament";
-/* Label for checkbox in address form allowing user to use billing address */
+
 "Use billing address for shipping" = "Uża l-indirizz tal-ħlas għall-kunsinna";
-/* Two factor authentication screen heading */
-"Use your saved info to check out faster" = "Uża l-informazzjoni li għandek merfugħa biex tħallas iktar malajr";
-/* Heading for the Link phone-match screen. */
+
 "Verify your phone number" = "Ivverifika n-numru telefoniku tiegħek";
-/* Link authentication in progress. */
+
 "Verifying your account…" = "Qed nivverifikaw il-kont tiegħek…";
-/* Text shown on a button that when tapped opens a user's screen with their payment methods. */
+
 "View more" = "Uri iktar";
-/* Link authentication cannot continue with the available verification methods. */
+
 "We couldn't verify your account. Please close this window and try again." = "Ma stajniex nivverifikaw il-kont tiegħek. Jekk jogħġbok agħlaq din it-tieqa u erġa' pprova.";
-/* Text for a tappable link that will update the email field with a suggested email address. */
+
 "Yes, update" = "Iva, aġġorna";
-/* Title of a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated. */
+
 "You can't pay with %@ here" = "Ma tistax tħallas bi %@ hawnhekk";
-/* An error message displayed when the IBAN does not start with a two-letter country code. */
+
 "Your IBAN should start with a two-letter country code." = "L-IBAN tiegħek għandu jibda b'kodiċi tal-pajjiż magħmul minn żewġ ittri.";
-/* Message of a confirmation alert warning the customer that closing the address form will discard their unsaved changes. */
+
 "Your address changes won't be saved." = "Il-bidliet fl-indirizz tiegħek mhux se jiġu ssejvjati.";
-/* Error message for card details form when expiration date has passed */
-"Your card has expired." = "Il-karta tiegħek skadiet.";
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "Il-Bank iDEAL";
