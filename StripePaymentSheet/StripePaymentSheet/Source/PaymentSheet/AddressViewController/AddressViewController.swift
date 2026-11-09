@@ -178,14 +178,7 @@ public class AddressViewController: UIViewController {
         // No default address provided, early exit
         guard !addressDetails.address.isEmpty else { return false }
 
-        // No blocked countries, allow all default addresses
-        guard !configuration.allowedCountries.isEmpty else { return true }
-
-        // Default address has no country specified, allow it
-        guard let defaultCountry = addressDetails.address.country else { return true }
-
-        // Only allow default addresses with allowed countries
-        return configuration.allowedCountries.contains(defaultCountry)
+        return addressDetails.isCountryAllowed(configuration.allowedCountries)
     }
 
     private lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
