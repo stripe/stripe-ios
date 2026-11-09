@@ -462,7 +462,7 @@ struct PaymentView: View {
 
     @ViewBuilder
     private func makePaymentContent(in geometry: GeometryProxy) -> some View {
-        #if compiler(>=6.4)
+        #if canImport(SwiftUI, _version: 8.0.85)
         if #available(iOS 27.1, *), !geometry.reservedRegions(kind: .division).isEmpty {
             ArrangementView {
                 FoldAvoidingScrollView { _ in

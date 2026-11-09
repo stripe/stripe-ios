@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### CryptoOnramp (Alpha)
+* [Fixed] Fixed a build failure with Xcode 27.0 when linking StripeCryptoOnramp.
+
 ## 26.16.0 2026-11-02
 ### PaymentSheet
 * [Added] The Link auth flow now natively supports email OTP and multi-factor authentication (MFA) enabled accounts.
