@@ -532,6 +532,8 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["link_use_attestation"] = elementsSession?.linkSettings?.useAttestationEndpoints
         additionalParams["link_mobile_suppress_2fa_modal"] = elementsSession?.linkSettings?.suppress2FAModal
         var configurationPayload = configuration.analyticPayload
+        // Customer fields come from the load's CustomerProvider rather than the configuration,
+        // since the customer may be provided by a source other than `configuration.customer`, like a Checkout Session.
         configurationPayload["customer"] = customerProvider.hasCustomer
         configurationPayload["customer_access_provider"] = customerProvider.analyticValue
         additionalParams["mpe_config"] = configurationPayload
@@ -622,13 +624,10 @@ extension EmbeddedPaymentElement.Configuration {
 extension PaymentElementConfiguration {
 
     var commonAnalyticPayload: [String: Any] {
-        let customerProvider = CustomerProvider(customer: customer)
         var payload = [String: Any]()
         payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
         payload["apple_pay_config"] = applePay != nil
         payload["style"] = style.rawValue
-        payload["customer"] = customerProvider.hasCustomer
-        payload["customer_access_provider"] = customerProvider.analyticValue
         payload["return_url"] = returnURL != nil
         payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
         payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
