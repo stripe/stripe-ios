@@ -169,6 +169,49 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(firstElement === secondElement)
     }
 
+    func testInlineElementsUseCheckoutUserInterfaceStyle() async throws {
+        let cases: [(style: PaymentSheet.UserInterfaceStyle, host: UIUserInterfaceStyle, expected: UIUserInterfaceStyle)] = [
+            (.alwaysDark, .light, .dark),
+            (.alwaysLight, .dark, .light),
+            (.automatic, .dark, .dark),
+        ]
+        for testCase in cases {
+            // Given a Checkout style and a host using the opposite appearance
+            let session = CheckoutTestHelpers.makeAdaptivePricingSession()
+            var configuration = CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
+            configuration.userInterfaceStyle = testCase.style
+            var selectorConfiguration = CurrencySelectorElement.Configuration()
+            selectorConfiguration.appearance.background = UIColor { traits in
+                traits.userInterfaceStyle == .dark ? .black : .white
+            }
+            configuration.currencySelectorElement = selectorConfiguration
+
+            // When Checkout's inline views are attached to the host
+            let checkout = try await CheckoutElementsController(configuration: configuration)
+            let paymentView = checkout.getPaymentElement().uiView
+            let currencyView = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
+            let expressView = checkout.getExpressCheckoutElement().uiView
+            let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 640))
+            let host = UIViewController()
+            host.overrideUserInterfaceStyle = testCase.host
+            window.rootViewController = host
+            window.makeKeyAndVisible()
+            defer { window.isHidden = true }
+
+            // Then all three views use Checkout's style, including the selector's dynamic colors
+            let overrideStyle: UIUserInterfaceStyle = testCase.style == .automatic ? .unspecified : testCase.expected
+            for view in [paymentView, currencyView, expressView] as [UIView] {
+                host.view.addSubview(view)
+                XCTAssertEqual(view.overrideUserInterfaceStyle, overrideStyle)
+                XCTAssertEqual(view.traitCollection.userInterfaceStyle, testCase.expected)
+            }
+            XCTAssertEqual(
+                selectorConfiguration.appearance.background.resolvedColor(with: currencyView.traitCollection),
+                testCase.expected == .dark ? UIColor.black : UIColor.white
+            )
+        }
+    }
+
     func testCurrencySelectorElementLogsInitializationOnce() async throws {
         let analyticsClient = STPAnalyticsClient.sharedClient
         let previousLogHistory = analyticsClient._testLogHistory

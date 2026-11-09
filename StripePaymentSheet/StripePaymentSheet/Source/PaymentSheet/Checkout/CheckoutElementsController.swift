@@ -177,6 +177,11 @@ public final class CheckoutElementsController: ObservableObject {
                     delegate: self
                 )
             }
+            let inlineStyle = configuration.userInterfaceStyle.overrideUserInterfaceStyle ?? .unspecified
+            paymentElement?.uiView.overrideUserInterfaceStyle = inlineStyle
+            expressCheckoutElement?.uiView.overrideUserInterfaceStyle = inlineStyle
+            currencySelectorElement?.uiView.overrideUserInterfaceStyle = inlineStyle
+
             var params = configurationParams
             params["ordered_lpms"] = paymentElement?.embeddedPaymentElement.loadResult.paymentMethodTypes.map { $0.identifier }.joined(separator: ",")
                 ?? configuration.expressCheckoutElement.map {
