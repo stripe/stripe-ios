@@ -176,7 +176,7 @@ final class CheckoutUnitTests: XCTestCase {
             (.automatic, .dark, .dark),
         ]
         for testCase in cases {
-            // Given a Checkout style and a host using the opposite appearance
+            // Given a Checkout style and a host appearance
             let session = CheckoutTestHelpers.makeAdaptivePricingSession()
             var configuration = CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
             configuration.userInterfaceStyle = testCase.style
@@ -200,11 +200,14 @@ final class CheckoutUnitTests: XCTestCase {
 
             // Then all three views use Checkout's style, including the selector's dynamic colors
             let overrideStyle: UIUserInterfaceStyle = testCase.style == .automatic ? .unspecified : testCase.expected
-            for view in [paymentView, currencyView, expressView] as [UIView] {
+            let views: [UIView] = [paymentView, currencyView, expressView]
+            for view in views {
                 host.view.addSubview(view)
                 XCTAssertEqual(view.overrideUserInterfaceStyle, overrideStyle)
                 XCTAssertEqual(view.traitCollection.userInterfaceStyle, testCase.expected)
             }
+            XCTAssertEqual(paymentView.subviews.first?.traitCollection.userInterfaceStyle, testCase.expected)
+            XCTAssertEqual(currencyView.subviews.first?.traitCollection.userInterfaceStyle, testCase.expected)
             XCTAssertEqual(
                 selectorConfiguration.appearance.background.resolvedColor(with: currencyView.traitCollection),
                 testCase.expected == .dark ? UIColor.black : UIColor.white

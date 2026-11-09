@@ -97,6 +97,32 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 
     // MARK: - Interaction state
 
+    func testWalletButtonsInheritForcedCheckoutStyle() {
+        // Given an Express Checkout Element in a light host
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
+        let view = ExpressCheckoutElementUIView(
+            session: session,
+            configuration: .init(completion: { _ in }),
+            userInterfaceStyle: .alwaysDark,
+            delegate: FakeExpressCheckoutElementDelegate()
+        )
+        view.update(with: session, buttons: [.applePay, .link])
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 640))
+        let host = UIViewController()
+        host.overrideUserInterfaceStyle = .light
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+
+        // When the wallet buttons are hosted inside the styled view
+        host.view.addSubview(view)
+
+        // Then both buttons use the dark appearance trait
+        let buttons = CheckoutTestHelpers.expressCheckoutButtons(in: view)
+        XCTAssertEqual(buttons.count, 2)
+        XCTAssertTrue(buttons.allSatisfy { $0.traitCollection.userInterfaceStyle == .dark })
+    }
+
     func testDisabledStateSurvivesButtonRecreation() {
         // Given an element with both wallet buttons
         let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
