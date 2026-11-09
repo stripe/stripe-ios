@@ -899,9 +899,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
-        var eceConfiguration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        eceConfiguration.applePayConfiguration = .init(merchantId: "merchant.com.test")
+        let eceConfiguration = ExpressCheckoutElement.Configuration(completion: { _ in })
         configuration.expressCheckoutElement = eceConfiguration
+        configuration.applePayMerchantId = "merchant.com.test"
         let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeConfiguration(
                 apiResponse: apiResponse,

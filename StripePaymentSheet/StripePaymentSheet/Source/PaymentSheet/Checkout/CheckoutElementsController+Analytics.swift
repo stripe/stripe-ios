@@ -48,6 +48,7 @@ extension CheckoutElementsController.Configuration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
             "merchant_display_name": merchantDisplayName != nil,
+            "apple_pay_config": applePayMerchantId != nil,
             "defaults": [
                 "billing_details": ["name": defaults.billingDetails?.name != nil, "address": defaults.billingDetails?.address != nil],
                 "shipping_details": ["name": defaults.shippingDetails?.name != nil, "address": defaults.shippingDetails?.address != nil],
@@ -66,8 +67,8 @@ extension CheckoutElementsController.Configuration {
 private extension PaymentElement.Configuration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
-            "apple_pay_config": applePayConfiguration != nil,
-            "link_display": linkConfiguration?.display.rawValue ?? "automatic",
+            "apple_pay_configuration": applePayConfiguration.checkoutAnalyticsPayload,
+            "link_configuration": (linkConfiguration ?? .init()).checkoutAnalyticsPayload,
             "save_payment_method_opt_in_behavior": savePaymentMethodOptInBehavior.description,
             "appearance": appearance.analyticPayload,
             "remove_saved_payment_method_message": removeSavedPaymentMethodMessage != nil,
@@ -76,7 +77,6 @@ private extension PaymentElement.Configuration {
             "payment_method_layout": paymentMethodLayout.description,
             "displays_mandate_text": displaysMandateText,
         ]
-        params["apple_pay_button_type"] = applePayConfiguration?.buttonType?.rawValue
         params["preferred_networks"] = preferredNetworks?.map { STPCardBrandUtilities.apiValue(from: $0) }.joined(separator: ", ")
         params["payment_method_order"] = paymentMethodOrder
         switch rowSelectionBehavior {
@@ -87,17 +87,62 @@ private extension PaymentElement.Configuration {
     }
 }
 
-private extension ExpressCheckoutElement.Configuration {
+private extension PaymentElement.Configuration.ApplePayConfiguration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
-            "apple_pay_config": applePayConfiguration != nil,
-            "apple_pay_visibility": applePayConfiguration == nil ? "never" : "automatic",
-            "link_visibility": linkConfiguration.display.rawValue,
-            "button_theme": appearance.buttonTheme.rawValue,
+            "display": display.rawValue,
         ]
-        params["apple_pay_button_type"] = applePayConfiguration?.buttonType?.rawValue
-        params["max_columns"] = appearance.buttonLayout.maxColumns
-        params["max_rows"] = appearance.buttonLayout.maxRows
+        params["button_type"] = buttonType?.rawValue
+        return params
+    }
+}
+
+private extension PaymentElement.Configuration.LinkConfiguration {
+    var checkoutAnalyticsPayload: [String: Any] {
+        ["display": display.rawValue]
+    }
+}
+
+extension ExpressCheckoutElement.Configuration {
+    var checkoutAnalyticsPayload: [String: Any] {
+        [
+            "link_configuration": linkConfiguration.checkoutAnalyticsPayload,
+            "apple_pay_configuration": applePayConfiguration.checkoutAnalyticsPayload,
+            "appearance": appearance.checkoutAnalyticsPayload,
+        ]
+    }
+}
+
+private extension ExpressCheckoutElement.Configuration.LinkConfiguration {
+    var checkoutAnalyticsPayload: [String: Any] {
+        ["display": display.rawValue]
+    }
+}
+
+private extension ExpressCheckoutElement.Configuration.ApplePayConfiguration {
+    var checkoutAnalyticsPayload: [String: Any] {
+        var params: [String: Any] = [:]
+        params["button_type"] = buttonType?.rawValue
+        return params
+    }
+}
+
+private extension ExpressCheckoutElement.Configuration.Appearance {
+    var checkoutAnalyticsPayload: [String: Any] {
+        var params: [String: Any] = [
+            "button_theme": buttonTheme.rawValue,
+            "button_layout": buttonLayout.checkoutAnalyticsPayload,
+        ]
+        params["corner_radius"] = cornerRadius
+        return params
+    }
+}
+
+private extension ExpressCheckoutElement.Configuration.Appearance.ButtonLayout {
+    var checkoutAnalyticsPayload: [String: Any] {
+        var params: [String: Any] = [:]
+        params["max_columns"] = maxColumns
+        params["max_rows"] = maxRows
         return params
     }
 }

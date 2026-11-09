@@ -39,14 +39,14 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
         )
         switch paymentMethod {
         case .applePay:
-            guard let applePayConfiguration = expressCheckoutElementConfiguration.applePayConfiguration else {
-                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Express Checkout Element Apple Pay configuration unexpectedly nil.")
+            guard let merchantId = configuration.applePayMerchantId else {
+                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Checkout Elements Apple Pay merchant ID unexpectedly nil.")
             }
             // TODO: Should next actions use an authentication context tied to `presentationWindow`
             // instead of `WindowAuthenticationContext` to avoid presenting in the wrong scene?
             let authenticationContext = WindowAuthenticationContext()
             return .applePay(.init(
-                applePayConfiguration: applePayConfiguration,
+                merchantId: merchantId,
                 apiClient: apiClient,
                 returnURL: configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,

@@ -33,6 +33,12 @@ extension CheckoutElementsController {
         /// Default customer details used to pre-populate Checkout integrations.
         public var defaults: Defaults = Defaults()
 
+        /// The Apple Pay merchant identifier, shared by Payment Element and Express Checkout Element.
+        ///
+        /// Set this property to enable Apple Pay in both Payment Element and Express Checkout Element.
+        /// The default value is `nil`, which disables Apple Pay in both.
+        public var applePayMerchantId: String?
+
         /// Configuration for Payment Element.
         ///
         /// Set this property to use Payment Element with this CheckoutElementsController.
