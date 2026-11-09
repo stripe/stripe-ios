@@ -48,7 +48,7 @@
 
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY로 결제를 확인하면 %@에서 해당 약관에 따라 향후 결제에 대해 이 결제 방식으로 대금 청구하는 것을 허용하시는 것입니다.";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal 결제를 확인하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal로 결제를 확인하면 %@에서 해당 약관에 따라 향후 결제를 위해 귀하의 PayPal 계정에 대금을 청구하는 것을 허용하게 됩니다.";
 
 "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Touch 'n Go로 결제를 확인하시면 %@ 이(가) 해당 약관에 따라 향후 결제에 대해 귀하의 Touch 'n Go 계정에 대금 청구하는 것을 허용하시는 것입니다.";
 
@@ -180,7 +180,7 @@
 
 "Hide details" = "세부사항 숨기기";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "%@ 님을 대신하여 Stripe에서 자동 이체를 받는 데 동의하며, 본인이 계좌의 소유자이자 이 계좌에서 인출을 승인해야 하는 유일한 사람임을 확인합니다.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "본인은 Stripe가 %@을(를) 대신하여 자동 이체로 수금한다는 것을 이해하며, 본인이 계좌 소유자이고 이 계좌에서 출금을 승인해야 하는 유일한 사람임을 확인합니다.";
 
 "IBAN" = "IBAN";
 

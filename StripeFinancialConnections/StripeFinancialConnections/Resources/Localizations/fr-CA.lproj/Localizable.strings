@@ -122,11 +122,11 @@
 
 "We found 1 %@ account but you can only link US checking accounts to %@." = "Nous avons trouvé 1 compte %1$@, mais vous ne pouvez associer que des comptes courants américains à %2$@.";
 
-"We found 1 %@ account but you can only link US checking accounts." = "Nous avons trouvé 1 compte %2$@, mais vous ne pouvez associer que des comptes courants américains.";
+"We found 1 %@ account but you can only link US checking accounts." = "Nous avons trouvé 1 compte %@, mais vous ne pouvez associer que des comptes courants américains.";
 
 "We found 1 %@ account but you can only link checking or savings accounts to %@." = "Nous avons trouvé 1 compte %1$@, mais vous ne pouvez associer que des comptes chèques ou d'épargne à %2$@.";
 
-"We found 1 %@ account but you can only link checking or savings accounts." = "Nous avons trouvé 1 compte %2$@, mais vous ne pouvez associer que des comptes courants ou des comptes d'épargne.";
+"We found 1 %@ account but you can only link checking or savings accounts." = "Nous avons trouvé 1 compte %@, mais vous ne pouvez associer que des comptes courants ou des comptes d’épargne.";
 
 "Yes, exit" = "Oui, quitter";
 

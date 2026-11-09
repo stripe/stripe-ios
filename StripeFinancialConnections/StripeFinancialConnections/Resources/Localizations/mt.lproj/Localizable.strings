@@ -124,7 +124,7 @@
 
 "We found 1 %@ account but you can only link US checking accounts." = "Sibna kont wieħed ta’ %@ imma tista’ torbot biss kontijiet checking tal-Istati Uniti.";
 
-"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Sibna kont wieħed ta’ %@ imma tista’ torbot biss kontijiet checking jew tat-tfaddil ma’ %2$@.";
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Sibna kont 1 ta’ %1$@ imma tista’ torbot biss kontijiet checking jew savings ma’ %2$@.";
 
 "We found 1 %@ account but you can only link checking or savings accounts." = "Sibna kont wieħed ta’ %@ imma tista’ torbot biss kontijiet checking jew tat-tfaddil.";
 

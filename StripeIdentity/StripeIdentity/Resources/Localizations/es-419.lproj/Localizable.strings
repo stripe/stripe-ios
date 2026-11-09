@@ -102,8 +102,6 @@
 
 "Last 4 of Social Security number" = "Últimos 4 dígitos del número de seguridad social";
 
-"Loading" = "Cargando";
-
 "Make sure you're in a well lit space." = "Asegúrate de que estás en un lugar bien iluminado.";
 
 "Manual" = "Manual";
@@ -162,7 +160,7 @@
 
 "Select a location to upload the front of your identity document from" = "Selecciona una ubicación desde donde cargar el frente de tu documento de identidad.";
 
-"Select back %@ photo" = "Vuelve a seleccionar la foto %@";
+"Select back %@ photo" = "Selecciona la foto del reverso de %@";
 
 "Select back identity document photo" = "Selecciona la foto del dorso del documento de identidad";
 
@@ -204,7 +202,7 @@
 
 "Upload your photo ID" = "Carga tu documento de identidad con foto";
 
-"Uploading back %@ photo" = "Cargando de nuevo la foto %@";
+"Uploading back %@ photo" = "Cargando la foto del reverso de %@";
 
 "Uploading back identity document photo" = "Carga la foto del dorso del documento de identidad";
 

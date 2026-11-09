@@ -22,8 +22,6 @@
 
 "Billing address is same as shipping" = "帳單地址與送貨地址相同";
 
-"Cancel" = "取消";
-
 "Card brand" = "金融卡品牌";
 
 "City" = "城市";
@@ -46,7 +44,7 @@
 
 "Do Si" = "道/縣";
 
-"Do you want to close this form?" = "您確定要儲存此表單嗎？";
+"Do you want to close this form?" = "您要關閉此表單嗎？";
 
 "Done" = "完成";
 
