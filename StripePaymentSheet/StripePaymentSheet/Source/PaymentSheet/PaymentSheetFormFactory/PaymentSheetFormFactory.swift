@@ -247,6 +247,10 @@ class PaymentSheetFormFactory {
                 subtitle: externalPaymentOption.displaySubtext,
                 disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection
             )
+        case .serverDriven:
+            // The server only sends payment methods without form elements, so this only has the billing details
+            // the merchant asks for. Without any, it doesn't collect input, so selecting the row selects the payment method.
+            return makeContactInformationAndBillingAddressForm()
         case .stripe(let paymentMethod):
             switch paymentMethod {
             case .card:

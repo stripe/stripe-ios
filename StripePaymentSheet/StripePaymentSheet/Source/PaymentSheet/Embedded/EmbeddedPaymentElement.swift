@@ -383,7 +383,7 @@ public final class EmbeddedPaymentElement {
             let params = IntentConfirmParams(type: paymentMethodType)
             params.setDefaultBillingDetailsIfNecessary(for: configuration)
             switch paymentMethodType {
-            case .stripe:
+            case .stripe, .serverDriven:
                 return .new(confirmParams: params)
             case .external(let type):
                 return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)

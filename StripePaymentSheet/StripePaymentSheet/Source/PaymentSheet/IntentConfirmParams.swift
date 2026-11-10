@@ -46,6 +46,8 @@ final class IntentConfirmParams {
             return "••••\(last4)"
         } else if paymentMethodType == .instantDebits || paymentMethodType == .linkCardBrand {
             return brand.displayName
+        } else if case .serverDriven(let serverDrivenPaymentMethod) = paymentMethodType {
+            return serverDrivenPaymentMethod.label
         } else {
             return paymentMethodParams.paymentSheetLabel
         }
@@ -62,7 +64,7 @@ final class IntentConfirmParams {
             default:
                 return nil
             }
-        case .external:
+        case .external, .serverDriven:
             return nil
         case .instantDebits, .linkCardBrand:
             if let linkedBank = instantDebitsLinkedBank {
@@ -79,6 +81,8 @@ final class IntentConfirmParams {
     func makeIcon(forDarkBackground: Bool, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName), iconStyle: iconStyle)
+        } else if case .serverDriven = paymentMethodType {
+            return paymentMethodType.makeImage(forDarkBackground: forDarkBackground, iconStyle: iconStyle, updateHandler: nil)
         } else {
             return paymentMethodParams.makeIcon(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle, updateHandler: nil)
         }
@@ -96,6 +100,11 @@ final class IntentConfirmParams {
             // 2. Reuse existing form state restoration code in PaymentSheetFlowController, which depends on the previous state being encoded in an IntentConfirmParams.
             let params = STPPaymentMethodParams(type: .unknown)
             params.rawTypeString = externalPaymentMethod.type
+            self.init(params: params, type: type)
+        case .serverDriven(let serverDrivenPaymentMethod):
+            // The SDK has no `STPPaymentMethodType` for the type, or the server's description wins over it.
+            let params = STPPaymentMethodParams(type: .unknown)
+            params.rawTypeString = serverDrivenPaymentMethod.paymentMethodDataType
             self.init(params: params, type: type)
         case .instantDebits:
             let params = STPPaymentMethodParams(type: .link)
@@ -191,7 +200,7 @@ final class IntentConfirmParams {
                 // For all other payment method types just use the default label
                 return paymentSheetLabel
             }
-        case .external:
+        case .external, .serverDriven:
             return paymentSheetLabel
         case .instantDebits, .linkCardBrand:
             return brand.displayName
