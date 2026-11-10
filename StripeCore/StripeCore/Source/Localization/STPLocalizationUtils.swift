@@ -68,6 +68,16 @@ import Foundation
         )
     }
 
+    /// Returns the BCP 47 tag of the language `localizedStripeString` shows `bundleLocator`'s strings in.
+    /// That's the user's preferred languages intersected with the bundle's localizations, which can differ from
+    /// `Locale.current`. Returns nil if the bundle has no localizations.
+    public static func displayLanguageTag(bundleLocator: BundleLocatorProtocol.Type) -> String? {
+        guard let language = languageOverride ?? bundleLocator.resourcesBundle.preferredLocalizations.first else {
+            return nil
+        }
+        return Locale(identifier: language).toLanguageTag()
+    }
+
     // MARK: - Testing
     static var languageOverride: String?
     static func overrideLanguage(to string: String?) {

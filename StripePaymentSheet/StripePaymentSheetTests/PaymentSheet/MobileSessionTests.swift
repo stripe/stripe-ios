@@ -31,6 +31,7 @@ class MobileSessionTests: XCTestCase {
         PaymentSheetLoader.availabilityLogger = { print($0) }
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = false
         PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
+        STPLocalizationUtils.overrideLanguage(to: nil)
         super.tearDown()
     }
 
@@ -83,12 +84,13 @@ class MobileSessionTests: XCTestCase {
     }
 
     func testConfigHeader_escapesNonASCII() throws {
-        // Given a configuration with non-ASCII payment method types, including one outside the Basic Multilingual Plane
-        var configuration = PaymentSheet.Configuration()
-        configuration.paymentMethodOrder = ["café", "😀"]
+        // Given a config with non-ASCII payment method types, including one outside the Basic Multilingual Plane.
+        // `Config(configuration:)` trims these, so set them directly.
+        var config = MobileSession.Config(configuration: PaymentSheet.Configuration())
+        config.paymentElementConfig.paymentMethodOrder = ["café", "😀"]
 
         // When it's encoded
-        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration))
+        let header = try MobileSession.encodeHeaderValue(config)
 
         // Then the header is ASCII, with each UTF-16 code unit escaped
         XCTAssertTrue(header.allSatisfy { $0.isASCII })
@@ -110,6 +112,70 @@ class MobileSessionTests: XCTestCase {
         // Then neither counts as present
         XCTAssertEqual(config.paymentElementConfig.defaultBillingDetails.email, false)
         XCTAssertEqual(config.paymentElementConfig.hasReturnUrl, false)
+    }
+
+    func testConfig_trimsPaymentMethodOrder() {
+        // Given a paymentMethodOrder with duplicates, entries that can't be payment method types, and a type the SDK doesn't know
+        var configuration = PaymentSheet.Configuration()
+        configuration.paymentMethodOrder = ["card", "CARD", "café", "", "demo_pay", String(repeating: "a", count: 41), "external_paypal", "cpmt_1AbC"]
+
+        // When the config is built
+        let config = MobileSession.Config(configuration: configuration)
+
+        // Then only the first copy of each well-formed entry is kept, including the unknown type
+        XCTAssertEqual(config.paymentElementConfig.paymentMethodOrder, ["card", "demo_pay", "external_paypal", "cpmt_1AbC"])
+    }
+
+    func testConfigHeader_worstCaseStaysUnder2KB() throws {
+        // Given a configuration with every field at its largest: a long paymentMethodOrder of the longest entries,
+        // every card brand, and a long display language
+        STPLocalizationUtils.overrideLanguage(to: "zh-HK")
+        var configuration = PaymentSheet.Configuration()
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.returnURL = "foo://bar"
+        configuration.defaultBillingDetails.email = "jane@example.com"
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        configuration.link = .init(display: .walletButtonHidden)
+        configuration.cardBrandAcceptance = .disallowed(brands: [.visa, .mastercard, .amex, .discover])
+        configuration.paymentMethodOrder = (0..<500).map { "cpmt_" + String(repeating: "x", count: 32) + String(format: "%03d", $0) }
+
+        // When it's encoded
+        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration))
+
+        // Then it's under 2KB, half the server's 4KB limit per header
+        XCTAssertLessThan(header.utf8.count, 2048)
+        XCTAssertTrue(header.contains(#""display_language":"zh-Hant-HK""#))
+    }
+
+    func testConfig_displayLanguage() {
+        // Given no language override
+        let configuration = PaymentSheet.Configuration()
+
+        // Then the display language is the language the SDK's own strings render in
+        let sdkLanguage = StripePaymentSheetBundleLocator.resourcesBundle.preferredLocalizations.first.map { Locale(identifier: $0).toLanguageTag() }
+        XCTAssertNotNil(sdkLanguage)
+        XCTAssertEqual(MobileSession.Config(configuration: configuration).environment.displayLanguage, sdkLanguage)
+
+        // When the SDK's language is overridden
+        STPLocalizationUtils.overrideLanguage(to: "fr")
+
+        // Then the display language follows it
+        XCTAssertEqual(MobileSession.Config(configuration: configuration).environment.displayLanguage, "fr")
+        // ...and Traditional Chinese keeps its script, like the top-level locale
+        STPLocalizationUtils.overrideLanguage(to: "zh-HK")
+        XCTAssertEqual(MobileSession.Config(configuration: configuration).environment.displayLanguage, "zh-Hant-HK")
+    }
+
+    func testConfigHeader_includesDisplayLanguage() throws {
+        // Given the SDK's language is overridden to French
+        STPLocalizationUtils.overrideLanguage(to: "fr")
+
+        // When the header is encoded
+        let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: PaymentSheet.Configuration()))
+
+        // Then it carries the display language
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(header.utf8)) as? [String: Any])
+        XCTAssertEqual(json[jsonDict: "environment"]?["display_language"] as? String, "fr")
     }
 
     func testConfig_cardBrandAcceptance() {
