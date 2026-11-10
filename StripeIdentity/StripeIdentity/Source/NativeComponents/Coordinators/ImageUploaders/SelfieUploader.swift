@@ -13,7 +13,8 @@ import UIKit
 
 /// Dependency-injectable protocol for SelfieUploader
 protocol SelfieUploaderProtocol: AnyObject {
-    var uploadFuture: Future<SelfieUploader.FileData>? { get }
+    // Main actor, because `uploadImages` and `reset` replace the upload task on the main thread.
+    @MainActor func uploadResult() async -> Result<SelfieUploader.FileData, Error>?
 
     func uploadImages(
         _ capturedImages: FaceCaptureData
@@ -58,7 +59,7 @@ final class SelfieUploader: SelfieUploaderProtocol {
     let imageUploader: IdentityImageUploader
     let isTestMode: Bool
 
-    private(set) var uploadFuture: Future<FileData>?
+    private var uploadTask: Task<SelfieUploader.FileData, Error>?
 
     init(
         imageUploader: IdentityImageUploader,
@@ -68,58 +69,54 @@ final class SelfieUploader: SelfieUploaderProtocol {
         self.isTestMode = isTestMode
     }
 
+    @MainActor func uploadResult() async -> Result<SelfieUploader.FileData, Error>? {
+        guard let uploadTask else {
+            return nil
+        }
+        return await uploadTask.result
+    }
+
     /// Uploads high- and low-resolution front frames and full-frame side captures.
     /// - Parameters:
     ///   - capturedImages: The original images and scanner output for each captured selfie image.
     func uploadImages(
         _ capturedImages: FaceCaptureData
     ) {
-        let bestUploadFuture = uploadImages(capturedImages.bestMiddle, ofType: .best)
-        let firstUploadFuture = uploadImages(capturedImages.first, ofType: .first)
-        let lastUploadFuture = uploadImages(capturedImages.last, ofType: .last)
-        let leftUploadFuture = capturedImages.leftSide.map { uploadFullFrameImage($0, ofType: .left) }
-        let rightUploadFuture = capturedImages.rightSide.map { uploadFullFrameImage($0, ofType: .right) }
-
-        uploadFuture = bestUploadFuture.chained { bestFiles in
-            return firstUploadFuture.chained { firstFiles in
-                return lastUploadFuture.chained { lastFiles in
-                    return Self.uploadedOptionalFile(from: leftUploadFuture).chained { leftFile in
-                        return Self.uploadedOptionalFile(from: rightUploadFuture).chained { rightFile in
-                            return Promise(
-                                value: FileData(
-                                    bestHighResFile: bestFiles.highRes,
-                                    bestLowResFile: bestFiles.lowRes,
-                                    firstHighResFile: firstFiles.highRes,
-                                    firstLowResFile: firstFiles.lowRes,
-                                    lastHighResFile: lastFiles.highRes,
-                                    lastLowResFile: lastFiles.lowRes,
-                                    leftFullFrameFile: leftFile,
-                                    rightFullFrameFile: rightFile
-                                )
-                            )
-                        }
-                    }
-                }
+        // Start uploading all images in parallel
+        uploadTask = Task {
+            let bestTask = Task {
+                try await uploadImages(capturedImages.bestMiddle, ofType: .best)
             }
-        }
-    }
+            let firstTask = Task {
+                try await uploadImages(capturedImages.first, ofType: .first)
+            }
+            let lastTask = Task {
+                try await uploadImages(capturedImages.last, ofType: .last)
+            }
+            let leftTask = capturedImages.leftSide.map { image in
+                Task { try await uploadFullFrameImage(image, ofType: .left) }
+            }
+            let rightTask = capturedImages.rightSide.map { image in
+                Task { try await uploadFullFrameImage(image, ofType: .right) }
+            }
 
-    private static func uploadedOptionalFile(
-        from future: Future<StripeFile>?
-    ) -> Future<StripeFile?> {
-        guard let future else {
-            return Promise(value: nil)
-        }
-
-        return future.chained { file in
-            return Promise(value: file)
+            return try await FileData(
+                bestHighResFile: bestTask.value.highRes,
+                bestLowResFile: bestTask.value.lowRes,
+                firstHighResFile: firstTask.value.highRes,
+                firstLowResFile: firstTask.value.lowRes,
+                lastHighResFile: lastTask.value.highRes,
+                lastLowResFile: lastTask.value.lowRes,
+                leftFullFrameFile: leftTask?.value,
+                rightFullFrameFile: rightTask?.value
+            )
         }
     }
 
     func uploadImages(
         _ capturedImage: FaceScannerInputOutput,
         ofType type: ImageType
-    ) -> Future<IdentityImageUploader.LowHighResFiles> {
+    ) async throws -> IdentityImageUploader.LowHighResFiles {
         let lowResFileName = SelfieUploader.fileName(
             with: imageUploader.apiClient.verificationSessionId,
             for: type,
@@ -132,20 +129,16 @@ final class SelfieUploader: SelfieUploaderProtocol {
         )
 
         if isTestMode {
-            do {
-                let image = try TestModeImage.selfie.makeCGImage()
-                return imageUploader.uploadLowAndHighResImagesNoCropping(
-                    highResImage: image,
-                    lowResImage: image,
-                    highResFileName: highResFileName,
-                    lowResFileName: lowResFileName
-                )
-            } catch {
-                return Promise(error: error)
-            }
+            let image = try TestModeImage.selfie.makeCGImage()
+            return try await imageUploader.uploadLowAndHighResImagesNoCropping(
+                highResImage: image,
+                lowResImage: image,
+                highResFileName: highResFileName,
+                lowResFileName: lowResFileName
+            )
         }
 
-        return imageUploader.uploadLowAndHighResImages(
+        return try await imageUploader.uploadLowAndHighResImages(
             capturedImage.image,
             highResRegionOfInterest: capturedImage.scannerOutput.faceRect,
             cropPaddingComputationMethod: .regionWidth,
@@ -157,8 +150,8 @@ final class SelfieUploader: SelfieUploaderProtocol {
     private func uploadFullFrameImage(
         _ capturedImage: FaceScannerInputOutput,
         ofType type: ImageType
-    ) -> Future<StripeFile> {
-        return imageUploader.uploadLowResImage(
+    ) async throws -> StripeFile {
+        try await imageUploader.uploadLowResImage(
             capturedImage.image,
             fileName: SelfieUploader.fileName(
                 with: imageUploader.apiClient.verificationSessionId,
@@ -169,7 +162,7 @@ final class SelfieUploader: SelfieUploaderProtocol {
     }
 
     func reset() {
-        uploadFuture = nil
+        uploadTask = nil
     }
 }
 
