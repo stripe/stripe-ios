@@ -9,7 +9,7 @@ import UIKit
 
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
-extension ShippingAddressElement {
+extension ShippingAddressElement.Configuration {
     /// Appearance configuration for ``ShippingAddressElement``.
     public struct Appearance: Equatable {
         /// Describes the appearance of fonts in the shipping address form.

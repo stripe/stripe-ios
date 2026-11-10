@@ -142,28 +142,16 @@ extension CheckoutClientAPIResponse {
     }
 
     static func makeTotals(
-        from checkoutItems: [CheckoutItem],
+        from totalSummary: TotalSummary,
         currency: String
     ) -> CheckoutElementsController.Session.Totals {
-        var subtotal = 0
-        var taxExclusive = 0
-        var taxInclusive = 0
-        var total = 0
-        for checkoutItem in checkoutItems {
-            for item in checkoutItem.oneTimePrice.items {
-                subtotal += item.amountDetails.subtotal
-                taxExclusive += item.amountDetails.taxExclusive
-                taxInclusive += item.amountDetails.taxInclusive
-                total += item.amountDetails.total
-            }
-        }
         return CheckoutElementsController.Session.Totals(
-            subtotal: makeAmount(subtotal, currency: currency),
-            taxExclusive: makeAmount(taxExclusive, currency: currency),
-            taxInclusive: makeAmount(taxInclusive, currency: currency),
+            subtotal: makeAmount(totalSummary.subtotal, currency: currency),
+            taxExclusive: makeAmount(totalSummary.taxExclusive, currency: currency),
+            taxInclusive: makeAmount(totalSummary.taxInclusive, currency: currency),
             // Discounts are not currently supported in unified mode.
             discount: makeAmount(0, currency: currency),
-            total: makeAmount(total, currency: currency)
+            total: makeAmount(totalSummary.total, currency: currency)
         )
     }
 

@@ -58,7 +58,7 @@ extension CheckoutPlayground {
         @Published var adaptivePricingCountry: AdaptivePricingCountry
         @Published var automaticPaymentMethods: Bool
         @Published var paymentMethodTypes: Set<String>
-        @Published var currencySelectorAppearance: CurrencySelectorElement.Appearance
+        @Published var currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance
         @Published var checkoutEndpointOption: EndpointOption
         @Published var checkoutEndpoint: String
         @Published var delayCheckoutClientRequests: Bool
