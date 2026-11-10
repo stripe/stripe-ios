@@ -113,7 +113,7 @@ enum CheckoutElementsControllerLoader {
         let intent = Intent.checkout(session)
         let customerProvider = CustomerProvider(checkoutSession: session)
         let experimentAnalyticsHelper = ExperimentAnalyticsHelper(integrationShape: .checkoutElements)
-        PaymentSheetLoader.warnAboutUnactivatedPaymentMethods(elementsSession: elementsSession)
+        PaymentSheetLoader.logAvailabilityMessages(elementsSession: elementsSession)
         // Filter PMs
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,

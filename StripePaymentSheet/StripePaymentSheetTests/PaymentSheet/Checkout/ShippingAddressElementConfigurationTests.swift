@@ -137,7 +137,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
 
     func testMakePaymentSheetAppearance() {
         // Given
-        var appearance = ShippingAddressElement.Appearance()
+        var appearance = ShippingAddressElement.Configuration.Appearance()
         appearance.font.sizeScaleFactor = 1.2
         appearance.font.base = .preferredFont(forTextStyle: .body)
         appearance.font.custom.headline = .preferredFont(forTextStyle: .headline)
@@ -160,7 +160,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         appearance.primaryButton.borderColor = .blue
         appearance.primaryButton.borderWidth = 2
         appearance.primaryButton.font = .preferredFont(forTextStyle: .title1)
-        var primaryButtonShadow = ShippingAddressElement.Appearance.Shadow()
+        var primaryButtonShadow = ShippingAddressElement.Configuration.Appearance.Shadow()
         primaryButtonShadow.color = .purple
         primaryButtonShadow.opacity = 0.2
         primaryButtonShadow.offset = .init(width: 3, height: 4)

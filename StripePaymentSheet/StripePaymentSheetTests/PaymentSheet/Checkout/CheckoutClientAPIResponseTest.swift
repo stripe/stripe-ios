@@ -366,6 +366,13 @@ class CheckoutClientAPIResponseTest: XCTestCase {
                     ],
                 ],
             ],
+            "total_summary": [
+                "subtotal": 1000,
+                "total": 1000,
+                "tax_exclusive": 0,
+                "tax_inclusive": 0,
+                "total_tax_amounts": [],
+            ],
             "ui_mode": "mobile_elements",
             "integration_currency": "usd",
             "presentment_currency": "usd",
@@ -490,6 +497,7 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         let session = CheckoutTestHelpers.makeSession([
             "payment_status": "unpaid",
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2345),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 2345),
             "ui_mode": "mobile_elements",
             "integration_currency": "usd",
         ]).makePublicSession()
@@ -579,23 +587,24 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         XCTAssertTrue(Intent.checkout(session).allowsPaymentMethodRemoval(elementsSession: session.elementsSession))
     }
 
-    func testAggregateTaxAmountsRemainSeparateFromTotals() {
+    func testAggregateTaxAmountsMapFromTotalSummary() {
         let session = CheckoutTestHelpers.makeSession([
-            "total_summary": [
-                "total_tax_amounts": [
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(
+                taxExclusive: 186,
+                totalTaxAmounts: [
                     [
                         "amount": 186, "inclusive": false, "taxable_amount": 2000,
                         "percentage": 7.45, "display_name": "Sales Tax",
                     ],
-                ],
-            ],
+                ]
+            ),
             "ui_mode": "mobile_elements",
             "integration_currency": "usd",
         ]).makePublicSession()
 
-        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 0)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 186)
         XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1000)
-        XCTAssertEqual(session.totals.total.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 1186)
         XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
         XCTAssertEqual(session.taxAmounts?.count, 1)
         XCTAssertEqual(session.taxAmounts?[0].minorUnitsAmount, 186)
@@ -606,16 +615,18 @@ class CheckoutClientAPIResponseTest: XCTestCase {
     func testUnifiedModeSessionParsesCheckoutItemsAndTax() {
         let session = CheckoutTestHelpers.makeSession([
 
-            "total_summary": [
-                "total_tax_amounts": [
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(
+                subtotal: 2000,
+                taxExclusive: 148,
+                totalTaxAmounts: [
                     [
                         "amount": 148,
                         "inclusive": false,
                         "taxable_amount": 2000,
                         "percentage": 7.4, "display_name": "Sales Tax",
                     ],
-                ],
-            ],
+                ]
+            ),
             "items": [
                 [
                     "key": "checkout_item_abc123",
@@ -742,7 +753,8 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         XCTAssertEqual(secondAmountDetails.taxAmounts?.first?.displayName, "VAT")
     }
 
-    func testTotalsSumOneTimePriceItems() {
+    func testTotalsUseTotalSummaryInsteadOfSummingItems() {
+        // Given items whose amounts don't account for an order-level tax, such as tax on shipping
         let session = CheckoutTestHelpers.makeSession([
             "items": [
                 makeOneTimePriceCheckoutItem(
@@ -760,17 +772,49 @@ class CheckoutClientAPIResponseTest: XCTestCase {
                     total: 500
                 ),
             ],
+            // ...and a server total summary that includes that tax
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(
+                subtotal: 1500,
+                total: 1625,
+                taxExclusive: 125,
+                taxInclusive: 40
+            ),
         ]).makePublicSession()
 
+        // Then totals match the server total summary, not the sum of the items
         XCTAssertEqual(session.totals.subtotal.minorUnitsAmount, 1500)
-        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 100)
+        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 125)
         XCTAssertEqual(session.totals.taxInclusive.minorUnitsAmount, 40)
         XCTAssertEqual(session.totals.discount.minorUnitsAmount, 0)
-        XCTAssertEqual(session.totals.total.minorUnitsAmount, 1600)
+        XCTAssertEqual(session.totals.total.minorUnitsAmount, 1625)
         XCTAssertEqual(
             session.totals.total.amount,
-            String.localizedAmountDisplayString(for: 1600, currency: "usd")
+            String.localizedAmountDisplayString(for: 1625, currency: "usd")
         )
+    }
+
+    func testSessionRejectsMissingTotalSummary() {
+        // Given a response without a total summary
+        var json = CheckoutTestHelpers.makeSessionJSON()
+        json.removeValue(forKey: "total_summary")
+
+        // Then decoding fails
+        XCTAssertThrowsError(try CheckoutClientAPIResponse.decode(fromAPIResponse: json))
+    }
+
+    func testSessionRejectsMissingRequiredTotalSummaryFields() {
+        for field in ["subtotal", "total", "tax_exclusive", "tax_inclusive", "total_tax_amounts"] {
+            // Given a total summary missing a required field
+            var totalSummary = CheckoutTestHelpers.makeTotalSummaryJSON()
+            totalSummary.removeValue(forKey: field)
+            let json = CheckoutTestHelpers.makeSessionJSON(["total_summary": totalSummary])
+
+            // Then decoding fails
+            XCTAssertThrowsError(
+                try CheckoutClientAPIResponse.decode(fromAPIResponse: json),
+                "Expected missing total_summary field \(field) to fail decoding"
+            )
+        }
     }
 
     func testUnifiedModeSessionRejectsUnsupportedCheckoutItemTypes() {

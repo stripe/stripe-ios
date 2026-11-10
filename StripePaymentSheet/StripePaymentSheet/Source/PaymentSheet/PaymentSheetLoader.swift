@@ -333,18 +333,27 @@ final class PaymentSheetLoader {
             intent = .checkout(checkout.session)
         }
 
-        warnAboutUnactivatedPaymentMethods(elementsSession: elementsSession)
+        logAvailabilityMessages(elementsSession: elementsSession)
         return (elementsSession, intent)
     }
 
-    static func warnAboutUnactivatedPaymentMethods(elementsSession: STPElementsSession) {
+    /// Prints availability messages for the merchant's developer. Tests replace it to capture them.
+    static var availabilityLogger: (String) -> Void = { print($0) }
+
+    /// Logs the server's `log_messages` when PaymentSheet uses the server's availability, since only the server knows
+    /// why it didn't offer a payment method. Otherwise, warns about unactivated payment method types.
+    static func logAvailabilityMessages(elementsSession: STPElementsSession) {
+        if elementsSession.serverPaymentMethodAvailability != nil {
+            elementsSession.mobileSession?.logMessages?.forEach(availabilityLogger)
+            return
+        }
         // Warn the merchant if we see unactivated payment method types in the Intent
         if !elementsSession.unactivatedPaymentMethodTypes.isEmpty {
             let message = """
             [Stripe SDK] Warning: Your Intent contains the following payment method types which are activated for test mode but not activated for live mode: \(elementsSession.unactivatedPaymentMethodTypes.map({ $0.displayName }).joined(separator: ",")). These payment method types will not be displayed in live mode until they are activated. To activate these payment method types visit your Stripe dashboard.
             More information: https://support.stripe.com/questions/activate-a-new-payment-method
             """
-            print(message)
+            availabilityLogger(message)
         }
     }
 

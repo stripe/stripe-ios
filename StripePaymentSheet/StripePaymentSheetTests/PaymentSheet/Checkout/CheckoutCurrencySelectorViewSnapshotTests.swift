@@ -32,7 +32,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCustomAppearance() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.cornerRadius = 16.0
         appearance.background = .systemBlue.withAlphaComponent(0.1)
         appearance.selectedBackground = .systemBlue
@@ -45,7 +45,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCustomVerticalPadding_tall() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.contentVerticalPadding = 13
 
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
@@ -53,7 +53,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCustomVerticalPadding_compact() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.contentVerticalPadding = 1
 
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
@@ -61,7 +61,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCustomBorderWidth() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.borderWidth = 2.0
         appearance.border = .systemBlue
 
@@ -70,7 +70,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testSizeScaleFactor_large() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.sizeScaleFactor = 1.3
 
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
@@ -78,7 +78,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCustomFont() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.font = try XCTUnwrap(UIFont(name: "Courier", size: 14))
 
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
@@ -108,7 +108,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testLabelContentAmount() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.labelContent = .amount
 
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
@@ -116,7 +116,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testTextSecondaryClampsLowAlpha() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.textSecondary = UIColor.red.withAlphaComponent(0.1)
 
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
@@ -124,7 +124,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testTextSecondaryClampsFullyTransparent() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.textSecondary = .clear
 
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
@@ -139,7 +139,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testDetailExpanded_darkMode() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.textSecondary = .darkText
 
         let view = try await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
@@ -149,7 +149,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testFullyCustomized() async throws {
-        var appearance = CurrencySelectorElement.Appearance()
+        var appearance = CurrencySelectorElement.Configuration.Appearance()
         appearance.contentVerticalPadding = 9
         appearance.cornerRadius = 22
         appearance.borderWidth = 1.5
@@ -171,7 +171,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     @MainActor
     private func makeCurrencySelectorView(
         selectedCurrency: String = "usd",
-        appearance: CurrencySelectorElement.Appearance = .init()
+        appearance: CurrencySelectorElement.Configuration.Appearance = .init()
     ) async throws -> CurrencySelectorElementUIView {
         let session = makeSession(selectedCurrency: selectedCurrency)
         var configuration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")

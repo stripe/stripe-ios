@@ -205,6 +205,8 @@
   "total_summary": {
     "due": 2149,
     "subtotal": 2000,
+    "tax_exclusive": 149,
+    "tax_inclusive": 0,
     "total": 2149,
     "total_tax_amounts": [
       {
