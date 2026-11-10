@@ -82,8 +82,6 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
     init() {
         let config = URLSessionConfiguration.ephemeral
         config.waitsForConnectivity = true
-        // Bound model downloads, including time spent waiting for connectivity.
-        config.timeoutIntervalForResource = 5 * 60
         let urlSession = URLSession(configuration: config)
 
         self.mlModelLoader = .init(
