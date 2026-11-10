@@ -956,6 +956,113 @@ class STPPaymentHandlerServerDrivenBehaviorTests: XCTestCase {
         XCTAssertEqual(callCount, 1)
     }
 
+    func testSetupIntentProcessingIsSuccessCompletesWithSuccess() {
+        // Given an untyped PM whose behavior says processing is success
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior = .init(processingIsSuccess: true, pollingDuration: nil)
+        let setupIntent = makeSetupIntent(paymentMethodType: "demo_pay", status: .processing)
+        var callCount = 0
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            callCount += 1
+            completion(setupIntent, nil)
+        }
+
+        // When the SetupIntent is retrieved after the next action
+        let (status, error) = retrieveAndCheck(paymentHandler: paymentHandler, setupIntent: setupIntent, serverDrivenBehavior: serverDrivenBehavior)
+
+        // Then it succeeds without polling
+        XCTAssertEqual(status, .succeeded)
+        XCTAssertNil(error)
+        XCTAssertEqual(callCount, 1)
+    }
+
+    func testHandleNextActionForProcessingSetupIntentWithProcessingIsSuccessSucceeds() {
+        // Given a processing SetupIntent and a behavior that says processing is success
+        let paymentHandler = STPPaymentHandler(apiClient: STPAPIClientPollingMock())
+        let serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior = .init(processingIsSuccess: true, pollingDuration: nil)
+        let setupIntent = makeSetupIntent(paymentMethodType: "demo_pay", status: .processing)
+        let expectation = expectation(description: "handleNextAction completes")
+
+        // When its next action is handled
+        paymentHandler.handleNextAction(for: setupIntent, with: self, returnURL: nil, serverDrivenBehavior: serverDrivenBehavior) { status, resultSetupIntent, error in
+            // Then it completes as succeeded with the SetupIntent
+            XCTAssertEqual(status, .succeeded)
+            XCTAssertNil(error)
+            XCTAssertEqual(resultSetupIntent?.stripeID, setupIntent.stripeID)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 10)
+    }
+
+    func testSetupIntentProcessingIsNotSuccessFails() {
+        // Given an untyped PM whose behavior says processing is not success
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior = .init(processingIsSuccess: false, pollingDuration: nil)
+        let setupIntent = makeSetupIntent(paymentMethodType: "demo_pay", status: .processing)
+        var callCount = 0
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            callCount += 1
+            completion(setupIntent, nil)
+        }
+
+        // When the SetupIntent stays processing until the polling budget runs out
+        let (status, error) = retrieveAndCheck(
+            paymentHandler: paymentHandler,
+            setupIntent: setupIntent,
+            serverDrivenBehavior: serverDrivenBehavior,
+            pollingBudget: PollingBudget(startDate: Date(), duration: 1)
+        )
+
+        // Then it polls, then fails
+        XCTAssertEqual(status, .failed)
+        XCTAssertEqual(error?.code, STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue)
+        XCTAssertGreaterThan(callCount, 1)
+    }
+
+    func testSetupIntentProcessingWithNilBehaviorFails() {
+        // Given an untyped PM with no behavior
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let setupIntent = makeSetupIntent(paymentMethodType: "demo_pay", status: .processing)
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            completion(setupIntent, nil)
+        }
+
+        // When the SetupIntent stays processing
+        let (status, error) = retrieveAndCheck(
+            paymentHandler: paymentHandler,
+            setupIntent: setupIntent,
+            serverDrivenBehavior: nil,
+            pollingBudget: PollingBudget(startDate: Date(), duration: 1)
+        )
+
+        // Then processing isn't treated as success, as before
+        XCTAssertEqual(status, .failed)
+        XCTAssertEqual(error?.code, STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue)
+    }
+
+    func testSetupIntentKnownTypeProcessingWithNilBehaviorFails() {
+        // Given a known type whose built-in PaymentIntent rule says processing is success, and no behavior
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let setupIntent = makeSetupIntent(paymentMethodType: "sepa_debit", status: .processing)
+        var callCount = 0
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            callCount += 1
+            completion(setupIntent, nil)
+        }
+
+        // When the SetupIntent is retrieved after the next action
+        let (status, error) = retrieveAndCheck(paymentHandler: paymentHandler, setupIntent: setupIntent, serverDrivenBehavior: nil)
+
+        // Then it fails without polling, as before
+        XCTAssertEqual(status, .failed)
+        XCTAssertEqual(error?.code, STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue)
+        XCTAssertEqual(callCount, 1)
+    }
+
     // MARK: - Helpers
 
     private func makePaymentIntent(paymentMethodType: String, status: STPPaymentIntentStatus) -> STPPaymentIntent {
@@ -986,6 +1093,39 @@ class STPPaymentHandlerServerDrivenBehaviorTests: XCTestCase {
             authenticationContext: self,
             threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
             paymentIntent: paymentIntent,
+            returnURL: nil,
+            serverDrivenBehavior: serverDrivenBehavior
+        ) { status, _, error in
+            result = (status, error)
+            expectation.fulfill()
+        }
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction, pollingBudget: pollingBudget)
+        wait(for: [expectation], timeout: 10)
+        return result
+    }
+
+    private func makeSetupIntent(paymentMethodType: String, status: STPSetupIntentStatus) -> STPSetupIntent {
+        return STPFixtures.setupIntent(
+            paymentMethodTypes: [paymentMethodType],
+            status: status,
+            paymentMethod: ["id": "pm_test", "type": paymentMethodType, "created": Date().timeIntervalSince1970]
+        )
+    }
+
+    private func retrieveAndCheck(
+        paymentHandler: STPPaymentHandler,
+        setupIntent: STPSetupIntent,
+        serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior?,
+        pollingBudget: PollingBudget? = nil
+    ) -> (STPPaymentHandlerActionStatus?, NSError?) {
+        let expectation = expectation(description: "Action completes")
+        var result: (STPPaymentHandlerActionStatus?, NSError?) = (nil, nil)
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: paymentHandler.apiClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
             returnURL: nil,
             serverDrivenBehavior: serverDrivenBehavior
         ) { status, _, error in

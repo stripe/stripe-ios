@@ -158,7 +158,7 @@ public class STPPaymentHandler: NSObject {
 
     /// How to treat the intent after a next action. When passed, this overrides the SDK's built-in per-type rules.
     @_spi(InternalOnlyAPI) public struct ServerDrivenPaymentMethodBehavior {
-        /// Whether a `processing` PaymentIntent counts as a successful payment.
+        /// Whether a `processing` PaymentIntent or SetupIntent counts as a success.
         public let processingIsSuccess: Bool
         /// How long to poll an intent that is still `requires_action` after a redirect, or nil to not poll.
         public let pollingDuration: TimeInterval?
@@ -616,6 +616,7 @@ public class STPPaymentHandler: NSObject {
                 if let setupIntent = setupIntent,
                     error == nil,
                     setupIntent.status == .succeeded
+                        || (setupIntent.status == .processing && serverDrivenBehavior?.processingIsSuccess == true)
                         || (setupIntent.status == .requiresAction
                             && self.isNextActionSuccessState(nextAction: setupIntent.nextAction))
                 {
@@ -812,6 +813,7 @@ public class STPPaymentHandler: NSObject {
                 if let setupIntent = setupIntent,
                    error == nil,
                    setupIntent.status == .succeeded
+                    || (setupIntent.status == .processing && serverDrivenBehavior?.processingIsSuccess == true)
                 {
                     completion(.succeeded, setupIntent, nil)
                 } else {
@@ -1088,10 +1090,14 @@ public class STPPaymentHandler: NSObject {
             return true
 
         case .processing:
-            action.complete(
-                with: STPPaymentHandlerActionStatus.failed,
-                error: _error(for: .intentStatusErrorCode)
-            )
+            if action.serverDrivenBehavior?.processingIsSuccess == true {
+                action.complete(with: STPPaymentHandlerActionStatus.succeeded, error: nil)
+            } else {
+                action.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(for: .intentStatusErrorCode)
+                )
+            }
 
         case .succeeded:
             action.complete(with: STPPaymentHandlerActionStatus.succeeded, error: nil)
@@ -1815,8 +1821,8 @@ public class STPPaymentHandler: NSObject {
                     return
                 }
                 currentAction.setupIntent = setupIntent
-                if let type = setupIntent.paymentMethod?.type,
-                   !STPPaymentHandler._isProcessingIntentSuccess(for: type) || (type == .card && safariViewControllerDismissedManually),
+                if let paymentMethod = setupIntent.paymentMethod,
+                   !self._isProcessingIntentSuccess(for: paymentMethod, serverDrivenBehavior: currentAction.serverDrivenBehavior) || (paymentMethod.type == .card && safariViewControllerDismissedManually),
                    setupIntent.status == .processing,
                    pollingBudget?.canPoll ?? true
                 {
