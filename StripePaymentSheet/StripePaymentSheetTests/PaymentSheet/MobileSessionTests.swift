@@ -18,12 +18,17 @@ import XCTest
 @MainActor
 class MobileSessionTests: XCTestCase {
 
+    private var availabilityLogs: [String] = []
+
     override func setUp() {
         super.setUp()
         STPAnalyticsClient.sharedClient._testLogHistory = []
+        availabilityLogs = []
+        PaymentSheetLoader.availabilityLogger = { [weak self] in self?.availabilityLogs.append($0) }
     }
 
     override func tearDown() {
+        PaymentSheetLoader.availabilityLogger = { print($0) }
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = false
         PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
         super.tearDown()
@@ -54,7 +59,7 @@ class MobileSessionTests: XCTestCase {
         // Then it matches the golden JSON, which is the spec's fully populated iOS example
         XCTAssertEqual(
             header,
-            #"{"environment":{"device_supports_native_link":true,"has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"address":"full","attach_defaults_to_payment_method":true,"email":"always","name":"always","phone":"never"},"card_brand_acceptance":{"brands":["amex"],"filter":"disallowed"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"2cffd7a0"}"#
+            #"{"environment":{"device_supports_native_link":true,"has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"address":"full","attach_defaults_to_payment_method":true,"email":"always","name":"always","phone":"never"},"card_brand_acceptance":{"brands":["amex"],"filter":"disallowed"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"f718567f"}"#
         )
         // ...and never contains customer values
         XCTAssertFalse(header.contains("jane"))
@@ -73,7 +78,7 @@ class MobileSessionTests: XCTestCase {
         // Then it matches the golden JSON, with every field present
         XCTAssertEqual(
             header,
-            #"{"environment":{"device_supports_native_link":false,"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"address":"automatic","attach_defaults_to_payment_method":false,"email":"automatic","name":"automatic","phone":"automatic"},"card_brand_acceptance":{"brands":[],"filter":"all"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"},"payment_method_order":[]},"spec_hash":"2cffd7a0"}"#
+            #"{"environment":{"device_supports_native_link":false,"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"address":"automatic","attach_defaults_to_payment_method":false,"email":"automatic","name":"automatic","phone":"automatic"},"card_brand_acceptance":{"brands":[],"filter":"all"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"},"payment_method_order":[]},"spec_hash":"f718567f"}"#
         )
     }
 
@@ -208,16 +213,353 @@ class MobileSessionTests: XCTestCase {
         XCTAssertNil(elementsSession.mobileSession)
     }
 
+    // MARK: - filteredPaymentMethodTypes
+
+    func testFilteredPaymentMethodTypes_usesServerList() {
+        // Given the flag is on and the server returns an order that differs from the local logic
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        var configuration = makeConfiguration()
+        configuration.paymentMethodOrder = ["card"]
+        let elementsSession = makeElementsSession(
+            paymentMethodTypes: ["card", "klarna"],
+            externalPaymentMethodTypes: ["external_paypal"],
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["external_paypal", "klarna", "card"], "link_enabled": true] as [String: Any]]
+        )
+
+        // When filtering
+        let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration)
+
+        // Then the server's list is used exactly, without reapplying paymentMethodOrder
+        XCTAssertEqual(paymentMethodTypes.map { $0.identifier }, ["external_paypal", "klarna", "card"])
+        // ...and the mismatch with the local result is logged
+        let mismatch = STPAnalyticsClient.sharedClient._testLogHistory.first {
+            $0["event"] as? String == STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue
+        }
+        XCTAssertEqual(mismatch?["server_payment_method_types"] as? [String], ["external_paypal", "klarna", "card"])
+        XCTAssertEqual(mismatch?["local_payment_method_types"] as? [String], ["card", "klarna", "external_paypal"])
+    }
+
+    func testFilteredPaymentMethodTypes_matchingServerListDoesNotLogMismatch() {
+        // Given the flag is on and the server agrees with the local logic, for payment methods and for Link
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let configuration = makeConfiguration()
+        let linkEnabled = localLinkEnabled(paymentMethodTypes: ["card", "klarna"], configuration: configuration)
+        let elementsSession = makeElementsSession(
+            paymentMethodTypes: ["card", "klarna"],
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card", "klarna"], "link_enabled": linkEnabled] as [String: Any]]
+        )
+
+        // When filtering
+        let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration)
+
+        // Then the result is the same and no mismatch is logged
+        XCTAssertEqual(paymentMethodTypes.map { $0.identifier }, ["card", "klarna"])
+        XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue))
+    }
+
+    func testFilteredPaymentMethodTypes_instantDebitsLastDoesNotLogMismatch() {
+        // Given the flag is on and Instant Debits is available
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        var json = STPTestUtils.jsonNamed("ElementsSession")!
+        json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = ["card", "link", "klarna", "affirm", "cashapp"]
+        json[jsonDict: "link_settings"]?["link_mode"] = "LINK_PAYMENT_METHOD"
+        json[jsonDict: "link_settings"]?["link_supported_payment_methods_onboarding_enabled"] = ["INSTANT_DEBITS"]
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "foo://bar"
+        let localLinkEnabled = PaymentSheet.linkDisabledReasons(elementsSession: STPElementsSession.decodedObject(fromAPIResponse: json)!, configuration: configuration).isEmpty
+        // ...and the server puts the bank option last
+        let serverPaymentMethodTypes = ["card", "klarna", "affirm", "cashapp", "instant_debits"]
+        json["mobile_session"] = ["payment_method_availability": ["payment_method_types": serverPaymentMethodTypes, "link_enabled": localLinkEnabled] as [String: Any]]
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
+
+        // When filtering
+        let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration)
+
+        // Then the local logic agrees on the order, so no mismatch is logged
+        XCTAssertEqual(paymentMethodTypes.map { $0.identifier }, serverPaymentMethodTypes)
+        XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue))
+    }
+
+    func testFilteredPaymentMethodTypes_logsLinkMismatch() {
+        // Given the flag is on and the server agrees on payment methods but not on Link
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let configuration = makeConfiguration()
+        let localLinkEnabled = localLinkEnabled(paymentMethodTypes: ["card", "klarna"], configuration: configuration)
+        let elementsSession = makeElementsSession(
+            paymentMethodTypes: ["card", "klarna"],
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card", "klarna"], "link_enabled": !localLinkEnabled] as [String: Any]]
+        )
+
+        // When filtering
+        _ = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration)
+
+        // Then the Link mismatch is logged
+        let mismatch = STPAnalyticsClient.sharedClient._testLogHistory.first {
+            $0["event"] as? String == STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue
+        }
+        XCTAssertEqual(mismatch?["server_link_enabled"] as? Bool, !localLinkEnabled)
+        XCTAssertEqual(mismatch?["local_link_enabled"] as? Bool, localLinkEnabled)
+    }
+
+    // MARK: - Link
+
+    func testIsLinkEnabled_usesServerLinkEnabled() {
+        // Given the flag is on
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let configuration = makeConfiguration()
+
+        // Then Link is enabled exactly when the server enables it
+        for linkEnabled in [true, false] {
+            let elementsSession = makeElementsSession(
+                mobileSession: ["payment_method_availability": ["payment_method_types": ["card"], "link_enabled": linkEnabled] as [String: Any]]
+            )
+            XCTAssertEqual(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), linkEnabled, "link_enabled: \(linkEnabled)")
+        }
+    }
+
+    func testIsLinkEnabled_flagOffUsesLocalLogic() {
+        // Given a session where the server disagrees with the local logic on Link
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let configuration = makeConfiguration()
+        let localLinkEnabled = localLinkEnabled(paymentMethodTypes: ["card"], configuration: configuration)
+        let elementsSession = makeElementsSession(
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card"], "link_enabled": !localLinkEnabled] as [String: Any]]
+        )
+
+        // When the flag is off
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = false
+
+        // Then the local logic decides
+        XCTAssertEqual(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), localLinkEnabled)
+    }
+
+    func testFilteredPaymentMethodTypes_mapsSyntheticTypes() {
+        // Given the flag is on and the server returns synthetic types
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card", "instant_debits", "link_card_brand"], "link_enabled": true] as [String: Any]]
+        )
+
+        // Then they map to their PaymentMethodType cases
+        XCTAssertEqual(
+            filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: makeConfiguration()),
+            [.stripe(.card), .instantDebits, .linkCardBrand]
+        )
+    }
+
+    func testFilteredPaymentMethodTypes_assertsAndDropsUnrenderableTypes() {
+        // Given the flag is on
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        // ...and types the client can't render: an unknown type, an EPM missing from the session, and a CPM the merchant didn't configure
+        for unrenderableType in ["not_a_real_type", "external_venmo", "cpmt_123"] {
+            STPAnalyticsClient.sharedClient._testLogHistory = []
+            STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+            let elementsSession = makeElementsSession(
+                mobileSession: ["payment_method_availability": ["payment_method_types": ["card", unrenderableType], "link_enabled": true] as [String: Any]]
+            )
+
+            // When filtering
+            let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: makeConfiguration())
+
+            // Then it asserts, since the server should never return these
+            XCTAssertEqual(STPAssertTestUtil.lastAssertMessage, "Server returned a payment method type the client can't render: \(unrenderableType)")
+            // ...drops the type
+            XCTAssertEqual(paymentMethodTypes.map { $0.identifier }, ["card"])
+            // ...and logs it
+            let dropped = STPAnalyticsClient.sharedClient._testLogHistory
+                .filter { $0["event"] as? String == STPAnalyticEvent.paymentSheetMobileSessionPaymentMethodDropped.rawValue }
+                .compactMap { $0["payment_method_type"] as? String }
+            XCTAssertEqual(dropped, [unrenderableType])
+        }
+    }
+
+    func testFilteredPaymentMethodTypes_mapsConfiguredCustomPaymentMethod() {
+        // Given the flag is on and the merchant configured a CPM that's in the session
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        var configuration = makeConfiguration()
+        configuration.customPaymentMethodConfiguration = .init(customPaymentMethods: [.init(id: "cpmt_123", subtitle: nil)], customPaymentMethodConfirmHandler: { _, _ in
+            XCTFail()
+            return .canceled
+        })
+        let elementsSession = makeElementsSession(
+            customPaymentMethodTypes: ["cpmt_123"],
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card", "cpmt_123"], "link_enabled": true] as [String: Any]]
+        )
+
+        // When filtering
+        let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration)
+
+        // Then the CPM maps to an external payment method
+        XCTAssertEqual(paymentMethodTypes.count, 2)
+        XCTAssertEqual(paymentMethodTypes.first, .stripe(.card))
+        guard case .external(let externalPaymentOption) = paymentMethodTypes.last else {
+            return XCTFail("Expected an external payment method, got \(String(describing: paymentMethodTypes.last))")
+        }
+        XCTAssertEqual(externalPaymentOption.type, "cpmt_123")
+        XCTAssertEqual(externalPaymentOption.displayText, "BufoPay")
+        // ...and it isn't dropped
+        XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionPaymentMethodDropped.rawValue))
+    }
+
+    func testFilteredPaymentMethodTypes_fallsBackWhenServerListAbsent() {
+        // Given the flag is on but the sidecar has no availability
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        var configuration = makeConfiguration()
+        configuration.paymentMethodOrder = ["klarna"]
+        let elementsSession = makeElementsSession(paymentMethodTypes: ["card", "klarna"], mobileSession: [:])
+
+        // Then the local logic runs, including paymentMethodOrder
+        XCTAssertEqual(
+            filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration).map { $0.identifier },
+            ["klarna", "card"]
+        )
+    }
+
+    func testFilteredPaymentMethodTypes_flagOffIgnoresServerList() {
+        // Given a session that has server availability
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(
+            paymentMethodTypes: ["card", "klarna"],
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["klarna"], "link_enabled": true] as [String: Any]]
+        )
+
+        // When the flag is off at filtering time
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = false
+
+        // Then the local logic runs unchanged
+        XCTAssertEqual(
+            filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: makeConfiguration()).map { $0.identifier },
+            ["card", "klarna"]
+        )
+        XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue))
+    }
+
+    // MARK: - Availability logs
+
+    func testLogAvailabilityMessages_logsServerMessages() {
+        // Given the flag is on and the server sends availability with log messages
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let logMessages = ["[Stripe SDK]: PaymentSheet could not offer wechat_pay:\n\t* Unsupported.", "[Stripe SDK]: Another message"]
+        let elementsSession = makeElementsSession(
+            unactivatedPaymentMethodTypes: ["klarna"],
+            mobileSession: [
+                "payment_method_availability": ["payment_method_types": ["card"], "link_enabled": true] as [String: Any],
+                "log_messages": logMessages,
+            ] as [String: Any]
+        )
+
+        // When the session is loaded
+        PaymentSheetLoader.logAvailabilityMessages(elementsSession: elementsSession)
+
+        // Then each server message is logged verbatim, without the local unactivated warning
+        XCTAssertEqual(availabilityLogs, logMessages)
+    }
+
+    func testLogAvailabilityMessages_serverAvailabilityWithoutMessages() {
+        // Given the flag is on and the server sends availability without log messages, as in live mode
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(
+            unactivatedPaymentMethodTypes: ["klarna"],
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card"], "link_enabled": true] as [String: Any]]
+        )
+
+        // When the session is loaded
+        PaymentSheetLoader.logAvailabilityMessages(elementsSession: elementsSession)
+
+        // Then nothing is logged
+        XCTAssertEqual(availabilityLogs, [])
+    }
+
+    func testFilteredPaymentMethodTypes_skipsLocalLogsWithServerAvailability() {
+        // Given the flag is on, the server sends availability, and the local logic would drop wechat_pay
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(
+            paymentMethodTypes: ["card", "wechat_pay"],
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card"], "link_enabled": true] as [String: Any]]
+        )
+
+        // When filtering with logging on
+        _ = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: makeConfiguration(), logAvailability: true)
+
+        // Then the local logic logs nothing
+        XCTAssertEqual(availabilityLogs, [])
+    }
+
+    func testAvailabilityLogs_unchangedWithoutServerAvailability() {
+        // Given the flag is on but the sidecar has log messages and no availability
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(
+            paymentMethodTypes: ["card", "wechat_pay"],
+            unactivatedPaymentMethodTypes: ["klarna"],
+            mobileSession: ["log_messages": ["[Stripe SDK]: Server message"]]
+        )
+
+        // When the session is loaded and filtered with logging on
+        PaymentSheetLoader.logAvailabilityMessages(elementsSession: elementsSession)
+        _ = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: makeConfiguration(), logAvailability: true)
+
+        // Then the local logs are logged as before
+        XCTAssertTrue(availabilityLogs.contains { $0.hasPrefix("[Stripe SDK] Warning: Your Intent contains the following payment method types which are activated for test mode but not activated for live mode: Klarna.") })
+        XCTAssertTrue(availabilityLogs.contains { $0.hasPrefix("[Stripe SDK]: PaymentSheet could not offer WeChat Pay:") })
+        // ...and the server's messages aren't
+        XCTAssertFalse(availabilityLogs.contains("[Stripe SDK]: Server message"))
+    }
+
     // MARK: - Helpers
 
     private var loggedEvents: [String] {
         STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
     }
 
-    private func makeElementsSession(mobileSession: Any?) -> STPElementsSession {
+    private func makeConfiguration() -> PaymentSheet.Configuration {
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
+            XCTFail()
+            return .canceled
+        })
+        return configuration
+    }
+
+    private func makeElementsSession(
+        paymentMethodTypes: [String] = ["card"],
+        externalPaymentMethodTypes: [String] = [],
+        customPaymentMethodTypes: [String] = [],
+        unactivatedPaymentMethodTypes: [String] = [],
+        mobileSession: Any?
+    ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
+        json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
+        json["unactivated_payment_method_types"] = unactivatedPaymentMethodTypes
+        json["external_payment_method_data"] = externalPaymentMethodTypes.map {
+            [
+                "type": $0,
+                "label": $0,
+                "light_image_url": "https://test.com",
+                "dark_image_url": "https://test.com",
+            ]
+        }
+        json["custom_payment_method_data"] = customPaymentMethodTypes.map {
+            [
+                "type": $0,
+                "display_name": "BufoPay",
+                "logo_url": "https://test.com",
+                "is_preset": false,
+            ] as [String: Any]
+        }
         json["mobile_session"] = mobileSession
         return STPElementsSession.decodedObject(fromAPIResponse: json)!
+    }
+
+    private func localLinkEnabled(paymentMethodTypes: [String], configuration: PaymentSheet.Configuration) -> Bool {
+        let elementsSession = makeElementsSession(paymentMethodTypes: paymentMethodTypes, mobileSession: nil)
+        return PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
+    }
+
+    private func filteredPaymentMethodTypes(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration, logAvailability: Bool = false) -> [PaymentSheet.PaymentMethodType] {
+        let intent = Intent.deferredIntent(
+            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
+        )
+        return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: logAvailability)
     }
 }
 

@@ -204,7 +204,18 @@
   "total_summary": {
     "due": 2149,
     "subtotal": 2000,
-    "total": 2149
+    "tax_exclusive": 149,
+    "tax_inclusive": 0,
+    "total": 2149,
+    "total_tax_amounts": [
+      {
+        "amount": 149,
+        "inclusive": false,
+        "taxable_amount": 2000,
+        "display_name": "Sales Tax",
+        "percentage": 7.45
+      }
+    ]
   },
   "payment_response": {
     "payment_intent": {

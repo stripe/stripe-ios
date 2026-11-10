@@ -25,7 +25,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     let applePayEnabled: Bool
     let paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay
-    let currencySelectorAppearance: CurrencySelectorElement.Appearance
+    let currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance
     let delayCheckoutClientRequests: Bool
 
     func makeUIViewController(context: Context) -> UINavigationController {
@@ -63,7 +63,7 @@ final class CheckoutCartViewController: UIViewController {
     private let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     private let applePayEnabled: Bool
     private let paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay
-    private let currencySelectorAppearance: CurrencySelectorElement.Appearance
+    private let currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance
     private let delayCheckoutClientRequests: Bool
     private let closeAction: () -> Void
     private let diagnostics = CheckoutSessionDiagnostics()
@@ -100,7 +100,7 @@ final class CheckoutCartViewController: UIViewController {
         expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings,
         applePayEnabled: Bool,
         paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay,
-        currencySelectorAppearance: CurrencySelectorElement.Appearance,
+        currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance,
         delayCheckoutClientRequests: Bool,
         closeAction: @escaping () -> Void
     ) {

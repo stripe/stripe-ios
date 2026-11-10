@@ -99,6 +99,9 @@ extension PaymentSheet {
 
     /// Canonical source of truth for whether Link is enabled
     static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+        if let serverPaymentMethodAvailability = elementsSession.serverPaymentMethodAvailability {
+            return serverPaymentMethodAvailability.linkEnabled
+        }
         return linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
     }
 

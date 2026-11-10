@@ -32,6 +32,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Given a session with a single item and no tax
         let session = CheckoutTestHelpers.makeSession([
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2500),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 2500),
             "presentment_currency": "usd",
         ]).makePublicSession()
 
@@ -100,6 +101,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
                     ],
                 ],
             ],
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 3000, taxExclusive: 200),
             "presentment_currency": "usd",
         ]).makePublicSession()
 
@@ -204,6 +206,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
                     ],
                 ],
                 "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency, unitAmount: amount),
+                "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: amount),
                 "presentment_currency": currency,
             ]).makePublicSession()
             let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
@@ -228,6 +231,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Given a checkout without an alternate currency
         let session = CheckoutTestHelpers.makeSession([
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 12000),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 12000),
             "presentment_currency": "usd",
         ]).makePublicSession()
         let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
@@ -285,6 +289,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             "integration_currency": "lbp",
             "presentment_currency": "lbp",
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "lbp", unitAmount: 2345),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 2345),
         ]).makePublicSession()
         let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
@@ -486,6 +491,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let updatedSession = CheckoutTestHelpers.makeSession([
             "shipping_address_collection": ["allowed_countries": ["US"]],
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 1200),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 1200),
             "automatic_tax": [
                 "enabled": true,
                 "status": "ready",
@@ -808,7 +814,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
         let confirmed = expectation(description: "Checkout confirmed with inline Apple Pay data")
         let session = CheckoutTestHelpers.makeSession([
-            "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(),
             "customer": ["id": "cus_123"],
             "setup_future_usage_for_payment_method_type": ["card": "off_session"],
         ]).makePublicSession()
@@ -1001,7 +1007,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let resolvedAPIClient = apiClient ?? APIStubbedTestCase.stubbedAPIClient()
         let session = checkoutSession ?? CheckoutTestHelpers.makeSession([
-            "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(),
             "id": sessionId,
             "presentment_currency": "usd",
             "automatic_tax": [

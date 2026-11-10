@@ -30,7 +30,7 @@ struct CheckoutCartView: View {
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     let applePayEnabled: Bool
     let paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay
-    var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+    var currencySelectorAppearance = CurrencySelectorElement.Configuration.Appearance()
     var delayCheckoutClientRequests = false
 
     var body: some View {
