@@ -282,12 +282,11 @@ extension PaymentSheet {
                 eligibleForLinkCardBrand = false
             }
 
-            // Else if here so we don't show both Instant Debits and Link Card Brand together.
-            let bankPaymentMethodType: PaymentMethodType? = eligibleForInstantDebits ? .instantDebits : (eligibleForLinkCardBrand ? .linkCardBrand : nil)
-            if let bankPaymentMethodType {
-                // Like web, the bank option follows card, or goes last if card isn't offered.
-                let bankIndex = recommendedPaymentMethodTypes.firstIndex(of: .stripe(.card)).map { $0 + 1 } ?? recommendedPaymentMethodTypes.endIndex
-                recommendedPaymentMethodTypes.insert(bankPaymentMethodType, at: bankIndex)
+            if eligibleForInstantDebits {
+                recommendedPaymentMethodTypes.append(.instantDebits)
+            } else if eligibleForLinkCardBrand {
+                // Else if here so we don't show both Instant Debits and Link Card Brand together.
+                recommendedPaymentMethodTypes.append(.linkCardBrand)
             }
 
             if let merchantPaymentMethodOrder = configuration.paymentMethodOrder {

@@ -257,7 +257,7 @@ class MobileSessionTests: XCTestCase {
         XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue))
     }
 
-    func testFilteredPaymentMethodTypes_instantDebitsAfterCardDoesNotLogMismatch() {
+    func testFilteredPaymentMethodTypes_instantDebitsLastDoesNotLogMismatch() {
         // Given the flag is on and Instant Debits is available
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
         var json = STPTestUtils.jsonNamed("ElementsSession")!
@@ -267,8 +267,8 @@ class MobileSessionTests: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "foo://bar"
         let localLinkEnabled = PaymentSheet.linkDisabledReasons(elementsSession: STPElementsSession.decodedObject(fromAPIResponse: json)!, configuration: configuration).isEmpty
-        // ...and the server puts the bank option right after card
-        let serverPaymentMethodTypes = ["card", "instant_debits", "klarna", "affirm", "cashapp"]
+        // ...and the server puts the bank option last
+        let serverPaymentMethodTypes = ["card", "klarna", "affirm", "cashapp", "instant_debits"]
         json["mobile_session"] = ["payment_method_availability": ["payment_method_types": serverPaymentMethodTypes, "link_enabled": localLinkEnabled] as [String: Any]]
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
 
