@@ -395,6 +395,7 @@ import Foundation
     case checkoutElementsRunServerUpdateSucceeded = "checkout_elements.run_server_update.succeeded"
     case checkoutElementsRunServerUpdateFailed = "checkout_elements.run_server_update.failed"
     case checkoutElementsClearPaymentOption = "checkout_elements.clear_payment_option"
+    case checkoutElementsClearLocalCustomerData = "checkout_elements.clear_local_customer_data"
 
     // MARK: - Express Checkout Element
     case expressCheckoutElementInit = "elements.express_checkout_element.init"

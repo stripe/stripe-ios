@@ -238,6 +238,9 @@ public final class CheckoutElementsController: ObservableObject {
     /// This will ensure that any persisted authentication state in CheckoutElementsController
     /// is also cleared during logout.
     nonisolated public static func clearLocalCustomerData() {
+        STPAnalyticsClient.sharedClient.log(
+            analytic: PaymentSheetAnalytic(event: .checkoutElementsClearLocalCustomerData, additionalParams: [:])
+        )
         LinkAccountContext.shared.resetCustomer()
     }
 
