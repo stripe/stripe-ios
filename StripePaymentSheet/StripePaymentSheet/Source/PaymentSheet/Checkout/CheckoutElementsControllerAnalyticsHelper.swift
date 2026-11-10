@@ -176,6 +176,12 @@ final class CheckoutElementsControllerAnalyticsHelper {
         log(event: .checkoutElementsClearPaymentOption, session: session)
     }
 
+    nonisolated static func logClearLocalCustomerData() {
+        STPAnalyticsClient.sharedClient.log(
+            analytic: PaymentSheetAnalytic(event: .checkoutElementsClearLocalCustomerData, additionalParams: [:])
+        )
+    }
+
     /// Logs started and succeeded/failed around the body, preserving any thrown error.
     func track(
         _ action: CheckoutAction,
