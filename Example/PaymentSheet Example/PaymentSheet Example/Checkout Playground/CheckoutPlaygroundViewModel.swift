@@ -197,6 +197,17 @@ extension CheckoutPlayground {
                 isCreating = false
             }
 
+            // UI tests can supply a Session created elsewhere, e.g. a Connect direct charge on a connected account.
+            let environment = ProcessInfo.processInfo.environment
+            if let clientSecret = environment["STP_CHECKOUT_CLIENT_SECRET"],
+               let publishableKey = environment["STP_CHECKOUT_PUBLISHABLE_KEY"] {
+                STPAPIClient.shared.publishableKey = publishableKey
+                STPAPIClient.shared.stripeAccount = environment["STP_CHECKOUT_STRIPE_ACCOUNT"]
+                self.clientSecret = clientSecret
+                navigateToCheckout = true
+                return
+            }
+
             do {
                 guard let backendURL = URL(string: EndpointOption.normalizedBaseURL(from: checkoutEndpoint)) else {
                     throw NSError(domain: "CheckoutPlayground", code: 0, userInfo: [
