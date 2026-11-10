@@ -6,10 +6,13 @@
 //
 
 import Foundation
+import OHHTTPStubs
+import OHHTTPStubsSwift
 import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) import StripePayments
 @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 import UIKit
+import XCTest
 
 @MainActor
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
@@ -239,6 +242,40 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             rowButton.updateSelectedState(true, willDisplayForm: false)
             verify(rowButton, identifier: "\(style)")
         }
+    }
+
+    func testPaymentMethodRowButton_serverDriven() {
+        // Given a server-driven payment method whose 48x48 pixel icon is drawn at 3x
+        let iconURL = "https://js.stripe.com/test/snapshot-server-driven-icon@3x.png"
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let iconData = UIGraphicsImageRenderer(size: CGSize(width: 48, height: 48), format: format).pngData { _ in
+            UIColor.systemIndigo.setFill()
+            UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 48, height: 48), cornerRadius: 9).fill()
+        }
+        stub(condition: { $0.url?.absoluteString == iconURL }) { _ in
+            HTTPStubsResponse(data: iconData, statusCode: 200, headers: nil)
+        }
+        addTeardownBlock { HTTPStubs.removeAllStubs() }
+        let paymentMethod = try! ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.json {
+            $0[jsonDict: "display"]?[jsonDict: "icon"]?[jsonDict: "light"]?["url"] = iconURL
+        })
+
+        // When its row is made and the icon downloads
+        let rowButton = RowButton.makeForPaymentMethodType(
+            paymentMethodType: .serverDriven(paymentMethod),
+            hasSavedCard: false,
+            promoText: nil,
+            promotionsHelper: nil,
+            appearance: .default,
+            shouldAnimateOnPress: false,
+            didTap: { _ in }
+        )
+        let downloaded = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in rowButton.imageView.image?.size == CGSize(width: 16, height: 16) }, object: nil)
+        wait(for: [downloaded], timeout: 5)
+
+        // Then the row shows the server's label, subtitle and icon, at 16pt
+        verify(rowButton)
     }
 
     func verify(

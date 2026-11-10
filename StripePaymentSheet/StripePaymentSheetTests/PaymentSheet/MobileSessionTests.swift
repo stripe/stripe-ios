@@ -500,6 +500,167 @@ class MobileSessionTests: XCTestCase {
         XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue))
     }
 
+    // MARK: - Server-driven payment methods
+
+    func testSidecar_decodesPaymentMethods() throws {
+        // Given the flag is on and the sidecar describes a payment method
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(mobileSession: serverDrivenMobileSession(types: ["card", "demo_pay"], paymentMethods: [ServerDrivenPaymentMethodFixtures.json()]))
+
+        // Then it's decoded
+        XCTAssertEqual(elementsSession.mobileSession?.paymentMethods, [try ServerDrivenPaymentMethodFixtures.paymentMethod()])
+        XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionDecodeFailed.rawValue))
+    }
+
+    func testFilteredPaymentMethodTypes_mapsServerDrivenPaymentMethods() throws {
+        // Given the flag is on and the server offers a type the SDK doesn't know, with its description
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let configuration = makeConfiguration()
+        let elementsSession = makeElementsSession(
+            mobileSession: serverDrivenMobileSession(
+                types: ["demo_pay", "card"],
+                linkEnabled: localLinkEnabled(paymentMethodTypes: ["card"], configuration: configuration),
+                paymentMethods: [ServerDrivenPaymentMethodFixtures.json()]
+            )
+        )
+
+        // When filtering
+        let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration)
+
+        // Then the type maps to a server-driven payment method, in the server's order
+        XCTAssertEqual(paymentMethodTypes, [.serverDriven(try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod()), .stripe(.card)])
+        XCTAssertEqual(paymentMethodTypes.first?.displayName, "Demo Pay")
+        // ...without a mismatch, since the local logic can't offer it
+        XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue))
+        XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionPaymentMethodDropped.rawValue))
+    }
+
+    func testFilteredPaymentMethodTypes_serverDescriptionWinsOverNativeType() throws {
+        // Given the flag is on and the server describes a type the SDK supports natively
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let configuration = makeConfiguration()
+        let elementsSession = makeElementsSession(
+            paymentMethodTypes: ["card", "klarna"],
+            mobileSession: serverDrivenMobileSession(
+                types: ["card", "klarna"],
+                linkEnabled: localLinkEnabled(paymentMethodTypes: ["card", "klarna"], configuration: configuration),
+                paymentMethods: [ServerDrivenPaymentMethodFixtures.json(type: "klarna")]
+            )
+        )
+
+        // When filtering
+        let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration)
+
+        // Then the server's description is used
+        XCTAssertEqual(paymentMethodTypes.map { $0.identifier }, ["card", "klarna"])
+        guard case .serverDriven = paymentMethodTypes.last else {
+            return XCTFail("Expected klarna to be server-driven, got \(String(describing: paymentMethodTypes.last))")
+        }
+        // ...and it's left out of the shadow comparison, so there's no mismatch
+        XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue))
+    }
+
+    func testFilteredPaymentMethodTypes_dropsUnrenderableEntriesWithoutAsserting() {
+        // Given the flag is on
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        // ...and entries this SDK can't render, one value at a time
+        let cases: [(String, (inout [String: Any]) -> Void)] = [
+            ("form_element:unparsable", { $0["form"] = ["elements": [["type": "billing_address"]]] }),
+            ("next_action:unparsable", { $0[jsonDict: "confirm"]?["next_actions"] = ["display_qr_code"] }),
+            ("mandate_data:online_inferred", { $0[jsonDict: "confirm"]?["mandate_data"] = "online_inferred" }),
+            ("setup_future_usage:off_session", { $0[jsonDict: "confirm"]?["setup_future_usage"] = "off_session" }),
+            ("icon_rendering:unparsable", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["rendering"] = "vector" }),
+        ]
+        for (expectedValue, modify) in cases {
+            STPAnalyticsClient.sharedClient._testLogHistory = []
+            STPAssertTestUtil.lastAssertMessage = ""
+            let elementsSession = makeElementsSession(
+                mobileSession: serverDrivenMobileSession(types: ["card", "demo_pay"], paymentMethods: [ServerDrivenPaymentMethodFixtures.json(modify)])
+            )
+
+            // When filtering
+            let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: makeConfiguration())
+
+            // Then the entry is dropped
+            XCTAssertEqual(paymentMethodTypes.map { $0.identifier }, ["card"], expectedValue)
+            // ...without asserting, since an unsuppressed assertion would fail the test
+            XCTAssertEqual(STPAssertTestUtil.lastAssertMessage, "", expectedValue)
+            // ...and reported once, with the value it couldn't render
+            let dropped = droppedPaymentMethodEvents
+            XCTAssertEqual(dropped.map { $0["payment_method_type"] as? String }, ["demo_pay"], expectedValue)
+            XCTAssertEqual(dropped.map { $0["unsupported_value"] as? String }, [expectedValue])
+        }
+    }
+
+    func testFilteredPaymentMethodTypes_unrenderableEntryFallsBackToNativeType() {
+        // Given the flag is on and the server describes a native type in a way this SDK can't render
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(
+            paymentMethodTypes: ["card", "klarna"],
+            mobileSession: serverDrivenMobileSession(
+                types: ["card", "klarna"],
+                paymentMethods: [ServerDrivenPaymentMethodFixtures.json(type: "klarna") { $0[jsonDict: "confirm"]?["mandate_data"] = "online_inferred" }]
+            )
+        )
+
+        // When filtering
+        let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: makeConfiguration())
+
+        // Then the native type is used
+        XCTAssertEqual(paymentMethodTypes, [.stripe(.card), .stripe(.klarna)])
+        // ...and the entry is still reported
+        XCTAssertEqual(droppedPaymentMethodEvents.map { $0["unsupported_value"] as? String }, ["mandate_data:online_inferred"])
+    }
+
+    func testServerDrivenPaymentMethods_checkoutDropsEntries() {
+        // Given the flag is on and the session describes a payment method
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(
+            mobileSession: serverDrivenMobileSession(types: ["card", "demo_pay"], paymentMethods: [ServerDrivenPaymentMethodFixtures.json()])
+        )
+
+        // When the intent is a Checkout Session, which doesn't support server-driven payment methods yet
+        let (renderable, unrenderableTypes) = PaymentSheet.PaymentMethodType.serverDrivenPaymentMethods(intent: ._testCheckoutSession(), elementsSession: elementsSession)
+
+        // Then the entry is dropped and reported
+        XCTAssertEqual(renderable, [:])
+        XCTAssertEqual(unrenderableTypes, ["demo_pay"])
+        XCTAssertEqual(droppedPaymentMethodEvents.map { $0["unsupported_value"] as? String }, ["intent:checkout"])
+    }
+
+    func testFilteredPaymentMethodTypes_typeWithoutEntryStillAsserts() {
+        // Given the flag is on and the server offers an unknown type without describing it
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        let elementsSession = makeElementsSession(
+            mobileSession: serverDrivenMobileSession(types: ["card", "demo_pay"], paymentMethods: [ServerDrivenPaymentMethodFixtures.json(type: "other_pay")])
+        )
+
+        // When filtering
+        let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: makeConfiguration())
+
+        // Then it's dropped with an assertion, since that's a server bug
+        XCTAssertEqual(paymentMethodTypes.map { $0.identifier }, ["card"])
+        XCTAssertEqual(STPAssertTestUtil.lastAssertMessage, "Server returned a payment method type the client can't render: demo_pay")
+    }
+
+    func testFilteredPaymentMethodTypes_flagOffIgnoresServerDrivenPaymentMethods() {
+        // Given a session that describes a server-driven payment method
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(
+            paymentMethodTypes: ["card", "klarna"],
+            mobileSession: serverDrivenMobileSession(types: ["demo_pay", "klarna"], paymentMethods: [ServerDrivenPaymentMethodFixtures.json(), ServerDrivenPaymentMethodFixtures.json(type: "klarna")])
+        )
+
+        // When the flag is off at filtering time
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = false
+
+        // Then the local logic runs, with no server-driven payment methods
+        XCTAssertEqual(filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: makeConfiguration()), [.stripe(.card), .stripe(.klarna)])
+        // ...and no header is sent
+        XCTAssertEqual(MobileSession.configHeaders(for: makeConfiguration()), [:])
+    }
+
     // MARK: - Availability logs
 
     func testLogAvailabilityMessages_logsServerMessages() {
@@ -575,6 +736,19 @@ class MobileSessionTests: XCTestCase {
 
     private var loggedEvents: [String] {
         STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
+    }
+
+    private var droppedPaymentMethodEvents: [[String: Any]] {
+        STPAnalyticsClient.sharedClient._testLogHistory.filter {
+            $0["event"] as? String == STPAnalyticEvent.paymentSheetMobileSessionPaymentMethodDropped.rawValue
+        }
+    }
+
+    private func serverDrivenMobileSession(types: [String], linkEnabled: Bool = true, paymentMethods: [[String: Any]]) -> [String: Any] {
+        return [
+            "payment_method_availability": ["payment_method_types": types, "link_enabled": linkEnabled] as [String: Any],
+            "payment_methods": paymentMethods,
+        ]
     }
 
     private func makeConfiguration() -> PaymentSheet.Configuration {
