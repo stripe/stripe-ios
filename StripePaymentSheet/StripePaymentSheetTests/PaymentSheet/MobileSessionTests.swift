@@ -318,21 +318,19 @@ class MobileSessionTests: XCTestCase {
     }
 
     func testIsLinkEnabled_flagOffUsesLocalLogic() {
-        // Given a session where the server disables Link
+        // Given a session where the server disagrees with the local logic on Link
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
         let configuration = makeConfiguration()
+        let localLinkEnabled = localLinkEnabled(paymentMethodTypes: ["card"], configuration: configuration)
         let elementsSession = makeElementsSession(
-            mobileSession: ["payment_method_availability": ["payment_method_types": ["card"], "link_enabled": false] as [String: Any]]
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card"], "link_enabled": !localLinkEnabled] as [String: Any]]
         )
 
         // When the flag is off
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = false
 
         // Then the local logic decides
-        XCTAssertEqual(
-            PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
-            PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
-        )
+        XCTAssertEqual(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), localLinkEnabled)
     }
 
     func testFilteredPaymentMethodTypes_mapsSyntheticTypes() {
@@ -373,6 +371,34 @@ class MobileSessionTests: XCTestCase {
                 .compactMap { $0["payment_method_type"] as? String }
             XCTAssertEqual(dropped, [unrenderableType])
         }
+    }
+
+    func testFilteredPaymentMethodTypes_mapsConfiguredCustomPaymentMethod() {
+        // Given the flag is on and the merchant configured a CPM that's in the session
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        var configuration = makeConfiguration()
+        configuration.customPaymentMethodConfiguration = .init(customPaymentMethods: [.init(id: "cpmt_123", subtitle: nil)], customPaymentMethodConfirmHandler: { _, _ in
+            XCTFail()
+            return .canceled
+        })
+        let elementsSession = makeElementsSession(
+            customPaymentMethodTypes: ["cpmt_123"],
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card", "cpmt_123"], "link_enabled": true] as [String: Any]]
+        )
+
+        // When filtering
+        let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration)
+
+        // Then the CPM maps to an external payment method
+        XCTAssertEqual(paymentMethodTypes.count, 2)
+        XCTAssertEqual(paymentMethodTypes.first, .stripe(.card))
+        guard case .external(let externalPaymentOption) = paymentMethodTypes.last else {
+            return XCTFail("Expected an external payment method, got \(String(describing: paymentMethodTypes.last))")
+        }
+        XCTAssertEqual(externalPaymentOption.type, "cpmt_123")
+        XCTAssertEqual(externalPaymentOption.displayText, "BufoPay")
+        // ...and it isn't dropped
+        XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionPaymentMethodDropped.rawValue))
     }
 
     func testFilteredPaymentMethodTypes_fallsBackWhenServerListAbsent() {
@@ -497,6 +523,7 @@ class MobileSessionTests: XCTestCase {
     private func makeElementsSession(
         paymentMethodTypes: [String] = ["card"],
         externalPaymentMethodTypes: [String] = [],
+        customPaymentMethodTypes: [String] = [],
         unactivatedPaymentMethodTypes: [String] = [],
         mobileSession: Any?
     ) -> STPElementsSession {
@@ -510,6 +537,14 @@ class MobileSessionTests: XCTestCase {
                 "light_image_url": "https://test.com",
                 "dark_image_url": "https://test.com",
             ]
+        }
+        json["custom_payment_method_data"] = customPaymentMethodTypes.map {
+            [
+                "type": $0,
+                "display_name": "BufoPay",
+                "logo_url": "https://test.com",
+                "is_preset": false,
+            ] as [String: Any]
         }
         json["mobile_session"] = mobileSession
         return STPElementsSession.decodedObject(fromAPIResponse: json)!

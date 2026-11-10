@@ -133,7 +133,7 @@ extension PaymentSheet {
 
         /// Maps the server's `payment_method_availability` to `PaymentMethodType`s.
         /// The server should only return payment methods the client can render, so anything else is a Stripe bug.
-        static func paymentMethodTypes(fromServerAvailability serverPaymentMethodTypes: [String], elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> [PaymentMethodType] {
+        private static func paymentMethodTypes(fromServerAvailability serverPaymentMethodTypes: [String], elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> [PaymentMethodType] {
             return serverPaymentMethodTypes.compactMap { type in
                 let paymentMethodType: PaymentMethodType? = {
                     switch type {
