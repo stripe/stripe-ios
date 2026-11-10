@@ -209,7 +209,18 @@
   "payment_response": {
     "payment_intent": {
       "id": "pi_1Cl15wIl4IdHmuTbCWrpJXN6",
-      "client_secret": "pi_1Cl15wIl4IdHmuTbCWrpJXN6_secret_EkKtQ7Sg75hLDFKqFG8DtWcaK"
+      "object": "payment_intent",
+      "amount": 2149,
+      "capture_method": "automatic",
+      "client_secret": "pi_1Cl15wIl4IdHmuTbCWrpJXN6_secret_EkKtQ7Sg75hLDFKqFG8DtWcaK",
+      "confirmation_method": "automatic",
+      "created": 1530911040,
+      "currency": "usd",
+      "livemode": false,
+      "payment_method_types": [
+        "card"
+      ],
+      "status": "succeeded"
     },
     "status": "succeeded"
   }

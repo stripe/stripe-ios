@@ -551,17 +551,21 @@ extension CheckoutElementsController {
         // Release the assertion only after the request using it has finished, before handling next actions.
         await confirmationChallenge?.complete()
 
-        // 2. Retrieve the referenced Intent and handle next actions only when required.
+        // 2. Handle the returned Intent's next action only when required.
         if response.paymentResponse == nil {
             // No payment response means no Intent next action to handle; continue with Session/poll handling.
         } else if response.paymentResponse?.status != .requiresAction {
             // If status != requires_action, continue.
-        } else if let paymentIntentReference = response.paymentResponse?.paymentIntent {
-            let result = await paymentHandler.handleNextAction(
-                paymentIntentClientSecret: paymentIntentReference.clientSecret,
-                authenticationContext: authenticationContext,
-                returnURL: requestParameters.returnURL
-            )
+        } else if let paymentIntent = response.paymentResponse?.paymentIntent {
+            let result: (STPPaymentHandlerActionStatus, STPPaymentIntent?, NSError?) = await withCheckedContinuation { continuation in
+                paymentHandler.handleNextAction(
+                    for: paymentIntent,
+                    with: authenticationContext,
+                    returnURL: requestParameters.returnURL
+                ) { status, paymentIntent, error in
+                    continuation.resume(returning: (status, paymentIntent, error))
+                }
+            }
             switch result.0 {
             case .succeeded:
                 break
@@ -574,19 +578,23 @@ extension CheckoutElementsController {
                 let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a PaymentIntent.")
                 return .failed(error, sessionResponse: response)
             }
-        } else if let setupIntentReference = response.paymentResponse?.setupIntent {
-            let result = await paymentHandler.handleNextAction(
-                setupIntentClientSecret: setupIntentReference.clientSecret,
-                authenticationContext: authenticationContext,
-                returnURL: requestParameters.returnURL
-            )
+        } else if let setupIntent = response.paymentResponse?.setupIntent {
+            let result: (STPPaymentHandlerActionStatus, STPSetupIntent?, NSError?) = await withCheckedContinuation { continuation in
+                paymentHandler.handleNextAction(
+                    for: setupIntent,
+                    with: authenticationContext,
+                    returnURL: requestParameters.returnURL
+                ) { status, setupIntent, error in
+                    continuation.resume(returning: (status, setupIntent, error))
+                }
+            }
             switch result.0 {
             case .succeeded:
                 break
             case .canceled:
                 return .canceled(sessionResponse: response)
             case .failed:
-                let error = result.2 ?? PaymentSheetError.errorHandlingNextAction
+                let error: Error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
                 let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a SetupIntent.")
