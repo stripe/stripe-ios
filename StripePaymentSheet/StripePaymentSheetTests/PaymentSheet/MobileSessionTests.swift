@@ -257,6 +257,29 @@ class MobileSessionTests: XCTestCase {
         XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue))
     }
 
+    func testFilteredPaymentMethodTypes_instantDebitsAfterCardDoesNotLogMismatch() {
+        // Given the flag is on and Instant Debits is available
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        var json = STPTestUtils.jsonNamed("ElementsSession")!
+        json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = ["card", "link", "klarna", "affirm", "cashapp"]
+        json[jsonDict: "link_settings"]?["link_mode"] = "LINK_PAYMENT_METHOD"
+        json[jsonDict: "link_settings"]?["link_supported_payment_methods_onboarding_enabled"] = ["INSTANT_DEBITS"]
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "foo://bar"
+        let localLinkEnabled = PaymentSheet.linkDisabledReasons(elementsSession: STPElementsSession.decodedObject(fromAPIResponse: json)!, configuration: configuration).isEmpty
+        // ...and the server puts the bank option right after card
+        let serverPaymentMethodTypes = ["card", "instant_debits", "klarna", "affirm", "cashapp"]
+        json["mobile_session"] = ["payment_method_availability": ["payment_method_types": serverPaymentMethodTypes, "link_enabled": localLinkEnabled] as [String: Any]]
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
+
+        // When filtering
+        let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration)
+
+        // Then the local logic agrees on the order, so no mismatch is logged
+        XCTAssertEqual(paymentMethodTypes.map { $0.identifier }, serverPaymentMethodTypes)
+        XCTAssertFalse(loggedEvents.contains(STPAnalyticEvent.paymentSheetMobileSessionAvailabilityMismatch.rawValue))
+    }
+
     func testFilteredPaymentMethodTypes_logsLinkMismatch() {
         // Given the flag is on and the server agrees on payment methods but not on Link
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
