@@ -870,12 +870,55 @@ class STPPaymentHandlerServerDrivenBehaviorTests: XCTestCase {
         XCTAssertEqual(error?.code, STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue)
     }
 
-    func testKnownTypeIgnoresBehavior() {
-        // Given a behavior for a known type that says processing is success
+    func testKnownTypeFollowsBehavior() {
+        // Given a known type whose built-in rule says processing is not success, and a behavior that says it is
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
         let serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior = .init(processingIsSuccess: true, pollingDuration: nil)
         let paymentIntent = makePaymentIntent(paymentMethodType: "amazon_pay", status: .processing)
+        var callCount = 0
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            completion(paymentIntent, nil)
+        }
+
+        // When the intent is retrieved after the next action
+        let (status, error) = retrieveAndCheck(paymentHandler: paymentHandler, paymentIntent: paymentIntent, serverDrivenBehavior: serverDrivenBehavior)
+
+        // Then the behavior wins and it succeeds without polling
+        XCTAssertEqual(status, .succeeded)
+        XCTAssertNil(error)
+        XCTAssertEqual(callCount, 1)
+    }
+
+    func testKnownTypeWithNilBehaviorKeepsNativeHandling() {
+        // Given a known type whose built-in rule says processing is not success, and no behavior
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let paymentIntent = makePaymentIntent(paymentMethodType: "amazon_pay", status: .processing)
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            completion(paymentIntent, nil)
+        }
+
+        // When the intent stays processing
+        let (status, error) = retrieveAndCheck(
+            paymentHandler: paymentHandler,
+            paymentIntent: paymentIntent,
+            serverDrivenBehavior: nil,
+            pollingBudget: PollingBudget(startDate: Date(), duration: 1)
+        )
+
+        // Then the built-in rule applies and it fails, as before
+        XCTAssertEqual(status, .failed)
+        XCTAssertEqual(error?.code, STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue)
+    }
+
+    func testKnownTypeBehaviorOverridesBuiltInProcessingSuccess() {
+        // Given a known type whose built-in rule says processing is success, and a behavior that says it isn't
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior = .init(processingIsSuccess: false, pollingDuration: nil)
+        let paymentIntent = makePaymentIntent(paymentMethodType: "sepa_debit", status: .processing)
         mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
             completion(paymentIntent, nil)
         }
@@ -888,9 +931,29 @@ class STPPaymentHandlerServerDrivenBehaviorTests: XCTestCase {
             pollingBudget: PollingBudget(startDate: Date(), duration: 1)
         )
 
-        // Then the native behavior applies and it fails
+        // Then the behavior wins and it fails
         XCTAssertEqual(status, .failed)
         XCTAssertEqual(error?.code, STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue)
+    }
+
+    func testKnownTypeBehaviorWithoutPollingDurationSkipsBuiltInPolling() {
+        // Given a known type that polls after a redirect by default, and a behavior with no polling duration
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior = .init(processingIsSuccess: false, pollingDuration: nil)
+        let paymentIntent = makePaymentIntent(paymentMethodType: "amazon_pay", status: .requiresAction)
+        var callCount = 0
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            completion(paymentIntent, nil)
+        }
+
+        // When the intent is still requires_action
+        let (status, _) = retrieveAndCheck(paymentHandler: paymentHandler, paymentIntent: paymentIntent, serverDrivenBehavior: serverDrivenBehavior)
+
+        // Then the behavior wins and it cancels without polling
+        XCTAssertEqual(status, .canceled)
+        XCTAssertEqual(callCount, 1)
     }
 
     // MARK: - Helpers

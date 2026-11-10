@@ -156,7 +156,7 @@ public class STPPaymentHandler: NSObject {
     /// Defaults to `STPThreeDSCustomizationSettings()`.
     @objc public var threeDSCustomizationSettings: STPThreeDSCustomizationSettings
 
-    /// How to treat the intent after a next action for a payment method type the SDK doesn't model.
+    /// How to treat the intent after a next action. When passed, this overrides the SDK's built-in per-type rules.
     @_spi(InternalOnlyAPI) public struct ServerDrivenPaymentMethodBehavior {
         /// Whether a `processing` PaymentIntent counts as a successful payment.
         public let processingIsSuccess: Bool
@@ -219,7 +219,7 @@ public class STPPaymentHandler: NSObject {
         confirmPaymentIntent(params: params, authenticationContext: authenticationContext, serverDrivenBehavior: nil, completion: completion)
     }
 
-    /// `confirmPaymentIntent(params:authenticationContext:completion:)`, using `serverDrivenBehavior` if the payment method type is `.unknown`.
+    /// `confirmPaymentIntent(params:authenticationContext:completion:)`, using `serverDrivenBehavior` instead of the per-type rules when it's passed.
     @_spi(InternalOnlyAPI) public func confirmPaymentIntent(
         params: STPPaymentIntentConfirmParams,
         authenticationContext: STPAuthenticationContext,
@@ -571,7 +571,7 @@ public class STPPaymentHandler: NSObject {
         confirmSetupIntent(params: params, authenticationContext: authenticationContext, serverDrivenBehavior: nil, completion: completion)
     }
 
-    /// `confirmSetupIntent(params:authenticationContext:completion:)`, using `serverDrivenBehavior` if the payment method type is `.unknown`.
+    /// `confirmSetupIntent(params:authenticationContext:completion:)`, using `serverDrivenBehavior` instead of the per-type rules when it's passed.
     @_spi(InternalOnlyAPI) public func confirmSetupIntent(
         params: STPSetupIntentConfirmParams,
         authenticationContext: STPAuthenticationContext,
@@ -763,7 +763,7 @@ public class STPPaymentHandler: NSObject {
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
     ///   - shouldSendStartAnalytic: Tracks whether STPPaymentHandler has already sent a start analytic for `handleNextAction` because this method was called from the other `handleNextAction`
-    ///   - serverDrivenBehavior: How to treat the SetupIntent if its payment method type is `.unknown`.
+    ///   - serverDrivenBehavior: How to treat the SetupIntent instead of the per-type rules, or nil to use them.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
     /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
     @_spi(InternalOnlyAPI) public func handleNextAction(
@@ -854,21 +854,20 @@ public class STPPaymentHandler: NSObject {
 
     // MARK: - Private Helpers
 
-    /// `_isProcessingIntentSuccess(for:)`, using `serverDrivenBehavior` for `.unknown` types.
+    /// `_isProcessingIntentSuccess(for:)`, using `serverDrivenBehavior` instead of the per-type rules when it's passed.
     func _isProcessingIntentSuccess(for paymentMethod: STPPaymentMethod?, serverDrivenBehavior: ServerDrivenPaymentMethodBehavior?) -> Bool {
-        let paymentMethodType = paymentMethod?.type ?? .unknown
-        if paymentMethodType == .unknown, let serverDrivenBehavior {
+        if let serverDrivenBehavior {
             return serverDrivenBehavior.processingIsSuccess
         }
-        return STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethodType)
+        return STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod?.type ?? .unknown)
     }
 
-    /// The polling budget for an intent still in `requires_action`, using `serverDrivenBehavior` for `.unknown` types.
+    /// The polling budget for an intent still in `requires_action`, using `serverDrivenBehavior` instead of the per-type rules when it's passed.
     func _pollingBudget(startDate: Date, paymentMethodType: STPPaymentMethodType, serverDrivenBehavior: ServerDrivenPaymentMethodBehavior?) -> PollingBudget? {
-        if paymentMethodType == .unknown,
-           let duration = serverDrivenBehavior?.pollingDuration,
-           duration > 0
-        {
+        if let serverDrivenBehavior {
+            guard let duration = serverDrivenBehavior.pollingDuration, duration > 0 else {
+                return nil
+            }
             return PollingBudget(startDate: startDate, duration: duration)
         }
         return PollingBudget(startDate: startDate, paymentMethodType: paymentMethodType)

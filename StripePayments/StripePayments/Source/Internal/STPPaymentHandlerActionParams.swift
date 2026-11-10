@@ -64,7 +64,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     @_spi(InternalOnlyAPI) public let returnURLString: String?
     @_spi(InternalOnlyAPI) public var paymentIntent: STPPaymentIntent
     @_spi(InternalOnlyAPI) public var threeDS2Transaction: STDSTransaction?
-    /// How to treat the intent if its payment method type is `.unknown`.
+    /// How to treat the intent instead of the per-type rules, or nil to use them.
     let serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior?
 
     @_spi(InternalOnlyAPI) public var intentStripeID: String {
@@ -163,7 +163,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     let returnURLString: String?
     var setupIntent: STPSetupIntent
     var threeDS2Transaction: STDSTransaction?
-    /// How to treat the intent if its payment method type is `.unknown`.
+    /// How to treat the intent instead of the per-type rules, or nil to use them.
     let serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior?
 
     var intentStripeID: String {
