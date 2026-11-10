@@ -12,6 +12,9 @@ import PassKit
 extension PaymentElement {
     /// Configuration for PaymentElement
     public struct Configuration {
+        /// Describes the appearance of PaymentElement.
+        public typealias Appearance = PaymentSheet.Appearance
+
         // MARK: - Public
 
         /// Initializes a Configuration with default values.
@@ -295,8 +298,6 @@ private extension EmbeddedPaymentElement.Configuration {
 // MARK: - Typealiases
 
 extension PaymentElement {
-    /// Describes the appearance of PaymentElement
-    public typealias Appearance = PaymentSheet.Appearance
     public typealias SavePaymentMethodOptInBehavior = PaymentSheet.SavePaymentMethodOptInBehavior
     public typealias PaymentMethodLayout = PaymentSheet.PaymentMethodLayout
     public typealias CardBrandAcceptance = PaymentSheet.CardBrandAcceptance

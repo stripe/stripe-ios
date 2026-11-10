@@ -419,7 +419,7 @@ extension PaymentSheet.Appearance: @retroactive Codable {
     }
 }
 
-extension CurrencySelectorElement.Appearance: @retroactive Codable {
+extension CurrencySelectorElement.Configuration.Appearance: @retroactive Codable {
 
     private enum CodingKeys: String, CodingKey {
         case contentVerticalPadding

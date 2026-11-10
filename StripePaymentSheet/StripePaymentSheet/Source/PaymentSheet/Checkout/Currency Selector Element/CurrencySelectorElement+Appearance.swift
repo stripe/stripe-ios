@@ -9,7 +9,7 @@ import UIKit
 
 @_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
-extension CurrencySelectorElement {
+extension CurrencySelectorElement.Configuration {
     /// Appearance configuration for ``CurrencySelectorElement``.
     public struct Appearance {
 
