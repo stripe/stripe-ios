@@ -198,6 +198,56 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .fileUpload)
     }
 
+    func testUnreadableFileCanBeRetried() throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try Data("not an image".utf8).write(to: url)
+        defer { try? FileManager.default.removeItem(at: url) }
+        let vc = makeViewController()
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.image])
+
+        // Given an unreadable image selected for the front of the document
+        vc.didTapSelect(for: .front, from: UIButton())
+        vc.documentPicker(picker, didPickDocumentsAt: [url])
+        waitForImageLoading(vc)
+
+        // Then loading ends with an explanation and no upload
+        XCTAssertFalse(vc.isLoadingFrontImageFile)
+        XCTAssertNil(mockDocumentUploader.uploadedSide)
+        let alert = try XCTUnwrap(vc.test_presentedViewController as? UIAlertController)
+        XCTAssertEqual(alert.message, "We couldn't read this image. Please select another image.")
+        XCTAssertEqual(alert.actions.map { $0.title }, ["OK"])
+
+        // When the same side is selected again with a valid image, it uploads
+        vc.didTapSelect(for: .front, from: UIButton())
+        vc.documentPicker(picker, didPickDocumentsAt: [mockImageURL])
+        wait(for: [mockDocumentUploader.uploadImagesExp], timeout: 1)
+        waitForImageLoading(vc)
+        XCTAssertFalse(vc.isLoadingFrontImageFile)
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
+    }
+
+    func testMissingFileDisplaysRetryableError() throws {
+        let vc = makeViewController()
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.image])
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+
+        vc.didTapSelect(for: .back, from: UIButton())
+        vc.documentPicker(picker, didPickDocumentsAt: [url])
+        waitForImageLoading(vc)
+
+        XCTAssertFalse(vc.isLoadingBackImageFile)
+        XCTAssertNil(mockDocumentUploader.uploadedSide)
+        let alert = try XCTUnwrap(vc.test_presentedViewController as? UIAlertController)
+        XCTAssertEqual(alert.message, "We couldn't read this image. Please select another image.")
+    }
+
+    private func waitForImageLoading(_ vc: DocumentFileUploadViewController) {
+        vc.imageLoadingQueue.sync {}
+        let completed = expectation(description: "Image loading UI updated")
+        DispatchQueue.main.async { completed.fulfill() }
+        wait(for: [completed], timeout: 1)
+    }
+
     func testContinueButton() {
         let vc = makeViewController()
 
