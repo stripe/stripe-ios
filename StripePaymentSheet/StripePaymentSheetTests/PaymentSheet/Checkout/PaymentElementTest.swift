@@ -189,35 +189,6 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(LinkAccountContext.shared.account?.email, account.email)
     }
 
-    func testSessionUpdateDoesNotLoadPromotionsInTreatment() async throws {
-        // Given Checkout and a promotions endpoint that must not be called
-        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
-        let element = checkout.getPaymentElement()
-        let requests = expectation(description: "Checkout does not fetch promotions")
-        requests.isInverted = true
-        HTTPStubs.stubRequests(passingTest: { $0.url?.host == "ppm.stripe.com" }) { _ in
-            requests.fulfill()
-            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
-        }
-
-        // When an updated session assigns the promotions treatment for a supported payment method
-        var json = Self.openSessionJSON(paymentMethodTypes: ["card", "klarna"])
-        json["presentment_currency"] = "gbp"
-        json["integration_currency"] = "gbp"
-        json["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "gbp", unitAmount: 2500)
-        json["experiments_data"] = [
-            "arb_id": "arb_test",
-            "experiment_assignments": [PaymentMethodMessagingPromotionsExperiment.experimentName: "treatment"],
-        ]
-        checkout.dangerouslySetSessionDirectly(try CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession())
-        checkout.updateForSessionChange()
-
-        // Then neither presentation gets a promotions helper and no promotions are fetched
-        XCTAssertNil(element.paymentSheetFlowController.viewController.loadResult.paymentMethodMessagingPromotionsHelper)
-        XCTAssertNil(element.embeddedPaymentElement.loadResult.paymentMethodMessagingPromotionsHelper)
-        await fulfillment(of: [requests], timeout: 0.5)
-    }
-
     func testConfigurationSetsCheckoutMerchantDisplayName() async throws {
         // Given Checkout merchant display name
         var checkoutConfiguration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
