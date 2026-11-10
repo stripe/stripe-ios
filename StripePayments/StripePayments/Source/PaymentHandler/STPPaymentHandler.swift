@@ -413,18 +413,8 @@ public class STPPaymentHandler: NSObject {
         authenticationContext: STPAuthenticationContext,
         returnURL: String?
     ) async -> (STPPaymentHandlerActionStatus, STPPaymentIntent?, NSError?) {
-        return await handleNextAction(paymentIntentClientSecret: paymentIntentClientSecret, authenticationContext: authenticationContext, returnURL: returnURL, serverDrivenBehavior: nil)
-    }
-
-    /// `handleNextAction(paymentIntentClientSecret:authenticationContext:returnURL:)`, using `serverDrivenBehavior` if the payment method type is `.unknown`.
-    @_spi(InternalOnlyAPI) public func handleNextAction(
-        paymentIntentClientSecret: String,
-        authenticationContext: STPAuthenticationContext,
-        returnURL: String?,
-        serverDrivenBehavior: ServerDrivenPaymentMethodBehavior?
-    ) async -> (STPPaymentHandlerActionStatus, STPPaymentIntent?, NSError?) {
         return await withCheckedContinuation { continuation in
-            handleNextAction(paymentIntentClientSecret: paymentIntentClientSecret, authenticationContext: authenticationContext, returnURL: returnURL, serverDrivenBehavior: serverDrivenBehavior) { status, paymentIntent, error in
+            handleNextAction(paymentIntentClientSecret: paymentIntentClientSecret, authenticationContext: authenticationContext, returnURL: returnURL) { status, paymentIntent, error in
                 continuation.resume(returning: (status, paymentIntent, error))
             }
         }
@@ -442,17 +432,6 @@ public class STPPaymentHandler: NSObject {
         paymentIntentClientSecret: String,
         authenticationContext: STPAuthenticationContext,
         returnURL: String?,
-        completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
-    ) {
-        handleNextAction(paymentIntentClientSecret: paymentIntentClientSecret, authenticationContext: authenticationContext, returnURL: returnURL, serverDrivenBehavior: nil, completion: completion)
-    }
-
-    /// `handleNextAction(paymentIntentClientSecret:authenticationContext:returnURL:completion:)`, using `serverDrivenBehavior` if the payment method type is `.unknown`.
-    @_spi(InternalOnlyAPI) public func handleNextAction(
-        paymentIntentClientSecret: String,
-        authenticationContext: STPAuthenticationContext,
-        returnURL: String?,
-        serverDrivenBehavior: ServerDrivenPaymentMethodBehavior?,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         let paymentIntentID = STPPaymentIntent.id(fromClientSecret: paymentIntentClientSecret)
@@ -475,7 +454,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             if let paymentIntent = paymentIntent, error == nil {
-                self.handleNextAction(for: paymentIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false, serverDrivenBehavior: serverDrivenBehavior, completion: completion)
+                self.handleNextAction(for: paymentIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false, completion: completion)
             } else {
                 completion(.failed, paymentIntent, error as NSError?)
             }
@@ -730,18 +709,8 @@ public class STPPaymentHandler: NSObject {
         authenticationContext: STPAuthenticationContext,
         returnURL: String?
     ) async -> (STPPaymentHandlerActionStatus, STPSetupIntent?, Error?) {
-        return await handleNextAction(setupIntentClientSecret: setupIntentClientSecret, authenticationContext: authenticationContext, returnURL: returnURL, serverDrivenBehavior: nil)
-    }
-
-    /// `handleNextAction(setupIntentClientSecret:authenticationContext:returnURL:)`, using `serverDrivenBehavior` if the payment method type is `.unknown`.
-    @_spi(InternalOnlyAPI) public func handleNextAction(
-        setupIntentClientSecret: String,
-        authenticationContext: STPAuthenticationContext,
-        returnURL: String?,
-        serverDrivenBehavior: ServerDrivenPaymentMethodBehavior?
-    ) async -> (STPPaymentHandlerActionStatus, STPSetupIntent?, Error?) {
         return await withCheckedContinuation { continuation in
-            handleNextAction(setupIntentClientSecret: setupIntentClientSecret, authenticationContext: authenticationContext, returnURL: returnURL, serverDrivenBehavior: serverDrivenBehavior) { status, setupIntent, error in
+            handleNextAction(setupIntentClientSecret: setupIntentClientSecret, authenticationContext: authenticationContext, returnURL: returnURL) { status, setupIntent, error in
                 continuation.resume(returning: (status, setupIntent, error))
             }
         }
@@ -759,17 +728,6 @@ public class STPPaymentHandler: NSObject {
         setupIntentClientSecret: String,
         authenticationContext: STPAuthenticationContext,
         returnURL: String?,
-        completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
-    ) {
-        handleNextAction(setupIntentClientSecret: setupIntentClientSecret, authenticationContext: authenticationContext, returnURL: returnURL, serverDrivenBehavior: nil, completion: completion)
-    }
-
-    /// `handleNextAction(setupIntentClientSecret:authenticationContext:returnURL:completion:)`, using `serverDrivenBehavior` if the payment method type is `.unknown`.
-    @_spi(InternalOnlyAPI) public func handleNextAction(
-        setupIntentClientSecret: String,
-        authenticationContext: STPAuthenticationContext,
-        returnURL: String?,
-        serverDrivenBehavior: ServerDrivenPaymentMethodBehavior?,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         let setupIntentID = STPSetupIntent.id(fromClientSecret: setupIntentClientSecret)
@@ -791,7 +749,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             if let setupIntent, error == nil {
-                self.handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false, serverDrivenBehavior: serverDrivenBehavior, completion: completion)
+                self.handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false, completion: completion)
             } else {
                 completion(.failed, setupIntent, error as NSError?)
             }
