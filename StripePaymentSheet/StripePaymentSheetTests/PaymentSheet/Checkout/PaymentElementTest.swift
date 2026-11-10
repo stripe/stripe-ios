@@ -189,35 +189,18 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(LinkAccountContext.shared.account?.email, account.email)
     }
 
-    func testSessionUpdateRefreshesPromotionsForBothPresentations() async throws {
-        // Given Checkout initially has no promotions
+    func testSessionUpdateDoesNotLoadPromotionsInTreatment() async throws {
+        // Given Checkout and a promotions endpoint that must not be called
         let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
         let element = checkout.getPaymentElement()
-        let requests = expectation(description: "Checkout fetches promotions once")
-        requests.assertForOverFulfill = true
-        HTTPStubs.stubRequests(passingTest: { $0.url?.host == "ppm.stripe.com" }) { request in
-            let query = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
-            XCTAssertEqual(query.first { $0.name == "amount" }?.value, "2500")
-            XCTAssertEqual(query.first { $0.name == "currency" }?.value?.lowercased(), "gbp")
+        let requests = expectation(description: "Checkout does not fetch promotions")
+        requests.isInverted = true
+        HTTPStubs.stubRequests(passingTest: { $0.url?.host == "ppm.stripe.com" }) { _ in
             requests.fulfill()
-            return HTTPStubsResponse(
-                jsonObject: [
-                    "content": ["images": []],
-                    "payment_plan_groups": [[
-                        "type": "klarna",
-                        "content": [
-                            "images": [],
-                            "summary": ["message": "Pay over time"],
-                            "learn_more": ["message": "See plans", "url": "https://example.com/klarna"],
-                        ],
-                    ], ],
-                ],
-                statusCode: 200,
-                headers: nil
-            )
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
         }
 
-        // When an updated session enables promotions for Klarna at a new amount/currency
+        // When an updated session assigns the promotions treatment for a supported payment method
         var json = Self.openSessionJSON(paymentMethodTypes: ["card", "klarna"])
         json["presentment_currency"] = "gbp"
         json["integration_currency"] = "gbp"
@@ -229,14 +212,10 @@ final class PaymentElementTest: XCTestCase {
         checkout.dangerouslySetSessionDirectly(try CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession())
         checkout.updateForSessionChange()
 
-        // Then the update has finished while promotions fetch asynchronously with the new inputs
-        let flowControllerHelper = try XCTUnwrap(element.paymentSheetFlowController.viewController.loadResult.paymentMethodMessagingPromotionsHelper)
-        let embeddedHelper = try XCTUnwrap(element.embeddedPaymentElement.loadResult.paymentMethodMessagingPromotionsHelper)
-        await flowControllerHelper.fetchTask?.value
-        await embeddedHelper.fetchTask?.value
-        await fulfillment(of: [requests], timeout: 1)
-        XCTAssertEqual(flowControllerHelper.promotion(for: .stripe(.klarna))?.promotion, "Pay over time")
-        XCTAssertEqual(embeddedHelper.promotion(for: .stripe(.klarna))?.promotion, "Pay over time")
+        // Then neither presentation gets a promotions helper and no promotions are fetched
+        XCTAssertNil(element.paymentSheetFlowController.viewController.loadResult.paymentMethodMessagingPromotionsHelper)
+        XCTAssertNil(element.embeddedPaymentElement.loadResult.paymentMethodMessagingPromotionsHelper)
+        await fulfillment(of: [requests], timeout: 0.5)
     }
 
     func testConfigurationSetsCheckoutMerchantDisplayName() async throws {
