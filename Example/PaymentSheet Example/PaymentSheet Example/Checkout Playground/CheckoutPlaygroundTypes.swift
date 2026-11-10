@@ -499,7 +499,7 @@ enum CheckoutPlayground {
         var adaptivePricingCountry: AdaptivePricingCountry = .none
         var automaticPaymentMethods = false
         var paymentMethodTypes: Set<String> = ["card"]
-        var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+        var currencySelectorAppearance = CurrencySelectorElement.Configuration.Appearance()
         var checkoutEndpointOption: EndpointOption = .hosted
         var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
         var delayCheckoutClientRequests = false

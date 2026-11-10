@@ -26,7 +26,7 @@ public final class CurrencySelectorElementUIView: UIView {
     var didUpdateContentHeight: () -> Void = {}
 
     private weak var currencySelectionDelegate: CurrencySelectorElementCheckoutDelegate?
-    private let appearance: CurrencySelectorElement.Appearance
+    private let appearance: CurrencySelectorElement.Configuration.Appearance
     private let checkoutSessionId: String
     private let flagImageManager = AdaptivePricingFlagImageManager()
     private var selectorView: TwoOptionSelectorView?
@@ -44,7 +44,7 @@ public final class CurrencySelectorElementUIView: UIView {
     init?(
         session: CheckoutElementsController.Session,
         delegate: CurrencySelectorElementCheckoutDelegate,
-        appearance: CurrencySelectorElement.Appearance,
+        appearance: CurrencySelectorElement.Configuration.Appearance,
         userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
         needsUpdateSuperviewHeight: @escaping () -> Void
     ) async {
@@ -109,7 +109,7 @@ public final class CurrencySelectorElementUIView: UIView {
         updateCaption(currency: currency, exchangeRateMeta: exchangeRateMeta)
     }
 
-    private func resolveLabelContent() -> CurrencySelectorElement.Appearance.LabelContent {
+    private func resolveLabelContent() -> CurrencySelectorElement.Configuration.Appearance.LabelContent {
         guard case .automatic = appearance.labelContent else {
             return appearance.labelContent
         }
