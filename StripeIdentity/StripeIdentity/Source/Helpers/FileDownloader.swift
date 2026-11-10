@@ -31,10 +31,16 @@ final class FileDownloader {
 
         let request = URLRequest(url: remoteURL)
 
-        let downloadTask = urlSession.downloadTask(with: request) { url, _, error in
+        let downloadTask = urlSession.downloadTask(with: request) { url, response, error in
 
             if let error = error {
                 return promise.reject(with: error)
+            }
+
+            guard let response = response as? HTTPURLResponse,
+                (200..<300).contains(response.statusCode)
+            else {
+                return promise.reject(with: URLError(.badServerResponse))
             }
 
             guard let url = url else {
