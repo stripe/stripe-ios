@@ -77,8 +77,11 @@ class PaymentMethodMessagingPromotionsHelper {
         experimentAnalyticsHelper: ExperimentAnalyticsHelper,
         analyticsHelper: PaymentSheetAnalyticsHelper? = nil
     ) {
-        // TODO: Checkout supplies the sheet configuration before knowing whether the merchant will
-        // use the sheet, Embedded (always vertical), or neither. This exposure layout can be wrong.
+        // Checkout elements load independently and can log duplicate exposures before presentation.
+        if case .checkout = intent {
+            return nil
+        }
+
         let layout = configuration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
         guard let experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession, layout: layout.rawValue) else {
             return nil

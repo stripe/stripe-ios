@@ -102,6 +102,42 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         XCTAssertNil(helper)
     }
 
+    func testInit_checkoutSession_returnsNil() {
+        // Given a Checkout Session with an assignment that would otherwise enable the helper
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
+        let configuration = stubbedConfiguration()
+        for group in [ExperimentGroup.control, .treatment] {
+            let elementsSession = STPElementsSession._testValue(experimentsData: ExperimentsData(
+                arbId: "arb_123",
+                experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: group],
+                allResponseFields: [:]
+            ))
+            let analyticsClient = STPTestingAnalyticsClient()
+            let analyticsClientV2 = MockAnalyticsClientV2()
+            let analyticsHelper = PaymentSheetAnalyticsHelper(
+                integrationShape: .embedded,
+                configuration: configuration,
+                analyticsClient: analyticsClient,
+                analyticsClientV2: analyticsClientV2
+            )
+
+            // When initializing promotions for a Checkout element
+            let helper = PaymentMethodMessagingPromotionsHelper(
+                elementsSession: elementsSession,
+                intent: .checkout(session),
+                configuration: configuration,
+                paymentMethodTypes: [.stripe(.affirm)],
+                experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
+                analyticsHelper: analyticsHelper
+            )
+
+            // Then no helper is available to fetch or display promotions, or log experiment exposures
+            XCTAssertNil(helper, "Checkout promotions should be disabled for \(group)")
+            XCTAssertTrue(analyticsClient._testLogHistory.isEmpty)
+            XCTAssertTrue(analyticsClientV2.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName).isEmpty)
+        }
+    }
+
     func testIsInTreatmentGroup_controlAssignment() throws {
         let analyticsClientV2 = MockAnalyticsClientV2()
         let arbId = "arb_123"
