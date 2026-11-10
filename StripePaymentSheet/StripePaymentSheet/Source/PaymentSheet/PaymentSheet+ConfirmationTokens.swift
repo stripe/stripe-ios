@@ -64,6 +64,8 @@ extension PaymentSheet {
                 }
             }()
 
+            let serverDrivenBehavior = serverDrivenPaymentMethodBehavior(for: confirmType.rawPaymentMethodType)
+
             // 4. Retrieve the PaymentIntent or SetupIntent and confirm
             let result: (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?)
             switch intentConfig.mode {
@@ -82,7 +84,8 @@ extension PaymentSheet {
                     result = await withCheckedContinuation { continuation in
                         paymentHandler.confirmPaymentIntent(
                             params: paymentIntentParams,
-                            authenticationContext: authenticationContext
+                            authenticationContext: authenticationContext,
+                            serverDrivenBehavior: serverDrivenBehavior
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
@@ -98,7 +101,8 @@ extension PaymentSheet {
                         paymentHandler.handleNextAction(
                             for: paymentIntent,
                             with: authenticationContext,
-                            returnURL: configuration.returnURL
+                            returnURL: configuration.returnURL,
+                            serverDrivenBehavior: serverDrivenBehavior
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
@@ -122,7 +126,8 @@ extension PaymentSheet {
                     result = await withCheckedContinuation { continuation in
                         paymentHandler.confirmSetupIntent(
                             params: setupIntentParams,
-                            authenticationContext: authenticationContext
+                            authenticationContext: authenticationContext,
+                            serverDrivenBehavior: serverDrivenBehavior
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
@@ -138,7 +143,8 @@ extension PaymentSheet {
                         paymentHandler.handleNextAction(
                             for: setupIntent,
                             with: authenticationContext,
-                            returnURL: configuration.returnURL
+                            returnURL: configuration.returnURL,
+                            serverDrivenBehavior: serverDrivenBehavior
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {

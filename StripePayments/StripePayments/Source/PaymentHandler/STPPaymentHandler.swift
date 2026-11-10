@@ -156,6 +156,19 @@ public class STPPaymentHandler: NSObject {
     /// Defaults to `STPThreeDSCustomizationSettings()`.
     @objc public var threeDSCustomizationSettings: STPThreeDSCustomizationSettings
 
+    /// How to treat the intent after a next action. When passed, this overrides the SDK's built-in per-type rules.
+    @_spi(InternalOnlyAPI) public struct ServerDrivenPaymentMethodBehavior {
+        /// Whether a `processing` PaymentIntent or SetupIntent counts as a success.
+        public let processingIsSuccess: Bool
+        /// How long to poll an intent that is still `requires_action` after a redirect, or nil to not poll.
+        public let pollingDuration: TimeInterval?
+
+        public init(processingIsSuccess: Bool, pollingDuration: TimeInterval?) {
+            self.processingIsSuccess = processingIsSuccess
+            self.pollingDuration = pollingDuration
+        }
+    }
+
     internal var _simulateAppToAppRedirect: Bool = false
 
     /// When this flag is enabled, STPPaymentHandler will confirm certain PaymentMethods using
@@ -203,6 +216,16 @@ public class STPPaymentHandler: NSObject {
         authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
+        confirmPaymentIntent(params: params, authenticationContext: authenticationContext, serverDrivenBehavior: nil, completion: completion)
+    }
+
+    /// `confirmPaymentIntent(params:authenticationContext:completion:)`, using `serverDrivenBehavior` instead of the per-type rules when it's passed.
+    @_spi(InternalOnlyAPI) public func confirmPaymentIntent(
+        params: STPPaymentIntentConfirmParams,
+        authenticationContext: STPAuthenticationContext,
+        serverDrivenBehavior: ServerDrivenPaymentMethodBehavior?,
+        completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
+    ) {
         let paymentParams = params
         let paymentIntentID = paymentParams.stripeId
         logConfirmPaymentIntentStarted(paymentIntentID: paymentIntentID, paymentParams: paymentParams)
@@ -237,8 +260,9 @@ public class STPPaymentHandler: NSObject {
                 let successIntentState =
                     paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture
                     || (paymentIntent.status == .processing
-                        && STPPaymentHandler._isProcessingIntentSuccess(
-                            for: paymentIntent.paymentMethod?.type ?? .unknown
+                        && strongSelf._isProcessingIntentSuccess(
+                            for: paymentIntent.paymentMethod,
+                            serverDrivenBehavior: serverDrivenBehavior
                         )
                         || (paymentIntent.status == .requiresAction
                             && strongSelf.isNextActionSuccessState(
@@ -281,7 +305,8 @@ public class STPPaymentHandler: NSObject {
                 strongSelf._handleNextAction(
                     forPayment: paymentIntent,
                     with: authenticationContext,
-                    returnURL: paymentParams.returnURL
+                    returnURL: paymentParams.returnURL,
+                    serverDrivenBehavior: serverDrivenBehavior
                 ) { status, completedPaymentIntent, completedError in
                     wrappedCompletion(status, completedPaymentIntent, completedError)
                 }
@@ -441,6 +466,7 @@ public class STPPaymentHandler: NSObject {
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
         shouldSendAnalytic: Bool = true,
+        serverDrivenBehavior: ServerDrivenPaymentMethodBehavior? = nil,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         let paymentIntentID = paymentIntent.stripeId
@@ -481,7 +507,7 @@ public class STPPaymentHandler: NSObject {
             {
                 let successIntentState =
                 paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture || paymentIntent.status == .requiresConfirmation
-                || (paymentIntent.status == .processing && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
+                || (paymentIntent.status == .processing && strongSelf._isProcessingIntentSuccess(for: paymentIntent.paymentMethod, serverDrivenBehavior: serverDrivenBehavior))
                 || (paymentIntent.status == .requiresAction && strongSelf.isNextActionSuccessState(nextAction: paymentIntent.nextAction))
 
                 if error == nil && successIntentState {
@@ -521,7 +547,8 @@ public class STPPaymentHandler: NSObject {
             _handleNextAction(
                 forPayment: paymentIntent,
                 with: authenticationContext,
-                returnURL: returnURL
+                returnURL: returnURL,
+                serverDrivenBehavior: serverDrivenBehavior
             ) { status, completedPaymentIntent, completedError in
                 wrappedCompletion(status, completedPaymentIntent, completedError)
             }
@@ -539,6 +566,16 @@ public class STPPaymentHandler: NSObject {
     public func confirmSetupIntent(
         params: STPSetupIntentConfirmParams,
         authenticationContext: STPAuthenticationContext,
+        completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
+    ) {
+        confirmSetupIntent(params: params, authenticationContext: authenticationContext, serverDrivenBehavior: nil, completion: completion)
+    }
+
+    /// `confirmSetupIntent(params:authenticationContext:completion:)`, using `serverDrivenBehavior` instead of the per-type rules when it's passed.
+    @_spi(InternalOnlyAPI) public func confirmSetupIntent(
+        params: STPSetupIntentConfirmParams,
+        authenticationContext: STPAuthenticationContext,
+        serverDrivenBehavior: ServerDrivenPaymentMethodBehavior?,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         let setupIntentConfirmParams = params
@@ -579,6 +616,7 @@ public class STPPaymentHandler: NSObject {
                 if let setupIntent = setupIntent,
                     error == nil,
                     setupIntent.status == .succeeded
+                        || (setupIntent.status == .processing && serverDrivenBehavior?.processingIsSuccess == true)
                         || (setupIntent.status == .requiresAction
                             && self.isNextActionSuccessState(nextAction: setupIntent.nextAction))
                 {
@@ -618,7 +656,8 @@ public class STPPaymentHandler: NSObject {
                     authenticationContext: authenticationContext,
                     threeDSCustomizationSettings: self.threeDSCustomizationSettings,
                     setupIntent: setupIntent,
-                    returnURL: setupIntentConfirmParams.returnURL
+                    returnURL: setupIntentConfirmParams.returnURL,
+                    serverDrivenBehavior: serverDrivenBehavior
                 ) {  [weak self] status, resultSetupIntent, resultError in
                     guard let self else {
                         return
@@ -725,6 +764,7 @@ public class STPPaymentHandler: NSObject {
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
     ///   - shouldSendStartAnalytic: Tracks whether STPPaymentHandler has already sent a start analytic for `handleNextAction` because this method was called from the other `handleNextAction`
+    ///   - serverDrivenBehavior: How to treat the SetupIntent instead of the per-type rules, or nil to use them.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
     /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
     @_spi(InternalOnlyAPI) public func handleNextAction(
@@ -732,6 +772,7 @@ public class STPPaymentHandler: NSObject {
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
         shouldSendAnalytic: Bool = true,
+        serverDrivenBehavior: ServerDrivenPaymentMethodBehavior? = nil,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         let setupIntentID = setupIntent.stripeID
@@ -772,6 +813,7 @@ public class STPPaymentHandler: NSObject {
                 if let setupIntent = setupIntent,
                    error == nil,
                    setupIntent.status == .succeeded
+                    || (setupIntent.status == .processing && serverDrivenBehavior?.processingIsSuccess == true)
                 {
                     completion(.succeeded, setupIntent, nil)
                 } else {
@@ -804,7 +846,8 @@ public class STPPaymentHandler: NSObject {
             _handleNextAction(
                 for: setupIntent,
                 with: authenticationContext,
-                returnURL: returnURL
+                returnURL: returnURL,
+                serverDrivenBehavior: serverDrivenBehavior
             ) { status, completedSetupIntent, completedError in
                 wrappedCompletion(status, completedSetupIntent, completedError)
             }
@@ -812,6 +855,25 @@ public class STPPaymentHandler: NSObject {
     }
 
     // MARK: - Private Helpers
+
+    /// `_isProcessingIntentSuccess(for:)`, using `serverDrivenBehavior` instead of the per-type rules when it's passed.
+    func _isProcessingIntentSuccess(for paymentMethod: STPPaymentMethod?, serverDrivenBehavior: ServerDrivenPaymentMethodBehavior?) -> Bool {
+        if let serverDrivenBehavior {
+            return serverDrivenBehavior.processingIsSuccess
+        }
+        return STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod?.type ?? .unknown)
+    }
+
+    /// The polling budget for an intent still in `requires_action`, using `serverDrivenBehavior` instead of the per-type rules when it's passed.
+    func _pollingBudget(startDate: Date, paymentMethodType: STPPaymentMethodType, serverDrivenBehavior: ServerDrivenPaymentMethodBehavior?) -> PollingBudget? {
+        if let serverDrivenBehavior {
+            guard let duration = serverDrivenBehavior.pollingDuration, duration > 0 else {
+                return nil
+            }
+            return PollingBudget(startDate: startDate, duration: duration)
+        }
+        return PollingBudget(startDate: startDate, paymentMethodType: paymentMethodType)
+    }
 
     /// Depending on the PaymentMethod Type, after handling next action and confirming,
     /// we should either expect a success state on the PaymentIntent, or for certain asynchronous
@@ -901,6 +963,7 @@ public class STPPaymentHandler: NSObject {
         forPayment paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL returnURLString: String?,
+        serverDrivenBehavior: ServerDrivenPaymentMethodBehavior? = nil,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         guard paymentIntent.status != .requiresPaymentMethod else {
@@ -918,7 +981,8 @@ public class STPPaymentHandler: NSObject {
             authenticationContext: authenticationContext,
             threeDSCustomizationSettings: threeDSCustomizationSettings,
             paymentIntent: paymentIntent,
-            returnURL: returnURLString
+            returnURL: returnURLString,
+            serverDrivenBehavior: serverDrivenBehavior
         ) {  [weak self] status, resultPaymentIntent, error in
             guard let self else {
                 return
@@ -937,6 +1001,7 @@ public class STPPaymentHandler: NSObject {
         for setupIntent: STPSetupIntent,
         with authenticationContext: STPAuthenticationContext,
         returnURL returnURLString: String?,
+        serverDrivenBehavior: ServerDrivenPaymentMethodBehavior? = nil,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         guard setupIntent.status != .requiresPaymentMethod else {
@@ -954,7 +1019,8 @@ public class STPPaymentHandler: NSObject {
             authenticationContext: authenticationContext,
             threeDSCustomizationSettings: threeDSCustomizationSettings,
             setupIntent: setupIntent,
-            returnURL: returnURLString
+            returnURL: returnURLString,
+            serverDrivenBehavior: serverDrivenBehavior
         ) { [weak self] status, resultSetupIntent, resultError in
             guard let self else {
                 return
@@ -1024,10 +1090,14 @@ public class STPPaymentHandler: NSObject {
             return true
 
         case .processing:
-            action.complete(
-                with: STPPaymentHandlerActionStatus.failed,
-                error: _error(for: .intentStatusErrorCode)
-            )
+            if action.serverDrivenBehavior?.processingIsSuccess == true {
+                action.complete(with: STPPaymentHandlerActionStatus.succeeded, error: nil)
+            } else {
+                action.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(for: .intentStatusErrorCode)
+                )
+            }
 
         case .succeeded:
             action.complete(with: STPPaymentHandlerActionStatus.succeeded, error: nil)
@@ -1096,9 +1166,7 @@ public class STPPaymentHandler: NSObject {
             return true
 
         case .processing:
-            if let type = paymentIntent.paymentMethod?.type,
-                STPPaymentHandler._isProcessingIntentSuccess(for: type)
-            {
+            if _isProcessingIntentSuccess(for: paymentIntent.paymentMethod, serverDrivenBehavior: action.serverDrivenBehavior) {
                 action.complete(with: STPPaymentHandlerActionStatus.succeeded, error: nil)
             } else {
                 action.complete(
@@ -1657,7 +1725,7 @@ public class STPPaymentHandler: NSObject {
                         // This could happen if, for example, a payment is approved in an SFSafariViewController, the user closes the sheet, and the approval races with this fetch.
                         if
                             let paymentMethod = paymentIntent.paymentMethod,
-                            !STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod.type) || (paymentMethod.type == .card && safariViewControllerDismissedManually),
+                            !self._isProcessingIntentSuccess(for: paymentMethod, serverDrivenBehavior: currentAction.serverDrivenBehavior) || (paymentMethod.type == .card && safariViewControllerDismissedManually),
                             paymentIntent.status == .processing,
                             pollingBudget?.canPoll ?? true
                         {
@@ -1699,7 +1767,7 @@ public class STPPaymentHandler: NSObject {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                     // Also retry a few times for certain LPMs that experience latency updating the intent status after returning to the merchant's app
                                     let shouldRetryForCard = paymentMethodType == .card && paymentIntent.nextAction?.type == .useStripeSDK
-                                    if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethodType), pollingBudget.canPoll {
+                                    if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? self._pollingBudget(startDate: startDate, paymentMethodType: paymentMethodType, serverDrivenBehavior: currentAction.serverDrivenBehavior), pollingBudget.canPoll {
                                         pollingBudget.pollAfter {
                                             self._retrieveAndCheckIntentForCurrentAction(
                                                 pollingBudget: pollingBudget
@@ -1753,8 +1821,8 @@ public class STPPaymentHandler: NSObject {
                     return
                 }
                 currentAction.setupIntent = setupIntent
-                if let type = setupIntent.paymentMethod?.type,
-                   !STPPaymentHandler._isProcessingIntentSuccess(for: type) || (type == .card && safariViewControllerDismissedManually),
+                if let paymentMethod = setupIntent.paymentMethod,
+                   !self._isProcessingIntentSuccess(for: paymentMethod, serverDrivenBehavior: currentAction.serverDrivenBehavior) || (paymentMethod.type == .card && safariViewControllerDismissedManually),
                    setupIntent.status == .processing,
                    pollingBudget?.canPoll ?? true
                 {
@@ -1785,7 +1853,7 @@ public class STPPaymentHandler: NSObject {
                             // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
                             // Also retry a few times for certain LPMs that experience latency updating the intent status after returning to the merchant's app
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
-                            if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethod.type), pollingBudget.canPoll {
+                            if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? self._pollingBudget(startDate: startDate, paymentMethodType: paymentMethod.type, serverDrivenBehavior: currentAction.serverDrivenBehavior), pollingBudget.canPoll {
                                 pollingBudget.pollAfter {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         pollingBudget: pollingBudget
