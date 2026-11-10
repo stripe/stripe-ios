@@ -30,7 +30,16 @@ snapshot_commit = `git rev-parse HEAD`.strip
 
 puts "==> Pushing snapshot update to #{branch}..."
 system('git', 'remote', 'set-url', 'origin', 'git@github.com:stripe/stripe-ios.git')
-system('git', 'fetch', 'origin', branch, [:out, :err] => '/dev/null')
+system('git', 'fetch', 'origin', branch, [:out, :err] => '/dev/null', exception: true)
+
+# The recorder skips builds triggered by its own snapshot commit. Avoid replaying
+# that commit when it is already included in the remote branch.
+if system('git', 'merge-base', '--is-ancestor', snapshot_commit, "origin/#{branch}")
+  puts '==> Snapshot commit is already on the remote branch; nothing to push.'
+  exit 0
+end
+abort 'Error: Could not check whether the snapshot commit is already on the remote branch.' unless $?.exitstatus == 1
+
 system('git', 'checkout', "origin/#{branch}", [:out, :err] => '/dev/null', exception: true)
 system('git', 'cherry-pick', snapshot_commit, exception: true)
 system('git', 'push', 'origin', "HEAD:#{branch}", exception: true)
