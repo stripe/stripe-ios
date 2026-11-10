@@ -112,6 +112,7 @@ extension PaymentSheet {
 
             // Shadow the local logic so we can find where it disagrees with the server before deleting it.
             // This runs once per load, so it also covers Link, whose `isLinkEnabled` is called too often to compare there.
+            // It doesn't log availability; the server's `log_messages` explain its decision instead.
             let serverIdentifiers = availablePaymentMethodTypes.map { $0.identifier }
             let localIdentifiers = locallyFilteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration).map { $0.identifier }
             let serverLinkEnabled = serverPaymentMethodAvailability.linkEnabled
@@ -184,7 +185,7 @@ extension PaymentSheet {
             func logIfNecessary(_ message: String) {
                 if logAvailability {
                     #if DEBUG
-                    print("[Stripe SDK]: \(message)")
+                    PaymentSheetLoader.availabilityLogger("[Stripe SDK]: \(message)")
                     #endif
                 }
             }
