@@ -305,9 +305,9 @@ final class CheckoutClientAPIResponseDiscountTests: XCTestCase {
                     "total_discount_amounts": [recurringDiscount],
                 ],
             ],
-            "total_summary": [
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON().merging([
                 "total_discount_amounts": [otherDiscount],
-            ],
+            ]) { _, new in new },
         ])
 
         // When decoding the public session
@@ -331,16 +331,16 @@ final class CheckoutClientAPIResponseDiscountTests: XCTestCase {
                     "total_tax_amounts": "ignored",
                 ],
             ],
-            "total_summary": [
-                "total_discount_amounts": "ignored",
-                "total_tax_amounts": [
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(
+                taxExclusive: 100,
+                totalTaxAmounts: [
                     [
                         "amount": 100,
                         "inclusive": false,
                         "tax_rate": ["display_name": "Sales Tax", "percentage": 10.0],
                     ],
-                ],
-            ],
+                ]
+            ).merging(["total_discount_amounts": "ignored"]) { _, new in new },
         ])
 
         // When decoding the public session

@@ -31,7 +31,7 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
     let setupFutureUsageForPaymentMethodType: [String: String]?
     let billingAddressCollection: String?
     let shippingAddressCollection: ShippingAddressCollection?
-    let totalSummary: TotalSummary?
+    let totalSummary: TotalSummary
     let adaptivePricingInfo: AdaptivePricingInfo?
     let automaticTax: AutomaticTax?
     let automaticPaymentMethodTypes: Bool?
@@ -135,7 +135,7 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
             ShippingAddressCollection.self,
             forKey: .shippingAddressCollection
         )
-        totalSummary = try container.decodeIfPresent(TotalSummary.self, forKey: .totalSummary)
+        totalSummary = try container.decode(TotalSummary.self, forKey: .totalSummary)
         adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.self, forKey: .adaptivePricingInfo)
         automaticTax = try container.decodeIfPresent(AutomaticTax.self, forKey: .automaticTax)
         automaticPaymentMethodTypes = try container.decodeIfPresent(Bool.self, forKey: .automaticPaymentMethodTypes)
@@ -329,7 +329,11 @@ extension CheckoutClientAPIResponse {
     }
 
     struct TotalSummary: Decodable {
-        let totalTaxAmounts: [TaxAmount]?
+        let subtotal: Int
+        let total: Int
+        let taxExclusive: Int
+        let taxInclusive: Int
+        let totalTaxAmounts: [TaxAmount]
     }
 
     struct TaxAmount: Decodable {
