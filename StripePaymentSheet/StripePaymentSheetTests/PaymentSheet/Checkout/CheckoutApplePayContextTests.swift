@@ -814,10 +814,11 @@ final class CheckoutApplePayContextTests: XCTestCase {
         ]).makePublicSession()
         XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
         let (context, controller) = makeContext(checkoutSession: session) { parameters in
-            XCTAssertNil(parameters.paymentMethodId)
-            XCTAssertNil(parameters.savePaymentMethod)
+            let inputParameters = parameters.inputParameters
+            XCTAssertNil(inputParameters["payment_method"])
+            XCTAssertNil((inputParameters["collected_information"] as? [String: Any])?["save_payment_method"])
             XCTAssertEqual(parameters.paymentMethodData?.card?.token, "tok_apple_pay")
-            XCTAssertEqual(parameters.expectedPaymentMethodType, "card")
+            XCTAssertEqual(inputParameters["expected_payment_method_type"] as? String, "card")
             XCTAssertEqual(parameters.expectedAmount, 1000)
             XCTAssertEqual(parameters.paymentMethodData?.billingDetails?.name, "Jane Doe")
             XCTAssertEqual(parameters.paymentMethodData?.billingDetails?.address?.line1, "123 Main St")
