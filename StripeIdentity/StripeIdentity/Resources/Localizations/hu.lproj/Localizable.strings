@@ -12,7 +12,7 @@
 
 "Back identity document photo successfully uploaded" = "Vissza azonosító dokumentum fénykép sikeresen feltöltve";
 
-"Back of %@" = "%@-a vissza";
+"Back of %@" = "%@ vissza";
 
 "Back of ID not detected" = "Az igazolvány hátlapja nem észlelhető";
 
@@ -101,8 +101,6 @@
 "Keep ID level" = "Tartsa egyenesen az igazolványt";
 
 "Last 4 of Social Security number" = "A társadalombiztosítási szám utolsó 4 számjegye";
-
-"Loading" = "Betöltés folyamatban";
 
 "Make sure you're in a well lit space." = "Válasszon jól megvilágított helyet.";
 

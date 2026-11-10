@@ -40,6 +40,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     init(
         session: CheckoutElementsController.Session,
         configuration: ExpressCheckoutElement.Configuration,
+        userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient = .shared,
         analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
@@ -64,6 +65,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+        userInterfaceStyle.configure(self)
     }
 
     @available(*, unavailable)
@@ -117,11 +119,8 @@ public final class ExpressCheckoutElementUIView: UIView {
                 event: .expressCheckoutElementInit,
                 additionalParams: [
                     "checkout_session_id": session.id,
-                    "ordered_lpms": ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: configuration, apiClient: apiClient).map(\.rawValue).joined(separator: ","),
-                    "ece_config": [
-                        "link_visibility": configuration.linkConfiguration.display.rawValue,
-                        "apple_pay_visibility": configuration.applePayConfiguration == nil ? "never" : "automatic",
-                    ],
+                    "ordered_lpms": session.availableExpressCheckoutPaymentMethodsOrdered.map(\.rawValue).joined(separator: ","),
+                    "ece_config": configuration.checkoutAnalyticsPayload,
                 ]
             ),
             apiClient: apiClient
@@ -209,7 +208,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     private func makeApplePayButton() -> PKPaymentButton {
-        let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
+        let buttonType = configuration.applePayConfiguration.buttonType ?? .plain
         let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
         button.isEnabled = isUserInteractionEnabled
         // `cornerConfiguration` doesn't work on PKPaymentButton, so set the radius directly.

@@ -28,16 +28,23 @@ extension PaymentSheet {
         /// PaymentSheet will always use colors appropriate for dark mode UI
         case alwaysDark
 
-        func configure(_ viewController: UIViewController) {
+        var overrideUserInterfaceStyle: UIUserInterfaceStyle? {
             switch self {
-            case .automatic:
-                break  // no-op
+            case .automatic: nil
+            case .alwaysLight: .light
+            case .alwaysDark: .dark
+            }
+        }
 
-            case .alwaysLight:
-                viewController.overrideUserInterfaceStyle = .light
+        func configure(_ viewController: UIViewController) {
+            if let overrideUserInterfaceStyle {
+                viewController.overrideUserInterfaceStyle = overrideUserInterfaceStyle
+            }
+        }
 
-            case .alwaysDark:
-                viewController.overrideUserInterfaceStyle = .dark
+        func configure(_ view: UIView) {
+            if let overrideUserInterfaceStyle {
+                view.overrideUserInterfaceStyle = overrideUserInterfaceStyle
             }
         }
     }

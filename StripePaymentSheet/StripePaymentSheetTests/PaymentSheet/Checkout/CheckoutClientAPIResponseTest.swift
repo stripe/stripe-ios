@@ -1345,7 +1345,8 @@ class CheckoutClientAPIResponseTest: XCTestCase {
             "ordered_payment_method_types_and_wallets": ["card"],
             "elements_session_id": "es_123",
             "merchant_info": [
-                "country": "US"
+                "account_id": "acct_123",
+                "country": "US",
             ],
             "automatic_tax": [
                 "enabled": true,
@@ -1354,6 +1355,7 @@ class CheckoutClientAPIResponseTest: XCTestCase {
             ],
         ]).withCustomer().makePublicSession()
         XCTAssertEqual(session.checkoutConfigID, "csc_123")
+        XCTAssertEqual(session.elementsSession.accountID, "acct_123")
         XCTAssertTrue(session.elementsSession.disableLinkForAutomaticTaxBilling)
 
         let sessionWithoutTax = CheckoutTestHelpers.makeSession([
@@ -1364,6 +1366,7 @@ class CheckoutClientAPIResponseTest: XCTestCase {
             ],
         ]).withCustomer().makePublicSession()
         XCTAssertNil(sessionWithoutTax.checkoutConfigID)
+        XCTAssertNil(sessionWithoutTax.elementsSession.accountID)
         XCTAssertFalse(sessionWithoutTax.elementsSession.disableLinkForAutomaticTaxBilling)
 
         var jsonWithoutES = CheckoutTestHelpers.baseSessionJSON

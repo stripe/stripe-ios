@@ -68,7 +68,7 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的電郵地址即表示您同意按照 %1$@ <terms>條款</terms>和<privacy>隱私政策</privacy>建立 %1$@ 帳戶，並將您的支付資訊儲存至 %1$@。";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式並確認該付款即表示您授權 (A) %@ 與我們的支付服務商 Stripe 向您的銀行發送對您的帳戶進行扣款的指令以及 (B) 您的銀行按照這些指令對您的帳戶進行扣款。根據您與您的銀行協議的條款和條件，您有權從您的銀行得到退款。退款必須在 8 周內申請，從您的帳戶被扣款之日起算。您的權利在結單上有解釋，可從您的銀行獲取。您同意提前 2 天接收後續扣款的通知。";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付資訊並確認此筆支付，即表示您授權 (A) %@ 和我們的支付服務提供商 Stripe 傳送指示給您的銀行，以從您的帳戶扣款，以及 (B) 您的銀行根據這些指示從您的帳戶扣款。作為您權利的一部分，您有權根據您與銀行協議的條款和條件，向您的銀行要求退款。必須在您的帳戶扣款之日起的 8 週內申請退款。您可以從您的銀行取得一份聲明，其中說明您的權利。您同意在未來的扣款發生前最多 2 天接收通知。";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的電話號碼即表示您同意按照 %1$@ <terms>條款</terms>和<privacy>隱私政策</privacy>建立 %1$@ 帳戶，並將您的支付資訊儲存至 %1$@。";
 
@@ -98,7 +98,7 @@
 
 "Confirm the payment in your MB WAY app within %@ to complete the purchase." = "請在 %@ 內於您的 MB WAY 應用程式中確認支付，以完成購買。";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的銀行或支付應用程式中確認向 %@ 的付款，以完成購物。";
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "請在 %@ 內，透過您的銀行或支付應用程式確認支付，以完成購買。";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@内在您的銀行應用中確認付款，完成購物。";
 

@@ -28,6 +28,8 @@ struct CheckoutCartView: View {
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
+    let applePayEnabled: Bool
+    let paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay
     var currencySelectorAppearance = CurrencySelectorElement.Appearance()
     var delayCheckoutClientRequests = false
 
@@ -149,11 +151,10 @@ struct CheckoutCartView: View {
             config.apiClient = diagnostics.makeAPIClient(
                 checkoutClientRequestDelay: delayCheckoutClientRequests ? 1 : 0
             )
+            config.applePayMerchantId = applePayEnabled ? "merchant.com.stripe.umbrella.test" : nil
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
-                paymentElementConfiguration.applePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.umbrella.test"
-                )
+                paymentElementConfiguration.applePayConfiguration.display = paymentElementApplePayDisplay.sdkValue
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
@@ -170,7 +171,6 @@ struct CheckoutCartView: View {
                     confirmResult = result
                 }
                 expressCheckoutElementConfiguration.applePayConfiguration = ExpressCheckoutElement.Configuration.ApplePayConfiguration(
-                    merchantId: "merchant.com.stripe.umbrella.test",
                     buttonType: expressCheckoutElementSettings.applePayButtonType.pkPaymentButtonType
                 )
                 expressCheckoutElementConfiguration.linkConfiguration = ExpressCheckoutElement.Configuration.LinkConfiguration(

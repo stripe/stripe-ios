@@ -654,9 +654,12 @@ import UIKit
         updateNativeSheetOverride(settings)
         updateForcedConsumerLinkBrand(settings)
         updateMobileSessionFlag(settings)
+        updateStripeAPIOverrides(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
             self?.updateNativeSheetOverride(newValue)
+            // Before `load` below, so the reload uses the new API host and SDK version
+            self?.updateStripeAPIOverrides(newValue)
             if newValue.autoreload == .on {
                 // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
                 DispatchQueue.main.async {
@@ -702,6 +705,26 @@ import UIKit
     private func updateMobileSessionFlag(_ settings: PaymentSheetTestPlaygroundSettings) {
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled =
             settings.mobileSessionSidecar == .on
+    }
+
+    /// The `customStripeAPI` host, if it applies. Accepts a bare host (as on Android) or a URL.
+    static func customStripeAPIHost(_ settings: PaymentSheetTestPlaygroundSettings) -> String? {
+        guard settings.merchantCountryCode == .custom,
+              let value = settings.customStripeAPI?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !value.isEmpty else {
+            return nil
+        }
+        return value.contains("://") ? URL(string: value)?.host : value
+    }
+
+    private func updateStripeAPIOverrides(_ settings: PaymentSheetTestPlaygroundSettings) {
+        if let host = Self.customStripeAPIHost(settings), let apiURL = URL(string: "https://\(host)/v1") {
+            STPAPIClient.shared.apiURL = apiURL
+        } else {
+            STPAPIClient.shared.apiURL = STPAPIClient().apiURL
+        }
+        let sdkVersion = settings.sdkVersionOverride?.trimmingCharacters(in: .whitespacesAndNewlines)
+        STPAPIClient.userAgentSDKVersionOverride = sdkVersion?.isEmpty == false ? sdkVersion : nil
     }
 
     private func updateNativeSheetOverride(_ settings: PaymentSheetTestPlaygroundSettings) {
@@ -1050,12 +1073,8 @@ extension PlaygroundController {
             body["use_manual_capture"] = true
         }
 
-        // Send custom keys to backend if provided
-        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
-            body["custom_secret_key"] = customSecretKey
-        }
+        body.merge(customMerchantParameters()) { _, custom in custom }
         if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
-            body["custom_publishable_key"] = customPublishableKey
             STPAPIClient.shared.publishableKey = customPublishableKey
         }
 
@@ -1086,6 +1105,29 @@ extension PlaygroundController {
             }
         }
         return body
+    }
+
+    /// The custom merchant's keys and Stripe API host, which the backend needs on every request for that merchant.
+    private func customMerchantParameters() -> [String: Any] {
+        var parameters: [String: Any] = [:]
+        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
+            parameters["custom_secret_key"] = customSecretKey
+        }
+        if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
+            parameters["custom_publishable_key"] = customPublishableKey
+        }
+        if let customStripeAPIHost = Self.customStripeAPIHost(settings) {
+            parameters["custom_stripe_api"] = customStripeAPIHost
+        }
+        return parameters
+    }
+
+    /// `/confirm_intent` on the same backend as `checkoutEndpoint`, so a local backend handles both.
+    var confirmEndpoint: String {
+        guard let checkoutURL = URL(string: checkoutEndpoint), checkoutURL.lastPathComponent == "checkout" else {
+            return PaymentSheetTestPlaygroundSettings.confirmEndpoint
+        }
+        return checkoutURL.deletingLastPathComponent().appendingPathComponent("confirm_intent").absoluteString
     }
 
 }
@@ -1204,6 +1246,7 @@ extension PlaygroundController {
             "link_mode": settings.linkEnabledMode.rawValue,
             "return_url": configuration.returnURL ?? "",
         ] as [String: Any]
+        body.merge(customMerchantParameters()) { _, custom in custom }
 
         // Add either payment method info or confirmation token info
         if let confirmationTokenId {
@@ -1213,7 +1256,7 @@ extension PlaygroundController {
             body["should_save_payment_method"] = shouldSavePaymentMethod
         }
 
-        makeRequest(with: PaymentSheetTestPlaygroundSettings.confirmEndpoint, body: body, completionHandler: { data, response, error in
+        makeRequest(with: confirmEndpoint, body: body, completionHandler: { data, response, error in
             guard
                 error == nil,
                 let data = data,

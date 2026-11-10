@@ -39,6 +39,7 @@ public final class ExpressCheckoutElement {
     init(
         sessionSource: CheckoutSessionSource,
         configuration: ExpressCheckoutElement.Configuration,
+        userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient
     ) {
@@ -46,10 +47,11 @@ public final class ExpressCheckoutElement {
         let uiView = ExpressCheckoutElementUIView(
             session: sessionSource.initialSession,
             configuration: configuration,
+            userInterfaceStyle: userInterfaceStyle,
             delegate: delegate,
             apiClient: apiClient
         )
-        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, uiView: uiView, configuration: configuration, apiClient: apiClient)
+        let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, uiView: uiView)
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
     }

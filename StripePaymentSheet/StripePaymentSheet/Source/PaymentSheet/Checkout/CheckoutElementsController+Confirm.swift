@@ -41,7 +41,7 @@ extension CheckoutElementsController {
             CheckoutSessionConfirmationRequestParameters
         ) async -> InternalConfirmResult
 
-        let applePayConfiguration: any CheckoutApplePayConfiguration
+        let merchantId: String
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
@@ -60,6 +60,7 @@ extension CheckoutElementsController {
         // TODO: Lots of stuff in here because current Link code nominally requires it but it may not all really be necessary.
         let confirmOption: PaymentSheet.LinkConfirmOption
         let configuration: PaymentElementConfiguration
+        let returnURL: String
         let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -78,6 +79,7 @@ extension CheckoutElementsController {
 
         let option: Option
         let configuration: PaymentElementConfiguration
+        let returnURL: String
         let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: (any CheckoutConfirmationChallenge)?
         let authenticationContext: STPAuthenticationContext
@@ -200,11 +202,12 @@ extension CheckoutElementsController {
         switch paymentOption {
         case .applePay:
             guard let paymentElementConfiguration = self.configuration.paymentElement,
-                  let applePayConfiguration = paymentElementConfiguration.applePayConfiguration else {
+                  paymentElementConfiguration.applePayConfiguration.display != .never,
+                  let merchantId = self.configuration.applePayMerchantId else {
                 return nil
             }
             return .applePay(.init(
-                applePayConfiguration: applePayConfiguration,
+                merchantId: merchantId,
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
@@ -228,6 +231,7 @@ extension CheckoutElementsController {
             return .link(.init(
                 confirmOption: confirmOption,
                 configuration: configuration,
+                returnURL: self.configuration.returnURL,
                 nativeSheetPresentation: nativeSheetPresentation,
                 confirmationChallenge: confirmationChallenge,
                 analyticsHelper: analyticsHelper,
@@ -240,6 +244,7 @@ extension CheckoutElementsController {
                 .init(
                     option: .new(confirmParams),
                     configuration: configuration,
+                    returnURL: self.configuration.returnURL,
                     nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
@@ -253,6 +258,7 @@ extension CheckoutElementsController {
                 .init(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
+                    returnURL: self.configuration.returnURL,
                     nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
@@ -317,7 +323,7 @@ extension CheckoutElementsController {
                         ),
                         // Due to legacy reasons, in the no-PM case /confirm requires customerData be sent with at least email
                         // TODO: Remove this once no-PM confirmation can use the Checkout Session's server email without `customer_data`.
-                        customerData: self.session.email.map { ["email": $0] }
+                        customerData: .init(email: self.session.email)
                     )
                     result = await Self.confirmCheckoutSession(
                         with: requestParameters,
@@ -486,7 +492,7 @@ extension CheckoutElementsController {
                 confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
                 savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
-                returnURL: configuration.returnURL,
+                returnURL: paymentMethodParameters.returnURL,
                 shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
                 paymentMethodOptions: confirmParams.confirmPaymentMethodOptions,
                 clientAttributionMetadata: clientAttributionMetadata,
@@ -503,7 +509,8 @@ extension CheckoutElementsController {
                 confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
                 expectedPaymentMethodType: savedPaymentMethod.type.identifier,
-                returnURL: configuration.returnURL,
+                savePaymentMethod: nil,
+                returnURL: paymentMethodParameters.returnURL,
                 shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
                 paymentMethodOptions: paymentMethodOptions,
                 clientAttributionMetadata: clientAttributionMetadata,

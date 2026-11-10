@@ -70,7 +70,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "%1$@ および <link>%2$@</link> での今後の購入に利用するためのお客様の情報の保存、ならびに%2$@ の<terms>規約</terms>と<privacy>プライバシー</privacy>に同意した上で、続行してください。";
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "続行すると、%2$@ の<terms>規約</terms>および<privacy>プライバシー</privacy>に従い、今後 %1$@ と <link>%2$@</link> で購入できるよう、お客様の情報が保存されることに同意したものとみなされます。";
 
 "By continuing, you agree to save your information for future purchases with %@." = "続行することで、あなたは、%@ での今後の購入のために情報を保存することに同意したことになります。";
 
@@ -80,7 +80,7 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "%@ に参加するには、<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に同意する必要があります。";
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "%@ に参加すると、<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に同意したものとみなされます。";
 
 "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号とメールアドレスを提供するには、%1$@ の <terms>規約</terms> と <privacy>プライバシーポリシー</privacy> に同意した上で、%1$@ アカウントを作成します。";
 
@@ -88,7 +88,7 @@
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "カード情報を提供すると、%@ がその規約に従って今後の支払いをお客様のカードに請求することを許可することになります。";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "メールアドレスを提供するには、%1$@ の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に同意した上で、%1$@ アカウントを作成し、決済情報を %1$@ に保存してください。";
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "メールアドレスを入力すると、%1$@ の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に基づき、%1$@ アカウントを作成し、決済情報を %1$@ に保存することに同意したものとみなされます。";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "支払い情報を提供し、この支払いを確定することで、お客様は (A) %@ および決済サービスプロバイダーである Stripe がお客様の銀行に口座引き落としの指図を送り、(B) 銀行がこの指図に従ってお客様の口座から引き落としを行うことを承認することになります。お客様の権利の一部として、銀行との契約条件に基づき、お客様は銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。お客様の権利は、銀行から得られる明細書内で説明されています。お客様は今後の引き落としに関する通知を引き落としの実行日の 2 日前までに受け取ることに同意するものとします。";
 

@@ -85,6 +85,11 @@ extension CheckoutElementsController {
 
         // MARK: - Internal Properties
 
+        /// `availableExpressCheckoutPaymentMethods`, preserving the order Express Checkout Element
+        /// should display them in. This is the single source of truth for both button layout and
+        /// analytics; avoid recomputing eligibility/ordering elsewhere.
+        let availableExpressCheckoutPaymentMethodsOrdered: [ExpressCheckoutElement.PaymentMethod]
+
         let clientSecret: String
         var checkoutConfigID: String?
         let paymentStatus: Status.PaymentStatus
@@ -163,9 +168,10 @@ extension CheckoutElementsController.Session {
         if automaticTaxEnabled && automaticTaxAddressSource == "billing" {
             elementsSessionValue.disableLinkForAutomaticTaxBilling = true
         }
-        let availableExpressCheckoutPaymentMethods = Set(configuration.map {
+        let availableExpressCheckoutPaymentMethodsOrdered = configuration.map {
             ExpressCheckoutElementUtilities.availablePaymentMethods(for: apiResponse, configuration: $0)
-        } ?? [])
+        } ?? []
+        let availableExpressCheckoutPaymentMethods = Set(availableExpressCheckoutPaymentMethodsOrdered)
         let serverEmail = apiResponse.customerEmail ?? apiResponse.customer?.email
 
         self.init(
@@ -185,6 +191,7 @@ extension CheckoutElementsController.Session {
             taxAmounts: publicTaxAmounts,
             totals: publicTotals,
             availableExpressCheckoutPaymentMethods: availableExpressCheckoutPaymentMethods,
+            availableExpressCheckoutPaymentMethodsOrdered: availableExpressCheckoutPaymentMethodsOrdered,
             clientSecret: clientSecret,
             paymentStatus: apiResponse.paymentStatus,
             automaticPaymentMethodTypes: apiResponse.automaticPaymentMethodTypes,
