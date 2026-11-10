@@ -760,6 +760,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     // For testing purposes only; keys should typically not be defined on the client
     var customSecretKey: String?
     var customPublishableKey: String?
+    /// A Stripe API host such as a devbox's `pay tunnel` host, used by the SDK and the backend. Requires custom keys.
+    var customStripeAPI: String?
+    /// The SDK version to report in `X-Stripe-User-Agent` instead of the real one.
+    var sdkVersionOverride: String?
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
     var paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage
@@ -908,6 +912,20 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     var base64URL: URL {
         URL(string: "stp-paymentsheet-playground://?\(base64Data)")!
+    }
+
+    /// Decodes settings from a JSON object with any subset of the settings' keys, using the defaults for the rest.
+    /// Lets scripts configure the playground (see `STP_PLAYGROUND_SETTINGS_JSON` in SceneDelegate) without LZFSE.
+    static func fromPartialJSON(_ json: String) throws -> PaymentSheetTestPlaygroundSettings {
+        let defaults = try JSONSerialization.jsonObject(with: JSONEncoder().encode(defaultValues())) as? [String: Any] ?? [:]
+        guard let overrides = try JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any] else {
+            throw DecodingError.typeMismatch(
+                [String: Any].self,
+                DecodingError.Context(codingPath: [], debugDescription: "Expected a JSON object")
+            )
+        }
+        let merged = defaults.merging(overrides) { _, override in override }
+        return try JSONDecoder().decode(Self.self, from: JSONSerialization.data(withJSONObject: merged))
     }
 
     static func fromBase64<T: Decodable>(base64: String, className: T.Type) -> T? {

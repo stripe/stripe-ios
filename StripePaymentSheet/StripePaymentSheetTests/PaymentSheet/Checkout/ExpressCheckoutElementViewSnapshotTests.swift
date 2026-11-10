@@ -115,11 +115,10 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         linkEmail: String? = nil
     ) -> ExpressCheckoutElementUIView {
         var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
         configuration.appearance = appearance
 
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"], customerEmail: "jenny@example.com")
-            .makePublicSession(expressCheckoutConfiguration: configuration)
+            .makePublicSession(expressCheckoutConfiguration: configuration, applePayMerchantId: "merchant.com.example")
         let view = ExpressCheckoutElementUIView(
             session: session,
             configuration: configuration,
@@ -128,7 +127,7 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         )
         view.update(
             with: session,
-            buttons: buttons ?? ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: configuration, apiClient: .shared)
+            buttons: buttons ?? session.availableExpressCheckoutPaymentMethodsOrdered
         )
         let stackView = view.subviews.first as? UIStackView
         for row in stackView?.arrangedSubviews ?? [] {

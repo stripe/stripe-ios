@@ -182,3 +182,12 @@ public extension AddressViewController {
         }
     }
 }
+
+extension AddressViewController.Configuration.DefaultAddressDetails {
+    /// Whether the address's country is in `allowedCountries`. An address without a country, or an
+    /// empty `allowedCountries`, allows any country.
+    func isCountryAllowed(_ allowedCountries: [String]) -> Bool {
+        guard !allowedCountries.isEmpty, let country = address.country else { return true }
+        return allowedCountries.contains(country)
+    }
+}

@@ -14,8 +14,6 @@
 
 "Add bank account" = "Přidat bankovní účet";
 
-"Add card" = "Přidat kartu";
-
 "Add new card" = "Přidat novou kartu";
 
 "Add new payment method" = "Nová platební metoda";
@@ -60,9 +58,9 @@
 
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Potvrzením platby souhlasíte s tím, že vaši transakci zpracuje společnost Global Stack Services Limited jako registrovaný obchodník a v souladu se svými <terms>podmínkami</terms>.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračováním v Amazon Pay povolujete společnosti %@, aby v souladu se svými podmínkami účtovala na váš účet Revolut Pay budoucí platby.";
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračováním na Amazon Pay umožňujete %@ strhnout budoucí platby z vašeho účtu Amazon Pay v souladu s jejich podmínkami.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Pokračováním ve službě Klarna povolujete společnosti %1$@, aby v souladu s jejími podmínkami a podmínkami účtovala na váš účet Klarna budoucí platby. Toto můžete kdykoli změnit v aplikaci Klarna nebo tak, že se obrátíte na %2$@.";
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Pokračováním na Klarna umožňujete %1$@ strhnout budoucí platby z vašeho účtu Klarna v souladu s jejich podmínkami a podmínkami společnosti Klarna. Toto nastavení můžete kdykoli změnit ve své aplikaci Klarna nebo kontaktováním %2$@.";
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pokračováním na PayPal povolujete společnosti %@, aby v souladu se svými podmínkami strhávala z vašeho účtu PayPal budoucí platby.";
 
@@ -92,7 +90,7 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím e-mailu souhlasíte s vytvořením účtu %1$@ a uložením platebních údajů do %1$@ v souladu s <terms>podmínkami</terms> a <privacy>zásadami ochrany osobních údajů</privacy> %1$@.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Tím, že zadáte informace o platbě a potvrdíte tuto platbu, udělujete společnosti (A) %@ a Stripe, našemu poskytovateli platebních služeb, oprávnění zaslat do vaší banky pokyny k zatížení vašeho účtu a (B) vaší bance zatížit váš účet na základě těchto pokynů. V rámci svých práv máte nárok na refundaci od banky na základě smluvních podmínek vaší smlouvy s bankou. Refundaci je nutné nárokovat během 8 týdnů od data, kdy byl váš účet zatížen. Vaše práva jsou vysvětlena v prohlášení, které můžete získat od banky.";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Poskytnutím svých platebních údajů a potvrzením této platby opravňujete (A) %@ a Stripe, našeho poskytovatele platebních služeb, k zasílání pokynů vaší bance k inkasu z vašeho účtu a (B) vaši banku k inkasu z vašeho účtu v souladu s těmito pokyny. V rámci svých práv máte nárok na proplacení od své banky podle podmínek vaší smlouvy s bankou. O proplacení je nutné požádat do 8 týdnů od data, kdy byl váš účet zatížen. Vaše práva jsou vysvětlena v prohlášení, které můžete získat u své banky. Souhlasíte s přijímáním oznámení o budoucích inkasech až 2 dny před jejich provedením.";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svého telefonního čísla souhlasíte s vytvořením účtu %1$@ a uložením platebních údajů do %1$@ v souladu s <terms>podmínkami</terms> a <privacy>zásadami ochrany osobních údajů</privacy> %1$@.";
 
@@ -100,7 +98,7 @@
 
 "By saving your payment information, you allow %@ to charge you for future payments in accordance with their terms." = "Uložením svých platebních údajů umožníte společnosti %@ strhnout vám budoucí platby v souladu s jejími podmínkami.";
 
-"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Odesláním objednávky do %1$@ a %2$@ souhlasíte s uložením svých údajů u %3$@ pro budoucí nákupy a souhlasíte s autorizací plateb podle podmínek <terms></terms>.";
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Odesláním objednávky do %1$@ a %2$@ souhlasíte s uložením svých údajů u %3$@ pro budoucí nákupy a souhlasíte s autorizací plateb podle podmínek <terms>těchto podmínek</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Odesláním objednávky společnosti %@ souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
 

@@ -58,7 +58,8 @@ public final class InlineAddressFormState: ObservableObject {
     /// Creates the state for an address form without autocomplete.
     /// - Parameters:
     ///   - defaultValues: The values to prefill the fields with.
-    ///   - allowedCountries: The countries the customer can select, or every country if empty.
+    ///   - allowedCountries: The countries the customer can select, or every country if empty. A
+    ///     `defaultValues` address in another country doesn't prefill the fields.
     ///   - nameField: Whether the form collects a name. A hidden name is `defaultValues.name`.
     ///   - phone: Whether the form collects a phone number, and whether it is required.
     ///   - appearance: The appearance of the fields. The fields take it when address formats load.
@@ -112,10 +113,13 @@ public final class InlineAddressFormState: ObservableObject {
 
     private func makeAddressSection() {
         let additionalFields = AddressViewController.Configuration.AdditionalFields(phone: phone)
+        // An address from a country the form doesn't offer would fill another country's fields.
+        let isCountryAllowed = defaultValues.isCountryAllowed(allowedCountries)
+        let prefilledValues = isCountryAllowed ? defaultValues : .init()
         let addressSection = AddressSectionElement(
             countries: allowedCountries.isEmpty ? nil : allowedCountries,
             addressSpecProvider: addressSpecProvider,
-            defaults: .init(from: defaultValues),
+            defaults: .init(from: prefilledValues),
             defaultFieldsToCollect: .all,
             disableAutocomplete: true,
             additionalFields: .init(from: additionalFields, nameField: nameField),

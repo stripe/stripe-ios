@@ -14,8 +14,6 @@
 
 "Add bank account" = "Добавить банковский счет";
 
-"Add card" = "Добавить карту";
-
 "Add new card" = "Добавить новую карту";
 
 "Add new payment method" = "Добавить новый метод оплаты";
@@ -80,7 +78,7 @@
 
 "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Продолжая использование, вы тем самым разрешаете %@ периодически списывать с вашего счета Twint суммы согласно вашему плану покупок или подписок.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы авторизируете %1$@ на списание средств с вашего счета Cash App для этого и будущих платежей в соответствии с условиями %2$@, пока данная авторизация не будет отозвана. Вы можете изменить это в любое время в настройках Cash App.";
 
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Присоединяясь к %@, вы принимаете <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
 
@@ -366,7 +364,7 @@
 
 "The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
 
-"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Это международная покупка, которая не облагается сбором IOF в размере 3,5 %. Продолжая, вы подтверждаете и принимаете <terms>условия и положения Ebanx</terms>.";
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Это международная покупка. Сбор IOF в размере 3,5 % не включен в сумму. Продолжая, вы подтверждаете и принимаете <terms>условия и положения Ebanx</terms>.";
 
 "This is your default" = "Это ваше значение по умолчанию";
 

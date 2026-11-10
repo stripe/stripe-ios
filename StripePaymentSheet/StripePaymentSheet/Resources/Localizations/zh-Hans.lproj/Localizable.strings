@@ -14,8 +14,6 @@
 
 "Add bank account" = "添加银行账户";
 
-"Add card" = "添加卡";
-
 "Add new card" = "添加银行卡";
 
 "Add new payment method" = "添加新支付方式";
@@ -92,7 +90,7 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的邮箱，即表示您同意根据 %1$@ 的<terms>条款</terms>和<privacy>隐私政策</privacy>，创建一个 %1$@ 账户，并将支付信息保存至 %1$@。";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式并确认该付款即表示您授权 (A) %@ 与我们的支付服务商 Stripe 向您的银行发送对您的账户进行扣款的指令以及 (B) 您的银行按照这些指令对您的账户进行扣款。根据您与您的银行协议的条款和条件，您有权从您的银行得到退款。退款必须在 8 周内申请，从您的账户被扣款之日起算。您的权利在对账单上有解释，可从您的银行获取。您同意提前 2 天接收后续扣款的通知。";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付信息并确认此次付款，即表示您授权 (A) %@ 和 Stripe（我们的支付服务商）向您的银行发送指令从您的账户中扣款，并授权 (B) 您的银行根据这些指令从您的账户中扣款。作为您权利的一部分，您有权根据您与银行协议的条款和条件从银行获得退款。退款必须在自您的账户被扣款之日起的 8 周内申请。您可以从银行获取一份解释您权利的声明。您同意在未来的扣款发生前，最多提前 2 天接收通知。";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的电话号码，即表示您同意根据 %1$@ 的<terms>条款</terms>和<privacy>隐私政策</privacy>，创建一个 %1$@ 账户，并将支付信息保存至 %1$@。";
 
@@ -130,7 +128,7 @@
 
 "Confirm the payment in your MB WAY app within %@ to complete the purchase." = "请在 %@ 内在您的 MB WAY 应用中确认支付，以完成购买。";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的银行或支付应用程序中确认向 %@ 的付款，以完成购物。";
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "请在 %@ 内通过您的银行或支付应用确认付款，以完成购买。";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@内在您的银行应用中确认付款，完成购物。";
 

@@ -206,6 +206,7 @@ public final class EmbeddedPaymentElement {
     ) {
         let previousPaymentOption = self._paymentOption
         self.loadResult = loadResult
+        self.analyticsHelper.didLoad(loadResult)
         self.confirmationChallenge = confirmationChallenge
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
@@ -432,6 +433,7 @@ public final class EmbeddedPaymentElement {
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
         self.analyticsHelper = analyticsHelper
+        self.analyticsHelper.didLoad(loadResult)
         self.initialSelection = initialSelection
         self.confirmationChallenge = confirmationChallenge
 

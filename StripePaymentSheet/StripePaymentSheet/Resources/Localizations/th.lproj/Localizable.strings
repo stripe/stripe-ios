@@ -14,8 +14,6 @@
 
 "Add bank account" = "เพิ่มบัญชีธนาคาร";
 
-"Add card" = "เพิ่มบัตร";
-
 "Add new card" = "เพิ่มบัตรใหม่";
 
 "Add new payment method" = "เพิ่มวิธีการชำระเงินใหม่";
@@ -62,7 +60,7 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "การดำเนินการต่อที่ Amazon Pay หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี Amazon Pay ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "การดำเนินการต่อที่ Klana หมายความว่าคุณอนุญาตให้ %1$@ เรียกเก็บเงินจากบัญชี Klana ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว คุณสามารถเปลี่ยนการอนุญาตนี้ได้ทุกเมื่อในแอป Klana หรือติดต่อที่ %2$@";
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "เมื่อดำเนินการต่อไปยัง Klarna จะถือว่าคุณอนุญาตให้ %1$@ เรียกเก็บเงินจากบัญชี Klarna ของคุณสำหรับการชำระเงินในอนาคตตามข้อกำหนดของผู้ค้ารายดังกล่าวและข้อกำหนดของ Klarna คุณสามารถเปลี่ยนแปลงได้ทุกเมื่อในแอป Klarna ของคุณหรือโดยติดต่อ %2$@";
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "การดำเนินการต่อที่ PayPal หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี PayPal ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
 
@@ -80,7 +78,7 @@
 
 "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "เมื่อดำเนินการต่อ จะถือว่าคุณอนุมัติให้ %@ หักเงินจากยอดคงเหลือ Twint ของคุณโดยอัตโนมัติเป็นประจำ ตามแผนการซื้อหรือการเรียกเก็บเงินตามรอบบิลของคุณ";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "การดำเนินการต่อ หมายความว่าคุณอนุญาตให้ %1$@ ฝากเงินเข้าบัญชี Cash App ของคุณสำหรับการชำระเงินรายการนี้ และการชำระเงินในอนาคตโดยสอดคล้องกับข้อกำหนดของ %2$@ จนกว่าจะมีการเพิกถอนการอนุญาต คุณสามารถเปลี่ยนแปลงการตั้งค่านี้ได้ทุกเมื่อในการตั้งค่า Cash App";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "เมื่อดำเนินการต่อ จะถือว่าคุณอนุญาตให้ %1$@ หักเงินจากบัญชี Cash App ของคุณสำหรับการชำระเงินรายการนี้และการชำระเงินในอนาคตตามข้อกำหนดของ %2$@ จนกว่าจะมีการเพิกถอนการอนุญาต คุณสามารถเปลี่ยนแปลงได้ทุกเมื่อในการตั้งค่า Cash App";
 
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "เมื่อเข้าร่วม %@ หมายความว่าคุณยอมรับ<terms>ข้อกำหนด</terms>และ<privacy>นโยบายความเป็นส่วนตัว</privacy>";
 
@@ -104,7 +102,7 @@
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "การส่งคำสั่งซื้อให้ %@ หมายความว่าคุณตกลงที่จะอนุมัติการชำระเงินตาม<terms>ข้อกำหนดเหล่านี้</terms>";
 
-"CPF/CPNJ" = "AU Direct Debit";
+"CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "ยกเลิกและชำระเงินด้วยวิธีอื่น";
 

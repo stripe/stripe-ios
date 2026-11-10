@@ -37,6 +37,25 @@ final class InlineAddressFormStateTests: XCTestCase {
         XCTAssertEqual(state.enteredAddress?.name, "Jane Doe")
     }
 
+    func testAddressOutsideAllowedCountriesIsNotPrefilled() {
+        // Given a form for US addresses prefilled with a Canadian address
+        let address = PaymentSheet.Address(
+            city: "Toronto",
+            country: "CA",
+            line1: "123 Main St",
+            postalCode: "M5V 2T6",
+            state: "ON"
+        )
+        let state = makeState(defaultValues: .init(address: address, name: "Jane Doe"))
+
+        // Then the fields stay empty
+        XCTAssertEqual(state.enteredAddress?.address.country, "US")
+        XCTAssertNil(state.enteredAddress?.address.line1)
+        XCTAssertNil(state.enteredAddress?.address.city)
+        XCTAssertNil(state.enteredAddress?.name)
+        XCTAssertFalse(state.hasChanges)
+    }
+
     func testEditingCompletesAddress() {
         // Given a form prefilled with a valid address but no name
         let state = makeState(defaultValues: .init(address: Self.validAddress))

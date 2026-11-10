@@ -33,6 +33,8 @@ extension CheckoutPlayground {
                 }
             }
         }
+        @Published var applePayEnabled: Bool
+        @Published var paymentElementApplePayDisplay: PaymentElementApplePayDisplay
         @Published var linkMode: LinkMode {
             didSet {
                 if isLinkModeOverrideActive {
@@ -74,6 +76,8 @@ extension CheckoutPlayground {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement = settings.expressCheckoutElement
+            applePayEnabled = settings.applePayEnabled
+            paymentElementApplePayDisplay = settings.paymentElementApplePayDisplay
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
@@ -240,6 +244,8 @@ extension CheckoutPlayground {
                 uiFramework: uiFramework,
                 integrationType: integrationType,
                 expressCheckoutElement: expressCheckoutElement,
+                applePayEnabled: applePayEnabled,
+                paymentElementApplePayDisplay: paymentElementApplePayDisplay,
                 linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
@@ -268,6 +274,8 @@ extension CheckoutPlayground {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement = settings.expressCheckoutElement
+            applePayEnabled = settings.applePayEnabled
+            paymentElementApplePayDisplay = settings.paymentElementApplePayDisplay
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
