@@ -308,6 +308,7 @@ extension PaymentSheet {
                         return .unknown
                     }
                 }()
+                let serverDrivenBehavior = serverDrivenPaymentMethodBehavior(for: confirmParams.paymentMethodParams.rawTypeString)
                 // Set allow_redisplay on params
                 setAllowRedisplay(confirmParams, paymentMethodType)
                 confirmParams.paymentMethodParams.radarOptions = radarOptions
@@ -328,6 +329,7 @@ extension PaymentSheet {
                     paymentHandler.confirmPaymentIntent(
                         params: params,
                         authenticationContext: authenticationContext,
+                        serverDrivenBehavior: serverDrivenBehavior,
                         completion: { actionStatus, paymentIntent, error in
                             Task { await confirmationChallenge?.complete() }
                             if let paymentIntent {
@@ -351,6 +353,7 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         params: setupIntentParams,
                         authenticationContext: authenticationContext,
+                        serverDrivenBehavior: serverDrivenBehavior,
                         completion: { actionStatus, setupIntent, error in
                             Task { await confirmationChallenge?.complete() }
                             if let setupIntent {
@@ -886,6 +889,16 @@ extension PaymentSheet {
         ///   selected so intent-based flows can derive the API parameters they need.
         case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState, shouldSetAsDefaultPM: Bool? = nil)
 
+        /// The raw payment method type, e.g. "card".
+        var rawPaymentMethodType: String? {
+            switch self {
+            case .saved(let paymentMethod, _, _, _):
+                return paymentMethod.allResponseFields["type"] as? String
+            case .new(let params, _, _, _, _):
+                return params.rawTypeString
+            }
+        }
+
         /// Projects the unified checkbox state into intent save semantics.
         var shouldSaveForIntent: Bool {
             saveForFutureUseCheckboxState == .selected
@@ -899,6 +912,12 @@ extension PaymentSheet {
                 return saveForFutureUseCheckboxState
             }
         }
+    }
+
+    /// How STPPaymentHandler should treat the intent for a server-driven payment method type, or nil for types the SDK models.
+    static func serverDrivenPaymentMethodBehavior(for rawPaymentMethodType: String?) -> STPPaymentHandler.ServerDrivenPaymentMethodBehavior? {
+        // TODO: Look up the behavior for server-driven payment method types.
+        return nil
     }
 
     static func makePaymentIntentParams(

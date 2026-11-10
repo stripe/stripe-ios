@@ -64,6 +64,8 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
     @_spi(InternalOnlyAPI) public let returnURLString: String?
     @_spi(InternalOnlyAPI) public var paymentIntent: STPPaymentIntent
     @_spi(InternalOnlyAPI) public var threeDS2Transaction: STDSTransaction?
+    /// How to treat the intent if its payment method type is `.unknown`.
+    let serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior?
 
     @_spi(InternalOnlyAPI) public var intentStripeID: String {
         return paymentIntent.stripeId
@@ -109,6 +111,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
         threeDSCustomizationSettings: STPThreeDSCustomizationSettings,
         paymentIntent: STPPaymentIntent,
         returnURL returnURLString: String?,
+        serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior? = nil,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         self.apiClient = apiClient
@@ -116,6 +119,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
         self.returnURLString = returnURLString
         self.paymentIntent = paymentIntent
+        self.serverDrivenBehavior = serverDrivenBehavior
         self.paymentIntentCompletion = completion
         super.init()
     }
@@ -159,6 +163,8 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     let returnURLString: String?
     var setupIntent: STPSetupIntent
     var threeDS2Transaction: STDSTransaction?
+    /// How to treat the intent if its payment method type is `.unknown`.
+    let serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior?
 
     var intentStripeID: String {
         return setupIntent.stripeID
@@ -204,6 +210,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
         threeDSCustomizationSettings: STPThreeDSCustomizationSettings,
         setupIntent: STPSetupIntent,
         returnURL returnURLString: String?,
+        serverDrivenBehavior: STPPaymentHandler.ServerDrivenPaymentMethodBehavior? = nil,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         self.apiClient = apiClient
@@ -211,6 +218,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
         self.returnURLString = returnURLString
         self.setupIntent = setupIntent
+        self.serverDrivenBehavior = serverDrivenBehavior
         self.setupIntentCompletion = completion
         super.init()
     }

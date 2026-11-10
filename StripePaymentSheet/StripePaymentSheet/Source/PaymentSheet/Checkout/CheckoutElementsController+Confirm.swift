@@ -546,6 +546,7 @@ extension CheckoutElementsController {
         await confirmationChallenge?.complete()
 
         // 2. Retrieve the referenced Intent and handle next actions only when required.
+        let serverDrivenBehavior = PaymentSheet.serverDrivenPaymentMethodBehavior(for: requestParameters.paymentMethodData?.rawTypeString)
         if response.paymentResponse == nil {
             // No payment response means no Intent next action to handle; continue with Session/poll handling.
         } else if response.paymentResponse?.status != .requiresAction {
@@ -554,7 +555,8 @@ extension CheckoutElementsController {
             let result = await paymentHandler.handleNextAction(
                 paymentIntentClientSecret: paymentIntentReference.clientSecret,
                 authenticationContext: authenticationContext,
-                returnURL: requestParameters.returnURL
+                returnURL: requestParameters.returnURL,
+                serverDrivenBehavior: serverDrivenBehavior
             )
             switch result.0 {
             case .succeeded:
@@ -572,7 +574,8 @@ extension CheckoutElementsController {
             let result = await paymentHandler.handleNextAction(
                 setupIntentClientSecret: setupIntentReference.clientSecret,
                 authenticationContext: authenticationContext,
-                returnURL: requestParameters.returnURL
+                returnURL: requestParameters.returnURL,
+                serverDrivenBehavior: serverDrivenBehavior
             )
             switch result.0 {
             case .succeeded:
