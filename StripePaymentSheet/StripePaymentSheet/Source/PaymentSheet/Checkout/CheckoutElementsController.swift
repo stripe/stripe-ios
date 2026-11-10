@@ -164,6 +164,7 @@ public final class CheckoutElementsController: ObservableObject {
                 self.expressCheckoutElement = ExpressCheckoutElement(
                     sessionSource: sessionSource,
                     configuration: expressCheckoutElementConfiguration,
+                    userInterfaceStyle: configuration.userInterfaceStyle,
                     delegate: self,
                     apiClient: apiClient
                 )
@@ -174,6 +175,7 @@ public final class CheckoutElementsController: ObservableObject {
                 self.currencySelectorElement = await CurrencySelectorElement(
                     sessionSource: sessionSource,
                     configuration: currencySelectorConfiguration,
+                    userInterfaceStyle: configuration.userInterfaceStyle,
                     delegate: self
                 )
             }
