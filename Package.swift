@@ -58,6 +58,7 @@ let package = Package(
         )
     ],
     traits: [
+        .default(enabledTraits: ["Identity"]),
         .trait(
             name: "Identity",
             description: "Enables 3D face capture in StripeIdentity."
