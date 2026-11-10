@@ -53,13 +53,10 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
                 )
             )
 
-            let button = LinkWalletButton(
-                linkController: linkController,
-                email: configuration.email.isEmpty ? nil : configuration.email,
-                phoneNumber: configuration.phone.isEmpty ? nil : configuration.phone
-            )
+            linkController.email = configuration.email.isEmpty ? nil : configuration.email
+            linkController.phoneNumber = configuration.phone.isEmpty ? nil : configuration.phone
+            let button = LinkWalletButton(linkController: linkController)
             button.delegate = self
-            button.showsPaymentMethodPreview = configuration.showsPaymentMethodPreviewOnButton
 
             phase = .ready(linkController, button)
         } catch {

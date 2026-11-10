@@ -80,28 +80,6 @@ final class LinkWalletButtonTests: XCTestCase {
         XCTAssertEqual(button.displayedPaymentMethodPreview?.last4, "4242")
     }
 
-    func testShowsEmailWhenPaymentMethodPreviewIsDisabled() {
-        // Given an account with a default card
-        let controller = MockLinkWalletButtonController()
-        controller.linkAccount = Stubs.linkAccount(email: email, paymentMethodType: .card)
-        controller.selectedPaymentDetails = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card]
-        let button = makeButton(controller: controller)
-        XCTAssertNotNil(button.displayedPaymentMethodPreview)
-
-        // When the payment method preview is disabled
-        button.showsPaymentMethodPreview = false
-
-        // Then the button shows the email instead
-        XCTAssertEqual(button.displayedLinkAccount?.email, email)
-        XCTAssertNil(button.displayedPaymentMethodPreview)
-
-        // When it's enabled again
-        button.showsPaymentMethodPreview = true
-
-        // Then the payment method is shown again
-        XCTAssertEqual(button.displayedPaymentMethodPreview?.last4, "1234")
-    }
-
     func testHidesAccountDetailsWhenEmailDoesNotMatch() {
         // Given an account for a different customer
         let controller = MockLinkWalletButtonController()
@@ -158,7 +136,8 @@ final class LinkWalletButtonTests: XCTestCase {
         XCTAssertNotNil(button.displayedLinkAccount)
 
         // When the merchant changes the email
-        button.email = "someone.else@example.com"
+        controller.email = "someone.else@example.com"
+        waitForMainQueue()
 
         // Then the previous customer's details are hidden
         XCTAssertNil(button.displayedLinkAccount)
@@ -201,7 +180,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testWithoutEmailShowsCustomerWhoSignedInWithNativeLink() {
         // Given a button without an email
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        let button = LinkWalletButton(controller: controller)
         button.presentingViewController = UIViewController()
 
         // When the customer signs in with native Link and selects a payment method
@@ -216,7 +195,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testWithoutEmailShowsCustomerWhoSignedInButCanceled() {
         // Given a button without an email
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        let button = LinkWalletButton(controller: controller)
         button.presentingViewController = UIViewController()
 
         // When the customer signs in with native Link, then closes it without selecting a payment method
@@ -231,7 +210,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testWithoutEmailLooksUpCustomerFromWebPopupPaymentMethod() {
         // Given a button without an email, and no native Link session
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        let button = LinkWalletButton(controller: controller)
         button.presentingViewController = UIViewController()
 
         // When the Link web popup returns a payment method with the customer's email
@@ -254,7 +233,7 @@ final class LinkWalletButtonTests: XCTestCase {
         // Given a button without an email, and an unverified Link account on the device
         let controller = MockLinkWalletButtonController()
         controller.linkAccount = Stubs.linkAccount(email: email)
-        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        let button = LinkWalletButton(controller: controller)
         button.presentingViewController = UIViewController()
 
         // When the customer closes Link without signing in
@@ -268,7 +247,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testMerchantEmailReplacesCustomerWhoSignedIn() {
         // Given a button showing a customer who signed in through it
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        let button = LinkWalletButton(controller: controller)
         button.presentingViewController = UIViewController()
         button.didTap()
         controller.linkAccount = verifiedLinkAccount(email: email)
@@ -277,7 +256,8 @@ final class LinkWalletButtonTests: XCTestCase {
 
         // When the merchant provides a different email
         let merchantEmail = "someone.else@example.com"
-        button.email = merchantEmail
+        controller.email = merchantEmail
+        waitForMainQueue()
 
         // Then the button stops showing the signed-in customer, and looks up the merchant's customer
         XCTAssertNil(button.displayedLinkAccount)
@@ -320,7 +300,7 @@ final class LinkWalletButtonTests: XCTestCase {
         controller.linkAccount = Stubs.linkAccount(email: email)
 
         // When the button is created without an email
-        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        let button = LinkWalletButton(controller: controller)
 
         // Then it doesn't look up a customer
         XCTAssertEqual(controller.lookupEmails, [])
@@ -332,7 +312,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testTapWithoutEmailPresentsLink() {
         // Given a button without an email
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        let button = LinkWalletButton(controller: controller)
         button.presentingViewController = UIViewController()
 
         // When the button is tapped
@@ -346,10 +326,11 @@ final class LinkWalletButtonTests: XCTestCase {
     func testSettingEmailLooksUpCustomer() {
         // Given a button created without an email
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller, email: nil, phoneNumber: nil)
+        let button = LinkWalletButton(controller: controller)
 
         // When the merchant provides an email
-        button.email = email
+        controller.email = email
+        waitForMainQueue()
 
         // Then the customer is looked up
         XCTAssertEqual(controller.lookupEmails, [email])
@@ -362,7 +343,8 @@ final class LinkWalletButtonTests: XCTestCase {
         XCTAssertEqual(controller.lookupEmails, [email])
 
         // When the email changes before the lookup completes
-        button.email = "someone.else@example.com"
+        controller.email = "someone.else@example.com"
+        waitForMainQueue()
 
         // Then a second lookup isn't started yet
         XCTAssertEqual(controller.lookupEmails, [email])
@@ -417,6 +399,26 @@ final class LinkWalletButtonTests: XCTestCase {
         }
     }
 
+    func testSaysContinueWithLinkInSetupMode() {
+        // Given a controller that collects or sets up a payment method
+        let controller = MockLinkWalletButtonController()
+        controller.mode = .setup
+
+        // Then the button says "Continue with Link"
+        XCTAssertEqual(makeButton(controller: controller).displayedCallToAction, .continue)
+    }
+
+    func testSaysPayWithLinkInPaymentMode() {
+        for mode in [LinkController.Mode.payment, .paymentAndSetupFutureUse] {
+            // Given a controller that completes a payment
+            let controller = MockLinkWalletButtonController()
+            controller.mode = mode
+
+            // Then the button says "Pay with Link"
+            XCTAssertEqual(makeButton(controller: controller).displayedCallToAction, .pay, "\(mode)")
+        }
+    }
+
     func testShowsLoadingIndicatorWhileLinkFlowIsInProgress() {
         // Given a button with a signed-in customer
         let controller = MockLinkWalletButtonController()
@@ -466,7 +468,9 @@ final class LinkWalletButtonTests: XCTestCase {
         controller: MockLinkWalletButtonController,
         email: String? = nil
     ) -> LinkWalletButton {
-        LinkWalletButton(controller: controller, email: email ?? self.email, phoneNumber: "+15555555555")
+        controller.email = email ?? self.email
+        controller.phoneNumber = "+15555555555"
+        return LinkWalletButton(controller: controller)
     }
 
     private func verifiedLinkAccount(email: String) -> PaymentSheetLinkAccount {
@@ -566,6 +570,11 @@ private final class MockLinkWalletButtonController: LinkWalletButtonControlling 
         didSet { stateSubject.send() }
     }
     var resolvedLinkBrand: LinkBrand = .link
+    var mode: LinkController.Mode = .setup
+    var email: String? {
+        didSet { stateSubject.send() }
+    }
+    var phoneNumber: String?
     var stateDidChange: AnyPublisher<Void, Never> { stateSubject.eraseToAnyPublisher() }
 
     private(set) var lookupEmails: [String] = []

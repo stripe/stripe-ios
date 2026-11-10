@@ -71,6 +71,24 @@ final class PayWithLinkButton: UIControl {
         }
     }
 
+    /// The action the button's title describes when no Link account is shown.
+    enum CallToAction {
+        /// "Pay with Link"
+        case pay
+        /// "Continue with Link", e.g. when Link only collects a payment method or sets one up for future use
+        case `continue`
+    }
+
+    /// The action the button's title describes, e.g. "Pay with Link". Defaults to `.pay`.
+    var callToAction: CallToAction = .pay {
+        didSet {
+            guard oldValue != callToAction else {
+                return
+            }
+            updateTitleUI()
+        }
+    }
+
     /// Whether the button shows a loading indicator next to the Link logo, e.g. while Link opens.
     /// The button also appears disabled to VoiceOver while loading. Defaults to `false`.
     var isLoading: Bool = false {
@@ -375,7 +393,7 @@ private extension PayWithLinkButton {
 
     /// - Parameter hidesLogo: Whether to leave a blank space in place of the Link logo.
     func makePayWithLinkAttributedText(for font: UIFont, hidesLogo: Bool = false) -> NSAttributedString {
-        let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link(brand: brand))
+        let payWithLinkString = NSMutableAttributedString(string: title)
 
         let linkImage = primaryLinkLogoImage
         let linkAttachment = NSTextAttachment(
@@ -554,6 +572,23 @@ private extension PayWithLinkButton {
             contentView.isHidden = contentView !== visibleContentView
         }
         payWithLinkView.isHidden = isCompact
+    }
+
+    /// The button's title, e.g. "Pay with Link", with the brand name that's replaced by the Link logo.
+    var title: String {
+        switch callToAction {
+        case .pay:
+            return String.Localized.pay_with_link(brand: brand)
+        case .continue:
+            return String.Localized.continue_with_link(brand: brand)
+        }
+    }
+
+    func updateTitleUI() {
+        finishStateTransition()
+        payWithLinkView.attributedText = makePayWithLinkAttributedText(for: payWithLinkView.font)
+        updateAccessibilityContent()
+        setNeedsLayout()
     }
 
     func updateBrandUI() {
@@ -865,7 +900,7 @@ private extension PayWithLinkButton {
         }
 
         // To use Xcode SwiftUI Previews, comment out the following `accessibilityLabel` setter:
-        accessibilityLabel = brand.accessibilityText(from: String.Localized.pay_with_link(brand: brand))
+        accessibilityLabel = brand.accessibilityText(from: title)
 
         // While loading, describe the account the button showed before
         switch accountState {

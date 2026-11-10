@@ -13,6 +13,21 @@ import Foundation
 // We use snake case to make long names easier to read.
 @_spi(InternalOnlyAPI) public extension String.Localized {
 
+    /// Shared by Financial Connections and the Link wallet button.
+    static func continue_with_link(brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "Continue with %@",
+                """
+                A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
+                   The title of a screen where users are informed that they can sign-in-to Link.
+                   The placeholder is a Stripe brand name and should not be translated.
+                """
+            ),
+            brand.displayName
+        )
+    }
+
     static var address: String {
         STPLocalizedString(
             "Address",

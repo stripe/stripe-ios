@@ -34,6 +34,8 @@
 
 "Continue" = "Jatka";
 
+"Continue with %@" = "Jatka kohteella %@";
+
 "Country" = "Maa";
 
 "Country or region" = "Maa tai alue";

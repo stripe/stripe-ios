@@ -7,6 +7,7 @@
 
 @_spi(InternalOnlyAPI) @testable import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeFinancialConnections
+@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
 class StringExtensionsTests: XCTestCase {

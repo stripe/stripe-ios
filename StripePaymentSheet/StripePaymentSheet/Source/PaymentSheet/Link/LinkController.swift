@@ -137,7 +137,7 @@ import UIKit
     }
 
     private let apiClient: STPAPIClient
-    private let mode: Mode
+    let mode: Mode
     private let elementsSession: STPElementsSession
     private let intent: Intent
     private let paymentElementConfiguration: PaymentElementConfiguration
@@ -169,6 +169,15 @@ import UIKit
     }
 
     private var lastCreatedPaymentMethod: STPPaymentMethod?
+
+    /// The customer's email address, if you have it. `LinkWalletButton` looks up the associated Link account to display
+    /// its details, and prefills it in Link. If `nil`, the customer enters their email in Link.
+    /// When you call `present(email:phoneNumber:from:completion:)` directly, the email you pass is used instead.
+    @Published @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public var email: String?
+
+    /// The customer's phone number in E.164 format, if you have it. `LinkWalletButton` uses it to prefill the Link signup form.
+    /// When you call `present(email:phoneNumber:from:completion:)` directly, the phone number you pass is used instead.
+    @Published @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public var phoneNumber: String?
 
     /// Details on the current Link account.
     @Published @_spi(InternalOnlyAPI) public private(set) var linkAccount: PaymentSheetLinkAccount?

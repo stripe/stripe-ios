@@ -49,6 +49,12 @@ final class LinkControllerPreviewAPITests: XCTestCase {
                 )
                 _ = controller.paymentMethodPreview
 
+                // The customer the button looks up and prefills in Link
+                controller.email = "jenny.rosen@example.com"
+                controller.phoneNumber = "+14155551234"
+                let button = LinkWalletButton(linkController: controller)
+                _ = button
+
                 controller.present(
                     email: "jenny.rosen@example.com",
                     phoneNumber: "+14155551234",
