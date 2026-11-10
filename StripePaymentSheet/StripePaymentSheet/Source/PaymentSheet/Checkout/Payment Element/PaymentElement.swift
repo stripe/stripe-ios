@@ -70,7 +70,6 @@ public final class PaymentElement {
 
     init(
         checkout: CheckoutElementsController,
-        userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
         flowControllerInitParameters: CheckoutElementsControllerLoader.FlowControllerInitializationParameters,
         embeddedPaymentElementInitParameters: CheckoutElementsControllerLoader.EmbeddedPaymentElementInitializationParameters
     ) throws {
@@ -103,7 +102,7 @@ public final class PaymentElement {
         self.embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
         let uiView = PaymentElementUIView(
             contentView: embeddedPaymentElement.view,
-            userInterfaceStyle: userInterfaceStyle
+            userInterfaceStyle: embeddedPaymentElementInitParameters.configuration.style
         )
         self.view = PaymentElementView(viewModel: PaymentElementViewModel(uiView: uiView))
         self.uiView = uiView

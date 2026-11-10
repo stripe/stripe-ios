@@ -150,7 +150,6 @@ public final class CheckoutElementsController: ObservableObject {
             if let paymentElementInitParameters = handleSessionChangeResult.paymentElement {
                 self.paymentElement = try PaymentElement(
                     checkout: self,
-                    userInterfaceStyle: configuration.userInterfaceStyle,
                     flowControllerInitParameters: paymentElementInitParameters.flowController,
                     embeddedPaymentElementInitParameters: paymentElementInitParameters.embedded
                 )
