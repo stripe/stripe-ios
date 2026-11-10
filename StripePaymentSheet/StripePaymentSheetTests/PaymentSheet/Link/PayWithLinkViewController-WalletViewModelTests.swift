@@ -290,6 +290,25 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         )
     }
 
+    func test_cardBrandAllowlist_blocksUnsupportedCardsAndPreservesBankAccounts() throws {
+        // Only allow Discover cards and bank accounts.
+        let sut = try makeSUT(
+            linkFundingSources: ["CARD", "BANK_ACCOUNT"],
+            cardBrandAcceptance: .allowed(brands: [.discover]),
+            linkPassthroughModeEnabled: true
+        )
+
+        // Try to use a visa, confirming it's unsupported / disabled.
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
+        XCTAssertFalse(sut.selectedPaymentMethodIsSupported)
+        XCTAssertEqual(sut.confirmButtonStatus, .disabled)
+
+        // Ensure bank accounts are unaffected by the filtering.
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
+        XCTAssertTrue(sut.selectedPaymentMethodIsSupported)
+        XCTAssertEqual(sut.confirmButtonStatus, .enabled)
+    }
+
     func test_cardBrandFiltering_ignoredWhenPassThroughDisabled() throws {
         let sut = try makeSUT(supportedPaymentDetailsTypes: [ParsedEnum(.card)],
                               linkFundingSources: ["CARD"],
