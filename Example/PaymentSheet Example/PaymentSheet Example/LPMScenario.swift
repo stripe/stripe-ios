@@ -32,6 +32,8 @@ struct LPMScenario: Identifiable {
         settings.allowsDelayedPMs = .on
         // Many payment methods don't support manual capture
         settings.manualCapture = .off
+        // PaymentMethod mode adds Link as a payment method type
+        settings.linkPassthroughMode = .passthrough
         // Offer only this payment method: no saved payment methods, EPMs, CPMs, or payment method configuration
         settings.customerMode = .guest
         settings.externalPaymentMethods = .off
