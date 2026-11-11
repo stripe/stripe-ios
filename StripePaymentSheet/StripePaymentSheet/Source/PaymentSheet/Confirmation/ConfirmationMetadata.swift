@@ -1,0 +1,341 @@
+//
+//  ConfirmationMetadata.swift
+//  StripePaymentSheet
+//
+//  Created by David Estes on 11/10/26.
+//
+
+import Foundation
+@_spi(InternalOnlyAPI) import StripePayments
+
+/// Everything PaymentSheet needs to confirm one payment method type and finish its payment: the confirm params,
+/// the next actions confirmation can return and how to perform each, and what each intent status means after
+/// confirmation and after a next action.
+///
+/// `ConfirmationMetadata.native(for:)` is the default table, derived from STPPaymentHandler's and PaymentSheet's
+/// per-type rules. A server-sent spec replaces a type's whole policy; see `resolved(for:serverSpec:)`.
+///
+/// It's a superset of the `mobile_session` contract's `confirm` object: every contract field maps to one field here,
+/// and the fields the contract doesn't have yet are marked "Not in the contract".
+struct ConfirmationMetadata: Codable, Equatable {
+    var params: Params
+    /// Next actions confirmation can return for this type, keyed by the API's `next_action[type]`. Any other next
+    /// action fails the payment with `unsupportedAuthenticationErrorCode`.
+    /// Contract: `confirm.next_actions` (types only; the per-action settings aren't in the contract).
+    var nextActions: [String: NextAction]
+    var paymentIntent: IntentRules
+    /// How to finish a SetupIntent, or nil if PaymentSheet doesn't offer this type for SetupIntents.
+    /// Not in the contract (server-driven PMs are PaymentIntent-only in v1).
+    var setupIntent: IntentRules?
+    /// How to read the intent after a next action. Before one, e.g. polling a `processing` intent right after
+    /// confirmation, it's always `retrieve`.
+    /// Contract: `post_confirm.intent_retrieval`.
+    var retrieval: Retrieval
+    /// Work to do before every read after a next action. Not in the contract.
+    var beforeFetch: BeforeFetch?
+    /// What canceling the payment after a next action also does. Not in the contract.
+    var onCancel: CancelSideEffect
+
+    // MARK: - Params
+
+    /// What goes into the confirm request, beyond the payment method details the form collects.
+    struct Params: Codable, Equatable {
+        /// `payment_method_data[type]`. Contract: `confirm.payment_method_data_type`.
+        var paymentMethodDataType: String
+        /// Whether confirming needs a `return_url`. Not in the contract (it's implied by the next actions).
+        var returnURL: ReturnURLRequirement
+        /// When to send `mandate_data` with inferred online acceptance.
+        /// Contract: `confirm.mandate_data` (`none` or `online_inferred`, which here is `.always`).
+        var mandateData: MandateData
+        /// Which `setup_future_usage` values this type can be confirmed with, and where PaymentSheet puts them.
+        /// Contract: `confirm.setup_future_usage` (one value, not a set).
+        var setupFutureUsage: SetupFutureUsage
+        /// Fixed `payment_method_options[<type>]` fields PaymentSheet sets for this type. Not in the contract.
+        var paymentMethodOptions: [PaymentMethodOption]
+
+        enum ReturnURLRequirement: String, Codable, Equatable {
+            /// Confirmation fails without one. PaymentSheet asserts on a missing `returnURL` for these types.
+            case required
+            /// Sent when the merchant configured one.
+            case sentIfSet
+        }
+
+        enum MandateData: String, Codable, Equatable {
+            case none
+            /// On every confirm.
+            case always
+            /// Only when the payment method is being set up: a SetupIntent, or a PaymentIntent with
+            /// `setup_future_usage` set at the top level or in this type's `payment_method_options`.
+            case whenSettingUp
+        }
+
+        struct SetupFutureUsage: Codable, Equatable {
+            /// Whether the type can be set up: confirmed with `setup_future_usage`, or with a SetupIntent.
+            var supportsSetup: Bool
+            /// Whether PaymentSheet sends the customer's "save" choice as
+            /// `payment_method_options[<type>][setup_future_usage]` (card, US bank account, Link), rather than
+            /// relying on the intent's own `setup_future_usage`.
+            var sendsCustomerChoiceInPaymentMethodOptions: Bool
+
+            static let unsupported = SetupFutureUsage(supportsSetup: false, sendsCustomerChoiceInPaymentMethodOptions: false)
+        }
+
+        enum PaymentMethodOption: String, Codable, Equatable {
+            /// Card: `payment_method_options[card][require_cvc_recollection]` and the recollected CVC for saved cards.
+            case cardCVCRecollection
+            /// Card: `payment_method_options[card][network]` when the customer picks a co-branded network.
+            case cardNetwork
+            /// US bank account: `payment_method_options[us_bank_account][verification_method]` from the intent.
+            case usBankAccountVerificationMethod
+        }
+    }
+
+    // MARK: - Next actions
+
+    struct NextAction: Codable, Equatable {
+        var presenter: Presenter
+        /// Which URL STPURLCallbackHandler listens for, i.e. when the customer counts as returned.
+        var returnURL: ReturnURLSource
+        /// How to try a native app before a web view.
+        var appToApp: AppToApp
+        /// Replaces the intent's `requires_action` rule while the intent still has this next action after it was
+        /// performed. For example, a voucher's `requires_action` means "the customer pays later", so it succeeds.
+        /// Not in the contract (`post_confirm` is per payment method, not per next action).
+        var whileRequiresAction: Outcome?
+
+        enum Presenter: Codable, Equatable {
+            /// Open the next action's URL: as an app first (see `AppToApp`), then in an in-app browser.
+            case redirect(browser: Browser)
+            /// 3DS2 through Stripe3DS2 (`use_stripe_sdk`), which falls back to a redirect. Stays a special handler.
+            case threeDS2
+            /// Show `PollingViewController` (BLIK, MB WAY, Bizum), or show it behind the hosted instructions web view
+            /// (PayNow, PromptPay, Pix).
+            case pollingScreen(PollingScreen, overWebView: Bool)
+            /// Nothing to show: the customer finishes later, e.g. verifying microdeposits. The payment succeeds.
+            case none
+        }
+
+        enum Browser: String, Codable, Equatable {
+            /// SFSafariViewController, unless the next action sets `useWebAuthSession`, which uses
+            /// ASWebAuthenticationSession with the `stripesdk` callback scheme.
+            case fromNextAction
+            case safariViewController
+        }
+
+        /// The `PollingViewController` config that `PollingViewModel` hardcodes per type today.
+        struct PollingScreen: Codable, Equatable {
+            /// How long the screen polls before showing an error, unless `deadlineField` is in the next action.
+            var seconds: Int
+            var intervalSeconds: Int
+            var showsCountdown: Bool
+            /// A next action field with the deadline, e.g. Pix's `expires_at`.
+            var deadlineField: String?
+        }
+
+        enum ReturnURLSource: String, Codable, Equatable {
+            /// The next action's own `return_url`.
+            case nextAction
+            /// The confirm request's `return_url`, which must be set.
+            case confirmRequired
+            /// The confirm request's `return_url`, if set.
+            case confirmIfSet
+            /// The confirm request's `return_url` if set, otherwise the next action's (Alipay's next action return
+            /// URL is an intermediate trampoline).
+            case confirmThenNextAction
+            /// Doesn't listen for a return URL; returns on foregrounding or closing the web view.
+            case none
+        }
+
+        enum AppToApp: String, Codable, Equatable {
+            /// Try the URL as an app first. An http(s) URL opens with `universalLinksOnly` (except on Mac Catalyst), so a
+            /// missing app falls back to the in-app browser rather than Safari; a custom scheme opens any app.
+            case universalLinksOnly
+            /// Try the next action's custom-scheme `native_url` first, then open its web `url` in the in-app browser (Alipay).
+            case nativeURLThenWeb
+            /// Nothing to open.
+            case none
+        }
+    }
+
+    // MARK: - Status rules
+
+    /// What `processing` and `requires_action` mean for one intent type. The other statuses have fixed handling in
+    /// `decide`, the same for every payment method.
+    struct IntentRules: Codable, Equatable {
+        /// Right after confirmation, or when PaymentSheet handles an intent that was confirmed elsewhere.
+        var afterConfirm: StatusRules
+        /// Each time the intent is read after a next action.
+        var afterNextAction: StatusRules
+        /// Replaces `afterNextAction` once the customer closes the in-app browser themselves. Not in the contract.
+        var afterWebViewDismissed: StatusRules?
+    }
+
+    /// Contract: `post_confirm.on_processing` and `post_confirm.on_requires_action`, one rule for both phases.
+    struct StatusRules: Codable, Equatable {
+        var processing: Outcome
+        var requiresAction: Outcome
+    }
+
+    enum Outcome: Codable, Equatable {
+        case succeed
+        case fail
+        case cancel
+        /// Only for `requires_action` right after confirmation.
+        case performNextAction
+        /// Read the intent every second until its status changes or `seconds` pass, then finish with `onTimeout`.
+        /// The first poll sets the deadline for the rest of the payment.
+        /// Contract: `poll` plus one `poll_seconds` for both statuses; `onTimeout` is fixed (fail for processing,
+        /// cancel for requires_action).
+        case poll(seconds: Int, onTimeout: Terminal)
+        /// Don't finish: the next action's screen (PayNow's and PromptPay's polling screen) finishes the payment.
+        /// Not in the contract.
+        case waitForNextActionScreen
+    }
+
+    enum Terminal: String, Codable, Equatable {
+        case succeed
+        case fail
+        case cancel
+    }
+
+    enum Retrieval: String, Codable, Equatable {
+        /// `GET /v1/payment_intents/:id`, expanding `payment_method`.
+        case retrieve
+        /// `POST /v1/payment_intents/:id/refresh`, which asks the partner for the latest status.
+        case refresh
+    }
+
+    enum BeforeFetch: String, Codable, Equatable {
+        /// Load the Alipay next action's `marlin_return_url` so the intent's status is up to date.
+        case loadAlipayMarlinReturnURL
+    }
+
+    enum CancelSideEffect: String, Codable, Equatable {
+        case none
+        /// Cancel the 3DS source (`source_cancel`) of a card or Link payment the customer abandoned in a web view.
+        case cancel3DSSource
+    }
+}
+
+// MARK: - Decisions
+
+extension ConfirmationMetadata {
+    enum IntentKind: Equatable {
+        case paymentIntent
+        case setupIntent
+    }
+
+    /// When the intent is being evaluated.
+    enum Phase: Equatable {
+        /// Right after confirmation, or the first evaluation of an intent confirmed elsewhere.
+        case afterConfirm
+        /// After a next action, on every read. `webViewDismissed` is whether the customer closed the in-app browser.
+        case afterNextAction(webViewDismissed: Bool)
+    }
+
+    /// One evaluation of an intent.
+    struct Situation: Equatable {
+        var intent: IntentKind
+        var status: STPPaymentIntentStatus
+        /// The intent's `next_action[type]`, if any.
+        var nextActionType: String?
+        var phase: Phase
+        /// Whether a poll's deadline has passed.
+        var pollExpired: Bool = false
+    }
+
+    enum Decision: Equatable {
+        case succeed
+        case fail(FailureReason)
+        case cancel
+        case performNextAction
+        case poll(seconds: Int)
+        case waitForNextActionScreen
+    }
+
+    enum FailureReason: Equatable {
+        /// `requires_payment_method`: confirmation failed, e.g. the customer was declined.
+        case paymentFailed
+        /// `requires_payment_method` when PaymentSheet starts handling a PaymentIntent: STPPaymentHandler treats it
+        /// as "no payment method attached" (`requiresPaymentMethodErrorCode`) rather than a decline.
+        case requiresPaymentMethod
+        /// The rules say this status fails, or the status is unknown.
+        case unexpectedStatus
+        /// `requires_action` with a next action this type doesn't list.
+        case unsupportedNextAction
+        /// A SetupIntent for a type with no SetupIntent rules.
+        case unsupportedIntent
+    }
+
+    /// What the intent's status means for this type. Pure, so the parity harness can compare it with STPPaymentHandler.
+    func decide(_ situation: Situation) -> Decision {
+        let isAfterNextAction = situation.phase != .afterConfirm
+        switch situation.status {
+        case .succeeded:
+            return .succeed
+        case .requiresCapture:
+            return situation.intent == .paymentIntent ? .succeed : .fail(.unexpectedStatus)
+        case .requiresPaymentMethod:
+            return situation.intent == .paymentIntent && !isAfterNextAction ? .fail(.requiresPaymentMethod) : .fail(.paymentFailed)
+        case .canceled:
+            return .cancel
+        case .requiresConfirmation:
+            // Manual confirmation: after a next action, the merchant confirms the PaymentIntent on their server.
+            return situation.intent == .paymentIntent && isAfterNextAction ? .succeed : .fail(.unexpectedStatus)
+        case .unknown:
+            return .fail(.unexpectedStatus)
+        case .processing, .requiresAction:
+            break
+        @unknown default:
+            return .fail(.unexpectedStatus)
+        }
+
+        guard let rules = situation.intent == .paymentIntent ? paymentIntent : setupIntent else {
+            return .fail(.unsupportedIntent)
+        }
+        let statusRules: StatusRules
+        switch situation.phase {
+        case .afterConfirm:
+            statusRules = rules.afterConfirm
+        case .afterNextAction(let webViewDismissed):
+            statusRules = webViewDismissed ? rules.afterWebViewDismissed ?? rules.afterNextAction : rules.afterNextAction
+        }
+
+        var outcome: Outcome
+        if situation.status == .processing {
+            outcome = statusRules.processing
+        } else {
+            outcome = statusRules.requiresAction
+            if outcome == .performNextAction {
+                guard let type = situation.nextActionType, nextActions[type] != nil else {
+                    return .fail(.unsupportedNextAction)
+                }
+            }
+            if isAfterNextAction, let type = situation.nextActionType, let override = nextActions[type]?.whileRequiresAction {
+                outcome = override
+            }
+        }
+
+        switch outcome {
+        case .succeed:
+            return .succeed
+        case .fail:
+            return .fail(.unexpectedStatus)
+        case .cancel:
+            return .cancel
+        case .performNextAction:
+            return .performNextAction
+        case .waitForNextActionScreen:
+            return .waitForNextActionScreen
+        case .poll(let seconds, let onTimeout):
+            guard situation.pollExpired || seconds == 0 else {
+                return .poll(seconds: seconds)
+            }
+            switch onTimeout {
+            case .succeed: return .succeed
+            case .fail: return .fail(.unexpectedStatus)
+            case .cancel: return .cancel
+            }
+        }
+    }
+}
