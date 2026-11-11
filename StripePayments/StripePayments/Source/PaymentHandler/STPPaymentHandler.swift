@@ -438,6 +438,7 @@ public class STPPaymentHandler: NSObject {
 
     /// Handles any `nextAction` required to authenticate the PaymentIntent.
     /// - Note: The PaymentIntent must have been fetched with an expanded paymentMethod object.
+    @MainActor
     @_spi(InternalOnlyAPI) public func handleNextAction(
         for paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
@@ -734,6 +735,7 @@ public class STPPaymentHandler: NSObject {
 
     /// Handles any `nextAction` required to authenticate the SetupIntent.
     /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object.
+    @MainActor
     @_spi(InternalOnlyAPI) public func handleNextAction(
         for setupIntent: STPSetupIntent,
         with authenticationContext: STPAuthenticationContext,
