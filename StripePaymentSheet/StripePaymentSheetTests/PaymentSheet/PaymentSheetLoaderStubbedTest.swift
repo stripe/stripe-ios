@@ -25,6 +25,110 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         return config
     }
 
+    func testLinkPreselectionTreatmentUpdatesLoadResultAndAnalytics() async throws {
+        let (loadResult, exposure, selectedLPM) = try await loadLinkPreselectionScenario()
+        XCTAssertTrue(loadResult.preselectLink)
+        XCTAssertEqual(selectedLPM, "link")
+        XCTAssertEqual(exposure?["assignment_group"] as? String, "treatment")
+    }
+
+    func testLinkPreselectionControlPreservesEmptySelection() async throws {
+        let (loadResult, exposure, selectedLPM) = try await loadLinkPreselectionScenario(assignment: "control")
+        XCTAssertFalse(loadResult.preselectLink)
+        XCTAssertEqual(selectedLPM, "none")
+        XCTAssertEqual(exposure?["assignment_group"] as? String, "control")
+    }
+
+    func testUnavailableLastUsedMethodReachesLinkPreselection() async throws {
+        let (loadResult, exposure, selectedLPM) = try await loadLinkPreselectionScenario(lastUsedMethod: .stripeId("pm_unavailable"))
+        XCTAssertTrue(loadResult.preselectLink)
+        XCTAssertNotNil(exposure)
+        XCTAssertEqual(selectedLPM, "link")
+    }
+
+    func testLastUsedLinkSkipsPreselectionExperiment() async throws {
+        let (loadResult, exposure, _) = try await loadLinkPreselectionScenario(lastUsedMethod: .link)
+        XCTAssertFalse(loadResult.preselectLink)
+        XCTAssertNil(exposure)
+    }
+
+    func testUnavailableLastUsedApplePayReachesLinkPreselection() async throws {
+        let (loadResult, exposure, selectedLPM) = try await loadLinkPreselectionScenario(lastUsedMethod: .applePay)
+        XCTAssertTrue(loadResult.preselectLink)
+        XCTAssertNotNil(exposure)
+        XCTAssertEqual(selectedLPM, "link")
+    }
+
+    func testSavedMethodFallbackSkipsLinkPreselection() async throws {
+        let (loadResult, exposure, selectedLPM) = try await loadLinkPreselectionScenario(savedMethodTypes: [.card])
+        XCTAssertFalse(loadResult.preselectLink)
+        XCTAssertNil(exposure)
+        XCTAssertEqual(selectedLPM, "card")
+    }
+
+    func testCompletePaymentSheetSkipsLinkPreselection() async throws {
+        let (loadResult, exposure, selectedLPM) = try await loadLinkPreselectionScenario(integrationShape: .paymentSheet)
+        XCTAssertFalse(loadResult.preselectLink)
+        XCTAssertNil(exposure)
+        XCTAssertEqual(selectedLPM, "none")
+    }
+
+    private func loadLinkPreselectionScenario(
+        assignment: String = "treatment",
+        lastUsedMethod: CustomerPaymentOption? = nil,
+        savedMethodTypes: [STPPaymentMethodType] = [],
+        integrationShape: PaymentSheetLoader.IntegrationShape = .flowController
+    ) async throws -> (PaymentSheetLoader.LoadResult, [String: Any]?, String?) {
+        // Given a Link-enabled session with an experiment assignment
+        let configuration = configuration(apiClient: stubbedAPIClient())
+        var config = configuration
+        config.applePay = nil
+        CustomerPaymentOption.setDefaultPaymentMethod(lastUsedMethod, forCustomer: "123")
+        let previousAccount = LinkAccountContext.shared.account
+        LinkAccountContext.shared.account = nil
+        defer {
+            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: "123")
+            LinkAccountContext.shared.account = previousAccount
+        }
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: savedMethodTypes)
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
+        StubbedBackend.stubSessions(fileMock: .elementsSessionsPaymentMethod_200) { data in
+            let resolved = StubbedBackend.updatePaymentMethodDetail(data: data, variables: [
+                "<paymentMethods>": "\"card\", \"link\"",
+                "<currency>": "\"usd\"",
+            ])
+            var json = try! JSONSerialization.jsonObject(with: resolved) as! [String: Any]
+            json["experiments_data"] = [
+                "arb_id": "arb_123",
+                "experiment_assignments": ["ocs_mobile_preselect_link": assignment],
+            ]
+            return try! JSONSerialization.data(withJSONObject: json)
+        }
+        let analytics = STPTestingAnalyticsClient()
+        let analyticsV2 = MockAnalyticsClientV2()
+        let analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: integrationShape == .paymentSheet ? .complete : .flowController,
+            configuration: config,
+            analyticsClient: analytics,
+            analyticsClientV2: analyticsV2
+        )
+
+        // When loading before the integration's analytics metadata has been populated
+        let (loadResult, _) = try await PaymentSheetLoader.load(
+            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+            configuration: config,
+            analyticsHelper: analyticsHelper,
+            integrationShape: integrationShape
+        )
+
+        // Then only the fallback logs exposure and the load analytic reflects the selection
+        let exposure = analyticsV2.loggedAnalyticsPayloads.first {
+            $0["experiment_retrieved"] as? String == "ocs_mobile_preselect_link"
+        }
+        return (loadResult, exposure, analytics.events.last?.params["selected_lpm"] as? String)
+    }
+
     func testReturningCustomerWithNoSavedCards() throws {
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
