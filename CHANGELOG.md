@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
 
 ## 26.16.1 2026-11-09
 ### PaymentSheet
