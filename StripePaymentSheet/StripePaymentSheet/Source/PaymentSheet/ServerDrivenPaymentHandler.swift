@@ -246,6 +246,8 @@ final class ServerDrivenPaymentHandler {
             return hasPerformedNextAction ? decision(for: spec.requiresAction) : .performNextAction
         case .unknown:
             return .fail(.unexpectedStatus)
+        @unknown default:
+            return .fail(.unexpectedStatus)
         }
     }
 
