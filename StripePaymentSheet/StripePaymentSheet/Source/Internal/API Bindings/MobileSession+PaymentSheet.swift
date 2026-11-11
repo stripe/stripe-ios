@@ -63,9 +63,18 @@ extension MobileSession {
         return ascii
     }
 
+    /// The decoded `mobile_session` sidecar.
+    struct DecodedSidecar {
+        let session: Session
+        /// The types of the `payment_methods` entries that didn't decode and were dropped. A type left without a
+        /// description shows natively if PaymentSheet supports it, and otherwise isn't shown.
+        let undecodablePaymentMethodTypes: Set<String>
+    }
+
     /// Decodes the `mobile_session` sidecar from an `elements/sessions` response.
-    /// Returns nil when it's missing or malformed; never fails the load.
-    static func decodeSidecar(fromAPIResponse response: [AnyHashable: Any]) -> Session? {
+    /// Returns nil when it's missing or malformed; never fails the load. A `payment_methods` entry that doesn't decode is
+    /// dropped and reported, and the rest of the session is kept.
+    static func decodeSidecar(fromAPIResponse response: [AnyHashable: Any]) -> DecodedSidecar? {
         guard let sidecar = response[sidecarResponseKey], !(sidecar is NSNull) else {
             return nil
         }
@@ -73,7 +82,26 @@ extension MobileSession {
             guard JSONSerialization.isValidJSONObject(sidecar) else {
                 throw PaymentSheetError.unknown(debugDescription: "mobile_session is not a JSON object")
             }
-            return try decode(JSONSerialization.data(withJSONObject: sidecar))
+            let rawPaymentMethods = (sidecar as? [String: Any])?["payment_methods"] as? [Any]
+            var undecodablePaymentMethodTypes: Set<String> = []
+            let session = try decode(JSONSerialization.data(withJSONObject: sidecar)) { droppedEntry in
+                // The entry didn't decode, so read its type from the raw JSON, if it has one.
+                let type = rawPaymentMethods.flatMap { droppedEntry.index < $0.count ? $0[droppedEntry.index] : nil }
+                    .flatMap { ($0 as? [String: Any])?["type"] as? String }
+                if let type {
+                    undecodablePaymentMethodTypes.insert(type)
+                }
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                    event: .paymentSheetMobileSessionPaymentMethodDropped,
+                    error: droppedEntry.error,
+                    params: [
+                        "payment_method_type": type ?? "unknown",
+                        "reason": "decode",
+                        "index": droppedEntry.index,
+                    ]
+                )
+            }
+            return DecodedSidecar(session: session, undecodablePaymentMethodTypes: undecodablePaymentMethodTypes)
         } catch {
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetMobileSessionDecodeFailed, error: error)
             return nil

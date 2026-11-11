@@ -196,7 +196,7 @@ extension PaymentSheet {
                     stpAssertionFailure("Server returned a payment method type the client can't render: \(type)")
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
                         event: .paymentSheetMobileSessionPaymentMethodDropped,
-                        params: ["payment_method_type": type]
+                        params: ["payment_method_type": type, "reason": "unrenderable_type"]
                     )
                 }
                 return paymentMethodType
@@ -225,11 +225,14 @@ extension PaymentSheet {
                         event: .paymentSheetMobileSessionPaymentMethodDropped,
                         params: [
                             "payment_method_type": paymentMethod.type,
+                            "reason": "unsupported_value",
                             "unsupported_value": (error as? ServerDrivenPaymentMethod.UnsupportedValue)?.value ?? "unknown",
                         ]
                     )
                 }
             }
+            // Entries that didn't decode were reported when the session was decoded.
+            unrenderableTypes.formUnion(elementsSession.mobileSessionUndecodablePaymentMethodTypes.subtracting(renderable.keys))
             return (renderable, unrenderableTypes)
         }
 
