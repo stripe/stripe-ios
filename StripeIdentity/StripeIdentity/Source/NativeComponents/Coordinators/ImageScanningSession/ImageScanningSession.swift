@@ -77,6 +77,9 @@ final class ImageScanningSession<
 
     private(set) var timeoutTimer: Timer?
     private var delegate: AnyDelegate?
+    /// Changes every time scanning starts. A retake of the same classification
+    /// has the same `state`, so this is what identifies frames from an earlier pass.
+    private var scanningPass = 0
 
     // MARK: Coordinators
     let concurrencyManager: ImageScanningConcurrencyManagerProtocol
@@ -184,6 +187,7 @@ final class ImageScanningSession<
         // Update the state of the PreviewView before starting the camera session,
         // otherwise the PreviewView may not update due to the DocumentScanner
         // hogging the CameraSession's sessionQueue.
+        scanningPass += 1
         self.state = .scanning(expectedClassification, .initialValue())
 
         delegate?.imageScanningSession(
@@ -322,6 +326,7 @@ final class ImageScanningSession<
         }
 
         let exifMetadata = CameraExifMetadata(sampleBuffer: sampleBuffer)
+        let scanningPass = self.scanningPass
 
         concurrencyManager.scanImage(
             with: scanner,
@@ -331,10 +336,11 @@ final class ImageScanningSession<
             completeOn: .main
         ) { [weak self] scannerOutput in
             // The completion block could get called after we've already found
-            // a high quality image for this document side or timed out, so
-            // verify that we're still scanning for the same document side
-            // before handling the image.
+            // a high quality image for this document side, timed out, or
+            // restarted scanning, so verify that we're still in the same
+            // scanning pass before handling the image.
             guard let self = self,
+                scanningPass == self.scanningPass,
                 case .scanning(expectedClassification, _) = self.state
             else {
                 return
