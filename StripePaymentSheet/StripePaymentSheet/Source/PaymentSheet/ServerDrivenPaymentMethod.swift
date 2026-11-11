@@ -85,7 +85,7 @@ struct ServerDrivenPaymentMethod {
         switch paymentMethod.confirm.mandateData {
         case .none:
             break
-        case .onlineInferred, .unparsable:
+        case .onlineInferred, .onlineInferredWhenSettingUp, .unparsable:
             throw UnsupportedValue(value: "mandate_data:\(paymentMethod.confirm.mandateData.rawValue)")
         }
         switch paymentMethod.savedPaymentMethods {

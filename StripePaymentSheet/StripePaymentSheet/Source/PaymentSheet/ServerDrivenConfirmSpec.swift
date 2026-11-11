@@ -66,6 +66,9 @@ extension ServerDrivenConfirmSpec {
                 return .redirectToURL
             case .unparsable:
                 throw UnsupportedValue(value: "next_action:unparsable")
+            default:
+                // The native types' next actions (pending in mint), which server-driven payment methods can't use yet.
+                throw UnsupportedValue(value: "next_action:\(nextAction.type.rawValue)")
             }
         }
         let postConfirm = confirm.postConfirm

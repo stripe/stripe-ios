@@ -58,7 +58,7 @@ final class PollingScreenSessionTests: XCTestCase {
         waitUntil { !host.presented.isEmpty }
         let viewController = host.presented.first
         XCTAssertEqual(viewController?.viewModel.CTA, .Localized.blik_confirm_payment)
-        XCTAssertNil(host.safariViewControllers.first ?? nil)
+        XCTAssertNil(host.safariViewControllers.first)
         viewController?.didTapCancel()
 
         // Then the screen finishes the payment

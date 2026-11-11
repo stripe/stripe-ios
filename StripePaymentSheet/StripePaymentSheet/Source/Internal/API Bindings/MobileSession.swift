@@ -18,6 +18,8 @@ enum MobileSession {
             return try StripeJSONDecoder().decode(Session.self, from: data)
         }
         let paymentMethods = object.removeValue(forKey: "payment_methods")
+        // PENDING MINT (task #61): decoded entry by entry, like `payment_methods`.
+        let paymentMethodConfirmations = object.removeValue(forKey: "payment_method_confirmations")
         var session = try StripeJSONDecoder().decode(
             Session.self,
             from: JSONSerialization.data(withJSONObject: object)
@@ -26,6 +28,12 @@ enum MobileSession {
             PaymentMethod.self,
             paymentMethods,
             key: "payment_methods",
+            onDroppedEntry: onDroppedEntry
+        )
+        session.paymentMethodConfirmations = try decodeLossyArray(
+            PaymentMethodConfirmation.self,
+            paymentMethodConfirmations,
+            key: "payment_method_confirmations",
             onDroppedEntry: onDroppedEntry
         )
         return session
@@ -116,6 +124,22 @@ enum MobileSession {
     /// Open: unknown values decode to `.unparsable`, which callers must handle.
     enum NextActionType: String, SafeEnumCodable {
         case `redirectToUrl` = "redirect_to_url"
+        // PENDING MINT: the next actions of the types the SDK confirms natively (task #61).
+        case `useStripeSdk` = "use_stripe_sdk"
+        case `alipayHandleRedirect` = "alipay_handle_redirect"
+        case `cashappHandleRedirectOrDisplayQrCode` = "cashapp_handle_redirect_or_display_qr_code"
+        case `swishHandleRedirectOrDisplayQrCode` = "swish_handle_redirect_or_display_qr_code"
+        case `oxxoDisplayDetails` = "oxxo_display_details"
+        case `boletoDisplayDetails` = "boleto_display_details"
+        case `konbiniDisplayDetails` = "konbini_display_details"
+        case `multibancoDisplayDetails` = "multibanco_display_details"
+        case `verifyWithMicrodeposits` = "verify_with_microdeposits"
+        case `blikAuthorize` = "blik_authorize"
+        case `mbWayAwaitAuthorization` = "mb_way_await_authorization"
+        case `awaitAuthorization` = "await_authorization"
+        case `paynowDisplayQrCode` = "paynow_display_qr_code"
+        case `promptpayDisplayQrCode` = "promptpay_display_qr_code"
+        case `pixDisplayQrCode` = "pix_display_qr_code"
         case unparsable
     }
 
@@ -123,6 +147,9 @@ enum MobileSession {
     enum MandateDataStyle: String, SafeEnumCodable {
         case `none` = "none"
         case `onlineInferred` = "online_inferred"
+        /// PENDING MINT: `online_inferred` only when the payment method is being set up (a SetupIntent, or
+        /// `setup_future_usage` at the top level or in the type's `payment_method_options`).
+        case `onlineInferredWhenSettingUp` = "online_inferred_when_setting_up"
         case unparsable
     }
 
@@ -383,9 +410,26 @@ enum MobileSession {
     struct NextAction: Codable, Equatable {
         /// The intent's `next_action[type]`. `redirect_to_url` opens `next_action[redirect_to_url][url]` and returns when the customer comes back to the app or closes the page.
         var type: NextActionType
+        // PENDING MINT (task #61): how the SDK performs the next action. Absent means the v1 behavior of `type`.
+        var presenter: NextActionPresenter?
+        var urlPath: String?
+        var fallbackUrlPath: String?
+        var browser: NextActionBrowser?
+        var returnUrl: NextActionReturnURL?
+        var appToApp: NextActionAppToApp?
+        var whileRequiresAction: StatusRule?
+        var pollingScreen: PollingScreen?
 
         enum CodingKeys: String, CodingKey {
             case type = "type"
+            case presenter = "presenter"
+            case urlPath = "url_path"
+            case fallbackUrlPath = "fallback_url_path"
+            case browser = "browser"
+            case returnUrl = "return_url"
+            case appToApp = "app_to_app"
+            case whileRequiresAction = "while_requires_action"
+            case pollingScreen = "polling_screen"
         }
     }
 
@@ -418,6 +462,14 @@ enum MobileSession {
         var mandateData: MandateDataStyle
         var setupFutureUsage: SetupFutureUsage
         var postConfirm: PostConfirm
+        // PENDING MINT (task #61): what the bundled confirmation table needs beyond v1. All optional, so v1 entries decode.
+        var intentRules: IntentRulesByKind?
+        var returnUrl: ReturnURLRequirement?
+        var setup: SetupSupport?
+        var paymentMethodOptions: [PaymentMethodOptionField]?
+        var beforeFetch: BeforeFetch?
+        var onCancel: CancelSideEffect?
+        var performer: NextActionPerformer?
 
         enum CodingKeys: String, CodingKey {
             case paymentMethodDataType = "payment_method_data_type"
@@ -425,6 +477,13 @@ enum MobileSession {
             case mandateData = "mandate_data"
             case setupFutureUsage = "setup_future_usage"
             case postConfirm = "post_confirm"
+            case intentRules = "intent_rules"
+            case returnUrl = "return_url"
+            case setup = "setup"
+            case paymentMethodOptions = "payment_method_options"
+            case beforeFetch = "before_fetch"
+            case onCancel = "on_cancel"
+            case performer = "performer"
         }
     }
 
@@ -454,12 +513,228 @@ enum MobileSession {
         var paymentMethods: [PaymentMethod]?
         /// Messages for the merchant's developer, such as why a payment method wasn't offered. The SDK logs each one verbatim after loading. Present in test mode whenever `payment_method_availability` is.
         var logMessages: [String]?
+        /// PENDING MINT (task #61): how to confirm the types the SDK renders natively. The SDK bundles a copy until the
+        /// server sends it.
+        var paymentMethodConfirmations: [PaymentMethodConfirmation]?
 
         enum CodingKeys: String, CodingKey {
             case paymentMethodAvailability = "payment_method_availability"
             case paymentMethods = "payment_methods"
             case logMessages = "log_messages"
+            case paymentMethodConfirmations = "payment_method_confirmations"
         }
     }
 
+    // MARK: - PENDING MINT (task #61)
+    //
+    // Hand-written in the shape the generator emits, for the bundled confirmation table. Not in mint yet: each is listed in
+    // paymentsheet-confirm-engine-prototype.md, "Contract additions". Regenerating this file drops them.
+
+    /// How to confirm one type the SDK renders natively.
+    struct PaymentMethodConfirmation: Codable, Equatable {
+        /// The payment method type, as in `payment_method_availability.payment_method_types`.
+        var type: String
+        var confirm: PaymentMethodConfirm
+
+        enum CodingKeys: String, CodingKey {
+            case type = "type"
+            case confirm = "confirm"
+        }
+    }
+
+    /// Which primitive performs a next action.
+    enum NextActionPresenter: String, SafeEnumCodable {
+        /// Open `url_path` as an app, then in a web view, and wait for the customer to come back.
+        case `redirect` = "redirect"
+        /// The SDK's own 3DS2 handling. Never server-driven.
+        case `threeDs2` = "three_ds2"
+        /// The polling screen, behind a web view of `url_path` when `polling_screen.over_web_view` is true.
+        case `pollingScreen` = "polling_screen"
+        /// Nothing to show; the next action counts as performed.
+        case `none` = "none"
+        case unparsable
+    }
+
+    enum NextActionBrowser: String, SafeEnumCodable {
+        /// SFSafariViewController, or ASWebAuthenticationSession when the URL sets `useWebAuthSession=true`.
+        case `fromNextAction` = "from_next_action"
+        case `safariViewController` = "safari_view_controller"
+        case unparsable
+    }
+
+    /// Which URL means the customer came back.
+    enum NextActionReturnURL: String, SafeEnumCodable {
+        /// `next_action[type][return_url]`.
+        case `nextAction` = "next_action"
+        /// The confirm request's `return_url`; confirming without one fails.
+        case `confirmRequired` = "confirm_required"
+        case `confirmIfSet` = "confirm_if_set"
+        /// The confirm request's `return_url` if set, otherwise the next action's.
+        case `confirmThenNextAction` = "confirm_then_next_action"
+        /// None: the customer comes back by foregrounding the app or closing the web view.
+        case `none` = "none"
+        case unparsable
+    }
+
+    enum NextActionAppToApp: String, SafeEnumCodable {
+        /// Try `url_path` as an app first; an https URL opens only as a universal link.
+        case `universalLinksOnly` = "universal_links_only"
+        /// Try `url_path` (a custom scheme) as an app, then open `fallback_url_path` in the web view.
+        case `nativeUrlThenWeb` = "native_url_then_web"
+        case `none` = "none"
+        case unparsable
+    }
+
+    enum PollingInstructions: String, SafeEnumCodable {
+        case `blik` = "blik"
+        case `paynow` = "paynow"
+        case `mbWay` = "mb_way"
+        case `bizum` = "bizum"
+        case `pix` = "pix"
+        case unparsable
+    }
+
+    /// The polling screen's config.
+    struct PollingScreen: Codable, Equatable {
+        /// How long the screen polls, unless `deadline_field` is in the next action.
+        var seconds: Int
+        var intervalSeconds: Int
+        var showsCountdown: Bool
+        /// A field of `next_action[type]` with the deadline as a Unix timestamp, e.g. `expires_at`.
+        var deadlineField: String?
+        /// Which SDK string the screen shows.
+        var instructions: PollingInstructions
+        /// Whether a web view of `url_path` shows in front of the screen.
+        var overWebView: Bool
+
+        enum CodingKeys: String, CodingKey {
+            case seconds = "seconds"
+            case intervalSeconds = "interval_seconds"
+            case showsCountdown = "shows_countdown"
+            case deadlineField = "deadline_field"
+            case instructions = "instructions"
+            case overWebView = "over_web_view"
+        }
+    }
+
+    enum StatusOutcome: String, SafeEnumCodable {
+        case `succeed` = "succeed"
+        case `fail` = "fail"
+        case `cancel` = "cancel"
+        /// Only for `requires_action` right after confirmation.
+        case `performNextAction` = "perform_next_action"
+        /// Read the intent again until its status changes or `poll_seconds` pass, then `on_timeout`.
+        case `poll` = "poll"
+        /// The next action's screen finishes the payment.
+        case `waitForNextActionScreen` = "wait_for_next_action_screen"
+        case unparsable
+    }
+
+    enum PollTimeoutOutcome: String, SafeEnumCodable {
+        case `succeed` = "succeed"
+        case `fail` = "fail"
+        case `cancel` = "cancel"
+        case unparsable
+    }
+
+    /// What one status means.
+    struct StatusRule: Codable, Equatable {
+        var outcome: StatusOutcome
+        /// For `poll`.
+        var pollSeconds: Int?
+        /// For `poll`.
+        var onTimeout: PollTimeoutOutcome?
+
+        enum CodingKeys: String, CodingKey {
+            case outcome = "outcome"
+            case pollSeconds = "poll_seconds"
+            case onTimeout = "on_timeout"
+        }
+    }
+
+    /// What `processing` and `requires_action` mean in one phase.
+    struct StatusRules: Codable, Equatable {
+        var processing: StatusRule
+        var requiresAction: StatusRule
+
+        enum CodingKeys: String, CodingKey {
+            case processing = "processing"
+            case requiresAction = "requires_action"
+        }
+    }
+
+    /// The status rules for one intent type, per phase. Replaces `post_confirm`'s `on_processing`, `on_requires_action`
+    /// and `poll_seconds` when present.
+    struct IntentRules: Codable, Equatable {
+        var afterConfirm: StatusRules
+        var afterNextAction: StatusRules
+        /// Replaces `after_next_action` once the customer closes the in-app browser themselves.
+        var afterWebViewDismissed: StatusRules?
+
+        enum CodingKeys: String, CodingKey {
+            case afterConfirm = "after_confirm"
+            case afterNextAction = "after_next_action"
+            case afterWebViewDismissed = "after_web_view_dismissed"
+        }
+    }
+
+    struct IntentRulesByKind: Codable, Equatable {
+        var paymentIntent: IntentRules
+        /// Absent: the type can't be confirmed with a SetupIntent.
+        var setupIntent: IntentRules?
+
+        enum CodingKeys: String, CodingKey {
+            case paymentIntent = "payment_intent"
+            case setupIntent = "setup_intent"
+        }
+    }
+
+    enum ReturnURLRequirement: String, SafeEnumCodable {
+        /// Confirming needs a `return_url`.
+        case `required` = "required"
+        /// Sent when the merchant set one.
+        case `optional` = "optional"
+        case unparsable
+    }
+
+    struct SetupSupport: Codable, Equatable {
+        /// Whether the type can be set up: confirmed with `setup_future_usage`, or with a SetupIntent.
+        var supported: Bool
+        /// Whether the customer's "save" choice goes in `payment_method_options[type][setup_future_usage]`.
+        var customerChoiceInPaymentMethodOptions: Bool
+
+        enum CodingKeys: String, CodingKey {
+            case supported = "supported"
+            case customerChoiceInPaymentMethodOptions = "customer_choice_in_payment_method_options"
+        }
+    }
+
+    /// Fixed `payment_method_options[type]` fields the SDK's native form sets.
+    enum PaymentMethodOptionField: String, SafeEnumCodable {
+        case `cardCvcRecollection` = "card_cvc_recollection"
+        case `cardNetwork` = "card_network"
+        case `usBankAccountVerificationMethod` = "us_bank_account_verification_method"
+        case unparsable
+    }
+
+    enum BeforeFetch: String, SafeEnumCodable {
+        /// Load the Alipay next action's Marlin return URL before each read of a PaymentIntent.
+        case `loadAlipayMarlinReturnUrl` = "load_alipay_marlin_return_url"
+        case unparsable
+    }
+
+    enum CancelSideEffect: String, SafeEnumCodable {
+        case `none` = "none"
+        /// Cancel the 3DS source of a card or Link payment the customer abandoned.
+        case `cancel3dsSource` = "cancel_3ds_source"
+        case unparsable
+    }
+
+    enum NextActionPerformer: String, SafeEnumCodable {
+        /// The engine performs each next action with its `presenter`.
+        case `engine` = "engine"
+        /// Every next action goes to the SDK's STPPaymentHandler (card, Link).
+        case `stripePaymentHandler` = "stripe_payment_handler"
+        case unparsable
+    }
 }
