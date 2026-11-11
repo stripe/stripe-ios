@@ -204,25 +204,61 @@ final class CustomerProviderTests: XCTestCase {
     }
 
     func testCustomerPermissionsUseTheElementsSession() {
-        let provider = CustomerProvider(
+        let customerSessionProvider = CustomerProvider(
             customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")
         )
-        for enabled in [true, false] {
+        let legacyProvider = CustomerProvider(
+            customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")
+        )
+        // Builds customer session data with the given mobile Payment Element settings
+        func mobilePaymentElementData(enabled: Bool, paymentMethodRemove: String) -> [String: Any] {
+            return [
+                "mobile_payment_element": [
+                    "enabled": enabled,
+                    "features": [
+                        "payment_method_save": "enabled",
+                        "payment_method_remove": paymentMethodRemove,
+                    ],
+                ],
+            ]
+        }
+        // Some cases expect removal and update to differ, so mixing up the two permissions fails the test
+        let cases: [(String, CustomerProvider, [String: Any]?, (removal: Bool, update: Bool))] = [
+            (
+                "Customer session with removal enabled",
+                customerSessionProvider,
+                mobilePaymentElementData(enabled: true, paymentMethodRemove: "enabled"),
+                (removal: true, update: true)
+            ),
+            (
+                "Customer session with the mobile Payment Element disabled",
+                customerSessionProvider,
+                mobilePaymentElementData(enabled: false, paymentMethodRemove: "enabled"),
+                (removal: false, update: false)
+            ),
+            (
+                "Customer session with removal disabled",
+                customerSessionProvider,
+                mobilePaymentElementData(enabled: true, paymentMethodRemove: "disabled"),
+                (removal: false, update: true)
+            ),
+            // The permissions come from the elements session, which has no customer session for legacy ephemeral key customers
+            (
+                "Legacy ephemeral key customer without a customer session",
+                legacyProvider,
+                nil,
+                (removal: true, update: false)
+            ),
+        ]
+
+        for (description, provider, customerSessionData, expected) in cases {
             let elementsSession = STPElementsSession._testValue(
                 paymentMethodTypes: ["card"],
-                customerSessionData: [
-                    "mobile_payment_element": [
-                        "enabled": enabled,
-                        "features": [
-                            "payment_method_save": "enabled",
-                            "payment_method_remove": "enabled",
-                        ],
-                    ],
-                ]
+                customerSessionData: customerSessionData
             )
 
-            XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: elementsSession), enabled)
-            XCTAssertEqual(provider.allowsPaymentMethodUpdate(elementsSession: elementsSession), enabled)
+            XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: elementsSession), expected.removal, description)
+            XCTAssertEqual(provider.allowsPaymentMethodUpdate(elementsSession: elementsSession), expected.update, description)
         }
     }
 }
