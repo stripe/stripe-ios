@@ -1424,6 +1424,14 @@ extension PaymentSheetLPMConfirmFlowTests {
                 }
                 redirectShimCalled = true
             }
+            // The same for payment methods PaymentConfirmer confirms: the customer comes back at once.
+            PaymentSheetNextActionPerformer._testMakeRedirectPresenter = {
+                ShimRedirectPresenter {
+                    print("✅ \(description): Successfully confirmed the intent and saw a redirect attempt.")
+                    redirectShimCalled = true
+                }
+            }
+            defer { PaymentSheetNextActionPerformer._testMakeRedirectPresenter = nil }
 
             // Hack to PaymentSheet-specific local actions that happen before control is handed over to STPPaymentHandler.
             PaymentSheet._preconfirmShim = { viewController in
@@ -1941,6 +1949,13 @@ extension PaymentSheetLPMConfirmFlowTests {
                     }
                     redirectShimCalled = true
                 }
+                PaymentSheetNextActionPerformer._testMakeRedirectPresenter = {
+                    ShimRedirectPresenter {
+                        print("✅ \(description): Successfully confirmed the intent and saw a redirect attempt.")
+                        redirectShimCalled = true
+                    }
+                }
+                defer { PaymentSheetNextActionPerformer._testMakeRedirectPresenter = nil }
 
                 confirm(
                     testIntent: testIntent,
@@ -2271,4 +2286,29 @@ extension IntentConfirmParams: Equatable {
 
         return true
     }
+}
+
+/// PaymentConfirmer's redirect presenter for these tests: reports the redirect, then the customer back at once, like
+/// `_redirectShim` plus `_handleWillForegroundNotification` do for STPPaymentHandler.
+@MainActor
+final class ShimRedirectPresenter: RedirectPresenting {
+    let didRedirect: () -> Void
+
+    init(didRedirect: @escaping () -> Void) {
+        self.didRedirect = didRedirect
+    }
+
+    func redirect(
+        _ redirect: ResolvedNextAction.Redirect,
+        authenticationContext: STPAuthenticationContext,
+        didOpen: @escaping (RedirectType) -> Void,
+        didPresent: ((SFSafariViewController?) -> Void)?
+    ) async -> RedirectResult {
+        didRedirect()
+        didOpen(.nativeApp)
+        didPresent?(nil)
+        return .returned(.appForegrounded)
+    }
+
+    func close() {}
 }

@@ -57,7 +57,7 @@ enum PaymentConfirmerFamily: String, CaseIterable {
 extension PaymentConfirmer {
     /// The families PaymentSheet confirms with the engine. Server-driven payment methods always use it. Prototype: a
     /// static allowlist; a shipping version would also need a server kill switch per type.
-    static var routedFamilies: Set<PaymentConfirmerFamily> = []
+    static var routedFamilies: Set<PaymentConfirmerFamily> = [.redirect]
 
     static func isRouted(_ type: STPPaymentMethodType) -> Bool {
         return PaymentConfirmerFamily.family(of: type).map(routedFamilies.contains) ?? false

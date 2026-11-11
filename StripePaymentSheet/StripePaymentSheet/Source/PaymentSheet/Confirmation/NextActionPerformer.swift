@@ -57,11 +57,14 @@ final class PaymentSheetNextActionPerformer: NextActionPerforming {
     /// The surface's own STPPaymentHandler, not a new one: the sheet's close button cancels a 3DS2 challenge through
     /// `paymentHandler.cancel3DS2ChallengeFlow()`, which needs the transaction this instance started.
     let paymentHandler: STPPaymentHandler
-    private let makeRedirectPresenter: () -> RedirectPresenting
+    private let makeRedirectPresenter: @MainActor () -> RedirectPresenting
 
-    init(paymentHandler: STPPaymentHandler, makeRedirectPresenter: (() -> RedirectPresenting)? = nil) {
+    /// Tests: replaces the redirect presenter of every payment, like STPPaymentHandler's `_redirectShim`.
+    nonisolated(unsafe) static var _testMakeRedirectPresenter: (@MainActor () -> RedirectPresenting)?
+
+    init(paymentHandler: STPPaymentHandler, makeRedirectPresenter: (@MainActor () -> RedirectPresenting)? = nil) {
         self.paymentHandler = paymentHandler
-        self.makeRedirectPresenter = makeRedirectPresenter ?? { [paymentHandler] in
+        self.makeRedirectPresenter = makeRedirectPresenter ?? Self._testMakeRedirectPresenter ?? { [paymentHandler] in
             RedirectNextActionPresenter(simulateAppToAppRedirect: paymentHandler.simulateAppToAppRedirect)
         }
     }
