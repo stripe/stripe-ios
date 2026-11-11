@@ -36,8 +36,7 @@ extension ConfirmationMetadata {
         }
         var nextActions: [String: NextAction] = [:]
         for nextAction in confirm.nextActions {
-            guard nextAction.type != .unparsable else { throw WireError(field: "next_actions.type") }
-            nextActions[nextAction.type.rawValue] = try NextAction(wire: nextAction)
+            nextActions[nextAction.type] = try NextAction(wire: nextAction)
         }
         let retrieval: Retrieval
         switch confirm.postConfirm.intentRetrieval {
@@ -66,7 +65,7 @@ extension ConfirmationMetadata {
 extension ConfirmationMetadata.NextAction {
     init(wire nextAction: MobileSession.NextAction) throws {
         typealias WireError = ConfirmationMetadata.WireError
-        let field = "next_actions[\(nextAction.type.rawValue)]"
+        let field = "next_actions[\(nextAction.type)]"
         let presenter: Presenter
         switch nextAction.presenter {
         case .redirect:

@@ -61,15 +61,12 @@ extension ServerDrivenConfirmSpec {
     init(_ confirm: MobileSession.PaymentMethodConfirm) throws {
         typealias UnsupportedValue = ServerDrivenPaymentMethod.UnsupportedValue
         self.nextActions = try confirm.nextActions.map { nextAction in
-            switch nextAction.type {
-            case .redirectToUrl:
-                return .redirectToURL
-            case .unparsable:
-                throw UnsupportedValue(value: "next_action:unparsable")
-            default:
-                // The native types' next actions (for the native table), which server-driven payment methods can't use yet.
-                throw UnsupportedValue(value: "next_action:\(nextAction.type.rawValue)")
+            guard nextAction.type == "redirect_to_url" else {
+                // Any other type, including the native types' next actions (for the native table), which server-driven
+                // payment methods can't use yet.
+                throw UnsupportedValue(value: "next_action:\(nextAction.type)")
             }
+            return .redirectToURL
         }
         let postConfirm = confirm.postConfirm
         switch postConfirm.intentRetrieval {

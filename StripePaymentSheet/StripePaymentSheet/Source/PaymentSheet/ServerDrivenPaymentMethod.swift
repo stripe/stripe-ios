@@ -66,7 +66,7 @@ struct ServerDrivenPaymentMethod {
         }
     }
 
-    /// The first part of a `mobile_session.payment_methods` entry this SDK can't render, e.g. "next_action:unparsable".
+    /// The first part of a `mobile_session.payment_methods` entry this SDK can't render, e.g. "on_processing:unparsable".
     struct UnsupportedValue: Error, Equatable {
         let value: String
     }

@@ -125,10 +125,19 @@ final class ConfirmationMetadataBundledTableTests: XCTestCase {
         }
     }
 
-    static func confirm(presenter: String) -> MobileSession.PaymentMethodConfirm {
+    func testUnknownNextActionTypeIsKeptAsServed() throws {
+        // Given a served entry whose next-action type the SDK has no case for
+        let confirm = Self.confirm(presenter: "redirect", nextActionType: "future_redirect")
+        // When it's decoded
+        let metadata = try ConfirmationMetadata(wire: confirm, type: "ideal")
+        // Then the entry is kept under the served type, ready to match the intent's next_action.type
+        XCTAssertEqual(Array(metadata.nextActions.keys), ["future_redirect"])
+    }
+
+    static func confirm(presenter: String, nextActionType: String = "redirect_to_url") -> MobileSession.PaymentMethodConfirm {
         let rule = MobileSession.StatusRule(outcome: .cancel, pollSeconds: nil, onTimeout: nil)
         let rules = MobileSession.StatusRules(processing: rule, requiresAction: rule)
-        var nextAction = MobileSession.NextAction(type: .redirectToUrl)
+        var nextAction = MobileSession.NextAction(type: nextActionType)
         nextAction.presenter = MobileSession.NextActionPresenter(rawValue: presenter) ?? .unparsable
         nextAction.browser = .fromNextAction
         nextAction.urlPath = "url"
