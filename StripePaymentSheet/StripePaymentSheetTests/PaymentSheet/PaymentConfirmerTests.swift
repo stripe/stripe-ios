@@ -291,13 +291,55 @@ final class PaymentConfirmerTests: XCTestCase {
         // Given confirmation returns a next action the spec doesn't list
         api.confirmResults = [.success(PaymentConfirmerFixtures.paymentIntent(status: "requires_action", nextAction: ["type": "display_bank_transfer_instructions"]))]
 
-        // When the payment is confirmed
+        // When the payment is confirmed (reporting it as an unexpected error asserts in debug builds)
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         let result = await confirm(makeConfirmer())
 
         // Then it fails without performing anything or fetching
         assertFailed(result, code: .unsupportedAuthenticationErrorCode)
         XCTAssertTrue(performer.performed.isEmpty)
         XCTAssertEqual(api.calls, ["confirm"])
+        // ...and reports the type and the next action, so a gap in the server's table shows up
+        assertReportedUnsupportedNextAction(paymentMethodType: "demo_pay", nextActionType: "display_bank_transfer_instructions")
+    }
+
+    func testNextActionTheEntryDoesNotListFailsAndIsReported() async {
+        // Given BLIK, whose entry lists only blik_authorize, and confirmation returns a redirect_to_url
+        api.confirmResults = [.success(PaymentConfirmerFixtures.paymentIntent(status: "requires_action", type: "blik", nextAction: ["type": "redirect_to_url", "redirect_to_url": ["url": "https://bank.example", "return_url": "x://y"]]))]
+        let confirmer = makeConfirmer(metadata: ConfirmationMetadata.native(for: .blik)!, type: "blik")
+
+        // When the payment is confirmed
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        let result = await confirm(confirmer)
+
+        // Then it fails as an unsupported next action without redirecting, unlike STPPaymentHandler (U1)
+        assertFailed(result, code: .unsupportedAuthenticationErrorCode)
+        XCTAssertTrue(performer.performed.isEmpty)
+        // ...and reports it
+        assertReportedUnsupportedNextAction(paymentMethodType: "blik", nextActionType: "redirect_to_url")
+    }
+
+    func testNextActionTheEntryDoesNotListFailsAndIsReportedViaHandleNextAction() async {
+        // Given a BLIK intent confirmed elsewhere, with a redirect_to_url next action
+        let intent = PaymentConfirmerFixtures.paymentIntent(status: "requires_action", type: "blik", nextAction: ["type": "redirect_to_url", "redirect_to_url": ["url": "https://bank.example", "return_url": "x://y"]])
+        let confirmer = makeConfirmer(metadata: ConfirmationMetadata.native(for: .blik)!, type: "blik")
+
+        // When PaymentSheet handles its next action
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        let result = await confirmer.handleNextAction(for: intent, returnURL: nil, authenticationContext: self).result
+
+        // Then it fails the same way, and reports it
+        assertFailed(result, code: .unsupportedAuthenticationErrorCode)
+        XCTAssertTrue(performer.performed.isEmpty)
+        assertReportedUnsupportedNextAction(paymentMethodType: "blik", nextActionType: "redirect_to_url")
+    }
+
+    func assertReportedUnsupportedNextAction(paymentMethodType: String, nextActionType: String, file: StaticString = #filePath, line: UInt = #line) {
+        let reported = analyticsClient.events.filter { $0.event == .unexpectedPaymentSheetConfirmationError }
+        XCTAssertEqual(reported.count, 1, file: file, line: line)
+        XCTAssertEqual(reported.first?.params["payment_method_type"] as? String, paymentMethodType, file: file, line: line)
+        XCTAssertEqual(reported.first?.params["next_action_type"] as? String, nextActionType, file: file, line: line)
+        XCTAssertEqual(reported.first?.params["handler"] as? String, PaymentConfirmer.analyticsHandler, file: file, line: line)
     }
 
     func testHandleNextActionForConfirmedIntent() async {

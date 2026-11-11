@@ -505,16 +505,7 @@
           }
         },
         "mandate_data" : "online_inferred",
-        "next_actions" : [
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
-          }
-        ],
+        "next_actions" : [],
         "payment_method_data_type" : "sepa_debit",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
@@ -678,14 +669,6 @@
         "mandate_data" : "online_inferred",
         "next_actions" : [
           {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
-          },
-          {
             "app_to_app" : "none",
             "presenter" : "none",
             "return_url" : "none",
@@ -752,16 +735,7 @@
           }
         },
         "mandate_data" : "online_inferred",
-        "next_actions" : [
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
-          }
-        ],
+        "next_actions" : [],
         "payment_method_data_type" : "au_becs_debit",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
@@ -831,14 +805,6 @@
             "return_url" : "confirm_required",
             "type" : "cashapp_handle_redirect_or_display_qr_code",
             "url_path" : "mobile_auth_url"
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "cashapp",
@@ -902,14 +868,6 @@
             "while_requires_action" : {
               "outcome" : "succeed"
             }
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "blik",
@@ -1071,16 +1029,7 @@
           }
         },
         "mandate_data" : "online_inferred",
-        "next_actions" : [
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
-          }
-        ],
+        "next_actions" : [],
         "payment_method_data_type" : "bacs_debit",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
@@ -1151,14 +1100,6 @@
             "return_url" : "confirm_then_next_action",
             "type" : "alipay_handle_redirect",
             "url_path" : "native_url"
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "alipay",
@@ -1213,14 +1154,6 @@
             "while_requires_action" : {
               "outcome" : "succeed"
             }
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "oxxo",
@@ -1629,14 +1562,6 @@
             "while_requires_action" : {
               "outcome" : "succeed"
             }
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "konbini",
@@ -1701,14 +1626,6 @@
             "while_requires_action" : {
               "outcome" : "wait_for_next_action_screen"
             }
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "paynow",
@@ -1773,14 +1690,6 @@
             "while_requires_action" : {
               "outcome" : "wait_for_next_action_screen"
             }
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "promptpay",
@@ -2079,14 +1988,6 @@
             "while_requires_action" : {
               "outcome" : "succeed"
             }
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "boleto",
@@ -2133,14 +2034,6 @@
         },
         "mandate_data" : "none",
         "next_actions" : [
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
-          },
           {
             "app_to_app" : "universal_links_only",
             "browser" : "safari_view_controller",
@@ -2277,14 +2170,6 @@
             "while_requires_action" : {
               "outcome" : "succeed"
             }
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "multibanco",
@@ -2503,14 +2388,6 @@
             "while_requires_action" : {
               "outcome" : "succeed"
             }
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "mb_way",
@@ -2574,14 +2451,6 @@
             "while_requires_action" : {
               "outcome" : "succeed"
             }
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "bizum",
@@ -3033,14 +2902,6 @@
             "while_requires_action" : {
               "outcome" : "wait_for_next_action_screen"
             }
-          },
-          {
-            "app_to_app" : "universal_links_only",
-            "browser" : "from_next_action",
-            "presenter" : "redirect",
-            "return_url" : "next_action",
-            "type" : "redirect_to_url",
-            "url_path" : "url"
           }
         ],
         "payment_method_data_type" : "pix",

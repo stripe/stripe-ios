@@ -99,6 +99,10 @@ final class ConfirmationMetadataParityTests: XCTestCase {
         // (SPH:1597); the table has no such step. Alipay PaymentIntents run on Alipay+ (EVO), where the ping is a no-op
         // (~/stripe/worktrees/handoff/alipay-marlin-research.md, task #69).
         KnownMismatch(id: "M4", count: 2) { $0.type == "alipay" && $0.scenario.hasSuffix("/before_fetch") && $0.native == "ping" && $0.table == "none" },
+        // U1, deliberate: a type handles only the next actions its entry lists, and the engine fails any other as an
+        // unsupported next action (and reports it). STPPaymentHandler performs `redirect_to_url` for any type (SPH:1157).
+        // The server vends the table, so a type that really gets another next action is fixed in the server's JSON.
+        KnownMismatch(id: "U1", count: 34) { $0.group == "dispatch" && ConfirmationMetadataParityTests.getsUnlistedRedirect(type: $0.type, scenario: $0.scenario, group: $0.group) },
         // M5: handleNextAction(for: SetupIntent)'s guard (SPH:770) only accepts succeeded, so a terminal next action
         // (a voucher, microdeposits) that STPPaymentHandler completes as succeeded is turned into a failure.
         KnownMismatch(id: "M5", count: 2) { $0.scenario.hasPrefix("si/requires_action+") && $0.scenario.hasSuffix("/via_handle_next_action") },
@@ -109,6 +113,38 @@ final class ConfirmationMetadataParityTests: XCTestCase {
         // #62: ~/stripe/worktrees/handoff/pix-dismiss-investigation.md.
         KnownMismatch(id: "F1", count: 4) { $0.type == "pix" && $0.scenario.contains("requires_action+pix_display_qr_code") && $0.native == "cancel" && $0.table == "wait_for_next_action_screen" },
     ]
+
+    // MARK: Next actions checked
+
+    /// The next actions each type is checked with: the ones its entry lists, plus `redirect_to_url`, which
+    /// STPPaymentHandler performs for any type (SPH:1157). The engine fails an unlisted one (U1).
+    static func checkedNextActionTypes(_ metadata: ConfirmationMetadata) -> [String] {
+        return Set(metadata.nextActions.keys).union(["redirect_to_url"]).sorted()
+    }
+
+    /// The next action a status-only run after a next action starts from: `redirect_to_url` if the entry lists it,
+    /// otherwise the entry's own redirect (a voucher, an app-to-app type), otherwise `redirect_to_url` (U1).
+    static func nextActionBeforeStatusOnlyRead(_ type: STPPaymentMethodType) -> String {
+        let metadata = ConfirmationMetadata.native(for: type)!
+        guard metadata.nextActions["redirect_to_url"] == nil else { return "redirect_to_url" }
+        let ownRedirect = metadata.nextActions.sorted(by: { $0.key < $1.key }).first { nextAction in
+            if case .redirect = nextAction.value.presenter { return true } else { return false }
+        }
+        return ownRedirect?.key ?? "redirect_to_url"
+    }
+
+    /// Whether the cell is one where the type gets a `redirect_to_url` its entry doesn't list: dispatching it, the
+    /// intent still showing it, or (after a next action) a status-only run that started from it.
+    static func getsUnlistedRedirect(type: String, scenario: String, group: String) -> Bool {
+        guard let paymentMethodType = ConfirmationMetadata.nativeTypes.first(where: { $0.identifier == type }),
+              ConfirmationMetadata.native(for: paymentMethodType)?.nextActions["redirect_to_url"] == nil
+        else { return false }
+        if scenario.contains("redirect_to_url") {
+            return true
+        }
+        let statusOnly = group == "after_next_action" && !scenario.contains("+")
+        return statusOnly && nextActionBeforeStatusOnlyRead(paymentMethodType) == "redirect_to_url"
+    }
 
     // MARK: Per-type functions
 
@@ -278,7 +314,7 @@ final class ConfirmationMetadataParityTests: XCTestCase {
             handler = STPPaymentHandler(apiClient: client)
             handler.analyticsClient = RecordingAnalyticsClient.shared
             handler.safariViewControllerDismissedManually = webViewDismissed
-            let before = nextActionType ?? "redirect_to_url"
+            let before = nextActionType ?? ConfirmationMetadataParityTests.nextActionBeforeStatusOnlyRead(type)
             let budget = expiredBudget ? PollingBudget(startDate: Date(timeIntervalSinceNow: -100), duration: 1) : nil
             let read = expiredBudget ? status : "succeeded"
             switch intent {
@@ -362,9 +398,11 @@ final class ConfirmationMetadataParityTests: XCTestCase {
                 let statuses = (intent == .paymentIntent ? Self.paymentIntentStatuses : Self.setupIntentStatuses).filter { $0 != "bogus_status" }
                 var scenarios: [(String, String?)] = statuses.map { ($0, nil) }
                 // Polling-screen next actions finish in the screen; the loop doesn't run for them unless there's a web view.
-                for (nextActionType, nextAction) in metadata.nextActions.sorted(by: { $0.key < $1.key }) {
-                    if case .pollingScreen(_, false) = nextAction.presenter { continue }
-                    if case .none = nextAction.presenter { continue }
+                for nextActionType in Self.checkedNextActionTypes(metadata) {
+                    if let nextAction = metadata.nextActions[nextActionType] {
+                        if case .pollingScreen(_, false) = nextAction.presenter { continue }
+                        if case .none = nextAction.presenter { continue }
+                    }
                     scenarios.append(("requires_action", nextActionType))
                 }
                 for (status, nextActionType) in scenarios {
@@ -464,10 +502,12 @@ final class ConfirmationMetadataParityTests: XCTestCase {
     func checkNextActionDispatch(_ report: inout ParityReport) {
         for type in ConfirmationMetadata.nativeTypes {
             let metadata = ConfirmationMetadata.native(for: type)!
-            for (nextActionType, nextAction) in metadata.nextActions.sorted(by: { $0.key < $1.key }) {
+            for nextActionType in Self.checkedNextActionTypes(metadata) {
                 for confirmReturnURL in [Self.confirmReturnURL, nil] {
                     let (native, source) = nativeDispatch(type: type, nextActionType: nextActionType, confirmReturnURL: confirmReturnURL)
-                    let table = Self.predictDispatch(nextAction, nextActionType: nextActionType, confirmReturnURL: confirmReturnURL)
+                    // An unlisted next action fails (U1).
+                    let table = metadata.nextActions[nextActionType].map { Self.predictDispatch($0, nextActionType: nextActionType, confirmReturnURL: confirmReturnURL) }
+                        ?? Decision.fail(.unsupportedNextAction).description
                     let scenario = "\(nextActionType)/\(confirmReturnURL == nil ? "no_return_url" : "return_url")"
                     report.compare("dispatch", type, scenario, native: native, table: table, source: source)
                 }

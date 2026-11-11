@@ -199,6 +199,9 @@ final class PaymentConfirmer {
                 }
                 return .finished(.canceled, intent)
             case .fail(let reason):
+                if reason == .unsupportedNextAction {
+                    logUnsupportedNextAction(intent)
+                }
                 return .finished(.failed(error: Self.error(for: reason, intent: intent)), intent)
             case .performNextAction:
                 return .performNextAction(intent, progress)
@@ -221,6 +224,9 @@ final class PaymentConfirmer {
             do {
                 resolved = try ResolvedNextAction(intent: intent, metadata: metadata, confirmReturnURL: returnURL)
             } catch {
+                if (error as NSError).code == STPPaymentHandlerErrorCode.unsupportedAuthenticationErrorCode.rawValue {
+                    logUnsupportedNextAction(intent)
+                }
                 return .finished(.failed(error: error), intent)
             }
             presenter = resolved.analyticsName
@@ -394,6 +400,22 @@ final class PaymentConfirmer {
             params["duration"] = duration
         }
         analyticsClient.log(analytic: GenericAnalytic(event: event, params: params), apiClient: analyticsAPIClient)
+    }
+
+    /// A type handles only the next actions its entry lists. The server vends the table, so another one is a gap in the
+    /// server's entry, not in the SDK: report it as an unexpected error (which alerts) with the type and the next action.
+    private func logUnsupportedNextAction(_ intent: ConfirmingIntent) {
+        let nextActionType = intent.nextActionType ?? "none"
+        let error = Self.error(.unsupportedAuthenticationErrorCode, loggingSafeErrorMessage: "Unsupported next action \(nextActionType)")
+        let analytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError, error: error, additionalNonPIIParams: [
+            "action_id": actionID,
+            "payment_method_type": paymentMethodType,
+            "next_action_type": nextActionType,
+            "intent_id": intent.stripeID,
+            "handler": Self.analyticsHandler,
+            "spec_source": policySource.rawValue,
+        ])
+        analyticsClient.log(analytic: analytic, apiClient: analyticsAPIClient)
     }
 
     private func logRedirect(_ event: STPAnalyticEvent, type: String) {

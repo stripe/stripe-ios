@@ -24,31 +24,41 @@ import XCTest
 /// the real post-return loop, and the real dispatch. Every difference must be one of `engineDifferences`, each a
 /// deliberate decision written up in paymentsheet-confirm-engine-prototype.md.
 extension ConfirmationMetadataParityTests {
-    /// What the engine does differently from STPPaymentHandler, on purpose.
+    /// What the engine does differently from STPPaymentHandler, on purpose. U1 comes first: a run that starts from a next
+    /// action the type doesn't list fails right there, so no other rule applies to it.
     static let engineDifferences: [KnownMismatch] = [
+        // U1: the engine fails a next action the type's entry doesn't list (and reports it); STPPaymentHandler performs
+        // `redirect_to_url` for any type (SPH:1157). The server vends the table, so the fix for a real gap is server JSON.
+        // This covers dispatching it, an intent still showing it, and status-only runs that started from it (types with
+        // no redirect of their own: no next action, US bank account, and the polling-screen types).
+        KnownMismatch(id: "U1", count: 594) { isUnlistedRedirect($0) },
         // M1: a SetupIntent in requires_payment_method fails as a decline whichever way PaymentSheet came in. STPPaymentHandler
         // says `requiresPaymentMethodErrorCode` only through handleNextAction(for:) (SPH:942).
-        KnownMismatch(id: "M1", count: 24) { $0.group == "after_confirm" && $0.scenario == "si/requires_payment_method/handle_next_action" },
-        // M2: PayNow and PromptPay wait for their polling screen only after their QR next action, not after any next action.
-        KnownMismatch(id: "M2", count: 4) { ["paynow", "promptpay"].contains($0.type) && $0.scenario.hasPrefix("pi/requires_action+redirect_to_url") },
+        KnownMismatch(id: "M1", count: 24) { !isUnlistedRedirect($0) && $0.group == "after_confirm" && $0.scenario == "si/requires_payment_method/handle_next_action" },
+        // M2 (PayNow and PromptPay waiting for a polling screen after a redirect_to_url) can't happen in the engine any
+        // more: neither lists redirect_to_url, so U1 covers those runs. The table harness still pins it.
         // M3: requires_confirmation after a next action succeeds (manual confirmation), whichever way PaymentSheet came in.
         // STPPaymentHandler's confirm path fails it and asserts (SPH:236). Card and Link get this through the delegate too,
         // because handleNextAction(for:)'s guard accepts it (SPH:482).
-        KnownMismatch(id: "M3", count: 122) { $0.scenario.hasPrefix("pi/requires_confirmation") && $0.scenario.hasSuffix("/via_confirm") },
-        // M5: a SetupIntent whose terminal next action (a voucher, microdeposits) is done succeeds whichever way PaymentSheet
-        // came in. STPPaymentHandler's handleNextAction(for:) guard fails it (SPH:770).
+        KnownMismatch(id: "M3", count: 102) { !isUnlistedRedirect($0) && $0.scenario.hasPrefix("pi/requires_confirmation") && $0.scenario.hasSuffix("/via_confirm") },
         // M4: the engine doesn't load Alipay's legacy "Marlin" return URL before reading a PaymentIntent; STPPaymentHandler
         // does (SPH:1597). Alipay PaymentIntents run on Alipay+ (EVO), where the ping is a no-op
         // (~/stripe/worktrees/handoff/alipay-marlin-research.md, task #69).
-        KnownMismatch(id: "M4", count: 2) { $0.type == "alipay" && $0.scenario.hasSuffix("/before_fetch") && $0.native == "ping" && $0.table == "none" },
-        KnownMismatch(id: "M5", count: 2) { $0.scenario.hasPrefix("si/requires_action+") && $0.scenario.hasSuffix("/via_handle_next_action") },
+        KnownMismatch(id: "M4", count: 2) { !isUnlistedRedirect($0) && $0.type == "alipay" && $0.scenario.hasSuffix("/before_fetch") && $0.native == "ping" && $0.table == "none" },
+        // M5: a SetupIntent whose terminal next action (a voucher, microdeposits) is done succeeds whichever way PaymentSheet
+        // came in. STPPaymentHandler's handleNextAction(for:) guard fails it (SPH:770).
+        KnownMismatch(id: "M5", count: 2) { !isUnlistedRedirect($0) && $0.scenario.hasPrefix("si/requires_action+") && $0.scenario.hasSuffix("/via_handle_next_action") },
         // F1, a deliberate fix of an STPPaymentHandler bug: closing Pix's instructions web view never cancels; the polling
         // screen finishes the payment, like PayNow and PromptPay, for PaymentIntents and SetupIntents. STPPaymentHandler
         // cancels while the screen is still up and drops its later success, because Pix was left out of the PayNow/PromptPay
         // exclusion by accident (SPH:1708 for PIs; the SI branch at SPH:1794 has no exclusion). Confirmed a bug in task
         // #62: ~/stripe/worktrees/handoff/pix-dismiss-investigation.md.
-        KnownMismatch(id: "F1", count: 4) { $0.type == "pix" && $0.scenario.contains("requires_action+pix_display_qr_code") && $0.native == "cancel" && $0.table == "wait_for_next_action_screen" },
+        KnownMismatch(id: "F1", count: 4) { !isUnlistedRedirect($0) && $0.type == "pix" && $0.scenario.contains("requires_action+pix_display_qr_code") && $0.native == "cancel" && $0.table == "wait_for_next_action_screen" },
     ]
+
+    static func isUnlistedRedirect(_ mismatch: ParityReport.Mismatch) -> Bool {
+        return getsUnlistedRedirect(type: mismatch.type, scenario: mismatch.scenario, group: mismatch.group)
+    }
 
     @MainActor
     func testEngineMatchesSTPPaymentHandler() {
@@ -162,7 +172,7 @@ extension ConfirmationMetadataParityTests {
             if isDelegated && native.expiredBudget { continue }
 
             let run = EngineRun(type: native.type, webViewDismissed: native.webViewDismissed, expiredBudget: native.expiredBudget)
-            let before = native.nextActionType ?? "redirect_to_url"
+            let before = native.nextActionType ?? Self.nextActionBeforeStatusOnlyRead(native.type)
             let read = native.expiredBudget ? native.status : "succeeded"
             let intent: ConfirmingIntent
             switch native.intent {
@@ -219,7 +229,7 @@ extension ConfirmationMetadataParityTests {
     func engineDispatch(_ report: inout ParityReport) {
         for type in ConfirmationMetadata.nativeTypes {
             let metadata = ConfirmationMetadata.native(for: type)!
-            for nextActionType in metadata.nextActions.keys.sorted() {
+            for nextActionType in Self.checkedNextActionTypes(metadata) {
                 for confirmReturnURL in [Self.confirmReturnURL, nil] {
                     let (native, _, nativeContext) = nativeDispatchWithContext(type: type, nextActionType: nextActionType, confirmReturnURL: confirmReturnURL)
                     let run = EngineRun(type: type)

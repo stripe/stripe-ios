@@ -21,7 +21,8 @@ import Foundation
 struct ConfirmationMetadata: Codable, Equatable {
     var params: Params
     /// Next actions confirmation can return for this type, keyed by the API's `next_action[type]`. Any other next
-    /// action fails the payment with `unsupportedAuthenticationErrorCode`.
+    /// action, even `redirect_to_url`, fails the payment with `unsupportedAuthenticationErrorCode` and is reported as
+    /// an unexpected error: the server vends this table, so a missing next action is fixed there.
     /// Contract: `confirm.next_actions`.
     var nextActions: [String: NextAction]
     var paymentIntent: IntentRules
