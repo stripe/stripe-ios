@@ -1,0 +1,38 @@
+  Before filing, check existing `checkout_issues/ISSUE_*.md` files for the same root cause (parallel
+  agents may cover overlapping code). If found, do not file a duplicate — note it instead.
+
+  Verification: you may edit any source in this worktree, including test infra helpers like
+  `STPTestingAPIClient+Swift.swift` — this is a temporary branch, nothing gets pushed. Prefer a
+  live repro against the real test backend (`createCheckoutSession(...)` and friends, which can
+  construct arbitrary Checkout Session configs) over a stubbed/mocked unit test when you're
+  checking a claim against actual backend behavior, not just your own code's internal logic.
+  Do not run `git add`/`git commit`. Leave repro tests and `checkout_issues/ISSUE_*.md` files as uncommitted
+  changes in the worktree.
+
+  Known unfinished preview features are out of scope per the user's 2026-11-03 direction.
+  Do not file absence of their implementation as a bug. Focus on supported flows and concrete
+  incorrect outcomes; respect documented integration preconditions when assessing reachability.
+
+  When you have identified a potential issue:
+  - Identify the minimal repro/trigger condition.
+  - Reproduce it in a minimal test with as few mocks as possible. E2E ideal, with video - but not all warrant (eg bad input -> bad config may not require, functional test ok there).
+  - Trace the ACTUAL reachable call path end to end before writing anything up. Don't assume a
+    caller giving up (a timeout, an abandoned await) means the underlying work was canceled —
+    for unstructured Tasks in this codebase it isn't, unless something explicitly calls
+    `.cancel()` on that specific Task. Grep for `.cancel()`/`isCancelled`/`checkCancellation` on
+    the path you're claiming, don't assert reachability you haven't checked.
+  - Produce a `ISSUE_[surface]_[description].md` file in the `checkout_issues/` folder using
+    exactly this template. Do not deviate, do not add extra sections:
+
+    ```
+    Summary: [concrete impact, starting from the merchant/customer e.g. call public API x or do xyz in the UI -> ... -> bug]
+    Repro: [clear, simple steps to repro]
+    Test: [test file and name of test]
+    Elaboration: Can go slightly more indepth on why this bug occurs.
+    ```
+
+    `[surface]` is the area you were assigned (keeps filenames collision-free across parallel
+    agents and lets a human sort by surface).
+
+  Do not file: style/lint nitpicks, already-tracked issues, or anything without a concrete trigger
+  condition ("this could theoretically..." is not a bug report - i expect you to scrap bugs as you fail to go down the list above).
