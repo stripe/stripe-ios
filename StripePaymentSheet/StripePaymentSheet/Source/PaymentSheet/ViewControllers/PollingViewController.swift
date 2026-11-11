@@ -381,6 +381,11 @@ class PollingViewController: UIViewController {
         completion(status)
     }
 
+    /// Tests: finishes as if polling saw `status`.
+    func _testFinish(with status: STPPaymentHandlerActionStatus) {
+        complete(with: status)
+    }
+
     /// Stops polling without finishing, e.g. because the payment finished elsewhere.
     func stopPolling() {
         isStopped = true

@@ -2211,6 +2211,15 @@ extension PaymentSheetLPMConfirmFlowTests: PaymentSheetAuthenticationContext {
     }
 }
 
+// PaymentConfirmer builds the polling screen itself and asks the container to show it; simulate that it saw success.
+extension PaymentSheetLPMConfirmFlowTests: PollingScreenHosting {
+    var pollingScreenAppearance: PaymentSheet.Appearance { .default }
+
+    func presentPollingViewController(_ pollingViewController: PollingViewController, safariViewController: SFSafariViewController?) {
+        pollingViewController._testFinish(with: .succeeded)
+    }
+}
+
 extension PaymentSheetLPMConfirmFlowTests: PaymentMethodFormViewControllerDelegate {
     nonisolated func didUpdate(_ viewController: StripePaymentSheet.PaymentMethodFormViewController) {
     }
