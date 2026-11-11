@@ -827,9 +827,15 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
     }
 
     func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        // Initialize the polling view controller and flag it for presentation
-        self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
-                                                      appearance: self.appearance, safariViewController: safariViewController)
+        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
+                                              appearance: self.appearance, safariViewController: safariViewController)
+        // Without a web view in front (e.g. BLIK, MB WAY, Bizum), present the polling view controller right away
+        guard safariViewController != nil else {
+            self._presentingViewController.present(pollingVC, animated: true)
+            return
+        }
+        // Otherwise, flag it for presentation once the web view is dismissed
+        self.pollingVC = pollingVC
         shouldPresentPollingVC = true
     }
 

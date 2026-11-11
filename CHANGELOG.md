@@ -4,6 +4,7 @@ PATCH
 ## X.Y.Z - changes pending release
 ### PaymentSheet
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
+* [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
 
 ## 26.16.1 2026-11-09
 ### PaymentSheet
