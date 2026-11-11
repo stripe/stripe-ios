@@ -671,11 +671,12 @@ final class PaymentConfirmerNativeTests: XCTestCase {
     func testAlipayLoadsItsReturnURLBeforeEachReadAndRefreshesNothing() async {
         // Given Alipay's next action, with its Marlin URL in the native URL's return_url
         let marlin = "https://hooks.stripe.com/marlin/1"
-        let nextAction: [String: Any] = ["type": "alipay_handle_redirect", "alipay_handle_redirect": [
+        let details: [String: Any] = [
             "native_url": "alipay://alipayclient/?return_url=\(marlin.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)",
             "url": "https://alipay.example/pay",
             "return_url": "https://hooks.stripe.com/trampoline",
-        ], ]
+        ]
+        let nextAction: [String: Any] = ["type": "alipay_handle_redirect", "alipay_handle_redirect": details]
         api.confirmResults = [.success(PaymentConfirmerFixtures.paymentIntent(status: "requires_action", type: "alipay", nextAction: nextAction))]
         api.fetchResults = [.success(PaymentConfirmerFixtures.paymentIntent(status: "succeeded", type: "alipay"))]
 

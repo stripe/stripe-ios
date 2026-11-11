@@ -47,7 +47,7 @@ class PollingViewController: UIViewController {
     private let poll: Poll
     private let completion: (STPPaymentHandlerActionStatus) -> Void
     private let appearance: PaymentSheet.Appearance
-    private let viewModel: PollingViewModel
+    let viewModel: PollingViewModel
     private let safariViewController: SFSafariViewController?
 
     private lazy var intentStatusPoller = IntentStatusPoller<PollResult, STPPaymentHandlerPollingStatus>(

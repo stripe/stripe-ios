@@ -322,13 +322,30 @@ final class ConfirmationMetadataParityTests: XCTestCase {
             return Decision(nativeResult: result, fetchCount: client.fetches.count)
         }
 
+        /// The scenario's name in the report, e.g. `pi/requires_action+redirect_to_url/web_view_dismissed`.
+        var scenario: String {
+            let intentName = intent == .paymentIntent ? "pi" : "si"
+            return "\(intentName)/\(status)\(nextActionType.map { "+\($0)" } ?? "")\(webViewDismissed ? "/web_view_dismissed" : "")\(expiredBudget ? "/poll_expired" : "")"
+        }
+
+        /// A `.succeed` from the loop, after each entry point's "succeeded must be a success state" guard.
+        var guardedDecisions: [(entry: String, decision: Decision)] {
+            let finalStatus = client.fetches.count > 1 && !expiredBudget ? "succeeded" : status
+            return ["confirm", "handle_next_action"].map { entry in
+                let passes = ConfirmationMetadataParityTests.nativeGuardPasses(intent: intent, entry: entry, status: finalStatus, type: type, nextActionType: nextActionType)
+                return (entry, passes ? .succeed : .fail(.unexpectedStatus))
+            }
+        }
+
         var canceledSource: Bool { NetworkRecorder.shared.contains("_\(id)/source_cancel") }
         var loadedMarlinURL: Bool { NetworkRecorder.shared.contains("/marlin/\(id)") }
     }
 
-    func checkAfterNextAction(_ report: inout ParityReport) {
+    /// Every after-next-action scenario of `types`, through STPPaymentHandler's real loop: each run with a fresh budget,
+    /// then each run that polled again with an expired one.
+    func runNativeLoops(types: [STPPaymentMethodType] = ConfirmationMetadata.nativeTypes) -> [LoopRun] {
         var runs: [LoopRun] = []
-        for type in ConfirmationMetadata.nativeTypes {
+        for type in types {
             let metadata = ConfirmationMetadata.native(for: type)!
             for intent in [ConfirmationMetadata.IntentKind.paymentIntent, .setupIntent] {
                 guard intent == .paymentIntent || metadata.setupIntent != nil else { continue }
@@ -362,8 +379,11 @@ final class ConfirmationMetadataParityTests: XCTestCase {
             }
         }
         RunLoop.main.run(until: Date(timeIntervalSinceNow: 2))
+        return runs + expiredRuns
+    }
 
-        for run in runs + expiredRuns {
+    func checkAfterNextAction(_ report: inout ParityReport) {
+        for run in runNativeLoops() {
             let metadata = ConfirmationMetadata.native(for: run.type)!
             let situation = Situation(
                 intent: run.intent,
@@ -382,15 +402,11 @@ final class ConfirmationMetadataParityTests: XCTestCase {
             if run.expiredBudget, case .poll = native {
                 native = .poll(seconds: 0)
             }
-            let intentName = run.intent == .paymentIntent ? "pi" : "si"
-            let scenario = "\(intentName)/\(run.status)\(run.nextActionType.map { "+\($0)" } ?? "")\(run.webViewDismissed ? "/web_view_dismissed" : "")\(run.expiredBudget ? "/poll_expired" : "")"
+            let scenario = run.scenario
             if native == .succeed {
                 // The loop's `.succeeded` then passes the entry point's "succeeded must be a success state" guard.
                 // The loop is driven; the guard is applied as written at SPH:236, :482, :577 and :770.
-                let finalStatus = run.client.fetches.count > 1 && !run.expiredBudget ? "succeeded" : run.status
-                for entry in ["confirm", "handle_next_action"] {
-                    let passes = Self.nativeGuardPasses(intent: run.intent, entry: entry, status: finalStatus, type: run.type, nextActionType: run.nextActionType)
-                    let guarded: Decision = passes ? .succeed : .fail(.unexpectedStatus)
+                for (entry, guarded) in run.guardedDecisions {
                     report.compare("after_next_action", run.type, "\(scenario)/via_\(entry)", native: guarded.description, table: table.description, source: "driven+guard(code)")
                 }
             } else {
@@ -451,11 +467,17 @@ final class ConfirmationMetadataParityTests: XCTestCase {
 
     /// What `_handleAuthenticationForCurrentAction` does with the next action, and whether that was driven or read from code.
     func nativeDispatch(type: STPPaymentMethodType, nextActionType: String, confirmReturnURL: String?) -> (String, String) {
+        let (description, source, _) = nativeDispatchWithContext(type: type, nextActionType: nextActionType, confirmReturnURL: confirmReturnURL)
+        return (description, source)
+    }
+
+    /// `nativeDispatch`, plus the container that recorded any polling screen.
+    func nativeDispatchWithContext(type: STPPaymentMethodType, nextActionType: String, confirmReturnURL: String?) -> (String, String, RecordingAuthenticationContext?) {
         // These `assertionFailure` without a return URL (STPPaymentHandler.swift:1456, :1468, :1497, :1536), which
         // would stop the test run, so this case is characterized from code instead of driven.
         let requiresReturnURL = ["cashapp_handle_redirect_or_display_qr_code", "paynow_display_qr_code", "promptpay_display_qr_code", "swish_handle_redirect_or_display_qr_code"]
         if confirmReturnURL == nil && requiresReturnURL.contains(nextActionType) {
-            return ("fail(missing_return_url)", "code")
+            return ("fail(missing_return_url)", "code", nil)
         }
         let client = ScriptedAPIClient(publishableKey: "pk_test_123")
         let handler = STPPaymentHandler(apiClient: client)
@@ -495,7 +517,7 @@ final class ConfirmationMetadataParityTests: XCTestCase {
         if let result {
             parts.append(Decision(nativeResult: result, fetchCount: 0).description)
         }
-        return (parts.isEmpty ? "nothing" : parts.joined(separator: " "), "driven")
+        return (parts.isEmpty ? "nothing" : parts.joined(separator: " "), "driven", context)
     }
 
     static func predictDispatch(_ nextAction: ConfirmationMetadata.NextAction, nextActionType: String, confirmReturnURL: String?) -> String {
@@ -695,11 +717,13 @@ struct ParityReport {
 
     var types = 0
     var comparisons = 0
+    var comparisonsByType: [String: Int] = [:]
     var mismatches: [Mismatch] = []
     var notes: [String] = []
 
     mutating func compare(_ group: String, _ type: STPPaymentMethodType?, _ scenario: String, native: String, table: String, source: String) {
         comparisons += 1
+        comparisonsByType[type?.identifier ?? "*", default: 0] += 1
         if native != table {
             mismatches.append(Mismatch(group: group, type: type?.identifier ?? "*", scenario: scenario, native: native, table: table, source: source))
         }
@@ -852,6 +876,8 @@ final class RecordingAnalyticsClient: STPAnalyticsClient {
 /// A PaymentSheet authentication context that records polling screens instead of showing them.
 final class RecordingAuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
     private(set) var pollingTypes: [STPPaymentMethodType] = []
+    /// The screen each PaymentSheet container builds for STPPaymentHandler's polling next action.
+    private(set) var pollingViewControllers: [PollingViewController] = []
     let viewController = UIViewController()
 
     func authenticationPresentingViewController() -> UIViewController {
@@ -866,6 +892,7 @@ final class RecordingAuthenticationContext: NSObject, PaymentSheetAuthentication
 
     func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         pollingTypes.append(type)
+        pollingViewControllers.append(PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type), appearance: .default, safariViewController: safariViewController))
     }
 }
 
