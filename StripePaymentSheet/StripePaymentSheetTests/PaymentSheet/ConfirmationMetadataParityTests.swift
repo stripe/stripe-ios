@@ -551,8 +551,9 @@ final class ConfirmationMetadataParityTests: XCTestCase {
 
     // MARK: - Server specs
 
-    /// The lean handler's `decide` and `ConfirmationMetadata(serverSpec:)` agree for every spec the contract can send.
-    func testServerSpecMetadataMatchesServerDrivenPaymentHandler() {
+    /// `ConfirmationMetadata(serverSpec:)`, which the engine confirms server-driven payment methods with, agrees with the
+    /// spike's lean handler for every spec the contract can send, except L1 and L2, where it now follows STPPaymentHandler.
+    func testServerSpecMetadataMatchesTheSpikeExceptL1AndL2() {
         let statuses: [STPPaymentIntentStatus] = [.succeeded, .requiresCapture, .requiresConfirmation, .canceled, .requiresPaymentMethod, .processing, .requiresAction, .unknown]
         var mismatches: [String] = []
         for processing in [ServerDrivenConfirmSpec.ProcessingOutcome.succeed, .fail, .poll] {
@@ -562,7 +563,7 @@ final class ConfirmationMetadataParityTests: XCTestCase {
                     let metadata = ConfirmationMetadata(serverSpec: spec, paymentMethodDataType: "demo_pay")
                     for status in statuses {
                         for hasPerformedNextAction in [false, true] {
-                            let lean = ServerDrivenPaymentHandler.decide(status: status, hasPerformedNextAction: hasPerformedNextAction, spec: spec)
+                            let lean = Self.spikeDecide(status: status, hasPerformedNextAction: hasPerformedNextAction, spec: spec)
                             let table = metadata.decide(Situation(
                                 intent: .paymentIntent,
                                 status: status,
@@ -583,11 +584,45 @@ final class ConfirmationMetadataParityTests: XCTestCase {
             }
         }
         print(mismatches.joined(separator: "\n"))
-        // Right after confirm, for each of the 18 specs, the lean handler differs from STPPaymentHandler (and the table) twice:
+        // Right after confirm, for each of the 18 specs, the spike differed from STPPaymentHandler (and the table) twice:
         // it succeeds `requires_confirmation`, which STPPaymentHandler fails, and it fails `requires_payment_method` as a
         // decline, which STPPaymentHandler fails as `requiresPaymentMethodErrorCode`.
         XCTAssertEqual(mismatches.count, 36, mismatches.joined(separator: "\n"))
         XCTAssertTrue(mismatches.allSatisfy { $0.contains("requires_confirmation after_next_action=false") || $0.contains("requires_payment_method after_next_action=false") })
+    }
+
+    /// The spike's `ServerDrivenPaymentHandler.decide` (task #54), frozen here as the reference for L1 and L2.
+    enum SpikeDecision: Equatable {
+        case succeed, cancel, performNextAction, poll
+        case fail(paymentFailed: Bool)
+    }
+
+    static func spikeDecide(status: STPPaymentIntentStatus, hasPerformedNextAction: Bool, spec: ServerDrivenConfirmSpec) -> SpikeDecision {
+        switch status {
+        case .succeeded, .requiresCapture, .requiresConfirmation:
+            return .succeed
+        case .canceled:
+            return .cancel
+        case .requiresPaymentMethod:
+            return .fail(paymentFailed: true)
+        case .processing:
+            switch spec.processing {
+            case .succeed: return .succeed
+            case .fail: return .fail(paymentFailed: false)
+            case .poll: return .poll
+            }
+        case .requiresAction:
+            guard hasPerformedNextAction else {
+                return .performNextAction
+            }
+            switch spec.requiresAction {
+            case .cancel: return .cancel
+            case .poll: return .poll
+            case .succeed: return .succeed
+            }
+        default:
+            return .fail(paymentFailed: false)
+        }
     }
 
     /// The server's spec replaces the whole native policy, with nothing carried over.
@@ -710,15 +745,14 @@ extension ConfirmationMetadata.Decision {
         }
     }
 
-    /// The lean handler's decision, in the table's terms.
-    init(_ lean: ServerDrivenPaymentHandler.Decision, pollSeconds: Int) {
+    /// The spike's decision, in the table's terms.
+    init(_ lean: ConfirmationMetadataParityTests.SpikeDecision, pollSeconds: Int) {
         switch lean {
         case .succeed: self = .succeed
         case .cancel: self = .cancel
         case .performNextAction: self = .performNextAction
-        case .poll: self = pollSeconds == 0 ? .poll(seconds: 0) : .poll(seconds: pollSeconds)
-        case .fail(.paymentFailed): self = .fail(.paymentFailed)
-        case .fail(.unexpectedStatus): self = .fail(.unexpectedStatus)
+        case .poll: self = .poll(seconds: pollSeconds)
+        case .fail(let paymentFailed): self = .fail(paymentFailed ? .paymentFailed : .unexpectedStatus)
         }
     }
 

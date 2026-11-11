@@ -53,6 +53,15 @@ extension PaymentSheet {
                 return (.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
             }
 
+            let paymentMethodType: STPPaymentMethodType = {
+                switch confirmType {
+                case .saved(let paymentMethod, _, _, _):
+                    return paymentMethod.type
+                case .new(let params, _, _, _, _):
+                    return params.type
+                }
+            }()
+
             let savedPaymentMethodRadarOptions: STPRadarOptions? = {
                 switch confirmType {
                 case .saved(_, _, _, let radarOptions):
@@ -80,13 +89,12 @@ extension PaymentSheet {
                     paymentIntentParams.radarOptions = savedPaymentMethodRadarOptions
                     paymentIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
-                    if let serverDrivenPaymentHandler = makeServerDrivenPaymentHandler(for: serverDrivenPaymentMethod, paymentHandler: paymentHandler) {
-                        let result = await serverDrivenPaymentHandler.confirm(params: paymentIntentParams, authenticationContext: authenticationContext)
-                        return (result, .client)
-                    }
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.confirmPaymentIntent(
+                        confirmPaymentIntent(
+                            using: paymentHandler,
                             params: paymentIntentParams,
+                            paymentMethodType: paymentMethodType,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
                             authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
@@ -99,14 +107,13 @@ extension PaymentSheet {
                 } else {
                     // 5b. Server-side confirmation
                     // Note: We cannot validate the ConfirmationToken used to confirm server-side, the backend does not return the CT on the intent object
-                    if let serverDrivenPaymentHandler = makeServerDrivenPaymentHandler(for: serverDrivenPaymentMethod, paymentHandler: paymentHandler) {
-                        let result = await serverDrivenPaymentHandler.handleNextAction(for: paymentIntent, authenticationContext: authenticationContext)
-                        return (result, .server)
-                    }
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.handleNextAction(
+                        handleNextAction(
+                            using: paymentHandler,
                             for: paymentIntent,
-                            with: authenticationContext,
+                            paymentMethodType: paymentIntent.paymentMethod?.type ?? paymentMethodType,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            authenticationContext: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
@@ -129,8 +136,11 @@ extension PaymentSheet {
                     setupIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.confirmSetupIntent(
+                        confirmSetupIntent(
+                            using: paymentHandler,
                             params: setupIntentParams,
+                            paymentMethodType: paymentMethodType,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
                             authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
@@ -144,9 +154,12 @@ extension PaymentSheet {
                     // 6b. Server-side confirmation
                     // Note: We cannot validate the ConfirmationToken used to confirm server-side, the backend does not return the CT on the intent object
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.handleNextAction(
+                        handleNextAction(
+                            using: paymentHandler,
                             for: setupIntent,
-                            with: authenticationContext,
+                            paymentMethodType: setupIntent.paymentMethod?.type ?? paymentMethodType,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            authenticationContext: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }

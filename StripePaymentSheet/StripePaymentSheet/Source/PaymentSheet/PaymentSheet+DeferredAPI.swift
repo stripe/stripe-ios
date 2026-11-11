@@ -153,13 +153,12 @@ extension PaymentSheet {
                     // This is a bit hacky, since the above `makePaymentIntentParams` call already set mandate data
                     setMandateDataIfNecessary(for: paymentMethod.type, on: paymentIntentParams)
 
-                    if let serverDrivenPaymentHandler = makeServerDrivenPaymentHandler(for: serverDrivenPaymentMethod, paymentHandler: paymentHandler) {
-                        let result = await serverDrivenPaymentHandler.confirm(params: paymentIntentParams, authenticationContext: authenticationContext)
-                        return (result, .client)
-                    }
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.confirmPaymentIntent(
+                        confirmPaymentIntent(
+                            using: paymentHandler,
                             params: paymentIntentParams,
+                            paymentMethodType: paymentMethod.type,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
                             authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
@@ -173,14 +172,13 @@ extension PaymentSheet {
                     // 4b. Server-side confirmation
                     try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
                     assert(!allowsSetAsDefaultPM, "(Debug-build-only error) The default payment methods feature is not yet supported with deferred intents. Please contact us if you'd like to use this feature via a Github issue on stripe-ios.")
-                    if let serverDrivenPaymentHandler = makeServerDrivenPaymentHandler(for: serverDrivenPaymentMethod, paymentHandler: paymentHandler) {
-                        let result = await serverDrivenPaymentHandler.handleNextAction(for: paymentIntent, authenticationContext: authenticationContext)
-                        return (result, .server)
-                    }
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.handleNextAction(
+                        handleNextAction(
+                            using: paymentHandler,
                             for: paymentIntent,
-                            with: authenticationContext,
+                            paymentMethodType: paymentMethod.type,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            authenticationContext: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
@@ -203,8 +201,11 @@ extension PaymentSheet {
                         configuration: configuration
                     )
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.confirmSetupIntent(
+                        confirmSetupIntent(
+                            using: paymentHandler,
                             params: setupIntentParams,
+                            paymentMethodType: paymentMethod.type,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
                             authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
@@ -219,9 +220,12 @@ extension PaymentSheet {
                     try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
                     assert(!allowsSetAsDefaultPM, "(Debug-build-only error) The default payment methods feature is not yet supported with deferred intents. Please contact us if you'd like to use this feature via a Github issue on stripe-ios.")
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.handleNextAction(
+                        handleNextAction(
+                            using: paymentHandler,
                             for: setupIntent,
-                            with: authenticationContext,
+                            paymentMethodType: paymentMethod.type,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            authenticationContext: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }

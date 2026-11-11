@@ -331,15 +331,11 @@ extension PaymentSheet {
                         paymentIntent: paymentIntent,
                         configuration: configuration
                     )
-                    if let serverDrivenPaymentHandler = makeServerDrivenPaymentHandler(for: serverDrivenPaymentMethod, paymentHandler: paymentHandler) {
-                        // Server-driven payment methods don't save, so there's no default payment method to set.
-                        let result = await serverDrivenPaymentHandler.confirm(params: params, authenticationContext: authenticationContext)
-                        await confirmationChallenge?.complete()
-                        completion(result, nil)
-                        return
-                    }
-                    paymentHandler.confirmPaymentIntent(
+                    confirmPaymentIntent(
+                        using: paymentHandler,
                         params: params,
+                        paymentMethodType: paymentMethodType,
+                        serverDrivenPaymentMethod: serverDrivenPaymentMethod,
                         authenticationContext: authenticationContext,
                         completion: { actionStatus, paymentIntent, error in
                             Task { await confirmationChallenge?.complete() }
@@ -351,8 +347,6 @@ extension PaymentSheet {
                     )
                     // MARK: ↪ SetupIntent
                 case .setupIntent(let setupIntent):
-                    // ServerDrivenPaymentHandler is PaymentIntent-only for now, so server-driven payment methods still
-                    // confirm SetupIntents with STPPaymentHandler. To add them, give it a `confirm(setupIntentParams:)`.
                     let setupIntentParams = makeSetupIntentParams(
                         confirmPaymentMethodType: .new(
                             params: confirmParams.paymentMethodParams,
@@ -363,8 +357,11 @@ extension PaymentSheet {
                         setupIntent: setupIntent,
                         configuration: configuration
                     )
-                    paymentHandler.confirmSetupIntent(
+                    confirmSetupIntent(
+                        using: paymentHandler,
                         params: setupIntentParams,
+                        paymentMethodType: paymentMethodType,
+                        serverDrivenPaymentMethod: serverDrivenPaymentMethod,
                         authenticationContext: authenticationContext,
                         completion: { actionStatus, setupIntent, error in
                             Task { await confirmationChallenge?.complete() }
@@ -414,8 +411,10 @@ extension PaymentSheet {
 
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil), paymentIntent: paymentIntent, configuration: configuration)
 
-                paymentHandler.confirmPaymentIntent(
+                confirmPaymentIntent(
+                    using: paymentHandler,
                     params: paymentIntentParams,
+                    paymentMethodType: paymentMethod.type,
                     authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
@@ -428,8 +427,10 @@ extension PaymentSheet {
                     setupIntent: setupIntent,
                     configuration: configuration
                 )
-                paymentHandler.confirmSetupIntent(
+                confirmSetupIntent(
+                    using: paymentHandler,
                     params: setupIntentParams,
+                    paymentMethodType: paymentMethod.type,
                     authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
@@ -481,8 +482,10 @@ extension PaymentSheet {
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                         paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
-                        paymentHandler.confirmPaymentIntent(
+                        confirmPaymentIntent(
+                            using: paymentHandler,
                             params: paymentIntentParams,
+                            paymentMethodType: paymentMethodParams.type,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
@@ -497,8 +500,10 @@ extension PaymentSheet {
                         setupIntentParams.paymentMethodParams = paymentMethodParams
                         setupIntentParams.returnURL = configuration.returnURL
                         setupIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
-                        paymentHandler.confirmSetupIntent(
+                        confirmSetupIntent(
+                            using: paymentHandler,
                             params: setupIntentParams,
+                            paymentMethodType: paymentMethodParams.type,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
@@ -563,8 +568,10 @@ extension PaymentSheet {
                         paymentIntentParams.radarOptions = radarOptions
                         paymentIntentParams.mandateData = mandateData
                         paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
-                        paymentHandler.confirmPaymentIntent(
+                        confirmPaymentIntent(
+                            using: paymentHandler,
                             params: paymentIntentParams,
+                            paymentMethodType: paymentMethod.type,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
@@ -581,8 +588,10 @@ extension PaymentSheet {
                         setupIntentParams.mandateData = mandateData
                         setupIntentParams.radarOptions = radarOptions
                         setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
-                        paymentHandler.confirmSetupIntent(
+                        confirmSetupIntent(
+                            using: paymentHandler,
                             params: setupIntentParams,
+                            paymentMethodType: paymentMethod.type,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
@@ -1097,20 +1106,5 @@ private extension ConsumerPaymentDetails {
         }()
 
         return elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp(paymentMethodType))
-    }
-}
-
-extension PaymentSheet {
-    /// Returns the handler that confirms a server-driven payment method's PaymentIntent, or nil to use `STPPaymentHandler`.
-    @MainActor
-    static func makeServerDrivenPaymentHandler(for serverDrivenPaymentMethod: ServerDrivenPaymentMethod?, paymentHandler: STPPaymentHandler) -> ServerDrivenPaymentHandler? {
-        guard let serverDrivenPaymentMethod else {
-            return nil
-        }
-        return ServerDrivenPaymentHandler(
-            spec: serverDrivenPaymentMethod.confirmSpec,
-            paymentMethodType: serverDrivenPaymentMethod.type,
-            apiClient: paymentHandler.apiClient
-        )
     }
 }
