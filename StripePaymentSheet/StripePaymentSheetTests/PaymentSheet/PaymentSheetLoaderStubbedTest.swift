@@ -405,7 +405,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         }
 
         // ...and we're using a deferred intent without PM types specified...
-        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _ in return "" })
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd", captureMethod: .automatic), confirmHandler: { _, _ in return "" })
 
         // ...and the customer has payment methods...
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
@@ -515,7 +515,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             XCTFail("Confirm handler shouldn't be called.")
             return ""
         }
-        let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
+        let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: PaymentSheet.Configuration._testValue_MostPermissive(),

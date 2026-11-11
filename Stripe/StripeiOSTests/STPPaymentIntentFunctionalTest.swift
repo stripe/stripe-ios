@@ -26,20 +26,6 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
-    func testCreatePaymentIntentWithInvalidCurrency() {
-        let expectation = self.expectation(description: "PaymentIntent create.")
-        STPTestingAPIClient.shared.createPaymentIntent(withParams: [
-            "payment_method_types": ["bancontact"],
-        ]) { clientSecret, error in
-            XCTAssertNil(clientSecret)
-            XCTAssertNotNil(error)
-            let errorString = (error! as NSError).userInfo[STPError.errorMessageKey] as! String
-            XCTAssertTrue(errorString.hasPrefix("Error creating PaymentIntent: The currency provided (usd) is invalid. Payments with bancontact support the following currencies: eur."))
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-    }
-
     func testRetrievePreviousCreatedPaymentIntent() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let expectation = self.expectation(description: "Payment Intent retrieve")
@@ -498,7 +484,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             withParams: [
                 "currency": "aud",
                 "amount": NSNumber(value: 2000),
-                "payment_method_types": ["au_becs_debit"],
+                "allowed_payment_method_types": ["au_becs_debit"],
             ],
             account: "au") { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
@@ -554,7 +540,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["p24"],
+                "allowed_payment_method_types": ["p24"],
                 "currency": "eur",
             ]) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
@@ -610,7 +596,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["bancontact"],
+                "allowed_payment_method_types": ["bancontact"],
                 "currency": "eur",
             ]) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
@@ -666,7 +652,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["oxxo"],
+                "allowed_payment_method_types": ["oxxo"],
                 "amount": NSNumber(value: 2000),
                 "currency": "mxn",
             ],
@@ -722,7 +708,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["eps"],
+                "allowed_payment_method_types": ["eps"],
                 "currency": "eur",
             ]) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
@@ -782,7 +768,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             withParams: [
                 "currency": "usd",
                 "amount": NSNumber(value: 2000),
-                "payment_method_types": ["alipay"],
+                "allowed_payment_method_types": ["alipay"],
             ]) { createdClientSecret, creationError in
             XCTAssertNotNil(createdClientSecret)
             XCTAssertNil(creationError)
@@ -827,7 +813,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["grabpay"],
+                "allowed_payment_method_types": ["grabpay"],
                 "currency": "sgd",
             ],
             account: "sg") { createdClientSecret, creationError in
@@ -884,7 +870,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["paypal"],
+                "allowed_payment_method_types": ["paypal"],
                 "currency": "eur",
             ],
             account: "be") { createdClientSecret, creationError in
@@ -941,7 +927,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["blik"],
+                "allowed_payment_method_types": ["blik"],
                 "currency": "pln",
                 "amount": NSNumber(value: 1000),
             ],
@@ -999,7 +985,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["affirm"],
+                "allowed_payment_method_types": ["affirm"],
                 "currency": "usd",
                 "amount": NSNumber(value: 6000),
             ]) { createdClientSecret, creationError in
@@ -1058,7 +1044,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["mobilepay"],
+                "allowed_payment_method_types": ["mobilepay"],
                 "currency": "dkk",
                 "amount": NSNumber(value: 6000),
             ],
@@ -1110,7 +1096,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["amazon_pay"],
+                "allowed_payment_method_types": ["amazon_pay"],
                 "currency": "usd",
                 "amount": NSNumber(value: 6000),
             ],
@@ -1162,7 +1148,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["alma"],
+                "allowed_payment_method_types": ["alma"],
                 "currency": "eur",
                 "amount": NSNumber(value: 6000),
             ],
@@ -1214,7 +1200,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["sunbit"],
+                "allowed_payment_method_types": ["sunbit"],
                 "currency": "usd",
                 "amount": NSNumber(value: 6000),
             ],
@@ -1264,7 +1250,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["billie"],
+                "allowed_payment_method_types": ["billie"],
                 "currency": "eur",
                 "amount": NSNumber(value: 6000),
             ],
@@ -1315,7 +1301,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["satispay"],
+                "allowed_payment_method_types": ["satispay"],
                 "currency": "eur",
                 "amount": NSNumber(value: 6000),
             ],
@@ -1366,7 +1352,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["crypto"],
+                "allowed_payment_method_types": ["crypto"],
                 "currency": "usd",
                 "amount": NSNumber(value: 100),
             ],
@@ -1417,7 +1403,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["multibanco"],
+                "allowed_payment_method_types": ["multibanco"],
                 "currency": "eur",
                 "amount": NSNumber(value: 6000),
             ],
@@ -1515,7 +1501,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
 
         let clientSecret = try await STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["us_bank_account"],
+                "allowed_payment_method_types": ["us_bank_account"],
                 "currency": "usd",
                 "amount": 1000,
             ],
@@ -1622,7 +1608,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
-                "payment_method_types": ["paypay"],
+                "allowed_payment_method_types": ["paypay"],
                 "currency": "jpy",
                 "amount": NSNumber(value: 6000),
             ],
@@ -1684,6 +1670,9 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             "mode": "payment",
             "automatic_payment_methods": false,
             "supported_payment_methods": ["klarna"],
+            // Create the PaymentIntent with the SDK's API version, which doesn't accept `payment_method_types`
+            "stripe_version": STPAPIClient.apiVersion,
+            "use_allowed_payment_method_types": true,
         ])
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 

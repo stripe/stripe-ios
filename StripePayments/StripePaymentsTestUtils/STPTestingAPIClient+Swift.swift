@@ -32,7 +32,7 @@ extension STPTestingAPIClient {
         var params = [String: Any]()
         params["amount"] = amount ?? 5050
         params["currency"] = currency
-        params["payment_method_types"] = types
+        params["allowed_payment_method_types"] = types
         params["confirm"] = confirm
         if let paymentMethodID {
             params["payment_method"] = paymentMethodID
@@ -107,7 +107,7 @@ extension STPTestingAPIClient {
         otherParams: [String: Any] = [:]
     ) async throws -> String {
         var params = [String: Any]()
-        params["payment_method_types"] = types
+        params["allowed_payment_method_types"] = types
         params["confirm"] = confirm
         if let paymentMethodID {
             params["payment_method"] = paymentMethodID
@@ -149,6 +149,8 @@ extension STPTestingAPIClient {
         let params = [
             "customer_id": customerID,
             "account": merchantCountry,
+            // Create the ephemeral key with the SDK's API version
+            "version": STPAPIClient.apiVersion,
         ]
         return try await makeRequest(endpoint: "create_ephemeral_key", params: params)
     }

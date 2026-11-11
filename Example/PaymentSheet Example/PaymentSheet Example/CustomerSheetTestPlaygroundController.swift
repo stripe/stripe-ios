@@ -353,6 +353,8 @@ class CustomerSheetBackend {
                      "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
                      "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
                      "customer_session_payment_method_sync_default": settings.paymentMethodSyncDefault.rawValue,
+                     // Create the legacy ephemeral key with the SDK's API version
+                     "stripe_version": STPAPIClient.apiVersion,
         ] as [String: Any]
 
         // Send custom keys to backend if provided
@@ -392,6 +394,9 @@ class CustomerSheetBackend {
     func createSetupIntent(customerId: String, settings: CustomerSheetTestPlaygroundSettings) async throws -> String {
         var body = [ "customer_id": customerId,
                      "merchant_country_code": settings.merchantCountryCode.rawValue,
+                     // Create the SetupIntent with the SDK's API version, which doesn't accept `payment_method_types`
+                     "stripe_version": STPAPIClient.apiVersion,
+                     "use_allowed_payment_method_types": true,
         ] as [String: Any]
 
         if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {

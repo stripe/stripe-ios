@@ -281,11 +281,13 @@ final class PaymentSheetLoader {
                 }
                 // Fallback to regular retrieve PI when retrieve PI with preferences fails
                 paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+                // elements/sessions rejects PaymentIntents in a terminal state with a 4xx error, but the
+                // fallback retrieve doesn't, so check the status here.
+                guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
+                    // Error if the PaymentIntent is in a terminal state
+                    throw PaymentSheetError.paymentIntentInTerminalState(status: paymentIntent.status)
+                }
                 elementsSession = .makeBackupElementsSession(with: paymentIntent)
-            }
-            guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
-                // Error if the PaymentIntent is in a terminal state
-                throw PaymentSheetError.paymentIntentInTerminalState(status: paymentIntent.status)
             }
             intent = .paymentIntent(paymentIntent)
         case .setupIntentClientSecret(let clientSecret):
@@ -303,11 +305,13 @@ final class PaymentSheetLoader {
                 }
                 // Fallback to regular retrieve SI when retrieve SI with preferences fails
                 setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
+                // elements/sessions rejects SetupIntents in a terminal state with a 4xx error, but the
+                // fallback retrieve doesn't, so check the status here.
+                guard ![.succeeded, .canceled].contains(setupIntent.status) else {
+                    // Error if the SetupIntent is in a terminal state
+                    throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
+                }
                 elementsSession = .makeBackupElementsSession(with: setupIntent)
-            }
-            guard ![.succeeded, .canceled].contains(setupIntent.status) else {
-                // Error if the SetupIntent is in a terminal state
-                throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
             }
             intent = .setupIntent(setupIntent)
         case .deferredIntent(let intentConfig):

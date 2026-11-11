@@ -43,7 +43,12 @@ class BackendModel {
         var request = URLRequest(url: Self.backendAPIURL.appendingPathComponent(method))
         request.httpMethod = "POST"
 
-        request.httpBody = try! JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
+        // Create intents and ephemeral keys with the SDK's API version, which doesn't accept `payment_method_types`
+        let bodyParams = params.merging([
+            "stripe_version": STPAPIClient.apiVersion,
+            "use_allowed_payment_method_types": true,
+        ]) { current, _ in current }
+        request.httpBody = try! JSONSerialization.data(withJSONObject: bodyParams, options: .prettyPrinted)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -51,7 +56,7 @@ class BackendModel {
           guard let unwrappedData = data,
                 let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String: Any] else {
             if let data = data {
-                print("\(String(decoding: data, as: UTF8.self))")
+                print(String(bytes: data, encoding: .utf8) ?? "Response data is not valid UTF-8")
             } else {
                 print("\(error ?? NSError())")  // swiftlint:disable:this discouraged_direct_init
             }

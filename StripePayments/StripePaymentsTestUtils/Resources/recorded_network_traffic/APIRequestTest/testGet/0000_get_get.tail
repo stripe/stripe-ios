@@ -22,7 +22,7 @@ Access-Control-Allow-Origin: *
     "Authorization" : "Bearer",
     "Accept-Language" : "en-US,en;q=0.9",
     "User-Agent" : "xctest\/22719 CFNetwork\/1406.0.4 Darwin\/23.5.0",
-    "Stripe-Version" : "2020-08-27",
+    "Stripe-Version" : "2026-10-28.endive",
     "X-Forwarded-Host" : "stripe-mobile-luxurious-alpine-devourer.stripedemos.com",
     "X-Stripe-User-Agent" : "{\"bindings_version\":\"23.28.1\",\"vendor_identifier\":\"6B9BD889-FE40-4D9D-BD6E-CA93E8B754A3\",\"lang\":\"objective-c\",\"type\":\"arm64\",\"os_version\":\"16.4\",\"model\":\"iPhone\"}"
   },
