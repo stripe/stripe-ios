@@ -190,7 +190,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         super.init(nibName: nil, bundle: nil)
         // Link can be the customer's default even when it is rendered as a wallet button instead of a selected row.
         // Unfortunately, FlowController asks its UI (this code), rather than a view model, for the selected payment option (see `selectedPaymentOption`), so we need to mark the wallet button as selected.
-        if previousPaymentOption == nil && isFlowController && isLinkShownAsWalletButton && customerDefaultIsLink {
+        if previousPaymentOption == nil && isFlowController && isLinkShownAsWalletButton && (loadResult.preselectLink || customerDefaultIsLink) {
             isLinkWalletButtonSelected = true
         }
 
