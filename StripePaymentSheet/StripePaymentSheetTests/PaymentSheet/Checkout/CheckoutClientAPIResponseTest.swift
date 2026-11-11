@@ -584,7 +584,7 @@ class CheckoutClientAPIResponseTest: XCTestCase {
 
         XCTAssertTrue(session.canDetachPaymentMethod)
         XCTAssertNil(session.customer)
-        XCTAssertTrue(Intent.checkout(session).allowsPaymentMethodRemoval(elementsSession: session.elementsSession))
+        XCTAssertTrue(CustomerProvider(checkoutSession: session).allowsPaymentMethodRemoval(elementsSession: session.elementsSession))
     }
 
     func testAggregateTaxAmountsMapFromTotalSummary() {
