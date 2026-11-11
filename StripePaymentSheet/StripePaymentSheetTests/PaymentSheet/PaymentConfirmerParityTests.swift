@@ -74,6 +74,48 @@ extension ConfirmationMetadataParityTests {
         }
     }
 
+    @MainActor
+    func testDelegatedEventsCarryTheEnginesActionID() throws {
+        for type: STPPaymentMethodType in [.card, .link] {
+            // Given a card or Link PaymentIntent whose redirect_to_url next action goes to the STPPaymentHandler delegate
+            let run = EngineRun(type: type)
+            let intent = Fixtures.paymentIntent(id: run.id, type: type.identifier, status: "requires_action", nextAction: "redirect_to_url")
+            run.client.paymentIntents = [Fixtures.paymentIntent(id: run.id, type: type.identifier, status: "succeeded", nextAction: nil)]
+            let firstEvent = RecordingAnalyticsClient.shared.analytics.count
+            // ...and a customer who comes back only once the web view is up, as in a real redirect (the harness's shim
+            // returns at once, which can be before STPPaymentHandler presents the web view and logs that it did)
+            let paymentHandler = run.paymentHandler
+            paymentHandler._redirectShim = { _, returnURL, _ in
+                func returnOnceShown() {
+                    let shown = RecordingAnalyticsClient.shared.analytics[firstEvent...].contains { $0.event == STPAnalyticEvent.urlRedirectNextAction.rawValue && $0.params["handler"] == nil }
+                    guard shown else {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: returnOnceShown)
+                        return
+                    }
+                    _ = paymentHandler.handleURLCallback(returnURL!)
+                }
+                DispatchQueue.main.async(execute: returnOnceShown)
+            }
+
+            // When the engine handles it
+            run.start(entry: "handle_next_action", intent: .paymentIntent(intent), returnURL: Self.confirmReturnURL)
+
+            // Then the redirect events STPPaymentHandler logs itself carry the engine's action_id
+            let delegated = RecordingAnalyticsClient.shared.analytics[firstEvent...].filter { $0.params["handler"] == nil }
+            let redirectEvents = delegated.filter { $0.event.hasPrefix("stripeios.url_redirect_next_action") }
+            XCTAssertEqual(redirectEvents.map(\.event), [STPAnalyticEvent.urlRedirectNextAction.rawValue, STPAnalyticEvent.urlRedirectNextActionCompleted.rawValue], type.identifier)
+            for event in redirectEvents {
+                XCTAssertEqual(event.params["action_id"] as? String, run.confirmer.actionID, "\(type.identifier) \(event.event)")
+            }
+            // ...the same action_id as the engine's own events
+            let engineEvents = RecordingAnalyticsClient.shared.analytics[firstEvent...].filter { $0.params["handler"] as? String == PaymentConfirmer.analyticsHandler }
+            XCTAssertFalse(engineEvents.isEmpty, type.identifier)
+            XCTAssertTrue(engineEvents.allSatisfy { $0.params["action_id"] as? String == run.confirmer.actionID }, type.identifier)
+            // ...and STPPaymentHandler forgets it once the call finishes
+            XCTAssertNil(run.paymentHandler.actionID, type.identifier)
+        }
+    }
+
     // MARK: After confirm
 
     @MainActor

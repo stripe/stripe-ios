@@ -869,9 +869,11 @@ final class ScriptedAPIClient: STPAPIClient {
 final class RecordingAnalyticsClient: STPAnalyticsClient {
     static let shared = RecordingAnalyticsClient()
     private(set) var events: [String] = []
+    private(set) var analytics: [(event: String, params: [String: Any])] = []
 
     override func log(analytic: Analytic, apiClient: STPAPIClient = .shared) {
         events.append(analytic.event.rawValue)
+        analytics.append((analytic.event.rawValue, analytic.params))
     }
 }
 

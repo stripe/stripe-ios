@@ -918,6 +918,7 @@ final class FakeNextActionPerformer: NextActionPerforming {
         _ action: ResolvedNextAction,
         intent: ConfirmingIntent,
         returnURL: String?,
+        actionID: String,
         authenticationContext: STPAuthenticationContext,
         poll: @escaping () async -> ConfirmingIntent?,
         didOpen: @escaping (RedirectType) -> Void

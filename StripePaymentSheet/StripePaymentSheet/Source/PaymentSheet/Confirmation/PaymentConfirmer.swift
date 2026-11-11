@@ -83,7 +83,7 @@ final class PaymentConfirmer {
     private let performer: NextActionPerforming
     private let clock: PaymentConfirmerClock
     private let analyticsClient: STPAnalyticsClientProtocol
-    private let actionID = UUID().uuidString
+    let actionID = UUID().uuidString
     private var startDate: Date?
     /// The confirm request's `return_url` (or, for an intent confirmed elsewhere, PaymentSheet's `returnURL`).
     private var returnURL: String?
@@ -228,6 +228,7 @@ final class PaymentConfirmer {
                 resolved,
                 intent: intent,
                 returnURL: returnURL,
+                actionID: actionID,
                 authenticationContext: authenticationContext,
                 poll: { [weak self] in await self?.pollForScreen(intent) },
                 didOpen: { [weak self] redirectType in

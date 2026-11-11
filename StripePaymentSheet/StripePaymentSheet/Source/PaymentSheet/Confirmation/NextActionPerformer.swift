@@ -38,12 +38,14 @@ protocol NextActionScreen: AnyObject {
 protocol NextActionPerforming {
     /// - Parameters:
     ///   - returnURL: The confirm request's `return_url`, for STPPaymentHandler.
+    ///   - actionID: The payment's `action_id`, for STPPaymentHandler's own analytics.
     ///   - poll: Reads the intent once, for the polling screen.
     ///   - didOpen: Called when an app or web view opens, for analytics.
     func perform(
         _ action: ResolvedNextAction,
         intent: ConfirmingIntent,
         returnURL: String?,
+        actionID: String,
         authenticationContext: STPAuthenticationContext,
         poll: @escaping () async -> ConfirmingIntent?,
         didOpen: @escaping (RedirectType) -> Void
@@ -73,6 +75,7 @@ final class PaymentSheetNextActionPerformer: NextActionPerforming {
         _ action: ResolvedNextAction,
         intent: ConfirmingIntent,
         returnURL: String?,
+        actionID: String,
         authenticationContext: STPAuthenticationContext,
         poll: @escaping () async -> ConfirmingIntent?,
         didOpen: @escaping (RedirectType) -> Void
@@ -90,24 +93,25 @@ final class PaymentSheetNextActionPerformer: NextActionPerforming {
         case .none:
             return .performed
         case .stripeSDK:
-            return await performWithPaymentHandler(intent: intent, returnURL: returnURL, authenticationContext: authenticationContext)
+            return await performWithPaymentHandler(intent: intent, returnURL: returnURL, actionID: actionID, authenticationContext: authenticationContext)
         }
     }
 
     /// Hands the payment to STPPaymentHandler, which performs the next action (3DS2, the 3DS redirect, the intent
     /// confirmation challenge, or any next action of card and Link) and applies its own rules after it.
-    /// `shouldSendAnalytic: false`, because PaymentConfirmer logs the confirm and handle_next_action events itself.
-    private func performWithPaymentHandler(intent: ConfirmingIntent, returnURL: String?, authenticationContext: STPAuthenticationContext) async -> NextActionOutcome {
+    /// `shouldSendAnalytic: false`, because PaymentConfirmer logs the confirm and handle_next_action events itself; the
+    /// events STPPaymentHandler still logs (redirects, polling timeouts) carry PaymentConfirmer's `action_id`.
+    private func performWithPaymentHandler(intent: ConfirmingIntent, returnURL: String?, actionID: String, authenticationContext: STPAuthenticationContext) async -> NextActionOutcome {
         switch intent {
         case .paymentIntent(let paymentIntent):
             return await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(for: paymentIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false) { status, paymentIntent, error in
+                paymentHandler.handleNextAction(for: paymentIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false, actionID: actionID) { status, paymentIntent, error in
                     continuation.resume(returning: .finished(PaymentSheet.makePaymentSheetResult(for: status, error: error), paymentIntent.map { .paymentIntent($0) }))
                 }
             }
         case .setupIntent(let setupIntent):
             return await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false) { status, setupIntent, error in
+                paymentHandler.handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false, actionID: actionID) { status, setupIntent, error in
                     continuation.resume(returning: .finished(PaymentSheet.makePaymentSheetResult(for: status, error: error), setupIntent.map { .setupIntent($0) }))
                 }
             }

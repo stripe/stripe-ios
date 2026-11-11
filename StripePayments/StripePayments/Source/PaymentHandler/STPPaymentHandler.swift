@@ -456,6 +456,7 @@ public class STPPaymentHandler: NSObject {
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
         shouldSendAnalytic: Bool = true,
+        actionID: String? = nil,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         let paymentIntentID = paymentIntent.stripeId
@@ -479,6 +480,10 @@ public class STPPaymentHandler: NSObject {
             assert(paymentIntent.paymentMethod != nil, "A PaymentIntent w/ attached paymentMethod must be retrieved w/ an expanded PaymentMethod")
         }
         isHandlingAction = true
+        // A caller that logs its own events (`shouldSendAnalytic: false`) passes its action ID so ours join them.
+        if let actionID {
+            self.actionID = actionID
+        }
 
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self]
@@ -490,6 +495,9 @@ public class STPPaymentHandler: NSObject {
             }
             // Reset our internal state
             strongSelf.isHandlingAction = false
+            if actionID != nil {
+                strongSelf.actionID = nil
+            }
             // Ensure the .succeeded case returns a PaymentIntent in the expected state.
             if let paymentIntent = paymentIntent,
                status == .succeeded
@@ -755,6 +763,7 @@ public class STPPaymentHandler: NSObject {
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
     ///   - shouldSendStartAnalytic: Tracks whether STPPaymentHandler has already sent a start analytic for `handleNextAction` because this method was called from the other `handleNextAction`
+    ///   - actionID: The `action_id` for this call's analytics, from a caller that logs its own events. Defaults to nil.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
     /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
     @_spi(InternalOnlyAPI) public func handleNextAction(
@@ -762,6 +771,7 @@ public class STPPaymentHandler: NSObject {
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
         shouldSendAnalytic: Bool = true,
+        actionID: String? = nil,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         let setupIntentID = setupIntent.stripeID
@@ -786,6 +796,10 @@ public class STPPaymentHandler: NSObject {
         }
 
         isHandlingAction = true
+        // A caller that logs its own events (`shouldSendAnalytic: false`) passes its action ID so ours join them.
+        if let actionID {
+            self.actionID = actionID
+        }
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self]
             status,
@@ -796,6 +810,9 @@ public class STPPaymentHandler: NSObject {
             }
             // Reset our internal state
             strongSelf.isHandlingAction = false
+            if actionID != nil {
+                strongSelf.actionID = nil
+            }
 
             if status == .succeeded {
                 // Ensure the .succeeded case returns a PaymentIntent in the expected state.
