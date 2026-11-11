@@ -564,9 +564,9 @@ final class PaymentConfirmerNativeTests: XCTestCase {
         // When the payment is confirmed and the customer closes the voucher
         let result = await confirmPaymentIntent(.OXXO).result
 
-        // Then the voucher opened in a web view with no return URL, and requires_action means success (SPH:2134)
+        // Then the voucher opened in a web view, with no app first and no return URL, and requires_action means success (SPH:2134)
         XCTAssertEqual(result, .completed)
-        XCTAssertEqual(performer.redirects, [.init(appURL: URL(string: "https://voucher.example"), webURL: URL(string: "https://voucher.example"), returnURL: nil, useWebAuthSession: false, followRedirects: false)])
+        XCTAssertEqual(performer.redirects, [.init(appURL: nil, webURL: URL(string: "https://voucher.example"), returnURL: nil, useWebAuthSession: false, followRedirects: false)])
         XCTAssertEqual(api.calls, ["confirm", "retrieve"])
     }
 

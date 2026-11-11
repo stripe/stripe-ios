@@ -1145,7 +1145,7 @@
         "mandate_data" : "none",
         "next_actions" : [
           {
-            "app_to_app" : "universal_links_only",
+            "app_to_app" : "none",
             "browser" : "safari_view_controller",
             "presenter" : "redirect",
             "return_url" : "none",
@@ -1553,7 +1553,7 @@
         "mandate_data" : "none",
         "next_actions" : [
           {
-            "app_to_app" : "universal_links_only",
+            "app_to_app" : "none",
             "browser" : "safari_view_controller",
             "presenter" : "redirect",
             "return_url" : "none",
@@ -1979,7 +1979,7 @@
         "mandate_data" : "none",
         "next_actions" : [
           {
-            "app_to_app" : "universal_links_only",
+            "app_to_app" : "none",
             "browser" : "safari_view_controller",
             "presenter" : "redirect",
             "return_url" : "none",
@@ -2161,7 +2161,7 @@
         "mandate_data" : "none",
         "next_actions" : [
           {
-            "app_to_app" : "universal_links_only",
+            "app_to_app" : "none",
             "browser" : "safari_view_controller",
             "presenter" : "redirect",
             "return_url" : "none",
