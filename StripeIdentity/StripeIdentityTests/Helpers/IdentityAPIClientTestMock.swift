@@ -16,7 +16,6 @@ import XCTest
 final class IdentityAPIClientTestMock: IdentityAPIClient {
 
     var apiVersion: Int = IdentityAPIClientImpl.productionApiVersion
-    var supportsNetworkedIdentity = false
 
     struct ImageUploadRequestParams {
         let image: UIImage
