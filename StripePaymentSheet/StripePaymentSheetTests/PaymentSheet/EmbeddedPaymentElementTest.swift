@@ -1166,20 +1166,14 @@ extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
 
 @MainActor
 class PaymentSheetAuthenticationContextViewControllerTest: XCTestCase {
-    var testWindow: UIWindow!
+    /// Records presented view controllers instead of presenting them, so the polling screen never appears and never starts polling.
+    class RecordingPresentingViewController: UIViewController {
+        var presentedViewControllers: [UIViewController] = []
 
-    override func setUp() {
-        super.setUp()
-        testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 812))
-        testWindow.rootViewController = UIViewController()
-        testWindow.isHidden = false
-    }
-
-    override func tearDown() {
-        testWindow.rootViewController?.presentedViewController?.dismiss(animated: false)
-        testWindow.isHidden = true
-        testWindow = nil
-        super.tearDown()
+        override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+            presentedViewControllers.append(viewControllerToPresent)
+            completion?()
+        }
     }
 
     func makeAction(authenticationContext: STPAuthenticationContext, paymentMethodType: String) -> STPPaymentHandlerPaymentIntentActionParams {
@@ -1195,7 +1189,7 @@ class PaymentSheetAuthenticationContextViewControllerTest: XCTestCase {
     func testPresentsPollingScreenImmediatelyWithoutWebView() {
         for type in [STPPaymentMethodType.blik, .mbWay, .bizum] {
             // Given an Embedded authentication context
-            let presentingViewController = testWindow.rootViewController!
+            let presentingViewController = RecordingPresentingViewController()
             let sut = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: .default)
             let action = makeAction(authenticationContext: sut, paymentMethodType: STPPaymentMethod.string(from: type)!)
 
@@ -1203,14 +1197,14 @@ class PaymentSheetAuthenticationContextViewControllerTest: XCTestCase {
             sut.presentPollingVCForAction(action: action, type: type, safariViewController: nil)
 
             // Then the polling screen is presented right away
-            XCTAssertTrue(presentingViewController.presentedViewController is PollingViewController, "Polling screen not presented for \(type)")
-            presentingViewController.presentedViewController?.dismiss(animated: false)
+            XCTAssertEqual(presentingViewController.presentedViewControllers.count, 1, "Polling screen not presented for \(type)")
+            XCTAssertTrue(presentingViewController.presentedViewControllers.first is PollingViewController, "Polling screen not presented for \(type)")
         }
     }
 
     func testPresentsPollingScreenAfterWebViewIsDismissed() {
         // Given an Embedded authentication context
-        let presentingViewController = testWindow.rootViewController!
+        let presentingViewController = RecordingPresentingViewController()
         let sut = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: .default)
         let action = makeAction(authenticationContext: sut, paymentMethodType: "pix")
         let safariViewController = SFSafariViewController(url: URL(string: "https://stripe.com")!)
@@ -1219,13 +1213,14 @@ class PaymentSheetAuthenticationContextViewControllerTest: XCTestCase {
         sut.presentPollingVCForAction(action: action, type: .pix, safariViewController: safariViewController)
 
         // Then the polling screen isn't presented while the web view is up
-        XCTAssertNil(presentingViewController.presentedViewController)
+        XCTAssertTrue(presentingViewController.presentedViewControllers.isEmpty)
 
         // When the web view is dismissed
         sut.authenticationContextDidDismiss(safariViewController)
 
-        // Then the polling screen is presented
-        XCTAssertTrue(presentingViewController.presentedViewController is PollingViewController)
+        // Then the polling screen is presented once
+        XCTAssertEqual(presentingViewController.presentedViewControllers.count, 1)
+        XCTAssertTrue(presentingViewController.presentedViewControllers.first is PollingViewController)
     }
 }
 
