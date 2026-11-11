@@ -60,6 +60,7 @@ extension CheckoutElementsController {
         // TODO: Lots of stuff in here because current Link code nominally requires it but it may not all really be necessary.
         let confirmOption: PaymentSheet.LinkConfirmOption
         let configuration: PaymentElementConfiguration
+        let customerProvider: CustomerProvider
         let returnURL: String
         let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: ConfirmationChallenge?
@@ -165,6 +166,7 @@ extension CheckoutElementsController {
 
         let paymentOption: PaymentOption
         let configuration: PaymentElementConfiguration
+        let customerProvider: CustomerProvider
         let nativeSheetPresentation: SheetImplementationResolver
         let integrationShape: PaymentSheet.IntegrationShape
 
@@ -178,6 +180,7 @@ extension CheckoutElementsController {
             }
             paymentOption = resolvedPaymentOption
             configuration = paymentElement.paymentSheetFlowController.configuration
+            customerProvider = paymentElement.paymentSheetFlowController.viewController.loadResult.customerProvider
             nativeSheetPresentation = paymentElement.paymentSheetFlowController.nativeSheetPresentation
             integrationShape = .flowController
         } else {
@@ -190,6 +193,7 @@ extension CheckoutElementsController {
             }
             paymentOption = resolvedPaymentOption
             configuration = paymentElement.embeddedPaymentElement.configuration
+            customerProvider = paymentElement.embeddedPaymentElement.loadResult.customerProvider
             nativeSheetPresentation = paymentElement.embeddedPaymentElement.nativeSheetPresentation
             integrationShape = .embedded
         }
@@ -231,6 +235,7 @@ extension CheckoutElementsController {
             return .link(.init(
                 confirmOption: confirmOption,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 returnURL: self.configuration.returnURL,
                 nativeSheetPresentation: nativeSheetPresentation,
                 confirmationChallenge: confirmationChallenge,

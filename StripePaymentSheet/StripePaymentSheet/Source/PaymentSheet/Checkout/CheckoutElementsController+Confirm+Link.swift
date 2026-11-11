@@ -155,6 +155,7 @@ extension CheckoutElementsController {
                         parameters: LinkConfirmationParameters(
                             confirmOption: confirmOption,
                             configuration: configuration,
+                            customerProvider: parameters.customerProvider,
                             returnURL: parameters.returnURL,
                             nativeSheetPresentation: parameters.nativeSheetPresentation,
                             confirmationChallenge: confirmationChallenge,
@@ -174,6 +175,7 @@ extension CheckoutElementsController {
             PaymentSheet.confirmLinkPaymentOption(
                 confirmOption: parameters.confirmOption,
                 configuration: configuration,
+                customerProvider: parameters.customerProvider,
                 paymentHandler: parameters.paymentHandler,
                 nativeSheetPresentation: parameters.nativeSheetPresentation,
                 authenticationContext: parameters.authenticationContext,

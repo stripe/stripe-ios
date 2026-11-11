@@ -103,6 +103,7 @@ final class SheetImplementationResolverTests: XCTestCase {
                 linkAccount: nil,
                 elementsSession: loadResult.elementsSession,
                 configuration: flowController.configuration,
+                customerProvider: loadResult.customerProvider,
                 nativeSheetPresentation: flowController.nativeSheetPresentation,
                 analyticsHelper: analyticsHelper
             )
@@ -146,6 +147,7 @@ final class SheetImplementationResolverTests: XCTestCase {
                 from: presenter,
                 intent: loadResult.intent,
                 elementsSession: loadResult.elementsSession,
+                customerProvider: loadResult.customerProvider,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false
             )
@@ -177,6 +179,7 @@ final class SheetImplementationResolverTests: XCTestCase {
                 mode: .payment,
                 elementsSession: loadResult.elementsSession,
                 intent: loadResult.intent,
+                customerProvider: loadResult.customerProvider,
                 paymentElementConfiguration: PaymentSheet.Configuration(),
                 linkBrand: .link,
                 appearance: nil,

@@ -27,6 +27,7 @@ final class USBankAccountPaymentMethodElementTest: XCTestCase {
                 previousCustomerInput: previousCustomerInput,
                 formCache: .init(),
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 paymentMethodOrientation: .vertical,
                 headerView: nil,
                 analyticsHelper: ._testValue(),

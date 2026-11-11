@@ -30,7 +30,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
-            intent: ._testValue(),
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -44,7 +43,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
-            intent: ._testValue(),
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(
@@ -71,7 +69,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
-            intent: ._testValue(),
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -86,7 +83,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
-            intent: ._testValue(),
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -102,7 +98,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
-            intent: ._testValue(),
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -115,7 +110,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     // MARK: canEdit tests
     func testCanEdit_multiplePaymentMethods_returnsTrue() {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
-                                                                       intent: ._testValue(),
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -129,7 +123,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         var noRemovalConfiguration = PaymentSheet.Configuration()
         noRemovalConfiguration.allowsRemovalOfLastSavedPaymentMethod = false
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: noRemovalConfiguration, customerProvider: CustomerProvider(customer: noRemovalConfiguration.customer),
-                                                                       intent: ._testValue(),
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -141,7 +134,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     func testCanEdit_singleRemovableCoBrandedCard_returnsFalse() {
         let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
-                                                                       intent: ._testValue(),
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -154,7 +146,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         configuration.allowsRemovalOfLastSavedPaymentMethod = false
         let singlePaymentMethods = [STPPaymentMethod._testCard()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
-                                                                       intent: ._testValue(),
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -167,7 +158,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         configuration.allowsRemovalOfLastSavedPaymentMethod = false
         let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
-                                                                       intent: ._testValue(),
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -182,7 +172,6 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
-            intent: ._testValue(),
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
@@ -197,8 +186,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     func testCanRemovePaymentMethods_checkoutSessionWithoutDetachPermission_returnsFalse() {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
-            customerProvider: CustomerProvider(customer: configuration.customer),
-            intent: makeCheckoutSessionIntent(canDetachPaymentMethod: false),
+            customerProvider: makeCheckoutSessionCustomerProvider(canDetachPaymentMethod: false),
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -212,8 +200,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     func testCanRemovePaymentMethods_checkoutSessionWithDetachPermission_returnsTrue() {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
-            customerProvider: CustomerProvider(customer: configuration.customer),
-            intent: makeCheckoutSessionIntent(canDetachPaymentMethod: true),
+            customerProvider: makeCheckoutSessionCustomerProvider(canDetachPaymentMethod: true),
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -224,7 +211,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
-    private func makeCheckoutSessionIntent(canDetachPaymentMethod: Bool) -> Intent {
+    /// Makes a customer provider backed by a Checkout Session, whose `payment_method_remove` option controls removal.
+    private func makeCheckoutSessionCustomerProvider(canDetachPaymentMethod: Bool) -> CustomerProvider {
         let session = CheckoutTestHelpers.makeSession([
             "saved_payment_method_options": ["payment_method_remove": canDetachPaymentMethod ? "enabled" : "disabled"],
             "customer": [
@@ -232,7 +220,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                 "payment_methods": [],
             ],
         ])
-        return .checkout(session.makePublicSession())
+        return CustomerProvider(checkoutSession: session.makePublicSession())
     }
 
 }

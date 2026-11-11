@@ -9,7 +9,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
 
-/// Provides a common view of customer data and capabilities across PaymentSheet integrations.
+/// Provides customer data, capabilities, and saved payment method operations across PaymentSheet integrations.
 struct CustomerProvider {
 
     private enum Backing {
@@ -97,6 +97,204 @@ struct CustomerProvider {
             return customer?.customerAccessProvider.analyticValue
         case .checkoutSession:
             return "checkout_session"
+        }
+    }
+
+    func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
+        switch backing {
+        case .checkoutSession(let session):
+            return session.canDetachPaymentMethod
+        case .customer:
+            return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        }
+    }
+
+    func allowsPaymentMethodUpdate(elementsSession: STPElementsSession) -> Bool {
+        switch backing {
+        case .checkoutSession:
+            return true
+        case .customer:
+            return elementsSession.paymentMethodUpdateForPaymentSheet
+        }
+    }
+
+    private enum Error: String, AnalyticLoggableError {
+
+        case missingEphemeralKey
+        case missingUpdatedPaymentMethod
+
+        var analyticsErrorType: String {
+            // Preserve the analytics identity used before these operations moved to the provider.
+            return "StripePaymentSheet.SavedPaymentMethodManager.Error"
+        }
+
+        var analyticsErrorCode: String {
+            return rawValue
+        }
+
+        var additionalNonPIIErrorDetails: [String: Any] {
+            return [:]
+        }
+    }
+
+    func ephemeralKeySecret(basedOn elementsSession: STPElementsSession?) -> String? {
+        guard case .customer(let customer) = backing else {
+            return nil
+        }
+        return customer?.ephemeralKeySecret(basedOn: elementsSession)
+    }
+
+    @MainActor
+    func update(
+        paymentMethod: STPPaymentMethod,
+        with updateParams: STPPaymentMethodUpdateParams,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient
+    ) async throws -> STPPaymentMethod {
+        let updatedPaymentMethod: STPPaymentMethod
+        switch backing {
+        case .checkoutSession(let session):
+            let billing = CheckoutElementsController.PaymentMethodBillingDetails(updateParams.billingDetails)
+            let expiry = CheckoutElementsController.PaymentMethodExpiryDetails(updateParams.card)
+            guard billing != nil || expiry != nil else {
+                throw PaymentSheetError.unknown(
+                    debugDescription: "Tried to update a payment method without billing details or expiry details."
+                )
+            }
+            let updatedSession = try await apiClient.updatePaymentMethod(
+                paymentMethod.stripeId,
+                inCheckoutSession: session.id,
+                clientSecret: session.clientSecret,
+                billingDetails: billing,
+                expiryDetails: expiry
+            )
+            guard let paymentMethod = updatedSession.customer?.paymentMethods.first(where: {
+                $0.stripeId == paymentMethod.stripeId
+            }) else {
+                let errorAnalytic = ErrorAnalytic(
+                    event: .unexpectedPaymentSheetError,
+                    error: Error.missingUpdatedPaymentMethod,
+                    additionalNonPIIParams: ["payment_method_id": paymentMethod.stripeId]
+                )
+                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                throw PaymentSheetError.unknown(
+                    debugDescription: "Checkout session response didn't include the updated payment method."
+                )
+            }
+            updatedPaymentMethod = paymentMethod
+        case .customer:
+            guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+                logMissingEphemeralKey()
+                throw PaymentSheetError.unknown(
+                    debugDescription: "Failed to read ephemeral key while updating a payment method."
+                )
+            }
+            updatedPaymentMethod = try await apiClient.updatePaymentMethod(
+                with: paymentMethod.stripeId,
+                paymentMethodUpdateParams: updateParams,
+                ephemeralKeySecret: ephemeralKey
+            )
+        }
+        // API responses don't contain the local Link details attached to the original method.
+        updatedPaymentMethod.updateLocalFields(from: paymentMethod)
+        return updatedPaymentMethod
+    }
+
+    @MainActor
+    func detach(
+        paymentMethod: STPPaymentMethod,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient
+    ) {
+        // Removal is optimistic; callers update their UI without waiting for the network response.
+        switch backing {
+        case .checkoutSession(let session):
+            Task {
+                try? await apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCheckoutSession: session.id,
+                    clientSecret: session.clientSecret
+                )
+            }
+        case .customer(let customer):
+            guard let customer,
+                  let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+                logMissingEphemeralKey()
+                return
+            }
+            switch customer.customerAccessProvider {
+            case .customerSession(let clientSecret):
+                if paymentMethod.type == .card {
+                    apiClient.detachPaymentMethodRemoveDuplicates(
+                        paymentMethod.stripeId,
+                        customerId: customer.id,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                } else {
+                    apiClient.detachPaymentMethod(
+                        paymentMethod.stripeId,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                }
+            case .legacyCustomerEphemeralKey:
+                apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCustomerUsing: ephemeralKey
+                ) { _ in }
+            }
+        }
+    }
+
+    @MainActor
+    func setAsDefaultPaymentMethod(
+        _ paymentMethodID: String,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient
+    ) async throws -> STPCustomer {
+        guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+            logMissingEphemeralKey()
+            throw PaymentSheetError.unknown(
+                debugDescription: "Failed to read ephemeral key while setting a payment method as default."
+            )
+        }
+        guard let customerID else {
+            throw PaymentSheetError.unknown(
+                debugDescription: "Failed to read customerId while setting a payment method as default."
+            )
+        }
+        return try await apiClient.setAsDefaultPaymentMethod(
+            paymentMethodID,
+            for: customerID,
+            using: ephemeralKey
+        )
+    }
+
+    private func logMissingEphemeralKey() {
+        let errorAnalytic = ErrorAnalytic(
+            event: .unexpectedPaymentSheetError,
+            error: Error.missingEphemeralKey,
+            additionalNonPIIParams: ["customer_access_provider": analyticValue ?? "unknown"]
+        )
+        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+    }
+
+    var supportsLinkSetupFutureUsage: Bool {
+        return usesCustomerSession
+    }
+
+    func savePaymentMethodConsentBehavior(
+        elementsSession: STPElementsSession
+    ) -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        switch backing {
+        case .checkoutSession(let session):
+            guard hasCustomer, session.savedPaymentMethodsOfferSave?.enabled == true else {
+                return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+            }
+            return .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
+        case .customer:
+            return elementsSession.savePaymentMethodConsentBehavior
         }
     }
 }

@@ -654,6 +654,7 @@ extension PaymentSheet {
             presentingViewController.presentNativeLink(
                 selectedPaymentDetailsID: selectedPaymentDetailsID,
                 configuration: configuration,
+                customerProvider: viewController.loadResult.customerProvider,
                 nativeSheetPresentation: nativeSheetPresentation,
                 intent: intent,
                 elementsSession: elementsSession,
@@ -716,6 +717,7 @@ extension PaymentSheet {
             func confirm() {
                 PaymentSheet.confirm(
                     configuration: self.configuration,
+                    customerProvider: self.viewController.loadResult.customerProvider,
                     nativeSheetPresentation: self.nativeSheetPresentation,
                     authenticationContext: authenticationContext,
                     intent: self.intent,
@@ -804,7 +806,6 @@ extension PaymentSheet {
         ) {
             // Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
             self.analyticsHelper.didLoad(loadResult)
-
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
                 nativeSheetPresentation: self.nativeSheetPresentation,

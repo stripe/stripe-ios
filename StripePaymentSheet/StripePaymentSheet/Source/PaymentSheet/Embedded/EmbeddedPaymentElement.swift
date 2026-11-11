@@ -233,6 +233,7 @@ public final class EmbeddedPaymentElement {
             selection: isPreviousPaymentOptionStillDisplayed ? previousSelectedRowType : nil,
             previousPaymentOption: previousPaymentOption,
             configuration: self.configuration,
+            customerProvider: loadResult.customerProvider,
             intent: loadResult.intent,
             elementsSession: loadResult.elementsSession,
             savedPaymentMethods: loadResult.savedPaymentMethods,
@@ -400,10 +401,6 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
-    internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
-    }()
-
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     internal var confirmationChallenge: ConfirmationChallenge?

@@ -10,11 +10,13 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
 extension PaymentSheet {
+
     /// Routes deferred intent confirmation to either the regular flow or confirmation token flow based on available handlers
     @MainActor
     static func routeDeferredIntentConfirmation(
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         intentConfig: PaymentSheet.IntentConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
@@ -33,6 +35,7 @@ extension PaymentSheet {
             return await handleDeferredIntentConfirmation_confirmationToken(
                 confirmType: confirmType,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 intentConfig: intentConfig,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler,
@@ -47,6 +50,7 @@ extension PaymentSheet {
             return await handleDeferredIntentConfirmation(
                 confirmType: confirmType,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 intentConfig: intentConfig,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler,
@@ -64,6 +68,7 @@ extension PaymentSheet {
     private static func handleDeferredIntentConfirmation(
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         intentConfig: PaymentSheet.IntentConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
@@ -140,7 +145,8 @@ extension PaymentSheet {
                     let paymentIntentParams = makePaymentIntentParams(
                         confirmPaymentMethodType: confirmType,
                         paymentIntent: paymentIntent,
-                        configuration: configuration
+                        configuration: configuration,
+                        customerProvider: customerProvider
                     )
                     // Set top-level SFU and PMO SFU to match the intent config
                     setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)
@@ -156,7 +162,7 @@ extension PaymentSheet {
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
@@ -173,7 +179,7 @@ extension PaymentSheet {
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }
@@ -197,7 +203,7 @@ extension PaymentSheet {
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
@@ -214,7 +220,7 @@ extension PaymentSheet {
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }

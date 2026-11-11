@@ -93,6 +93,18 @@ final class CustomerProviderTests: XCTestCase {
         XCTAssertEqual(paymentMethods.map(\.stripeId), ["pm_checkout_default", "pm_merchant_default"])
     }
 
+    private func makeLoadResult(session: CheckoutElementsController.Session) -> PaymentSheetLoader.LoadResult {
+        return .init(
+            intent: .checkout(session),
+            elementsSession: session.elementsSession,
+            savedPaymentMethods: session.customer?.paymentMethods ?? [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(checkoutSession: session)
+        )
+    }
+
     func testSavedPaymentMethodsComeFromTheResolvedCustomerSource() {
         // Given different saved methods in each loading source
         let elementsSession = STPElementsSession._testValue(
@@ -187,6 +199,206 @@ final class CustomerProviderTests: XCTestCase {
 
         for (provider, expected) in cases {
             XCTAssertEqual(provider.analyticValue, expected)
+        }
+    }
+
+    func testCheckoutPermissionsUseTheCheckoutSession() {
+        for canDetach in [true, false] {
+            let session = CheckoutTestHelpers.makeSession([
+                "customer": ["id": "cus_checkout"],
+                "saved_payment_method_options": ["payment_method_remove": canDetach ? "enabled" : "disabled"],
+            ]).makePublicSession()
+            let provider = CustomerProvider(checkoutSession: session)
+
+            XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: .emptyElementsSession), canDetach)
+            XCTAssertTrue(provider.allowsPaymentMethodUpdate(elementsSession: .emptyElementsSession))
+        }
+    }
+
+    func testCustomerPermissionsUseTheElementsSession() {
+        let customerSessionProvider = CustomerProvider(
+            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")
+        )
+        let legacyProvider = CustomerProvider(
+            customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")
+        )
+        // Builds customer session data with the given mobile Payment Element settings
+        func mobilePaymentElementData(enabled: Bool, paymentMethodRemove: String) -> [String: Any] {
+            return [
+                "mobile_payment_element": [
+                    "enabled": enabled,
+                    "features": [
+                        "payment_method_save": "enabled",
+                        "payment_method_remove": paymentMethodRemove,
+                    ],
+                ],
+            ]
+        }
+        // Some cases expect removal and update to differ, so mixing up the two permissions fails the test
+        let cases: [(String, CustomerProvider, [String: Any]?, (removal: Bool, update: Bool))] = [
+            (
+                "Customer session with removal enabled",
+                customerSessionProvider,
+                mobilePaymentElementData(enabled: true, paymentMethodRemove: "enabled"),
+                (removal: true, update: true)
+            ),
+            (
+                "Customer session with the mobile Payment Element disabled",
+                customerSessionProvider,
+                mobilePaymentElementData(enabled: false, paymentMethodRemove: "enabled"),
+                (removal: false, update: false)
+            ),
+            (
+                "Customer session with removal disabled",
+                customerSessionProvider,
+                mobilePaymentElementData(enabled: true, paymentMethodRemove: "disabled"),
+                (removal: false, update: true)
+            ),
+            // The permissions come from the elements session, which has no customer session for legacy ephemeral key customers
+            (
+                "Legacy ephemeral key customer without a customer session",
+                legacyProvider,
+                nil,
+                (removal: true, update: false)
+            ),
+        ]
+
+        for (description, provider, customerSessionData, expected) in cases {
+            let elementsSession = STPElementsSession._testValue(
+                paymentMethodTypes: ["card"],
+                customerSessionData: customerSessionData
+            )
+
+            XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: elementsSession), expected.removal, description)
+            XCTAssertEqual(provider.allowsPaymentMethodUpdate(elementsSession: elementsSession), expected.update, description)
+        }
+    }
+
+    func testLoadedCheckoutCustomerDoesNotReplaceMerchantConfiguration() async {
+        // Given a merchant configuration and a separate Checkout customer
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.customer = .init(id: "cus_merchant", ephemeralKeySecret: "ek_test")
+        let session = CheckoutTestHelpers.makeSession()
+            .withCustomer(id: "cus_checkout")
+            .makePublicSession()
+
+        // When the payment surface accepts the Checkout load result
+        let sut = EmbeddedPaymentElement(
+            configuration: configuration,
+            loadResult: makeLoadResult(session: session),
+            analyticsHelper: ._testValue()
+        )
+
+        // Then consumers can use the loaded customer without mutating merchant input
+        XCTAssertEqual(sut.loadResult.customerProvider.customerID, "cus_checkout")
+        XCTAssertEqual(sut.configuration.customer?.id, "cus_merchant")
+    }
+
+    func testLegacyCustomerUsesTheConfiguredEphemeralKey() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test_legacy")
+        )
+
+        XCTAssertEqual(provider.ephemeralKeySecret(basedOn: nil), "ek_test_legacy")
+    }
+
+    func testCustomerSessionCredentialsUseTheLoadedAPIKey() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test_secret")
+        )
+        let elementsSession = STPElementsSession
+            .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_from_session")
+
+        XCTAssertEqual(provider.ephemeralKeySecret(basedOn: elementsSession), "ek_from_session")
+        XCTAssertNil(provider.ephemeralKeySecret(basedOn: nil))
+    }
+
+    func testCheckoutAndGuestCustomersDoNotUseElementsSessionEphemeralKeys() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        let providers: [CustomerProvider] = [
+            .init(customer: nil),
+            .init(checkoutSession: checkoutSession),
+        ]
+        let elementsSession = STPElementsSession
+            .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_unrelated")
+
+        for provider in providers {
+            XCTAssertNil(provider.ephemeralKeySecret(basedOn: elementsSession))
+        }
+    }
+
+    func testOnlyCustomerSessionSupportsLinkSetupFutureUsage() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        let cases: [(CustomerProvider, Bool)] = [
+            (.init(customer: nil), false),
+            (.init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")), false),
+            (.init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")), true),
+            (.init(checkoutSession: checkoutSession), false),
+        ]
+
+        for (provider, expected) in cases {
+            XCTAssertEqual(provider.supportsLinkSetupFutureUsage, expected)
+        }
+    }
+
+    func testCheckoutSaveConsentRequiresACustomerAndAnEnabledOffer() {
+        for hasCustomer in [true, false] {
+            for enabled in [true, false] {
+                var overrides: [String: Any] = [
+                    "saved_payment_method_options": ["payment_method_save": enabled ? "enabled" : "disabled"],
+                ]
+                if hasCustomer {
+                    overrides["customer"] = ["id": "cus_checkout"]
+                }
+                let provider = CustomerProvider(
+                    checkoutSession: CheckoutTestHelpers.makeSession(overrides).makePublicSession()
+                )
+
+                XCTAssertEqual(
+                    provider.savePaymentMethodConsentBehavior(elementsSession: .emptyElementsSession),
+                    hasCustomer && enabled
+                        ? .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
+                        : .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+                )
+            }
+        }
+
+        let providerWithoutOffer = CustomerProvider(
+            checkoutSession: CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        )
+        XCTAssertEqual(
+            providerWithoutOffer.savePaymentMethodConsentBehavior(elementsSession: .emptyElementsSession),
+            .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+        )
+    }
+
+    func testCustomerSaveConsentUsesTheElementsSession() {
+        let provider = CustomerProvider(
+            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")
+        )
+        XCTAssertEqual(provider.savePaymentMethodConsentBehavior(elementsSession: .emptyElementsSession), .legacy)
+
+        for enabled in [true, false] {
+            let elementsSession = STPElementsSession._testValue(
+                paymentMethodTypes: ["card"],
+                customerSessionData: [
+                    "mobile_payment_element": [
+                        "enabled": true,
+                        "features": [
+                            "payment_method_save": enabled ? "enabled" : "disabled",
+                            "payment_method_remove": "enabled",
+                        ],
+                    ],
+                ]
+            )
+
+            XCTAssertEqual(
+                provider.savePaymentMethodConsentBehavior(elementsSession: elementsSession),
+                enabled
+                    ? .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
+                    : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
+            )
         }
     }
 }

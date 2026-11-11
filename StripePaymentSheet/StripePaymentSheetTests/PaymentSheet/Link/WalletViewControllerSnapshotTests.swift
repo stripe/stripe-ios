@@ -125,6 +125,7 @@ extension WalletViewControllerSnapshotTests {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 linkBrand: .link,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: false,
