@@ -11,7 +11,7 @@ Repro:
 Test:
 `CheckoutGuideUITests.testEmailUpdatePreservesCard` failed on the real example-app UI: “Select payment method” replaced “Visa, •••• 4242.” `testEmailUpdatePreservesCardWithoutLink` passed in the same run, `/tmp/checkout-guide-final-flows.xcresult`. Both tests use the same raw Session parameters and customer interactions. The test field asserts the exact submitted email, so this is not a mistyped address or a keyboard covering Pay.
 
-The separate missing-email recovery flow also captured the [reopened card form](guide_repros/images/card-form-after-email-update.png): card details remain, but Link signup is checked again and Continue is disabled until the customer declines it again. That recovery then completes payment. Compare [selection after the email update](guide_repros/images/email-update-clears-card.png) with the [Link-disabled control](guide_repros/images/email-update-no-link-control.png).
+The separate missing-email recovery flow also captured the [reopened card form](../guide_repros/images/card-form-after-email-update.png): card details remain, but Link signup is checked again and Continue is disabled until the customer declines it again. That recovery then completes payment. Compare [selection after the email update](../guide_repros/images/email-update-clears-card.png) with the [Link-disabled control](../guide_repros/images/email-update-no-link-control.png).
 
 Elaboration:
 The call path is `CheckoutController.updateEmail` → `performUnqueuedUpdate` → `updateForSessionChange` → `PaymentElement.apply`. That rebuilds the FlowController with `applyLoadResult`, then derives Checkout's payment option from the rebuilt form. Preserve a valid accepted card and the customer's Link opt-out across this rebuild.

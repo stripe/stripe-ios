@@ -4,7 +4,7 @@ A guide audit must ask whether a merchant can discover and complete a supported 
 
 ## Confirmed omission: saving and returning customers
 
-[Report](ISSUE_integration-guide_missing-saved-payment-method-workflow.md).
+[Report](checkout_issues/ISSUE_integration-guide_missing-saved-payment-method-workflow.md).
 
 The guide's `customer_email` example does not enable merchant saving. A Customer alone does not enable it either. The verified setup replaces `customer_email` with the server's Customer ID and adds:
 

@@ -1,12 +1,12 @@
-  Before filing, check existing `ISSUE_*.md` files for the same root cause (parallel agents may
-  cover overlapping code). If found, do not file a duplicate — note it instead.
+  Before filing, check existing `checkout_issues/ISSUE_*.md` files for the same root cause (parallel
+  agents may cover overlapping code). If found, do not file a duplicate — note it instead.
 
   Verification: you may edit any source in this worktree, including test infra helpers like
   `STPTestingAPIClient+Swift.swift` — this is a temporary branch, nothing gets pushed. Prefer a
   live repro against the real test backend (`createCheckoutSession(...)` and friends, which can
   construct arbitrary Checkout Session configs) over a stubbed/mocked unit test when you're
   checking a claim against actual backend behavior, not just your own code's internal logic.
-  Do not run `git add`/`git commit`. Leave repro tests and `ISSUE_*.md` files as uncommitted
+  Do not run `git add`/`git commit`. Leave repro tests and `checkout_issues/ISSUE_*.md` files as uncommitted
   changes in the worktree.
 
   Known unfinished preview features are out of scope per the user's 2026-11-03 direction.
@@ -21,8 +21,8 @@
     for unstructured Tasks in this codebase it isn't, unless something explicitly calls
     `.cancel()` on that specific Task. Grep for `.cancel()`/`isCancelled`/`checkCancellation` on
     the path you're claiming, don't assert reachability you haven't checked.
-  - Produce a `ISSUE_[surface]_[description].md` file using exactly this template. Do not deviate,
-    do not add extra sections:
+  - Produce a `ISSUE_[surface]_[description].md` file in the `checkout_issues/` folder using
+    exactly this template. Do not deviate, do not add extra sections:
 
     ```
     Summary: [concrete impact, starting from the merchant/customer e.g. call public API x or do xyz in the UI -> ... -> bug]

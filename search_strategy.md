@@ -5,7 +5,7 @@ Root: `StripePaymentSheet/StripePaymentSheet/Source/PaymentSheet/Checkout/`
 Each agent:
 1. Reads `bug_report_guidance.md` first.
 2. Starts with its assigned surface, then follows actual callers and dependencies across boundaries. In particular, inspect the enclosing operation before claiming a queue is bypassed.
-3. Reports candidates with concrete triggers and complete call paths. The lead verifies the repro before filing `ISSUE_<surface>_<description>.md` in the worktree root.
+3. Reports candidates with concrete triggers and complete call paths. The lead verifies the repro before filing `ISSUE_<surface>_<description>.md` in the `checkout_issues/` folder.
 4. May edit source, including test infra helpers (this is a temporary branch, nothing here gets
    pushed). Do not run `git add`/`git commit` — leave changes uncommitted in the worktree.
 
@@ -50,7 +50,7 @@ Each agent:
 
 ## After all agents finish: merge pass
 
-One more agent reads all `ISSUE_*.md` files, dedupes by root cause (not by filename), and
+One more agent reads all `checkout_issues/ISSUE_*.md` files, dedupes by root cause (not by filename), and
 produces a single ranked list (confidence, then surface 1–3 before 4–6) for human review.
 
 ## Execution after the audit

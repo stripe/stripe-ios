@@ -7,7 +7,7 @@ plausible merchant/customer action isn't handled.
 
 This catches a different bug *shape*: contract violations and misuse-handling gaps, not
 internal races. Run alongside `search_strategy.md`, not instead of it — same
-`bug_report_guidance.md` format, same `ISSUE_<surface>_<description>.md` output, same merge
+`bug_report_guidance.md` format, same `checkout_issues/ISSUE_<surface>_<description>.md` output, same merge
 pass at the end.
 
 Docs root (fetch each with `execute_internal_search` / `fetch_internal_search_result`, type
@@ -47,7 +47,7 @@ response.
 
 You may edit this helper (and any other source, including test infra) to add the params you
 need — this is a temporary branch, nothing here gets pushed upstream. Do not run `git add`/
-`git commit` — leave repro tests and `ISSUE_*.md` files as uncommitted changes in the worktree.
+`git commit` — leave repro tests and `checkout_issues/ISSUE_*.md` files as uncommitted changes in the worktree.
 
 ## Partition (6 agents, by doc)
 

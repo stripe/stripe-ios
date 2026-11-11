@@ -12,19 +12,19 @@ This pass adds **four guide reports and one SDK report**, bringing the branch to
 
 | Area | Finding and report |
 | --- | --- |
-| SDK | [Shipping form restores an old address](ISSUE_sub-elements_shipping-address-element-never-resyncs-after-construction.md) |
-| SDK | [Queued shipping clears/reverts are dropped](ISSUE_state-machine_shipping-update-noop-check-drops-queued-reverts.md) |
-| SDK | [COP display rounds away cents](ISSUE_session-model_formatted-cop-total-rounds-away-cents.md) |
-| SDK | [Link web handoff retains old email](ISSUE_config_link-web-handoff-keeps-email-before-update.md) |
-| SDK — new | [Email update clears selected card with Link enabled](ISSUE_config_email-update-clears-selected-card-with-link.md) |
-| Guide | [Preview import does not expose Checkout](ISSUE_integration-guide_ios-preview-import-does-not-expose-checkout.md) |
-| Guide | [Pay requires optional shipping](ISSUE_integration-guide_pay-button-requires-optional-shipping.md) |
-| Guide | [Result switch fails with a resilient Swift 6 framework](ISSUE_integration-guide_result-switch-fails-with-swift6-framework.md) |
-| Guide | [Missing Customer/save/reuse workflow](ISSUE_integration-guide_missing-saved-payment-method-workflow.md) |
-| Guide — new | [Return URL step configures an unused API](ISSUE_integration-guide_return-url-configures-unused-embedded-api.md) |
-| Guide — new | [Pay ignores required email](ISSUE_integration-guide_pay-button-ignores-required-email.md) |
-| Guide — new | [SwiftUI reloads checkout on navigation return](ISSUE_integration-guide_swiftui-reloads-checkout-on-navigation.md) |
-| Guide — new | [Fulfillment omits payment-status and deduplication rules](ISSUE_integration-guide_fulfillment-omits-payment-status-and-deduplication.md) |
+| SDK | [Shipping form restores an old address](checkout_issues/ISSUE_sub-elements_shipping-address-element-never-resyncs-after-construction.md) |
+| SDK | [Queued shipping clears/reverts are dropped](checkout_issues/ISSUE_state-machine_shipping-update-noop-check-drops-queued-reverts.md) |
+| SDK | [COP display rounds away cents](checkout_issues/ISSUE_session-model_formatted-cop-total-rounds-away-cents.md) |
+| SDK | [Link web handoff retains old email](checkout_issues/ISSUE_config_link-web-handoff-keeps-email-before-update.md) |
+| SDK — new | [Email update clears selected card with Link enabled](checkout_issues/ISSUE_config_email-update-clears-selected-card-with-link.md) |
+| Guide | [Preview import does not expose Checkout](checkout_issues/ISSUE_integration-guide_ios-preview-import-does-not-expose-checkout.md) |
+| Guide | [Pay requires optional shipping](checkout_issues/ISSUE_integration-guide_pay-button-requires-optional-shipping.md) |
+| Guide | [Result switch fails with a resilient Swift 6 framework](checkout_issues/ISSUE_integration-guide_result-switch-fails-with-swift6-framework.md) |
+| Guide | [Missing Customer/save/reuse workflow](checkout_issues/ISSUE_integration-guide_missing-saved-payment-method-workflow.md) |
+| Guide — new | [Return URL step configures an unused API](checkout_issues/ISSUE_integration-guide_return-url-configures-unused-embedded-api.md) |
+| Guide — new | [Pay ignores required email](checkout_issues/ISSUE_integration-guide_pay-button-ignores-required-email.md) |
+| Guide — new | [SwiftUI reloads checkout on navigation return](checkout_issues/ISSUE_integration-guide_swiftui-reloads-checkout-on-navigation.md) |
+| Guide — new | [Fulfillment omits payment-status and deduplication rules](checkout_issues/ISSUE_integration-guide_fulfillment-omits-payment-status-and-deduplication.md) |
 
 New fixtures: `Checkout Guide/CheckoutGuideContainer.swift`, `CheckoutGuideUITests.swift`, and the `STP_CHECKOUT_GUIDE` example-app route. Production SDK code is unchanged. [Portable results](guide_repros/walkthrough-results.txt) and report-linked screenshots distinguish actual failures from corrected harness interactions. Pinned SwiftLint and whitespace checks pass.
 
@@ -32,19 +32,19 @@ New fixtures: `Checkout Guide/CheckoutGuideContainer.swift`, `CheckoutGuideUITes
 
 The earlier completion claim was too broad: the SDK scenario pass used docs as input but had not audited the guide's samples themselves. A subsequent direct audit of the core iOS guide found **three additional guide issues**, bringing the local report count to seven. See [integration_guide_audit.md](integration_guide_audit.md) for exact scope, sources, compiler controls, live checks, and limits.
 
-- [Documented SPI import does not expose CheckoutController](ISSUE_integration-guide_ios-preview-import-does-not-expose-checkout.md).
-- [Pay-button predicate requires shipping even when collection is omitted](ISSUE_integration-guide_pay-button-requires-optional-shipping.md).
-- [Result switch fails in Swift 6 with a resilient framework](ISSUE_integration-guide_result-switch-fails-with-swift6-framework.md).
+- [Documented SPI import does not expose CheckoutController](checkout_issues/ISSUE_integration-guide_ios-preview-import-does-not-expose-checkout.md).
+- [Pay-button predicate requires shipping even when collection is omitted](checkout_issues/ISSUE_integration-guide_pay-button-requires-optional-shipping.md).
+- [Result switch fails in Swift 6 with a resilient framework](checkout_issues/ISSUE_integration-guide_result-switch-fails-with-swift6-framework.md).
 
 The guide's server request body was also exercised verbatim and successfully loaded and paid. `guide_repros/check_swift_samples.py` reproduces both compilation problems and verifies their minimal corrections. These checks do not establish exhaustive coverage of all sibling guides or Android/React Native examples.
 
 ## SDK behavior findings
 
-1. [Shipping Address Element restores stale form values](ISSUE_sub-elements_shipping-address-element-never-resyncs-after-construction.md). Retained from the original audit; real UI reproduction and a form-level test verify the overwrite.
-2. [Overlapping shipping API calls discard later clears/reverts](ISSUE_state-machine_shipping-update-noop-check-drops-queued-reverts.md). Three failing local repros and the same three failures against the real test backend; two controls pass in each matrix. This requires overlapping programmatic calls, not taps through controls disabled while `isUpdating`.
-3. [COP total strings round away cents](ISSUE_session-model_formatted-cop-total-rounds-away-cents.md). A real session for 1,234,567 minor units exposes `COP 12,346` instead of `COP 12,345.67` on iOS 18.5, en_US. Numeric amounts remain correct. JPY control passes.
+1. [Shipping Address Element restores stale form values](checkout_issues/ISSUE_sub-elements_shipping-address-element-never-resyncs-after-construction.md). Retained from the original audit; real UI reproduction and a form-level test verify the overwrite.
+2. [Overlapping shipping API calls discard later clears/reverts](checkout_issues/ISSUE_state-machine_shipping-update-noop-check-drops-queued-reverts.md). Three failing local repros and the same three failures against the real test backend; two controls pass in each matrix. This requires overlapping programmatic calls, not taps through controls disabled while `isUpdating`.
+3. [COP total strings round away cents](checkout_issues/ISSUE_session-model_formatted-cop-total-rounds-away-cents.md). A real session for 1,234,567 minor units exposes `COP 12,346` instead of `COP 12,345.67` on iOS 18.5, en_US. Numeric amounts remain correct. JPY control passes.
 
-4. [Link web handoff retains the previous email](ISSUE_config_link-web-handoff-keeps-email-before-update.md). Real session creation and initial Link lookup; after `updateEmail`, the session and Payment Element contain the new email but generated web parameters still contain the old email. No web presentation or payment is claimed by this repro.
+4. [Link web handoff retains the previous email](checkout_issues/ISSUE_config_link-web-handoff-keeps-email-before-update.md). Real session creation and initial Link lookup; after `updateEmail`, the session and Payment Element contain the new email but generated web parameters still contain the old email. No web presentation or payment is claimed by this repro.
 
 The SDK scenario matrix below finished with four distinct root causes. It was not a full guide-sample audit; the follow-up and correction above record that additional work.
 

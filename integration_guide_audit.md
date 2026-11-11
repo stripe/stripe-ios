@@ -10,9 +10,9 @@ Source: [Build a checkout with Mobile Checkout Elements](https://docs.corp.strip
 
 ## Confirmed guide defects
 
-- [Unavailable Swift SPI import](ISSUE_integration-guide_ios-preview-import-does-not-expose-checkout.md): the documented import fails to expose CheckoutController in this branch; changing only the import compiles. Also present in the migration guide.
-- [Pay requires optional shipping](ISSUE_integration-guide_pay-button-requires-optional-shipping.md): copying the UIKit/SwiftUI predicate into a non-shipping integration disables a purchase that succeeds through the SDK. The complete four-Element example with shipping enabled is unaffected.
-- [Swift 6 result switch](ISSUE_integration-guide_result-switch-fails-with-swift6-framework.md): the documented handler fails against a resilient framework without an unknown-case fallback. Adding only that fallback compiles; this is not a claim about SwiftPM builds without library evolution.
+- [Unavailable Swift SPI import](checkout_issues/ISSUE_integration-guide_ios-preview-import-does-not-expose-checkout.md): the documented import fails to expose CheckoutController in this branch; changing only the import compiles. Also present in the migration guide.
+- [Pay requires optional shipping](checkout_issues/ISSUE_integration-guide_pay-button-requires-optional-shipping.md): copying the UIKit/SwiftUI predicate into a non-shipping integration disables a purchase that succeeds through the SDK. The complete four-Element example with shipping enabled is unaffected.
+- [Swift 6 result switch](checkout_issues/ISSUE_integration-guide_result-switch-fails-with-swift6-framework.md): the documented handler fails against a resilient framework without an unknown-case fallback. Adding only that fallback compiles; this is not a claim about SwiftPM builds without library evolution.
 
 These are separate from the four SDK behavior reports. No additional SDK defect was inferred from a test-harness crash or a guide compilation failure.
 
