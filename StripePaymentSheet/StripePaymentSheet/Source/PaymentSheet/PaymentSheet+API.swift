@@ -308,8 +308,12 @@ extension PaymentSheet {
                         return .unknown
                     }
                 }()
-                // TODO: For `.serverDriven`, pass `processingIsSuccess` and `postRedirectPollSeconds` to `paymentHandler`
-                // once it can take behaviors for payment method types it doesn't know. Until then it treats them like `.unknown`.
+                let serverDrivenPaymentMethod: ServerDrivenPaymentMethod? = {
+                    if case .serverDriven(let serverDrivenPaymentMethod) = confirmParams.paymentMethodType {
+                        return serverDrivenPaymentMethod
+                    }
+                    return nil
+                }()
                 // Set allow_redisplay on params
                 setAllowRedisplay(confirmParams, paymentMethodType)
                 confirmParams.paymentMethodParams.radarOptions = radarOptions
@@ -327,6 +331,13 @@ extension PaymentSheet {
                         paymentIntent: paymentIntent,
                         configuration: configuration
                     )
+                    if let serverDrivenPaymentHandler = makeServerDrivenPaymentHandler(for: serverDrivenPaymentMethod, paymentHandler: paymentHandler) {
+                        // Server-driven payment methods don't save, so there's no default payment method to set.
+                        let result = await serverDrivenPaymentHandler.confirm(params: params, authenticationContext: authenticationContext)
+                        await confirmationChallenge?.complete()
+                        completion(result, nil)
+                        return
+                    }
                     paymentHandler.confirmPaymentIntent(
                         params: params,
                         authenticationContext: authenticationContext,
@@ -340,6 +351,8 @@ extension PaymentSheet {
                     )
                     // MARK: ↪ SetupIntent
                 case .setupIntent(let setupIntent):
+                    // ServerDrivenPaymentHandler is PaymentIntent-only for now, so server-driven payment methods still
+                    // confirm SetupIntents with STPPaymentHandler. To add them, give it a `confirm(setupIntentParams:)`.
                     let setupIntentParams = makeSetupIntentParams(
                         confirmPaymentMethodType: .new(
                             params: confirmParams.paymentMethodParams,
@@ -377,7 +390,8 @@ extension PaymentSheet {
                             paymentHandler: paymentHandler,
                             isFlowController: isFlowController,
                             allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                            elementsSession: elementsSession
+                            elementsSession: elementsSession,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod
                         )
                         await confirmationChallenge?.complete()
                         completion(result.result, result.deferredIntentConfirmationType)
@@ -1083,5 +1097,20 @@ private extension ConsumerPaymentDetails {
         }()
 
         return elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp(paymentMethodType))
+    }
+}
+
+extension PaymentSheet {
+    /// Returns the handler that confirms a server-driven payment method's PaymentIntent, or nil to use `STPPaymentHandler`.
+    @MainActor
+    static func makeServerDrivenPaymentHandler(for serverDrivenPaymentMethod: ServerDrivenPaymentMethod?, paymentHandler: STPPaymentHandler) -> ServerDrivenPaymentHandler? {
+        guard let serverDrivenPaymentMethod else {
+            return nil
+        }
+        return ServerDrivenPaymentHandler(
+            spec: serverDrivenPaymentMethod.confirmSpec,
+            paymentMethodType: serverDrivenPaymentMethod.type,
+            apiClient: paymentHandler.apiClient
+        )
     }
 }

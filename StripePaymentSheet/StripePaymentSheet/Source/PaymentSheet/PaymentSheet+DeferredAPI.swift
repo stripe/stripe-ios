@@ -21,7 +21,8 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession?,
-        isFromLink: Bool = false
+        isFromLink: Bool = false,
+        serverDrivenPaymentMethod: ServerDrivenPaymentMethod? = nil
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         // Route based on which handler is available in the intent configuration
         if let confirmationTokenConfirmHandler = intentConfig.confirmationTokenConfirmHandler {
@@ -40,7 +41,8 @@ extension PaymentSheet {
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 elementsSession: elementsSession,
                 confirmHandler: confirmationTokenConfirmHandler,
-                isFromLink: isFromLink
+                isFromLink: isFromLink,
+                serverDrivenPaymentMethod: serverDrivenPaymentMethod
             )
         } else if let confirmHandler = intentConfig.confirmHandler {
             // Use regular confirmation flow
@@ -52,7 +54,8 @@ extension PaymentSheet {
                 paymentHandler: paymentHandler,
                 isFlowController: isFlowController,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
-                confirmHandler: confirmHandler
+                confirmHandler: confirmHandler,
+                serverDrivenPaymentMethod: serverDrivenPaymentMethod
             )
         } else {
             stpAssertionFailure("Unexpectedly found nil confirmHandler and confirmationTokenConfirmHandler in intentConfig")
@@ -69,7 +72,8 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
-        confirmHandler: @escaping IntentConfiguration.ConfirmHandler
+        confirmHandler: @escaping IntentConfiguration.ConfirmHandler,
+        serverDrivenPaymentMethod: ServerDrivenPaymentMethod?
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
             var confirmType = confirmType
@@ -149,6 +153,10 @@ extension PaymentSheet {
                     // This is a bit hacky, since the above `makePaymentIntentParams` call already set mandate data
                     setMandateDataIfNecessary(for: paymentMethod.type, on: paymentIntentParams)
 
+                    if let serverDrivenPaymentHandler = makeServerDrivenPaymentHandler(for: serverDrivenPaymentMethod, paymentHandler: paymentHandler) {
+                        let result = await serverDrivenPaymentHandler.confirm(params: paymentIntentParams, authenticationContext: authenticationContext)
+                        return (result, .client)
+                    }
                     result = await withCheckedContinuation { continuation in
                         paymentHandler.confirmPaymentIntent(
                             params: paymentIntentParams,
@@ -165,6 +173,10 @@ extension PaymentSheet {
                     // 4b. Server-side confirmation
                     try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
                     assert(!allowsSetAsDefaultPM, "(Debug-build-only error) The default payment methods feature is not yet supported with deferred intents. Please contact us if you'd like to use this feature via a Github issue on stripe-ios.")
+                    if let serverDrivenPaymentHandler = makeServerDrivenPaymentHandler(for: serverDrivenPaymentMethod, paymentHandler: paymentHandler) {
+                        let result = await serverDrivenPaymentHandler.handleNextAction(for: paymentIntent, authenticationContext: authenticationContext)
+                        return (result, .server)
+                    }
                     result = await withCheckedContinuation { continuation in
                         paymentHandler.handleNextAction(
                             for: paymentIntent,

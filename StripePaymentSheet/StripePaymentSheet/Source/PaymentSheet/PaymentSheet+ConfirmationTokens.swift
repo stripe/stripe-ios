@@ -20,7 +20,8 @@ extension PaymentSheet {
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession,
         confirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler,
-        isFromLink: Bool = false
+        isFromLink: Bool = false,
+        serverDrivenPaymentMethod: ServerDrivenPaymentMethod? = nil
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
             // 1. Create the confirmation token params
@@ -79,6 +80,10 @@ extension PaymentSheet {
                     paymentIntentParams.radarOptions = savedPaymentMethodRadarOptions
                     paymentIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
+                    if let serverDrivenPaymentHandler = makeServerDrivenPaymentHandler(for: serverDrivenPaymentMethod, paymentHandler: paymentHandler) {
+                        let result = await serverDrivenPaymentHandler.confirm(params: paymentIntentParams, authenticationContext: authenticationContext)
+                        return (result, .client)
+                    }
                     result = await withCheckedContinuation { continuation in
                         paymentHandler.confirmPaymentIntent(
                             params: paymentIntentParams,
@@ -94,6 +99,10 @@ extension PaymentSheet {
                 } else {
                     // 5b. Server-side confirmation
                     // Note: We cannot validate the ConfirmationToken used to confirm server-side, the backend does not return the CT on the intent object
+                    if let serverDrivenPaymentHandler = makeServerDrivenPaymentHandler(for: serverDrivenPaymentMethod, paymentHandler: paymentHandler) {
+                        let result = await serverDrivenPaymentHandler.handleNextAction(for: paymentIntent, authenticationContext: authenticationContext)
+                        return (result, .server)
+                    }
                     result = await withCheckedContinuation { continuation in
                         paymentHandler.handleNextAction(
                             for: paymentIntent,
