@@ -19,15 +19,24 @@ final class LinkControllerPreviewAPITests: XCTestCase {
         _ = LinkConfiguration(financialConnectionsPermissions: ["payment_method", "balances"]).financialConnectionsPermissions
         _ = LinkConfiguration(returnURL: "example://stripe-redirect").returnURL
 
-        let result: LinkController.PaymentMethodResult = .canceled
-        _ = result
+        // Merchants switch over every case of the result
+        let handleResult: (LinkController.PaymentMethodResult) -> Void = { result in
+            switch result {
+            case .completed(let paymentMethod):
+                _ = paymentMethod
+            case .confirmed(let paymentMethod):
+                _ = paymentMethod
+            case .canceled:
+                break
+            }
+        }
+        handleResult(.canceled)
 
         let integrationErrors: [LinkController.IntegrationError] = [
             .noPaymentMethodSelected,
             .noActiveLinkConsumer,
             .missingAppAttestation,
             .linkUnavailable,
-            .unsupportedIntentConfiguration,
             .configurationRequiresNativeLink,
         ]
         _ = integrationErrors.map(\.errorDescription)

@@ -111,12 +111,10 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
         switch result {
         case .success(.completed(let paymentMethod)):
             self.paymentMethod = paymentMethod
-            switch configuration.integration {
-            case .collectPaymentMethod:
-                message = .init(text: "Payment method selected", tint: .green)
-            case .payInLink:
-                message = .init(text: "Payment succeeded!", tint: .green)
-            }
+            message = .init(text: "Payment method selected", tint: .green)
+        case .success(.confirmed(let paymentMethod)):
+            self.paymentMethod = paymentMethod
+            message = .init(text: "Payment succeeded!", tint: .green)
         case .success(.canceled):
             message = .init(text: "Link flow canceled", tint: .orange)
         case .failure(let error):

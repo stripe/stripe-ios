@@ -40,15 +40,14 @@ final class LinkControllerTests: XCTestCase {
         )
     }
 
-    func testWithoutIntentConfigurationCollectsPaymentMethodsInSetupMode() throws {
+    func testWithoutIntentConfigurationCollectsPaymentMethodsInSetupMode() {
         // Given a Link configuration with intent payment method types and Financial Connections permissions
         let linkConfiguration = LinkConfiguration(paymentMethodTypes: ["link"], financialConnectionsPermissions: ["balances"])
 
         // When making the intent configuration without a merchant intent configuration
-        let (intentConfiguration, recorder) = try LinkController.makeIntentConfiguration(nil, linkConfiguration: linkConfiguration)
+        let intentConfiguration = LinkController.makeIntentConfiguration(nil, linkConfiguration: linkConfiguration)
 
         // Then the controller only collects payment methods, in off-session setup mode
-        XCTAssertNil(recorder)
         guard case let .setup(currency, setupFutureUsage) = intentConfiguration.mode else {
             return XCTFail("Expected setup mode, got \(intentConfiguration.mode)")
         }
@@ -58,7 +57,7 @@ final class LinkControllerTests: XCTestCase {
         XCTAssertEqual(intentConfiguration.financialConnectionsPermissions, ["balances"])
     }
 
-    func testWithIntentConfigurationRecordsConfirmedPaymentMethod() async throws {
+    func testWithIntentConfigurationKeepsMerchantConfirmHandler() async throws {
         // Given a merchant intent configuration in payment mode
         let merchantIntentConfiguration = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1099, currency: "usd")
@@ -66,7 +65,7 @@ final class LinkControllerTests: XCTestCase {
         let linkConfiguration = LinkConfiguration(paymentMethodTypes: ["link"], financialConnectionsPermissions: ["balances"])
 
         // When making the intent configuration to load with
-        let (intentConfiguration, recorder) = try LinkController.makeIntentConfiguration(
+        let intentConfiguration = LinkController.makeIntentConfiguration(
             merchantIntentConfiguration,
             linkConfiguration: linkConfiguration
         )
@@ -80,31 +79,31 @@ final class LinkControllerTests: XCTestCase {
         XCTAssertEqual(intentConfiguration.paymentMethodTypes, ["link"])
         XCTAssertEqual(intentConfiguration.financialConnectionsPermissions, ["balances"])
 
-        // When Link calls the confirm handler
-        let paymentMethod = STPPaymentMethod._testCard()
-        let clientSecret = try await intentConfiguration.confirmHandler?(paymentMethod, false)
-
-        // Then it returns the merchant's client secret
+        // ...and the merchant's confirm handler
+        let clientSecret = try await intentConfiguration.confirmHandler?(STPPaymentMethod._testCard(), false)
         XCTAssertEqual(clientSecret, "pi_123_secret_abc")
-        // ...and records the payment method for `present` to return
-        XCTAssertEqual(recorder?.paymentMethod?.stripeId, paymentMethod.stripeId)
     }
 
-    func testIntentConfigurationWithoutConfirmHandlerIsUnsupported() {
-        // Given a merchant intent configuration that only has a confirmation token handler
+    func testWithConfirmationTokenIntentConfigurationKeepsMerchantHandler() async throws {
+        // Given a merchant intent configuration that confirms with confirmation tokens
         let merchantIntentConfiguration = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1099, currency: "usd"),
             confirmationTokenConfirmHandler: { _ in "pi_123_secret_abc" }
         )
 
         // When making the intent configuration to load with
-        // Then it fails because LinkController needs a payment method confirm handler
-        XCTAssertThrowsError(try LinkController.makeIntentConfiguration(merchantIntentConfiguration, linkConfiguration: nil)) { error in
-            XCTAssertEqual(error as? LinkController.IntegrationError, .unsupportedIntentConfiguration)
-        }
+        let intentConfiguration = LinkController.makeIntentConfiguration(merchantIntentConfiguration, linkConfiguration: nil)
+
+        // Then it's supported, and keeps the merchant's confirmation token handler
+        XCTAssertNotNil(intentConfiguration.confirmationTokenConfirmHandler)
     }
 
-    // MARK: - Link web popup
+    func testPaymentMethodResultPaymentMethod() {
+        let paymentMethod = STPPaymentMethod._testCard()
+        XCTAssertEqual(LinkController.PaymentMethodResult.completed(paymentMethod).paymentMethod?.stripeId, paymentMethod.stripeId)
+        XCTAssertEqual(LinkController.PaymentMethodResult.confirmed(paymentMethod).paymentMethod?.stripeId, paymentMethod.stripeId)
+        XCTAssertNil(LinkController.PaymentMethodResult.canceled.paymentMethod)
+    }
 
     func testWebLinkCanSatisfyDefaultConfiguration() {
         XCTAssertTrue(LinkController.webLinkCanSatisfy(configuration: PaymentSheet.Configuration(), linkConfiguration: nil))

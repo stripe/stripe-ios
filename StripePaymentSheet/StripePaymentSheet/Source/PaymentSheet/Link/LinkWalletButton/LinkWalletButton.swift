@@ -14,9 +14,10 @@ import UIKit
 @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public protocol LinkWalletButtonDelegate: AnyObject {
     /// Called when the Link flow launched by the button finishes.
     /// - Parameter button: The button that launched the Link flow.
-    /// - Parameter result: `.success(.completed(paymentMethod))` when the flow completes: the payment or setup was confirmed
-    ///   if the `LinkController` was created with an `IntentConfiguration`, otherwise the customer selected a payment method.
-    ///   `.success(.canceled)` when they dismiss the flow, or `.failure(error)` on an error.
+    /// - Parameter result: `.success(.confirmed(paymentMethod))` once Link confirms the payment or setup (if the
+    ///   `LinkController` was created with an `IntentConfiguration`), `.success(.completed(paymentMethod))` once the customer
+    ///   selects a payment method (if it wasn't), `.success(.canceled)` when they dismiss the flow, or `.failure(error)`
+    ///   on an error.
     func linkWalletButton(
         _ button: LinkWalletButton,
         didCompleteWith result: Result<LinkController.PaymentMethodResult, Error>
@@ -79,8 +80,9 @@ import UIKit
     /// Creates a `LinkWalletButton`.
     ///
     /// The button shows the Link account for the controller's `email`, and prefills its `email` and `phoneNumber` in Link.
-    /// If the controller has no `email`, the button shows "Pay with Link", and tapping it lets the customer sign in to or
-    /// sign up for Link. Once they complete the Link flow, the button shows their Link account.
+    /// If the controller has no `email`, the button shows "Pay with Link", or "Continue with Link" when collecting or setting
+    /// up a payment method, and tapping it lets the customer sign in to or sign up for Link. Once they complete the Link flow,
+    /// the button shows their Link account.
     /// - Parameter linkController: The `LinkController` used to look up the customer and present the Link flow.
     public convenience init(linkController: LinkController) {
         self.init(controller: linkController)
@@ -238,7 +240,8 @@ extension LinkWalletButton {
         }
         if let account = linkController.linkAccount, account.sessionState == .verified {
             signedInEmail = account.email
-        } else if case .success(.completed(let paymentMethod)) = result,
+        } else if case .success(let paymentMethodResult) = result,
+                  let paymentMethod = paymentMethodResult.paymentMethod,
                   let paymentMethodEmail = paymentMethod.billingDetails?.email,
                   !paymentMethodEmail.isEmpty {
             signedInEmail = paymentMethodEmail
