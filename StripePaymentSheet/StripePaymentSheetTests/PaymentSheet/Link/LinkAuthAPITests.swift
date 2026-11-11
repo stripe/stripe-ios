@@ -135,6 +135,17 @@ final class LinkAuthAPITests: STPNetworkStubbingTestCase {
         XCTAssertEqual(LinkAccountService(elementsSession: disabled).supportedVerificationTypes, [.sms])
     }
 
+    func testIdentitySurfaceSkipsAttestationOnlyForMerchantsWithoutIt() {
+        // Given merchants with and without Link's attestation endpoints
+        let attesting = STPElementsSession._testValue(linkSettings: ._testValue())
+        let notAttesting = STPElementsSession._testValue(linkSettings: nil)
+
+        // Then only the Identity surface skips attestation, and only for the merchant without it
+        XCTAssertTrue(LinkRequestSurface.identityProduct.skipsAttestation(for: notAttesting))
+        XCTAssertFalse(LinkRequestSurface.identityProduct.skipsAttestation(for: attesting))
+        XCTAssertFalse(LinkRequestSurface.paymentElement.skipsAttestation(for: notAttesting))
+    }
+
     private func assertRefreshDeclares(_ types: [SupportedVerificationType], expected: Set<String>, file: StaticString = #filePath, line: UInt = #line) {
         let completed = expectation(description: "Refreshed")
         stub(condition: isPath("/v1/consumers/sessions/refresh")) { request in
