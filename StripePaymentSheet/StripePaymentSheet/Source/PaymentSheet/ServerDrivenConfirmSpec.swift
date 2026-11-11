@@ -8,27 +8,16 @@
 import Foundation
 
 /// How `ServerDrivenPaymentHandler` finishes a payment for a server-driven payment method: which next actions it may
-/// perform, how it fetches the intent after the customer returns, and what the non-terminal intent statuses mean.
+/// perform, how it fetches the intent after a next action, and what the non-terminal intent statuses mean.
 ///
-/// This is the shape the `mobile_session` contract is heading toward. Today's wire fields are booleans
-/// (`processing_is_success`, `post_redirect_poll_seconds`) and `init(_:)` adapts them. The intended wire shape is:
-/// ```
-/// "confirm": {
-///   "next_actions": [{"type": "redirect_to_url"}],
-///   "post_confirm": {
-///     "retrieval": "retrieve" | "refresh",
-///     "statuses": {"processing": "succeed" | "fail" | "cancel" | "poll", "requires_action": ...},
-///     "poll_seconds": 5
-///   }
-/// }
-/// ```
+/// It maps 1:1 from the `mobile_session` contract's `confirm.next_actions` and `confirm.post_confirm`.
 struct ServerDrivenConfirmSpec: Equatable {
     /// A next action the handler may perform. Any other next action fails the payment.
     enum NextAction: Equatable {
         case redirectToURL
     }
 
-    /// How to fetch the intent after the customer returns.
+    /// How to fetch the intent.
     enum Retrieval: Equatable {
         /// `GET /v1/payment_intents/:id`
         case retrieve
@@ -36,44 +25,80 @@ struct ServerDrivenConfirmSpec: Equatable {
         case refresh
     }
 
-    /// What a `processing` or `requires_action` intent means.
-    enum Outcome: Equatable {
+    /// What a `processing` intent means.
+    enum ProcessingOutcome: Equatable {
         case succeed
         case fail
-        case cancel
-        /// Fetch the intent again every second for up to `pollSeconds`. If it's still in this status after that,
-        /// a `processing` intent fails and a `requires_action` intent is canceled, like `STPPaymentHandler`.
+        /// Fetch the intent again every second until its status changes or `pollSeconds` pass, then fail.
         case poll
+    }
+
+    /// What a `requires_action` intent means after its next action was performed.
+    enum RequiresActionOutcome: Equatable {
+        case cancel
+        /// Fetch the intent again every second until its status changes or `pollSeconds` pass, then cancel.
+        case poll
+        case succeed
     }
 
     let nextActions: [NextAction]
     let retrieval: Retrieval
     /// Applies whenever the intent is `processing`, including right after confirmation.
-    let processing: Outcome
+    let processing: ProcessingOutcome
     /// Applies only after a next action has been performed. Before that, `requires_action` means "perform the next action".
-    let requiresAction: Outcome
-    /// How long `poll` keeps fetching, starting from the first fetch. 0 fetches once.
+    let requiresAction: RequiresActionOutcome
+    /// How long `poll` keeps fetching, starting from the first poll decision. With 0, `poll` doesn't fetch again.
     let pollSeconds: Int
 }
 
 extension ServerDrivenConfirmSpec {
-    /// Adapts today's `mobile_session` confirm fields.
-    /// - `processing_is_success: true` is `processing: succeed`. `false` polls, like `STPPaymentHandler` does for a type
-    ///   whose `processing` isn't success, but for `post_redirect_poll_seconds` rather than a hardcoded 30s.
-    /// - `post_redirect_poll_seconds > 0` is `requires_action: poll`, and 0 is `requires_action: cancel`.
-    /// - There's no wire field for retrieval yet, so it's always `retrieve`.
+    /// The `poll_seconds` range the contract allows.
+    static let pollSecondsRange = 0...60
+
+    /// Maps the `mobile_session` confirm fields. Throws `ServerDrivenPaymentMethod.UnsupportedValue` for a value this SDK
+    /// can't follow, so the payment method is dropped.
     init(_ confirm: MobileSession.PaymentMethodConfirm) throws {
+        typealias UnsupportedValue = ServerDrivenPaymentMethod.UnsupportedValue
         self.nextActions = try confirm.nextActions.map { nextAction in
-            switch nextAction {
+            switch nextAction.type {
             case .redirectToUrl:
                 return .redirectToURL
             case .unparsable:
-                throw ServerDrivenPaymentMethod.UnsupportedValue(value: "next_action:unparsable")
+                throw UnsupportedValue(value: "next_action:unparsable")
             }
         }
-        self.retrieval = .retrieve
-        self.processing = confirm.processingIsSuccess ? .succeed : .poll
-        self.requiresAction = confirm.postRedirectPollSeconds > 0 ? .poll : .cancel
-        self.pollSeconds = max(0, confirm.postRedirectPollSeconds)
+        let postConfirm = confirm.postConfirm
+        switch postConfirm.intentRetrieval {
+        case .retrieve:
+            self.retrieval = .retrieve
+        case .refresh:
+            self.retrieval = .refresh
+        case .unparsable:
+            throw UnsupportedValue(value: "intent_retrieval:unparsable")
+        }
+        switch postConfirm.onProcessing {
+        case .succeed:
+            self.processing = .succeed
+        case .fail:
+            self.processing = .fail
+        case .poll:
+            self.processing = .poll
+        case .unparsable:
+            throw UnsupportedValue(value: "on_processing:unparsable")
+        }
+        switch postConfirm.onRequiresAction {
+        case .cancel:
+            self.requiresAction = .cancel
+        case .poll:
+            self.requiresAction = .poll
+        case .succeed:
+            self.requiresAction = .succeed
+        case .unparsable:
+            throw UnsupportedValue(value: "on_requires_action:unparsable")
+        }
+        guard Self.pollSecondsRange.contains(postConfirm.pollSeconds) else {
+            throw UnsupportedValue(value: "poll_seconds:\(postConfirm.pollSeconds)")
+        }
+        self.pollSeconds = postConfirm.pollSeconds
     }
 }

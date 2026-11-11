@@ -35,10 +35,15 @@ enum ServerDrivenPaymentMethodFixtures {
             "form": ["elements": [[String: Any]]()],
             "confirm": [
                 "payment_method_data_type": type,
-                "next_actions": ["redirect_to_url"],
+                "next_actions": [["type": "redirect_to_url"]],
                 "mandate_data": "none",
-                "processing_is_success": true,
-                "post_redirect_poll_seconds": 5,
+                "setup_future_usage": "none",
+                "post_confirm": [
+                    "intent_retrieval": "retrieve",
+                    "on_processing": "succeed",
+                    "on_requires_action": "poll",
+                    "poll_seconds": 5,
+                ] as [String: Any],
             ] as [String: Any],
             "saved_payment_methods": "unsupported",
         ]
@@ -81,9 +86,16 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         // Each entry has one value this SDK can't render, and throws that value
         let cases: [(String, (inout [String: Any]) -> Void)] = [
             ("form_element:unparsable", { $0["form"] = ["elements": [["type": "name"]]] }),
-            ("next_action:unparsable", { $0[jsonDict: "confirm"]?["next_actions"] = ["redirect_to_url", "confirm_on_mobile_device"] }),
+            ("next_action:unparsable", { $0[jsonDict: "confirm"]?["next_actions"] = [["type": "redirect_to_url"], ["type": "confirm_on_mobile_device"]] }),
+            ("intent_retrieval:unparsable", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["intent_retrieval"] = "webhook" }),
+            ("on_processing:unparsable", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["on_processing"] = "show_pending" }),
+            ("on_requires_action:unparsable", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["on_requires_action"] = "show_instructions" }),
+            ("poll_seconds:-1", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["poll_seconds"] = -1 }),
+            ("poll_seconds:61", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["poll_seconds"] = 61 }),
             ("mandate_data:online_inferred", { $0[jsonDict: "confirm"]?["mandate_data"] = "online_inferred" }),
             ("mandate_data:unparsable", { $0[jsonDict: "confirm"]?["mandate_data"] = "offline" }),
+            ("setup_future_usage:off_session", { $0[jsonDict: "confirm"]?["setup_future_usage"] = "off_session" }),
+            ("setup_future_usage:on_session", { $0[jsonDict: "confirm"]?["setup_future_usage"] = "on_session" }),
             ("saved_payment_methods:unparsable", { $0["saved_payment_methods"] = "supported" }),
             ("icon_rendering:unparsable", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["rendering"] = "vector" }),
             ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?[jsonDict: "light"]?["url"] = "http://js.stripe.com/icon.png" }),

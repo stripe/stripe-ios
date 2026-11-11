@@ -24,8 +24,8 @@ final class ServerDrivenPaymentHandlerTests: XCTestCase {
 
     func makeHandler(
         retrieval: ServerDrivenConfirmSpec.Retrieval = .retrieve,
-        processing: ServerDrivenConfirmSpec.Outcome = .succeed,
-        requiresAction: ServerDrivenConfirmSpec.Outcome = .cancel,
+        processing: ServerDrivenConfirmSpec.ProcessingOutcome = .succeed,
+        requiresAction: ServerDrivenConfirmSpec.RequiresActionOutcome = .cancel,
         pollSeconds: Int = 0
     ) -> ServerDrivenPaymentHandler {
         return ServerDrivenPaymentHandler(
@@ -159,6 +159,45 @@ final class ServerDrivenPaymentHandlerTests: XCTestCase {
         }
     }
 
+    func testPollWithZeroSecondsDoesntReadAgain() async {
+        // Given an intent that's still requires_action after the customer returns
+        api.confirmResults = [.success(ServerDrivenIntentFixtures.redirectIntent())]
+        api.fetchResults = Array(repeating: .success(ServerDrivenIntentFixtures.redirectIntent()), count: 10)
+
+        // When the payment is confirmed with a spec that polls requires_action for 0 seconds
+        let result = await confirm(makeHandler(requiresAction: .poll, pollSeconds: 0))
+
+        // Then it reads the intent once after the redirect, doesn't read it again, and cancels
+        assertCanceled(result)
+        XCTAssertEqual(api.calls, ["confirm", "retrieve"])
+        XCTAssertTrue(clock.sleeps.isEmpty)
+    }
+
+    func testProcessingPollWithZeroSecondsFailsWithoutReading() async {
+        // Given confirmation returns a processing intent
+        api.confirmResults = [.success(ServerDrivenIntentFixtures.paymentIntent(status: "processing"))]
+
+        // When the payment is confirmed with a spec that polls processing for 0 seconds
+        let result = await confirm(makeHandler(processing: .poll, pollSeconds: 0))
+
+        // Then it fails without reading the intent
+        assertFailed(result, code: .intentStatusErrorCode)
+        XCTAssertEqual(api.calls, ["confirm"])
+    }
+
+    func testRequiresActionSucceedsAfterRedirect() async {
+        // Given an intent that's still requires_action after the customer returns, e.g. a voucher they pay later
+        api.confirmResults = [.success(ServerDrivenIntentFixtures.redirectIntent())]
+        api.fetchResults = [.success(ServerDrivenIntentFixtures.redirectIntent())]
+
+        // When the payment is confirmed with a spec where requires_action after the next action is success
+        let result = await confirm(makeHandler(requiresAction: .succeed))
+
+        // Then it completes after one read
+        assertCompleted(result)
+        XCTAssertEqual(api.calls, ["confirm", "retrieve"])
+    }
+
     func testRedirectThatCantBeShownFails() async {
         // Given the redirect can't be presented
         api.confirmResults = [.success(ServerDrivenIntentFixtures.redirectIntent())]
@@ -257,39 +296,62 @@ final class ServerDrivenPaymentHandlerTests: XCTestCase {
     // MARK: - Decisions
 
     func testDecide() {
-        let spec = ServerDrivenConfirmSpec(nextActions: [.redirectToURL], retrieval: .retrieve, processing: .poll, requiresAction: .cancel, pollSeconds: 5)
-        let cases: [(STPPaymentIntentStatus, Bool, ServerDrivenPaymentHandler.Decision)] = [
-            (.succeeded, false, .succeed),
-            (.requiresCapture, true, .succeed),
-            (.requiresConfirmation, false, .succeed),
-            (.canceled, true, .cancel),
-            (.requiresPaymentMethod, false, .fail(.paymentFailed)),
-            (.unknown, false, .fail(.unexpectedStatus)),
-            (.processing, false, .poll),
-            (.processing, true, .poll),
+        func spec(processing: ServerDrivenConfirmSpec.ProcessingOutcome = .poll, requiresAction: ServerDrivenConfirmSpec.RequiresActionOutcome = .cancel) -> ServerDrivenConfirmSpec {
+            return ServerDrivenConfirmSpec(nextActions: [.redirectToURL], retrieval: .retrieve, processing: processing, requiresAction: requiresAction, pollSeconds: 5)
+        }
+        let cases: [(STPPaymentIntentStatus, Bool, ServerDrivenConfirmSpec, ServerDrivenPaymentHandler.Decision)] = [
+            (.succeeded, false, spec(), .succeed),
+            (.requiresCapture, true, spec(), .succeed),
+            (.requiresConfirmation, false, spec(), .succeed),
+            (.canceled, true, spec(), .cancel),
+            (.requiresPaymentMethod, false, spec(), .fail(.paymentFailed)),
+            (.unknown, false, spec(), .fail(.unexpectedStatus)),
+            (.processing, false, spec(processing: .poll), .poll),
+            (.processing, true, spec(processing: .poll), .poll),
+            (.processing, false, spec(processing: .succeed), .succeed),
+            (.processing, true, spec(processing: .fail), .fail(.unexpectedStatus)),
             // Before a next action, requires_action means perform it. After, the spec decides.
-            (.requiresAction, false, .performNextAction),
-            (.requiresAction, true, .cancel),
+            (.requiresAction, false, spec(requiresAction: .succeed), .performNextAction),
+            (.requiresAction, true, spec(requiresAction: .cancel), .cancel),
+            (.requiresAction, true, spec(requiresAction: .poll), .poll),
+            (.requiresAction, true, spec(requiresAction: .succeed), .succeed),
         ]
-        for (status, hasPerformedNextAction, expected) in cases {
+        for (status, hasPerformedNextAction, spec, expected) in cases {
             XCTAssertEqual(
                 ServerDrivenPaymentHandler.decide(status: status, hasPerformedNextAction: hasPerformedNextAction, spec: spec),
                 expected,
-                "\(STPPaymentIntentStatus.string(from: status)), hasPerformedNextAction: \(hasPerformedNextAction)"
+                "\(STPPaymentIntentStatus.string(from: status)), hasPerformedNextAction: \(hasPerformedNextAction), \(spec)"
             )
         }
     }
 
     func testSpecFromWireFields() throws {
-        func spec(processingIsSuccess: Bool, postRedirectPollSeconds: Int) throws -> ServerDrivenConfirmSpec {
-            let json = ServerDrivenPaymentMethodFixtures.json {
-                $0[jsonDict: "confirm"]?["processing_is_success"] = processingIsSuccess
-                $0[jsonDict: "confirm"]?["post_redirect_poll_seconds"] = postRedirectPollSeconds
-            }
+        func spec(_ postConfirm: [String: Any]) throws -> ServerDrivenConfirmSpec {
+            let json = ServerDrivenPaymentMethodFixtures.json { $0[jsonDict: "confirm"]?["post_confirm"] = postConfirm }
             return try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json).confirmSpec
         }
-        XCTAssertEqual(try spec(processingIsSuccess: true, postRedirectPollSeconds: 5), .init(nextActions: [.redirectToURL], retrieval: .retrieve, processing: .succeed, requiresAction: .poll, pollSeconds: 5))
-        XCTAssertEqual(try spec(processingIsSuccess: false, postRedirectPollSeconds: 0), .init(nextActions: [.redirectToURL], retrieval: .retrieve, processing: .poll, requiresAction: .cancel, pollSeconds: 0))
+        // Each post_confirm field maps 1:1
+        let cases: [([String: Any], ServerDrivenConfirmSpec)] = [
+            (
+                ["intent_retrieval": "retrieve", "on_processing": "succeed", "on_requires_action": "poll", "poll_seconds": 5],
+                .init(nextActions: [.redirectToURL], retrieval: .retrieve, processing: .succeed, requiresAction: .poll, pollSeconds: 5)
+            ),
+            (
+                ["intent_retrieval": "refresh", "on_processing": "fail", "on_requires_action": "cancel", "poll_seconds": 0],
+                .init(nextActions: [.redirectToURL], retrieval: .refresh, processing: .fail, requiresAction: .cancel, pollSeconds: 0)
+            ),
+            (
+                ["intent_retrieval": "retrieve", "on_processing": "poll", "on_requires_action": "succeed", "poll_seconds": 60],
+                .init(nextActions: [.redirectToURL], retrieval: .retrieve, processing: .poll, requiresAction: .succeed, pollSeconds: 60)
+            ),
+        ]
+        for (postConfirm, expected) in cases {
+            XCTAssertEqual(try spec(postConfirm), expected, "\(postConfirm)")
+        }
+
+        // next_actions maps each entry's type, and may be empty
+        let noNextActions = ServerDrivenPaymentMethodFixtures.json { $0[jsonDict: "confirm"]?["next_actions"] = [[String: Any]]() }
+        XCTAssertEqual(try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(noNextActions).confirmSpec.nextActions, [])
     }
 
     // MARK: - Helpers

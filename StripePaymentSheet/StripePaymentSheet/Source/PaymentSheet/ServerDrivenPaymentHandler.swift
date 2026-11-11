@@ -241,22 +241,24 @@ final class ServerDrivenPaymentHandler {
         case .requiresPaymentMethod:
             return .fail(.paymentFailed)
         case .processing:
-            return decision(for: spec.processing)
+            switch spec.processing {
+            case .succeed: return .succeed
+            case .fail: return .fail(.unexpectedStatus)
+            case .poll: return .poll
+            }
         case .requiresAction:
-            return hasPerformedNextAction ? decision(for: spec.requiresAction) : .performNextAction
+            guard hasPerformedNextAction else {
+                return .performNextAction
+            }
+            switch spec.requiresAction {
+            case .cancel: return .cancel
+            case .poll: return .poll
+            case .succeed: return .succeed
+            }
         case .unknown:
             return .fail(.unexpectedStatus)
         @unknown default:
             return .fail(.unexpectedStatus)
-        }
-    }
-
-    private nonisolated static func decision(for outcome: ServerDrivenConfirmSpec.Outcome) -> Decision {
-        switch outcome {
-        case .succeed: return .succeed
-        case .fail: return .fail(.unexpectedStatus)
-        case .cancel: return .cancel
-        case .poll: return .poll
         }
     }
 
