@@ -808,7 +808,7 @@ final class PaymentSheetAuthenticationContextViewController: UIViewController {
     }
 }
 
-extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthenticationContext {
+extension PaymentSheetAuthenticationContextViewController: PollingScreenHosting {
 
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
         DispatchQueue.main.async {
@@ -826,16 +826,16 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
         }
     }
 
-    func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
-                                              appearance: self.appearance, safariViewController: safariViewController)
+    var pollingScreenAppearance: PaymentSheet.Appearance { appearance }
+
+    func presentPollingViewController(_ pollingViewController: PollingViewController, safariViewController: SFSafariViewController?) {
         // Without a web view in front (e.g. BLIK, MB WAY, Bizum), present the polling view controller right away
         guard safariViewController != nil else {
-            self._presentingViewController.present(pollingVC, animated: true)
+            self._presentingViewController.present(pollingViewController, animated: true)
             return
         }
         // Otherwise, flag it for presentation once the web view is dismissed
-        self.pollingVC = pollingVC
+        self.pollingVC = pollingViewController
         shouldPresentPollingVC = true
     }
 

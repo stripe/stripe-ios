@@ -46,4 +46,33 @@ class PollingViewTests: XCTestCase {
         XCTAssertEqual(pollingViewModel.retryInterval, 2)
         XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 24 * 60 * 60, accuracy: 0.5)
     }
+
+    func testPollingViewModelFromConfirmationMetadata() {
+        // Given Pix's polling screen from the confirmation metadata
+        let screen = ConfirmationMetadata.NextAction.PollingScreen(seconds: 90, intervalSeconds: 2, showsCountdown: false, deadlineField: "expires_at", instructions: .pix)
+
+        // When the view model is made from it
+        let pollingViewModel = PollingViewModel(screen: screen)
+
+        // Then it shows and polls as configured
+        XCTAssertEqual(pollingViewModel.CTA, .Localized.pix_confirm_payment)
+        XCTAssertFalse(pollingViewModel.showsCountdown)
+        XCTAssertEqual(pollingViewModel.retryInterval, 2)
+        XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 90, accuracy: 0.5)
+    }
+
+    func testPollingViewModelMatchesConfirmationMetadataForEveryPollingType() {
+        for type in PollingViewModel.supportedPaymentMethods {
+            let native = PollingViewModel(paymentMethodType: type)
+            let screen = ConfirmationMetadata.native(for: type)!.nextActions.values.compactMap { nextAction -> ConfirmationMetadata.NextAction.PollingScreen? in
+                guard case .pollingScreen(let screen, _) = nextAction.presenter else { return nil }
+                return screen
+            }.first!
+            let fromMetadata = PollingViewModel(screen: screen)
+            XCTAssertEqual(native.CTA, fromMetadata.CTA, type.identifier)
+            XCTAssertEqual(native.showsCountdown, fromMetadata.showsCountdown, type.identifier)
+            XCTAssertEqual(native.retryInterval, fromMetadata.retryInterval, type.identifier)
+            XCTAssertEqual(native.deadline.timeIntervalSince(fromMetadata.deadline), 0, accuracy: 0.5, type.identifier)
+        }
+    }
 }

@@ -35,7 +35,8 @@ extension ConfirmationMetadata {
             setupIntent: supportsSetup(type) ? setupIntentRules(for: type) : nil,
             retrieval: refreshingTypes.contains(type) ? .refresh : .retrieve,
             beforeFetch: type == .alipay ? .loadAlipayMarlinReturnURL : nil,
-            onCancel: [.card, .link].contains(type) ? .cancel3DSSource : .none
+            onCancel: [.card, .link].contains(type) ? .cancel3DSSource : .none,
+            performer: [.card, .link].contains(type) ? .stripePaymentHandler : .engine
         )
     }
 
@@ -127,6 +128,8 @@ extension ConfirmationMetadata {
             let pollSeconds = type == .card ? 15 : nil
             let threeDS2 = NextAction(
                 presenter: .threeDS2,
+                urlPath: nil,
+                fallbackURLPath: nil,
                 returnURL: .confirmIfSet,
                 appToApp: .none,
                 whileRequiresAction: pollSeconds.map { .poll(seconds: $0, onTimeout: .cancel) }
@@ -134,13 +137,13 @@ extension ConfirmationMetadata {
             return ["use_stripe_sdk": threeDS2]
         case .alipay:
             // STPPaymentHandler.swift:1169.
-            return ["alipay_handle_redirect": NextAction(presenter: .redirect(browser: .safariViewController), returnURL: .confirmThenNextAction, appToApp: .nativeURLThenWeb, whileRequiresAction: nil)]
+            return ["alipay_handle_redirect": NextAction(presenter: .redirect(browser: .safariViewController), urlPath: "native_url", fallbackURLPath: "url", returnURL: .confirmThenNextAction, appToApp: .nativeURLThenWeb, whileRequiresAction: nil)]
         case .cashApp:
             // STPPaymentHandler.swift:1454.
-            return ["cashapp_handle_redirect_or_display_qr_code": NextAction(presenter: .redirect(browser: .safariViewController), returnURL: .confirmRequired, appToApp: .universalLinksOnly, whileRequiresAction: nil)]
+            return ["cashapp_handle_redirect_or_display_qr_code": NextAction(presenter: .redirect(browser: .safariViewController), urlPath: "mobile_auth_url", fallbackURLPath: nil, returnURL: .confirmRequired, appToApp: .universalLinksOnly, whileRequiresAction: nil)]
         case .swish:
             // STPPaymentHandler.swift:1534.
-            return ["swish_handle_redirect_or_display_qr_code": NextAction(presenter: .redirect(browser: .safariViewController), returnURL: .confirmRequired, appToApp: .universalLinksOnly, whileRequiresAction: nil)]
+            return ["swish_handle_redirect_or_display_qr_code": NextAction(presenter: .redirect(browser: .safariViewController), urlPath: "mobile_auth_url", fallbackURLPath: nil, returnURL: .confirmRequired, appToApp: .universalLinksOnly, whileRequiresAction: nil)]
         case .OXXO:
             return ["oxxo_display_details": .voucher]
         case .boleto:
@@ -151,20 +154,22 @@ extension ConfirmationMetadata {
             return ["multibanco_display_details": .voucher]
         case .USBankAccount:
             // STPPaymentHandler.swift:1450: the customer verifies microdeposits later.
-            return ["verify_with_microdeposits": NextAction(presenter: .none, returnURL: .none, appToApp: .none, whileRequiresAction: .succeed)]
+            return ["verify_with_microdeposits": NextAction(presenter: .none, urlPath: nil, fallbackURLPath: nil, returnURL: .none, appToApp: .none, whileRequiresAction: .succeed)]
         case .blik:
-            return ["blik_authorize": .pollingScreen(PollingScreen(seconds: 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil))]
+            return ["blik_authorize": .pollingScreen(PollingScreen(seconds: 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil, instructions: .blik))]
         case .mbWay:
-            return ["mb_way_await_authorization": .pollingScreen(PollingScreen(seconds: 4 * 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil))]
+            return ["mb_way_await_authorization": .pollingScreen(PollingScreen(seconds: 4 * 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil, instructions: .mbWay))]
         case .bizum:
-            return ["await_authorization": .pollingScreen(PollingScreen(seconds: 70 * 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil))]
+            return ["await_authorization": .pollingScreen(PollingScreen(seconds: 70 * 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil, instructions: .bizum))]
         case .paynow:
-            return ["paynow_display_qr_code": .qrCodeWithPollingScreen(PollingScreen(seconds: 60 * 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil), returnURL: .confirmRequired, whileRequiresAction: .waitForNextActionScreen)]
+            return ["paynow_display_qr_code": .qrCodeWithPollingScreen(PollingScreen(seconds: 60 * 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil, instructions: .paynow), returnURL: .confirmRequired, whileRequiresAction: .waitForNextActionScreen)]
         case .promptPay:
-            return ["promptpay_display_qr_code": .qrCodeWithPollingScreen(PollingScreen(seconds: 60 * 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil), returnURL: .confirmRequired, whileRequiresAction: .waitForNextActionScreen)]
+            return ["promptpay_display_qr_code": .qrCodeWithPollingScreen(PollingScreen(seconds: 60 * 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil, instructions: .paynow), returnURL: .confirmRequired, whileRequiresAction: .waitForNextActionScreen)]
         case .pix:
-            // Unlike PayNow and PromptPay, closing Pix's web view cancels (STPPaymentHandler.swift:1708 only exempts those two).
-            return ["pix_display_qr_code": .qrCodeWithPollingScreen(PollingScreen(seconds: 24 * 60 * 60, intervalSeconds: 2, showsCountdown: false, deadlineField: "expires_at"), returnURL: .confirmIfSet, whileRequiresAction: nil)]
+            // Like PayNow and PromptPay, the polling screen finishes the payment. STPPaymentHandler differs: closing Pix's
+            // web view cancels the payment while the polling screen is still up, then drops the screen's later success
+            // (STPPaymentHandler.swift:1708 only exempts PayNow and PromptPay; reproduced in task #62). Fixed here on purpose.
+            return ["pix_display_qr_code": .qrCodeWithPollingScreen(PollingScreen(seconds: 24 * 60 * 60, intervalSeconds: 2, showsCountdown: false, deadlineField: "expires_at", instructions: .pix), returnURL: .confirmIfSet, whileRequiresAction: .waitForNextActionScreen)]
         default:
             return [:]
         }
@@ -240,6 +245,8 @@ extension ConfirmationMetadata.NextAction {
     /// `redirect_to_url`, which STPPaymentHandler performs for any type (STPPaymentHandler.swift:1157).
     static let redirectToURL = ConfirmationMetadata.NextAction(
         presenter: .redirect(browser: .fromNextAction),
+        urlPath: "url",
+        fallbackURLPath: nil,
         returnURL: .nextAction,
         appToApp: .universalLinksOnly,
         whileRequiresAction: nil
@@ -248,6 +255,8 @@ extension ConfirmationMetadata.NextAction {
     /// A hosted voucher the customer pays later, so `requires_action` means success (STPPaymentHandler.swift:2134).
     static let voucher = ConfirmationMetadata.NextAction(
         presenter: .redirect(browser: .safariViewController),
+        urlPath: "hosted_voucher_url",
+        fallbackURLPath: nil,
         returnURL: .none,
         appToApp: .universalLinksOnly,
         whileRequiresAction: .succeed
@@ -255,12 +264,12 @@ extension ConfirmationMetadata.NextAction {
 
     /// BLIK, MB WAY and Bizum: PaymentSheet's polling screen finishes the payment (STPPaymentHandler.swift:1415-1449).
     static func pollingScreen(_ screen: ConfirmationMetadata.NextAction.PollingScreen) -> Self {
-        return .init(presenter: .pollingScreen(screen, overWebView: false), returnURL: .none, appToApp: .none, whileRequiresAction: .succeed)
+        return .init(presenter: .pollingScreen(screen, overWebView: false), urlPath: nil, fallbackURLPath: nil, returnURL: .none, appToApp: .none, whileRequiresAction: .succeed)
     }
 
     /// PayNow, PromptPay and Pix: hosted instructions in a web view, with the polling screen behind it.
     static func qrCodeWithPollingScreen(_ screen: ConfirmationMetadata.NextAction.PollingScreen, returnURL: ReturnURLSource, whileRequiresAction: ConfirmationMetadata.Outcome?) -> Self {
-        return .init(presenter: .pollingScreen(screen, overWebView: true), returnURL: returnURL, appToApp: .universalLinksOnly, whileRequiresAction: whileRequiresAction)
+        return .init(presenter: .pollingScreen(screen, overWebView: true), urlPath: "hosted_instructions_url", fallbackURLPath: nil, returnURL: returnURL, appToApp: .universalLinksOnly, whileRequiresAction: whileRequiresAction)
     }
 }
 

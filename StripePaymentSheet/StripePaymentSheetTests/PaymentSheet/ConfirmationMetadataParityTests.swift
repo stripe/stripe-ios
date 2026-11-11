@@ -95,11 +95,14 @@ final class ConfirmationMetadataParityTests: XCTestCase {
         // M3: requires_confirmation after a next action fails through confirmPaymentIntent (its guard, SPH:236, leaves it
         // out, and asserts) but succeeds through handleNextAction (SPH:482). The table says succeed (manual confirmation).
         KnownMismatch(id: "M3", count: 122) { $0.scenario.hasPrefix("pi/requires_confirmation") && $0.scenario.hasSuffix("/via_confirm") },
-        // M4: Alipay's Marlin ping only runs for PaymentIntents (SPH:1626); SetupIntents skip it.
-        KnownMismatch(id: "M4", count: 2) { $0.type == "alipay" && $0.scenario.hasPrefix("si/") && $0.scenario.hasSuffix("/before_fetch") },
+        // M4 (Alipay SetupIntents skip the Marlin ping) is gone: `beforeFetch` is PaymentIntent-only, like SPH:1626.
         // M5: handleNextAction(for: SetupIntent)'s guard (SPH:770) only accepts succeeded, so a terminal next action
         // (a voucher, microdeposits) that STPPaymentHandler completes as succeeded is turned into a failure.
         KnownMismatch(id: "M5", count: 2) { $0.scenario.hasPrefix("si/requires_action+") && $0.scenario.hasSuffix("/via_handle_next_action") },
+        // F1, a deliberate fix: closing Pix's instructions web view cancels in STPPaymentHandler while the polling screen is
+        // still up, and the screen's later success is dropped (SPH:1708 only exempts PayNow and PromptPay; task #62
+        // reproduced it). The table lets Pix's polling screen finish the payment, like PayNow and PromptPay.
+        KnownMismatch(id: "F1", count: 4) { $0.type == "pix" && $0.scenario.contains("requires_action+pix_display_qr_code") && $0.native == "cancel" && $0.table == "wait_for_next_action_screen" },
     ]
 
     // MARK: Per-type functions
@@ -399,7 +402,8 @@ final class ConfirmationMetadataParityTests: XCTestCase {
             report.compare("after_next_action", run.type, "\(scenario)/read_endpoint", native: firstFetch.endpoint, table: tableRetrieval, source: "driven")
 
             if run.nextActionType == "alipay_handle_redirect" {
-                report.compare("after_next_action", run.type, "\(scenario)/before_fetch", native: run.loadedMarlinURL ? ConfirmationMetadata.BeforeFetch.loadAlipayMarlinReturnURL.rawValue : "none", table: metadata.beforeFetch?.rawValue ?? "none", source: "driven")
+                let tableBeforeFetch = run.intent == .paymentIntent ? metadata.beforeFetch : nil
+                report.compare("after_next_action", run.type, "\(scenario)/before_fetch", native: run.loadedMarlinURL ? ConfirmationMetadata.BeforeFetch.loadAlipayMarlinReturnURL.rawValue : "none", table: tableBeforeFetch?.rawValue ?? "none", source: "driven")
             }
             if run.status == "requires_action", table == .cancel, ["redirect_to_url", "use_stripe_sdk"].contains(run.nextActionType ?? "") {
                 report.compare("after_next_action", run.type, "\(scenario)/on_cancel", native: run.canceledSource ? "cancel3DSSource" : "none", table: metadata.onCancel.rawValue, source: "driven")

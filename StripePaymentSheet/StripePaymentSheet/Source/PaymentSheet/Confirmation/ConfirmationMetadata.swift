@@ -31,10 +31,21 @@ struct ConfirmationMetadata: Codable, Equatable {
     /// confirmation, it's always `retrieve`.
     /// Contract: `post_confirm.intent_retrieval`.
     var retrieval: Retrieval
-    /// Work to do before every read after a next action. Not in the contract.
+    /// Work to do before every read of a PaymentIntent after a next action (STPPaymentHandler skips it for
+    /// SetupIntents). Not in the contract.
     var beforeFetch: BeforeFetch?
     /// What canceling the payment after a next action also does. Not in the contract.
     var onCancel: CancelSideEffect
+    /// Who performs this type's next actions. Not in the contract (a server spec is always `.engine`).
+    var performer: Performer = .engine
+
+    enum Performer: String, Codable, Equatable {
+        /// `PaymentConfirmer` performs each next action with the presenter its `NextAction` names.
+        case engine
+        /// Every next action goes to `STPPaymentHandler.handleNextAction(for:)`, which also owns what happens after it:
+        /// card and Link, whose 3DS2, 3DS redirect and post-return rules stay in STPPaymentHandler.
+        case stripePaymentHandler
+    }
 
     // MARK: - Params
 
@@ -94,6 +105,12 @@ struct ConfirmationMetadata: Codable, Equatable {
 
     struct NextAction: Codable, Equatable {
         var presenter: Presenter
+        /// The field of `next_action[type]` with the URL to open, e.g. `url` or `hosted_voucher_url`.
+        /// Not in the contract.
+        var urlPath: String?
+        /// The field with a web URL to open when `urlPath`'s app isn't installed (Alipay's `url`). Without one, the
+        /// web view opens `urlPath`'s URL. Not in the contract.
+        var fallbackURLPath: String?
         /// Which URL STPURLCallbackHandler listens for, i.e. when the customer counts as returned.
         var returnURL: ReturnURLSource
         /// How to try a native app before a web view.
@@ -130,10 +147,21 @@ struct ConfirmationMetadata: Codable, Equatable {
             var showsCountdown: Bool
             /// A next action field with the deadline, e.g. Pix's `expires_at`.
             var deadlineField: String?
+            /// The instructions under the title, from the SDK's strings.
+            var instructions: Instructions
+
+            enum Instructions: String, Codable, Equatable {
+                case blik
+                /// PayNow and PromptPay
+                case paynow
+                case mbWay
+                case bizum
+                case pix
+            }
         }
 
         enum ReturnURLSource: String, Codable, Equatable {
-            /// The next action's own `return_url`.
+            /// The next action's own `return_url` (`next_action[type].return_url`).
             case nextAction
             /// The confirm request's `return_url`, which must be set.
             case confirmRequired
@@ -267,6 +295,8 @@ extension ConfirmationMetadata {
         case unsupportedIntent
     }
 
+    static let stripeSDKNextActionType = "use_stripe_sdk"
+
     /// What the intent's status means for this type. Pure, so the parity harness can compare it with STPPaymentHandler.
     func decide(_ situation: Situation) -> Decision {
         let isAfterNextAction = situation.phase != .afterConfirm
@@ -307,7 +337,9 @@ extension ConfirmationMetadata {
         } else {
             outcome = statusRules.requiresAction
             if outcome == .performNextAction {
-                guard let type = situation.nextActionType, nextActions[type] != nil else {
+                // `use_stripe_sdk` (3DS2, the intent confirmation challenge) can come for any type, and always goes to
+                // STPPaymentHandler.
+                guard let type = situation.nextActionType, nextActions[type] != nil || type == Self.stripeSDKNextActionType else {
                     return .fail(.unsupportedNextAction)
                 }
             }

@@ -571,7 +571,7 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 }
 
 // MARK: - PaymentSheetAuthenticationContext
-extension BottomSheetViewController: PaymentSheetAuthenticationContext {
+extension BottomSheetViewController: PollingScreenHosting {
 
     func authenticationPresentingViewController() -> UIViewController {
         return findTopMostPresentedViewController()
@@ -598,10 +598,10 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         self.removeBlurEffect(animated: true, completion: completion)
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
-                                                      appearance: self.appearance, safariViewController: safariViewController)
-        pushContentViewController(pollingVC)
+    var pollingScreenAppearance: PaymentSheet.Appearance { appearance }
+
+    func presentPollingViewController(_ pollingViewController: PollingViewController, safariViewController: SFSafariViewController?) {
+        pushContentViewController(pollingViewController)
     }
 
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {

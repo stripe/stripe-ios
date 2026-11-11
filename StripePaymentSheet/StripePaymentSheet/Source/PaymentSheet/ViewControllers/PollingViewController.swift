@@ -14,6 +14,12 @@ import SafariServices
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
+/// Shows "approve the payment in your app" with a countdown while it polls the intent, then finishes the payment.
+///
+/// It doesn't know about STPPaymentHandler: it takes a display config (`PollingViewModel`), a `poll` closure that reads
+/// the intent once, and a `complete` closure. STPPaymentHandler's polling next actions use
+/// `init(currentAction:viewModel:appearance:safariViewController:)`, which adapts its action params; `PaymentConfirmer`
+/// passes its own closures.
 /// For internal SDK use only
 @objc(STP_Internal_PollingViewController)
 class PollingViewController: UIViewController {
@@ -22,17 +28,31 @@ class PollingViewController: UIViewController {
         case error
     }
 
+    /// One read of the intent.
+    struct PollResult {
+        let status: STPPaymentHandlerPollingStatus
+        /// Accepts the read intent as the payment's latest, e.g. STPPaymentHandler's action params.
+        let accept: () -> Void
+    }
+
+    /// Reads the intent once. `nil` means the read failed; polling keeps going.
+    typealias Poll = (@escaping (PollResult?) -> Void) -> Void
+
     // MARK: State
 
     private var oneSecondTimer: Timer?
-    private let currentAction: STPPaymentHandlerActionParams
+    /// Set by `stopPolling`, so becoming active again doesn't restart polling.
+    private var isStopped = false
+    private let authenticationContext: PaymentSheetAuthenticationContext?
+    private let poll: Poll
+    private let completion: (STPPaymentHandlerActionStatus) -> Void
     private let appearance: PaymentSheet.Appearance
     private let viewModel: PollingViewModel
     private let safariViewController: SFSafariViewController?
 
-    private lazy var intentStatusPoller = IntentStatusPoller<STPPaymentHandlerPollingResult, STPPaymentHandlerPollingStatus>(
+    private lazy var intentStatusPoller = IntentStatusPoller<PollResult, STPPaymentHandlerPollingStatus>(
         retryInterval: viewModel.retryInterval,
-        retrieveValue: currentAction.retrievePollingResult,
+        retrieveValue: poll,
         status: \.status,
         didUpdate: { [weak self] result in
             self?.didUpdate(result)
@@ -162,16 +182,49 @@ class PollingViewController: UIViewController {
 
     // MARK: Overrides
 
-    init(currentAction: STPPaymentHandlerActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance, safariViewController: SFSafariViewController? = nil) {
-        self.currentAction = currentAction
+    /// - Parameters:
+    ///   - deadline: Overrides the view model's deadline, e.g. Pix's `expires_at`.
+    ///   - authenticationContext: Dismisses the screen.
+    ///   - complete: Called once, with `.succeeded` or `.canceled`.
+    init(
+        viewModel: PollingViewModel,
+        deadline: Date? = nil,
+        authenticationContext: PaymentSheetAuthenticationContext?,
+        poll: @escaping Poll,
+        complete: @escaping (STPPaymentHandlerActionStatus) -> Void,
+        appearance: PaymentSheet.Appearance,
+        safariViewController: SFSafariViewController? = nil
+    ) {
+        self.authenticationContext = authenticationContext
+        self.poll = poll
+        self.completion = complete
         self.appearance = appearance
         self.viewModel = viewModel
-        if let expiresAt = currentAction.nextAction()?.pixDisplayQrCode?.expiresAt {
-            self.viewModel.deadline = expiresAt
+        if let deadline {
+            self.viewModel.deadline = deadline
         }
         self.safariViewController = safariViewController
 
         super.init(nibName: nil, bundle: nil)
+    }
+
+    /// For STPPaymentHandler's polling next actions (`PaymentSheetAuthenticationContext.presentPollingVCForAction`).
+    convenience init(currentAction: STPPaymentHandlerActionParams, viewModel: PollingViewModel, appearance: PaymentSheet.Appearance, safariViewController: SFSafariViewController? = nil) {
+        self.init(
+            viewModel: viewModel,
+            deadline: currentAction.nextAction()?.pixDisplayQrCode?.expiresAt,
+            authenticationContext: currentAction.authenticationContext as? PaymentSheetAuthenticationContext,
+            poll: { completion in
+                currentAction.retrievePollingResult { result in
+                    completion(result.map { result in PollResult(status: result.status, accept: result.updateActionIntent) })
+                }
+            },
+            complete: { status in
+                currentAction.complete(with: status, error: nil)
+            },
+            appearance: appearance,
+            safariViewController: safariViewController
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -245,7 +298,7 @@ class PollingViewController: UIViewController {
     }
 
     private func dismiss(completion: (() -> Void)? = nil) {
-        if let authContext = currentAction.authenticationContext as? PaymentSheetAuthenticationContext {
+        if let authContext = authenticationContext {
             authContext.authenticationContextWillDismiss?(self)
             authContext.dismiss(self, completion: completion)
         }
@@ -312,6 +365,7 @@ class PollingViewController: UIViewController {
     }
 
     private func beginPolling() {
+        guard !isStopped else { return }
         intentStatusPoller.beginPolling()
     }
 
@@ -324,11 +378,19 @@ class PollingViewController: UIViewController {
     }
 
     private func complete(with status: STPPaymentHandlerActionStatus) {
-        currentAction.complete(with: status, error: nil)
+        completion(status)
     }
 
-    private func didUpdate(_ result: STPPaymentHandlerPollingResult) {
-        result.updateActionIntent()
+    /// Stops polling without finishing, e.g. because the payment finished elsewhere.
+    func stopPolling() {
+        isStopped = true
+        suspendPolling()
+        setErrorStateWorkItem.cancel()
+        oneSecondTimer?.invalidate()
+    }
+
+    private func didUpdate(_ result: PollResult) {
+        result.accept()
         switch result.status {
         case .pending:
             break
@@ -373,4 +435,24 @@ extension PollingViewController: SheetNavigationBarDelegate {
         dismiss()
     }
 
+}
+
+// MARK: - Hosting
+
+/// A PaymentSheet container that shows a polling screen someone else built: pushed into the sheet, presented, or
+/// presented once the web view in front of it closes. STPPaymentHandler's `presentPollingVCForAction` and
+/// `PaymentConfirmer` both go through it.
+protocol PollingScreenHosting: PaymentSheetAuthenticationContext {
+    var pollingScreenAppearance: PaymentSheet.Appearance { get }
+    /// - Parameter safariViewController: The web view showing in front of the screen (PayNow, PromptPay, Pix), if any.
+    func presentPollingViewController(_ pollingViewController: PollingViewController, safariViewController: SFSafariViewController?)
+}
+
+extension PollingScreenHosting {
+    /// STPPaymentHandler's polling next actions.
+    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
+                                              appearance: pollingScreenAppearance, safariViewController: safariViewController)
+        presentPollingViewController(pollingVC, safariViewController: safariViewController)
+    }
 }
