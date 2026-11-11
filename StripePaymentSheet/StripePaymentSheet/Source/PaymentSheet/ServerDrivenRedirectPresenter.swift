@@ -129,7 +129,11 @@ final class ServerDrivenRedirectPresenter: NSObject, ServerDrivenRedirectPresent
                 session.presentationContextProvider = self
                 webAuthenticationSession = session
                 didOpen(.webAuthenticationSession)
-                session.start()
+                // If the session doesn't start, its completion never runs, so finish here rather than wait forever.
+                if !session.start() {
+                    webAuthenticationSession = nil
+                    finish(.failed(ServerDrivenPaymentHandler.error(.requiresAuthenticationContextErrorCode, loggingSafeErrorMessage: "ASWebAuthenticationSession failed to start")))
+                }
             } else {
                 let safariViewController = SFSafariViewController(url: url)
                 safariViewController.modalPresentationStyle = .overFullScreen
