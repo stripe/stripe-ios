@@ -41,6 +41,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private let linkBrandProvider: () -> LinkBrand
     private var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    private let featuredInstitutionsLoader: FeaturedInstitutionsLoader?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -67,6 +68,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         amount: Int?,
         incentive: PaymentMethodIncentive?,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        featuredInstitutionsLoader: FeaturedInstitutionsLoader? = nil,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
         self.appearance = appearance
@@ -83,6 +85,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.linkBrandProvider = linkBrandProvider ?? { linkBrand }
         self.paymentMethodTypes = paymentMethodTypes
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        self.featuredInstitutionsLoader = featuredInstitutionsLoader
 
         super.init(nibName: nil, bundle: nil)
         self.renderContent()
@@ -173,6 +176,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 hasSavedCard: savedPaymentMethods.contains { $0.type == .card },
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 promotionsHelper: paymentMethodMessagingPromotionsHelper,
+                featuredInstitutionsLoader: featuredInstitutionsLoader,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
                 shouldAnimateOnPress: delegate?.willDisplayForm(selection) == true

@@ -498,6 +498,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             amount: loadResult.intent.amount,
             incentive: loadResult.elementsSession.incentive,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            featuredInstitutionsLoader: loadResult.featuredInstitutionsLoader,
             delegate: self
         )
     }
