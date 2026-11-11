@@ -40,7 +40,10 @@ enum PaymentConfirmerFamily: String, CaseIterable {
         if [.cashApp, .swish, .alipay].contains(type) {
             return .appToApp
         }
-        if metadata.nextActions.values.contains(.voucher) {
+        // A hosted voucher: a redirect whose requires_action afterwards means the customer pays later.
+        if metadata.nextActions.values.contains(where: { nextAction in
+            if case .redirect = nextAction.presenter, nextAction.whileRequiresAction == .succeed { return true } else { return false }
+        }) {
             return .voucher
         }
         if [.SEPADebit, .bacsDebit, .AUBECSDebit, .USBankAccount].contains(type) {

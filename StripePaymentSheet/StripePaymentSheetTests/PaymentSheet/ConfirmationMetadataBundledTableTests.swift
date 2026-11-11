@@ -8,8 +8,8 @@
 import XCTest
 
 @testable@_spi(InternalOnlyAPI) import StripeCore
-@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 
 /// The bundled `confirmation_metadata.json` must be complete and fully understood, so a bad file fails CI.
 final class ConfirmationMetadataBundledTableTests: XCTestCase {
