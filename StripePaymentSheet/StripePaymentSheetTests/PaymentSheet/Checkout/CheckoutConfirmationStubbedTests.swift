@@ -351,10 +351,11 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let result = await checkout.confirm(makePaymentMethodFlow(for: checkout))
 
         // Then the coordinator still commits the returned Checkout Session
-        guard case .failed = result else {
+        guard case .failed(let error) = result else {
             XCTFail("Expected confirmation to fail, got \(result)")
             return
         }
+        XCTAssertEqual((error as NSError).code, STPPaymentHandlerErrorCode.requiresPaymentMethodErrorCode.rawValue)
         XCTAssertEqual(checkout.session.status, .complete(.paid))
     }
 

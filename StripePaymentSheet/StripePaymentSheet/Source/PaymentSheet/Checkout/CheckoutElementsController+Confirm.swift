@@ -557,15 +557,11 @@ extension CheckoutElementsController {
         } else if response.paymentResponse?.status != .requiresAction {
             // If status != requires_action, continue.
         } else if let paymentIntent = response.paymentResponse?.paymentIntent {
-            let result: (STPPaymentHandlerActionStatus, STPPaymentIntent?, NSError?) = await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(
-                    for: paymentIntent,
-                    with: authenticationContext,
-                    returnURL: requestParameters.returnURL
-                ) { status, paymentIntent, error in
-                    continuation.resume(returning: (status, paymentIntent, error))
-                }
-            }
+            let result = await paymentHandler.handleNextAction(
+                for: paymentIntent,
+                with: authenticationContext,
+                returnURL: requestParameters.returnURL
+            )
             switch result.0 {
             case .succeeded:
                 break
@@ -579,15 +575,11 @@ extension CheckoutElementsController {
                 return .failed(error, sessionResponse: response)
             }
         } else if let setupIntent = response.paymentResponse?.setupIntent {
-            let result: (STPPaymentHandlerActionStatus, STPSetupIntent?, NSError?) = await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(
-                    for: setupIntent,
-                    with: authenticationContext,
-                    returnURL: requestParameters.returnURL
-                ) { status, setupIntent, error in
-                    continuation.resume(returning: (status, setupIntent, error))
-                }
-            }
+            let result = await paymentHandler.handleNextAction(
+                for: setupIntent,
+                with: authenticationContext,
+                returnURL: requestParameters.returnURL
+            )
             switch result.0 {
             case .succeeded:
                 break

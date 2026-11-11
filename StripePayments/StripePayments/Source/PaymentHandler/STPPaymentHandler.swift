@@ -436,6 +436,20 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
+    /// Handles any `nextAction` required to authenticate the PaymentIntent.
+    /// - Note: The PaymentIntent must have been fetched with an expanded paymentMethod object.
+    @_spi(InternalOnlyAPI) public func handleNextAction(
+        for paymentIntent: STPPaymentIntent,
+        with authenticationContext: STPAuthenticationContext,
+        returnURL: String?
+    ) async -> (STPPaymentHandlerActionStatus, STPPaymentIntent?, NSError?) {
+        return await withCheckedContinuation { continuation in
+            handleNextAction(for: paymentIntent, with: authenticationContext, returnURL: returnURL) { status, paymentIntent, error in
+                continuation.resume(returning: (status, paymentIntent, error))
+            }
+        }
+    }
+
     @_spi(InternalOnlyAPI) public func handleNextAction(
         for paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
@@ -714,6 +728,20 @@ public class STPPaymentHandler: NSObject {
                 self.handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false, completion: completion)
             } else {
                 completion(.failed, setupIntent, error as NSError?)
+            }
+        }
+    }
+
+    /// Handles any `nextAction` required to authenticate the SetupIntent.
+    /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object.
+    @_spi(InternalOnlyAPI) public func handleNextAction(
+        for setupIntent: STPSetupIntent,
+        with authenticationContext: STPAuthenticationContext,
+        returnURL: String?
+    ) async -> (STPPaymentHandlerActionStatus, STPSetupIntent?, Error?) {
+        return await withCheckedContinuation { continuation in
+            handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL) { status, setupIntent, error in
+                continuation.resume(returning: (status, setupIntent, error))
             }
         }
     }
