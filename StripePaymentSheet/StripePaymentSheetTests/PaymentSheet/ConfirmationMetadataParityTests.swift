@@ -95,7 +95,10 @@ final class ConfirmationMetadataParityTests: XCTestCase {
         // M3: requires_confirmation after a next action fails through confirmPaymentIntent (its guard, SPH:236, leaves it
         // out, and asserts) but succeeds through handleNextAction (SPH:482). The table says succeed (manual confirmation).
         KnownMismatch(id: "M3", count: 122) { $0.scenario.hasPrefix("pi/requires_confirmation") && $0.scenario.hasSuffix("/via_confirm") },
-        // M4 (Alipay SetupIntents skip the Marlin ping) is gone: `beforeFetch` is PaymentIntent-only, like SPH:1626.
+        // M4, deliberate: STPPaymentHandler loads Alipay's legacy "Marlin" return URL before each PaymentIntent read
+        // (SPH:1597); the table has no such step. Alipay PaymentIntents run on Alipay+ (EVO), where the ping is a no-op
+        // (~/stripe/worktrees/handoff/alipay-marlin-research.md, task #69).
+        KnownMismatch(id: "M4", count: 2) { $0.type == "alipay" && $0.scenario.hasSuffix("/before_fetch") && $0.native == "ping" && $0.table == "none" },
         // M5: handleNextAction(for: SetupIntent)'s guard (SPH:770) only accepts succeeded, so a terminal next action
         // (a voucher, microdeposits) that STPPaymentHandler completes as succeeded is turned into a failure.
         KnownMismatch(id: "M5", count: 2) { $0.scenario.hasPrefix("si/requires_action+") && $0.scenario.hasSuffix("/via_handle_next_action") },
@@ -420,8 +423,8 @@ final class ConfirmationMetadataParityTests: XCTestCase {
             report.compare("after_next_action", run.type, "\(scenario)/read_endpoint", native: firstFetch.endpoint, table: tableRetrieval, source: "driven")
 
             if run.nextActionType == "alipay_handle_redirect" {
-                let tableBeforeFetch = run.intent == .paymentIntent ? metadata.beforeFetch : nil
-                report.compare("after_next_action", run.type, "\(scenario)/before_fetch", native: run.loadedMarlinURL ? ConfirmationMetadata.BeforeFetch.loadAlipayMarlinReturnURL.rawValue : "none", table: tableBeforeFetch?.rawValue ?? "none", source: "driven")
+                // The table never pings (M4).
+                report.compare("after_next_action", run.type, "\(scenario)/before_fetch", native: run.loadedMarlinURL ? "ping" : "none", table: "none", source: "driven")
             }
             if run.status == "requires_action", table == .cancel, ["redirect_to_url", "use_stripe_sdk"].contains(run.nextActionType ?? "") {
                 report.compare("after_next_action", run.type, "\(scenario)/on_cancel", native: run.canceledSource ? "cancel3DSSource" : "none", table: metadata.onCancel.rawValue, source: "driven")

@@ -37,6 +37,10 @@ extension ConfirmationMetadataParityTests {
         KnownMismatch(id: "M3", count: 122) { $0.scenario.hasPrefix("pi/requires_confirmation") && $0.scenario.hasSuffix("/via_confirm") },
         // M5: a SetupIntent whose terminal next action (a voucher, microdeposits) is done succeeds whichever way PaymentSheet
         // came in. STPPaymentHandler's handleNextAction(for:) guard fails it (SPH:770).
+        // M4: the engine doesn't load Alipay's legacy "Marlin" return URL before reading a PaymentIntent; STPPaymentHandler
+        // does (SPH:1597). Alipay PaymentIntents run on Alipay+ (EVO), where the ping is a no-op
+        // (~/stripe/worktrees/handoff/alipay-marlin-research.md, task #69).
+        KnownMismatch(id: "M4", count: 2) { $0.type == "alipay" && $0.scenario.hasSuffix("/before_fetch") && $0.native == "ping" && $0.table == "none" },
         KnownMismatch(id: "M5", count: 2) { $0.scenario.hasPrefix("si/requires_action+") && $0.scenario.hasSuffix("/via_handle_next_action") },
         // F1, a deliberate fix of an STPPaymentHandler bug: closing Pix's instructions web view never cancels; the polling
         // screen finishes the payment, like PayNow and PromptPay, for PaymentIntents and SetupIntents. STPPaymentHandler

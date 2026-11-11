@@ -297,11 +297,8 @@ final class PaymentConfirmer {
         guard progress.hasPerformedNextAction else {
             return try await api.fetchIntent(intent, retrieval: .retrieve, timeout: remainingBudget(progress))
         }
-        if case .paymentIntent(let paymentIntent) = intent, metadata.beforeFetch == .loadAlipayMarlinReturnURL,
-           let marlinReturnURL = paymentIntent.nextAction?.alipayHandleRedirect?.paymentConfirmerMarlinReturnURL {
-            // Alipay updates the intent's status only once its return URL is loaded (STPPaymentHandler.swift:1597).
-            await api.loadURLBeforeFetch(marlinReturnURL)
-        }
+        // Unlike STPPaymentHandler (STPPaymentHandler.swift:1597), there's no Alipay "Marlin" ping before the read:
+        // Alipay PaymentIntents run on Alipay+ (EVO), where the ping is a no-op.
         return try await api.fetchIntent(intent, retrieval: metadata.retrieval, timeout: remainingBudget(progress))
     }
 
@@ -538,7 +535,6 @@ enum ConfirmingParams {
 protocol PaymentConfirmerAPI {
     func confirmIntent(_ params: ConfirmingParams) async throws -> ConfirmingIntent
     func fetchIntent(_ intent: ConfirmingIntent, retrieval: ConfirmationMetadata.Retrieval, timeout: TimeInterval?) async throws -> ConfirmingIntent
-    func loadURLBeforeFetch(_ url: URL) async
 }
 
 extension STPAPIClient: PaymentConfirmerAPI {
@@ -567,15 +563,6 @@ extension STPAPIClient: PaymentConfirmerAPI {
         }
     }
 
-    func loadURLBeforeFetch(_ url: URL) async {
-        // Like STPPaymentHandler: the response doesn't matter, only that the request finished.
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            URLSession.shared.dataTask(with: URLRequest(url: url)) { _, _, _ in
-                continuation.resume()
-            }.resume()
-        }
-    }
-
     private func withIntentContinuation<Intent>(_ start: (@escaping (Intent?, Error?) -> Void) -> Void) async throws -> Intent {
         return try await withCheckedThrowingContinuation { continuation in
             start { intent, error in
@@ -598,21 +585,4 @@ struct PaymentConfirmerClock {
         now: { Date() },
         sleep: { seconds in try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000)) }
     )
-}
-
-extension STPIntentActionAlipayHandleRedirect {
-    /// The `https://hooks.stripe.com/...` URL in the native URL's `return_url`. A copy of the internal
-    /// `STPIntentActionAlipayHandleRedirect.marlinReturnURL`.
-    var paymentConfirmerMarlinReturnURL: URL? {
-        guard
-            let escapedNativeURL = nativeURL?.absoluteString.removingPercentEncoding,
-            let regex = try? NSRegularExpression(pattern: "return_url=([^&]*)", options: []),
-            let match = regex.firstMatch(in: escapedNativeURL, options: [], range: NSRange(escapedNativeURL.startIndex..<escapedNativeURL.endIndex, in: escapedNativeURL)),
-            let range = Range(match.range(at: 1), in: escapedNativeURL),
-            let marlinReturnURL = String(escapedNativeURL[range]).removingPercentEncoding
-        else {
-            return nil
-        }
-        return URL(string: marlinReturnURL)
-    }
 }

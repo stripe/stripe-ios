@@ -668,8 +668,8 @@ final class PaymentConfirmerNativeTests: XCTestCase {
         XCTAssertTrue(performer.performed.isEmpty)
     }
 
-    func testAlipayLoadsItsReturnURLBeforeEachReadAndRefreshesNothing() async {
-        // Given Alipay's next action, with its Marlin URL in the native URL's return_url
+    func testAlipayDoesNotPingMarlinBeforeReading() async {
+        // Given Alipay's next action, with a legacy Marlin URL in the native URL's return_url
         let marlin = "https://hooks.stripe.com/marlin/1"
         let details: [String: Any] = [
             "native_url": "alipay://alipayclient/?return_url=\(marlin.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)",
@@ -683,12 +683,13 @@ final class PaymentConfirmerNativeTests: XCTestCase {
         // When it's confirmed
         let result = await confirmPaymentIntent(.alipay).result
 
-        // Then it tries the native URL, falls back to the web URL, returns to the confirm-time URL, and pings Marlin first
+        // Then it tries the native URL, falls back to the web URL, returns to the confirm-time URL, and reads the intent
+        // without loading the Marlin URL first (M4: Alipay+ makes the ping a no-op)
         XCTAssertEqual(result, .completed)
         XCTAssertEqual(performer.redirects.first?.appURL?.scheme, "alipay")
         XCTAssertEqual(performer.redirects.first?.webURL, URL(string: "https://alipay.example/pay"))
         XCTAssertEqual(performer.redirects.first?.returnURL, URL(string: PaymentConfirmerFixtures.confirmReturnURL))
-        XCTAssertEqual(api.calls, ["confirm", "load:\(marlin)", "retrieve"])
+        XCTAssertEqual(api.calls, ["confirm", "retrieve"])
     }
 
     func testRedirectFlagsFromTheURL() throws {
@@ -889,10 +890,6 @@ final class StubPaymentConfirmerAPI: PaymentConfirmerAPI {
     func fetchIntent(_ intent: ConfirmingIntent, retrieval: ConfirmationMetadata.Retrieval, timeout: TimeInterval?) async throws -> ConfirmingIntent {
         calls.append(retrieval.rawValue)
         return try fetchResults.removeFirst().get()
-    }
-
-    func loadURLBeforeFetch(_ url: URL) async {
-        calls.append("load:\(url.absoluteString)")
     }
 }
 
