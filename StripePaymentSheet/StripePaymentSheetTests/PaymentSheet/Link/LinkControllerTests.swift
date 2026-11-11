@@ -194,7 +194,7 @@ final class LinkControllerTests: XCTestCase {
 
     func testWebPaymentMethodPreviewShowsBankAccount() {
         // Given a bank account payment method returned by the Link web popup
-        let paymentMethod = LinkWalletButtonTests.bankAccountPaymentMethod()
+        let paymentMethod = LinkWalletButtonUIViewTests.bankAccountPaymentMethod()
         let paymentOption: PaymentOption = .link(option: .withPaymentMethod(brand: .link, paymentMethod: paymentMethod))
 
         // When making its preview
@@ -208,7 +208,7 @@ final class LinkControllerTests: XCTestCase {
 
     func testWebPaymentMethodPreviewOnlyShowsLinkForCardBrandToken() {
         // Given a card-brand token returned by the Link web popup, e.g. for a bank account selected in Link
-        let paymentMethod = LinkWalletButtonTests.linkCardBrandTokenPaymentMethod()
+        let paymentMethod = LinkWalletButtonUIViewTests.linkCardBrandTokenPaymentMethod()
         XCTAssertTrue(paymentMethod.isLinkCardBrandToken)
         let paymentOption: PaymentOption = .link(option: .withPaymentMethod(brand: .link, paymentMethod: paymentMethod))
 
@@ -222,7 +222,7 @@ final class LinkControllerTests: XCTestCase {
 
     func testRegularCardIsNotLinkCardBrandToken() {
         XCTAssertFalse(STPPaymentMethod._testCard().isLinkCardBrandToken)
-        XCTAssertFalse(LinkWalletButtonTests.bankAccountPaymentMethod().isLinkCardBrandToken)
+        XCTAssertFalse(LinkWalletButtonUIViewTests.bankAccountPaymentMethod().isLinkCardBrandToken)
     }
 
     func testWebPaymentMethodPreviewIsNilWithoutCard() {

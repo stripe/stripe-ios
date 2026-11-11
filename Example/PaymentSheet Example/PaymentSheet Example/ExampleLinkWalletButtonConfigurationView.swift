@@ -146,11 +146,11 @@ struct ExampleLinkWalletButtonConfigurationView: View {
 
                         switch configuration.uiFramework {
                         case .swiftUI:
-                            Text("Embeds the button with LinkWalletButtonView. The presenting view controller is found from the button's window.")
+                            Text("Embeds the SwiftUI LinkWalletButton, which reports the result to a closure. The presenting view controller is found from the button's window.")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         case .uiKit:
-                            Text("Embeds LinkWalletButton in a UIViewController with Auto Layout and sets its presentingViewController.")
+                            Text("Embeds LinkWalletButtonUIView in a UIViewController with Auto Layout and sets its presentingViewController.")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }

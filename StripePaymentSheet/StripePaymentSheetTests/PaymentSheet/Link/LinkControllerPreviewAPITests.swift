@@ -61,8 +61,12 @@ final class LinkControllerPreviewAPITests: XCTestCase {
                 // The customer the button looks up and prefills in Link
                 controller.email = "jenny.rosen@example.com"
                 controller.phoneNumber = "+14155551234"
-                let button = LinkWalletButton(linkController: controller)
+                let button = LinkWalletButtonUIView(linkController: controller)
                 _ = button
+                _ = LinkWalletButton(linkController: controller) { result in
+                    _ = result
+                }
+                _ = LinkWalletButton(linkController: controller, onWillPresent: {}, onCompletion: { _ in })
 
                 controller.present(
                     email: "jenny.rosen@example.com",

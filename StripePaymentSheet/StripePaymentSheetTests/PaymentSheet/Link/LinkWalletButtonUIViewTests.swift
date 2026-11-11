@@ -1,5 +1,5 @@
 //
-//  LinkWalletButtonTests.swift
+//  LinkWalletButtonUIViewTests.swift
 //  StripePaymentSheetTests
 //
 
@@ -11,7 +11,7 @@ import UIKit
 import XCTest
 
 @MainActor
-final class LinkWalletButtonTests: XCTestCase {
+final class LinkWalletButtonUIViewTests: XCTestCase {
     private let email = "jane.diaz@example.com"
 
     // MARK: - Display state
@@ -180,7 +180,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testWithoutEmailShowsCustomerWhoSignedInWithNativeLink() {
         // Given a button without an email
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller)
+        let button = LinkWalletButtonUIView(controller: controller)
         button.presentingViewController = UIViewController()
 
         // When the customer signs in with native Link and selects a payment method
@@ -195,7 +195,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testWithoutEmailShowsCustomerWhoSignedInButCanceled() {
         // Given a button without an email
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller)
+        let button = LinkWalletButtonUIView(controller: controller)
         button.presentingViewController = UIViewController()
 
         // When the customer signs in with native Link, then closes it without selecting a payment method
@@ -210,7 +210,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testWithoutEmailLooksUpCustomerFromWebPopupPaymentMethod() {
         // Given a button without an email, and no native Link session
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller)
+        let button = LinkWalletButtonUIView(controller: controller)
         button.presentingViewController = UIViewController()
 
         // When the Link web popup returns a payment method with the customer's email
@@ -233,7 +233,7 @@ final class LinkWalletButtonTests: XCTestCase {
         // Given a button without an email, and an unverified Link account on the device
         let controller = MockLinkWalletButtonController()
         controller.linkAccount = Stubs.linkAccount(email: email)
-        let button = LinkWalletButton(controller: controller)
+        let button = LinkWalletButtonUIView(controller: controller)
         button.presentingViewController = UIViewController()
 
         // When the customer closes Link without signing in
@@ -247,7 +247,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testMerchantEmailReplacesCustomerWhoSignedIn() {
         // Given a button showing a customer who signed in through it
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller)
+        let button = LinkWalletButtonUIView(controller: controller)
         button.presentingViewController = UIViewController()
         button.didTap()
         controller.linkAccount = verifiedLinkAccount(email: email)
@@ -300,7 +300,7 @@ final class LinkWalletButtonTests: XCTestCase {
         controller.linkAccount = Stubs.linkAccount(email: email)
 
         // When the button is created without an email
-        let button = LinkWalletButton(controller: controller)
+        let button = LinkWalletButtonUIView(controller: controller)
 
         // Then it doesn't look up a customer
         XCTAssertEqual(controller.lookupEmails, [])
@@ -312,7 +312,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testTapWithoutEmailPresentsLink() {
         // Given a button without an email
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller)
+        let button = LinkWalletButtonUIView(controller: controller)
         button.presentingViewController = UIViewController()
 
         // When the button is tapped
@@ -326,7 +326,7 @@ final class LinkWalletButtonTests: XCTestCase {
     func testSettingEmailLooksUpCustomer() {
         // Given a button created without an email
         let controller = MockLinkWalletButtonController()
-        let button = LinkWalletButton(controller: controller)
+        let button = LinkWalletButtonUIView(controller: controller)
 
         // When the merchant provides an email
         controller.email = email
@@ -462,15 +462,65 @@ final class LinkWalletButtonTests: XCTestCase {
         XCTAssertEqual(controller.presentCalls.count, 2)
     }
 
+    // MARK: - SwiftUI
+
+    func testSwiftUICoordinatorForwardsDelegateCallsToClosures() {
+        // Given a button whose delegate is a SwiftUI coordinator
+        let controller = MockLinkWalletButtonController()
+        let button = makeButton(controller: controller)
+        button.presentingViewController = UIViewController()
+        var willPresentCount = 0
+        var results: [Result<LinkController.PaymentMethodResult, Error>] = []
+        let coordinator = LinkWalletButtonCoordinator(
+            onWillPresent: { willPresentCount += 1 },
+            onCompletion: { results.append($0) }
+        )
+        button.delegate = coordinator
+
+        // When the button is tapped
+        button.didTap()
+
+        // Then `onWillPresent` is called
+        XCTAssertEqual(willPresentCount, 1)
+
+        // When the Link flow is canceled
+        controller.completePresent(at: 0, with: .success(.canceled))
+
+        // Then `onCompletion` receives the result
+        XCTAssertEqual(results.count, 1)
+        guard case .success(.canceled) = results.first else {
+            return XCTFail("Expected a canceled result, got \(String(describing: results.first))")
+        }
+    }
+
+    func testSwiftUICoordinatorUsesLatestClosures() {
+        // Given a SwiftUI coordinator whose closures were replaced, e.g. when the view updated
+        let button = makeButton(controller: MockLinkWalletButtonController())
+        var oldClosureCalled = false
+        var newClosureCalled = false
+        let coordinator = LinkWalletButtonCoordinator(
+            onWillPresent: {},
+            onCompletion: { _ in oldClosureCalled = true }
+        )
+        coordinator.onCompletion = { _ in newClosureCalled = true }
+
+        // When the Link flow finishes
+        coordinator.linkWalletButtonUIView(button, didCompleteWith: .success(.canceled))
+
+        // Then only the latest closure is called
+        XCTAssertFalse(oldClosureCalled)
+        XCTAssertTrue(newClosureCalled)
+    }
+
     // MARK: - Helpers
 
     private func makeButton(
         controller: MockLinkWalletButtonController,
         email: String? = nil
-    ) -> LinkWalletButton {
+    ) -> LinkWalletButtonUIView {
         controller.email = email ?? self.email
         controller.phoneNumber = "+15555555555"
-        return LinkWalletButton(controller: controller)
+        return LinkWalletButtonUIView(controller: controller)
     }
 
     private func verifiedLinkAccount(email: String) -> PaymentSheetLinkAccount {
@@ -611,16 +661,16 @@ private final class MockLinkWalletButtonController: LinkWalletButtonControlling 
 }
 
 @MainActor
-private final class MockLinkWalletButtonDelegate: LinkWalletButtonDelegate {
+private final class MockLinkWalletButtonDelegate: LinkWalletButtonUIViewDelegate {
     private(set) var willPresentCount = 0
     private(set) var results: [Result<LinkController.PaymentMethodResult, Error>] = []
 
-    func linkWalletButtonWillPresent(_ button: LinkWalletButton) {
+    func linkWalletButtonUIViewWillPresent(_ button: LinkWalletButtonUIView) {
         willPresentCount += 1
     }
 
-    func linkWalletButton(
-        _ button: LinkWalletButton,
+    func linkWalletButtonUIView(
+        _ button: LinkWalletButtonUIView,
         didCompleteWith result: Result<LinkController.PaymentMethodResult, Error>
     ) {
         results.append(result)

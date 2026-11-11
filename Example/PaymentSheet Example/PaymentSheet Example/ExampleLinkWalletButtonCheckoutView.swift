@@ -11,10 +11,12 @@ import StripePayments
 
 @available(iOS 16.0, *)
 @MainActor
-final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDelegate {
+final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonUIViewDelegate {
     enum Phase {
         case loading
-        case ready(LinkController, LinkWalletButton)
+        /// With the UIKit integration, also the `LinkWalletButtonUIView`. The SwiftUI integration's `LinkWalletButton`
+        /// creates its own.
+        case ready(LinkController, LinkWalletButtonUIView?)
         case error(String)
     }
 
@@ -55,10 +57,14 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
 
             linkController.email = configuration.email.isEmpty ? nil : configuration.email
             linkController.phoneNumber = configuration.phone.isEmpty ? nil : configuration.phone
-            let button = LinkWalletButton(linkController: linkController)
-            button.delegate = self
-
-            phase = .ready(linkController, button)
+            switch configuration.uiFramework {
+            case .swiftUI:
+                phase = .ready(linkController, nil)
+            case .uiKit:
+                let button = LinkWalletButtonUIView(linkController: linkController)
+                button.delegate = self
+                phase = .ready(linkController, button)
+            }
         } catch {
             phase = .error(error.localizedDescription)
         }
@@ -98,16 +104,11 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
         return customerId
     }
 
-    // MARK: - LinkWalletButtonDelegate
-
-    func linkWalletButtonWillPresent(_ button: LinkWalletButton) {
+    func linkWalletButtonWillPresent() {
         message = nil
     }
 
-    func linkWalletButton(
-        _ button: LinkWalletButton,
-        didCompleteWith result: Result<LinkController.PaymentMethodResult, Error>
-    ) {
+    func linkWalletButtonDidComplete(with result: Result<LinkController.PaymentMethodResult, Error>) {
         switch result {
         case .success(.completed(let paymentMethod)):
             self.paymentMethod = paymentMethod
@@ -120,6 +121,19 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonDeleg
         case .failure(let error):
             message = .init(text: "Error: \(error.localizedDescription)", tint: .red)
         }
+    }
+
+    // MARK: - LinkWalletButtonUIViewDelegate
+
+    func linkWalletButtonUIViewWillPresent(_ button: LinkWalletButtonUIView) {
+        linkWalletButtonWillPresent()
+    }
+
+    func linkWalletButtonUIView(
+        _ button: LinkWalletButtonUIView,
+        didCompleteWith result: Result<LinkController.PaymentMethodResult, Error>
+    ) {
+        linkWalletButtonDidComplete(with: result)
     }
 }
 
@@ -162,13 +176,16 @@ struct ExampleLinkWalletButtonCheckoutView: View {
                             .foregroundColor(.secondary)
                     }
                     .frame(maxWidth: .infinity, minHeight: 44)
-                case .ready(_, let button):
-                    switch configuration.uiFramework {
-                    case .swiftUI:
-                        LinkWalletButtonView(button: button)
-                    case .uiKit:
-                        LinkWalletButtonUIKitHost(button: button)
+                case .ready(let linkController, let uiKitButton):
+                    if let uiKitButton {
+                        LinkWalletButtonUIKitHost(button: uiKitButton)
                             .frame(height: 44)
+                    } else {
+                        LinkWalletButton(
+                            linkController: linkController,
+                            onWillPresent: { session.linkWalletButtonWillPresent() },
+                            onCompletion: { session.linkWalletButtonDidComplete(with: $0) }
+                        )
                     }
                 case .error(let errorMessage):
                     MessageBanner(text: "Failed to load: \(errorMessage)", tint: .red)
@@ -228,11 +245,11 @@ struct ExampleLinkWalletButtonCheckoutView: View {
     }
 }
 
-/// Hosts a `LinkWalletButton` the way a UIKit integration would: in a view controller, using Auto Layout,
+/// Hosts a `LinkWalletButtonUIView` the way a UIKit integration would: in a view controller, using Auto Layout,
 /// with `presentingViewController` set explicitly.
 @available(iOS 16.0, *)
 private struct LinkWalletButtonUIKitHost: UIViewControllerRepresentable {
-    let button: LinkWalletButton
+    let button: LinkWalletButtonUIView
 
     func makeUIViewController(context: Context) -> LinkWalletButtonHostViewController {
         LinkWalletButtonHostViewController(button: button)
@@ -242,9 +259,9 @@ private struct LinkWalletButtonUIKitHost: UIViewControllerRepresentable {
 }
 
 private final class LinkWalletButtonHostViewController: UIViewController {
-    private let button: LinkWalletButton
+    private let button: LinkWalletButtonUIView
 
-    init(button: LinkWalletButton) {
+    init(button: LinkWalletButtonUIView) {
         self.button = button
         super.init(nibName: nil, bundle: nil)
     }
