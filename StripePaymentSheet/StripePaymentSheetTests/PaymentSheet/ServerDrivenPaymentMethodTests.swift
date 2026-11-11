@@ -71,8 +71,10 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         XCTAssertEqual(paymentMethod.paymentMethodDataType, "demo_pay")
         XCTAssertEqual(paymentMethod.icon.light, .init(url: URL(string: ServerDrivenPaymentMethodFixtures.lightIconURL)!, sizing: .resizable))
         XCTAssertFalse(paymentMethod.icon.isTemplate)
-        XCTAssertTrue(paymentMethod.processingIsSuccess)
-        XCTAssertEqual(paymentMethod.postRedirectPollSeconds, 5)
+        XCTAssertEqual(
+            paymentMethod.confirmSpec,
+            .init(nextActions: [.redirectToURL], retrieval: .retrieve, processing: .succeed, requiresAction: .poll, pollSeconds: 5)
+        )
     }
 
     func testInit_throwsForValuesItCantRender() throws {

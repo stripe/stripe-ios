@@ -20,12 +20,8 @@ struct ServerDrivenPaymentMethod {
     let icon: Icon
     /// The `payment_method_data[type]` to confirm with.
     let paymentMethodDataType: String
-    // STPPaymentHandler doesn't use these yet (see the TODO in `PaymentSheet.confirm`), so an intent that's `processing`,
-    // or still `requires_action` after a redirect, fails or is canceled.
-    /// Whether a `processing` intent after confirmation counts as success.
-    let processingIsSuccess: Bool
-    /// How long to keep polling the intent after the customer returns from a redirect.
-    let postRedirectPollSeconds: Int
+    /// How `ServerDrivenPaymentHandler` performs next actions and interprets the intent's status.
+    let confirmSpec: ServerDrivenConfirmSpec
 
     struct Icon {
         struct Image: Equatable {
@@ -85,14 +81,7 @@ struct ServerDrivenPaymentMethod {
                 throw UnsupportedValue(value: "form_element:unparsable")
             }
         }
-        for nextAction in paymentMethod.confirm.nextActions {
-            switch nextAction {
-            case .redirectToUrl:
-                break
-            case .unparsable:
-                throw UnsupportedValue(value: "next_action:unparsable")
-            }
-        }
+        let confirmSpec = try ServerDrivenConfirmSpec(paymentMethod.confirm)
         switch paymentMethod.confirm.mandateData {
         case .none:
             break
@@ -130,8 +119,7 @@ struct ServerDrivenPaymentMethod {
             isTemplate: isTemplate
         )
         self.paymentMethodDataType = paymentMethod.confirm.paymentMethodDataType
-        self.processingIsSuccess = paymentMethod.confirm.processingIsSuccess
-        self.postRedirectPollSeconds = paymentMethod.confirm.postRedirectPollSeconds
+        self.confirmSpec = confirmSpec
     }
 
     private static func image(_ image: MobileSession.IconImage) throws -> Icon.Image {
