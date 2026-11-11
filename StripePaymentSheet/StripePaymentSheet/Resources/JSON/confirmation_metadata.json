@@ -19,16 +19,6 @@
               "requires_action" : {
                 "outcome" : "cancel"
               }
-            },
-            "after_web_view_dismissed" : {
-              "processing" : {
-                "on_timeout" : "succeed",
-                "outcome" : "poll",
-                "poll_seconds" : 30
-              },
-              "requires_action" : {
-                "outcome" : "cancel"
-              }
             }
           },
           "setup_intent" : {
@@ -43,16 +33,6 @@
             "after_next_action" : {
               "processing" : {
                 "outcome" : "fail"
-              },
-              "requires_action" : {
-                "outcome" : "cancel"
-              }
-            },
-            "after_web_view_dismissed" : {
-              "processing" : {
-                "on_timeout" : "fail",
-                "outcome" : "poll",
-                "poll_seconds" : 30
               },
               "requires_action" : {
                 "outcome" : "cancel"
@@ -82,13 +62,7 @@
             }
           }
         ],
-        "on_cancel" : "cancel_3ds_source",
         "payment_method_data_type" : "card",
-        "payment_method_options" : [
-          "card_cvc_recollection",
-          "card_network"
-        ],
-        "performer" : "stripe_payment_handler",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "succeed",
@@ -159,9 +133,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "paypal",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -232,9 +204,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "klarna",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "refresh",
           "on_processing" : "poll",
@@ -285,9 +255,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "afterpay_clearpay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -338,9 +306,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "affirm",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -411,9 +377,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "ideal",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -484,9 +448,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "bancontact",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -553,9 +515,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "sepa_debit",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "succeed",
@@ -606,9 +566,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "eps",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -661,9 +619,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "p24",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -739,12 +695,7 @@
             }
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "us_bank_account",
-        "payment_method_options" : [
-          "us_bank_account_verification_method"
-        ],
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "succeed",
@@ -811,9 +762,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "au_becs_debit",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "succeed",
@@ -892,9 +841,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "cashapp",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "refresh",
           "on_processing" : "poll",
@@ -939,11 +886,15 @@
           {
             "app_to_app" : "none",
             "polling_screen" : {
-              "instructions" : "blik",
+              "cancel_button" : "Cancel and pay another way",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Confirm the payment in your bank's app within {time_remaining} to complete the purchase.",
               "interval_seconds" : 1,
               "over_web_view" : false,
               "seconds" : 60,
-              "shows_countdown" : true
+              "shows_countdown" : true,
+              "title" : "Approve payment"
             },
             "presenter" : "polling_screen",
             "return_url" : "none",
@@ -961,9 +912,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "blik",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1014,9 +963,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "grabpay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1067,9 +1014,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "fpx",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1136,9 +1081,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "bacs_debit",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "succeed",
@@ -1156,7 +1099,6 @@
     },
     {
       "confirm" : {
-        "before_fetch" : "load_alipay_marlin_return_url",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1219,9 +1161,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "alipay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1283,9 +1223,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "oxxo",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1336,9 +1274,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "zip",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1413,9 +1349,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "revolut_pay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1490,9 +1424,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "amazon_pay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1543,9 +1475,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "alma",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1596,9 +1526,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "mobilepay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1649,9 +1577,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "vipps",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1713,9 +1639,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "konbini",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1760,11 +1684,15 @@
           {
             "app_to_app" : "universal_links_only",
             "polling_screen" : {
-              "instructions" : "paynow",
+              "cancel_button" : "Cancel and pay another way",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Confirm the payment in your bank or payment app within {time_remaining} to complete the purchase.",
               "interval_seconds" : 1,
               "over_web_view" : true,
               "seconds" : 3600,
-              "shows_countdown" : true
+              "shows_countdown" : true,
+              "title" : "Approve payment"
             },
             "presenter" : "polling_screen",
             "return_url" : "confirm_required",
@@ -1783,9 +1711,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "paynow",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1830,11 +1756,15 @@
           {
             "app_to_app" : "universal_links_only",
             "polling_screen" : {
-              "instructions" : "paynow",
+              "cancel_button" : "Cancel and pay another way",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Confirm the payment in your bank or payment app within {time_remaining} to complete the purchase.",
               "interval_seconds" : 1,
               "over_web_view" : true,
               "seconds" : 3600,
-              "shows_countdown" : true
+              "shows_countdown" : true,
+              "title" : "Approve payment"
             },
             "presenter" : "polling_screen",
             "return_url" : "confirm_required",
@@ -1853,9 +1783,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "promptpay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1906,9 +1834,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "sunbit",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -1959,9 +1885,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "billie",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2032,9 +1956,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "satispay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2085,9 +2007,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "crypto",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2169,9 +2089,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "boleto",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2232,9 +2150,7 @@
             "url_path" : "mobile_auth_url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "swish",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2309,9 +2225,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "twint",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2373,9 +2287,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "multibanco",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2428,9 +2340,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "paypay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2481,9 +2391,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "wero",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2534,9 +2442,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "pay_by_bank",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2581,11 +2487,15 @@
           {
             "app_to_app" : "none",
             "polling_screen" : {
-              "instructions" : "mb_way",
+              "cancel_button" : "Cancel and pay another way",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Confirm the payment in your MB WAY app within {time_remaining} to complete the purchase.",
               "interval_seconds" : 1,
               "over_web_view" : false,
               "seconds" : 240,
-              "shows_countdown" : true
+              "shows_countdown" : true,
+              "title" : "Approve payment"
             },
             "presenter" : "polling_screen",
             "return_url" : "none",
@@ -2603,9 +2513,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "mb_way",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2650,11 +2558,15 @@
           {
             "app_to_app" : "none",
             "polling_screen" : {
-              "instructions" : "bizum",
+              "cancel_button" : "Cancel and pay another way",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Confirm the Bizum payment in your mobile banking application within {time_remaining} to complete the purchase.",
               "interval_seconds" : 1,
               "over_web_view" : false,
               "seconds" : 4200,
-              "shows_countdown" : true
+              "shows_countdown" : true,
+              "title" : "Approve payment"
             },
             "presenter" : "polling_screen",
             "return_url" : "none",
@@ -2672,9 +2584,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "bizum",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2745,9 +2655,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "kakao_pay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2818,9 +2726,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "naver_pay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2891,9 +2797,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "kr_card",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2944,9 +2848,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "payco",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -2997,9 +2899,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "sequra",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3050,9 +2950,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "scalapay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3117,12 +3015,16 @@
           {
             "app_to_app" : "universal_links_only",
             "polling_screen" : {
+              "cancel_button" : "Cancel and pay another way",
               "deadline_field" : "expires_at",
-              "instructions" : "pix",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Complete the payment using Pix to finish the purchase.",
               "interval_seconds" : 2,
               "over_web_view" : true,
               "seconds" : 86400,
-              "shows_countdown" : false
+              "shows_countdown" : false,
+              "title" : "Approve payment"
             },
             "presenter" : "polling_screen",
             "return_url" : "confirm_if_set",
@@ -3141,9 +3043,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "pix",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3194,9 +3094,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "gopay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3247,9 +3145,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "mondu",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3300,9 +3196,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "ng_ussd",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3353,9 +3247,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "qris",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3406,9 +3298,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "ng_wallet",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3459,9 +3349,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "shopeepay",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3532,9 +3420,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "touch_n_go",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3605,9 +3491,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "truemoney",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3678,9 +3562,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "gcash",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3729,9 +3611,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "momo",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "succeed",
@@ -3782,9 +3662,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "ng_bank_transfer",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3835,9 +3713,7 @@
             "url_path" : "url"
           }
         ],
-        "on_cancel" : "none",
         "payment_method_data_type" : "ng_card",
-        "performer" : "engine",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",
@@ -3918,9 +3794,7 @@
             "type" : "use_stripe_sdk"
           }
         ],
-        "on_cancel" : "cancel_3ds_source",
         "payment_method_data_type" : "link",
-        "performer" : "stripe_payment_handler",
         "post_confirm" : {
           "intent_retrieval" : "retrieve",
           "on_processing" : "poll",

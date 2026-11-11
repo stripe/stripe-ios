@@ -102,7 +102,6 @@ extension ConfirmationMetadata {
             ),
             setupIntent: nil,
             retrieval: spec.retrieval == .refresh ? .refresh : .retrieve,
-            beforeFetch: nil,
             onCancel: .none
         )
     }

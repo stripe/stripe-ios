@@ -582,7 +582,7 @@ final class PaymentConfirmerNativeTests: XCTestCase {
             return XCTFail("Expected a polling screen, got \(performer.performed)")
         }
         XCTAssertEqual(screen.screen.seconds, 60)
-        XCTAssertEqual(screen.screen.instructions, .blik)
+        XCTAssertEqual(screen.screen.instructions, "Confirm the payment in your bank's app within {time_remaining} to complete the purchase.")
         XCTAssertNil(screen.instructions)
         XCTAssertEqual(api.calls, ["confirm"])
     }

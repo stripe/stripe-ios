@@ -58,6 +58,73 @@ final class ConfirmationMetadataBundledTableTests: XCTestCase {
         XCTAssertTrue(table.problems.contains { $0.contains("payment_method_confirmations[3]") })
     }
 
+    func testClientConstantsAreMergedIntoEntries() throws {
+        // Given the bundled table, whose entries are what the server serves (no SDK-internal fields)
+        let table = ConfirmationMetadata.loadBundledTable()
+        let card = try XCTUnwrap(table.entries["card"])
+        let link = try XCTUnwrap(table.entries["link"])
+        let usBankAccount = try XCTUnwrap(table.entries["us_bank_account"])
+        let alipay = try XCTUnwrap(table.entries["alipay"])
+
+        // Then card and Link go to STPPaymentHandler and cancel the 3DS source
+        XCTAssertEqual(card.performer, .stripePaymentHandler)
+        XCTAssertEqual(card.onCancel, .cancel3DSSource)
+        XCTAssertEqual(link.performer, .stripePaymentHandler)
+        XCTAssertEqual(link.onCancel, .cancel3DSSource)
+        // ...the native forms' fixed payment_method_options are set
+        XCTAssertEqual(card.params.paymentMethodOptions, [.cardCVCRecollection, .cardNetwork])
+        XCTAssertEqual(usBankAccount.params.paymentMethodOptions, [.usBankAccountVerificationMethod])
+        XCTAssertEqual(link.params.paymentMethodOptions, [])
+        // ...card has its closed-web-view rule, for both intent types
+        XCTAssertEqual(card.paymentIntent.afterWebViewDismissed, ConfirmationMetadata.StatusRules(processing: .poll(seconds: 30, onTimeout: .succeed), requiresAction: .cancel))
+        XCTAssertEqual(card.setupIntent?.afterWebViewDismissed, ConfirmationMetadata.StatusRules(processing: .poll(seconds: 30, onTimeout: .fail), requiresAction: .cancel))
+        // ...and every other type gets the defaults, Alipay included (no Marlin ping)
+        XCTAssertEqual(alipay.performer, .engine)
+        XCTAssertEqual(alipay.onCancel, .none)
+        for (type, entry) in table.entries where !["card", "link", "us_bank_account"].contains(type) {
+            XCTAssertEqual(entry.performer, .engine, type)
+            XCTAssertEqual(entry.onCancel, .none, type)
+            XCTAssertEqual(entry.params.paymentMethodOptions, [], type)
+            XCTAssertNil(entry.paymentIntent.afterWebViewDismissed, type)
+            XCTAssertNil(entry.setupIntent?.afterWebViewDismissed, type)
+        }
+    }
+
+    func testClientConstantsApplyToAServedEntry() throws {
+        // Given a served entry for card, which carries none of the SDK-internal fields
+        let confirm = Self.confirm(presenter: "redirect")
+
+        // When it's mapped for card and for iDEAL
+        let card = try ConfirmationMetadata(wire: confirm, type: "card")
+        let ideal = try ConfirmationMetadata(wire: confirm, type: "ideal")
+
+        // Then card gets its client constants and iDEAL the defaults
+        XCTAssertEqual(card.performer, .stripePaymentHandler)
+        XCTAssertEqual(card.onCancel, .cancel3DSSource)
+        XCTAssertNotNil(card.paymentIntent.afterWebViewDismissed)
+        XCTAssertEqual(ideal.performer, .engine)
+        XCTAssertEqual(ideal.onCancel, .none)
+        XCTAssertNil(ideal.paymentIntent.afterWebViewDismissed)
+    }
+
+    func testBundledPollingScreensCarryEnglishStrings() throws {
+        // Given the bundled table's polling screens
+        let table = ConfirmationMetadata.loadBundledTable()
+        for type in PollingViewModel.supportedPaymentMethods {
+            let entry = try XCTUnwrap(table.entries[type.identifier])
+            let screens = entry.nextActions.values.compactMap { nextAction -> ConfirmationMetadata.NextAction.PollingScreen? in
+                if case .pollingScreen(let screen, _) = nextAction.presenter { return screen } else { return nil }
+            }
+            let screen = try XCTUnwrap(screens.first, type.identifier)
+            // Then each has the server's English strings, with the ICU time argument only when it counts down
+            XCTAssertEqual(screen.title, "Approve payment", type.identifier)
+            XCTAssertEqual(screen.cancelButton, "Cancel and pay another way", type.identifier)
+            XCTAssertEqual(screen.failureTitle, "Payment failed", type.identifier)
+            XCTAssertEqual(screen.failureInstructions, "Please go back and select another payment method", type.identifier)
+            XCTAssertEqual(screen.instructions.contains("{time_remaining}"), screen.showsCountdown, type.identifier)
+        }
+    }
+
     static func confirm(presenter: String) -> MobileSession.PaymentMethodConfirm {
         let rule = MobileSession.StatusRule(outcome: .cancel, pollSeconds: nil, onTimeout: nil)
         let rules = MobileSession.StatusRules(processing: rule, requiresAction: rule)
@@ -73,13 +140,9 @@ final class ConfirmationMetadataBundledTableTests: XCTestCase {
             mandateData: .none,
             setupFutureUsage: .none,
             postConfirm: MobileSession.PostConfirm(intentRetrieval: .retrieve, onProcessing: .fail, onRequiresAction: .cancel, pollSeconds: 0),
-            intentRules: MobileSession.IntentRulesByKind(paymentIntent: MobileSession.IntentRules(afterConfirm: rules, afterNextAction: rules, afterWebViewDismissed: nil), setupIntent: nil),
+            intentRules: MobileSession.IntentRulesByKind(paymentIntent: MobileSession.IntentRules(afterConfirm: rules, afterNextAction: rules), setupIntent: nil),
             returnUrl: .optional,
-            setup: MobileSession.SetupSupport(supported: false, customerChoiceInPaymentMethodOptions: false),
-            paymentMethodOptions: nil,
-            beforeFetch: nil,
-            onCancel: MobileSession.CancelSideEffect.none,
-            performer: .engine
+            setup: MobileSession.SetupSupport(supported: false, customerChoiceInPaymentMethodOptions: false)
         )
     }
 }

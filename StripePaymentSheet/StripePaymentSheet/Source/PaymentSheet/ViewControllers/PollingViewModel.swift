@@ -16,8 +16,15 @@ import UIKit
 class PollingViewModel {
     static let supportedPaymentMethods: [STPPaymentMethodType] = [.blik, .paynow, .promptPay, .mbWay, .bizum, .pix]
 
-    /// The instructions under the title. With a countdown, `%@` is replaced with the time left.
+    let title: String
+    /// The instructions under the title. With a countdown, `timeRemainingPlaceholder` is replaced with the time left.
     let CTA: String
+    /// `%@` in the SDK's strings, `{time_remaining}` in the server's.
+    let timeRemainingPlaceholder: String
+    let cancelButtonTitle: String
+    /// The title and instructions once the deadline passes without approval.
+    let failureTitle: String
+    let failureInstructions: String
     let showsCountdown: Bool
     let retryInterval: TimeInterval
     /// How long the screen polls before showing an error, counted from when `deadline` is first read.
@@ -42,6 +49,11 @@ class PollingViewModel {
         default:
             CTA = .Localized.pix_confirm_payment
         }
+        title = .Localized.approve_payment
+        timeRemainingPlaceholder = "%@"
+        cancelButtonTitle = .Localized.cancel_pay_another_way
+        failureTitle = .Localized.payment_failed
+        failureInstructions = .Localized.please_go_back
         showsCountdown = paymentMethodType != .pix
         switch paymentMethodType {
         case .blik:
@@ -71,28 +83,22 @@ class PollingViewModel {
         }
     }
 
-    /// The config from a payment method's confirmation metadata.
+    /// The config from a payment method's confirmation metadata, with the server's localized strings.
     init(screen: ConfirmationMetadata.NextAction.PollingScreen) {
-        self.CTA = screen.instructions.localizedString
+        self.title = screen.title
+        self.CTA = screen.instructions
+        // The server's instructions are an ICU message whose only argument is the time left.
+        self.timeRemainingPlaceholder = "{time_remaining}"
+        self.cancelButtonTitle = screen.cancelButton
+        self.failureTitle = screen.failureTitle
+        self.failureInstructions = screen.failureInstructions
         self.showsCountdown = screen.showsCountdown
         self.retryInterval = TimeInterval(screen.intervalSeconds)
         self.duration = TimeInterval(screen.seconds)
     }
-}
 
-extension ConfirmationMetadata.NextAction.PollingScreen.Instructions {
-    var localizedString: String {
-        switch self {
-        case .blik:
-            return .Localized.blik_confirm_payment
-        case .paynow:
-            return .Localized.paynow_confirm_payment
-        case .mbWay:
-            return .Localized.mb_way_confirm_payment
-        case .bizum:
-            return .Localized.bizum_confirm_payment
-        case .pix:
-            return .Localized.pix_confirm_payment
-        }
+    /// `CTA` with the time left filled in.
+    func instructions(timeRemaining: String) -> String {
+        return CTA.replacingOccurrences(of: timeRemainingPlaceholder, with: timeRemaining)
     }
 }

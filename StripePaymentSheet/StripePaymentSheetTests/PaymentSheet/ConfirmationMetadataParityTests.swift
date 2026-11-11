@@ -145,6 +145,11 @@ final class ConfirmationMetadataParityTests: XCTestCase {
                                native: "\(nativeSeconds)s every \(Int(viewModel.retryInterval))s countdown=\(viewModel.showsCountdown)",
                                table: "\(screen.seconds)s every \(screen.intervalSeconds)s countdown=\(screen.showsCountdown)",
                                source: "called")
+                // The table's English strings against the SDK's English strings, with the time left filled in.
+                report.compare("functions", type, "polling_screen_strings(\(nextActionType))",
+                               native: Self.describeStrings(viewModel),
+                               table: Self.describeStrings(PollingViewModel(screen: screen)),
+                               source: "called")
             }
         }
 

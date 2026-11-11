@@ -79,10 +79,7 @@ class PollingViewController: UIViewController {
             return NSAttributedString(string: viewModel.CTA)
         }
         let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
-        let attrText = NSMutableAttributedString(string: String(
-                format: viewModel.CTA,
-                timeRemaining
-        ))
+        let attrText = NSMutableAttributedString(string: viewModel.instructions(timeRemaining: timeRemaining))
         attrText.addAttributes([.foregroundColor: appearance.colors.primary],
                                range: NSString(string: attrText.string).range(of: timeRemaining))
         return attrText
@@ -134,7 +131,7 @@ class PollingViewController: UIViewController {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = .Localized.approve_payment
+        label.text = viewModel.title
         label.textColor = appearance.colors.text
         label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .body, maximumPointSize: 25)
         label.sizeToFit()
@@ -154,7 +151,7 @@ class PollingViewController: UIViewController {
 
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(.Localized.cancel_pay_another_way, for: .normal)
+        button.setTitle(viewModel.cancelButtonTitle, for: .normal)
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, style: .footnote, maximumPointSize: 22)
         button.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
         button.tintColor = appearance.colors.primary
@@ -337,8 +334,8 @@ class PollingViewController: UIViewController {
             self.errorImageView.isHidden = false
             self.actvityIndicator.isHidden = true
             self.cancelButton.isHidden = true
-            self.titleLabel.text = .Localized.payment_failed
-            self.instructionLabel.text = .Localized.please_go_back
+            self.titleLabel.text = self.viewModel.failureTitle
+            self.instructionLabel.text = self.viewModel.failureInstructions
             self.navigationBar.setStyle(.back(showAdditionalButton: false))
             self.suspendPolling()
             self.oneSecondTimer?.invalidate()

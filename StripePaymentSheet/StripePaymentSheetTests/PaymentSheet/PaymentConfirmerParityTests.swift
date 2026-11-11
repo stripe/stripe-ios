@@ -245,7 +245,13 @@ extension ConfirmationMetadataParityTests {
         let deadline = abs(viewModel.deadline.timeIntervalSince1970 - 1_900_000_000) < 1
             ? "expires_at"
             : "\(Int(viewModel.deadline.timeIntervalSinceNow.rounded()))s"
-        return "\(viewModel.CTA.prefix(24))…, every \(Int(viewModel.retryInterval))s, countdown=\(viewModel.showsCountdown), deadline=\(deadline)"
+        return "\(describeStrings(viewModel)), every \(Int(viewModel.retryInterval))s, countdown=\(viewModel.showsCountdown), deadline=\(deadline)"
+    }
+
+    /// The screen's text as shown, with a fixed time left.
+    static func describeStrings(_ viewModel: PollingViewModel) -> String {
+        let strings = [viewModel.title, viewModel.instructions(timeRemaining: "0:59"), viewModel.cancelButtonTitle, viewModel.failureTitle, viewModel.failureInstructions]
+        return strings.map { "\"\($0)\"" }.joined(separator: " / ")
     }
 }
 

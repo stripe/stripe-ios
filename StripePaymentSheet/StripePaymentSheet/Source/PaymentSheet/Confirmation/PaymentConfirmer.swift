@@ -18,7 +18,7 @@ import Foundation
 /// - nothing to do (the outcome is known: vouchers once shown, microdeposits);
 /// - no next action at all (only the status rules apply);
 /// - `use_stripe_sdk` (3DS2, 3DS redirect, the intent confirmation challenge) and every next action of a type whose
-///   metadata says `performer: stripePaymentHandler` (card, Link): handed to `STPPaymentHandler.handleNextAction(for:)`,
+///   client constants say `performer: stripePaymentHandler` (card, Link): handed to `STPPaymentHandler.handleNextAction(for:)`,
 ///   which then owns the rest of the payment.
 ///
 /// It's a small state machine (`State`): each step does at most one API call, next action or wait. The API, the

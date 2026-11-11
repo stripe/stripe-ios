@@ -15,28 +15,26 @@ import Foundation
 /// `ConfirmationMetadata.native(for:)` is the default table, derived from STPPaymentHandler's and PaymentSheet's
 /// per-type rules. A server-sent spec replaces a type's whole policy; see `resolved(for:serverSpec:)`.
 ///
-/// It's a superset of the `mobile_session` contract's `confirm` object: every contract field maps to one field here,
-/// and the fields the contract doesn't have yet are marked "Not in the contract".
+/// It's a superset of the `mobile_session` contract's `confirm` object: every contract field maps to one field here.
+/// The fields marked "Client constant" aren't in the contract: the SDK fixes them per type
+/// (`ConfirmationMetadata+ClientConstants.swift`) and merges them into every bundled or served entry.
 struct ConfirmationMetadata: Codable, Equatable {
     var params: Params
     /// Next actions confirmation can return for this type, keyed by the API's `next_action[type]`. Any other next
     /// action fails the payment with `unsupportedAuthenticationErrorCode`.
-    /// Contract: `confirm.next_actions` (types only; the per-action settings aren't in the contract).
+    /// Contract: `confirm.next_actions`.
     var nextActions: [String: NextAction]
     var paymentIntent: IntentRules
     /// How to finish a SetupIntent, or nil if PaymentSheet doesn't offer this type for SetupIntents.
-    /// Not in the contract (server-driven PMs are PaymentIntent-only in v1).
+    /// Contract: `confirm.intent_rules.setup_intent` (server-driven PMs are PaymentIntent-only in v1).
     var setupIntent: IntentRules?
     /// How to read the intent after a next action. Before one, e.g. polling a `processing` intent right after
     /// confirmation, it's always `retrieve`.
     /// Contract: `post_confirm.intent_retrieval`.
     var retrieval: Retrieval
-    /// Work to do before every read of a PaymentIntent after a next action (STPPaymentHandler skips it for
-    /// SetupIntents). Not in the contract.
-    var beforeFetch: BeforeFetch?
-    /// What canceling the payment after a next action also does. Not in the contract.
+    /// What canceling the payment after a next action also does. Client constant.
     var onCancel: CancelSideEffect
-    /// Who performs this type's next actions. Not in the contract (a server spec is always `.engine`).
+    /// Who performs this type's next actions. Client constant (a server-driven PM's spec is always `.engine`).
     var performer: Performer = .engine
 
     enum Performer: String, Codable, Equatable {
@@ -53,7 +51,7 @@ struct ConfirmationMetadata: Codable, Equatable {
     struct Params: Codable, Equatable {
         /// `payment_method_data[type]`. Contract: `confirm.payment_method_data_type`.
         var paymentMethodDataType: String
-        /// Whether confirming needs a `return_url`. Not in the contract (it's implied by the next actions).
+        /// Whether confirming needs a `return_url`. Contract: `confirm.return_url`.
         var returnURL: ReturnURLRequirement
         /// When to send `mandate_data` with inferred online acceptance.
         /// Contract: `confirm.mandate_data` (`none` or `online_inferred`, which here is `.always`).
@@ -61,7 +59,7 @@ struct ConfirmationMetadata: Codable, Equatable {
         /// Which `setup_future_usage` values this type can be confirmed with, and where PaymentSheet puts them.
         /// Contract: `confirm.setup_future_usage` (one value, not a set).
         var setupFutureUsage: SetupFutureUsage
-        /// Fixed `payment_method_options[<type>]` fields PaymentSheet sets for this type. Not in the contract.
+        /// Fixed `payment_method_options[<type>]` fields PaymentSheet sets for this type. Client constant.
         var paymentMethodOptions: [PaymentMethodOption]
 
         enum ReturnURLRequirement: String, Codable, Equatable {
@@ -106,10 +104,10 @@ struct ConfirmationMetadata: Codable, Equatable {
     struct NextAction: Codable, Equatable {
         var presenter: Presenter
         /// The field of `next_action[type]` with the URL to open, e.g. `url` or `hosted_voucher_url`.
-        /// Not in the contract.
+        /// Contract: `url_path`.
         var urlPath: String?
         /// The field with a web URL to open when `urlPath`'s app isn't installed (Alipay's `url`). Without one, the
-        /// web view opens `urlPath`'s URL. Not in the contract.
+        /// web view opens `urlPath`'s URL. Contract: `fallback_url_path`.
         var fallbackURLPath: String?
         /// Which URL STPURLCallbackHandler listens for, i.e. when the customer counts as returned.
         var returnURL: ReturnURLSource
@@ -117,7 +115,7 @@ struct ConfirmationMetadata: Codable, Equatable {
         var appToApp: AppToApp
         /// Replaces the intent's `requires_action` rule while the intent still has this next action after it was
         /// performed. For example, a voucher's `requires_action` means "the customer pays later", so it succeeds.
-        /// Not in the contract (`post_confirm` is per payment method, not per next action).
+        /// Contract: `while_requires_action`.
         var whileRequiresAction: Outcome?
 
         enum Presenter: Codable, Equatable {
@@ -139,7 +137,7 @@ struct ConfirmationMetadata: Codable, Equatable {
             case safariViewController
         }
 
-        /// The `PollingViewController` config that `PollingViewModel` hardcodes per type today.
+        /// The `PollingViewController` config. The strings are localized by the server; the bundled table has English.
         struct PollingScreen: Codable, Equatable {
             /// How long the screen polls before showing an error, unless `deadlineField` is in the next action.
             var seconds: Int
@@ -147,17 +145,13 @@ struct ConfirmationMetadata: Codable, Equatable {
             var showsCountdown: Bool
             /// A next action field with the deadline, e.g. Pix's `expires_at`.
             var deadlineField: String?
-            /// The instructions under the title, from the SDK's strings.
-            var instructions: Instructions
-
-            enum Instructions: String, Codable, Equatable {
-                case blik
-                /// PayNow and PromptPay
-                case paynow
-                case mbWay
-                case bizum
-                case pix
-            }
+            var title: String
+            /// The instructions under the title. With `showsCountdown`, `{time_remaining}` is replaced with the time left.
+            var instructions: String
+            var cancelButton: String
+            /// The title once the deadline passes without approval.
+            var failureTitle: String
+            var failureInstructions: String
         }
 
         enum ReturnURLSource: String, Codable, Equatable {
@@ -194,11 +188,11 @@ struct ConfirmationMetadata: Codable, Equatable {
         var afterConfirm: StatusRules
         /// Each time the intent is read after a next action.
         var afterNextAction: StatusRules
-        /// Replaces `afterNextAction` once the customer closes the in-app browser themselves. Not in the contract.
+        /// Replaces `afterNextAction` once the customer closes the in-app browser themselves. Client constant (card).
         var afterWebViewDismissed: StatusRules?
     }
 
-    /// Contract: `post_confirm.on_processing` and `post_confirm.on_requires_action`, one rule for both phases.
+    /// Contract: `StatusRules` (v1's `post_confirm.on_processing` and `on_requires_action` are one rule for both phases).
     struct StatusRules: Codable, Equatable {
         var processing: Outcome
         var requiresAction: Outcome
@@ -212,11 +206,10 @@ struct ConfirmationMetadata: Codable, Equatable {
         case performNextAction
         /// Read the intent every second until its status changes or `seconds` pass, then finish with `onTimeout`.
         /// The first poll sets the deadline for the rest of the payment.
-        /// Contract: `poll` plus one `poll_seconds` for both statuses; `onTimeout` is fixed (fail for processing,
-        /// cancel for requires_action).
+        /// Contract: `outcome: poll` with `poll_seconds` and `on_timeout`.
         case poll(seconds: Int, onTimeout: Terminal)
         /// Don't finish: the next action's screen (PayNow's and PromptPay's polling screen) finishes the payment.
-        /// Not in the contract.
+        /// Contract: `wait_for_next_action_screen`.
         case waitForNextActionScreen
     }
 
@@ -231,11 +224,6 @@ struct ConfirmationMetadata: Codable, Equatable {
         case retrieve
         /// `POST /v1/payment_intents/:id/refresh`, which asks the partner for the latest status.
         case refresh
-    }
-
-    enum BeforeFetch: String, Codable, Equatable {
-        /// Load the Alipay next action's `marlin_return_url` so the intent's status is up to date.
-        case loadAlipayMarlinReturnURL
     }
 
     enum CancelSideEffect: String, Codable, Equatable {

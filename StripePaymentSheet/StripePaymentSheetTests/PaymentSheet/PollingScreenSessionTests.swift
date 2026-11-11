@@ -19,7 +19,17 @@ final class PollingScreenSessionTests: XCTestCase {
     let host = RecordingPollingHost()
     let redirectPresenter = ControlledRedirectPresenter()
     let intent = PaymentConfirmerFixtures.paymentIntent(status: "requires_action", type: "blik")
-    let screen = ConfirmationMetadata.NextAction.PollingScreen(seconds: 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil, instructions: .blik)
+    let screen = ConfirmationMetadata.NextAction.PollingScreen(
+        seconds: 60,
+        intervalSeconds: 1,
+        showsCountdown: true,
+        deadlineField: nil,
+        title: "Approve payment",
+        instructions: "Confirm the payment in your bank's app within {time_remaining} to complete the purchase.",
+        cancelButton: "Cancel and pay another way",
+        failureTitle: "Payment failed",
+        failureInstructions: "Please go back and select another payment method"
+    )
 
     /// Starts the screen; `outcome` is set once it returns. Synchronous tests spin the run loop, since spinning it inside an
     /// async test would block the main actor.
@@ -57,7 +67,7 @@ final class PollingScreenSessionTests: XCTestCase {
         // When the container shows the screen, with BLIK's config, and the customer cancels it
         waitUntil { !host.presented.isEmpty }
         let viewController = host.presented.first
-        XCTAssertEqual(viewController?.viewModel.CTA, .Localized.blik_confirm_payment)
+        XCTAssertEqual(viewController?.viewModel.CTA, screen.instructions)
         XCTAssertEqual(host.safariViewControllers.count, 1)
         XCTAssertTrue(host.safariViewControllers.allSatisfy { $0 == nil }, "No web view in front of BLIK's screen")
         viewController?.didTapCancel()

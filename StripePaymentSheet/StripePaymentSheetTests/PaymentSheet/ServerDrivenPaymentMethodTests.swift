@@ -87,7 +87,7 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         let cases: [(String, (inout [String: Any]) -> Void)] = [
             ("form_element:unparsable", { $0["form"] = ["elements": [["type": "name"]]] }),
             ("next_action:unparsable", { $0[jsonDict: "confirm"]?["next_actions"] = [["type": "redirect_to_url"], ["type": "confirm_on_mobile_device"]] }),
-            // A native type's next action (pending in mint) isn't one a server-driven payment method can use yet
+            // A native type's next action (for the native table) isn't one a server-driven payment method can use yet
             ("next_action:use_stripe_sdk", { $0[jsonDict: "confirm"]?["next_actions"] = [["type": "use_stripe_sdk"]] }),
             ("mandate_data:online_inferred_when_setting_up", { $0[jsonDict: "confirm"]?["mandate_data"] = "online_inferred_when_setting_up" }),
             ("intent_retrieval:unparsable", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["intent_retrieval"] = "webhook" }),

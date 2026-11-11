@@ -8,7 +8,7 @@
 import Foundation
 
 /// `ConfirmationMetadata` from the `mobile_session` wire shape: an entry of `payment_method_confirmations`, whose
-/// `confirm` is the contract's `PaymentMethodConfirm` plus the fields pending in mint (`MobileSession.swift`, "PENDING MINT").
+/// `confirm` is the contract's `PaymentMethodConfirm`, merged with the SDK's client constants for its type.
 extension ConfirmationMetadata {
     /// A field the table needs is missing or has a value this SDK can't follow.
     struct WireError: Error, Equatable, CustomStringConvertible {
@@ -17,8 +17,8 @@ extension ConfirmationMetadata {
     }
 
     /// Every field is required here, unlike for a server-driven payment method's v1 `confirm`: an entry that can't
-    /// describe the whole policy throws, so a type never runs half described.
-    init(wire confirm: MobileSession.PaymentMethodConfirm) throws {
+    /// describe the whole policy throws, so a type never runs half described. `type` picks the client constants.
+    init(wire confirm: MobileSession.PaymentMethodConfirm, type: String) throws {
         guard let intentRules = confirm.intentRules else { throw WireError(field: "intent_rules") }
         guard let setup = confirm.setup else { throw WireError(field: "setup") }
         let returnURL: Params.ReturnURLRequirement
@@ -34,14 +34,6 @@ extension ConfirmationMetadata {
         case .onlineInferredWhenSettingUp: mandateData = .whenSettingUp
         case .unparsable: throw WireError(field: "mandate_data")
         }
-        let paymentMethodOptions: [Params.PaymentMethodOption] = try (confirm.paymentMethodOptions ?? []).map {
-            switch $0 {
-            case .cardCvcRecollection: return .cardCVCRecollection
-            case .cardNetwork: return .cardNetwork
-            case .usBankAccountVerificationMethod: return .usBankAccountVerificationMethod
-            case .unparsable: throw WireError(field: "payment_method_options")
-            }
-        }
         var nextActions: [String: NextAction] = [:]
         for nextAction in confirm.nextActions {
             guard nextAction.type != .unparsable else { throw WireError(field: "next_actions.type") }
@@ -53,40 +45,21 @@ extension ConfirmationMetadata {
         case .refresh: retrieval = .refresh
         case .unparsable: throw WireError(field: "post_confirm.intent_retrieval")
         }
-        let beforeFetch: BeforeFetch?
-        switch confirm.beforeFetch {
-        case .loadAlipayMarlinReturnUrl: beforeFetch = .loadAlipayMarlinReturnURL
-        case nil: beforeFetch = nil
-        case .unparsable: throw WireError(field: "before_fetch")
-        }
-        let onCancel: CancelSideEffect
-        switch confirm.onCancel {
-        case .some(.none): onCancel = .none
-        case .cancel3dsSource: onCancel = .cancel3DSSource
-        case .unparsable, nil: throw WireError(field: "on_cancel")
-        }
-        let performer: Performer
-        switch confirm.performer {
-        case .engine: performer = .engine
-        case .stripePaymentHandler: performer = .stripePaymentHandler
-        case .unparsable, nil: throw WireError(field: "performer")
-        }
         self.init(
             params: Params(
                 paymentMethodDataType: confirm.paymentMethodDataType,
                 returnURL: returnURL,
                 mandateData: mandateData,
                 setupFutureUsage: Params.SetupFutureUsage(supportsSetup: setup.supported, sendsCustomerChoiceInPaymentMethodOptions: setup.customerChoiceInPaymentMethodOptions),
-                paymentMethodOptions: paymentMethodOptions
+                paymentMethodOptions: []
             ),
             nextActions: nextActions,
             paymentIntent: try IntentRules(wire: intentRules.paymentIntent, field: "intent_rules.payment_intent"),
             setupIntent: try intentRules.setupIntent.map { try IntentRules(wire: $0, field: "intent_rules.setup_intent") },
             retrieval: retrieval,
-            beforeFetch: beforeFetch,
-            onCancel: onCancel,
-            performer: performer
+            onCancel: .none
         )
+        apply(Self.clientConstants(for: type))
     }
 }
 
@@ -106,17 +79,18 @@ extension ConfirmationMetadata.NextAction {
             presenter = .threeDS2
         case .pollingScreen:
             guard let screen = nextAction.pollingScreen else { throw WireError(field: "\(field).polling_screen") }
-            let instructions: PollingScreen.Instructions
-            switch screen.instructions {
-            case .blik: instructions = .blik
-            case .paynow: instructions = .paynow
-            case .mbWay: instructions = .mbWay
-            case .bizum: instructions = .bizum
-            case .pix: instructions = .pix
-            case .unparsable: throw WireError(field: "\(field).polling_screen.instructions")
-            }
             presenter = .pollingScreen(
-                PollingScreen(seconds: screen.seconds, intervalSeconds: screen.intervalSeconds, showsCountdown: screen.showsCountdown, deadlineField: screen.deadlineField, instructions: instructions),
+                PollingScreen(
+                    seconds: screen.seconds,
+                    intervalSeconds: screen.intervalSeconds,
+                    showsCountdown: screen.showsCountdown,
+                    deadlineField: screen.deadlineField,
+                    title: screen.title,
+                    instructions: screen.instructions,
+                    cancelButton: screen.cancelButton,
+                    failureTitle: screen.failureTitle,
+                    failureInstructions: screen.failureInstructions
+                ),
                 overWebView: screen.overWebView
             )
         case .some(.none):
@@ -156,7 +130,7 @@ extension ConfirmationMetadata.IntentRules {
         self.init(
             afterConfirm: try ConfirmationMetadata.StatusRules(wire: rules.afterConfirm, field: "\(field).after_confirm"),
             afterNextAction: try ConfirmationMetadata.StatusRules(wire: rules.afterNextAction, field: "\(field).after_next_action"),
-            afterWebViewDismissed: try rules.afterWebViewDismissed.map { try ConfirmationMetadata.StatusRules(wire: $0, field: "\(field).after_web_view_dismissed") }
+            afterWebViewDismissed: nil
         )
     }
 }
@@ -219,7 +193,7 @@ extension ConfirmationMetadata {
                 continue
             }
             do {
-                table.entries[entry.type] = try ConfirmationMetadata(wire: entry.confirm)
+                table.entries[entry.type] = try ConfirmationMetadata(wire: entry.confirm, type: entry.type)
             } catch {
                 table.problems.append("\(entry.type): \(error)")
             }
