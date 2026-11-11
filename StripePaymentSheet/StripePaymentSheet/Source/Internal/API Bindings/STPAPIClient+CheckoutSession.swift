@@ -436,7 +436,7 @@ extension STPAPIClient {
 
     private func checkoutSessionError(from apiError: StripeAPIError) -> StripeError {
         // During private preview, Checkout cannot distinguish buyer-actionable API errors.
-        // Let the shared formatter expose the server's optional message for every error type.
+        // Let the shared formatter expose the server's message, or a generic fallback, for every error type.
         var apiError = apiError
         apiError.useServerErrorMessage = true
         // Keep the original error so analytics and other internal consumers retain all API data.
