@@ -30,6 +30,8 @@ struct LPMScenario: Identifiable {
         settings.apmsEnabled = .off
         settings.supportedPaymentMethods = paymentMethodType.identifier
         settings.allowsDelayedPMs = .on
+        // Many payment methods don't support manual capture
+        settings.manualCapture = .off
         // Offer only this payment method: no saved payment methods, EPMs, CPMs, or payment method configuration
         settings.customerMode = .guest
         settings.externalPaymentMethods = .off
