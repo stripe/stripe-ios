@@ -38,8 +38,11 @@ extension ConfirmationMetadataParityTests {
         // M5: a SetupIntent whose terminal next action (a voucher, microdeposits) is done succeeds whichever way PaymentSheet
         // came in. STPPaymentHandler's handleNextAction(for:) guard fails it (SPH:770).
         KnownMismatch(id: "M5", count: 2) { $0.scenario.hasPrefix("si/requires_action+") && $0.scenario.hasSuffix("/via_handle_next_action") },
-        // F1: Pix's polling screen finishes the payment when its instructions web view closes, like PayNow and PromptPay.
-        // STPPaymentHandler cancels while the screen is still up and drops its later success (task #62).
+        // F1, a deliberate fix of an STPPaymentHandler bug: closing Pix's instructions web view never cancels; the polling
+        // screen finishes the payment, like PayNow and PromptPay, for PaymentIntents and SetupIntents. STPPaymentHandler
+        // cancels while the screen is still up and drops its later success, because Pix was left out of the PayNow/PromptPay
+        // exclusion by accident (SPH:1708 for PIs; the SI branch at SPH:1794 has no exclusion). Confirmed a bug in task
+        // #62: ~/stripe/worktrees/handoff/pix-dismiss-investigation.md.
         KnownMismatch(id: "F1", count: 4) { $0.type == "pix" && $0.scenario.contains("requires_action+pix_display_qr_code") && $0.native == "cancel" && $0.table == "wait_for_next_action_screen" },
     ]
 
