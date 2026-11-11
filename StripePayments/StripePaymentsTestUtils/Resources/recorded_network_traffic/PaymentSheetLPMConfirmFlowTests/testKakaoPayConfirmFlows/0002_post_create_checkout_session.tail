@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 8f7af1400e8ef319b3a7c0c35c03bec8;o=1
+x-cloud-trace-context: dcf40b75e3ad9cc1e922cbdf609f4af2
 Via: 1.1 google
-Date: Mon, 09 Nov 2026 23:55:01 GMT
+Date: Tue, 10 Nov 2026 19:14:46 GMT
 Content-Length: 2576
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"a10-VoWXipIW5F6ercPu3dEqUCKvi4M"
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"a10-n/pIDIq96xqCkagTeNODRaXP+t0"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1fIJWMp1ndZDVlZTcSSoJ3HS6rQhGmfh3Onthg3QOVKPr08gXJ2nxh2Hi",
-  "client_secret" : "cs_test_a1fIJWMp1ndZDVlZTcSSoJ3HS6rQhGmfh3Onthg3QOVKPr08gXJ2nxh2Hi_secret_N9O5OPUczu7T1WCNwcnTBcQeU",
+  "id" : "cs_test_a03lN8q5R4DyAQWo2edrrIWukXzIql98j3JaSRSz32k1NQysefFSsCaSUq",
+  "client_secret" : "cs_test_a03lN8q5R4DyAQWo2edrrIWukXzIql98j3JaSRSz32k1NQysefFSsCaSUq_secret_IUETbIdRcq6hlTvm6THCLBhuk",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a10-VoWXipIW5F6ercPu3dEqUCKvi4M"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1794268501,
+  "created" : 1794338086,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "kakao_pay"
@@ -41,13 +41,13 @@ Etag: W/"a10-VoWXipIW5F6ercPu3dEqUCKvi4M"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VbEsQKhs",
+      "key" : "checkout_item_VbXaUjdo",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ua2OvLu5o3P18ZpuVMOpIYT",
+            "price" : "price_1UaKVGLu5o3P18Zp6uKhRuf0",
             "tax_rates" : null
           }
         ],
@@ -157,6 +157,6 @@ Etag: W/"a10-VoWXipIW5F6ercPu3dEqUCKvi4M"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1794354901,
+  "expires_at" : 1794424486,
   "marketing_attributions" : null
 }

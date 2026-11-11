@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 95308ecb0cbf65a9e94cdb9d76f6166f
+x-cloud-trace-context: e83f9fb9ce42babc0837e2b9189871be
 Via: 1.1 google
-Date: Mon, 09 Nov 2026 23:58:30 GMT
+Date: Tue, 10 Nov 2026 19:18:29 GMT
 Content-Length: 2518
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"9d6-nusivsn4MoX52JsyA903MtWgUeA"
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"9d6-iGChmx7kU6ebbtz6gxAfxn30fX0"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1AAOw1uhvTfkh1RJQwC82jTPyfLSSucxQgzSIuIWNlgKL2100AHvjfrRz",
-  "client_secret" : "cs_test_a1AAOw1uhvTfkh1RJQwC82jTPyfLSSucxQgzSIuIWNlgKL2100AHvjfrRz_secret_Ih71CIVTf66HK1COwYT2kC4MK",
+  "id" : "cs_test_a0o1D0kYBYoUaNDf0GWSIMkeFHZ3Zuie353rUcYoQZly8mz6nddEjqT6VZ",
+  "client_secret" : "cs_test_a0o1D0kYBYoUaNDf0GWSIMkeFHZ3Zuie353rUcYoQZly8mz6nddEjqT6VZ_secret_tvNQTuBn9zLNE4kbgw0Qh21dK",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"9d6-nusivsn4MoX52JsyA903MtWgUeA"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1794268710,
+  "created" : 1794338309,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "mb_way"
@@ -41,13 +41,13 @@ Etag: W/"9d6-nusivsn4MoX52JsyA903MtWgUeA"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VbEwlDEa",
+      "key" : "checkout_item_VbXe4XEw",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ua2SIKG6vc7r7YCCcn6SsDt",
+            "price" : "price_1UaKYrKG6vc7r7YCyARvgSLU",
             "tax_rates" : null
           }
         ],
@@ -153,6 +153,6 @@ Etag: W/"9d6-nusivsn4MoX52JsyA903MtWgUeA"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1794355110,
+  "expires_at" : 1794424709,
   "marketing_attributions" : null
 }

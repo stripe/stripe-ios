@@ -551,15 +551,15 @@ extension CheckoutElementsController {
         // Release the assertion only after the request using it has finished, before handling next actions.
         await confirmationChallenge?.complete()
 
-        // 2. Retrieve the referenced Intent and handle next actions only when required.
+        // 2. Handle the returned Intent's next action only when required.
         if response.paymentResponse == nil {
             // No payment response means no Intent next action to handle; continue with Session/poll handling.
         } else if response.paymentResponse?.status != .requiresAction {
             // If status != requires_action, continue.
-        } else if let paymentIntentReference = response.paymentResponse?.paymentIntent {
+        } else if let paymentIntent = response.paymentResponse?.paymentIntent {
             let result = await paymentHandler.handleNextAction(
-                paymentIntentClientSecret: paymentIntentReference.clientSecret,
-                authenticationContext: authenticationContext,
+                for: paymentIntent,
+                with: authenticationContext,
                 returnURL: requestParameters.returnURL
             )
             switch result.0 {
@@ -574,10 +574,10 @@ extension CheckoutElementsController {
                 let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a PaymentIntent.")
                 return .failed(error, sessionResponse: response)
             }
-        } else if let setupIntentReference = response.paymentResponse?.setupIntent {
+        } else if let setupIntent = response.paymentResponse?.setupIntent {
             let result = await paymentHandler.handleNextAction(
-                setupIntentClientSecret: setupIntentReference.clientSecret,
-                authenticationContext: authenticationContext,
+                for: setupIntent,
+                with: authenticationContext,
                 returnURL: requestParameters.returnURL
             )
             switch result.0 {
@@ -586,7 +586,7 @@ extension CheckoutElementsController {
             case .canceled:
                 return .canceled(sessionResponse: response)
             case .failed:
-                let error = result.2 ?? PaymentSheetError.errorHandlingNextAction
+                let error: Error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
                 let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a SetupIntent.")
