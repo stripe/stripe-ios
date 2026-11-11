@@ -15,11 +15,9 @@ final class SavedPaymentMethodManager {
 
     enum Error: Swift.Error {
         case missingEphemeralKey
-        case missingUpdatedPaymentMethod
     }
 
     let configuration: PaymentElementConfiguration
-    let customerProvider: CustomerProvider
     let elementsSession: STPElementsSession
     let intent: Intent
 
@@ -35,9 +33,8 @@ final class SavedPaymentMethodManager {
         return ephemeralKey
     }()
 
-    init(configuration: PaymentElementConfiguration, customerProvider: CustomerProvider, elementsSession: STPElementsSession, intent: Intent) {
+    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent) {
         self.configuration = configuration
-        self.customerProvider = customerProvider
         self.elementsSession = elementsSession
         self.intent = intent
     }
@@ -96,16 +93,5 @@ final class SavedPaymentMethodManager {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read customerId while setting a payment method as default.")
         }
         return try await configuration.apiClient.setAsDefaultPaymentMethod(defaultPaymentMethodId, for: customerId, using: ephemeralKey)
-    }
-
-    private func logMissingEphemeralKey() {
-        let errorAnalytic = ErrorAnalytic(
-            event: .unexpectedPaymentSheetError,
-            error: Error.missingEphemeralKey,
-            additionalNonPIIParams: [
-                "customer_access_provider": customerProvider.analyticValue ?? "unknown",
-            ]
-        )
-        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
     }
 }
