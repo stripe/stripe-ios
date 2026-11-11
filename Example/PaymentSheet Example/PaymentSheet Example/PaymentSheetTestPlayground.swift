@@ -219,6 +219,19 @@ struct PaymentSheetTestPlayground: View {
                                 }
                             }
                         }
+                        SearchableView(searchableName: "LPM Scenarios", searchText: $searchText) {
+                            HStack {
+                                Text("LPM Scenarios")
+                                    .font(.subheadline)
+                                Spacer()
+                                Button {
+                                    playgroundController.lpmScenariosTapped()
+                                } label: {
+                                    Text("Choose LPM")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                            }
+                        }
                         SearchableView(searchableName: "Payment Method Options", searchText: $searchText) {
                             VStack {
                                 HStack {
