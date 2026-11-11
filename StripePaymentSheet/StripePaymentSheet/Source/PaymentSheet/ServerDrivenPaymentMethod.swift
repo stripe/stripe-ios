@@ -29,9 +29,24 @@ struct ServerDrivenPaymentMethod {
 
     struct Icon {
         struct Image: Equatable {
+            enum Sizing: Equatable {
+                /// Fetch `url` through Stripe's image proxy at the height and screen scale it's drawn at.
+                case resizable
+                /// Fetch `url` as-is. `scale` is the pixels per point the image was drawn at.
+                case fixed(scale: CGFloat)
+            }
             let url: URL
-            /// The pixels per point the image was drawn at.
-            let scale: CGFloat
+            let sizing: Sizing
+
+            /// Returns the URL to download and the scale to decode it at, for an icon `height` points tall.
+            func download(height: Int, dpr: Int = StripeImageProxy.screenDPR) -> (url: URL, scale: CGFloat) {
+                switch sizing {
+                case .resizable:
+                    return (StripeImageProxy.url(for: url, format: .png, height: height, dpr: dpr), CGFloat(dpr))
+                case .fixed(let scale):
+                    return (url, scale)
+                }
+            }
         }
         let light: Image
         let dark: Image?
@@ -129,20 +144,28 @@ struct ServerDrivenPaymentMethod {
         guard let url = URL(string: image.url), url.scheme == "https" else {
             throw UnsupportedValue(value: "icon:invalid_url")
         }
-        guard image.scale > 0 else {
+        if image.resizable {
+            return Icon.Image(url: url, sizing: .resizable)
+        }
+        let scale = image.scale ?? 1
+        guard scale > 0 else {
             throw UnsupportedValue(value: "icon:invalid_scale")
         }
-        return Icon.Image(url: url, scale: CGFloat(image.scale))
+        return Icon.Image(url: url, sizing: .fixed(scale: CGFloat(scale)))
     }
+
+    /// The height in points to fetch resizable icons at. `RowButton` draws icons in a 30x20pt box. The horizontal layout's
+    /// 12pt icons, and the images FlowController and Embedded give the merchant, scale this down rather than fetch again.
+    static let iconHeight: Int = 20
 
     /// Returns the icon for the background and icon style. Returns a placeholder until the image downloads, then calls `updateHandler`.
     func makeImage(forDarkBackground: Bool, iconStyle: PaymentSheet.Appearance.IconStyle, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
-        let image = icon.image(forDarkBackground: forDarkBackground, iconStyle: iconStyle)
+        let download = icon.image(forDarkBackground: forDarkBackground, iconStyle: iconStyle).download(height: Self.iconHeight)
         return DownloadManager.sharedManager.downloadImage(
-            url: image.url,
+            url: download.url,
             placeholder: nil,
             updateHandler: updateHandler,
-            scale: image.scale
+            scale: download.scale
         )
     }
 }

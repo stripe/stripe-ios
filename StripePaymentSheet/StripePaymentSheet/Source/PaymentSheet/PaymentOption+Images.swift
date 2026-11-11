@@ -199,7 +199,7 @@ extension STPPaymentMethod {
         guard let artImageURL = card?.cardArt?.artImage?.url else {
             return nil
         }
-        return URL(string: "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=\(STPPaymentMethod.cardArtHeight),dpr=\(dpr)/\(artImageURL.absoluteString)")
+        return StripeImageProxy.url(for: artImageURL, format: .auto, height: STPPaymentMethod.cardArtHeight, dpr: dpr)
     }
 }
 

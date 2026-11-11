@@ -138,16 +138,10 @@ final class AdaptivePricingFlagImageManager {
     }
 
     private static let flagBaseURL = "https://b.stripecdn.com/ocs-mobile/assets/flags"
-    private static let imageProxyURL = "https://img.stripecdn.com/cdn-cgi/image"
 
     private func makeFlagImageURL(countryCode: String) -> URL {
-        #if os(visionOS)
-        let dpr = 1
-        #else
-        let dpr = Int(UIScreen.main.scale.rounded(.up))
-        #endif
-        let origin = "\(Self.flagBaseURL)/\(countryCode.uppercased()).png"
         // Safe to force-unwrap: the URL components are all static constants plus a country code.
-        return URL(string: "\(Self.imageProxyURL)/format=auto,height=16,dpr=\(dpr)/\(origin)")!
+        let origin = URL(string: "\(Self.flagBaseURL)/\(countryCode.uppercased()).png")!
+        return StripeImageProxy.url(for: origin, format: .auto, height: 16)
     }
 }
