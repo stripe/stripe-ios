@@ -159,6 +159,70 @@ final class ServerDrivenPaymentHandlerTests: XCTestCase {
         }
     }
 
+    func testRefreshPollsWithRefresh() async {
+        // Given an intent that's still requires_action for two refreshes after the customer returns, then succeeds
+        api.confirmResults = [.success(ServerDrivenIntentFixtures.redirectIntent())]
+        api.fetchResults = [
+            .success(ServerDrivenIntentFixtures.redirectIntent()),
+            .success(ServerDrivenIntentFixtures.redirectIntent()),
+            .success(ServerDrivenIntentFixtures.paymentIntent(status: "succeeded")),
+        ]
+
+        // When the payment is confirmed with a spec that refreshes and polls requires_action
+        let result = await confirm(makeHandler(retrieval: .refresh, requiresAction: .poll, pollSeconds: 5))
+
+        // Then every read after the redirect is a refresh, a second apart
+        assertCompleted(result)
+        XCTAssertEqual(api.calls, ["confirm", "refresh", "refresh", "refresh"])
+        XCTAssertEqual(clock.sleeps, [1, 1])
+    }
+
+    func testRefreshProcessingAfterRedirectPollsThenFails() async {
+        // Given an intent that's processing after the customer returns, and stays processing
+        api.confirmResults = [.success(ServerDrivenIntentFixtures.redirectIntent())]
+        api.fetchResults = Array(repeating: .success(ServerDrivenIntentFixtures.paymentIntent(status: "processing")), count: 10)
+
+        // When the payment is confirmed with a spec that refreshes and polls processing for 2 seconds
+        let result = await confirm(makeHandler(retrieval: .refresh, processing: .poll, pollSeconds: 2))
+
+        // Then it refreshes until the deadline, then fails
+        assertFailed(result, code: .intentStatusErrorCode)
+        XCTAssertEqual(api.calls, ["confirm", "refresh", "refresh", "refresh"])
+    }
+
+    func testRefreshOnlyAppliesAfterANextAction() async {
+        // Given confirmation returns a processing intent, which succeeds on the second read
+        api.confirmResults = [.success(ServerDrivenIntentFixtures.paymentIntent(status: "processing"))]
+        api.fetchResults = [
+            .success(ServerDrivenIntentFixtures.paymentIntent(status: "processing")),
+            .success(ServerDrivenIntentFixtures.paymentIntent(status: "succeeded")),
+        ]
+
+        // When the payment is confirmed with a spec that refreshes and polls processing
+        let result = await confirm(makeHandler(retrieval: .refresh, processing: .poll, pollSeconds: 5))
+
+        // Then it retrieves, since `intent_retrieval` is how to read the intent after a next action
+        assertCompleted(result)
+        XCTAssertEqual(api.calls, ["confirm", "retrieve", "retrieve"])
+    }
+
+    func testRefreshErrorRetriesOnceThenFails() async {
+        // Given every refresh after the redirect fails
+        let networkError = NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut)
+        api.confirmResults = [.success(ServerDrivenIntentFixtures.redirectIntent())]
+        api.fetchResults = [.failure(networkError), .failure(networkError)]
+
+        // When the payment is confirmed with a spec that refreshes and doesn't poll
+        let result = await confirm(makeHandler(retrieval: .refresh))
+
+        // Then it refreshes again once, then fails with the error
+        guard case .failed(let error) = result else {
+            return XCTFail("Expected failure, got \(result)")
+        }
+        XCTAssertEqual(error as NSError, networkError)
+        XCTAssertEqual(api.calls, ["confirm", "refresh", "refresh"])
+    }
+
     func testPollWithZeroSecondsDoesntReadAgain() async {
         // Given an intent that's still requires_action after the customer returns
         api.confirmResults = [.success(ServerDrivenIntentFixtures.redirectIntent())]
@@ -428,6 +492,27 @@ final class ServerDrivenPaymentHandlerRoutingTests: APIStubbedTestCase {
         XCTAssertEqual(nativeConfirmStarted.count, 1)
         XCTAssertEqual(nativeConfirmStarted.first?["payment_method_type"] as? String, "cashapp")
         XCTAssertNil(nativeConfirmStarted.first?["handler"])
+    }
+
+    func testSTPAPIClientRefreshCallsTheRefreshEndpoint() async throws {
+        // Given the refresh endpoint returns a succeeded intent
+        var refreshRequests: [URLRequest] = []
+        stub { $0.url?.path == "/v1/payment_intents/pi_123/refresh" } response: { request in
+            refreshRequests.append(request)
+            return HTTPStubsResponse(jsonObject: ServerDrivenIntentFixtures.json(status: "succeeded"), statusCode: 200, headers: nil)
+        }
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_123"
+
+        // When ServerDrivenPaymentHandler's API refreshes the intent, as it does for `intent_retrieval: refresh`
+        let paymentIntent = try await (apiClient as ServerDrivenPaymentAPI).refresh(clientSecret: ServerDrivenIntentFixtures.clientSecret)
+
+        // Then it POSTs to the intent's refresh endpoint with the client secret, like STPPaymentHandler for Cash App and Klarna
+        XCTAssertEqual(paymentIntent.status, .succeeded)
+        XCTAssertEqual(refreshRequests.count, 1)
+        XCTAssertEqual(refreshRequests.first?.httpMethod, "POST")
+        let body = refreshRequests.first.map { RequestBodyTestHelpers.formEncodedBodyParams(from: $0) } ?? [:]
+        XCTAssertEqual(body["client_secret"], ServerDrivenIntentFixtures.clientSecret)
     }
 
     private func confirm(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentSheetResult {

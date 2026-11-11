@@ -17,7 +17,8 @@ struct ServerDrivenConfirmSpec: Equatable {
         case redirectToURL
     }
 
-    /// How to fetch the intent.
+    /// How to fetch the intent after a next action. Before one, e.g. polling a `processing` intent right after
+    /// confirmation, the handler always retrieves.
     enum Retrieval: Equatable {
         /// `GET /v1/payment_intents/:id`
         case retrieve

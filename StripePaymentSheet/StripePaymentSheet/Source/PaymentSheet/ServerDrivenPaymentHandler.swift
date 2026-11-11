@@ -275,7 +275,9 @@ final class ServerDrivenPaymentHandler {
     }
 
     private func fetch(_ paymentIntent: STPPaymentIntent, progress: Progress) async throws -> STPPaymentIntent {
-        switch spec.retrieval {
+        // `intent_retrieval` is how to read the intent after a next action, like STPPaymentHandler's refresh for
+        // Cash App and Klarna. Before one, e.g. polling a `processing` intent right after confirmation, retrieve it.
+        switch progress.hasPerformedNextAction ? spec.retrieval : .retrieve {
         case .retrieve:
             // Like STPPaymentHandler, don't let one request outlast the polling budget, but give the last one a minute.
             let remaining = progress.pollDeadline.map { $0.timeIntervalSince(clock.now()) } ?? 0
