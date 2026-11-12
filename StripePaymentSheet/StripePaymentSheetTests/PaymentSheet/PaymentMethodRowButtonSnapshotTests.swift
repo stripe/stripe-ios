@@ -245,7 +245,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     }
 
     func testPaymentMethodRowButton_serverDriven() {
-        // Given DemoPay with resizable light and dark icons, which the image proxy returns 30x20pt at the screen's scale
+        // Given DemoPay with light and dark icons, which the image proxy returns 30x20pt at the screen's scale
         let lightIconURL = URL(string: "https://b.stripecdn.com/ocs-mobile/assets/pm/demo_pay.png")!
         let darkIconURL = URL(string: "https://b.stripecdn.com/ocs-mobile/assets/pm/demo_pay_dark.png")!
         let dpr = StripeImageProxy.screenDPR
@@ -267,8 +267,8 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         addTeardownBlock { HTTPStubs.removeAllStubs() }
         let paymentMethod = try! ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.json {
             $0[jsonDict: "display"]?["icon"] = [
-                "light": ["url": lightIconURL.absoluteString, "resizable": true],
-                "dark": ["url": darkIconURL.absoluteString, "resizable": true],
+                "light": ["url": lightIconURL.absoluteString],
+                "dark": ["url": darkIconURL.absoluteString],
                 "rendering": "original",
             ] as [String: Any]
         })

@@ -50,7 +50,7 @@ extension ConfirmationMetadata {
                 paymentMethodDataType: confirm.paymentMethodDataType,
                 returnURL: returnURL,
                 mandateData: mandateData,
-                setupFutureUsage: Params.SetupFutureUsage(supportsSetup: setup.supported, sendsCustomerChoiceInPaymentMethodOptions: setup.customerChoiceInPaymentMethodOptions),
+                setupFutureUsage: Params.SetupFutureUsage(supportsSetup: setup.supported),
                 paymentMethodOptions: []
             ),
             nextActions: nextActions,

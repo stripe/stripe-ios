@@ -24,24 +24,13 @@ struct ServerDrivenPaymentMethod {
     let confirmation: ConfirmationMetadata
 
     struct Icon {
-        struct Image: Equatable {
-            enum Sizing: Equatable {
-                /// Fetch `url` through Stripe's image proxy at the height and screen scale it's drawn at.
-                case resizable
-                /// Fetch `url` as-is. `scale` is the pixels per point the image was drawn at.
-                case fixed(scale: CGFloat)
-            }
+        struct Image: Hashable {
             let url: URL
-            let sizing: Sizing
 
-            /// Returns the URL to download and the scale to decode it at, for an icon `height` points tall.
+            /// Returns the URL to download and the scale to decode it at, for an icon `height` points tall: `url` through
+            /// Stripe's image proxy at that height and the screen's scale.
             func download(height: Int, dpr: Int = StripeImageProxy.screenDPR) -> (url: URL, scale: CGFloat) {
-                switch sizing {
-                case .resizable:
-                    return (StripeImageProxy.url(for: url, format: .png, height: height, dpr: dpr), CGFloat(dpr))
-                case .fixed(let scale):
-                    return (url, scale)
-                }
+                return (StripeImageProxy.url(for: url, format: .png, height: height, dpr: dpr), CGFloat(dpr))
             }
         }
         let light: Image
@@ -133,17 +122,10 @@ struct ServerDrivenPaymentMethod {
         guard let url = URL(string: image.url), url.scheme == "https" else {
             throw UnsupportedValue(value: "icon:invalid_url")
         }
-        if image.resizable {
-            return Icon.Image(url: url, sizing: .resizable)
-        }
-        let scale = image.scale ?? 1
-        guard scale > 0 else {
-            throw UnsupportedValue(value: "icon:invalid_scale")
-        }
-        return Icon.Image(url: url, sizing: .fixed(scale: CGFloat(scale)))
+        return Icon.Image(url: url)
     }
 
-    /// The height in points to fetch resizable icons at. `RowButton` draws icons in a 30x20pt box. The horizontal layout's
+    /// The height in points to fetch icons at. `RowButton` draws icons in a 30x20pt box. The horizontal layout's
     /// 12pt icons, and the images FlowController and Embedded give the merchant, scale this down rather than fetch again.
     static let iconHeight: Int = 20
 
@@ -156,6 +138,17 @@ struct ServerDrivenPaymentMethod {
             updateHandler: updateHandler,
             scale: download.scale
         )
+    }
+
+    /// Starts downloading each icon `iconStyle` can draw, on a light or a dark background, at the size `makeImage` fetches.
+    /// Rows, and the images FlowController and Embedded give the merchant, are then usually cached before they're built.
+    func prefetchIcons(iconStyle: PaymentSheet.Appearance.IconStyle, downloadManager: DownloadManager = .sharedManager) {
+        let images = Set([false, true].map { icon.image(forDarkBackground: $0, iconStyle: iconStyle) })
+        for image in images {
+            let download = image.download(height: Self.iconHeight)
+            // Passing a non-nil updateHandler starts a best-effort download that fills the in-memory cache.
+            _ = downloadManager.downloadImage(url: download.url, placeholder: nil, updateHandler: { _ in }, scale: download.scale)
+        }
     }
 }
 

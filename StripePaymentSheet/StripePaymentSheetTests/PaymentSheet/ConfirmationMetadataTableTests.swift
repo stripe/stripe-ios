@@ -250,7 +250,7 @@ final class ConfirmationMetadataTableTests: XCTestCase {
             intentRetrieval: .retrieve,
             intentRules: MobileSession.IntentRulesByKind(paymentIntent: MobileSession.IntentRules(afterConfirm: rules, afterNextAction: rules), setupIntent: nil),
             returnUrl: .optional,
-            setup: MobileSession.SetupSupport(supported: false, customerChoiceInPaymentMethodOptions: false)
+            setup: MobileSession.SetupSupport(supported: false)
         )
     }
 }

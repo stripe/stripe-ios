@@ -28,7 +28,7 @@ enum ServerDrivenPaymentMethodFixtures {
                 "label": "Demo Pay",
                 "subtitle": "Pay with Demo Pay",
                 "icon": [
-                    "light": ["url": lightIconURL, "resizable": true] as [String: Any],
+                    "light": ["url": lightIconURL],
                     "rendering": "original",
                 ] as [String: Any],
             ] as [String: Any],
@@ -60,7 +60,7 @@ enum ServerDrivenPaymentMethodFixtures {
                     ],
                 ],
                 "return_url": "required",
-                "setup": ["supported": false, "customer_choice_in_payment_method_options": false],
+                "setup": ["supported": false],
             ] as [String: Any],
             "saved_payment_methods": "unsupported",
         ]
@@ -77,6 +77,19 @@ enum ServerDrivenPaymentMethodFixtures {
     static func serverDrivenPaymentMethod(_ json: [String: Any] = json()) throws -> ServerDrivenPaymentMethod {
         return try ServerDrivenPaymentMethod(paymentMethod(json))
     }
+
+    /// Returns an entry whose icon has every variant, at https://js.stripe.com/<variant>.png.
+    static func allVariantsJSON() -> [String: Any] {
+        return json {
+            $0[jsonDict: "display"]?["icon"] = [
+                "light": ["url": "https://js.stripe.com/light.png"],
+                "dark": ["url": "https://js.stripe.com/dark.png"],
+                "outlined_light": ["url": "https://js.stripe.com/outlined_light.png"],
+                "outlined_dark": ["url": "https://js.stripe.com/outlined_dark.png"],
+                "rendering": "template",
+            ] as [String: Any]
+        }
+    }
 }
 
 @MainActor
@@ -91,7 +104,7 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         XCTAssertEqual(paymentMethod.label, "Demo Pay")
         XCTAssertEqual(paymentMethod.subtitle, "Pay with Demo Pay")
         XCTAssertEqual(paymentMethod.paymentMethodDataType, "demo_pay")
-        XCTAssertEqual(paymentMethod.icon.light, .init(url: URL(string: ServerDrivenPaymentMethodFixtures.lightIconURL)!, sizing: .resizable))
+        XCTAssertEqual(paymentMethod.icon.light, .init(url: URL(string: ServerDrivenPaymentMethodFixtures.lightIconURL)!))
         XCTAssertFalse(paymentMethod.icon.isTemplate)
         // ...and reads its confirm the same way as a served payment_method_confirmations entry
         let served = try ConfirmationMetadata(wire: ServerDrivenPaymentMethodFixtures.paymentMethod().confirm, type: "demo_pay")
@@ -152,8 +165,7 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
             ("saved_payment_methods:unparsable", { $0["saved_payment_methods"] = "supported" }),
             ("icon_rendering:unparsable", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["rendering"] = "vector" }),
             ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?[jsonDict: "light"]?["url"] = "http://js.stripe.com/icon.png" }),
-            ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = ["url": "", "resizable": true] as [String: Any] }),
-            ("icon:invalid_scale", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = ["url": ServerDrivenPaymentMethodFixtures.lightIconURL, "resizable": false, "scale": 0] as [String: Any] }),
+            ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = ["url": ""] }),
             ("type:empty", { $0[jsonDict: "confirm"]?["payment_method_data_type"] = "" }),
         ]
         for (expectedValue, modify) in cases {
@@ -177,26 +189,15 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
     }
 
     func testIcon_picksVariants() throws {
-        // Given an icon with every variant, each at a different scale
-        func image(_ name: String, scale: Int) -> [String: Any] {
-            return ["url": "https://js.stripe.com/\(name).png", "resizable": false, "scale": scale, "width": 48, "height": 48]
-        }
-        let json = ServerDrivenPaymentMethodFixtures.json {
-            $0[jsonDict: "display"]?["icon"] = [
-                "light": image("light", scale: 1),
-                "dark": image("dark", scale: 2),
-                "outlined_light": image("outlined_light", scale: 3),
-                "outlined_dark": image("outlined_dark", scale: 4),
-                "rendering": "template",
-            ] as [String: Any]
-        }
+        // Given an icon with every variant
+        let json = ServerDrivenPaymentMethodFixtures.allVariantsJSON()
         let icon = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json).icon
 
-        // Then each background and style picks its own variant, with the server's scale
-        XCTAssertEqual(icon.image(forDarkBackground: false, iconStyle: .filled), .init(url: URL(string: "https://js.stripe.com/light.png")!, sizing: .fixed(scale: 1)))
-        XCTAssertEqual(icon.image(forDarkBackground: true, iconStyle: .filled), .init(url: URL(string: "https://js.stripe.com/dark.png")!, sizing: .fixed(scale: 2)))
-        XCTAssertEqual(icon.image(forDarkBackground: false, iconStyle: .outlined), .init(url: URL(string: "https://js.stripe.com/outlined_light.png")!, sizing: .fixed(scale: 3)))
-        XCTAssertEqual(icon.image(forDarkBackground: true, iconStyle: .outlined), .init(url: URL(string: "https://js.stripe.com/outlined_dark.png")!, sizing: .fixed(scale: 4)))
+        // Then each background and style picks its own variant
+        XCTAssertEqual(icon.image(forDarkBackground: false, iconStyle: .filled), .init(url: URL(string: "https://js.stripe.com/light.png")!))
+        XCTAssertEqual(icon.image(forDarkBackground: true, iconStyle: .filled), .init(url: URL(string: "https://js.stripe.com/dark.png")!))
+        XCTAssertEqual(icon.image(forDarkBackground: false, iconStyle: .outlined), .init(url: URL(string: "https://js.stripe.com/outlined_light.png")!))
+        XCTAssertEqual(icon.image(forDarkBackground: true, iconStyle: .outlined), .init(url: URL(string: "https://js.stripe.com/outlined_dark.png")!))
         // ...and template rendering tints it
         XCTAssertTrue(PaymentSheet.PaymentMethodType.serverDriven(try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json)).iconRequiresTinting)
     }
@@ -204,7 +205,7 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
     func testIcon_outlinedDarkFallsBackToDark() throws {
         // Given an icon with a dark image but no outlined images
         let json = ServerDrivenPaymentMethodFixtures.json {
-            $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = ["url": "https://js.stripe.com/dark.png", "resizable": true] as [String: Any]
+            $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = ["url": "https://js.stripe.com/dark.png"]
         }
         let icon = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json).icon
 
@@ -213,10 +214,10 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         XCTAssertEqual(icon.image(forDarkBackground: false, iconStyle: .outlined), icon.light)
     }
 
-    func testIconDownload_resizableUsesImageProxy() throws {
-        // Given a resizable icon whose URL has a percent-encoded path and a query
+    func testIconDownload_usesImageProxy() throws {
+        // Given an icon whose URL has a percent-encoded path and a query
         let url = try XCTUnwrap(URL(string: "https://b.stripecdn.com/ocs-mobile/assets/pm/demo%20pay.png?v=2"))
-        let image = ServerDrivenPaymentMethod.Icon.Image(url: url, sizing: .resizable)
+        let image = ServerDrivenPaymentMethod.Icon.Image(url: url)
 
         // When it's downloaded 20pt tall on a 3x screen
         let download = image.download(height: 20, dpr: 3)
@@ -232,25 +233,8 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         XCTAssertEqual(image.download(height: 12, dpr: 2).scale, 2)
     }
 
-    func testIconDownload_fixedUsesURLAndScale() throws {
-        // Given icons that aren't resizable, with and without a scale
-        func icon(_ light: [String: Any]) throws -> ServerDrivenPaymentMethod.Icon.Image {
-            let json = ServerDrivenPaymentMethodFixtures.json { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = light }
-            return try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json).icon.light
-        }
-        let url = "https://js.stripe.com/icon@2x.png"
-        let withScale = try icon(["url": url, "resizable": false, "scale": 2, "width": 60, "height": 40])
-        let withoutScale = try icon(["url": url, "resizable": false])
-
-        // Then they're fetched as-is, at the server's scale or 1
-        XCTAssertEqual(withScale.download(height: 20, dpr: 3).url.absoluteString, url)
-        XCTAssertEqual(withScale.download(height: 20, dpr: 3).scale, 2)
-        XCTAssertEqual(withoutScale.download(height: 20, dpr: 3).url.absoluteString, url)
-        XCTAssertEqual(withoutScale.download(height: 20, dpr: 3).scale, 1)
-    }
-
-    func testMakeImage_decodesResizableIconAtScreenScale() throws {
-        // Given a resizable icon, and a proxy that returns it 20pt tall at the screen's scale
+    func testMakeImage_decodesIconAtScreenScale() throws {
+        // Given an icon, and a proxy that returns it 20pt tall at the screen's scale
         let iconURL = "https://b.stripecdn.com/ocs-mobile/assets/pm/test_decode_\(UUID().uuidString).png"
         let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.json {
             $0[jsonDict: "display"]?[jsonDict: "icon"]?[jsonDict: "light"]?["url"] = iconURL
@@ -277,6 +261,35 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         // Then it's decoded at the scale it asked for, so it's 20pt tall
         XCTAssertEqual(image?.scale, CGFloat(dpr))
         XCTAssertEqual(image?.size, CGSize(width: 30, height: 20))
+    }
+
+    func testPrefetchIcons_downloadsVariantsForIconStyle() throws {
+        // Given an icon with every variant, and a proxy that records what's requested
+        let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.allVariantsJSON())
+        let urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
+        urlSessionConfig.urlCache = URLCache(memoryCapacity: 5_000_000, diskCapacity: 0)
+        let downloadManager = DownloadManager(urlSessionConfiguration: urlSessionConfig, analyticsClient: STPAnalyticsClient(), isTesting: true)
+        let lock = NSLock()
+        var requestedURLs: Set<URL> = []
+        let requested = expectation(description: "Requested both outlined variants")
+        requested.expectedFulfillmentCount = 2
+        let iconData = UIGraphicsImageRenderer(size: CGSize(width: 30, height: 20)).pngData { _ in }
+        stub(condition: { $0.url?.host == "img.stripecdn.com" }) { request in
+            lock.withLock { _ = requestedURLs.insert(request.url!) }
+            requested.fulfill()
+            return HTTPStubsResponse(data: iconData, statusCode: 200, headers: nil)
+        }
+        addTeardownBlock { HTTPStubs.removeAllStubs() }
+
+        // When its icons are prefetched for the outlined style
+        paymentMethod.prefetchIcons(iconStyle: .outlined, downloadManager: downloadManager)
+        wait(for: [requested], timeout: 5)
+
+        // Then the outlined light and dark variants are fetched through the proxy, at the size rows draw them
+        let expectedURLs = Set(["outlined_light", "outlined_dark"].map {
+            StripeImageProxy.url(for: URL(string: "https://js.stripe.com/\($0).png")!, format: .png, height: ServerDrivenPaymentMethod.iconHeight, dpr: StripeImageProxy.screenDPR)
+        })
+        XCTAssertEqual(lock.withLock { requestedURLs }, expectedURLs)
     }
 
     func testPaymentMethodType() throws {

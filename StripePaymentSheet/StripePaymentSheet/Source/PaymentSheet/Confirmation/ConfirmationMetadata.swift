@@ -82,12 +82,8 @@ struct ConfirmationMetadata: Codable, Equatable {
         struct SetupFutureUsage: Codable, Equatable {
             /// Whether the type can be set up: confirmed with `setup_future_usage`, or with a SetupIntent.
             var supportsSetup: Bool
-            /// Whether PaymentSheet sends the customer's "save" choice as
-            /// `payment_method_options[<type>][setup_future_usage]` (card, US bank account, Link), rather than
-            /// relying on the intent's own `setup_future_usage`.
-            var sendsCustomerChoiceInPaymentMethodOptions: Bool
 
-            static let unsupported = SetupFutureUsage(supportsSetup: false, sendsCustomerChoiceInPaymentMethodOptions: false)
+            static let unsupported = SetupFutureUsage(supportsSetup: false)
         }
 
         enum PaymentMethodOption: String, Codable, Equatable {
