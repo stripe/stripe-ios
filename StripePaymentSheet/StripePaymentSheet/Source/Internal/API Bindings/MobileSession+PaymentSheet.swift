@@ -121,7 +121,7 @@ extension MobileSession.Config {
     }
 
     /// The most `payment_method_order` entries the header sends, and the longest entry.
-    /// Together they keep the header under 2KB, half the server's 4KB limit per header.
+    /// Together they keep the header under 2KB, a quarter of the server's 8KB limit per header.
     static let maxPaymentMethodOrderCount = 30
     static let maxPaymentMethodOrderEntryLength = 40
 

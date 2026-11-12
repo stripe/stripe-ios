@@ -60,7 +60,7 @@ class MobileSessionTests: XCTestCase {
         // Then it matches the golden JSON, which is the spec's fully populated iOS example
         XCTAssertEqual(
             header,
-            #"{"environment":{"device_supports_native_link":true,"has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"address":"full","attach_defaults_to_payment_method":true,"email":"always","name":"always","phone":"never"},"card_brand_acceptance":{"brands":["amex"],"filter":"disallowed"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"bde64655"}"#
+            #"{"environment":{"device_supports_native_link":true,"has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"address":"full","attach_defaults_to_payment_method":true,"email":"always","name":"always","phone":"never"},"card_brand_acceptance":{"brands":["amex"],"filter":"disallowed"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"59ded754"}"#
         )
         // ...and never contains customer values
         XCTAssertFalse(header.contains("jane"))
@@ -79,7 +79,7 @@ class MobileSessionTests: XCTestCase {
         // Then it matches the golden JSON, with every field present
         XCTAssertEqual(
             header,
-            #"{"environment":{"device_supports_native_link":false,"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"address":"automatic","attach_defaults_to_payment_method":false,"email":"automatic","name":"automatic","phone":"automatic"},"card_brand_acceptance":{"brands":[],"filter":"all"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"},"payment_method_order":[]},"spec_hash":"bde64655"}"#
+            #"{"environment":{"device_supports_native_link":false,"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"address":"automatic","attach_defaults_to_payment_method":false,"email":"automatic","name":"automatic","phone":"automatic"},"card_brand_acceptance":{"brands":[],"filter":"all"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"},"payment_method_order":[]},"spec_hash":"59ded754"}"#
         )
     }
 
@@ -142,7 +142,7 @@ class MobileSessionTests: XCTestCase {
         // When it's encoded
         let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration))
 
-        // Then it's under 2KB, half the server's 4KB limit per header
+        // Then it's under 2KB, a quarter of the server's 8KB limit per header
         XCTAssertLessThan(header.utf8.count, 2048)
         XCTAssertTrue(header.contains(#""display_language":"zh-Hant-HK""#))
     }
@@ -568,7 +568,6 @@ class MobileSessionTests: XCTestCase {
             ("form_element:unparsable", { $0["form"] = ["elements": [["type": "billing_address"]]] }),
             ("next_action:unparsable", { $0[jsonDict: "confirm"]?["next_actions"] = ["display_qr_code"] }),
             ("mandate_data:online_inferred", { $0[jsonDict: "confirm"]?["mandate_data"] = "online_inferred" }),
-            ("setup_future_usage:off_session", { $0[jsonDict: "confirm"]?["setup_future_usage"] = "off_session" }),
             ("icon_rendering:unparsable", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["rendering"] = "vector" }),
         ]
         for (expectedValue, modify) in cases {
