@@ -123,7 +123,8 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
             session: session,
             configuration: configuration,
             userInterfaceStyle: .automatic,
-            delegate: Delegate()
+            delegate: Delegate(),
+            needsUpdateSuperviewHeight: {}
         )
         view.update(
             with: session,
@@ -155,7 +156,7 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(view, file: file, line: line)
     }
 
-    private final class Delegate: ExpressCheckoutElementDelegate {
+    private final class Delegate: ExpressCheckoutElementCheckoutDelegate {
         func expressCheckoutElementShouldConfirm(
             _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
             presentationWindow: UIWindow?

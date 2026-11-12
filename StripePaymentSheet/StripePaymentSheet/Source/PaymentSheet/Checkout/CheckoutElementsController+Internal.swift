@@ -11,7 +11,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-extension CheckoutElementsController: ExpressCheckoutElementDelegate {
+extension CheckoutElementsController: ExpressCheckoutElementCheckoutDelegate {
     func expressCheckoutElementShouldConfirm(
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?

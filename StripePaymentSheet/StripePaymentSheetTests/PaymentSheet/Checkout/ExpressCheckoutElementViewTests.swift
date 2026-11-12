@@ -33,8 +33,9 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             session: session,
             configuration: configuration,
             userInterfaceStyle: .automatic,
-            delegate: FakeExpressCheckoutElementDelegate(),
-            analyticsClient: analyticsClient
+            delegate: FakeExpressCheckoutElementCheckoutDelegate(),
+            analyticsClient: analyticsClient,
+            needsUpdateSuperviewHeight: {}
         )
         let window = UIWindow()
 
@@ -108,7 +109,8 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             session: session,
             configuration: .init(completion: { _ in }),
             userInterfaceStyle: .alwaysDark,
-            delegate: FakeExpressCheckoutElementDelegate()
+            delegate: FakeExpressCheckoutElementCheckoutDelegate(),
+            needsUpdateSuperviewHeight: {}
         )
         view.update(with: session, buttons: [.applePay, .link])
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 640))
@@ -134,7 +136,8 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             session: session,
             configuration: .init(completion: { _ in }),
             userInterfaceStyle: .automatic,
-            delegate: FakeExpressCheckoutElementDelegate()
+            delegate: FakeExpressCheckoutElementCheckoutDelegate(),
+            needsUpdateSuperviewHeight: {}
         )
         view.update(with: session, buttons: [.applePay, .link])
         let buttons = CheckoutTestHelpers.expressCheckoutButtons(in: view)
@@ -453,7 +456,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
 }
 
 @MainActor
-private final class FakeExpressCheckoutElementDelegate: ExpressCheckoutElementDelegate {
+private final class FakeExpressCheckoutElementCheckoutDelegate: ExpressCheckoutElementCheckoutDelegate {
     func expressCheckoutElementShouldConfirm(
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?

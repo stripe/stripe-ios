@@ -10,7 +10,7 @@ import UIKit
 
 /// Handles Checkout mutations requested by an ExpressCheckoutElement.
 @MainActor
-protocol ExpressCheckoutElementDelegate: AnyObject {
+protocol ExpressCheckoutElementCheckoutDelegate: AnyObject {
     func expressCheckoutElementShouldConfirm(
         _ paymentMethod: ExpressCheckoutElement.PaymentMethod,
         presentationWindow: UIWindow?
@@ -28,6 +28,9 @@ public final class ExpressCheckoutElement {
 
     // MARK: - Public Properties
 
+    /// See ``ExpressCheckoutElementDelegate``.
+    public weak var delegate: ExpressCheckoutElementDelegate?
+
     /// A SwiftUI view that displays the express checkout buttons.
     public let view: ExpressCheckoutElementView
 
@@ -40,21 +43,36 @@ public final class ExpressCheckoutElement {
         sessionSource: CheckoutSessionSource,
         configuration: ExpressCheckoutElement.Configuration,
         userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
-        delegate: ExpressCheckoutElementDelegate,
+        delegate: ExpressCheckoutElementCheckoutDelegate,
         apiClient: STPAPIClient
     ) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: ExpressCheckoutElement.self)
+        // Assign the callback's weak reference after the views finish initializing.
+        weak var element: ExpressCheckoutElement?
         let uiView = ExpressCheckoutElementUIView(
             session: sessionSource.initialSession,
             configuration: configuration,
             userInterfaceStyle: userInterfaceStyle,
             delegate: delegate,
-            apiClient: apiClient
+            apiClient: apiClient,
+            needsUpdateSuperviewHeight: {
+                guard let element else { return }
+                element.delegate?.expressCheckoutElementDidUpdateHeight(expressCheckoutElement: element)
+            }
         )
         let viewModel = ExpressCheckoutElementViewModel(sessionSource: sessionSource, uiView: uiView)
         self.uiView = uiView
         self.view = ExpressCheckoutElementView(viewModel: viewModel)
+        element = self
     }
+}
+
+@MainActor
+@_spi(InternalOnlyAPI)
+@_spi(ReactNativeSDK)
+public protocol ExpressCheckoutElementDelegate: AnyObject {
+    /// Called when the ExpressCheckoutElement view is updating its height, e.g. because the set of displayed buttons changed. Your implementation should call `setNeedsLayout()` and `layoutIfNeeded` on the scroll view that contains the ExpressCheckoutElement view to animate the height change.
+    func expressCheckoutElementDidUpdateHeight(expressCheckoutElement: ExpressCheckoutElement)
 }
 
 // MARK: - STPAnalyticsProtocol

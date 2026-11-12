@@ -33,7 +33,8 @@ public final class ExpressCheckoutElementUIView: UIView {
     private var hasReportedInit = false
     private var linkBrand: LinkBrand
     private var session: CheckoutElementsController.Session
-    private weak var delegate: ExpressCheckoutElementDelegate?
+    private weak var delegate: ExpressCheckoutElementCheckoutDelegate?
+    private let needsUpdateSuperviewHeight: () -> Void
 
     // MARK: - Init
 
@@ -41,9 +42,10 @@ public final class ExpressCheckoutElementUIView: UIView {
         session: CheckoutElementsController.Session,
         configuration: ExpressCheckoutElement.Configuration,
         userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
-        delegate: ExpressCheckoutElementDelegate,
+        delegate: ExpressCheckoutElementCheckoutDelegate,
         apiClient: STPAPIClient = .shared,
-        analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
+        analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient,
+        needsUpdateSuperviewHeight: @escaping () -> Void
     ) {
         self.configuration = configuration
         self.apiClient = apiClient
@@ -51,6 +53,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         self.delegate = delegate
         self.linkBrand = session.elementsSession.linkBrand ?? .link
         self.session = session
+        self.needsUpdateSuperviewHeight = needsUpdateSuperviewHeight
         super.init(frame: .zero)
 
         stackView.axis = .vertical
@@ -87,6 +90,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         linkBrand = updatedLinkBrand
         layoutButtons(buttons)
         invalidateIntrinsicContentSize()
+        needsUpdateSuperviewHeight()
     }
 
     func setEnabled(_ enabled: Bool) {
