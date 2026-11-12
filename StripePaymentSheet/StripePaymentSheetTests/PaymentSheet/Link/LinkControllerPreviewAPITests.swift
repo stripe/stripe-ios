@@ -22,6 +22,19 @@ final class LinkControllerPreviewAPITests: XCTestCase {
         let result: LinkController.PaymentMethodResult = .canceled
         _ = result
 
+        let integrationErrors: [LinkController.IntegrationError] = [
+            .noPaymentMethodSelected,
+            .noActiveLinkConsumer,
+            .missingAppAttestation,
+            .linkUnavailable,
+            .unsupportedIntentConfiguration,
+        ]
+        _ = integrationErrors.map(\.errorDescription)
+
+        let intentConfiguration = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 1099, currency: "usd")
+        ) { _, _ in "pi_secret_123" }
+
         if false {
             LinkController.create(
                 configuration: .init(supportedPaymentMethodTypes: [.card], paymentMethodTypes: ["link"])
@@ -58,6 +71,25 @@ final class LinkControllerPreviewAPITests: XCTestCase {
 
                 _ = try await controller.confirmSetupIntent(
                     clientSecret: "seti_secret_123",
+                    from: UIViewController()
+                )
+            }
+
+            // Confirm inside Link with an intent configuration
+            LinkController.create(
+                intentConfiguration: intentConfiguration,
+                configuration: .init(supportedPaymentMethodTypes: [.card])
+            ) { result in
+                _ = result
+            }
+
+            Task { @MainActor in
+                let controller = try await LinkController.create(
+                    intentConfiguration: intentConfiguration,
+                    configuration: .init(supportedPaymentMethodTypes: [.card])
+                )
+                _ = try await controller.present(
+                    email: "jenny.rosen@example.com",
                     from: UIViewController()
                 )
             }

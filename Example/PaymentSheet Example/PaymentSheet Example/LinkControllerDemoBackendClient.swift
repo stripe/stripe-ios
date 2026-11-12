@@ -117,6 +117,34 @@ enum LinkControllerDemoBackendClient {
         }
     }
 
+    struct DeferredPaymentIntentResponse: Decodable {
+        let clientSecret: String
+        let paymentIntentId: String
+        let status: String
+    }
+
+    /// Creates a PaymentIntent for `LinkController.confirmPaymentIntent`. Confirmed client-side unless `confirmOnServer` is set.
+    static func createDeferredPaymentIntent(
+        paymentMethodId: String,
+        customerId: String,
+        amount: Int,
+        currency: String,
+        setupFutureUsage: String?,
+        confirmOnServer: Bool
+    ) async throws -> DeferredPaymentIntentResponse {
+        var body: [String: Any] = [
+            "paymentMethodId": paymentMethodId,
+            "customerId": customerId,
+            "amount": amount,
+            "currency": currency,
+            "confirmOnServer": confirmOnServer,
+        ]
+        if let setupFutureUsage {
+            body["setupFutureUsage"] = setupFutureUsage
+        }
+        return try await post("payment-intents/deferred", body: body)
+    }
+
     static func fetchPaymentIntentStatus(piId: String) async throws -> PaymentIntentResponse {
         try await get("payment-intents/\(piId)")
     }

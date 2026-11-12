@@ -15,7 +15,7 @@ struct LinkControllerDemoView: View {
 
     @State private var phase: Phase = .initializing
     @State private var customerId: String?
-    @State private var setupIntentClientSecret: String?
+    @State private var intentClientSecret: String?
     @State private var linkController: LinkController?
     @State private var savedPaymentMethods: [LinkControllerDemoBackendClient.PaymentMethodInfo] = []
     @State private var errorMessage: String?
@@ -64,12 +64,12 @@ struct LinkControllerDemoView: View {
             VStack(alignment: .leading, spacing: 24) {
                 DemoSection(title: "Setup") {
                     VStack(alignment: .leading, spacing: 12) {
-                        PreviewInfoRow(label: "Customer", value: customerId ?? "Creating...")
+                        PreviewInfoRow(label: "Customer", value: customerId ?? (configuration.email.isEmpty ? "Created after Link sign-in" : "Creating..."))
                         PreviewInfoRow(label: "Intent Mode", value: configuration.intentMode.rawValue)
-                        if configuration.intentMode == .serverSetupIntent {
+                        if configuration.intentMode != .sdkManaged {
                             PreviewInfoRow(
-                                label: "Setup Intent",
-                                value: setupIntentClientSecret.map { "..." + $0.suffix(8) } ?? "Created on Present tap"
+                                label: configuration.intentMode == .serverPaymentIntent ? "Payment Intent" : "Setup Intent",
+                                value: intentClientSecret.map { "..." + $0.suffix(8) } ?? "Created on Present tap"
                             )
                         }
                         PreviewInfoRow(label: "Controller", value: controllerStatusLabel)
@@ -187,10 +187,13 @@ struct LinkControllerDemoView: View {
             let config = try await LinkControllerDemoBackendClient.fetchConfig()
             STPAPIClient.shared.publishableKey = config.publishableKey
 
-            let cid = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: configuration.email)
-            customerId = cid
+            // Without an email, the customer is created once they sign in to Link (see `resolveCustomerId`)
+            if !configuration.email.isEmpty {
+                customerId = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: configuration.email)
+            }
 
             linkController = try await LinkController.create(
+                intentConfiguration: makeIntentConfiguration(),
                 appearance: configuration.appearance,
                 configuration: .init(
                     supportedPaymentMethodTypes: Array(configuration.supportedPaymentMethodTypes),
@@ -200,7 +203,7 @@ struct LinkControllerDemoView: View {
                 )
             )
 
-            savedPaymentMethods = try await LinkControllerDemoBackendClient.listPaymentMethods(for: cid)
+            try await refreshSavedPaymentMethods()
 
             phase = .ready
             statusTint = .secondary
@@ -214,7 +217,7 @@ struct LinkControllerDemoView: View {
 
     @MainActor
     private func presentLinkFlow() async {
-        guard isReady, let customerId else {
+        guard isReady else {
             errorMessage = "LinkController not ready"
             return
         }
@@ -236,7 +239,7 @@ struct LinkControllerDemoView: View {
             }
 
             let result = try await activeController.present(
-                email: configuration.email,
+                email: configuration.email.isEmpty ? nil : configuration.email,
                 phoneNumber: configuration.phone.isEmpty ? nil : configuration.phone,
                 from: rootViewController
             )
@@ -244,6 +247,12 @@ struct LinkControllerDemoView: View {
             switch result {
             case .completed(let paymentMethod):
                 switch configuration.intentMode {
+                case .serverPaymentIntent:
+                    // The PaymentIntent was created by the confirm handler and confirmed inside Link.
+                    try? await refreshSavedPaymentMethods()
+                    statusTint = .green
+                    statusMessage = "Payment succeeded!"
+                    phase = .completed(paymentMethod)
                 case .serverSetupIntent:
                     // PM selected — wait for the merchant to tap "Confirm & Save".
                     statusTint = .secondary
@@ -254,7 +263,7 @@ struct LinkControllerDemoView: View {
                     do {
                         try await LinkControllerDemoBackendClient.attachPaymentMethod(
                             paymentMethod.stripeId,
-                            toCustomer: customerId
+                            toCustomer: try await resolveCustomerId(for: paymentMethod)
                         )
                         print("**** Payment method created (ID: \(paymentMethod.stripeId), type: \(paymentMethod.type))")
                     } catch {
@@ -275,9 +284,53 @@ struct LinkControllerDemoView: View {
         }
     }
 
+    /// In PaymentIntent mode, an intent configuration whose confirm handler creates the PaymentIntent on the demo backend,
+    /// so that `present` confirms the payment inside Link. Otherwise `nil`, so that `present` returns the selected payment method.
+    private func makeIntentConfiguration() -> PaymentSheet.IntentConfiguration? {
+        guard configuration.intentMode == .serverPaymentIntent else {
+            return nil
+        }
+        let configuration = configuration
+        return .init(
+            mode: .payment(
+                amount: configuration.amount,
+                currency: configuration.currency,
+                setupFutureUsage: configuration.setupFutureUsage ? .offSession : nil
+            )
+        ) { paymentMethod, _ in
+            let customerId = try await resolveCustomerId(for: paymentMethod)
+            let paymentIntent = try await LinkControllerDemoBackendClient.createDeferredPaymentIntent(
+                paymentMethodId: paymentMethod.stripeId,
+                customerId: customerId,
+                amount: configuration.amount,
+                currency: configuration.currency,
+                setupFutureUsage: configuration.setupFutureUsage ? "off_session" : nil,
+                confirmOnServer: configuration.confirmOnServer
+            )
+            await MainActor.run { intentClientSecret = paymentIntent.clientSecret }
+            return paymentIntent.clientSecret
+        }
+    }
+
+    /// The demo backend's customer for this session. Created from the entered email, or, if none was entered,
+    /// from the email Link attaches to the payment method once the customer signs in.
+    @MainActor
+    private func resolveCustomerId(for paymentMethod: STPPaymentMethod) async throws -> String {
+        if let customerId {
+            return customerId
+        }
+        let email = configuration.email.isEmpty ? paymentMethod.billingDetails?.email : configuration.email
+        guard let email, !email.isEmpty else {
+            throw LinkControllerDemoError.missingCustomerEmail
+        }
+        let customerId = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: email)
+        self.customerId = customerId
+        return customerId
+    }
+
     @MainActor
     private func confirmFlow() async {
-        guard case .awaitingConfirmation = phase, let customerId else { return }
+        guard case .awaitingConfirmation(let selectedPaymentMethod) = phase else { return }
 
         guard let rootViewController = findViewController() else {
             errorMessage = "Could not find root view controller"
@@ -294,8 +347,9 @@ struct LinkControllerDemoView: View {
         statusMessage = "Creating SetupIntent and confirming..."
 
         do {
+            let customerId = try await resolveCustomerId(for: selectedPaymentMethod)
             let secret = try await LinkControllerDemoBackendClient.createSetupIntent(customerId: customerId)
-            setupIntentClientSecret = secret
+            intentClientSecret = secret
 
             let confirmResult = try await activeController.confirmSetupIntent(
                 clientSecret: secret,
@@ -405,4 +459,15 @@ struct LinkControllerDemoView: View {
     var config = LinkControllerDemoConfiguration()
     config.email = "test@example.com"
     return LinkControllerDemoView(configuration: config)
+}
+
+enum LinkControllerDemoError: LocalizedError {
+    case missingCustomerEmail
+
+    var errorDescription: String? {
+        switch self {
+        case .missingCustomerEmail:
+            return "Couldn't find the customer's email on the Link payment method, so the demo backend can't create a customer. Enter an email on the configuration screen."
+        }
+    }
 }
