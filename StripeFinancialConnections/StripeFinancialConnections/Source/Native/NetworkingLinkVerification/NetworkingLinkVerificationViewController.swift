@@ -68,17 +68,6 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         paneLayoutView.addTo(view: view)
     }
 
-    private func focusOTPTextFieldAfterTransition() {
-        if let transitionCoordinator {
-            transitionCoordinator.animate(alongsideTransition: nil) { [weak self] context in
-                guard !context.isCancelled else { return }
-                self?.otpView.otpTextField.becomeFirstResponder()
-            }
-        } else {
-            otpView.otpTextField.becomeFirstResponder()
-        }
-    }
-
     private func showLoadingView(_ show: Bool) {
         if show && loadingView.superview == nil {
             // first-time we are showing this, so add the view to hierarchy
@@ -136,7 +125,7 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
         showContent(redactedPhoneNumber: consumerSession.redactedFormattedPhoneNumber)
-        focusOTPTextFieldAfterTransition()
+        otpView.focusOTPTextField(after: transitionCoordinator)
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {

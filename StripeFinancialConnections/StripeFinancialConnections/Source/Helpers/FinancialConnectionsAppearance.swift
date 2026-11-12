@@ -23,8 +23,6 @@ struct FinancialConnectionsAppearance: Equatable {
     struct Colors: Equatable {
         // Some colors are static, and don't depend on the manifest's theme.
         static let surfacePrimary: UIColor = .dynamic(light: .linkNeutral0, dark: .linkNeutral900)
-        static let surfaceSecondary: UIColor = .dynamic(light: .linkNeutral100, dark: .linkNeutral800)
-        static let surfaceTertiary: UIColor = .dynamic(light: .linkNeutral200, dark: .linkNeutral700)
         static let textDefault: UIColor = .dynamic(light: .neutral800, dark: .neutral25)
         static let textSubdued: UIColor = .dynamic(light: .neutral600, dark: .neutral800Dark)
         static let textCritical: UIColor = .feedbackCritical600
@@ -62,6 +60,8 @@ struct FinancialConnectionsAppearance: Equatable {
         let textPrimary: UIColor
         let textTertiary: UIColor
         let iconSecondary: UIColor
+        let surfaceSecondary: UIColor
+        let surfaceTertiary: UIColor
     }
 
     let colors: Colors
@@ -162,8 +162,10 @@ extension FinancialConnectionsAppearance.Colors {
         successIconBackground: .brand500,
         successIconForeground: .neutral0,
         textPrimary: FinancialConnectionsAppearance.Colors.textDefault,
-        textTertiary: FinancialConnectionsAppearance.Colors.textSubdued,
-        iconSecondary: FinancialConnectionsAppearance.Colors.icon
+        textTertiary: FinancialConnectionsAppearance.Colors.textDefault,
+        iconSecondary: FinancialConnectionsAppearance.Colors.icon,
+        surfaceSecondary: .dynamic(light: .neutral25, dark: .neutral25Dark),
+        surfaceTertiary: .dynamic(light: .neutral50, dark: .neutral50Dark)
     )
 
     static let link: FinancialConnectionsAppearance.Colors = .init(
@@ -179,7 +181,9 @@ extension FinancialConnectionsAppearance.Colors {
         successIconForeground: .linkNeutral900,
         textPrimary: .dynamic(light: .linkNeutral900, dark: .linkNeutral0),
         textTertiary: .dynamic(light: .linkNeutral600, dark: .linkNeutral200),
-        iconSecondary: .dynamic(light: .linkNeutral700, dark: .linkNeutral200)
+        iconSecondary: .dynamic(light: .linkNeutral700, dark: .linkNeutral200),
+        surfaceSecondary: .dynamic(light: .linkNeutral100, dark: .linkNeutral800),
+        surfaceTertiary: .dynamic(light: .linkNeutral200, dark: .linkNeutral700)
     )
 }
 

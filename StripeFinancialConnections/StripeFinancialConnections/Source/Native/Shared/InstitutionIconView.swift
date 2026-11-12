@@ -14,6 +14,7 @@ final class InstitutionIconView: UIView {
 
     private let size: CGSize
     private let isLink: Bool
+    private let surfaceColor: UIColor
 
     private lazy var institutionImageView: UIImageView = {
         let iconImageView = UIImageView()
@@ -23,6 +24,7 @@ final class InstitutionIconView: UIView {
     init(appearance: FinancialConnectionsAppearance? = nil, size: CGSize = InstitutionIconView.defaultSize) {
         self.size = size
         self.isLink = appearance?.colors == .link
+        self.surfaceColor = (appearance ?? .stripe).colors.surfaceSecondary
         super.init(frame: .zero)
         let cornerRadius: CGFloat = 12
         translatesAutoresizingMaskIntoConstraints = false
@@ -54,7 +56,7 @@ final class InstitutionIconView: UIView {
     }
 
     func setImageUrl(_ imageUrl: String?) {
-        let bankIconPlaceholder = CreateBankIconPlaceholder(size: size)
+        let bankIconPlaceholder = CreateBankIconPlaceholder(size: size, backgroundColor: surfaceColor)
         institutionImageView.setImage(
             with: imageUrl,
             placeholder: bankIconPlaceholder
@@ -72,8 +74,7 @@ final class InstitutionIconView: UIView {
     }
 }
 
-private func CreateBankIconPlaceholder(size: CGSize) -> UIImage {
-    let backgroundColor: UIColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
+private func CreateBankIconPlaceholder(size: CGSize, backgroundColor: UIColor) -> UIImage {
     let iconColor: UIColor = FinancialConnectionsAppearance.Colors.icon
     let iconSize: CGSize = CGSize(width: 24, height: 24)
     let icon: UIImage = Image.bank.makeImage(template: true)

@@ -73,7 +73,7 @@ final class PhoneCountryCodeSelectorView: UIView {
         super.init(frame: .zero)
         pickerView.delegate = self
 
-        backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
+        backgroundColor = appearance.colors.surfaceSecondary
         layer.cornerRadius = 8
         clipsToBounds = true
         accessibilityIdentifier = "phone_country_code_selector"

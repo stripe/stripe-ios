@@ -30,7 +30,7 @@ extension PaneLayoutView {
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         contentView: UIView?,
         isSheet: Bool = false,
-        appearance: FinancialConnectionsAppearance? = nil
+        appearance: FinancialConnectionsAppearance
     ) -> UIView {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
@@ -67,7 +67,7 @@ extension PaneLayoutView {
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         contentView: UIView?,
         isSheet: Bool = false,
-        appearance: FinancialConnectionsAppearance? = nil
+        appearance: FinancialConnectionsAppearance
     ) -> UIView {
         createContentView(
             iconView: iconView,
@@ -88,9 +88,9 @@ extension PaneLayoutView {
         alignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         isSheet: Bool = false,
-        appearance: FinancialConnectionsAppearance? = nil
+        appearance: FinancialConnectionsAppearance
     ) -> UIView {
-        let isLink = appearance?.colors == .link
+        let isLink = appearance.colors == .link
         let resolvedAlignment: UIStackView.Alignment = {
             guard isLink else { return alignment }
             return isSheet ? .leading : .center
@@ -121,7 +121,7 @@ extension PaneLayoutView {
                 font: titleFont,
                 boldFont: titleFont,
                 linkFont: titleFont,
-                textColor: appearance?.colors.textPrimary ?? FinancialConnectionsAppearance.Colors.textDefault,
+                textColor: appearance.colors.textPrimary,
                 alignment: textAlignment
             )
             titleLabel.setText(title.text)
@@ -154,7 +154,7 @@ extension PaneLayoutView {
         alignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         isSheet: Bool = false,
-        appearance: FinancialConnectionsAppearance? = nil
+        appearance: FinancialConnectionsAppearance
     ) -> UIView {
         createHeaderView(
             iconView: iconView,
@@ -171,9 +171,9 @@ extension PaneLayoutView {
         accessibleText: AccessibleText?,
         contentView: UIView?,
         isSheet: Bool = false,
-        appearance: FinancialConnectionsAppearance? = nil
+        appearance: FinancialConnectionsAppearance
     ) -> UIView {
-        let isLink = appearance?.colors == .link
+        let isLink = appearance.colors == .link
         let willShowDescriptionText = (accessibleText != nil)
 
         let paddingStackView = HitTestStackView()
@@ -195,7 +195,7 @@ extension PaneLayoutView {
                 font: .body(.medium),
                 boldFont: .body(.mediumEmphasized),
                 linkFont: .body(.mediumEmphasized),
-                textColor: appearance?.colors.textTertiary ?? FinancialConnectionsAppearance.Colors.textDefault,
+                textColor: appearance.colors.textTertiary,
                 alignment: isLink && !isSheet ? .center : nil
             )
             textLabel.setText(text.text)
@@ -215,7 +215,7 @@ extension PaneLayoutView {
         text: String?,
         contentView: UIView?,
         isSheet: Bool = false,
-        appearance: FinancialConnectionsAppearance? = nil
+        appearance: FinancialConnectionsAppearance
     ) -> UIView {
         createBodyView(
             accessibleText: text.map { AccessibleText($0) },

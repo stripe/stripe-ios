@@ -77,8 +77,8 @@ extension StripeUICore.Button.Configuration {
             secondaryButtonConfiguration.disabledBackgroundColor = .clear
             secondaryButtonConfiguration.colorTransforms.highlightedBackground = nil
         } else {
-            secondaryButtonConfiguration.backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
-            secondaryButtonConfiguration.disabledBackgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
+            secondaryButtonConfiguration.backgroundColor = appearance.colors.surfaceSecondary
+            secondaryButtonConfiguration.disabledBackgroundColor = appearance.colors.surfaceSecondary
             secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)
         }
         // disabled

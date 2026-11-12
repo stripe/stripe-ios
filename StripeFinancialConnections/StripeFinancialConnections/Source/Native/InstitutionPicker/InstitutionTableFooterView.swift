@@ -24,14 +24,15 @@ final class InstitutionTableFooterView: UIView {
         super.init(frame: .zero)
 
         let institutionCellView = InstitutionCellView(appearance: appearance)
+        let isLinkTheme = appearance.colors == .link
         let iconView = RoundedIconView(
             image: .image(image),
             style: .rounded,
             appearance: appearance,
-            // match the size of the institution icons above this row
-            diameter: 44
+            // Link: match the size of the institution icons above this row
+            diameter: isLinkTheme ? 44 : 56
         )
-        if appearance.colors == .link {
+        if isLinkTheme {
             iconView.backgroundColor = FinancialConnectionsAppearance.Colors.iconBackgroundOnCard
         }
         institutionCellView.customize(
@@ -41,7 +42,7 @@ final class InstitutionTableFooterView: UIView {
         )
 
         if appearance.colors == .link {
-            backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
+            backgroundColor = appearance.colors.surfaceSecondary
             layer.cornerRadius = 12
             layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
             layer.masksToBounds = true

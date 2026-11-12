@@ -44,12 +44,9 @@ final class AccountPickerSelectionListView: UIView {
         super.init(frame: .zero)
         if appearance.colors == .link {
             verticalStackView.spacing = 0
-            let groupContainer = UIView()
-            groupContainer.backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
-            groupContainer.layer.cornerRadius = 12
-            groupContainer.layer.masksToBounds = true
-            groupContainer.addAndPinSubview(verticalStackView)
-            addAndPinSubviewToSafeArea(groupContainer)
+            addAndPinSubviewToSafeArea(
+                CreateLinkGroupedCardView(contentView: verticalStackView, appearance: appearance)
+            )
         } else {
             addAndPinSubviewToSafeArea(verticalStackView)
         }
@@ -68,7 +65,7 @@ final class AccountPickerSelectionListView: UIView {
         var rowCount = 0
         func addRow(_ rowView: AccountPickerRowView) {
             if isLinkTheme && rowCount > 0 {
-                verticalStackView.addArrangedSubview(makeSeparator())
+                verticalStackView.addArrangedSubview(CreateLinkGroupedCardSeparatorView())
             }
             rowView.isInsideGroup = isLinkTheme
             verticalStackView.addArrangedSubview(rowView)
@@ -125,15 +122,5 @@ final class AccountPickerSelectionListView: UIView {
             )
             addRow(accountRowView)
         }
-    }
-
-    private func makeSeparator() -> UIView {
-        let separator = UIView()
-        separator.backgroundColor = FinancialConnectionsAppearance.Colors.dividerOnCard
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            separator.heightAnchor.constraint(equalToConstant: FinancialConnectionsAppearance.linkDividerThickness),
-        ])
-        return separator
     }
 }

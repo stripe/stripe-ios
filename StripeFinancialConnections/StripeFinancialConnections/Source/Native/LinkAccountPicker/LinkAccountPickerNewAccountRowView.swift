@@ -32,7 +32,8 @@ final class LinkAccountPickerNewAccountRowView: UIView {
         }
         horizontalStackView.addArrangedSubview(
             CreateTitleLabelView(
-                title: title
+                title: title,
+                appearance: appearance
             )
         )
         addAndPinSubviewToSafeArea(horizontalStackView)
@@ -78,9 +79,9 @@ private func CreateIconView(imageUrl: String, appearance: FinancialConnectionsAp
     return iconView
 }
 
-private func CreateTitleLabelView(title: String) -> UIView {
+private func CreateTitleLabelView(title: String, appearance: FinancialConnectionsAppearance) -> UIView {
     let titleLabel = AttributedLabel(
-        font: .label(.large),
+        font: appearance.colors == .link ? .label(.large) : .label(.largeEmphasized),
         textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
     titleLabel.text = title

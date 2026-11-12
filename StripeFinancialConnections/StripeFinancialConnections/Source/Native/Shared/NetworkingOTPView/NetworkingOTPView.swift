@@ -107,6 +107,19 @@ final class NetworkingOTPView: UIView {
         }
     }
 
+    /// Focuses the OTP text field once `transitionCoordinator`'s transition finishes, or
+    /// immediately if there's no transition in progress.
+    func focusOTPTextField(after transitionCoordinator: UIViewControllerTransitionCoordinator?) {
+        if let transitionCoordinator {
+            transitionCoordinator.animate(alongsideTransition: nil) { [weak self] context in
+                guard !context.isCancelled else { return }
+                self?.otpTextField.becomeFirstResponder()
+            }
+        } else {
+            otpTextField.becomeFirstResponder()
+        }
+    }
+
     func showLoadingView(_ show: Bool) {
         lastFooterView?.removeFromSuperview()
         lastFooterView = nil

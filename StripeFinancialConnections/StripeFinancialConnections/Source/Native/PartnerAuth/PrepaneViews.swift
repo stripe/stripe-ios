@@ -59,6 +59,7 @@ final class PrepaneViews {
             text: prepaneModel.subtitle,
             contentView: CreateContentView(
                 prepaneBodyModel: prepaneModel.body,
+                appearance: appearance,
                 didSelectURL: didSelectURL
             ),
             isSheet: (panePresentationStyle == .sheet),
@@ -123,6 +124,7 @@ final class PrepaneViews {
 
 private func CreateContentView(
     prepaneBodyModel: FinancialConnectionsOAuthPrepane.OauthPrepaneBody,
+    appearance: FinancialConnectionsAppearance,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView? {
     guard
@@ -151,7 +153,7 @@ private func CreateContentView(
             verticalStackView.addArrangedSubview(label)
         case .image(let image):
             if let imageUrl = image.default {
-                let prepaneImageView = PrepaneImageView(imageURLString: imageUrl)
+                let prepaneImageView = PrepaneImageView(imageURLString: imageUrl, appearance: appearance)
                 verticalStackView.addArrangedSubview(prepaneImageView)
             }
         case .unparsable:

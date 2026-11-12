@@ -81,12 +81,13 @@ final class InstitutionTableViewCell: UITableViewCell {
     }
 
     private func adjustBackgroundColor(isHighlighted: Bool) {
-        let isLinkAppearance = appearance?.colors == .link
+        let colors = (appearance ?? .stripe).colors
+        let isLinkAppearance = colors == .link
         let restingColor: UIColor = isLinkAppearance
-            ? FinancialConnectionsAppearance.Colors.surfaceSecondary
+            ? colors.surfaceSecondary
             : FinancialConnectionsAppearance.Colors.surfacePrimary
         contentView.backgroundColor = isHighlighted
-            ? FinancialConnectionsAppearance.Colors.surfaceTertiary
+            ? colors.surfaceTertiary
             : restingColor
         backgroundColor = isLinkAppearance ? .clear : contentView.backgroundColor
         dividerView.isHidden = !isLinkAppearance || roundsBottomCorners || isHighlighted

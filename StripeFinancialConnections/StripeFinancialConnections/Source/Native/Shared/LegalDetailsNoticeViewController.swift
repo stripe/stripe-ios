@@ -113,7 +113,7 @@ private func CreateLinkThemeMultiLinkView(
 
     linkItems.enumerated().forEach { index, linkItem in
         if index > 0 {
-            verticalStackView.addArrangedSubview(CreateLinkThemeSeparatorView())
+            verticalStackView.addArrangedSubview(CreateLinkGroupedCardSeparatorView(leadingInset: 16))
         }
         let url = ExtractLinkURL(fromTitle: linkItem.title, content: linkItem.content)
         verticalStackView.addArrangedSubview(
@@ -130,12 +130,7 @@ private func CreateLinkThemeMultiLinkView(
         )
     }
 
-    let cardView = UIView()
-    cardView.backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
-    cardView.layer.cornerRadius = 16
-    cardView.layer.masksToBounds = true
-    cardView.addAndPinSubview(verticalStackView)
-    return cardView
+    return CreateLinkGroupedCardView(contentView: verticalStackView, appearance: appearance, cornerRadius: 16)
 }
 
 private func ExtractLinkURL(fromTitle title: String, content: String?) -> URL? {
@@ -146,22 +141,6 @@ private func ExtractLinkURL(fromTitle title: String, content: String?) -> URL? {
         return url
     }
     return nil
-}
-
-private func CreateLinkThemeSeparatorView() -> UIView {
-    let container = UIView()
-    let separatorView = UIView()
-    separatorView.backgroundColor = FinancialConnectionsAppearance.Colors.dividerOnCard
-    separatorView.translatesAutoresizingMaskIntoConstraints = false
-    container.addSubview(separatorView)
-    NSLayoutConstraint.activate([
-        separatorView.heightAnchor.constraint(equalToConstant: FinancialConnectionsAppearance.linkDividerThickness),
-        separatorView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
-        separatorView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-        separatorView.topAnchor.constraint(equalTo: container.topAnchor),
-        separatorView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-    ])
-    return container
 }
 
 private final class LinkNoticeRowView: UIView {
@@ -216,10 +195,20 @@ private final class LinkNoticeRowView: UIView {
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         addGestureRecognizer(tapGestureRecognizer)
+
+        // Expose the row as a single tappable link to VoiceOver and Voice Control.
+        isAccessibilityElement = true
+        accessibilityLabel = [title, content].compactMap { $0 }.joined(separator: ", ")
+        accessibilityTraits = .link
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func accessibilityActivate() -> Bool {
+        didSelect()
+        return true
     }
 
     @objc private func didTapView() {

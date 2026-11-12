@@ -92,20 +92,17 @@ final class LinkAccountPickerBodyView: UIView {
             accountRowsStack.spacing = 0
             for (index, rowView) in accountRowViews.enumerated() {
                 if index > 0 {
-                    accountRowsStack.addArrangedSubview(makeSeparator())
+                    accountRowsStack.addArrangedSubview(CreateSeparatorView())
                 }
                 accountRowsStack.addArrangedSubview(rowView)
             }
             // new account row goes inside the container as the last row
-            accountRowsStack.addArrangedSubview(makeSeparator())
+            accountRowsStack.addArrangedSubview(CreateSeparatorView())
             accountRowsStack.addArrangedSubview(newAccountRowView)
 
-            let groupContainer = UIView()
-            groupContainer.backgroundColor = FinancialConnectionsAppearance.Colors.surfaceSecondary
-            groupContainer.layer.cornerRadius = 16
-            groupContainer.layer.masksToBounds = true
-            groupContainer.addAndPinSubview(accountRowsStack)
-            outerStackView.addArrangedSubview(groupContainer)
+            outerStackView.addArrangedSubview(
+                CreateLinkGroupedCardView(contentView: accountRowsStack, appearance: appearance, cornerRadius: 16)
+            )
         } else {
             accountRowViews.forEach { outerStackView.addArrangedSubview($0) }
             outerStackView.addArrangedSubview(newAccountRowView)
@@ -118,22 +115,6 @@ final class LinkAccountPickerBodyView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func makeSeparator() -> UIView {
-        // Inset to align with the row's text start (leading margin + icon + spacing),
-        // so the divider extends from the text rather than running full-bleed.
-        let wrapper = UIStackView()
-        wrapper.isLayoutMarginsRelativeArrangement = true
-        wrapper.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 84, bottom: 0, trailing: 0)
-        let separator = UIView()
-        separator.backgroundColor = FinancialConnectionsAppearance.Colors.dividerOnCard
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            separator.heightAnchor.constraint(equalToConstant: FinancialConnectionsAppearance.linkDividerThickness),
-        ])
-        wrapper.addArrangedSubview(separator)
-        return wrapper
-    }
-
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsAccountTuple]) {
         let selectedAccountIds = Set(selectedAccounts.map({ $0.partnerAccount.id }))
         partnerAccountIdToRowView
@@ -143,6 +124,12 @@ final class LinkAccountPickerBodyView: UIView {
                 )
             }
     }
+}
+
+private func CreateSeparatorView() -> UIView {
+    // Inset to align with the row's text start (leading margin + icon + spacing),
+    // so the divider extends from the text rather than running full-bleed.
+    CreateLinkGroupedCardSeparatorView(leadingInset: 84)
 }
 
 #if DEBUG

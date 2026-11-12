@@ -30,10 +30,9 @@ final class RetrieveAccountsLoadingView: UIView {
                 ),
                 subtitle: nil,
                 contentView: {
-                    let isLinkTheme = appearance.colors == .link
-                    let rows = (0..<(isLinkTheme ? 3 : 4)).map { _ in
+                    let rows = (0..<4).map { _ in
                         ShimmeringAccountPickerRow(
-                            backgroundColor: FinancialConnectionsAppearance.Colors.surfaceSecondary
+                            backgroundColor: appearance.colors.surfaceSecondary
                         )
                     }
                     let verticalStackView = UIStackView(arrangedSubviews: rows)
