@@ -223,7 +223,10 @@ final class BankInstitutionIconsView: UIView {
         guard shouldRotate != (rotationTimer != nil) else { return }
         if shouldRotate {
             let timer = Timer(timeInterval: Self.rotationInterval, repeats: true) { [weak self] _ in
-                self?.rotateToNextIcon()
+                // The timer is scheduled on the main run loop, so it always fires on the main thread
+                MainActor.assumeIsolated {
+                    self?.rotateToNextIcon()
+                }
             }
             RunLoop.main.add(timer, forMode: .common)
             rotationTimer = timer
