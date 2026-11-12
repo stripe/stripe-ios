@@ -85,7 +85,9 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
         await AddressSpecProvider.shared.loadAddressSpecs()
         var embeddedConfiguration = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         embeddedConfiguration.apiClient = configuration.apiClient
-        let customerProvider = CustomerProvider(customer: .init(id: "cus_test", customerSessionClientSecret: "cuss_test"))
+        // Configure the same customer as the load result, as a merchant integration would
+        embeddedConfiguration.customer = .init(id: "cus_test", customerSessionClientSecret: "cuss_test")
+        let customerProvider = CustomerProvider(customer: embeddedConfiguration.customer)
         func makeLoadResult(apiKey: String) -> PaymentSheetLoader.LoadResult {
             return .init(
                 intent: ._testValue(),
@@ -128,27 +130,30 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
         field.text = "1230"
         field.sendActions(for: .editingChanged)
         XCTAssertNotNil(updateViewController.updateParams)
-
-        // When an accepted load refreshes the Customer Session's key
-        sut.loadResult = makeLoadResult(apiKey: "ek_refreshed")
-        let requestReceived = expectation(description: "Payment method update uses refreshed credentials")
+        // ...and record the credentials sent by each update request
+        var authorizationHeaders: [String?] = []
         let paymentMethodID = paymentMethod.stripeId
         let requestStub = stub { request in
             request.url?.absoluteString.contains("/payment_methods/\(paymentMethodID)") == true && request.httpMethod == "POST"
         } response: { request in
-            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer ek_refreshed")
-            requestReceived.fulfill()
+            authorizationHeaders.append(request.value(forHTTPHeaderField: "Authorization"))
             return HTTPStubsResponse(jsonObject: STPPaymentMethod.paymentMethodJson, statusCode: 200, headers: nil)
         }
         defer { HTTPStubs.removeStub(requestStub) }
 
-        // Then the next saved-method operation uses that key
-        let result = await sut.didUpdate(viewController: updateViewController, paymentMethod: paymentMethod)
-        guard case .success = result else {
-            return XCTFail("Expected the saved payment method update to succeed")
+        // When one update runs before an accepted load refreshes the Customer Session's key and one runs after
+        let firstResult = await sut.didUpdate(viewController: updateViewController, paymentMethod: paymentMethod)
+        guard case .success = firstResult else {
+            return XCTFail("Expected the update before the refresh to succeed")
         }
-        XCTAssertEqual(sut.savedPaymentMethods.first?.stripeId, paymentMethodID)
-        await fulfillment(of: [requestReceived], timeout: 5)
+        sut.loadResult = makeLoadResult(apiKey: "ek_refreshed")
+        let secondResult = await sut.didUpdate(viewController: updateViewController, paymentMethod: paymentMethod)
+        guard case .success = secondResult else {
+            return XCTFail("Expected the update after the refresh to succeed")
+        }
+
+        // Then the second update uses the refreshed key rather than credentials cached by the first update
+        XCTAssertEqual(authorizationHeaders, ["Bearer ek_previous", "Bearer ek_refreshed"])
     }
 
     func testUpdatePaymentMethod_preservesLocalLinkFields() async throws {
@@ -252,7 +257,7 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
         XCTAssertFalse(body.contains("payment_method_to_update%5Bbilling_details%5D"))
     }
 
-    func testUpdatePaymentMethod_checkoutSession_missingBillingAndExpiry_throws() async {
+    func testUpdatePaymentMethod_checkoutSession_missingBillingAndExpiry_throws() async throws {
         let checkoutSession = makeCheckoutSession(id: "cs_test_checkout_session")
         let sut = CustomerProvider(checkoutSession: checkoutSession.makePublicSession())
 
@@ -264,7 +269,10 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
                 apiClient: configuration.apiClient
             )
             XCTFail("Expected error")
-        } catch {}
+        } catch PaymentSheetError.unknown(let description) {
+            // Match the guard's error so a failed network request can't satisfy this test
+            XCTAssertEqual(description, "Tried to update a payment method without billing details or expiry details.")
+        }
     }
 
     func testMissingCustomerSessionKeyPreservesOperationErrorsAndAnalytics() async {
