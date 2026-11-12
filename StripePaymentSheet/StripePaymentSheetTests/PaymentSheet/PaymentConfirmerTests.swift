@@ -901,9 +901,7 @@ final class PaymentConfirmerRoutingTests: APIStubbedTestCase {
 
     /// The table's entries, as the server sends them.
     static func fixtureEntries() throws -> [String: [String: Any]] {
-        let url = try XCTUnwrap(Bundle(for: ConfirmationMetadataTableTests.self).url(forResource: "payment_method_confirmations", withExtension: "json"))
-        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
-        let entries = try XCTUnwrap(json["payment_method_confirmations"] as? [[String: Any]])
+        let entries = try ConfirmationMetadata.fixtureJSONEntries()
         return Dictionary(uniqueKeysWithValues: entries.map { ($0["type"] as! String, $0) })
     }
 

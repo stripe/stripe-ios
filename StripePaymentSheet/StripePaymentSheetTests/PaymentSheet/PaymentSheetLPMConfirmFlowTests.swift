@@ -2071,11 +2071,19 @@ extension PaymentSheetLPMConfirmFlowTests {
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         guard case .checkout(let checkoutSession) = testIntent.intent else {
+            // PaymentConfirmer confirms a native type only when the session serves its entry, so serve the whole table.
+            let servingElementsSession: STPElementsSession
+            do {
+                servingElementsSession = try elementsSession._testServingConfirmationTable()
+            } catch {
+                XCTFail("Couldn't serve the confirmation table: \(error)")
+                return
+            }
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: self,
                 intent: testIntent.intent,
-                elementsSession: elementsSession,
+                elementsSession: servingElementsSession,
                 paymentOption: paymentOption,
                 paymentHandler: paymentHandler,
                 analyticsHelper: analyticsHelper,

@@ -63,6 +63,30 @@ extension ConfirmationMetadata {
     }
 }
 
+extension ConfirmationMetadata {
+    /// The table's entries as JSON, as the server sends them in `mobile_session.payment_method_confirmations`.
+    static func fixtureJSONEntries() throws -> [[String: Any]] {
+        let url = try XCTUnwrap(Bundle(for: ConfirmationMetadataTableTests.self).url(forResource: "payment_method_confirmations", withExtension: "json"))
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
+        return try XCTUnwrap(json["payment_method_confirmations"] as? [[String: Any]])
+    }
+}
+
+extension STPElementsSession {
+    /// This session as if the server also served the table's entry for every type, as mint does with its
+    /// `elements_mobile_payment_method_confirmations` flag on, so `PaymentConfirmer` confirms every native type.
+    func _testServingConfirmationTable() throws -> STPElementsSession {
+        let flag = PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        defer { PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = flag }
+        var json = allResponseFields
+        var mobileSession = json[MobileSession.sidecarResponseKey] as? [String: Any] ?? [:]
+        mobileSession["payment_method_confirmations"] = try ConfirmationMetadata.fixtureJSONEntries()
+        json[MobileSession.sidecarResponseKey] = mobileSession
+        return try XCTUnwrap(STPElementsSession.decodedObject(fromAPIResponse: json))
+    }
+}
+
 extension PaymentConfirmerFamily {
     /// The table's types in this family.
     var types: [STPPaymentMethodType] {
