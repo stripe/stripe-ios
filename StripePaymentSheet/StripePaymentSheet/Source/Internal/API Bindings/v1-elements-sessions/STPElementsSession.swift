@@ -70,6 +70,14 @@ import Foundation
     /// The `mobile_session` sidecar. Only decoded when `PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled` is on.
     let mobileSession: MobileSession.Session?
 
+    /// The types of `mobile_session.payment_methods` entries that didn't decode. They were already reported.
+    let mobileSessionUndecodablePaymentMethodTypes: Set<String>
+
+    /// How to confirm native types, from `mobile_session.payment_method_confirmations`, keyed by type. `PaymentConfirmer`
+    /// confirms only the types this or a server-driven payment method's description covers; every other type is
+    /// confirmed with STPPaymentHandler.
+    let paymentMethodConfirmations: [String: ConfirmationMetadata]
+
     // TODO(joyceqin) Re-enable as part of the ECE workstream
     // Link doesn't support automatic tax from billing address
     var disableLinkForAutomaticTaxBilling: Bool = false
@@ -96,7 +104,8 @@ import Foundation
         customPaymentMethods: [CustomPaymentMethod],
         passiveCaptchaData: PassiveCaptchaData?,
         customer: ElementsCustomer?,
-        mobileSession: MobileSession.Session? = nil
+        mobileSession: MobileSession.Session? = nil,
+        mobileSessionUndecodablePaymentMethodTypes: Set<String> = []
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
@@ -118,6 +127,8 @@ import Foundation
         self.passiveCaptchaData = passiveCaptchaData
         self.customer = customer
         self.mobileSession = mobileSession
+        self.mobileSessionUndecodablePaymentMethodTypes = mobileSessionUndecodablePaymentMethodTypes
+        self.paymentMethodConfirmations = ConfirmationMetadata.servedEntries(Self.confirmationEntries(servedBy: mobileSession))
         super.init()
     }
 
@@ -251,7 +262,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             return cpms
         }()
 
-        let mobileSession: MobileSession.Session? = {
+        let mobileSession: MobileSession.DecodedSidecar? = {
             guard PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled else {
                 return nil
             }
@@ -280,7 +291,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
             customPaymentMethods: customPaymentMethods,
             passiveCaptchaData: passiveCaptchaData,
             customer: customer,
-            mobileSession: mobileSession
+            mobileSession: mobileSession?.session,
+            mobileSessionUndecodablePaymentMethodTypes: mobileSession?.undecodablePaymentMethodTypes ?? []
         )
     }
 }

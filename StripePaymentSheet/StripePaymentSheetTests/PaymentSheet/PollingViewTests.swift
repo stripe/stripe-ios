@@ -46,4 +46,63 @@ class PollingViewTests: XCTestCase {
         XCTAssertEqual(pollingViewModel.retryInterval, 2)
         XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 24 * 60 * 60, accuracy: 0.5)
     }
+
+    func testPollingViewModelFromConfirmationMetadata() {
+        // Given Pix's polling screen from the confirmation metadata, with the server's strings
+        let screen = ConfirmationMetadata.NextAction.PollingScreen(
+            seconds: 90,
+            intervalSeconds: 2,
+            showsCountdown: false,
+            deadlineField: "expires_at",
+            title: "Zahlung bestätigen",
+            instructions: "Mit Pix bezahlen.",
+            cancelButton: "Abbrechen",
+            failureTitle: "Zahlung fehlgeschlagen",
+            failureInstructions: "Bitte zurückgehen."
+        )
+
+        // When the view model is made from it
+        let pollingViewModel = PollingViewModel(screen: screen)
+
+        // Then it shows the server's strings and polls as configured
+        XCTAssertEqual(pollingViewModel.title, "Zahlung bestätigen")
+        XCTAssertEqual(pollingViewModel.CTA, "Mit Pix bezahlen.")
+        XCTAssertEqual(pollingViewModel.cancelButtonTitle, "Abbrechen")
+        XCTAssertEqual(pollingViewModel.failureTitle, "Zahlung fehlgeschlagen")
+        XCTAssertEqual(pollingViewModel.failureInstructions, "Bitte zurückgehen.")
+        XCTAssertFalse(pollingViewModel.showsCountdown)
+        XCTAssertEqual(pollingViewModel.retryInterval, 2)
+        XCTAssertEqual(pollingViewModel.deadline.timeIntervalSinceNow, 90, accuracy: 0.5)
+    }
+
+    func testServerInstructionsFillInTheTimeRemaining() {
+        // Given BLIK's screen with the server's ICU instructions
+        let screen = ConfirmationMetadata.NextAction.PollingScreen(seconds: 60, intervalSeconds: 1, showsCountdown: true, deadlineField: nil, title: "Approve payment", instructions: "Confirm within {time_remaining}.", cancelButton: "Cancel", failureTitle: "Failed", failureInstructions: "Go back")
+
+        // When the time left is filled in
+        let instructions = PollingViewModel(screen: screen).instructions(timeRemaining: "0:59")
+
+        // Then the ICU argument is replaced
+        XCTAssertEqual(instructions, "Confirm within 0:59.")
+    }
+
+    func testPollingViewModelMatchesConfirmationMetadataForEveryPollingType() {
+        for type in PollingViewModel.supportedPaymentMethods {
+            let native = PollingViewModel(paymentMethodType: type)
+            let screen = ConfirmationMetadata.native(for: type)!.nextActions.values.compactMap { nextAction -> ConfirmationMetadata.NextAction.PollingScreen? in
+                guard case .pollingScreen(let screen, _) = nextAction.presenter else { return nil }
+                return screen
+            }.first!
+            let fromMetadata = PollingViewModel(screen: screen)
+            // The table's English renders the same text as the SDK's English strings
+            XCTAssertEqual(native.instructions(timeRemaining: "0:59"), fromMetadata.instructions(timeRemaining: "0:59"), type.identifier)
+            XCTAssertEqual(native.title, fromMetadata.title, type.identifier)
+            XCTAssertEqual(native.cancelButtonTitle, fromMetadata.cancelButtonTitle, type.identifier)
+            XCTAssertEqual(native.failureTitle, fromMetadata.failureTitle, type.identifier)
+            XCTAssertEqual(native.failureInstructions, fromMetadata.failureInstructions, type.identifier)
+            XCTAssertEqual(native.showsCountdown, fromMetadata.showsCountdown, type.identifier)
+            XCTAssertEqual(native.retryInterval, fromMetadata.retryInterval, type.identifier)
+            XCTAssertEqual(native.deadline.timeIntervalSince(fromMetadata.deadline), 0, accuracy: 0.5, type.identifier)
+        }
+    }
 }

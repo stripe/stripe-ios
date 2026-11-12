@@ -705,6 +705,12 @@ import UIKit
     private func updateMobileSessionFlag(_ settings: PaymentSheetTestPlaygroundSettings) {
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled =
             settings.mobileSessionSidecar == .on
+        PaymentSheet.MobileSessionFeatureFlags.paymentConfirmerEnabled = settings.paymentConfirmer != .off
+        #if DEBUG
+        PaymentSheet.MobileSessionFeatureFlags.paymentMethodConfirmationsOverride = settings.paymentConfirmer == .onServingTestTable
+            ? Bundle.main.url(forResource: "payment_method_confirmations", withExtension: "json").flatMap { try? Data(contentsOf: $0) }
+            : nil
+        #endif
     }
 
     /// The `customStripeAPI` host, if it applies. Accepts a bare host (as on Android) or a URL.

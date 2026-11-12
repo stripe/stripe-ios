@@ -20,12 +20,8 @@ struct ServerDrivenPaymentMethod {
     let icon: Icon
     /// The `payment_method_data[type]` to confirm with.
     let paymentMethodDataType: String
-    // STPPaymentHandler doesn't use these yet (see the TODO in `PaymentSheet.confirm`), so an intent that's `processing`,
-    // or still `requires_action` after a redirect, fails or is canceled.
-    /// Whether a `processing` intent after confirmation counts as success.
-    let processingIsSuccess: Bool
-    /// How long to keep polling the intent after the customer returns from a redirect.
-    let postRedirectPollSeconds: Int
+    /// How `PaymentConfirmer` confirms it: its next actions and status rules, from the description's `confirm`.
+    let confirmation: ConfirmationMetadata
 
     struct Icon {
         struct Image: Hashable {
@@ -59,7 +55,7 @@ struct ServerDrivenPaymentMethod {
         }
     }
 
-    /// The first part of a `mobile_session.payment_methods` entry this SDK can't render, e.g. "next_action:unparsable".
+    /// The first part of a `mobile_session.payment_methods` entry this SDK can't render, e.g. "mandate_data:online_inferred".
     struct UnsupportedValue: Error, Equatable {
         let value: String
     }
@@ -74,19 +70,19 @@ struct ServerDrivenPaymentMethod {
                 throw UnsupportedValue(value: "form_element:unparsable")
             }
         }
-        for nextAction in paymentMethod.confirm.nextActions {
-            switch nextAction {
-            case .redirectToUrl:
-                break
-            case .unparsable:
-                throw UnsupportedValue(value: "next_action:unparsable")
-            }
-        }
+        // PaymentSheet builds confirm params in code, and doesn't send mandate data for these yet.
         switch paymentMethod.confirm.mandateData {
         case .none:
             break
-        case .onlineInferred, .unparsable:
+        case .onlineInferred, .onlineInferredWhenSettingUp, .unparsable:
             throw UnsupportedValue(value: "mandate_data:\(paymentMethod.confirm.mandateData.rawValue)")
+        }
+        // The same mapping as a served `payment_method_confirmations` entry.
+        let confirmation: ConfirmationMetadata
+        do {
+            confirmation = try ConfirmationMetadata(wire: paymentMethod.confirm, type: paymentMethod.type)
+        } catch let error as ConfirmationMetadata.WireError {
+            throw UnsupportedValue(value: error.description)
         }
         switch paymentMethod.savedPaymentMethods {
         case .unsupported:
@@ -119,8 +115,7 @@ struct ServerDrivenPaymentMethod {
             isTemplate: isTemplate
         )
         self.paymentMethodDataType = paymentMethod.confirm.paymentMethodDataType
-        self.processingIsSuccess = paymentMethod.confirm.processingIsSuccess
-        self.postRedirectPollSeconds = paymentMethod.confirm.postRedirectPollSeconds
+        self.confirmation = confirmation
     }
 
     private static func image(_ image: MobileSession.IconImage) throws -> Icon.Image {

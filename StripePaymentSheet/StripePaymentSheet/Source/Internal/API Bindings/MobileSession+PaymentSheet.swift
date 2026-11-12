@@ -16,6 +16,16 @@ extension PaymentSheet {
         /// Sends the `X-Stripe-Mobile-Config` header on `elements/sessions` and uses the server's
         /// `mobile_session.payment_method_availability` when it's present. Defaults to off.
         @_spi(InternalOnlyAPI) public static var serverPaymentMethodAvailabilityEnabled: Bool = false
+
+        /// Confirms PaymentSheet's payments with `PaymentConfirmer`, for the types the session carries a `confirm` for.
+        /// Off, STPPaymentHandler confirms every payment, including server-driven payment methods. Defaults to off.
+        @_spi(InternalOnlyAPI) public static var paymentConfirmerEnabled: Bool = false
+
+        #if DEBUG
+        /// The playground's stand-in for the server: a `mobile_session` JSON object whose `payment_method_confirmations`
+        /// every session uses in place of the ones the server serves. Only in DEBUG builds.
+        @_spi(InternalOnlyAPI) public static var paymentMethodConfirmationsOverride: Data?
+        #endif
     }
 }
 
@@ -63,9 +73,18 @@ extension MobileSession {
         return ascii
     }
 
+    /// The decoded `mobile_session` sidecar.
+    struct DecodedSidecar {
+        let session: Session
+        /// The types of the `payment_methods` entries that didn't decode and were dropped. A type left without a
+        /// description shows natively if PaymentSheet supports it, and otherwise isn't shown.
+        let undecodablePaymentMethodTypes: Set<String>
+    }
+
     /// Decodes the `mobile_session` sidecar from an `elements/sessions` response.
-    /// Returns nil when it's missing or malformed; never fails the load.
-    static func decodeSidecar(fromAPIResponse response: [AnyHashable: Any]) -> Session? {
+    /// Returns nil when it's missing or malformed; never fails the load. A `payment_methods` or
+    /// `payment_method_confirmations` entry that doesn't decode is dropped and reported, and the rest of the session is kept.
+    static func decodeSidecar(fromAPIResponse response: [AnyHashable: Any]) -> DecodedSidecar? {
         guard let sidecar = response[sidecarResponseKey], !(sidecar is NSNull) else {
             return nil
         }
@@ -73,7 +92,28 @@ extension MobileSession {
             guard JSONSerialization.isValidJSONObject(sidecar) else {
                 throw PaymentSheetError.unknown(debugDescription: "mobile_session is not a JSON object")
             }
-            return try decode(JSONSerialization.data(withJSONObject: sidecar))
+            var undecodablePaymentMethodTypes: Set<String> = []
+            let session = try decode(JSONSerialization.data(withJSONObject: sidecar)) { droppedEntry in
+                // The entry didn't decode, so read its type from the raw JSON, if it has one.
+                let rawEntries = (sidecar as? [String: Any])?[droppedEntry.key] as? [Any]
+                let type = rawEntries.flatMap { droppedEntry.index < $0.count ? $0[droppedEntry.index] : nil }
+                    .flatMap { ($0 as? [String: Any])?["type"] as? String }
+                // A dropped `payment_method_confirmations` entry only means the type is confirmed with STPPaymentHandler.
+                if let type, droppedEntry.key == "payment_methods" {
+                    undecodablePaymentMethodTypes.insert(type)
+                }
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                    event: .paymentSheetMobileSessionPaymentMethodDropped,
+                    error: droppedEntry.error,
+                    params: [
+                        "payment_method_type": type ?? "unknown",
+                        "key": droppedEntry.key,
+                        "reason": "decode",
+                        "index": droppedEntry.index,
+                    ]
+                )
+            }
+            return DecodedSidecar(session: session, undecodablePaymentMethodTypes: undecodablePaymentMethodTypes)
         } catch {
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetMobileSessionDecodeFailed, error: error)
             return nil
@@ -88,6 +128,21 @@ extension STPElementsSession {
             return nil
         }
         return mobileSession?.paymentMethodAvailability
+    }
+
+    /// The `payment_method_confirmations` entries to use for `mobileSession`: the served ones, or in DEBUG builds
+    /// `paymentMethodConfirmationsOverride`'s when it's set.
+    static func confirmationEntries(servedBy mobileSession: MobileSession.Session?) -> [MobileSession.PaymentMethodConfirmation] {
+        #if DEBUG
+        if let override = PaymentSheet.MobileSessionFeatureFlags.paymentMethodConfirmationsOverride {
+            do {
+                return try MobileSession.decode(override).paymentMethodConfirmations ?? []
+            } catch {
+                assertionFailure("paymentMethodConfirmationsOverride doesn't decode: \(error)")
+            }
+        }
+        #endif
+        return mobileSession?.paymentMethodConfirmations ?? []
     }
 }
 

@@ -1,0 +1,3239 @@
+{
+  "payment_method_confirmations" : [
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          },
+          {
+            "app_to_app" : "none",
+            "presenter" : "three_ds2",
+            "return_url" : "confirm_if_set",
+            "type" : "use_stripe_sdk",
+            "while_requires_action" : {
+              "on_timeout" : "cancel",
+              "outcome" : "poll",
+              "poll_seconds" : 15
+            }
+          }
+        ],
+        "payment_method_data_type" : "card",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "card"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "paypal",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "paypal"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "refresh",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "klarna",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "klarna"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "afterpay_clearpay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "afterpay_clearpay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "affirm",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "affirm"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "ideal",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "ideal"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "bancontact",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "bancontact"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred",
+        "next_actions" : [],
+        "payment_method_data_type" : "sepa_debit",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "sepa_debit"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "eps",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "eps"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "p24",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "p24"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred",
+        "next_actions" : [
+          {
+            "app_to_app" : "none",
+            "presenter" : "none",
+            "return_url" : "none",
+            "type" : "verify_with_microdeposits",
+            "while_requires_action" : {
+              "outcome" : "succeed"
+            }
+          }
+        ],
+        "payment_method_data_type" : "us_bank_account",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "us_bank_account"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred",
+        "next_actions" : [],
+        "payment_method_data_type" : "au_becs_debit",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "au_becs_debit"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "refresh",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "safari_view_controller",
+            "presenter" : "redirect",
+            "return_url" : "confirm_required",
+            "type" : "cashapp_handle_redirect_or_display_qr_code",
+            "url_path" : "mobile_auth_url"
+          }
+        ],
+        "payment_method_data_type" : "cashapp",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "cashapp"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "none",
+            "polling_screen" : {
+              "cancel_button" : "Cancel and pay another way",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Confirm the payment in your bank's app within {time_remaining} to complete the purchase.",
+              "interval_seconds" : 1,
+              "over_web_view" : false,
+              "seconds" : 60,
+              "shows_countdown" : true,
+              "title" : "Approve payment"
+            },
+            "presenter" : "polling_screen",
+            "return_url" : "none",
+            "type" : "blik_authorize"
+          }
+        ],
+        "payment_method_data_type" : "blik",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "blik"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "grabpay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "grabpay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "fpx",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "fpx"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred",
+        "next_actions" : [],
+        "payment_method_data_type" : "bacs_debit",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "bacs_debit"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "native_url_then_web",
+            "browser" : "safari_view_controller",
+            "fallback_url_path" : "url",
+            "presenter" : "redirect",
+            "return_url" : "confirm_then_next_action",
+            "type" : "alipay_handle_redirect",
+            "url_path" : "native_url"
+          }
+        ],
+        "payment_method_data_type" : "alipay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "alipay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "none",
+            "browser" : "safari_view_controller",
+            "presenter" : "redirect",
+            "return_url" : "none",
+            "type" : "oxxo_display_details",
+            "url_path" : "hosted_voucher_url",
+            "while_requires_action" : {
+              "outcome" : "succeed"
+            }
+          }
+        ],
+        "payment_method_data_type" : "oxxo",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "oxxo"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "zip",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "zip"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "revolut_pay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "revolut_pay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "amazon_pay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "amazon_pay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "alma",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "alma"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "mobilepay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "mobilepay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "vipps",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "vipps"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "none",
+            "browser" : "safari_view_controller",
+            "presenter" : "redirect",
+            "return_url" : "none",
+            "type" : "konbini_display_details",
+            "url_path" : "hosted_voucher_url",
+            "while_requires_action" : {
+              "outcome" : "succeed"
+            }
+          }
+        ],
+        "payment_method_data_type" : "konbini",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "konbini"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "polling_screen" : {
+              "cancel_button" : "Cancel and pay another way",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Confirm the payment in your bank or payment app within {time_remaining} to complete the purchase.",
+              "interval_seconds" : 1,
+              "over_web_view" : true,
+              "seconds" : 3600,
+              "shows_countdown" : true,
+              "title" : "Approve payment"
+            },
+            "presenter" : "polling_screen",
+            "return_url" : "confirm_required",
+            "type" : "paynow_display_qr_code",
+            "url_path" : "hosted_instructions_url",
+            "while_requires_action" : {
+              "outcome" : "wait_for_next_action_screen"
+            }
+          }
+        ],
+        "payment_method_data_type" : "paynow",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "paynow"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "polling_screen" : {
+              "cancel_button" : "Cancel and pay another way",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Confirm the payment in your bank or payment app within {time_remaining} to complete the purchase.",
+              "interval_seconds" : 1,
+              "over_web_view" : true,
+              "seconds" : 3600,
+              "shows_countdown" : true,
+              "title" : "Approve payment"
+            },
+            "presenter" : "polling_screen",
+            "return_url" : "confirm_required",
+            "type" : "promptpay_display_qr_code",
+            "url_path" : "hosted_instructions_url",
+            "while_requires_action" : {
+              "outcome" : "wait_for_next_action_screen"
+            }
+          }
+        ],
+        "payment_method_data_type" : "promptpay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "promptpay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "sunbit",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "sunbit"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "billie",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "billie"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "satispay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "satispay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "crypto",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "crypto"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "none",
+            "browser" : "safari_view_controller",
+            "presenter" : "redirect",
+            "return_url" : "none",
+            "type" : "boleto_display_details",
+            "url_path" : "hosted_voucher_url",
+            "while_requires_action" : {
+              "outcome" : "succeed"
+            }
+          }
+        ],
+        "payment_method_data_type" : "boleto",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "boleto"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "safari_view_controller",
+            "presenter" : "redirect",
+            "return_url" : "confirm_required",
+            "type" : "swish_handle_redirect_or_display_qr_code",
+            "url_path" : "mobile_auth_url"
+          }
+        ],
+        "payment_method_data_type" : "swish",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "swish"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "twint",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "twint"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "none",
+            "browser" : "safari_view_controller",
+            "presenter" : "redirect",
+            "return_url" : "none",
+            "type" : "multibanco_display_details",
+            "url_path" : "hosted_voucher_url",
+            "while_requires_action" : {
+              "outcome" : "succeed"
+            }
+          }
+        ],
+        "payment_method_data_type" : "multibanco",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "multibanco"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "paypay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "paypay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "wero",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "wero"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "pay_by_bank",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "pay_by_bank"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "none",
+            "polling_screen" : {
+              "cancel_button" : "Cancel and pay another way",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Confirm the payment in your MB WAY app within {time_remaining} to complete the purchase.",
+              "interval_seconds" : 1,
+              "over_web_view" : false,
+              "seconds" : 240,
+              "shows_countdown" : true,
+              "title" : "Approve payment"
+            },
+            "presenter" : "polling_screen",
+            "return_url" : "none",
+            "type" : "mb_way_await_authorization"
+          }
+        ],
+        "payment_method_data_type" : "mb_way",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "mb_way"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "none",
+            "polling_screen" : {
+              "cancel_button" : "Cancel and pay another way",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Confirm the Bizum payment in your mobile banking application within {time_remaining} to complete the purchase.",
+              "interval_seconds" : 1,
+              "over_web_view" : false,
+              "seconds" : 4200,
+              "shows_countdown" : true,
+              "title" : "Approve payment"
+            },
+            "presenter" : "polling_screen",
+            "return_url" : "none",
+            "type" : "await_authorization"
+          }
+        ],
+        "payment_method_data_type" : "bizum",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "bizum"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "kakao_pay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "kakao_pay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "naver_pay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "naver_pay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "kr_card",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "kr_card"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "payco",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "payco"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "sequra",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "sequra"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "scalapay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "scalapay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "polling_screen" : {
+              "cancel_button" : "Cancel and pay another way",
+              "deadline_field" : "expires_at",
+              "failure_instructions" : "Please go back and select another payment method",
+              "failure_title" : "Payment failed",
+              "instructions" : "Complete the payment using Pix to finish the purchase.",
+              "interval_seconds" : 2,
+              "over_web_view" : true,
+              "seconds" : 86400,
+              "shows_countdown" : false,
+              "title" : "Approve payment"
+            },
+            "presenter" : "polling_screen",
+            "return_url" : "confirm_if_set",
+            "type" : "pix_display_qr_code",
+            "url_path" : "hosted_instructions_url",
+            "while_requires_action" : {
+              "outcome" : "wait_for_next_action_screen"
+            }
+          }
+        ],
+        "payment_method_data_type" : "pix",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "pix"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "gopay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "gopay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "mondu",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "mondu"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "ng_ussd",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "ng_ussd"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "qris",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "qris"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "ng_wallet",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "ng_wallet"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "shopeepay",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "shopeepay"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "touch_n_go",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "touch_n_go"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred_when_setting_up",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "truemoney",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "truemoney"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "gcash",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "gcash"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "outcome" : "succeed"
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "momo",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "momo"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "ng_bank_transfer",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "ng_bank_transfer"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "outcome" : "cancel"
+              }
+            }
+          }
+        },
+        "mandate_data" : "none",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          }
+        ],
+        "payment_method_data_type" : "ng_card",
+        "return_url" : "required",
+        "setup" : {
+          "supported" : false
+        }
+      },
+      "type" : "ng_card"
+    },
+    {
+      "confirm" : {
+        "intent_retrieval" : "retrieve",
+        "intent_rules" : {
+          "payment_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          },
+          "setup_intent" : {
+            "after_confirm" : {
+              "processing" : {
+                "outcome" : "fail"
+              },
+              "requires_action" : {
+                "outcome" : "perform_next_action"
+              }
+            },
+            "after_next_action" : {
+              "processing" : {
+                "on_timeout" : "fail",
+                "outcome" : "poll",
+                "poll_seconds" : 30
+              },
+              "requires_action" : {
+                "on_timeout" : "cancel",
+                "outcome" : "poll",
+                "poll_seconds" : 5
+              }
+            }
+          }
+        },
+        "mandate_data" : "online_inferred",
+        "next_actions" : [
+          {
+            "app_to_app" : "universal_links_only",
+            "browser" : "from_next_action",
+            "presenter" : "redirect",
+            "return_url" : "next_action",
+            "type" : "redirect_to_url",
+            "url_path" : "url"
+          },
+          {
+            "app_to_app" : "none",
+            "presenter" : "three_ds2",
+            "return_url" : "confirm_if_set",
+            "type" : "use_stripe_sdk"
+          }
+        ],
+        "payment_method_data_type" : "link",
+        "return_url" : "optional",
+        "setup" : {
+          "supported" : true
+        }
+      },
+      "type" : "link"
+    }
+  ]
+}

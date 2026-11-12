@@ -21,7 +21,8 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession?,
-        isFromLink: Bool = false
+        isFromLink: Bool = false,
+        serverDrivenPaymentMethod: ServerDrivenPaymentMethod? = nil
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         // Route based on which handler is available in the intent configuration
         if let confirmationTokenConfirmHandler = intentConfig.confirmationTokenConfirmHandler {
@@ -40,7 +41,8 @@ extension PaymentSheet {
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 elementsSession: elementsSession,
                 confirmHandler: confirmationTokenConfirmHandler,
-                isFromLink: isFromLink
+                isFromLink: isFromLink,
+                serverDrivenPaymentMethod: serverDrivenPaymentMethod
             )
         } else if let confirmHandler = intentConfig.confirmHandler {
             // Use regular confirmation flow
@@ -52,7 +54,9 @@ extension PaymentSheet {
                 paymentHandler: paymentHandler,
                 isFlowController: isFlowController,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
-                confirmHandler: confirmHandler
+                elementsSession: elementsSession,
+                confirmHandler: confirmHandler,
+                serverDrivenPaymentMethod: serverDrivenPaymentMethod
             )
         } else {
             stpAssertionFailure("Unexpectedly found nil confirmHandler and confirmationTokenConfirmHandler in intentConfig")
@@ -69,7 +73,9 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
-        confirmHandler: @escaping IntentConfiguration.ConfirmHandler
+        elementsSession: STPElementsSession?,
+        confirmHandler: @escaping IntentConfiguration.ConfirmHandler,
+        serverDrivenPaymentMethod: ServerDrivenPaymentMethod?
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
             var confirmType = confirmType
@@ -150,8 +156,12 @@ extension PaymentSheet {
                     setMandateDataIfNecessary(for: paymentMethod.type, on: paymentIntentParams)
 
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.confirmPaymentIntent(
+                        confirmPaymentIntent(
+                            using: paymentHandler,
                             params: paymentIntentParams,
+                            paymentMethodType: paymentMethod.type,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
@@ -166,9 +176,13 @@ extension PaymentSheet {
                     try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
                     assert(!allowsSetAsDefaultPM, "(Debug-build-only error) The default payment methods feature is not yet supported with deferred intents. Please contact us if you'd like to use this feature via a Github issue on stripe-ios.")
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.handleNextAction(
+                        handleNextAction(
+                            using: paymentHandler,
                             for: paymentIntent,
-                            with: authenticationContext,
+                            paymentMethodType: paymentMethod.type,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
+                            authenticationContext: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
@@ -191,8 +205,12 @@ extension PaymentSheet {
                         configuration: configuration
                     )
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.confirmSetupIntent(
+                        confirmSetupIntent(
+                            using: paymentHandler,
                             params: setupIntentParams,
+                            paymentMethodType: paymentMethod.type,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
@@ -207,9 +225,13 @@ extension PaymentSheet {
                     try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
                     assert(!allowsSetAsDefaultPM, "(Debug-build-only error) The default payment methods feature is not yet supported with deferred intents. Please contact us if you'd like to use this feature via a Github issue on stripe-ios.")
                     result = await withCheckedContinuation { continuation in
-                        paymentHandler.handleNextAction(
+                        handleNextAction(
+                            using: paymentHandler,
                             for: setupIntent,
-                            with: authenticationContext,
+                            paymentMethodType: paymentMethod.type,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
+                            authenticationContext: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }

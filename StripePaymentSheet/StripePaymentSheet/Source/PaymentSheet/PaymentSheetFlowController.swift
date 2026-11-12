@@ -1061,15 +1061,15 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
 /// A simple STPAuthenticationContext that wraps a UIViewController
 /// For internal SDK use only
 @objc(STP_Internal_AuthenticationContext)
-class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
+class AuthenticationContext: NSObject, PollingScreenHosting {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
         presentingViewController.present(authenticationViewController, animated: true, completion: nil)
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
-                                              appearance: self.appearance, safariViewController: safariViewController)
-        presentingViewController.present(pollingVC, animated: true, completion: nil)
+    var pollingScreenAppearance: PaymentSheet.Appearance { appearance }
+
+    func presentPollingViewController(_ pollingViewController: PollingViewController, safariViewController: SFSafariViewController?) {
+        presentingViewController.present(pollingViewController, animated: true, completion: nil)
     }
 
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {

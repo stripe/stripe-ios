@@ -701,6 +701,9 @@ extension NativeSheetContainerViewController: UIScrollViewDelegate {
 }
 
 // MARK: - PaymentSheetAuthenticationContext
+// Declared on its own: declaring it on the extension below makes `prepareForPresentation(in:)` a near-miss warning.
+extension NativeSheetContainerViewController: PollingScreenHosting {}
+
 extension NativeSheetContainerViewController: PaymentSheetAuthenticationContext {
 
     func authenticationPresentingViewController() -> UIViewController {
@@ -728,10 +731,10 @@ extension NativeSheetContainerViewController: PaymentSheetAuthenticationContext 
         self.removeBlurEffect(animated: true, completion: completion)
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
-                                                      appearance: self.appearance, safariViewController: safariViewController)
-        pushContentViewController(pollingVC)
+    var pollingScreenAppearance: PaymentSheet.Appearance { appearance }
+
+    func presentPollingViewController(_ pollingViewController: PollingViewController, safariViewController: SFSafariViewController?) {
+        pushContentViewController(pollingViewController)
     }
 
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {

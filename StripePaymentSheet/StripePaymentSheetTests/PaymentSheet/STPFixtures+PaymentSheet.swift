@@ -82,7 +82,8 @@ extension STPElementsSession {
         externalPaymentMethods: [ExternalPaymentMethod] = [],
         customPaymentMethods: [CustomPaymentMethod] = [],
         passiveCaptchaData: PassiveCaptchaData? = nil,
-        customer: ElementsCustomer? = nil
+        customer: ElementsCustomer? = nil,
+        mobileSession: MobileSession.Session? = nil
     ) -> STPElementsSession {
         return .init(
             allResponseFields: [:],
@@ -103,7 +104,8 @@ extension STPElementsSession {
             externalPaymentMethods: externalPaymentMethods,
             customPaymentMethods: customPaymentMethods,
             passiveCaptchaData: passiveCaptchaData,
-            customer: customer
+            customer: customer,
+            mobileSession: mobileSession
         )
     }
 

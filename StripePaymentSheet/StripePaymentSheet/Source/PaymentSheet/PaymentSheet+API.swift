@@ -308,8 +308,12 @@ extension PaymentSheet {
                         return .unknown
                     }
                 }()
-                // TODO: For `.serverDriven`, pass `processingIsSuccess` and `postRedirectPollSeconds` to `paymentHandler`
-                // once it can take behaviors for payment method types it doesn't know. Until then it treats them like `.unknown`.
+                let serverDrivenPaymentMethod: ServerDrivenPaymentMethod? = {
+                    if case .serverDriven(let serverDrivenPaymentMethod) = confirmParams.paymentMethodType {
+                        return serverDrivenPaymentMethod
+                    }
+                    return nil
+                }()
                 // Set allow_redisplay on params
                 setAllowRedisplay(confirmParams, paymentMethodType)
                 confirmParams.paymentMethodParams.radarOptions = radarOptions
@@ -327,8 +331,12 @@ extension PaymentSheet {
                         paymentIntent: paymentIntent,
                         configuration: configuration
                     )
-                    paymentHandler.confirmPaymentIntent(
+                    confirmPaymentIntent(
+                        using: paymentHandler,
                         params: params,
+                        paymentMethodType: paymentMethodType,
+                        serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                        elementsSession: elementsSession,
                         authenticationContext: authenticationContext,
                         completion: { actionStatus, paymentIntent, error in
                             Task { await confirmationChallenge?.complete() }
@@ -350,8 +358,12 @@ extension PaymentSheet {
                         setupIntent: setupIntent,
                         configuration: configuration
                     )
-                    paymentHandler.confirmSetupIntent(
+                    confirmSetupIntent(
+                        using: paymentHandler,
                         params: setupIntentParams,
+                        paymentMethodType: paymentMethodType,
+                        serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                        elementsSession: elementsSession,
                         authenticationContext: authenticationContext,
                         completion: { actionStatus, setupIntent, error in
                             Task { await confirmationChallenge?.complete() }
@@ -377,7 +389,8 @@ extension PaymentSheet {
                             paymentHandler: paymentHandler,
                             isFlowController: isFlowController,
                             allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                            elementsSession: elementsSession
+                            elementsSession: elementsSession,
+                            serverDrivenPaymentMethod: serverDrivenPaymentMethod
                         )
                         await confirmationChallenge?.complete()
                         completion(result.result, result.deferredIntentConfirmationType)
@@ -400,8 +413,11 @@ extension PaymentSheet {
 
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil), paymentIntent: paymentIntent, configuration: configuration)
 
-                paymentHandler.confirmPaymentIntent(
+                confirmPaymentIntent(
+                    using: paymentHandler,
                     params: paymentIntentParams,
+                    paymentMethodType: paymentMethod.type,
+                    elementsSession: elementsSession,
                     authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
@@ -414,8 +430,11 @@ extension PaymentSheet {
                     setupIntent: setupIntent,
                     configuration: configuration
                 )
-                paymentHandler.confirmSetupIntent(
+                confirmSetupIntent(
+                    using: paymentHandler,
                     params: setupIntentParams,
+                    paymentMethodType: paymentMethod.type,
+                    elementsSession: elementsSession,
                     authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
@@ -467,8 +486,11 @@ extension PaymentSheet {
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                         paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
-                        paymentHandler.confirmPaymentIntent(
+                        confirmPaymentIntent(
+                            using: paymentHandler,
                             params: paymentIntentParams,
+                            paymentMethodType: paymentMethodParams.type,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
@@ -483,8 +505,11 @@ extension PaymentSheet {
                         setupIntentParams.paymentMethodParams = paymentMethodParams
                         setupIntentParams.returnURL = configuration.returnURL
                         setupIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
-                        paymentHandler.confirmSetupIntent(
+                        confirmSetupIntent(
+                            using: paymentHandler,
                             params: setupIntentParams,
+                            paymentMethodType: paymentMethodParams.type,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
@@ -549,8 +574,11 @@ extension PaymentSheet {
                         paymentIntentParams.radarOptions = radarOptions
                         paymentIntentParams.mandateData = mandateData
                         paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
-                        paymentHandler.confirmPaymentIntent(
+                        confirmPaymentIntent(
+                            using: paymentHandler,
                             params: paymentIntentParams,
+                            paymentMethodType: paymentMethod.type,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
@@ -567,8 +595,11 @@ extension PaymentSheet {
                         setupIntentParams.mandateData = mandateData
                         setupIntentParams.radarOptions = radarOptions
                         setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
-                        paymentHandler.confirmSetupIntent(
+                        confirmSetupIntent(
+                            using: paymentHandler,
                             params: setupIntentParams,
+                            paymentMethodType: paymentMethod.type,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }

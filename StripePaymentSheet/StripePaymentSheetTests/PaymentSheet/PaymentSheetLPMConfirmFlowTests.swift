@@ -160,6 +160,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         // Don't follow redirects for this specific tests, as we want to record
         // the body of the redirect request for UnredirectableSessionDelegate.
         self.followRedirects = false
+        PaymentSheet.MobileSessionFeatureFlags.paymentConfirmerEnabled = true
+    }
+
+    override func tearDown() async throws {
+        PaymentSheet.MobileSessionFeatureFlags.paymentConfirmerEnabled = false
+        try await super.tearDown()
     }
 
     func testSEPADebitConfirmFlows() async throws {
@@ -1424,6 +1430,14 @@ extension PaymentSheetLPMConfirmFlowTests {
                 }
                 redirectShimCalled = true
             }
+            // The same for payment methods PaymentConfirmer confirms: the customer comes back at once.
+            PaymentSheetNextActionPerformer._testMakeRedirectPresenter = {
+                ShimRedirectPresenter {
+                    print("✅ \(description): Successfully confirmed the intent and saw a redirect attempt.")
+                    redirectShimCalled = true
+                }
+            }
+            defer { PaymentSheetNextActionPerformer._testMakeRedirectPresenter = nil }
 
             // Hack to PaymentSheet-specific local actions that happen before control is handed over to STPPaymentHandler.
             PaymentSheet._preconfirmShim = { viewController in
@@ -1941,6 +1955,13 @@ extension PaymentSheetLPMConfirmFlowTests {
                     }
                     redirectShimCalled = true
                 }
+                PaymentSheetNextActionPerformer._testMakeRedirectPresenter = {
+                    ShimRedirectPresenter {
+                        print("✅ \(description): Successfully confirmed the intent and saw a redirect attempt.")
+                        redirectShimCalled = true
+                    }
+                }
+                defer { PaymentSheetNextActionPerformer._testMakeRedirectPresenter = nil }
 
                 confirm(
                     testIntent: testIntent,
@@ -2056,11 +2077,19 @@ extension PaymentSheetLPMConfirmFlowTests {
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         guard case .checkout(let checkoutSession) = testIntent.intent else {
+            // With its flag on, PaymentConfirmer confirms a native type only when the session serves its entry, so serve the whole table.
+            let servingElementsSession: STPElementsSession
+            do {
+                servingElementsSession = try elementsSession._testServingConfirmationTable()
+            } catch {
+                XCTFail("Couldn't serve the confirmation table: \(error)")
+                return
+            }
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: self,
                 intent: testIntent.intent,
-                elementsSession: elementsSession,
+                elementsSession: servingElementsSession,
                 paymentOption: paymentOption,
                 paymentHandler: paymentHandler,
                 analyticsHelper: analyticsHelper,
@@ -2196,6 +2225,15 @@ extension PaymentSheetLPMConfirmFlowTests: PaymentSheetAuthenticationContext {
     }
 }
 
+// PaymentConfirmer builds the polling screen itself and asks the container to show it; simulate that it saw success.
+extension PaymentSheetLPMConfirmFlowTests: PollingScreenHosting {
+    var pollingScreenAppearance: PaymentSheet.Appearance { .default }
+
+    func presentPollingViewController(_ pollingViewController: PollingViewController, safariViewController: SFSafariViewController?) {
+        pollingViewController._testFinish(with: .succeeded)
+    }
+}
+
 extension PaymentSheetLPMConfirmFlowTests: PaymentMethodFormViewControllerDelegate {
     nonisolated func didUpdate(_ viewController: StripePaymentSheet.PaymentMethodFormViewController) {
     }
@@ -2271,4 +2309,29 @@ extension IntentConfirmParams: Equatable {
 
         return true
     }
+}
+
+/// PaymentConfirmer's redirect presenter for these tests: reports the redirect, then the customer back at once, like
+/// `_redirectShim` plus `_handleWillForegroundNotification` do for STPPaymentHandler.
+@MainActor
+final class ShimRedirectPresenter: RedirectPresenting {
+    let didRedirect: () -> Void
+
+    init(didRedirect: @escaping () -> Void) {
+        self.didRedirect = didRedirect
+    }
+
+    func redirect(
+        _ redirect: ResolvedNextAction.Redirect,
+        authenticationContext: STPAuthenticationContext,
+        didOpen: @escaping (RedirectType) -> Void,
+        didPresent: ((SFSafariViewController?) -> Void)?
+    ) async -> RedirectResult {
+        didRedirect()
+        didOpen(.nativeApp)
+        didPresent?(nil)
+        return .returned(.appForegrounded)
+    }
+
+    func close() {}
 }
