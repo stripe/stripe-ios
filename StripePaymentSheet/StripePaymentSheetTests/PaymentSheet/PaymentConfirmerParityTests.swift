@@ -22,7 +22,7 @@ import XCTest
 ///
 /// The native side is the table harness's: the real `confirmPaymentIntent`/`confirmSetupIntent`/`handleNextAction(for:)`,
 /// the real post-return loop, and the real dispatch. Every difference must be one of `engineDifferences`, each a
-/// deliberate decision written up in paymentsheet-confirm-engine-prototype.md.
+/// deliberate decision.
 extension ConfirmationMetadataParityTests {
     /// What the engine does differently from STPPaymentHandler, on purpose. U1 comes first: a run that starts from a next
     /// action the type doesn't list fails right there, so no other rule applies to it.
@@ -42,18 +42,11 @@ extension ConfirmationMetadataParityTests {
         // because handleNextAction(for:)'s guard accepts it (SPH:482).
         KnownMismatch(id: "M3", count: 102) { !isUnlistedRedirect($0) && $0.scenario.hasPrefix("pi/requires_confirmation") && $0.scenario.hasSuffix("/via_confirm") },
         // M4: the engine doesn't load Alipay's legacy "Marlin" return URL before reading a PaymentIntent; STPPaymentHandler
-        // does (SPH:1597). Alipay PaymentIntents run on Alipay+ (EVO), where the ping is a no-op
-        // (~/stripe/worktrees/handoff/alipay-marlin-research.md, task #69).
+        // does (SPH:1597). Alipay PaymentIntents run on Alipay+ (EVO), where the ping is a no-op.
         KnownMismatch(id: "M4", count: 2) { !isUnlistedRedirect($0) && $0.type == "alipay" && $0.scenario.hasSuffix("/before_fetch") && $0.native == "ping" && $0.table == "none" },
         // M5: a SetupIntent whose terminal next action (a voucher, microdeposits) is done succeeds whichever way PaymentSheet
         // came in. STPPaymentHandler's handleNextAction(for:) guard fails it (SPH:770).
         KnownMismatch(id: "M5", count: 2) { !isUnlistedRedirect($0) && $0.scenario.hasPrefix("si/requires_action+") && $0.scenario.hasSuffix("/via_handle_next_action") },
-        // F1, a deliberate fix of an STPPaymentHandler bug: closing Pix's instructions web view never cancels; the polling
-        // screen finishes the payment, like PayNow and PromptPay, for PaymentIntents and SetupIntents. STPPaymentHandler
-        // cancels while the screen is still up and drops its later success, because Pix was left out of the PayNow/PromptPay
-        // exclusion by accident (SPH:1708 for PIs; the SI branch at SPH:1794 has no exclusion). Confirmed a bug in task
-        // #62: ~/stripe/worktrees/handoff/pix-dismiss-investigation.md.
-        KnownMismatch(id: "F1", count: 4) { !isUnlistedRedirect($0) && $0.type == "pix" && $0.scenario.contains("requires_action+pix_display_qr_code") && $0.native == "cancel" && $0.table == "wait_for_next_action_screen" },
     ]
 
     static func isUnlistedRedirect(_ mismatch: ParityReport.Mismatch) -> Bool {
@@ -70,9 +63,6 @@ extension ConfirmationMetadataParityTests {
 
         let text = report.render(header: "ENGINE_PARITY", families: true, rules: Self.engineDifferences)
         print(text)
-        if let home = ProcessInfo.processInfo.environment["SIMULATOR_HOST_HOME"] {
-            try? text.write(toFile: "\(home)/stripe/worktrees/handoff/paymentsheet-confirm-engine-parity.txt", atomically: true, encoding: .utf8)
-        }
         // Every difference is a known, deliberate one, and each still produces the same number of rows.
         for mismatch in report.mismatches {
             let rules = Self.engineDifferences.filter { $0.matches(mismatch) }

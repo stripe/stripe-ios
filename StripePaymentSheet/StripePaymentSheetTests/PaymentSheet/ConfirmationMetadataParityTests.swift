@@ -64,9 +64,6 @@ final class ConfirmationMetadataParityTests: XCTestCase {
 
         let text = report.render()
         print(text)
-        if let home = ProcessInfo.processInfo.environment["SIMULATOR_HOST_HOME"] {
-            try? text.write(toFile: "\(home)/stripe/worktrees/handoff/confirmation-metadata-parity.txt", atomically: true, encoding: .utf8)
-        }
         XCTAssertEqual(report.types, ConfirmationMetadata.nativeTypes.count)
         // Every mismatch belongs to exactly one known rule, and each rule still produces the same number of them.
         for mismatch in report.mismatches {
@@ -78,7 +75,7 @@ final class ConfirmationMetadataParityTests: XCTestCase {
         }
     }
 
-    /// The rules the table can't express yet, as numbered in confirmation-metadata-table.md.
+    /// A rule for where the table differs from STPPaymentHandler, and how many rows it produces.
     struct KnownMismatch {
         let id: String
         let count: Int
@@ -89,9 +86,9 @@ final class ConfirmationMetadataParityTests: XCTestCase {
         // M1: a SetupIntent in requires_payment_method is a decline via confirmSetupIntent, but
         // `requiresPaymentMethodErrorCode` via handleNextAction(for:) (SPH:942). The table can't key on the entry point.
         KnownMismatch(id: "M1", count: 24) { $0.group == "after_confirm" && $0.scenario == "si/requires_payment_method/handle_next_action" },
-        // M2: PayNow and PromptPay never cancel from the loop, whatever the next action (SPH:1708 keys on PM type); the
-        // table keys it on their QR next action.
-        KnownMismatch(id: "M2", count: 4) { ["paynow", "promptpay"].contains($0.type) && $0.scenario.hasPrefix("pi/requires_action+redirect_to_url") },
+        // M2: PayNow, PromptPay and Pix never cancel from the loop, whatever the next action (SPH:1708 keys on PM type;
+        // Pix since #7617, for SetupIntents too); the table keys it on their QR next action.
+        KnownMismatch(id: "M2", count: 8) { ["paynow", "promptpay", "pix"].contains($0.type) && $0.scenario.contains("requires_action+redirect_to_url") },
         // M3: requires_confirmation after a next action fails through confirmPaymentIntent (its guard, SPH:236, leaves it
         // out, and asserts) but succeeds through handleNextAction (SPH:482). The table says succeed (manual confirmation).
         KnownMismatch(id: "M3", count: 122) { $0.scenario.hasPrefix("pi/requires_confirmation") && $0.scenario.hasSuffix("/via_confirm") },
@@ -105,12 +102,13 @@ final class ConfirmationMetadataParityTests: XCTestCase {
         // M5: handleNextAction(for: SetupIntent)'s guard (SPH:770) only accepts succeeded, so a terminal next action
         // (a voucher, microdeposits) that STPPaymentHandler completes as succeeded is turned into a failure.
         KnownMismatch(id: "M5", count: 2) { $0.scenario.hasPrefix("si/requires_action+") && $0.scenario.hasSuffix("/via_handle_next_action") },
-        // F1, a deliberate fix of an STPPaymentHandler bug: closing Pix's instructions web view never cancels; the polling
-        // screen finishes the payment, like PayNow and PromptPay, for PaymentIntents and SetupIntents. STPPaymentHandler
-        // cancels while the screen is still up and drops its later success, because Pix was left out of the PayNow/PromptPay
-        // exclusion by accident (SPH:1708 for PIs; the SI branch at SPH:1794 has no exclusion). Confirmed a bug in task
-        // #62: ~/stripe/worktrees/handoff/pix-dismiss-investigation.md.
-        KnownMismatch(id: "F1", count: 4) { $0.type == "pix" && $0.scenario.contains("requires_action+pix_display_qr_code") && $0.native == "cancel" && $0.table == "wait_for_next_action_screen" },
+        // W1, deliberate: STPPaymentHandler counts BLIK's, MB WAY's and Bizum's next actions as success states (SPH:2187).
+        // Their entries don't set `while_requires_action: succeed`: a standalone polling screen finishes the payment, and
+        // the engine never reads that rule for one, so another SDK can't read it as "requires_action means success".
+        KnownMismatch(id: "W1", count: 3) {
+            $0.group == "functions" && $0.native == "true" && $0.table == "false"
+                && ["blik_authorize", "mb_way_await_authorization", "await_authorization"].map { "next_action_is_success(\($0))" }.contains($0.scenario)
+        },
     ]
 
     // MARK: Next actions checked
