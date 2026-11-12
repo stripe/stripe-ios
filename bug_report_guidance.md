@@ -1,7 +1,6 @@
   Use the [Mobile Checkout Elements Bug Tracker](https://docs.google.com/document/d/1bV3WyCppVILnOFxwnyVmY0bFxOTO_5gd3LsZ0xzLrD0/edit)
-  as the source of truth for bug reports, root causes, manifestations, and status. Existing
-  repository issue files are historical evidence. Do not create or maintain repository files
-  to track bugs.
+  as the source of truth for bug reports, root causes, manifestations, and status. Do not create
+  or maintain repository files to track bugs.
 
   At the start of each bug investigation, read the current tracker using Google Docs/Drive
   tools, including its How to use, Status, Index, Bugs, and Template sections. Follow the
