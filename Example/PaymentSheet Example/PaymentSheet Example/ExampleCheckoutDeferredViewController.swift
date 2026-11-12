@@ -36,6 +36,10 @@ class ExampleDeferredCheckoutViewController: UIViewController {
 
     private var computedTotals: ComputedTotals!
 
+    // `PaymentSheet.CustomerConfiguration.id` is internal, so we keep our own copy of the
+    // customer ID to send along with our confirm-intent request.
+    private var customerId: String?
+
     private var currencyFormatter: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -237,6 +241,7 @@ class ExampleDeferredCheckoutViewController: UIViewController {
                     STPAPIClient.shared.publishableKey = publishableKey
 
                     // MARK: Update the configuration.customer details
+                    self.customerId = customerId
                     self.paymentSheetConfiguration.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                     [self.hotDogStepper, self.saladStepper, self.subscribeSwitch, self.buyButton].forEach { $0?.isEnabled = true }
                     self.updateLabels()
@@ -260,7 +265,7 @@ class ExampleDeferredCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
-            "customer_id": paymentSheetConfiguration.customer?.id,
+            "customer_id": customerId,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])

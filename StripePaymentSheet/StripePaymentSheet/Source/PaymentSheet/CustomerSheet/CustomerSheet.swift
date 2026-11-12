@@ -428,16 +428,33 @@ public extension CustomerSheet {
 }
 
 public struct CustomerSessionClientSecret {
-    /// The identifier of the Stripe Customer object.
+    /// The identifier of the Stripe Customer object, if one was provided.
     /// See https://stripe.com/docs/api/customers/object#customer_object-id
-    internal let customerId: String
+    internal let customerId: String?
 
     /// Customer session client secret
     /// See: https://docs.stripe.com/api/customer_sessions/object
     internal let clientSecret: String
 
+    @available(
+        *,
+        deprecated,
+        message: "You no longer need to pass a Customer ID."
+    )
     public init(customerId: String, clientSecret: String) {
         self.customerId = customerId
+        self.clientSecret = clientSecret
+
+        stpAssert(!clientSecret.hasPrefix("ek_"),
+                  "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+        stpAssert(clientSecret.hasPrefix("cuss_"),
+                  "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+    }
+
+    /// Initializes a `CustomerSessionClientSecret`.
+    /// The customer is determined from the CustomerSession, so no Customer ID is required.
+    public init(clientSecret: String) {
+        self.customerId = nil
         self.clientSecret = clientSecret
 
         stpAssert(!clientSecret.hasPrefix("ek_"),

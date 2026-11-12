@@ -86,7 +86,7 @@ extension PaymentSheet {
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, elementsSession: elementsSession, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
@@ -102,7 +102,7 @@ extension PaymentSheet {
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, elementsSession: elementsSession, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }
@@ -126,7 +126,7 @@ extension PaymentSheet {
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, elementsSession: elementsSession, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
@@ -142,7 +142,7 @@ extension PaymentSheet {
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, elementsSession: elementsSession, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }
@@ -171,7 +171,7 @@ extension PaymentSheet {
         // This helps catch integration errors during development (e.g. mismatched currency/amount/SFU)
         // without breaking production payments if server intent changes after client configuration.
         #if DEBUG
-        confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: configuration.customer?.id)
+        confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: configuration.customer?.resolvedID(elementsSession: elementsSession))
         #endif
 
         // 2. Configure payment method details based on confirm type

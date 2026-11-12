@@ -73,7 +73,9 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         // Then the same credentials are returned without calling the provider or API again
         XCTAssertEqual(providerCallCount, 1)
         XCTAssertEqual(elementsSessionRequestCount, 1)
-        XCTAssertEqual(cachedSession.customerId, "cus_123")
+        // The customer ID resolved from the server response (the fixture's `customer_session.customer`) is
+        // authoritative, matching Android/web, even though the provider explicitly supplied "cus_123".
+        XCTAssertEqual(cachedSession.customerId, "cus_123456")
         XCTAssertEqual(cachedSession.customerSessionClientSecret.clientSecret, "cuss_123")
         XCTAssertEqual(cachedSession.apiKey, originalSession.apiKey)
         XCTAssertEqual(cachedSession.cacheDate, originalSession.cacheDate)
@@ -101,10 +103,26 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         // Then the API is called again using the cached customer session without calling the provider
         XCTAssertEqual(providerCallCount, 1)
         XCTAssertEqual(elementsSessionRequestCount, 2)
-        XCTAssertEqual(cachedSession.customerId, "cus_123")
+        // The customer ID resolved from the server response (the fixture's `customer_session.customer`) is
+        // authoritative, matching Android/web, even though the provider explicitly supplied "cus_123".
+        XCTAssertEqual(cachedSession.customerId, "cus_123456")
         XCTAssertEqual(cachedSession.customerSessionClientSecret.clientSecret, "cuss_123")
         XCTAssertEqual(cachedSession.apiKey, originalSession.apiKey)
         XCTAssertEqual(cachedSession.cacheDate, originalSession.cacheDate)
+    }
+
+    func testElementsSessionResolvesCustomerIDFromSessionWhenOmitted() async throws {
+        // Given a `CustomerSessionClientSecret` that doesn't provide a customer ID
+        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheet_200)
+        let adapter = makeAdapter {
+            .init(clientSecret: "cuss_123")
+        }
+
+        // When fetching the Elements session
+        let (_, cachedSession) = try await adapter.elementsSessionWithCustomerSessionClientSecret()
+
+        // Then the customer ID is resolved from the server's response
+        XCTAssertEqual(cachedSession.customerId, "cus_123456")
     }
 
     func testCachedCustomerSessionClientSecretRefreshesExpiredSession() async throws {
@@ -183,6 +201,7 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
     ) -> CustomerSessionAdapter.CachedCustomerSessionClientSecret {
         return .init(customerSessionClientSecret: .init(customerId: "cus_123", clientSecret: "cuss_123"),
                      apiKey: "ek_123",
+                     elementsSession: .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: [.card]),
                      timeProvider: timeProvider)
     }
 

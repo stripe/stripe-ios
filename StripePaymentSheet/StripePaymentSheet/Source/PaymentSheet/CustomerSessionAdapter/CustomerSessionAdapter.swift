@@ -20,15 +20,19 @@ class CustomerSessionAdapter {
     struct CachedCustomerSessionClientSecret {
         let customerSessionClientSecret: CustomerSessionClientSecret
         let apiKey: String
-        let customerId: String
+        let customerId: String?
         let cacheDate: Date
         private let timeProvider: () -> Date
 
         init(customerSessionClientSecret: CustomerSessionClientSecret,
              apiKey: String,
+             elementsSession: STPElementsSession,
              timeProvider: @escaping () -> Date = Date.init) {
             self.customerSessionClientSecret = customerSessionClientSecret
-            self.customerId = customerSessionClientSecret.customerId
+            // The customer resolved server-side from the CustomerSession is authoritative, matching the
+            // Android and web SDKs. Only fall back to the explicitly provided customer ID if the response
+            // is missing it.
+            self.customerId = elementsSession.customer?.customerSession.customer ?? customerSessionClientSecret.customerId
             self.cacheDate = timeProvider()
             self.apiKey = apiKey
             self.timeProvider = timeProvider
@@ -88,6 +92,7 @@ class CustomerSessionAdapter {
 
             let tempCachedCustomerSessionClientSecret = CachedCustomerSessionClientSecret(customerSessionClientSecret: customerSessionClientSecret,
                                                                                           apiKey: apiKey,
+                                                                                          elementsSession: elementsSessionResponse,
                                                                                           timeProvider: timeProvider)
             self._cachedCustomerSessionClientSecret = tempCachedCustomerSessionClientSecret
             return (elementsSessionResponse, tempCachedCustomerSessionClientSecret)
@@ -109,26 +114,30 @@ class CustomerSessionAdapter {
     }
 }
 extension CustomerSessionAdapter {
-    func fetchClientDefaultPaymentMethod(for customerId: String) -> String? {
-        guard let defaultPaymentMethod = CustomerPaymentOption.localDefaultPaymentMethod(for: customerId),
+    func fetchClientDefaultPaymentMethod(for customerId: String?) -> String? {
+        guard let customerId,
+              let defaultPaymentMethod = CustomerPaymentOption.localDefaultPaymentMethod(for: customerId),
            case .stripeId(let stripePaymentMethodId) = defaultPaymentMethod else {
             return nil
         }
         return stripePaymentMethodId
     }
 
-    func fetchSelectedPaymentOption(for customerId: String, elementsSession: STPElementsSession) -> CustomerPaymentOption? {
+    func fetchSelectedPaymentOption(for customerId: String?, elementsSession: STPElementsSession) -> CustomerPaymentOption? {
         return CustomerPaymentOption.selectedPaymentMethod(for: customerId, elementsSession: elementsSession, surface: .customerSheet)
     }
 
     func detachPaymentMethod(paymentMethod: STPPaymentMethod) async throws {
 
         let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()
+        guard let customerId = cachedCustomerSessionClientSecret.customerId else {
+            throw CustomerSheetError.unknown(debugDescription: "Failed to read customerId while detaching a payment method.")
+        }
         return try await withCheckedThrowingContinuation({ continuation in
             if paymentMethod.type == .card {
                 self.configuration.apiClient.detachPaymentMethodRemoveDuplicates(
                     paymentMethod.stripeId,
-                    customerId: cachedCustomerSessionClientSecret.customerId,
+                    customerId: customerId,
                     fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey,
                     withCustomerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret.clientSecret) { error in
                         if let error = error {
@@ -161,6 +170,9 @@ extension CustomerSessionAdapter {
 
     func setAsDefaultPaymentMethod(paymentMethodId: String) async throws -> STPCustomer {
         let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()
-        return try await self.configuration.apiClient.setAsDefaultPaymentMethod(paymentMethodId, for: cachedCustomerSessionClientSecret.customerId, using: cachedCustomerSessionClientSecret.apiKey)
+        guard let customerId = cachedCustomerSessionClientSecret.customerId else {
+            throw CustomerSheetError.unknown(debugDescription: "Failed to read customerId while setting a payment method as default.")
+        }
+        return try await self.configuration.apiClient.setAsDefaultPaymentMethod(paymentMethodId, for: customerId, using: cachedCustomerSessionClientSecret.apiKey)
     }
 }

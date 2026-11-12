@@ -332,9 +332,9 @@ extension PaymentSheet {
 
     /// Configuration related to the Stripe Customer
     public struct CustomerConfiguration {
-        /// The identifier of the Stripe Customer object.
+        /// The identifier of the Stripe Customer object, if one was provided.
         /// See https://stripe.com/docs/api/customers/object#customer_object-id
-        public let id: String
+        let id: String?
 
         internal let customerAccessProvider: CustomerAccessProvider
 
@@ -345,6 +345,11 @@ extension PaymentSheet {
         }
 
         /// Initializes a CustomerConfiguration with a customerSessionClientSecret
+        @available(
+            *,
+            deprecated,
+            message: "You no longer need to pass a Customer ID."
+        )
         public init(id: String, customerSessionClientSecret: String) {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
@@ -353,6 +358,29 @@ extension PaymentSheet {
                       "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
             stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
                       "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+        }
+
+        /// Initializes a CustomerConfiguration with a customerSessionClientSecret.
+        /// The customer is determined from the CustomerSession, so no Customer ID is required.
+        public init(customerSessionClientSecret: String) {
+            self.id = nil
+            self.customerAccessProvider = .customerSession(customerSessionClientSecret)
+
+            stpAssert(!customerSessionClientSecret.hasPrefix("ek_"),
+                      "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+            stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
+                      "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+        }
+
+        /// Resolves the customer ID. For CustomerSession integrations, this matches the Android and web SDKs:
+        /// the customer resolved server-side from the CustomerSession is authoritative once available, even if
+        /// an `id` was also explicitly provided. The explicit `id` is only used as a fallback before the
+        /// Elements Session has loaded, and always for the legacy ephemeral key integration.
+        func resolvedID(elementsSession: STPElementsSession?) -> String? {
+            guard case .customerSession = customerAccessProvider else {
+                return id
+            }
+            return elementsSession?.customer?.customerSession.customer ?? id
         }
     }
     /// TermsDisplay controls how mandates or other legal agreements are displayed. Use 'never' to never display legal agreements.

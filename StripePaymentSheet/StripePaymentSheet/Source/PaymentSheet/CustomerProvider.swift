@@ -37,6 +37,17 @@ struct CustomerProvider {
         }
     }
 
+    /// Resolves the customer ID, falling back to the customer resolved server-side from the
+    /// `elementsSession`'s CustomerSession when the configuration didn't provide one explicitly.
+    func customerID(elementsSession: STPElementsSession?) -> String? {
+        switch backing {
+        case .customer(let customer):
+            return customer?.resolvedID(elementsSession: elementsSession)
+        case .checkoutSession(let session):
+            return session.customer?.id
+        }
+    }
+
     var hasCustomer: Bool {
         return customerID != nil
     }
@@ -44,10 +55,11 @@ struct CustomerProvider {
     var legacyEphemeralKeyCredentials: (customerID: String, ephemeralKeySecret: String)? {
         guard case .customer(let customer) = backing,
               let customer,
+              let id = customer.id,
               case .legacyCustomerEphemeralKey(let ephemeralKeySecret) = customer.customerAccessProvider else {
             return nil
         }
-        return (customer.id, ephemeralKeySecret)
+        return (id, ephemeralKeySecret)
     }
 
     func savedPaymentMethods(

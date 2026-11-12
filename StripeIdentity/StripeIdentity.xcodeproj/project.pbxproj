@@ -464,20 +464,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3AEAD4572FD9F00F00CDDAA4 /* XCRemoteSwiftPackageReference "identity-ios-mediapipe" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stripe/identity-ios-mediapipe";
-			requirement = {
-				kind = exactVersion;
-				version = 1.0.0;
-			};
-		};
 		1034C700B96E0B79C2107621 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/uber/ios-snapshot-test-case";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 8.0.0;
+			};
+		};
+		3AEAD4572FD9F00F00CDDAA4 /* XCRemoteSwiftPackageReference "identity-ios-mediapipe" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stripe/identity-ios-mediapipe";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.0;
 			};
 		};
 		98906E4295D5EDD251F81145 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {

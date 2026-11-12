@@ -52,6 +52,7 @@ extension PaymentSheet {
                 paymentHandler: paymentHandler,
                 isFlowController: isFlowController,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                elementsSession: elementsSession,
                 confirmHandler: confirmHandler
             )
         } else {
@@ -69,6 +70,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
+        elementsSession: STPElementsSession?,
         confirmHandler: @escaping IntentConfiguration.ConfirmHandler
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
@@ -156,7 +158,7 @@ extension PaymentSheet {
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, elementsSession: elementsSession, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
@@ -173,7 +175,7 @@ extension PaymentSheet {
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, elementsSession: elementsSession, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }
@@ -197,7 +199,7 @@ extension PaymentSheet {
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, elementsSession: elementsSession, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
@@ -214,7 +216,7 @@ extension PaymentSheet {
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, elementsSession: elementsSession, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }

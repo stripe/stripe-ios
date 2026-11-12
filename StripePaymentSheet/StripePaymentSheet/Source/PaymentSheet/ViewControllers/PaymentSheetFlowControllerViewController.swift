@@ -215,7 +215,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
-                customerID: loadResult.customerProvider.customerID,
+                customerID: loadResult.customerID,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
@@ -288,7 +288,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         elementsSession: STPElementsSession
     ) -> Bool {
         return CustomerPaymentOption.selectedPaymentMethod(
-            for: customerProvider.customerID,
+            for: customerProvider.customerID(elementsSession: elementsSession),
             elementsSession: elementsSession,
             surface: .paymentSheet
         ) == .link
