@@ -10,6 +10,9 @@ PATCH
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".
 
+### Identity
+* [Fixed] StripeIdentity now sends `media_pipe_available` when loading a verification session and uploading face data, allowing Stripe to check whether the app supports 3D face capture. MediaPipe availability reporting requires SDK version 26.16.1 or later; the `Identity` Swift Package Manager trait was introduced in 26.16.0.
+
 ## 26.16.0 2026-11-02
 ### PaymentSheet
 * [Added] The Link auth flow now natively supports email OTP and multi-factor authentication (MFA) enabled accounts.
