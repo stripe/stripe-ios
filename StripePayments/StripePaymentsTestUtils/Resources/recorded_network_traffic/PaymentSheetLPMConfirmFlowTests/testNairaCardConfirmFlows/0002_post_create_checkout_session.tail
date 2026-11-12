@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 3d2384df130e55e176cac8eee555afeb
+x-cloud-trace-context: ed5a6c5a0378c59bfe682c7e1ea0c31b
 Via: 1.1 google
-Date: Mon, 09 Nov 2026 23:59:33 GMT
+Date: Tue, 10 Nov 2026 19:19:36 GMT
 Content-Length: 2519
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"9d7-k3imYwd4mmQlczFv5Z9EV4eTUbA"
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"9d7-6x67LMWjHQPrnRrT0UyJs9aROVs"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1rBmR0JDztclwLRRrk9rHZIscUJbvtcXWLmY9Z3lsxgofORZJKI4NU4f3",
-  "client_secret" : "cs_test_a1rBmR0JDztclwLRRrk9rHZIscUJbvtcXWLmY9Z3lsxgofORZJKI4NU4f3_secret_UH0kIC79VkOmUFJYTo8xXTTsi",
+  "id" : "cs_test_a09NyW4XPb7OI4ZC2UNYEwqVdut9986Lu1cmFovqkZFZDy5K73hONk3CiI",
+  "client_secret" : "cs_test_a09NyW4XPb7OI4ZC2UNYEwqVdut9986Lu1cmFovqkZFZDy5K73hONk3CiI_secret_tY97s8X9enSNGs1RhMPsEOgmC",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"9d7-k3imYwd4mmQlczFv5Z9EV4eTUbA"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1794268773,
+  "created" : 1794338376,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "ng_card"
@@ -41,13 +41,13 @@ Etag: W/"9d7-k3imYwd4mmQlczFv5Z9EV4eTUbA"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VbExQfiY",
+      "key" : "checkout_item_VbXfv89F",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ua2TJFoDYfWw3n4adMjPra2",
+            "price" : "price_1UaKZwFoDYfWw3n4M3mOU483",
             "tax_rates" : null
           }
         ],
@@ -153,6 +153,6 @@ Etag: W/"9d7-k3imYwd4mmQlczFv5Z9EV4eTUbA"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1794355173,
+  "expires_at" : 1794424776,
   "marketing_attributions" : null
 }

@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: cfbdc91144b30a7f1e788833eabb0ab9
+x-cloud-trace-context: 15b1882297fede07a18ad421788ea5bf
 Via: 1.1 google
-Date: Mon, 09 Nov 2026 23:43:46 GMT
+Date: Tue, 10 Nov 2026 19:03:58 GMT
 Content-Length: 2601
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"a29-uAtuW7QoTCAfWIJBnLVVo69X9ZM"
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"a29-CwI1KJWaezX9Z9FTeZ7M6cx3Hy8"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1jge0lRrbtr6z3FhFmCeMCzog6djOS482wPbe5lqr2qRAYS6CEiQXTXJH",
-  "client_secret" : "cs_test_a1jge0lRrbtr6z3FhFmCeMCzog6djOS482wPbe5lqr2qRAYS6CEiQXTXJH_secret_KDBaBOqR34txxFNwc8d64F87g",
+  "id" : "cs_test_a0gchh6w2Ei9nDrtpEqp348GZSJE1YNNfCHuVGCQZ9jXM1cwXbdLyQ4exw",
+  "client_secret" : "cs_test_a0gchh6w2Ei9nDrtpEqp348GZSJE1YNNfCHuVGCQZ9jXM1cwXbdLyQ4exw_secret_HJo1I0O2vb9Msr2hwEDPyiWmb",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a29-uAtuW7QoTCAfWIJBnLVVo69X9ZM"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1794267826,
+  "created" : 1794337438,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "card"
@@ -41,13 +41,13 @@ Etag: W/"a29-uAtuW7QoTCAfWIJBnLVVo69X9ZM"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VbEhHqFU",
+      "key" : "checkout_item_VbXPkURZ",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ua2E2Lu5o3P18ZpbwaNYziy",
+            "price" : "price_1UaKKoLu5o3P18ZpnQ9dY5ds",
             "tax_rates" : null
           }
         ],
@@ -157,6 +157,6 @@ Etag: W/"a29-uAtuW7QoTCAfWIJBnLVVo69X9ZM"
   },
   "livemode" : false,
   "customer_email" : "test+location_test@example.com",
-  "expires_at" : 1794354226,
+  "expires_at" : 1794423838,
   "marketing_attributions" : null
 }

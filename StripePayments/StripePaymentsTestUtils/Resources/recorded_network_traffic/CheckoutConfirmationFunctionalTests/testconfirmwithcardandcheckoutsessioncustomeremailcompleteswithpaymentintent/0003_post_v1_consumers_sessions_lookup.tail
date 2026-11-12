@@ -3,30 +3,30 @@ https:\/\/api\.stripe\.com\/v1\/consumers\/sessions\/lookup$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=T0Au1EjE2f4uzFP2pLYxyKZ57PHL4OF5yuf9RSnQIUr2ULwJ5djxQuhsMtkhHiZ1F6alW9r_V8cQfh1s; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=rjceotit6GgKlyjDJdQboNHN5HgV0qLdUk58LO5FWwuwA_d1wHhJiNKUaoILCYVSJ2QJyTCBo5CR_vEV; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=T0Au1EjE2f4uzFP2pLYxyKZ57PHL4OF5yuf9RSnQIUr2ULwJ5djxQuhsMtkhHiZ1F6alW9r_V8cQfh1s&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=rjceotit6GgKlyjDJdQboNHN5HgV0qLdUk58LO5FWwuwA_d1wHhJiNKUaoILCYVSJ2QJyTCBo5CR_vEV&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=T0Au1EjE2f4uzFP2pLYxyKZ57PHL4OF5yuf9RSnQIUr2ULwJ5djxQuhsMtkhHiZ1F6alW9r_V8cQfh1s&t=1"}],"include_subdomains":true}
-request-id: req_BO2k57KOSLqZ4J
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=rjceotit6GgKlyjDJdQboNHN5HgV0qLdUk58LO5FWwuwA_d1wHhJiNKUaoILCYVSJ2QJyTCBo5CR_vEV&t=1"}],"include_subdomains":true}
+request-id: req_IdhxJPiA0Nn2iK
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 11799
 Vary: Origin
-Date: Mon, 09 Nov 2026 23:43:50 GMT
-original-request: req_BO2k57KOSLqZ4J
+Date: Tue, 10 Nov 2026 19:04:02 GMT
+original-request: req_IdhxJPiA0Nn2iK
 stripe-version: 2020-08-27
-idempotency-key: 2d36dec8-3259-4b8a-a3cb-1ba6fac8d701
+idempotency-key: ac27e5db-eb91-4e5f-88aa-bdec877c69ff
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_email&request_surface=ios_payment_element&session_id=elements_session_1jjLfDy2JAm
+X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_email&request_surface=ios_payment_element&session_id=elements_session_1uCbfOOnZej
 
 {
   "link_modal_settings" : {
@@ -55,157 +55,157 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
     {
       "response_id" : "",
       "experiment_name" : "lae_dl_otp",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_pe_improved_change_pm_ui",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_pe_improved_change_pm_ui_aa",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_ulm_prominent_branding",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_ulm_add_card_nickname",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "guacamole_resend_otp_v2",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "lae_resend_otp",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "guacamole_returning_green_pay_button",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_lae_resend_otp",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_inline_otp_spacing_v2",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "wanderlust_benchmarking",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_lae_inline_resend_otp",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_lae_inline_resend_otp_aa",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_pe_logged_in_add_card_button",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_pe_logged_in_add_card_button_aa",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_camd_aa",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_legacy_pe_accelerated_partial_cookie",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_legacy_pe_accelerated_partial_cookie_aa",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_pe_lpm_pay_another_way",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_pe_lpm_pay_another_way_aa",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_legacy_cookie_pay_another_way",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_legacy_cookie_pay_another_way_aa",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_pe_ulm_cookied_alt_pms_preference",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_inline_otp_spacing",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_ece_recognized_user_uprank_aa",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     },
     {
       "response_id" : "",
       "experiment_name" : "link_dl_pe_green_secure_click_btn",
-      "event_id" : "d3ef4831-e0e9-4ce4-9c56-981faa28799b",
+      "event_id" : "a2d095c9-e937-42bc-b211-454a44803a70",
       "variant" : "control"
     }
   ],
@@ -242,7 +242,7 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
   "avatar" : null,
   "sms_outage_message" : null,
   "consumer_session" : {
-    "link_session_key" : "lsk_e42apj8Wbbzj62D6Em1qF9tKeoU85R4ZR3wbd4HadQauT9UN4IAckT2ho4r0c9q0by7d1a6ofq7eqL8If4KT0Cj6M9fyIcEEd0J7fM6M46nyaNv4BFaqg3v5e4ZdLhdx54gh0bv4Ik3Yp2EZfrTfcOfYAaXwaqG8Ub55u1JB4HPaNc51n2u21r15xw6Cx3ntfwO6OC1E24qce2g4WZekzfjG5ID3wv3Vz0ZQ4jk4km6TE52P2TF9lQ7B18QQcjO69AflVbfY0HC5JRb0S3lf5JKfth7fc3jk3go3z7b60h0I8qHd4LgEpaWp8qN7XX64u5Qr995fw53ppgHigan4uA3e9fn4d2Q8oN2Nh0EX2tJ4sdge55ou1STcj0gS3f7ecPEbkb6Qv9O8aC1elA4cm5DX1UybNv",
+    "link_session_key" : "lsk_gbR6ZjaJ36hD5bA9uQ6hJgWCfenfuT7pJeUb0w96eY1CNcee43R5J16an9vh74O4eNcwn3Bp3Jm6c4diAdrW3j10jpahQaWTdTh8nx5A015Pd8Jb3S5w54GX0ladMX4zm7og3A0dOGcew21373P1zv08T3oLeO82e3fUvfC3ab83op01u6qx3nOetse9H9W75rMe6La41dMt7p3eGfgexfMdd6r7Z9dVLasy17Cduy2z058j4cM6zk3Y0gzWcCB3e7eP88p1aR2akm9158q263B4KdcUn33q8wkdARfxnacW47jd7B7Yu14sfYx2Mt8l52G57locFgehm4wCaZV2kL8QW1xA5l50RYg9A3WS5eJdRd8wYeWU4pn3DlbQh6Tlfc6cUCg087VFgs74nZ5uF6ZRaPzdCF",
     "mobile_fallback_webview_params" : {
       "webview_requirement_type" : "notrequired",
       "webview_open_url" : null
@@ -264,7 +264,7 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
     ],
     "available_verification_factors" : [
       {
-        "id" : "casvf_6mV_zTlFSCpKbuJmfwgPJDA_VEcwlKEWIjz3liVM2ZQHbZE7lMEKCYxZW4WqEurvphPVeD5o6n9GV94bwCezV5WWrA7Go8an1MpX63tvJpGYKeggNrKIgYgf6Gs-fB7A_dD7YSUw3_CGcOiQ3LT3nsRlrdqlxApWK0Ppxt6CBtQASmlH_z9lbdEdojM7ICK16mKkLbQWDKzDM3YfdnUq1o5j",
+        "id" : "casvf_nS-PJfJdjt8tbczuE--8_WZsUeKqm77Le9o6vdCxudNn9quJiCH-wzLNl0MqyORMO8UG8JXn86-8ir4m1G6JawejXH8eCpIucPNymvgEWniC7fMHO2-soj2ln2JUZ7xek0vfOmOEJ0GDURdpSY6UiSaJySJjx2bJmvDCXLEWVN5leXHHAekxwO2pKC3cFJxWUbT7hFc46fPUcqvVQi-DYwFW",
         "identifier_last_verified_at" : null,
         "provides_further_verification" : true,
         "temporarily_disabled" : false,
@@ -272,7 +272,7 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
         "type" : "SMS"
       },
       {
-        "id" : "casvf_0I8mdSKbrsubquheX_AhfnvLjFwEEABRWCxCbO5ji9JUQQQ_TzW05S4MHaqiv1OAl6R13Id-xkPsUdiMOjkkN8rmylUMuH6kUf3mAAHDVHsrt4CgJTgQIE59r8nXvlGDxH7LyKUBNlRwd2jfwXR9_CTv1t8bjJlAcYeghPgDoyUIvo0iGy7EoeZC-MOFzygiJKlIucDuY_FOEsVsOeR5TUbm",
+        "id" : "casvf_uL4kotOJUtpT27Ync97568GVxUVYvZwXEuVKdXNBnY0ZvmyK53kY-_7_wyTuOfglGPYD9mGcVnc83ggTei_6cxcJ-1dkH7GI2WkQAE3SfbtoxjtvqxmeTzNLj4-1t_ovuKBNMlVM_onvsjWo8Ld-2ynENRbUJomLgvO1Ql_1hhTpmONz7y0cLpjDNdvBN_glcdt6rObJGbS3SNAGxRqIsrTW",
         "identifier_last_verified_at" : null,
         "provides_further_verification" : true,
         "temporarily_disabled" : false,
@@ -280,7 +280,7 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
         "type" : "EMAIL"
       },
       {
-        "id" : "casvf_ImQvE-CNMtU_5rugwVfYKGS9NAA42WtRhbSGUgTaaJbrNhbUk738W3zrZcsSW3L0eHl4WUcURhLenD_m3fG0ULdZhpUV0oI7B7EGEXX2jviYJA8sLEgtTogt8oNDcAw-qTgrnmwny6u5HnTGvwnxyK36WMb0PeSvEeHJL7iMgD0iC4VkKrzocwPe7ehKYpyrNJ7M_7GabsIuUT8n6Wk8_Z03",
+        "id" : "casvf_pshpGywgt-sKFya3F1Q5he6yAHAO_x2JLi2N-Ezm1QbQoQWd3kk1MxsxrIt-hplO0Qx6igz_DW9VwciV8Mue8T3ygkwWaj0PMcE9__mWwZw6eHNCzw83K44T2RCO-7gMQFYixIAbNkugyYz1lswmZYapTxyouyIRp8s9v0BNKqTTHH_R0eqDRPBXJAn2M5vHa1z54HLevFk7efsk4mRElmCX",
         "identifier_last_verified_at" : null,
         "provides_further_verification" : true,
         "temporarily_disabled" : false,
@@ -288,7 +288,7 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
         "type" : "PHONE_MATCH"
       },
       {
-        "id" : "casvf_gf598peYP-JOPbutUYYs823lUaIm9FTe5u7eTNnjLzNEIXs4kANtpnB1ZHkhKklXP_HygjwQIxVO7D3lhaoXkJ7wOHXYeskjfIGGekPeY8EFVT1Tu1hiXFx9xIhDoVXQE7fxdSfD6eAt2jNDQDH_qRJ11f75HzuXvNOmp0d9WIJtN6uOWR39rkjvYpion3XTrvYLb1txhv6UajJhfCPM6SEo",
+        "id" : "casvf_e86-5kjTXxD_GrAIVwo5fEjtY7DYwGi3wdp9YIrUFcJOH55KJyJegFzyeFs4FHpSK5LLth4dADtDb9sMsrvEIGj6wkLnB_DySJwpYrgDs5cfZVSRufDhIAjBvwIIXLzBiOaDGpsed7P-_nr5BgzwfICJihSwhhrg4mj0pPL40imFSUImD_yhIW6OC7S5nZgVjgMfeNvPZXZVOBUAEqQEr1a8",
         "identifier_last_verified_at" : null,
         "provides_further_verification" : true,
         "temporarily_disabled" : false,
@@ -296,7 +296,7 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
         "type" : "PHONE_BY_LINK"
       },
       {
-        "id" : "casvf_8SdlJ0MDgQ9TFkTB9NFEtl_FyB0Bm5Ut6zRdzjzCXBhBBu7oDUIn_CXxPKwh79wccjMgGUXcJDrfXYbYZjggMOb1zf5oj00ZZAdiW4_QT61GqiTP7qrIKJ3nhQIkQOuF0Pj1k7z1vFLQq1y0g_duMJWY1o1pdJsF0hnF486TARlol_dtwo-b22s1gCprajCMukuzBkXanJ_uGgBKMK8-GYWi",
+        "id" : "casvf_OTpX5zZ-orVghQnZrMP6xPhShZxM1jkZTzy_egvbraxO8jvVQkJ620Da01Wd1WLkIGbS7mypsCCjn6kD971xJRao_I_61Hq-kt24XqQFiHmH4hvizP3MfXvL0Dpaa0Bz28wQj3_2icRCiQWCa8v0zCho35wj8ejndDY8lHtcyuxbQKn3pryr4_7w2KEl-Jb3qZo1srqW9hTRABSVaZETBmqW",
         "identifier_last_verified_at" : null,
         "provides_further_verification" : true,
         "temporarily_disabled" : false,
@@ -304,7 +304,7 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
         "type" : "EMAIL_BY_LINK"
       },
       {
-        "id" : "casvf_5nFGONWPd2UUN4qlvEGdmb30Cq9lobMN5Uojd-AwV0FkZeOyILp6g1u55ajfl1VXrP4xwdb9cafOJLk1aDt5wqaLQYY3InF0BcyQO0K3dhoJthBUHeGyPKOdMgQ4qBfyQx2kw0Cw1UqFUvQTa1BnlLI8KZGpfVApEPia8FXWf4uvO9abfaZty9Mk2QctJQ5w7q6ebFWUYtLWyWSDvcvw91V0",
+        "id" : "casvf_8yjPlAij88Sa5_sHwqElpS2Mbpcxezf1JEVOZgBGGIpfhAcbrnny5NdZfI17bmjVGiOqv_CBpsKgSIa5rOokBWsNvm7KZjTTWcsTJsArk8xDa0pntxV2aPhV4FeogAux7SBcpNAR6MGJGCTJHLPY_NTetI30EYKnyzfTl6R1QbRFAMinko1GCQW1rv3wvqdBmmajgADJeg6s5mIXD2PnOjBJ",
         "identifier_last_verified_at" : null,
         "provides_further_verification" : true,
         "temporarily_disabled" : false,
@@ -312,7 +312,7 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
         "type" : "SNA"
       },
       {
-        "id" : "casvf_yObYwJ1RI86Vk_s2d6dMTyJ70l7SqovxUc7ZO1dJ14AA2ZhmjbJoBHl69HrOX95uAFurEEGdzQ6ehlqiYmz490vSirT2kfC9flsE3WzSOnMUvG_3tKEr49B3sKtqCLp3um8VGMXesrwKsssCj_9Wev6txCAw11YX-E25Y_cRZFLGUXj-_gg9FvMhUDxPxwZdlidqxG9YpQ6eKqJbtv-UkkvV",
+        "id" : "casvf__PFiFdZ8z75WpeAQmL9mBoa8n7ZI-aTWra5yDG3AArCPJctasfLSn2hcYv_9vxa31Ph_GHe1aXZYzdr55OLSKuh-wdiZhxzJtolm1viWHmB2nrgRr9e5VN8QvsMUlDQ-nm2_Uwne9jTPtnz9oCMRc_ZxpaSwXtOcxYZq_e6uADVa_ZbLI46MSATRxNZhEiUEpU4azoFvQEGkGXSxThtU0ea6",
         "identifier_last_verified_at" : null,
         "provides_further_verification" : true,
         "temporarily_disabled" : false,
@@ -320,7 +320,7 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
         "type" : "LINK_AUTH_TOKEN"
       },
       {
-        "id" : "casvf_CZnAKLzrRkgi8Xcz48puXWFwZqgD9cp8iRhwIZNPwjbscSk_0toYbk6Y8ELN5u9-UQkWm0Aqg4ExujpKJ9JcNpE5SSrpdUYUlWEX8FCraPgUdIseYcmKqc69ZwdQL8F4jmjs95-NwLWACU_LjDg7ihQMi-Xvt9f7WYqeW3IxyEFlObgjeNSOFlICMyU0v2WhoDPrYSReC-1KEG7-04akVVN_",
+        "id" : "casvf_WobL_uVmMH7rTl145BG5d-SZPVw8bm8Dmv6bVB2JbPtccjZc6DHsWYeuI3JtgJOD8oD6qxf9IQJtTWJHfX4lznHnEfs94U0sVPRmiPawM-ZAW_U4gO_tz15RNEExfGNb81yiDd6xqbwE1VWlY7_DcSNXnVINJd80W4fKsZrSo_y3BRkIC3SalX8xW0DCIPQECqRwavbh7cPiOKGy_RQpHHGa",
         "identifier_last_verified_at" : null,
         "provides_further_verification" : true,
         "temporarily_disabled" : false,
@@ -329,7 +329,7 @@ X-Stripe-Mock-Request: email_address=test%40example\.com&email_source=customer_e
       }
     ],
     "redacted_phone_number" : "+1********12",
-    "client_secret" : "pscs_AVsCY5XlaVpKbgkX2hi7l_zMiIu3PQv8SjbeZN9-TtG4noLIxIZ7lcteKEDhG0FLkPsRhJ7tUmKrkKWWCJn0-xsJ0n2lxJkngjSuDRp9fMbkWeu1aOP9oU1bUD4xUIrYhpAter4uGcBskuNAQm-aHoUOeg-MUNT8KaaKDEMrdDqsuq8BZePu4WFeej723axk4vcQdhQcmfmPOaxgmhmMysS2xZvJrjX0Jqn7unGje_Lw8rEeCDSovRD490boC1ELZy-QZjNW4Wd1FMrCxOeTzikKnk1UO8aPhGdIY772JonuNlmLUcZ75lzM6Rth4fnaE3AA8bjujeQcfdZcWdRhSvPtBpesH_oWz7hyJH2I6I-JTyfrx5diDDy2ZVMUXIlriPKC6HXl43rfQwCdfqkGEyhhL1dg0NSFuwwbeFKz1xQ1zjZnP1L1S9iUG0qezFpr_m4Zl60nlMCoPAqz5__jpIDs8jYBLlTRXiTiFw",
+    "client_secret" : "pscs_AVsCY5WZwdg2CPdd9kh9gJXJPaTRMhMj-BuJQnr6UG4bTrJcigWGEjy_2r6U2_5Ix6wreGF8N1jVaRmkBBnDAk8_OTP1dgnI8v93Zib3MpnUsSoJ1UKcVgeUITl7ITRkd5DYssJsNu3mF8kmxc22heZxsCbQqTzpEvcTu4Osm703NyaLV4b7SC9saDL8S11sRPQiDmz7Ap76wb8w12VH8-1DyNOKIl--zjVz0oIzwrfFhFV4a2-2jovdxv7npLJ3gLqFp3geoXRo0CevAlOH16v0FIjyodd4vQb_4aQ8llUPqucpiEJvgB2LXV-qs8hQcXDIvz7Rx_Kyjcld-RxndNQaRanODxGYegjveklydRqaK5eNd_s0G1Yu7WGwbBCSuxE9zQy1xmXsm7X06snC5uGfLPLk3RcBF1TaC4vW9y2enSs3GpiE00USVbr1DE-VadmS7qeQRaTDOdHvAKj8xiH75_D_SCkqpwCzJg",
     "minimum_authentication_level" : "1FA",
     "unredacted_phone_number" : null,
     "redacted_formatted_phone_number" : "(***) *** **12",

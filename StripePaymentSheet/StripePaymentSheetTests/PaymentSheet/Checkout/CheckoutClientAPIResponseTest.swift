@@ -247,8 +247,8 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.minorUnitsAmountDivisor, 100)
         XCTAssertEqual(session.paymentStatus, .unpaid)
         XCTAssertEqual(session.status, .open)
-        XCTAssertEqual(apiResponse.paymentResponse?.paymentIntent?.id, "pi_test123456789")
-        XCTAssertNil(apiResponse.paymentResponse?.setupIntent?.id)
+        XCTAssertEqual(apiResponse.paymentResponse?.paymentIntent?.stripeId, "pi_test123456789")
+        XCTAssertNil(apiResponse.paymentResponse?.setupIntent?.stripeID)
         XCTAssertFalse(session.livemode)
         XCTAssertNotNil(session.customer)
         XCTAssertEqual(session.customer?.id, "cus_test123456")
@@ -394,8 +394,8 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.totals.total.minorUnitsAmount, 1000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertNil(session.presentmentDetails)
-        XCTAssertNil(apiResponse.paymentResponse?.paymentIntent?.id)
-        XCTAssertNil(apiResponse.paymentResponse?.setupIntent?.id)
+        XCTAssertNil(apiResponse.paymentResponse?.paymentIntent?.stripeId)
+        XCTAssertNil(apiResponse.paymentResponse?.setupIntent?.stripeID)
         XCTAssertNil(session.customer)
         XCTAssertNil(session.email)
         XCTAssertNil(session.savedPaymentMethodsOfferSave)
@@ -478,26 +478,6 @@ class CheckoutClientAPIResponseTest: XCTestCase {
             XCTAssertTrue(session.adaptivePricingActive)
             XCTAssertNotNil(CurrencySelectorUtilities.adaptivePricingData(from: session))
             XCTAssertNil(CurrencySelectorUtilities.detailText(exchangeRateMeta: exchangeRateMeta))
-        }
-    }
-
-    func testIntentReferencesDecode() throws {
-        var json = CheckoutTestHelpers.baseSessionJSON
-        json["payment_response"] = [
-            "status": "succeeded",
-            "payment_intent": ["id": "pi_123", "client_secret": "pi_123_secret_abc"],
-            "setup_intent": ["id": "seti_123", "client_secret": "seti_123_secret_abc"],
-        ]
-        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
-        XCTAssertEqual(response.paymentResponse?.paymentIntent?.id, "pi_123")
-        XCTAssertEqual(response.paymentResponse?.setupIntent?.id, "seti_123")
-    }
-
-    func testIntentReferencesRequireClientSecrets() {
-        for key in ["payment_intent", "setup_intent"] {
-            var json = CheckoutTestHelpers.baseSessionJSON
-            json["payment_response"] = ["status": "requires_action", key: ["id": "intent_123"]]
-            XCTAssertThrowsError(try CheckoutClientAPIResponse.decode(fromAPIResponse: json))
         }
     }
 
