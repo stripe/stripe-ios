@@ -1186,41 +1186,62 @@ class PaymentSheetAuthenticationContextViewControllerTest: XCTestCase {
         ) { _, _, _ in }
     }
 
+    /// The two ways a polling screen reaches Embedded: STPPaymentHandler's `presentPollingVCForAction`, and
+    /// `PaymentConfirmer`'s `presentPollingViewController`.
+    enum PollingScreenPath: CaseIterable {
+        case stpPaymentHandler
+        case engine
+
+        func present(on sut: PaymentSheetAuthenticationContextViewController, action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+            switch self {
+            case .stpPaymentHandler:
+                sut.presentPollingVCForAction(action: action, type: type, safariViewController: safariViewController)
+            case .engine:
+                let pollingViewController = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type), appearance: .default, safariViewController: safariViewController)
+                sut.presentPollingViewController(pollingViewController, safariViewController: safariViewController)
+            }
+        }
+    }
+
     func testPresentsPollingScreenImmediatelyWithoutWebView() {
-        for type in [STPPaymentMethodType.blik, .mbWay, .bizum] {
-            // Given an Embedded authentication context
-            let presentingViewController = RecordingPresentingViewController()
-            let sut = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: .default)
-            let action = makeAction(authenticationContext: sut, paymentMethodType: STPPaymentMethod.string(from: type)!)
+        for path in PollingScreenPath.allCases {
+            for type in [STPPaymentMethodType.blik, .mbWay, .bizum] {
+                // Given an Embedded authentication context
+                let presentingViewController = RecordingPresentingViewController()
+                let sut = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: .default)
+                let action = makeAction(authenticationContext: sut, paymentMethodType: STPPaymentMethod.string(from: type)!)
 
-            // When a next action asks for the polling screen without a web view, like BLIK, MB WAY and Bizum do
-            sut.presentPollingVCForAction(action: action, type: type, safariViewController: nil)
+                // When a next action asks for the polling screen without a web view, like BLIK, MB WAY and Bizum do
+                path.present(on: sut, action: action, type: type, safariViewController: nil)
 
-            // Then the polling screen is presented right away
-            XCTAssertEqual(presentingViewController.presentedViewControllers.count, 1, "Polling screen not presented for \(type)")
-            XCTAssertTrue(presentingViewController.presentedViewControllers.first is PollingViewController, "Polling screen not presented for \(type)")
+                // Then the polling screen is presented right away
+                XCTAssertEqual(presentingViewController.presentedViewControllers.count, 1, "Polling screen not presented for \(type) via \(path)")
+                XCTAssertTrue(presentingViewController.presentedViewControllers.first is PollingViewController, "Polling screen not presented for \(type) via \(path)")
+            }
         }
     }
 
     func testPresentsPollingScreenAfterWebViewIsDismissed() {
-        // Given an Embedded authentication context
-        let presentingViewController = RecordingPresentingViewController()
-        let sut = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: .default)
-        let action = makeAction(authenticationContext: sut, paymentMethodType: "pix")
-        let safariViewController = SFSafariViewController(url: URL(string: "https://stripe.com")!)
+        for path in PollingScreenPath.allCases {
+            // Given an Embedded authentication context
+            let presentingViewController = RecordingPresentingViewController()
+            let sut = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: .default)
+            let action = makeAction(authenticationContext: sut, paymentMethodType: "pix")
+            let safariViewController = SFSafariViewController(url: URL(string: "https://stripe.com")!)
 
-        // When a next action asks for the polling screen behind its instructions web view, like Pix, PayNow and PromptPay do
-        sut.presentPollingVCForAction(action: action, type: .pix, safariViewController: safariViewController)
+            // When a next action asks for the polling screen behind its instructions web view, like Pix, PayNow and PromptPay do
+            path.present(on: sut, action: action, type: .pix, safariViewController: safariViewController)
 
-        // Then the polling screen isn't presented while the web view is up
-        XCTAssertTrue(presentingViewController.presentedViewControllers.isEmpty)
+            // Then the polling screen isn't presented while the web view is up
+            XCTAssertTrue(presentingViewController.presentedViewControllers.isEmpty, "\(path)")
 
-        // When the web view is dismissed
-        sut.authenticationContextDidDismiss(safariViewController)
+            // When the web view is dismissed
+            sut.authenticationContextDidDismiss(safariViewController)
 
-        // Then the polling screen is presented once
-        XCTAssertEqual(presentingViewController.presentedViewControllers.count, 1)
-        XCTAssertTrue(presentingViewController.presentedViewControllers.first is PollingViewController)
+            // Then the polling screen is presented once
+            XCTAssertEqual(presentingViewController.presentedViewControllers.count, 1, "\(path)")
+            XCTAssertTrue(presentingViewController.presentedViewControllers.first is PollingViewController, "\(path)")
+        }
     }
 }
 
