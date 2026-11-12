@@ -373,6 +373,16 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum PaymentConfirmer: String, PickerEnum {
+        static var enumName: String { "PaymentConfirmer" }
+
+        case on
+        case off
+        /// The engine, with every session serving the SDK's test copy of the server's confirmation table, since the
+        /// test-mode backend doesn't serve it yet. DEBUG builds only.
+        case onServingTestTable = "on (serve test table)"
+    }
+
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
 
@@ -788,6 +798,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var forceOnelink: ForceOnelink
     var forceOnelinkConsumer: ForceOnelinkConsumer
     var mobileSessionSidecar: MobileSessionSidecar
+    var paymentConfirmer: PaymentConfirmer
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -860,6 +871,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             forceOnelink: .off,
             forceOnelinkConsumer: .off,
             mobileSessionSidecar: .off,
+            paymentConfirmer: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,

@@ -128,7 +128,7 @@ import Foundation
         self.customer = customer
         self.mobileSession = mobileSession
         self.mobileSessionUndecodablePaymentMethodTypes = mobileSessionUndecodablePaymentMethodTypes
-        self.paymentMethodConfirmations = ConfirmationMetadata.servedEntries(mobileSession?.paymentMethodConfirmations ?? [])
+        self.paymentMethodConfirmations = ConfirmationMetadata.servedEntries(Self.confirmationEntries(servedBy: mobileSession))
         super.init()
     }
 

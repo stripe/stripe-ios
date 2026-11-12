@@ -56,6 +56,7 @@ struct PaymentSheetTestPlayground: View {
             }
         }
         SearchableSettingView(setting: $playgroundController.settings.mobileSessionSidecar, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.paymentConfirmer, searchText: searchText)
         SearchableView(searchableName: "SDK version override", searchText: searchText) {
             TextField("SDK version override (e.g. 25.0.0)", text: sdkVersionOverrideBinding)
                 .autocapitalization(.none)

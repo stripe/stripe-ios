@@ -160,6 +160,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         // Don't follow redirects for this specific tests, as we want to record
         // the body of the redirect request for UnredirectableSessionDelegate.
         self.followRedirects = false
+        PaymentSheet.MobileSessionFeatureFlags.paymentConfirmerEnabled = true
+    }
+
+    override func tearDown() async throws {
+        PaymentSheet.MobileSessionFeatureFlags.paymentConfirmerEnabled = false
+        try await super.tearDown()
     }
 
     func testSEPADebitConfirmFlows() async throws {
@@ -2071,7 +2077,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         guard case .checkout(let checkoutSession) = testIntent.intent else {
-            // PaymentConfirmer confirms a native type only when the session serves its entry, so serve the whole table.
+            // With its flag on, PaymentConfirmer confirms a native type only when the session serves its entry, so serve the whole table.
             let servingElementsSession: STPElementsSession
             do {
                 servingElementsSession = try elementsSession._testServingConfirmationTable()

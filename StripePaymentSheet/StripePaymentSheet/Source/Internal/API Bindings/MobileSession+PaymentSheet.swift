@@ -16,6 +16,16 @@ extension PaymentSheet {
         /// Sends the `X-Stripe-Mobile-Config` header on `elements/sessions` and uses the server's
         /// `mobile_session.payment_method_availability` when it's present. Defaults to off.
         @_spi(InternalOnlyAPI) public static var serverPaymentMethodAvailabilityEnabled: Bool = false
+
+        /// Confirms PaymentSheet's payments with `PaymentConfirmer`, for the types the session carries a `confirm` for.
+        /// Off, STPPaymentHandler confirms every payment, including server-driven payment methods. Defaults to off.
+        @_spi(InternalOnlyAPI) public static var paymentConfirmerEnabled: Bool = false
+
+        #if DEBUG
+        /// The playground's stand-in for the server: a `mobile_session` JSON object whose `payment_method_confirmations`
+        /// every session uses in place of the ones the server serves. Only in DEBUG builds.
+        @_spi(InternalOnlyAPI) public static var paymentMethodConfirmationsOverride: Data?
+        #endif
     }
 }
 
@@ -118,6 +128,21 @@ extension STPElementsSession {
             return nil
         }
         return mobileSession?.paymentMethodAvailability
+    }
+
+    /// The `payment_method_confirmations` entries to use for `mobileSession`: the served ones, or in DEBUG builds
+    /// `paymentMethodConfirmationsOverride`'s when it's set.
+    static func confirmationEntries(servedBy mobileSession: MobileSession.Session?) -> [MobileSession.PaymentMethodConfirmation] {
+        #if DEBUG
+        if let override = PaymentSheet.MobileSessionFeatureFlags.paymentMethodConfirmationsOverride {
+            do {
+                return try MobileSession.decode(override).paymentMethodConfirmations ?? []
+            } catch {
+                assertionFailure("paymentMethodConfirmationsOverride doesn't decode: \(error)")
+            }
+        }
+        #endif
+        return mobileSession?.paymentMethodConfirmations ?? []
     }
 }
 

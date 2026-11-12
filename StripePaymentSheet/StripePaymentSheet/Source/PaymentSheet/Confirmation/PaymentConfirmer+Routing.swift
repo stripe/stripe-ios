@@ -53,8 +53,9 @@ enum PaymentConfirmerFamily: String, CaseIterable {
 extension PaymentSheet {
     /// The engine for this payment, or nil to confirm with STPPaymentHandler.
     ///
-    /// The engine confirms a type only when the session carries a `confirm` for it: a server-driven payment method's
-    /// description, or a served `payment_method_confirmations` entry. Every other type, including one whose entry didn't
+    /// With `MobileSessionFeatureFlags.paymentConfirmerEnabled` off, STPPaymentHandler confirms everything. On, the engine
+    /// confirms a type only when the session carries a `confirm` for it: a server-driven payment method's description, or
+    /// a served `payment_method_confirmations` entry. Every other type, including one whose entry didn't
     /// decode or when the session has no `mobile_session` (or none at all, as for headless Link), goes to
     /// STPPaymentHandler. So the server's flag and killswitch for those entries are also the engine's off switch.
     /// - Parameters:
@@ -69,6 +70,9 @@ extension PaymentSheet {
         intentKind: ConfirmationMetadata.IntentKind,
         paymentHandler: STPPaymentHandler
     ) -> PaymentConfirmer? {
+        guard PaymentSheet.MobileSessionFeatureFlags.paymentConfirmerEnabled else {
+            return nil
+        }
         let metadata: ConfirmationMetadata
         let analyticsType: String
         if let serverDrivenPaymentMethod {
