@@ -237,7 +237,18 @@
     "status": "requires_payment_method",
     "payment_intent": {
       "id": "pi_test123456789",
-      "client_secret": "pi_test123456789_secret_test"
+      "object": "payment_intent",
+      "amount": 2149,
+      "capture_method": "automatic",
+      "client_secret": "pi_test123456789_secret_test",
+      "confirmation_method": "automatic",
+      "created": 1530911040,
+      "currency": "usd",
+      "livemode": false,
+      "payment_method_types": [
+        "card"
+      ],
+      "status": "requires_payment_method"
     }
   }
 }
