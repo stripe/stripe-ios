@@ -226,10 +226,8 @@ public final class ExpressCheckoutElementUIView: UIView {
         button.isEnabled = isUserInteractionEnabled
         if let cornerRadius = configuration.appearance.cornerRadius {
             button.cornerRadius = cornerRadius
-        } else if LiquidGlassDetector.isEnabledInMerchantApp {
-            button.ios26_applyCapsuleCornerConfiguration()
         } else {
-            button.cornerRadius = Constants.cornerRadius
+            button.applyDefaultCornerStyle()
         }
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
