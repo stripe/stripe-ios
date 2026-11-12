@@ -70,12 +70,14 @@ import Foundation
 
     /// Returns the BCP 47 tag of the language `localizedStripeString` shows `bundleLocator`'s strings in.
     /// That's the user's preferred languages intersected with the bundle's localizations, which can differ from
-    /// `Locale.current`. Returns nil if the bundle has no localizations.
-    public static func displayLanguageTag(bundleLocator: BundleLocatorProtocol.Type) -> String? {
-        guard let language = languageOverride ?? bundleLocator.resourcesBundle.preferredLocalizations.first else {
-            return nil
-        }
-        return Locale(identifier: language).toLanguageTag()
+    /// `Locale.current`. Skips an empty language and `Base`, which name no language, and returns `en`, the SDK's
+    /// development language, if nothing else is left.
+    public static func displayLanguageTag(bundleLocator: BundleLocatorProtocol.Type) -> String {
+        let candidates = [languageOverride].compactMap { $0 } + bundleLocator.resourcesBundle.preferredLocalizations
+        let language = candidates
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .first { !$0.isEmpty && $0.caseInsensitiveCompare("Base") != .orderedSame }
+        return language.map { Locale(identifier: $0).toLanguageTag() } ?? "en"
     }
 
     // MARK: - Testing

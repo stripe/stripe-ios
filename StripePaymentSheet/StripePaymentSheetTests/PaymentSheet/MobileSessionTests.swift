@@ -54,13 +54,13 @@ class MobileSessionTests: XCTestCase {
 
         // When it's encoded, with a fixed environment since that depends on the test host
         var config = MobileSession.Config(configuration: configuration)
-        config.environment = .init(hasFinancialConnectionsSdk: true, deviceSupportsNativeLink: true)
+        config.environment = .init(hasFinancialConnectionsSdk: true, deviceSupportsNativeLink: true, displayLanguage: "fr")
         let header = try MobileSession.encodeHeaderValue(config)
 
         // Then it matches the golden JSON, which is the spec's fully populated iOS example
         XCTAssertEqual(
             header,
-            #"{"environment":{"device_supports_native_link":true,"has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"address":"full","attach_defaults_to_payment_method":true,"email":"always","name":"always","phone":"never"},"card_brand_acceptance":{"brands":["amex"],"filter":"disallowed"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"59ded754"}"#
+            #"{"environment":{"device_supports_native_link":true,"display_language":"fr","has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"address":"full","attach_defaults_to_payment_method":true,"email":"always","name":"always","phone":"never"},"card_brand_acceptance":{"brands":["amex"],"filter":"disallowed"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"8307abc8"}"#
         )
         // ...and never contains customer values
         XCTAssertFalse(header.contains("jane"))
@@ -73,13 +73,13 @@ class MobileSessionTests: XCTestCase {
 
         // When it's encoded, with a fixed environment since that depends on the test host
         var config = MobileSession.Config(configuration: configuration)
-        config.environment = .init(hasFinancialConnectionsSdk: false, deviceSupportsNativeLink: false)
+        config.environment = .init(hasFinancialConnectionsSdk: false, deviceSupportsNativeLink: false, displayLanguage: "en")
         let header = try MobileSession.encodeHeaderValue(config)
 
         // Then it matches the golden JSON, with every field present
         XCTAssertEqual(
             header,
-            #"{"environment":{"device_supports_native_link":false,"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"address":"automatic","attach_defaults_to_payment_method":false,"email":"automatic","name":"automatic","phone":"automatic"},"card_brand_acceptance":{"brands":[],"filter":"all"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"},"payment_method_order":[]},"spec_hash":"59ded754"}"#
+            #"{"environment":{"device_supports_native_link":false,"display_language":"en","has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"address":"automatic","attach_defaults_to_payment_method":false,"email":"automatic","name":"automatic","phone":"automatic"},"card_brand_acceptance":{"brands":[],"filter":"all"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"},"payment_method_order":[]},"spec_hash":"8307abc8"}"#
         )
     }
 
@@ -147,13 +147,13 @@ class MobileSessionTests: XCTestCase {
         XCTAssertTrue(header.contains(#""display_language":"zh-Hant-HK""#))
     }
 
-    func testConfig_displayLanguage() {
+    func testConfig_displayLanguage() throws {
         // Given no language override
         let configuration = PaymentSheet.Configuration()
 
         // Then the display language is the language the SDK's own strings render in
-        let sdkLanguage = StripePaymentSheetBundleLocator.resourcesBundle.preferredLocalizations.first.map { Locale(identifier: $0).toLanguageTag() }
-        XCTAssertNotNil(sdkLanguage)
+        let sdkLanguage = try XCTUnwrap(StripePaymentSheetBundleLocator.resourcesBundle.preferredLocalizations.first.map { Locale(identifier: $0).toLanguageTag() })
+        XCTAssertFalse(sdkLanguage.isEmpty)
         XCTAssertEqual(MobileSession.Config(configuration: configuration).environment.displayLanguage, sdkLanguage)
 
         // When the SDK's language is overridden
@@ -164,6 +164,14 @@ class MobileSessionTests: XCTestCase {
         // ...and Traditional Chinese keeps its script, like the top-level locale
         STPLocalizationUtils.overrideLanguage(to: "zh-HK")
         XCTAssertEqual(MobileSession.Config(configuration: configuration).environment.displayLanguage, "zh-Hant-HK")
+
+        // When the override names no language
+        for override in ["", "  ", "Base"] {
+            STPLocalizationUtils.overrideLanguage(to: override)
+
+            // Then the display language is still the bundle's language, never empty
+            XCTAssertEqual(MobileSession.Config(configuration: configuration).environment.displayLanguage, sdkLanguage, "override: \(override)")
+        }
     }
 
     func testConfigHeader_includesDisplayLanguage() throws {
