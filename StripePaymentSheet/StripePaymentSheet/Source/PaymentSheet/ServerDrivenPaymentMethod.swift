@@ -8,24 +8,16 @@
 import Foundation
 import UIKit
 
-/// A payment method PaymentSheet renders and confirms from the server's `mobile_session.payment_methods` description,
+/// A payment method PaymentSheet renders from the `display` of its `payment_method_availability.payment_methods` entry,
 /// rather than from SDK code for its `STPPaymentMethodType`. It's displayed like an external payment method and
-/// confirmed like a Stripe payment method.
+/// confirmed with `STPPaymentHandler` as an `.unknown` type, which follows `next_action[redirect_to_url]`.
 struct ServerDrivenPaymentMethod {
-    /// The payment method type, e.g. "demo_pay". Unique among a session's payment methods.
+    /// The payment method type, e.g. "paypal", confirmed as `payment_method_data[type]`. Unique among a session's payment methods.
     let type: String
     /// Localized by the server to the header's `display_language`.
     let label: String
     let subtitle: String?
     let icon: Icon
-    /// The `payment_method_data[type]` to confirm with.
-    let paymentMethodDataType: String
-    // STPPaymentHandler doesn't use these yet (see the TODO in `PaymentSheet.confirm`), so an intent that's `processing`,
-    // or still `requires_action` after a redirect, fails or is canceled.
-    /// Whether a `processing` intent after confirmation counts as success.
-    let processingIsSuccess: Bool
-    /// How long to keep polling the intent after the customer returns from a redirect.
-    let postRedirectPollSeconds: Int
 
     struct Icon {
         struct Image: Hashable {
@@ -59,43 +51,16 @@ struct ServerDrivenPaymentMethod {
         }
     }
 
-    /// The first part of a `mobile_session.payment_methods` entry this SDK can't render, e.g. "next_action:unparsable".
+    /// The first part of a description this SDK can't render, e.g. "icon_rendering:unparsable".
     struct UnsupportedValue: Error, Equatable {
         let value: String
     }
 
-    /// Returns the payment method for `paymentMethod`, or throws `UnsupportedValue` if this SDK can't render or confirm it.
+    /// Returns the payment method for a `type` described by `display`, or throws `UnsupportedValue` if this SDK can't render it.
     /// The server should only send what this SDK version supports, so a throw means its capability table is wrong.
-    init(_ paymentMethod: MobileSession.PaymentMethod) throws {
-        // Every form element needs SDK support, and v1 supports none.
-        for element in paymentMethod.form.elements {
-            switch element.type {
-            case .unparsable:
-                throw UnsupportedValue(value: "form_element:unparsable")
-            }
-        }
-        for nextAction in paymentMethod.confirm.nextActions {
-            switch nextAction {
-            case .redirectToUrl:
-                break
-            case .unparsable:
-                throw UnsupportedValue(value: "next_action:unparsable")
-            }
-        }
-        switch paymentMethod.confirm.mandateData {
-        case .none:
-            break
-        case .onlineInferred, .unparsable:
-            throw UnsupportedValue(value: "mandate_data:\(paymentMethod.confirm.mandateData.rawValue)")
-        }
-        switch paymentMethod.savedPaymentMethods {
-        case .unsupported:
-            break
-        case .unparsable:
-            throw UnsupportedValue(value: "saved_payment_methods:unparsable")
-        }
+    init(type: String, display: MobileSession.PaymentMethodDisplay) throws {
         let isTemplate: Bool
-        switch paymentMethod.display.icon.rendering {
+        switch display.icon.rendering {
         case .original:
             isTemplate = false
         case .template:
@@ -103,14 +68,14 @@ struct ServerDrivenPaymentMethod {
         case .unparsable:
             throw UnsupportedValue(value: "icon_rendering:unparsable")
         }
-        guard !paymentMethod.type.isEmpty, !paymentMethod.confirm.paymentMethodDataType.isEmpty else {
+        guard !type.isEmpty else {
             throw UnsupportedValue(value: "type:empty")
         }
 
-        let icon = paymentMethod.display.icon
-        self.type = paymentMethod.type
-        self.label = paymentMethod.display.label
-        self.subtitle = paymentMethod.display.subtitle
+        let icon = display.icon
+        self.type = type
+        self.label = display.label
+        self.subtitle = display.subtitle
         self.icon = Icon(
             light: try Self.image(icon.light),
             dark: try icon.dark.map(Self.image),
@@ -118,9 +83,6 @@ struct ServerDrivenPaymentMethod {
             outlinedDark: try icon.outlinedDark.map(Self.image),
             isTemplate: isTemplate
         )
-        self.paymentMethodDataType = paymentMethod.confirm.paymentMethodDataType
-        self.processingIsSuccess = paymentMethod.confirm.processingIsSuccess
-        self.postRedirectPollSeconds = paymentMethod.confirm.postRedirectPollSeconds
     }
 
     private static func image(_ image: MobileSession.IconImage) throws -> Icon.Image {

@@ -16,11 +16,11 @@ import XCTest
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripeUICore
 
-/// `mobile_session.payment_methods` entries for tests.
+/// Described `payment_method_availability.payment_methods` entries for tests.
 enum ServerDrivenPaymentMethodFixtures {
     static let lightIconURL = "https://b.stripecdn.com/ocs-mobile/assets/pm/demo_pay.png"
 
-    /// Returns a DemoPay-like entry: no form, a redirect, no mandate. `modify` changes it.
+    /// Returns a described DemoPay entry. `modify` changes it.
     static func json(type: String = "demo_pay", _ modify: (inout [String: Any]) -> Void = { _ in }) -> [String: Any] {
         var json: [String: Any] = [
             "type": type,
@@ -32,28 +32,22 @@ enum ServerDrivenPaymentMethodFixtures {
                     "rendering": "original",
                 ] as [String: Any],
             ] as [String: Any],
-            "form": ["elements": [[String: Any]]()],
-            "confirm": [
-                "payment_method_data_type": type,
-                "next_actions": ["redirect_to_url"],
-                "mandate_data": "none",
-                "processing_is_success": true,
-                "post_redirect_poll_seconds": 5,
-            ] as [String: Any],
-            "saved_payment_methods": "unsupported",
         ]
         modify(&json)
         return json
     }
 
     /// Decodes `json` the way the sidecar is decoded.
-    static func paymentMethod(_ json: [String: Any] = json()) throws -> MobileSession.PaymentMethod {
-        let data = try JSONSerialization.data(withJSONObject: ["payment_methods": [json]])
-        return try XCTUnwrap(MobileSession.decode(data).paymentMethods?.first)
+    static func entry(_ json: [String: Any] = json()) throws -> MobileSession.PaymentMethodEntry {
+        let data = try JSONSerialization.data(withJSONObject: [
+            "payment_method_availability": ["payment_methods": [json], "link_enabled": false] as [String: Any],
+        ])
+        return try XCTUnwrap(MobileSession.decode(data).paymentMethodAvailability?.paymentMethods.first)
     }
 
     static func serverDrivenPaymentMethod(_ json: [String: Any] = json()) throws -> ServerDrivenPaymentMethod {
-        return try ServerDrivenPaymentMethod(paymentMethod(json))
+        let entry = try entry(json)
+        return try ServerDrivenPaymentMethod(type: entry.type, display: XCTUnwrap(entry.display))
     }
 
     /// Returns an entry whose icon has every variant, at https://js.stripe.com/<variant>.png.
@@ -77,33 +71,25 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         // When a DemoPay entry is mapped
         let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod()
 
-        // Then it keeps the display and confirm values
+        // Then it keeps the type and display values
         XCTAssertEqual(paymentMethod.type, "demo_pay")
         XCTAssertEqual(paymentMethod.label, "Demo Pay")
         XCTAssertEqual(paymentMethod.subtitle, "Pay with Demo Pay")
-        XCTAssertEqual(paymentMethod.paymentMethodDataType, "demo_pay")
         XCTAssertEqual(paymentMethod.icon.light, .init(url: URL(string: ServerDrivenPaymentMethodFixtures.lightIconURL)!))
         XCTAssertFalse(paymentMethod.icon.isTemplate)
-        XCTAssertTrue(paymentMethod.processingIsSuccess)
-        XCTAssertEqual(paymentMethod.postRedirectPollSeconds, 5)
     }
 
     func testInit_throwsForValuesItCantRender() throws {
         // Each entry has one value this SDK can't render, and throws that value
         let cases: [(String, (inout [String: Any]) -> Void)] = [
-            ("form_element:unparsable", { $0["form"] = ["elements": [["type": "name"]]] }),
-            ("next_action:unparsable", { $0[jsonDict: "confirm"]?["next_actions"] = ["redirect_to_url", "confirm_on_mobile_device"] }),
-            ("mandate_data:online_inferred", { $0[jsonDict: "confirm"]?["mandate_data"] = "online_inferred" }),
-            ("mandate_data:unparsable", { $0[jsonDict: "confirm"]?["mandate_data"] = "offline" }),
-            ("saved_payment_methods:unparsable", { $0["saved_payment_methods"] = "supported" }),
             ("icon_rendering:unparsable", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["rendering"] = "vector" }),
             ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?[jsonDict: "light"]?["url"] = "http://js.stripe.com/icon.png" }),
             ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = ["url": ""] }),
-            ("type:empty", { $0[jsonDict: "confirm"]?["payment_method_data_type"] = "" }),
+            ("type:empty", { $0["type"] = "" }),
         ]
         for (expectedValue, modify) in cases {
-            let paymentMethod = try ServerDrivenPaymentMethodFixtures.paymentMethod(ServerDrivenPaymentMethodFixtures.json(modify))
-            XCTAssertThrowsError(try ServerDrivenPaymentMethod(paymentMethod), expectedValue) { error in
+            let entry = try ServerDrivenPaymentMethodFixtures.entry(ServerDrivenPaymentMethodFixtures.json(modify))
+            XCTAssertThrowsError(try ServerDrivenPaymentMethod(type: entry.type, display: XCTUnwrap(entry.display)), expectedValue) { error in
                 XCTAssertEqual(error as? ServerDrivenPaymentMethod.UnsupportedValue, .init(value: expectedValue))
             }
         }
@@ -244,11 +230,9 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         XCTAssertNotEqual(paymentMethodType, .stripe(.unknown))
     }
 
-    func testIntentConfirmParams_confirmsWithPaymentMethodDataType() throws {
-        // Given a server-driven payment method whose payment_method_data type differs from its type
-        let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(
-            ServerDrivenPaymentMethodFixtures.json { $0[jsonDict: "confirm"]?["payment_method_data_type"] = "demo_pay_data" }
-        )
+    func testIntentConfirmParams_confirmsAsUnknownType() throws {
+        // Given a described PayPal entry
+        let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.json(type: "paypal"))
 
         // When it's confirmed with a PaymentIntent
         let confirmParams = IntentConfirmParams(type: .serverDriven(paymentMethod))
@@ -258,14 +242,15 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
                 paymentOptions: confirmParams.confirmPaymentMethodOptions,
                 saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState
             ),
-            paymentIntent: STPFixtures.paymentIntent(paymentMethodTypes: ["card", "demo_pay"]),
+            paymentIntent: STPFixtures.paymentIntent(paymentMethodTypes: ["card", "paypal"]),
             configuration: PaymentSheet.Configuration._testValue_MostPermissive()
         )
         let encoded = STPFormEncoder.dictionary(forObject: paymentIntentParams)
 
-        // Then it sends the entry's payment_method_data type
-        XCTAssertEqual(encoded[jsonDict: "payment_method_data"]?["type"] as? String, "demo_pay_data")
-        // ...without mandate data or setup_future_usage
+        // Then it sends the entry's type as payment_method_data[type]
+        XCTAssertEqual(confirmParams.paymentMethodParams.rawTypeString, "paypal")
+        XCTAssertEqual(encoded[jsonDict: "payment_method_data"]?["type"] as? String, "paypal")
+        // ...without mandate data or setup_future_usage, unlike native PayPal
         XCTAssertNil(encoded["mandate_data"])
         XCTAssertNil(encoded["setup_future_usage"])
         XCTAssertNil(encoded[jsonDict: "payment_method_options"]?["setup_future_usage"])

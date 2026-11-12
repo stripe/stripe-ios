@@ -248,7 +248,7 @@ class PaymentSheetFormFactory {
                 disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection
             )
         case .serverDriven:
-            // The server only sends payment methods without form elements, so this only has the billing details
+            // Descriptions don't have form elements, so like native PayPal this only has the billing details
             // the merchant asks for. Without any, it doesn't collect input, so selecting the row selects the payment method.
             return makeContactInformationAndBillingAddressForm()
         case .stripe(let paymentMethod):

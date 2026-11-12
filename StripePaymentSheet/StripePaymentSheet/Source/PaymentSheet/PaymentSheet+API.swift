@@ -308,8 +308,6 @@ extension PaymentSheet {
                         return .unknown
                     }
                 }()
-                // TODO: For `.serverDriven`, pass `processingIsSuccess` and `postRedirectPollSeconds` to `paymentHandler`
-                // once it can take behaviors for payment method types it doesn't know. Until then it treats them like `.unknown`.
                 // Set allow_redisplay on params
                 setAllowRedisplay(confirmParams, paymentMethodType)
                 confirmParams.paymentMethodParams.radarOptions = radarOptions

@@ -64,7 +64,8 @@ extension MobileSession {
     }
 
     /// Decodes the `mobile_session` sidecar from an `elements/sessions` response.
-    /// Returns nil when it's missing or malformed; never fails the load.
+    /// Returns nil when it's missing or malformed; never fails the load. A `payment_methods` entry that doesn't
+    /// decode is dropped and reported, and the rest of the session is kept.
     static func decodeSidecar(fromAPIResponse response: [AnyHashable: Any]) -> Session? {
         guard let sidecar = response[sidecarResponseKey], !(sidecar is NSNull) else {
             return nil
@@ -73,7 +74,13 @@ extension MobileSession {
             guard JSONSerialization.isValidJSONObject(sidecar) else {
                 throw PaymentSheetError.unknown(debugDescription: "mobile_session is not a JSON object")
             }
-            return try decode(JSONSerialization.data(withJSONObject: sidecar))
+            return try decode(JSONSerialization.data(withJSONObject: sidecar)) { droppedEntry in
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                    event: .paymentSheetMobileSessionPaymentMethodDropped,
+                    error: droppedEntry.error,
+                    params: ["key": droppedEntry.key, "index": droppedEntry.index]
+                )
+            }
         } catch {
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetMobileSessionDecodeFailed, error: error)
             return nil
