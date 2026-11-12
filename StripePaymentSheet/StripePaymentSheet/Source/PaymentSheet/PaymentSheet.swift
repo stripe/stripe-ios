@@ -48,26 +48,18 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkout(CheckoutElementsController)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
             case .deferredIntent(let intentConfig):
                 return intentConfig
-            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkout:
+            case .paymentIntentClientSecret, .setupIntentClientSecret:
                 return nil
             }
         }
 
         var isDeferred: Bool {
             if case .deferredIntent = self {
-                return true
-            }
-            return false
-        }
-
-        var isCheckout: Bool {
-            if case .checkout = self {
                 return true
             }
             return false
@@ -321,12 +313,6 @@ public class PaymentSheet {
         loadResult: PaymentSheetLoader.LoadResult,
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
-        let checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = {
-            guard case .checkout(let checkout) = mode else {
-                return nil
-            }
-            return checkout
-        }()
         persistedSelectionSnapshotBeforePresentation = .init(
             customerID: loadResult.customerProvider.customerID,
             availableSavedPaymentMethods: loadResult.savedPaymentMethods
@@ -347,7 +333,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 isFlowController: false,
                 analyticsHelper: analyticsHelper,
-                checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
+                checkoutBillingAddressUpdater: nil,
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self
