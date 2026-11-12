@@ -56,6 +56,13 @@ struct CheckoutCartView: View {
                 } else {
                     VStack {
                         Text("Failed to load cart.")
+                            .font(.headline)
+                        if let errorMessage {
+                            Text(errorMessage)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                        }
                         Button("Retry") {
                             Task { await loadCheckout() }
                         }

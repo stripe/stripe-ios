@@ -825,7 +825,7 @@ final class CheckoutCartViewController: UIViewController {
         scrollView.isHidden = true
         statusContainerView.isHidden = false
         statusActivityIndicator.stopAnimating()
-        statusLabel.text = "Failed to load cart."
+        statusLabel.text = ["Failed to load cart.", errorMessage].compactMap { $0 }.joined(separator: "\n\n")
         retryButton.isHidden = false
     }
 
