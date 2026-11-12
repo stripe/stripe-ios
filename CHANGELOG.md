@@ -9,12 +9,12 @@ MINOR
 ### CryptoOnramp (Alpha)
 * [Added] Added the optional `linkCardBrandAcceptance` parameter to `CryptoOnrampCoordinator.create(...)` to allow or block card brands in the Link UI. Defaults to accepting all supported brands.
 
+### Financial Connections
+* [Changed] Updated Link-branded Financial Connections flows, including Instant Debits, to the new Link design system.
+
 ## 26.16.1 2026-11-09
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".
-
-### Financial Connections
-* [Changed] Updated Link-branded Financial Connections flows, including Instant Debits, to the new Link design system.
 
 ## 26.16.0 2026-11-02
 ### PaymentSheet
