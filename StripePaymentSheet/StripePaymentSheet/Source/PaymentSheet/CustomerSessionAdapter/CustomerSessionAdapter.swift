@@ -24,11 +24,15 @@ class CustomerSessionAdapter {
         let cacheDate: Date
         private let timeProvider: () -> Date
 
+        /// - Parameter customerId: The Customer the CustomerSession is scoped to, from `v1/elements/sessions`. For a CustomerSession
+        ///   created with a customer-configured Account, this is the Account's backing Customer, which v1 endpoints require
+        ///   instead of the merchant's `acct_` ID. Defaults to the merchant-provided ID.
         init(customerSessionClientSecret: CustomerSessionClientSecret,
              apiKey: String,
+             customerId: String? = nil,
              timeProvider: @escaping () -> Date = Date.init) {
             self.customerSessionClientSecret = customerSessionClientSecret
-            self.customerId = customerSessionClientSecret.customerId
+            self.customerId = customerId ?? customerSessionClientSecret.customerId
             self.cacheDate = timeProvider()
             self.apiKey = apiKey
             self.timeProvider = timeProvider
@@ -88,6 +92,7 @@ class CustomerSessionAdapter {
 
             let tempCachedCustomerSessionClientSecret = CachedCustomerSessionClientSecret(customerSessionClientSecret: customerSessionClientSecret,
                                                                                           apiKey: apiKey,
+                                                                                          customerId: elementsSessionResponse.customer?.customerSession.customer,
                                                                                           timeProvider: timeProvider)
             self._cachedCustomerSessionClientSecret = tempCachedCustomerSessionClientSecret
             return (elementsSessionResponse, tempCachedCustomerSessionClientSecret)

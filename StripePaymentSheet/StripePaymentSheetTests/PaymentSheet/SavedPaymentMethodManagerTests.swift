@@ -194,9 +194,21 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
 
     func testDetachPaymentMethod_customerSessions() {
         var configuration = configuration
-        configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "cuss_test")
+        configuration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_test")
+        _testDetachPaymentMethodWithCustomerSession(configuration: configuration, expectedCustomerId: "cus_123")
+    }
 
-        let listPaymentMethodsExpectation = stubListPaymentMethods(customerId: configuration.customer!.id,
+    /// A CustomerSession created with a customer-configured Account is scoped to the Account's backing Customer.
+    /// Listing cards by the merchant's `acct_` ID is rejected, so removal must use the backing Customer from `v1/elements/sessions`.
+    func testDetachPaymentMethod_customerSessions_customerAccount() {
+        var configuration = configuration
+        configuration.customer = .init(id: "acct_123", customerSessionClientSecret: "cuss_test")
+        _testDetachPaymentMethodWithCustomerSession(configuration: configuration, expectedCustomerId: "cus_123")
+    }
+
+    private func _testDetachPaymentMethodWithCustomerSession(configuration: PaymentSheet.Configuration, expectedCustomerId: String) {
+        // Given a CustomerSession scoped to `expectedCustomerId`
+        let listPaymentMethodsExpectation = stubListPaymentMethods(customerId: expectedCustomerId,
                                                                    ephemeralKey: "ek_12345")
 
         let detachExpectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
@@ -215,9 +227,11 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
                                              ],
                                          ])
 
+        // When a card is removed
         let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: ._testValue())
         sut.detach(paymentMethod: paymentMethod)
 
+        // Then cards are listed for the CustomerSession's Customer, and the card is detached
         wait(for: [listPaymentMethodsExpectation, detachExpectation], timeout: 5.0)
     }
 
