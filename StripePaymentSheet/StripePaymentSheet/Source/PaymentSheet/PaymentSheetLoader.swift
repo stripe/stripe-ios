@@ -68,12 +68,7 @@ final class PaymentSheetLoader {
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
     ) async throws -> (LoadResult, ConfirmationChallenge) {
-        let customerProvider: CustomerProvider
-        if case .checkout(let checkout) = mode {
-            customerProvider = CustomerProvider(checkoutSession: checkout.session)
-        } else {
-            customerProvider = CustomerProvider(customer: configuration.customer)
-        }
+        let customerProvider = CustomerProvider(customer: configuration.customer)
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
         analyticsHelper.logLoadStarted(isUpdate: isUpdate, customerProvider: customerProvider)
@@ -328,9 +323,6 @@ final class PaymentSheetLoader {
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
-        case .checkout(let checkout):
-            elementsSession = checkout.session.elementsSession
-            intent = .checkout(checkout.session)
         }
 
         logAvailabilityMessages(elementsSession: elementsSession)

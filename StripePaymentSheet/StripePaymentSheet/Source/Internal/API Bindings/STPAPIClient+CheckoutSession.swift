@@ -364,6 +364,11 @@ extension STPAPIClient {
         }
 
         parameters["client_attribution_metadata"] = try requestParameters.clientAttributionMetadata.encodeJSONDictionary()
+        // STPPaymentHandler requires the Intent's PaymentMethod to be expanded to handle next actions.
+        parameters["expand"] = [
+            "payment_response.payment_intent.payment_method",
+            "payment_response.setup_intent.payment_method",
+        ]
 
         return try await post(
             endpoint: "checkout_client/\(requestParameters.sessionId)/confirm",
@@ -436,7 +441,7 @@ extension STPAPIClient {
 
     private func checkoutSessionError(from apiError: StripeAPIError) -> StripeError {
         // During private preview, Checkout cannot distinguish buyer-actionable API errors.
-        // Let the shared formatter expose the server's optional message for every error type.
+        // Let the shared formatter expose the server's message, or a generic fallback, for every error type.
         var apiError = apiError
         apiError.useServerErrorMessage = true
         // Keep the original error so analytics and other internal consumers retain all API data.
