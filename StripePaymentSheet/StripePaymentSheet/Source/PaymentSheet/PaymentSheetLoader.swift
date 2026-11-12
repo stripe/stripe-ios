@@ -169,7 +169,7 @@ final class PaymentSheetLoader {
 
             // Also fire-and-forget; the "Bank" row shows the icons once they load.
             var featuredInstitutionsLoader: FeaturedInstitutionsLoader?
-            if FeaturedInstitutionsLoader.shouldFetch(paymentMethodTypes: paymentMethodTypes) {
+            if FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes) {
                 featuredInstitutionsLoader = FeaturedInstitutionsLoader(apiClient: configuration.apiClient, analyticsHelper: analyticsHelper)
                 featuredInstitutionsLoader?.fetch()
             }
