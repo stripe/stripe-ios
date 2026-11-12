@@ -538,7 +538,6 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
                 elementsSession: elementsSession,
                 apiClient: configuration.apiClient
             )
-            updatedPaymentMethod.updateLocalFields(from: paymentMethod)
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())
         } catch {
