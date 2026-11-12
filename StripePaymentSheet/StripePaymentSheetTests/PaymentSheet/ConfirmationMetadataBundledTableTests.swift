@@ -54,7 +54,8 @@ final class ConfirmationMetadataBundledTableTests: XCTestCase {
         XCTAssertEqual(Array(table.entries.keys), ["ideal"])
         XCTAssertEqual(table.problems.count, 3, table.problems.joined(separator: "\n"))
         XCTAssertTrue(table.problems.contains { $0.contains("eps") && $0.contains("presenter") })
-        XCTAssertTrue(table.problems.contains { $0.contains("fpx") && $0.contains("intent_rules") })
+        // ...intent_rules is required, so that entry doesn't decode at all
+        XCTAssertTrue(table.problems.contains { $0.contains("payment_method_confirmations[2]") && $0.contains("intent_rules") })
         XCTAssertTrue(table.problems.contains { $0.contains("payment_method_confirmations[3]") })
     }
 
@@ -137,18 +138,19 @@ final class ConfirmationMetadataBundledTableTests: XCTestCase {
     static func confirm(presenter: String, nextActionType: String = "redirect_to_url") -> MobileSession.PaymentMethodConfirm {
         let rule = MobileSession.StatusRule(outcome: .cancel, pollSeconds: nil, onTimeout: nil)
         let rules = MobileSession.StatusRules(processing: rule, requiresAction: rule)
-        var nextAction = MobileSession.NextAction(type: nextActionType)
-        nextAction.presenter = MobileSession.NextActionPresenter(rawValue: presenter) ?? .unparsable
-        nextAction.browser = .fromNextAction
-        nextAction.urlPath = "url"
-        nextAction.returnUrl = .nextAction
-        nextAction.appToApp = .universalLinksOnly
+        let nextAction = MobileSession.NextAction(
+            type: nextActionType,
+            presenter: MobileSession.NextActionPresenter(rawValue: presenter) ?? .unparsable,
+            urlPath: "url",
+            browser: .fromNextAction,
+            returnUrl: .nextAction,
+            appToApp: .universalLinksOnly
+        )
         return MobileSession.PaymentMethodConfirm(
             paymentMethodDataType: "ideal",
             nextActions: [nextAction],
             mandateData: .none,
-            setupFutureUsage: .none,
-            postConfirm: MobileSession.PostConfirm(intentRetrieval: .retrieve, onProcessing: .fail, onRequiresAction: .cancel, pollSeconds: 0),
+            intentRetrieval: .retrieve,
             intentRules: MobileSession.IntentRulesByKind(paymentIntent: MobileSession.IntentRules(afterConfirm: rules, afterNextAction: rules), setupIntent: nil),
             returnUrl: .optional,
             setup: MobileSession.SetupSupport(supported: false, customerChoiceInPaymentMethodOptions: false)

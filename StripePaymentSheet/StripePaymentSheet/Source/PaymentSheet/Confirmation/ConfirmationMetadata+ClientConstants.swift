@@ -9,8 +9,8 @@ import Foundation
 
 /// The parts of a type's policy the server can't vary, because they name the SDK's own code: who performs next
 /// actions, what a cancel also does, which fixed `payment_method_options` the native form sets, and card's rule for a
-/// closed web view. They aren't in the `mobile_session` contract; `init(wire:type:)` merges them into every bundled or
-/// served entry.
+/// closed web view. They aren't in the `mobile_session` contract; `init(wire:type:)` merges them into every served
+/// entry and description.
 extension ConfirmationMetadata {
     struct ClientConstants: Equatable {
         var performer: Performer = .engine

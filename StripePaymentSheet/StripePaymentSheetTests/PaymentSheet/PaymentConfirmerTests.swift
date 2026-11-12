@@ -24,14 +24,41 @@ final class PaymentConfirmerTests: XCTestCase {
     let clock = FakePaymentConfirmerClock()
     let analyticsClient = STPTestingAnalyticsClient()
 
+    /// What a DemoPay description says `processing` (in both phases) or `requires_action` (after the redirect) means.
+    /// `poll` times out as a failure for `processing` and as a cancel for `requires_action`.
+    enum DescribedOutcome {
+        case succeed
+        case fail
+        case cancel
+        case poll
+    }
+
+    /// A confirmer for a DemoPay description with these rules, read the way PaymentSheet reads a description.
     func makeConfirmer(
-        retrieval: ServerDrivenConfirmSpec.Retrieval = .retrieve,
-        processing: ServerDrivenConfirmSpec.ProcessingOutcome = .succeed,
-        requiresAction: ServerDrivenConfirmSpec.RequiresActionOutcome = .cancel,
+        retrieval: ConfirmationMetadata.Retrieval = .retrieve,
+        processing: DescribedOutcome = .succeed,
+        requiresAction: DescribedOutcome = .cancel,
         pollSeconds: Int = 0
     ) -> PaymentConfirmer {
-        let spec = ServerDrivenConfirmSpec(nextActions: [.redirectToURL], retrieval: retrieval, processing: processing, requiresAction: requiresAction, pollSeconds: pollSeconds)
-        return makeConfirmer(metadata: ConfirmationMetadata(serverSpec: spec, paymentMethodDataType: "demo_pay"), policySource: .server, type: "demo_pay")
+        func rule(_ outcome: DescribedOutcome, onTimeout: String) -> [String: Any] {
+            switch outcome {
+            case .succeed: return ["outcome": "succeed"]
+            case .fail: return ["outcome": "fail"]
+            case .cancel: return ["outcome": "cancel"]
+            case .poll: return ["outcome": "poll", "poll_seconds": pollSeconds, "on_timeout": onTimeout]
+            }
+        }
+        let json = ServerDrivenPaymentMethodFixtures.json {
+            $0[jsonDict: "confirm"]?["intent_retrieval"] = retrieval.rawValue
+            $0[jsonDict: "confirm"]?["intent_rules"] = [
+                "payment_intent": [
+                    "after_confirm": ["processing": rule(processing, onTimeout: "fail"), "requires_action": ["outcome": "perform_next_action"]],
+                    "after_next_action": ["processing": rule(processing, onTimeout: "fail"), "requires_action": rule(requiresAction, onTimeout: "cancel")],
+                ],
+            ]
+        }
+        let metadata = try! ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json).confirmation
+        return makeConfirmer(metadata: metadata, policySource: .server, type: "demo_pay")
     }
 
     func makeConfirmer(metadata: ConfirmationMetadata, policySource: PaymentConfirmer.PolicySource = .defaultTable, type: String) -> PaymentConfirmer {
@@ -154,7 +181,7 @@ final class PaymentConfirmerTests: XCTestCase {
     }
 
     func testRefreshVsRetrieve() async {
-        for (retrieval, expectedCall) in [(ServerDrivenConfirmSpec.Retrieval.retrieve, "retrieve"), (.refresh, "refresh")] {
+        for (retrieval, expectedCall) in [(ConfirmationMetadata.Retrieval.retrieve, "retrieve"), (.refresh, "refresh")] {
             // Given a redirect that succeeds after the customer returns
             api.calls = []
             api.confirmResults = [.success(PaymentConfirmerFixtures.redirectIntent())]
@@ -446,33 +473,19 @@ final class PaymentConfirmerTests: XCTestCase {
         assertFailed(result, code: .intentStatusErrorCode)
     }
 
-    func testSpecFromWireFields() throws {
-        func spec(_ postConfirm: [String: Any]) throws -> ServerDrivenConfirmSpec {
-            let json = ServerDrivenPaymentMethodFixtures.json { $0[jsonDict: "confirm"]?["post_confirm"] = postConfirm }
-            return try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json).confirmSpec
+    func testDescriptionFromWireFields() throws {
+        func confirmation(_ modify: (inout [String: Any]) -> Void) throws -> ConfirmationMetadata {
+            return try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.json(modify)).confirmation
         }
-        // Each post_confirm field maps 1:1
-        let cases: [([String: Any], ServerDrivenConfirmSpec)] = [
-            (
-                ["intent_retrieval": "retrieve", "on_processing": "succeed", "on_requires_action": "poll", "poll_seconds": 5],
-                .init(nextActions: [.redirectToURL], retrieval: .retrieve, processing: .succeed, requiresAction: .poll, pollSeconds: 5)
-            ),
-            (
-                ["intent_retrieval": "refresh", "on_processing": "fail", "on_requires_action": "cancel", "poll_seconds": 0],
-                .init(nextActions: [.redirectToURL], retrieval: .refresh, processing: .fail, requiresAction: .cancel, pollSeconds: 0)
-            ),
-            (
-                ["intent_retrieval": "retrieve", "on_processing": "poll", "on_requires_action": "succeed", "poll_seconds": 60],
-                .init(nextActions: [.redirectToURL], retrieval: .retrieve, processing: .poll, requiresAction: .succeed, pollSeconds: 60)
-            ),
-        ]
-        for (postConfirm, expected) in cases {
-            XCTAssertEqual(try spec(postConfirm), expected, "\(postConfirm)")
-        }
+        // intent_retrieval is read from the top level of confirm
+        XCTAssertEqual(try confirmation { $0[jsonDict: "confirm"]?["intent_retrieval"] = "refresh" }.retrieval, .refresh)
+        // ...and intent_rules per phase, as a served entry's are
+        let rules = try confirmation { _ in }.paymentIntent
+        XCTAssertEqual(rules.afterConfirm, .init(processing: .succeed, requiresAction: .performNextAction))
+        XCTAssertEqual(rules.afterNextAction, .init(processing: .succeed, requiresAction: .poll(seconds: 5, onTimeout: .cancel)))
 
-        // next_actions maps each entry's type, and may be empty
-        let noNextActions = ServerDrivenPaymentMethodFixtures.json { $0[jsonDict: "confirm"]?["next_actions"] = [[String: Any]]() }
-        XCTAssertEqual(try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(noNextActions).confirmSpec.nextActions, [])
+        // next_actions may be empty
+        XCTAssertEqual(try confirmation { $0[jsonDict: "confirm"]?["next_actions"] = [[String: Any]]() }.nextActions, [:])
     }
 
     // MARK: - Helpers

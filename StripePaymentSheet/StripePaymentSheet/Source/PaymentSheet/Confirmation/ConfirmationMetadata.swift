@@ -12,12 +12,12 @@ import Foundation
 /// the next actions confirmation can return and how to perform each, and what each intent status means after
 /// confirmation and after a next action.
 ///
-/// `ConfirmationMetadata.native(for:)` is the default table, derived from STPPaymentHandler's and PaymentSheet's
-/// per-type rules. A server-sent spec replaces a type's whole policy; see `resolved(for:serverSpec:)`.
+/// It comes from the server: a served `payment_method_confirmations` entry for a native type, or a server-driven
+/// payment method's description. Both are read by `init(wire:type:)`.
 ///
 /// It's a superset of the `mobile_session` contract's `confirm` object: every contract field maps to one field here.
 /// The fields marked "Client constant" aren't in the contract: the SDK fixes them per type
-/// (`ConfirmationMetadata+ClientConstants.swift`) and merges them into every bundled or served entry.
+/// (`ConfirmationMetadata+ClientConstants.swift`) and merges them into every served entry and description.
 struct ConfirmationMetadata: Codable, Equatable {
     var params: Params
     /// Next actions confirmation can return for this type, keyed by the API's `next_action[type]`. Any other next
@@ -27,15 +27,15 @@ struct ConfirmationMetadata: Codable, Equatable {
     var nextActions: [String: NextAction]
     var paymentIntent: IntentRules
     /// How to finish a SetupIntent, or nil if PaymentSheet doesn't offer this type for SetupIntents.
-    /// Contract: `confirm.intent_rules.setup_intent` (server-driven PMs are PaymentIntent-only in v1).
+    /// Contract: `confirm.intent_rules.setup_intent`.
     var setupIntent: IntentRules?
     /// How to read the intent after a next action. Before one, e.g. polling a `processing` intent right after
     /// confirmation, it's always `retrieve`.
-    /// Contract: `post_confirm.intent_retrieval`.
+    /// Contract: `confirm.intent_retrieval`.
     var retrieval: Retrieval
     /// What canceling the payment after a next action also does. Client constant.
     var onCancel: CancelSideEffect
-    /// Who performs this type's next actions. Client constant (a server-driven PM's spec is always `.engine`).
+    /// Who performs this type's next actions. Client constant.
     var performer: Performer = .engine
 
     enum Performer: String, Codable, Equatable {
@@ -55,10 +55,10 @@ struct ConfirmationMetadata: Codable, Equatable {
         /// Whether confirming needs a `return_url`. Contract: `confirm.return_url`.
         var returnURL: ReturnURLRequirement
         /// When to send `mandate_data` with inferred online acceptance.
-        /// Contract: `confirm.mandate_data` (`none` or `online_inferred`, which here is `.always`).
+        /// Contract: `confirm.mandate_data` (`online_inferred` is `.always`, `online_inferred_when_setting_up` is `.whenSettingUp`).
         var mandateData: MandateData
         /// Which `setup_future_usage` values this type can be confirmed with, and where PaymentSheet puts them.
-        /// Contract: `confirm.setup_future_usage` (one value, not a set).
+        /// Contract: `confirm.setup`.
         var setupFutureUsage: SetupFutureUsage
         /// Fixed `payment_method_options[<type>]` fields PaymentSheet sets for this type. Client constant.
         var paymentMethodOptions: [PaymentMethodOption]
@@ -193,7 +193,7 @@ struct ConfirmationMetadata: Codable, Equatable {
         var afterWebViewDismissed: StatusRules?
     }
 
-    /// Contract: `StatusRules` (v1's `post_confirm.on_processing` and `on_requires_action` are one rule for both phases).
+    /// Contract: `StatusRules`.
     struct StatusRules: Codable, Equatable {
         var processing: Outcome
         var requiresAction: Outcome

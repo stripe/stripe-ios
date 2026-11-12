@@ -83,7 +83,7 @@ extension PaymentSheet {
         let policySource: PaymentConfirmer.PolicySource
         let analyticsType: String
         if let serverDrivenPaymentMethod {
-            metadata = ConfirmationMetadata(serverSpec: serverDrivenPaymentMethod.confirmSpec, paymentMethodDataType: serverDrivenPaymentMethod.type)
+            metadata = serverDrivenPaymentMethod.confirmation
             policySource = .server
             analyticsType = serverDrivenPaymentMethod.type
         } else if PaymentConfirmer.isRouted(paymentMethodType), let native = ConfirmationMetadata.native(for: paymentMethodType) {
@@ -93,7 +93,7 @@ extension PaymentSheet {
         } else {
             return nil
         }
-        // A type with no SetupIntent rules (server-driven PMs are PaymentIntent-only in v1) keeps today's path for SIs.
+        // A type with no SetupIntent rules keeps today's path for SIs.
         if intentKind == .setupIntent && metadata.setupIntent == nil {
             return nil
         }

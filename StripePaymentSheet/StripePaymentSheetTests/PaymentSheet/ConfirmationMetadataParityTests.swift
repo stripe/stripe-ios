@@ -96,8 +96,7 @@ final class ConfirmationMetadataParityTests: XCTestCase {
         // out, and asserts) but succeeds through handleNextAction (SPH:482). The table says succeed (manual confirmation).
         KnownMismatch(id: "M3", count: 122) { $0.scenario.hasPrefix("pi/requires_confirmation") && $0.scenario.hasSuffix("/via_confirm") },
         // M4, deliberate: STPPaymentHandler loads Alipay's legacy "Marlin" return URL before each PaymentIntent read
-        // (SPH:1597); the table has no such step. Alipay PaymentIntents run on Alipay+ (EVO), where the ping is a no-op
-        // (~/stripe/worktrees/handoff/alipay-marlin-research.md, task #69).
+        // (SPH:1597); the table has no such step. Alipay PaymentIntents run on Alipay+ (EVO), where the ping is a no-op.
         KnownMismatch(id: "M4", count: 2) { $0.type == "alipay" && $0.scenario.hasSuffix("/before_fetch") && $0.native == "ping" && $0.table == "none" },
         // U1, deliberate: a type handles only the next actions its entry lists, and the engine fails any other as an
         // unsupported next action (and reports it). STPPaymentHandler performs `redirect_to_url` for any type (SPH:1157).
@@ -621,100 +620,7 @@ final class ConfirmationMetadataParityTests: XCTestCase {
         }
     }
 
-    // MARK: - Server specs
-
-    /// `ConfirmationMetadata(serverSpec:)`, which the engine confirms server-driven payment methods with, agrees with the
-    /// spike's lean handler for every spec the contract can send, except L1 and L2, where it now follows STPPaymentHandler.
-    func testServerSpecMetadataMatchesTheSpikeExceptL1AndL2() {
-        let statuses: [STPPaymentIntentStatus] = [.succeeded, .requiresCapture, .requiresConfirmation, .canceled, .requiresPaymentMethod, .processing, .requiresAction, .unknown]
-        var mismatches: [String] = []
-        for processing in [ServerDrivenConfirmSpec.ProcessingOutcome.succeed, .fail, .poll] {
-            for requiresAction in [ServerDrivenConfirmSpec.RequiresActionOutcome.cancel, .poll, .succeed] {
-                for pollSeconds in [0, 5] {
-                    let spec = ServerDrivenConfirmSpec(nextActions: [.redirectToURL], retrieval: .retrieve, processing: processing, requiresAction: requiresAction, pollSeconds: pollSeconds)
-                    let metadata = ConfirmationMetadata(serverSpec: spec, paymentMethodDataType: "demo_pay")
-                    for status in statuses {
-                        for hasPerformedNextAction in [false, true] {
-                            let lean = Self.spikeDecide(status: status, hasPerformedNextAction: hasPerformedNextAction, spec: spec)
-                            let table = metadata.decide(Situation(
-                                intent: .paymentIntent,
-                                status: status,
-                                nextActionType: "redirect_to_url",
-                                phase: hasPerformedNextAction ? .afterNextAction(webViewDismissed: false) : .afterConfirm
-                            ))
-                            var leanAsTable = Decision(lean, pollSeconds: pollSeconds)
-                            // With 0 seconds the lean handler's poll finishes at once, as on a timeout.
-                            if leanAsTable == .poll(seconds: 0) {
-                                leanAsTable = status == .processing ? .fail(.unexpectedStatus) : .cancel
-                            }
-                            if leanAsTable != table {
-                                mismatches.append("\(processing)/\(requiresAction)/\(pollSeconds)s \(STPPaymentIntentStatus.string(from: status)) after_next_action=\(hasPerformedNextAction): lean=\(leanAsTable.description) table=\(table.description)")
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        print(mismatches.joined(separator: "\n"))
-        // Right after confirm, for each of the 18 specs, the spike differed from STPPaymentHandler (and the table) twice:
-        // it succeeds `requires_confirmation`, which STPPaymentHandler fails, and it fails `requires_payment_method` as a
-        // decline, which STPPaymentHandler fails as `requiresPaymentMethodErrorCode`.
-        XCTAssertEqual(mismatches.count, 36, mismatches.joined(separator: "\n"))
-        XCTAssertTrue(mismatches.allSatisfy { $0.contains("requires_confirmation after_next_action=false") || $0.contains("requires_payment_method after_next_action=false") })
-    }
-
-    /// The spike's `ServerDrivenPaymentHandler.decide` (task #54), frozen here as the reference for L1 and L2.
-    enum SpikeDecision: Equatable {
-        case succeed, cancel, performNextAction, poll
-        case fail(paymentFailed: Bool)
-    }
-
-    static func spikeDecide(status: STPPaymentIntentStatus, hasPerformedNextAction: Bool, spec: ServerDrivenConfirmSpec) -> SpikeDecision {
-        switch status {
-        case .succeeded, .requiresCapture, .requiresConfirmation:
-            return .succeed
-        case .canceled:
-            return .cancel
-        case .requiresPaymentMethod:
-            return .fail(paymentFailed: true)
-        case .processing:
-            switch spec.processing {
-            case .succeed: return .succeed
-            case .fail: return .fail(paymentFailed: false)
-            case .poll: return .poll
-            }
-        case .requiresAction:
-            guard hasPerformedNextAction else {
-                return .performNextAction
-            }
-            switch spec.requiresAction {
-            case .cancel: return .cancel
-            case .poll: return .poll
-            case .succeed: return .succeed
-            }
-        default:
-            return .fail(paymentFailed: false)
-        }
-    }
-
-    /// The server's spec replaces the whole native policy, with nothing carried over.
-    func testServerSpecReplacesNativePolicy() {
-        let spec = ServerDrivenConfirmSpec(nextActions: [.redirectToURL], retrieval: .retrieve, processing: .succeed, requiresAction: .poll, pollSeconds: 5)
-        // Given a native type with its own rules
-        let native = ConfirmationMetadata.native(for: .cashApp)!
-        XCTAssertEqual(native.retrieval, .refresh)
-        // When the server sends a spec for it
-        let resolved = ConfirmationMetadata.resolved(for: .cashApp, serverSpec: spec)!
-        // Then nothing native survives
-        XCTAssertEqual(resolved, ConfirmationMetadata(serverSpec: spec, paymentMethodDataType: "cashapp"))
-        XCTAssertEqual(resolved.retrieval, .retrieve)
-        XCTAssertNil(resolved.nextActions["cashapp_handle_redirect_or_display_qr_code"])
-        XCTAssertEqual(resolved.params.mandateData, .none)
-        // ...and without a spec, the native table applies
-        XCTAssertEqual(ConfirmationMetadata.resolved(for: .cashApp, serverSpec: nil), native)
-    }
-
-    /// Every entry encodes and decodes, so a server spec could carry any of it.
+    /// Every entry encodes and decodes.
     func testTableIsCodable() throws {
         for type in ConfirmationMetadata.nativeTypes {
             let metadata = ConfirmationMetadata.native(for: type)!
@@ -816,17 +722,6 @@ extension ConfirmationMetadata.Decision {
             }
         @unknown default:
             self = .fail(.unexpectedStatus)
-        }
-    }
-
-    /// The spike's decision, in the table's terms.
-    init(_ lean: ConfirmationMetadataParityTests.SpikeDecision, pollSeconds: Int) {
-        switch lean {
-        case .succeed: self = .succeed
-        case .cancel: self = .cancel
-        case .performNextAction: self = .performNextAction
-        case .poll: self = .poll(seconds: pollSeconds)
-        case .fail(let paymentFailed): self = .fail(paymentFailed ? .paymentFailed : .unexpectedStatus)
         }
     }
 

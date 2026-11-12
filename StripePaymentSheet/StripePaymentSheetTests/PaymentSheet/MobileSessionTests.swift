@@ -60,7 +60,7 @@ class MobileSessionTests: XCTestCase {
         // Then it matches the golden JSON, which is the spec's fully populated iOS example
         XCTAssertEqual(
             header,
-            #"{"environment":{"device_supports_native_link":true,"has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"address":"full","attach_defaults_to_payment_method":true,"email":"always","name":"always","phone":"never"},"card_brand_acceptance":{"brands":["amex"],"filter":"disallowed"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"554f2b32"}"#
+            #"{"environment":{"device_supports_native_link":true,"has_financial_connections_sdk":true},"payment_element_config":{"allows_delayed_payment_methods":true,"billing_details_collection":{"address":"full","attach_defaults_to_payment_method":true,"email":"always","name":"always","phone":"never"},"card_brand_acceptance":{"brands":["amex"],"filter":"disallowed"},"default_billing_details":{"email":true},"has_return_url":true,"link":{"display_mode":"wallet_button_hidden"},"payment_method_order":["card","external_paypal"]},"spec_hash":"db52f6df"}"#
         )
         // ...and never contains customer values
         XCTAssertFalse(header.contains("jane"))
@@ -79,7 +79,7 @@ class MobileSessionTests: XCTestCase {
         // Then it matches the golden JSON, with every field present
         XCTAssertEqual(
             header,
-            #"{"environment":{"device_supports_native_link":false,"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"address":"automatic","attach_defaults_to_payment_method":false,"email":"automatic","name":"automatic","phone":"automatic"},"card_brand_acceptance":{"brands":[],"filter":"all"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"},"payment_method_order":[]},"spec_hash":"554f2b32"}"#
+            #"{"environment":{"device_supports_native_link":false,"has_financial_connections_sdk":false},"payment_element_config":{"allows_delayed_payment_methods":false,"billing_details_collection":{"address":"automatic","attach_defaults_to_payment_method":false,"email":"automatic","name":"automatic","phone":"automatic"},"card_brand_acceptance":{"brands":[],"filter":"all"},"default_billing_details":{"email":false},"has_return_url":false,"link":{"display_mode":"automatic"},"payment_method_order":[]},"spec_hash":"db52f6df"}"#
         )
     }
 
@@ -142,7 +142,7 @@ class MobileSessionTests: XCTestCase {
         // When it's encoded
         let header = try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration))
 
-        // Then it's under 2KB, half the server's 4KB limit per header
+        // Then it's under 2KB, a quarter of the server's 8KB limit per header
         XCTAssertLessThan(header.utf8.count, 2048)
         XCTAssertTrue(header.contains(#""display_language":"zh-Hant-HK""#))
     }
@@ -566,12 +566,10 @@ class MobileSessionTests: XCTestCase {
         // ...and entries this SDK can't render, one value at a time
         let cases: [(String, (inout [String: Any]) -> Void)] = [
             ("form_element:unparsable", { $0["form"] = ["elements": [["type": "billing_address"]]] }),
-            ("next_action:display_qr_code", { $0[jsonDict: "confirm"]?["next_actions"] = [["type": "display_qr_code"]] }),
-            ("on_processing:unparsable", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["on_processing"] = "show_pending" }),
-            ("intent_retrieval:unparsable", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["intent_retrieval"] = "webhook" }),
-            ("on_requires_action:unparsable", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["on_requires_action"] = "show_instructions" }),
+            ("confirm.next_actions[display_qr_code].presenter", { $0[jsonDict: "confirm"]?["next_actions"] = [["type": "display_qr_code", "presenter": "qr_code", "return_url": "none", "app_to_app": "none"]] }),
+            ("confirm.intent_rules.payment_intent.after_confirm.processing.outcome", { $0[jsonDict: "confirm"]?[jsonDict: "intent_rules"]?[jsonDict: "payment_intent"]?[jsonDict: "after_confirm"]?["processing"] = ["outcome": "show_pending"] }),
+            ("confirm.intent_retrieval", { $0[jsonDict: "confirm"]?["intent_retrieval"] = "webhook" }),
             ("mandate_data:online_inferred", { $0[jsonDict: "confirm"]?["mandate_data"] = "online_inferred" }),
-            ("setup_future_usage:off_session", { $0[jsonDict: "confirm"]?["setup_future_usage"] = "off_session" }),
             ("icon_rendering:unparsable", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["rendering"] = "vector" }),
         ]
         for (expectedValue, modify) in cases {
@@ -596,13 +594,13 @@ class MobileSessionTests: XCTestCase {
         }
     }
 
-    func testFilteredPaymentMethodTypes_unparsableOnProcessingDropsPaymentMethod() {
-        // Given the flag is on and DemoPay's description has an on_processing value this SDK doesn't know
+    func testFilteredPaymentMethodTypes_unparsableIntentRetrievalDropsPaymentMethod() {
+        // Given the flag is on and DemoPay's description has an intent_retrieval value this SDK doesn't know
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
         let elementsSession = makeElementsSession(
             mobileSession: serverDrivenMobileSession(
                 types: ["card", "demo_pay"],
-                paymentMethods: [ServerDrivenPaymentMethodFixtures.json { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["on_processing"] = "show_pending" }]
+                paymentMethods: [ServerDrivenPaymentMethodFixtures.json { $0[jsonDict: "confirm"]?["intent_retrieval"] = "webhook" }]
             )
         )
 
@@ -610,14 +608,14 @@ class MobileSessionTests: XCTestCase {
         let paymentMethodTypes = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: makeConfiguration())
 
         // Then the entry still decodes, since the enum is open
-        XCTAssertEqual(elementsSession.mobileSession?.paymentMethods?.first?.confirm.postConfirm.onProcessing, .unparsable)
+        XCTAssertEqual(elementsSession.mobileSession?.paymentMethods?.first?.confirm.intentRetrieval, .unparsable)
         // ...but DemoPay isn't offered
         XCTAssertEqual(paymentMethodTypes.map { $0.identifier }, ["card"])
         XCTAssertEqual(STPAssertTestUtil.lastAssertMessage, "")
         // ...and it's reported once, with the offending field
         let dropped = droppedPaymentMethodEvents
         XCTAssertEqual(dropped.map { $0["payment_method_type"] as? String }, ["demo_pay"])
-        XCTAssertEqual(dropped.map { $0["unsupported_value"] as? String }, ["on_processing:unparsable"])
+        XCTAssertEqual(dropped.map { $0["unsupported_value"] as? String }, ["confirm.intent_retrieval"])
     }
 
     // MARK: - Lossy payment_methods decoding

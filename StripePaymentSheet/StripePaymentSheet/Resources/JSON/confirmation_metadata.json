@@ -2,6 +2,7 @@
   "payment_method_confirmations" : [
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -63,23 +64,17 @@
           }
         ],
         "payment_method_data_type" : "card",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "succeed",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 0
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : true,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "card"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -134,23 +129,17 @@
           }
         ],
         "payment_method_data_type" : "paypal",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "paypal"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "refresh",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -205,23 +194,17 @@
           }
         ],
         "payment_method_data_type" : "klarna",
-        "post_confirm" : {
-          "intent_retrieval" : "refresh",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "klarna"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -256,23 +239,17 @@
           }
         ],
         "payment_method_data_type" : "afterpay_clearpay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "afterpay_clearpay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -307,23 +284,17 @@
           }
         ],
         "payment_method_data_type" : "affirm",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "affirm"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -378,23 +349,17 @@
           }
         ],
         "payment_method_data_type" : "ideal",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "ideal"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -449,23 +414,17 @@
           }
         ],
         "payment_method_data_type" : "bancontact",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "bancontact"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -507,23 +466,17 @@
         "mandate_data" : "online_inferred",
         "next_actions" : [],
         "payment_method_data_type" : "sepa_debit",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "succeed",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 0
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "sepa_debit"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -558,23 +511,17 @@
           }
         ],
         "payment_method_data_type" : "eps",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "eps"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -611,23 +558,17 @@
           }
         ],
         "payment_method_data_type" : "p24",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "poll",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "p24"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -679,23 +620,17 @@
           }
         ],
         "payment_method_data_type" : "us_bank_account",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "succeed",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 0
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : true,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "us_bank_account"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -737,23 +672,17 @@
         "mandate_data" : "online_inferred",
         "next_actions" : [],
         "payment_method_data_type" : "au_becs_debit",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "succeed",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 0
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "au_becs_debit"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "refresh",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -808,23 +737,17 @@
           }
         ],
         "payment_method_data_type" : "cashapp",
-        "post_confirm" : {
-          "intent_retrieval" : "refresh",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "cashapp"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -864,30 +787,21 @@
             },
             "presenter" : "polling_screen",
             "return_url" : "none",
-            "type" : "blik_authorize",
-            "while_requires_action" : {
-              "outcome" : "succeed"
-            }
+            "type" : "blik_authorize"
           }
         ],
         "payment_method_data_type" : "blik",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "blik"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -922,23 +836,17 @@
           }
         ],
         "payment_method_data_type" : "grabpay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "grabpay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -973,23 +881,17 @@
           }
         ],
         "payment_method_data_type" : "fpx",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "fpx"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1031,23 +933,17 @@
         "mandate_data" : "online_inferred",
         "next_actions" : [],
         "payment_method_data_type" : "bacs_debit",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "succeed",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 0
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "bacs_debit"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1103,23 +999,17 @@
           }
         ],
         "payment_method_data_type" : "alipay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "alipay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1157,23 +1047,17 @@
           }
         ],
         "payment_method_data_type" : "oxxo",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "oxxo"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1208,23 +1092,17 @@
           }
         ],
         "payment_method_data_type" : "zip",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "zip"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1283,23 +1161,17 @@
           }
         ],
         "payment_method_data_type" : "revolut_pay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "poll",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "revolut_pay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1358,23 +1230,17 @@
           }
         ],
         "payment_method_data_type" : "amazon_pay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "poll",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "amazon_pay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1409,23 +1275,17 @@
           }
         ],
         "payment_method_data_type" : "alma",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "alma"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1460,23 +1320,17 @@
           }
         ],
         "payment_method_data_type" : "mobilepay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "mobilepay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1511,23 +1365,17 @@
           }
         ],
         "payment_method_data_type" : "vipps",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "vipps"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1565,23 +1413,17 @@
           }
         ],
         "payment_method_data_type" : "konbini",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "konbini"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1629,23 +1471,17 @@
           }
         ],
         "payment_method_data_type" : "paynow",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "paynow"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1693,23 +1529,17 @@
           }
         ],
         "payment_method_data_type" : "promptpay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "promptpay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1744,23 +1574,17 @@
           }
         ],
         "payment_method_data_type" : "sunbit",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "sunbit"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1795,23 +1619,17 @@
           }
         ],
         "payment_method_data_type" : "billie",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "billie"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1866,23 +1684,17 @@
           }
         ],
         "payment_method_data_type" : "satispay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "satispay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1917,23 +1729,17 @@
           }
         ],
         "payment_method_data_type" : "crypto",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "crypto"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -1991,23 +1797,17 @@
           }
         ],
         "payment_method_data_type" : "boleto",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "boleto"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2044,23 +1844,17 @@
           }
         ],
         "payment_method_data_type" : "swish",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "poll",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "swish"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2119,23 +1913,17 @@
           }
         ],
         "payment_method_data_type" : "twint",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "poll",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "twint"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2173,23 +1961,17 @@
           }
         ],
         "payment_method_data_type" : "multibanco",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "multibanco"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2226,23 +2008,17 @@
           }
         ],
         "payment_method_data_type" : "paypay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "poll",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "paypay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2277,23 +2053,17 @@
           }
         ],
         "payment_method_data_type" : "wero",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "wero"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2328,23 +2098,17 @@
           }
         ],
         "payment_method_data_type" : "pay_by_bank",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "pay_by_bank"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2384,30 +2148,21 @@
             },
             "presenter" : "polling_screen",
             "return_url" : "none",
-            "type" : "mb_way_await_authorization",
-            "while_requires_action" : {
-              "outcome" : "succeed"
-            }
+            "type" : "mb_way_await_authorization"
           }
         ],
         "payment_method_data_type" : "mb_way",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "mb_way"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2447,30 +2202,21 @@
             },
             "presenter" : "polling_screen",
             "return_url" : "none",
-            "type" : "await_authorization",
-            "while_requires_action" : {
-              "outcome" : "succeed"
-            }
+            "type" : "await_authorization"
           }
         ],
         "payment_method_data_type" : "bizum",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "bizum"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2525,23 +2271,17 @@
           }
         ],
         "payment_method_data_type" : "kakao_pay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "kakao_pay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2596,23 +2336,17 @@
           }
         ],
         "payment_method_data_type" : "naver_pay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "naver_pay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2667,23 +2401,17 @@
           }
         ],
         "payment_method_data_type" : "kr_card",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "kr_card"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2718,23 +2446,17 @@
           }
         ],
         "payment_method_data_type" : "payco",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "payco"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2769,23 +2491,17 @@
           }
         ],
         "payment_method_data_type" : "sequra",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "sequra"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2820,23 +2536,17 @@
           }
         ],
         "payment_method_data_type" : "scalapay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "scalapay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2905,23 +2615,17 @@
           }
         ],
         "payment_method_data_type" : "pix",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "pix"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -2956,23 +2660,17 @@
           }
         ],
         "payment_method_data_type" : "gopay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "gopay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3007,23 +2705,17 @@
           }
         ],
         "payment_method_data_type" : "mondu",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "mondu"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3058,23 +2750,17 @@
           }
         ],
         "payment_method_data_type" : "ng_ussd",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "ng_ussd"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3109,23 +2795,17 @@
           }
         ],
         "payment_method_data_type" : "qris",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "qris"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3160,23 +2840,17 @@
           }
         ],
         "payment_method_data_type" : "ng_wallet",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "ng_wallet"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3211,23 +2885,17 @@
           }
         ],
         "payment_method_data_type" : "shopeepay",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "shopeepay"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3282,23 +2950,17 @@
           }
         ],
         "payment_method_data_type" : "touch_n_go",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "touch_n_go"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3353,23 +3015,17 @@
           }
         ],
         "payment_method_data_type" : "truemoney",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "truemoney"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3424,23 +3080,17 @@
           }
         ],
         "payment_method_data_type" : "gcash",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "gcash"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3473,23 +3123,17 @@
           }
         ],
         "payment_method_data_type" : "momo",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "succeed",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 0
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "momo"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3524,23 +3168,17 @@
           }
         ],
         "payment_method_data_type" : "ng_bank_transfer",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "ng_bank_transfer"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3575,23 +3213,17 @@
           }
         ],
         "payment_method_data_type" : "ng_card",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "cancel",
-          "poll_seconds" : 30
-        },
         "return_url" : "required",
         "setup" : {
           "customer_choice_in_payment_method_options" : false,
           "supported" : false
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "ng_card"
     },
     {
       "confirm" : {
+        "intent_retrieval" : "retrieve",
         "intent_rules" : {
           "payment_intent" : {
             "after_confirm" : {
@@ -3656,18 +3288,11 @@
           }
         ],
         "payment_method_data_type" : "link",
-        "post_confirm" : {
-          "intent_retrieval" : "retrieve",
-          "on_processing" : "poll",
-          "on_requires_action" : "poll",
-          "poll_seconds" : 30
-        },
         "return_url" : "optional",
         "setup" : {
           "customer_choice_in_payment_method_options" : true,
           "supported" : true
-        },
-        "setup_future_usage" : "none"
+        }
       },
       "type" : "link"
     }

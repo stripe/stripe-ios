@@ -16,16 +16,16 @@ extension ConfirmationMetadata {
         var description: String { "confirm.\(field)" }
     }
 
-    /// Every field is required here, unlike for a server-driven payment method's v1 `confirm`: an entry that can't
+    /// The same mapping reads a served entry and a server-driven payment method's description. An entry that can't
     /// describe the whole policy throws, so a type never runs half described. `type` picks the client constants.
     init(wire confirm: MobileSession.PaymentMethodConfirm, type: String) throws {
-        guard let intentRules = confirm.intentRules else { throw WireError(field: "intent_rules") }
-        guard let setup = confirm.setup else { throw WireError(field: "setup") }
+        let intentRules = confirm.intentRules
+        let setup = confirm.setup
         let returnURL: Params.ReturnURLRequirement
         switch confirm.returnUrl {
         case .required: returnURL = .required
         case .optional: returnURL = .sentIfSet
-        case .unparsable, nil: throw WireError(field: "return_url")
+        case .unparsable: throw WireError(field: "return_url")
         }
         let mandateData: Params.MandateData
         switch confirm.mandateData {
@@ -39,10 +39,10 @@ extension ConfirmationMetadata {
             nextActions[nextAction.type] = try NextAction(wire: nextAction)
         }
         let retrieval: Retrieval
-        switch confirm.postConfirm.intentRetrieval {
+        switch confirm.intentRetrieval {
         case .retrieve: retrieval = .retrieve
         case .refresh: retrieval = .refresh
-        case .unparsable: throw WireError(field: "post_confirm.intent_retrieval")
+        case .unparsable: throw WireError(field: "intent_retrieval")
         }
         self.init(
             params: Params(
@@ -92,9 +92,9 @@ extension ConfirmationMetadata.NextAction {
                 ),
                 overWebView: screen.overWebView
             )
-        case .some(.none):
+        case .none:
             presenter = .none
-        case .unparsable, nil:
+        case .unparsable:
             throw WireError(field: "\(field).presenter")
         }
         let returnURL: ReturnURLSource
@@ -103,15 +103,15 @@ extension ConfirmationMetadata.NextAction {
         case .confirmRequired: returnURL = .confirmRequired
         case .confirmIfSet: returnURL = .confirmIfSet
         case .confirmThenNextAction: returnURL = .confirmThenNextAction
-        case .some(.none): returnURL = .none
-        case .unparsable, nil: throw WireError(field: "\(field).return_url")
+        case .none: returnURL = .none
+        case .unparsable: throw WireError(field: "\(field).return_url")
         }
         let appToApp: AppToApp
         switch nextAction.appToApp {
         case .universalLinksOnly: appToApp = .universalLinksOnly
         case .nativeUrlThenWeb: appToApp = .nativeURLThenWeb
-        case .some(.none): appToApp = .none
-        case .unparsable, nil: throw WireError(field: "\(field).app_to_app")
+        case .none: appToApp = .none
+        case .unparsable: throw WireError(field: "\(field).app_to_app")
         }
         self.init(
             presenter: presenter,

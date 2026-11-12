@@ -35,15 +35,32 @@ enum ServerDrivenPaymentMethodFixtures {
             "form": ["elements": [[String: Any]]()],
             "confirm": [
                 "payment_method_data_type": type,
-                "next_actions": [["type": "redirect_to_url"]],
+                "next_actions": [
+                    [
+                        "type": "redirect_to_url",
+                        "presenter": "redirect",
+                        "url_path": "url",
+                        "browser": "from_next_action",
+                        "return_url": "next_action",
+                        "app_to_app": "universal_links_only",
+                    ],
+                ],
                 "mandate_data": "none",
-                "setup_future_usage": "none",
-                "post_confirm": [
-                    "intent_retrieval": "retrieve",
-                    "on_processing": "succeed",
-                    "on_requires_action": "poll",
-                    "poll_seconds": 5,
-                ] as [String: Any],
+                "intent_retrieval": "retrieve",
+                "intent_rules": [
+                    "payment_intent": [
+                        "after_confirm": [
+                            "processing": ["outcome": "succeed"],
+                            "requires_action": ["outcome": "perform_next_action"],
+                        ],
+                        "after_next_action": [
+                            "processing": ["outcome": "succeed"],
+                            "requires_action": ["outcome": "poll", "poll_seconds": 5, "on_timeout": "cancel"] as [String: Any],
+                        ],
+                    ],
+                ],
+                "return_url": "required",
+                "setup": ["supported": false, "customer_choice_in_payment_method_options": false],
             ] as [String: Any],
             "saved_payment_methods": "unsupported",
         ]
@@ -76,29 +93,62 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         XCTAssertEqual(paymentMethod.paymentMethodDataType, "demo_pay")
         XCTAssertEqual(paymentMethod.icon.light, .init(url: URL(string: ServerDrivenPaymentMethodFixtures.lightIconURL)!, sizing: .resizable))
         XCTAssertFalse(paymentMethod.icon.isTemplate)
-        XCTAssertEqual(
-            paymentMethod.confirmSpec,
-            .init(nextActions: [.redirectToURL], retrieval: .retrieve, processing: .succeed, requiresAction: .poll, pollSeconds: 5)
-        )
+        // ...and reads its confirm the same way as a served payment_method_confirmations entry
+        let served = try ConfirmationMetadata(wire: ServerDrivenPaymentMethodFixtures.paymentMethod().confirm, type: "demo_pay")
+        XCTAssertEqual(paymentMethod.confirmation, served)
+        XCTAssertEqual(Array(paymentMethod.confirmation.nextActions.keys), ["redirect_to_url"])
+        XCTAssertEqual(paymentMethod.confirmation.paymentIntent.afterConfirm, .init(processing: .succeed, requiresAction: .performNextAction))
+        XCTAssertEqual(paymentMethod.confirmation.paymentIntent.afterNextAction, .init(processing: .succeed, requiresAction: .poll(seconds: 5, onTimeout: .cancel)))
+        XCTAssertNil(paymentMethod.confirmation.setupIntent)
+        XCTAssertEqual(paymentMethod.confirmation.retrieval, .retrieve)
+        XCTAssertEqual(paymentMethod.confirmation.params.returnURL, .required)
+    }
+
+    func testInit_readsAnyPresenter() throws {
+        // Given a description whose next action is a polling screen, as a served entry for BLIK has
+        let json = ServerDrivenPaymentMethodFixtures.json {
+            $0[jsonDict: "confirm"]?["next_actions"] = [
+                [
+                    "type": "blik_authorize",
+                    "presenter": "polling_screen",
+                    "return_url": "none",
+                    "app_to_app": "none",
+                    "polling_screen": [
+                        "seconds": 60, "interval_seconds": 3, "shows_countdown": true, "over_web_view": false,
+                        "title": "Approve payment", "instructions": "Open your bank app. {time_remaining}",
+                        "cancel_button": "Cancel", "failure_title": "Payment failed", "failure_instructions": "Try again",
+                    ] as [String: Any],
+                ] as [String: Any],
+            ]
+        }
+
+        // When it's mapped
+        let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json)
+
+        // Then the engine performs it with the polling screen
+        guard case .pollingScreen(let screen, let overWebView) = paymentMethod.confirmation.nextActions["blik_authorize"]?.presenter else {
+            return XCTFail("Expected a polling screen, got \(String(describing: paymentMethod.confirmation.nextActions))")
+        }
+        XCTAssertEqual(screen.seconds, 60)
+        XCTAssertFalse(overWebView)
     }
 
     func testInit_throwsForValuesItCantRender() throws {
         // Each entry has one value this SDK can't render, and throws that value
         let cases: [(String, (inout [String: Any]) -> Void)] = [
             ("form_element:unparsable", { $0["form"] = ["elements": [["type": "name"]]] }),
-            ("next_action:confirm_on_mobile_device", { $0[jsonDict: "confirm"]?["next_actions"] = [["type": "redirect_to_url"], ["type": "confirm_on_mobile_device"]] }),
-            // A native type's next action (for the native table) isn't one a server-driven payment method can use yet
-            ("next_action:use_stripe_sdk", { $0[jsonDict: "confirm"]?["next_actions"] = [["type": "use_stripe_sdk"]] }),
+            // The confirm is read with the served entries' mapping, which names the field it can't follow
+            ("confirm.next_actions[redirect_to_url].presenter", { $0[jsonDict: "confirm"]?["next_actions"] = [["type": "redirect_to_url", "presenter": "carrier_pigeon", "return_url": "next_action", "app_to_app": "none"]] }),
+            ("confirm.next_actions[redirect_to_url].browser", { $0[jsonDict: "confirm"]?["next_actions"] = [["type": "redirect_to_url", "presenter": "redirect", "return_url": "next_action", "app_to_app": "none"]] }),
+            ("confirm.intent_retrieval", { $0[jsonDict: "confirm"]?["intent_retrieval"] = "webhook" }),
+            ("confirm.return_url", { $0[jsonDict: "confirm"]?["return_url"] = "sometimes" }),
+            ("confirm.intent_rules.payment_intent.after_next_action.processing.outcome", { $0[jsonDict: "confirm"]?[jsonDict: "intent_rules"]?[jsonDict: "payment_intent"]?[jsonDict: "after_next_action"]?["processing"] = ["outcome": "show_pending"] }),
+            ("confirm.intent_rules.payment_intent.after_next_action.requires_action.on_timeout", { $0[jsonDict: "confirm"]?[jsonDict: "intent_rules"]?[jsonDict: "payment_intent"]?[jsonDict: "after_next_action"]?["requires_action"] = ["outcome": "poll", "poll_seconds": 5] as [String: Any] }),
+            ("confirm.intent_rules.payment_intent.after_next_action.requires_action.poll_seconds", { $0[jsonDict: "confirm"]?[jsonDict: "intent_rules"]?[jsonDict: "payment_intent"]?[jsonDict: "after_next_action"]?["requires_action"] = ["outcome": "poll", "poll_seconds": -1, "on_timeout": "cancel"] as [String: Any] }),
+            // iOS still builds confirm params in code, and sends no mandate for these
             ("mandate_data:online_inferred_when_setting_up", { $0[jsonDict: "confirm"]?["mandate_data"] = "online_inferred_when_setting_up" }),
-            ("intent_retrieval:unparsable", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["intent_retrieval"] = "webhook" }),
-            ("on_processing:unparsable", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["on_processing"] = "show_pending" }),
-            ("on_requires_action:unparsable", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["on_requires_action"] = "show_instructions" }),
-            ("poll_seconds:-1", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["poll_seconds"] = -1 }),
-            ("poll_seconds:61", { $0[jsonDict: "confirm"]?[jsonDict: "post_confirm"]?["poll_seconds"] = 61 }),
             ("mandate_data:online_inferred", { $0[jsonDict: "confirm"]?["mandate_data"] = "online_inferred" }),
             ("mandate_data:unparsable", { $0[jsonDict: "confirm"]?["mandate_data"] = "offline" }),
-            ("setup_future_usage:off_session", { $0[jsonDict: "confirm"]?["setup_future_usage"] = "off_session" }),
-            ("setup_future_usage:on_session", { $0[jsonDict: "confirm"]?["setup_future_usage"] = "on_session" }),
             ("saved_payment_methods:unparsable", { $0["saved_payment_methods"] = "supported" }),
             ("icon_rendering:unparsable", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["rendering"] = "vector" }),
             ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?[jsonDict: "light"]?["url"] = "http://js.stripe.com/icon.png" }),

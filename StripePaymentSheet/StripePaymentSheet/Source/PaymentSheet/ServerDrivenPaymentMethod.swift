@@ -20,8 +20,8 @@ struct ServerDrivenPaymentMethod {
     let icon: Icon
     /// The `payment_method_data[type]` to confirm with.
     let paymentMethodDataType: String
-    /// How `ServerDrivenPaymentHandler` performs next actions and interprets the intent's status.
-    let confirmSpec: ServerDrivenConfirmSpec
+    /// How `PaymentConfirmer` confirms it: its next actions and status rules, from the description's `confirm`.
+    let confirmation: ConfirmationMetadata
 
     struct Icon {
         struct Image: Equatable {
@@ -66,7 +66,7 @@ struct ServerDrivenPaymentMethod {
         }
     }
 
-    /// The first part of a `mobile_session.payment_methods` entry this SDK can't render, e.g. "on_processing:unparsable".
+    /// The first part of a `mobile_session.payment_methods` entry this SDK can't render, e.g. "mandate_data:online_inferred".
     struct UnsupportedValue: Error, Equatable {
         let value: String
     }
@@ -81,12 +81,19 @@ struct ServerDrivenPaymentMethod {
                 throw UnsupportedValue(value: "form_element:unparsable")
             }
         }
-        let confirmSpec = try ServerDrivenConfirmSpec(paymentMethod.confirm)
+        // PaymentSheet builds confirm params in code, and doesn't send mandate data for these yet.
         switch paymentMethod.confirm.mandateData {
         case .none:
             break
         case .onlineInferred, .onlineInferredWhenSettingUp, .unparsable:
             throw UnsupportedValue(value: "mandate_data:\(paymentMethod.confirm.mandateData.rawValue)")
+        }
+        // The same mapping as a served `payment_method_confirmations` entry.
+        let confirmation: ConfirmationMetadata
+        do {
+            confirmation = try ConfirmationMetadata(wire: paymentMethod.confirm, type: paymentMethod.type)
+        } catch let error as ConfirmationMetadata.WireError {
+            throw UnsupportedValue(value: error.description)
         }
         switch paymentMethod.savedPaymentMethods {
         case .unsupported:
@@ -119,7 +126,7 @@ struct ServerDrivenPaymentMethod {
             isTemplate: isTemplate
         )
         self.paymentMethodDataType = paymentMethod.confirm.paymentMethodDataType
-        self.confirmSpec = confirmSpec
+        self.confirmation = confirmation
     }
 
     private static func image(_ image: MobileSession.IconImage) throws -> Icon.Image {
