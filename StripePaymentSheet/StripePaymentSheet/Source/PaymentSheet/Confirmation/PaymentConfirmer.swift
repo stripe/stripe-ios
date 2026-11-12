@@ -10,7 +10,8 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
 /// Confirms one PaymentIntent or SetupIntent and finishes the payment, following the payment method's
-/// `ConfirmationMetadata` (a server spec, or the bundled default table) instead of STPPaymentHandler's per-type rules.
+/// `ConfirmationMetadata` (a server-driven payment method's description, or the session's served entry for a native type)
+/// instead of STPPaymentHandler's per-type rules.
 ///
 /// Every next action is one of five primitives, performed by a `NextActionPerforming`:
 /// - a redirect: a web view or another app, then the customer comes back;
@@ -61,21 +62,16 @@ final class PaymentConfirmer {
         let intent: ConfirmingIntent?
     }
 
-    enum PolicySource: String {
-        /// The server sent a spec for this type (`mobile_session.payment_methods[].confirm`).
-        case server
-        /// `ConfirmationMetadata.native(for:)`.
-        case defaultTable = "default_table"
-    }
-
     static let pollInterval: TimeInterval = 1
     /// The value of the `handler` analytics param, which tells this engine's events from STPPaymentHandler's.
     static let analyticsHandler = "paymentsheet_engine"
+    /// The value of the `spec_source` analytics param. Every policy comes from the server: a server-driven payment
+    /// method's description or a served `payment_method_confirmations` entry.
+    static let analyticsSpecSource = "server"
     /// Guards against two payments at once. It doesn't share STPPaymentHandler's lock (that's private); see the doc.
     private(set) static var isInProgress = false
 
     let metadata: ConfirmationMetadata
-    let policySource: PolicySource
     /// The real payment method type, e.g. "ideal" or "demo_pay", for analytics.
     let paymentMethodType: String
     private let analyticsAPIClient: STPAPIClient
@@ -96,7 +92,6 @@ final class PaymentConfirmer {
 
     init(
         metadata: ConfirmationMetadata,
-        policySource: PolicySource,
         paymentMethodType: String,
         apiClient: STPAPIClient,
         performer: NextActionPerforming,
@@ -105,7 +100,6 @@ final class PaymentConfirmer {
         analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
     ) {
         self.metadata = metadata
-        self.policySource = policySource
         self.paymentMethodType = paymentMethodType
         self.analyticsAPIClient = apiClient
         self.api = api ?? apiClient
@@ -377,7 +371,7 @@ final class PaymentConfirmer {
             "action_id": actionID,
             "payment_method_type": paymentMethodType,
             "handler": Self.analyticsHandler,
-            "spec_source": policySource.rawValue,
+            "spec_source": Self.analyticsSpecSource,
         ]
         params["intent_id"] = intentID
         params["payment_method_id"] = paymentMethodID
@@ -413,7 +407,7 @@ final class PaymentConfirmer {
             "next_action_type": nextActionType,
             "intent_id": intent.stripeID,
             "handler": Self.analyticsHandler,
-            "spec_source": policySource.rawValue,
+            "spec_source": Self.analyticsSpecSource,
         ])
         analyticsClient.log(analytic: analytic, apiClient: analyticsAPIClient)
     }

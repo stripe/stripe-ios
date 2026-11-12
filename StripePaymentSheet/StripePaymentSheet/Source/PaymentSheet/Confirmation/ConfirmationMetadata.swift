@@ -138,7 +138,7 @@ struct ConfirmationMetadata: Codable, Equatable {
             case safariViewController
         }
 
-        /// The `PollingViewController` config. The strings are localized by the server; the bundled table has English.
+        /// The `PollingViewController` config. The strings are localized by the server.
         struct PollingScreen: Codable, Equatable {
             /// How long the screen polls before showing an error, unless `deadlineField` is in the next action.
             var seconds: Int

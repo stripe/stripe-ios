@@ -72,8 +72,8 @@ extension MobileSession {
     }
 
     /// Decodes the `mobile_session` sidecar from an `elements/sessions` response.
-    /// Returns nil when it's missing or malformed; never fails the load. A `payment_methods` entry that doesn't decode is
-    /// dropped and reported, and the rest of the session is kept.
+    /// Returns nil when it's missing or malformed; never fails the load. A `payment_methods` or
+    /// `payment_method_confirmations` entry that doesn't decode is dropped and reported, and the rest of the session is kept.
     static func decodeSidecar(fromAPIResponse response: [AnyHashable: Any]) -> DecodedSidecar? {
         guard let sidecar = response[sidecarResponseKey], !(sidecar is NSNull) else {
             return nil
@@ -82,13 +82,14 @@ extension MobileSession {
             guard JSONSerialization.isValidJSONObject(sidecar) else {
                 throw PaymentSheetError.unknown(debugDescription: "mobile_session is not a JSON object")
             }
-            let rawPaymentMethods = (sidecar as? [String: Any])?["payment_methods"] as? [Any]
             var undecodablePaymentMethodTypes: Set<String> = []
             let session = try decode(JSONSerialization.data(withJSONObject: sidecar)) { droppedEntry in
                 // The entry didn't decode, so read its type from the raw JSON, if it has one.
-                let type = rawPaymentMethods.flatMap { droppedEntry.index < $0.count ? $0[droppedEntry.index] : nil }
+                let rawEntries = (sidecar as? [String: Any])?[droppedEntry.key] as? [Any]
+                let type = rawEntries.flatMap { droppedEntry.index < $0.count ? $0[droppedEntry.index] : nil }
                     .flatMap { ($0 as? [String: Any])?["type"] as? String }
-                if let type {
+                // A dropped `payment_method_confirmations` entry only means the type is confirmed with STPPaymentHandler.
+                if let type, droppedEntry.key == "payment_methods" {
                     undecodablePaymentMethodTypes.insert(type)
                 }
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
@@ -96,6 +97,7 @@ extension MobileSession {
                     error: droppedEntry.error,
                     params: [
                         "payment_method_type": type ?? "unknown",
+                        "key": droppedEntry.key,
                         "reason": "decode",
                         "index": droppedEntry.index,
                     ]

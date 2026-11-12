@@ -9,9 +9,8 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
 
-/// The payment method families PaymentSheet can confirm with `PaymentConfirmer`, in migration order. Each is routed only
-/// once the parity harness shows the engine matches STPPaymentHandler for it, apart from deliberate, documented
-/// differences (`PaymentConfirmerParityTests`).
+/// How the engine groups payment method types that it handles alike, for the parity harnesses and analytics review.
+/// Routing doesn't use it: the engine confirms any type the session carries a `confirm` for.
 enum PaymentConfirmerFamily: String, CaseIterable {
     /// `redirect_to_url` only: the web-redirect LPMs, the 5s post-return poll group, Klarna (refresh) and MoMo.
     case redirect
@@ -26,69 +25,57 @@ enum PaymentConfirmerFamily: String, CaseIterable {
     /// Every next action goes to STPPaymentHandler: card and Link.
     case stripeSDK = "stripe_sdk"
 
-    static func family(of type: STPPaymentMethodType) -> PaymentConfirmerFamily? {
-        guard let metadata = ConfirmationMetadata.native(for: type) else {
-            return nil
+    /// The family of a type confirmed with `metadata`, from the entry alone.
+    init(metadata: ConfirmationMetadata) {
+        // `use_stripe_sdk` can come for any type, and doesn't decide its family.
+        let nextActions = metadata.nextActions.filter { $0.key != "use_stripe_sdk" }
+        func isRedirect(_ nextAction: ConfirmationMetadata.NextAction) -> Bool {
+            if case .redirect = nextAction.presenter { return true } else { return false }
         }
         if metadata.performer == .stripePaymentHandler {
-            return .stripeSDK
+            self = .stripeSDK
+        } else if nextActions.values.contains(where: { if case .pollingScreen = $0.presenter { return true } else { return false } }) {
+            self = .pollingScreen
+        } else if nextActions.values.contains(where: { isRedirect($0) && $0.whileRequiresAction == .succeed }) {
+            // A hosted voucher: a redirect whose requires_action afterwards means the customer pays later.
+            self = .voucher
+        } else if !nextActions.values.contains(where: isRedirect) {
+            self = .noNextAction
+        } else if nextActions.contains(where: { isRedirect($0.value) && $0.key != "redirect_to_url" }) {
+            // A redirect through the type's own next action, which opens its app.
+            self = .appToApp
+        } else {
+            self = .redirect
         }
-        let presenters = metadata.nextActions.values.map(\.presenter)
-        if presenters.contains(where: { if case .pollingScreen = $0 { return true } else { return false } }) {
-            return .pollingScreen
-        }
-        if [.cashApp, .swish, .alipay].contains(type) {
-            return .appToApp
-        }
-        // A hosted voucher: a redirect whose requires_action afterwards means the customer pays later.
-        if metadata.nextActions.values.contains(where: { nextAction in
-            if case .redirect = nextAction.presenter, nextAction.whileRequiresAction == .succeed { return true } else { return false }
-        }) {
-            return .voucher
-        }
-        if [.SEPADebit, .bacsDebit, .AUBECSDebit, .USBankAccount].contains(type) {
-            return .noNextAction
-        }
-        return .redirect
-    }
-
-    var types: [STPPaymentMethodType] {
-        return ConfirmationMetadata.nativeTypes.filter { Self.family(of: $0) == self }
-    }
-}
-
-extension PaymentConfirmer {
-    /// The families PaymentSheet confirms with the engine. Server-driven payment methods always use it. Prototype: a
-    /// static allowlist; a shipping version would also need a server kill switch per type.
-    static var routedFamilies: Set<PaymentConfirmerFamily> = [.redirect, .voucher, .noNextAction, .appToApp, .pollingScreen, .stripeSDK]
-
-    static func isRouted(_ type: STPPaymentMethodType) -> Bool {
-        return PaymentConfirmerFamily.family(of: type).map(routedFamilies.contains) ?? false
     }
 }
 
 extension PaymentSheet {
     /// The engine for this payment, or nil to confirm with STPPaymentHandler.
+    ///
+    /// The engine confirms a type only when the session carries a `confirm` for it: a server-driven payment method's
+    /// description, or a served `payment_method_confirmations` entry. Every other type, including one whose entry didn't
+    /// decode or when the session has no `mobile_session` (or none at all, as for headless Link), goes to
+    /// STPPaymentHandler. So the server's flag and killswitch for those entries are also the engine's off switch.
     /// - Parameters:
     ///   - paymentMethodType: The payment method being confirmed. `.unknown` for a server-driven payment method.
-    ///   - serverDrivenPaymentMethod: Its server spec, which wins over the default table.
+    ///   - serverDrivenPaymentMethod: Its description, which wins over a served entry.
+    ///   - elementsSession: The session whose served entries to use.
     @MainActor
     static func makePaymentConfirmer(
         paymentMethodType: STPPaymentMethodType,
         serverDrivenPaymentMethod: ServerDrivenPaymentMethod?,
+        elementsSession: STPElementsSession?,
         intentKind: ConfirmationMetadata.IntentKind,
         paymentHandler: STPPaymentHandler
     ) -> PaymentConfirmer? {
         let metadata: ConfirmationMetadata
-        let policySource: PaymentConfirmer.PolicySource
         let analyticsType: String
         if let serverDrivenPaymentMethod {
             metadata = serverDrivenPaymentMethod.confirmation
-            policySource = .server
             analyticsType = serverDrivenPaymentMethod.type
-        } else if PaymentConfirmer.isRouted(paymentMethodType), let native = ConfirmationMetadata.native(for: paymentMethodType) {
-            metadata = native
-            policySource = .defaultTable
+        } else if let served = elementsSession?.paymentMethodConfirmations[paymentMethodType.identifier] {
+            metadata = served
             analyticsType = paymentMethodType.identifier
         } else {
             return nil
@@ -99,7 +86,6 @@ extension PaymentSheet {
         }
         return PaymentConfirmer(
             metadata: metadata,
-            policySource: policySource,
             paymentMethodType: analyticsType,
             apiClient: paymentHandler.apiClient,
             performer: PaymentSheetNextActionPerformer(paymentHandler: paymentHandler)
@@ -117,10 +103,11 @@ extension PaymentSheet {
         params: STPPaymentIntentConfirmParams,
         paymentMethodType: STPPaymentMethodType,
         serverDrivenPaymentMethod: ServerDrivenPaymentMethod? = nil,
+        elementsSession: STPElementsSession?,
         authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
-        guard let confirmer = makePaymentConfirmer(paymentMethodType: paymentMethodType, serverDrivenPaymentMethod: serverDrivenPaymentMethod, intentKind: .paymentIntent, paymentHandler: paymentHandler) else {
+        guard let confirmer = makePaymentConfirmer(paymentMethodType: paymentMethodType, serverDrivenPaymentMethod: serverDrivenPaymentMethod, elementsSession: elementsSession, intentKind: .paymentIntent, paymentHandler: paymentHandler) else {
             paymentHandler.confirmPaymentIntent(params: params, authenticationContext: authenticationContext, completion: completion)
             return
         }
@@ -136,10 +123,11 @@ extension PaymentSheet {
         params: STPSetupIntentConfirmParams,
         paymentMethodType: STPPaymentMethodType,
         serverDrivenPaymentMethod: ServerDrivenPaymentMethod? = nil,
+        elementsSession: STPElementsSession?,
         authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
-        guard let confirmer = makePaymentConfirmer(paymentMethodType: paymentMethodType, serverDrivenPaymentMethod: serverDrivenPaymentMethod, intentKind: .setupIntent, paymentHandler: paymentHandler) else {
+        guard let confirmer = makePaymentConfirmer(paymentMethodType: paymentMethodType, serverDrivenPaymentMethod: serverDrivenPaymentMethod, elementsSession: elementsSession, intentKind: .setupIntent, paymentHandler: paymentHandler) else {
             paymentHandler.confirmSetupIntent(params: params, authenticationContext: authenticationContext, completion: completion)
             return
         }
@@ -155,11 +143,12 @@ extension PaymentSheet {
         for paymentIntent: STPPaymentIntent,
         paymentMethodType: STPPaymentMethodType,
         serverDrivenPaymentMethod: ServerDrivenPaymentMethod? = nil,
+        elementsSession: STPElementsSession?,
         authenticationContext: STPAuthenticationContext,
         returnURL: String?,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
-        guard let confirmer = makePaymentConfirmer(paymentMethodType: paymentMethodType, serverDrivenPaymentMethod: serverDrivenPaymentMethod, intentKind: .paymentIntent, paymentHandler: paymentHandler) else {
+        guard let confirmer = makePaymentConfirmer(paymentMethodType: paymentMethodType, serverDrivenPaymentMethod: serverDrivenPaymentMethod, elementsSession: elementsSession, intentKind: .paymentIntent, paymentHandler: paymentHandler) else {
             paymentHandler.handleNextAction(for: paymentIntent, with: authenticationContext, returnURL: returnURL, completion: completion)
             return
         }
@@ -175,11 +164,12 @@ extension PaymentSheet {
         for setupIntent: STPSetupIntent,
         paymentMethodType: STPPaymentMethodType,
         serverDrivenPaymentMethod: ServerDrivenPaymentMethod? = nil,
+        elementsSession: STPElementsSession?,
         authenticationContext: STPAuthenticationContext,
         returnURL: String?,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
-        guard let confirmer = makePaymentConfirmer(paymentMethodType: paymentMethodType, serverDrivenPaymentMethod: serverDrivenPaymentMethod, intentKind: .setupIntent, paymentHandler: paymentHandler) else {
+        guard let confirmer = makePaymentConfirmer(paymentMethodType: paymentMethodType, serverDrivenPaymentMethod: serverDrivenPaymentMethod, elementsSession: elementsSession, intentKind: .setupIntent, paymentHandler: paymentHandler) else {
             paymentHandler.handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL, completion: completion)
             return
         }

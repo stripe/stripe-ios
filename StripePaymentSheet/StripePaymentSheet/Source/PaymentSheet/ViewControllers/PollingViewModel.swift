@@ -32,7 +32,7 @@ class PollingViewModel {
     lazy var deadline: Date = Date().addingTimeInterval(duration)
 
     /// The config STPPaymentHandler's polling next actions use (`PaymentSheetAuthenticationContext.presentPollingVCForAction`).
-    /// `ConfirmationMetadata.native(for:)` has the same values; `ConfirmationMetadataParityTests` compares them.
+    /// The confirmation table's entries have the same values; `ConfirmationMetadataParityTests` compares them.
     init(paymentMethodType: STPPaymentMethodType) {
         guard Self.supportedPaymentMethods.contains(paymentMethodType) else {
             fatalError("Unsupported payment type \(paymentMethodType) in PollingViewModel")

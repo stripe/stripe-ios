@@ -54,6 +54,7 @@ extension PaymentSheet {
                 paymentHandler: paymentHandler,
                 isFlowController: isFlowController,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                elementsSession: elementsSession,
                 confirmHandler: confirmHandler,
                 serverDrivenPaymentMethod: serverDrivenPaymentMethod
             )
@@ -72,6 +73,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
+        elementsSession: STPElementsSession?,
         confirmHandler: @escaping IntentConfiguration.ConfirmHandler,
         serverDrivenPaymentMethod: ServerDrivenPaymentMethod?
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
@@ -159,6 +161,7 @@ extension PaymentSheet {
                             params: paymentIntentParams,
                             paymentMethodType: paymentMethod.type,
                             serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
@@ -178,6 +181,7 @@ extension PaymentSheet {
                             for: paymentIntent,
                             paymentMethodType: paymentMethod.type,
                             serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, paymentIntent, error in
@@ -206,6 +210,7 @@ extension PaymentSheet {
                             params: setupIntentParams,
                             paymentMethodType: paymentMethod.type,
                             serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
@@ -225,6 +230,7 @@ extension PaymentSheet {
                             for: setupIntent,
                             paymentMethodType: paymentMethod.type,
                             serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, setupIntent, error in

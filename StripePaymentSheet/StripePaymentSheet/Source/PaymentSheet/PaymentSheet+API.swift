@@ -336,6 +336,7 @@ extension PaymentSheet {
                         params: params,
                         paymentMethodType: paymentMethodType,
                         serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                        elementsSession: elementsSession,
                         authenticationContext: authenticationContext,
                         completion: { actionStatus, paymentIntent, error in
                             Task { await confirmationChallenge?.complete() }
@@ -362,6 +363,7 @@ extension PaymentSheet {
                         params: setupIntentParams,
                         paymentMethodType: paymentMethodType,
                         serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                        elementsSession: elementsSession,
                         authenticationContext: authenticationContext,
                         completion: { actionStatus, setupIntent, error in
                             Task { await confirmationChallenge?.complete() }
@@ -415,6 +417,7 @@ extension PaymentSheet {
                     using: paymentHandler,
                     params: paymentIntentParams,
                     paymentMethodType: paymentMethod.type,
+                    elementsSession: elementsSession,
                     authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
@@ -431,6 +434,7 @@ extension PaymentSheet {
                     using: paymentHandler,
                     params: setupIntentParams,
                     paymentMethodType: paymentMethod.type,
+                    elementsSession: elementsSession,
                     authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
@@ -486,6 +490,7 @@ extension PaymentSheet {
                             using: paymentHandler,
                             params: paymentIntentParams,
                             paymentMethodType: paymentMethodParams.type,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
@@ -504,6 +509,7 @@ extension PaymentSheet {
                             using: paymentHandler,
                             params: setupIntentParams,
                             paymentMethodType: paymentMethodParams.type,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
@@ -572,6 +578,7 @@ extension PaymentSheet {
                             using: paymentHandler,
                             params: paymentIntentParams,
                             paymentMethodType: paymentMethod.type,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
@@ -592,6 +599,7 @@ extension PaymentSheet {
                             using: paymentHandler,
                             params: setupIntentParams,
                             paymentMethodType: paymentMethod.type,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }

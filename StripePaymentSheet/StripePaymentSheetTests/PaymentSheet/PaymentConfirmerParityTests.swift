@@ -81,8 +81,8 @@ extension ConfirmationMetadataParityTests {
         for rule in Self.engineDifferences {
             XCTAssertEqual(report.mismatches.filter(rule.matches).count, rule.count, "Engine difference \(rule.id) changed; update the doc")
         }
-        // Every routed family is covered by the harness.
-        for family in PaymentConfirmer.routedFamilies {
+        // Every family is covered by the harness.
+        for family in PaymentConfirmerFamily.allCases {
             XCTAssertFalse(family.types.isEmpty, "\(family) has no types")
             XCTAssertTrue(family.types.allSatisfy { (report.comparisonsByType[$0.identifier] ?? 0) > 0 }, "\(family) isn't fully covered")
         }
@@ -306,7 +306,6 @@ final class EngineRun {
         })
         confirmer = PaymentConfirmer(
             metadata: ConfirmationMetadata.native(for: type)!,
-            policySource: .defaultTable,
             paymentMethodType: type.identifier,
             apiClient: client,
             performer: performer,
@@ -477,8 +476,7 @@ extension ParityReport {
                 let differences = mismatches.filter { typeIDs.contains($0.type) }
                 let byRule = rules.map { rule in "\(rule.id)=\(differences.filter(rule.matches).count)" }.joined(separator: " ")
                 let unexplained = differences.filter { mismatch in !rules.contains { $0.matches(mismatch) } }.count
-                let routed = PaymentConfirmer.routedFamilies.contains(family) ? "yes" : "no"
-                lines.append("FAMILY \(family.rawValue) types=\(typeIDs.count) comparisons=\(comparisons) differences=\(differences.count) [\(byRule)] unexplained=\(unexplained) routed=\(routed) (\(family.types.map(\.identifier).joined(separator: ",")))")
+                lines.append("FAMILY \(family.rawValue) types=\(typeIDs.count) comparisons=\(comparisons) differences=\(differences.count) [\(byRule)] unexplained=\(unexplained) (\(family.types.map(\.identifier).joined(separator: ",")))")
             }
         }
         lines += notes.map { "NOTE \($0)" }

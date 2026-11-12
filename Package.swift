@@ -187,7 +187,6 @@ let package = Package(
             exclude: ["Info.plist"],
             resources: [
                 .process("Resources/StripePaymentSheet.xcassets"),
-                .process("Resources/JSON"),
                 .process("PrivacyInfo.xcprivacy")
             ]
         ),

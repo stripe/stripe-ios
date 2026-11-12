@@ -95,6 +95,7 @@ extension PaymentSheet {
                             params: paymentIntentParams,
                             paymentMethodType: paymentMethodType,
                             serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
@@ -113,6 +114,7 @@ extension PaymentSheet {
                             for: paymentIntent,
                             paymentMethodType: paymentIntent.paymentMethod?.type ?? paymentMethodType,
                             serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, paymentIntent, error in
@@ -141,6 +143,7 @@ extension PaymentSheet {
                             params: setupIntentParams,
                             paymentMethodType: paymentMethodType,
                             serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
@@ -159,6 +162,7 @@ extension PaymentSheet {
                             for: setupIntent,
                             paymentMethodType: setupIntent.paymentMethod?.type ?? paymentMethodType,
                             serverDrivenPaymentMethod: serverDrivenPaymentMethod,
+                            elementsSession: elementsSession,
                             authenticationContext: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, setupIntent, error in

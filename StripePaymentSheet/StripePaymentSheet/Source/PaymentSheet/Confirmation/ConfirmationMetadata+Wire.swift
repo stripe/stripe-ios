@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(InternalOnlyAPI) import StripeCore
 
 /// `ConfirmationMetadata` from the `mobile_session` wire shape: an entry of `payment_method_confirmations`, whose
 /// `confirm` is the contract's `PaymentMethodConfirm`, merged with the SDK's client constants for its type.
@@ -167,50 +168,41 @@ extension ConfirmationMetadata.Outcome {
     }
 }
 
-// MARK: - The bundled table
+// MARK: - Served entries
 
 extension ConfirmationMetadata {
-    /// `Resources/JSON/confirmation_metadata.json`: a `mobile_session` sidecar with only `payment_method_confirmations`,
-    /// a stand-in until the server sends it.
-    static let bundledTableResourceName = "confirmation_metadata"
-
-    struct Table {
+    /// Maps a session's `payment_method_confirmations`, keyed by type. An entry this SDK can't follow, or a repeated
+    /// type, is left out and passed to `onProblem`, so that type is confirmed with STPPaymentHandler. Entries that didn't
+    /// decode were already dropped and reported by `MobileSession.decodeSidecar`.
+    static func servedEntries(
+        _ confirmations: [MobileSession.PaymentMethodConfirmation],
+        onProblem: (_ type: String, _ value: String) -> Void = reportServedEntryProblem
+    ) -> [String: ConfirmationMetadata] {
         var entries: [String: ConfirmationMetadata] = [:]
-        /// Entries that didn't decode or map, and duplicates. A bundled file with any is a bug.
-        var problems: [String] = []
-    }
-
-    /// Decodes a sidecar's `payment_method_confirmations` the way the sidecar itself is decoded (`MobileSession.decode`).
-    static func decodeTable(_ data: Data) throws -> Table {
-        var table = Table()
-        let session = try MobileSession.decode(data) { dropped in
-            table.problems.append("\(dropped.key)[\(dropped.index)] didn't decode: \(dropped.error)")
-        }
-        for entry in session.paymentMethodConfirmations ?? [] {
-            guard table.entries[entry.type] == nil else {
-                table.problems.append("\(entry.type) is listed twice")
+        for entry in confirmations {
+            guard entries[entry.type] == nil else {
+                onProblem(entry.type, "duplicate_type")
                 continue
             }
             do {
-                table.entries[entry.type] = try ConfirmationMetadata(wire: entry.confirm, type: entry.type)
+                entries[entry.type] = try ConfirmationMetadata(wire: entry.confirm, type: entry.type)
             } catch {
-                table.problems.append("\(entry.type): \(error)")
+                onProblem(entry.type, (error as? WireError)?.description ?? "\(error)")
             }
         }
-        return table
+        return entries
     }
 
-    static func loadBundledTable() -> Table {
-        guard
-            let url = StripePaymentSheetBundleLocator.resourcesBundle.url(forResource: bundledTableResourceName, withExtension: "json"),
-            let data = try? Data(contentsOf: url)
-        else {
-            return Table(problems: ["\(bundledTableResourceName).json isn't in the bundle"])
-        }
-        do {
-            return try decodeTable(data)
-        } catch {
-            return Table(problems: ["\(bundledTableResourceName).json didn't decode: \(error)"])
-        }
+    /// The server should only send entries this SDK version can follow, so a problem means its capability table is wrong.
+    static func reportServedEntryProblem(type: String, value: String) {
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+            event: .paymentSheetMobileSessionPaymentMethodDropped,
+            params: [
+                "payment_method_type": type,
+                "key": "payment_method_confirmations",
+                "reason": "unsupported_value",
+                "unsupported_value": value,
+            ]
+        )
     }
 }

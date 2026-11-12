@@ -225,6 +225,7 @@ extension PaymentSheet {
                         event: .paymentSheetMobileSessionPaymentMethodDropped,
                         params: [
                             "payment_method_type": paymentMethod.type,
+                            "key": "payment_methods",
                             "reason": "unsupported_value",
                             "unsupported_value": (error as? ServerDrivenPaymentMethod.UnsupportedValue)?.value ?? "unknown",
                         ]

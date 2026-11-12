@@ -73,6 +73,11 @@ import Foundation
     /// The types of `mobile_session.payment_methods` entries that didn't decode. They were already reported.
     let mobileSessionUndecodablePaymentMethodTypes: Set<String>
 
+    /// How to confirm native types, from `mobile_session.payment_method_confirmations`, keyed by type. `PaymentConfirmer`
+    /// confirms only the types this or a server-driven payment method's description covers; every other type is
+    /// confirmed with STPPaymentHandler.
+    let paymentMethodConfirmations: [String: ConfirmationMetadata]
+
     // TODO(joyceqin) Re-enable as part of the ECE workstream
     // Link doesn't support automatic tax from billing address
     var disableLinkForAutomaticTaxBilling: Bool = false
@@ -123,6 +128,7 @@ import Foundation
         self.customer = customer
         self.mobileSession = mobileSession
         self.mobileSessionUndecodablePaymentMethodTypes = mobileSessionUndecodablePaymentMethodTypes
+        self.paymentMethodConfirmations = ConfirmationMetadata.servedEntries(mobileSession?.paymentMethodConfirmations ?? [])
         super.init()
     }
 

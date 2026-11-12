@@ -94,7 +94,7 @@ class PollingViewTests: XCTestCase {
                 return screen
             }.first!
             let fromMetadata = PollingViewModel(screen: screen)
-            // The bundled table's English renders the same text as the SDK's English strings
+            // The table's English renders the same text as the SDK's English strings
             XCTAssertEqual(native.instructions(timeRemaining: "0:59"), fromMetadata.instructions(timeRemaining: "0:59"), type.identifier)
             XCTAssertEqual(native.title, fromMetadata.title, type.identifier)
             XCTAssertEqual(native.cancelButtonTitle, fromMetadata.cancelButtonTitle, type.identifier)

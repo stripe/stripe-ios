@@ -58,13 +58,12 @@ final class PaymentConfirmerTests: XCTestCase {
             ]
         }
         let metadata = try! ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json).confirmation
-        return makeConfirmer(metadata: metadata, policySource: .server, type: "demo_pay")
+        return makeConfirmer(metadata: metadata, type: "demo_pay")
     }
 
-    func makeConfirmer(metadata: ConfirmationMetadata, policySource: PaymentConfirmer.PolicySource = .defaultTable, type: String) -> PaymentConfirmer {
+    func makeConfirmer(metadata: ConfirmationMetadata, type: String) -> PaymentConfirmer {
         return PaymentConfirmer(
             metadata: metadata,
-            policySource: policySource,
             paymentMethodType: type,
             apiClient: STPAPIClient(publishableKey: "pk_test"),
             performer: performer,
@@ -519,7 +518,7 @@ extension PaymentConfirmerTests: STPAuthenticationContext {
 
 // MARK: - Native types, SetupIntents and the primitives
 
-/// The engine with default-table entries: one test per primitive, SetupIntents, and the STPPaymentHandler delegate.
+/// The engine with the table's entries: one test per primitive, SetupIntents, and the STPPaymentHandler delegate.
 @MainActor
 final class PaymentConfirmerNativeTests: XCTestCase {
     let api = StubPaymentConfirmerAPI()
@@ -529,7 +528,6 @@ final class PaymentConfirmerNativeTests: XCTestCase {
     func makeConfirmer(_ type: STPPaymentMethodType) -> PaymentConfirmer {
         return PaymentConfirmer(
             metadata: ConfirmationMetadata.native(for: type)!,
-            policySource: .defaultTable,
             paymentMethodType: type.identifier,
             apiClient: STPAPIClient(publishableKey: "pk_test"),
             performer: performer,
@@ -643,7 +641,7 @@ final class PaymentConfirmerNativeTests: XCTestCase {
     }
 
     func testPixWebViewCloseLetsThePollingScreenFinish() async {
-        // Given Pix's QR next action, the customer closes the instructions while the screen keeps polling (F1)
+        // Given Pix's QR next action, the customer closes the instructions while the screen keeps polling (as STPPaymentHandler does since #7617)
         let pix = PaymentConfirmerFixtures.paymentIntent(status: "requires_action", type: "pix", nextAction: ["type": "pix_display_qr_code", "pix_display_qr_code": ["hosted_instructions_url": "https://qr.example/instructions", "expires_at": 1_900_000_000]])
         api.confirmResults = [.success(pix)]
         api.fetchResults = [.success(pix)]
@@ -773,48 +771,105 @@ final class PaymentConfirmerRoutingTests: APIStubbedTestCase {
     /// PaymentSheet doesn't retain the STPPaymentHandler it's given, so the test does.
     var paymentHandler: STPPaymentHandler?
 
-    func testOnlyServerDrivenPaymentMethodsUseTheEngineByDefault() throws {
-        // Given confirmation returns a processing DemoPay intent and a succeeded Cash App Pay intent
-        stub { $0.url?.pathComponents.last == "confirm" } response: { request in
-            let isServerDriven = RequestBodyTestHelpers.formEncodedBodyParams(from: request)["payment_method_data[type]"] == "demo_pay"
-            let json = isServerDriven
-                ? PaymentConfirmerFixtures.json(status: "processing", paymentMethodType: "demo_pay")
-                : PaymentConfirmerFixtures.json(status: "succeeded", paymentMethodType: "cashapp")
-            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
-        }
+    func testServerDrivenPaymentMethodsUseTheEngine() throws {
+        // Given confirmation returns a processing DemoPay intent
+        stubConfirm(status: "processing", paymentMethodType: "demo_pay")
         let serverDriven = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod()
         STPAnalyticsClient.sharedClient._testLogHistory = []
 
-        // When PaymentSheet confirms a server-driven payment method
-        let serverDrivenResult = confirm(paymentMethodType: .serverDriven(serverDriven))
+        // When PaymentSheet confirms the server-driven payment method, in a session with no served entries
+        let result = confirm(paymentMethodType: .serverDriven(serverDriven), elementsSession: ._testCardValue())
 
-        // Then the engine confirms it, so its processing intent completes per the spec
+        // Then the engine confirms it from its description, so its processing intent completes
         // (STPPaymentHandler fails a processing intent of a type it doesn't know)
-        guard case .completed = serverDrivenResult else {
-            return XCTFail("Expected completed, got \(serverDrivenResult)")
+        guard case .completed = result else {
+            return XCTFail("Expected completed, got \(result)")
         }
         // ...and logs the real type and the engine
-        let serverDrivenConfirmStarted = confirmStartedEvents()
-        XCTAssertEqual(serverDrivenConfirmStarted.count, 1)
-        XCTAssertEqual(serverDrivenConfirmStarted.first?["payment_method_type"] as? String, "demo_pay")
-        XCTAssertEqual(serverDrivenConfirmStarted.first?["handler"] as? String, "paymentsheet_engine")
-        XCTAssertEqual(serverDrivenConfirmStarted.first?["spec_source"] as? String, "server")
+        let confirmStarted = confirmStartedEvents()
+        XCTAssertEqual(confirmStarted.count, 1)
+        XCTAssertEqual(confirmStarted.first?["payment_method_type"] as? String, "demo_pay")
+        XCTAssertEqual(confirmStarted.first?["handler"] as? String, "paymentsheet_engine")
+        XCTAssertEqual(confirmStarted.first?["spec_source"] as? String, "server")
+    }
 
-        // When PaymentSheet confirms a native payment method whose family isn't routed
-        let routedFamilies = PaymentConfirmer.routedFamilies
-        defer { PaymentConfirmer.routedFamilies = routedFamilies }
-        PaymentConfirmer.routedFamilies.remove(.appToApp)
+    func testNativeTypeUsesTheEngineOnlyWithAServedEntry() throws {
+        // Given confirmation returns a succeeded Cash App Pay intent
+        stubConfirm(status: "succeeded", paymentMethodType: "cashapp")
+        let cashApp = try XCTUnwrap(ConfirmationMetadata.fixtureTable.entries["cashapp"])
+        let served = try servedSession(types: ["cashapp"])
+
+        // When PaymentSheet confirms Cash App Pay in a session that serves its entry
         STPAnalyticsClient.sharedClient._testLogHistory = []
-        let nativeResult = confirm(paymentMethodType: .stripe(.cashApp))
+        let servedResult = confirm(paymentMethodType: .stripe(.cashApp), elementsSession: served)
 
-        // Then STPPaymentHandler confirms it
-        guard case .completed = nativeResult else {
-            return XCTFail("Expected completed, got \(nativeResult)")
+        // Then the engine confirms it with the served entry
+        XCTAssertEqual(served.paymentMethodConfirmations["cashapp"], cashApp)
+        guard case .completed = servedResult else {
+            return XCTFail("Expected completed, got \(servedResult)")
         }
-        let nativeConfirmStarted = confirmStartedEvents()
-        XCTAssertEqual(nativeConfirmStarted.count, 1)
-        XCTAssertEqual(nativeConfirmStarted.first?["payment_method_type"] as? String, "cashapp")
-        XCTAssertNil(nativeConfirmStarted.first?["handler"])
+        XCTAssertEqual(confirmStartedEvents().first?["handler"] as? String, "paymentsheet_engine")
+
+        // When the session has no entry for it: no sidecar, or entries for other types only
+        let sessions: [(String, STPElementsSession)] = [
+            ("no mobile_session", ._testCardValue()),
+            ("other types only", try servedSession(types: ["ideal"])),
+        ]
+        for (name, elementsSession) in sessions {
+            STPAnalyticsClient.sharedClient._testLogHistory = []
+            let result = confirm(paymentMethodType: .stripe(.cashApp), elementsSession: elementsSession)
+
+            // Then STPPaymentHandler confirms it
+            guard case .completed = result else {
+                return XCTFail("Expected completed with \(name), got \(result)")
+            }
+            let confirmStarted = confirmStartedEvents()
+            XCTAssertEqual(confirmStarted.count, 1, name)
+            XCTAssertEqual(confirmStarted.first?["payment_method_type"] as? String, "cashapp", name)
+            XCTAssertNil(confirmStarted.first?["handler"], name)
+        }
+    }
+
+    func testMakePaymentConfirmerRoutesPerSession() throws {
+        let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: "pk_test"))
+        func confirmer(_ type: STPPaymentMethodType, _ elementsSession: STPElementsSession?, _ intentKind: ConfirmationMetadata.IntentKind = .paymentIntent) -> PaymentConfirmer? {
+            return PaymentSheet.makePaymentConfirmer(paymentMethodType: type, serverDrivenPaymentMethod: nil, elementsSession: elementsSession, intentKind: intentKind, paymentHandler: paymentHandler)
+        }
+        let served = try servedSession(types: ["ideal", "card", "klarna"])
+
+        // A served type uses its entry, card included
+        XCTAssertEqual(confirmer(.iDEAL, served)?.metadata, ConfirmationMetadata.fixtureTable.entries["ideal"])
+        XCTAssertEqual(confirmer(.card, served)?.metadata.performer, .stripePaymentHandler)
+        // ...a SetupIntent too, when the entry has SetupIntent rules
+        XCTAssertNotNil(confirmer(.iDEAL, served, .setupIntent))
+        // ...but not a type the session doesn't serve
+        XCTAssertNil(confirmer(.SEPADebit, served))
+        // ...and nothing without a session, like headless Link
+        XCTAssertNil(confirmer(.link, nil))
+        XCTAssertNil(confirmer(.iDEAL, nil))
+    }
+
+    func testUnusableServedEntryFallsBackToSTPPaymentHandler() throws {
+        // Given a session whose iDEAL entry has a presenter this SDK doesn't know, and whose EPS entry doesn't decode
+        var ideal = try XCTUnwrap(Self.fixtureEntries()["ideal"])
+        ideal[jsonDict: "confirm"]?["next_actions"] = [["type": "redirect_to_url", "presenter": "hologram", "return_url": "next_action", "app_to_app": "none"]]
+        var eps = try XCTUnwrap(Self.fixtureEntries()["eps"])
+        eps[jsonDict: "confirm"]?["intent_rules"] = nil
+        let klarna = try XCTUnwrap(Self.fixtureEntries()["klarna"])
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+
+        // When the session is decoded
+        let elementsSession = try decodeSession(paymentMethodConfirmations: [ideal, eps, klarna])
+
+        // Then only Klarna is served
+        XCTAssertEqual(Set(elementsSession.paymentMethodConfirmations.keys), ["klarna"])
+        // ...and both bad entries are reported
+        let dropped = STPAnalyticsClient.sharedClient._testLogHistory.filter { $0["event"] as? String == STPAnalyticEvent.paymentSheetMobileSessionPaymentMethodDropped.rawValue }
+        XCTAssertEqual(dropped.compactMap { $0["key"] as? String }, ["payment_method_confirmations", "payment_method_confirmations"])
+        XCTAssertEqual(Set(dropped.compactMap { $0["payment_method_type"] as? String }), ["ideal", "eps"])
+        XCTAssertEqual(Set(dropped.compactMap { $0["reason"] as? String }), ["decode", "unsupported_value"])
+        // ...and a dropped confirmation doesn't hide the payment method
+        XCTAssertEqual(elementsSession.mobileSessionUndecodablePaymentMethodTypes, [])
     }
 
     func testSTPAPIClientRefreshCallsTheRefreshEndpoint() async throws {
@@ -838,7 +893,37 @@ final class PaymentConfirmerRoutingTests: APIStubbedTestCase {
         XCTAssertEqual(body["client_secret"], PaymentConfirmerFixtures.clientSecret)
     }
 
-    func confirm(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentSheetResult {
+    func stubConfirm(status: String, paymentMethodType: String) {
+        stub { $0.url?.pathComponents.last == "confirm" } response: { _ in
+            return HTTPStubsResponse(jsonObject: PaymentConfirmerFixtures.json(status: status, paymentMethodType: paymentMethodType), statusCode: 200, headers: nil)
+        }
+    }
+
+    /// The table's entries, as the server sends them.
+    static func fixtureEntries() throws -> [String: [String: Any]] {
+        let url = try XCTUnwrap(Bundle(for: ConfirmationMetadataTableTests.self).url(forResource: "payment_method_confirmations", withExtension: "json"))
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
+        let entries = try XCTUnwrap(json["payment_method_confirmations"] as? [[String: Any]])
+        return Dictionary(uniqueKeysWithValues: entries.map { ($0["type"] as! String, $0) })
+    }
+
+    /// A session whose `mobile_session` serves the table's entries for `types`.
+    func servedSession(types: [String]) throws -> STPElementsSession {
+        let entries = try Self.fixtureEntries()
+        return try decodeSession(paymentMethodConfirmations: types.map { try XCTUnwrap(entries[$0]) })
+    }
+
+    /// Decodes an `elements/sessions` response with this `mobile_session.payment_method_confirmations`, as PaymentSheet does.
+    func decodeSession(paymentMethodConfirmations: [[String: Any]]) throws -> STPElementsSession {
+        let flag = PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        defer { PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = flag }
+        var json = try XCTUnwrap(STPTestUtils.jsonNamed("ElementsSession"))
+        json["mobile_session"] = ["payment_method_confirmations": paymentMethodConfirmations]
+        return try XCTUnwrap(STPElementsSession.decodedObject(fromAPIResponse: json))
+    }
+
+    func confirm(paymentMethodType: PaymentSheet.PaymentMethodType, elementsSession: STPElementsSession) -> PaymentSheetResult {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.apiClient = stubbedAPIClient()
         configuration.apiClient.publishableKey = "pk_test_123"
@@ -851,7 +936,7 @@ final class PaymentConfirmerRoutingTests: APIStubbedTestCase {
             configuration: configuration,
             authenticationContext: self,
             intent: .paymentIntent(paymentIntent),
-            elementsSession: ._testCardValue(),
+            elementsSession: elementsSession,
             paymentOption: .new(confirmParams: IntentConfirmParams(type: paymentMethodType)),
             paymentHandler: paymentHandler,
             analyticsHelper: ._testValue(),
