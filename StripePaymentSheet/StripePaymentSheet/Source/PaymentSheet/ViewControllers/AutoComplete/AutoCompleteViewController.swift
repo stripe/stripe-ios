@@ -36,7 +36,7 @@ class AutoCompleteViewController: UIViewController {
 
     private let minimumQueryLength: Int = 3
     private let indendationWidth: CGFloat = 5
-    private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
+    lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
         searchCompleter.delegate = self
         searchCompleter.resultTypes = .address
@@ -511,13 +511,31 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                         request.naturalLanguageQuery = [suggestion.title, suggestion.subtitle]
                             .filter { !$0.isEmpty }.joined(separator: ", ")
                         request.resultTypes = .address
+                        let mapKitRequestStart = Date()
                         let mapItems = try? await searchMapKit(request)
                         guard !Task.isCancelled else { return }
+                        let mapKitLatency = Date().timeIntervalSince(mapKitRequestStart)
                         #if !os(visionOS)
-                        delegate?.didSelectAddress(mapItems?.first?.placemark.asAddress)
+                        let fallbackAddress = mapItems?.first?.placemark.asAddress
                         #else
-                        delegate?.didSelectAddress(nil)
+                        let fallbackAddress: PaymentSheet.Address? = nil
                         #endif
+                        if fallbackAddress != nil {
+                            // The address now came from MapKit, not `source`'s original API-based lookup.
+                            self.currentSource = "apple"
+                            STPAnalyticsClient.sharedClient.logAddressAutocompleteSelected(
+                                addressCountryCode: selectedCountry,
+                                queryLength: queryLength,
+                                sessionToken: sessionToken,
+                                source: "apple",
+                                sessionElapsed: elapsedTimeSinceAutocompleteStart,
+                                placeId: placeId,
+                                fetchDuration: mapKitLatency,
+                                checkoutSessionID: checkoutSessionID,
+                                apiClient: configuration.apiClient
+                            )
+                        }
+                        delegate?.didSelectAddress(fallbackAddress)
                     }
                 }
             }
