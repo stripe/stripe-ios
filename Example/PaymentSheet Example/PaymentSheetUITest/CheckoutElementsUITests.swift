@@ -18,7 +18,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
-        XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["checkout_picker_Email"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
         let shippingToggle = app.switches["Collect Shipping Address"]
@@ -97,7 +97,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
-        XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["checkout_picker_Email"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
         let adaptivePricingLocationPicker = app.buttons["checkout_picker_Adaptive Pricing Location"]
         adaptivePricingLocationPicker.scrollToAndTap(in: app)
@@ -211,6 +211,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // CheckoutApplePayContext implements shipping contact collection.
         var settings = CheckoutPlayground.Settings()
         settings.integrationType = .eceOnly
+        settings.automaticPaymentMethods = false
         settings.shippingAddressCollection = false
         settings.automaticTax = false
         loadCheckoutPlayground(app, settings)
@@ -257,6 +258,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // Given a native Link checkout with a card that always requires authentication
         var settings = CheckoutPlayground.Settings()
         settings.integrationType = .eceOnly
+        settings.automaticPaymentMethods = false
         settings.linkMode = .native
         settings.currency = .eur
         settings.email = .init(source: .none)
