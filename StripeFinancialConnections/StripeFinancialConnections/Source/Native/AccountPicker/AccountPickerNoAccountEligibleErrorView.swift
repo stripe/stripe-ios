@@ -148,7 +148,8 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                     }
                 }(),
                 subtitle: subtitleFirstSentence + " " + subtitleSecondSentence,
-                contentView: nil
+                contentView: nil,
+                appearance: appearance
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
