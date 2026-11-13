@@ -3,6 +3,7 @@ MINOR
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
+* [Added] Added support for [Stripe balance](https://docs.stripe.com/payments/pay-with-balance) (public preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
 * [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
 
