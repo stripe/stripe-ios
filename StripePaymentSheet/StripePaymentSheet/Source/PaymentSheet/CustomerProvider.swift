@@ -200,6 +200,53 @@ struct CustomerProvider {
         return updatedPaymentMethod
     }
 
+    @MainActor
+    func detach(
+        paymentMethod: STPPaymentMethod,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient
+    ) {
+        // Removal is optimistic; callers update their UI without waiting for the network response.
+        switch backing {
+        case .checkoutSession(let session):
+            Task {
+                try? await apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCheckoutSession: session.id,
+                    clientSecret: session.clientSecret
+                )
+            }
+        case .customer(let customer):
+            guard let customer,
+                  let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+                logMissingEphemeralKey()
+                return
+            }
+            switch customer.customerAccessProvider {
+            case .customerSession(let clientSecret):
+                if paymentMethod.type == .card {
+                    apiClient.detachPaymentMethodRemoveDuplicates(
+                        paymentMethod.stripeId,
+                        customerId: customer.id,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                } else {
+                    apiClient.detachPaymentMethod(
+                        paymentMethod.stripeId,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                }
+            case .legacyCustomerEphemeralKey:
+                apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCustomerUsing: ephemeralKey
+                ) { _ in }
+            }
+        }
+    }
+
     private func logMissingEphemeralKey() {
         let errorAnalytic = ErrorAnalytic(
             event: .unexpectedPaymentSheetError,

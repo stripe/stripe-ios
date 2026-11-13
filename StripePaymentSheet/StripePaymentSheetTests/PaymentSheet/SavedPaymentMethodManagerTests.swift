@@ -326,8 +326,12 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let expectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                   ephemeralKey: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testValue(paymentMethodTypes: ["card"]), intent: ._testValue())
-        sut.detach(paymentMethod: paymentMethod)
+        let sut = CustomerProvider(customer: configuration.customer)
+        sut.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            apiClient: configuration.apiClient
+        )
 
         wait(for: [expectation], timeout: 5.0)
     }
@@ -355,8 +359,12 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
                                              ],
                                          ])
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: ._testValue())
-        sut.detach(paymentMethod: paymentMethod)
+        let sut = CustomerProvider(customer: configuration.customer)
+        sut.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
 
         wait(for: [listPaymentMethodsExpectation, detachExpectation], timeout: 5.0)
     }
@@ -370,18 +378,19 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
 
         let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
 
-        let sut = SavedPaymentMethodManager(
-            configuration: configuration,
+        let sut = CustomerProvider(checkoutSession: checkoutSession.makePublicSession())
+        sut.detach(
+            paymentMethod: paymentMethod,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkout(checkoutSession.makePublicSession())
+            apiClient: configuration.apiClient
         )
-        sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [detachExpectation], timeout: 5.0)
     }
 }
 
 extension SavedPaymentMethodManagerTests {
+
     // MARK: HTTP Stubs
 
     func stubRequest(urlContains: String,
