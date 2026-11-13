@@ -226,30 +226,19 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - Merchant Capabilities Tests
 
-    func testNormalizeEMVCapabilityForChinaUnionPay_addsEMVForChinaUnionPay() {
-        let paymentRequest = PKPaymentRequest()
-        paymentRequest.supportedNetworks = [.visa, .chinaUnionPay]
-        paymentRequest.merchantCapabilities = [.capability3DS, .capabilityCredit, .capabilityDebit]
+    func testCreate_removesEMVWhenBrandFilterRemovesChinaUnionPay() {
+        // Given UnionPay is enabled globally but excluded by PaymentSheet's brand filter
+        let originalNetworks = StripeAPI.additionalEnabledApplePayNetworks
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = originalNetworks }
+        configuration.cardBrandAcceptance = .allowed(brands: [.visa])
 
-        STPApplePayContext.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
+        // When PaymentSheet hands the filtered request to the Apple Pay context
+        let paymentRequest = paymentRequestAfterCustomHandler { $0 }
 
-        XCTAssertEqual(
-            paymentRequest.merchantCapabilities,
-            [.capability3DS, .capabilityEMV, .capabilityCredit, .capabilityDebit]
-        )
-    }
-
-    func testNormalizeEMVCapabilityForChinaUnionPay_removesEMVWithoutChinaUnionPay() {
-        let paymentRequest = PKPaymentRequest()
-        paymentRequest.supportedNetworks = [.visa]
-        paymentRequest.merchantCapabilities = [.capability3DS, .capabilityEMV, .capabilityCredit, .capabilityDebit]
-
-        STPApplePayContext.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
-
-        XCTAssertEqual(
-            paymentRequest.merchantCapabilities,
-            [.capability3DS, .capabilityCredit, .capabilityDebit]
-        )
+        // Then the builder's EMV capability is removed with UnionPay
+        XCTAssertEqual(paymentRequest.supportedNetworks, [.visa])
+        XCTAssertEqual(paymentRequest.merchantCapabilities, .capability3DS)
     }
 
     func testCreate_normalizesMerchantCapabilitiesAfterHandlerAddsChinaUnionPay() {
