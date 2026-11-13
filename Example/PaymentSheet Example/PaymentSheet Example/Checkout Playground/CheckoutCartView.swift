@@ -17,6 +17,7 @@ struct CheckoutCartView: View {
 
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var loadError: Error?
     @State private var confirmResult: CheckoutElementsController.ConfirmResult?
     @State private var showsCheckoutDetails = false
 
@@ -57,11 +58,16 @@ struct CheckoutCartView: View {
                     VStack {
                         Text("Failed to load cart.")
                             .font(.headline)
-                        if let errorMessage {
-                            Text(errorMessage)
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
+                        if let loadError {
+                            ScrollView {
+                                Text("Localized: \(loadError.localizedDescription)\n\nDebug: \(String(reflecting: loadError))")
+                                    .font(.footnote.monospaced())
+                                    .foregroundColor(.secondary)
+                                    .textSelection(.enabled)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .frame(maxHeight: 300)
+                            .padding(.horizontal)
                         }
                         Button("Retry") {
                             Task { await loadCheckout() }
@@ -153,6 +159,7 @@ struct CheckoutCartView: View {
     private func loadCheckout() async {
         isLoading = true
         errorMessage = nil
+        loadError = nil
         do {
             var config = CheckoutElementsController.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.apiClient = diagnostics.makeAPIClient(
@@ -197,6 +204,7 @@ struct CheckoutCartView: View {
             checkout = try await CheckoutElementsController(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
+            loadError = error
         }
         isLoading = false
     }
