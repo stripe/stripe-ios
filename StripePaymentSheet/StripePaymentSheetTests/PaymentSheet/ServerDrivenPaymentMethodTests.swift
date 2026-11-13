@@ -23,9 +23,9 @@ enum ServerDrivenPaymentMethodFixtures {
         return URL(string: "https://b.stripecdn.com/ocs-mobile/assets/pm/ios/\(name)-\(scale)x-abc123.png")!
     }
 
-    /// Returns an `IconImage` with a source at each of `scales`, at `iconURL(name, scale:)`.
-    static func iconImageJSON(_ name: String, scales: [Int] = [2, 3]) -> [String: Any] {
-        return ["sources": scales.map { ["url": iconURL(name, scale: $0).absoluteString, "scale": $0] as [String: Any] }]
+    /// Returns `IconFile`s at each of `scales`, at `iconURL(name, scale:)`.
+    static func iconFilesJSON(_ name: String, scales: [Int] = [2, 3]) -> [[String: Any]] {
+        return scales.map { ["url": iconURL(name, scale: $0).absoluteString, "scale": $0] as [String: Any] }
     }
 
     /// Returns a described DemoPay entry. `modify` changes it.
@@ -36,7 +36,7 @@ enum ServerDrivenPaymentMethodFixtures {
                 "label": "Demo Pay",
                 "subtitle": "Pay with Demo Pay",
                 "icon": [
-                    "light": iconImageJSON(type),
+                    "light": iconFilesJSON(type),
                     "rendering": "original",
                 ] as [String: Any],
             ] as [String: Any],
@@ -62,8 +62,8 @@ enum ServerDrivenPaymentMethodFixtures {
     static func lightAndDarkJSON(type: String = "demo_pay", rendering: String = "template") -> [String: Any] {
         return json(type: type) {
             $0[jsonDict: "display"]?["icon"] = [
-                "light": iconImageJSON(type),
-                "dark": iconImageJSON("\(type)_dark"),
+                "light": iconFilesJSON(type),
+                "dark": iconFilesJSON("\(type)_dark"),
                 "rendering": rendering,
             ] as [String: Any]
         }
@@ -92,7 +92,7 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         XCTAssertEqual(paymentMethod.type, "demo_pay")
         XCTAssertEqual(paymentMethod.label, "Demo Pay")
         XCTAssertEqual(paymentMethod.subtitle, "Pay with Demo Pay")
-        XCTAssertEqual(paymentMethod.icon.light.sources, [
+        XCTAssertEqual(paymentMethod.icon.light, [
             .init(url: ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: 2), scale: 2),
             .init(url: ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: 3), scale: 3),
         ])
@@ -104,10 +104,11 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         // Each entry has one value this SDK can't render, and throws that value
         let cases: [(String, (inout [String: Any]) -> Void)] = [
             ("icon_rendering:unparsable", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["rendering"] = "vector" }),
-            ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = ["sources": [["url": "http://js.stripe.com/icon.png", "scale": 2]]] }),
-            ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = ["sources": [["url": "", "scale": 2]]] }),
-            ("icon:invalid_scale", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = ["sources": [["url": "https://js.stripe.com/icon.png", "scale": 0]]] }),
-            ("icon:no_sources", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = ["sources": [] as [Any]] }),
+            ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = [["url": "http://js.stripe.com/icon.png", "scale": 2]] }),
+            ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = [["url": "", "scale": 2]] }),
+            ("icon:invalid_scale", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = [["url": "https://js.stripe.com/icon.png", "scale": 0]] }),
+            ("icon:no_files", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = [] as [Any] }),
+            ("icon:no_files", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = [] as [Any] }),
             ("type:empty", { $0["type"] = "" }),
         ]
         for (expectedValue, modify) in cases {
@@ -118,37 +119,38 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         }
     }
 
-    func testIconSource_picksSmallestScaleAtOrAboveScreenScale() {
-        func image(_ scales: [Int]) -> ServerDrivenPaymentMethod.Icon.Image {
-            return .init(sources: scales.map { .init(url: ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: $0), scale: $0) })
+    func testIconFile_picksSmallestScaleAtOrAboveScreenScale() {
+        func file(_ scales: [Int], forScreenScale screenScale: CGFloat) -> ServerDrivenPaymentMethod.Icon.File {
+            let files = scales.map { ServerDrivenPaymentMethod.Icon.File(url: ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: $0), scale: $0) }
+            return ServerDrivenPaymentMethod.Icon.file(in: files, forScreenScale: screenScale)
         }
-        // Given 2x and 3x sources, a 2x and a 3x screen each get their own scale
-        XCTAssertEqual(image([2, 3]).source(forScreenScale: 2).scale, 2)
-        XCTAssertEqual(image([2, 3]).source(forScreenScale: 3).scale, 3)
-        // ...a 1x screen gets the smallest source above it
-        XCTAssertEqual(image([2, 3]).source(forScreenScale: 1).scale, 2)
-        // ...and a screen above every source gets the largest
-        XCTAssertEqual(image([2, 3]).source(forScreenScale: 4).scale, 3)
+        // Given 2x and 3x files, a 2x and a 3x screen each get their own scale
+        XCTAssertEqual(file([2, 3], forScreenScale: 2).scale, 2)
+        XCTAssertEqual(file([2, 3], forScreenScale: 3).scale, 3)
+        // ...a 1x screen gets the smallest file above it
+        XCTAssertEqual(file([2, 3], forScreenScale: 1).scale, 2)
+        // ...and a screen above every file gets the largest
+        XCTAssertEqual(file([2, 3], forScreenScale: 4).scale, 3)
 
         // Given a missing scale, a 3x screen with only 2x gets 2x, and a 2x screen with only 3x gets 3x
-        XCTAssertEqual(image([2]).source(forScreenScale: 3).scale, 2)
-        XCTAssertEqual(image([3]).source(forScreenScale: 2).scale, 3)
-        // ...whatever order the sources are in
-        XCTAssertEqual(image([3, 1, 2]).source(forScreenScale: 1.5).url, ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: 2))
+        XCTAssertEqual(file([2], forScreenScale: 3).scale, 2)
+        XCTAssertEqual(file([3], forScreenScale: 2).scale, 3)
+        // ...whatever order the files are in
+        XCTAssertEqual(file([3, 1, 2], forScreenScale: 1.5).url, ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: 2))
     }
 
     func testIcon_picksDarkForDarkBackground() throws {
-        // Given an icon with light and dark images
+        // Given an icon with light and dark files
         let icon = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.lightAndDarkJSON()).icon
 
-        // Then a dark background uses the dark image, and a light one the light image
-        XCTAssertEqual(icon.image(forDarkBackground: true).sources.first?.url, ServerDrivenPaymentMethodFixtures.iconURL("demo_pay_dark", scale: 2))
-        XCTAssertEqual(icon.image(forDarkBackground: false), icon.light)
+        // Then a dark background uses the dark files, and a light one the light files
+        XCTAssertEqual(icon.file(forDarkBackground: true, screenScale: 2).url, ServerDrivenPaymentMethodFixtures.iconURL("demo_pay_dark", scale: 2))
+        XCTAssertEqual(icon.files(forDarkBackground: false), icon.light)
 
-        // Given an icon with only a light image, both backgrounds use it
+        // Given an icon with only light files, both backgrounds use them
         let lightOnly = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod().icon
-        XCTAssertEqual(lightOnly.image(forDarkBackground: true), lightOnly.light)
-        XCTAssertEqual(lightOnly.image(forDarkBackground: false), lightOnly.light)
+        XCTAssertEqual(lightOnly.files(forDarkBackground: true), lightOnly.light)
+        XCTAssertEqual(lightOnly.files(forDarkBackground: false), lightOnly.light)
     }
 
     func testIcon_templateRenderingTints() throws {
@@ -166,8 +168,8 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         XCTAssertEqual(imageView.tintColor, .black)
     }
 
-    func testMakeImage_decodesPickedSourceAtItsScale() throws {
-        // Given an icon with 2x and 3x sources
+    func testMakeImage_decodesPickedFileAtItsScale() throws {
+        // Given an icon with 2x and 3x files
         let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod()
         let downloadManager = makeDownloadManager()
         var requestedURLs: [URL] = []
@@ -189,7 +191,7 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
             }, downloadManager: downloadManager, screenScale: CGFloat(scale))
             wait(for: [downloaded], timeout: 5)
 
-            // Then it fetches that source as is, and decodes it at the source's scale, so it fills the 30x20pt box
+            // Then it fetches that file as is, and decodes it at the file's scale, so it fills the 30x20pt box
             XCTAssertEqual(requestedURLs.last, ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: scale))
             XCTAssertEqual(image?.scale, CGFloat(scale))
             XCTAssertEqual(image?.size, CGSize(width: 30, height: 20))
@@ -260,8 +262,8 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         XCTAssertTrue(analyticsClient._testLogHistory.isEmpty)
     }
 
-    func testPrefetchIcons_downloadsPickedLightAndDarkSources() throws {
-        // Given an icon with light and dark images at 2x and 3x, and a CDN that records what's requested
+    func testPrefetchIcons_downloadsPickedLightAndDarkFiles() throws {
+        // Given an icon with light and dark files at 2x and 3x, and a CDN that records what's requested
         let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.lightAndDarkJSON())
         let downloadManager = makeDownloadManager()
         let lock = NSLock()
@@ -278,7 +280,7 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         paymentMethod.prefetchIcons(downloadManager: downloadManager, screenScale: 3)
         wait(for: [requested], timeout: 5)
 
-        // Then the 3x light and dark sources are fetched as is, without a proxy
+        // Then the 3x light and dark files are fetched as is, without a proxy
         XCTAssertEqual(lock.withLock { requestedURLs }, [
             ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: 3),
             ServerDrivenPaymentMethodFixtures.iconURL("demo_pay_dark", scale: 3),
