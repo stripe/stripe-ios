@@ -137,6 +137,12 @@ class InstitutionPickerViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    /// Updates the manifest after a later pane changed the session, such as by acquiring consent,
+    /// so that selecting another institution is based on the latest session state.
+    func updateManifest(_ manifest: FinancialConnectionsSessionManifest) {
+        dataSource.manifest = manifest
+    }
+
     // MARK: - UIViewController
 
     override func viewDidLoad() {

@@ -910,6 +910,12 @@ extension NativeFlowController: StreamlinedConsentViewControllerDelegate {
             didReceiveEvent: FinancialConnectionsEventPayload(name: .consentAcquired)
         )
         dataManager.manifest = manifest
+
+        // The institution picker stays below streamlined consent on the navigation stack. Update it
+        // so that selecting another institution creates an auth session instead of selecting it again.
+        navigationController.viewControllers
+            .compactMap { $0 as? InstitutionPickerViewController }
+            .forEach { $0.updateManifest(manifest) }
     }
 }
 
