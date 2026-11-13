@@ -15,12 +15,16 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         app.buttons["Reset"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["checkout_picker_Customer"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Returning"].waitForExistenceAndTap())
-        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
-        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
-        XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
+        // Drag along the leading edge so the gesture never starts on the email text field or a control.
+        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.5))
+        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.25))
+        XCTAssertTrue(app.buttons["checkout_picker_Email"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
         scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
+        // Use explicit card payment method types, which this test was written against.
+        let automaticPaymentMethodsToggle = app.switches["Automatic Payment Methods"]
+        automaticPaymentMethodsToggle.scrollToAndTap(in: app)
+        XCTAssertEqual(automaticPaymentMethodsToggle.value as? String, "0")
         let shippingToggle = app.switches["Collect Shipping Address"]
         shippingToggle.scrollToAndTap(in: app)
         XCTAssertEqual(shippingToggle.value as? String, "0")
@@ -94,15 +98,23 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         app.buttons["Reset"].waitForExistenceAndTap()
         app.buttons["checkout_picker_Customer"].waitForExistenceAndTap()
         app.buttons["New"].waitForExistenceAndTap()
-        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
-        scrollStart.press(forDuration: 0.1, thenDragTo: scrollEnd)
-        XCTAssertTrue(app.buttons["checkout_picker_Email source"].waitForExistenceAndTap())
+        // Drag along the leading edge so the gesture never starts on the email text field or a control.
+        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.5))
+        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.25))
+        XCTAssertTrue(app.buttons["checkout_picker_Email"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Server — Customer"].waitForExistenceAndTap())
+        // Wait for the Email menu to close; a tap during its dismissal is dropped.
+        XCTAssertTrue(app.buttons["Server — Customer"].waitForNonExistence(timeout: 5))
         let adaptivePricingLocationPicker = app.buttons["checkout_picker_Adaptive Pricing Location"]
         adaptivePricingLocationPicker.scrollToAndTap(in: app)
         XCTAssertTrue(app.buttons["Germany (DE)"].waitForExistenceAndTap())
         XCTAssertTrue(adaptivePricingLocationPicker.label.contains("Germany (DE)"))
+        // Wait for the location menu to close. The picker's own label is now "Germany (DE)", so check another item.
+        XCTAssertTrue(app.buttons["France (FR)"].waitForNonExistence(timeout: 5))
+        // Use explicit card payment method types, which this test was written against.
+        let automaticPaymentMethodsToggle = app.switches["Automatic Payment Methods"]
+        automaticPaymentMethodsToggle.scrollToAndTap(in: app)
+        XCTAssertEqual(automaticPaymentMethodsToggle.value as? String, "0")
         app.buttons["Create Checkout Session"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 15))
@@ -211,6 +223,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // CheckoutApplePayContext implements shipping contact collection.
         var settings = CheckoutPlayground.Settings()
         settings.integrationType = .eceOnly
+        settings.automaticPaymentMethods = false
         settings.shippingAddressCollection = false
         settings.automaticTax = false
         loadCheckoutPlayground(app, settings)
@@ -257,6 +270,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         // Given a native Link checkout with a card that always requires authentication
         var settings = CheckoutPlayground.Settings()
         settings.integrationType = .eceOnly
+        settings.automaticPaymentMethods = false
         settings.linkMode = .native
         settings.currency = .eur
         settings.email = .init(source: .none)
