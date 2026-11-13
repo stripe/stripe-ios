@@ -632,6 +632,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             savedPaymentMethodAccessoryType: .none,
             featuredInstitutionsLoader: ._testValue()
         )
+        // `host` makes the view a window's root, which adds a status bar safe area inset.
+        // Ignore it so the hosted layout matches the measured height.
+        embeddedView.insetsLayoutMarginsFromSafeArea = false
         embeddedView.autosizeHeight(width: 300)
         let containerView = UIView()
         containerView.addAndPinSubview(embeddedView)
@@ -989,6 +992,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
+        // `host` makes the view a window's root, which adds a status bar safe area inset.
+        // Ignore it so the hosted layout matches the measured height.
+        embeddedView.insetsLayoutMarginsFromSafeArea = false
         embeddedView.autosizeHeight(width: 300)
         let containerView = UIView()
         containerView.addAndPinSubview(embeddedView)
