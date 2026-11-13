@@ -30,6 +30,12 @@ final class SpinnerView: UIView {
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+        if appearance?.colors == .link {
+            NSLayoutConstraint.activate([
+                imageView.widthAnchor.constraint(equalToConstant: 24),
+                imageView.heightAnchor.constraint(equalToConstant: 24),
+            ])
+        }
 
         if shouldStartAnimating {
             startAnimating()

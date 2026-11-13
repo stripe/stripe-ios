@@ -210,13 +210,19 @@ struct PaymentSheetTestPlayground: View {
                                     }
                                 }
                                 SearchableSettingView(setting: $playgroundController.settings.apmsEnabled, searchText: $searchText)
-                                if playgroundController.settings.apmsEnabled == .off {
-                                    SearchableView(searchableName: "Automatic PMs", searchText: $searchText) {
-                                        TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
-                                            .autocapitalization(.none)
-                                            .autocorrectionDisabled()
-                                    }
-                                }
+                            }
+                        }
+                        SearchableView(searchableName: "LPM Scenarios", searchText: $searchText) {
+                            HStack {
+                                Text("LPM Scenarios")
+                                    .font(.subheadline)
+                                Spacer()
+                                Button {
+                                    playgroundController.lpmScenariosTapped()
+                                } label: {
+                                    Text("Choose LPM")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
                             }
                         }
                         SearchableView(searchableName: "Payment Method Options", searchText: $searchText) {
@@ -450,14 +456,6 @@ struct PaymentSheetTestPlayground: View {
                 playgroundController.settings.customerMode = .guest
             }
             playgroundController.settings.linkEnabledMode = newMode
-        }
-    }
-
-    var supportedPaymentMethodsBinding: Binding<String> {
-        Binding<String> {
-            return playgroundController.settings.supportedPaymentMethods ?? ""
-        } set: { newString in
-            playgroundController.settings.supportedPaymentMethods = newString
         }
     }
 
