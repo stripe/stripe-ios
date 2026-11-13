@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Injectible configuration for Link behavior and content.
+/// Injectable configuration for Link behavior and content.
 @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview)
 public struct LinkConfiguration {
 
@@ -16,6 +16,9 @@ public struct LinkConfiguration {
 
     /// Whether to allow the user to log out. When `false`, the logout menu button will be hidden.
     @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public let allowLogout: Bool
+
+    /// The card brands accepted by native Link in passthrough mode. This filtering is client-side only.
+    @_spi(InternalOnlyAPI) public let cardBrandAcceptance: PaymentSheet.CardBrandAcceptance
 
     /// The payment method types to support in the Link sheet. If `nil` or empty, all available types are shown.
     @_spi(LinkControllerPreview) public let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
@@ -43,12 +46,15 @@ public struct LinkConfiguration {
     /// - Parameters:
     ///   - hintMessage: Custom hint message to display in the wallet view. If `nil`, no hint will be shown.
     ///   - allowLogout: Whether to allow the user to log out. When `false`, the logout menu button will be hidden. Defaults to `true`.
+    ///   - cardBrandAcceptance: The card brands accepted in passthrough mode. Defaults to accepting all supported brands.
     @_spi(InternalOnlyAPI) public init(
         hintMessage: String? = nil,
-        allowLogout: Bool = true
+        allowLogout: Bool = true,
+        cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
     ) {
         self.hintMessage = hintMessage
         self.allowLogout = allowLogout
+        self.cardBrandAcceptance = cardBrandAcceptance
         self.supportedPaymentMethodTypes = nil
         self.paymentMethodTypes = nil
         self.merchantDisplayName = nil
@@ -77,6 +83,7 @@ public struct LinkConfiguration {
     ) {
         self.hintMessage = nil
         self.allowLogout = allowLogout
+        self.cardBrandAcceptance = .all
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
         self.paymentMethodTypes = paymentMethodTypes
         self.merchantDisplayName = merchantDisplayName
