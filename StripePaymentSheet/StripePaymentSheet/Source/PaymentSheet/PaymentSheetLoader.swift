@@ -132,7 +132,7 @@ final class PaymentSheetLoader {
             let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
             // Fire-and-forget fetch of server-driven icons, so rows and the PS.FC and embedded PaymentOptionDisplayData images are usually cached.
             for case .serverDriven(let serverDrivenPaymentMethod) in paymentMethodTypes {
-                serverDrivenPaymentMethod.prefetchIcons(iconStyle: configuration.appearance.iconStyle)
+                serverDrivenPaymentMethod.prefetchIcons()
             }
 
             // Assert if using konbini or blik with confirmation tokens

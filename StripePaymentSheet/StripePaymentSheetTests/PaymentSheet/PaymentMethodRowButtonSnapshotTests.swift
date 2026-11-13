@@ -245,33 +245,17 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     }
 
     func testPaymentMethodRowButton_serverDriven() {
-        // Given DemoPay with light and dark icons, which the image proxy returns 30x20pt at the screen's scale
-        let lightIconURL = URL(string: "https://b.stripecdn.com/ocs-mobile/assets/pm/demo_pay.png")!
-        let darkIconURL = URL(string: "https://b.stripecdn.com/ocs-mobile/assets/pm/demo_pay_dark.png")!
-        let dpr = StripeImageProxy.screenDPR
-        func stubIcon(_ url: URL, color: UIColor) {
-            let proxyURL = StripeImageProxy.url(for: url, format: .png, height: ServerDrivenPaymentMethod.iconHeight, dpr: dpr)
-            let format = UIGraphicsImageRendererFormat()
-            format.scale = 1
-            let size = CGSize(width: 30 * dpr, height: 20 * dpr)
-            let iconData = UIGraphicsImageRenderer(size: size, format: format).pngData { _ in
-                color.setFill()
-                UIBezierPath(roundedRect: CGRect(origin: .zero, size: size), cornerRadius: CGFloat(4 * dpr)).fill()
-            }
-            stub(condition: { $0.url == proxyURL }) { _ in
-                HTTPStubsResponse(data: iconData, statusCode: 200, headers: nil)
+        // Given DemoPay with light and dark icons at 2x and 3x, each 30x20pt at its scale
+        for scale in [2, 3] {
+            for (name, color) in [("demo_pay", UIColor.systemIndigo), ("demo_pay_dark", .systemOrange)] {
+                let url = ServerDrivenPaymentMethodFixtures.iconURL(name, scale: scale)
+                stub(condition: { $0.url == url }) { _ in
+                    HTTPStubsResponse(data: ServerDrivenPaymentMethodFixtures.iconData(scale: scale, color: color), statusCode: 200, headers: nil)
+                }
             }
         }
-        stubIcon(lightIconURL, color: .systemIndigo)
-        stubIcon(darkIconURL, color: .systemOrange)
         addTeardownBlock { HTTPStubs.removeAllStubs() }
-        let paymentMethod = try! ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.json {
-            $0[jsonDict: "display"]?["icon"] = [
-                "light": ["url": lightIconURL.absoluteString],
-                "dark": ["url": darkIconURL.absoluteString],
-                "rendering": "original",
-            ] as [String: Any]
-        })
+        let paymentMethod = try! ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.lightAndDarkJSON(rendering: "original"))
 
         // When its row is made and the light icon downloads
         let rowButton = RowButton.makeForPaymentMethodType(
@@ -283,7 +267,10 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             shouldAnimateOnPress: false,
             didTap: { _ in }
         )
-        let downloaded = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in rowButton.imageView.image?.size == CGSize(width: 30, height: 20) }, object: nil)
+        // The blank placeholder is also 30x20pt, so wait for the image to change
+        let downloaded = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            rowButton.imageView.image.map { $0 !== ServerDrivenPaymentMethod.blankIcon && $0.size == CGSize(width: 30, height: 20) } ?? false
+        }, object: nil)
         wait(for: [downloaded], timeout: 5)
 
         // Then the row shows the server's label, subtitle and light icon, filling the 30x20pt icon box

@@ -355,9 +355,6 @@ class DownloadManagerTest: APIStubbedTestCase {
         // Then it's 16x16 points, whatever the screen's scale
         XCTAssertEqual(image.scale, 3)
         XCTAssertEqual(image.size, CGSize(width: 16, height: 16))
-        // ...and a cached copy requested at another scale uses that scale
-        let cachedImage = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil, scale: 2)
-        XCTAssertEqual(cachedImage.size, CGSize(width: 24, height: 24))
     }
 
     private func validImageData() -> Data {

@@ -83,7 +83,7 @@ extension DownloadManager {
             }
         }
         // Immediately return the cached image or a placeholder. When the download operation completes `updateHandler` will be called with the downloaded image.
-        return cachedImage.map { $0.withScale(scale) } ?? placeholder
+        return cachedImage ?? placeholder
     }
 
     /// Downloads an image from a provided URL asynchronously.
@@ -177,13 +177,5 @@ private extension UIImage {
         }
 
         return image
-    }
-
-    /// Returns this image at `scale`, for an image cached by an earlier request for the same URL at another scale.
-    func withScale(_ scale: CGFloat?) -> UIImage {
-        guard let scale, scale != self.scale, let cgImage else {
-            return self
-        }
-        return UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
     }
 }

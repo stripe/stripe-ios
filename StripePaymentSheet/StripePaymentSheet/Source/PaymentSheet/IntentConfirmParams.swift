@@ -102,8 +102,7 @@ final class IntentConfirmParams {
             params.rawTypeString = externalPaymentMethod.type
             self.init(params: params, type: type)
         case .serverDriven(let serverDrivenPaymentMethod):
-            // The SDK has no `STPPaymentMethodType` for the type, or the server's description wins over it. Like an
-            // external payment method, `STPPaymentHandler` confirms it with its default handling for `.unknown`.
+            // This is temporary until we support the new server-driven confirmation spec
             let params = STPPaymentMethodParams(type: .unknown)
             params.rawTypeString = serverDrivenPaymentMethod.type
             self.init(params: params, type: type)

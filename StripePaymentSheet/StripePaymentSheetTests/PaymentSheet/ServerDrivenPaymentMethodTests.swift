@@ -18,7 +18,15 @@ import XCTest
 
 /// Described `payment_method_availability.payment_methods` entries for tests.
 enum ServerDrivenPaymentMethodFixtures {
-    static let lightIconURL = "https://b.stripecdn.com/ocs-mobile/assets/pm/demo_pay.png"
+    /// Returns the URL of `name`'s icon at `scale`, like the server's content-hashed icon URLs.
+    static func iconURL(_ name: String, scale: Int) -> URL {
+        return URL(string: "https://b.stripecdn.com/ocs-mobile/assets/pm/ios/\(name)-\(scale)x-abc123.png")!
+    }
+
+    /// Returns an `IconImage` with a source at each of `scales`, at `iconURL(name, scale:)`.
+    static func iconImageJSON(_ name: String, scales: [Int] = [2, 3]) -> [String: Any] {
+        return ["sources": scales.map { ["url": iconURL(name, scale: $0).absoluteString, "scale": $0] as [String: Any] }]
+    }
 
     /// Returns a described DemoPay entry. `modify` changes it.
     static func json(type: String = "demo_pay", _ modify: (inout [String: Any]) -> Void = { _ in }) -> [String: Any] {
@@ -28,7 +36,7 @@ enum ServerDrivenPaymentMethodFixtures {
                 "label": "Demo Pay",
                 "subtitle": "Pay with Demo Pay",
                 "icon": [
-                    "light": ["url": lightIconURL],
+                    "light": iconImageJSON(type),
                     "rendering": "original",
                 ] as [String: Any],
             ] as [String: Any],
@@ -50,16 +58,25 @@ enum ServerDrivenPaymentMethodFixtures {
         return try ServerDrivenPaymentMethod(type: entry.type, display: XCTUnwrap(entry.display))
     }
 
-    /// Returns an entry whose icon has every variant, at https://js.stripe.com/<variant>.png.
-    static func allVariantsJSON() -> [String: Any] {
-        return json {
+    /// Returns a DemoPay entry with light and dark icons, named `<type>` and `<type>_dark`.
+    static func lightAndDarkJSON(type: String = "demo_pay", rendering: String = "template") -> [String: Any] {
+        return json(type: type) {
             $0[jsonDict: "display"]?["icon"] = [
-                "light": ["url": "https://js.stripe.com/light.png"],
-                "dark": ["url": "https://js.stripe.com/dark.png"],
-                "outlined_light": ["url": "https://js.stripe.com/outlined_light.png"],
-                "outlined_dark": ["url": "https://js.stripe.com/outlined_dark.png"],
-                "rendering": "template",
+                "light": iconImageJSON(type),
+                "dark": iconImageJSON("\(type)_dark"),
+                "rendering": rendering,
             ] as [String: Any]
+        }
+    }
+
+    /// Returns `scale`x PNG data for a 30x20pt icon, filled with `color`.
+    static func iconData(scale: Int, color: UIColor = .systemIndigo) -> Data {
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let size = CGSize(width: 30 * scale, height: 20 * scale)
+        return UIGraphicsImageRenderer(size: size, format: format).pngData { _ in
+            color.setFill()
+            UIBezierPath(roundedRect: CGRect(origin: .zero, size: size), cornerRadius: CGFloat(4 * scale)).fill()
         }
     }
 }
@@ -75,7 +92,11 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         XCTAssertEqual(paymentMethod.type, "demo_pay")
         XCTAssertEqual(paymentMethod.label, "Demo Pay")
         XCTAssertEqual(paymentMethod.subtitle, "Pay with Demo Pay")
-        XCTAssertEqual(paymentMethod.icon.light, .init(url: URL(string: ServerDrivenPaymentMethodFixtures.lightIconURL)!))
+        XCTAssertEqual(paymentMethod.icon.light.sources, [
+            .init(url: ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: 2), scale: 2),
+            .init(url: ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: 3), scale: 3),
+        ])
+        XCTAssertNil(paymentMethod.icon.dark)
         XCTAssertFalse(paymentMethod.icon.isTemplate)
     }
 
@@ -83,8 +104,10 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         // Each entry has one value this SDK can't render, and throws that value
         let cases: [(String, (inout [String: Any]) -> Void)] = [
             ("icon_rendering:unparsable", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["rendering"] = "vector" }),
-            ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?[jsonDict: "light"]?["url"] = "http://js.stripe.com/icon.png" }),
-            ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = ["url": ""] }),
+            ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = ["sources": [["url": "http://js.stripe.com/icon.png", "scale": 2]]] }),
+            ("icon:invalid_url", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = ["sources": [["url": "", "scale": 2]]] }),
+            ("icon:invalid_scale", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = ["sources": [["url": "https://js.stripe.com/icon.png", "scale": 0]]] }),
+            ("icon:no_sources", { $0[jsonDict: "display"]?[jsonDict: "icon"]?["light"] = ["sources": [] as [Any]] }),
             ("type:empty", { $0["type"] = "" }),
         ]
         for (expectedValue, modify) in cases {
@@ -95,120 +118,196 @@ class ServerDrivenPaymentMethodTests: XCTestCase {
         }
     }
 
-    func testIcon_fallsBackToLight() throws {
-        // Given an icon with only a light image
-        let icon = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod().icon
+    func testIconSource_picksSmallestScaleAtOrAboveScreenScale() {
+        func image(_ scales: [Int]) -> ServerDrivenPaymentMethod.Icon.Image {
+            return .init(sources: scales.map { .init(url: ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: $0), scale: $0) })
+        }
+        // Given 2x and 3x sources, a 2x and a 3x screen each get their own scale
+        XCTAssertEqual(image([2, 3]).source(forScreenScale: 2).scale, 2)
+        XCTAssertEqual(image([2, 3]).source(forScreenScale: 3).scale, 3)
+        // ...a 1x screen gets the smallest source above it
+        XCTAssertEqual(image([2, 3]).source(forScreenScale: 1).scale, 2)
+        // ...and a screen above every source gets the largest
+        XCTAssertEqual(image([2, 3]).source(forScreenScale: 4).scale, 3)
 
-        // Then every background and style uses it
-        for forDarkBackground in [false, true] {
-            for iconStyle in [PaymentSheet.Appearance.IconStyle.filled, .outlined] {
-                XCTAssertEqual(icon.image(forDarkBackground: forDarkBackground, iconStyle: iconStyle), icon.light)
+        // Given a missing scale, a 3x screen with only 2x gets 2x, and a 2x screen with only 3x gets 3x
+        XCTAssertEqual(image([2]).source(forScreenScale: 3).scale, 2)
+        XCTAssertEqual(image([3]).source(forScreenScale: 2).scale, 3)
+        // ...whatever order the sources are in
+        XCTAssertEqual(image([3, 1, 2]).source(forScreenScale: 1.5).url, ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: 2))
+    }
+
+    func testIcon_picksDarkForDarkBackground() throws {
+        // Given an icon with light and dark images
+        let icon = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.lightAndDarkJSON()).icon
+
+        // Then a dark background uses the dark image, and a light one the light image
+        XCTAssertEqual(icon.image(forDarkBackground: true).sources.first?.url, ServerDrivenPaymentMethodFixtures.iconURL("demo_pay_dark", scale: 2))
+        XCTAssertEqual(icon.image(forDarkBackground: false), icon.light)
+
+        // Given an icon with only a light image, both backgrounds use it
+        let lightOnly = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod().icon
+        XCTAssertEqual(lightOnly.image(forDarkBackground: true), lightOnly.light)
+        XCTAssertEqual(lightOnly.image(forDarkBackground: false), lightOnly.light)
+    }
+
+    func testIcon_templateRenderingTints() throws {
+        // Given a template icon
+        let paymentMethodType = PaymentSheet.PaymentMethodType.serverDriven(
+            try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.lightAndDarkJSON(rendering: "template"))
+        )
+
+        // When it's shown in an image view
+        let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, contrastMatchingColor: .black, currency: nil, iconStyle: .filled)
+
+        // Then it's tinted to the foreground color
+        XCTAssertTrue(paymentMethodType.iconRequiresTinting)
+        XCTAssertEqual(imageView.image?.renderingMode, .alwaysTemplate)
+        XCTAssertEqual(imageView.tintColor, .black)
+    }
+
+    func testMakeImage_decodesPickedSourceAtItsScale() throws {
+        // Given an icon with 2x and 3x sources
+        let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod()
+        let downloadManager = makeDownloadManager()
+        var requestedURLs: [URL] = []
+        for scale in [2, 3] {
+            let url = ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: scale)
+            stub(condition: { $0.url == url }) { request in
+                requestedURLs.append(request.url!)
+                return HTTPStubsResponse(data: ServerDrivenPaymentMethodFixtures.iconData(scale: scale), statusCode: 200, headers: nil)
             }
         }
-    }
 
-    func testIcon_picksVariants() throws {
-        // Given an icon with every variant
-        let json = ServerDrivenPaymentMethodFixtures.allVariantsJSON()
-        let icon = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json).icon
+        for scale in [2, 3] {
+            // When it's downloaded for a screen at that scale
+            let downloaded = expectation(description: "Downloaded at \(scale)x")
+            var image: UIImage?
+            _ = paymentMethod.makeImage(forDarkBackground: false, iconStyle: .filled, updateHandler: {
+                image = $0
+                downloaded.fulfill()
+            }, downloadManager: downloadManager, screenScale: CGFloat(scale))
+            wait(for: [downloaded], timeout: 5)
 
-        // Then each background and style picks its own variant
-        XCTAssertEqual(icon.image(forDarkBackground: false, iconStyle: .filled), .init(url: URL(string: "https://js.stripe.com/light.png")!))
-        XCTAssertEqual(icon.image(forDarkBackground: true, iconStyle: .filled), .init(url: URL(string: "https://js.stripe.com/dark.png")!))
-        XCTAssertEqual(icon.image(forDarkBackground: false, iconStyle: .outlined), .init(url: URL(string: "https://js.stripe.com/outlined_light.png")!))
-        XCTAssertEqual(icon.image(forDarkBackground: true, iconStyle: .outlined), .init(url: URL(string: "https://js.stripe.com/outlined_dark.png")!))
-        // ...and template rendering tints it
-        XCTAssertTrue(PaymentSheet.PaymentMethodType.serverDriven(try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json)).iconRequiresTinting)
-    }
-
-    func testIcon_outlinedDarkFallsBackToDark() throws {
-        // Given an icon with a dark image but no outlined images
-        let json = ServerDrivenPaymentMethodFixtures.json {
-            $0[jsonDict: "display"]?[jsonDict: "icon"]?["dark"] = ["url": "https://js.stripe.com/dark.png"]
+            // Then it fetches that source as is, and decodes it at the source's scale, so it fills the 30x20pt box
+            XCTAssertEqual(requestedURLs.last, ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: scale))
+            XCTAssertEqual(image?.scale, CGFloat(scale))
+            XCTAssertEqual(image?.size, CGSize(width: 30, height: 20))
         }
-        let icon = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json).icon
-
-        // Then the outlined style uses the filled image for its background
-        XCTAssertEqual(icon.image(forDarkBackground: true, iconStyle: .outlined), icon.dark)
-        XCTAssertEqual(icon.image(forDarkBackground: false, iconStyle: .outlined), icon.light)
     }
 
-    func testIconDownload_usesImageProxy() throws {
-        // Given an icon whose URL has a percent-encoded path and a query
-        let url = try XCTUnwrap(URL(string: "https://b.stripecdn.com/ocs-mobile/assets/pm/demo%20pay.png?v=2"))
-        let image = ServerDrivenPaymentMethod.Icon.Image(url: url)
-
-        // When it's downloaded 20pt tall on a 3x screen
-        let download = image.download(height: 20, dpr: 3)
-
-        // Then it's fetched through the image proxy at that height and scale, with the source URL unchanged
-        XCTAssertEqual(
-            download.url.absoluteString,
-            "https://img.stripecdn.com/cdn-cgi/image/format=png,height=20,dpr=3/https://b.stripecdn.com/ocs-mobile/assets/pm/demo%20pay.png?v=2"
-        )
-        // ...and decoded at the scale it asked for
-        XCTAssertEqual(download.scale, 3)
-        XCTAssertEqual(image.download(height: 12, dpr: 2).url.absoluteString, "https://img.stripecdn.com/cdn-cgi/image/format=png,height=12,dpr=2/\(url.absoluteString)")
-        XCTAssertEqual(image.download(height: 12, dpr: 2).scale, 2)
-    }
-
-    func testMakeImage_decodesIconAtScreenScale() throws {
-        // Given an icon, and a proxy that returns it 20pt tall at the screen's scale
-        let iconURL = "https://b.stripecdn.com/ocs-mobile/assets/pm/test_decode_\(UUID().uuidString).png"
-        let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.json {
-            $0[jsonDict: "display"]?[jsonDict: "icon"]?[jsonDict: "light"]?["url"] = iconURL
-        })
-        let dpr = StripeImageProxy.screenDPR
-        let proxyURL = StripeImageProxy.url(for: URL(string: iconURL)!, format: .png, height: ServerDrivenPaymentMethod.iconHeight, dpr: dpr)
-        let format = UIGraphicsImageRendererFormat()
-        format.scale = 1
-        let iconData = UIGraphicsImageRenderer(size: CGSize(width: 30 * dpr, height: 20 * dpr), format: format).pngData { _ in }
-        stub(condition: { $0.url == proxyURL }) { _ in
-            HTTPStubsResponse(data: iconData, statusCode: 200, headers: nil)
+    func testMakeImage_vendsBlankPlaceholderAndLogsUntilCached() throws {
+        // Given an icon that isn't cached
+        let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.json(type: "paypal"))
+        let downloadManager = makeDownloadManager()
+        let analyticsClient = STPAnalyticsClient()
+        let url = ServerDrivenPaymentMethodFixtures.iconURL("paypal", scale: 3)
+        stub(condition: { $0.url == url }) { _ in
+            HTTPStubsResponse(data: ServerDrivenPaymentMethodFixtures.iconData(scale: 3), statusCode: 200, headers: nil)
         }
-        addTeardownBlock { HTTPStubs.removeAllStubs() }
 
-        // When it's downloaded
+        // When its image is vended to the merchant, without an update handler
+        let vended = paymentMethod.makeImage(forDarkBackground: false, iconStyle: .filled, updateHandler: nil, downloadManager: downloadManager, analyticsClient: analyticsClient, screenScale: 3)
+
+        // Then it's a clear image the size of the icon box, not the SDK's PayPal icon or a 1x1 placeholder
+        XCTAssertTrue(vended === ServerDrivenPaymentMethod.blankIcon)
+        XCTAssertEqual(vended.size, CGSize(width: 30, height: 20))
+        XCTAssertTrue(isClear(vended))
+        // ...and vending it is logged with the type
+        XCTAssertEqual(analyticsClient._testLogHistory.map { $0["event"] as? String }, ["mc_server_driven_icon_placeholder_vended"])
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["payment_method_type"] as? String, "paypal")
+
+        // When the icon is then downloaded, and vended again
         let downloaded = expectation(description: "Downloaded")
-        var image: UIImage?
-        _ = paymentMethod.makeImage(forDarkBackground: false, iconStyle: .filled) {
-            image = $0
-            downloaded.fulfill()
-        }
+        _ = paymentMethod.makeImage(forDarkBackground: false, iconStyle: .filled, updateHandler: { _ in downloaded.fulfill() }, downloadManager: downloadManager, analyticsClient: analyticsClient, screenScale: 3)
         wait(for: [downloaded], timeout: 5)
+        let cached = paymentMethod.makeImage(forDarkBackground: false, iconStyle: .filled, updateHandler: nil, downloadManager: downloadManager, analyticsClient: analyticsClient, screenScale: 3)
 
-        // Then it's decoded at the scale it asked for, so it's 20pt tall
-        XCTAssertEqual(image?.scale, CGFloat(dpr))
-        XCTAssertEqual(image?.size, CGSize(width: 30, height: 20))
+        // Then the merchant gets the icon, and nothing more is logged
+        XCTAssertFalse(cached === ServerDrivenPaymentMethod.blankIcon)
+        XCTAssertEqual(cached.scale, 3)
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
     }
 
-    func testPrefetchIcons_downloadsVariantsForIconStyle() throws {
-        // Given an icon with every variant, and a proxy that records what's requested
-        let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.allVariantsJSON())
-        let urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
-        urlSessionConfig.urlCache = URLCache(memoryCapacity: 5_000_000, diskCapacity: 0)
-        let downloadManager = DownloadManager(urlSessionConfiguration: urlSessionConfig, analyticsClient: STPAnalyticsClient(), isTesting: true)
+    func testMakeImage_rowFallsBackToBundledIconWhileLoadingAndOnFailure() throws {
+        // Given icon downloads that fail
+        let downloadManager = makeDownloadManager()
+        let analyticsClient = STPAnalyticsClient()
+        stub(condition: { $0.url?.host == "b.stripecdn.com" }) { _ in
+            HTTPStubsResponse(data: Data(), statusCode: 404, headers: nil)
+        }
+        func rowImage(_ json: [String: Any]) throws -> UIImage {
+            let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(json)
+            return paymentMethod.makeImage(forDarkBackground: false, iconStyle: .filled, updateHandler: { _ in
+                XCTFail("A failed download doesn't update the row")
+            }, downloadManager: downloadManager, analyticsClient: analyticsClient, screenScale: 3)
+        }
+
+        // Then a row for a type the SDK has an icon for shows that icon
+        let payPal = try rowImage(ServerDrivenPaymentMethodFixtures.json(type: "paypal"))
+        let bundledPayPal = try XCTUnwrap(STPPaymentMethodType.payPal.makeImage(forDarkBackground: false, iconStyle: .filled))
+        XCTAssertEqual(payPal.pngData(), bundledPayPal.pngData())
+        XCTAssertFalse(payPal === ServerDrivenPaymentMethod.blankIcon)
+        // ...a type the SDK doesn't know shows the blank icon
+        XCTAssertTrue(try rowImage(ServerDrivenPaymentMethodFixtures.json()) === ServerDrivenPaymentMethod.blankIcon)
+        // ...and so does a type whose bundled icon is tinted differently, since the row tints by the server's rendering
+        XCTAssertTrue(try rowImage(ServerDrivenPaymentMethodFixtures.lightAndDarkJSON(type: "paypal", rendering: "template")) === ServerDrivenPaymentMethod.blankIcon)
+
+        // ...and rows don't log the placeholder event, which is only for the merchant's image
+        let failed = expectation(description: "Downloads failed")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { failed.fulfill() }
+        wait(for: [failed], timeout: 2)
+        XCTAssertTrue(analyticsClient._testLogHistory.isEmpty)
+    }
+
+    func testPrefetchIcons_downloadsPickedLightAndDarkSources() throws {
+        // Given an icon with light and dark images at 2x and 3x, and a CDN that records what's requested
+        let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.lightAndDarkJSON())
+        let downloadManager = makeDownloadManager()
         let lock = NSLock()
         var requestedURLs: Set<URL> = []
-        let requested = expectation(description: "Requested both outlined variants")
+        let requested = expectation(description: "Requested light and dark")
         requested.expectedFulfillmentCount = 2
-        let iconData = UIGraphicsImageRenderer(size: CGSize(width: 30, height: 20)).pngData { _ in }
-        stub(condition: { $0.url?.host == "img.stripecdn.com" }) { request in
+        stub(condition: { $0.url?.host == "b.stripecdn.com" }) { request in
             lock.withLock { _ = requestedURLs.insert(request.url!) }
             requested.fulfill()
-            return HTTPStubsResponse(data: iconData, statusCode: 200, headers: nil)
+            return HTTPStubsResponse(data: ServerDrivenPaymentMethodFixtures.iconData(scale: 3), statusCode: 200, headers: nil)
         }
-        addTeardownBlock { HTTPStubs.removeAllStubs() }
 
-        // When its icons are prefetched for the outlined style
-        paymentMethod.prefetchIcons(iconStyle: .outlined, downloadManager: downloadManager)
+        // When its icons are prefetched on a 3x screen
+        paymentMethod.prefetchIcons(downloadManager: downloadManager, screenScale: 3)
         wait(for: [requested], timeout: 5)
 
-        // Then the outlined light and dark variants are fetched through the proxy, at the size rows draw them
-        let expectedURLs = Set(["outlined_light", "outlined_dark"].map {
-            StripeImageProxy.url(for: URL(string: "https://js.stripe.com/\($0).png")!, format: .png, height: ServerDrivenPaymentMethod.iconHeight, dpr: StripeImageProxy.screenDPR)
-        })
-        XCTAssertEqual(lock.withLock { requestedURLs }, expectedURLs)
+        // Then the 3x light and dark sources are fetched as is, without a proxy
+        XCTAssertEqual(lock.withLock { requestedURLs }, [
+            ServerDrivenPaymentMethodFixtures.iconURL("demo_pay", scale: 3),
+            ServerDrivenPaymentMethodFixtures.iconURL("demo_pay_dark", scale: 3),
+        ])
+    }
+
+    /// Returns whether every pixel of `image` is fully transparent.
+    private func isClear(_ image: UIImage) -> Bool {
+        guard let cgImage = image.cgImage else { return false }
+        let width = cgImage.width, height = cgImage.height
+        var pixels = [UInt8](repeating: 0xFF, count: width * height * 4)
+        let drawn: Bool = pixels.withUnsafeMutableBytes { buffer in
+            guard let context = CGContext(
+                data: buffer.baseAddress, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
+                space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+            ) else { return false }
+            context.clear(CGRect(x: 0, y: 0, width: width, height: height))
+            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+            return true
+        }
+        return drawn && stride(from: 3, to: pixels.count, by: 4).allSatisfy { pixels[$0] == 0 }
+    }
+
+    /// Returns a `DownloadManager` with its own caches, whose requests `HTTPStubs` handles.
+    private func makeDownloadManager() -> DownloadManager {
+        let urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
+        urlSessionConfig.urlCache = URLCache(memoryCapacity: 5_000_000, diskCapacity: 0)
+        addTeardownBlock { HTTPStubs.removeAllStubs() }
+        return DownloadManager(urlSessionConfiguration: urlSessionConfig, analyticsClient: STPAnalyticsClient(), isTesting: true)
     }
 
     func testPaymentMethodType() throws {
