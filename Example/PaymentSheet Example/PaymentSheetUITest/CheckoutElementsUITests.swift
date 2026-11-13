@@ -3,6 +3,7 @@
 //  PaymentSheet Example
 //
 
+import StripePaymentSheet
 import XCTest
 
 final class CheckoutElementsUITests: PaymentSheetUITestCase {
@@ -393,5 +394,33 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             file: file,
             line: line
         )
+    }
+
+    func testExportLinkRoundTrip() throws {
+        // Given settings with a non-default currency, customer, and Payment Element appearance
+        var settings = CheckoutPlayground.Settings()
+        settings.currency = .eur
+        settings.customerType = .returning
+        var exportedAppearance = PaymentSheet.Appearance()
+        exportedAppearance.cornerRadius = 20
+        settings.paymentElementAppearance = exportedAppearance
+        // ...and a receiving device with its own Payment Element appearance
+        var base = CheckoutPlayground.Settings()
+        var baseAppearance = PaymentSheet.Appearance()
+        baseAppearance.cornerRadius = 4
+        base.paymentElementAppearance = baseAppearance
+
+        // When the settings are exported to a link and imported on the receiving device
+        let url = try XCTUnwrap(settings.exportURL)
+        let imported = try XCTUnwrap(CheckoutPlayground.Settings(exportURL: url, base: base))
+
+        // Then the link's settings are imported, and appearance stays the receiver's
+        XCTAssertTrue(CheckoutPlayground.Settings.isExportURL(url))
+        XCTAssertEqual(imported.currency, .eur)
+        XCTAssertEqual(imported.customerType, .returning)
+        XCTAssertEqual(imported.paymentElementAppearance?.cornerRadius, 4)
+
+        // ...and a malformed link isn't imported
+        XCTAssertNil(CheckoutPlayground.Settings(exportURL: URL(string: "stp-paymentsheet-playground://checkout?not-valid")!, base: base))
     }
 }

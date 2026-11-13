@@ -536,3 +536,47 @@ enum CheckoutPlayground {
         static let nsUserDefaultsKey = "CheckoutPlaygroundSettings"
     }
 }
+
+extension CheckoutPlayground.Settings {
+    /// Checkout Playground links share the PaymentSheet playground's URL scheme and use this host.
+    static let exportURLScheme = "stp-paymentsheet-playground"
+    static let exportURLHost = "checkout"
+
+    /// Appearance settings are left out of links: they would make the QR code too dense to generate or scan.
+    /// The PaymentSheet playground also keeps its appearance out of its QR code.
+    private static let keysExcludedFromExport = ["currencySelectorAppearance", "paymentElementAppearance"]
+
+    /// A link that opens the Checkout Playground with these settings, except appearance. The query is the
+    /// settings JSON, LZFSE-compressed and base64-encoded, like `PaymentSheetTestPlaygroundSettings.base64URL`.
+    var exportURL: URL? {
+        guard var object = try? JSONSerialization.jsonObject(with: JSONEncoder().encode(self)) as? [String: Any] else {
+            return nil
+        }
+        Self.keysExcludedFromExport.forEach { object[$0] = nil }
+        guard let json = try? JSONSerialization.data(withJSONObject: object),
+              let compressed = try? (json as NSData).compressed(using: .lzfse) as Data else {
+            return nil
+        }
+        return URL(string: "\(Self.exportURLScheme)://\(Self.exportURLHost)?\(compressed.base64EncodedString())")
+    }
+
+    static func isExportURL(_ url: URL) -> Bool {
+        url.scheme == exportURLScheme && url.host == exportURLHost
+    }
+
+    /// Decodes settings from an `exportURL`, taking any setting the link doesn't include, such as appearance,
+    /// from `base`. Returns `nil` if the link is malformed.
+    init?(exportURL url: URL, base: Self) {
+        guard Self.isExportURL(url),
+              let query = url.query,
+              let compressed = Data(base64Encoded: query),
+              let json = try? (compressed as NSData).decompressed(using: .lzfse) as Data,
+              let linkObject = try? JSONSerialization.jsonObject(with: json) as? [String: Any],
+              let baseObject = try? JSONSerialization.jsonObject(with: JSONEncoder().encode(base)) as? [String: Any],
+              let merged = try? JSONSerialization.data(withJSONObject: baseObject.merging(linkObject) { _, link in link }),
+              let settings = try? JSONDecoder().decode(Self.self, from: merged) else {
+            return nil
+        }
+        self = settings
+    }
+}

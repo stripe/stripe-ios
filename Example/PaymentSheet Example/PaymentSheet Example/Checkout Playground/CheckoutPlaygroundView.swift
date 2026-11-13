@@ -10,9 +10,12 @@ struct CheckoutPlaygroundView: View {
     @StateObject private var viewModel: CheckoutPlayground.ViewModel
     @State private var showCurrencySelectorAppearance = false
     @State private var showPaymentElementAppearance = false
+    @State private var showExportQRCode = false
 
-    init(settings: CheckoutPlayground.Settings? = nil) {
-        _viewModel = StateObject(wrappedValue: CheckoutPlayground.ViewModel(settings: settings))
+    init(settings: CheckoutPlayground.Settings? = nil, errorMessage: String? = nil) {
+        let viewModel = CheckoutPlayground.ViewModel(settings: settings)
+        viewModel.errorMessage = errorMessage
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
@@ -58,8 +61,19 @@ struct CheckoutPlaygroundView: View {
             .navigationTitle("Checkout Playground")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button("QR") {
+                        showExportQRCode = true
+                    }
+                    .accessibilityLabel("Export settings as QR code")
                     Button("Reset", action: viewModel.reset)
+                }
+            }
+            .sheet(isPresented: $showExportQRCode) {
+                if let exportURL = viewModel.exportURL {
+                    QRView(url: exportURL)
+                } else {
+                    Text("Couldn't export settings.")
                 }
             }
             .sheet(isPresented: $viewModel.navigateToCheckout) {
