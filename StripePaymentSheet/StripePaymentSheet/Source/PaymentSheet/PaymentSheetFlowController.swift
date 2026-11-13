@@ -854,6 +854,7 @@ extension PaymentSheet {
                 savedPaymentMethods: savedPaymentMethods,
                 paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: viewController.loadResult.paymentMethodMessagingPromotionsHelper,
+                stripeBalanceFinancialAccounts: viewController.loadResult.stripeBalanceFinancialAccounts,
                 paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation,
                 customerProvider: viewController.loadResult.customerProvider
             )
