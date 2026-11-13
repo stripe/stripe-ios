@@ -6,15 +6,181 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import OHHTTPStubs
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+@testable @_spi(InternalOnlyAPI) import StripeUICore
+import UIKit
 import XCTest
 
 @MainActor
 final class CheckoutTests: STPNetworkStubbingTestCase {
+
+    func testLiveRemovedSavedCardStaysRemovedAfterLocalShippingUpdate() async throws {
+        // Given a disposable customer with one saved card on the real playground backend
+        HTTPStubs.removeAllStubs()
+        let checkout = try await makeCustomerLogicCheckout(withSavedCard: true)
+        let embedded = checkout.getPaymentElement().embeddedPaymentElement
+        let card = try XCTUnwrap(embedded.savedPaymentMethods.first)
+        XCTAssertTrue(checkout.session.canDetachPaymentMethod)
+        let updateConfiguration = UpdatePaymentMethodViewController.Configuration(
+            paymentMethod: card,
+            appearance: embedded.configuration.appearance,
+            billingDetailsCollectionConfiguration: embedded.configuration.billingDetailsCollectionConfiguration,
+            hostedSurface: .paymentSheet,
+            checkoutSessionID: checkout.session.id,
+            canRemove: true,
+            canUpdate: true,
+            isCBCEligible: false
+        )
+        let updateController = UpdatePaymentMethodViewController(
+            removeSavedPaymentMethodMessage: nil,
+            configuration: updateConfiguration
+        )
+
+        // When the normal removal delegate runs and the backend finishes detaching the card
+        embedded.didRemove(viewController: updateController, paymentMethod: card)
+        XCTAssertTrue(embedded.savedPaymentMethods.isEmpty)
+        let deadline = Date().addingTimeInterval(15)
+        var backendRemovedCard = false
+        repeat {
+            let backendSession = try await checkout.apiClient.initCheckoutSession(
+                checkoutSessionId: checkout.session.id,
+                clientSecret: checkout.clientSecret,
+                adaptivePricingAllowed: false
+            )
+            backendRemovedCard = backendSession.customer?.paymentMethods.contains {
+                $0.stripeId == card.stripeId
+            } == false
+            if !backendRemovedCard {
+                try await Task.sleep(nanoseconds: 100_000_000)
+            }
+        } while !backendRemovedCard && Date() < deadline
+        XCTAssertTrue(backendRemovedCard, "The live backend must confirm removal before the local update")
+        guard backendRemovedCard else { return }
+
+        // ...and an unrelated, local-only shipping change rebuilds Payment Element
+        try await checkout.updateShippingAddress(
+            name: "Jenny Rosen",
+            address: .init(country: "US", line1: "354 Oyster Point Blvd")
+        )
+
+        // Then the removed card must stay absent from the same embedded presentation.
+        XCTAssertFalse(embedded.savedPaymentMethods.contains { $0.stripeId == card.stripeId })
+    }
+
+    func testLiveGuestCanOptIntoSavingCardWhenCustomerWillBeCreated() async throws {
+        // Given a live guest session explicitly configured to create a customer and offer saving
+        HTTPStubs.removeAllStubs()
+        let checkout = try await makeCustomerLogicCheckout(withSavedCard: false)
+        XCTAssertNil(checkout.session.customerId)
+        XCTAssertEqual(checkout.session.savedPaymentMethodsOfferSave?.enabled, true)
+        // Exclude the separate Link experiment that intentionally hides this checkbox.
+        XCTAssertFalse(checkout.session.elementsSession.linkSignupOptInFeatureEnabled)
+
+        // When the card form is built through the loaded Payment Element
+        let embedded = checkout.getPaymentElement().embeddedPaymentElement
+        let presentingViewController = UIViewController()
+        embedded.presentingViewController = presentingViewController
+        let cardRow = try XCTUnwrap(embedded.embeddedPaymentMethodsView.rowButtons.first {
+            $0.type == .new(paymentMethodType: .stripe(.card))
+        })
+        embedded.embeddedPaymentMethodsView.didTap(rowButton: cardRow)
+        let form = try XCTUnwrap(embedded.formCache[.stripe(.card)])
+        let saveCheckbox = form.getAllUnwrappedSubElements().compactMap { $0 as? CheckboxElement }
+            .first { $0.label.hasPrefix("Save") }
+
+        // Then the guest must be able to consent to saving their card for the new customer.
+        XCTAssertNotNil(saveCheckbox)
+    }
+
+    private func makeCustomerLogicCheckout(withSavedCard: Bool) async throws -> CheckoutElementsController {
+        let keyResponse = try await customerLogicBackendRequest(endpoint: "publishable_key?merchant=US")
+        let apiClient = STPAPIClient(publishableKey: try XCTUnwrap(keyResponse["publishable_key"] as? String))
+        var sessionParameters: [String: Any] = [
+            "ui_mode": "mobile_elements",
+            "currency": "usd",
+            "allowed_payment_method_types": ["card"],
+            "items": [
+                [
+                    "type": "one_time_price",
+                    "one_time_price": [
+                        "items": [
+                            [
+                                "price_data": [
+                                    "currency": "usd",
+                                    "unit_amount": 2000,
+                                    "product_data": ["name": "Customer logic repro"],
+                                ],
+                                "quantity": 1,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            "saved_payment_method_options": [
+                "payment_method_save": "enabled",
+                "payment_method_remove": "enabled",
+                "allow_redisplay_filters": ["always", "limited", "unspecified"],
+            ],
+        ]
+        if withSavedCard {
+            let customerID = try await STPTestingAPIClient.shared.createCheckoutCustomer(email: "customer@example.com")
+            let card = STPPaymentMethodCardParams()
+            card.number = "4242424242424242"
+            card.expMonth = 12
+            card.expYear = 2040
+            card.cvc = "123"
+            let paymentMethod = try await apiClient.createPaymentMethod(with: .init(
+                card: card,
+                billingDetails: nil,
+                allowRedisplay: .always,
+                metadata: nil
+            ))
+            _ = try await customerLogicBackendRequest(endpoint: "attach_payment_method", parameters: [
+                "merchant": "US",
+                "payment_method_id": paymentMethod.stripeId,
+                "request_params": ["customer": customerID],
+            ])
+            sessionParameters["customer"] = customerID
+        } else {
+            sessionParameters["customer_creation"] = "always"
+        }
+        let response = try await customerLogicBackendRequest(endpoint: "create_checkout_session", parameters: [
+            "merchant": "US",
+            "stripe_version": STPTestingAPIClient.checkoutMobileElementsAPISettings,
+            "request_params": sessionParameters,
+        ])
+        var configuration = CheckoutElementsController.Configuration(
+            clientSecret: try XCTUnwrap(response["client_secret"] as? String),
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.apiClient = apiClient
+        configuration.paymentElement = .init()
+        return try await CheckoutElementsController(configuration: configuration)
+    }
+
+    private func customerLogicBackendRequest(
+        endpoint: String,
+        parameters: [String: Any]? = nil
+    ) async throws -> [String: Any] {
+        let url = try XCTUnwrap(URL(string: STPTestingAPIClient.STPTestingPlaygroundBackendURL + endpoint))
+        var request = URLRequest(url: url)
+        request.httpMethod = parameters == nil ? "GET" : "POST"
+        if let parameters {
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
+        }
+        let (data, response) = try await URLSession.shared.data(for: request)
+        let httpResponse = try XCTUnwrap(response as? HTTPURLResponse)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        XCTAssertTrue((200..<300).contains(httpResponse.statusCode), "Playground request failed: \(json)")
+        return json
+    }
+
     func testLoadCheckoutSession() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
         var configuration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")

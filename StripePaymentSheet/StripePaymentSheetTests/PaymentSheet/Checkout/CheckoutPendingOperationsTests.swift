@@ -162,6 +162,49 @@ final class CheckoutPendingOperationsTests: XCTestCase {
         XCTAssertTrue(checkout.pendingOperations.isEmpty)
     }
 
+    func testClearShippingAddressUsesLatestQueuedValue() async throws {
+        // Given an empty shipping address and a merchant update holding the queue
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration(
+                paymentElementConfiguration: nil,
+                expressCheckoutElementConfiguration: nil
+            )
+        )
+        let gate = CheckoutPendingOperationsTestGate()
+        let serverUpdate = Task { @MainActor in
+            try await checkout.runServerUpdate {
+                await gate.wait()
+            }
+        }
+        defer { gate.open() }
+        try await waitUntil { gate.isWaiting }
+        XCTAssertNil(checkout.session.shippingAddress)
+
+        // When shipping is set and then cleared before that queued set has committed
+        let setShipping = Task { @MainActor in
+            try await checkout.updateShippingAddress(
+                name: "Jenny Rosen",
+                address: .init(country: "US", line1: "354 Oyster Point Blvd")
+            )
+        }
+        try await waitUntil { checkout.pendingOperations.count == 2 }
+        var clearCompleted = false
+        let clearShipping = Task { @MainActor in
+            try await checkout.updateShippingAddress(name: nil, address: nil)
+            clearCompleted = true
+        }
+        // Let the clear reach its guard while the earlier address is still queued.
+        try await waitUntil { clearCompleted || checkout.pendingOperations.count == 3 }
+        gate.open()
+        try await serverUpdate.value
+        try await setShipping.value
+        try await clearShipping.value
+
+        // Then the last requested address, including a clear, must win.
+        XCTAssertNil(checkout.session.shippingAddress)
+        XCTAssertTrue(checkout.pendingOperations.isEmpty)
+    }
+
     // MARK: - Loading & Emission Tests
 
     func testLoadingStatePersistsAcrossConsecutiveQueuedOperations() async throws {
