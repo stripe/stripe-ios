@@ -150,6 +150,27 @@ enum Intent {
         }
     }
 
+    /// China UnionPay Apple Pay cannot validate a card or set up future merchant-initiated payments.
+    var isSetupOrFutureOffSessionForApplePay: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.setupFutureUsage(for: .card) == "off_session"
+        case .setupIntent:
+            return true
+        case .deferredIntent(let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, _, let setupFutureUsage, _, let paymentMethodOptions):
+                // A per-card value, including `none`, overrides the top-level value.
+                let effectiveUsage = paymentMethodOptions?.setupFutureUsageValues?[.card] ?? setupFutureUsage
+                return effectiveUsage == .offSession
+            case .setup:
+                return true
+            }
+        case .checkout(let session):
+            return session.noPaymentRequired || session.setupFutureUsage(for: .card) == "off_session"
+        }
+    }
+
     var isPaymentMethodOptionsSetupFutureUsageSet: Bool? {
         switch self {
         case .paymentIntent(let paymentIntent):

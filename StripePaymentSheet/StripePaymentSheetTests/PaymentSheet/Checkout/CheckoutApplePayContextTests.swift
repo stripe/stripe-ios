@@ -202,6 +202,38 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(request.merchantCapabilities, [.capability3DS, .capabilityEMV])
     }
 
+    func testMakePaymentRequestFiltersChinaUnionPayForUnsupportedCheckoutFlows() {
+        let originalNetworks = StripeAPI.additionalEnabledApplePayNetworks
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay, .cartesBancaires]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = originalNetworks }
+
+        let cases: [([String: Any], Bool)] = [
+            ([:], true),
+            (["setup_future_usage_for_payment_method_type": ["card": "on_session"]], true),
+            (["setup_future_usage_for_payment_method_type": ["card": "none"]], true),
+            (["setup_future_usage_for_payment_method_type": ["card": "off_session"]], false),
+            (["setup_future_usage_for_payment_method_type": ["sepa_debit": "off_session"]], true),
+            (["payment_status": "no_payment_required"], false),
+            (["total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 0)], false),
+        ]
+        for (overrides, allowsChinaUnionPay) in cases {
+            // Given a session with resolved card future usage or no payment due
+            let session = CheckoutTestHelpers.makeSession(overrides).makePublicSession()
+            let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
+                apiClient: APIStubbedTestCase.stubbedAPIClient()
+            )
+
+            // When building the request before handing it to PassKit
+            let request = CheckoutApplePayContext.makePaymentRequest(checkoutSession: session, applePayConfirmationParameters: parameters)
+
+            // Then setup and off-session flows exclude only UnionPay and its EMV bit
+            XCTAssertEqual(request.supportedNetworks.contains(.chinaUnionPay), allowsChinaUnionPay)
+            XCTAssertEqual(request.merchantCapabilities.contains(.emv), allowsChinaUnionPay)
+            XCTAssertTrue(request.supportedNetworks.contains(.cartesBancaires))
+            XCTAssertTrue(request.merchantCapabilities.contains(.capability3DS))
+        }
+    }
+
     func testMakePaymentRequestUsesPresentmentCurrency() {
         for (currency, amount, expectedAmount, exchangeRate) in [
             ("jpy", 19181, "19181", "159.8416666667"),

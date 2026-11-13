@@ -78,6 +78,8 @@ import PassKit
     /// Configure China UnionPay before initializing PaymentSheet so Apple Pay availability and payment request construction use the intended network list.
     /// Stripe adds the EMV merchant capability for China UnionPay when building a payment request.
     /// If you modify the supported networks and present your own PassKit controller, keep the EMV capability in sync with China UnionPay.
+    /// China UnionPay Apple Pay supports one-time payments only. For custom integrations, exclude it from SetupIntents,
+    /// zero-total requests, and payments that set up recurring or future off-session use before presenting Apple Pay.
     @objc public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = [] {
         didSet {
             // Reset deviceSupportsApplePay for the updated network list:
@@ -196,6 +198,32 @@ import PassKit
         } else {
             paymentRequest.merchantCapabilities.remove(.emv)
         }
+    }
+
+    /// Excludes China UnionPay from unsupported Apple Pay transactions and synchronizes the EMV capability.
+    /// Intent-aware callers must supply whether this is a setup or a payment that sets up future off-session use.
+    /// Request-only callers can detect zero totals and explicit PassKit recurring, reload, or deferred payments.
+    @_spi(InternalOnlyAPI) public class func filterChinaUnionPay(
+        for paymentRequest: PKPaymentRequest,
+        isSetupOrFutureOffSession: Bool = false
+    ) {
+        var requiresFuturePayment = paymentRequest.paymentSummaryItems.contains {
+            $0 is PKRecurringPaymentSummaryItem || $0 is PKDeferredPaymentSummaryItem
+        }
+        if #available(iOS 16.0, macOS 13.0, *) {
+            requiresFuturePayment = requiresFuturePayment
+                || paymentRequest.recurringPaymentRequest != nil
+                || paymentRequest.automaticReloadPaymentRequest != nil
+                || paymentRequest.paymentSummaryItems.contains { $0 is PKAutomaticReloadPaymentSummaryItem }
+        }
+        if #available(iOS 16.4, macOS 13.3, *) {
+            requiresFuturePayment = requiresFuturePayment || paymentRequest.deferredPaymentRequest != nil
+        }
+
+        if isSetupOrFutureOffSession || paymentRequest.paymentSummaryItems.last?.amount == .zero || requiresFuturePayment {
+            paymentRequest.supportedNetworks.removeAll { $0 == .chinaUnionPay }
+        }
+        normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
     }
 
     // MARK: - URL callbacks
