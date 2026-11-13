@@ -41,11 +41,15 @@ class StreamlinedConsentViewController: UIViewController {
         return GenericInfoFooterViewAndPrimaryButton(
             footer: dataSource.streamlinedConsentPane.screen.footer,
             appearance: dataSource.manifest.appearance,
-            didSelectPrimaryButton: didSelectAgree,
+            didSelectPrimaryButton: { [weak self] in
+                self?.didSelectAgree()
+            },
             didSelectSecondaryButton: {
                 // This can't occur
             },
-            didSelectURL: didSelectURLInTextFromBackend
+            didSelectURL: { [weak self] url in
+                self?.didSelectURLInTextFromBackend(url)
+            }
         )
     }()
 

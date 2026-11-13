@@ -46,9 +46,9 @@ final class StreamlinedConsentDataSourceImplementation: StreamlinedConsentDataSo
     private let clientSecret: String
 
     var dataAccessNotice: FinancialConnectionsDataAccessNotice? {
-        // The backend may omit the notice from the streamlined consent pane,
-        // in which case we fall back to the one from the regular consent pane.
-        return streamlinedConsentPane.dataAccessNotice ?? consentPaneDataAccessNotice
+        // Prefer the regular consent pane's notice so this pane shows the same notice as
+        // the account picker, falling back to the streamlined consent pane's notice.
+        return consentPaneDataAccessNotice ?? streamlinedConsentPane.dataAccessNotice
     }
 
     init(
