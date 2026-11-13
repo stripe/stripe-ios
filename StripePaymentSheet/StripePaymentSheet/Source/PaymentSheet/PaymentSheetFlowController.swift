@@ -310,7 +310,7 @@ extension PaymentSheet {
                 return false
             }
 
-            guard let internalPaymentOption else {
+            guard let internalPaymentOption, internalPaymentOption.canLaunchLink else {
                 return false
             }
 
@@ -319,12 +319,12 @@ extension PaymentSheet {
             // that opening payment options shows FlowController instead of immediately
             // launching the Link payment-method selection flow. Preserve that behavior here
             // and only launch Link in place of FlowController after the customer has
-            // continued from FlowController at least once, unless the experiment pre-selected Link.
+            // continued from FlowController at least once.
             if case .link(.wallet) = internalPaymentOption {
-                return viewController.loadResult.preselectLink || (internalPaymentOption.canLaunchLink && didPresentAndContinue)
+                return didPresentAndContinue
             }
 
-            return internalPaymentOption.canLaunchLink
+            return true
         }
 
         // Stores the state of the most recent call to the update API

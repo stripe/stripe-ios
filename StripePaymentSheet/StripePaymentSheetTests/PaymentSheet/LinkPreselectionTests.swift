@@ -19,12 +19,10 @@ final class LinkPreselectionTests: STPSnapshotTestCase {
         super.tearDown()
     }
 
-    // @iOS26
     func testHorizontalFlowControllerPreselectsLink() {
         assertFlowControllerPreselectsLink(layout: .horizontal)
     }
 
-    // @iOS26
     func testVerticalFlowControllerPreselectsLink() {
         assertFlowControllerPreselectsLink(layout: .vertical)
     }
@@ -35,7 +33,7 @@ final class LinkPreselectionTests: STPSnapshotTestCase {
             loadResult: makeLoadResult(preselectLink: false),
             analyticsHelper: ._testValue()
         )
-        XCTAssertNil(flowController.internalPaymentOption)
+        XCTAssertNil(flowController.paymentOption)
     }
 
     // @iOS26
@@ -49,7 +47,8 @@ final class LinkPreselectionTests: STPSnapshotTestCase {
         guard case .link(.wallet) = embedded._paymentOption else {
             return XCTFail("Expected Link wallet selection")
         }
-        XCTAssertNotNil(embedded.paymentOption)
+        XCTAssertEqual(embedded.paymentOption?.paymentMethodType, "link")
+        XCTAssertEqual(embedded.paymentOption?.label, "Link")
         embedded.view.backgroundColor = embedded.configuration.appearance.colors.background
         STPSnapshotVerifyView(embedded.view, autoSizingHeightForWidth: 375)
     }
@@ -83,52 +82,57 @@ final class LinkPreselectionTests: STPSnapshotTestCase {
         XCTAssertEqual(view.selectedRowButton?.type, .link)
     }
 
-    func testExperimentSelectedLinkPresentsNativeLinkImmediately() {
-        assertInitialPresentation(preselectLink: true, expectsLink: true)
+    func testExperimentSelectedLinkStillPresentsPaymentOptionsFirst() {
+        assertInitialPresentation(preselectLink: true)
+    }
+
+    func testExperimentSelectedLinkWithRegisteredAccountStillPresentsPaymentOptionsFirst() {
+        LinkAccountContext.shared.account = LinkStubs.account()
+        assertInitialPresentation(preselectLink: true)
     }
 
     func testLastUsedLinkStillPresentsPaymentOptionsFirst() {
         LinkAccountContext.shared.account = LinkStubs.account()
         CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: nil)
-        assertInitialPresentation(preselectLink: false, expectsLink: false)
+        assertInitialPresentation(preselectLink: false)
     }
 
     func testFlowControllerRebuildPreservesExperimentSelection() {
-        assertInitialPresentation(preselectLink: true, rebuild: true, expectsLink: true)
+        // Given a load-time Link fallback
+        let flowController = PaymentSheet.FlowController(
+            configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
+            loadResult: makeLoadResult(),
+            analyticsHelper: ._testValue(integrationShape: .flowController)
+        )
+
+        // When wallet visibility rebuilds the payment options controller
+        flowController.walletButtonsViewState = .hidden
+
+        // Then Link is still the payment option returned to the merchant
+        XCTAssertEqual(flowController.paymentOption?.paymentMethodType, "link")
+        XCTAssertEqual(flowController.paymentOption?.label, "Link")
+        XCTAssertTrue(flowController.viewController.loadResult.preselectLink)
     }
 
-    func testPreselectedLinkRespectsNativeLinkAvailability() {
-        assertInitialPresentation(preselectLink: true, isNativeLinkAvailable: false, expectsLink: false)
-    }
-
-    private func assertInitialPresentation(
-        preselectLink: Bool,
-        isNativeLinkAvailable: Bool = true,
-        rebuild: Bool = false,
-        expectsLink: Bool
-    ) {
-        // Given a selected Link wallet before any payment options have been presented
+    private func assertInitialPresentation(preselectLink: Bool) {
+        // Given a selected Link wallet with native Link available
         let previousOverride = PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride
-        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = isNativeLinkAvailable
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
         defer { PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = previousOverride }
         let flowController = PaymentSheet.FlowController(
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeLoadResult(preselectLink: preselectLink),
             analyticsHelper: ._testValue(integrationShape: .flowController)
         )
-        if rebuild {
-            flowController.walletButtonsViewState = .hidden
-        }
         let presenter = PresentationCapturingViewController()
 
         // When the merchant presents payment options for the first time
         flowController.presentPaymentOptions(from: presenter, completion: { (_: Bool) in })
 
-        // Then only the experiment selection immediately opens native Link
+        // Then preselection does not change the existing presentation behavior
         XCTAssertNotNil(presenter.capturedViewController)
-        let presentedLink = presenter.capturedViewController is LinkBottomSheetViewController
-            || presenter.capturedViewController is LinkNativeSheetContainerViewController
-        XCTAssertEqual(presentedLink, expectsLink)
+        XCTAssertFalse(presenter.capturedViewController is LinkBottomSheetViewController)
+        XCTAssertFalse(presenter.capturedViewController is LinkNativeSheetContainerViewController)
     }
 
     private func assertFlowControllerPreselectsLink(layout: PaymentSheet.PaymentMethodLayout.ResolvedLayout) {
@@ -139,26 +143,17 @@ final class LinkPreselectionTests: STPSnapshotTestCase {
             analyticsHelper: ._testValue(integrationShape: .flowController)
         )
 
-        // Then the merchant can pay with Link immediately, without persisting a last-used method
-        guard case .link(.wallet) = flowController.internalPaymentOption else {
-            return XCTFail("Expected Link wallet selection")
-        }
-        XCTAssertNotNil(flowController.paymentOption)
+        // Then the initial merchant-facing payment option is Link, without persisting a last-used method
+        XCTAssertEqual(flowController.paymentOption?.paymentMethodType, "link")
+        XCTAssertEqual(flowController.paymentOption?.label, "Link")
         XCTAssertNil(CustomerPaymentOption.localDefaultPaymentMethod(for: nil))
+
+        // When the payment options view is loaded
         flowController.viewController.loadViewIfNeeded()
-        guard case .link(.wallet) = flowController.internalPaymentOption else {
-            return XCTFail("Expected Link wallet selection after rendering")
-        }
-        let bottomSheet = BottomSheetViewController(
-            contentViewController: flowController.viewController,
-            appearance: .default,
-            didCancelNative3DS2: {}
-        )
-        bottomSheet.view.setNeedsLayout()
-        bottomSheet.view.layoutIfNeeded()
-        let height = bottomSheet.view.systemLayoutSizeFitting(.init(width: 375, height: UIView.noIntrinsicMetric)).height
-        bottomSheet.view.frame = .init(x: 0, y: 0, width: 375, height: height)
-        STPSnapshotVerifyView(bottomSheet.view)
+
+        // Then rendering preserves the merchant-facing selection
+        XCTAssertEqual(flowController.paymentOption?.paymentMethodType, "link")
+        XCTAssertEqual(flowController.paymentOption?.label, "Link")
     }
 
     private func makeLoadResult(

@@ -49,7 +49,7 @@ extension EmbeddedPaymentElement {
                 return previousSelection
             }
 
-            if loadResult.preselectLink && shouldShowLink {
+            if loadResult.preselectLink {
                 return .link
             }
 
