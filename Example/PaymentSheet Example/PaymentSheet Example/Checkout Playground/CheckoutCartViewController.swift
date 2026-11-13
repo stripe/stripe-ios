@@ -825,7 +825,7 @@ final class CheckoutCartViewController: UIViewController {
         scrollView.isHidden = true
         statusContainerView.isHidden = false
         statusActivityIndicator.stopAnimating()
-        statusLabel.text = "Failed to load cart.\n\nLocalized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
+        statusLabel.text = "Failed to load cart.\n\n\(CheckoutPlayground.errorDisplayText(error))"
         retryButton.isHidden = false
     }
 
@@ -1004,7 +1004,7 @@ final class CheckoutCartViewController: UIViewController {
             dismissOnAcknowledgment = false
         case .failed(let error):
             title = "Unable to complete checkout"
-            message = "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
+            message = CheckoutPlayground.errorDisplayText(error)
             dismissOnAcknowledgment = false
         }
         let alertController = UIAlertController(

@@ -60,7 +60,7 @@ struct CheckoutCartView: View {
                             .font(.headline)
                         if let loadError {
                             ScrollView {
-                                Text("Localized: \(loadError.localizedDescription)\n\nDebug: \(String(reflecting: loadError))")
+                                Text(CheckoutPlayground.errorDisplayText(loadError))
                                     .font(.footnote.monospaced())
                                     .foregroundColor(.secondary)
                                     .textSelection(.enabled)
@@ -138,7 +138,7 @@ struct CheckoutCartView: View {
         case .completed(let paymentStatus): return "Payment status: \(paymentStatus)"
         case .canceled: return "The payment was canceled."
         case .failed(let error):
-            return "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
+            return CheckoutPlayground.errorDisplayText(error)
         case nil: return ""
         }
     }
