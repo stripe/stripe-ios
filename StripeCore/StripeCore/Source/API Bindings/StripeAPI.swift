@@ -200,32 +200,6 @@ import PassKit
         }
     }
 
-    /// Excludes China UnionPay from unsupported Apple Pay transactions and synchronizes the EMV capability.
-    /// Intent-aware callers must supply whether this is a setup or a payment that sets up future off-session use.
-    /// Request-only callers can detect zero totals and explicit PassKit recurring, reload, or deferred payments.
-    @_spi(InternalOnlyAPI) public class func filterChinaUnionPay(
-        for paymentRequest: PKPaymentRequest,
-        isSetupOrFutureOffSession: Bool = false
-    ) {
-        var requiresFuturePayment = paymentRequest.paymentSummaryItems.contains {
-            $0 is PKRecurringPaymentSummaryItem || $0 is PKDeferredPaymentSummaryItem
-        }
-        if #available(iOS 16.0, macOS 13.0, *) {
-            requiresFuturePayment = requiresFuturePayment
-                || paymentRequest.recurringPaymentRequest != nil
-                || paymentRequest.automaticReloadPaymentRequest != nil
-                || paymentRequest.paymentSummaryItems.contains { $0 is PKAutomaticReloadPaymentSummaryItem }
-        }
-        if #available(iOS 16.4, macOS 13.3, *) {
-            requiresFuturePayment = requiresFuturePayment || paymentRequest.deferredPaymentRequest != nil
-        }
-
-        if isSetupOrFutureOffSession || paymentRequest.paymentSummaryItems.last?.amount == .zero || requiresFuturePayment {
-            paymentRequest.supportedNetworks.removeAll { $0 == .chinaUnionPay }
-        }
-        normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
-    }
-
     // MARK: - URL callbacks
 
     /// Call this method in your app delegate whenever you receive an URL in your

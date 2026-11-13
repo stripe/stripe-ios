@@ -9,8 +9,10 @@
 //
 
 import Foundation
+import PassKit
 import UIKit
 
+@_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
 @_spi(InternalOnlyAPI) import StripePaymentsUI
 
@@ -150,8 +152,16 @@ enum Intent {
         }
     }
 
+    /// Applies the managed Apple Pay flow's intent restrictions, then synchronizes the EMV capability.
+    func filterChinaUnionPayForApplePay(from paymentRequest: PKPaymentRequest) {
+        if isSetupOrFutureOffSessionForApplePay {
+            paymentRequest.supportedNetworks.removeAll { $0 == .chinaUnionPay }
+        }
+        StripeAPI.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
+    }
+
     /// China UnionPay Apple Pay cannot validate a card or set up future merchant-initiated payments.
-    var isSetupOrFutureOffSessionForApplePay: Bool {
+    private var isSetupOrFutureOffSessionForApplePay: Bool {
         switch self {
         case .paymentIntent(let paymentIntent):
             return paymentIntent.setupFutureUsage(for: .card) == "off_session"

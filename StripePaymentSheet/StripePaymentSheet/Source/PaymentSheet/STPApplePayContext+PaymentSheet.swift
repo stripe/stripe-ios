@@ -268,7 +268,7 @@ extension STPApplePayContext {
             paymentRequest = paymentRequestHandler(paymentRequest)
         }
         // Apply intent restrictions after customization so a handler cannot re-enable an unsupported network.
-        StripeAPI.filterChinaUnionPay(for: paymentRequest, isSetupOrFutureOffSession: intent.isSetupOrFutureOffSessionForApplePay)
+        intent.filterChinaUnionPayForApplePay(from: paymentRequest)
 
         let delegate = ApplePayContextClosureDelegate(
             intent: intent,
@@ -351,7 +351,7 @@ extension STPApplePayContext {
             paymentRequest.merchantCapabilities = merchantCapabilities
         }
 
-        StripeAPI.filterChinaUnionPay(for: paymentRequest, isSetupOrFutureOffSession: intent.isSetupOrFutureOffSessionForApplePay)
+        intent.filterChinaUnionPayForApplePay(from: paymentRequest)
 
         return paymentRequest
     }

@@ -214,7 +214,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
             (["setup_future_usage_for_payment_method_type": ["card": "off_session"]], false),
             (["setup_future_usage_for_payment_method_type": ["sepa_debit": "off_session"]], true),
             (["payment_status": "no_payment_required"], false),
-            (["total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 0)], false),
         ]
         for (overrides, allowsChinaUnionPay) in cases {
             // Given a session with resolved card future usage or no payment due

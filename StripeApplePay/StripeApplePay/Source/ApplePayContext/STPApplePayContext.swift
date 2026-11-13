@@ -180,8 +180,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
     /// @note If using Swift, using ApplePayContextDelegate is recommended over STPApplePayContextDelegate.
     /// @note The EMV merchant capability is synchronized with China UnionPay in the request's supported networks before passing the request to PassKit.
-    /// @note China UnionPay is excluded from zero-total and explicit recurring, automatic reload, or deferred requests.
-    /// For other SetupIntent or future off-session flows, exclude China UnionPay yourself: the intent client secret is supplied after Apple Pay authorization.
+    /// @note Custom integrations must exclude China UnionPay from setup-only, recurring, and future off-session flows before creating the context.
+    /// The context normalizes EMV but does not filter networks by payment usage; the intent client secret is supplied after Apple Pay authorization.
     /// - Parameters:
     ///   - paymentRequest:      The payment request to use with Apple Pay.
     ///   - delegate:                    The delegate.
@@ -190,7 +190,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         paymentRequest: PKPaymentRequest,
         delegate: _stpinternal_STPApplePayContextDelegateBase?
     ) {
-        StripeAPI.filterChinaUnionPay(for: paymentRequest)
+        StripeAPI.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
         STPTelemetryClient.shared.sendTelemetryData()
         // On iOS 15+, Apple Pay can be displayed even though there are no cards because Apple added the ability for customers to add cards in the payment sheet (see WWDC '21 "What's new in Wallet and Apple Pay")

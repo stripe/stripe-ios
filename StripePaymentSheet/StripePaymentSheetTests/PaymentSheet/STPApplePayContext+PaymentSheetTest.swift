@@ -294,7 +294,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         }
     }
 
-    func testChinaUnionPayExcludedWhenCustomHandlerChangesTotalOrRecurringSummary() {
+    func testChinaUnionPayEligibilityUsesIntentRatherThanCustomSummaryItems() {
         for summaryItems in [
             [PKPaymentSummaryItem(label: "Total", amount: .zero, type: .pending)],
             [PKRecurringPaymentSummaryItem(label: "Subscription", amount: 10), PKPaymentSummaryItem(label: "Total", amount: 10)],
@@ -305,8 +305,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
                 return request
             }
 
-            XCTAssertEqual(request.supportedNetworks, [.visa])
-            XCTAssertFalse(request.merchantCapabilities.contains(.emv))
+            XCTAssertEqual(request.supportedNetworks, [.visa, .chinaUnionPay])
+            XCTAssertTrue(request.merchantCapabilities.contains(.emv))
         }
     }
 

@@ -68,7 +68,7 @@ class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
 }
 
 class STPApplePayContextTest: XCTestCase {
-    func testInitFiltersChinaUnionPayForZeroTotalAndRecurringCustomRequests() {
+    func testInitPreservesMerchantSelectedChinaUnionPayForZeroTotalAndRecurringRequests() {
         // Given a merchant-built request, with no intent available to the context
         for summaryItems in [
             [PKPaymentSummaryItem(label: "Total", amount: .zero, type: .pending)],
@@ -79,15 +79,15 @@ class STPApplePayContextTest: XCTestCase {
             request.countryCode = "CN"
             request.currencyCode = "CNY"
             request.supportedNetworks = [.visa, .chinaUnionPay]
-            request.merchantCapabilities = [.capability3DS, .emv, .capabilityDebit]
+            request.merchantCapabilities = [.capability3DS, .capabilityDebit]
             request.paymentSummaryItems = summaryItems
 
             // When the final request is handed to Stripe's context
             _ = STPApplePayContext(paymentRequest: request, delegate: nil)
 
-            // Then filtering runs before PassKit, preserving the debit restriction
-            XCTAssertEqual(request.supportedNetworks, [.visa])
-            XCTAssertEqual(request.merchantCapabilities, [.capability3DS, .capabilityDebit])
+            // Then usage filtering stays with the merchant, while Stripe adds EMV and preserves the debit restriction
+            XCTAssertEqual(request.supportedNetworks, [.visa, .chinaUnionPay])
+            XCTAssertEqual(request.merchantCapabilities, [.capability3DS, .emv, .capabilityDebit])
         }
     }
 

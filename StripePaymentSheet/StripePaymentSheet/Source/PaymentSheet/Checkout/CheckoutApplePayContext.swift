@@ -506,10 +506,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             paymentRequest.billingContact = makeBillingContact(from: defaults)
         }
 
-        StripeAPI.filterChinaUnionPay(
-            for: paymentRequest,
-            isSetupOrFutureOffSession: Intent.checkout(checkoutSession).isSetupOrFutureOffSessionForApplePay
-        )
+        Intent.checkout(checkoutSession).filterChinaUnionPayForApplePay(from: paymentRequest)
 
         return paymentRequest
     }
