@@ -95,8 +95,12 @@ final class PreselectLinkExperimentTests: XCTestCase {
         XCTAssertTrue(analyticsClient.loggedAnalyticsPayloads.isEmpty)
     }
 
-    func testUnsupportedLinkIsNotExposed() {
-        XCTAssertFalse(evaluate(supportsLink: false))
+    func testEmbeddedUnsupportedLinkIsNotExposed() {
+        XCTAssertFalse(evaluate(
+            configuration: EmbeddedPaymentElement.Configuration(),
+            integrationShape: .embedded,
+            supportsLink: false
+        ))
         XCTAssertTrue(analyticsClient.loggedAnalyticsPayloads.isEmpty)
     }
 
