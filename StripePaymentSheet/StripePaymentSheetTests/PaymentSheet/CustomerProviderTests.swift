@@ -261,4 +261,18 @@ final class CustomerProviderTests: XCTestCase {
             XCTAssertEqual(provider.allowsPaymentMethodUpdate(elementsSession: elementsSession), expected.update, description)
         }
     }
+
+    func testCheckoutAndGuestCustomersDoNotUseElementsSessionEphemeralKeys() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        let providers: [CustomerProvider] = [
+            .init(customer: nil),
+            .init(checkoutSession: checkoutSession),
+        ]
+        let elementsSession = STPElementsSession
+            .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_unrelated")
+
+        for provider in providers {
+            XCTAssertNil(provider.ephemeralKeySecret(basedOn: elementsSession))
+        }
+    }
 }

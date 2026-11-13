@@ -15,7 +15,6 @@ final class SavedPaymentMethodManager {
 
     enum Error: Swift.Error {
         case missingEphemeralKey
-        case missingUpdatedPaymentMethod
     }
 
     let configuration: PaymentElementConfiguration
@@ -38,43 +37,6 @@ final class SavedPaymentMethodManager {
         self.configuration = configuration
         self.elementsSession = elementsSession
         self.intent = intent
-    }
-
-    func update(paymentMethod: STPPaymentMethod,
-                with updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod {
-        switch intent {
-        case .checkout(let session):
-            let billing = CheckoutElementsController.PaymentMethodBillingDetails(updateParams.billingDetails)
-            let expiry = CheckoutElementsController.PaymentMethodExpiryDetails(updateParams.card)
-            guard billing != nil || expiry != nil else {
-                throw PaymentSheetError.unknown(debugDescription: "Tried to update a payment method without billing details or expiry details.")
-            }
-            let updatedSession = try await configuration.apiClient.updatePaymentMethod(
-                paymentMethod.stripeId,
-                inCheckoutSession: session.id,
-                clientSecret: session.clientSecret,
-                billingDetails: billing,
-                expiryDetails: expiry
-            )
-            guard let updatedPaymentMethod = updatedSession.customer?.paymentMethods.first(where: { $0.stripeId == paymentMethod.stripeId }) else {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                                  error: Error.missingUpdatedPaymentMethod,
-                                                  additionalNonPIIParams: ["payment_method_id": paymentMethod.stripeId])
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                throw PaymentSheetError.unknown(debugDescription: "Checkout session response didn't include the updated payment method.")
-            }
-            updatedPaymentMethod.updateLocalFields(from: paymentMethod)
-            return updatedPaymentMethod
-        case .paymentIntent, .setupIntent, .deferredIntent:
-            guard let ephemeralKey else {
-                throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while updating a payment method.")
-            }
-            let updatedPaymentMethod = try await configuration.apiClient.updatePaymentMethod(with: paymentMethod.stripeId,
-                                                                                             paymentMethodUpdateParams: updateParams,
-                                                                                             ephemeralKeySecret: ephemeralKey)
-            updatedPaymentMethod.updateLocalFields(from: paymentMethod)
-            return updatedPaymentMethod
-        }
     }
 
     func detach(paymentMethod: STPPaymentMethod) {
