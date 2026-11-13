@@ -39,6 +39,16 @@ final class PreselectLinkExperimentTests: XCTestCase {
         XCTAssertEqual(analyticsClient.loggedAnalyticsPayloads.first?["dimensions-in_app_elements_integration_type"] as? String, "embedded")
     }
 
+    func testCheckoutElementsTreatmentLogsCheckoutIntegration() {
+        XCTAssertTrue(evaluate(
+            configuration: EmbeddedPaymentElement.Configuration(),
+            integrationShape: .embedded,
+            experimentIntegrationShape: .checkoutElements
+        ))
+        XCTAssertEqual(analyticsClient.loggedAnalyticsPayloads.count, 1)
+        XCTAssertEqual(analyticsClient.loggedAnalyticsPayloads.first?["dimensions-in_app_elements_integration_type"] as? String, "checkoutelements")
+    }
+
     func testControlLogsExposureWithoutPreselectingLink() {
         XCTAssertFalse(evaluate(assignment: "control"))
         XCTAssertEqual(analyticsClient.loggedAnalyticsPayloads.first?["assignment_group"] as? String, "control")
@@ -141,6 +151,7 @@ final class PreselectLinkExperimentTests: XCTestCase {
         assignment: String? = "treatment",
         configuration: PaymentElementConfiguration = PaymentSheet.Configuration(),
         integrationShape: PaymentSheetLoader.IntegrationShape = .flowController,
+        experimentIntegrationShape: ExperimentIntegrationShape? = nil,
         hasExistingSelection: Bool = false,
         supportsLink: Bool = true,
         linkAccount: PaymentSheetLinkAccount? = nil
@@ -153,7 +164,7 @@ final class PreselectLinkExperimentTests: XCTestCase {
             "experiment_assignments": assignment.map { ["ocs_mobile_preselect_link": $0] } ?? [:],
         ] as [String: Any]
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
-        let shape: ExperimentIntegrationShape = integrationShape == .embedded ? .embedded : .flowController
+        let shape: ExperimentIntegrationShape = experimentIntegrationShape ?? (integrationShape == .embedded ? .embedded : .flowController)
 
         // When the loader evaluates the final fallback
         return PreselectLinkExperiment.shouldPreselectLink(

@@ -147,6 +147,27 @@ enum CheckoutElementsControllerLoader {
             checkoutSessionID: session.id,
             checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
         )
+        let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: fcConfiguration)
+        let hasLastUsedLink = CustomerPaymentOption.selectedPaymentMethod(
+            for: customerProvider.customerID,
+            elementsSession: elementsSession,
+            surface: .paymentSheet
+        ) == .link && PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: fcConfiguration)
+        // Checkout shares its initial selection across the sheet and embedded presentations.
+        let preselectLink = PreselectLinkExperiment.shouldPreselectLink(
+            elementsSession: elementsSession,
+            configuration: fcConfiguration,
+            integrationShape: .flowController,
+            hasExistingSelection: session.paymentOption != nil || isApplePayEnabled || !savedPaymentMethods.isEmpty || hasLastUsedLink,
+            isApplePayEnabled: isApplePayEnabled,
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: paymentMethodTypes,
+            linkAccount: LinkAccountContext.shared.account,
+            analyticsHelper: ExperimentAnalyticsHelper(
+                integrationShape: .checkoutElements,
+                analyticsClientV2: flowControllerAnalyticsHelper.analyticsClientV2
+            )
+        )
         // Return
         let flowControllerLoadResult = PaymentSheetLoader.LoadResult(
             intent: intent,
@@ -155,7 +176,8 @@ enum CheckoutElementsControllerLoader {
             paymentMethodTypes: paymentMethodTypes,
             paymentMethodMessagingPromotionsHelper: nil,
             paymentMethodOrientation: orientation,
-            customerProvider: customerProvider
+            customerProvider: customerProvider,
+            preselectLink: preselectLink
         )
         let embeddedLoadResult = PaymentSheetLoader.LoadResult(
             intent: intent,
@@ -164,7 +186,8 @@ enum CheckoutElementsControllerLoader {
             paymentMethodTypes: paymentMethodTypes,
             paymentMethodMessagingPromotionsHelper: nil,
             paymentMethodOrientation: .vertical,
-            customerProvider: customerProvider
+            customerProvider: customerProvider,
+            preselectLink: preselectLink
         )
         return (
             confirmationChallenge: confirmationChallenge,
