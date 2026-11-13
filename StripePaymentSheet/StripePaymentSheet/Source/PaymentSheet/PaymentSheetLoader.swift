@@ -23,6 +23,7 @@ final class PaymentSheetLoader {
         let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
         let customerProvider: CustomerProvider
+        var preselectLink: Bool = false
     }
 
     enum IntegrationShape {
@@ -179,6 +180,24 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
+            let defaultPaymentMethod = paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex)
+            // Link may live in a wallet header instead of the saved-method carousel.
+            let hasLastUsedLink = CustomerPaymentOption.selectedPaymentMethod(
+                for: customerProvider.customerID,
+                elementsSession: elementsSession,
+                surface: .paymentSheet
+            ) == .link && PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
+            let preselectLink = PreselectLinkExperiment.shouldPreselectLink(
+                elementsSession: elementsSession,
+                configuration: configuration,
+                integrationShape: integrationShape,
+                hasExistingSelection: defaultPaymentMethod != nil || hasLastUsedLink,
+                isApplePayEnabled: isApplePayEnabled,
+                savedPaymentMethods: filteredSavedPaymentMethods,
+                paymentMethodTypes: paymentMethodTypes,
+                linkAccount: LinkAccountContext.shared.account,
+                analyticsHelper: analyticsHelper.experimentAnalyticsHelper
+            )
 
             // Temporary band-aid for pre-loading card art: fire-and-forget fetch to warm the in-meory cache for PS.FC
             // and embedded PaymentOptionDisplayData APIs.
@@ -196,7 +215,8 @@ final class PaymentSheetLoader {
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                 paymentMethodOrientation: paymentMethodOrientation,
-                customerProvider: customerProvider
+                customerProvider: customerProvider,
+                preselectLink: preselectLink
             )
             let confirmationChallenge = ConfirmationChallenge(
                 elementsSession: elementsSession,
@@ -208,7 +228,7 @@ final class PaymentSheetLoader {
             analyticsHelper.logLoadSucceeded(
                 intent: intent,
                 elementsSession: elementsSession,
-                defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
+                defaultPaymentMethod: preselectLink ? .link : defaultPaymentMethod,
                 orderedPaymentMethodTypes: paymentMethodTypes,
                 paymentMethodOrientation: loadResult.paymentMethodOrientation,
                 loadTimings: loadTimings,

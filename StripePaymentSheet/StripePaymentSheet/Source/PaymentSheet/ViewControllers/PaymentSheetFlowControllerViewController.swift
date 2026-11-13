@@ -275,11 +275,17 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         }
         self.savedPaymentOptionsViewController.delegate = self
         self.addPaymentMethodViewController.delegate = self
-        if initialState.paymentOption == nil,
-           shouldUseLinkOnlyWalletHeader,
-           Self.customerDefaultIsLink(customerProvider: loadResult.customerProvider, elementsSession: elementsSession) {
-            mode = .addingNew
-            isHackyLinkButtonSelected = true
+        if shouldUseLinkOnlyWalletHeader {
+            switch initialState.paymentOption {
+            case .link(.wallet):
+                mode = .addingNew
+                isHackyLinkButtonSelected = true
+            case nil where loadResult.preselectLink || Self.customerDefaultIsLink(customerProvider: loadResult.customerProvider, elementsSession: elementsSession):
+                mode = .addingNew
+                isHackyLinkButtonSelected = true
+            default:
+                break
+            }
         }
     }
 
