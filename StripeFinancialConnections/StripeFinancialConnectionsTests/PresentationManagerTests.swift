@@ -33,25 +33,40 @@ class PresentationManagerTests: XCTestCase {
         XCTAssertEqual(toViewController.traitCollection.userInterfaceStyle, .dark)
     }
 
-    func testOnelinkBrandUsesSameTintAsLinkForLightTheme() {
-        let onelinkAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .onelink)
-        let linkAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .link)
+    func testLinkThemeUsesColoredLinkLogos() {
+        let appearance = FinancialConnectionsAppearance(theme: .linkLight, linkBrand: .link)
 
-        XCTAssertTrue(onelinkAppearance.logoTintColor.isEqual(linkAppearance.logoTintColor))
+        XCTAssertEqual(appearance.logo, .link_logo_color)
+        XCTAssertEqual(appearance.darkModeLogo, .link_logo_color_dark)
+        XCTAssertEqual(appearance.logoImage(for: .light).renderingMode, .alwaysOriginal)
+        XCTAssertEqual(appearance.logoImage(for: .dark).renderingMode, .alwaysOriginal)
     }
 
-    func testOnelinkBrandUsesSameTintAsLinkForLinkTheme() {
-        let onelinkAppearance = FinancialConnectionsAppearance(theme: .linkLight, linkBrand: .onelink)
-        let linkAppearance = FinancialConnectionsAppearance(theme: .linkLight, linkBrand: .link)
+    func testLinkThemeUsesColoredOnelinkLogos() {
+        let appearance = FinancialConnectionsAppearance(theme: .linkLight, linkBrand: .onelink)
 
-        XCTAssertTrue(onelinkAppearance.logoTintColor.isEqual(linkAppearance.logoTintColor))
+        XCTAssertEqual(appearance.logo, .onelink_logo_color)
+        XCTAssertEqual(appearance.darkModeLogo, .onelink_logo_color_dark)
+        XCTAssertEqual(appearance.logoImage(for: .light).renderingMode, .alwaysOriginal)
+        XCTAssertEqual(appearance.logoImage(for: .dark).renderingMode, .alwaysOriginal)
     }
 
-    func testLinkBrandStillUsesThemeTinting() {
-        let linkAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .link)
-        let stripeAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: nil)
+    func testConfiguredOnelinkBrandOverridesManifestLinkBrand() {
+        var configuration = FinancialConnectionsSheet.Configuration()
+        configuration.linkBrand = .onelink
+        PresentationManager.shared.configuration = configuration
 
-        XCTAssertFalse(linkAppearance.logoTintColor.isEqual(UIColor.clear))
-        XCTAssertFalse(stripeAppearance.logoTintColor.isEqual(UIColor.clear))
+        let appearance = FinancialConnectionsAppearance(theme: .linkLight, linkBrand: .link)
+
+        XCTAssertEqual(appearance.logo, .onelink_logo_color)
+        XCTAssertEqual(appearance.darkModeLogo, .onelink_logo_color_dark)
+    }
+
+    func testStripeThemeUsesTintedStripeLogo() {
+        let appearance = FinancialConnectionsAppearance(theme: .light, linkBrand: nil)
+
+        XCTAssertEqual(appearance.logo, .stripe_logo)
+        XCTAssertNil(appearance.darkModeLogo)
+        XCTAssertEqual(appearance.logoImage(for: .light).renderingMode, .alwaysTemplate)
     }
 }

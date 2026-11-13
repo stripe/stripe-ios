@@ -42,7 +42,14 @@ final class AccountPickerSelectionListView: UIView {
         self.disabledAccounts = disabledAccounts
         self.appearance = appearance
         super.init(frame: .zero)
-        addAndPinSubviewToSafeArea(verticalStackView)
+        if appearance.colors == .link {
+            verticalStackView.spacing = 0
+            addAndPinSubviewToSafeArea(
+                CreateLinkGroupedCardView(contentView: verticalStackView, appearance: appearance)
+            )
+        } else {
+            addAndPinSubviewToSafeArea(verticalStackView)
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -50,9 +57,19 @@ final class AccountPickerSelectionListView: UIView {
     }
 
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount]) {
+        let isLinkTheme = appearance.colors == .link
+
         // clear all previous state
-        verticalStackView.arrangedSubviews.forEach { arrangedSubview in
-            arrangedSubview.removeFromSuperview()
+        verticalStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        var rowCount = 0
+        func addRow(_ rowView: AccountPickerRowView) {
+            if isLinkTheme && rowCount > 0 {
+                verticalStackView.addArrangedSubview(CreateLinkGroupedCardSeparatorView())
+            }
+            rowView.isInsideGroup = isLinkTheme
+            verticalStackView.addArrangedSubview(rowView)
+            rowCount += 1
         }
 
         // list enabled accounts
@@ -83,7 +100,7 @@ final class AccountPickerSelectionListView: UIView {
                 balanceString: rowInfo.balanceString,
                 isSelected: selectedAccounts.contains(where: { $0.id == account.id })
             )
-            verticalStackView.addArrangedSubview(accountRowView)
+            addRow(accountRowView)
         }
 
         // list disabled accounts
@@ -103,7 +120,7 @@ final class AccountPickerSelectionListView: UIView {
                 balanceString: nil,
                 isSelected: false
             )
-            verticalStackView.addArrangedSubview(accountRowView)
+            addRow(accountRowView)
         }
     }
 }
