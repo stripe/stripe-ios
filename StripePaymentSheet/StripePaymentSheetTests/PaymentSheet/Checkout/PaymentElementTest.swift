@@ -33,6 +33,79 @@ final class PaymentElementTest: XCTestCase {
         super.tearDown()
     }
 
+    func testLinkPreselectionTreatmentSetsInitialCheckoutPaymentOption() async throws {
+        let previousAccount = LinkAccountContext.shared.account
+        LinkAccountContext.shared.account = nil
+        defer { LinkAccountContext.shared.account = previousAccount }
+        // Given Checkout has no higher-priority selection and a Link treatment assignment
+        let checkout = try await makeLinkPreselectionCheckout(assignment: "treatment")
+
+        // Then the merchant receives Link before presenting or interacting with either UI
+        let element = checkout.getPaymentElement()
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "link")
+        XCTAssertEqual(checkout.session.paymentOption?.label, "Link")
+        XCTAssertEqual(element.paymentSheetFlowController.paymentOption?.paymentMethodType, "link")
+        XCTAssertEqual(element.embeddedPaymentElement.paymentOption?.paymentMethodType, "link")
+        XCTAssertTrue(element.paymentSheetFlowController.viewController.loadResult.preselectLink)
+        XCTAssertTrue(element.embeddedPaymentElement.loadResult.preselectLink)
+        XCTAssertNil(CustomerPaymentOption.localDefaultPaymentMethod(for: nil))
+    }
+
+    func testLinkPreselectionControlLeavesCheckoutUnselected() async throws {
+        let previousAccount = LinkAccountContext.shared.account
+        LinkAccountContext.shared.account = nil
+        defer { LinkAccountContext.shared.account = previousAccount }
+        // Given the same eligible Checkout in the control group
+        let checkout = try await makeLinkPreselectionCheckout(assignment: "control")
+
+        // Then neither presentation nor the merchant receives an initial selection
+        let element = checkout.getPaymentElement()
+        XCTAssertNil(checkout.session.paymentOption)
+        XCTAssertNil(element.paymentSheetFlowController.paymentOption)
+        XCTAssertNil(element.embeddedPaymentElement.paymentOption)
+        XCTAssertFalse(element.paymentSheetFlowController.viewController.loadResult.preselectLink)
+        XCTAssertFalse(element.embeddedPaymentElement.loadResult.preselectLink)
+    }
+
+    func testLinkPreselectionPreservesCheckoutSelectionDuringUpdate() async throws {
+        let previousAccount = LinkAccountContext.shared.account
+        LinkAccountContext.shared.account = nil
+        defer { LinkAccountContext.shared.account = previousAccount }
+        // Given treatment Checkout with a customer-selected payment method
+        let checkout = try await makeLinkPreselectionCheckout(assignment: "treatment", paymentMethodTypes: ["card", "link", "paynow"], currency: "sgd")
+        let element = checkout.getPaymentElement()
+        let row = try XCTUnwrap(element.embeddedPaymentElement.embeddedPaymentMethodsView.rowButtons.first {
+            $0.type == .new(paymentMethodType: .stripe(.paynow))
+        })
+        element.embeddedPaymentElement.embeddedPaymentMethodsView.didTap(rowButton: row)
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
+
+        // When Checkout refreshes the same eligible session
+        try await checkout.runServerUpdate { }
+
+        // Then the fallback is not reapplied over the customer's selection
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
+        XCTAssertFalse(element.paymentSheetFlowController.viewController.loadResult.preselectLink)
+        XCTAssertFalse(element.embeddedPaymentElement.loadResult.preselectLink)
+    }
+
+    private func makeLinkPreselectionCheckout(
+        assignment: String,
+        paymentMethodTypes: [String] = ["card", "link"],
+        currency: String = "usd"
+    ) async throws -> CheckoutElementsController {
+        var json = Self.openSessionJSON(paymentMethodTypes: paymentMethodTypes)
+        json["presentment_currency"] = currency
+        json["integration_currency"] = currency
+        json["items"] = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency)
+        json["experiments_data"] = [
+            "arb_id": "arb_checkout",
+            "experiment_assignments": ["ocs_mobile_preselect_link": assignment],
+        ]
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
+        return try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: response))
+    }
+
     func testConfigurationSetsCheckoutDefaultBillingDetails() async throws {
         // Given Checkout billing defaults
         var checkoutConfiguration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
