@@ -226,6 +226,90 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - Merchant Capabilities Tests
 
+    func testChinaUnionPayEligibilityRespectsEffectiveCardFutureUsage() {
+        let originalNetworks = StripeAPI.additionalEnabledApplePayNetworks
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay, .cartesBancaires]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = originalNetworks }
+
+        // Given both intent integration styles with top-level and per-card future usage
+        let usages: [(PaymentSheet.IntentConfiguration.SetupFutureUsage?, PaymentSheet.IntentConfiguration.SetupFutureUsage?, Bool)] = [
+            (nil, nil, true),
+            (.onSession, nil, true),
+            (.offSession, nil, false),
+            (nil, .offSession, false),
+            (.onSession, .offSession, false),
+            (.offSession, .some(.none), true),
+            (.offSession, .onSession, true),
+        ]
+        for (topLevel, cardOverride, allowsChinaUnionPay) in usages {
+            let intent = Intent._testPaymentIntent(
+                paymentMethodTypes: [.card],
+                setupFutureUsage: topLevel == .offSession ? .offSession : topLevel == .onSession ? .onSession : .none,
+                paymentMethodOptionsSetupFutureUsage: cardOverride.map { [.card: $0.rawValue] }
+            )
+            let deferredIntent = Intent.deferredIntent(intentConfig: .init(
+                mode: .payment(
+                    amount: 2345, currency: "USD", setupFutureUsage: topLevel,
+                    paymentMethodOptions: .init(setupFutureUsageValues: cardOverride.map { [.card: $0] })
+                ),
+                confirmHandler: dummyDeferredConfirmHandler
+            ))
+            for intent in [intent, deferredIntent] {
+                // When building the request
+                let request = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+
+                // Then only effective off-session card setup excludes UnionPay
+                XCTAssertEqual(request.supportedNetworks.contains(.chinaUnionPay), allowsChinaUnionPay)
+                XCTAssertEqual(request.merchantCapabilities.contains(.emv), allowsChinaUnionPay)
+                XCTAssertTrue(request.supportedNetworks.contains(.cartesBancaires))
+            }
+        }
+    }
+
+    func testChinaUnionPayCannotBeReenabledByCustomHandlerForUnsupportedIntents() {
+        // Given setup-only and future off-session intents, including setup with on-session usage
+        var setupIntentResponse = STPFixtures.setupIntent().allResponseFields
+        setupIntentResponse["usage"] = "on_session"
+        let intents: [Intent] = [
+            .setupIntent(STPFixtures.setupIntent()),
+            .setupIntent(STPSetupIntent.decodedObject(fromAPIResponse: setupIntentResponse)!),
+            .deferredIntent(intentConfig: .init(mode: .setup(currency: "USD", setupFutureUsage: .onSession), confirmHandler: dummyDeferredConfirmHandler)),
+            .deferredIntent(intentConfig: .init(mode: .setup(currency: "USD"), confirmHandler: dummyDeferredConfirmHandler)),
+            ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession),
+            .deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession), confirmHandler: dummyDeferredConfirmHandler)),
+        ]
+        for intent in intents {
+            // When a merchant replaces the entire request and attempts to re-enable UnionPay
+            let request = paymentRequestAfterCustomHandler(intent: intent) { _ in
+                let replacement = StripeAPI.paymentRequest(withMerchantIdentifier: "merchant_id", country: "GB", currency: "USD")
+                replacement.paymentSummaryItems = [PKPaymentSummaryItem(label: "Custom positive total", amount: 10)]
+                replacement.supportedNetworks = [.visa, .chinaUnionPay, .cartesBancaires]
+                replacement.merchantCapabilities = [.capability3DS, .emv, .capabilityCredit]
+                return replacement
+            }
+
+            // Then final filtering still excludes UnionPay and preserves other networks and capability bits
+            XCTAssertEqual(request.supportedNetworks, [.visa, .cartesBancaires])
+            XCTAssertEqual(request.merchantCapabilities, [.capability3DS, .capabilityCredit])
+        }
+    }
+
+    func testChinaUnionPayEligibilityUsesIntentRatherThanCustomSummaryItems() {
+        for summaryItems in [
+            [PKPaymentSummaryItem(label: "Total", amount: .zero, type: .pending)],
+            [PKRecurringPaymentSummaryItem(label: "Subscription", amount: 10), PKPaymentSummaryItem(label: "Total", amount: 10)],
+        ] {
+            let request = paymentRequestAfterCustomHandler { request in
+                request.supportedNetworks = [.visa, .chinaUnionPay]
+                request.paymentSummaryItems = summaryItems
+                return request
+            }
+
+            XCTAssertEqual(request.supportedNetworks, [.visa, .chinaUnionPay])
+            XCTAssertTrue(request.merchantCapabilities.contains(.emv))
+        }
+    }
+
     func testCreate_removesEMVWhenBrandFilterRemovesChinaUnionPay() {
         // Given UnionPay is enabled globally but excluded by PaymentSheet's brand filter
         let originalNetworks = StripeAPI.additionalEnabledApplePayNetworks
@@ -270,6 +354,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     private func paymentRequestAfterCustomHandler(
+        intent: Intent = ._testValue(),
         _ paymentRequestHandler: @escaping (PKPaymentRequest) -> PKPaymentRequest
     ) -> PKPaymentRequest {
         var handledPaymentRequest: PKPaymentRequest?
@@ -284,7 +369,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             merchantCountryCode: "GB",
             customHandlers: handlers
         )
-        let intent = Intent._testValue()
         let elementsSession = STPElementsSession._testValue()
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: intent,

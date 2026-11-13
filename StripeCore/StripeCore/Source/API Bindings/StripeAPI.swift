@@ -78,6 +78,8 @@ import PassKit
     /// Configure China UnionPay before initializing PaymentSheet so Apple Pay availability and payment request construction use the intended network list.
     /// Stripe adds the EMV merchant capability for China UnionPay when building a payment request.
     /// If you modify the supported networks and present your own PassKit controller, keep the EMV capability in sync with China UnionPay.
+    /// China UnionPay Apple Pay supports one-time payments only. For custom integrations, exclude it from SetupIntents,
+    /// zero-total requests, and payments that set up recurring or future off-session use before presenting Apple Pay.
     @objc public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = [] {
         didSet {
             // Reset deviceSupportsApplePay for the updated network list:
