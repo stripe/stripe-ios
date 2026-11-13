@@ -49,12 +49,12 @@ class IDConsentContentViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         let genericInfoScreen = dataSource.idConsentContent.screen
         let logoView: UIView? = {
             guard let imageUrl = genericInfoScreen.header?.icon?.default else { return nil }
-            return CreateRoundedLogoView(urlString: imageUrl)
+            return CreateRoundedLogoView(urlString: imageUrl, appearance: dataSource.manifest.appearance)
         }()
 
         let bodyView: ConsentBodyView? = {
@@ -75,6 +75,7 @@ class IDConsentContentViewController: UIViewController {
 
             return ConsentBodyView(
                 bulletItems: bullets,
+                appearance: dataSource.manifest.appearance,
                 didSelectURL: { [weak self] url in
                     self?.didSelectURLInTextFromBackend(url)
                 }
@@ -87,7 +88,8 @@ class IDConsentContentViewController: UIViewController {
             subtitle: genericInfoScreen.header?.subtitle,
             headerAlignment: .center,
             horizontalPadding: 0,
-            contentView: bodyView
+            contentView: bodyView,
+            appearance: dataSource.manifest.appearance
         )
         let paneLayoutView = PaneLayoutView(contentView: contentView, footerView: footer.footerView)
         paneLayoutView.addTo(view: view)

@@ -36,7 +36,6 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         otpView.delegate = self
         return otpView
     }()
-
     init(dataSource: NetworkingLinkVerificationDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
@@ -48,7 +47,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         otpView.startVerification()
     }
 
@@ -61,7 +60,8 @@ final class NetworkingLinkVerificationViewController: UIViewController {
                     "Enter the code sent to %@",
                     "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
                 ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
-                contentView: otpView
+                contentView: otpView,
+                appearance: dataSource.manifest.appearance
             ),
             footerView: nil
         )
@@ -125,6 +125,7 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
         showContent(redactedPhoneNumber: consumerSession.redactedFormattedPhoneNumber)
+        otpView.focusOTPTextField(after: transitionCoordinator)
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
