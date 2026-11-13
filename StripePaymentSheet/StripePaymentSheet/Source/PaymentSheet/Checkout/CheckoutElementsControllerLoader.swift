@@ -48,9 +48,14 @@ enum CheckoutElementsControllerLoader {
     /// Loads the shared Link account
     static func loadLink(
         session: CheckoutElementsController.Session,
-        configuration: CheckoutElementsController.Configuration,
-        paymentElementConfiguration: PaymentSheet.Configuration?
+        configuration: CheckoutElementsController.Configuration
     ) async {
+        // Link lookup logs analytics and FC experiment dimensions using these session settings.
+        PaymentSheetLoader.applyFinancialConnectionsSettings(elementsSession: session.elementsSession)
+        STPAnalyticsClient.sendAnalyticsToRStripe = session.elementsSession.isAnalyticsToRStripeEnabled
+        let paymentElementConfiguration = configuration.paymentElement.map {
+            makeFlowControllerConfiguration(paymentElementConfiguration: $0, configuration: configuration, session: session)
+        }
         let paymentElementUsesLink = paymentElementConfiguration.map {
             PaymentSheet.isLinkEnabled(elementsSession: session.elementsSession, configuration: $0)
         } ?? false
@@ -66,7 +71,7 @@ enum CheckoutElementsControllerLoader {
             isLinkEnabled: paymentElementUsesLink || expressCheckoutUsesLink,
             email: defaultBillingDetails.email,
             defaultBillingDetails: defaultBillingDetails,
-            analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .checkoutElements),
+            analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .checkoutElements, analyticsClientV2: configuration.analyticsClientV2),
             prefetchedEmailAndSourceTask: Task { nil },
             loadTimings: .init(loadingStartDate: Date()),
             isUpdate: false,
@@ -136,7 +141,8 @@ enum CheckoutElementsControllerLoader {
                 integrationShape: .flowController,
                 configuration: fcConfiguration,
                 checkoutSessionID: session.id,
-                checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
+                checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements),
+                analyticsClientV2: checkout.configuration.analyticsClientV2
             )
         let orientation = fcConfiguration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
         // Create/reuse Embedded analytics helper
@@ -145,7 +151,8 @@ enum CheckoutElementsControllerLoader {
             integrationShape: .embedded,
             configuration: embeddedConfiguration,
             checkoutSessionID: session.id,
-            checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
+            checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements),
+            analyticsClientV2: checkout.configuration.analyticsClientV2
         )
         let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: fcConfiguration)
         let hasLastUsedLink = CustomerPaymentOption.selectedPaymentMethod(
