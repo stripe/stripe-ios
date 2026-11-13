@@ -20,8 +20,6 @@ code). Add related findings to the existing entry rather than filing a duplicate
 Verification: Prefer a live repro against the real test backend (`createCheckoutSession(...)`
 and friends, which can construct arbitrary Checkout Session configs) over a stubbed/mocked
 unit test when checking a claim against actual backend behavior, not just your own code's internal logic.
-Do not run `git add`/`git commit` for repro code. Leave repro tests and source changes
-uncommitted in the worktree.
 
 Known unfinished preview features are out of scope.
 Do not file absence of their implementation as a bug. Focus on supported flows and concrete
@@ -36,7 +34,9 @@ When you have identified a potential issue:
   for unstructured Tasks in this codebase it isn't, unless something explicitly calls
   `.cancel()` on that specific Task. Grep for `.cancel()`/`isCancelled`/`checkCancellation` on
   the path you're claiming, don't assert reachability you haven't checked.
+- Push a branch to the GitHub repo that can be used to reproduce the bug, for example with a unit or UI test. 
+  You may also include source code changes needed to reproduce the bug, for example test harnessing or playground options, but not behavioral changes to production code.
 - File the bug directly in the tracker and update its index. Confirm the changes were saved.
 
 Do not file: style/lint nitpicks, duplicate reports of already-tracked issues, or anything without
-a concrete trigger condition ("this could theoretically..." is not a bug report - i expect you to scrap bugs as you fail to go down the list above).
+a concrete trigger condition ("this could theoretically..." is not a bug report.
