@@ -1,10 +1,16 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
 * [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
+
+### CryptoOnramp (Alpha)
+* [Added] Added the optional `linkCardBrandAcceptance` parameter to `CryptoOnrampCoordinator.create(...)` to allow or block card brands in the Link UI. Defaults to accepting all supported brands.
+
+### Financial Connections
+* [Changed] Updated Link-branded Financial Connections flows, including Instant Debits, to the new Link design system.
 
 ## 26.16.1 2026-11-09
 ### PaymentSheet

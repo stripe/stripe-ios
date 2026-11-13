@@ -204,7 +204,7 @@ private class AutomaticShadowScrollView: UIScrollView {
             shadowView.layer.shadowRadius = 10
             // if the background color is clear, iOS will
             // not draw a shadow
-            shadowView.backgroundColor = FinancialConnectionsAppearance.Colors.background
+            shadowView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
             addSubview(shadowView)
         } else if !canScroll {
             shadowView?.removeFromSuperview()

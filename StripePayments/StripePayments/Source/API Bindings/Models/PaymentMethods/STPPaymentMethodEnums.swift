@@ -140,6 +140,8 @@ import Foundation
     case ngWallet
     /// A Mondu payment method
     case mondu
+    /// A Stripe balance payment method
+    case stripeBalance
     /// An unknown type.
     case unknown
 
@@ -276,6 +278,8 @@ import Foundation
             return "Naira Wallet"
         case .mondu:
             return "Mondu"
+        case .stripeBalance:
+            return "Stripe balance"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -417,6 +421,8 @@ import Foundation
             return "ng_wallet"
         case .mondu:
             return "mondu"
+        case .stripeBalance:
+            return "stripe_balance"
         case .goPay:
             return "gopay"
         }
