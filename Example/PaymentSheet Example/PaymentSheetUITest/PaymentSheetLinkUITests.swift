@@ -655,6 +655,23 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         assertLinkPaymentSuccess(app)
     }
 
+    // MARK: Embedded Link inline signup
+
+    func testLinkEmbedded_disabledSPM_firstTimeLinkUser() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .embedded
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .guest
+        settings.apmsEnabled = .on
+        settings.linkPassthroughMode = .pm
+        settings.formSheetAction = .continue
+
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+        fillLinkAndPay(mode: .checkbox, uiStyle: .embedded, showLinkWalletButton: false)
+    }
+
     // MARK: Link test helpers
 
     private enum LinkMode {
@@ -677,8 +694,20 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
             app.buttons["Continue"].tap()
             app.buttons["Confirm"].waitForExistenceAndTap()
         case .embedded:
-            // TODO(porter) Fill in embedded UI test steps
-            break
+            let phoneField = app.textFields["Phone number"]
+            let phoneDigits = (phoneField.value as? String ?? "").filter(\.isNumber)
+            if phoneDigits.count > 10 {
+                phoneField.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: phoneDigits.count - 10))
+            }
+            XCTAssertEqual((phoneField.value as? String ?? "").filter(\.isNumber), "3105551234")
+            app.stp_dismissKeyboard()
+            XCTAssertTrue(app.buttons["Continue"].isEnabled)
+            app.buttons["Continue"].waitForExistenceAndTap()
+            XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+            XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
+            app.swipeUp()
+            XCTAssertTrue(app.buttons["Checkout"].isEnabled)
+            app.buttons["Checkout"].waitForExistenceAndTap()
         }
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
         // Roundabout way to validate that signup completed successfully

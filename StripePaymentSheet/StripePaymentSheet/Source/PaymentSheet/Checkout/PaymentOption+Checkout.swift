@@ -1,5 +1,5 @@
 //
-//  PaymentOption+CheckoutController.swift
+//  PaymentOption+CheckoutElementsController.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 7/16/26.
@@ -24,7 +24,6 @@ extension PaymentOption {
         case .external(_, let billingDetails):
             return billingDetails
         case .applePay:
-            // TODO(porter) Get Apple Pay working with automatic tax
             return nil
         case .link:
             // Link does not support automatic tax with billing address as source

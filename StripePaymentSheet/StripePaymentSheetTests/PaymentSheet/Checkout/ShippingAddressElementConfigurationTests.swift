@@ -13,7 +13,7 @@ import XCTest
 final class ShippingAddressElementConfigurationTests: XCTestCase {
 
     func testConfigurationDefaultsToNil() {
-        let configuration = CheckoutController.Configuration(
+        let configuration = CheckoutElementsController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
@@ -28,9 +28,9 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         var elementsSessionJSON = CheckoutTestHelpers.minimalCheckoutClientConfigurationJSON
         elementsSessionJSON["flags"] = ["ocs_mobile_should_use_autocomplete_proxy_endpoints": true]
         for (key, value) in elementsSessionJSON { sessionJSON[key] = value }
-        let apiResponse = try PaymentPagesAPIResponse.decode(fromAPIResponse: sessionJSON)
+        let apiResponse = try CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON)
 
-        var configuration = CheckoutController.Configuration(
+        var configuration = CheckoutElementsController.Configuration(
             clientSecret: "cs_test_123_secret_abc",
             returnURL: "stripe-ios-test://checkout-return"
         )
@@ -40,7 +40,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         shippingAddressElementConfiguration.appearance.colors.primary = .purple
         configuration.shippingAddressElement = shippingAddressElementConfiguration
         configuration.userInterfaceStyle = .alwaysDark
-        var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
+        var shippingDetails = CheckoutElementsController.Configuration.Defaults.ShippingDetails()
         shippingDetails.name = "Jenny Rosen"
         shippingDetails.address = .init(
             country: "US",
@@ -56,7 +56,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         )
 
         // When
-        let checkout = try await CheckoutController(configuration: configuration)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
         let shippingAddressElement = checkout.getShippingAddressElement()
         let addressConfiguration = shippingAddressElement.addressViewController.configuration
 
@@ -77,7 +77,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
     func testMakeAddressViewControllerConfiguration() {
         // Given
         let apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        let shippingAddress = CheckoutController.Session.ShippingAddress(
+        let shippingAddress = CheckoutElementsController.Session.ShippingAddress(
             name: "Jenny Rosen",
             address: .init(
                 country: "US",
@@ -117,7 +117,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
 
     func testMakeAddressViewControllerConfigurationIgnoresDisallowedShippingAddress() {
         // Given
-        let shippingAddress = CheckoutController.Session.ShippingAddress(
+        let shippingAddress = CheckoutElementsController.Session.ShippingAddress(
             name: "Jenny Rosen",
             address: .init(country: "CA", line1: "123 Front St.")
         )
@@ -137,7 +137,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
 
     func testMakePaymentSheetAppearance() {
         // Given
-        var appearance = ShippingAddressElement.Appearance()
+        var appearance = ShippingAddressElement.Configuration.Appearance()
         appearance.font.sizeScaleFactor = 1.2
         appearance.font.base = .preferredFont(forTextStyle: .body)
         appearance.font.custom.headline = .preferredFont(forTextStyle: .headline)
@@ -160,7 +160,7 @@ final class ShippingAddressElementConfigurationTests: XCTestCase {
         appearance.primaryButton.borderColor = .blue
         appearance.primaryButton.borderWidth = 2
         appearance.primaryButton.font = .preferredFont(forTextStyle: .title1)
-        var primaryButtonShadow = ShippingAddressElement.Appearance.Shadow()
+        var primaryButtonShadow = ShippingAddressElement.Configuration.Appearance.Shadow()
         primaryButtonShadow.color = .purple
         primaryButtonShadow.opacity = 0.2
         primaryButtonShadow.offset = .init(width: 3, height: 4)

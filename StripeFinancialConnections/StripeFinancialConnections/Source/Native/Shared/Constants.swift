@@ -12,6 +12,8 @@ struct Constants {
     struct Layout {
         private init() {}
         static let defaultHorizontalMargin: CGFloat = 24.0
+        /// Aligns content with the edges of the navigation bar's back and close buttons.
+        static let navigationBarAlignedHorizontalMargin: CGFloat = 16.0
         static let defaultVerticalPadding: CGFloat = 16.0
     }
 }

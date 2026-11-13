@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "En debugger er knyttet til appen.";
+
+"An emulator is being used to run the App." = "Der bruges en emulator til at køre appen.";
+
 "An error occurred. Please try again." = "Der opstod en fejl. Prøv igen.";
+
+"Cancel" = "Annuller";
 
 "Card brand was not updated. Please try again." = "Kortbrandet blev ikke opdateret. Prøv igen.";
 
 "Close" = "Luk";
+
+"Collapsed" = "Lukket";
 
 "Confirm it's you" = "Bekræft, at det er dig";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Indtast koden, der blev sendt til %@.";
 
+"Expanded" = "Udvidet";
+
 "Failed to connect" = "Kunne ikke oprette forbindelse";
+
+"Loading" = "Indlæser";
+
+"No" = "Nej";
 
 "Resend code" = "Send koden igen";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Scan kort";
 
+"Secure checkout" = "Sikker betaling";
+
+"Selected" = "Valgt";
+
 "The IBAN you entered is invalid." = "Det indtastede IBAN-nummer er ugyldigt.";
+
+"The OS or the OS Version is not supported." = "OS’et eller OS-versionen understøttes ikke.";
+
+"The device is jailbroken." = "Enheden er jailbreaket.";
+
+"The integrity of the SDK has been tampered." = "SDK’ets integritet er blevet manipuleret.";
 
 "There was an error processing your card -- try again in a few seconds" = "Der opstod en fejl under behandling af dit kort – prøv igen om et par sekunder";
 
 "There was an unexpected error -- try again in a few seconds" = "Der opstod en uventet fejl – prøv igen om et par sekunder";
 
+"Timeout" = "Timeout";
+
 "Try again" = "Prøv igen";
 
+"Unselected" = "Ikke valgt";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Vi bruger Stripe til at bekræfte dine kortoplysninger. Stripe kan bruge og gemme dine oplysninger i henhold til selskabets Privatlivspolitik. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Lær mere</u></a>";
+
+"Yes" = "Ja";
 
 "Your card has expired" = "Dit kort er udløbet";
 

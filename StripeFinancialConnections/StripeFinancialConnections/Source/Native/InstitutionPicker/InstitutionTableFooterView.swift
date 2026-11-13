@@ -24,15 +24,30 @@ final class InstitutionTableFooterView: UIView {
         super.init(frame: .zero)
 
         let institutionCellView = InstitutionCellView(appearance: appearance)
+        let isLinkTheme = appearance.colors == .link
+        let iconView = RoundedIconView(
+            image: .image(image),
+            style: .rounded,
+            appearance: appearance,
+            // Link: match the size of the institution icons above this row
+            diameter: isLinkTheme ? 44 : 56
+        )
+        if isLinkTheme {
+            iconView.backgroundColor = FinancialConnectionsAppearance.Colors.iconBackgroundOnCard
+        }
         institutionCellView.customize(
-            iconView: RoundedIconView(
-                image: .image(image),
-                style: .rounded,
-                appearance: appearance
-            ),
+            iconView: iconView,
             title: title,
             subtitle: subtitle
         )
+
+        if appearance.colors == .link {
+            backgroundColor = appearance.colors.surfaceSecondary
+            layer.cornerRadius = 12
+            layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            layer.masksToBounds = true
+        }
+
         addAndPinSubview(institutionCellView)
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))

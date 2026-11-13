@@ -14,8 +14,6 @@
 
 "Add bank account" = "Afegir compte bancari";
 
-"Add card" = "Afegir targeta";
-
 "Add new card" = "Afegeix una targeta nova";
 
 "Add new payment method" = "Afegir nou mètode de pagament";
@@ -31,6 +29,10 @@
 "Bank account" = "Compte bancari";
 
 "Bank account details cannot be changed." = "Les dades del compte bancari no es poden canviar.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Abans que puguem enviar un codi al vostre correu electrònic, cal que verifiquem la vostra informació addicional. Introduïu el vostre número de telèfon acabat en ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Abans que puguem enviar un codi al vostre correu electrònic, cal que verifiquem la vostra informació addicional. Introduïu el vostre número de telèfon.";
 
 "Buy Now, Pay Later with  <img/>" = "Pagament diferit amb  <img/>";
 
@@ -58,7 +60,7 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "En continuar a Amazon Pay, permeteu que %@ cobri pagaments futurs al vostre compte de d'Amazon Pay d'acord amb les seves condicions.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "En continuar a Klarna, permeteu que %1$@ cobri pagaments futurs al vostre compte de Klarna d'acord amb les seves condicions. Podeu canviar aquesta opció en qualsevol moment a l'aplicació Klarna o posant-vos en contacte amb %2$@.";
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "En continuar cap a Klarna, autoritzeu %1$@ a carregar pagaments futurs al vostre compte de Klarna d'acord amb els seus termes i amb els termes de Klarna. Podeu canviar-ho en qualsevol moment des de la vostra aplicació de Klarna o posant-vos en contacte amb %2$@.";
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Si continueu a PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";
 
@@ -88,7 +90,7 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En proporcionar l'adreça electrònica, accepteu crear un compte de %1$@ i desar la vostra informació de pagament a %1$@, d'acord amb les <terms>Condicions</terms> i la <privacy>Política de privadesa</privacy> de %1$@.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Proporcionant la informació de pagament i confirmant aquest pagament, estàs autoritzant (A) %@ i Stripe, el nostre proveïdor de serveis de pagament, a enviar ordres al teu banc per tal de carregar des del teu compte i (B) carregar el teu compte en conformitat amb aquestes ordres. Tens dret a un reembolsament per part del teu banc sota els termes i condicions que s'hagin acordat amb aquest. El reembolsament s'ha de sol·licitar en un termini de 8 setmanes des de la data en que es va carregar el compte. Els teus drets estan explicats en un extracte que pots demanar al teu banc. Estàs acceptant rebre notificacions per pròxims dèbits fins a dos dies abans de que es portin a terme.";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "En proporcionar la vostra informació de pagament i confirmar aquest pagament, autoritzeu (A) %@ i Stripe, el nostre proveïdor de serveis de pagament, a enviar instruccions al vostre banc per carregar el vostre compte i (B) al vostre banc a carregar el vostre compte d'acord amb aquestes instruccions. Com a part dels vostres drets, teniu dret a un reembossament per part del vostre banc segons els termes i les condicions del vostre acord amb aquest. El reembossament s'ha de sol·licitar en un termini de 8 setmanes a partir de la data en què es va carregar el vostre compte. Els vostres drets s'expliquen en una declaració que podeu obtenir del vostre banc. Accepteu rebre notificacions de càrrecs futurs amb un màxim de 2 dies d'antelació respecte al moment en què es produeixin.";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En proporcionar el número de telèfon, accepteu crear un compte de %1$@ i desar la vostra informació de pagament a %1$@, d'acord amb les <terms>Condicions</terms> i la <privacy>Política de privadesa</privacy> de %1$@.";
 
@@ -115,8 +117,6 @@
 "Choose a payment method" = "Escull un mètode de pagament";
 
 "Close card scanner" = "Tancar l'escàner de la targeta";
-
-"Code sent" = "Codi enviat";
 
 "Complete the payment using Pix to finish the purchase." = "Completeu el pagament amb Pix per finalitzar la compra.";
 
@@ -162,7 +162,11 @@
 
 "Edit address" = "Edita l'adreça";
 
+"Email code" = "Codi per correu electrònic";
+
 "Enter address manually" = "Introduir l'adreça manualment";
+
+"Enter the phone number on your Link account." = "Introduïu el número de telèfon del vostre compte de Link.";
 
 "Exchange rate and fees of your bank may apply." = "Es poden aplicar la taxa de canvi i les comissions del teu banc.";
 
@@ -186,6 +190,8 @@
 
 "Last 4 digits of SSN" = "Últims 4 dígits del número de la seguretat social (SSN)";
 
+"Log in to another account" = "Inicieu sessió a un altre compte";
+
 "Manage SEPA debit" = "Administra la domiciliació SEPA";
 
 "Manage US bank account" = "Administra el compte bancari dels EUA";
@@ -202,6 +208,8 @@
 
 "Manage your payment methods" = "Administreu els vostres mètodes de pagament";
 
+"More options" = "Més opcions";
+
 "Name on card" = "Nom a la targeta";
 
 "Naver Pay Card" = "Targeta de Naver Pay";
@@ -213,6 +221,8 @@
 "New payment method" = "Nou mètode de pagament";
 
 "No %@ promo" = "Sense promoció de %@";
+
+"None of the payment methods in your %@ account work with this business." = "Cap dels mètodes de pagament del vostre compte %@ funciona en aquesta empresa.";
 
 "Not you?" = "No ets tu?";
 
@@ -277,6 +287,8 @@
 "Remove payment method" = "Elimina el mètode de pagament";
 
 "Remove payment method?" = "Suprimir el mètode de pagament?";
+
+"Resend code in %d seconds" = "Torneu a enviar el codi d'aquí a %li segons";
 
 "SEPA debit details cannot be changed." = "Les dades de la domiciliació SEPA no es poden canviar.";
 
@@ -358,6 +370,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Aquesta forma de pagament se suprimirà, però continuarà disponible per a les subscripcions del %@.";
 
+"This phone number doesn't match your Link account. Please try again." = "Aquest número de telèfon no coincideix amb el vostre compte de Link. Torneu-ho a provar.";
+
 "Too many attempts. Please try again in a few minutes." = "Massa intents. Torneu-ho a provar d'aquí uns minuts.";
 
 "Unavailable for this purchase" = "No disponible per a aquesta compra";
@@ -368,9 +382,17 @@
 
 "Use billing address for shipping" = "Utilitzar l'adreça de facturació per a l'enviament";
 
+"Verify your phone number" = "Verifiqueu el vostre número de telèfon";
+
+"Verifying your account…" = "S'està verificant el vostre compte…";
+
 "View more" = "Visualitza més";
 
+"We couldn't verify your account. Please close this window and try again." = "No hem pogut verificar el vostre compte. Tanqueu aquesta finestra i torneu-ho a provar.";
+
 "Yes, update" = "Sí, actualitzar";
+
+"You can't pay with %@ here" = "Aquí no podeu pagar amb %@";
 
 "Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
 

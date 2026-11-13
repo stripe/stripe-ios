@@ -19,6 +19,20 @@ extension ExpressCheckoutElement.Configuration.Appearance.ButtonTheme: CaseItera
 }
 
 enum CheckoutPlayground {
+    enum PaymentElementApplePayDisplay: String, CaseIterable, Identifiable, Codable {
+        case automatic
+        case never
+
+        var id: String { rawValue }
+
+        var sdkValue: PaymentElement.Configuration.ApplePayConfiguration.Display {
+            switch self {
+            case .automatic: return .automatic
+            case .never: return .never
+            }
+        }
+    }
+
     enum ApplePayButtonType: String, CaseIterable, Identifiable, Codable {
         case plain
         case buy
@@ -265,10 +279,10 @@ enum CheckoutPlayground {
             country: "US"
         )
 
-        var checkoutShippingDetails: CheckoutController.Configuration.Defaults.ShippingDetails {
-            var shippingDetails = CheckoutController.Configuration.Defaults.ShippingDetails()
+        var checkoutShippingDetails: CheckoutElementsController.Configuration.Defaults.ShippingDetails {
+            var shippingDetails = CheckoutElementsController.Configuration.Defaults.ShippingDetails()
             shippingDetails.name = name
-            shippingDetails.address = CheckoutController.Address(
+            shippingDetails.address = CheckoutElementsController.Address(
                 country: country,
                 line1: line1,
                 line2: line2,
@@ -279,16 +293,16 @@ enum CheckoutPlayground {
             return shippingDetails
         }
 
-        var checkoutBillingDetails: CheckoutController.Configuration.Defaults.BillingDetails? {
+        var checkoutBillingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails? {
             let billingName = name.trimmingCharacters(in: .whitespacesAndNewlines)
             let billingCountry = country.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !billingName.isEmpty || !billingCountry.isEmpty else {
                 return nil
             }
-            var billingDetails = CheckoutController.Configuration.Defaults.BillingDetails()
+            var billingDetails = CheckoutElementsController.Configuration.Defaults.BillingDetails()
             billingDetails.name = billingName.isEmpty ? nil : billingName
             if !billingCountry.isEmpty {
-                billingDetails.address = CheckoutController.Address(
+                billingDetails.address = CheckoutElementsController.Address(
                     country: billingCountry.uppercased(),
                     line1: line1.isEmpty ? nil : line1,
                     line2: line2.isEmpty ? nil : line2,
@@ -466,6 +480,8 @@ enum CheckoutPlayground {
         var uiFramework: UIFramework = .swiftUI
         var integrationType: IntegrationType = .flowController
         var expressCheckoutElement = ExpressCheckoutElementSettings()
+        var applePayEnabled = true
+        var paymentElementApplePayDisplay: PaymentElementApplePayDisplay = .automatic
         var linkMode: LinkMode = .native
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
@@ -483,10 +499,10 @@ enum CheckoutPlayground {
         var adaptivePricingCountry: AdaptivePricingCountry = .none
         var automaticPaymentMethods = false
         var paymentMethodTypes: Set<String> = ["card"]
-        var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+        var currencySelectorAppearance = CurrencySelectorElement.Configuration.Appearance()
         var checkoutEndpointOption: EndpointOption = .hosted
         var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
-        var delayPaymentPagesRequests = false
+        var delayCheckoutClientRequests = false
 
         static let nsUserDefaultsKey = "CheckoutPlaygroundSettings"
     }

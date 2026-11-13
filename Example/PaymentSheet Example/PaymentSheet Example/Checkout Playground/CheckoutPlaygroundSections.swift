@@ -14,7 +14,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var customerType: CheckoutPlayground.CustomerType
     @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
-    @Binding var delayPaymentPagesRequests: Bool
+    @Binding var delayCheckoutClientRequests: Bool
     let onReset: () -> Void
 
     var body: some View {
@@ -85,9 +85,9 @@ struct CheckoutPlaygroundConfigurationSection: View {
                 .padding(.horizontal, 16)
                 .background(Color(uiColor: .secondarySystemGroupedBackground))
                 CheckoutPlayground.ToggleRow(
-                    title: "Delay Payment Pages Requests",
-                    isOn: $delayPaymentPagesRequests,
-                    tooltip: "Adds a 1-second delay before Payment Pages API requests except the initial /init request so loading states are easier to inspect."
+                    title: "Delay Checkout Client Requests",
+                    isOn: $delayCheckoutClientRequests,
+                    tooltip: "Adds a 1-second delay before Checkout Client API requests except the initial /init request so loading states are easier to inspect."
                 )
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
@@ -247,6 +247,8 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var automaticPaymentMethods: Bool
     @Binding var linkMode: CheckoutPlayground.LinkMode
+    @Binding var applePayEnabled: Bool
+    @Binding var paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay
 
     private var shouldShowAutomaticTax: Bool {
         return customerType != .new
@@ -264,7 +266,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 CheckoutPlayground.PickerRow(
                     title: "Default Shipping Address",
                     selection: $defaultShippingAddressOption,
-                    tooltip: "Sets `CheckoutController.Configuration.defaults.shippingDetails` before loading Checkout.",
+                    tooltip: "Sets `CheckoutElementsController.Configuration.defaults.shippingDetails` before loading Checkout.",
                     displayText: { $0.displayName }
                 )
                 switch defaultShippingAddressOption {
@@ -284,7 +286,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
                 CheckoutPlayground.PickerRow(
                     title: "Default Billing Details",
                     selection: $defaultBillingAddressOption,
-                    tooltip: "Sets `CheckoutController.Configuration.defaults.billingDetails` before loading Checkout. Email is configured separately above.",
+                    tooltip: "Sets `CheckoutElementsController.Configuration.defaults.billingDetails` before loading Checkout. Email is configured separately above.",
                     displayText: { $0.displayName }
                 )
                 switch defaultBillingAddressOption {
@@ -323,6 +325,20 @@ struct CheckoutPlaygroundFeaturesSection: View {
                     isOn: $checkoutSessionPaymentMethodRemove,
                     tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
                 )
+                CheckoutPlayground.ToggleRow(
+                    title: "Apple Pay",
+                    isOn: $applePayEnabled,
+                    tooltip: "Sets `CheckoutElementsController.Configuration.applePayMerchantId`, shared by Payment Element and Express Checkout Element."
+                )
+                if applePayEnabled {
+                    CheckoutPlayground.PickerRow(
+                        title: "Apple Pay in Payment Element",
+                        icon: "apple.logo",
+                        selection: $paymentElementApplePayDisplay,
+                        tooltip: "Sets `PaymentElement.Configuration.ApplePayConfiguration.display`. Set to `never` to hide Apple Pay in Payment Element while continuing to show it in Express Checkout Element.",
+                        displayText: { $0.rawValue.capitalized }
+                    )
+                }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))

@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Na aplikacijo je priključen razhroščevalnik.";
+
+"An emulator is being used to run the App." = "Za zagon aplikacije se uporablja emulator.";
+
 "An error occurred. Please try again." = "Prišlo je do napake. Poskusite znova.";
+
+"Cancel" = "Prekliči";
 
 "Card brand was not updated. Please try again." = "Blagovna znamka kartice ni bila posodobljena. Poskusite znova.";
 
 "Close" = "Zapri";
+
+"Collapsed" = "Strnjeno";
 
 "Confirm it's you" = "Potrdite svojo identiteto";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Vnesite kodo, poslano v %@.";
 
+"Expanded" = "Razširjeno";
+
 "Failed to connect" = "Povezava ni bila vzpostavljena";
+
+"Loading" = "Nalaganje";
+
+"No" = "Ne";
 
 "Resend code" = "Ponovno pošljite kodo";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Optično preberi kartico";
 
+"Secure checkout" = "Varna izvedba plačila";
+
+"Selected" = "Izbrano";
+
 "The IBAN you entered is invalid." = "Vnesena koda IBAN ni veljavna.";
+
+"The OS or the OS Version is not supported." = "OS ali različica OS ni podprta.";
+
+"The device is jailbroken." = "Naprava je »jailbroken«.";
+
+"The integrity of the SDK has been tampered." = "V celovitost SDK-ja je bilo poseženo.";
 
 "There was an error processing your card -- try again in a few seconds" = "Pri obdelavi vaše kartice je prišlo do napake. Poskusite znova čez nekaj sekund.";
 
 "There was an unexpected error -- try again in a few seconds" = "Prišlo je do nepričakovane napake. Poskusite znova čez nekaj sekund.";
 
+"Timeout" = "Časovna omejitev";
+
 "Try again" = "Poskusi znova";
 
+"Unselected" = "Neizbrano";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Za preverjanje podatkov o vaši kartici uporabljamo storitev Stripe. Stripe lahko vaše podatke uporablja in hrani v skladu s svojim pravilnikom o zasebnosti. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Več informacij</u></a>";
+
+"Yes" = "Da";
 
 "Your card has expired" = "Vaša kartica je potekla";
 

@@ -135,9 +135,8 @@ public final class EmbeddedPaymentElement {
             return result
         }
 
-        // If we currently have a sheet presented, fail the update (unless it's a checkout session update, which may occur during billing sync)
-        if !mode.isCheckout,
-           isPresentingPaymentUI {
+        // If we currently have a sheet presented, fail the update
+        if isPresentingPaymentUI {
             let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented)
             analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
             return result
@@ -206,6 +205,7 @@ public final class EmbeddedPaymentElement {
     ) {
         let previousPaymentOption = self._paymentOption
         self.loadResult = loadResult
+        self.analyticsHelper.didLoad(loadResult)
         self.confirmationChallenge = confirmationChallenge
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
@@ -350,13 +350,13 @@ public final class EmbeddedPaymentElement {
     internal private(set) var formCache: PaymentMethodFormCache = .init()
     /// The form view controller for the currently selected payment method.
     internal var selectedFormViewController: EmbeddedFormViewController?
-    /// The saved payment method waiting for its billing address to sync to CheckoutController.
+    /// The saved payment method waiting for its billing address to sync to CheckoutElementsController.
     internal var pendingBillingAddressSyncSelection: PendingBillingAddressSyncSelection?
     /// Indicates if a payment has been successfully completed.
     internal var hasConfirmedIntent = false
     /// Tracks info about the currently in-flight or most recent update attempt.
     internal var latestUpdateContext: EmbeddedUpdateContext?
-    internal weak var checkout: CheckoutController?
+    internal weak var checkout: CheckoutElementsController?
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif
@@ -399,9 +399,9 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
-    internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
+    internal var savedPaymentMethodManager: SavedPaymentMethodManager {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
-    }()
+    }
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
@@ -432,6 +432,7 @@ public final class EmbeddedPaymentElement {
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
         self.analyticsHelper = analyticsHelper
+        self.analyticsHelper.didLoad(loadResult)
         self.initialSelection = initialSelection
         self.confirmationChallenge = confirmationChallenge
 

@@ -14,8 +14,6 @@
 
 "Add bank account" = "은행 계좌 추가";
 
-"Add card" = "카드 추가";
-
 "Add new card" = "새 카드 추가";
 
 "Add new payment method" = "새 결제 방식 추가";
@@ -32,6 +30,10 @@
 
 "Bank account details cannot be changed." = "은행 계좌 세부사항은 설정되면 변경할 수 없습니다.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "이메일에 인증 코드를 보내드리기 전에, 귀하의 추가 정보를 확인해야 합니다. ••%@로 끝나는 전화번호를 입력하십시오.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "이메일에 인증 코드를 보내드리기 전에, 귀하의 추가 정보를 확인해야 합니다. 휴대폰 번호를 입력하십시오.";
+
 "Buy Now, Pay Later with  <img/>" = "<img/>(으)로 선구매 후지불";
 
 "Buy Now, Pay Later with Afterpay" = "Afterpay로 선구매 후지불";
@@ -46,7 +48,7 @@
 
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "NICEPAY로 결제를 확인하면 %@에서 해당 약관에 따라 향후 결제에 대해 이 결제 방식으로 대금 청구하는 것을 허용하시는 것입니다.";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal 결제를 확인하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 PayPal 계정에 대금을 청구할 수 있습니다.";
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal로 결제를 확인하면 %@에서 해당 약관에 따라 향후 결제를 위해 귀하의 PayPal 계정에 대금을 청구하는 것을 허용하게 됩니다.";
 
 "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Touch 'n Go로 결제를 확인하시면 %@ 이(가) 해당 약관에 따라 향후 결제에 대해 귀하의 Touch 'n Go 계정에 대금 청구하는 것을 허용하시는 것입니다.";
 
@@ -116,8 +118,6 @@
 
 "Close card scanner" = "카드 스캐너 닫기";
 
-"Code sent" = "코드 전송 완료";
-
 "Complete the payment using Pix to finish the purchase." = "구매를 마치려면 Pix를 사용하여 결제를 완료하십시오.";
 
 "Confirm" = "확인";
@@ -162,7 +162,11 @@
 
 "Edit address" = "주소 편집";
 
+"Email code" = "이메일 코드";
+
 "Enter address manually" = "주소 직접 입력";
+
+"Enter the phone number on your Link account." = "Link 계정의 전화번호를 입력하십시오.";
 
 "Exchange rate and fees of your bank may apply." = "귀하가 이용하시는 은행의 환율 및 수수료가 적용될 수 있습니다.";
 
@@ -176,7 +180,7 @@
 
 "Hide details" = "세부사항 숨기기";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "%@ 님을 대신하여 Stripe에서 자동 이체를 받는 데 동의하며, 본인이 계좌의 소유자이자 이 계좌에서 인출을 승인해야 하는 유일한 사람임을 확인합니다.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "본인은 Stripe가 %@을(를) 대신하여 자동 이체로 수금한다는 것을 이해하며, 본인이 계좌 소유자이고 이 계좌에서 출금을 승인해야 하는 유일한 사람임을 확인합니다.";
 
 "IBAN" = "IBAN";
 
@@ -185,6 +189,8 @@
 "Keep Editing" = "계속 편집";
 
 "Last 4 digits of SSN" = "SSN의 마지막 4자리";
+
+"Log in to another account" = "다른 계정으로 로그인";
 
 "Manage SEPA debit" = "SEPA 자동 이체 관리";
 
@@ -202,6 +208,8 @@
 
 "Manage your payment methods" = "내 결제 방식 관리";
 
+"More options" = "추가 옵션";
+
 "Name on card" = "카드 명의자";
 
 "Naver Pay Card" = "네이버페이 카드";
@@ -213,6 +221,8 @@
 "New payment method" = "새 결제 방식";
 
 "No %@ promo" = "%@ 프로모션 없음";
+
+"None of the payment methods in your %@ account work with this business." = "%@ 계정의 어떤 결제 방식도 이 비즈니스에서 사용할 수 없습니다.";
 
 "Not you?" = "본인이 아닙니까?";
 
@@ -277,6 +287,8 @@
 "Remove payment method" = "결제 방식 삭제";
 
 "Remove payment method?" = "결제 방식을 삭제하시겠습니까?";
+
+"Resend code in %d seconds" = "%li초 후 코드 재전송";
 
 "SEPA debit details cannot be changed." = "SEPA 자동 이체 세부사항은 설정되면 변경할 수 없습니다.";
 
@@ -358,6 +370,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "이 결제 방식은 제거되지만 %@ 구독에는 계속 사용할 수 있습니다.";
 
+"This phone number doesn't match your Link account. Please try again." = "이 전화번호는 Link 계정과 일치하지 않습니다. 다시 시도하십시오.";
+
 "Too many attempts. Please try again in a few minutes." = "너무 많이 시도했습니다. 몇 분 후에 다시 시도해 주십시오.";
 
 "Unavailable for this purchase" = "해당 구매에는 사용 불가능";
@@ -368,9 +382,17 @@
 
 "Use billing address for shipping" = "배송에 청구지 주소 사용";
 
+"Verify your phone number" = "전화번호 인증";
+
+"Verifying your account…" = "계정 인증 중…";
+
 "View more" = "자세히 보기";
 
+"We couldn't verify your account. Please close this window and try again." = "계정을 인증할 수 없습니다. 이 창을 닫고 다시 시도하십시오.";
+
 "Yes, update" = "예, 업데이트합니다";
+
+"You can't pay with %@ here" = "여기에서는 %@ 방식으로 결제할 수 없습니다";
 
 "Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
 

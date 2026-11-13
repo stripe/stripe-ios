@@ -14,7 +14,7 @@ extension ExpressCheckoutElement {
     /// Configuration options for ``ExpressCheckoutElement``.
     public struct Configuration {
         /// Sets the configuration for Apple Pay.
-        public var applePayConfiguration: ApplePayConfiguration?
+        public var applePayConfiguration: ApplePayConfiguration = .init()
         /// Sets the configuration for Link.
         public var linkConfiguration: LinkConfiguration = .init()
         /// Controls appearance of Express Checkout Element.
@@ -33,22 +33,16 @@ extension ExpressCheckoutElement {
 
 extension ExpressCheckoutElement.Configuration {
     /// Configuration for Apple Pay.
-    public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
-        /// The Apple Pay merchant identifier.
-        public let merchantId: String
-
-        /// The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+    public struct ApplePayConfiguration {
+        /// The type of Apple Pay button to display.
         public var buttonType: PKPaymentButtonType?
 
         /// Creates an Apple Pay configuration.
         /// - Parameters:
-        ///   - merchantId: The Apple Pay merchant identifier.
-        ///   - buttonType: The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+        ///   - buttonType: The type of Apple Pay button to display. Defaults to `nil`.
         public init(
-            merchantId: String,
             buttonType: PKPaymentButtonType? = nil
         ) {
-            self.merchantId = merchantId
             self.buttonType = buttonType
         }
     }
@@ -117,5 +111,5 @@ extension ExpressCheckoutElement.Configuration {
     }
 
     /// A closure called after a wallet payment confirmation completes.
-    public typealias CompletionHandler = (_ result: CheckoutController.ConfirmResult) -> Void
+    public typealias CompletionHandler = (_ result: CheckoutElementsController.ConfirmResult) -> Void
 }

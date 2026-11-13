@@ -52,12 +52,14 @@ struct WalletOwnershipVerificationContext {
     ///   - transactionDetails: The transaction details from a create-onramp-session response.
     ///   - isTestMode: Whether the wallet is being verified in test mode.
     init?(transactionDetails: CreateOnrampSessionResponse.TransactionDetails, isTestMode: Bool) {
-        guard let network = CryptoNetwork(rawValue: transactionDetails.destinationNetwork) else {
+        guard let walletAddress = transactionDetails.walletAddress,
+              let destinationNetwork = transactionDetails.destinationNetwork,
+              let network = CryptoNetwork(rawValue: destinationNetwork) else {
             return nil
         }
 
         self.init(
-            walletAddress: transactionDetails.walletAddress,
+            walletAddress: walletAddress,
             network: network,
             isTestMode: isTestMode
         )

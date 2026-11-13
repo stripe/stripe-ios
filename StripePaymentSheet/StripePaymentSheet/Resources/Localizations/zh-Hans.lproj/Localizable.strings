@@ -14,8 +14,6 @@
 
 "Add bank account" = "添加银行账户";
 
-"Add card" = "添加卡";
-
 "Add new card" = "添加银行卡";
 
 "Add new payment method" = "添加新支付方式";
@@ -31,6 +29,10 @@
 "Bank account" = "银行账户";
 
 "Bank account details cannot be changed." = "无法更改银行账户详情。";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "在向您的电子邮箱发送验证码之前，我们需要验证您的补充信息。请输入您尾号为 ••%@ 的电话号码。";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "在向您的电子邮箱发送验证码之前，我们需要验证您的补充信息。请输入您的电话号码。";
 
 "Buy Now, Pay Later with  <img/>" = "使用 <img/> 先买后付";
 
@@ -88,7 +90,7 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的邮箱，即表示您同意根据 %1$@ 的<terms>条款</terms>和<privacy>隐私政策</privacy>，创建一个 %1$@ 账户，并将支付信息保存至 %1$@。";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式并确认该付款即表示您授权 (A) %@ 与我们的支付服务商 Stripe 向您的银行发送对您的账户进行扣款的指令以及 (B) 您的银行按照这些指令对您的账户进行扣款。根据您与您的银行协议的条款和条件，您有权从您的银行得到退款。退款必须在 8 周内申请，从您的账户被扣款之日起算。您的权利在对账单上有解释，可从您的银行获取。您同意提前 2 天接收后续扣款的通知。";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付信息并确认此次付款，即表示您授权 (A) %@ 和 Stripe（我们的支付服务商）向您的银行发送指令从您的账户中扣款，并授权 (B) 您的银行根据这些指令从您的账户中扣款。作为您权利的一部分，您有权根据您与银行协议的条款和条件从银行获得退款。退款必须在自您的账户被扣款之日起的 8 周内申请。您可以从银行获取一份解释您权利的声明。您同意在未来的扣款发生前，最多提前 2 天接收通知。";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的电话号码，即表示您同意根据 %1$@ 的<terms>条款</terms>和<privacy>隐私政策</privacy>，创建一个 %1$@ 账户，并将支付信息保存至 %1$@。";
 
@@ -116,8 +118,6 @@
 
 "Close card scanner" = "关闭银行卡扫描器";
 
-"Code sent" = "验证码已发送";
-
 "Complete the payment using Pix to finish the purchase." = "使用 Pix 完成付款即可完成购买。";
 
 "Confirm" = "确定";
@@ -128,7 +128,7 @@
 
 "Confirm the payment in your MB WAY app within %@ to complete the purchase." = "请在 %@ 内在您的 MB WAY 应用中确认支付，以完成购买。";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的银行或支付应用程序中确认向 %@ 的付款，以完成购物。";
+"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "请在 %@ 内通过您的银行或支付应用确认付款，以完成购买。";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@内在您的银行应用中确认付款，完成购物。";
 
@@ -162,7 +162,11 @@
 
 "Edit address" = "编辑地址";
 
+"Email code" = "电子邮件验证码";
+
 "Enter address manually" = "手动输入地址";
+
+"Enter the phone number on your Link account." = "请输入您 Link 账户上的电话号码。";
 
 "Exchange rate and fees of your bank may apply." = "可能适用您银行的汇率和费用。";
 
@@ -186,6 +190,8 @@
 
 "Last 4 digits of SSN" = "社会保障号码 (SSN) 最后 4 位";
 
+"Log in to another account" = "登录其他账户";
+
 "Manage SEPA debit" = "管理 SEPA 借记";
 
 "Manage US bank account" = "管理美国银行账户";
@@ -202,6 +208,8 @@
 
 "Manage your payment methods" = "管理您的支付方式";
 
+"More options" = "更多选项";
+
 "Name on card" = "持卡人姓名";
 
 "Naver Pay Card" = "Naver Pay Card";
@@ -213,6 +221,8 @@
 "New payment method" = "新支付方式";
 
 "No %@ promo" = "无 %@ 促销";
+
+"None of the payment methods in your %@ account work with this business." = "您 %@ 账户中的支付方式均无法用于此商家。";
 
 "Not you?" = "不是您本人？";
 
@@ -277,6 +287,8 @@
 "Remove payment method" = "移除支付方式";
 
 "Remove payment method?" = "移除支付方式？";
+
+"Resend code in %d seconds" = "%li 秒后重新发送验证码";
 
 "SEPA debit details cannot be changed." = "无法更改 SEPA 借记详情。";
 
@@ -358,6 +370,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "此支付方式将被移除，但仍可用于 %@ 订阅。";
 
+"This phone number doesn't match your Link account. Please try again." = "此电话号码与您的 Link 账户不匹配。请重试。";
+
 "Too many attempts. Please try again in a few minutes." = "尝试次数过多。请几分钟后重试。";
 
 "Unavailable for this purchase" = "无法完成这笔订单";
@@ -368,9 +382,17 @@
 
 "Use billing address for shipping" = "使用账单地址作为配送地址";
 
+"Verify your phone number" = "验证您的电话号码";
+
+"Verifying your account…" = "正在验证您的账户…";
+
 "View more" = "查看更多";
 
+"We couldn't verify your account. Please close this window and try again." = "我们无法验证您的账户。请关闭此窗口并重试。";
+
 "Yes, update" = "是的，更新";
+
+"You can't pay with %@ here" = "您无法在此处使用 %@ 付款";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 应以两个字母的国家代码开头。";
 

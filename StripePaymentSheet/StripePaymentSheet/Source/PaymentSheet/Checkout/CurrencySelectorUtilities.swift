@@ -33,9 +33,9 @@ enum CurrencySelectorUtilities {
     ///
     /// - Parameter flagPrefixProvider: Returns an attributed flag icon for each currency code.
     static func buildSelectorItems(
-        exchangeRateMeta: CheckoutController.Session.ExchangeRateMeta,
+        exchangeRateMeta: CheckoutElementsController.Session.ExchangeRateMeta,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
-        labelContent: CurrencySelectorElement.Appearance.LabelContent = .currencyCode,
+        labelContent: CurrencySelectorElement.Configuration.Appearance.LabelContent = .currencyCode,
         flagPrefixProvider: (String) -> NSAttributedString = { _ in NSAttributedString() }
     ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
         let localCurrency = CurrencyCode(exchangeRateMeta.localizedCurrency)
@@ -55,7 +55,7 @@ enum CurrencySelectorUtilities {
         return (left: left, right: right)
     }
 
-    static func makeSelectorItem(currency: CurrencyCode, total: Int, labelContent: CurrencySelectorElement.Appearance.LabelContent = .currencyCode, flagPrefix: NSAttributedString) -> TwoOptionSelectorItem {
+    static func makeSelectorItem(currency: CurrencyCode, total: Int, labelContent: CurrencySelectorElement.Configuration.Appearance.LabelContent = .currencyCode, flagPrefix: NSAttributedString) -> TwoOptionSelectorItem {
         let displayText = NSMutableAttributedString(attributedString: flagPrefix)
         if displayText.length > 0 {
             displayText.append(NSAttributedString(string: " \u{2009}"))
@@ -88,7 +88,7 @@ enum CurrencySelectorUtilities {
     /// or a bank-fees disclaimer when the merchant's currency is selected.
     static func caption(
         forSelectedCurrency selectedCurrency: String,
-        exchangeRateMeta meta: CheckoutController.Session.ExchangeRateMeta
+        exchangeRateMeta meta: CheckoutElementsController.Session.ExchangeRateMeta
     ) -> String {
         let isIntegrationCurrencySelected = selectedCurrency == CurrencyCode(meta.integrationCurrency).apiValue
         if isIntegrationCurrencySelected {
@@ -99,7 +99,7 @@ enum CurrencySelectorUtilities {
     }
 
     /// Returns the expandable detail text for the exchange rate, or nil if not applicable.
-    static func detailText(exchangeRateMeta meta: CheckoutController.Session.ExchangeRateMeta) -> String? {
+    static func detailText(exchangeRateMeta meta: CheckoutElementsController.Session.ExchangeRateMeta) -> String? {
         return meta.details
     }
 
@@ -108,8 +108,8 @@ enum CurrencySelectorUtilities {
     /// Returns the adaptive pricing data needed to show a currency selector,
     /// or `nil` if adaptive pricing is not available for the given session.
     static func adaptivePricingData(
-        from session: CheckoutController.Session?
-    ) -> (session: CheckoutController.Session, exchangeRateMeta: CheckoutController.Session.ExchangeRateMeta, currency: String)? {
+        from session: CheckoutElementsController.Session?
+    ) -> (session: CheckoutElementsController.Session, exchangeRateMeta: CheckoutElementsController.Session.ExchangeRateMeta, currency: String)? {
         guard let session,
               session.adaptivePricingActive,
               !session.localizedPricesMetas.isEmpty,

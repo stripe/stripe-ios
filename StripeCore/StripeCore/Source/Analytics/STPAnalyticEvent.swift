@@ -250,6 +250,9 @@ import Foundation
     case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"
     case paymentSheetElementsSessionEPMLoadFailed = "mc_elements_session_epms_load_failed"
     case paymentSheetElementsSessionCPMLoadFailed = "mc_elements_session_cpms_load_failed"
+    case paymentSheetMobileSessionDecodeFailed = "mc_mobile_session_decode_failed"
+    case paymentSheetMobileSessionPaymentMethodDropped = "mc_mobile_session_payment_method_dropped"
+    case paymentSheetMobileSessionAvailabilityMismatch = "mc_mobile_session_availability_mismatch"
 
     // MARK: - PaymentSheet card brand choice
     case paymentSheetDisplayCardBrandChoiceIndicator = "mc_display_cbc_selector"
@@ -394,6 +397,7 @@ import Foundation
     case checkoutElementsRunServerUpdateSucceeded = "checkout_elements.run_server_update.succeeded"
     case checkoutElementsRunServerUpdateFailed = "checkout_elements.run_server_update.failed"
     case checkoutElementsClearPaymentOption = "checkout_elements.clear_payment_option"
+    case checkoutElementsClearLocalCustomerData = "checkout_elements.clear_local_customer_data"
 
     // MARK: - Express Checkout Element
     case expressCheckoutElementInit = "elements.express_checkout_element.init"

@@ -9,7 +9,7 @@
 import Foundation
 
 /// Error codes returned from STPAPIClient.
-@_spi(InternalOnlyAPI) public enum StripeError: Error {
+@_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public enum StripeError: Error {
     /// The server returned an API error.
     case apiError(StripeAPIError)
 
@@ -90,9 +90,7 @@ extension Error {
     /// Whether this API error's localized description includes a live-mode request ID.
     @_spi(InternalOnlyAPI) public var _stp_hasRequestIDInDescription: Bool {
         if let stripeError = self as? StripeError, case .apiError(let apiError) = stripeError {
-            // The formatter only appends a request ID when a description is available.
             return apiError.includeRequestIDInDescription && apiError.requestID?.nonEmpty != nil
-                && (!apiError.useServerErrorMessage || apiError.message?.nonEmpty != nil)
         }
         return (self as NSError).userInfo[STPError.requestIDInDescriptionKey] as? Bool == true
     }

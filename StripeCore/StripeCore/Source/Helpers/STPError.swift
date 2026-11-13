@@ -141,7 +141,7 @@ extension NSError {
 
 /// NSError extensions for creating error objects from Stripe API responses.
 extension NSError {
-    @_spi(InternalOnlyAPI) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
         switch modernStripeError {
         case .apiError(let stripeAPIError):
             // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-3965 We're dropping some info in this conversion w/o http response
@@ -206,9 +206,9 @@ extension NSError {
         }
 
         // localized description
-        let message: String? = if useServerErrorMessage {
-            // Checkout treats an empty server message as absent.
-            stripeErrorMessage?.nonEmpty
+        let message = if useServerErrorMessage {
+            // Checkout treats an empty server message as absent and falls back to a generic message.
+            stripeErrorMessage?.nonEmpty ?? stp_unexpectedErrorMessage()
         } else if errorType == "card_error", let stripeErrorMessage {
             // see https://stripe.com/docs/api/errors#errors-message
             stripeErrorMessage
@@ -219,7 +219,7 @@ extension NSError {
         }
 
         let requestID = requestID ?? httpResponse?.value(forHTTPHeaderField: "request-id")
-        if includeRequestIDInDescription, let requestID = requestID?.nonEmpty, let message {
+        if includeRequestIDInDescription, let requestID = requestID?.nonEmpty {
             userInfo[NSLocalizedDescriptionKey] = message + " (\(requestID))"
             userInfo[STPError.requestIDInDescriptionKey] = true
         } else {
@@ -266,7 +266,7 @@ extension NSError {
     /// - Parameter httpResponse: The HTTP URL response containing headers, the status code, etc.
     /// - Parameter requestID: The request ID when converting an error without its HTTP response.
     /// - Parameter includeRequestIDInDescription: Whether to append a nonempty request ID to the description.
-    /// - Parameter useServerErrorMessage: Whether to use the server's optional message without a localized fallback.
+    /// - Parameter useServerErrorMessage: Whether to use the server's message, falling back to a generic message when it is missing.
     /// - Returns: An NSError object with the error information from the JSON response.
     @objc
     @_spi(InternalOnlyAPI) public static func stp_error(

@@ -32,25 +32,9 @@ public class AddressViewController: UIViewController {
     let useAutocompleteEndpoints: Bool
     /// A valid address or nil.
     private var addressDetails: AddressDetails? {
-        guard let addressSection = addressSection else { return nil }
-
-        guard case .valid = addressSection.validationState,
-              let line1 = addressSection.line1?.text.nonEmpty
-        else {
-            return nil
-        }
-        let address = AddressDetails.Address(
-            city: addressSection.city?.text.nonEmpty,
-            country: addressSection.selectedCountryCode,
-            line1: line1,
-            line2: addressSection.line2?.text.nonEmpty,
-            postalCode: addressSection.postalCode?.text.nonEmpty,
-            state: addressSection.state?.rawData.nonEmpty
-        )
-        return .init(
-            address: address,
-            name: addressSection.name?.text.nonEmpty,
-            phone: addressSection.phone?.phoneNumber?.string(as: .e164).nonEmpty,
+        return addressSection?.completeAddressDetails(
+            nameField: configuration.nameField,
+            defaultName: configuration.defaultValues.name,
             isCheckboxSelected: checkboxElement?.checkboxButton.isSelected
         )
     }
@@ -194,14 +178,7 @@ public class AddressViewController: UIViewController {
         // No default address provided, early exit
         guard !addressDetails.address.isEmpty else { return false }
 
-        // No blocked countries, allow all default addresses
-        guard !configuration.allowedCountries.isEmpty else { return true }
-
-        // Default address has no country specified, allow it
-        guard let defaultCountry = addressDetails.address.country else { return true }
-
-        // Only allow default addresses with allowed countries
-        return configuration.allowedCountries.contains(defaultCountry)
+        return addressDetails.isCountryAllowed(configuration.allowedCountries)
     }
 
     private lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
@@ -554,7 +531,7 @@ extension AddressViewController {
             defaults: .init(from: defaultValues),
             defaultFieldsToCollect: .all,
             countriesSupportingAutocomplete: configuration.autocompleteCountries,
-            additionalFields: .init(from: configuration.additionalFields),
+            additionalFields: .init(from: configuration.additionalFields, nameField: configuration.nameField),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
                 self?.presentAutocomplete()
@@ -758,6 +735,47 @@ extension AddressViewController: UIGestureRecognizerDelegate {
 }
 
 // MARK: - PaymentSheet <-> AddressSectionElement Helpers
+extension AddressSectionElement {
+    /// The address entered in this section, or nil until it's valid.
+    /// - Parameters:
+    ///   - nameField: Whether the section has a name field. A hidden name is `defaultName`.
+    ///   - defaultName: The name to return when the name field is hidden.
+    ///   - isCheckboxSelected: The state of the host's custom checkbox, if it has one.
+    func completeAddressDetails(
+        nameField: AddressViewController.Configuration.NameField,
+        defaultName: String?,
+        isCheckboxSelected: Bool?
+    ) -> AddressViewController.AddressDetails? {
+        guard case .valid = validationState,
+              let line1 = line1?.text.nonEmpty
+        else {
+            return nil
+        }
+        let address = AddressViewController.AddressDetails.Address(
+            city: city?.text.nonEmpty,
+            country: selectedCountryCode,
+            line1: line1,
+            line2: line2?.text.nonEmpty,
+            postalCode: postalCode?.text.nonEmpty,
+            state: state?.rawData.nonEmpty
+        )
+        let name: String?
+        switch nameField {
+        case .auto:
+            name = self.name?.text.nonEmpty
+        case .never:
+            // The customer can't edit a hidden name, so the result keeps the default one.
+            name = defaultName
+        }
+        return .init(
+            address: address,
+            name: name,
+            phone: phone?.phoneNumber?.string(as: .e164).nonEmpty,
+            isCheckboxSelected: isCheckboxSelected
+        )
+    }
+}
+
 extension AddressSectionElement.AddressDetails {
     init(from addressDetails: AddressViewController.Configuration.DefaultAddressDetails) {
         self.init(
@@ -776,7 +794,10 @@ extension AddressSectionElement.AddressDetails {
 }
 
 extension AddressSectionElement.AdditionalFields {
-    init(from additionalFields: AddressViewController.Configuration.AdditionalFields) {
+    init(
+        from additionalFields: AddressViewController.Configuration.AdditionalFields,
+        nameField: AddressViewController.Configuration.NameField
+    ) {
         func config(from fieldConfiguration: AddressViewController.Configuration.AdditionalFields.FieldConfiguration) -> FieldConfiguration {
             switch fieldConfiguration {
             case .hidden:
@@ -788,8 +809,15 @@ extension AddressSectionElement.AdditionalFields {
             }
         }
 
+        let name: FieldConfiguration
+        switch nameField {
+        case .auto:
+            name = config(from: .required)
+        case .never:
+            name = .disabled
+        }
         self.init(
-            name: config(from: .required),
+            name: name,
             phone: config(from: additionalFields.phone)
         )
     }
@@ -812,7 +840,7 @@ extension AddressViewController {
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: billingAddress),
             defaultFieldsToCollect: .all,
-            additionalFields: .init(from: configuration.additionalFields),
+            additionalFields: .init(from: configuration.additionalFields, nameField: configuration.nameField),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { /* no-op for comparison */ }
         )

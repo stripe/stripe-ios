@@ -14,8 +14,6 @@
 
 "Add bank account" = "Tambahkan rekening bank";
 
-"Add card" = "Tambahkan kartu";
-
 "Add new card" = "Tambahkan kartu baru";
 
 "Add new payment method" = "Tambahkan metode pembayaran baru";
@@ -31,6 +29,10 @@
 "Bank account" = "Rekening bank";
 
 "Bank account details cannot be changed." = "Detail rekening bank tidak dapat diubah.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Sebelum kami dapat mengirim kode ke email Anda, kami perlu memverifikasi informasi tambahan tentang Anda. Masukkan nomor telepon Anda yang berakhiran ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Sebelum kami dapat mengirim kode ke email Anda, kami perlu memverifikasi informasi tambahan tentang Anda. Masukkan nomor telepon Anda.";
 
 "Buy Now, Pay Later with  <img/>" = "Beli Sekarang, Bayar Nanti dengan  <img/>";
 
@@ -116,8 +118,6 @@
 
 "Close card scanner" = "Tutup pemindai kartu";
 
-"Code sent" = "Kode dikirim";
-
 "Complete the payment using Pix to finish the purchase." = "Selesaikan pembayaran menggunakan Pix untuk menyelesaikan pembelian.";
 
 "Confirm" = "Konfirmasikan";
@@ -162,7 +162,11 @@
 
 "Edit address" = "Edit alamat";
 
+"Email code" = "Kode email";
+
 "Enter address manually" = "Masukkan alamat secara manual";
+
+"Enter the phone number on your Link account." = "Masukkan nomor telepon di akun Link Anda.";
 
 "Exchange rate and fees of your bank may apply." = "Nilai tukar dan biaya bank Anda mungkin berlaku.";
 
@@ -186,6 +190,8 @@
 
 "Last 4 digits of SSN" = "4 angka terakhir SSN";
 
+"Log in to another account" = "Masuk ke akun lain";
+
 "Manage SEPA debit" = "Kelola debit SEPA";
 
 "Manage US bank account" = "Kelola rekening bank AS";
@@ -202,6 +208,8 @@
 
 "Manage your payment methods" = "Kelola metode pembayaran Anda";
 
+"More options" = "Opsi lainnya";
+
 "Name on card" = "Nama pada kartu";
 
 "Naver Pay Card" = "Naver Pay Card";
@@ -213,6 +221,8 @@
 "New payment method" = "Metode pembayaran baru";
 
 "No %@ promo" = "Tidak ada promo %@";
+
+"None of the payment methods in your %@ account work with this business." = "Tidak ada metode pembayaran di akun %@ Anda yang berfungsi dengan bisnis ini.";
 
 "Not you?" = "Bukan Anda?";
 
@@ -277,6 +287,8 @@
 "Remove payment method" = "Hapus metode pembayaran";
 
 "Remove payment method?" = "Hapus metode pembayaran?";
+
+"Resend code in %d seconds" = "Kirim ulang kode dalam %li detik";
 
 "SEPA debit details cannot be changed." = "Detail debit SEPA tidak dapat diubah.";
 
@@ -358,6 +370,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Metode pembayaran ini akan dihapus tetapi akan tetap tersedia untuk langganan %@.";
 
+"This phone number doesn't match your Link account. Please try again." = "Nomor telepon ini tidak cocok dengan akun Link Anda. Silakan coba lagi.";
+
 "Too many attempts. Please try again in a few minutes." = "Terlalu banyak percobaan. Cobalah lagi sebentar lagi.";
 
 "Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
@@ -368,9 +382,17 @@
 
 "Use billing address for shipping" = "Gunakan alamat penagihan untuk pengiriman";
 
+"Verify your phone number" = "Verifikasikan nomor telepon Anda";
+
+"Verifying your account…" = "Memverifikasi akun Anda…";
+
 "View more" = "Lihat selengkapnya";
 
+"We couldn't verify your account. Please close this window and try again." = "Kami tidak dapat memverifikasi akun Anda. Harap tutup jendela ini dan coba lagi.";
+
 "Yes, update" = "Ya, perbarui";
+
+"You can't pay with %@ here" = "Anda tidak dapat membayar dengan %@ di sini";
 
 "Your IBAN should start with a two-letter country code." = "IBAN Anda harus diawali dengan kode negara dua-huruf.";
 

@@ -54,13 +54,15 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         // When the session is polled
         let response = try await apiClient.pollCheckoutSession(
             checkoutSessionId: sessionId,
+            clientSecret: checkoutSessionResponse.clientSecret,
             timeout: 30
         )
 
         // Then its current poll state is returned
         XCTAssertEqual(response.sessionId, sessionId)
-        XCTAssertEqual(response.state, .active)
-        XCTAssertNil(response.paymentObjectStatus)
+        XCTAssertEqual(response.confirmationStatus, .notStarted)
+        XCTAssertEqual(response.status, .open)
+        XCTAssertEqual(response.paymentStatus, .unpaid)
     }
 
     func testInitCheckoutSessionPayment() async throws {
@@ -90,6 +92,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(apiResponse.elementsSession.value.linkSettings?.disableFlowControllerRUX, disableFlowControllerRUX)
     }
 
+    @MainActor
     func testConfirmCheckoutSessionPayment() async throws {
         // 1. Create a checkout session with the test backend
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
@@ -101,7 +104,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // 2. Init the checkout session to get the actual amount
         let initResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId, clientSecret: checkoutSessionResponse.clientSecret, adaptivePricingAllowed: false)
-        let expectedAmount = initResponse.makePublicSession().amount
+        let checkoutSession = initResponse.makePublicSession()
+        let expectedAmount = checkoutSession.amount
 
         // 3. Create a payment method with test card and billing email
         let cardParams = STPPaymentMethodCardParams()
@@ -122,7 +126,15 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             confirmationSource: .paymentElement,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: "card",
-            returnURL: "stripe-ios-test://checkout-return"
+            savePaymentMethod: nil,
+            returnURL: "stripe-ios-test://checkout-return",
+            shipping: nil,
+            paymentMethodOptions: nil,
+            clientAttributionMetadata: .makeClientAttributionMetadata(
+                checkoutSession: checkoutSession,
+                attribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
+            ),
+            collectedInformation: .init(email: nil)
         )
         let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 
@@ -219,7 +231,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             setup.paymentMethodID,
             inCheckoutSession: setup.checkoutSessionID,
             clientSecret: setup.clientSecret,
-            expiryDetails: CheckoutController.PaymentMethodExpiryDetails(expMonth: 6, expYear: 2029)
+            expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails(expMonth: 6, expYear: 2029)
         )
 
         // Then CheckoutClient returns the updated saved card, decoded from the session response
@@ -245,11 +257,11 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             setup.paymentMethodID,
             inCheckoutSession: setup.checkoutSessionID,
             clientSecret: setup.clientSecret,
-            billingDetails: CheckoutController.PaymentMethodBillingDetails(
+            billingDetails: CheckoutElementsController.PaymentMethodBillingDetails(
                 name: "Jane Doe",
                 email: "jane@example.com",
                 phone: "+15551234567",
-                address: CheckoutController.PaymentMethodBillingAddress(
+                address: CheckoutElementsController.PaymentMethodBillingAddress(
                     line1: "123 Main St",
                     city: "San Francisco",
                     state: "CA",
@@ -305,6 +317,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
     }
 
     // TODO(porter): see disabled_testInitCheckoutSessionSetup above.
+    @MainActor
     func disabled_testConfirmCheckoutSessionSetup() async throws {
         // 1. Create a checkout session in setup mode with the test backend
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
@@ -313,7 +326,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
 
         // 2. Init the checkout session
-        _ = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId, clientSecret: checkoutSessionResponse.clientSecret, adaptivePricingAllowed: false)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId, clientSecret: checkoutSessionResponse.clientSecret, adaptivePricingAllowed: false).makePublicSession()
 
         // 3. Create a payment method with test card and billing email
         let cardParams = STPPaymentMethodCardParams()
@@ -334,7 +347,15 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
             confirmationSource: .paymentElement,
             expectedAmount: nil,
             expectedPaymentMethodType: "card",
-            returnURL: "stripe-ios-test://checkout-return"
+            savePaymentMethod: nil,
+            returnURL: "stripe-ios-test://checkout-return",
+            shipping: nil,
+            paymentMethodOptions: nil,
+            clientAttributionMetadata: .makeClientAttributionMetadata(
+                checkoutSession: checkoutSession,
+                attribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
+            ),
+            collectedInformation: .init(email: nil)
         )
         let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 

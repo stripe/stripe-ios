@@ -14,8 +14,6 @@
 
 "Add bank account" = "Adicionar conta bancária";
 
-"Add card" = "Adicionar cartão";
-
 "Add new card" = "Adicionar novo cartão";
 
 "Add new payment method" = "Adicionar nova forma de pagamento";
@@ -31,6 +29,10 @@
 "Bank account" = "Conta bancária";
 
 "Bank account details cannot be changed." = "Os dados da conta bancária não podem ser alterados.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Antes de enviar um código para seu e-mail, precisamos verificar outras informações sobre você. Insira seu número de telefone terminado em ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Antes de enviar um código para seu e-mail, precisamos verificar outras informações sobre você. Insira seu número de telefone.";
 
 "Buy Now, Pay Later with  <img/>" = "Compre agora e pague depois com  <img/>";
 
@@ -88,7 +90,7 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao fornecer seu e-mail, você concorda em criar uma conta %1$@ e salvar suas informações de pagamento para %1$@, de acordo com os <terms>Termos</terms> e <privacy>Política de Privacidade</privacy> da %1$@.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ao fornecer seus dados de pagamento e confirmar este pagamento, você autoriza (A) %@ e a Stripe, o nosso provedor de serviços de pagamento, a enviar instruções ao seu banco para debitar sua conta e (B) seu banco a debitar sua conta, de acordo com as referidas instruções. Os seus direitos incluem a possibilidade de exigir do banco o reembolso do valor debitado, nos termos e condições acordados com a instituição. O reembolso deve ser solicitado dentro de um prazo de 8 semanas a partir da data do débito na conta. Você concorda em receber notificações de débitos futuros em até 2 dias antes do débito.";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ao fornecer seus dados de pagamento e confirmar este pagamento, você autoriza (A) %@ e a Stripe, o nosso provedor de serviços de pagamentos, a enviar instruções ao seu banco para debitar sua conta e (B) seu banco a debitar sua conta, de acordo com as referidas instruções. Os seus direitos incluem a possibilidade de exigir do banco o reembolso do valor debitado, nos termos e condições acordados com a instituição. O reembolso deve ser solicitado dentro de um prazo de 8 semanas a partir da data do débito na conta. Você concorda em receber notificações de débitos futuros em até 2 dias antes do débito.";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao fornecer seu número de telefone, você concorda em criar uma conta %1$@ e salvar suas informações de pagamento para %1$@, de acordo com os <terms>Termos</terms> e <privacy>Política de Privacidade</privacy> da %1$@.";
 
@@ -115,8 +117,6 @@
 "Choose a payment method" = "Escolha uma forma de pagamento";
 
 "Close card scanner" = "Fechar máquina de cartão";
-
-"Code sent" = "Código enviado";
 
 "Complete the payment using Pix to finish the purchase." = "Conclua o pagamento usando Pix para finalizar a compra.";
 
@@ -162,7 +162,11 @@
 
 "Edit address" = "Editar endereço";
 
+"Email code" = "Código de e-mail";
+
 "Enter address manually" = "Inserir endereço manualmente";
+
+"Enter the phone number on your Link account." = "Insira o número de telefone da sua conta Link.";
 
 "Exchange rate and fees of your bank may apply." = "Sujeito a taxas de câmbio e tarifas do seu banco.";
 
@@ -186,6 +190,8 @@
 
 "Last 4 digits of SSN" = "Últimos 4 dígitos do SSN";
 
+"Log in to another account" = "Faça login em outra conta";
+
 "Manage SEPA debit" = "Gerenciar débito SEPA";
 
 "Manage US bank account" = "Gerenciar conta bancária dos EUA";
@@ -202,6 +208,8 @@
 
 "Manage your payment methods" = "Gerencie suas formas de pagamento";
 
+"More options" = "Mais opções";
+
 "Name on card" = "Nome no cartão";
 
 "Naver Pay Card" = "Cartão Naver Pay";
@@ -213,6 +221,8 @@
 "New payment method" = "Nova forma de pagamento";
 
 "No %@ promo" = "Nenhuma promoção de %@";
+
+"None of the payment methods in your %@ account work with this business." = "Nenhuma das formas de pagamento da sua conta %@ funciona nesta empresa.";
 
 "Not you?" = "Não é você?";
 
@@ -277,6 +287,8 @@
 "Remove payment method" = "Remover forma de pagamento";
 
 "Remove payment method?" = "Remover forma de pagamento?";
+
+"Resend code in %d seconds" = "Reenviar código em %li segundos";
 
 "SEPA debit details cannot be changed." = "Os dados do débito SEPA não podem ser alterados.";
 
@@ -352,11 +364,13 @@
 
 "The provided verification code is incorrect." = "O código de verificação informado está incorreto.";
 
-"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Esta é uma compra internacional e não inclui a tarifa de 3,5% de IOF. Ao prosseguir, você reconhece e aceita os <terms>termos e condições do Ebanx<terms>.";
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Esta é uma compra internacional e não inclui a tarifa de 3,5% de IOF. Ao prosseguir, você reconhece e aceita os <terms>Termos e condições do Ebanx</terms>.";
 
 "This is your default" = "Este é o seu padrão";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Esta forma de pagamento será removida, mas permanecerá disponível para %@ assinaturas.";
+
+"This phone number doesn't match your Link account. Please try again." = "Este número de telefone não corresponde à sua conta Link. Tente novamente.";
 
 "Too many attempts. Please try again in a few minutes." = "Excesso de tentativas. Tente novamente em alguns minutos.";
 
@@ -368,9 +382,17 @@
 
 "Use billing address for shipping" = "Usar o endereço de faturamento para envio";
 
+"Verify your phone number" = "Verificar seu número de telefone";
+
+"Verifying your account…" = "Verificando sua conta…";
+
 "View more" = "Exibir mais";
 
+"We couldn't verify your account. Please close this window and try again." = "Não foi possível verificar sua conta. Feche esta janela e tente novamente.";
+
 "Yes, update" = "Sim, atualizar";
+
+"You can't pay with %@ here" = "Não é possível pagar com %@ aqui";
 
 "Your IBAN should start with a two-letter country code." = "Seu IBAN deve começar com um código de país de duas letras.";
 

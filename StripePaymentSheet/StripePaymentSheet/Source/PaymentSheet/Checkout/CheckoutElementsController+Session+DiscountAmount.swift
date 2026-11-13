@@ -1,0 +1,31 @@
+//
+//  CheckoutElementsController+Session+DiscountAmount.swift
+//  StripePaymentSheet
+//
+//  Created by Yuki Tokuhiro on 8/16/26.
+//
+
+import Foundation
+
+@_spi(InternalOnlyAPI)
+@_spi(ReactNativeSDK)
+extension CheckoutElementsController.Session {
+    /// An aggregate discount amount calculated across all line items in a Checkout Session.
+    public struct DiscountAmount: Sendable, Hashable {
+        /// The localized, formatted representation of the discount amount.
+        public let amount: String
+
+        /// The numeric, unformatted representation of the discount amount in minor units.
+        public let minorUnitsAmount: Int
+
+        /// A user-facing description of the discount.
+        public let displayName: String
+
+        /// The customer-facing promotion code used to apply this discount, if any.
+        public let promotionCode: String?
+
+        /// The percentage discounted, if this is a percentage-based discount.
+        public let percentOff: Double?
+
+    }
+}

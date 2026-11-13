@@ -436,6 +436,21 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
+    /// Handles any `nextAction` required to authenticate the PaymentIntent.
+    /// - Note: The PaymentIntent must have been fetched with an expanded paymentMethod object.
+    @MainActor
+    @_spi(InternalOnlyAPI) public func handleNextAction(
+        for paymentIntent: STPPaymentIntent,
+        with authenticationContext: STPAuthenticationContext,
+        returnURL: String?
+    ) async -> (STPPaymentHandlerActionStatus, STPPaymentIntent?, NSError?) {
+        return await withCheckedContinuation { continuation in
+            handleNextAction(for: paymentIntent, with: authenticationContext, returnURL: returnURL) { status, paymentIntent, error in
+                continuation.resume(returning: (status, paymentIntent, error))
+            }
+        }
+    }
+
     @_spi(InternalOnlyAPI) public func handleNextAction(
         for paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
@@ -719,6 +734,21 @@ public class STPPaymentHandler: NSObject {
     }
 
     /// Handles any `nextAction` required to authenticate the SetupIntent.
+    /// - Note: The SetupIntent must have been fetched with an expanded paymentMethod object.
+    @MainActor
+    @_spi(InternalOnlyAPI) public func handleNextAction(
+        for setupIntent: STPSetupIntent,
+        with authenticationContext: STPAuthenticationContext,
+        returnURL: String?
+    ) async -> (STPPaymentHandlerActionStatus, STPSetupIntent?, Error?) {
+        return await withCheckedContinuation { continuation in
+            handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL) { status, setupIntent, error in
+                continuation.resume(returning: (status, setupIntent, error))
+            }
+        }
+    }
+
+    /// Handles any `nextAction` required to authenticate the SetupIntent.
     /// Call this method if you are confirming the SetupIntent on your backend and get a status of requires_action.
     /// - Parameters:
     ///   - setupIntent: The SetupIntent to handle next actions for.
@@ -840,6 +870,7 @@ public class STPPaymentHandler: NSObject {
             .ngUSSD,
             .ngWallet,
             .mondu,
+            .stripeBalance,
             .alipay,
             .iDEAL,
             .FPX,
@@ -1705,8 +1736,8 @@ public class STPPaymentHandler: NSObject {
                                                 pollingBudget: pollingBudget
                                             )
                                         }
-                                    } else if paymentMethodType != .paynow && paymentMethodType != .promptPay {
-                                        // For PayNow, we don't want to mark as canceled when the web view dismisses
+                                    } else if paymentMethodType != .paynow && paymentMethodType != .promptPay && paymentMethodType != .pix {
+                                        // For PayNow, PromptPay, and Pix, we don't want to mark as canceled when the web view dismisses
                                         // Instead we rely on the presented PollingViewController to complete the currentAction
                                         if let pollingBudget, !pollingBudget.canPoll {
                                             // Log if we are canceling because we finished polling and the status is not terminal
@@ -1791,8 +1822,10 @@ public class STPPaymentHandler: NSObject {
                                         pollingBudget: pollingBudget
                                     )
                                 }
-                            } else {
-                                // If the status is still RequiresAction, the user exited from the redirect before the
+                            } else if paymentMethod.type != .pix {
+                                // For Pix, we don't want to mark as canceled when the web view dismisses
+                                // Instead we rely on the presented PollingViewController to complete the currentAction
+                                // Otherwise, if the status is still RequiresAction, the user exited from the redirect before the
                                 // setup intent was updated. Consider it a cancel
                                 if let pollingBudget, !pollingBudget.canPoll {
                                     // Log if we are canceling because we finished polling and the status is not terminal

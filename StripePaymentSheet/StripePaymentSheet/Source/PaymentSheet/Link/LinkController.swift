@@ -85,6 +85,7 @@ import UIKit
         case noPaymentMethodSelected
         case noActiveLinkConsumer
         case missingAppAttestation
+        case linkUnavailable
 
         @_spi(InternalOnlyAPI) public var errorDescription: String? {
             switch self {
@@ -94,6 +95,8 @@ import UIKit
                 return "No active Link consumer is available."
             case .missingAppAttestation:
                 return "App attestation is missing or device cannot use native Link."
+            case .linkUnavailable:
+                return "Link is not available for this merchant. Check that Link is enabled in your Payment Element settings."
             }
         }
     }
@@ -118,7 +121,7 @@ import UIKit
     let nativeSheetPresentation: SheetImplementationResolver
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
-        LinkAccountService(apiClient: apiClient, elementsSession: elementsSession)
+        LinkAccountService(apiClient: apiClient, elementsSession: elementsSession, analyticsHelper: analyticsHelper.linkAnalytics)
     }()
 
     private var selectedPaymentDetails: ConsumerPaymentDetails? {
@@ -280,6 +283,7 @@ import UIKit
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
                 paymentElementConfiguration.returnURL = configuration?.returnURL
+                paymentElementConfiguration.cardBrandAcceptance = configuration?.cardBrandAcceptance ?? .all
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,
@@ -292,14 +296,15 @@ import UIKit
                     analyticsHelper: analyticsHelper
                 )
 
-                guard deviceCanUseNativeLink(
+                if let error = nativeLinkUnavailableError(
                     elementsSession: loadResult.elementsSession,
                     configuration: paymentElementConfiguration
-                ) else {
-                    completion(.failure(IntegrationError.missingAppAttestation))
+                ) {
+                    completion(.failure(error))
                     return
                 }
 
+                analyticsHelper.didLoad(loadResult)
                 let controller = LinkController(
                     apiClient: apiClient,
                     mode: mode,
@@ -345,6 +350,7 @@ import UIKit
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
                 paymentElementConfiguration.returnURL = configuration?.returnURL
+                paymentElementConfiguration.cardBrandAcceptance = configuration?.cardBrandAcceptance ?? .all
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,
@@ -357,14 +363,15 @@ import UIKit
                     analyticsHelper: analyticsHelper
                 )
 
-                guard deviceCanUseNativeLink(
+                if let error = nativeLinkUnavailableError(
                     elementsSession: loadResult.elementsSession,
                     configuration: paymentElementConfiguration
-                ) else {
-                    completion(.failure(IntegrationError.missingAppAttestation))
+                ) {
+                    completion(.failure(error))
                     return
                 }
 
+                analyticsHelper.didLoad(loadResult)
                 let controller = LinkController(
                     apiClient: apiClient,
                     mode: .setup,
@@ -459,6 +466,7 @@ import UIKit
             legalName: fullName,
             countryCode: country,
             consentAction: consentAction,
+            analyticsHelper: analyticsHelper.linkAnalytics,
             completion: { [weak self] result in
                 LinkAccountContext.shared.account = self?.linkAccount
                 completion(result)
@@ -486,7 +494,8 @@ import UIKit
             linkAccount: linkAccount,
             brand: resolvedLinkBrand,
             configuration: paymentElementConfiguration,
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: analyticsHelper.linkAnalytics
         )
 
         verificationController.present(from: viewController) { result in
@@ -1121,7 +1130,8 @@ import UIKit
             brand: resolvedLinkBrand,
             configuration: paymentElementConfiguration,
             appearance: appearance,
-            consentViewModel: consentViewModel
+            consentViewModel: consentViewModel,
+            analyticsHelper: analyticsHelper.linkAnalytics
         )
 
         verificationController.present(from: viewController) { [weak self] result in
@@ -1220,6 +1230,23 @@ import UIKit
         )
 
         return result
+    }
+
+    /// Returns the error that prevents native Link from being used with the given session, if any.
+    static func nativeLinkUnavailableError(
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration
+    ) -> IntegrationError? {
+        // When Link is unavailable for the session (e.g. it's turned off in the merchant's payment method configuration),
+        // the backend returns no funding sources and doesn't enable attestation either. Check this first so that we don't
+        // misreport it as an attestation issue.
+        guard let linkFundingSources = elementsSession.linkFundingSources, !linkFundingSources.isEmpty else {
+            return .linkUnavailable
+        }
+        guard deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) else {
+            return .missingAppAttestation
+        }
+        return nil
     }
 
     private static func lookupLinkAuthToken(

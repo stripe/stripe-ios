@@ -14,8 +14,6 @@
 
 "Add bank account" = "Legg til bankkonto";
 
-"Add card" = "Legg til kort";
-
 "Add new card" = "Legg til nytt kort";
 
 "Add new payment method" = "Legg til ny betalingsmetode";
@@ -32,6 +30,10 @@
 
 "Bank account details cannot be changed." = "Bankkontoopplysninger kan ikke endres.";
 
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Før vi kan sende en kode til e-postadressen din, må vi bekrefte tilleggsinformasjon om deg. Oppgi telefonnummeret ditt som slutter på ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Før vi kan sende en kode til e-postadressen din, må vi bekrefte tilleggsinformasjon om deg. Oppgi telefonnummeret ditt.";
+
 "Buy Now, Pay Later with  <img/>" = "Kjøp nå, betal senere med <img/>";
 
 "Buy Now, Pay Later with Afterpay" = "Kjøp nå, betal senere med Afterpay";
@@ -46,7 +48,7 @@
 
 "By confirming your payment with NICEPAY, you allow %@ to charge this payment method for future payments in accordance with their terms." = "Når du bekrefter betalingen din med NICEPAY, tillater du at %@ belaster denne betalingsmetoden for fremtidige betalinger i henhold til deres vilkår.";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å bekrefte betalingen med PayPal, tillater du %@ å belaste PayPal for fremtidige betalinger i samsvar med vilkårene deres.";
+"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å bekrefte betalingen med PayPal, gir du %@ tillatelse til å belaste PayPal-kontoen din for fremtidige betalinger i henhold til deres vilkår.";
 
 "By confirming your payment with Touch 'n Go, you allow %@ to charge your Touch 'n Go account for future payments in accordance with their terms." = "Når du bekrefter betalingen med Touch ’n Go, godtar du at %@ belaster Touch ’n Go-kontoen din for fremtidige betalinger i henhold til vilkårene deres.";
 
@@ -116,8 +118,6 @@
 
 "Close card scanner" = "Lukk kortskanner";
 
-"Code sent" = "Kode sendt";
-
 "Complete the payment using Pix to finish the purchase." = "Fullfør betalingen med Pix for å fullføre kjøpet.";
 
 "Confirm" = "Bekreft";
@@ -162,7 +162,11 @@
 
 "Edit address" = "Rediger adresse";
 
+"Email code" = "E-postkode";
+
 "Enter address manually" = "Skriv inn adresse manuelt";
+
+"Enter the phone number on your Link account." = "Skriv inn telefonnummeret på Link-kontoen din.";
 
 "Exchange rate and fees of your bank may apply." = "Bankens vekslingskurs og gebyrer kan påløpe.";
 
@@ -186,6 +190,8 @@
 
 "Last 4 digits of SSN" = "De siste 4 sifrene i personnummeret ditt";
 
+"Log in to another account" = "Logg inn på en annen konto";
+
 "Manage SEPA debit" = "Administrer SEPA-debet";
 
 "Manage US bank account" = "Administrer bankkonto i USA";
@@ -202,6 +208,8 @@
 
 "Manage your payment methods" = "Administrer betalingsmetodene dine";
 
+"More options" = "Flere alternativer";
+
 "Name on card" = "Navn på kort";
 
 "Naver Pay Card" = "Naver Pay-kort";
@@ -213,6 +221,8 @@
 "New payment method" = "Ny betalingsmetode";
 
 "No %@ promo" = "Ingen %@-kampanje";
+
+"None of the payment methods in your %@ account work with this business." = "Ingen av betalingsmetodene på %@-kontoen din fungerer med denne bedriften.";
 
 "Not you?" = "Ikke deg?";
 
@@ -277,6 +287,8 @@
 "Remove payment method" = "Fjern betalingsmetode";
 
 "Remove payment method?" = "Fjerne betalingsmetode?";
+
+"Resend code in %d seconds" = "Send kode på nytt om %li sekunder";
 
 "SEPA debit details cannot be changed." = "SEPA-debetopplysninger kan ikke endres.";
 
@@ -358,6 +370,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Denne betalingsmåten vil bli fjernet, men vil fortsatt være tilgjengelig for %@ abonnementer.";
 
+"This phone number doesn't match your Link account. Please try again." = "Dette telefonnummeret samsvarer ikke med Link-kontoen din. Prøv på nytt.";
+
 "Too many attempts. Please try again in a few minutes." = "For mange forsøk. Prøv på nytt om noen få minutter.";
 
 "Unavailable for this purchase" = "Utilgjengelig for dette kjøpet";
@@ -368,9 +382,17 @@
 
 "Use billing address for shipping" = "Bruk faktureringsadressen for frakt";
 
+"Verify your phone number" = "Bekreft telefonnummeret ditt";
+
+"Verifying your account…" = "Bekrefter kontoen din …";
+
 "View more" = "Se mer";
 
+"We couldn't verify your account. Please close this window and try again." = "Vi kan ikke bekrefte kontoen din. Lukk dette vinduet og prøv på nytt.";
+
 "Yes, update" = "Ja, oppdater";
+
+"You can't pay with %@ here" = "Du kan ikke betale med %@ her";
 
 "Your IBAN should start with a two-letter country code." = "IBAN-nummeret skal starte med en tosifret landskode.";
 

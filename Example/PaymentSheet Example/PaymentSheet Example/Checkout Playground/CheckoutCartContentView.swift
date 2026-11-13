@@ -10,14 +10,14 @@
 import SwiftUI
 
 struct CheckoutCartContentView: View {
-    @ObservedObject var checkout: CheckoutController
+    @ObservedObject var checkout: CheckoutElementsController
     var emailSource: CheckoutPlayground.EmailSource
     var showsCurrencySelectorElement: Bool
     var showsShippingAddressSection: Bool
     var errorMessage: String?
     var showExpressCheckoutElement: Bool
     var integrationType: CheckoutPlayground.IntegrationType
-    let onConfirm: (CheckoutController.ConfirmResult) -> Void
+    let onConfirm: (CheckoutElementsController.ConfirmResult) -> Void
     @State private var showsTaxDetails = false
     @State private var showsEmailEditor = false
     @State private var emailDraft = ""
@@ -142,7 +142,7 @@ struct CheckoutCartContentView: View {
                                 Text(item.displayName)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text("\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)")
+                                Text("\(item.unitAmountDecimal?.amount ?? item.unitAmount.amount) × \(item.quantity)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .accessibilityIdentifier("checkout_line_item_amount")
@@ -186,7 +186,7 @@ struct CheckoutCartContentView: View {
     // MARK: - Address Helpers
 
     @ViewBuilder
-    private func addressCard(name: String?, address: CheckoutController.Address, onEdit: @escaping () -> Void) -> some View {
+    private func addressCard(name: String?, address: CheckoutElementsController.Address, onEdit: @escaping () -> Void) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: "mappin.circle.fill")
                 .foregroundColor(.blue)
@@ -378,7 +378,7 @@ struct CheckoutCartContentView: View {
         .accessibilityLabel("Show tax details")
     }
 
-    private func taxAddressPrompt(for status: CheckoutController.Session.Tax.Status?) -> String? {
+    private func taxAddressPrompt(for status: CheckoutElementsController.Session.Tax.Status?) -> String? {
         switch status {
         case .requiresShippingAddress:
             return "Enter shipping address to calculate"
@@ -399,7 +399,7 @@ struct CheckoutCartContentView: View {
 
 private struct CheckoutTaxDetailsView: View {
     @Environment(\.dismiss) private var dismiss
-    let taxAmounts: [CheckoutController.Session.TaxAmount]
+    let taxAmounts: [CheckoutElementsController.Session.TaxAmount]
 
     @ViewBuilder
     var body: some View {
@@ -436,7 +436,7 @@ private struct CheckoutTaxDetailsView: View {
 
 struct CheckoutCartSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var checkout: CheckoutController
+    @ObservedObject var checkout: CheckoutElementsController
 
     var body: some View {
         NavigationView {

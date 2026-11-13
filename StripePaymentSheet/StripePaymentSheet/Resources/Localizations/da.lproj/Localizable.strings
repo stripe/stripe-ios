@@ -14,8 +14,6 @@
 
 "Add bank account" = "Tilføj bankkonto";
 
-"Add card" = "Tilføj kort";
-
 "Add new card" = "Tilføj nyt kort";
 
 "Add new payment method" = "Tilføj ny betalingsmetode";
@@ -31,6 +29,10 @@
 "Bank account" = "Bankkonto";
 
 "Bank account details cannot be changed." = "Bankkontooplysninger kan ikke ændres.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Før vi kan sende en kode til din e-mail, er vi nødt til at verificere yderligere oplysninger om dig. Indtast dit telefonnummer, der slutter på ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Før vi kan sende en kode til din e-mail, er vi nødt til at verificere yderligere oplysninger om dig. Indtast dit telefonnummer.";
 
 "Buy Now, Pay Later with  <img/>" = "Køb nu, betal senere med <img/>";
 
@@ -56,7 +58,7 @@
 
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Ved at bekræfte din betaling accepterer du, at din transaktion vil blive håndteret af Global Stack Services Limited som den registrerede handlende og i overensstemmelse med deres <terms>vilkår</terms>.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved at fortsætte til Amazon Pay, tillader du %@ at debitere din Revolut Pay-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved at fortsætte til Amazon Pay giver du %@ tilladelse til at debitere din Amazon Pay-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
 
 "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Når du fortsætter til Klarna, giver du %1$@ tilladelse til at debitere din Klarna-konto for fremtidige betalinger i overensstemmelse med deres vilkår og Klarnas vilkår. Du kan til enhver tid ændre dette i din Klarna-app eller ved at kontakte %2$@.";
 
@@ -84,7 +86,7 @@
 
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ved at angive dine bankkontooplysninger og bekræfte denne betaling accepterer du denne anmodning om direkte debitering og den <terms>direkte debiteringsaftale</terms> og giver Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit-bruger-id-nummer 507156 (“Stripe”) tilladelse til at debitere din konto via Bulk Electronic Clearing System (BECS) på vegne af %@ (den “handlende”) for alle beløb, der separat er blevet meddelt dig af den handlende. Du bekræfter, at du enten er en kontoindehaver eller en autoriseret underskriver på ovenstående konto.";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Ved at angive dine kortoplysninger tillader du %@ at opkræve dit kort for denne betaling i overensstemmelse med dennes vilkår.";
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Ved at angive dine kortoplysninger giver du %@ tilladelse til at debitere dit kort for fremtidige betalinger i overensstemmelse med deres vilkår.";
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at angive din e-mail accepterer du at oprette en %1$@-konto og gemme dine betalingsoplysninger på %1$@ i henhold til <terms>vilkårene</terms> og <privacy>privatlivspolitikken</privacy> for %1$@.";
 
@@ -115,8 +117,6 @@
 "Choose a payment method" = "Vælg en betalingsmetode";
 
 "Close card scanner" = "Luk kortscanner";
-
-"Code sent" = "Kode sendt";
 
 "Complete the payment using Pix to finish the purchase." = "Gennemfør betalingen med Pix for at afslutte købet.";
 
@@ -162,7 +162,11 @@
 
 "Edit address" = "Rediger adresse";
 
+"Email code" = "E-mailkode";
+
 "Enter address manually" = "Indtast adresse manuelt";
+
+"Enter the phone number on your Link account." = "Indtast telefonnummeret på din Link-konto.";
 
 "Exchange rate and fees of your bank may apply." = "Din banks vekselkurs og gebyrer kan være gældende.";
 
@@ -186,6 +190,8 @@
 
 "Last 4 digits of SSN" = "Sidste 4 cifre af SSN";
 
+"Log in to another account" = "Log ind på en anden konto";
+
 "Manage SEPA debit" = "Administrer SEPA-debet";
 
 "Manage US bank account" = "Administrer amerikansk bankkonto";
@@ -202,6 +208,8 @@
 
 "Manage your payment methods" = "Administrer dine betalingsmetoder";
 
+"More options" = "Flere muligheder";
+
 "Name on card" = "Kortholderens navn";
 
 "Naver Pay Card" = "Naver Pay-kort";
@@ -213,6 +221,8 @@
 "New payment method" = "Ny betalingsmetode";
 
 "No %@ promo" = "Ingen %@-kampagne";
+
+"None of the payment methods in your %@ account work with this business." = "Ingen af betalingsmetoderne på din %@-konto fungerer med denne virksomhed.";
 
 "Not you?" = "Ikke dig?";
 
@@ -277,6 +287,8 @@
 "Remove payment method" = "Fjern betalingsmetode";
 
 "Remove payment method?" = "Fjern betalingsmetode?";
+
+"Resend code in %d seconds" = "Send kode igen om %li sekunder";
 
 "SEPA debit details cannot be changed." = "SEPA-debetdetaljer kan ikke ændres.";
 
@@ -358,6 +370,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Denne betalingsmetode vil blive fjernet, men vil fortsat være tilgængelig for %@-abonnementer.";
 
+"This phone number doesn't match your Link account. Please try again." = "Dette telefonnummer stemmer ikke overens med din Link-konto. Prøv igen.";
+
 "Too many attempts. Please try again in a few minutes." = "For mange forsøg. Prøv igen om et par minutter.";
 
 "Unavailable for this purchase" = "Ikke tilgængelig for dette køb";
@@ -368,9 +382,17 @@
 
 "Use billing address for shipping" = "Brug faktureringsadresse til forsendelse";
 
+"Verify your phone number" = "Verificer dit telefonnummer";
+
+"Verifying your account…" = "Verificerer din konto …";
+
 "View more" = "Vis mere";
 
+"We couldn't verify your account. Please close this window and try again." = "Vi kunne ikke verificere din konto. Luk dette vindue, og prøv igen.";
+
 "Yes, update" = "Ja, opdater";
+
+"You can't pay with %@ here" = "Du kan ikke betale med %@ her";
 
 "Your IBAN should start with a two-letter country code." = "Dit IBAN-nummer skal starte med en landekode på to bogstaver.";
 

@@ -33,6 +33,8 @@ extension CheckoutPlayground {
                 }
             }
         }
+        @Published var applePayEnabled: Bool
+        @Published var paymentElementApplePayDisplay: PaymentElementApplePayDisplay
         @Published var linkMode: LinkMode {
             didSet {
                 if isLinkModeOverrideActive {
@@ -56,10 +58,10 @@ extension CheckoutPlayground {
         @Published var adaptivePricingCountry: AdaptivePricingCountry
         @Published var automaticPaymentMethods: Bool
         @Published var paymentMethodTypes: Set<String>
-        @Published var currencySelectorAppearance: CurrencySelectorElement.Appearance
+        @Published var currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance
         @Published var checkoutEndpointOption: EndpointOption
         @Published var checkoutEndpoint: String
-        @Published var delayPaymentPagesRequests: Bool
+        @Published var delayCheckoutClientRequests: Bool
 
         @Published var isCreating = false
         @Published var errorMessage: String?
@@ -74,6 +76,8 @@ extension CheckoutPlayground {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement = settings.expressCheckoutElement
+            applePayEnabled = settings.applePayEnabled
+            paymentElementApplePayDisplay = settings.paymentElementApplePayDisplay
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
@@ -94,7 +98,7 @@ extension CheckoutPlayground {
             currencySelectorAppearance = settings.currencySelectorAppearance
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = EndpointOption.normalizedBaseURL(from: settings.checkoutEndpoint)
-            delayPaymentPagesRequests = settings.delayPaymentPagesRequests
+            delayCheckoutClientRequests = settings.delayCheckoutClientRequests
             settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
                 guard let self else {
                     return
@@ -240,6 +244,8 @@ extension CheckoutPlayground {
                 uiFramework: uiFramework,
                 integrationType: integrationType,
                 expressCheckoutElement: expressCheckoutElement,
+                applePayEnabled: applePayEnabled,
+                paymentElementApplePayDisplay: paymentElementApplePayDisplay,
                 linkMode: linkMode,
                 currency: currency,
                 customerType: customerType,
@@ -260,7 +266,7 @@ extension CheckoutPlayground {
                 currencySelectorAppearance: currencySelectorAppearance,
                 checkoutEndpointOption: checkoutEndpointOption,
                 checkoutEndpoint: checkoutEndpoint,
-                delayPaymentPagesRequests: delayPaymentPagesRequests
+                delayCheckoutClientRequests: delayCheckoutClientRequests
             )
         }
 
@@ -268,6 +274,8 @@ extension CheckoutPlayground {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
             expressCheckoutElement = settings.expressCheckoutElement
+            applePayEnabled = settings.applePayEnabled
+            paymentElementApplePayDisplay = settings.paymentElementApplePayDisplay
             linkMode = settings.linkMode
             currency = settings.currency
             customerType = settings.customerType
@@ -288,7 +296,7 @@ extension CheckoutPlayground {
             currencySelectorAppearance = settings.currencySelectorAppearance
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = settings.checkoutEndpoint
-            delayPaymentPagesRequests = settings.delayPaymentPagesRequests
+            delayCheckoutClientRequests = settings.delayCheckoutClientRequests
         }
 
         private func serializeSettingsToNSUserDefaults() {

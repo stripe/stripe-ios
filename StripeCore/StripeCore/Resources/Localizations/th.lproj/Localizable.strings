@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "ตัวแก้ไขข้อบกพร่องเชื่อมต่อกับแอปแล้ว";
+
+"An emulator is being used to run the App." = "มีการใช้โปรแกรมจำลองเพื่อเรียกใช้แอปอยู่";
+
 "An error occurred. Please try again." = "เกิดข้อผิดพลาด โปรดลองอีกครั้ง";
+
+"Cancel" = "ยกเลิก";
 
 "Card brand was not updated. Please try again." = "ระบบไม่ได้อัปเดตแบรนด์ของบัตร โปรดลองอีกครั้ง";
 
 "Close" = "ปิด";
+
+"Collapsed" = "ยุบแล้ว";
 
 "Confirm it's you" = "ยืนยันว่าเป็นคุณจริงๆ";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "ป้อนรหัสที่ส่งไปยัง %@";
 
+"Expanded" = "ขยายแล้ว";
+
 "Failed to connect" = "เชื่อมต่อไม่สำเร็จ";
+
+"Loading" = "กำลังโหลด";
+
+"No" = "ไม่";
 
 "Resend code" = "ส่งรหัสอีกครั้ง";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "สแกนบัตร";
 
+"Secure checkout" = "การชำระเงินที่ปลอดภัย";
+
+"Selected" = "เลือกแล้ว";
+
 "The IBAN you entered is invalid." = "IBAN ที่คุณป้อนไม่ถูกต้อง";
+
+"The OS or the OS Version is not supported." = "ระบบไม่รองรับระบบปฏิบัติการหรือเวอร์ชันของระบบปฏิบัติการ";
+
+"The device is jailbroken." = "อุปกรณ์ถูกเจลเบรค";
+
+"The integrity of the SDK has been tampered." = "ความสมบูรณ์ของ SDK ถูกดัดแปลงแล้ว";
 
 "There was an error processing your card -- try again in a few seconds" = "เกิดข้อผิดพลาดขณะประมวลผลบัตร โปรดลองอีกครั้งในอีกสักครู่";
 
 "There was an unexpected error -- try again in a few seconds" = "เกิดข้อผิดพลาดที่ไม่คาดคิด โปรดลองอีกครั้งในอีกสักครู่";
 
+"Timeout" = "หมดเวลา";
+
 "Try again" = "โปรดลองอีกครั้ง";
 
+"Unselected" = "ไม่ได้เลือก";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "เราใช้ Stripe เพื่อยืนยันรายละเอียดบัตรของคุณ ดังนั้น Stripe อาจจะใช้และจัดเก็บข้อมูลของคุณไว้ตามนโยบายความเป็นส่วนตัวของบริษัท <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>ดูข้อมูลเพิ่มเติม</u></a>";
+
+"Yes" = "ใช่";
 
 "Your card has expired" = "บัตรของคุณหมดอายุแล้ว";
 

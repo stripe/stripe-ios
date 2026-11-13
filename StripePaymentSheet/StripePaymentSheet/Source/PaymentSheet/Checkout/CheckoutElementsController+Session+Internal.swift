@@ -1,0 +1,77 @@
+//
+//  CheckoutElementsController+Session+Internal.swift
+//  StripePaymentSheet
+//
+
+import Foundation
+@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
+
+// MARK: - Computed Properties
+
+extension CheckoutElementsController.Session {
+    var customerId: String? {
+        return customer?.id
+    }
+
+    var requiresShippingAddress: Bool {
+        allowedShippingCountries != nil
+    }
+
+    var isPaymentMethodOptionsSetupFutureUsageSet: Bool {
+        return !setupFutureUsageForPaymentMethodType.isEmpty
+    }
+
+    /// Whether this Checkout Session computes automatic tax from the billing address.
+    var collectsTaxFromBillingAddress: Bool {
+        return shouldSendTaxRegion(for: "billing")
+    }
+
+    /// Whether this session's `payment_status` is `no_payment_required`.
+    var noPaymentRequired: Bool {
+        return paymentStatus == .noPaymentRequired
+    }
+
+    var amount: Int {
+        return totals.total.minorUnitsAmount
+    }
+
+    /// The currency associated with the session's amounts.
+    var activePresentmentCurrency: String? {
+        return presentmentDetails?.presentmentCurrency ?? currency
+    }
+}
+
+// MARK: - Methods
+
+extension CheckoutElementsController.Session {
+    /// Returns `true` when the server needs a `tax_region` update for the given address type.
+    ///
+    /// - Parameter addressType: Either `"billing"` or `"shipping"`.
+    func shouldSendTaxRegion(for addressType: String) -> Bool {
+        return automaticTaxEnabled && automaticTaxAddressSource == addressType
+    }
+
+    func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {
+        guard customerId != nil else {
+            return false
+        }
+
+        if noPaymentRequired {
+            return true
+        }
+
+        guard let setupFutureUsage = setupFutureUsage(for: paymentMethodType) else {
+            return false
+        }
+        return setupFutureUsage != "none"
+    }
+
+    func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
+        return setupFutureUsageForPaymentMethodType[paymentMethodType.identifier]
+    }
+}
+
+extension CheckoutElementsController {
+    typealias LocalStateMutation = @MainActor @Sendable (inout Session.LocalState) -> Void
+}

@@ -129,7 +129,7 @@ class PaymentMethodFormViewController: UIViewController {
                 paymentMethodOrientation: paymentMethodOrientation,
                 previousCustomerInput: previousCustomerInput,
                 linkAccount: LinkAccountContext.shared.account,
-                accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
+                accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession, analyticsHelper: analyticsHelper.linkAnalytics),
                 analyticsHelper: analyticsHelper,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                 linkAppearance: linkAppearance,
@@ -192,8 +192,7 @@ class PaymentMethodFormViewController: UIViewController {
         form.clearTextFields()
     }
 
-    /// Sets up the autocomplete button callback for any AddressSectionElement in the form
-    /// TODO(porter) Make this more generic for when we have shipping address section in here too
+    /// Sets up the autocomplete button callback for the billing address section in the form
     private func setupAddressSectionAutocompleteCallback() {
         let formElement = (form as? PaymentMethodElementWrapper<FormElement>)?.element ?? form
         if let addressSection = formElement.getAllUnwrappedSubElements()
@@ -355,7 +354,7 @@ extension PaymentMethodFormViewController {
         }
     }
 
-    private var elementsSessionContext: ElementsSessionContext {
+    var elementsSessionContext: ElementsSessionContext {
         let intentId: ElementsSessionContext.IntentID? = {
             switch intent {
             case .paymentIntent(let paymentIntent):
@@ -388,7 +387,12 @@ extension PaymentMethodFormViewController {
         let paymentMethodType: STPPaymentMethodType = elementsSession.useCardPaymentMethodTypeForIBP ? .card : .USBankAccount
         let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         let allowRedisplay = elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp)
-        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: analyticsHelper, intent: intent, elementsSession: elementsSession)
+        let clientAttributionMetadata = analyticsHelper.shouldIncludeClientAttributionMetadata
+            ? STPClientAttributionMetadata.makeClientAttributionMetadata(
+                intent: intent,
+                elementsSession: elementsSession,
+                checkoutAttribution: analyticsHelper.checkoutAttribution
+            ) : nil
 
         return ElementsSessionContext(
             amount: intent.amount,

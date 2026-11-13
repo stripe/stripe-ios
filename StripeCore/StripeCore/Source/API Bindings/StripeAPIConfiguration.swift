@@ -9,7 +9,7 @@
 import Foundation
 
 /// Shared configurations across all Stripe frameworks.
-@_spi(InternalOnlyAPI) public struct StripeAPIConfiguration {
+@_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public struct StripeAPIConfiguration {
 
     public static let sharedUrlSessionConfiguration = URLSessionConfiguration.default
 

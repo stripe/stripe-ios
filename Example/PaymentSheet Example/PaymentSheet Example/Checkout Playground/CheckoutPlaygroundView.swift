@@ -36,7 +36,7 @@ struct CheckoutPlaygroundView: View {
                             customerType: $viewModel.customerType,
                             checkoutEndpointOption: $viewModel.checkoutEndpointOption,
                             checkoutEndpoint: $viewModel.checkoutEndpoint,
-                            delayPaymentPagesRequests: $viewModel.delayPaymentPagesRequests,
+                            delayCheckoutClientRequests: $viewModel.delayCheckoutClientRequests,
                             onReset: viewModel.reset
                         )
 
@@ -59,7 +59,9 @@ struct CheckoutPlaygroundView: View {
                             checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             automaticPaymentMethods: $viewModel.automaticPaymentMethods,
-                            linkMode: $viewModel.linkMode
+                            linkMode: $viewModel.linkMode,
+                            applePayEnabled: $viewModel.applePayEnabled,
+                            paymentElementApplePayDisplay: $viewModel.paymentElementApplePayDisplay
                         )
 
                         CheckoutPlaygroundExpressCheckoutElementSection(
@@ -109,8 +111,10 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             expressCheckoutElementSettings: viewModel.expressCheckoutElement,
+                            applePayEnabled: viewModel.applePayEnabled,
+                            paymentElementApplePayDisplay: viewModel.paymentElementApplePayDisplay,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
-                            delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
+                            delayCheckoutClientRequests: viewModel.delayCheckoutClientRequests
                         )
                     case .uiKit:
                         CheckoutCartUIKitView(
@@ -122,8 +126,10 @@ struct CheckoutPlaygroundView: View {
                             adaptivePricing: true,
                             integrationType: viewModel.integrationType,
                             expressCheckoutElementSettings: viewModel.expressCheckoutElement,
+                            applePayEnabled: viewModel.applePayEnabled,
+                            paymentElementApplePayDisplay: viewModel.paymentElementApplePayDisplay,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
-                            delayPaymentPagesRequests: viewModel.delayPaymentPagesRequests
+                            delayCheckoutClientRequests: viewModel.delayCheckoutClientRequests
                         )
                     }
                 }

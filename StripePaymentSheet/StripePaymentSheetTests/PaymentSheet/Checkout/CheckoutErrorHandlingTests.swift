@@ -20,7 +20,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
     func testConfirmationErrorMessages() async throws {
         for (response, expectedMessage) in Self.errorCases {
             // Given a loaded Checkout whose confirmation API returns an error
-            let checkout = try await CheckoutController(configuration: CheckoutTestHelpers.makeConfiguration(
+            let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
                 paymentElementConfiguration: nil,
                 expressCheckoutElementConfiguration: nil
             ))
@@ -33,13 +33,15 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
             // When the merchant confirms Checkout
             let result = await checkout.confirm(source: .merchant) { flow }
 
-            // Then the failed result preserves the server's optional message
+            // Then the failed result uses the server's message, or a generic fallback when it is missing
             guard case .failed(let error) = result else {
                 XCTFail("Expected confirmation to fail, got \(result)")
                 continue
             }
             let stripeError = try XCTUnwrap(error as? StripeError)
             XCTAssertEqual(stripeError.errorDescription, expectedMessage)
+            // ...and merchants receiving a plain Error see the same message
+            XCTAssertEqual(error.localizedDescription, expectedMessage)
         }
     }
 
@@ -61,14 +63,14 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
                     _ = try await apiClient.retrieveCheckoutSession(checkoutSessionId: "cs_test_123", clientSecret: "cs_test_123_secret_123")
                     XCTFail("Expected retrieval to fail")
                 } catch {
-                    // Then only existing messages get a live-mode request ID, and metadata is preserved
+                    // Then messages get a live-mode request ID, and metadata is preserved
                     guard let stripeError = error as? StripeError, case .apiError(let apiError) = stripeError else {
                         XCTFail("Expected StripeError")
                         return
                     }
-                    let expectedDescription = expectedMessage.map { $0 + (isTestmode ? "" : " (req_test_123)") }
+                    let expectedDescription = expectedMessage + (isTestmode ? "" : " (req_test_123)")
                     XCTAssertEqual(stripeError.errorDescription, expectedDescription)
-                    XCTAssertEqual(error._stp_hasRequestIDInDescription, !isTestmode && expectedMessage != nil)
+                    XCTAssertEqual(error._stp_hasRequestIDInDescription, !isTestmode)
                     XCTAssertEqual(apiError.httpStatusCode, 400)
                     XCTAssertEqual(apiError.requestID, "req_test_123")
                     XCTAssertEqual(apiError.code, response["code"] as? String)
@@ -77,12 +79,10 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
                     // ...and explicit NSError conversion uses the same formatting and preserves the request ID
                     let converted = try XCTUnwrap(NSError.stp_error(from: stripeError))
                     XCTAssertEqual(converted.userInfo[NSLocalizedDescriptionKey] as? String, expectedDescription)
-                    XCTAssertEqual(converted._stp_hasRequestIDInDescription, !isTestmode && expectedMessage != nil)
+                    XCTAssertEqual(converted._stp_hasRequestIDInDescription, !isTestmode)
                     XCTAssertEqual(converted.userInfo[STPError.stripeRequestIDKey] as? String, "req_test_123")
-                    if let expectedDescription {
-                        XCTAssertEqual(error.localizedDescription, expectedDescription)
-                        XCTAssertEqual(converted.localizedDescription, expectedDescription)
-                    }
+                    XCTAssertEqual(error.localizedDescription, expectedDescription)
+                    XCTAssertEqual(converted.localizedDescription, expectedDescription)
                 }
             }
         }
@@ -92,7 +92,7 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
         // Given the poll endpoint returns an error used only for internal rate-limit handling
         let apiClient = CheckoutTestHelpers.makeStubbedAPIClient()
         stubError(
-            path: "/v1/payment_pages/cs_test_123/poll",
+            path: "/v1/checkout_client/cs_test_123/poll",
             response: ["type": "invalid_request_error", "code": "test_code", "message": "Server message"],
             statusCode: 429,
             headers: ["request-id": "req_test_poll"]
@@ -100,7 +100,11 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
 
         // When Checkout polls for confirmation status
         do {
-            _ = try await apiClient.pollCheckoutSession(checkoutSessionId: "cs_test_123", timeout: 10)
+            _ = try await apiClient.pollCheckoutSession(
+                checkoutSessionId: "cs_test_123",
+                clientSecret: "cs_test_123_secret_123",
+                timeout: 10
+            )
             XCTFail("Expected polling to fail")
         } catch {
             // Then standard message formatting applies and the original metadata remains available
@@ -147,17 +151,18 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
         }
     }
 
-    private static var errorCases: [(response: [String: Any], expectedMessage: String?)] {
+    private static var errorCases: [(response: [String: Any], expectedMessage: String)] {
         let serverMessage = "Ce code promotionnel n’est pas valide."
         let errorTypes = ["invalid_request_error", "api_error", "card_error", "idempotency_error", "future_error_type"]
-        let messageCases: [(response: [String: Any], expectedMessage: String?)] = errorTypes.map { type in
+        let messageCases: [(response: [String: Any], expectedMessage: String)] = errorTypes.map { type in
             (["type": type, "message": serverMessage, "code": "promotion_code_invalid"], serverMessage)
         }
-        // Missing, null, and empty messages produce nil descriptions even for a known card code.
+        // Missing, null, and empty messages use the generic message even for a known card code.
+        let genericMessage = NSError.stp_unexpectedErrorMessage()
         return messageCases + [
-            (["type": "card_error", "code": "incorrect_number", "message": NSNull()], nil),
-            (["type": "invalid_request_error", "code": "incorrect_number"], nil),
-            (["type": "invalid_request_error", "code": "incorrect_number", "message": ""], nil),
+            (["type": "card_error", "code": "incorrect_number", "message": NSNull()], genericMessage),
+            (["type": "invalid_request_error", "code": "incorrect_number"], genericMessage),
+            (["type": "invalid_request_error", "code": "incorrect_number", "message": ""], genericMessage),
         ]
     }
 

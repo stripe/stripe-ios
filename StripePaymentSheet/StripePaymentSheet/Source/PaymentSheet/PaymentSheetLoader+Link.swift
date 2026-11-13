@@ -5,33 +5,37 @@
 //  Created by Nick Porter on 7/19/26.
 //
 
+import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
 
 extension PaymentSheetLoader {
+    /// Loads Link and records experiment exposure. Returns whether lookup timed out, or nil when Link is disabled.
     @MainActor
     static func loadLink(
         elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
+        apiClient: STPAPIClient,
+        isLinkEnabled: Bool,
         email: String?,
+        defaultBillingDetails: PaymentSheet.BillingDetails,
         analyticsHelper: ExperimentAnalyticsHelper,
         prefetchedEmailAndSourceTask: Task<(email: String, source: EmailSource)?, Never>,
         loadTimings: LoadTimings,
-        isUpdate: Bool
-    ) async -> (isLinkEnabled: Bool, didLinkLookupTimeOut: Bool?) {
-        let isLinkEnabled = PaymentSheet.isLinkEnabled(
-            elementsSession: elementsSession,
-            configuration: configuration
-        )
+        isUpdate: Bool,
+        linkAnalytics: LinkAnalyticsHelper,
+        lookupTimeout: TimeInterval = 5.0
+    ) async -> Bool? {
         let lookupLinkAccountTask = Task { @MainActor in
             let prefetchedLinkEmailAndSource = await prefetchedEmailAndSourceTask.value
             let linkAccount = try? await Self.lookupLinkAccount(
                 elementsSession: elementsSession,
-                configuration: configuration,
+                apiClient: apiClient,
+                isLinkEnabled: isLinkEnabled,
                 email: email,
                 prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
                 loadTimings: loadTimings,
-                isUpdate: isUpdate
+                isUpdate: isUpdate,
+                linkAnalytics: linkAnalytics
             )
 
             // We don't want to set the global singleton if we timed out, because that means setting it after MPE has finished loading, which the code is not necessarily expecting.
@@ -41,7 +45,8 @@ extension PaymentSheetLoader {
             }
             Self.logExperimentExposures(
                 elementsSession: elementsSession,
-                configuration: configuration,
+                isLinkEnabled: isLinkEnabled,
+                defaultBillingDetails: defaultBillingDetails,
                 linkAccount: linkAccount,
                 analyticsHelper: analyticsHelper
             )
@@ -50,7 +55,7 @@ extension PaymentSheetLoader {
         // Only block on link lookup if it's enabled.
         var didLinkLookupTimeOut: Bool?
         if isLinkEnabled {
-            let result = await withTimeout(5.0) {
+            let result = await withTimeout(lookupTimeout) {
                 await lookupLinkAccountTask.value
             }
             switch result {
@@ -61,21 +66,24 @@ extension PaymentSheetLoader {
                     didLinkLookupTimeOut = true
                     // Since we're using unstructured Tasks, we have to manually cancel it.
                     lookupLinkAccountTask.cancel()
+                    LinkAccountContext.shared.account = nil
                 }
             }
         }
 
-        return (isLinkEnabled, didLinkLookupTimeOut)
+        return didLinkLookupTimeOut
     }
 
     @MainActor
     static func lookupLinkAccount(
         elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
+        apiClient: STPAPIClient,
+        isLinkEnabled: Bool,
         email: String?,
         prefetchedEmailAndSource: (email: String, source: EmailSource)?,
         loadTimings: LoadTimings,
-        isUpdate: Bool
+        isUpdate: Bool,
+        linkAnalytics: LinkAnalyticsHelper
     ) async throws -> PaymentSheetLinkAccount? {
         // If we already have a verified Link account and the merchant is just calling `update` on FlowController or Embedded,
         // keep the account logged-in. Otherwise, the user has to verify via OTP again.
@@ -84,7 +92,6 @@ extension PaymentSheetLoader {
         }
 
         // Lookup Link account if Link is enabled, or if Link is disabled due to the holdback experiment (to collect experiment dimensions).
-        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         let isLinkInHoldbackExperiment = PaymentSheet.isLinkInHoldbackExperiment(elementsSession: elementsSession)
         let isLookupForHoldbackEnabled = elementsSession.flags["elements_disable_link_global_holdback_lookup"] != true
 
@@ -117,7 +124,7 @@ extension PaymentSheetLoader {
             return nil
         }
 
-        let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
+        let linkAccountService = LinkAccountService(apiClient: apiClient, elementsSession: elementsSession, analyticsHelper: linkAnalytics)
         let linkAccount = try await linkAccountService.lookupAccount(
             withEmail: lookupEmail.email,
             emailSource: lookupEmail.source,
@@ -134,7 +141,8 @@ extension PaymentSheetLoader {
     @MainActor
     static func logExperimentExposures(
         elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
+        isLinkEnabled: Bool,
+        defaultBillingDetails: PaymentSheet.BillingDetails,
         linkAccount: PaymentSheetLinkAccount?,
         analyticsHelper: ExperimentAnalyticsHelper
     ) {
@@ -145,21 +153,24 @@ extension PaymentSheetLoader {
             analyticsHelper.logExposure(experiment: LinkGlobalHoldback(
                 arbId: arbId,
                 session: elementsSession,
-                configuration: configuration,
+                isLinkEnabled: isLinkEnabled,
+                defaultBillingDetails: defaultBillingDetails,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
             ))
             analyticsHelper.logExposure(experiment: LinkGlobalHoldbackAA(
                 arbId: arbId,
                 session: elementsSession,
-                configuration: configuration,
+                isLinkEnabled: isLinkEnabled,
+                defaultBillingDetails: defaultBillingDetails,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
             ))
             analyticsHelper.logExposure(experiment: LinkABTest(
                 arbId: arbId,
                 session: elementsSession,
-                configuration: configuration,
+                isLinkEnabled: isLinkEnabled,
+                defaultBillingDetails: defaultBillingDetails,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
             ))
@@ -174,16 +185,16 @@ extension PaymentSheetLoader {
         }
     }
 
-    /// If configuration uses Ephemeral Key, retrieve Customer object and return email
+    /// If the customer uses a legacy Ephemeral Key, retrieve Customer object and return email
     @MainActor
     static func getCustomerEmailForLinkWithEphemeralKey(
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         loadTimings: LoadTimings
     ) async throws -> (email: String, source: EmailSource)? {
         guard
             configuration.defaultBillingDetails.email == nil, // If email was already provided, don't make a network request to retrieve it.
-            let customerID = configuration.customer?.id,
-            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
+            let credentials = customerProvider.legacyEphemeralKeyCredentials
         else {
             return nil
         }
@@ -191,7 +202,10 @@ extension PaymentSheetLoader {
         defer {
             loadTimings.logEnd("retrieveCustomer")
         }
-        let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
+        let customer = try await configuration.apiClient.retrieveCustomer(
+            credentials.customerID,
+            using: credentials.ephemeralKeySecret
+        )
         if let email = customer.email {
             return (email, EmailSource.customerObject)
         }

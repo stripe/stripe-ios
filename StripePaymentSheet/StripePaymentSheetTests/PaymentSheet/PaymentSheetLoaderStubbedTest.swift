@@ -621,10 +621,63 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loaded], timeout: 2)
     }
 
+    // MARK: - Link Email Sources
+
+    func testLoadLinkEmailForLegacyCustomer() async throws {
+        defer { LinkAccountContext.shared.account = nil }
+        let cases: [(explicitEmail: String?, customerStatus: Int32, expectedEmail: String, expectedSource: String)] = [
+            (nil, 200, "foo@bar.com", "customer_object"),
+            ("explicit@example.com", 200, "explicit@example.com", "customer_email"),
+            (nil, 403, "session@example.com", "customer_object"),
+        ]
+        for testCase in cases {
+            // Given competing Customer and Elements Session emails, and an optional explicit email
+            StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
+            StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsMobilePaymentElement_200) { data in
+                let resolved = StubbedBackend.updatePaymentMethodDetail(data: data, variables: [
+                    "<paymentMethods>": "\"card\", \"link\"",
+                    "<currency>": "\"usd\"",
+                ])
+                var json = try! JSONSerialization.jsonObject(with: resolved) as! [String: Any]
+                json[jsonDict: "customer"]?["email"] = "session@example.com"
+                return try! JSONSerialization.data(withJSONObject: json)
+            }
+            var customerRequestCount = 0
+            stub { $0.url?.path == "/v1/customers/123" } response: { request in
+                customerRequestCount += 1
+                XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer ek_456")
+                return HTTPStubsResponse(data: try! FileMock.customers_200.data(), statusCode: testCase.customerStatus, headers: nil)
+            }
+            var lookupRequestCount = 0
+            stub { $0.url?.path == "/v1/consumers/sessions/lookup" } response: { request in
+                lookupRequestCount += 1
+                let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+                XCTAssertEqual(params["email_address"], testCase.expectedEmail)
+                XCTAssertEqual(params["email_source"], testCase.expectedSource)
+                return HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+            }
+            var configuration = self.configuration(apiClient: stubbedAPIClient())
+            configuration.defaultBillingDetails.email = testCase.explicitEmail
+
+            // When loading with legacy customer credentials
+            _ = try await PaymentSheetLoader.load(
+                mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+                configuration: configuration,
+                analyticsHelper: ._testValue(configuration: configuration),
+                integrationShape: .paymentSheet
+            )
+
+            // Then explicit email skips retrieval, and a failed retrieval still allows the session fallback
+            XCTAssertEqual(customerRequestCount, testCase.explicitEmail == nil ? 1 : 0)
+            XCTAssertEqual(lookupRequestCount, 1)
+        }
+    }
+
     // MARK: - Link Lookup Session Preservation
 
     @MainActor
     func testLookupLink_preservesVerifiedSessionForMatchingAccountOnReload() async throws {
+        let analyticsClient = STPTestingAnalyticsClient()
         var didCallLookup = false
         stub { urlRequest in
             if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
@@ -641,21 +694,22 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             LinkAccountContext.shared.account = nil
         }
 
-        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        configuration.apiClient = stubbedAPIClient()
-
         let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
-            configuration: configuration,
+            apiClient: stubbedAPIClient(),
+            isLinkEnabled: true,
             email: "foo@bar.com",
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
-            isUpdate: false
+            isUpdate: false,
+            linkAnalytics: .init(analyticsClient: analyticsClient)
         )
 
         XCTAssertTrue(didCallLookup, "Expected Link lookup to still run when reloading PaymentSheet")
         XCTAssertEqual(linkAccount?.consumerSessionClientSecret, "pscs_persisted")
         XCTAssertEqual(linkAccount?.sessionState, .verified)
+        let lookupEvent = try XCTUnwrap(analyticsClient._testLogHistory.first { $0["event"] as? String == "link.account_lookup.complete" })
+        XCTAssertNil(lookupEvent["checkout_session_id"])
     }
 
     @MainActor
@@ -676,21 +730,77 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             LinkAccountContext.shared.account = nil
         }
 
-        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
-        configuration.apiClient = stubbedAPIClient()
-
         let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
-            configuration: configuration,
+            apiClient: stubbedAPIClient(),
+            isLinkEnabled: true,
             email: "foo@bar.com",
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
-            isUpdate: false
+            isUpdate: false,
+            linkAnalytics: .init()
         )
 
         XCTAssertTrue(didCallLookup, "Expected Link lookup to run for the new email")
         XCTAssertEqual(linkAccount?.consumerSessionClientSecret, "pscs_abc123")
         XCTAssertEqual(linkAccount?.sessionState, .requiresVerification)
+    }
+
+    @MainActor
+    func testResetCustomer_logsOutAndClearsVerifiedLinkAccount() async throws {
+        // Given a verified Link account from a previous customer
+        let didLogOut = expectation(description: "Link logout")
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("consumers/sessions/log_out") == true
+        } response: { _ in
+            didLogOut.fulfill()
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+        LinkAccountContext.shared.account = makeVerifiedLinkAccount(email: "user-a@example.com")
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        // When the merchant resets the customer on logout
+        PaymentSheet.resetCustomer()
+
+        // Then the Link account is cleared locally and logged out on the backend
+        XCTAssertNil(LinkAccountContext.shared.account)
+        await fulfillment(of: [didLogOut], timeout: 2)
+    }
+
+    @MainActor
+    func testLoadLink_lookupTimeout_clearsPreviousLinkAccount() async throws {
+        // Given a verified Link account from a previous customer
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true
+        } response: { _ in
+            HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+                .requestTime(1, responseTime: 0)
+        }
+        LinkAccountContext.shared.account = makeVerifiedLinkAccount(email: "user-a@example.com")
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        // When the Link lookup for the next customer times out
+        let didLinkLookupTimeOut = await PaymentSheetLoader.loadLink(
+            elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
+            apiClient: stubbedAPIClient(),
+            isLinkEnabled: true,
+            email: "user-b@example.com",
+            defaultBillingDetails: .init(),
+            analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
+            prefetchedEmailAndSourceTask: Task { nil },
+            loadTimings: .init(),
+            isUpdate: false,
+            linkAnalytics: .init(),
+            lookupTimeout: 0.1
+        )
+
+        // Then the previous customer's Link account is not kept around
+        XCTAssertEqual(didLinkLookupTimeOut, true)
+        XCTAssertNil(LinkAccountContext.shared.account)
     }
 
     // MARK: - Link Lookup Holdback Tests
@@ -726,11 +836,13 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
         _ = try await PaymentSheetLoader.lookupLinkAccount(
             elementsSession: elementsSession,
-            configuration: config,
+            apiClient: config.apiClient,
+            isLinkEnabled: PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: config),
             email: "test@example.com",
             prefetchedEmailAndSource: nil,
             loadTimings: .init(),
-            isUpdate: false
+            isUpdate: false,
+            linkAnalytics: .init()
         )
 
         if shouldCallLookup {

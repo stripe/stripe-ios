@@ -27,7 +27,7 @@ public struct ExpressCheckoutElementView: View {
     }
 }
 
-/// Bridges ExpressCheckoutElement's UIKit state into SwiftUI without retaining CheckoutController.
+/// Bridges ExpressCheckoutElement's UIKit state into SwiftUI without retaining CheckoutElementsController.
 @MainActor
 final class ExpressCheckoutElementViewModel: ObservableObject {
     let uiView: ExpressCheckoutElementUIView
@@ -44,7 +44,7 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
         uiView: ExpressCheckoutElementUIView
     ) {
         let initialSession = sessionSource.initialSession
-        let initialButtons = initialSession.availableExpressCheckoutPaymentMethods.compactMap { ExpressCheckoutElement.PaymentMethod(rawValue: $0) }
+        let initialButtons = initialSession.availableExpressCheckoutPaymentMethodsOrdered
         self.uiView = uiView
         self.buttons = initialButtons
         uiView.update(with: initialSession, buttons: initialButtons)
@@ -53,7 +53,7 @@ final class ExpressCheckoutElementViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 guard let self else { return }
-                let buttons = session.availableExpressCheckoutPaymentMethods.compactMap { ExpressCheckoutElement.PaymentMethod(rawValue: $0) }
+                let buttons = session.availableExpressCheckoutPaymentMethodsOrdered
                 self.uiView.update(with: session, buttons: buttons)
                 self.buttons = buttons
             }

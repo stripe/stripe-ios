@@ -43,14 +43,14 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
     @MainActor
     private func makeCurrencySelectorElement(
         selectedCurrency: String = "usd",
-        appearance: CurrencySelectorElement.Appearance = .init()
+        appearance: CurrencySelectorElement.Configuration.Appearance = .init()
     ) async throws -> CurrencySelectorElement {
         let session = CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
-        var configuration = CheckoutController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
+        var configuration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
         var currencySelectorConfiguration = CurrencySelectorElement.Configuration()
         currencySelectorConfiguration.appearance = appearance
         configuration.currencySelectorElement = currencySelectorConfiguration
-        let checkout = try await CheckoutController(
+        let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(
                 apiResponse: session,
                 configuration: configuration

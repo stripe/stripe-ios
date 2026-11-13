@@ -14,8 +14,6 @@
 
 "Add bank account" = "Żid kont tal-bank";
 
-"Add card" = "Żid karta";
-
 "Add new card" = "Żid karta ġdida";
 
 "Add new payment method" = "Żid metodu tal-ħlas ġdid";
@@ -31,6 +29,10 @@
 "Bank account" = "Kont tal-bank";
 
 "Bank account details cannot be changed." = "Id-dettalji tal-kont tal-bank ma jistgħux jinbidlu.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Qabel ma nkunu nistgħu nibagħtu kodiċi lill-email tiegħek, irridu nivverifikaw informazzjoni addizzjonali dwarek. Jekk jogħġbok daħħal in-numru telefoniku tiegħek li jispiċċa f’••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Qabel ma nkunu nistgħu nibagħtu kodiċi lill-email tiegħek, irridu nivverifikaw informazzjoni addizzjonali dwarek. Jekk jogħġbok daħħal in-numru telefoniku tiegħek.";
 
 "Buy Now, Pay Later with  <img/>" = "Ixtri Issa, Ħallas Wara ma’  <img/>";
 
@@ -116,8 +118,6 @@
 
 "Close card scanner" = "Agħlaq l-iskenner tal-karta";
 
-"Code sent" = "Il-kodiċi ntbagħat";
-
 "Complete the payment using Pix to finish the purchase." = "Lesti l-ħlas permezz ta' Pix biex tiffinalizza x-xiri.";
 
 "Confirm" = "Ikkonferma";
@@ -162,7 +162,11 @@
 
 "Edit address" = "Editja l-indirizz";
 
+"Email code" = "Kodiċi tal-email";
+
 "Enter address manually" = "Ikteb l-indirizz int stess";
+
+"Enter the phone number on your Link account." = "Daħħal in-numru tat-telefon tal-kont ta' Link tiegħek.";
 
 "Exchange rate and fees of your bank may apply." = "Ir-rata tal-kambju u l-miżati tal-bank tiegħek jistgħu japplikaw.";
 
@@ -186,6 +190,8 @@
 
 "Last 4 digits of SSN" = "L-aħħar 4 ċifri tal-SSN";
 
+"Log in to another account" = "Idħol f'kont ieħor";
+
 "Manage SEPA debit" = "Ħu ħsieb id-debitu SEPA";
 
 "Manage US bank account" = "Ħu ħsieb il-kont tal-bank tal-Istati Uniti tal-Amerka";
@@ -202,6 +208,8 @@
 
 "Manage your payment methods" = "Ħu ħsieb il-metodi tal-pagament tiegħek";
 
+"More options" = "Aktar għażliet";
+
 "Name on card" = "L-isem fuq il-karta";
 
 "Naver Pay Card" = "Kard ta’ Naver Pay";
@@ -213,6 +221,8 @@
 "New payment method" = "Metodu tal-pagament ġdid";
 
 "No %@ promo" = "L-ebda offerta %@";
+
+"None of the payment methods in your %@ account work with this business." = "L-ebda mill-metodi tal-pagament fil-kont %@ tiegħek ma jaħdmu ma' dan in-negozju.";
 
 "Not you?" = "Mhux l-indirizz tal-email tiegħek?";
 
@@ -277,6 +287,8 @@
 "Remove payment method" = "Neħħi l-metodu tal-pagament";
 
 "Remove payment method?" = "Trid tneħħi l-metodu tal-pagament?";
+
+"Resend code in %d seconds" = "Ibgħat mill-ġdid il-kodiċi fi %li sekondi";
 
 "SEPA debit details cannot be changed." = "Id-dettalji tad-debitu SEPA ma jistgħux jinbidlu.";
 
@@ -352,11 +364,13 @@
 
 "The provided verification code is incorrect." = "Il-kodiċi tal-verifika mogħti mhuwiex tajjeb.";
 
-"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Din hija xirja internazzjonali u teskludi tariffa IOF ta’ 3.5%. Billi tipproċedi, inti tirrikonoxxi u taċċetta t-<terms>termini u l-kundizzjonijiet ta’ Ebanx<terms>.";
+"This is an international purchase and excludes a 3.5% IOF fee. By proceeding, you acknowledge and accept <terms>Ebanx’s terms and conditions</terms>." = "Din hija xirja internazzjonali u teskludi tariffa IOF ta’ 3.5%. Billi tipproċedi, inti qed tirrikonoxxi u taċċetta t-<terms>termini u l-kundizzjonijiet ta’ Ebanx</terms>.";
 
 "This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Dan il-metodu ta' pagament se jitneħħa iżda se jibqa' disponibbli għal abbonamenti ta' %@.";
+
+"This phone number doesn't match your Link account. Please try again." = "Dan in-numru tat-telefon ma jaqbilx mal-kont ta' Link tiegħek. Jekk jogħġbok ipprova mill-ġdid.";
 
 "Too many attempts. Please try again in a few minutes." = "Ippruvajt wisq drabi. Jekk jogħġbok erġa' pprova wara ftit minuti.";
 
@@ -368,9 +382,17 @@
 
 "Use billing address for shipping" = "Uża l-indirizz tal-ħlas għall-kunsinna";
 
+"Verify your phone number" = "Ivverifika n-numru telefoniku tiegħek";
+
+"Verifying your account…" = "Qed nivverifikaw il-kont tiegħek…";
+
 "View more" = "Uri iktar";
 
+"We couldn't verify your account. Please close this window and try again." = "Ma stajniex nivverifikaw il-kont tiegħek. Jekk jogħġbok agħlaq din it-tieqa u erġa' pprova.";
+
 "Yes, update" = "Iva, aġġorna";
+
+"You can't pay with %@ here" = "Ma tistax tħallas bi %@ hawnhekk";
 
 "Your IBAN should start with a two-letter country code." = "L-IBAN tiegħek għandu jibda b'kodiċi tal-pajjiż magħmul minn żewġ ittri.";
 

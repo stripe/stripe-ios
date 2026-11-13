@@ -8,7 +8,7 @@
 
 extension ShippingAddressElement.Configuration {
     func makeAddressViewControllerConfiguration(
-        shippingAddress: CheckoutController.Session.ShippingAddress?,
+        shippingAddress: CheckoutElementsController.Session.ShippingAddress?,
         allowedCountries: [String]?,
         apiClient: STPAPIClient
     ) -> AddressViewController.Configuration {
@@ -43,7 +43,7 @@ extension ShippingAddressElement.Configuration {
     }
 }
 
-extension ShippingAddressElement.Appearance {
+extension ShippingAddressElement.Configuration.Appearance {
     func makePaymentSheetAppearance() -> PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
         appearance.font.sizeScaleFactor = font.sizeScaleFactor

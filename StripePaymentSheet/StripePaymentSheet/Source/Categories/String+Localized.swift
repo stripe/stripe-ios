@@ -524,7 +524,7 @@ extension String.Localized {
 
     static var add_card: String {
         STPLocalizedString(
-            "Add card",
+            "Add a card",
             "Title shown above a view allowing the customer to save their first card."
         )
     }
@@ -668,6 +668,33 @@ extension String.Localized {
                 "Title of the sign-out action. The placeholder is a Stripe brand name and should not be translated."
             ),
             brand.displayName
+        )
+    }
+
+    static func you_cant_pay_with_brand_here(brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "You can't pay with %@ here",
+                "Title of a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
+    }
+
+    static func none_of_the_payment_methods_in_your_brand_account_work_with_this_business(brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "None of the payment methods in your %@ account work with this business.",
+                "Message on a screen shown when none of the payment methods in the user's Link account can be used with this business. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
+    }
+
+    static var log_in_to_another_account: String {
+        STPLocalizedString(
+            "Log in to another account",
+            "Label of a button that signs the user out of their current Link account so they can log in to a different one."
         )
     }
 

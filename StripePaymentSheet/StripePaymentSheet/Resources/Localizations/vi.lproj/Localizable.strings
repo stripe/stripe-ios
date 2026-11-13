@@ -14,8 +14,6 @@
 
 "Add bank account" = "Thêm tài khoản ngân hàng";
 
-"Add card" = "Thêm thẻ";
-
 "Add new card" = "Thêm thẻ mới";
 
 "Add new payment method" = "Thêm phương thức thanh toán mới";
@@ -31,6 +29,10 @@
 "Bank account" = "Tài khoản ngân hàng";
 
 "Bank account details cannot be changed." = "Không thể thay đổi thông tin tài khoản ngân hàng.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Trước khi gửi mã đến email của bạn, chúng tôi cần xác minh thêm thông tin về bạn. Vui lòng nhập số điện thoại của bạn có số đuôi ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Chúng tôi cần xác minh thêm thông tin trước khi gửi mã đến email của bạn. Vui lòng nhập số điện thoại của bạn.";
 
 "Buy Now, Pay Later with  <img/>" = "Mua ngay trả sau với  <img/>";
 
@@ -58,7 +60,7 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Amazon Pay, bạn cho phép %@ tính phí tài khoản Amazon Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Bằng việc tiếp tục với Klarna, bạn cho phép %1$@ tính phí vào tài khoản Klarna của bạn cho các khoản thanh toán trong tương lai căn cứ theo các điều khoản của khoản thanh toán và của Klarna. Bạn có thể thay đổi tùy chọn này bất kỳ lúc nào trong ứng dụng Klarna của mình hoặc bằng cách liên hệ với %2$@.";
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Bằng cách tiếp tục với Klarna, bạn cho phép %1$@ tính phí tài khoản Klarna của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ và các điều khoản của Klarna. Bạn có thể thay đổi điều này bất kỳ lúc nào trong ứng dụng Klarna của mình hoặc bằng cách liên hệ với %2$@.";
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách tiếp tục với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
@@ -116,8 +118,6 @@
 
 "Close card scanner" = "Đóng máy quét thẻ";
 
-"Code sent" = "Mã đã được gửi";
-
 "Complete the payment using Pix to finish the purchase." = "Hoàn tất thanh toán bằng Pix để hoàn thành giao dịch mua.";
 
 "Confirm" = "Xác nhận";
@@ -162,7 +162,11 @@
 
 "Edit address" = "Chỉnh sửa địa chỉ";
 
+"Email code" = "Mã qua email";
+
 "Enter address manually" = "Nhập địa chỉ thủ công";
+
+"Enter the phone number on your Link account." = "Nhập số điện thoại trên tài khoản Link của bạn.";
 
 "Exchange rate and fees of your bank may apply." = "Tỷ giá hối đoái và phí ngân hàng của bạn có thể áp dụng.";
 
@@ -186,6 +190,8 @@
 
 "Last 4 digits of SSN" = "4 chữ số cuối của SSN";
 
+"Log in to another account" = "Đăng nhập vào tài khoản khác";
+
 "Manage SEPA debit" = "Quản lý Ghi nợ SEPA";
 
 "Manage US bank account" = "Quản lý tài khoản ngân hàng Hoa Kỳ";
@@ -202,6 +208,8 @@
 
 "Manage your payment methods" = "Quản lý các phương thức thanh toán của bạn";
 
+"More options" = "Thêm tùy chọn";
+
 "Name on card" = "Tên trên thẻ";
 
 "Naver Pay Card" = "Thẻ Naver Pay";
@@ -213,6 +221,8 @@
 "New payment method" = "Phương thức thanh toán mới";
 
 "No %@ promo" = "Không có khuyến mại %@";
+
+"None of the payment methods in your %@ account work with this business." = "Không có phương thức thanh toán nào trong tài khoản %@ của bạn hoạt động với doanh nghiệp này.";
 
 "Not you?" = "Đây không phải là bạn?";
 
@@ -277,6 +287,8 @@
 "Remove payment method" = "Gỡ bỏ phương thức thanh toán";
 
 "Remove payment method?" = "Xóa phương thức thanh toán?";
+
+"Resend code in %d seconds" = "Gửi lại mã trong %li giây";
 
 "SEPA debit details cannot be changed." = "Không thể thay đổi thông tin Ghi nợ SEPA.";
 
@@ -358,6 +370,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Phương thức thanh toán này sẽ bị xóa nhưng sẽ vẫn khả dụng cho các gói đăng ký %@.";
 
+"This phone number doesn't match your Link account. Please try again." = "Số điện thoại này không khớp với tài khoản Link của bạn. Vui lòng thử lại.";
+
 "Too many attempts. Please try again in a few minutes." = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
 
 "Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";
@@ -368,9 +382,17 @@
 
 "Use billing address for shipping" = "Sử dụng địa chỉ thanh toán cho việc giao hàng";
 
+"Verify your phone number" = "Xác minh số điện thoại của bạn";
+
+"Verifying your account…" = "Đang xác thực tài khoản của bạn…";
+
 "View more" = "Xem thêm";
 
+"We couldn't verify your account. Please close this window and try again." = "Chúng tôi không thể xác thực tài khoản của bạn. Vui lòng đóng cửa sổ này và thử lại.";
+
 "Yes, update" = "Có, cập nhật";
+
+"You can't pay with %@ here" = "Bạn không thể thanh toán bằng %@ ở đây";
 
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 

@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Atkļūdotājs ir pievienots Lietotnei.";
+
+"An emulator is being used to run the App." = "Emulators tiek izmantots, lai darbinātu Lietotni.";
+
 "An error occurred. Please try again." = "Radās kļūda. Lūdzu, mēģiniet vēlreiz.";
+
+"Cancel" = "Atcelt";
 
 "Card brand was not updated. Please try again." = "Kartes zīmols netika atjaunināts. Lūdzu, mēģiniet vēlreiz.";
 
 "Close" = "Aizvērt";
+
+"Collapsed" = "Sakļauts";
 
 "Confirm it's you" = "Apstipriniet, ka tas esat jūs";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Ievadiet kodu, kas tika nosūtīts uz %@.";
 
+"Expanded" = "Izvērsts";
+
 "Failed to connect" = "Neizdevās izveidot savienojumu";
+
+"Loading" = "Ielādē";
+
+"No" = "Nē";
 
 "Resend code" = "Sūtīt kodu vēlreiz";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Skenēt karti";
 
+"Secure checkout" = "Droša norēķināšanās";
+
+"Selected" = "Atlasīts";
+
 "The IBAN you entered is invalid." = "Ievadītais IBAN nav derīgs.";
+
+"The OS or the OS Version is not supported." = "OS vai OS versija netiek atbalstīta.";
+
+"The device is jailbroken." = "Ierīce ir uzlauzta.";
+
+"The integrity of the SDK has been tampered." = "SDK integritāte ir kompromitēta.";
 
 "There was an error processing your card -- try again in a few seconds" = "Radās kļūda, apstrādājot jūsu karti — mēģiniet vēlreiz pēc dažām sekundēm";
 
 "There was an unexpected error -- try again in a few seconds" = "Radusies negaidīta kļūda — mēģiniet vēlreiz pēc dažām sekundēm";
 
+"Timeout" = "Noildze";
+
 "Try again" = "Mēģināt vēlreiz";
 
+"Unselected" = "Neatlasīts";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Mēs izmantojam Stripe, lai verificētu jūsu kartes informāciju. Stripe var izmantot un uzglabāt jūsu datus saskaņā ar konfidencialitātes politiku. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Uzzināt vairāk</u></a>";
+
+"Yes" = "Jā";
 
 "Your card has expired" = "Kartes derīguma termiņš ir beidzies";
 

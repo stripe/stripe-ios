@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "앱에 디버거가 연결되어 있습니다.";
+
+"An emulator is being used to run the App." = "앱을 실행하는 데 에뮬레이터가 사용되고 있습니다.";
+
 "An error occurred. Please try again." = "오류가 발생했습니다. 다시 시도하십시오.";
+
+"Cancel" = "취소";
 
 "Card brand was not updated. Please try again." = "카드 브랜드가 업데이트되지 않았습니다. 다시 시도하십시오.";
 
 "Close" = "닫기";
+
+"Collapsed" = "축소됨";
 
 "Confirm it's you" = "본인 확인";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "%@(으)로 전송된 코드를 입력하십시오.";
 
+"Expanded" = "확장됨";
+
 "Failed to connect" = "연결 실패";
+
+"Loading" = "로딩 중";
+
+"No" = "아니요";
 
 "Resend code" = "코드 재전송";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "카드 스캔";
 
+"Secure checkout" = "안전한 결제";
+
+"Selected" = "선택됨";
+
 "The IBAN you entered is invalid." = "입력한 IBAN이 잘못되었습니다.";
+
+"The OS or the OS Version is not supported." = "OS 또는 OS 버전이 지원되지 않습니다.";
+
+"The device is jailbroken." = "장치가 탈옥되었습니다.";
+
+"The integrity of the SDK has been tampered." = "SDK의 무결성이 손상되었습니다.";
 
 "There was an error processing your card -- try again in a few seconds" = "카드를 처리하는 동안 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
 
 "There was an unexpected error -- try again in a few seconds" = "예기치 않은 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
 
+"Timeout" = "시간 초과";
+
 "Try again" = "다시 시도";
 
+"Unselected" = "선택 해제됨";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Stripe를 통해 카드 세부사항을 확인합니다. Stripe에서 자사 개인정보정책에 따라 귀하의 데이터를 사용하고 저장할 수 있습니다. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>자세히 알아보기</u></a>";
+
+"Yes" = "예";
 
 "Your card has expired" = "카드가 만료되었습니다";
 

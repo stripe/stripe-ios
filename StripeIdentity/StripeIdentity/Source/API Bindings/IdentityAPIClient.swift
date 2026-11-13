@@ -54,6 +54,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
 
     let apiClient: STPAPIClient
     let verificationSessionId: String
+    private let mediaPipeAvailable = FaceGeometryDetectorFactory.isAvailable
 
     /// The VerificationPages API version used to make all API requests.
     ///
@@ -87,13 +88,18 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage> {
         return apiClient.get(
             resource: APIEndpointVerificationPage(id: verificationSessionId),
-            parameters: ["app_identifier": Bundle.main.bundleIdentifier ?? ""]
+            parameters: [
+                "app_identifier": Bundle.main.bundleIdentifier ?? "",
+                "media_pipe_available": mediaPipeAvailable,
+            ]
         )
     }
 
     func updateIdentityVerificationPageData(
         updating verificationData: StripeAPI.VerificationPageDataUpdate
     ) -> Promise<StripeAPI.VerificationPageData> {
+        var verificationData = verificationData
+        verificationData.mediaPipeAvailable = verificationData.collectedData?.face == nil ? nil : mediaPipeAvailable
         return apiClient.post(
             resource: APIEndpointVerificationPageData(id: verificationSessionId),
             object: verificationData

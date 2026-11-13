@@ -69,7 +69,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         let alwaysUseEphemeralSession: Bool
-        let confirmationSource: CheckoutController.ConfirmingElement?
+        let checkoutAttribution: CheckoutAttributionContext?
+        let analyticsHelper: LinkAnalyticsHelper
 
         /// Creates a new Context object.
         /// - Parameters:
@@ -78,8 +79,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         ///   - configuration: PaymentElementConfiguration configuration.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
         ///   - alwaysUseEphemeralSession: If `true`, always use an ephemeral session. If `false`, we'll follow our existing ephemeral session logic.
-        ///   - confirmationSource: Set when this Link web popup is confirming a Checkout Session, so
-        ///     its payment_user_agent can be built for the right Checkout Elements component.
+        ///   - checkoutAttribution: Integration context for Checkout CAM and `payment_user_agent`.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
@@ -87,7 +87,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             linkBrand: LinkBrand,
             callToAction: ConfirmButton.CallToActionType?,
             alwaysUseEphemeralSession: Bool,
-            confirmationSource: CheckoutController.ConfirmingElement? = nil
+            checkoutAttribution: CheckoutAttributionContext? = nil,
+            analyticsHelper: LinkAnalyticsHelper
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -95,7 +96,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             self.linkBrand = linkBrand
             self.callToAction = callToAction ?? .makeDefaultType(intent: intent)
             self.alwaysUseEphemeralSession = alwaysUseEphemeralSession
-            self.confirmationSource = confirmationSource
+            self.checkoutAttribution = checkoutAttribution
+            self.analyticsHelper = analyticsHelper
         }
     }
 
@@ -110,7 +112,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         linkAccount: PaymentSheetLinkAccount? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
         alwaysUseEphemeralSession: Bool = false,
-        confirmationSource: CheckoutController.ConfirmingElement? = nil
+        checkoutAttribution: CheckoutAttributionContext? = nil,
+        analyticsHelper: LinkAnalyticsHelper
     ) {
         self.init(
             context: Context(
@@ -120,7 +123,8 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
                 callToAction: callToAction,
                 alwaysUseEphemeralSession: alwaysUseEphemeralSession,
-                confirmationSource: confirmationSource
+                checkoutAttribution: checkoutAttribution,
+                analyticsHelper: analyticsHelper
             )
         )
     }
@@ -137,14 +141,14 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     var webAuthSession: ASWebAuthenticationSession?
 
     func present(over viewController: UIViewController? = nil) {
-        STPAnalyticsClient.sharedClient.logLinkPopupShow(sessionType: self.context.elementsSession.linkPopupWebviewOption)
+        context.analyticsHelper.logPopupShow(sessionType: self.context.elementsSession.linkPopupWebviewOption)
         do {
             // Generate Link URL, fetching the customer if needed
             let linkPopupParams = try LinkURLGenerator.linkParams(
                 configuration: self.context.configuration,
                 intent: self.context.intent,
                 elementsSession: self.context.elementsSession,
-                confirmationSource: self.context.confirmationSource
+                checkoutAttribution: self.context.checkoutAttribution
             )
             let linkPopupUrl = try LinkURLGenerator.url(params: linkPopupParams)
 
@@ -169,7 +173,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     }
 
     private func canceledWithoutError() {
-        STPAnalyticsClient.sharedClient.logLinkPopupCancel(sessionType: self.context.elementsSession.linkPopupWebviewOption)
+        context.analyticsHelper.logPopupCancel(sessionType: self.context.elementsSession.linkPopupWebviewOption)
         // If the user closed the popup, remove any Link account state.
         // Otherwise, a user would have to *log in* if they wanted to log out.
         // We don't have any account state at the moment. But if we did, we'd clear it here.
@@ -177,7 +181,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
     }
 
     private func canceledWithError(error: Error?, returnURL: URL?) {
-        STPAnalyticsClient.sharedClient.logLinkPopupError(error: error, returnURL: returnURL, sessionType: self.context.elementsSession.linkPopupWebviewOption)
+        context.analyticsHelper.logPopupError(error: error, returnURL: returnURL, sessionType: self.context.elementsSession.linkPopupWebviewOption)
         self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel()
     }
 
@@ -204,12 +208,12 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                     )
                 )
 
-                STPAnalyticsClient.sharedClient.logLinkPopupSuccess(sessionType: self.context.elementsSession.linkPopupWebviewOption)
+                context.analyticsHelper.logPopupSuccess(sessionType: self.context.elementsSession.linkPopupWebviewOption)
                 UserDefaults.standard.markLinkAsUsed()
                 self.payWithLinkDelegate?.payWithLinkWebControllerDidComplete(self, intent: self.context.intent, elementsSession: self.context.elementsSession, with: paymentOption)
             case .logout:
                 // Delete the account information
-                STPAnalyticsClient.sharedClient.logLinkPopupLogout(sessionType: self.context.elementsSession.linkPopupWebviewOption)
+                context.analyticsHelper.logPopupLogout(sessionType: self.context.elementsSession.linkPopupWebviewOption)
                 self.payWithLinkDelegate?.payWithLinkWebControllerDidCancel()
             }
         } catch {

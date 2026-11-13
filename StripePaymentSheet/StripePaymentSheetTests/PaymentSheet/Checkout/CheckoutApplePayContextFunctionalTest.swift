@@ -20,7 +20,7 @@ import XCTest
 @MainActor
 class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
     func testCompletesPayment() async throws {
-        let (context, apiClient) = try await makeContext()
+        let context = try await makeContext()
 
         let didComplete = expectation(description: "Apple Pay completes")
         Task {
@@ -28,25 +28,25 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(result.paymentSheetResult, .completed)
             if case .completed(let response) = result {
                 XCTAssertEqual(response.status, .complete(.paid))
-                XCTAssertEqual(response.paymentResponse?.status, "succeeded")
+                XCTAssertEqual(response.paymentResponse?.status, .succeeded)
             }
             didComplete.fulfill()
         }
         _startApplePayForContext(context, withExpectedStatus: .success)
         await fulfillment(of: [didComplete], timeout: STPTestingNetworkRequestTimeout)
-        try await assertApplePayPaymentMethod(context: context, apiClient: apiClient)
+        try assertApplePayPaymentMethod(context: context)
     }
 
     func testCompletesSetupForZeroAmountSession() async throws {
         // Given a zero-amount Checkout Session with an Apple Pay payment
-        let (context, apiClient) = try await makeContext(amount: 0)
+        let context = try await makeContext(amount: 0)
         let didComplete = expectation(description: "Apple Pay setup completes")
         Task {
             let result = await context.presentApplePay()
             XCTAssertEqual(result.paymentSheetResult, .completed)
             if case .completed(let response) = result {
                 XCTAssertEqual(response.status, .complete(.noPaymentRequired))
-                XCTAssertEqual(response.paymentResponse?.status, "succeeded")
+                XCTAssertEqual(response.paymentResponse?.status, .succeeded)
             }
             didComplete.fulfill()
         }
@@ -56,12 +56,12 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
 
         // Then setup completes and preserves the wallet's payment method details
         await fulfillment(of: [didComplete], timeout: STPTestingNetworkRequestTimeout)
-        try await assertApplePayPaymentMethod(context: context, apiClient: apiClient)
+        try assertApplePayPaymentMethod(context: context)
     }
 
     func testCancelAfterConfirmStillSucceeds() async throws {
         // Given a cancel fires while the confirm is in-flight
-        let (context, _) = try await makeContext()
+        let context = try await makeContext()
         let didCancel = expectation(description: "Cancellation happens during confirmation")
         var cancellationRequested = false
         stub { urlRequest in
@@ -95,26 +95,19 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
 
     // MARK: - Helpers
 
-    private func assertApplePayPaymentMethod(context: CheckoutApplePayContext, apiClient: STPAPIClient) async throws {
+    private func assertApplePayPaymentMethod(context: CheckoutApplePayContext) throws {
         guard case .completed(let response) = context.result else {
             return XCTFail("Expected a completed Checkout Session")
         }
-        let paymentMethod: STPPaymentMethod?
-        if let paymentIntent = response.paymentResponse?.paymentIntent {
-            let intent = try await apiClient.retrievePaymentIntent(clientSecret: paymentIntent.clientSecret, expand: ["payment_method"])
-            paymentMethod = intent.paymentMethod
-        } else {
-            let setupIntent = try XCTUnwrap(response.paymentResponse?.setupIntent)
-            let intent = try await apiClient.retrieveSetupIntent(clientSecret: setupIntent.clientSecret, expand: ["payment_method"])
-            paymentMethod = intent.paymentMethod
-        }
-        let confirmedPaymentMethod = try XCTUnwrap(paymentMethod)
+        let confirmedPaymentMethod = try XCTUnwrap(
+            response.paymentResponse?.paymentIntent?.paymentMethod ?? response.paymentResponse?.setupIntent?.paymentMethod
+        )
         XCTAssertEqual(confirmedPaymentMethod.card?.wallet?.type, .applePay)
         XCTAssertEqual(confirmedPaymentMethod.billingDetails?.name, "Jane Doe")
         XCTAssertEqual(confirmedPaymentMethod.billingDetails?.email, "jane@example.com")
     }
 
-    private func makeContext(amount: Int = 2000) async throws -> (CheckoutApplePayContext, STPAPIClient) {
+    private func makeContext(amount: Int = 2000) async throws -> CheckoutApplePayContext {
         let returnURL = "stripe-ios-test://checkout-return"
         let sessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
             amount: amount,
@@ -130,12 +123,12 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         let session = initResponse.makePublicSession(clientSecret: sessionResponse.clientSecret)
         let authenticationContext = WindowAuthenticationContext()
         let paymentHandler = STPPaymentHandler(apiClient: apiClient)
-        let applePayConfirmationParameters = CheckoutController.ApplePayConfirmationParameters.makeMock(
+        let applePayConfirmationParameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: "Functional Test Merchant",
             confirmationHandler: { requestParameters in
-                await CheckoutController.confirmCheckoutSession(
+                await CheckoutElementsController.confirmCheckoutSession(
                     with: requestParameters,
                     apiClient: apiClient,
                     authenticationContext: authenticationContext,
@@ -149,7 +142,7 @@ class CheckoutApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             authorizationController: MockPKPaymentAuthorizationController(),
             checkoutWalletUpdater: MockCheckoutSessionWalletUpdater()
         )
-        return (context, apiClient)
+        return context
     }
 
     /// Simulates the user tapping 'Pay': calls `didAuthorizePayment` and once the completion

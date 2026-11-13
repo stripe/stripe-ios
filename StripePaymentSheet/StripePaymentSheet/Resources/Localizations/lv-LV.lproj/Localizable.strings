@@ -14,8 +14,6 @@
 
 "Add bank account" = "Pievienot bankas kontu";
 
-"Add card" = "Pievienot karti";
-
 "Add new card" = "Pievienot jaunu karti";
 
 "Add new payment method" = "Pievienot jaunu maksājuma veidu";
@@ -31,6 +29,10 @@
 "Bank account" = "Bankas konts";
 
 "Bank account details cannot be changed." = "Bankas konta informāciju nevar mainīt.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number ending in ••%@." = "Pirms mēs varam nosūtīt kodu uz jūsu e-pastu, mums ir jāpārbauda papildu informācija par jums. Lūdzu, ievadiet savu tālruņa numuru, kas beidzas ar ••%@.";
+
+"Before we can send a code to your email, we need to verify additional information about you. Please enter your phone number." = "Pirms mēs varam nosūtīt kodu uz jūsu e-pastu, mums ir jāpārbauda papildu informācija par jums. Lūdzu, ievadiet savu tālruņa numuru.";
 
 "Buy Now, Pay Later with  <img/>" = "Pērciet tūlīt, maksājiet vēlāk ar  <img/>";
 
@@ -56,7 +58,7 @@
 
 "By confirming your payment, you agree that your transaction will be handled by Global Stack Services Limited as merchant of record and in accordance with their <terms>terms</terms>." = "Apstiprinot maksājumu, jūs piekrītat, ka jūsu darījumu apstrādās Global Stack Services Limited kā reģistrētais tirgotājs saskaņā ar viņu<terms>noteikumi</terms>.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Turpinot doties uz Amazon Pay, jūs atļaujat %@ iekasēt no jūsu Amazon Pay konta turpmākajiem maksājumiem saskaņā ar Klarna noteikumiem.";
+"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pārejot uz Amazon Pay, jūs atļaujat %@ iekasēt maksu no jūsu Amazon Pay konta par turpmākiem maksājumiem saskaņā ar viņu noteikumiem.";
 
 "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Turpinot doties uz Klarna, jūs atļaujat %1$@ iekasēt no jūsu Klarna konta turpmākajiem maksājumiem saskaņā viņu noteikumiem un Klarna noteikumiem. To jebkurā laikā varat mainīt savā Klarna lietotnē vai sazinoties ar %2$@.";
 
@@ -88,7 +90,7 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot savu e-pasta adresi, jūs piekrītat izveidot %1$@ kontu un saglabāt maksājuma informāciju %1$@ saskaņā ar %1$@ <terms>Noteikumi</terms> un <privacy>Konfidencialitātes politika</privacy>.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Norādot savu maksājuma informāciju un apstiprinot šo maksājumu, jūs pilnvarojat A) %@ un Stripe (mūsu maksājumu pakalpojumu sniedzēju) nosūtīt rīkojumu jūsu bankai debetēt jūsu kontu un B) jūsu banku debetēt jūsu kontu saskaņā ar šo rīkojumu. Jums ir tiesības pieprasīt naudas līdzekļu atmaksu no jūsu bankas saskaņā ar jūsu bankas konta apkalpošanas līguma noteikumiem un nosacījumiem. Naudas līdzekļu atmaksa jāpieprasa astoņu nedēļu laikā, sākot no jūsu konta debetēšanas datuma. Jūsu tiesības ir paskaidrotas paziņojumā, kuru varat saņemt savā bankā. Jūs piekrītat saņemt paziņojumus par turpmākajiem debeta darījumiem vismaz divas dienas pirms to veikšanas.";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Norādot savu maksājumu informāciju un apstiprinot šo maksājumu, jūs pilnvarojat (A) %@ un Stripe, kas ir mūsu maksājumu pakalpojumu sniedzējs, nosūtīt norādījumus jūsu bankai debitēt finanšu līdzekļus jūsu kontā un (B) savu banku debitēt finanšu līdzekļus jūsu kontā saskaņā ar minētiem norādījumiem. Citu tiesību starpā jums ir tiesības saņemt atmaksāšanu no savas bankas saskaņā ar jūsu bankas līguma noteikumiem un nosacījumiem. Atmaksāšana ir jāpieprasa 8 nedēļu laikā, sākot no datuma, kurā finanšu līdzekļi tika debitēti jūsu kontā. Jūsu tiesības ir izskaidrotas paziņojumā, ko varat saņemt no savas bankas. Jūs piekrītat saņemt paziņojumus par turpmākiem debeta maksājumiem līdz 2 dienām pirms to veikšanas.";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot savu tālruņa numuru, jūs piekrītat izveidot %1$@ kontu un saglabāt maksājuma informāciju %1$@ saskaņā ar %1$@ <terms>Noteikumi</terms> un <privacy>Konfidencialitātes politika</privacy>.";
 
@@ -115,8 +117,6 @@
 "Choose a payment method" = "Izvēlēties maksājuma veidu";
 
 "Close card scanner" = "Aizvērt kartes skeneri";
-
-"Code sent" = "Kods nosūtīts";
 
 "Complete the payment using Pix to finish the purchase." = "Veiciet maksājumu, izmantojot Pix, lai pabeigtu pirkumu.";
 
@@ -162,7 +162,11 @@
 
 "Edit address" = "Rediģēt adresi";
 
+"Email code" = "E-pasta kods";
+
 "Enter address manually" = "Ievadīt adresi manuāli";
+
+"Enter the phone number on your Link account." = "Ievadiet sava Link konta tālruņa numuru.";
 
 "Exchange rate and fees of your bank may apply." = "Var tikt piemērots jūsu bankas valūtas kurss un maksas.";
 
@@ -186,6 +190,8 @@
 
 "Last 4 digits of SSN" = "SSN pēdējie 4 cipari";
 
+"Log in to another account" = "Pierakstieties citā kontā";
+
 "Manage SEPA debit" = "Pārvaldīt SEPA debetu";
 
 "Manage US bank account" = "Pārvaldīt ASV bankas kontu";
@@ -202,6 +208,8 @@
 
 "Manage your payment methods" = "Pārvaldīt savus maksājuma veidus";
 
+"More options" = "Papildu opcijas";
+
 "Name on card" = "Uz kartes norādītais vārds";
 
 "Naver Pay Card" = "Naver Pay karte";
@@ -213,6 +221,8 @@
 "New payment method" = "Jauns maksājumu veids";
 
 "No %@ promo" = "Bez %@ reklāmas";
+
+"None of the payment methods in your %@ account work with this business." = "Neviens no maksājumu veidiem jūsu %@ kontā nedarbojas šim uzņēmumam.";
 
 "Not you?" = "Tas neesat jūs?";
 
@@ -277,6 +287,8 @@
 "Remove payment method" = "Noņemt maksājumu veidu";
 
 "Remove payment method?" = "Vai noņemt maksājuma veidu?";
+
+"Resend code in %d seconds" = "Atkārtoti nosūtiet kodu pēc %li sekundēm";
 
 "SEPA debit details cannot be changed." = "SEPA debeta informāciju nevar mainīt.";
 
@@ -358,6 +370,8 @@
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Šis maksājuma veids tiks noņemts, bet joprojām būs pieejams %@ abonementiem.";
 
+"This phone number doesn't match your Link account. Please try again." = "Šis tālruņa numurs neatbilst jūsu Link kontam. Lūdzu, mēģiniet vēlreiz.";
+
 "Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
 
 "Unavailable for this purchase" = "Nav pieejams šim pirkumam";
@@ -368,9 +382,17 @@
 
 "Use billing address for shipping" = "Piegādei izmantot norēķinu adresi";
 
+"Verify your phone number" = "Verificējiet tālruņa numuru";
+
+"Verifying your account…" = "Verificē jūsu kontu…";
+
 "View more" = "Skatīt vairāk";
 
+"We couldn't verify your account. Please close this window and try again." = "Mums neizdevās verificēt jūsu kontu. Lūdzu, aizveriet šo logu un mēģiniet vēlreiz.";
+
 "Yes, update" = "Jā, atjaunināt";
+
+"You can't pay with %@ here" = "Jūs šeit nevarat norēķināties ar %@";
 
 "Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
 

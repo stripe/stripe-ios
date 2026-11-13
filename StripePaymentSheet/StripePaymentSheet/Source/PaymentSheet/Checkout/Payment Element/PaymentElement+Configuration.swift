@@ -12,16 +12,19 @@ import PassKit
 extension PaymentElement {
     /// Configuration for PaymentElement
     public struct Configuration {
+        /// Describes the appearance of PaymentElement.
+        public typealias Appearance = PaymentSheet.Appearance
+
         // MARK: - Public
 
         /// Initializes a Configuration with default values.
         public init() {}
 
         /// Configuration for Apple Pay.
-        public var applePayConfiguration: ApplePayConfiguration?
+        public var applePayConfiguration: ApplePayConfiguration = .init()
 
         /// Configuration for Link.
-        public var linkConfiguration: LinkConfiguration?
+        public var linkConfiguration: LinkConfiguration = .init()
 
         /// PaymentSheet offers users an option to save some payment methods for later use.
         /// Default value is `.automatic`.
@@ -46,6 +49,17 @@ extension PaymentElement {
             didSet {
                 paymentSheetConfiguration.preferredNetworks = preferredNetworks
                 embeddedConfiguration.preferredNetworks = preferredNetworks
+            }
+        }
+
+        /// By default, PaymentElement accepts all card brands supported by Stripe.
+        /// You can specify which card brands to allow or disallow.
+        /// - Note: This is only a client-side solution.
+        /// - Note: Card brand filtering is not currently supported by Apple Pay or Link.
+        public var cardBrandAcceptance: CardBrandAcceptance = .all {
+            didSet {
+                paymentSheetConfiguration.cardBrandAcceptance = cardBrandAcceptance
+                embeddedConfiguration.cardBrandAcceptance = cardBrandAcceptance
             }
         }
 
@@ -126,15 +140,22 @@ extension PaymentElement {
             return configuration
         }()
 
+        /// `applePayMerchantId` when Apple Pay should be enabled, or `nil` when the shared merchant ID
+        /// is unset or this element's `applePayConfiguration.display` is `.never`.
+        private func effectiveApplePayMerchantId(_ applePayMerchantId: String?) -> String? {
+            applePayConfiguration.display == .never ? nil : applePayMerchantId
+        }
+
         // TODO: Have both configuration conversion methods accept Checkout configuration and session,
-        // apply address overrides here, and remove the CheckoutControllerLoader wrappers.
+        // apply address overrides here, and remove the CheckoutElementsControllerLoader wrappers.
         func makeEmbeddedConfiguration(
             apiClient: STPAPIClient,
             returnURL: String,
-            defaults: CheckoutController.Configuration.Defaults,
+            defaults: CheckoutElementsController.Configuration.Defaults,
             merchantDisplayName: String,
             merchantCountryCode: String,
-            userInterfaceStyle: CheckoutController.UserInterfaceStyle
+            applePayMerchantId: String?,
+            userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle
         ) -> EmbeddedPaymentElement.Configuration {
             var configuration = embeddedConfiguration
             configuration.allowsDelayedPaymentMethods = true
@@ -142,9 +163,9 @@ extension PaymentElement {
             configuration.apiClient = apiClient
             configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
-            configuration.applePay = applePayConfiguration?.paymentSheetConfiguration(
-                merchantCountryCode: merchantCountryCode
-            )
+            configuration.applePay = effectiveApplePayMerchantId(applePayMerchantId).map {
+                applePayConfiguration.paymentSheetConfiguration(merchantId: $0, merchantCountryCode: merchantCountryCode)
+            }
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             if let billingDetails = defaults.billingDetails {
@@ -157,10 +178,11 @@ extension PaymentElement {
         func makeFlowControllerConfiguration(
             apiClient: STPAPIClient,
             returnURL: String,
-            defaults: CheckoutController.Configuration.Defaults,
+            defaults: CheckoutElementsController.Configuration.Defaults,
             merchantDisplayName: String,
             merchantCountryCode: String,
-            userInterfaceStyle: CheckoutController.UserInterfaceStyle
+            applePayMerchantId: String?,
+            userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle
         ) -> PaymentSheet.Configuration {
             var configuration = paymentSheetConfiguration
             configuration.allowsDelayedPaymentMethods = true
@@ -168,9 +190,9 @@ extension PaymentElement {
             configuration.apiClient = apiClient
             configuration.returnURL = returnURL
             configuration.apply(linkConfiguration: linkConfiguration)
-            configuration.applePay = applePayConfiguration?.paymentSheetConfiguration(
-                merchantCountryCode: merchantCountryCode
-            )
+            configuration.applePay = effectiveApplePayMerchantId(applePayMerchantId).map {
+                applePayConfiguration.paymentSheetConfiguration(merchantId: $0, merchantCountryCode: merchantCountryCode)
+            }
             configuration.merchantDisplayName = merchantDisplayName
             configuration.style = userInterfaceStyle
             if let billingDetails = defaults.billingDetails {
@@ -184,10 +206,17 @@ extension PaymentElement {
 
 extension PaymentElement.Configuration {
     /// Configuration related to Apple Pay
-    public struct ApplePayConfiguration: CheckoutApplePayConfiguration {
-        /// The Apple Merchant Identifier to use during Apple Pay transactions.
-        /// To obtain one, see https://stripe.com/docs/apple-pay#native
-        public var merchantId: String
+    public struct ApplePayConfiguration {
+        /// Controls whether Apple Pay is displayed in Payment Element.
+        public enum Display: String {
+            /// Show Apple Pay when it is available.
+            case automatic
+            /// Never show Apple Pay in Payment Element.
+            case never
+        }
+
+        /// Controls whether Apple Pay is displayed in Payment Element.
+        public var display: Display = .automatic
 
         /// Defines the label that will be displayed in the Apple Pay button.
         /// See <https://developer.apple.com/design/human-interface-guidelines/technologies/apple-pay/buttons-and-marks/>
@@ -196,13 +225,13 @@ extension PaymentElement.Configuration {
 
         /// Creates an Apple Pay configuration.
         /// - Parameters:
-        ///   - merchantId: The Apple Pay merchant identifier.
-        ///   - buttonType: The type of Apple Pay button to display. Defaults to `.plain` when `nil`.
+        ///   - display: Controls whether Apple Pay is displayed in Payment Element. Defaults to `.automatic`.
+        ///   - buttonType: The type of Apple Pay button to display. Defaults to `nil`.
         public init(
-            merchantId: String,
+            display: Display = .automatic,
             buttonType: PKPaymentButtonType? = nil
         ) {
-            self.merchantId = merchantId
+            self.display = display
             self.buttonType = buttonType
         }
     }
@@ -231,7 +260,7 @@ extension PaymentElement.Configuration {
 }
 
 private extension PaymentElement.Configuration.ApplePayConfiguration {
-    func paymentSheetConfiguration(merchantCountryCode: String) -> PaymentSheet.ApplePayConfiguration {
+    func paymentSheetConfiguration(merchantId: String, merchantCountryCode: String) -> PaymentSheet.ApplePayConfiguration {
         return PaymentSheet.ApplePayConfiguration(
             merchantId: merchantId,
             merchantCountryCode: merchantCountryCode,
@@ -241,9 +270,9 @@ private extension PaymentElement.Configuration.ApplePayConfiguration {
 }
 
 private extension PaymentSheet.Configuration {
-    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration?) {
-        switch linkConfiguration?.display {
-        case .none, .automatic:
+    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration) {
+        switch linkConfiguration.display {
+        case .automatic:
             link.display = .automatic
         case .never:
             link.display = .never
@@ -254,9 +283,9 @@ private extension PaymentSheet.Configuration {
 }
 
 private extension EmbeddedPaymentElement.Configuration {
-    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration?) {
-        switch linkConfiguration?.display {
-        case .none, .automatic:
+    mutating func apply(linkConfiguration: PaymentElement.Configuration.LinkConfiguration) {
+        switch linkConfiguration.display {
+        case .automatic:
             link.display = .automatic
         case .never:
             link.display = .never
@@ -269,10 +298,10 @@ private extension EmbeddedPaymentElement.Configuration {
 // MARK: - Typealiases
 
 extension PaymentElement {
-    /// Describes the appearance of PaymentElement
-    public typealias Appearance = PaymentSheet.Appearance
     public typealias SavePaymentMethodOptInBehavior = PaymentSheet.SavePaymentMethodOptInBehavior
     public typealias PaymentMethodLayout = PaymentSheet.PaymentMethodLayout
+    public typealias CardBrandAcceptance = PaymentSheet.CardBrandAcceptance
+    public typealias BrandCategory = PaymentSheet.CardBrandAcceptance.BrandCategory
 }
 
 private extension PaymentElement.Configuration {
@@ -287,7 +316,7 @@ private extension PaymentElement.Configuration {
 }
 
 extension PaymentSheet.BillingDetails {
-    mutating func set(_ billingDetails: CheckoutController.Configuration.Defaults.BillingDetails) {
+    mutating func set(_ billingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails) {
         name = billingDetails.name
         if let billingAddress = billingDetails.address {
             address.set(billingAddress)
@@ -296,7 +325,7 @@ extension PaymentSheet.BillingDetails {
 }
 
 private extension PaymentSheet.Address {
-    mutating func set(_ address: CheckoutController.Address) {
+    mutating func set(_ address: CheckoutElementsController.Address) {
         city = address.city
         country = address.country
         line1 = address.line1

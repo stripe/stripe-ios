@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 5f20cc0c16ebbfa1b397338c670f978c;o=1
+x-cloud-trace-context: 29c075089401e1c5d5aae173aae2d4ec
 Via: 1.1 google
-Date: Fri, 23 Oct 2026 18:46:19 GMT
-Content-Length: 2627
+Date: Tue, 10 Nov 2026 19:28:25 GMT
+Content-Length: 2578
 Alt-Svc: h3=":443"; ma=2592000
-Etag: W/"a43-987t9LEhOGraq4sKH1D0UzQMv+M"
+Etag: W/"a12-Z1KSF5tS8ohJ7LDC5zr9TZTTAak"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1sMn3njl3CrAZvbl1inFjzrmZwkJ9Oq4bdndhaTa6BFrbNYPvMrhoYIPN",
-  "client_secret" : "cs_test_a1sMn3njl3CrAZvbl1inFjzrmZwkJ9Oq4bdndhaTa6BFrbNYPvMrhoYIPN_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydoamdsaWBaYGlgaGBrcXYneCUl",
+  "id" : "cs_test_a1xMMA3E3i5HrRL5ddkuMbgWgyE2bKMZikYMOogofM94LRLFX8Kz4mwP7s",
+  "client_secret" : "cs_test_a1xMMA3E3i5HrRL5ddkuMbgWgyE2bKMZikYMOogofM94LRLFX8Kz4mwP7s_secret_Z7IQPnMUDUs88s1QDLmMvMJkb",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a43-987t9LEhOGraq4sKH1D0UzQMv+M"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1792781179,
+  "created" : 1794338905,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "sepa_debit"
@@ -41,13 +41,13 @@ Etag: W/"a43-987t9LEhOGraq4sKH1D0UzQMv+M"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VUn3yGfY",
+      "key" : "checkout_item_VbXokrlJ",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1UTnTrLu5o3P18ZpkUerL9tk",
+            "price" : "price_1UaKiTLu5o3P18ZpotmiPcNN",
             "tax_rates" : null
           }
         ],
@@ -157,6 +157,6 @@ Etag: W/"a43-987t9LEhOGraq4sKH1D0UzQMv+M"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1792867579,
+  "expires_at" : 1794425305,
   "marketing_attributions" : null
 }

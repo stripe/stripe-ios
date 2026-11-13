@@ -12,7 +12,7 @@ import UIKit
 @MainActor
 protocol ShippingAddressElementDelegate: AnyObject {
     /// Sets or clears the customer's shipping address.
-    func updateShippingAddressFromElement(name: String?, address: CheckoutController.Address?) async throws
+    func updateShippingAddressFromElement(name: String?, address: CheckoutElementsController.Address?) async throws
 }
 
 /// A shipping address form backed by a Checkout Session.
@@ -30,8 +30,8 @@ public final class ShippingAddressElement {
 
     init(
         configuration: Configuration,
-        userInterfaceStyle: CheckoutController.UserInterfaceStyle,
-        initialShippingAddress: CheckoutController.Session.ShippingAddress?,
+        userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
+        initialShippingAddress: CheckoutElementsController.Session.ShippingAddress?,
         allowedCountries: [String]?,
         checkoutSessionId: String,
         apiClient: STPAPIClient,
@@ -53,14 +53,14 @@ public final class ShippingAddressElement {
         userInterfaceStyle.configure(addressViewController)
     }
 
-    func normalizedInitialShippingAddress() async -> CheckoutController.Session.ShippingAddress? {
+    func normalizedInitialShippingAddress() async -> CheckoutElementsController.Session.ShippingAddress? {
         // Read the address back from the form to include its validation and normalization.
         guard let addressDetails = await addressViewController.initialAddressDetails() else {
             return nil
         }
-        return CheckoutController.Session.ShippingAddress(
+        return CheckoutElementsController.Session.ShippingAddress(
             name: addressDetails.name,
-            address: CheckoutController.Address(
+            address: CheckoutElementsController.Address(
                 country: addressDetails.address.country,
                 line1: addressDetails.address.line1,
                 line2: addressDetails.address.line2,
@@ -152,7 +152,7 @@ extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
         do {
             try await delegate.updateShippingAddressFromElement(
                 name: addressDetails.name,
-                address: CheckoutController.Address(
+                address: CheckoutElementsController.Address(
                     country: addressDetails.address.country,
                     line1: addressDetails.address.line1.nonEmpty,
                     line2: addressDetails.address.line2,

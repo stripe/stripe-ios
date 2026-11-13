@@ -13,6 +13,7 @@ import UIKit
 /// PaymentElement collects the customer's payment method, either in an embeddable view or presented in a sheet.
 @MainActor
 @_spi(InternalOnlyAPI)
+@_spi(ReactNativeSDK)
 public final class PaymentElement {
     // MARK: - Public Properties
 
@@ -60,7 +61,7 @@ public final class PaymentElement {
 
     let paymentSheetFlowController: PaymentSheet.FlowController
     let embeddedPaymentElement: EmbeddedPaymentElement
-    weak var checkout: CheckoutController?
+    weak var checkout: CheckoutElementsController?
     private var cancellables = Set<AnyCancellable>()
     var paymentOptionSourceOfTruthIsFlowController = false
     private var isSuppressingPaymentOptionUpdates = false
@@ -68,9 +69,9 @@ public final class PaymentElement {
     // MARK: - Internal methods
 
     init(
-        checkout: CheckoutController,
-        flowControllerInitParameters: CheckoutControllerLoader.FlowControllerInitializationParameters,
-        embeddedPaymentElementInitParameters: CheckoutControllerLoader.EmbeddedPaymentElementInitializationParameters
+        checkout: CheckoutElementsController,
+        flowControllerInitParameters: CheckoutElementsControllerLoader.FlowControllerInitializationParameters,
+        embeddedPaymentElementInitParameters: CheckoutElementsControllerLoader.EmbeddedPaymentElementInitializationParameters
     ) throws {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentElement.self)
         try EmbeddedPaymentElement.validateRowSelectionConfiguration(
@@ -99,7 +100,10 @@ public final class PaymentElement {
         )
         self.embeddedPaymentElement.checkout = checkout
         self.embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
-        let uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
+        let uiView = PaymentElementUIView(
+            contentView: embeddedPaymentElement.view,
+            userInterfaceStyle: embeddedPaymentElementInitParameters.configuration.style
+        )
         self.view = PaymentElementView(viewModel: PaymentElementViewModel(uiView: uiView))
         self.uiView = uiView
         self.embeddedPaymentElement.delegate = self
@@ -114,7 +118,7 @@ public final class PaymentElement {
                     return
                 }
                 paymentOptionSourceOfTruthIsFlowController = true
-                self.checkout?.dangerouslySetPaymentOptionDirectly(paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
+                self.checkout?.dangerouslySetPaymentOptionDirectly(paymentOption.map(CheckoutElementsController.Session.PaymentOptionDisplayData.init))
             }
             .store(in: &cancellables)
 
@@ -131,7 +135,7 @@ public final class PaymentElement {
             "Payment Element assumes that the FlowController's payment option is the same as the Embedded's on first load!"
         )
         checkout.dangerouslySetPaymentOptionDirectly(
-            embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
+            embeddedPaymentElement.paymentOption.map(CheckoutElementsController.Session.PaymentOptionDisplayData.init)
         )
         paymentOptionSourceOfTruthIsFlowController = false // We used embedded's payment option
     }
@@ -145,11 +149,11 @@ extension PaymentElement {
     }
 
     func apply(
-        flowControllerInitParameters: CheckoutControllerLoader.FlowControllerInitializationParameters,
-        embeddedPaymentElementInitParameters: CheckoutControllerLoader.EmbeddedPaymentElementInitializationParameters,
-        checkout: CheckoutController
+        flowControllerInitParameters: CheckoutElementsControllerLoader.FlowControllerInitializationParameters,
+        embeddedPaymentElementInitParameters: CheckoutElementsControllerLoader.EmbeddedPaymentElementInitializationParameters,
+        checkout: CheckoutElementsController
     ) {
-        // Suppress updating CheckoutController payment option while reloading FC and Embedded - we only want to update once, at the end.
+        // Suppress updating CheckoutElementsController payment option while reloading FC and Embedded - we only want to update once, at the end.
         isSuppressingPaymentOptionUpdates = true
         defer { isSuppressingPaymentOptionUpdates = false }
 
@@ -171,16 +175,16 @@ extension PaymentElement {
         updatePaymentOption(checkout: checkout)
     }
 
-    func updatePaymentOption(checkout: CheckoutController) {
+    func updatePaymentOption(checkout: CheckoutElementsController) {
         // Update payment option
         // Problem: Since (unfortunately) we have two sources of truth for payment option (FC and Embedded), we need to know which one to pick. We can't just let them both update payment option - then the last one to update will win, even when it wasn't actually used by the customer.
         // Hacky solution: We determine which one to pick based on which one last reported a payment option update.
         // If neither was used, their payment options should be equal (the default), and we pick one arbitrarily.
         let paymentOption = {
             if paymentOptionSourceOfTruthIsFlowController {
-                paymentSheetFlowController.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
+                paymentSheetFlowController.paymentOption.map(CheckoutElementsController.Session.PaymentOptionDisplayData.init)
             } else {
-                embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init)
+                embeddedPaymentElement.paymentOption.map(CheckoutElementsController.Session.PaymentOptionDisplayData.init)
             }
         }()
         checkout.dangerouslySetPaymentOptionDirectly(paymentOption)
@@ -192,7 +196,7 @@ extension PaymentElement {
             return
         }
         guard let checkout else {
-            stpAssertionFailure("PaymentElement unexpectedly lost its CheckoutController.")
+            stpAssertionFailure("PaymentElement unexpectedly lost its CheckoutElementsController.")
             return
         }
         try await checkout.updateBillingTaxRegionIfNecessary(address: nil, source: .paymentElement)
@@ -218,13 +222,13 @@ extension PaymentElement: EmbeddedPaymentElementDelegate {
             return
         }
         paymentOptionSourceOfTruthIsFlowController = false
-        checkout?.dangerouslySetPaymentOptionDirectly(embeddedPaymentElement.paymentOption.map(CheckoutController.Session.PaymentOptionDisplayData.init))
+        checkout?.dangerouslySetPaymentOptionDirectly(embeddedPaymentElement.paymentOption.map(CheckoutElementsController.Session.PaymentOptionDisplayData.init))
     }
 }
 
-// MARK: - CheckoutController.Session.PaymentOptionDisplayData
+// MARK: - CheckoutElementsController.Session.PaymentOptionDisplayData
 
-extension CheckoutController.Session.PaymentOptionDisplayData {
+extension CheckoutElementsController.Session.PaymentOptionDisplayData {
     init(_ paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData) {
         self.init(
             image: paymentOption.image,
@@ -248,7 +252,7 @@ extension CheckoutController.Session.PaymentOptionDisplayData {
     }
 }
 
-private extension CheckoutController.Session.PaymentOptionDisplayData.BillingDetails {
+private extension CheckoutElementsController.Session.PaymentOptionDisplayData.BillingDetails {
     init(_ billingDetails: PaymentSheet.BillingDetails) {
         self.init(
             address: billingDetails.address == .init() ? nil : Address(billingDetails.address),
@@ -259,7 +263,7 @@ private extension CheckoutController.Session.PaymentOptionDisplayData.BillingDet
     }
 }
 
-private extension CheckoutController.Session.PaymentOptionDisplayData.BillingDetails.Address {
+private extension CheckoutElementsController.Session.PaymentOptionDisplayData.BillingDetails.Address {
     init(_ address: PaymentSheet.Address) {
         self.init(
             city: address.city,

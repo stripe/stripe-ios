@@ -344,7 +344,7 @@ extension PaymentSheet {
             }
         }
 
-        weak var checkout: CheckoutController?
+        weak var checkout: CheckoutElementsController?
         private var isPresented = false
         private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
@@ -368,6 +368,7 @@ extension PaymentSheet {
             )
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
+            self.analyticsHelper.didLoad(loadResult)
             self.analyticsHelper.logInitialized()
             self.analyticsHelper.startTimeMeasurement(.checkout)
             self.viewController = Self.makeViewController(
@@ -584,7 +585,7 @@ extension PaymentSheet {
         /// then swaps to the payment options view controller on success or dismisses on failure.
         private func presentPaymentOptionsAwaitingMutations(
             from presentingViewController: UIViewController,
-            checkout: CheckoutController,
+            checkout: CheckoutElementsController,
             completion: @escaping (Bool) -> Void
         ) {
             let loadingVC = LoadingViewController(
@@ -802,6 +803,7 @@ extension PaymentSheet {
             confirmationChallenge: ConfirmationChallenge?
         ) {
             // Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
+            self.analyticsHelper.didLoad(loadResult)
 
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,

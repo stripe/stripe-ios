@@ -78,7 +78,7 @@ class ConsentViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         let paneLayoutView = PaneLayoutView(
             contentView: {
@@ -96,7 +96,8 @@ class ConsentViewController: UIViewController {
                     let showsAnimatedDots = dataSource.manifest.isLinkWithStripe != true
                     let consentLogoView = ConsentLogoView(
                         merchantLogo: merchantLogo,
-                        showsAnimatedDots: showsAnimatedDots
+                        showsAnimatedDots: showsAnimatedDots,
+                        appearance: dataSource.manifest.appearance
                     )
                     self.consentLogoView = consentLogoView
                     verticalStackView.addArrangedSubview(consentLogoView)
@@ -105,6 +106,7 @@ class ConsentViewController: UIViewController {
                 verticalStackView.addArrangedSubview(
                     ConsentBodyView(
                         bulletItems: dataSource.consent.body.bullets,
+                        appearance: dataSource.manifest.appearance,
                         didSelectURL: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }
