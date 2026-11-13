@@ -191,15 +191,10 @@ import PassKit
     }
 
     @_spi(InternalOnlyAPI) public class func normalizeEMVCapabilityForChinaUnionPay(for paymentRequest: PKPaymentRequest) {
-        #if os(visionOS)
-        let emvCapability: PKMerchantCapability = .emv
-        #else
-        let emvCapability: PKMerchantCapability = .capabilityEMV
-        #endif
         if paymentRequest.supportedNetworks.contains(.chinaUnionPay) {
-            paymentRequest.merchantCapabilities.insert(emvCapability)
+            paymentRequest.merchantCapabilities.insert(.emv)
         } else {
-            paymentRequest.merchantCapabilities.remove(emvCapability)
+            paymentRequest.merchantCapabilities.remove(.emv)
         }
     }
 
