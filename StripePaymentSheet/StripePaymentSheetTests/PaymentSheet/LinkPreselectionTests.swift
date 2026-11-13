@@ -97,13 +97,22 @@ final class LinkPreselectionTests: STPSnapshotTestCase {
         assertInitialPresentation(preselectLink: false)
     }
 
-    func testFlowControllerRebuildPreservesExperimentSelection() {
+    func testHorizontalFlowControllerRebuildPreservesExperimentSelection() {
+        assertFlowControllerRebuildPreservesExperimentSelection(layout: .horizontal)
+    }
+
+    func testVerticalFlowControllerRebuildPreservesExperimentSelection() {
+        assertFlowControllerRebuildPreservesExperimentSelection(layout: .vertical)
+    }
+
+    private func assertFlowControllerRebuildPreservesExperimentSelection(layout: PaymentSheet.PaymentMethodLayout.ResolvedLayout) {
         // Given a load-time Link fallback
         let flowController = PaymentSheet.FlowController(
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
-            loadResult: makeLoadResult(),
+            loadResult: makeLoadResult(layout: layout),
             analyticsHelper: ._testValue(integrationShape: .flowController)
         )
+        XCTAssertEqual(flowController.paymentOption?.paymentMethodType, "link")
 
         // When wallet visibility rebuilds the payment options controller
         flowController.walletButtonsViewState = .hidden
@@ -112,6 +121,7 @@ final class LinkPreselectionTests: STPSnapshotTestCase {
         XCTAssertEqual(flowController.paymentOption?.paymentMethodType, "link")
         XCTAssertEqual(flowController.paymentOption?.label, "Link")
         XCTAssertTrue(flowController.viewController.loadResult.preselectLink)
+        XCTAssertNil(CustomerPaymentOption.localDefaultPaymentMethod(for: nil))
     }
 
     private func assertInitialPresentation(preselectLink: Bool) {
