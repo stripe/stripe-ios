@@ -99,8 +99,8 @@ final class InlineAddressFormStateTests: XCTestCase {
         XCTAssertTrue(line1.validationState.isDisplayingError)
     }
 
-    func testFormHasNoAutocomplete() {
-        // Given an empty form for a country that supports autocomplete elsewhere
+    func testFormWithoutPublishableKeyHasNoAutocomplete() {
+        // Given an empty form without a publishable key
         let state = makeState(defaultValues: .init(address: .init(country: "US")))
 
         // Then the form shows address fields instead of the autocomplete trigger
@@ -108,9 +108,34 @@ final class InlineAddressFormStateTests: XCTestCase {
         XCTAssertNotNil(state.addressSection?.line1)
     }
 
+    func testEmptyFormWithPublishableKeyShowsAutocompleteTrigger() {
+        // Given an empty form with a publishable key
+        let state = makeState(
+            defaultValues: .init(address: .init(country: "US")),
+            publishableKey: "pk_test_123"
+        )
+
+        // Then the form shows the autocomplete trigger instead of address fields
+        XCTAssertNotNil(state.addressSection?.autoCompleteLine)
+        XCTAssertNil(state.addressSection?.line1)
+    }
+
+    func testPrefilledFormWithPublishableKeyShowsAddressFields() {
+        // Given a prefilled form with a publishable key
+        let state = makeState(
+            defaultValues: .init(address: Self.validAddress, name: "Jane Doe"),
+            publishableKey: "pk_test_123"
+        )
+
+        // Then the form shows the prefilled address fields
+        XCTAssertNil(state.addressSection?.autoCompleteLine)
+        XCTAssertEqual(state.addressSection?.line1?.text, "354 Oyster Point Blvd")
+    }
+
     private func makeState(
         defaultValues: AddressViewController.Configuration.DefaultAddressDetails,
-        nameField: AddressViewController.Configuration.NameField = .auto
+        nameField: AddressViewController.Configuration.NameField = .auto,
+        publishableKey: String? = nil
     ) -> InlineAddressFormState {
         InlineAddressFormState(
             defaultValues: defaultValues,
@@ -118,6 +143,7 @@ final class InlineAddressFormStateTests: XCTestCase {
             nameField: nameField,
             phone: .hidden,
             appearance: .default,
+            publishableKey: publishableKey,
             addressSpecProvider: makeAddressSpecProvider()
         )
     }
