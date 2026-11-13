@@ -115,10 +115,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     var defaultPaymentMethod: STPPaymentMethod?
 
-    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
-    }()
-
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
@@ -1187,7 +1183,11 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     private func updateDefault(paymentMethod: STPPaymentMethod) async -> Result<Void, Swift.Error> {
         do {
             // Update the payment method
-            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            _ = try await loadResult.customerProvider.setAsDefaultPaymentMethod(
+                paymentMethod.stripeId,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             defaultPaymentMethod = paymentMethod
             return .success(())
         } catch {
