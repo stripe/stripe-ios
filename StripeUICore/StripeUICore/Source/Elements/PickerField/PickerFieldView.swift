@@ -24,18 +24,38 @@ protocol PickerFieldViewDelegate: AnyObject {
 @objc(STP_Internal_PickerFieldView)
 final class PickerFieldView: UIView {
 
+    final class MenuButton: UIButton {
+        override var canBecomeFirstResponder: Bool { true }
+
+        override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+            window?.endEditing(true)
+            return super.beginTracking(touch, with: event)
+        }
+
+        override func accessibilityActivate() -> Bool {
+            window?.endEditing(true)
+            return super.accessibilityActivate()
+        }
+    }
+
+    private let menuButton: MenuButton?
+
     // MARK: - Views
     private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: true, theme: theme)
     private lazy var textField: PickerTextField = {
         let textField = PickerTextField()
         // Input views are not supported on Catalyst (and are non-optimal on visionOS)
 #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
-        textField.inputView = pickerView
+        if menuButton == nil {
+            textField.inputView = pickerView
+        }
 #endif
         textField.adjustsFontForContentSizeCategory = true
         textField.font = theme.fonts.subheadline
 #if !os(visionOS)
-        textField.inputAccessoryView = toolbar
+        if menuButton == nil {
+            textField.inputAccessoryView = toolbar
+        }
 #endif
         textField.delegate = self
         return textField
@@ -109,6 +129,7 @@ final class PickerFieldView: UIView {
         }
         set {
             textField.accessibilityValue = newValue
+            menuButton?.accessibilityValue = newValue
         }
     }
 
@@ -128,7 +149,8 @@ final class PickerFieldView: UIView {
         delegate: PickerFieldViewDelegate,
         theme: ElementsAppearance,
         hasPadding: Bool = true,
-        isOptional: Bool = false
+        isOptional: Bool = false,
+        menuButton: MenuButton? = nil
     ) {
         self.label = label
         self.shouldShowChevron = shouldShowChevron
@@ -136,8 +158,16 @@ final class PickerFieldView: UIView {
         self.delegate = delegate
         self.theme = theme
         self.isOptional = isOptional
+        self.menuButton = menuButton
         super.init(frame: .zero)
         addAndPinSubview(hStackView, directionalLayoutMargins: hasPadding ? theme.textFieldInsets : .zero)
+        if let menuButton {
+            addAndPinSubview(menuButton)
+            hStackView.accessibilityElementsHidden = true
+            menuButton.accessibilityLabel = label
+            menuButton.isAccessibilityElement = true
+            accessibilityElements = [menuButton]
+        }
 //      On Catalyst/visionOS, add the picker view as a subview instead of an input view.
         #if targetEnvironment(macCatalyst) || canImport(visionOS)
         addAndPinSubview(pickerView, directionalLayoutMargins: theme.textFieldInsets)
@@ -164,6 +194,7 @@ final class PickerFieldView: UIView {
 
     override var isUserInteractionEnabled: Bool {
         didSet {
+            menuButton?.isEnabled = isUserInteractionEnabled
             textField.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
             if frame.size != .zero {
                 textField.layoutIfNeeded()  // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.
@@ -188,8 +219,8 @@ final class PickerFieldView: UIView {
         // Forward all events within our bounds to the button
         return pickerView
         #else
-        // Forward all events within our bounds to the textview
-        return textField
+        // Forward menu field taps to the button while retaining the existing label layout.
+        return menuButton ?? textField
         #endif
     }
 
@@ -210,6 +241,16 @@ final class PickerFieldView: UIView {
             return false
         }
 
+        if let menuButton {
+            guard let window else { return false }
+            window.endEditing(true)
+            // Programmatic navigation focuses the control; only user activation opens the menu.
+            let didFocus = menuButton.becomeFirstResponder()
+            if didFocus {
+                UIAccessibility.post(notification: .layoutChanged, argument: menuButton)
+            }
+            return didFocus
+        }
         if super.becomeFirstResponder() {
             return true
         }
@@ -221,7 +262,7 @@ final class PickerFieldView: UIView {
     }
 
     override func resignFirstResponder() -> Bool {
-        return textField.resignFirstResponder()
+        return menuButton?.resignFirstResponder() ?? textField.resignFirstResponder()
     }
 }
 
@@ -263,7 +304,7 @@ extension PickerFieldView: UITextFieldDelegate {
     }
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        return _canBecomeFirstResponder
+        return menuButton == nil && _canBecomeFirstResponder
     }
 }
 

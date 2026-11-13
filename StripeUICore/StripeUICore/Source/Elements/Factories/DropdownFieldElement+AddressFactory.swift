@@ -47,7 +47,8 @@ import Foundation
                 defaultIndex: defaultCountryIndex,
                 label: String.Localized.country_or_region,
                 theme: theme,
-                disableDropdownWithSingleElement: disableDropdownWithSingleCountry
+                disableDropdownWithSingleElement: disableDropdownWithSingleCountry,
+                presentation: .menu
             )
         }
     }
