@@ -204,7 +204,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,
             analyticsHelper: analyticsHelper,
-            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts
         )
         self.analyticsHelper = analyticsHelper
 

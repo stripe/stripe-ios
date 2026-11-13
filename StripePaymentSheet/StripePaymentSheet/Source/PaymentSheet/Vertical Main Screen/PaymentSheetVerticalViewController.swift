@@ -1047,6 +1047,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             isLinkUI: false,
             delegate: self,
             previousLinkInlineSignupAction: previousLinkInlineSignupAction
