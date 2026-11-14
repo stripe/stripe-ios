@@ -17,6 +17,7 @@ struct CheckoutCartView: View {
 
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var loadError: Error?
     @State private var confirmResult: CheckoutElementsController.ConfirmResult?
     @State private var showsCheckoutDetails = false
 
@@ -58,6 +59,18 @@ struct CheckoutCartView: View {
                 } else {
                     VStack {
                         Text("Failed to load cart.")
+                            .font(.headline)
+                        if let loadError {
+                            ScrollView {
+                                Text(CheckoutPlayground.errorDisplayText(loadError))
+                                    .font(.footnote.monospaced())
+                                    .foregroundColor(.secondary)
+                                    .textSelection(.enabled)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .frame(maxHeight: 300)
+                            .padding(.horizontal)
+                        }
                         Button("Retry") {
                             Task { await loadCheckout() }
                         }
@@ -127,7 +140,7 @@ struct CheckoutCartView: View {
         case .completed(let paymentStatus): return "Payment status: \(paymentStatus)"
         case .canceled: return "The payment was canceled."
         case .failed(let error):
-            return "Localized: \(error.localizedDescription)\n\nDebug: \(String(reflecting: error))"
+            return CheckoutPlayground.errorDisplayText(error)
         case nil: return ""
         }
     }
@@ -148,6 +161,7 @@ struct CheckoutCartView: View {
     private func loadCheckout() async {
         isLoading = true
         errorMessage = nil
+        loadError = nil
         do {
             var config = CheckoutElementsController.Configuration(clientSecret: clientSecret, returnURL: "payments-example://stripe-redirect")
             config.apiClient = diagnostics.makeAPIClient(
@@ -194,6 +208,7 @@ struct CheckoutCartView: View {
             checkout = try await CheckoutElementsController(configuration: config)
         } catch {
             errorMessage = error.localizedDescription
+            loadError = error
         }
         isLoading = false
     }
