@@ -52,6 +52,7 @@ class PaymentSheetFormFactory {
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
     let cardFundingFilter: CardFundingFilter
     let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    let stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
     let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
     var shouldDisplaySaveCheckbox: Bool {
@@ -98,6 +99,7 @@ class PaymentSheetFormFactory {
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
         linkAppearance: LinkAppearance? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
@@ -157,6 +159,7 @@ class PaymentSheetFormFactory {
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
                   paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+                  stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
                   linkBrand: linkBrand,
@@ -190,6 +193,7 @@ class PaymentSheetFormFactory {
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
         linkBrand: LinkBrand = .link,
@@ -225,6 +229,7 @@ class PaymentSheetFormFactory {
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        self.stripeBalanceFinancialAccounts = stripeBalanceFinancialAccounts
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
         self.linkBrand = linkBrand
@@ -310,6 +315,8 @@ class PaymentSheetFormFactory {
                 )
             case .mondu:
                 return makeMondu()
+            case .stripeBalance:
+                return makeStripeBalance()
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
@@ -344,7 +351,7 @@ class PaymentSheetFormFactory {
                 return makeAUBECSDebit()
             case .FPX:
                 return makeFPX()
-            case .netBanking, .weChatPay, .link, .cardPresent, .unknown, .stripeBalance:
+            case .netBanking, .weChatPay, .link, .cardPresent, .unknown:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
             @unknown default:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
@@ -926,6 +933,25 @@ extension PaymentSheetFormFactory {
             additionalElements: [description]
         )
     }
+    func makeStripeBalance() -> PaymentMethodElement {
+        let financialAccounts = StripeBalanceFinancialAccountsElement(
+            financialAccounts: stripeBalanceFinancialAccounts,
+            defaultFinancialAccountID: getPreviousCustomerInput(for: StripeBalanceFinancialAccountsElement.apiPath),
+            appearance: configuration.appearance
+        )
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        // The account picker goes first since it's the one thing the buyer has to choose
+        let elements = ([financialAccounts, contactInfoSection, billingDetails] as [Element?]).compactMap { $0 }
+        return makeDefaultsApplierWrapper(
+            for: FormElement(autoSectioningElements: elements, theme: theme)
+        )
+    }
+
     func makeNaverPay() -> PaymentMethodElement {
         let funding = makeDropdown(
             label: String.Localized.naver_pay_funding_label,

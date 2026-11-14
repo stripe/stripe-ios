@@ -104,6 +104,44 @@ final class StripeBalanceTests: XCTestCase {
         }
     }
 
+    func testOnlyOffersStripeBalanceWhenItsAccountsLoaded() {
+        // Given
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .stripeBalance])
+        let elementsSession = makeElementsSessionWithCustomerSession(paymentMethodTypes: ["card", "stripe_balance"])
+        func paymentMethodTypes(financialAccounts: StripeBalanceFinancialAccounts?) -> [PaymentSheet.PaymentMethodType] {
+            PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+                from: intent,
+                elementsSession: elementsSession,
+                configuration: makeCustomerSessionConfiguration(),
+                stripeBalanceFinancialAccounts: financialAccounts
+            )
+        }
+
+        // Then Stripe balance is offered when its accounts loaded
+        XCTAssertEqual(
+            paymentMethodTypes(financialAccounts: .init(accounts: [makeAccount(id: "fa_1")], currency: "usd")),
+            [.stripe(.card), .stripe(.stripeBalance)]
+        )
+        // ...but not when they didn't, since there'd be nothing to pay from
+        XCTAssertEqual(paymentMethodTypes(financialAccounts: nil), [.stripe(.card)])
+    }
+
+    func testDoesNotOfferStripeBalanceWhenTheBuyerHasNoAccounts() {
+        // Given the buyer's accounts loaded, but there are none to pay from
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .stripeBalance])
+
+        // When
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: makeElementsSessionWithCustomerSession(paymentMethodTypes: ["card", "stripe_balance"]),
+            configuration: makeCustomerSessionConfiguration(),
+            stripeBalanceFinancialAccounts: .init(accounts: [], currency: "usd")
+        )
+
+        // Then
+        XCTAssertEqual(paymentMethodTypes, [.stripe(.card)])
+    }
+
     // MARK: - Loading
 
     func testOnlyFetchesAccountsWhenStripeBalanceIsOfferedWithACustomerSession() async {
@@ -196,6 +234,30 @@ final class StripeBalanceTests: XCTestCase {
 
         // Then the row only shows the account's name
         XCTAssertEqual(try XCTUnwrap(row(for: "fa_1", in: element)).accessibilityLabel, "Account fa_1")
+    }
+
+    // MARK: - Form
+
+    func testFormListsFinancialAccounts() throws {
+        // Given
+        let configuration = makeCustomerSessionConfiguration()
+
+        // When
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.stripeBalance]),
+            elementsSession: makeElementsSessionWithCustomerSession(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.stripeBalance),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService._testValue(),
+            analyticsHelper: ._testValue(),
+            stripeBalanceFinancialAccounts: .init(accounts: [makeAccount(id: "fa_1")], currency: "usd")
+        ).make()
+
+        // Then
+        let elements = form.getAllUnwrappedSubElements()
+        let financialAccountsElement = try XCTUnwrap(elements.compactMap { $0 as? StripeBalanceFinancialAccountsElement }.first)
+        XCTAssertNotNil(row(for: "fa_1", in: financialAccountsElement))
     }
 
     // MARK: - Helpers

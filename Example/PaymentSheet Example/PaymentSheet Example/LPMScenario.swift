@@ -11,15 +11,29 @@ import Foundation
 struct LPMScenario: Identifiable {
     typealias Settings = PaymentSheetTestPlaygroundSettings
 
+    /// Who's paying. Most payment methods are offered to guests.
+    enum Customer {
+        case guest
+        /// The merchant's returning customer, authenticated with a CustomerSession
+        case returningWithCustomerSession
+    }
+
     let paymentMethodType: STPPaymentMethodType
     let merchantCountry: Settings.MerchantCountry
     let currency: Settings.Currency
     var amount: Settings.Amount = ._5099
+    var customer: Customer = .guest
 
     var id: String { paymentMethodType.identifier }
     var displayName: String { paymentMethodType.displayName }
     var summary: String {
-        "\(merchantCountry.displayName) merchant · \(amount.customDisplayName(currency: currency)) \(currency.rawValue.uppercased())"
+        let summary = "\(merchantCountry.displayName) merchant · \(amount.customDisplayName(currency: currency)) \(currency.rawValue.uppercased())"
+        switch customer {
+        case .guest:
+            return summary
+        case .returningWithCustomerSession:
+            return "\(summary) · returning customer"
+        }
     }
 
     func apply(to settings: inout Settings) {
@@ -34,11 +48,21 @@ struct LPMScenario: Identifiable {
         settings.manualCapture = .off
         // PaymentMethod mode adds Link as a payment method type
         settings.linkPassthroughMode = .passthrough
-        // Offer only this payment method: no saved payment methods, EPMs, CPMs, or payment method configuration
-        settings.customerMode = .guest
+        // Offer only this payment method: no EPMs, CPMs, or payment method configuration
         settings.externalPaymentMethods = .off
         settings.customPaymentMethods = .off
         settings.paymentMethodConfigurationId = nil
+        switch customer {
+        case .guest:
+            // No saved payment methods
+            settings.customerMode = .guest
+        case .returningWithCustomerSession:
+            settings.customerMode = .returning
+            settings.customerKeyType = .customerSession
+            // Merchants not gated into these CustomerSession features reject them
+            settings.paymentMethodRemoveLast = .unset
+            settings.paymentMethodSetAsDefault = .unset
+        }
         settings.customSecretKey = nil
         settings.customPublishableKey = nil
         settings.customStripeAPI = nil
@@ -103,6 +127,9 @@ struct LPMScenario: Identifiable {
         .init(paymentMethodType: .SEPADebit, merchantCountry: .US, currency: .eur),
         .init(paymentMethodType: .sequra, merchantCountry: .ES, currency: .eur, amount: ._10000),
         .init(paymentMethodType: .shopeePay, merchantCountry: .US, currency: .idr, amount: ._1000000),
+        // The merchant is gated into Stripe balance, and its returning customer is a v2 Account's backing Customer with a
+        // financial account funded in GBP. The small amount keeps that balance from running out.
+        .init(paymentMethodType: .stripeBalance, merchantCountry: .stripeBalance, currency: .gbp, amount: ._100, customer: .returningWithCustomerSession),
         .init(paymentMethodType: .sunbit, merchantCountry: .US, currency: .usd, amount: ._10000),
         .init(paymentMethodType: .swish, merchantCountry: .FR, currency: .sek),
         .init(paymentMethodType: .touchNGo, merchantCountry: .US, currency: .myr),

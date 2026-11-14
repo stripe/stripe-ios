@@ -201,6 +201,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case NG
         case ngWallet = "ng_wallet"
         case SG
+        case stripeBalance = "stripe_balance"
         case stripeShop = "stripe_shop_test"
         case TH
         case US

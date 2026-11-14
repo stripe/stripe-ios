@@ -113,6 +113,14 @@ enum CheckoutElementsControllerLoader {
         let intent = Intent.checkout(session)
         let customerProvider = CustomerProvider(checkoutSession: session)
         PaymentSheetLoader.logAvailabilityMessages(elementsSession: elementsSession)
+        // TODO(porter) Stripe balance: Support Checkout Sessions once CheckoutClient can list the buyer's financial accounts.
+        // Until then, Stripe balance isn't offered here since there are no accounts to pay from.
+        if elementsSession.orderedPaymentMethodTypes.contains(.stripeBalance) {
+            logUnexpectedCheckoutElementsErrorAndAssert(
+                "Stripe balance isn't supported for Checkout Sessions yet. Listing the buyer's financial accounts needs a CheckoutClient endpoint; `v1/elements/stripe_balance/customer_session/financial_accounts` requires a CustomerSession.",
+                apiClient: checkout.apiClient
+            )
+        }
         // Filter PMs
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,
