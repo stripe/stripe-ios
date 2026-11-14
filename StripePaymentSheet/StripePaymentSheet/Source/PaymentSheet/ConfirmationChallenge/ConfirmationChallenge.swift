@@ -80,8 +80,10 @@ actor ConfirmationChallenge {
     }
 
     // must be called after completing the signed request
-    public func complete() async {
-        await attestationChallenge?.complete()
+    public func complete() {
+        Task {
+            await attestationChallenge?.complete()
+        }
     }
 
 }
