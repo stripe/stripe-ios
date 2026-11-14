@@ -245,6 +245,11 @@ import Foundation
     case paymentMethodMessagingFetchBegin = "payment_method_messaging_fetch_begin"
     case paymentMethodMessagingDisplayed = "payment_method_messaging_displayed"
 
+    // MARK: - PaymentSheet instant debits featured institutions
+    case paymentSheetFeaturedInstitutionsShown = "mc_instant_debits_featured_institutions_shown"
+    case paymentSheetFeaturedInstitutionsInsufficient = "mc_instant_debits_featured_institutions_insufficient"
+    case paymentSheetFeaturedInstitutionsLoadFailed = "mc_instant_debits_featured_institutions_load_failed"
+
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
     case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"

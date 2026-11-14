@@ -648,6 +648,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()
+        stubFeaturedInstitutions()
 
         // Instant debits includes unqiue labels. Test with custom font to ensure it renders correctly.
         var appearance = PaymentSheet.Appearance()
@@ -995,6 +996,18 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         } response: { _ in
             let mockResponseData = try! FileMock.consumers_lookup_200.data()
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
+
+    /// The instant debits "Bank" row fetches featured institutions. An empty list keeps the row's icons hidden.
+    func stubFeaturedInstitutions() {
+        guard !runAgainstLiveService else {
+            return
+        }
+        stub { urlRequest in
+            return urlRequest.url?.path.hasSuffix("/connections/featured_institutions") ?? false
+        } response: { _ in
+            return HTTPStubsResponse(jsonObject: ["object": "list", "data": [], "has_more": false], statusCode: 200, headers: nil)
         }
     }
 
