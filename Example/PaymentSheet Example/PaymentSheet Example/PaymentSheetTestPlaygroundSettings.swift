@@ -161,6 +161,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case brl
         case chf
         case cny
+        case dkk
         case eur
         case gbp
         case idr
@@ -197,7 +198,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case mondu
         case MX
         case MY
-        case NG = "ng"
+        case NG
         case ngWallet = "ng_wallet"
         case SG
         case stripeShop = "stripe_shop_test"

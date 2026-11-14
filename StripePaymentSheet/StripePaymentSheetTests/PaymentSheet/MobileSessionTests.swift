@@ -563,23 +563,28 @@ class MobileSessionTests: XCTestCase {
     }
 }
 
-class MobileSessionHeaderStubbedTests: APIStubbedTestCase {
+@MainActor
+class MobileSessionLoaderStubbedTests: APIStubbedTestCase {
+
+    /// The server's list differs from the local result, `card, klarna, cashapp, cpmt_123`: it reorders, drops cashapp, and puts the CPM first.
+    private static let serverPaymentMethodTypes = ["cpmt_123", "klarna", "card"]
+    private static let localPaymentMethodTypes = ["card", "klarna", "cashapp", "cpmt_123"]
+
+    override func setUp() {
+        super.setUp()
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        addTeardownBlock {
+            PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = false
+        }
+    }
 
     func testPaymentSheetLoadSendsConfigHeader() async throws {
         // Given the flag is on
-        enableFlag()
-        let sentHeaders = stubElementsSessionsCapturingConfigHeader()
-        StubbedBackend.stubLookup()
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = stubbedAPIClient()
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let sentHeaders = stubElementsSessions(mobileSession: nil)
 
         // When PaymentSheet loads
-        _ = try await PaymentSheetLoader.load(
-            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
-            configuration: configuration,
-            analyticsHelper: ._testValue(configuration: configuration),
-            integrationShape: .paymentSheet
-        )
+        _ = try await load(configuration: makeConfiguration())
 
         // Then its elements/sessions request carries the config header
         let header = try XCTUnwrap(sentHeaders.values.first.flatMap { $0 })
@@ -589,8 +594,8 @@ class MobileSessionHeaderStubbedTests: APIStubbedTestCase {
 
     func testElementsSessionOmitsConfigHeaderByDefault() async throws {
         // Given the flag is on
-        enableFlag()
-        let sentHeaders = stubElementsSessionsCapturingConfigHeader()
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let sentHeaders = stubElementsSessions(mobileSession: nil)
 
         // When elements/sessions is fetched without opting in, as CustomerSheet and the Link brand fetch do
         _ = try await stubbedAPIClient().retrieveElementsSession(
@@ -604,21 +609,126 @@ class MobileSessionHeaderStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(sentHeaders.values, [nil])
     }
 
-    private func enableFlag() {
+    func testLoad_usesServerPaymentMethodAvailability() async throws {
+        // Given the flag is on
         PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
-        addTeardownBlock {
-            PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = false
+        // ...and the server returns a sidecar whose list differs from the local logic and includes the merchant's CPM
+        let sentHeaders = stubElementsSessions(mobileSession: [
+            "payment_method_availability": ["payment_method_types": Self.serverPaymentMethodTypes, "link_enabled": false] as [String: Any],
+        ])
+        let configuration = makeConfiguration()
+
+        // When PaymentSheet loads
+        let loadResult = try await load(configuration: configuration)
+
+        // Then the elements/sessions request carries the config header for this configuration
+        XCTAssertEqual(sentHeaders.values, [try MobileSession.encodeHeaderValue(MobileSession.Config(configuration: configuration))])
+        // ...the loaded payment method types are the server's list, in the server's order
+        XCTAssertEqual(loadResult.paymentMethodTypes.map { $0.identifier }, Self.serverPaymentMethodTypes)
+        // ...with the CPM as an external payment method
+        guard case .external(let customPaymentOption) = loadResult.paymentMethodTypes.first else {
+            return XCTFail("Expected an external payment method, got \(String(describing: loadResult.paymentMethodTypes.first))")
         }
+        XCTAssertEqual(customPaymentOption.type, "cpmt_123")
+        XCTAssertEqual(customPaymentOption.displayText, "BufoPay")
+        XCTAssertEqual(Array(loadResult.paymentMethodTypes.dropFirst()), [.stripe(.klarna), .stripe(.card)])
+        // ...the server's link_enabled is used
+        XCTAssertFalse(PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration))
+        // ...and the disagreement with the local logic is logged
+        let mismatch = try XCTUnwrap(loggedEvent(.paymentSheetMobileSessionAvailabilityMismatch))
+        XCTAssertEqual(mismatch["server_payment_method_types"] as? [String], Self.serverPaymentMethodTypes)
+        XCTAssertEqual(mismatch["local_payment_method_types"] as? [String], Self.localPaymentMethodTypes)
+        XCTAssertNil(loggedEvent(.paymentSheetMobileSessionDecodeFailed))
+        XCTAssertNil(loggedEvent(.paymentSheetMobileSessionPaymentMethodDropped))
     }
 
-    /// Stubs elements/sessions and records the `X-Stripe-Mobile-Config` header of each request.
-    private func stubElementsSessionsCapturingConfigHeader() -> SentHeaders {
+    func testLoad_flagOffIgnoresSidecar() async throws {
+        // Given the flag is off and the server returns a sidecar anyway
+        let sentHeaders = stubElementsSessions(mobileSession: [
+            "payment_method_availability": ["payment_method_types": Self.serverPaymentMethodTypes, "link_enabled": false] as [String: Any],
+        ])
+
+        // When PaymentSheet loads
+        let loadResult = try await load(configuration: makeConfiguration())
+
+        // Then the elements/sessions request has no config header
+        XCTAssertEqual(sentHeaders.values, [nil])
+        // ...the sidecar is ignored
+        XCTAssertNil(loadResult.elementsSession.mobileSession)
+        // ...and the local logic decides the payment method types
+        XCTAssertEqual(loadResult.paymentMethodTypes.map { $0.identifier }, Self.localPaymentMethodTypes)
+        XCTAssertNil(loggedEvent(.paymentSheetMobileSessionAvailabilityMismatch))
+    }
+
+    func testLoad_malformedSidecarFallsBackToLocalLogic() async throws {
+        // Given the flag is on and the sidecar has the wrong shape
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let sentHeaders = stubElementsSessions(mobileSession: [
+            "payment_method_availability": ["payment_method_types": "cpmt_123", "link_enabled": false] as [String: Any],
+        ])
+
+        // When PaymentSheet loads
+        let loadResult = try await load(configuration: makeConfiguration())
+
+        // Then the load still succeeds, having sent the config header
+        XCTAssertEqual(sentHeaders.values.count, 1)
+        XCTAssertNotNil(sentHeaders.values.first.flatMap { $0 })
+        // ...the local logic decides the payment method types
+        XCTAssertNil(loadResult.elementsSession.mobileSession)
+        XCTAssertEqual(loadResult.paymentMethodTypes.map { $0.identifier }, Self.localPaymentMethodTypes)
+        // ...and the decode failure is logged
+        XCTAssertNotNil(loggedEvent(.paymentSheetMobileSessionDecodeFailed))
+        XCTAssertNil(loggedEvent(.paymentSheetMobileSessionAvailabilityMismatch))
+    }
+
+    // MARK: - Helpers
+
+    private func makeConfiguration() -> PaymentSheet.Configuration {
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = stubbedAPIClient()
+        configuration.returnURL = "foo://bar"
+        configuration.customPaymentMethodConfiguration = .init(customPaymentMethods: [.init(id: "cpmt_123", subtitle: nil)], customPaymentMethodConfirmHandler: { _, _ in
+            XCTFail()
+            return .canceled
+        })
+        return configuration
+    }
+
+    private func load(configuration: PaymentSheet.Configuration) async throws -> PaymentSheetLoader.LoadResult {
+        StubbedBackend.stubLookup()
+        return try await PaymentSheetLoader.load(
+            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+            configuration: configuration,
+            analyticsHelper: ._testValue(configuration: configuration),
+            integrationShape: .paymentSheet
+        ).0
+    }
+
+    private func loggedEvent(_ event: STPAnalyticEvent) -> [String: Any]? {
+        STPAnalyticsClient.sharedClient._testLogHistory.first { $0["event"] as? String == event.rawValue }
+    }
+
+    /// Stubs elements/sessions with card, klarna and cashapp, a `cpmt_123` custom payment method, and `mobileSession`
+    /// as the sidecar, and records the `X-Stripe-Mobile-Config` header of each request.
+    private func stubElementsSessions(mobileSession: [String: Any]?) -> SentHeaders {
         let sentHeaders = SentHeaders()
+        var additionalFields: [String: Any] = [
+            "custom_payment_method_data": [
+                ["type": "cpmt_123", "display_name": "BufoPay", "logo_url": "https://test.com", "is_preset": false] as [String: Any],
+            ],
+        ]
+        additionalFields["mobile_session"] = mobileSession
+        // Splice the fields into the top-level object of the fixture
+        let additionalFieldsJSON = String(data: try! JSONSerialization.data(withJSONObject: additionalFields), encoding: .utf8)!
         stub { $0.url?.path == "/v1/elements/sessions" } response: { request in
             sentHeaders.values.append(request.value(forHTTPHeaderField: MobileSession.configHeaderName))
             let data = StubbedBackend.updatePaymentMethodDetail(
                 data: try! FileMock.elementsSessionsPaymentMethod_200.data(),
-                variables: ["<paymentMethods>": "\"card\"", "<currency>": "\"usd\""]
+                variables: [
+                    "<paymentMethods>": "\"card\", \"klarna\", \"cashapp\"",
+                    "<currency>": "\"usd\"",
+                    "\"session_id\": \"123\",": "\"session_id\": \"123\", \(additionalFieldsJSON.dropFirst().dropLast()),",
+                ]
             )
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
         }

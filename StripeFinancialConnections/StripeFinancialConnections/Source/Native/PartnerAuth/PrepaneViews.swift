@@ -52,14 +52,18 @@ final class PrepaneViews {
                 }
             }(),
             title: prepaneModel.title,
-            isSheet: (panePresentationStyle == .sheet)
+            isSheet: (panePresentationStyle == .sheet),
+            appearance: appearance
         )
         self.bodyView = PaneLayoutView.createBodyView(
             text: prepaneModel.subtitle,
             contentView: CreateContentView(
                 prepaneBodyModel: prepaneModel.body,
+                appearance: appearance,
                 didSelectURL: didSelectURL
-            )
+            ),
+            isSheet: (panePresentationStyle == .sheet),
+            appearance: appearance
         )
 
         contentStackView.addArrangedSubview(headerView)
@@ -91,7 +95,8 @@ final class PrepaneViews {
                     )
                 }
             }(),
-            appearance: appearance
+            appearance: appearance,
+            preferHorizontalButtonsForLink: panePresentationStyle == .sheet
         )
         self.footerView = footerViewTuple.footerView
         self.primaryButton = footerViewTuple.primaryButton
@@ -119,6 +124,7 @@ final class PrepaneViews {
 
 private func CreateContentView(
     prepaneBodyModel: FinancialConnectionsOAuthPrepane.OauthPrepaneBody,
+    appearance: FinancialConnectionsAppearance,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView? {
     guard
@@ -147,7 +153,7 @@ private func CreateContentView(
             verticalStackView.addArrangedSubview(label)
         case .image(let image):
             if let imageUrl = image.default {
-                let prepaneImageView = PrepaneImageView(imageURLString: imageUrl)
+                let prepaneImageView = PrepaneImageView(imageURLString: imageUrl, appearance: appearance)
                 verticalStackView.addArrangedSubview(prepaneImageView)
             }
         case .unparsable:
@@ -222,7 +228,7 @@ private class PrepanePreviewView: UIView {
             footerView: prepaneViews.footerView
         )
         paneLayoutView.addTo(view: self)
-        backgroundColor = FinancialConnectionsAppearance.Colors.background
+        backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
     }
 
     required init?(coder: NSCoder) {

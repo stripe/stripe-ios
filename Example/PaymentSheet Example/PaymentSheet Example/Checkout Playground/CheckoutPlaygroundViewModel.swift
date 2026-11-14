@@ -21,10 +21,23 @@ extension CheckoutPlayground {
         @Published var uiFramework: UIFramework
         @Published var integrationType: IntegrationType {
             didSet {
+                if let presentation = PaymentElementPresentation(integrationType: integrationType) {
+                    lastPaymentElementPresentation = presentation
+                }
                 if integrationType == .eceOnly && !expressCheckoutElement.isEnabled {
                     expressCheckoutElement.isEnabled = true
                 }
             }
+        }
+        /// Restored when Payment Element is shown again after being hidden.
+        private var lastPaymentElementPresentation: PaymentElementPresentation = .sheet
+        var showsPaymentElement: Bool {
+            get { integrationType != .eceOnly }
+            set { integrationType = newValue ? lastPaymentElementPresentation.integrationType : .eceOnly }
+        }
+        var paymentElementPresentation: PaymentElementPresentation {
+            get { PaymentElementPresentation(integrationType: integrationType) ?? lastPaymentElementPresentation }
+            set { integrationType = newValue.integrationType }
         }
         @Published var expressCheckoutElement = ExpressCheckoutElementSettings() {
             didSet {
@@ -52,6 +65,7 @@ extension CheckoutPlayground {
         @Published var billingAddressCollection: BillingAddressCollection
         @Published var defaultBillingAddressOption: DefaultAddressOption
         @Published var customDefaultBillingAddress: DefaultAddress
+        @Published var defaultPhone: String
         @Published var automaticTax: Bool
         @Published var checkoutSessionPaymentMethodSave: Bool
         @Published var checkoutSessionPaymentMethodRemove: Bool
@@ -59,6 +73,7 @@ extension CheckoutPlayground {
         @Published var automaticPaymentMethods: Bool
         @Published var paymentMethodTypes: Set<String>
         @Published var currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance
+        @Published var paymentElementAppearance: PaymentSheet.Appearance
         @Published var checkoutEndpointOption: EndpointOption
         @Published var checkoutEndpoint: String
         @Published var delayCheckoutClientRequests: Bool
@@ -75,6 +90,7 @@ extension CheckoutPlayground {
             let settings = settings ?? Self.settingsFromDefaults() ?? Settings()
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
+            lastPaymentElementPresentation = PaymentElementPresentation(integrationType: settings.integrationType) ?? .sheet
             expressCheckoutElement = settings.expressCheckoutElement
             applePayEnabled = settings.applePayEnabled
             paymentElementApplePayDisplay = settings.paymentElementApplePayDisplay
@@ -89,6 +105,7 @@ extension CheckoutPlayground {
             billingAddressCollection = settings.billingAddressCollection
             defaultBillingAddressOption = settings.defaultBillingAddressOption ?? .none
             customDefaultBillingAddress = settings.customDefaultBillingAddress ?? .usTestAddress
+            defaultPhone = settings.defaultPhone ?? ""
             automaticTax = settings.automaticTax
             checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
             checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
@@ -96,6 +113,7 @@ extension CheckoutPlayground {
             automaticPaymentMethods = settings.automaticPaymentMethods
             paymentMethodTypes = settings.paymentMethodTypes
             currencySelectorAppearance = settings.currencySelectorAppearance
+            paymentElementAppearance = settings.paymentElementAppearance ?? .default
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = EndpointOption.normalizedBaseURL(from: settings.checkoutEndpoint)
             delayCheckoutClientRequests = settings.delayCheckoutClientRequests
@@ -133,7 +151,7 @@ extension CheckoutPlayground {
                 return "Customer server email requires a New or Returning Customer."
             }
             if adaptivePricingCountry != .none && !email.source.isServer {
-                return "AP location simulation requires server email. Choose No Override under Currency Selector, or select a server email source."
+                return "AP location simulation requires server email. Set Adaptive Pricing Location to No Override, or select a server email source."
             }
             if email.source.isServer && resolvedEmail.email == nil {
                 return "Enter a server email, or choose None for no email."
@@ -170,6 +188,11 @@ extension CheckoutPlayground {
             case .custom:
                 return customDefaultShippingAddress
             }
+        }
+
+        var resolvedDefaultPhone: String? {
+            let trimmed = defaultPhone.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? nil : trimmed
         }
 
         var defaultBillingAddress: DefaultAddress? {
@@ -257,6 +280,7 @@ extension CheckoutPlayground {
                 billingAddressCollection: billingAddressCollection,
                 defaultBillingAddressOption: defaultBillingAddressOption,
                 customDefaultBillingAddress: customDefaultBillingAddress,
+                defaultPhone: resolvedDefaultPhone,
                 automaticTax: automaticTax,
                 checkoutSessionPaymentMethodSave: checkoutSessionPaymentMethodSave,
                 checkoutSessionPaymentMethodRemove: checkoutSessionPaymentMethodRemove,
@@ -264,6 +288,7 @@ extension CheckoutPlayground {
                 automaticPaymentMethods: automaticPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes,
                 currencySelectorAppearance: currencySelectorAppearance,
+                paymentElementAppearance: paymentElementAppearance,
                 checkoutEndpointOption: checkoutEndpointOption,
                 checkoutEndpoint: checkoutEndpoint,
                 delayCheckoutClientRequests: delayCheckoutClientRequests
@@ -273,6 +298,7 @@ extension CheckoutPlayground {
         private func apply(_ settings: Settings) {
             uiFramework = settings.uiFramework
             integrationType = settings.integrationType
+            lastPaymentElementPresentation = PaymentElementPresentation(integrationType: settings.integrationType) ?? .sheet
             expressCheckoutElement = settings.expressCheckoutElement
             applePayEnabled = settings.applePayEnabled
             paymentElementApplePayDisplay = settings.paymentElementApplePayDisplay
@@ -287,6 +313,7 @@ extension CheckoutPlayground {
             billingAddressCollection = settings.billingAddressCollection
             defaultBillingAddressOption = settings.defaultBillingAddressOption ?? .none
             customDefaultBillingAddress = settings.customDefaultBillingAddress ?? .usTestAddress
+            defaultPhone = settings.defaultPhone ?? ""
             automaticTax = settings.automaticTax
             checkoutSessionPaymentMethodSave = settings.checkoutSessionPaymentMethodSave
             checkoutSessionPaymentMethodRemove = settings.checkoutSessionPaymentMethodRemove
@@ -294,6 +321,7 @@ extension CheckoutPlayground {
             automaticPaymentMethods = settings.automaticPaymentMethods
             paymentMethodTypes = settings.paymentMethodTypes
             currencySelectorAppearance = settings.currencySelectorAppearance
+            paymentElementAppearance = settings.paymentElementAppearance ?? .default
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = settings.checkoutEndpoint
             delayCheckoutClientRequests = settings.delayCheckoutClientRequests
