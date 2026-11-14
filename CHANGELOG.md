@@ -2,6 +2,9 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### Payments
+* [Fixed] `STPPaymentCardTextField.isValid` no longer returns `true` while the US ZIP field holds an incomplete postal code. Postal validation now goes through `STPPostalCodeValidator`, matching `STPCardFormView`.
+
 ### PaymentSheet
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
 * [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.

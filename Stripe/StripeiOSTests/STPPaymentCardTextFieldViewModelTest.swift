@@ -80,6 +80,54 @@ class STPPaymentCardTextFieldViewModelTest: XCTestCase {
         XCTAssertFalse(viewModel!.isValid)
     }
 
+    func testValidationStateForUSPostalCode() {
+        viewModel?.postalCodeRequested = true
+        viewModel?.postalCodeCountryCode = "US"
+
+        let tests: [(String, STPCardValidationState)] = [
+            ("", .incomplete),
+            ("1", .incomplete),
+            ("1234", .incomplete),
+            ("12345", .valid),
+            ("12345-6789", .valid),
+            ("1234a", .invalid),
+        ]
+        for (postalCode, expected) in tests {
+            viewModel?.postalCode = postalCode
+            XCTAssertEqual(
+                viewModel?.validationStateForPostalCode(),
+                expected,
+                "Unexpected validation state for US postal code \"\(postalCode)\""
+            )
+        }
+    }
+
+    func testValidationStateForNonUSPostalCode() {
+        // Non-US postal codes stay permissive: any non-empty value is valid.
+        viewModel?.postalCodeRequested = true
+        viewModel?.postalCodeCountryCode = "GB"
+
+        viewModel?.postalCode = ""
+        XCTAssertEqual(viewModel?.validationStateForPostalCode(), .incomplete)
+
+        viewModel?.postalCode = "1"
+        XCTAssertEqual(viewModel?.validationStateForPostalCode(), .valid)
+    }
+
+    func testValidityRequiresCompleteUSPostalCode() {
+        viewModel?.postalCodeRequested = true
+        viewModel?.postalCodeCountryCode = "US"
+        viewModel?.cardNumber = "4242424242424242"
+        viewModel?.rawExpiration = "12/40"
+        viewModel?.cvc = "123"
+
+        viewModel?.postalCode = "1"
+        XCTAssertFalse(viewModel!.isValid)
+
+        viewModel?.postalCode = "12345"
+        XCTAssertTrue(viewModel!.isValid)
+    }
+
     func testCompressedCardNumber() {
         viewModel?.cardNumber = nil
         // Should use default placeholder
