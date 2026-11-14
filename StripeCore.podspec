@@ -18,4 +18,6 @@ Pod::Spec.new do |s|
   s.swift_version		               = '5.0'
   s.source_files                   = 'StripeCore/StripeCore/**/*.swift'
   s.ios.resource_bundle            = { 'StripeCoreBundle' => ['StripeCore/StripeCore/Resources/**/*.lproj', 'StripeCore/StripeCore/PrivacyInfo.xcprivacy'] }
+  # Optional build phase script that merchants can run to remove unused localizations.
+  s.preserve_paths                 = 'StripeCore/Scripts/strip_unused_localizations.sh'
 end
