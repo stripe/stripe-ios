@@ -97,7 +97,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNotNil(saveCheckbox)
     }
 
-    private func makeCustomerLogicCheckout(withSavedCard: Bool) async throws -> CheckoutElementsController {
+    func makeCustomerLogicCheckout(withSavedCard: Bool) async throws -> CheckoutElementsController {
         let keyResponse = try await customerLogicBackendRequest(endpoint: "publishable_key?merchant=US")
         let apiClient = STPAPIClient(publishableKey: try XCTUnwrap(keyResponse["publishable_key"] as? String))
         var sessionParameters: [String: Any] = [
@@ -163,7 +163,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         return try await CheckoutElementsController(configuration: configuration)
     }
 
-    private func customerLogicBackendRequest(
+    func customerLogicBackendRequest(
         endpoint: String,
         parameters: [String: Any]? = nil
     ) async throws -> [String: Any] {
