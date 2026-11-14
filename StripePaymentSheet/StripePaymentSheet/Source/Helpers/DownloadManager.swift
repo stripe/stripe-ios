@@ -60,9 +60,10 @@ extension DownloadManager {
     ///   - url: The URL from which to download the image.
     ///   - placeholder: An optional parameter indicating a placeholder image to display while the download is in progress. If not provided, a default placeholder image will be used instead.
     ///   - updateHandler: An optional closure that's called when the image finishes downloading. The downloaded image is passed as a parameter to this closure.
+    ///   - scale: The pixels per point the image was drawn at. If `nil`, the image is decoded at the screen's scale.
     ///
     /// - Returns: A `UIImage` instance. If `updateHandler` is `nil`, this would be the downloaded image, otherwise, this would be the placeholder image.
-    public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
+    public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?, scale: CGFloat? = nil) -> UIImage {
         let placeholder = placeholder ?? imagePlaceHolder()
         imageCacheLock.lock()
         var cachedImage = imageCache[url]
@@ -70,13 +71,13 @@ extension DownloadManager {
 
         // If there is no cached image, attempt to promote from diskCache
         if cachedImage == nil,
-           let diskImage = promoteFromDiskCache(url: url) {
+           let diskImage = promoteFromDiskCache(url: url, scale: scale) {
             cachedImage = diskImage
         }
 
         if let updateHandler {
             Task {
-                if let image = try? await downloadImageSkippingCacheRead(url: url) {
+                if let image = try? await downloadImageSkippingCacheRead(url: url, scale: scale) {
                     updateHandler(image)
                 }
             }
@@ -99,10 +100,10 @@ extension DownloadManager {
 
     // Common download functions
 
-    private func promoteFromDiskCache(url: URL) -> UIImage? {
+    private func promoteFromDiskCache(url: URL, scale: CGFloat? = nil) -> UIImage? {
         let request = URLRequest(url: url)
         guard let cachedResponse = session.configuration.urlCache?.cachedResponse(for: request),
-              let image = try? UIImage.from(imageData: cachedResponse.data) else {
+              let image = try? UIImage.from(imageData: cachedResponse.data, scale: scale) else {
             return nil
         }
         imageCacheLock.withLock {
@@ -111,7 +112,7 @@ extension DownloadManager {
         return image
     }
 
-    private func downloadImageSkippingCacheRead(url: URL) async throws -> UIImage {
+    private func downloadImageSkippingCacheRead(url: URL, scale: CGFloat? = nil) async throws -> UIImage {
         var errorParams: [String: Any] = ["url": url.absoluteString]
         do {
             let (data, response) = try await session.data(from: url)
@@ -121,7 +122,7 @@ extension DownloadManager {
                 errorParams["content_type"] = httpResponse.allHeaderFields["Content-Type"]
                 errorParams["content_length"] = httpResponse.allHeaderFields["Content-Length"]
             }
-            let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
+            let image = try UIImage.from(imageData: data, scale: scale) // Throws a Error.failedToMakeImageFromData
             Task {
                 // Cache the image in memory
                 self.imageCacheLock.withLock {
@@ -165,13 +166,13 @@ extension DownloadManager {
 
 // MARK: UIImage helpers
 private extension UIImage {
-    static func from(imageData: Data) throws -> UIImage {
+    static func from(imageData: Data, scale: CGFloat? = nil) throws -> UIImage {
         #if os(visionOS)
-        let scale = 1.0
+        let screenScale = 1.0
         #else
-        let scale = UIScreen.main.scale
+        let screenScale = UIScreen.main.scale
         #endif
-        guard let image = UIImage(data: imageData, scale: scale) else {
+        guard let image = UIImage(data: imageData, scale: scale ?? screenScale) else {
             throw DownloadManager.Error.failedToMakeImageFromData
         }
 

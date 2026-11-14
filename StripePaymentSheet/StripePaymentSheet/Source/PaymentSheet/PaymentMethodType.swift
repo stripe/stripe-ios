@@ -16,6 +16,9 @@ extension PaymentSheet {
     enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentOption)
+        /// A payment method whose `payment_method_availability.payment_methods` entry has a `display`. The server's
+        /// description wins, so this can also be a type PaymentSheet supports natively.
+        case serverDriven(ServerDrivenPaymentMethod)
 
         // Synthetic payment methods. These are payment methods which don't have an `STPPaymentMethodType` defined for the same name.
         // That is, the payment method manifest for a synthetic PMT will show a PMT that doesn't match the form name.
@@ -28,6 +31,8 @@ extension PaymentSheet {
                 return paymentMethodType.displayName
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.displayText
+            case .serverDriven(let serverDrivenPaymentMethod):
+                return serverDrivenPaymentMethod.label
             case .instantDebits, .linkCardBrand:
                 return String.Localized.bank
             }
@@ -41,6 +46,8 @@ extension PaymentSheet {
                 return paymentMethodType.identifier
             case .external(let externalPaymentMethod):
                 return externalPaymentMethod.type
+            case .serverDriven(let serverDrivenPaymentMethod):
+                return serverDrivenPaymentMethod.type
             case .instantDebits:
                 return "instant_debits"
             case .linkCardBrand:
@@ -51,7 +58,7 @@ extension PaymentSheet {
         /// Returns the Stripe API identifier used for incentives for this payment method type, which can be different from `identifier`.
         var incentiveIdentifier: String? {
             switch self {
-            case .stripe, .external:
+            case .stripe, .external, .serverDriven:
                 return nil
             case .instantDebits, .linkCardBrand:
                 return "link_instant_debits"
@@ -73,6 +80,8 @@ extension PaymentSheet {
                     placeholder: nil,
                     updateHandler: updateHandler
                 )
+            case .serverDriven(let serverDrivenPaymentMethod):
+                return serverDrivenPaymentMethod.makeImage(forDarkBackground: forDarkBackground, iconStyle: iconStyle, updateHandler: updateHandler)
             case .stripe(let paymentMethodType):
                 let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
                 if let localImage {
@@ -92,6 +101,8 @@ extension PaymentSheet {
                 return stpPaymentMethodType.iconRequiresTinting
             case .external:
                 return false
+            case .serverDriven(let serverDrivenPaymentMethod):
+                return serverDrivenPaymentMethod.icon.isTemplate
             case .instantDebits, .linkCardBrand:
                 return true
             }
@@ -108,13 +119,20 @@ extension PaymentSheet {
                 return locallyFilteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: logAvailability)
             }
             // The server already applied `paymentMethodOrder`, so use its list as-is.
-            let availablePaymentMethodTypes = paymentMethodTypes(fromServerAvailability: serverPaymentMethodAvailability.paymentMethodTypes, elementsSession: elementsSession, configuration: configuration)
+            let availablePaymentMethodTypes = paymentMethodTypes(fromServerAvailability: serverPaymentMethodAvailability.paymentMethods, intent: intent, elementsSession: elementsSession, configuration: configuration)
 
             // Shadow the local logic so we can find where it disagrees with the server before deleting it.
             // This runs once per load, so it also covers Link, whose `isLinkEnabled` is called too often to compare there.
             // It doesn't log availability; the server's `log_messages` explain its decision instead.
-            let serverIdentifiers = availablePaymentMethodTypes.map { $0.identifier }
-            let localIdentifiers = locallyFilteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration).map { $0.identifier }
+            // Only the server can offer server-driven payment methods, so leave their types out of both lists.
+            let serverDrivenTypes = Set(availablePaymentMethodTypes.compactMap { paymentMethodType -> String? in
+                guard case .serverDriven(let serverDrivenPaymentMethod) = paymentMethodType else { return nil }
+                return serverDrivenPaymentMethod.type
+            })
+            let serverIdentifiers = availablePaymentMethodTypes.map { $0.identifier }.filter { !serverDrivenTypes.contains($0) }
+            let localIdentifiers = locallyFilteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration)
+                .map { $0.identifier }
+                .filter { !serverDrivenTypes.contains($0) }
             let serverLinkEnabled = serverPaymentMethodAvailability.linkEnabled
             let localLinkEnabled = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
             if serverIdentifiers != localIdentifiers || serverLinkEnabled != localLinkEnabled {
@@ -131,10 +149,28 @@ extension PaymentSheet {
             return availablePaymentMethodTypes
         }
 
-        /// Maps the server's `payment_method_availability` to `PaymentMethodType`s.
+        /// Maps the server's `payment_method_availability.payment_methods` to `PaymentMethodType`s, in order.
+        /// An entry with a `display` maps to `.serverDriven`, even if PaymentSheet supports its type natively.
         /// The server should only return payment methods the client can render, so anything else is a Stripe bug.
-        private static func paymentMethodTypes(fromServerAvailability serverPaymentMethodTypes: [String], elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> [PaymentMethodType] {
-            return serverPaymentMethodTypes.compactMap { type in
+        private static func paymentMethodTypes(fromServerAvailability entries: [MobileSession.PaymentMethodEntry], intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> [PaymentMethodType] {
+            return entries.compactMap { entry -> PaymentMethodType? in
+                let type = entry.type
+                var isUnrenderableDescription = false
+                if let display = entry.display {
+                    do {
+                        return .serverDriven(try serverDrivenPaymentMethod(type: type, display: display, intent: intent))
+                    } catch {
+                        isUnrenderableDescription = true
+                        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                            event: .paymentSheetMobileSessionPaymentMethodDropped,
+                            params: [
+                                "payment_method_type": type,
+                                "unsupported_value": (error as? ServerDrivenPaymentMethod.UnsupportedValue)?.value ?? "unknown",
+                            ]
+                        )
+                    }
+                }
+                // A type whose description this client can't render falls back to native support, if there is any.
                 let paymentMethodType: PaymentMethodType? = {
                     switch type {
                     case "instant_debits":
@@ -167,8 +203,8 @@ extension PaymentSheet {
                         return .stripe(stripePaymentMethodType)
                     }
                 }()
-                if paymentMethodType == nil {
-                    // TODO: Remove once PaymentSheet can render arbitrary payment method types from the server.
+                // An unrenderable description was already reported, without asserting.
+                if paymentMethodType == nil, !isUnrenderableDescription {
                     stpAssertionFailure("Server returned a payment method type the client can't render: \(type)")
                     STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
                         event: .paymentSheetMobileSessionPaymentMethodDropped,
@@ -177,6 +213,16 @@ extension PaymentSheet {
                 }
                 return paymentMethodType
             }
+        }
+
+        /// Returns the payment method `display` describes, or throws if this client can't render it. The server should only send
+        /// what this SDK version supports, so the caller reports a throw.
+        static func serverDrivenPaymentMethod(type: String, display: MobileSession.PaymentMethodDisplay, intent: Intent) throws -> ServerDrivenPaymentMethod {
+            // Checkout Sessions don't support server-driven payment methods yet, and the server doesn't send them.
+            if case .checkout = intent {
+                throw ServerDrivenPaymentMethod.UnsupportedValue(value: "intent:checkout")
+            }
+            return try ServerDrivenPaymentMethod(type: type, display: display)
         }
 
         @MainActor
@@ -660,7 +706,7 @@ extension PaymentSheet.PaymentMethodType {
 
     var isLinkBankPayment: Bool {
         switch self {
-        case .stripe, .external:
+        case .stripe, .external, .serverDriven:
             return false
         case .instantDebits, .linkCardBrand:
             return true
@@ -671,7 +717,7 @@ extension PaymentSheet.PaymentMethodType {
         switch self {
         case .stripe(let type):
             return type == .USBankAccount
-        case .external:
+        case .external, .serverDriven:
             return false
         case .instantDebits, .linkCardBrand:
             return true

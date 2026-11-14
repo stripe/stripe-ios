@@ -332,6 +332,31 @@ class DownloadManagerTest: APIStubbedTestCase {
         urlSessionConfig.urlCache?.storeCachedResponse(cachedResponse, for: request)
     }
 
+    func testDownloadImage_honorsScale() {
+        // Given a 48x48 pixel image
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let imageData = UIGraphicsImageRenderer(size: CGSize(width: 48, height: 48), format: format).pngData { _ in }
+        stub(condition: { request in
+            return request.url?.path.contains("/validImage.png") ?? false
+        }) { _ in
+            return HTTPStubsResponse(data: imageData, statusCode: 200, headers: nil)
+        }
+
+        // When it's downloaded at scale 3
+        let downloaded = expectation(description: "Downloaded")
+        var image: UIImage!
+        _ = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: {
+            image = $0
+            downloaded.fulfill()
+        }, scale: 3)
+        waitForExpectations(timeout: 1)
+
+        // Then it's 16x16 points, whatever the screen's scale
+        XCTAssertEqual(image.scale, 3)
+        XCTAssertEqual(image.size, CGSize(width: 16, height: 16))
+    }
+
     private func validImageData() -> Data {
         return generateUIImage(size: validImageSize).pngData()!
     }

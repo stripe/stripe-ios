@@ -224,6 +224,75 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    func testServerDrivenPaymentMethodConfirmsAsUnknownTypeAndFollowsRedirect() throws {
+        // Given a described PayPal entry, and a confirm that returns a redirect_to_url next action
+        let redirectURL = URL(string: "https://hooks.stripe.com/redirect/authenticate/src_123")!
+        let confirmRequested = expectation(description: "confirm requested")
+        stub { urlRequest in
+            urlRequest.url?.pathComponents.last == "confirm"
+        } response: { [self] request in
+            let params = bodyParams(from: request, line: #line)
+            assertParam(params, named: "payment_method_data[type]", is: "paypal", line: #line)
+            assertParam(params, named: "return_url", is: "foo://bar", line: #line)
+            assertParam(params, named: "mandate_data[customer_acceptance][type]", is: nil, line: #line)
+            confirmRequested.fulfill()
+            var json = MockJson.paymentIntent
+            json["status"] = "requires_action"
+            json["next_action"] = [
+                "type": "redirect_to_url",
+                "redirect_to_url": ["url": redirectURL.absoluteString, "return_url": "foo://bar"],
+            ] as [String: Any]
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+        }
+        // ...and the intent has succeeded when it's fetched after the redirect
+        stub { urlRequest in
+            urlRequest.httpMethod == "GET" && urlRequest.url?.pathComponents.contains("payment_intents") == true
+        } response: { _ in
+            var json = MockJson.paymentIntent
+            json["status"] = "succeeded"
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+        }
+        var configuration = MockParams.configuration(pk: MockParams.publicKey)
+        configuration.returnURL = "foo://bar"
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+        var redirectedURL: URL?
+        paymentHandler._redirectShim = { url, _, _ in
+            redirectedURL = url
+            // Simulate the customer returning to the app
+            DispatchQueue.main.async {
+                paymentHandler._handleWillForegroundNotification()
+            }
+        }
+        var paymentIntentJSON = MockJson.paymentIntent
+        paymentIntentJSON["payment_method_types"] = ["card", "paypal"]
+        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJSON)!
+        let paymentMethod = try ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.json(type: "paypal"))
+
+        // When it's confirmed
+        let confirmed = expectation(description: "confirm completed")
+        var result: PaymentSheetResult?
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .paymentIntent(paymentIntent),
+            elementsSession: ._testValue(paymentMethodTypes: ["card", "paypal"]),
+            paymentOption: .new(confirmParams: IntentConfirmParams(type: .serverDriven(paymentMethod))),
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { confirmResult, _ in
+                result = confirmResult
+                confirmed.fulfill()
+            }
+        )
+        wait(for: [confirmRequested, confirmed], timeout: 10)
+
+        // Then STPPaymentHandler's default handling follows the redirect and completes once the intent succeeds
+        XCTAssertEqual(redirectedURL, redirectURL)
+        guard case .completed = result else {
+            return XCTFail("Expected .completed, got \(String(describing: result))")
+        }
+    }
+
 }
 
 extension PaymentSheetAPIMockTest: STPAuthenticationContext {

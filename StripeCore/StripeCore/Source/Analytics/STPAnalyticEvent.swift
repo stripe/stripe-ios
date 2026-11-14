@@ -253,6 +253,7 @@ import Foundation
     case paymentSheetMobileSessionDecodeFailed = "mc_mobile_session_decode_failed"
     case paymentSheetMobileSessionPaymentMethodDropped = "mc_mobile_session_payment_method_dropped"
     case paymentSheetMobileSessionAvailabilityMismatch = "mc_mobile_session_availability_mismatch"
+    case paymentSheetServerDrivenIconPlaceholderVended = "mc_server_driven_icon_placeholder_vended"
 
     // MARK: - PaymentSheet card brand choice
     case paymentSheetDisplayCardBrandChoiceIndicator = "mc_display_cbc_selector"

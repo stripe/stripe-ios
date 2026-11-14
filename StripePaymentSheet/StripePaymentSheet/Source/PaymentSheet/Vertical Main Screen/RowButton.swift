@@ -544,6 +544,8 @@ extension RowButton {
                     return String.Localized.pay_over_time_with_affirm
                 case .external(let externalPaymentOption):
                     return externalPaymentOption.displaySubtext
+                case .serverDriven(let serverDrivenPaymentMethod):
+                    return serverDrivenPaymentMethod.subtitle
                 default:
                     return nil
                 }

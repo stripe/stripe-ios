@@ -64,7 +64,8 @@ extension MobileSession {
     }
 
     /// Decodes the `mobile_session` sidecar from an `elements/sessions` response.
-    /// Returns nil when it's missing or malformed; never fails the load.
+    /// Returns nil when it's missing or malformed; never fails the load. A `payment_methods` entry that doesn't
+    /// decode is dropped and reported, and the rest of the session is kept.
     static func decodeSidecar(fromAPIResponse response: [AnyHashable: Any]) -> Session? {
         guard let sidecar = response[sidecarResponseKey], !(sidecar is NSNull) else {
             return nil
@@ -73,7 +74,13 @@ extension MobileSession {
             guard JSONSerialization.isValidJSONObject(sidecar) else {
                 throw PaymentSheetError.unknown(debugDescription: "mobile_session is not a JSON object")
             }
-            return try decode(JSONSerialization.data(withJSONObject: sidecar))
+            return try decode(JSONSerialization.data(withJSONObject: sidecar)) { droppedEntry in
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                    event: .paymentSheetMobileSessionPaymentMethodDropped,
+                    error: droppedEntry.error,
+                    params: ["key": droppedEntry.key, "index": droppedEntry.index]
+                )
+            }
         } catch {
             STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetMobileSessionDecodeFailed, error: error)
             return nil
@@ -110,13 +117,33 @@ extension MobileSession.Config {
                 ),
                 link: .init(displayMode: .init(configuration.link.display)),
                 cardBrandAcceptance: .init(configuration.cardBrandAcceptance),
-                paymentMethodOrder: configuration.paymentMethodOrder ?? []
+                paymentMethodOrder: Self.trimmedPaymentMethodOrder(configuration.paymentMethodOrder ?? [])
             ),
             environment: .init(
                 hasFinancialConnectionsSdk: FinancialConnectionsSDKAvailability.isFullFinancialConnectionsSDKAvailable,
-                deviceSupportsNativeLink: Self.deviceSupportsNativeLink(apiClient: configuration.apiClient)
+                deviceSupportsNativeLink: Self.deviceSupportsNativeLink(apiClient: configuration.apiClient),
+                displayLanguage: STPLocalizationUtils.displayLanguageTag(bundleLocator: StripePaymentSheetBundleLocator.self)
             )
         )
+    }
+
+    /// The most `payment_method_order` entries the header sends, and the longest entry.
+    /// Together they keep the header under 2KB, a quarter of the server's 8KB limit per header.
+    static let maxPaymentMethodOrderCount = 30
+    static let maxPaymentMethodOrderEntryLength = 40
+
+    /// Returns `paymentMethodOrder` without entries that can't name a payment method type, duplicates and entries past
+    /// `maxPaymentMethodOrderCount`, since it's the only part of the header the merchant controls.
+    /// It doesn't drop types the SDK doesn't know, since the server can describe payment methods the SDK can't name yet.
+    static func trimmedPaymentMethodOrder(_ paymentMethodOrder: [String]) -> [String] {
+        var seen = Set<String>()
+        let trimmed = paymentMethodOrder.filter { type in
+            let isPaymentMethodType = (1...maxPaymentMethodOrderEntryLength).contains(type.count)
+                && type.allSatisfy { $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "_") }
+            // The local ordering matches case-insensitively, so do the same for duplicates.
+            return isPaymentMethodType && seen.insert(type.lowercased()).inserted
+        }
+        return Array(trimmed.prefix(maxPaymentMethodOrderCount))
     }
 
     /// The device half of `deviceCanUseNativeLink`. The server combines it with the merchant's

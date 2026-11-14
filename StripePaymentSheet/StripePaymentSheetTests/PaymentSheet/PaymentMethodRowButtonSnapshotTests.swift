@@ -6,10 +6,13 @@
 //
 
 import Foundation
+import OHHTTPStubs
+import OHHTTPStubsSwift
 import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) import StripePayments
 @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 import UIKit
+import XCTest
 
 @MainActor
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
@@ -239,6 +242,39 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             rowButton.updateSelectedState(true, willDisplayForm: false)
             verify(rowButton, identifier: "\(style)")
         }
+    }
+
+    func testPaymentMethodRowButton_serverDriven() {
+        // Given DemoPay with light and dark icons at 2x and 3x, each 30x20pt at its scale
+        for scale in [2, 3] {
+            for (name, color) in [("demo_pay", UIColor.systemIndigo), ("demo_pay_dark", .systemOrange)] {
+                let url = ServerDrivenPaymentMethodFixtures.iconURL(name, scale: scale)
+                stub(condition: { $0.url == url }) { _ in
+                    HTTPStubsResponse(data: ServerDrivenPaymentMethodFixtures.iconData(scale: scale, color: color), statusCode: 200, headers: nil)
+                }
+            }
+        }
+        addTeardownBlock { HTTPStubs.removeAllStubs() }
+        let paymentMethod = try! ServerDrivenPaymentMethodFixtures.serverDrivenPaymentMethod(ServerDrivenPaymentMethodFixtures.lightAndDarkJSON(rendering: "original"))
+
+        // When its row is made and the light icon downloads
+        let rowButton = RowButton.makeForPaymentMethodType(
+            paymentMethodType: .serverDriven(paymentMethod),
+            hasSavedCard: false,
+            promoText: nil,
+            promotionsHelper: nil,
+            appearance: .default,
+            shouldAnimateOnPress: false,
+            didTap: { _ in }
+        )
+        // The blank placeholder is also 30x20pt, so wait for the image to change
+        let downloaded = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            rowButton.imageView.image.map { $0 !== ServerDrivenPaymentMethod.blankIcon && $0.size == CGSize(width: 30, height: 20) } ?? false
+        }, object: nil)
+        wait(for: [downloaded], timeout: 5)
+
+        // Then the row shows the server's label, subtitle and light icon, filling the 30x20pt icon box
+        verify(rowButton)
     }
 
     func verify(

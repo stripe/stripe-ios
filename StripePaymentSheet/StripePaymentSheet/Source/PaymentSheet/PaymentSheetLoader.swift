@@ -130,6 +130,10 @@ final class PaymentSheetLoader {
             STPAnalyticsClient.sendAnalyticsToRStripe = elementsSession.isAnalyticsToRStripeEnabled
 
             let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+            // Fire-and-forget fetch of server-driven icons, so rows and the PS.FC and embedded PaymentOptionDisplayData images are usually cached.
+            for case .serverDriven(let serverDrivenPaymentMethod) in paymentMethodTypes {
+                serverDrivenPaymentMethod.prefetchIcons()
+            }
 
             // Assert if using konbini or blik with confirmation tokens
             if case .deferredIntent(let intentConfiguration) = mode,

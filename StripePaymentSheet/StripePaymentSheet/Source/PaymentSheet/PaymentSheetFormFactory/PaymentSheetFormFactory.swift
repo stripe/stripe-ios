@@ -247,6 +247,9 @@ class PaymentSheetFormFactory {
                 subtitle: externalPaymentOption.displaySubtext,
                 disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection
             )
+        case .serverDriven:
+            // Server-driven payments don't have forms yet
+            return makeContactInformationAndBillingAddressForm()
         case .stripe(let paymentMethod):
             switch paymentMethod {
             case .card:
