@@ -39,4 +39,4 @@ When you have identified a potential issue:
 - File the bug directly in the tracker and update its index. Confirm the changes were saved.
 
 Do not file: style/lint nitpicks, duplicate reports of already-tracked issues, or anything without
-a concrete trigger condition ("this could theoretically..." is not a bug report.
+a concrete trigger condition ("this could theoretically..." is not a bug report).
