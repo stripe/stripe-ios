@@ -44,7 +44,7 @@ private struct PrimaryActionDividerInsetModifier: ViewModifier {
     @Environment(\.self) private var environment
 
     func body(content: Content) -> some View {
-        #if compiler(>=6.4)
+        #if canImport(SwiftUI, _version: 8.0.85)
         if #available(iOS 27.1, *) {
             // For iPhone Duo support, don't use a full-width separator above the CTA in the presence
             // of a vertical toolbar. Instead, we match the CTA's insets.
