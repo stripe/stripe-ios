@@ -26,7 +26,7 @@ extension MockData {
 
     public func make() throws -> ResponseType {
         let httpURLResponse = HTTPURLResponse(url: URL(string: "https://api.stripe.com/v1/some_endpoint")!, statusCode: 200, httpVersion: nil, headerFields: ["request-id": "req_123"])
-        let result: Result<ResponseType, Error> = STPAPIClient.decodeResponse(
+        let result: Result<ResponseType, Error> = STPAPIClient().decodeResponse(
             data: try data(),
             error: nil,
             response: httpURLResponse

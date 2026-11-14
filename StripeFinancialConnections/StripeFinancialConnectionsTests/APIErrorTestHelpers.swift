@@ -48,7 +48,7 @@ func MakeStripeAPIError(
         throw APIErrorTestHelpersError.couldNotBuildResponse
     }
 
-    let result: Result<NeverDecodableResponse, Error> = STPAPIClient.decodeResponse(
+    let result: Result<NeverDecodableResponse, Error> = STPAPIClient().decodeResponse(
         data: data,
         error: nil,
         response: response

@@ -147,6 +147,7 @@ final class STPAPIClient_FileUploadTest: APIStubbedTestCase {
         XCTAssertEqual(attempts, 1)
     }
 
+    @MainActor
     func testInvalidResponsePreservesStatusAndUnderlyingError() async throws {
         let sourceFileURL = temporaryDirectoryURL.appendingPathComponent("document.pdf")
         try Self.testData.write(to: sourceFileURL)
@@ -154,12 +155,16 @@ final class STPAPIClient_FileUploadTest: APIStubbedTestCase {
             let stubDescriptor = stub(condition: { $0.url?.host == "uploads.stripe.com" }) { _ in
                 HTTPStubsResponse(data: Data("invalid JSON".utf8), statusCode: Int32(statusCode), headers: ["Content-Type": "application/json"])
             }
+            if statusCode == 200 {
+                STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+            }
             do {
                 _ = try await stubbedAPIClient().uploadFile(at: sourceFileURL, purpose: StripeFile.Purpose.cryptoOnrampKYCDocument.rawValue, authorizationSecret: "lsk_test")
                 XCTFail("Expected an invalid response error")
             } catch FileUploadError.invalidResponse(let actualStatusCode, let underlyingError) {
                 XCTAssertEqual(actualStatusCode, statusCode)
                 if statusCode == 200 {
+                    XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
                     XCTAssertTrue(underlyingError is DecodingError)
                 } else {
                     XCTAssertEqual((underlyingError as NSError).domain, STPError.stripeDomain)

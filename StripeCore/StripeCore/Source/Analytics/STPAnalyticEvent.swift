@@ -289,6 +289,7 @@ import Foundation
 
     // MARK: - Unexpected errors
     // ⚠️ Errors with the "unexpected_error" prefix should **never happen** and indicate a problem with the SDK or the Stripe backend and will trigger an assertion + cerberus alert.
+    case unexpectedAPIResponseDecodingError = "unexpected_error.api_response_decoding"
     case unexpectedPaymentSheetFormFactoryError = "unexpected_error.paymentsheet.formfactory"
     case unexpectedStripeUICoreAddressSpecProvider = "unexpected_error.stripeuicore.addressspecprovider"
     case unexpectedStripeUICoreBSBNumberProvider = "unexpected_error.stripeuicore.bsbnumberprovider"
