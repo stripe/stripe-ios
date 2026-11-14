@@ -299,6 +299,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             checkoutSession: checkoutSession,
             applePayConfirmationParameters: applePayConfirmationParameters
         )
+        StripeAPI.normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
 
         // PKPaymentAuthorizationController.init is non-nullable even for invalid requests.
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and

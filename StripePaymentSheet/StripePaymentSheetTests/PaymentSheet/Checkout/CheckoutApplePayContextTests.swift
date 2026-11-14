@@ -184,6 +184,24 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(items[0].amount, .zero)
     }
 
+    func testMakePaymentRequestWithChinaUnionPayAddsEMV() {
+        let originalNetworks = StripeAPI.additionalEnabledApplePayNetworks
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = originalNetworks }
+        let session = CheckoutTestHelpers.makeSession().makePublicSession()
+        let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
+            apiClient: APIStubbedTestCase.stubbedAPIClient()
+        )
+
+        let request = CheckoutApplePayContext.makePaymentRequest(
+            checkoutSession: session,
+            applePayConfirmationParameters: parameters
+        )
+
+        XCTAssertTrue(request.supportedNetworks.contains(.chinaUnionPay))
+        XCTAssertEqual(request.merchantCapabilities, [.capability3DS, .capabilityEMV])
+    }
+
     func testMakePaymentRequestUsesPresentmentCurrency() {
         for (currency, amount, expectedAmount, exchangeRate) in [
             ("jpy", 19181, "19181", "159.8416666667"),

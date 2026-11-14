@@ -72,9 +72,12 @@ import PassKit
 
     /// The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
     ///
-    /// Set this property to enable other card networks in addition to these, such as .JCB, .cartesBancaires, or .eftpos (for eftpos Australia).
-    /// For example, `additionalEnabledApplePayNetworks = [.eftpos]` enables eftpos Australia.
-    /// Note: These networks require the merchant to support the respective payment network before enabling.
+    /// Set this property to enable other card networks in addition to these, such as .JCB, .cartesBancaires, .eftpos (for eftpos Australia), or .chinaUnionPay.
+    /// The merchant must be enabled for the respective payment network before adding it.
+    /// For example, enable China UnionPay with `StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]`.
+    /// Configure China UnionPay before initializing PaymentSheet so Apple Pay availability and payment request construction use the intended network list.
+    /// Stripe adds the EMV merchant capability for China UnionPay when building a payment request.
+    /// If you modify the supported networks and present your own PassKit controller, keep the EMV capability in sync with China UnionPay.
     @objc public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = [] {
         didSet {
             // Reset deviceSupportsApplePay for the updated network list:
@@ -180,10 +183,19 @@ import PassKit
         #else
         paymentRequest.merchantCapabilities = .capability3DS
         #endif
+        normalizeEMVCapabilityForChinaUnionPay(for: paymentRequest)
         paymentRequest.countryCode = countryCode.uppercased()
         paymentRequest.currencyCode = currencyCode.uppercased()
         paymentRequest.requiredBillingContactFields = Set([.postalAddress])
         return paymentRequest
+    }
+
+    @_spi(InternalOnlyAPI) public class func normalizeEMVCapabilityForChinaUnionPay(for paymentRequest: PKPaymentRequest) {
+        if paymentRequest.supportedNetworks.contains(.chinaUnionPay) {
+            paymentRequest.merchantCapabilities.insert(.emv)
+        } else {
+            paymentRequest.merchantCapabilities.remove(.emv)
+        }
     }
 
     // MARK: - URL callbacks
