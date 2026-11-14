@@ -7,6 +7,7 @@
 import OHHTTPStubs
 import OHHTTPStubsSwift
 @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+import UIKit
 import XCTest
 
 @testable @_spi(InternalOnlyAPI) import StripeCore
@@ -49,11 +50,34 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
             LinkUtils.ConsumerErrorCode.consumerVerificationMaxAttemptsExceeded.localizedDescription
         )
     }
+
+    @MainActor
+    func testSandboxBannerAppearsForTestAPIKey() throws {
+        let sut = makeSUT(analyticsHelper: .init(), apiKey: "pk_test_auth")
+        sut.loadViewIfNeeded()
+        let otp = try XCTUnwrap(sut.children.first as? LinkVerificationViewController)
+        let view = otp.verificationView
+        view.autosizeHeight(width: 340)
+        let stack = try XCTUnwrap(view.subviews.first as? UIStackView)
+
+        let banner = try XCTUnwrap(stack.arrangedSubviews.first { $0 is LinkVerificationView.SandboxBannerView })
+        XCTAssertGreaterThan(banner.bounds.height, 0)
+    }
+
+    @MainActor
+    func testSandboxBannerDoesNotAppearForLiveAPIKey() throws {
+        let sut = makeSUT(analyticsHelper: .init(), apiKey: "pk_live_auth")
+        sut.loadViewIfNeeded()
+        let otp = try XCTUnwrap(sut.children.first as? LinkVerificationViewController)
+        let stack = try XCTUnwrap(otp.verificationView.subviews.first as? UIStackView)
+
+        XCTAssertFalse(stack.arrangedSubviews.contains { $0 is LinkVerificationView.SandboxBannerView })
+    }
 }
 
 private extension LinkVerificationViewControllerTests {
     @MainActor
-    func makeSUT(analyticsHelper: LinkAnalyticsHelper) -> LinkAuthFlowViewController {
+    func makeSUT(analyticsHelper: LinkAnalyticsHelper, apiKey: String = STPTestingDefaultPublishableKey) -> LinkAuthFlowViewController {
         let session = ConsumerSession.make(
             clientSecret: "client_secret",
             emailAddress: "jane.diaz@example.com",
@@ -72,7 +96,7 @@ private extension LinkVerificationViewControllerTests {
             session: session,
             publishableKey: "pk_test_123",
             displayablePaymentDetails: nil,
-            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+            apiClient: STPAPIClient(publishableKey: apiKey),
             useMobileEndpoints: true,
             canSyncAttestationState: false
         )

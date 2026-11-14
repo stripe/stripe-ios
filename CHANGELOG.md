@@ -3,6 +3,7 @@ MINOR
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
+* [Added] Added a banner to Link's OTP verification screen in sandbox and test mode with instructions for entering a test verification code.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
 * [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
 

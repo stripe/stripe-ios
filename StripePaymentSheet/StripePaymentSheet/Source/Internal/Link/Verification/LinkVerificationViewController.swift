@@ -31,6 +31,7 @@ final class LinkVerificationViewController: UIViewController {
         verificationView = LinkVerificationView(
             mode: mode,
             linkAccount: linkAccount,
+            isTestMode: linkAccount.apiClient.isTestmode,
             brand: brand,
             appearance: appearance,
             allowLogoutInDialog: allowLogoutInDialog,

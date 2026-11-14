@@ -61,6 +61,21 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testSandboxModal() {
+        let sut = makeSUT(mode: .modal, isTestMode: true)
+        verify(sut)
+    }
+
+    func testSandboxEmbedded() {
+        let sut = makeSUT(mode: .embedded, isTestMode: true)
+        verify(sut)
+    }
+
+    func testSandboxInlineLogin() {
+        let sut = makeSUT(mode: .inlineLogin, isTestMode: true)
+        verify(sut)
+    }
+
     func testCustomColors() {
         let appearance = LinkAppearance(
             colors: .init(
@@ -98,6 +113,7 @@ extension LinkVerificationViewSnapshotTests {
 
     func makeSUT(
         mode: LinkVerificationView.Mode,
+        isTestMode: Bool = false,
         brand: LinkBrand = .link,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool = false
@@ -112,6 +128,7 @@ extension LinkVerificationViewSnapshotTests {
                 consumerSessionClientSecret: nil,
                 linkSessionKey: nil
             ),
+            isTestMode: isTestMode,
             brand: brand,
             appearance: appearance,
             allowLogoutInDialog: allowLogoutInDialog

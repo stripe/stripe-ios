@@ -17,19 +17,19 @@ final class LinkAuthFlowViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testEmailOTPModal() {
-        let flow = makeFlow(types: [.email])
+        let flow = makeFlow(types: [.email], isTestMode: false)
         startAndWait(flow)
         snapshot(flow)
     }
 
     func testEmailOTPEmbedded() {
-        let flow = makeFlow(types: [.email], mode: .embedded)
+        let flow = makeFlow(types: [.email], mode: .embedded, isTestMode: false)
         startAndWait(flow)
         snapshot(flow)
     }
 
     func testSMSMoreOptionsModal() {
-        let flow = makeFlow(types: [.sms, .email])
+        let flow = makeFlow(types: [.sms, .email], isTestMode: false)
         startAndWait(flow)
         snapshot(flow)
     }
@@ -357,10 +357,11 @@ final class LinkAuthFlowViewSnapshotTests: STPSnapshotTestCase {
         window.isHidden = true
     }
 
-    private func makeFlow(types: [SupportedVerificationType], phoneMatch: Bool = false, mode: LinkVerificationView.Mode = .modal, onStart: @escaping () -> Void = {}) -> LinkAuthFlowViewController {
+    private func makeFlow(types: [SupportedVerificationType], phoneMatch: Bool = false, mode: LinkVerificationView.Mode = .modal, isTestMode: Bool = true, onStart: @escaping () -> Void = {}) -> LinkAuthFlowViewController {
+        let apiKey = isTestMode ? "pk_test_auth" : "pk_live_auth"
         let factors = types.map { ConsumerSession.VerificationFactor(type: $0 == .sms ? .sms : .email, providesFurtherVerification: true, temporarilyDisabled: false, id: $0.rawValue) }
         let session = ConsumerSession.make(clientSecret: "secret", emailAddress: "jane.diaz@example.com", redactedFormattedPhoneNumber: "(***) *** **23", unredactedPhoneNumber: nil, phoneNumberCountry: "US", verificationSessions: [], supportedPaymentDetailsTypes: [], mobileFallbackWebviewParams: nil, currentAuthenticationLevel: .notAuthenticated, minimumAuthenticationLevel: .oneFactorAuth, availableVerificationFactors: factors, redactedPhoneNumber: "+1********23")
-        let account = PaymentSheetLinkAccount(email: session.emailAddress, session: session, publishableKey: "pk_test_consumer", displayablePaymentDetails: nil, apiClient: STPAPIClient(publishableKey: "pk_test_auth"), useMobileEndpoints: true, canSyncAttestationState: false, supportedVerificationTypes: [.sms, .email])
+        let account = PaymentSheetLinkAccount(email: session.emailAddress, session: session, publishableKey: "pk_test_consumer", displayablePaymentDetails: nil, apiClient: STPAPIClient(publishableKey: apiKey), useMobileEndpoints: true, canSyncAttestationState: false, supportedVerificationTypes: [.sms, .email])
         account.authLookupSettings = .init(emailOtpRequiresAdditionalInfo: phoneMatch)
         stub(condition: isPath("/v1/consumers/sessions/start_verification")) { request in
             onStart()
