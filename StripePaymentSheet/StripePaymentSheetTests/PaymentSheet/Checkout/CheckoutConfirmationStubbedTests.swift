@@ -88,8 +88,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         // Given a saved SEPA method whose mandate was accepted in the sheet
         let checkout = try await makeSavedSEPACheckout()
         let flowController = checkout.getPaymentElement().paymentSheetFlowController
-        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
-        flowController.updatePaymentOption()
+        presentAndContinue(checkout.getPaymentElement())
         XCTAssertTrue(flowController.didPresentAndContinue)
         XCTAssertTrue(checkout.getPaymentElement().paymentOptionSourceOfTruthIsFlowController)
         let confirmRequested = stubConfirmationExpecting(

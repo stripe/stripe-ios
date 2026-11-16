@@ -504,14 +504,35 @@ final class PaymentElementTest: XCTestCase {
         let paymentElement = checkout.getPaymentElement()
         XCTAssertFalse(paymentElement.paymentOptionSourceOfTruthIsFlowController)
 
-        // When FlowController publishes its selection
-        paymentElement.paymentSheetFlowController.updatePaymentOption()
+        // When the customer closes the FlowController sheet, which publishes its selection
+        presentAndContinue(paymentElement)
 
-        // Then Checkout receives the separate labels through the subscription
+        // Then Checkout receives the separate labels from FlowController
         XCTAssertTrue(paymentElement.paymentOptionSourceOfTruthIsFlowController)
         XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
         XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
         XCTAssertEqual(paymentElement.paymentSheetFlowController.paymentOption?.label, "•••• 4242")
+    }
+
+    func testLinkAccountChangeKeepsEmbeddedSelection() async throws {
+        // Given PayNow selected in Embedded, while the hidden FlowController has nothing selected
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card", "paynow"])
+        ))
+        let embedded = checkout.getPaymentElement().embeddedPaymentElement
+        let row = try XCTUnwrap(embedded.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.paynow)) })
+        embedded.embeddedPaymentMethodsView.didTap(rowButton: row)
+
+        // When the Link account changes (e.g. opening Link looks up the email), making FlowController republish on the next main queue turn
+        let originalLinkAccount = LinkAccountContext.shared.account
+        addTeardownBlock { @MainActor in LinkAccountContext.shared.account = originalLinkAccount }
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount._testValue(email: "patrick@example.com", isRegistered: false)
+        let republished = expectation(description: "FlowController republished")
+        DispatchQueue.main.async { republished.fulfill() }
+        await fulfillment(of: [republished], timeout: 1)
+
+        // Then Checkout keeps the Embedded selection
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
     }
 
     func testEmbeddedPublishesChangesToLinkSublabel() async throws {
@@ -636,11 +657,12 @@ final class PaymentElementTest: XCTestCase {
             paymentMethodListViewController.rowButtons.first { $0.accessibilityIdentifier == "PayNow" },
             "Available rows: \(paymentMethodListViewController.rowButtons.compactMap(\.accessibilityIdentifier))"
         )
-        paymentMethodListViewController.didTap(
-            rowButton: payNowRowButton,
-            selection: .new(paymentMethodType: .stripe(.paynow))
-        )
-        paymentElement.paymentSheetFlowController.updatePaymentOption()
+        presentAndContinue(paymentElement) {
+            paymentMethodListViewController.didTap(
+                rowButton: payNowRowButton,
+                selection: .new(paymentMethodType: .stripe(.paynow))
+            )
+        }
         XCTAssertEqual(checkout.session.paymentOption?.label, "PayNow")
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
 

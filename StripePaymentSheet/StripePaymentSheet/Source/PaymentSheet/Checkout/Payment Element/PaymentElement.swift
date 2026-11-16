@@ -52,7 +52,12 @@ public final class PaymentElement {
             return
         }
 
-        paymentSheetFlowController.presentPaymentOptions(from: presentingViewController) { _ in
+        paymentSheetFlowController.presentPaymentOptions(from: presentingViewController) { [weak self] _ in
+            // The customer used FlowController's sheet, so its selection is now Checkout's payment option.
+            if let self, let checkout {
+                paymentOptionSourceOfTruthIsFlowController = true
+                updatePaymentOption(checkout: checkout)
+            }
             completion?()
         }
     }
@@ -109,15 +114,15 @@ public final class PaymentElement {
         self.embeddedPaymentElement.delegate = self
         self.checkout = checkout
 
-        // When FC paymentOption updates, update checkout's payment option too
+        // When FC paymentOption updates, update checkout's payment option too - but only once the customer has used FC's sheet.
+        // FC republishes its untouched selection on its own (e.g. when the Link account changes), which must not replace the customer's Embedded selection.
         self.paymentSheetFlowController.$paymentOption
             // Without dropFirst, @Published immediately emits FlowController's current value before we setPaymentOption from EmbeddedPaymentElement below.
             .dropFirst()
             .sink { [weak self] paymentOption in
-                guard let self, !isSuppressingPaymentOptionUpdates else {
+                guard let self, !isSuppressingPaymentOptionUpdates, paymentOptionSourceOfTruthIsFlowController else {
                     return
                 }
-                paymentOptionSourceOfTruthIsFlowController = true
                 self.checkout?.dangerouslySetPaymentOptionDirectly(paymentOption.map(CheckoutElementsController.Session.PaymentOptionDisplayData.init))
             }
             .store(in: &cancellables)
