@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Một trình gỡ lỗi được gắn vào Ứng dụng.";
+
+"An emulator is being used to run the App." = "Một trình giả lập đang được sử dụng để chạy Ứng dụng.";
+
 "An error occurred. Please try again." = "Đã xảy ra lỗi. Vui lòng thử lại.";
+
+"Cancel" = "Hủy";
 
 "Card brand was not updated. Please try again." = "Thương hiệu thẻ chưa được cập nhật. Vui lòng thử lại.";
 
 "Close" = "Đóng";
+
+"Collapsed" = "Đã thu gọn";
 
 "Confirm it's you" = "Xác nhận đó là bạn";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Nhập mã đã được gửi tới %@.";
 
+"Expanded" = "Đã mở rộng";
+
 "Failed to connect" = "Không thể kết nối";
+
+"Loading" = "Đang tải";
+
+"No" = "Không";
 
 "Resend code" = "Gửi lại mã";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Quét thẻ";
 
+"Secure checkout" = "Thanh toán an toàn";
+
+"Selected" = "Đã chọn";
+
 "The IBAN you entered is invalid." = "IBAN quý vị đã nhập không hợp lệ.";
+
+"The OS or the OS Version is not supported." = "Hệ điều hành hoặc Phiên bản hệ điều hành không được hỗ trợ.";
+
+"The device is jailbroken." = "Thiết bị đã bị bẻ khóa.";
+
+"The integrity of the SDK has been tampered." = "Tính toàn vẹn của SDK đã bị can thiệp.";
 
 "There was an error processing your card -- try again in a few seconds" = "Có lỗi bất ngờ khi xử lý thẻ -- hãy thử lại sau vài giây";
 
 "There was an unexpected error -- try again in a few seconds" = "Có lỗi bất ngờ -- hãy thử lại sau vài giây";
 
+"Timeout" = "Hết thời gian chờ";
+
 "Try again" = "Thử lại";
 
+"Unselected" = "Chưa chọn";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Chúng tôi sử dụng Stripe để xác minh chi tiết thẻ của bạn. Stripe có thể sử dụng và lưu trữ dữ liệu của bạn theo chính sách quyền riêng tư của họ. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Tìm hiểu thêm</u></a>";
+
+"Yes" = "Có";
 
 "Your card has expired" = "Thẻ đã hết hạn";
 

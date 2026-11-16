@@ -16,29 +16,27 @@ struct CheckoutSuccessView: View {
     // MARK: - View
 
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
+        FoldAvoidingScrollView { _ in
+            VStack(spacing: 0) {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(.green)
+                    .font(.system(size: 80, weight: .semibold))
 
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(.green)
-                .font(.system(size: 80, weight: .semibold))
+                VStack(spacing: 6) {
+                    Text("Purchase successful")
+                        .font(.title2)
+                        .bold()
 
-            VStack(spacing: 6) {
-                Text("Purchase successful")
-                    .font(.title2)
-                    .bold()
-
-                Text(message)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity)
+                    Text(message)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                }
             }
-
-            Spacer()
+            .horizontallyCenteredContent()
+            .padding()
         }
-        .offset(y: -32)
-        .padding(.horizontal)
     }
 }
 

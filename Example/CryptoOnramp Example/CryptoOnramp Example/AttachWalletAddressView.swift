@@ -35,7 +35,7 @@ struct AttachWalletAddressView: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
                     VStack(alignment: .leading, spacing: 8) {
@@ -46,7 +46,8 @@ struct AttachWalletAddressView: View {
                     }
 
                     FormField("Wallet Address") {
-                        TextField("Enter wallet address", text: $walletAddress)
+                        TextField("Enter wallet address", text: $walletAddress, axis: .vertical)
+                            .lineLimit(1...3)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
@@ -67,29 +68,32 @@ struct AttachWalletAddressView: View {
                         ErrorMessageView(message: errorMessage)
                     }
                 }
+                .horizontallyCenteredContent()
                 .padding()
             }
             .navigationTitle("Wallet Address")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button {
                         dismiss()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark")
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Submit") {
+                    Button {
                         submit()
+                    } label: {
+                        Label("Submit", systemImage: "checkmark")
                     }
                     .disabled(isSubmitDisabled)
                     .opacity(isSubmitDisabled ? 0.5 : 1)
                 }
             }
         }
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                walletFieldFocused = true
-            }
+        .task {
+            walletFieldFocused = true
         }
     }
 

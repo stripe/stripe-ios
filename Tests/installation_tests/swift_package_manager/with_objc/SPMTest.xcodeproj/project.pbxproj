@@ -12,6 +12,7 @@
 		3B3F01BD27444CD200C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F01BC27444CD200C53D34 /* StripeUICoreAssetTests.swift */; };
 		3BD98015274162CF00B09BCD /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD98014274162CF00B09BCD /* ModelTests.swift */; };
 		3BD98085274318E800B09BCD /* StripeCardScan in Frameworks */ = {isa = PBXBuildFile; productRef = 3BD98084274318E800B09BCD /* StripeCardScan */; };
+		7301F9308762F204060FF449 /* Stripe3DS2LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7535DF7A81F6978A2DB9B6B /* Stripe3DS2LocalizationTests.swift */; };
 		C176898820616C7E003DE895 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C176898720616C7E003DE895 /* AppDelegate.m */; };
 		C176898B20616C7E003DE895 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C176898A20616C7E003DE895 /* ViewController.m */; };
 		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
@@ -59,6 +60,7 @@
 		C176899220616C7E003DE895 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C176899420616C7E003DE895 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C176899520616C7E003DE895 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F7535DF7A81F6978A2DB9B6B /* Stripe3DS2LocalizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Stripe3DS2LocalizationTests.swift; path = ../../shared_unit_tests/Stripe3DS2/Stripe3DS2LocalizationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 				3BD9800A274162A400B09BCD /* SPMTestTests */,
 				C176898420616C7E003DE895 /* Products */,
 				CBB4622869490C3C489194BF /* Frameworks */,
+				F7535DF7A81F6978A2DB9B6B /* Stripe3DS2LocalizationTests.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -244,6 +247,7 @@
 				317C500527604CDE003771D7 /* SPMAnalyticsTests.swift in Sources */,
 				3B3F01BD27444CD200C53D34 /* StripeUICoreAssetTests.swift in Sources */,
 				3BD98015274162CF00B09BCD /* ModelTests.swift in Sources */,
+				7301F9308762F204060FF449 /* Stripe3DS2LocalizationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

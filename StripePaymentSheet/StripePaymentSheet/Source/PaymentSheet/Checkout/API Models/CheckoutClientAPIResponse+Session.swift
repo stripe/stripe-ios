@@ -11,20 +11,27 @@ import Foundation
 // MARK: - Public model conversion
 
 extension CheckoutClientAPIResponse {
-    static func makeAmount(_ minorUnitsAmount: Int, currency: String) -> CheckoutElementsController.Session.Amount {
-        return makeAmount(Double(minorUnitsAmount), currency: currency, locale: .autoupdatingCurrent)
+    static func makeAmount(
+        _ minorUnitsAmount: Int,
+        currency: String,
+        locale: Locale = .autoupdatingCurrent
+    ) -> CheckoutElementsController.Session.Amount {
+        return CheckoutElementsController.Session.Amount(
+            amount: formatAmount(Decimal(minorUnitsAmount), currency: currency, locale: locale),
+            minorUnitsAmount: minorUnitsAmount
+        )
     }
 
     // TODO: Have Checkout Client return Session.Amount-shaped values so clients don't duplicate
     // minor-to-major conversion and locale-aware currency formatting.
-    private static func makeAmount(
-        _ minorUnitsAmount: Double,
+    private static func formatAmount(
+        _ minorUnitsAmount: Decimal,
         currency: String,
         locale: Locale,
         supportsSubcentPrecision: Bool = false
-    ) -> CheckoutElementsController.Session.Amount {
+    ) -> String {
         let minorUnitValueInMajorUnits = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency) // e.g. USD: 0.01
-        let decimalizedAmount = NSDecimalNumber(value: minorUnitsAmount).multiplying(by: minorUnitValueInMajorUnits) // e.g. 49,900 × 0.01 = 499.00
+        let decimalizedAmount = NSDecimalNumber(decimal: minorUnitsAmount).multiplying(by: minorUnitValueInMajorUnits) // e.g. 49,900 × 0.01 = 499.00
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.usesGroupingSeparator = true
@@ -37,10 +44,7 @@ extension CheckoutClientAPIResponse {
         }
         let formatted = formatter.string(from: decimalizedAmount)
             ?? "\(formatter.currencySymbol ?? "")\(decimalizedAmount)"
-        return CheckoutElementsController.Session.Amount(
-            amount: formatted,
-            minorUnitsAmount: minorUnitsAmount
-        )
+        return formatted
     }
 
     static func makeMinorUnitsAmountDivisor(currency: String) -> Int {
@@ -66,7 +70,6 @@ extension CheckoutClientAPIResponse {
                        let maximum = rawAdjustableQuantity.maximum,
                        let minimum = rawAdjustableQuantity.minimum {
                         adjustableQuantity = CheckoutElementsController.Session.AdjustableQuantity(
-                            enabled: true,
                             maximum: maximum,
                             minimum: minimum
                         )
@@ -78,27 +81,30 @@ extension CheckoutClientAPIResponse {
                         makeSessionTaxAmount(from: $0, currency: currency, locale: locale)
                     }
                     let publicAmountDetails = CheckoutElementsController.Session.OrderSummaryItem.OneTimePrice.Item.AmountDetails(
-                        total: makeAmount(Double(amountDetails.total), currency: currency, locale: locale),
-                        subtotal: makeAmount(Double(amountDetails.subtotal), currency: currency, locale: locale),
+                        total: makeAmount(amountDetails.total, currency: currency, locale: locale),
+                        subtotal: makeAmount(amountDetails.subtotal, currency: currency, locale: locale),
                         taxAmounts: taxAmounts.isEmpty ? nil : taxAmounts,
-                        taxInclusive: makeAmount(Double(amountDetails.taxInclusive), currency: currency, locale: locale),
-                        taxExclusive: makeAmount(Double(amountDetails.taxExclusive), currency: currency, locale: locale)
+                        taxInclusive: makeAmount(amountDetails.taxInclusive, currency: currency, locale: locale),
+                        taxExclusive: makeAmount(amountDetails.taxExclusive, currency: currency, locale: locale)
                     )
                     return CheckoutElementsController.Session.OrderSummaryItem.OneTimePrice.Item(
                         key: item.innerItemKey,
                         displayName: product.name,
                         images: product.images,
                         unitAmount: makeAmount(
-                            Double(unitAmount),
+                            unitAmount,
                             currency: currency,
                             locale: locale
                         ),
                         unitAmountDecimal: item.unitAmountDecimal.map {
-                            makeAmount(
-                                $0,
-                                currency: currency,
-                                locale: locale,
-                                supportsSubcentPrecision: true
+                            .init(
+                                amount: formatAmount(
+                                    $0,
+                                    currency: currency,
+                                    locale: locale,
+                                    supportsSubcentPrecision: true
+                                ),
+                                minorUnitsAmount: $0
                             )
                         },
                         unitLabel: item.unitLabel,
@@ -123,7 +129,7 @@ extension CheckoutClientAPIResponse {
         currency: String,
         locale: Locale
     ) -> CheckoutElementsController.Session.TaxAmount {
-        let publicAmount = makeAmount(Double(taxAmount.amount), currency: currency, locale: locale)
+        let publicAmount = makeAmount(taxAmount.amount, currency: currency, locale: locale)
         return CheckoutElementsController.Session.TaxAmount(
             amount: publicAmount.amount,
             minorUnitsAmount: publicAmount.minorUnitsAmount,
@@ -136,28 +142,16 @@ extension CheckoutClientAPIResponse {
     }
 
     static func makeTotals(
-        from checkoutItems: [CheckoutItem],
+        from totalSummary: TotalSummary,
         currency: String
     ) -> CheckoutElementsController.Session.Totals {
-        var subtotal = 0
-        var taxExclusive = 0
-        var taxInclusive = 0
-        var total = 0
-        for checkoutItem in checkoutItems {
-            for item in checkoutItem.oneTimePrice.items {
-                subtotal += item.amountDetails.subtotal
-                taxExclusive += item.amountDetails.taxExclusive
-                taxInclusive += item.amountDetails.taxInclusive
-                total += item.amountDetails.total
-            }
-        }
         return CheckoutElementsController.Session.Totals(
-            subtotal: makeAmount(subtotal, currency: currency),
-            taxExclusive: makeAmount(taxExclusive, currency: currency),
-            taxInclusive: makeAmount(taxInclusive, currency: currency),
+            subtotal: makeAmount(totalSummary.subtotal, currency: currency),
+            taxExclusive: makeAmount(totalSummary.taxExclusive, currency: currency),
+            taxInclusive: makeAmount(totalSummary.taxInclusive, currency: currency),
             // Discounts are not currently supported in unified mode.
             discount: makeAmount(0, currency: currency),
-            total: makeAmount(total, currency: currency)
+            total: makeAmount(totalSummary.total, currency: currency)
         )
     }
 

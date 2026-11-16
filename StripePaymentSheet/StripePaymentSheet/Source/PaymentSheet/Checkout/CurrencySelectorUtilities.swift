@@ -35,7 +35,7 @@ enum CurrencySelectorUtilities {
     static func buildSelectorItems(
         exchangeRateMeta: CheckoutElementsController.Session.ExchangeRateMeta,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
-        labelContent: CurrencySelectorElement.Appearance.LabelContent = .currencyCode,
+        labelContent: CurrencySelectorElement.Configuration.Appearance.LabelContent = .currencyCode,
         flagPrefixProvider: (String) -> NSAttributedString = { _ in NSAttributedString() }
     ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
         let localCurrency = CurrencyCode(exchangeRateMeta.localizedCurrency)
@@ -55,7 +55,7 @@ enum CurrencySelectorUtilities {
         return (left: left, right: right)
     }
 
-    static func makeSelectorItem(currency: CurrencyCode, total: Int, labelContent: CurrencySelectorElement.Appearance.LabelContent = .currencyCode, flagPrefix: NSAttributedString) -> TwoOptionSelectorItem {
+    static func makeSelectorItem(currency: CurrencyCode, total: Int, labelContent: CurrencySelectorElement.Configuration.Appearance.LabelContent = .currencyCode, flagPrefix: NSAttributedString) -> TwoOptionSelectorItem {
         let displayText = NSMutableAttributedString(attributedString: flagPrefix)
         if displayText.length > 0 {
             displayText.append(NSAttributedString(string: " \u{2009}"))

@@ -147,4 +147,132 @@ final class CustomerProviderTests: XCTestCase {
             XCTAssertNil(provider.legacyEphemeralKeyCredentials)
         }
     }
+
+    func testElementsSessionAuthenticationMatchesTheCustomerSource() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        let cases: [(CustomerProvider, [String: String], Bool)] = [
+            (.init(customer: nil), [:], false),
+            (
+                .init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")),
+                ["legacy_customer_ephemeral_key": "ek_test"],
+                false
+            ),
+            (
+                .init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")),
+                ["customer_session_client_secret": "cuss_test"],
+                true
+            ),
+            (.init(checkoutSession: checkoutSession), [:], false),
+        ]
+
+        for (provider, expectedParameters, usesCustomerSession) in cases {
+            var parameters: [String: Any] = ["unrelated": "preserved"]
+            provider.addElementsSessionParams(to: &parameters)
+
+            var expectedParameters = expectedParameters
+            expectedParameters["unrelated"] = "preserved"
+            XCTAssertEqual(parameters as? [String: String], expectedParameters)
+            XCTAssertEqual(provider.usesCustomerSession, usesCustomerSession)
+        }
+    }
+
+    func testCustomerAnalyticsIdentifyTheResolvedIntegration() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().makePublicSession()
+        let cases: [(CustomerProvider, String?)] = [
+            (.init(customer: nil), nil),
+            (.init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")), "legacy"),
+            (.init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")), "customer_session"),
+            (.init(checkoutSession: checkoutSession), "checkout_session"),
+        ]
+
+        for (provider, expected) in cases {
+            XCTAssertEqual(provider.analyticValue, expected)
+        }
+    }
+
+    func testCheckoutPermissionsUseTheCheckoutSession() {
+        for canDetach in [true, false] {
+            let session = CheckoutTestHelpers.makeSession([
+                "customer": ["id": "cus_checkout"],
+                "saved_payment_method_options": ["payment_method_remove": canDetach ? "enabled" : "disabled"],
+            ]).makePublicSession()
+            let provider = CustomerProvider(checkoutSession: session)
+
+            XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: .emptyElementsSession), canDetach)
+            XCTAssertTrue(provider.allowsPaymentMethodUpdate(elementsSession: .emptyElementsSession))
+        }
+    }
+
+    func testCustomerPermissionsUseTheElementsSession() {
+        let customerSessionProvider = CustomerProvider(
+            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")
+        )
+        let legacyProvider = CustomerProvider(
+            customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")
+        )
+        // Builds customer session data with the given mobile Payment Element settings
+        func mobilePaymentElementData(enabled: Bool, paymentMethodRemove: String) -> [String: Any] {
+            return [
+                "mobile_payment_element": [
+                    "enabled": enabled,
+                    "features": [
+                        "payment_method_save": "enabled",
+                        "payment_method_remove": paymentMethodRemove,
+                    ],
+                ],
+            ]
+        }
+        // Some cases expect removal and update to differ, so mixing up the two permissions fails the test
+        let cases: [(String, CustomerProvider, [String: Any]?, (removal: Bool, update: Bool))] = [
+            (
+                "Customer session with removal enabled",
+                customerSessionProvider,
+                mobilePaymentElementData(enabled: true, paymentMethodRemove: "enabled"),
+                (removal: true, update: true)
+            ),
+            (
+                "Customer session with the mobile Payment Element disabled",
+                customerSessionProvider,
+                mobilePaymentElementData(enabled: false, paymentMethodRemove: "enabled"),
+                (removal: false, update: false)
+            ),
+            (
+                "Customer session with removal disabled",
+                customerSessionProvider,
+                mobilePaymentElementData(enabled: true, paymentMethodRemove: "disabled"),
+                (removal: false, update: true)
+            ),
+            // The permissions come from the elements session, which has no customer session for legacy ephemeral key customers
+            (
+                "Legacy ephemeral key customer without a customer session",
+                legacyProvider,
+                nil,
+                (removal: true, update: false)
+            ),
+        ]
+
+        for (description, provider, customerSessionData, expected) in cases {
+            let elementsSession = STPElementsSession._testValue(
+                paymentMethodTypes: ["card"],
+                customerSessionData: customerSessionData
+            )
+
+            XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: elementsSession), expected.removal, description)
+            XCTAssertEqual(provider.allowsPaymentMethodUpdate(elementsSession: elementsSession), expected.update, description)
+        }
+    }
+
+    func testCheckoutAndGuestCustomersDoNotUseElementsSessionEphemeralKeys() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        let providers: [CustomerProvider] = [
+            .init(customer: nil),
+            .init(checkoutSession: checkoutSession),
+        ]
+        let elementsSession = STPElementsSession
+            .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_unrelated")
+
+        for provider in providers {
+            XCTAssertNil(provider.ephemeralKeySecret(basedOn: elementsSession))
+        }
+    }
 }

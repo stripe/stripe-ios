@@ -274,6 +274,47 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session.totals.total.minorUnitsAmount, 2000)
     }
 
+    func testClearLocalCustomerDataClearsLinkState() {
+        // Given a customer who has used Link
+        UserDefaults.standard.markLinkAsUsed()
+        XCTAssertTrue(UserDefaults.standard.customerHasUsedLink)
+        // ...and has a Link account in memory
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        // When the customer is reset
+        CheckoutElementsController.clearLocalCustomerData()
+
+        // Then the persisted Link state is cleared
+        XCTAssertFalse(UserDefaults.standard.customerHasUsedLink)
+        // ...and the in-memory Link account is cleared
+        XCTAssertNil(LinkAccountContext.shared.account)
+    }
+
+    func testClearLocalCustomerDataLogsAnalytic() {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+
+        CheckoutElementsController.clearLocalCustomerData()
+
+        let events = analyticsClient._testLogHistory.filter {
+            $0["event"] as? String == "checkout_elements.clear_local_customer_data"
+        }
+        XCTAssertEqual(events.count, 1)
+    }
+
     private func promotionCode(in session: CheckoutElementsController.Session?) -> String? {
         session?.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
     }

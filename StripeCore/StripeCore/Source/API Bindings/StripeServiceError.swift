@@ -35,7 +35,7 @@ import Foundation
     /// The Stripe API request ID, if available. Looks like `req_123`.
     @_spi(InternalOnlyAPI) public var requestID: String?
 
-    /// Uses the server's optional message instead of the SDK's localized error messages.
+    /// Uses the server's message, or a generic message when it is missing, instead of the SDK's localized error messages.
     /// Set by Checkout, never encoded or read from an API response.
     @_spi(InternalOnlyAPI) public var useServerErrorMessage = false
 

@@ -14,8 +14,6 @@
 
 "Add bank account" = "Dodaj bančni račun";
 
-"Add card" = "Dodaj kartico";
-
 "Add new card" = "Dodajte novo kartico";
 
 "Add new payment method" = "Dodaj nov način plačila";
@@ -92,7 +90,7 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Z navedbo svojega e-poštnega naslova se strinjate, da boste ustvarili račun ponudnika %1$@ in shranili plačilne podatke na %1$@ v skladu s <terms>Pogoji</terms> in <privacy>Pravilnikom o zasebnosti</privacy> ponudnika %1$@.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Z navedbo podatkov o plačilu in potrditvijo tega plačila pooblaščate (A) podjetje %@ in družbo Stripe, našega ponudnika plačilnih storitev, da posreduje navodila vaši banki za bremenitev vašega računa, in (B) vašo banko, da bremeni vaš račun v skladu s temi navodili. Vaše pravice vključujejo tudi pravico do povračila denarnih sredstev s strani vaše banke v skladu s pogoji in določili vaše pogodbe z banko. Povračilo denarnih sredstev morate zahtevati v 8 tednih od dneva bremenitve vašega računa. Vaše pravice so podrobno opisane na izpisku, ki ga lahko pridobite v banki. Strinjate se s prejemom obvestil za prihodnje bremenitve največ 2 dni pred njihovo izvedbo.";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Z navedbo svojih podatkov o plačilu in potrditvijo tega plačila pooblaščate (A) %@ in Stripe, našega ponudnika plačilnih storitev, da vaši banki pošljeta navodila za obremenitev vašega računa, ter (B) vašo banko, da v skladu s temi navodili obremeni vaš račun. V okviru svojih pravic ste upravičeni do povračila s strani svoje banke v skladu s pogoji in določili vaše pogodbe z banko. Zahtevek za povračilo morate vložiti v 8 tednih od datuma obremenitve vašega računa. Vaše pravice so pojasnjene v izjavi, ki jo lahko pridobite pri svoji banki. Strinjate se, da boste obvestila o prihodnjih obremenitvah računa prejemali največ 2 dni pred njihovo izvedbo.";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Z navedbo svoje telefonske številke se strinjate, da boste ustvarili račun ponudnika %1$@ in shranite plačilne podatke na %1$@ v skladu s <terms>Pogoji</terms> in <privacy>Pravilnikom o zasebnosti</privacy> ponudnika %1$@.";
 
@@ -132,7 +130,7 @@
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke ali aplikaciji za plačilo v %@, da zaključite nakup.";
 
-"Confirm the payment in your bank's app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke %@, da zaključite nakup.";
+"Confirm the payment in your bank's app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji svoje banke v %@, da dokončate nakup.";
 
 "Confirm your CVC" = "Potrdite svojo kodo CVC";
 
@@ -182,7 +180,7 @@
 
 "Hide details" = "Skrij podrobnosti";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Potrjujem, da bo družba Stripe zbirala direktne obremenitve v imenu podjetja %@ ter da sem lastnik računa in edina oseba, ki lahko odobri bremenitve s tega računa.";
+"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Razumem, da bo Stripe izvajal direktne obremenitve v imenu %@, in potrjujem, da sem imetnik računa ter edina oseba, katere soglasje je potrebno za izvajanje obremenitev tega računa.";
 
 "IBAN" = "IBAN";
 

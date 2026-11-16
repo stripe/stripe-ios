@@ -80,7 +80,7 @@ enum LinkUI {
 
     // MARK: - Margins
 
-    static let buttonMargins: NSDirectionalEdgeInsets = .insets(amount: 16)
+    static let buttonMargins: NSDirectionalEdgeInsets = .insets(top: 14, leading: 16, bottom: 14, trailing: 16)
 
     static let compactButtonMargins: NSDirectionalEdgeInsets = .insets(top: 12, leading: 16, bottom: 12, trailing: 16)
 
@@ -280,9 +280,9 @@ extension LinkUI {
         appearance.shadow = .disabled
 
         // Primary button
-        appearance.primaryButton.textColor = .linkContentOnPrimaryButton
-        appearance.primaryButton.backgroundColor = .linkButtonBrand
-        appearance.primaryButton.successBackgroundColor = .linkButtonBrand
+        appearance.primaryButton.textColor = .linkContentOnButtonPrimary
+        appearance.primaryButton.backgroundColor = .linkButtonPrimary
+        appearance.primaryButton.successBackgroundColor = .linkButtonPrimary
         appearance.primaryButton.borderWidth = 0
         appearance.primaryButton.cornerRadius = LinkUI.cornerRadius
         appearance.primaryButton.font = LinkUI.font(forTextStyle: .bodyEmphasized)

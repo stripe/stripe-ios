@@ -40,7 +40,7 @@
 
 "Hmm, that code didn’t work. Double check it and try again." = "De code werkt niet. Controleer de code en probeer het nogmaals.";
 
-"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Ongeldig bankrekeningnummer: moet minstens %li tekens (alleen cijfers) bevatten.";
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Ongeldig bankrekeningnummer: mag maximaal %li cijfers lang zijn en uitsluitend uit getallen bestaan.";
 
 "Invalid routing number." = "Ongeldig routingnummer.";
 

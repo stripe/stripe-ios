@@ -200,16 +200,22 @@ private extension Optional where Wrapped == Double {
 }
 
 private extension Optional where Wrapped == CheckoutElementsController.Session.AdjustableQuantity {
-    /// Example: `1...99 (enabled: true)`; `nil` remains `nil`.
+    /// Example: `1...99`; `nil` remains `nil`.
     var debugValue: String {
         guard let value = self else {
             return "nil"
         }
-        return "\(value.minimum)...\(value.maximum) (enabled: \(value.enabled))"
+        return "\(value.minimum)...\(value.maximum)"
     }
 }
 
 private extension CheckoutElementsController.Session.Amount {
+    var debugValue: String {
+        String(reflecting: amount)
+    }
+}
+
+private extension CheckoutElementsController.Session.DecimalAmount {
     var debugValue: String {
         String(reflecting: amount)
     }

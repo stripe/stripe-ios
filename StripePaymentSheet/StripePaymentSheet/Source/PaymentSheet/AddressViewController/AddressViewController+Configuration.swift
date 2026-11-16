@@ -170,5 +170,24 @@ public extension AddressViewController {
         /// When provided, shows a checkbox that allows customers to populate shipping fields with billing address data.
         @_spi(InternalOnlyAPI) public var billingAddress: DefaultAddressDetails?
 
+        /// Whether `AddressViewController` collects a name. Defaults to `.auto`.
+        @_spi(InternalOnlyAPI) public var nameField: NameField = .auto
+
+        /// Whether `AddressViewController` collects a name.
+        @_spi(InternalOnlyAPI) public enum NameField {
+            /// The name field is displayed and the customer is required to fill it in.
+            case auto
+            /// The name field is not displayed. The result's name is `defaultValues.name`, if any.
+            case never
+        }
+    }
+}
+
+extension AddressViewController.Configuration.DefaultAddressDetails {
+    /// Whether the address's country is in `allowedCountries`. An address without a country, or an
+    /// empty `allowedCountries`, allows any country.
+    func isCountryAllowed(_ allowedCountries: [String]) -> Bool {
+        guard !allowedCountries.isEmpty, let country = address.country else { return true }
+        return allowedCountries.contains(country)
     }
 }

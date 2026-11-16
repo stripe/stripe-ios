@@ -653,9 +653,13 @@ import UIKit
         self.currentlyRenderedSettings = .defaultValues()
         updateNativeSheetOverride(settings)
         updateForcedConsumerLinkBrand(settings)
+        updateMobileSessionFlag(settings)
+        updateStripeAPIOverrides(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
             self?.updateNativeSheetOverride(newValue)
+            // Before `load` below, so the reload uses the new API host and SDK version
+            self?.updateStripeAPIOverrides(newValue)
             if newValue.autoreload == .on {
                 // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
                 DispatchQueue.main.async {
@@ -679,6 +683,7 @@ import UIKit
             FinancialConnectionsSDKAvailability.localFcLiteOverride = enableFcLite
 
             self?.updateForcedConsumerLinkBrand(newValue)
+            self?.updateMobileSessionFlag(newValue)
         }.store(in: &subscribers)
 
         // Listen for analytics
@@ -695,6 +700,31 @@ import UIKit
     private func updateForcedConsumerLinkBrand(_ settings: PaymentSheetTestPlaygroundSettings) {
         PaymentSheetLinkAccount.forcedConsumerLinkBrandForTesting =
             settings.forceOnelinkConsumer == .on ? .onelink : nil
+    }
+
+    private func updateMobileSessionFlag(_ settings: PaymentSheetTestPlaygroundSettings) {
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled =
+            settings.mobileSessionSidecar == .on
+    }
+
+    /// The `customStripeAPI` host, if it applies. Accepts a bare host (as on Android) or a URL.
+    static func customStripeAPIHost(_ settings: PaymentSheetTestPlaygroundSettings) -> String? {
+        guard settings.merchantCountryCode == .custom,
+              let value = settings.customStripeAPI?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !value.isEmpty else {
+            return nil
+        }
+        return value.contains("://") ? URL(string: value)?.host : value
+    }
+
+    private func updateStripeAPIOverrides(_ settings: PaymentSheetTestPlaygroundSettings) {
+        if let host = Self.customStripeAPIHost(settings), let apiURL = URL(string: "https://\(host)/v1") {
+            STPAPIClient.shared.apiURL = apiURL
+        } else {
+            STPAPIClient.shared.apiURL = STPAPIClient().apiURL
+        }
+        let sdkVersion = settings.sdkVersionOverride?.trimmingCharacters(in: .whitespacesAndNewlines)
+        STPAPIClient.userAgentSDKVersionOverride = sdkVersion?.isEmpty == false ? sdkVersion : nil
     }
 
     private func updateNativeSheetOverride(_ settings: PaymentSheetTestPlaygroundSettings) {
@@ -752,6 +782,22 @@ import UIKit
             self.load(reinitializeControllers: true)
         }))
 
+        rootViewController.present(vc, animated: true, completion: nil)
+    }
+    func lpmScenariosTapped() {
+        let vc = UIHostingController(rootView: LPMScenarioPickerView(settings: settings, onSelect: { scenario in
+            self.rootViewController.dismiss(animated: true, completion: nil)
+            PlaygroundController.resetCustomer()
+            var updatedSettings = self.settings
+            scenario.apply(to: &updatedSettings)
+            self.settings = updatedSettings
+            // Settings changes only reload on their own when autoreload is on
+            if updatedSettings.autoreload == .off {
+                self.load(reinitializeControllers: true)
+            }
+        }, onCancel: {
+            self.rootViewController.dismiss(animated: true, completion: nil)
+        }))
         rootViewController.present(vc, animated: true, completion: nil)
     }
     func paymentMethodOptionsSetupFutureUsageSettingsTapped() {
@@ -1043,20 +1089,22 @@ extension PlaygroundController {
             body["use_manual_capture"] = true
         }
 
-        // Send custom keys to backend if provided
-        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
-            body["custom_secret_key"] = customSecretKey
-        }
+        body.merge(customMerchantParameters()) { _, custom in custom }
         if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
-            body["custom_publishable_key"] = customPublishableKey
             STPAPIClient.shared.publishableKey = customPublishableKey
         }
 
         if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
-            body["supported_payment_methods"] = supportedPaymentMethods
+            let paymentMethodTypes = supportedPaymentMethods
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
                 .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+            body["supported_payment_methods"] = paymentMethodTypes
+            // Vipps is in preview, so its intents must be created with the preview API version.
+            // 2020-08-27 is the backend's default intent API version.
+            if paymentMethodTypes.contains("vipps") {
+                body["stripe_version"] = "2020-08-27; vipps_preview=v1"
+            }
         }
 
         // Only set PMO SFU on the Intent if we're Intent-first, never set it for deferred intents.
@@ -1079,6 +1127,29 @@ extension PlaygroundController {
             }
         }
         return body
+    }
+
+    /// The custom merchant's keys and Stripe API host, which the backend needs on every request for that merchant.
+    private func customMerchantParameters() -> [String: Any] {
+        var parameters: [String: Any] = [:]
+        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
+            parameters["custom_secret_key"] = customSecretKey
+        }
+        if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
+            parameters["custom_publishable_key"] = customPublishableKey
+        }
+        if let customStripeAPIHost = Self.customStripeAPIHost(settings) {
+            parameters["custom_stripe_api"] = customStripeAPIHost
+        }
+        return parameters
+    }
+
+    /// `/confirm_intent` on the same backend as `checkoutEndpoint`, so a local backend handles both.
+    var confirmEndpoint: String {
+        guard let checkoutURL = URL(string: checkoutEndpoint), checkoutURL.lastPathComponent == "checkout" else {
+            return PaymentSheetTestPlaygroundSettings.confirmEndpoint
+        }
+        return checkoutURL.deletingLastPathComponent().appendingPathComponent("confirm_intent").absoluteString
     }
 
 }
@@ -1197,6 +1268,7 @@ extension PlaygroundController {
             "link_mode": settings.linkEnabledMode.rawValue,
             "return_url": configuration.returnURL ?? "",
         ] as [String: Any]
+        body.merge(customMerchantParameters()) { _, custom in custom }
 
         // Add either payment method info or confirmation token info
         if let confirmationTokenId {
@@ -1206,7 +1278,7 @@ extension PlaygroundController {
             body["should_save_payment_method"] = shouldSavePaymentMethod
         }
 
-        makeRequest(with: PaymentSheetTestPlaygroundSettings.confirmEndpoint, body: body, completionHandler: { data, response, error in
+        makeRequest(with: confirmEndpoint, body: body, completionHandler: { data, response, error in
             guard
                 error == nil,
                 let data = data,

@@ -82,6 +82,7 @@ let package = Package(
         ),
         .target(
             name: "Stripe3DS2",
+            dependencies: ["StripeCore"],
             path: "Stripe3DS2/Stripe3DS2",
             exclude: ["Info.plist", "Resources/CertificateFiles", "include/Stripe3DS2-Prefix.pch"],
             resources: [

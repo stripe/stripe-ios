@@ -14,8 +14,6 @@
 
 "Add bank account" = "Adăugare cont bancar";
 
-"Add card" = "Adăugare card";
-
 "Add new card" = "Adăugare card nou";
 
 "Add new payment method" = "Adăuga o nouă metodă de plată";
@@ -62,7 +60,7 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Prin continuarea către Amazon Pay, permiteți %@ să vă taxeze contul Amazon Pay pentru plățile viitoare în conformitate cu termenii acesteia.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Prin continuarea către Klarna, permiteți %1$@ să vă taxeze contul Klarna pentru plățile viitoare în conformitate cu termenii acesteia și termenii Klarna. Puteți schimba acest lucru în orice moment din aplicația dvs. Klarna sau contactându-ne la %2$@.";
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Prin continuarea către Klarna, permiteți %1$@ să vă taxeze contul Klarna pentru plăți viitoare în conformitate cu termenii săi și termenii Klarna. Puteți modifica acest lucru în orice moment în aplicația dvs. Klarna sau contactând %2$@.";
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Prin continuarea cu PayPal, permiteți %@ să vă taxeze contul PayPal pentru plățile viitoare în conformitate cu termenii acesteia.";
 
@@ -242,7 +240,7 @@
 
 "Or use a card" = "Sau utilizează un card";
 
-"Pay %@" = "Adaugă %@";
+"Pay %@" = "Plătiți %@";
 
 "Pay another way" = "Folosiți altă metodă de plată";
 

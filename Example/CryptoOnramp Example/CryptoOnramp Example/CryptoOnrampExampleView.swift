@@ -114,7 +114,7 @@ struct CryptoOnrampExampleView: View {
                         selectedScopes = Set(OAuthScopes.allScopes)
                     }
                 )
-                .presentationDetents([.medium])
+                .presentationDetents([.medium, .large])
             }
             .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
                 if let coordinator {

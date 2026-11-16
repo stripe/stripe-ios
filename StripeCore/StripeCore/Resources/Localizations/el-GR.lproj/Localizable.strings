@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Ένα πρόγραμμα εντοπισμού σφαλμάτων είναι συνδεδεμένο στην Εφαρμογή.";
+
+"An emulator is being used to run the App." = "Ένας εξομοιωτής χρησιμοποιείται για την εκτέλεση της Εφαρμογής.";
+
 "An error occurred. Please try again." = "Προέκυψε σφάλμα. Δοκιμάστε ξανά.";
+
+"Cancel" = "Ακύρωση";
 
 "Card brand was not updated. Please try again." = "Η επωνυμία κάρτας δεν ενημερώθηκε. Δοκιμάστε ξανά.";
 
 "Close" = "Κλείσιμο";
+
+"Collapsed" = "Συμπτυγμένο";
 
 "Confirm it's you" = "Επιβεβαιώστε ότι είστε εσείς";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Εισαγάγετε τον κωδικό που εστάλη στο %@.";
 
+"Expanded" = "Αναπτυγμένο";
+
 "Failed to connect" = "Αποτυχία σύνδεσης";
+
+"Loading" = "Γίνεται φόρτωση";
+
+"No" = "Όχι";
 
 "Resend code" = "Επανάληψη αποστολής κωδικού";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Σάρωση κάρτας";
 
+"Secure checkout" = "Ασφαλές ταμείο";
+
+"Selected" = "Επιλεγμένο";
+
 "The IBAN you entered is invalid." = "Ο κωδικός IBAN που εισαγάγατε δεν είναι έγκυρος.";
+
+"The OS or the OS Version is not supported." = "Το OS ή η Έκδοση του OS δεν υποστηρίζεται.";
+
+"The device is jailbroken." = "Η συσκευή δεν διαθέτει περιορισμούς ασφαλείας.";
+
+"The integrity of the SDK has been tampered." = "Η ακεραιότητα του SDK έχει αλλοιωθεί.";
 
 "There was an error processing your card -- try again in a few seconds" = "Προέκυψε απροσδόκητο σφάλμα κατά την επεξεργασία της κάρτας σας -- δοκιμάστε ξανά σε μερικά δευτερόλεπτα";
 
 "There was an unexpected error -- try again in a few seconds" = "Προέκυψε απροσδόκητο σφάλμα -- δοκιμάστε ξανά σε μερικά δευτερόλεπτα";
 
+"Timeout" = "Λήξη χρονικού ορίου";
+
 "Try again" = "Δοκιμάστε ξανά";
 
+"Unselected" = "Μη επιλεγμένο";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Χρησιμοποιούμε τη Stripe για να επαληθεύσουμε τα στοιχεία της κάρτας σας. Η Stripe μπορεί να χρησιμοποιεί και να αποθηκεύει τα δεδομένα σας σύμφωνα με την πολιτική απορρήτου της. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Μάθετε περισσότερα</u></a>";
+
+"Yes" = "Ναι";
 
 "Your card has expired" = "Η κάρτα σας έχει λήξει";
 

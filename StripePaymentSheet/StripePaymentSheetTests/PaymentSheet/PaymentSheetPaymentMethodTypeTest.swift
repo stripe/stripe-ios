@@ -1203,6 +1203,76 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(types, [.stripe(.card), .linkCardBrand])
     }
 
+    func testPaymentMethodTypesLinkCardBrand_goesLast() {
+        // Given Link card brand is available and card isn't first
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.cashApp, .card, .klarna])
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+
+        // When filtering
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(
+                intent: intent,
+                linkMode: .linkCardBrand,
+                linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+                linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
+            ),
+            configuration: configuration
+        )
+
+        // Then the bank option goes last
+        XCTAssertEqual(types, [.stripe(.cashApp), .stripe(.card), .stripe(.klarna), .linkCardBrand])
+    }
+
+    func testPaymentMethodTypesInstantDebits_goesLast() {
+        // Given Instant Debits is available and card isn't first
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.cashApp, .card, .link, .klarna])
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+
+        // When filtering
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: instantDebitsElementsSession(intent: intent),
+            configuration: configuration
+        )
+
+        // Then the bank option goes last
+        XCTAssertEqual(types, [.stripe(.cashApp), .stripe(.card), .stripe(.klarna), .instantDebits])
+    }
+
+    func testPaymentMethodTypesInstantDebits_merchantPaymentMethodOrder() {
+        // Given Instant Debits is available
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link, .cashApp, .klarna])
+        let elementsSession = instantDebitsElementsSession(intent: intent)
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+
+        // When the merchant orders the bank option explicitly
+        configuration.paymentMethodOrder = ["klarna", "instant_debits"]
+        let explicitlyOrderedTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration)
+
+        // Then the merchant's order wins, and the rest keep the default order
+        XCTAssertEqual(explicitlyOrderedTypes, [.stripe(.klarna), .instantDebits, .stripe(.card), .stripe(.cashApp)])
+
+        // When the merchant orders other payment methods only
+        configuration.paymentMethodOrder = ["cashapp"]
+        let partiallyOrderedTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration)
+
+        // Then the bank option stays last among the rest
+        XCTAssertEqual(partiallyOrderedTypes, [.stripe(.cashApp), .stripe(.card), .stripe(.klarna), .instantDebits])
+    }
+
+    private func instantDebitsElementsSession(intent: Intent) -> STPElementsSession {
+        return ._testValue(
+            intent: intent,
+            linkMode: .linkPaymentMethod,
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
+        )
+    }
+
     func testPaymentMethodTypesLinkCardBrand_noDefaults() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         var configuration = PaymentSheet.Configuration()
