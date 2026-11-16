@@ -2,15 +2,6 @@
   "originHash" : "fcce19e7e309780a0b74c527ee647096679de983f50bf6bbfe7e4c3868ec2163",
   "pins" : [
     {
-      "identity" : "identity-ios-mediapipe",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/stripe/identity-ios-mediapipe",
-      "state" : {
-        "revision" : "66147f847d308460cb4827fc1f05fa99fc201836",
-        "version" : "1.0.0"
-      }
-    },
-    {
       "identity" : "ios-snapshot-test-case",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/uber/ios-snapshot-test-case",
