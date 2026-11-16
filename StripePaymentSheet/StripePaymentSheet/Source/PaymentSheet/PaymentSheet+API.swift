@@ -661,6 +661,7 @@ extension PaymentSheet {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         confirmationChallenge: ConfirmationChallenge?,
         clientAttributionMetadata: STPClientAttributionMetadata,
+        linkTotalUpdater: LinkTotalUpdater? = nil,
         isSettingUp: @escaping (STPPaymentMethodType) -> Bool,
         setAllowRedisplay: @escaping (IntentConfirmParams, STPPaymentMethodType) -> Void,
         confirmWithPaymentMethodParams: @escaping (STPPaymentMethodParams, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState) -> Void,
@@ -763,6 +764,7 @@ extension PaymentSheet {
                     logPayment: false,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
+                    totalUpdater: linkTotalUpdater,
                     confirmHandler: confirmHandler
                 )
                 linkController.presentAsSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in

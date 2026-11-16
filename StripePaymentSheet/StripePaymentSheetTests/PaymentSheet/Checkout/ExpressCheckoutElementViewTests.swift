@@ -298,7 +298,7 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         )
     }
 
-    func testLinkButtonHiddenWhenAutomaticTaxUsesBillingAddress() {
+    func testLinkButtonHiddenForWebLinkWhenAutomaticTaxUsesBillingAddress() {
         // Given a session that calculates automatic tax from the billing address
         let apiResponse = CheckoutTestHelpers.makeSessionWithWalletTypes(
             ["link"],
@@ -311,18 +311,21 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertFalse(apiResponse.elementsSession.value.disableLinkForAutomaticTaxBilling)
         let session = CheckoutElementsController.Session(apiResponse: apiResponse, clientSecret: checkoutConfiguration.clientSecret, localState: .empty, configuration: checkoutConfiguration)
 
-        let reasons = ExpressCheckoutElementUtilities.linkDisabledReasonsWithoutCheckoutRequirements(
+        let webReasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
+            for: session.elementsSession,
+            configuration: configuration,
+            usesWebLink: true,
+            requiresShippingAddress: false,
+            billingDetailsCollectionRequired: false
+        )
+        let nativeReasons = ExpressCheckoutElementUtilities.linkDisabledReasonsWithoutCheckoutRequirements(
             for: session.elementsSession,
             configuration: configuration)
 
-        // Then Link is hidden because it cannot update billing-based automatic tax
+        // Then web Link is hidden because it cannot update billing-based automatic tax, but native Link can
         XCTAssertTrue(session.elementsSession.disableLinkForAutomaticTaxBilling)
-        XCTAssertFalse(session.availableExpressCheckoutPaymentMethods.contains(.link))
-        XCTAssertTrue(reasons.contains(.automaticTaxAddress))
-        XCTAssertFalse(
-            ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
-                .contains(.link)
-        )
+        XCTAssertTrue(webReasons.contains(.automaticTaxAddress))
+        XCTAssertFalse(nativeReasons.contains(.automaticTaxAddress))
     }
 
     func testLinkButtonHiddenWhenShippingAddressIsRequired() {
@@ -392,17 +395,26 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertTrue(ExpressCheckoutElementUtilities.availablePaymentMethods(for: nativeResponse, configuration: nativeConfiguration).contains(.link))
     }
 
-    func testLinkButtonHiddenWhenDisabledForAutomaticTaxBilling() {
-        // Given Link is disabled because the Checkout Session uses automatic tax billing
+    func testLinkButtonHiddenForWebLinkWhenDisabledForAutomaticTaxBilling() {
+        // Given Link is disabled for web Link because the Checkout Session uses automatic tax billing
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"]).makePublicSession()
         session.elementsSession.disableLinkForAutomaticTaxBilling = true
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
 
         // When
-        let buttons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
+        let webButtons = ExpressCheckoutElementUtilities.availablePaymentMethods(
+            for: session.elementsSession,
+            configuration: configuration,
+            applePayMerchantId: nil,
+            usesWebLink: true,
+            requiresShippingAddress: false,
+            billingDetailsCollectionRequired: false
+        )
+        let nativeButtons = ExpressCheckoutElementUtilities.availablePaymentMethodsWithoutCheckoutRequirements(for: session.elementsSession, configuration: configuration)
 
-        // Then
-        XCTAssertFalse(buttons.contains(.link))
+        // Then only native Link is shown
+        XCTAssertFalse(webButtons.contains(.link))
+        XCTAssertTrue(nativeButtons.contains(.link))
     }
 
     func testApplePayButtonHiddenWhenDisabledOnSession() {

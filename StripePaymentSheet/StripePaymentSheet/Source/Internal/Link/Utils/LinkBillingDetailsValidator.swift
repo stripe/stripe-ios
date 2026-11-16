@@ -44,13 +44,13 @@ class LinkBillingDetailsValidator {
 
         let effectivePaymentDetails = consumerPaymentDetails.update(
             with: effectiveBillingDetails,
-            basedOn: context.configuration.billingDetailsCollectionConfiguration
+            basedOn: billingDetailsCollectionConfigurationForDefaults
         )
 
         let hasRequiredBillingDetailsNow = effectivePaymentDetails.supports(
             context.configuration.billingDetailsCollectionConfiguration,
             in: linkAccount.currentSession
-        )
+        ) && satisfiesAutomaticTaxRequirements(effectivePaymentDetails)
 
         if hasRequiredBillingDetailsNow {
             // We have filled in all the missing fields. Now, update the payment details and confirm the intent.
@@ -77,6 +77,11 @@ class LinkBillingDetailsValidator {
     }
 
     private func isMissingRequestedBillingDetails(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+        if !satisfiesAutomaticTaxRequirements(paymentDetails) {
+            // Tax can't be calculated without these, so recollect them regardless of the merchant's setting.
+            return true
+        }
+
         guard context.configuration.link.collectMissingBillingDetailsForExistingPaymentMethods else {
             // Don't recollect even if details are missing
             return false
@@ -88,6 +93,24 @@ class LinkBillingDetailsValidator {
         )
 
         return !paymentDetailsAreSupported
+    }
+
+    /// Whether the payment details' billing address is enough to calculate automatic tax, if the total depends on it.
+    private func satisfiesAutomaticTaxRequirements(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+        guard context.requiresAutomaticTaxBillingAddress else {
+            return true
+        }
+        return AutomaticTaxBillingAddressRequirements.areSatisfied(by: paymentDetails.billingAddress)
+    }
+
+    /// The configuration that determines which merchant-provided defaults fill in missing billing details.
+    /// When tax needs the billing address, fill in a full address so the tax requirements can be met.
+    private var billingDetailsCollectionConfigurationForDefaults: PaymentSheet.BillingDetailsCollectionConfiguration {
+        var configuration = context.configuration.billingDetailsCollectionConfiguration
+        if context.requiresAutomaticTaxBillingAddress {
+            configuration.address = .full
+        }
+        return configuration
     }
 
     private func updateBillingDetails(

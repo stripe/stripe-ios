@@ -95,7 +95,8 @@ enum ExpressCheckoutElementUtilities {
         if configuration.linkConfiguration.display == .never {
             reasons.append(.linkConfiguration)
         }
-        if elementsSession.disableLinkForAutomaticTaxBilling {
+        // Native Link can update its total when the billing address changes, but web Link can't.
+        if elementsSession.disableLinkForAutomaticTaxBilling && usesWebLink {
             reasons.append(.automaticTaxAddress)
         }
         if requiresShippingAddress {

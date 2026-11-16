@@ -198,6 +198,11 @@ extension PayWithLinkViewController {
         }
 
         var confirmButtonStatus: ConfirmButton.Status {
+            if context.totalUpdater?.isUpdating == true {
+                // Keep showing the current total with a spinner until it reflects the selected payment method's billing address.
+                return .spinnerWithInteractionDisabled
+            }
+
             if !selectedPaymentMethodIsSupported {
                 // Selected payment method not supported
                 return .disabled

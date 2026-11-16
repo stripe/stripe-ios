@@ -144,7 +144,8 @@ extension PaymentSheet {
             reasons.append(.billingDetailsCollection)
         }
 
-        if elementsSession.disableLinkForAutomaticTaxBilling {
+        // Native Link can update its total when the billing address changes, but web Link can't.
+        if elementsSession.disableLinkForAutomaticTaxBilling && !deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
             reasons.append(.automaticTaxBillingAddress)
         }
 

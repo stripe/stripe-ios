@@ -63,6 +63,7 @@ final class PayWithNativeLinkController {
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let confirmationChallenge: ConfirmationChallenge?
+    private let totalUpdater: LinkTotalUpdater?
     // If you pass a confirmHandler, it's used to confirm the payment. Otherwise, PaymentSheet.confirm is used.
     private let confirmHandler: ConfirmHandler?
 
@@ -79,6 +80,7 @@ final class PayWithNativeLinkController {
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil,
+        totalUpdater: LinkTotalUpdater? = nil,
         confirmHandler: ConfirmHandler? = nil
     ) {
         self.mode = mode
@@ -93,6 +95,7 @@ final class PayWithNativeLinkController {
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
         self.confirmationChallenge = confirmationChallenge
+        self.totalUpdater = totalUpdater
         self.confirmHandler = confirmHandler
     }
 
@@ -177,7 +180,9 @@ final class PayWithNativeLinkController {
                 analyticsHelper: self.analyticsHelper,
                 supportedPaymentMethodTypes: self.supportedPaymentMethodTypes,
                 linkAppearance: self.linkAppearance,
-                linkConfiguration: self.linkConfiguration
+                linkConfiguration: self.linkConfiguration,
+                // The total can only be updated in full mode, where Link shows the amount.
+                totalUpdater: launchedFromFlowController ? nil : self.totalUpdater
             )
 
             payWithLinkVC.payWithLinkDelegate = self
