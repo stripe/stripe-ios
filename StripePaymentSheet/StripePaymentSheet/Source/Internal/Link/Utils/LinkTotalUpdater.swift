@@ -35,16 +35,22 @@ final class LinkTotalUpdater {
 
     private var syncedKey: String?
     private var inFlight: (key: String, task: Task<Int, Swift.Error>)?
-    private var observers: [() -> Void] = []
+    private var observers: [(isAlive: () -> Bool, notify: () -> Void)] = []
 
     init(amount: Int, handler: @escaping Handler) {
         self.amount = amount
         self.handler = handler
     }
 
-    /// Registers a closure that's called whenever `amount` or `isUpdating` changes.
-    func addObserver(_ observer: @escaping () -> Void) {
-        observers.append(observer)
+    /// Registers a closure that's called whenever `amount` or `isUpdating` changes, for as long as `owner` is alive.
+    func addObserver<Owner: AnyObject>(_ owner: Owner, handler: @escaping (Owner) -> Void) {
+        observers.append((
+            isAlive: { [weak owner] in owner != nil },
+            notify: { [weak owner] in
+                guard let owner else { return }
+                handler(owner)
+            }
+        ))
     }
 
     /// Syncs the total for the given billing address.
@@ -123,7 +129,8 @@ final class LinkTotalUpdater {
     }
 
     private func notifyObservers() {
-        observers.forEach { $0() }
+        observers.removeAll { !$0.isAlive() }
+        observers.forEach { $0.notify() }
     }
 
     private static func key(for billingAddress: STPPaymentMethodAddress?) -> String {
