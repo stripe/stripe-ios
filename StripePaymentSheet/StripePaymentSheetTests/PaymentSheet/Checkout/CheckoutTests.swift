@@ -97,6 +97,326 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNotNil(saveCheckbox)
     }
 
+    func testLiveEditedSavedCardKeepsEditsAfterLocalShippingUpdate() async throws {
+        // Given a disposable customer with one saved card (exp 12/2040, no billing address) on the real playground backend
+        HTTPStubs.removeAllStubs()
+        let checkout = try await makeCustomerLogicCheckout(withSavedCard: true)
+        let embedded = checkout.getPaymentElement().embeddedPaymentElement
+        let card = try XCTUnwrap(embedded.savedPaymentMethods.first)
+        XCTAssertEqual(card.card?.expMonth, 12, "The saved card must start with the expiry it was created with")
+        XCTAssertEqual(card.card?.expYear, 2040, "The saved card must start with the expiry it was created with")
+        // The shipping change below must take the local-only path rather than refreshing the session from the server.
+        XCTAssertFalse(checkout.session.shouldSendTaxRegion(for: "shipping"), "The shipping update must be local-only")
+        let canUpdate = embedded.loadResult.customerProvider.allowsPaymentMethodUpdate(
+            elementsSession: embedded.elementsSession
+        )
+        XCTAssertTrue(canUpdate, "Checkout must allow editing saved cards")
+        // ...and the saved card editor configured the way Embedded configures it
+        let updateController = UpdatePaymentMethodViewController(
+            removeSavedPaymentMethodMessage: nil,
+            configuration: .init(
+                paymentMethod: card,
+                appearance: embedded.configuration.appearance,
+                billingDetailsCollectionConfiguration: embedded.configuration.billingDetailsCollectionConfiguration,
+                hostedSurface: .paymentSheet,
+                checkoutSessionID: checkout.session.id,
+                canRemove: true,
+                canUpdate: canUpdate,
+                isCBCEligible: false
+            )
+        )
+
+        // When the customer changes the expiry to 11/41 and enters the billing ZIP the editor requires
+        var textFields: [String: UITextField] = [:]
+        var views: [UIView] = [updateController.view]
+        while let view = views.popLast() {
+            if let textField = view as? UITextField, let identifier = textField.accessibilityIdentifier {
+                textFields[identifier] = textField
+            }
+            views.append(contentsOf: view.subviews)
+        }
+        let expiryField = try XCTUnwrap(textFields["MM / YY"], "The editor must show an editable expiry field")
+        let postalCodeField = try XCTUnwrap(textFields["ZIP"], "The editor must show a US billing ZIP field")
+        expiryField.text = "1141"
+        expiryField.sendActions(for: .editingChanged)
+        postalCodeField.text = "94107"
+        postalCodeField.sendActions(for: .editingChanged)
+        XCTAssertNotNil(updateController.updateParams, "The edited form must be valid so Save is enabled")
+        // ...and saves through Embedded's normal update delegate
+        let result = await embedded.didUpdate(viewController: updateController, paymentMethod: card)
+        guard case .success = result else {
+            return XCTFail("The live backend must accept the saved card edit: \(result)")
+        }
+        let editedCard = embedded.savedPaymentMethods.first { $0.stripeId == card.stripeId }
+        XCTAssertEqual(editedCard?.card?.expMonth, 11, "Embedded must show the edited expiry before the local update")
+        XCTAssertEqual(editedCard?.card?.expYear, 2041, "Embedded must show the edited expiry before the local update")
+        // ...and a separate backend session response confirms that the server stored the edit
+        let backendSession = try await checkout.apiClient.initCheckoutSession(
+            checkoutSessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
+            adaptivePricingAllowed: false
+        )
+        let backendCard = backendSession.customer?.paymentMethods.first { $0.stripeId == card.stripeId }
+        let backendStoredEdit = backendCard?.card?.expMonth == 11
+            && backendCard?.card?.expYear == 2041
+            && backendCard?.billingDetails?.address?.postalCode == "94107"
+        XCTAssertTrue(backendStoredEdit, "The live backend must store the edit before the local update")
+        guard backendStoredEdit else { return }
+
+        // ...and an unrelated, local-only shipping change rebuilds Payment Element
+        try await checkout.updateShippingAddress(
+            name: "Jenny Rosen",
+            address: .init(country: "US", line1: "354 Oyster Point Blvd")
+        )
+
+        // Then the saved card in the same embedded presentation must keep the edits the backend stored.
+        let cardAfterLocalUpdate = embedded.savedPaymentMethods.first { $0.stripeId == card.stripeId }
+        XCTAssertEqual(cardAfterLocalUpdate?.card?.expMonth, 11, "The saved card's edited expiry month reverted")
+        XCTAssertEqual(cardAfterLocalUpdate?.card?.expYear, 2041, "The saved card's edited expiry year reverted")
+        XCTAssertEqual(
+            cardAfterLocalUpdate?.billingDetails?.address?.postalCode,
+            "94107",
+            "The saved card's edited billing ZIP reverted"
+        )
+    }
+
+    func testLiveSavedCardRemovedInEmbeddedViewIsNotListedInSheet() async throws {
+        // Given a disposable customer with one saved card on the real playground backend
+        HTTPStubs.removeAllStubs()
+        let checkout = try await makeCustomerLogicCheckout(withSavedCard: true)
+        let paymentElement = checkout.getPaymentElement()
+        let embedded = paymentElement.embeddedPaymentElement
+        // present(from:) shows this FlowController's existing view controller when no Checkout update is in flight.
+        let flowController = paymentElement.paymentSheetFlowController
+        let card = try XCTUnwrap(embedded.savedPaymentMethods.first)
+        XCTAssertTrue(checkout.session.canDetachPaymentMethod, "Checkout must allow removing saved cards")
+        XCTAssertTrue(
+            flowController.viewController.savedPaymentMethods.contains { $0.stripeId == card.stripeId },
+            "The sheet must initially list the saved card"
+        )
+        let updateController = UpdatePaymentMethodViewController(
+            removeSavedPaymentMethodMessage: nil,
+            configuration: .init(
+                paymentMethod: card,
+                appearance: embedded.configuration.appearance,
+                billingDetailsCollectionConfiguration: embedded.configuration.billingDetailsCollectionConfiguration,
+                hostedSurface: .paymentSheet,
+                checkoutSessionID: checkout.session.id,
+                canRemove: true,
+                canUpdate: true,
+                isCBCEligible: false
+            )
+        )
+
+        // When the customer removes the card in the embedded view and the backend finishes detaching it
+        embedded.didRemove(viewController: updateController, paymentMethod: card)
+        XCTAssertTrue(embedded.savedPaymentMethods.isEmpty, "The embedded view must drop the removed card")
+        let deadline = Date().addingTimeInterval(15)
+        var backendRemovedCard = false
+        repeat {
+            let backendSession = try await checkout.apiClient.initCheckoutSession(
+                checkoutSessionId: checkout.session.id,
+                clientSecret: checkout.clientSecret,
+                adaptivePricingAllowed: false
+            )
+            backendRemovedCard = backendSession.customer?.paymentMethods.contains {
+                $0.stripeId == card.stripeId
+            } == false
+            if !backendRemovedCard {
+                try await Task.sleep(nanoseconds: 100_000_000)
+            }
+        } while !backendRemovedCard && Date() < deadline
+        XCTAssertTrue(backendRemovedCard, "The live backend must confirm removal before checking the sheet")
+        guard backendRemovedCard else { return }
+        // ...and the client has had time to apply the detach response, in case it does so asynchronously
+        let sheetDeadline = Date().addingTimeInterval(5)
+        while flowController.viewController.savedPaymentMethods.contains(where: { $0.stripeId == card.stripeId }),
+              Date() < sheetDeadline {
+            try await Task.sleep(nanoseconds: 100_000_000)
+        }
+
+        // Then presenting the same PaymentElement as a sheet must not list the removed card.
+        XCTAssertFalse(
+            flowController.viewController.savedPaymentMethods.contains { $0.stripeId == card.stripeId },
+            "The sheet still lists the card the customer removed in the embedded view"
+        )
+    }
+
+    func testLiveSavedCoBrandedCardNetworkEditIsNotSilentlyDropped() async throws {
+        // Given a French merchant, whose EUR Checkout Sessions are eligible for card brand choice, on the real playground backend
+        HTTPStubs.removeAllStubs()
+        let keyResponse = try await customerLogicBackendRequest(endpoint: "publishable_key?merchant=FR")
+        let apiClient = STPAPIClient(publishableKey: try XCTUnwrap(keyResponse["publishable_key"] as? String))
+        // ...and a disposable customer with one saved Cartes Bancaires / Visa co-branded card.
+        // Its French billing country means the editor's billing section only asks for a country, which is already filled in.
+        let customerID = try await STPTestingAPIClient.shared.createCheckoutCustomer(
+            email: "customer@example.com",
+            merchantCountry: "fr"
+        )
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4000002500001001"
+        cardParams.expMonth = 12
+        cardParams.expYear = 2040
+        cardParams.cvc = "123"
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.address = STPPaymentMethodAddress()
+        billingDetails.address?.country = "FR"
+        let createdPaymentMethod = try await apiClient.createPaymentMethod(with: .init(
+            card: cardParams,
+            billingDetails: billingDetails,
+            allowRedisplay: .always,
+            metadata: nil
+        ))
+        _ = try await customerLogicBackendRequest(endpoint: "attach_payment_method", parameters: [
+            "merchant": "FR",
+            "payment_method_id": createdPaymentMethod.stripeId,
+            "request_params": ["customer": customerID],
+        ])
+        let sessionResponse = try await customerLogicBackendRequest(endpoint: "create_checkout_session", parameters: [
+            "merchant": "FR",
+            "stripe_version": STPTestingAPIClient.checkoutMobileElementsAPISettings,
+            "request_params": [
+                "ui_mode": "mobile_elements",
+                "currency": "eur",
+                "allowed_payment_method_types": ["card"],
+                "customer": customerID,
+                "items": [
+                    [
+                        "type": "one_time_price",
+                        "one_time_price": [
+                            "items": [
+                                [
+                                    "price_data": [
+                                        "currency": "eur",
+                                        "unit_amount": 2000,
+                                        "product_data": ["name": "Card brand choice repro"],
+                                    ],
+                                    "quantity": 1,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                "saved_payment_method_options": [
+                    "payment_method_save": "enabled",
+                    "payment_method_remove": "enabled",
+                    "allow_redisplay_filters": ["always", "limited", "unspecified"],
+                ],
+            ] as [String: Any],
+        ])
+        var configuration = CheckoutElementsController.Configuration(
+            clientSecret: try XCTUnwrap(sessionResponse["client_secret"] as? String),
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.apiClient = apiClient
+        configuration.paymentElement = .init()
+        let checkout = try await CheckoutElementsController(configuration: configuration)
+        let embedded = checkout.getPaymentElement().embeddedPaymentElement
+        // With exactly one saved card, the row's Edit button opens the card editor directly.
+        XCTAssertEqual(
+            embedded.savedPaymentMethods.map(\.stripeId),
+            [createdPaymentMethod.stripeId],
+            "Payment Element must list exactly the one saved card"
+        )
+        let card = try XCTUnwrap(embedded.savedPaymentMethods.first)
+        let availableNetworks = card.card?.networks?.available ?? []
+        XCTAssertTrue(card.isCoBrandedCard, "The saved card must be co-branded, but its networks are \(availableNetworks)")
+        XCTAssertTrue(
+            embedded.elementsSession.isCardBrandChoiceEligible,
+            "The FR merchant's EUR Checkout Session must be eligible for card brand choice"
+        )
+        guard card.isCoBrandedCard, embedded.elementsSession.isCardBrandChoiceEligible else { return }
+        let originalBrand = try XCTUnwrap(card.card?.preferredDisplayBrand)
+        let selectedBrand = try XCTUnwrap(
+            availableNetworks.map { STPCard.brand(from: $0) }.first { $0 != originalBrand },
+            "The co-branded card must have a network other than \(originalBrand) to switch to"
+        )
+        // ...and a merchant screen in a key window that Payment Element presents its sheets from
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        let merchantViewController = UIViewController()
+        window.rootViewController = merchantViewController
+        window.makeKeyAndVisible()
+        defer {
+            merchantViewController.dismiss(animated: false)
+            window.isHidden = true
+        }
+        embedded.presentingViewController = merchantViewController
+
+        // When the customer taps Edit on the saved card's row
+        var embeddedViews: [UIView] = [embedded.embeddedPaymentMethodsView]
+        var editButton: RowButton.RightAccessoryButton?
+        while let view = embeddedViews.popLast() {
+            if let button = view as? RowButton.RightAccessoryButton, button.accessoryType == .edit {
+                editButton = button
+                break
+            }
+            embeddedViews.append(contentsOf: view.subviews)
+        }
+        try XCTUnwrap(editButton, "The saved card's row must show an Edit button").handleTap()
+        // ...which presents the saved-card editor in a sheet
+        let presentationDeadline = Date().addingTimeInterval(5)
+        while merchantViewController.presentedViewController == nil, Date() < presentationDeadline {
+            try await Task.sleep(nanoseconds: 100_000_000)
+        }
+        let editor = try XCTUnwrap(
+            merchantViewController.presentedViewController?.bottomSheetController?.contentStack.first
+                as? UpdatePaymentMethodViewController,
+            "Tapping Edit must open the saved-card editor"
+        )
+        var editorViews: [UIView] = [editor.view]
+        var brandSelectorView: SegmentedSelectorView?
+        while let view = editorViews.popLast() {
+            if let selectorView = view as? SegmentedSelectorView {
+                brandSelectorView = selectorView
+                break
+            }
+            editorViews.append(contentsOf: view.subviews)
+        }
+        guard let brandSelectorView else {
+            // The editor doesn't offer network selection for Checkout saved cards, so there's no edit to drop.
+            return
+        }
+        // ...and taps the card's other network in the editor's brand selector, the same path a tap on its icon takes
+        brandSelectorView.delegate?.didTap(selectedBrand.makeCardBrandItem())
+        guard case .card(let editedCardParams, _) = editor.updateParams else {
+            return XCTFail("Selecting the other network must enable Save")
+        }
+        XCTAssertEqual(
+            editedCardParams.networks?.preferred,
+            STPCardBrandUtilities.apiValue(from: selectedBrand),
+            "The editor must capture the selected network"
+        )
+        // ...and taps Save, which hands the edit to Payment Element through the editor's delegate
+        let editorDelegate = try XCTUnwrap(editor.delegate, "The editor must save through Payment Element")
+        let result = await editorDelegate.didUpdate(viewController: editor, paymentMethod: card)
+        guard case .success = result else {
+            // A failed save tells the customer their network choice wasn't stored, so the edit isn't silently dropped.
+            return
+        }
+
+        // Then a save reported as successful must have stored the selected network, both in Payment Element...
+        let displayedCard = embedded.savedPaymentMethods.first { $0.stripeId == card.stripeId }
+        XCTAssertEqual(
+            displayedCard?.card?.preferredDisplayBrand,
+            selectedBrand,
+            "The save reported success, but Payment Element still shows the card's original network"
+        )
+        // ...and on the server, as seen by a separate backend session response
+        let backendSession = try await checkout.apiClient.initCheckoutSession(
+            checkoutSessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
+            adaptivePricingAllowed: false
+        )
+        let backendCard = backendSession.customer?.paymentMethods.first { $0.stripeId == card.stripeId }
+        XCTAssertEqual(
+            backendCard?.card?.networks?.preferred,
+            STPCardBrandUtilities.apiValue(from: selectedBrand),
+            "The save reported success, but the server didn't store the selected network"
+        )
+    }
+
     func makeCustomerLogicCheckout(withSavedCard: Bool) async throws -> CheckoutElementsController {
         let keyResponse = try await customerLogicBackendRequest(endpoint: "publishable_key?merchant=US")
         let apiClient = STPAPIClient(publishableKey: try XCTUnwrap(keyResponse["publishable_key"] as? String))
