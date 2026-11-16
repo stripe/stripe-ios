@@ -215,7 +215,7 @@ public extension PaymentSheet {
 
             /// Use this if you do not intend to reuse this payment method and want to override the top-level `setup_future_usage` value for this payment method.
             /// - Note: This value is only valid when used to set `PaymentMethodOptions.setupFutureUsageValues`.
-            @_spi(PaymentMethodOptionsSetupFutureUsagePreview) case none = "none"
+            @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(ReactNativeSDK) case none = "none"
         }
 
         /// Additional information about the payment or setup
@@ -224,7 +224,7 @@ public extension PaymentSheet {
             public struct PaymentMethodOptions {
                 var setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]?
 
-                @_spi(PaymentMethodOptionsSetupFutureUsagePreview) public init(setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]? = nil) {
+                @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(ReactNativeSDK) public init(setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]? = nil) {
                     self.setupFutureUsageValues = setupFutureUsageValues
                 }
             }

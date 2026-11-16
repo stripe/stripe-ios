@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		317C500327604CBF003771D7 /* PodAnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C500227604CBF003771D7 /* PodAnalyticsTests.swift */; };
+		3740352F7A0AD64AEFD74E2B /* Stripe3DS2LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67099FFF17071C9535762045 /* Stripe3DS2LocalizationTests.swift */; };
 		3B3F019D274448A400C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F019C274448A400C53D34 /* StripeUICoreAssetTests.swift */; };
 		3BD97FCA2741556900B09BCD /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD97FC92741556900B09BCD /* ModelTests.swift */; };
 		517AA996F29C470A3BA7BE39 /* Pods_CocoapodsTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6B28CED06BCA245328274DF /* Pods_CocoapodsTest.framework */; };
@@ -39,6 +40,7 @@
 		3BD97FC92741556900B09BCD /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = ../../../shared_unit_tests/StripeCardScan/ModelTests.swift; sourceTree = "<group>"; };
 		4D027CC9491E435DB33D4756 /* Pods-CocoapodsTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoapodsTest.debug.xcconfig"; path = "Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest.debug.xcconfig"; sourceTree = "<group>"; };
 		555387A38B3DF1A80708C252 /* Pods_CocoapodsTestTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CocoapodsTestTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		67099FFF17071C9535762045 /* Stripe3DS2LocalizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Stripe3DS2LocalizationTests.swift; path = ../../shared_unit_tests/Stripe3DS2/Stripe3DS2LocalizationTests.swift; sourceTree = "<group>"; };
 		6BD0CBD63F73D9C005879178 /* Pods-CocoapodsTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoapodsTest.release.xcconfig"; path = "Target Support Files/Pods-CocoapodsTest/Pods-CocoapodsTest.release.xcconfig"; sourceTree = "<group>"; };
 		BB305E1990F1896514D96A9A /* Pods-CocoapodsTestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoapodsTestTests.release.xcconfig"; path = "Target Support Files/Pods-CocoapodsTestTests/Pods-CocoapodsTestTests.release.xcconfig"; sourceTree = "<group>"; };
 		C176898320616C7E003DE895 /* CocoapodsTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CocoapodsTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -113,6 +115,7 @@
 				C176898420616C7E003DE895 /* Products */,
 				03A7DE744B445718F8055721 /* Pods */,
 				45651E34982B17BF9AA4A994 /* Frameworks */,
+				67099FFF17071C9535762045 /* Stripe3DS2LocalizationTests.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -329,6 +332,7 @@
 				3B3F019D274448A400C53D34 /* StripeUICoreAssetTests.swift in Sources */,
 				317C500327604CBF003771D7 /* PodAnalyticsTests.swift in Sources */,
 				3BD97FCA2741556900B09BCD /* ModelTests.swift in Sources */,
+				3740352F7A0AD64AEFD74E2B /* Stripe3DS2LocalizationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

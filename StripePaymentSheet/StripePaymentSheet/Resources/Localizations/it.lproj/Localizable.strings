@@ -14,8 +14,6 @@
 
 "Add bank account" = "Aggiungi conto bancario";
 
-"Add card" = "Aggiungi carta";
-
 "Add new card" = "Aggiungi carta";
 
 "Add new payment method" = "Aggiungi nuovo metodo di pagamento";
@@ -102,7 +100,7 @@
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Inviando l'ordine a %1$@ e %2$@, accetti di salvare le informazioni con %3$@ per acquisti futuri e accetti di autorizzare i pagamenti ai sensi dei <terms>presenti Termini</terms>.";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Inviando l'ordine a %@, accetti di autorizzare i pagamenti in conformità con i presenti termini.";
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Inviando l'ordine a %@, accetti di autorizzare i pagamenti in conformità con i <terms>presenti termini</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -316,7 +314,7 @@
 
 "Select card" = "Seleziona la carta";
 
-"Select how you want to pay:" = "Seleziona quanto vuoi pagare:";
+"Select how you want to pay:" = "Seleziona come vuoi pagare:";
 
 "Select payment method" = "Seleziona il metodo di pagamento";
 

@@ -30,7 +30,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Entering a card w/ deferred PaymentIntent...
         cardButton.tap()
-        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Add a card"].waitForExistence(timeout: 10))
         try! fillCardData(app, postalEnabled: true)
         app.stp_dismissKeyboard()
         XCTAssertTrue(app.buttons["Continue"].isEnabled)
@@ -553,7 +553,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
         app.buttons["Card"].waitForExistenceAndTap(timeout: 10)
-        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Add a card"].waitForExistence(timeout: 10))
         try! fillCardData(app, postalEnabled: true, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
 
         // Checkout
@@ -978,7 +978,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.buttons["Card"].waitForExistenceAndTap())
-        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Add a card"].waitForExistence(timeout: 10))
 
         // Card number from https://docs.stripe.com/testing#regulatory-cards
         try! fillCardData(app, cardNumber: "4000002760003184")
@@ -1056,7 +1056,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let allButtons = app.buttons.allElementsBoundByIndex
 
         XCTAssertTrue(changeButton.waitForExistenceAndTap())
-        XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Add a card"].waitForExistence(timeout: 10))
         continueButton.tap()
 
         app.swipeUp() // scroll to see the confirm button

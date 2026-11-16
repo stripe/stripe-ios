@@ -76,7 +76,8 @@ final class GenericInfoViewController: SheetViewController {
                     body: genericInfoScreen.body,
                     didSelectURL: didSelectURL
                 ),
-                isSheet: (panePresentationStyle == .sheet)
+                isSheet: (panePresentationStyle == .sheet),
+                appearance: appearance
             ),
             footerView: GenericInfoFooterView(
                 footer: genericInfoScreen.footer,

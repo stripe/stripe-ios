@@ -9,6 +9,6 @@
 #ifndef Stripe3DS2_pch
 #define Stripe3DS2_pch
 
-#import "STDSLocalizedString.h"
+@import StripeCore;
 
 #endif /* Stripe3DS2_pch */

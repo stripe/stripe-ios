@@ -21,8 +21,15 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     // The native bar needs its own fixed-height logo; the legacy bar retains its existing layout.
     private lazy var systemLogoView: UIImageView = {
         let image = brand.paymentSheetLogoImage
-        let size = CGSize(width: image.size.width * 24 / max(image.size.height, 1), height: 24)
-        let logoView = UIImageView(image: image.resized(to: size))
+        let height: CGFloat = 24
+        // Size with constraints rather than resizing the image, so the asset's light/dark variants are preserved.
+        let logoView = UIImageView(image: image)
+        logoView.contentMode = .scaleAspectFit
+        logoView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            logoView.heightAnchor.constraint(equalToConstant: height),
+            logoView.widthAnchor.constraint(equalToConstant: image.size.width * height / max(image.size.height, 1)),
+        ])
         logoView.tintColor = .linkIconBrand
         logoView.isAccessibilityElement = true
         logoView.accessibilityTraits = .header

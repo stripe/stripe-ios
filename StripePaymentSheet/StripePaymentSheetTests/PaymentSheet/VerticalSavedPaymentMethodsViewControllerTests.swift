@@ -197,8 +197,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     func testCanRemovePaymentMethods_checkoutSessionWithoutDetachPermission_returnsFalse() {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
-            customerProvider: CustomerProvider(customer: configuration.customer),
-            intent: makeCheckoutSessionIntent(canDetachPaymentMethod: false),
+            customerProvider: makeCheckoutSessionCustomerProvider(canDetachPaymentMethod: false),
+            intent: ._testValue(),
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -212,8 +212,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     func testCanRemovePaymentMethods_checkoutSessionWithDetachPermission_returnsTrue() {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
-            customerProvider: CustomerProvider(customer: configuration.customer),
-            intent: makeCheckoutSessionIntent(canDetachPaymentMethod: true),
+            customerProvider: makeCheckoutSessionCustomerProvider(canDetachPaymentMethod: true),
+            intent: ._testValue(),
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -224,7 +224,8 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         XCTAssertTrue(viewController.canRemovePaymentMethods)
     }
 
-    private func makeCheckoutSessionIntent(canDetachPaymentMethod: Bool) -> Intent {
+    /// Makes a customer provider backed by a Checkout Session, whose `payment_method_remove` option controls removal.
+    private func makeCheckoutSessionCustomerProvider(canDetachPaymentMethod: Bool) -> CustomerProvider {
         let session = CheckoutTestHelpers.makeSession([
             "saved_payment_method_options": ["payment_method_remove": canDetachPaymentMethod ? "enabled" : "disabled"],
             "customer": [
@@ -232,7 +233,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
                 "payment_methods": [],
             ],
         ])
-        return .checkout(session.makePublicSession())
+        return CustomerProvider(checkoutSession: session.makePublicSession())
     }
 
 }

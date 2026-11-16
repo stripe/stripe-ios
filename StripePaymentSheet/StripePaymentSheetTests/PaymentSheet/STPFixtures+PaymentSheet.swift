@@ -386,18 +386,18 @@ extension Intent {
                 ],
             ],
         ]
-        if taxAmount != 0 {
-            json["total_summary"] = [
-                "total_tax_amounts": [
-                    [
-                        "amount": taxAmount,
-                        "inclusive": false,
-                        "display_name": "Tax",
-                        "percentage": 0.0,
-                    ],
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            subtotal: oneTimePriceSubtotal,
+            taxExclusive: taxAmount,
+            totalTaxAmounts: taxAmount == 0 ? [] : [
+                [
+                    "amount": taxAmount,
+                    "inclusive": false,
+                    "display_name": "Tax",
+                    "percentage": 0.0,
                 ],
             ]
-        }
+        )
         let checkoutSession = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
         return .checkout(checkoutSession.makePublicSession())
     }

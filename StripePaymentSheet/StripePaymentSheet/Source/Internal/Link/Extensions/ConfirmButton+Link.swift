@@ -55,6 +55,7 @@ extension ConfirmButton {
         )
 
         button.directionalLayoutMargins = directionalLayoutMargins
+        LinkPrimaryButtonGradientView.attach(to: button)
 
         return button
     }

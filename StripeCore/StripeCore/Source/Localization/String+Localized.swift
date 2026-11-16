@@ -8,8 +8,16 @@
 
 import Foundation
 
-@_spi(InternalOnlyAPI) extension String {
+@_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) extension String {
     public enum Localized {
+        public static var cancel: String {
+            return STPLocalizedString("Cancel", "Button title to cancel action in an alert")
+        }
+
+        public static var loading: String {
+            return STPLocalizedString("Loading", "Status while screen is loading")
+        }
+
         public static var close: String {
             return STPLocalizedString("Close", "Text for close button")
         }

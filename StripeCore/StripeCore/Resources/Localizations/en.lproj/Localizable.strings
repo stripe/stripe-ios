@@ -1,11 +1,23 @@
+/* The text for warning when a debugger is currently attached to the process. */
+"A debugger is attached to the App." = "A debugger is attached to the App.";
+
+/* The text for warning when an emulator is being used to run the application. */
+"An emulator is being used to run the App." = "An emulator is being used to run the App.";
+
 /* A generic error message displayed when an error occurs. */
 "An error occurred. Please try again." = "An error occurred. Please try again.";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Cancel";
 
 /* An error message displayed when updating a card brand fails. */
 "Card brand was not updated. Please try again." = "Card brand was not updated. Please try again.";
 
 /* Text for close button */
 "Close" = "Close";
+
+/* Accessibility label for expandable text control to indicate text is hidden. */
+"Collapsed" = "Collapsed";
 
 /* Two factor authentication screen heading */
 "Confirm it's you" = "Confirm it's you";
@@ -16,20 +28,44 @@
 /* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@." = "Enter the code sent to %@.";
 
+/* Accessibility label for expandable text control to indicate that the UI has been expanded and additional text is available. */
+"Expanded" = "Expanded";
+
 /* Label shown when a network-related error has occured. */
 "Failed to connect" = "Failed to connect";
+
+/* Status while screen is loading */
+"Loading" = "Loading";
+
+/* The no answer to a yes or no question. */
+"No" = "No";
 
 /* The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it. */
 "Resend code" = "Resend code";
 
-/* Text for button to scan a credit card */
-"Scan Card" = "Scan Card";
-
 /* Button title to open camera to scan credit/debit card */
 "Scan card" = "Scan card";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Scan Card";
+
+/* The title for the challenge response step of an authenticated checkout. */
+"Secure checkout" = "Secure checkout";
+
+/* Indicates that a button is selected. */
+"Selected" = "Selected";
+
+/* The text for warning when a device is jailbroken. */
+"The device is jailbroken." = "The device is jailbroken.";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "The IBAN you entered is invalid.";
+
+/* The text for warning when the integrity of the SDK has been tampered with. */
+"The integrity of the SDK has been tampered." = "The integrity of the SDK has been tampered.";
+
+/* The text for warning when the SDK is running on an unsupported OS or OS version. */
+"The OS or the OS Version is not supported." = "The OS or the OS Version is not supported.";
 
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "There was an error processing your card -- try again in a few seconds";
@@ -37,11 +73,20 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "There was an unexpected error -- try again in a few seconds";
 
+/* Error description for when a network request times out. English value is as required by UL certification. */
+"Timeout" = "Timeout";
+
 /* Text for a retry button */
 "Try again" = "Try again";
 
+/* Indicates that a button is not selected. */
+"Unselected" = "Unselected";
+
 /* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>";
+
+/* The yes answer to a yes or no question. */
+"Yes" = "Yes";
 
 /* Error when the card has already expired */
 "Your card has expired" = "Your card has expired";
