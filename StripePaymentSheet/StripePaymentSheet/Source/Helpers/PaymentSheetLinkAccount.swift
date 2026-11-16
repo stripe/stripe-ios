@@ -450,6 +450,28 @@ struct LinkPMDisplayDetails {
         }
     }
 
+    func deleteShippingAddress(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                return completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Deleting Link shipping address without valid session"
+                        )
+                    )
+                )
+            }
+
+            session.deleteShippingAddress(
+                with: self.apiClient,
+                id: id,
+                requestSurface: self.requestSurface,
+                completion: completionRetryingOnAuthErrors
+            )
+        }
+    }
+
     func deletePaymentDetails(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {

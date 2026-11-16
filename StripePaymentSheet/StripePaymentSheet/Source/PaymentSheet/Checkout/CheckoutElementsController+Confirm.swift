@@ -458,9 +458,11 @@ extension CheckoutElementsController {
     static func makeConfirmationRequestParameters(
         for paymentMethodParameters: PaymentMethodConfirmationParameters,
         checkoutSession: Session,
-        preconfirmedIntentParams: IntentConfirmParams?
+        preconfirmedIntentParams: IntentConfirmParams?,
+        shippingOverride: STPPaymentIntentShippingDetailsParams? = nil
     ) async -> CheckoutSessionConfirmationRequestParameters {
         let configuration = paymentMethodParameters.configuration
+        let shipping = shippingOverride ?? STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration)
         let confirmationChallenge = paymentMethodParameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             checkoutSession: checkoutSession,
@@ -501,7 +503,7 @@ extension CheckoutElementsController {
                 expectedAmount: checkoutSession.amount,
                 savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
                 returnURL: paymentMethodParameters.returnURL,
-                shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
+                shipping: shipping,
                 paymentMethodOptions: confirmParams.confirmPaymentMethodOptions,
                 clientAttributionMetadata: clientAttributionMetadata,
                 collectedInformation: .init(email: checkoutSession.localState.email),
@@ -523,7 +525,7 @@ extension CheckoutElementsController {
                 expectedPaymentMethodType: savedPaymentMethod.type.identifier,
                 savePaymentMethod: nil,
                 returnURL: paymentMethodParameters.returnURL,
-                shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
+                shipping: shipping,
                 paymentMethodOptions: paymentMethodOptions,
                 clientAttributionMetadata: clientAttributionMetadata,
                 collectedInformation: .init(email: checkoutSession.localState.email),

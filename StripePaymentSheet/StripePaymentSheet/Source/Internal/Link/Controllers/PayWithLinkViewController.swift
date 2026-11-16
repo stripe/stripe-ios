@@ -108,6 +108,47 @@ final class PayWithLinkViewController: NSObject {
             }
             return .pay(amount: totalUpdater.amount, currency: currency, withLock: withLock)
         }
+
+        /// Whether the customer must provide a shipping address in Link (e.g. for a Checkout Session that collects shipping).
+        var requiresShippingAddress: Bool {
+            guard case .checkout(let session) = intent else {
+                return false
+            }
+            return session.requiresShippingAddress
+        }
+
+        /// The shipping addresses saved to the Link account.
+        var shippingAddresses: [ShippingAddressesResponse.ShippingAddress] = []
+
+        /// The ID of the shipping address to use. Defaults to the account's default shipping address.
+        var selectedShippingAddressID: String?
+
+        var selectedShippingAddress: ShippingAddressesResponse.ShippingAddress? {
+            shippingAddresses.first { $0.id == selectedShippingAddressID }
+        }
+
+        /// Whether the shipping address is in a country the session ships to.
+        func isShippingAddressSupported(_ shippingAddress: ShippingAddressesResponse.ShippingAddress) -> Bool {
+            guard case .checkout(let session) = intent,
+                  let allowedCountries = session.allowedShippingCountries,
+                  !allowedCountries.isEmpty else {
+                return true
+            }
+            guard let countryCode = shippingAddress.address.countryCode else {
+                return false
+            }
+            return allowedCountries.contains(countryCode.uppercased())
+        }
+
+        /// Selects the default supported shipping address, unless a supported one is already selected.
+        func selectDefaultShippingAddressIfNeeded() {
+            if let selectedShippingAddress, isShippingAddressSupported(selectedShippingAddress) {
+                return
+            }
+            let supportedShippingAddresses = shippingAddresses.filter(isShippingAddressSupported)
+            selectedShippingAddressID = (supportedShippingAddresses.first { $0.isDefault ?? false } ?? supportedShippingAddresses.first)?.id
+        }
+
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
         let linkAppearance: LinkAppearance?
@@ -207,14 +248,6 @@ final class PayWithLinkViewController: NSObject {
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
 
     let sheetContainer: any PaymentSheetContainer
-
-    var shippingAddressResponse: ShippingAddressesResponse?
-
-    var defaultShippingAddress: ShippingAddressesResponse.ShippingAddress? {
-        shippingAddressResponse?.shippingAddresses.first {
-            $0.isDefault ?? false
-        } ?? shippingAddressResponse?.shippingAddresses.first
-    }
 
     private var isBailingToWebFlow: Bool = false
 
@@ -456,7 +489,7 @@ private extension PayWithLinkViewController {
             let shippingAddressTask = Task {
                 try? await self.fetchShippingAddress(
                     using: linkAccount,
-                    shouldFetch: context.launchedFromFlowController
+                    shouldFetch: context.launchedFromFlowController || context.requiresShippingAddress
                 )
             }
             defer {
@@ -468,7 +501,9 @@ private extension PayWithLinkViewController {
                 let paymentDetails = try await paymentDetailsTask.value
 
                 // Ignore any errors that might happen here.
-                shippingAddressResponse = await shippingAddressTask.value
+                let shippingAddresses = await shippingAddressTask.value?.shippingAddresses ?? []
+                context.shippingAddresses = shippingAddresses
+                context.selectDefaultShippingAddressIfNeeded()
 
                 presentAppropriateViewController(
                     with: linkAccount,
@@ -605,7 +640,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             account: linkAccount,
             paymentDetails: paymentDetails,
             confirmationExtras: confirmationExtras,
-            shippingAddress: defaultShippingAddress
+            shippingAddress: context.selectedShippingAddress
         )
 
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: confirmOption)
@@ -846,7 +881,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                     account: linkAccount,
                     paymentDetails: paymentDetails,
                     confirmationExtras: confirmationExtras,
-                    shippingAddress: defaultShippingAddress
+                    shippingAddress: context.selectedShippingAddress
                 )
             ),
             completion: completion

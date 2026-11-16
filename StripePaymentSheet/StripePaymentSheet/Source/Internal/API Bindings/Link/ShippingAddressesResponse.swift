@@ -62,4 +62,16 @@ extension ShippingAddressesResponse.ShippingAddress {
             state: address.administrativeArea
         )
     }
+
+    /// The address on a single line, without the name, e.g. "123 Main St, San Francisco, CA 94111, US".
+    var formattedAddress: String {
+        let stateAndPostalCode = [address.administrativeArea, address.postalCode]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+        return [address.line1, address.line2, address.locality, stateAndPostalCode, address.countryCode]
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .joined(separator: ", ")
+    }
 }

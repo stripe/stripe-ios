@@ -129,6 +129,7 @@ extension CheckoutElementsController {
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
             checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
         }
+        let linkShipping = linkShippingDetailsParams(for: parameters.confirmOption, checkoutSession: checkoutSession)
         let setAllowRedisplay: (IntentConfirmParams, STPPaymentMethodType) -> Void = { confirmParams, paymentMethodType in
             confirmParams.setAllowRedisplayForCheckoutSession(
                 merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
@@ -186,7 +187,8 @@ extension CheckoutElementsController {
                     )
                     let result = await Self.confirmLinkPaymentMethod(
                         checkoutSession: latestSession(),
-                        parameters: paymentMethodParameters
+                        parameters: paymentMethodParameters,
+                        shipping: linkShipping
                     )
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
@@ -215,7 +217,8 @@ extension CheckoutElementsController {
                     )
                     let result = await Self.confirmLinkPaymentMethod(
                         checkoutSession: latestSession(),
-                        parameters: paymentMethodParameters
+                        parameters: paymentMethodParameters,
+                        shipping: linkShipping
                     )
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
@@ -300,12 +303,14 @@ extension CheckoutElementsController {
     @MainActor
     private static func confirmLinkPaymentMethod(
         checkoutSession: Session,
-        parameters: PaymentMethodConfirmationParameters
+        parameters: PaymentMethodConfirmationParameters,
+        shipping: STPPaymentIntentShippingDetailsParams?
     ) async -> InternalConfirmResult {
         let requestParameters = await makeConfirmationRequestParameters(
             for: parameters,
             checkoutSession: checkoutSession,
-            preconfirmedIntentParams: nil
+            preconfirmedIntentParams: nil,
+            shippingOverride: shipping
         )
         return await confirmCheckoutSession(
             with: requestParameters,
@@ -314,6 +319,29 @@ extension CheckoutElementsController {
             paymentHandler: parameters.paymentHandler,
             confirmationChallenge: parameters.confirmationChallenge
         )
+    }
+
+    /// The shipping address the customer selected in native Link, if the session collects one.
+    static func linkShippingDetailsParams(
+        for confirmOption: PaymentSheet.LinkConfirmOption,
+        checkoutSession: Session
+    ) -> STPPaymentIntentShippingDetailsParams? {
+        guard checkoutSession.requiresShippingAddress,
+              let shippingAddress = confirmOption.shippingAddress,
+              let line1 = shippingAddress.address.line1?.nonEmpty,
+              let name = shippingAddress.name?.nonEmpty else {
+            return nil
+        }
+        let address = shippingAddress.address
+        let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
+        addressParams.line2 = address.line2
+        addressParams.city = address.city
+        addressParams.state = address.state
+        addressParams.postalCode = address.postalCode
+        addressParams.country = address.country
+
+        // Checkout Session confirmation doesn't accept a shipping phone number.
+        return STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
     }
 
 }
