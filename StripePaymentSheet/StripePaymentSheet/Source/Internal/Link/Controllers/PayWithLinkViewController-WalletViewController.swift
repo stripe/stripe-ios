@@ -263,7 +263,7 @@ extension PayWithLinkViewController {
 
             context.totalUpdater?.addObserver { [weak self] in
                 guard let self, !self.isConfirming else { return }
-                self.updateUI(animated: true)
+                self.updateConfirmButton()
             }
             syncTotalForSelectedPaymentMethod()
         }
@@ -275,15 +275,12 @@ extension PayWithLinkViewController {
         private func syncTotalForSelectedPaymentMethod() {
             guard let totalUpdater = context.totalUpdater,
                   !isConfirming,
-                  let billingAddress = viewModel.selectedPaymentMethod?.billingAddress else {
+                  let paymentDetails = viewModel.selectedPaymentMethod,
+                  paymentDetails.billingAddress != nil else {
                 return
             }
-            Task { @MainActor [weak self] in
-                do {
-                    try await totalUpdater.sync(billingAddress: billingAddress)
-                } catch {
-                    self?.updateErrorLabel(for: error)
-                }
+            totalUpdater.syncInBackground(billingAddress: paymentDetails.billingDetails?.address) { [weak self] error in
+                self?.updateErrorLabel(for: error)
             }
         }
 
@@ -326,6 +323,10 @@ extension PayWithLinkViewController {
                 cardDetailsRecollectionSection.view.layoutIfNeeded()
             }
 
+            updateConfirmButton()
+        }
+
+        private func updateConfirmButton() {
             confirmButton.update(
                 status: viewModel.confirmButtonStatus,
                 callToAction: viewModel.confirmButtonCallToAction
@@ -440,10 +441,6 @@ extension PayWithLinkViewController {
                 confirmationExtras: confirmationExtras
             ) { [weak self] result, deferredIntentConfirmationType in
                 self?.isConfirming = false
-                if case .failed = result {
-                    // The total may have changed while confirming. Refresh the button's call to action.
-                    self?.updateUI(animated: true)
-                }
                 switch result {
                 case .completed:
                     #if !os(visionOS)
@@ -461,7 +458,8 @@ extension PayWithLinkViewController {
                     self?.feedbackGenerator.notificationOccurred(.error)
                     #endif
                     self?.updateErrorLabel(for: error)
-                    self?.confirmButton.update(status: .enabled)
+                    // The total may have changed while confirming. Refresh the button's call to action.
+                    self?.confirmButton.update(status: .enabled, callToAction: self?.viewModel.confirmButtonCallToAction)
                     self?.setUserInteractionEnabled(true)
                 }
             }

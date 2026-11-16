@@ -765,7 +765,7 @@ extension PaymentSheetLinkAccount {
         if let allowRedisplay {
             params.allowRedisplay = allowRedisplay
         }
-        params.billingDetails = STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
+        params.billingDetails = paymentDetails.billingDetails
         params.billingDetails?.phone = billingPhoneNumber
         params.link?.paymentDetailsID = paymentDetails.stripeID
         params.link?.credentials = ["consumer_session_client_secret": currentSession.clientSecret]

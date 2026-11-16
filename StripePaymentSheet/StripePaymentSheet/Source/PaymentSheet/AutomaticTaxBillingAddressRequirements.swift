@@ -60,34 +60,8 @@ enum AutomaticTaxBillingAddressRequirements {
 
     /// Whether a saved payment method address contains the fields required to calculate tax.
     static func areSatisfied(by address: STPPaymentMethodAddress?) -> Bool {
-        return areSatisfied(
-            country: address?.country,
-            line1: address?.line1,
-            city: address?.city,
-            state: address?.state,
-            postalCode: address?.postalCode
-        )
-    }
-
-    /// Whether a Link payment details' billing address contains the fields required to calculate tax.
-    static func areSatisfied(by address: BillingAddress?) -> Bool {
-        return areSatisfied(
-            country: address?.countryCode,
-            line1: address?.line1,
-            city: address?.city,
-            state: address?.state,
-            postalCode: address?.postalCode
-        )
-    }
-
-    private static func areSatisfied(
-        country: String?,
-        line1: String?,
-        city: String?,
-        state: String?,
-        postalCode: String?
-    ) -> Bool {
-        guard let country = country?.nonEmpty?.uppercased() else {
+        guard let address,
+              let country = address.country?.nonEmpty?.uppercased() else {
             return false
         }
 
@@ -95,13 +69,13 @@ enum AutomaticTaxBillingAddressRequirements {
         return requirement.requiredFields.allSatisfy { field in
             switch field {
             case .line1:
-                return line1?.nonEmpty != nil
+                return address.line1?.nonEmpty != nil
             case .city:
-                return city?.nonEmpty != nil
+                return address.city?.nonEmpty != nil
             case .state:
-                return state?.nonEmpty != nil
+                return address.state?.nonEmpty != nil
             case .postalCode:
-                return postalCode?.nonEmpty != nil
+                return address.postalCode?.nonEmpty != nil
             }
         }
     }

@@ -44,7 +44,7 @@ class LinkBillingDetailsValidator {
 
         let effectivePaymentDetails = consumerPaymentDetails.update(
             with: effectiveBillingDetails,
-            basedOn: billingDetailsCollectionConfigurationForDefaults
+            basedOn: context.billingDetailsCollectionConfiguration
         )
 
         let hasRequiredBillingDetailsNow = effectivePaymentDetails.supports(
@@ -97,20 +97,10 @@ class LinkBillingDetailsValidator {
 
     /// Whether the payment details' billing address is enough to calculate automatic tax, if the total depends on it.
     private func satisfiesAutomaticTaxRequirements(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
-        guard context.requiresAutomaticTaxBillingAddress else {
+        guard context.intent.collectsTaxFromBillingAddress else {
             return true
         }
-        return AutomaticTaxBillingAddressRequirements.areSatisfied(by: paymentDetails.billingAddress)
-    }
-
-    /// The configuration that determines which merchant-provided defaults fill in missing billing details.
-    /// When tax needs the billing address, fill in a full address so the tax requirements can be met.
-    private var billingDetailsCollectionConfigurationForDefaults: PaymentSheet.BillingDetailsCollectionConfiguration {
-        var configuration = context.configuration.billingDetailsCollectionConfiguration
-        if context.requiresAutomaticTaxBillingAddress {
-            configuration.address = .full
-        }
-        return configuration
+        return AutomaticTaxBillingAddressRequirements.areSatisfied(by: paymentDetails.billingDetails?.address)
     }
 
     private func updateBillingDetails(

@@ -71,6 +71,10 @@ final class ConsumerPaymentDetails: Decodable {
 }
 
 extension ConsumerPaymentDetails {
+    var billingDetails: STPPaymentMethodBillingDetails? {
+        return STPPaymentMethodBillingDetails(billingAddress: billingAddress, email: billingEmailAddress)
+    }
+
     func isSupported(linkAccount: PaymentSheetLinkAccount,
                      elementsSession: STPElementsSession,
                      configuration: PaymentElementConfiguration,

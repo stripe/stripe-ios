@@ -13,24 +13,31 @@ import PassKit
 extension CheckoutSessionBillingAddressUpdater {
     /// Syncs the payment method's billing address to Checkout tax calculation when needed.
     func syncBillingAddress(from billingDetails: STPPaymentMethodBillingDetails?) async throws {
-        // We need at least a country to build an Address for tax region calculation. Billing details
-        // are optional on payment methods, so it's fine to just skip if we don't have enough info.
-        guard let billingDetails,
-              let country = billingDetails.address?.country?.nonEmpty else {
+        // Billing details are optional on payment methods, so it's fine to just skip if we don't have enough info.
+        guard let address = CheckoutElementsController.Address(taxRegionFrom: billingDetails?.address) else {
             return
         }
-        let source = billingDetails.address
-        let address = CheckoutElementsController.Address(
-            country: country,
-            line1: source?.line1?.nonEmpty,
-            line2: source?.line2?.nonEmpty,
-            city: source?.city?.nonEmpty,
-            state: source?.state?.nonEmpty,
-            postalCode: source?.postalCode?.nonEmpty
-        )
         _ = try await updateBillingTaxRegionIfNecessaryForPaymentSheet(
             address: address,
             canUpdateWhileSheetPresented: true
+        )
+    }
+}
+
+extension CheckoutElementsController.Address {
+    /// Creates a tax region from a payment method billing address.
+    /// Returns nil without a country, since there's nothing to calculate tax from.
+    init?(taxRegionFrom address: STPPaymentMethodAddress?) {
+        guard let country = address?.country?.nonEmpty else {
+            return nil
+        }
+        self.init(
+            country: country,
+            line1: address?.line1?.nonEmpty,
+            line2: address?.line2?.nonEmpty,
+            city: address?.city?.nonEmpty,
+            state: address?.state?.nonEmpty,
+            postalCode: address?.postalCode?.nonEmpty
         )
     }
 }

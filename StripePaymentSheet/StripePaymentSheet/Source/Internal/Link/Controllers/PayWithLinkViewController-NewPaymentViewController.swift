@@ -272,6 +272,7 @@ extension PayWithLinkViewController {
                         confirmationExtras: confirmationExtras
                     ) { [weak self] result, deferredIntentConfirmationType in
                         let status: ConfirmButton.Status
+                        var callToAction: ConfirmButton.CallToActionType?
                         self?.isConfirming = false
 
                         switch result {
@@ -283,15 +284,13 @@ extension PayWithLinkViewController {
                             status = .enabled
                             self?.updateErrorLabel(for: error)
                             // The total may have changed while confirming. Refresh the button's call to action.
-                            if let callToAction = self?.context.callToAction {
-                                self?.confirmButton.update(status: .enabled, callToAction: callToAction)
-                            }
+                            callToAction = self?.context.callToAction
                         }
 
                         #if !os(visionOS)
                         self?.feedbackGenerator.notificationOccurred(.success)
                         #endif
-                        self?.confirmButton.update(status: status, animated: true) {
+                        self?.confirmButton.update(status: status, callToAction: callToAction, animated: true) {
                             self?.setUserInteractionEnabled(true)
                             if status == .succeeded {
                                 self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
@@ -383,23 +382,11 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
         guard let totalUpdater = context.totalUpdater,
               !isConfirming,
               case .new(let confirmParams)? = addPaymentMethodVC.paymentOption,
-              let address = confirmParams.paymentMethodParams.billingDetails?.address else {
+              let billingAddress = confirmParams.paymentMethodParams.billingDetails?.address else {
             return
         }
-        let billingAddress = BillingAddress(
-            line1: address.line1,
-            line2: address.line2,
-            city: address.city,
-            state: address.state,
-            postalCode: address.postalCode,
-            countryCode: address.country
-        )
-        Task { @MainActor [weak self] in
-            do {
-                try await totalUpdater.sync(billingAddress: billingAddress)
-            } catch {
-                self?.updateErrorLabel(for: error)
-            }
+        totalUpdater.syncInBackground(billingAddress: billingAddress) { [weak self] error in
+            self?.updateErrorLabel(for: error)
         }
     }
 

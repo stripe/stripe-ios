@@ -5,6 +5,7 @@
 
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 
 /// Keeps the total shown in native Link in sync when it depends on the selected payment details' billing address,
 /// e.g. for automatic tax calculated from the billing address.
@@ -13,7 +14,7 @@ import Foundation
 /// Updates run one at a time in the order they were requested, and only the latest request's result is applied.
 @MainActor
 final class LinkTotalUpdater {
-    typealias Handler = @MainActor (BillingAddress?) async throws -> Int
+    typealias Handler = @MainActor (STPPaymentMethodAddress?) async throws -> Int
 
     enum Error: LocalizedError {
         case totalChanged
@@ -50,7 +51,7 @@ final class LinkTotalUpdater {
     /// - Parameter showsProgress: Whether to set `isUpdating` while the request is in flight.
     /// - Returns: Whether the total changed from the one displayed when this method was called.
     @discardableResult
-    func sync(billingAddress: BillingAddress?, showsProgress: Bool = true) async throws -> Bool {
+    func sync(billingAddress: STPPaymentMethodAddress?, showsProgress: Bool = true) async throws -> Bool {
         let key = Self.key(for: billingAddress)
         let amountBefore = amount
 
@@ -101,6 +102,17 @@ final class LinkTotalUpdater {
         }
     }
 
+    /// Syncs the total for the given billing address without waiting for the result.
+    func syncInBackground(billingAddress: STPPaymentMethodAddress?, onError: @escaping @MainActor (Swift.Error) -> Void) {
+        Task { @MainActor in
+            do {
+                try await sync(billingAddress: billingAddress)
+            } catch {
+                onError(error)
+            }
+        }
+    }
+
     /// Waits for any in-flight update to finish.
     func waitUntilIdle() async {
         var awaitedTask: Task<Int, Swift.Error>?
@@ -114,17 +126,14 @@ final class LinkTotalUpdater {
         observers.forEach { $0() }
     }
 
-    private static func key(for billingAddress: BillingAddress?) -> String {
-        guard let billingAddress else {
-            return ""
-        }
+    private static func key(for billingAddress: STPPaymentMethodAddress?) -> String {
         return [
-            billingAddress.line1,
-            billingAddress.line2,
-            billingAddress.city,
-            billingAddress.state,
-            billingAddress.postalCode,
-            billingAddress.countryCode,
+            billingAddress?.line1,
+            billingAddress?.line2,
+            billingAddress?.city,
+            billingAddress?.state,
+            billingAddress?.postalCode,
+            billingAddress?.country,
         ].map { $0 ?? "" }.joined(separator: "|")
     }
 }

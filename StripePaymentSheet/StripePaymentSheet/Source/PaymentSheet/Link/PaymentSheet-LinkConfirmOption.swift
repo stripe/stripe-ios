@@ -118,7 +118,7 @@ extension PaymentSheet.LinkConfirmOption {
         case .withPaymentMethod(_, let paymentMethod):
             return paymentMethod.billingDetails
         case .withPaymentDetails(_, _, let paymentDetails, _, _):
-            return STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
+            return paymentDetails.billingDetails
         }
     }
 

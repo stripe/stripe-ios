@@ -49,13 +49,7 @@ extension CheckoutElementsController {
         if let linkTotalUpdater, let checkoutWalletUpdater, case .canceled = result {
             // Mirror Apple Pay: if the customer leaves Link, restore the tax region they started with.
             await linkTotalUpdater.waitUntilIdle()
-            if checkoutWalletUpdater.currentTaxRegion != initialTaxRegion {
-                _ = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
-                    address: initialTaxRegion,
-                    canUpdateWhileSheetPresented: true,
-                    confirmationSource: parameters.attribution.confirmingElement
-                )
-            }
+            await checkoutWalletUpdater.restoreTaxRegion(to: initialTaxRegion, confirmationSource: parameters.attribution.confirmingElement)
         }
         return result
     }
@@ -79,18 +73,10 @@ extension CheckoutElementsController {
             guard let checkoutWalletUpdater else {
                 throw CheckoutError.unknown(debugDescription: "Checkout was deallocated while Link was open.")
             }
-            guard let country = billingAddress?.countryCode?.nonEmpty else {
+            guard let address = Address(taxRegionFrom: billingAddress) else {
                 // Without a country there's nothing to calculate tax from.
                 return latestSession().amount
             }
-            let address = Address(
-                country: country,
-                line1: billingAddress?.line1?.nonEmpty,
-                line2: billingAddress?.line2?.nonEmpty,
-                city: billingAddress?.city?.nonEmpty,
-                state: billingAddress?.state?.nonEmpty,
-                postalCode: billingAddress?.postalCode?.nonEmpty
-            )
             guard address != checkoutWalletUpdater.currentTaxRegion else {
                 return latestSession().amount
             }
