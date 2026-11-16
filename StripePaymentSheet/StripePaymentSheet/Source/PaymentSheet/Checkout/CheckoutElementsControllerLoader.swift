@@ -114,10 +114,12 @@ enum CheckoutElementsControllerLoader {
         let customerProvider = CustomerProvider(checkoutSession: session)
         PaymentSheetLoader.logAvailabilityMessages(elementsSession: elementsSession)
         // TODO(porter) Stripe balance: Support Checkout Sessions once CheckoutClient can list the buyer's financial accounts.
-        // Until then, Stripe balance isn't offered here since there are no accounts to pay from.
+        // `v1/elements/stripe_balance/customer_session/financial_accounts` requires a CustomerSession, so until then Stripe
+        // balance isn't offered here. Report it so we know how many merchants offer Stripe balance with Checkout Sessions.
         if elementsSession.orderedPaymentMethodTypes.contains(.stripeBalance) {
-            logUnexpectedCheckoutElementsErrorAndAssert(
-                "Stripe balance isn't supported for Checkout Sessions yet. Listing the buyer's financial accounts needs a CheckoutClient endpoint; `v1/elements/stripe_balance/customer_session/financial_accounts` requires a CustomerSession.",
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                event: .paymentSheetStripeBalanceCheckoutSessionUnsupported,
+                checkoutSessionID: session.id,
                 apiClient: checkout.apiClient
             )
         }
