@@ -225,13 +225,15 @@ extension STPTestingAPIClient {
         merchantCountry: String? = "us",
         customerID: String? = nil,
         savedPaymentMethodAllowRedisplayFilters: [String]? = nil,
+        savedPaymentMethodSaveEnabled: Bool = false,
         collectBillingAddress: Bool = false,
         automaticTax: Bool = false,
         customerEmailLocation: String? = nil,
         returnURL: String? = nil,
         allowPromotionCodes: Bool = false,
         allowedShippingCountries: [String]? = nil,
-        customerEmail: String? = nil
+        customerEmail: String? = nil,
+        paymentMethodOptions: [String: Any]? = nil
     ) async throws -> CreateCheckoutSessionResponse {
         let playgroundMerchant = playgroundMerchant(for: merchantCountry)
         var sessionParameters: [String: Any] = [
@@ -277,6 +279,9 @@ extension STPTestingAPIClient {
         if let customerEmail {
             sessionParameters["customer_email"] = customerEmail
         }
+        if let paymentMethodOptions {
+            sessionParameters["payment_method_options"] = paymentMethodOptions
+        }
         if let customerEmailLocation {
             sessionParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
         }
@@ -284,10 +289,16 @@ extension STPTestingAPIClient {
             sessionParameters["customer"] = customerID
         }
 
+        var savedPaymentMethodOptions: [String: Any] = [:]
         if let savedPaymentMethodAllowRedisplayFilters {
-            sessionParameters["saved_payment_method_options"] = [
-                "allow_redisplay_filters": savedPaymentMethodAllowRedisplayFilters,
-            ]
+            savedPaymentMethodOptions["allow_redisplay_filters"] = savedPaymentMethodAllowRedisplayFilters
+        }
+        // Lets Checkout offer the customer a checkbox to save their payment method.
+        if savedPaymentMethodSaveEnabled {
+            savedPaymentMethodOptions["payment_method_save"] = "enabled"
+        }
+        if !savedPaymentMethodOptions.isEmpty {
+            sessionParameters["saved_payment_method_options"] = savedPaymentMethodOptions
         }
 
         let checkoutSession: PlaygroundCheckoutSessionResponse = try await makePlaygroundRequest(
