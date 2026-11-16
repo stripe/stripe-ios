@@ -55,6 +55,8 @@ final class EmbeddedLinkInlineVerificationView: UIView {
 
     private let appearance: PaymentSheet.Appearance
     private let isFloating: Bool
+    private let logoImage: UIImage
+    private let logoView = UIImageView()
     private let emailButton = ChevronMenuButton()
     private lazy var closeButton = CircularButton(style: .close, iconColor: appearance.colors.icon)
     private let titleLabel = UILabel()
@@ -86,6 +88,7 @@ final class EmbeddedLinkInlineVerificationView: UIView {
     init(appearance: PaymentSheet.Appearance, linkBrand: LinkBrand) {
         self.appearance = appearance
         self.isFloating = appearance.embeddedPaymentElement.row.style == .floatingButton
+        self.logoImage = linkBrand.paymentSheetLogoImage
         // Link's own verification screen, scaled down: 56pt-tall digits with a 12pt radius.
         let digitHeight: CGFloat = 44
         self.codeField = OneTimeCodeTextField(
@@ -111,6 +114,7 @@ final class EmbeddedLinkInlineVerificationView: UIView {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        updateLogoSizing()
         // Attributed text doesn't rescale with Dynamic Type on its own.
         if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory, let state {
             render(state)
@@ -299,12 +303,11 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         focusRegion.setCustomSpacing(4, after: titleLabel)
         focusRegion.setCustomSpacing(16, after: subtitleLabel)
 
-        let logo = UIImageView(image: linkBrand.paymentSheetLogoImage)
-        logo.contentMode = .scaleAspectFit
-        logo.isAccessibilityElement = true
-        logo.accessibilityLabel = linkBrand.accessibilityDisplayName
-        logo.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        let footer = UIStackView(arrangedSubviews: [logo, UIView()])
+        logoView.contentMode = .scaleAspectFit
+        logoView.isAccessibilityElement = true
+        logoView.accessibilityLabel = linkBrand.accessibilityDisplayName
+        updateLogoSizing()
+        let footer = UIStackView(arrangedSubviews: [logoView, UIView()])
 
         let content = UIStackView(arrangedSubviews: [header, makeDivider(), focusRegion, makeDivider(), footer])
         content.axis = .vertical
@@ -312,6 +315,14 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         // The card can scroll under a navigation bar or the status bar; its padding shouldn't grow when it does.
         container.insetsLayoutMarginsFromSafeArea = false
         container.addAndPinSubview(content, directionalLayoutMargins: .init(top: 12, leading: 16, bottom: 16, trailing: 16))
+    }
+
+    private func updateLogoSizing() {
+        // Like the web PE's 1em logo, follow the surrounding body text, including merchant scaling and Dynamic Type.
+        let font = appearance.scaledFont(for: appearance.font.base.medium, style: .body, maximumPointSize: 30)
+        titleLabel.font = font
+        let image = logoImage.withConfiguration(traitCollection.imageConfiguration)
+        logoView.image = image.resized(to: font.pointSize / image.size.height)
     }
 
     /// Unfocused digits are shaded and borderless; the focused digit takes the component background.
