@@ -285,21 +285,6 @@ import UIKit
             }
         }()
 
-        switch settings.embeddedLinkInlineVerification {
-        case .off:
-            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = false
-            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = nil
-        case .on:
-            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = true
-            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = false
-        case .forceDialog:
-            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = true
-            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = true
-        case .server:
-            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = nil
-            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = nil
-        }
-
         var configuration = EmbeddedPaymentElement.Configuration()
         configuration.formSheetAction = formSheetAction
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
@@ -1437,11 +1422,24 @@ class AnalyticsLogObserver: ObservableObject {
 // MARK: Embedded helpers
 extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
+        applyEmbeddedLinkInlineVerificationOverride()
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
             intentConfig: intentConfig,
             playgroundController: self
         )
+    }
+
+    /// Overrides the server's inline Link OTP flags for the next Embedded Payment Element.
+    private func applyEmbeddedLinkInlineVerificationOverride() {
+        let (enabled, forcesDialog): (Bool?, Bool?) = switch settings.embeddedLinkInlineVerification {
+        case .off: (false, nil)
+        case .on: (true, false)
+        case .forceDialog: (true, true)
+        case .server: (nil, nil)
+        }
+        PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = enabled
+        PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = forcesDialog
     }
 
     func presentEmbedded<SettingsView: View>(settingsView: @escaping () -> SettingsView) {

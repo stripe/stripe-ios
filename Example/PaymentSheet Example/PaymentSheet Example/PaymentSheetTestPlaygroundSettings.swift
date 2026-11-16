@@ -711,9 +711,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case immediateAction
     }
 
-    /// Inline Link verification for returning Link customers in Embedded. Off by default, so other tests never send a code on their own.
+    /// A local override for inline Link OTP for returning Link customers in Embedded.
+    /// Off by default, so other tests never send a code on their own.
     enum EmbeddedLinkInlineVerification: String, PickerEnum {
-        static let enumName: String = "Inline Link verification"
+        static let enumName: String = "Embedded inline Link OTP"
         case off
         case on
         /// Always enters the code in the Link dialog.

@@ -17,7 +17,7 @@ final class EmbeddedVisibilityMonitor {
 
     init(
         view: UIView,
-        isVisible: @escaping (UIView) -> Bool = EmbeddedVisibilityMonitor.isOnScreen,
+        isVisible: @escaping @MainActor (UIView) -> Bool = EmbeddedVisibilityMonitor.isOnScreen,
         onFirstVisible: @escaping () -> Void
     ) {
         self.view = view
