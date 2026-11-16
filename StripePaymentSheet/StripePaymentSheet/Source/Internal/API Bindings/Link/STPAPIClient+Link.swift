@@ -518,6 +518,29 @@ extension STPAPIClient {
         }
     }
 
+    func deleteShippingAddress(
+        for consumerSessionClientSecret: String,
+        id: String,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/shipping_addresses/\(id)"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": requestSurface.rawValue,
+        ]
+
+        APIRequest<STPEmptyStripeResponse>.delete(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(),
+            parameters: parameters
+        ) { result in
+            completion(result.map { _ in () } )
+        }
+    }
+
     func deletePaymentDetails(
         for consumerSessionClientSecret: String,
         id: String,

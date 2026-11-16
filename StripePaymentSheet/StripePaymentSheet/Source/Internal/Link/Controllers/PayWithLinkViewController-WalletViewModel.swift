@@ -216,6 +216,10 @@ extension PayWithLinkViewController {
                 return .disabled
             }
 
+            if shouldShowShippingAddressPicker && context.selectedShippingAddress == nil {
+                return .disabled
+            }
+
             return .enabled
         }
 
@@ -271,6 +275,46 @@ extension PayWithLinkViewController {
                     delegate?.viewModelDidChange(self)
                 case .failure:
                     break
+                }
+
+                completion(result)
+            }
+        }
+
+        // MARK: Shipping addresses
+
+        /// Whether to let the customer pick a shipping address.
+        var shouldShowShippingAddressPicker: Bool {
+            context.requiresShippingAddress
+        }
+
+        var shippingAddresses: [ShippingAddressesResponse.ShippingAddress] {
+            context.shippingAddresses
+        }
+
+        var selectedShippingAddressIndex: Int? {
+            shippingAddresses.firstIndex { $0.id == context.selectedShippingAddressID }
+        }
+
+        func isShippingAddressSupported(at index: Int) -> Bool {
+            context.isShippingAddressSupported(shippingAddresses[index])
+        }
+
+        func selectShippingAddress(at index: Int) {
+            guard isShippingAddressSupported(at: index) else {
+                return
+            }
+            context.selectedShippingAddressID = shippingAddresses[index].id
+            delegate?.viewModelDidChange(self)
+        }
+
+        func deleteShippingAddress(at index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
+            let shippingAddress = shippingAddresses[index]
+
+            linkAccount.deleteShippingAddress(id: shippingAddress.id) { [self] result in
+                if case .success = result {
+                    context.shippingAddresses.removeAll { $0.id == shippingAddress.id }
+                    context.selectDefaultShippingAddressIfNeeded()
                 }
 
                 completion(result)

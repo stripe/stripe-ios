@@ -49,6 +49,14 @@ extension PayWithLinkViewController {
             return paymentPicker
         }()
 
+        private lazy var shippingAddressPicker: LinkShippingAddressPicker = {
+            let shippingAddressPicker = LinkShippingAddressPicker()
+            shippingAddressPicker.delegate = self
+            shippingAddressPicker.dataSource = self
+            shippingAddressPicker.linkAppearance = viewModel.linkAppearance
+            return shippingAddressPicker
+        }()
+
         private lazy var dataConsentView = LinkMandateView(delegate: self, linkAppearance: viewModel.linkAppearance)
 
         private lazy var mandateView = LinkMandateView(delegate: self, linkAppearance: viewModel.linkAppearance)
@@ -228,6 +236,11 @@ extension PayWithLinkViewController {
         }
 
         func setupUI() {
+            if viewModel.shouldShowShippingAddressPicker,
+               let paymentPickerIndex = containerView.arrangedSubviews.firstIndex(of: paymentPickerContainerView) {
+                containerView.insertArrangedSubview(shippingAddressPicker, at: paymentPickerIndex + 1)
+            }
+
             if viewModel.shouldShowApplePayButton {
                 containerView.addArrangedSubview(separator)
                 containerView.addArrangedSubview(applePayButton)
@@ -296,6 +309,9 @@ extension PayWithLinkViewController {
             }
 
             paymentPicker.reloadData()
+            if viewModel.shouldShowShippingAddressPicker {
+                shippingAddressPicker.reloadData()
+            }
             paymentPickerContainerView.toggleArrangedSubview(
                 mandateView,
                 shouldShow: viewModel.shouldShowMandate,
@@ -874,6 +890,147 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         actionSheet.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
 
         present(actionSheet, animated: true)
+    }
+}
+
+// MARK: - LinkShippingAddressPickerDataSource
+
+extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPickerDataSource {
+    var selectedShippingAddressIndex: Int? {
+        viewModel.selectedShippingAddressIndex
+    }
+
+    var numberOfShippingAddresses: Int {
+        viewModel.shippingAddresses.count
+    }
+
+    func shippingAddressPicker(
+        _ picker: LinkShippingAddressPicker,
+        shippingAddressAt index: Int
+    ) -> ShippingAddressesResponse.ShippingAddress {
+        viewModel.shippingAddresses[index]
+    }
+
+    func shippingAddressPicker(_ picker: LinkShippingAddressPicker, isShippingAddressSupportedAt index: Int) -> Bool {
+        viewModel.isShippingAddressSupported(at: index)
+    }
+}
+
+// MARK: - LinkShippingAddressPickerDelegate
+
+extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPickerDelegate {
+
+    func shippingAddressPicker(_ picker: LinkShippingAddressPicker, didSelectIndex index: Int) {
+        guard viewModel.isShippingAddressSupported(at: index) else {
+            return
+        }
+        viewModel.selectShippingAddress(at: index)
+        picker.setExpanded(false, animated: true)
+        picker.reloadData()
+    }
+
+    func shippingAddressPicker(
+        _ picker: LinkShippingAddressPicker,
+        menuActionsForItemAt index: Int
+    ) -> [Action] {
+        shippingAddressActions(for: index, includeCancelAction: false)
+    }
+
+    func shippingAddressPicker(
+        _ picker: LinkShippingAddressPicker,
+        showMenuForItemAt index: Int,
+        sourceRect: CGRect
+    ) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.popoverPresentationController?.sourceView = picker
+        alertController.popoverPresentationController?.sourceRect = sourceRect
+
+        for action in shippingAddressActions(for: index, includeCancelAction: true) {
+            alertController.addAction(
+                UIAlertAction(
+                    title: action.title,
+                    style: action.style,
+                    handler: { _ in action.action() }
+                )
+            )
+        }
+
+        present(alertController, animated: true)
+    }
+
+    func shippingAddressPickerDidTapOnAddShippingAddress(
+        _ picker: LinkShippingAddressPicker,
+        sourceRect: CGRect
+    ) {
+        // TODO(link): Collect a new shipping address.
+    }
+
+    private func shippingAddressActions(for index: Int, includeCancelAction: Bool) -> [Action] {
+        var actions = [
+            Action(
+                title: STPLocalizedString(
+                    "Remove address",
+                    "Title for a button that when tapped removes a saved shipping address."
+                ),
+                style: .destructive,
+                action: { [weak self] in
+                    self?.removeShippingAddress(at: index)
+                }
+            ),
+        ]
+
+        if includeCancelAction {
+            actions.append(Action(title: String.Localized.cancel, style: .cancel, action: {}))
+        }
+
+        return actions
+    }
+
+    private func removeShippingAddress(at index: Int) {
+        let shippingAddress = viewModel.shippingAddresses[index]
+
+        let alertController = UIAlertController(
+            title: STPLocalizedString(
+                "Remove address?",
+                "Title for confirmation alert to remove a saved shipping address."
+            ),
+            message: String(
+                format: STPLocalizedString(
+                    "%@ will no longer be saved to your wallet.",
+                    "Message shown in a confirmation prompt when removing a saved payment method."
+                ),
+                shippingAddress.formattedAddress
+            ),
+            preferredStyle: .alert
+        )
+
+        alertController.addAction(UIAlertAction(
+            title: String.Localized.cancel,
+            style: .cancel
+        ))
+
+        alertController.addAction(UIAlertAction(
+            title: String.Localized.remove,
+            style: .destructive,
+            handler: { _ in
+                self.shippingAddressPicker.showLoader(at: index)
+
+                self.viewModel.deleteShippingAddress(at: index) { result in
+                    self.shippingAddressPicker.hideLoader(at: index)
+
+                    switch result {
+                    case .success:
+                        self.shippingAddressPicker.removeShippingAddress(at: index, animated: true)
+                        // The selected shipping address may have changed, which affects whether the customer can pay.
+                        self.confirmButton.update(status: self.viewModel.confirmButtonStatus)
+                    case .failure(let error):
+                        self.updateErrorLabel(for: error)
+                    }
+                }
+            }
+        ))
+
+        present(alertController, animated: true)
     }
 }
 
