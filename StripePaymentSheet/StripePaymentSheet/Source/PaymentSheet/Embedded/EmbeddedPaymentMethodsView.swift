@@ -121,6 +121,8 @@ class EmbeddedPaymentMethodsView: UIView {
     /// The expanded Link row, shown in place of the Link row while a returning Link customer can verify inline.
     private(set) var linkInlineVerificationView: EmbeddedLinkInlineVerificationView?
     private var linkInlineVerificationContainer: UIView?
+    /// The separators around the expanded Link row, hidden while it shows since it has its own border.
+    private(set) var linkInlineVerificationHiddenSeparators: [UIView] = []
     private(set) var rowButtons: [RowButton]
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
     /// Keeps track of whether we're showing a change button/sublabel on the selected row
@@ -240,6 +242,12 @@ class EmbeddedPaymentMethodsView: UIView {
             container.addAndPinSubview(linkInlineVerificationView, insets: .insets(top: verticalInset, bottom: verticalInset))
             stackView.insertArrangedSubview(container, at: linkRowIndex + 1)
             linkRowButton.setHiddenIfNecessary(true)
+            // The separator before the hidden Link row and the one after the card.
+            linkInlineVerificationHiddenSeparators = [linkRowIndex - 1, linkRowIndex + 2]
+                .filter { stackView.arrangedSubviews.indices.contains($0) }
+                .map { stackView.arrangedSubviews[$0] }
+                .filter { !($0 is RowButton) }
+            linkInlineVerificationHiddenSeparators.forEach { $0.setHiddenIfNecessary(true) }
             self.linkInlineVerificationView = linkInlineVerificationView
             self.linkInlineVerificationContainer = container
         }
@@ -358,9 +366,12 @@ class EmbeddedPaymentMethodsView: UIView {
         linkInlineVerificationContainer = nil
         linkInlineVerificationView = nil
         let linkRowButton = linkRowButton
+        let separators = linkInlineVerificationHiddenSeparators
+        linkInlineVerificationHiddenSeparators = []
         let updates = {
             container.setHiddenIfNecessary(true)
             container.alpha = 0
+            separators.forEach { $0.setHiddenIfNecessary(false) }
             linkRowButton?.setHiddenIfNecessary(false)
             linkRowButton?.alpha = 1
             self.setNeedsLayout()

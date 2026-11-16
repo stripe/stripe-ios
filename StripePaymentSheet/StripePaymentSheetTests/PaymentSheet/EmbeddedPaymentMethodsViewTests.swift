@@ -34,12 +34,25 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         XCTAssertTrue(linkInlineVerificationView.isDescendant(of: arrangedSubviews[linkIndex + 1]))
         XCTAssertFalse(arrangedSubviews[linkIndex + 2] is RowButton, "Expected a separator after the card")
         XCTAssertTrue(arrangedSubviews[linkIndex + 3] === embeddedView.rowButtons[1])
+        XCTAssertFalse(arrangedSubviews[linkIndex + 4] is RowButton, "Expected a separator after the next row")
+
+        // ...and the card, which has its own border, hides the separators on either side of it but no others
+        let separatorAbove = arrangedSubviews[linkIndex - 1]
+        let separatorBelow = arrangedSubviews[linkIndex + 2]
+        XCTAssertFalse(separatorAbove is RowButton, "Expected the top separator")
+        XCTAssertEqual(embeddedView.linkInlineVerificationHiddenSeparators, [separatorAbove, separatorBelow])
+        XCTAssertTrue(separatorAbove.isHidden)
+        XCTAssertTrue(separatorBelow.isHidden)
+        XCTAssertFalse(arrangedSubviews[linkIndex + 4].isHidden)
 
         // When the card collapses
         embeddedView.collapseLinkInlineVerification(animated: false)
 
-        // Then the regular Link row is back in the same place
+        // Then the regular Link row is back in the same place, with its separators
         XCTAssertFalse(linkRow.isHidden)
+        XCTAssertFalse(separatorAbove.isHidden)
+        XCTAssertFalse(separatorBelow.isHidden)
+        XCTAssertTrue(embeddedView.linkInlineVerificationHiddenSeparators.isEmpty)
         XCTAssertNil(embeddedView.linkInlineVerificationView)
         XCTAssertFalse(linkInlineVerificationView.isDescendant(of: embeddedView))
         XCTAssertTrue(embeddedView.stackView.arrangedSubviews[linkIndex + 1] === arrangedSubviews[linkIndex + 2])
