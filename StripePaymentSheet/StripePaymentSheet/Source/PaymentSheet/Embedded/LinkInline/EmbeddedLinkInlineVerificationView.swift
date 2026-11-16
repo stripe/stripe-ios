@@ -55,8 +55,7 @@ final class EmbeddedLinkInlineVerificationView: UIView {
 
     private let appearance: PaymentSheet.Appearance
     private let isFloating: Bool
-    // Custom, so the title keeps the merchant's text color instead of the tint color.
-    private let emailButton = UIButton(type: .custom)
+    private let emailButton = ChevronMenuButton()
     private lazy var closeButton = CircularButton(style: .close, iconColor: appearance.colors.icon)
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
@@ -87,17 +86,20 @@ final class EmbeddedLinkInlineVerificationView: UIView {
     init(appearance: PaymentSheet.Appearance, linkBrand: LinkBrand) {
         self.appearance = appearance
         self.isFloating = appearance.embeddedPaymentElement.row.style == .floatingButton
+        // Link's own verification screen, scaled down: 56pt-tall digits with a 12pt radius.
+        let digitHeight: CGFloat = 44
         self.codeField = OneTimeCodeTextField(
             configuration: .init(
                 numberOfDigits: 6,
                 enableDigitGrouping: false,
-                font: appearance.scaledFont(for: appearance.font.base.medium, style: .title2, maximumPointSize: 32),
-                itemCornerRadius: min(appearance.cornerRadius ?? 8, 12),
-                itemHeight: 52,
-                itemMaxWidth: 48,
+                font: appearance.scaledFont(for: appearance.font.base.medium, style: .title2, maximumPointSize: 28),
+                itemCornerRadius: digitHeight * LinkUI.oneTimeCodeTextFieldCornerRadius / 56,
+                itemHeight: digitHeight,
+                itemMaxWidth: digitHeight / 1.16,
+                itemFocusRingThickness: 1.5,
                 itemFocusBackgroundColor: appearance.colors.componentBackground
             ),
-            theme: appearance.asElementsTheme
+            theme: Self.makeCodeFieldTheme(appearance: appearance)
         )
         super.init(frame: .zero)
         setUpViews(linkBrand: linkBrand)
@@ -121,8 +123,9 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         let previousState = state
         state = newState
 
-        emailButton.setAttributedTitle(makeEmailTitle(email: newState.email, color: appearance.colors.text), for: .normal)
-        emailButton.setAttributedTitle(makeEmailTitle(email: newState.email, color: appearance.colors.text.withAlphaComponent(0.5)), for: .highlighted)
+        var emailTitle = AttributedString(newState.email)
+        emailTitle.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 25)
+        emailButton.configuration?.attributedTitle = emailTitle
         emailButton.accessibilityLabel = newState.email
         emailButton.accessibilityHint = Self.switchAccountTitle
 
@@ -149,18 +152,6 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         errorLabel.setHiddenIfNecessary(newState.errorMessage == nil)
 
         renderActions(newState.actions, isLoading: newState.isActionLoading)
-    }
-
-    private func makeEmailTitle(email: String, color: UIColor) -> NSAttributedString {
-        let chevron = NSTextAttachment()
-        chevron.image = UIImage(systemName: "chevron.down", withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .semibold))?
-            .withTintColor(color, renderingMode: .alwaysOriginal)
-        let title = NSMutableAttributedString(string: email + " ", attributes: [
-            .font: appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 25),
-            .foregroundColor: color,
-        ])
-        title.append(NSAttributedString(attachment: chevron))
-        return title
     }
 
     private func makeSubtitle(recipient: String) -> NSAttributedString {
@@ -233,9 +224,16 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         }
         addAndPinSubview(container)
 
+        var emailButtonConfiguration = UIButton.Configuration.plain()
+        emailButtonConfiguration.contentInsets = .zero
+        // Keeps the merchant's text color instead of the tint color.
+        emailButtonConfiguration.baseForegroundColor = appearance.colors.text
+        emailButtonConfiguration.image = UIImage(systemName: "chevron.down", withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .semibold))
+        emailButtonConfiguration.imagePlacement = .trailing
+        emailButtonConfiguration.imagePadding = 4
+        emailButtonConfiguration.titleLineBreakMode = .byTruncatingMiddle
+        emailButton.configuration = emailButtonConfiguration
         emailButton.contentHorizontalAlignment = .leading
-        emailButton.titleLabel?.lineBreakMode = .byTruncatingMiddle
-        emailButton.titleLabel?.numberOfLines = 1
         emailButton.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         if #available(iOS 14.0, *) {
             emailButton.showsMenuAsPrimaryAction = true
@@ -262,7 +260,8 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         titleLabel.accessibilityTraits = .header
         subtitleLabel.numberOfLines = 0
 
-        codeField.tintColor = appearance.colors.primary
+        // Colors the focused digit's border.
+        codeField.tintColor = appearance.colors.selectedComponentBorder ?? appearance.colors.text
         codeField.customInputAccessoryView = doneToolbar
         codeField.addTarget(self, action: #selector(codeFieldChanged), for: .valueChanged)
         codeField.addTarget(self, action: #selector(codeFieldEndedEditing), for: .editingDidEnd)
@@ -313,6 +312,18 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         // The card can scroll under a navigation bar or the status bar; its padding shouldn't grow when it does.
         container.insetsLayoutMarginsFromSafeArea = false
         container.addAndPinSubview(content, directionalLayoutMargins: .init(top: 12, leading: 16, bottom: 16, trailing: 16))
+    }
+
+    /// Unfocused digits are shaded and borderless; the focused digit takes the component background.
+    private static func makeCodeFieldTheme(appearance: PaymentSheet.Appearance) -> ElementsAppearance {
+        var theme = appearance.asElementsTheme
+        let componentBackground = appearance.colors.componentBackground
+        theme.colors.componentBackground = UIColor { traitCollection in
+            let resolvedColor = componentBackground.resolvedColor(with: traitCollection)
+            return resolvedColor.isBright ? resolvedColor.darken(by: 0.04) : resolvedColor.lighten(by: 0.08)
+        }
+        theme.colors.border = .clear
+        return theme
     }
 
     private func makeDivider() -> UIView {
@@ -453,6 +464,29 @@ extension EmbeddedLinkInlineVerificationView.State {
             inputRevision: coordinator.inputRevision,
             invalidCodeRevision: coordinator.invalidCodeRevision
         )
+    }
+}
+
+/// A button whose menu opens from its chevron, so the menu doesn't cover the title.
+private final class ChevronMenuButton: UIButton {
+    override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
+        guard let imageView else { return super.menuAttachmentPoint(for: configuration) }
+        return convert(CGPoint(x: imageView.bounds.midX, y: imageView.bounds.maxY), from: imageView)
+    }
+
+    // The menu grows out of this preview.
+    @available(iOS 16.0, *)
+    override func contextMenuInteraction(
+        _ interaction: UIContextMenuInteraction,
+        configuration: UIContextMenuConfiguration,
+        highlightPreviewForItemWithIdentifier identifier: any NSCopying
+    ) -> UITargetedPreview? {
+        guard let imageView, imageView.window != nil else {
+            return super.contextMenuInteraction(interaction, configuration: configuration, highlightPreviewForItemWithIdentifier: identifier)
+        }
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        return UITargetedPreview(view: imageView, parameters: parameters)
     }
 }
 
