@@ -212,6 +212,7 @@ final class EmbeddedLinkInlineVerificationView: UIView {
     // MARK: Layout
 
     private func setUpViews(linkBrand: LinkBrand) {
+        accessibilityIdentifier = "embedded_link_inline_verification"
         let container: UIView
         if isFloating {
             container = ShadowedRoundedRectangle(appearance: appearance)

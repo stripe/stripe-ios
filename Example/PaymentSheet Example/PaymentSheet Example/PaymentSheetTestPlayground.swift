@@ -84,6 +84,9 @@ struct PaymentSheetTestPlayground: View {
             }
             SearchableSettingView(setting: $playgroundController.settings.linkPassthroughMode, searchText: searchText)
             SearchableSettingView(setting: $playgroundController.settings.linkDisplay, searchText: searchText)
+            if playgroundController.settings.uiStyle == .embedded {
+                SearchableSettingView(setting: $playgroundController.settings.embeddedLinkInlineVerification, searchText: searchText)
+            }
             SearchableSettingView(setting: $playgroundController.settings.forceOnelink, searchText: searchText)
             SearchableSettingView(setting: $playgroundController.settings.forceOnelinkConsumer, searchText: searchText)
         }

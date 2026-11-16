@@ -6,7 +6,7 @@
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(EmbeddedLinkInlineVerificationPrivatePreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
@@ -14,6 +14,7 @@ import XCTest
 final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
     private let host = HostSpy()
     private let experimentAnalyticsClient = MockAnalyticsClientV2()
+    private let analyticsClient = STPTestingAnalyticsClient()
     private var window: UIWindow?
 
     override func setUp() {
@@ -48,6 +49,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertEqual(exposures.count, 1)
         XCTAssertEqual(exposures.first?["assignment_group"] as? String, "treatment")
         XCTAssertTrue(controller.coordinator.canSubmitCode)
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthShown).count, 1)
     }
 
     func testControlGroupKeepsTheLinkRowButLogsTheSameExposure() async {
@@ -62,6 +64,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertTrue(account.starts.isEmpty)
         let exposures = experimentAnalyticsClient.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName)
         XCTAssertEqual(exposures.first?["assignment_group"] as? String, "control")
+        XCTAssertTrue(loggedEvents(.linkEmbeddedInlineAuthShown).isEmpty)
     }
 
     func testSessionsWithoutAnAssignmentShowTheCardWithoutLoggingExposure() async {
@@ -99,6 +102,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertNotNil(controller.accountToPreserveOnUpdate)
         XCTAssertEqual(EmbeddedLinkInlineAuthRegistry.ineligibleReason(email: controller.linkAccount.email), .dismissedThisSession)
         XCTAssertNil(controller.makeCardView(appearance: .default))
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthDismissed).count, 1)
     }
 
     func testSwitchingAccountsLogsOut() async throws {
@@ -132,6 +136,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertEqual(controller.phase, .finished)
         XCTAssertEqual(host.collapses, 1)
         XCTAssertFalse(controller.isShowingCard)
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthFellBack).map { $0.params["reason"] as? String }, ["send_failed"])
     }
 
     func testAnotherSurfaceReplacingTheAccountEndsTheAttempt() async {
@@ -187,6 +192,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertTrue(controller.isPresentingUI)
         XCTAssertEqual(host.presentations, 1)
         XCTAssertFalse(controller.verifiesBeforeConfirming)
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthDialogShown).map { $0.params["reason"] as? String }, ["confirm"])
 
         // ...and enter the code they were sent in the dialog
         account.confirmResult = .success(.init(consumerSession: LinkAuthStubs.session(current: .oneFactorAuth)))
@@ -262,6 +268,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         // Then they type in the card rather than a dialog
         XCTAssertTrue(card.isCodeFocused)
         XCTAssertEqual(host.presentations, 0)
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthFocused).count, 1)
 
         // When the merchant's app ends editing
         let endEditing = card.onCodeEditingEnded
@@ -323,6 +330,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertFalse(card.isCodeFocused)
         XCTAssertEqual(host.presentations, 1)
         XCTAssertTrue(controller.isPresentingUI)
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthDialogShown).map { $0.params["reason"] as? String }, ["forced_by_server"])
         controller.invalidate()
         try await waitUntil { presenter.presentedViewController == nil }
     }
@@ -391,7 +399,8 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
             experiment: experiment,
             configuration: configuration,
             linkBrand: .link,
-            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .embedded, analyticsClientV2: experimentAnalyticsClient)
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .embedded, analyticsClientV2: experimentAnalyticsClient),
+            linkAnalyticsHelper: LinkAnalyticsHelper(analyticsClient: analyticsClient)
         )
         controller.host = host
         return (controller, account)
@@ -404,6 +413,10 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         window.makeKeyAndVisible()
         self.window = window
         return presenter
+    }
+
+    private func loggedEvents(_ event: STPAnalyticEvent) -> [Analytic] {
+        analyticsClient.events.filter { $0.event == event }
     }
 
     /// Puts the card near the top of a full-screen scroll view in a window.
@@ -613,6 +626,30 @@ final class EmbeddedPaymentElementLinkInlineAuthTests: XCTestCase {
         XCTAssertNil(element.linkInlineAuth)
         XCTAssertNil(element.embeddedPaymentMethodsView.linkInlineVerificationView)
         XCTAssertNotEqual(element.embeddedPaymentMethodsView.rowButtons.first?.type, .link)
+    }
+
+    func testReturningCustomersWhoDontGetTheCardAreLoggedOncePerElement() {
+        // Given a returning customer who needs to verify, with a merchant that opted out
+        LinkAccountContext.shared.account = makeLinkAccountRequiringVerification()
+        var configuration = makeConfiguration()
+        configuration.allowsLinkInlineVerification = false
+        let analyticsClient = STPTestingAnalyticsClient()
+
+        // When the element loads, then updates
+        let element = EmbeddedPaymentElement(configuration: configuration, loadResult: makeLoadResult(isLinkEnabled: true), analyticsHelper: ._testValue(integrationShape: .embedded, analyticsClient: analyticsClient))
+        element.applyLoadResult(makeLoadResult(isLinkEnabled: true), confirmationChallenge: nil, configuration: configuration)
+
+        // Then the reason is logged once
+        XCTAssertNil(element.linkInlineAuth)
+        let ineligible = analyticsClient.events.filter { $0.event == .linkEmbeddedInlineAuthIneligible }
+        XCTAssertEqual(ineligible.map { $0.params["reason"] as? String }, ["disabled_by_merchant"])
+    }
+
+    func testCustomersWithoutALinkAccountArentLoggedAsIneligible() {
+        LinkAccountContext.shared.account = nil
+        let analyticsClient = STPTestingAnalyticsClient()
+        _ = EmbeddedPaymentElement(configuration: makeConfiguration(), loadResult: makeLoadResult(isLinkEnabled: true), analyticsHelper: ._testValue(integrationShape: .embedded, analyticsClient: analyticsClient))
+        XCTAssertFalse(analyticsClient.events.contains { $0.event == .linkEmbeddedInlineAuthIneligible })
     }
 
     func testPickingPaymentDetailsInTheLinkWalletSelectsLinkWithThem() throws {
