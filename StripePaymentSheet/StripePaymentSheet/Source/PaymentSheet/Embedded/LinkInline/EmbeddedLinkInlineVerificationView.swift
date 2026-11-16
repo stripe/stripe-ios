@@ -44,8 +44,10 @@ final class EmbeddedLinkInlineVerificationView: UIView {
     var onClose: (() -> Void)?
     var onSwitchAccount: (() -> Void)?
     var onAction: ((LinkAuthFlowCoordinator.Action) -> Void)?
-    var onCodeChanged: (() -> Void)?
+    var onCodeChanged: ((String) -> Void)?
     var onCodeEntered: ((String) -> Void)?
+    /// The code field stopped being first responder, e.g. after Done, or because the host ended editing or removed the view.
+    var onCodeEditingEnded: (() -> Void)?
 
     /// The part that has to stay visible while the customer types the code.
     let focusRegion = UIStackView()
@@ -69,7 +71,18 @@ final class EmbeddedLinkInlineVerificationView: UIView {
     }()
     /// Shows the actions menu on iOS 14+, layered over `actionsButton`.
     private let actionsMenuButton = UIButton(type: .system)
+    /// The number pad has no return key, so this gives it a way to close.
+    private lazy var doneToolbar = DoneButtonToolbar(delegate: self, theme: appearance.asElementsTheme)
     private var state: State?
+
+    var isCodeFocused: Bool {
+        codeField.isFirstResponder
+    }
+
+    /// The height the Done toolbar adds above the keyboard.
+    var keyboardAccessoryHeight: CGFloat {
+        doneToolbar.frame.height
+    }
 
     init(appearance: PaymentSheet.Appearance, linkBrand: LinkBrand) {
         self.appearance = appearance
@@ -124,8 +137,8 @@ final class EmbeddedLinkInlineVerificationView: UIView {
             }
             if previousState.invalidCodeRevision != newState.invalidCodeRevision {
                 if codeField.isFirstResponder {
-                    // Clears the field once the animation finishes.
-                    codeField.performInvalidCodeAnimation()
+                    // Clears the field once the animation finishes. The field only focuses when the customer taps it.
+                    codeField.performInvalidCodeAnimation(refocusesWhenFinished: false)
                 } else {
                     codeField.value = ""
                 }
@@ -249,7 +262,9 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         subtitleLabel.numberOfLines = 0
 
         codeField.tintColor = appearance.colors.primary
+        codeField.customInputAccessoryView = doneToolbar
         codeField.addTarget(self, action: #selector(codeFieldChanged), for: .valueChanged)
+        codeField.addTarget(self, action: #selector(codeFieldEndedEditing), for: .editingDidEnd)
         codeTapTarget.isAccessibilityElement = true
         codeTapTarget.accessibilityTraits = .button
         codeTapTarget.addTarget(self, action: #selector(didTapCode), for: .touchUpInside)
@@ -306,6 +321,24 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         return divider
     }
 
+    // MARK: Focus
+
+    /// Starts typing in the card. Taps on the code field otherwise only call `onTapCode`.
+    func focusCode() {
+        codeTapTarget.isHidden = true
+        codeField.becomeFirstResponder()
+    }
+
+    func resignCode() {
+        codeField.resignFirstResponder()
+        codeTapTarget.isHidden = false
+    }
+
+    /// Shows digits typed into a previous card for the same attempt, without submitting them.
+    func restoreCode(_ code: String) {
+        codeField.value = code
+    }
+
     // MARK: Actions
 
     @objc private func didTapClose() {
@@ -317,10 +350,15 @@ final class EmbeddedLinkInlineVerificationView: UIView {
     }
 
     @objc private func codeFieldChanged() {
-        onCodeChanged?()
+        onCodeChanged?(codeField.value)
         if codeField.isComplete {
             onCodeEntered?(codeField.value)
         }
+    }
+
+    @objc private func codeFieldEndedEditing() {
+        codeTapTarget.isHidden = false
+        onCodeEditingEnded?()
     }
 
     @objc private func didTapActions() {
@@ -414,5 +452,11 @@ extension EmbeddedLinkInlineVerificationView.State {
             inputRevision: coordinator.inputRevision,
             invalidCodeRevision: coordinator.invalidCodeRevision
         )
+    }
+}
+
+extension EmbeddedLinkInlineVerificationView: @preconcurrency DoneButtonToolbarDelegate {
+    func didTapDone(_ toolbar: DoneButtonToolbar) {
+        resignCode()
     }
 }

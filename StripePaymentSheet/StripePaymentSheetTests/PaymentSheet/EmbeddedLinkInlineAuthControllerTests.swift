@@ -247,6 +247,113 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertEqual(host.presentations, 0)
     }
 
+    func testTappingTheCodeTypesInTheCardWhenTheLayoutCanKeepItVisible() async throws {
+        // Given a card whose code was sent, near the top of a scrolling screen
+        let (controller, _) = makeController()
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+        placeInScrollingScreen(card)
+        XCTAssertEqual(controller.codeEntry(), .inline)
+
+        // When the customer taps the code
+        card.onTapCode?()
+
+        // Then they type in the card rather than a dialog
+        XCTAssertTrue(card.isCodeFocused)
+        XCTAssertEqual(host.presentations, 0)
+
+        // When the merchant's app ends editing
+        let endEditing = card.onCodeEditingEnded
+        var editingEndedCount = 0
+        card.onCodeEditingEnded = {
+            editingEndedCount += 1
+            endEditing?()
+        }
+        card.window?.endEditing(true)
+
+        // Then the card hears about it once
+        XCTAssertFalse(card.isCodeFocused)
+        XCTAssertEqual(editingEndedCount, 1)
+
+        // When they tap the code again, then close the card
+        card.onTapCode?()
+        XCTAssertTrue(card.isCodeFocused)
+        card.onClose?()
+
+        // Then typing ends
+        XCTAssertFalse(card.isCodeFocused)
+        XCTAssertEqual(editingEndedCount, 2)
+    }
+
+    func testCodeEntryUsesTheDialogWhenTheCardCanNotTakeIt() async throws {
+        // Given a card whose code was sent, in a scrolling screen
+        let (controller, _) = makeController()
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+        placeInScrollingScreen(card)
+
+        // Then the server can send every code to the dialog
+        controller.forcesDialog = true
+        XCTAssertEqual(controller.codeEntry(), .dialog(.forcedByServer))
+        controller.forcesDialog = false
+
+        // ...and so does a card that isn't on screen
+        card.removeFromSuperview()
+        XCTAssertEqual(controller.codeEntry(), .dialog(.layout(.notInWindow)))
+
+        // ...and an email code
+        controller.coordinator.sendToEmail()
+        await settle()
+        XCTAssertEqual(controller.codeEntry(), .dialog(.unsupportedStep))
+    }
+
+    func testForcedDialogOpensWhenTheCodeIsTapped() async throws {
+        let (controller, _) = makeController()
+        controller.forcesDialog = true
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+        let presenter = makePresenterInWindow()
+        host.presenter = presenter
+
+        card.onTapCode?()
+
+        XCTAssertFalse(card.isCodeFocused)
+        XCTAssertEqual(host.presentations, 1)
+        XCTAssertTrue(controller.isPresentingUI)
+        controller.invalidate()
+        try await waitUntil { presenter.presentedViewController == nil }
+    }
+
+    func testTypedDigitsCarryIntoARebuiltCardUntilTheFieldIsCleared() async throws {
+        // Given a card whose code was sent
+        let account = LinkAuthAccountStub()
+        let (controller, _) = makeController(account: account)
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+
+        // When the customer types two digits, then an update rebuilds the list
+        card.onCodeChanged?("12")
+        let rebuiltCard = try XCTUnwrap(controller.makeCardView(appearance: .default))
+
+        // Then the new card shows them, without submitting anything
+        XCTAssertEqual(rebuiltCard.codeField.value, "12")
+        XCTAssertTrue(account.confirms.isEmpty)
+
+        // When they finish a wrong code, which clears the field
+        rebuiltCard.onCodeChanged?("123456")
+        rebuiltCard.onCodeEntered?("123456")
+        await settle()
+        let cardAfterWrongCode = try XCTUnwrap(controller.makeCardView(appearance: .default))
+
+        // Then the digits aren't carried over again
+        XCTAssertEqual(account.confirms.count, 1)
+        XCTAssertEqual(cardAfterWrongCode.codeField.value, "")
+    }
+
     func testShowingTheCardClaimsItForThisInstance() {
         let (controller, _) = makeController()
         XCTAssertEqual(EmbeddedLinkInlineAuthRegistry.ineligibleReason(email: "other@example.com"), .shownElsewhere)
@@ -291,12 +398,28 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
     }
 
     private func makePresenterInWindow() -> UIViewController {
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+        let window = UIWindow.makeForTesting()
         let presenter = UIViewController()
         window.rootViewController = presenter
         window.makeKeyAndVisible()
         self.window = window
         return presenter
+    }
+
+    /// Puts the card near the top of a full-screen scroll view in a window.
+    private func placeInScrollingScreen(_ card: UIView) {
+        let presenter = makePresenterInWindow()
+        let scrollView = UIScrollView()
+        presenter.view.addAndPinSubview(scrollView)
+        card.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(card)
+        NSLayoutConstraint.activate([
+            card.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 40),
+            card.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
+            card.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
+            card.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -800),
+        ])
+        presenter.view.layoutIfNeeded()
     }
 
     private func waitUntil(timeout: TimeInterval = 5, _ condition: () -> Bool) async throws {
