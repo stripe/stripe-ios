@@ -303,7 +303,7 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         logo.contentMode = .scaleAspectFit
         logo.isAccessibilityElement = true
         logo.accessibilityLabel = linkBrand.accessibilityDisplayName
-        logo.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        logo.heightAnchor.constraint(equalToConstant: titleLabel.font.pointSize).isActive = true
         let footer = UIStackView(arrangedSubviews: [logo, UIView()])
 
         let content = UIStackView(arrangedSubviews: [header, makeDivider(), focusRegion, makeDivider(), footer])
