@@ -450,6 +450,33 @@ struct LinkPMDisplayDetails {
         }
     }
 
+    func createShippingAddress(
+        name: String?,
+        address: STPPaymentMethodAddress,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                return completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Creating Link shipping address without valid session"
+                        )
+                    )
+                )
+            }
+
+            session.createShippingAddress(
+                with: self.apiClient,
+                name: name,
+                address: address,
+                requestSurface: self.requestSurface,
+                completion: completionRetryingOnAuthErrors
+            )
+        }
+    }
+
     func deleteShippingAddress(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {

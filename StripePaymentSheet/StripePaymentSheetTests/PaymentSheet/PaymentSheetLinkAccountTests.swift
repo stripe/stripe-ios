@@ -415,6 +415,67 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         }
     }
 
+    func testCreateShippingAddressSendsAddressAndDecodesResponse() {
+        // Given a stubbed create shipping address endpoint
+        let apiClient = APIStubbedTestCase.stubbedAPIClient()
+        var capturedFormFields: [String: String] = [:]
+        stub { request in
+            request.url?.absoluteString.hasSuffix("consumers/shipping_addresses") ?? false
+        } response: { request in
+            let body = String(data: request.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+            capturedFormFields = Self.decodeFormFields(from: body)
+            return HTTPStubsResponse(
+                jsonObject: [
+                    "shipping_address": [
+                        "id": "csmrshpad_123",
+                        "is_default": false,
+                        "address": [
+                            "name": "Jane Doe",
+                            "line_1": "510 Townsend St",
+                            "locality": "San Francisco",
+                            "administrative_area": "CA",
+                            "postal_code": "94103",
+                            "country_code": "US",
+                        ],
+                    ],
+                ],
+                statusCode: 200,
+                headers: nil
+            )
+        }
+        let address = STPPaymentMethodAddress()
+        address.line1 = "510 Townsend St"
+        address.city = "San Francisco"
+        address.state = "CA"
+        address.postalCode = "94103"
+        address.country = "US"
+        let expectation = expectation(description: "Creates shipping address")
+
+        // When a shipping address is created
+        var createdShippingAddress: ShippingAddressesResponse.ShippingAddress?
+        apiClient.createShippingAddress(
+            for: "consumer_session_secret",
+            name: "Jane Doe",
+            address: address
+        ) { result in
+            createdShippingAddress = try? result.get()
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 1)
+
+        // Then the address is sent with the consumer API's field names
+        XCTAssertEqual(capturedFormFields["credentials[consumer_session_client_secret]"], "consumer_session_secret")
+        XCTAssertEqual(capturedFormFields["address[name]"], "Jane Doe")
+        XCTAssertEqual(capturedFormFields["address[line_1]"], "510 Townsend St")
+        XCTAssertEqual(capturedFormFields["address[locality]"], "San Francisco")
+        XCTAssertEqual(capturedFormFields["address[administrative_area]"], "CA")
+        XCTAssertEqual(capturedFormFields["address[postal_code]"], "94103")
+        XCTAssertEqual(capturedFormFields["address[country_code]"], "US")
+        // ...and the created shipping address is returned
+        XCTAssertEqual(createdShippingAddress?.id, "csmrshpad_123")
+        XCTAssertEqual(createdShippingAddress?.address.name, "Jane Doe")
+    }
+
     /// Decodes an `application/x-www-form-urlencoded` request body into a flat `[key: value]` map, keeping
     /// bracketed keys (e.g. `credentials[consumer_session_client_secret]`) as-is rather than nesting them.
     private static func decodeFormFields(from body: String) -> [String: String] {

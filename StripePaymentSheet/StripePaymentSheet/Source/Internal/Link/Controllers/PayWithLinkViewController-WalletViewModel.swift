@@ -308,6 +308,15 @@ extension PayWithLinkViewController {
             delegate?.viewModelDidChange(self)
         }
 
+        /// Adds a shipping address the customer just saved to their Link account, and selects it if the session ships to it.
+        func addShippingAddress(_ shippingAddress: ShippingAddressesResponse.ShippingAddress) {
+            context.shippingAddresses.append(shippingAddress)
+            if context.isShippingAddressSupported(shippingAddress) {
+                context.selectedShippingAddressID = shippingAddress.id
+            }
+            delegate?.viewModelDidChange(self)
+        }
+
         func deleteShippingAddress(at index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
             let shippingAddress = shippingAddresses[index]
 

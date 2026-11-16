@@ -397,6 +397,21 @@ extension ConsumerSession {
             completion: completion)
     }
 
+    func createShippingAddress(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        name: String?,
+        address: STPPaymentMethodAddress,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        apiClient.createShippingAddress(
+            for: clientSecret,
+            name: name,
+            address: address,
+            requestSurface: requestSurface,
+            completion: completion)
+    }
+
     func deleteShippingAddress(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
