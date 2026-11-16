@@ -143,6 +143,7 @@ public final class EmbeddedPaymentElement {
         }
 
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
+        linkInlineAuth?.endInlineEntry()
         // Cancel the old task and let it finish so that merchants receive update results in order
         latestUpdateTask?.cancel()
         _ = await latestUpdateTask?.value
@@ -299,6 +300,7 @@ public final class EmbeddedPaymentElement {
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
         analyticsHelper.log(event: .mcConfirmEmbedded)
+        linkInlineAuth?.endInlineEntry()
         guard let presentingViewController = confirmPresentingViewController else {
             let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
             assertionFailure(errorMessage)
