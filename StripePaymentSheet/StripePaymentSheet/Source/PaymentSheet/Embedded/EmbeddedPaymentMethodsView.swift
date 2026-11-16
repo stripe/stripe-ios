@@ -54,6 +54,10 @@ class EmbeddedPaymentMethodsView: UIView {
             case .new(paymentMethodType: let paymentMethodType):
                 let isCardOrUSBankAccount = paymentMethodType == .stripe(.card) || paymentMethodType == .stripe(.USBankAccount)
                 previousSelectedRowButton.removeChangeButton(shouldClearSublabel: isCardOrUSBankAccount)
+            case .link where previousSelectedRowButton.accessoryView != nil:
+                // The Link row goes back to showing the customer's email instead of the payment details they picked.
+                previousSelectedRowButton.removeChangeButton(shouldClearSublabel: false)
+                updateLinkRow(for: LinkAccountContext.shared.account, animated: false)
             default:
                break
             }
@@ -161,7 +165,13 @@ class EmbeddedPaymentMethodsView: UIView {
         super.init(frame: .zero)
 
         let makeLinkRowButton = { [weak self] in
-            RowButton.makeForLink(appearance: appearance, linkBrand: linkBrand, isEmbedded: true) { rowButton in
+            RowButton.makeForLink(
+                appearance: appearance,
+                linkBrand: linkBrand,
+                isEmbedded: true,
+                // After inline verification, the Link row shows the payment details picked in the Link wallet and a "Change" button.
+                accessoryView: placesLinkFirst ? self?.makeChangeButton() : nil
+            ) { rowButton in
                 self?.didTap(rowButton: rowButton)
             }
         }
@@ -342,6 +352,14 @@ class EmbeddedPaymentMethodsView: UIView {
         selectedRowButton = nil
     }
 
+    /// Selects the Link row if it's displayed.
+    @discardableResult
+    func selectLinkRow() -> Bool {
+        guard let linkRowButton else { return false }
+        selectedRowButton = linkRowButton
+        return true
+    }
+
     /// Replaces the expanded Link row with the regular Link row, which keeps its position.
     func collapseLinkInlineVerification(animated: Bool = true) {
         guard let container = linkInlineVerificationContainer else { return }
@@ -442,6 +460,11 @@ class EmbeddedPaymentMethodsView: UIView {
 
         if let linkAccount, linkAccount.isRegistered {
             sublabel = linkAccount.email
+        }
+
+        // A selected Link row shows the payment details picked in the Link wallet instead.
+        if selectedRowButton === linkRowButton, let selectedSublabel = selectedRowChangeButtonState?.sublabel {
+            sublabel = selectedSublabel
         }
 
         linkRowButton.setSublabel(text: sublabel, animated: animated)
@@ -615,8 +638,8 @@ class EmbeddedPaymentMethodsView: UIView {
         return savedPaymentMethodButton
     }
 
-    func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {
-        // We always add a hidden accessory button ("Change >") so we can show/hide it easily
+    /// A hidden "Change >" button, which re-taps the selected row.
+    func makeChangeButton() -> RowButton.RightAccessoryButton {
         let accessoryButton = RowButton.RightAccessoryButton(
             accessoryType: appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton ? .change : .changeWithChevron,
             appearance: appearance,
@@ -626,11 +649,16 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         )
         accessoryButton.isHidden = true
+        return accessoryButton
+    }
+
+    func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {
+        // We always add a hidden accessory button ("Change >") so we can show/hide it easily
         return RowButton.makeForPaymentMethodType(
             paymentMethodType: paymentMethodType,
             currency: currency,
             hasSavedCard: savedPaymentMethods.hasSavedCard,
-            accessoryView: accessoryButton,
+            accessoryView: makeChangeButton(),
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
             promotionsHelper: paymentMethodMessagingPromotionsHelper,
             appearance: appearance,

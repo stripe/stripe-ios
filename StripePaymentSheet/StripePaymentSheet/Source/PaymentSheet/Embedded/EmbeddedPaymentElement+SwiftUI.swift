@@ -80,7 +80,9 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
             self.embeddedPaymentElement = embeddedPaymentElement
             self.embeddedPaymentElement?.delegate = self
             self.paymentOption = embeddedPaymentElement.paymentOption
-            // TODO: Consider opting Embedded SwiftUI into EmbeddedPaymentElement's initial height notification and removing this load-time height calculation.
+            // The load-time height is measured before the view has a width, which is too short for rows that wrap,
+            // like inline Link verification. Measure again after the first layout.
+            embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
             calculateAndPublishHeight(embeddedPaymentElement: embeddedPaymentElement) // compute initial height
             self.isLoaded = true
         }

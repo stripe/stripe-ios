@@ -1503,6 +1503,16 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_selectedWithLinkPaymentDetails() {
+        // After verifying, Link stays first, selected with what was picked in the Link wallet and a "Change" button
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .link,
+            initialSelectedRowChangeButtonState: (shouldShowChangeButton: true, sublabel: "Visa •••• 4242"),
+            placesLinkFirst: true
+        )
+        verify(embeddedView)
+    }
+
     private func makeLinkInlineVerificationEmbeddedView(
         style: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style,
         state: EmbeddedLinkInlineVerificationView.State
@@ -1652,6 +1662,7 @@ extension EmbeddedPaymentMethodsView {
     @MainActor
     convenience init(
         initialSelection: RowButtonType? = nil,
+        initialSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.card), .stripe(.cashApp)],
         savedPaymentMethod: STPPaymentMethod? = nil,
         appearance: PaymentSheet.Appearance = .default,
@@ -1668,7 +1679,7 @@ extension EmbeddedPaymentMethodsView {
     ) {
         self.init(
             initialSelectedRowType: initialSelection,
-            initialSelectedRowChangeButtonState: nil,
+            initialSelectedRowChangeButtonState: initialSelectedRowChangeButtonState,
             paymentMethodTypes: paymentMethodTypes,
             savedPaymentMethod: savedPaymentMethod,
             appearance: appearance,
