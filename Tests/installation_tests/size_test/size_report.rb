@@ -3,6 +3,7 @@
 require 'plist'
 require 'fileutils'
 require 'optparse'
+require 'pathname'
 require 'colorize'
 require 'yaml'
 require 'terminal-table'
@@ -33,7 +34,8 @@ end.parse!
 # 2. Commit the changes
 # 3. Include the Stripe framewwork and make any necessary edits to the project
 # 4. Open any files that reference the framework in a text editor and replace
-#    "Stripe" with "{{SDK}}" in any relevant files. This includes:
+#    "Stripe" with "{{SDK}}" and the local package path with "{{PACKAGE_PATH}}"
+#    in any relevant files. This includes:
 #    - SPMTest.xcodeproj/project.pbxproj
 #    - SPMTest/ViewController.swift
 # 5. Create a new patch file and save it outside the repo location:
@@ -169,22 +171,6 @@ def setup_project(branch, directory, sdk)
   end
 
   Dir.chdir(directory) do
-    # We'll want to modify the workspace to point to the checked-out git repo
-    File.open('SPMTest.xcworkspace/contents.xcworkspacedata', 'w') do |f|
-      f.write <<~CONTENTS
-        <?xml version="1.0" encoding="UTF-8"?>
-        <Workspace
-          version = "1.0">
-          <FileRef
-              location = "container:SPMTest.xcodeproj">
-          </FileRef>
-          <FileRef
-              location = "group:#{@project_dir}">
-          </FileRef>
-        </Workspace>
-      CONTENTS
-    end
-
     # Include the SDK in the project
     unless sdk.nil?
       # Apply patch adding module named '{{SDK}}'
@@ -192,10 +178,20 @@ def setup_project(branch, directory, sdk)
         l.partition('patching file').last.strip.tr("'", '') # Recent versions of patch in macOS add a ' to the filename
       end
 
+      # The package reference points at the checked-out git repo. Xcode sets package traits only on a
+      # project's package reference. Real paths keep the relative path valid when the temp directory is
+      # behind a symlink.
+      package_path = Pathname.new(File.realpath(@project_dir)).relative_path_from(Pathname.new(File.realpath(directory))).to_s
+
       # Do a find/replace of '{{SDK}}' with SDK name for each patched file
       patched_files.each do |file_name|
         file_contents = File.read(file_name)
-        file_contents = file_contents.gsub(/\{\{SDK\}\}/, sdk)
+        file_contents = file_contents.gsub(/\{\{SDK\}\}/, sdk).gsub('{{PACKAGE_PATH}}', package_path)
+        # StripeIdentity builds only with the Identity trait. Other SDKs leave it off so they don't download MediaPipe.
+        # ponytail: fixed list; a new SDK that uses StripeIdentity fails its size build with the trait's #error until added here.
+        if %w[StripeIdentity StripeCryptoOnramp].include?(sdk)
+          file_contents = file_contents.sub("isa = XCLocalSwiftPackageReference;\n", "\\0\t\t\ttraits = (\n\t\t\t\tIdentity,\n\t\t\t);\n")
+        end
         sdk_import = sdk == 'StripeCryptoOnramp' ? '@_spi(CryptoOnrampAlpha) import StripeCryptoOnramp' : "import #{sdk}"
         sdk_initialization = sdk == 'StripeCryptoOnramp' ? 'Task { _ = try await CryptoOnrampCoordinator.create() }' : 'StripeAPI.defaultPublishableKey = "foo"'
         file_contents = file_contents.gsub('{{SDK_IMPORT}}', sdk_import).gsub('{{SDK_INITIALIZATION}}', sdk_initialization)
