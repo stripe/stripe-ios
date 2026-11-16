@@ -53,6 +53,37 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
             shouldShowLink: true
         )
         XCTAssertEqual(embeddedView.rowButtons.map(\.type), [.new(paymentMethodType: .stripe(.card)), .applePay, .link, .new(paymentMethodType: .stripe(.cashApp))])
+        XCTAssertNil(embeddedView.rowButtons.first(where: { $0.type == .link })?.accessoryView)
+    }
+
+    func testDeselectingTheLinkRowRemovesItsPickedDetails() throws {
+        // Given Link leads and is selected with details picked in the Link wallet
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .link,
+            initialSelectedRowChangeButtonState: (shouldShowChangeButton: true, sublabel: "Visa •••• 4242"),
+            placesLinkFirst: true
+        )
+        let linkRow = try XCTUnwrap(embeddedView.rowButtons.first)
+        XCTAssertTrue(linkRow.isDisplayingAccessoryView)
+        XCTAssertEqual(sublabelText(of: linkRow), "Visa •••• 4242")
+
+        // When Link account changes are announced, the row keeps showing the picked details
+        embeddedView.updateLinkRow(for: nil, animated: false)
+        XCTAssertEqual(sublabelText(of: linkRow), "Visa •••• 4242")
+
+        // When another row is selected
+        let cardRow = try XCTUnwrap(embeddedView.rowButtons.first(where: { $0.type == .new(paymentMethodType: .stripe(.card)) }))
+        embeddedView.didTap(rowButton: cardRow)
+
+        // Then the Link row hides "Change" and goes back to its usual sublabel
+        let usualLinkRow = try XCTUnwrap(EmbeddedPaymentMethodsView(placesLinkFirst: true).rowButtons.first)
+        XCTAssertFalse(linkRow.isDisplayingAccessoryView)
+        XCTAssertNotNil(sublabelText(of: linkRow))
+        XCTAssertEqual(sublabelText(of: linkRow), sublabelText(of: usualLinkRow))
+    }
+
+    private func sublabelText(of rowButton: RowButton) -> String? {
+        (rowButton.sublabel as? RowButton.PlainSublabelView)?.textLabel.text
     }
 
     // MARK: EmbeddedPaymentMethodsViewDelegate test
