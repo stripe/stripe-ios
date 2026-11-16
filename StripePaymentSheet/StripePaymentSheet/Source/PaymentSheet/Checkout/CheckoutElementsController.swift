@@ -326,10 +326,13 @@ public final class CheckoutElementsController: ObservableObject {
         try await updateShippingAddress(name: name, address: address, source: .merchant)
     }
 
+    /// - Parameter canUpdateWhileSheetPresented: Bypasses the sheet-presented guard, e.g. to apply a shipping address
+    ///   selected in Link while Payment Element's sheet is closing.
     func updateShippingAddress(
         name: String?,
         address: Address?,
-        source: CheckoutElementsControllerAnalyticsHelper.InvocationSource
+        source: CheckoutElementsControllerAnalyticsHelper.InvocationSource,
+        canUpdateWhileSheetPresented: Bool = false
     ) async throws {
         let startedAction = analyticsHelper.logStarted(.updateShippingAddress, session: session, additionalParams: ["invocation_source": source.rawValue])
         var didRequestTaxUpdate = false
@@ -349,11 +352,15 @@ public final class CheckoutElementsController: ObservableObject {
             let shippingAddress = Session.ShippingAddress(name: name, address: address)
             guard session.shippingAddress != shippingAddress else { return }
             if session.shouldSendTaxRegion(for: "shipping") {
-                try await performQueuedUpdate(.setTaxRegion(address), onRequest: { didRequestTaxUpdate = true }) {
+                try await performQueuedUpdate(
+                    .setTaxRegion(address),
+                    canUpdateWhileSheetPresented: canUpdateWhileSheetPresented,
+                    onRequest: { didRequestTaxUpdate = true }
+                ) {
                     $0.shippingAddress = shippingAddress
                 }
             } else {
-                try await performQueuedUpdate(mutateLocalState: {
+                try await performQueuedUpdate(canUpdateWhileSheetPresented: canUpdateWhileSheetPresented, mutateLocalState: {
                     $0.shippingAddress = shippingAddress
                 })
             }
