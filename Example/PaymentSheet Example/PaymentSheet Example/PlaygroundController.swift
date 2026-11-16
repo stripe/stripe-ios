@@ -1431,11 +1431,24 @@ class AnalyticsLogObserver: ObservableObject {
 // MARK: Embedded helpers
 extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
+        applyEmbeddedLinkInlineVerificationOverride()
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
             intentConfig: intentConfig,
             playgroundController: self
         )
+    }
+
+    /// Overrides the server's inline Link OTP flags for the next Embedded Payment Element.
+    private func applyEmbeddedLinkInlineVerificationOverride() {
+        let (enabled, forcesDialog): (Bool?, Bool?) = switch settings.embeddedLinkInlineVerification {
+        case .off: (false, nil)
+        case .on: (true, false)
+        case .forceDialog: (true, true)
+        case .server: (nil, nil)
+        }
+        PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = enabled
+        PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = forcesDialog
     }
 
     func presentEmbedded<SettingsView: View>(settingsView: @escaping () -> SettingsView) {

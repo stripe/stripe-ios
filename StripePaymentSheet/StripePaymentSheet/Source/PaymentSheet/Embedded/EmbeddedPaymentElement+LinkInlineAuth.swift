@@ -8,7 +8,8 @@ import UIKit
 
 extension EmbeddedPaymentElement {
     /// Starts inline Link verification if the session's returning Link customer is eligible.
-    func setUpLinkInlineAuthIfEligible(loadResult: PaymentSheetLoader.LoadResult) {
+    /// - Parameter logsIneligibility: Whether to log why a returning customer who needs to verify didn't get the card.
+    func setUpLinkInlineAuthIfEligible(loadResult: PaymentSheetLoader.LoadResult, logsIneligibility: Bool = false) {
         guard linkInlineAuth == nil, !hasConfirmedIntent else { return }
         let eligibility = EmbeddedLinkInlineVerificationEligibility.evaluate(
             elementsSession: loadResult.elementsSession,
@@ -17,7 +18,18 @@ extension EmbeddedPaymentElement {
             savedPaymentMethods: loadResult.savedPaymentMethods,
             analyticsHelper: analyticsHelper.linkAnalytics
         )
-        guard case .success(let eligible) = eligibility else { return }
+        let eligible: EmbeddedLinkInlineVerificationEligibility.Eligible
+        switch eligibility {
+        case .success(let value):
+            eligible = value
+        case .failure(let reason):
+            // Only returning customers who need to verify, while the feature is on, say something about the card.
+            let isUninteresting: Set<EmbeddedLinkInlineVerificationEligibility.IneligibleReason> = [.disabledByServer, .linkNotDisplayed, .notReturningLinkUser, .alreadyVerified]
+            if logsIneligibility, !isUninteresting.contains(reason) {
+                analyticsHelper.linkAnalytics.logEmbeddedInlineAuthIneligible(reason: reason.rawValue)
+            }
+            return
+        }
         let experiment = EmbeddedLinkInlineVerificationExperiment(
             elementsSession: loadResult.elementsSession,
             dimensions: Self.linkInlineVerificationExperimentDimensions(
@@ -32,7 +44,8 @@ extension EmbeddedPaymentElement {
             configuration: configuration,
             linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: eligible.linkAccount),
             forcesDialog: loadResult.elementsSession.linkEmbeddedInlineVerificationForcesDialog,
-            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper
+            experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper,
+            linkAnalyticsHelper: analyticsHelper.linkAnalytics
         )
         controller.host = self
         linkInlineAuth = controller
@@ -128,7 +141,13 @@ extension EmbeddedPaymentElement {
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper
         ) { [weak self] confirmOption, _, _ in
-            self?.linkWalletDidFinish(with: confirmOption, revertsSelectionOnClose: revertsSelectionOnClose)
+            guard let self else { return }
+            if confirmOption != nil {
+                self.analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletSelected()
+            } else {
+                self.analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletClosed()
+            }
+            self.linkWalletDidFinish(with: confirmOption, revertsSelectionOnClose: revertsSelectionOnClose)
         }
     }
 

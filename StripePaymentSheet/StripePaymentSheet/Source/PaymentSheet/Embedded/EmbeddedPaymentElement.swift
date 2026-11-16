@@ -492,7 +492,7 @@ public final class EmbeddedPaymentElement {
         analyticsHelper.logInitialized()
         analyticsHelper.startTimeMeasurement(.checkout)
         // Before the list view is created, since it shows the card.
-        setUpLinkInlineAuthIfEligible(loadResult: loadResult)
+        setUpLinkInlineAuthIfEligible(loadResult: loadResult, logsIneligibility: true)
         self.containerView.didMoveToWindowHandler = { [weak self] in
             self?.linkInlineAuthVisibilityMonitor?.viewDidMoveToWindow()
         }
