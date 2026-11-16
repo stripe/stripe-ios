@@ -803,6 +803,92 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         XCTAssertNil(LinkAccountContext.shared.account)
     }
 
+    @MainActor
+    func testLoadLink_preservesAccountMidVerificationWithoutLookingUpAgain() async throws {
+        // Given a Link account whose verification is in progress, and a customer email prefetch that never finishes
+        var didCallLookup = false
+        stub { urlRequest in
+            if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
+                didCallLookup = true
+                return true
+            }
+            return false
+        } response: { _ in
+            HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+        }
+        let accountMidVerification = makeLinkAccountRequiringVerification(email: "user-a@example.com")
+        XCTAssertEqual(accountMidVerification.sessionState, .requiresVerification)
+        LinkAccountContext.shared.account = accountMidVerification
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+        let slowPrefetch = Task<(email: String, source: EmailSource)?, Never> {
+            try? await Task.sleep(nanoseconds: 10_000_000_000)
+            return nil
+        }
+        defer { slowPrefetch.cancel() }
+
+        // When an update reloads Link while preserving that account
+        let didLinkLookupTimeOut = await PaymentSheetLoader.loadLink(
+            elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
+            apiClient: stubbedAPIClient(),
+            isLinkEnabled: true,
+            email: "user-a@example.com",
+            defaultBillingDetails: .init(),
+            analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .embedded),
+            prefetchedEmailAndSourceTask: slowPrefetch,
+            loadTimings: .init(),
+            isUpdate: true,
+            linkAnalytics: .init(),
+            lookupTimeout: 0.5,
+            preservingLinkAccount: accountMidVerification
+        )
+
+        // Then the same account is kept without a lookup or waiting on the prefetch
+        XCTAssertEqual(didLinkLookupTimeOut, false)
+        XCTAssertFalse(didCallLookup)
+        XCTAssertTrue(LinkAccountContext.shared.account === accountMidVerification)
+    }
+
+    @MainActor
+    func testLoadLink_looksUpAgainWhenPreservedAccountIsNoLongerCurrent() async throws {
+        // Given another surface replaced the Link account the update wanted to keep
+        var didCallLookup = false
+        stub { urlRequest in
+            if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
+                didCallLookup = true
+                return true
+            }
+            return false
+        } response: { _ in
+            HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+        }
+        let staleAccount = makeLinkAccountRequiringVerification(email: "user-a@example.com")
+        LinkAccountContext.shared.account = makeLinkAccountRequiringVerification(email: "user-b@example.com")
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        // When an update reloads Link
+        _ = await PaymentSheetLoader.loadLink(
+            elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
+            apiClient: stubbedAPIClient(),
+            isLinkEnabled: true,
+            email: "foo@bar.com",
+            defaultBillingDetails: .init(),
+            analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .embedded),
+            prefetchedEmailAndSourceTask: Task { nil },
+            loadTimings: .init(),
+            isUpdate: true,
+            linkAnalytics: .init(),
+            preservingLinkAccount: staleAccount
+        )
+
+        // Then it looks the account up as usual
+        XCTAssertTrue(didCallLookup)
+        XCTAssertFalse(LinkAccountContext.shared.account === staleAccount)
+    }
+
     // MARK: - Link Lookup Holdback Tests
 
     @MainActor
@@ -850,6 +936,30 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         } else {
             XCTAssertFalse(didCallLookup, message)
         }
+    }
+
+    private func makeLinkAccountRequiringVerification(email: String) -> PaymentSheetLinkAccount {
+        let session = ConsumerSession.make(
+            clientSecret: "pscs_mid_verification",
+            emailAddress: email,
+            redactedFormattedPhoneNumber: "(***) *** **12",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [.init(type: .sms, state: .started)],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil,
+            currentAuthenticationLevel: .notAuthenticated,
+            minimumAuthenticationLevel: .oneFactorAuth
+        )
+        return PaymentSheetLinkAccount(
+            email: email,
+            session: session,
+            publishableKey: "pk_test_persisted",
+            displayablePaymentDetails: nil,
+            apiClient: stubbedAPIClient(),
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
+        )
     }
 
     private func makeVerifiedLinkAccount(
