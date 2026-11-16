@@ -32,6 +32,7 @@
     },
     "document_capture": {
         "autocapture_timeout": 10000,
+        "autocapture_timeout_back": 5000,
         "file_purpose": "identity_private",
         "high_res_image_compression_quality": 0.92,
         "high_res_image_crop_padding": 0.08,

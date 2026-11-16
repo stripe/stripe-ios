@@ -358,7 +358,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             imageScanningSession: SelfieImageScanningSession(
                 initialState: initialState,
                 initialCameraPosition: .front,
-                autocaptureTimeout: TimeInterval(milliseconds: apiConfig.autocaptureTimeout),
+                autocaptureTimeout: { _ in TimeInterval(milliseconds: apiConfig.autocaptureTimeout) },
                 cameraSession: cameraSession,
                 scanner: anyFaceScanner,
                 concurrencyManager: concurrencyManager

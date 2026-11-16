@@ -13,6 +13,7 @@ extension StripeAPI {
 
     struct VerificationPageStaticContentDocumentCapturePage: Decodable, Equatable {
         let autocaptureTimeout: Int
+        let autocaptureTimeoutBack: Int?
         let filePurpose: String
         let highResImageCompressionQuality: CGFloat
         let highResImageCropPadding: CGFloat

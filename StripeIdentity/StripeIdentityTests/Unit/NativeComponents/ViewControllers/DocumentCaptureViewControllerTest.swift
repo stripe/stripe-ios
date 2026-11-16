@@ -788,6 +788,31 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssert(analytic: analytic, hasMetadata: "side", withValue: "front")
     }
 
+    func testScanningTimeoutBackUsesBackTimeout() throws {
+        // Given a config with `autocapture_timeout_back` of 5000ms
+        let vc = makeViewController(state: .scanning(.back, nil))
+        let startedScanningDate = Date()
+
+        vc.imageScanningSession.startScanning(expectedClassification: .back)
+        waitForCameraSessionToStart()
+
+        let timer = try XCTUnwrap(vc.imageScanningSession.timeoutTimer)
+        XCTAssertEqual(timer.fireDate.timeIntervalSince(startedScanningDate), 5, accuracy: 0.2)
+    }
+
+    func testScanningTimeoutBackDefaultsToAutocaptureTimeout() throws {
+        // Given a config with no `autocapture_timeout_back` and `autocapture_timeout` of 10000ms
+        let apiConfig = try VerificationPageMock.requireLiveCapture.make().documentCapture
+        let vc = makeViewController(state: .scanning(.back, nil), apiConfig: apiConfig)
+        let startedScanningDate = Date()
+
+        vc.imageScanningSession.startScanning(expectedClassification: .back)
+        waitForCameraSessionToStart()
+
+        let timer = try XCTUnwrap(vc.imageScanningSession.timeoutTimer)
+        XCTAssertEqual(timer.fireDate.timeIntervalSince(startedScanningDate), 10, accuracy: 0.2)
+    }
+
     func testScanAttemptsFront() {
         let vc = makeViewController(
             state: .scanning(.front, nil)
