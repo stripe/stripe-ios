@@ -25,6 +25,8 @@ extension EmbeddedPaymentElement {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         previousSelection: RowButtonType? = nil,
         previousSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)? = nil,
+        placesLinkFirst: Bool = false,
+        linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
         // Restore the customer's previous payment method.
@@ -60,6 +62,8 @@ extension EmbeddedPaymentElement {
                 return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
             }
         }()
+        // The Link row is hidden while it's expanded for verification, so it can't start out selected.
+        let resolvedInitialSelection = linkInlineVerificationView != nil && initialSelection == .link ? nil : initialSelection
         let mandateProvider = VerticalListMandateProvider(
             configuration: configuration,
             customerProvider: loadResult.customerProvider,
@@ -71,7 +75,7 @@ extension EmbeddedPaymentElement {
             }
         )
         return EmbeddedPaymentMethodsView(
-            initialSelectedRowType: initialSelection,
+            initialSelectedRowType: resolvedInitialSelection,
             initialSelectedRowChangeButtonState: previousSelectedRowChangeButtonState,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
@@ -82,6 +86,8 @@ extension EmbeddedPaymentElement {
             linkBrandProvider: { [configuration, elementsSession = loadResult.elementsSession] in
                 configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
             },
+            placesLinkFirst: placesLinkFirst,
+            linkInlineVerificationView: linkInlineVerificationView,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
