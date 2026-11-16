@@ -13,8 +13,8 @@ protocol EmbeddedLinkInlineAuthControllerHost: AnyObject {
     func linkInlineAuthWillPresent()
     /// The card should be replaced by the regular Link row.
     func linkInlineAuthDidCollapse()
-    /// The customer verified their Link account.
-    func linkInlineAuthDidVerify()
+    /// The customer verified their Link account. `fromCard` is false when they verified after the card closed, e.g. before paying with Link.
+    func linkInlineAuthDidVerify(fromCard: Bool)
 }
 
 /// Owns a returning Link customer's inline verification in the Embedded Payment Element.
@@ -23,6 +23,13 @@ protocol EmbeddedLinkInlineAuthControllerHost: AnyObject {
 /// the first time the element is on screen, and entered in the card or, when the card can't handle a step, in the Link dialog.
 @MainActor
 final class EmbeddedLinkInlineAuthController {
+    enum ConfirmVerificationResult: Equatable {
+        case verified
+        case canceled
+        /// The dialog can't be shown, so paying with Link verifies the usual way.
+        case unavailable
+    }
+
     enum Phase: Equatable {
         /// The card is showing, or would be outside the experiment's control groups.
         case expanded
@@ -49,6 +56,7 @@ final class EmbeddedLinkInlineAuthController {
     private var didBecomeVisible = false
     /// Set once a code challenge has started, to tell a failed first send apart from later errors.
     private var didStartCodeChallenge = false
+    private var confirmVerificationContinuation: CheckedContinuation<ConfirmVerificationResult, Never>?
 
     init(
         eligible: EmbeddedLinkInlineVerificationEligibility.Eligible,
@@ -89,6 +97,22 @@ final class EmbeddedLinkInlineAuthController {
         phase == .finished ? nil : linkAccount
     }
 
+    /// Paying with Link after closing the card verifies in the dialog first, reusing any code the card sent.
+    var verifiesBeforeConfirming: Bool {
+        phase == .collapsed && dialog == nil && linkAccount.sessionState == .requiresVerification
+    }
+
+    /// Verifies in the Link dialog before paying with Link.
+    func verifyBeforeConfirming() async -> ConfirmVerificationResult {
+        guard verifiesBeforeConfirming, confirmVerificationContinuation == nil else { return .unavailable }
+        return await withCheckedContinuation { continuation in
+            confirmVerificationContinuation = continuation
+            if !presentDialog() {
+                resumeConfirmVerification(.unavailable)
+            }
+        }
+    }
+
     /// A new card for a rebuilt list, or nil when the card isn't showing.
     func makeCardView(appearance: PaymentSheet.Appearance) -> EmbeddedLinkInlineVerificationView? {
         guard isShowingCard else { return nil }
@@ -125,6 +149,7 @@ final class EmbeddedLinkInlineAuthController {
             self.dialog = nil
             dialog.detach { _ in }
         }
+        resumeConfirmVerification(.canceled)
         if wasShowingCard {
             host?.linkInlineAuthDidCollapse()
         }
@@ -176,8 +201,9 @@ final class EmbeddedLinkInlineAuthController {
 
     // MARK: - Dialog
 
-    private func presentDialog() {
-        guard dialog == nil, phase != .finished, let presenter = host?.linkInlineAuthPresentingViewController() else { return }
+    @discardableResult
+    private func presentDialog() -> Bool {
+        guard dialog == nil, phase != .finished, let presenter = host?.linkInlineAuthPresentingViewController() else { return false }
         let dialog = LinkVerificationController(
             mode: .inlineLogin,
             sharedCoordinator: coordinator,
@@ -197,12 +223,20 @@ final class EmbeddedLinkInlineAuthController {
                 self.handleFinish(result)
             case .detached:
                 self.render()
+                self.resumeConfirmVerification(.canceled)
                 // The card only shows code challenges, so steps like a phone match continue in the dialog next time.
                 if self.isShowingCard, self.coordinator.screen != .otp {
                     self.dismiss()
                 }
             }
         }
+        return true
+    }
+
+    private func resumeConfirmVerification(_ result: ConfirmVerificationResult) {
+        let continuation = confirmVerificationContinuation
+        confirmVerificationContinuation = nil
+        continuation?.resume(returning: result)
     }
 
     // MARK: - Coordinator events
@@ -255,16 +289,19 @@ final class EmbeddedLinkInlineAuthController {
             if wasShowingCard {
                 host?.linkInlineAuthDidCollapse()
             }
-            host?.linkInlineAuthDidVerify()
+            host?.linkInlineAuthDidVerify(fromCard: wasShowingCard)
+            resumeConfirmVerification(.verified)
         case .switchAccount:
             if wasShowingCard {
                 host?.linkInlineAuthDidCollapse()
             }
+            resumeConfirmVerification(.canceled)
             linkAccount.logout()
         case .canceled, .failed:
             if wasShowingCard {
                 host?.linkInlineAuthDidCollapse()
             }
+            resumeConfirmVerification(.canceled)
         }
     }
 
