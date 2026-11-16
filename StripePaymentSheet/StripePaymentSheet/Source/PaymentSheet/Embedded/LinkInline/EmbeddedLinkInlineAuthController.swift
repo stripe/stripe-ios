@@ -46,6 +46,16 @@ final class EmbeddedLinkInlineAuthController {
         case layout(EmbeddedKeyboardAvoider.DialogReason)
         /// The keyboard still covered the code field after the layout adjusted.
         case obscured
+
+        var analyticsValue: String {
+            switch self {
+            case .forcedByServer: return "forced_by_server"
+            case .voiceOver: return "voice_over"
+            case .unsupportedStep: return "unsupported_step"
+            case .layout(let reason): return reason.rawValue
+            case .obscured: return "obscured"
+            }
+        }
     }
 
     enum Phase: Equatable {
@@ -70,6 +80,7 @@ final class EmbeddedLinkInlineAuthController {
     private let configuration: EmbeddedPaymentElement.Configuration
     private let linkBrand: LinkBrand
     private let experimentAnalyticsHelper: ExperimentAnalyticsHelper
+    private let linkAnalyticsHelper: LinkAnalyticsHelper
     private weak var cardView: EmbeddedLinkInlineVerificationView?
     private var dialog: LinkVerificationController?
     private var resendTimer: Timer?
@@ -88,7 +99,8 @@ final class EmbeddedLinkInlineAuthController {
         configuration: EmbeddedPaymentElement.Configuration,
         linkBrand: LinkBrand,
         forcesDialog: Bool = false,
-        experimentAnalyticsHelper: ExperimentAnalyticsHelper
+        experimentAnalyticsHelper: ExperimentAnalyticsHelper,
+        linkAnalyticsHelper: LinkAnalyticsHelper
     ) {
         self.linkAccount = eligible.linkAccount
         self.forcesDialog = forcesDialog
@@ -97,6 +109,7 @@ final class EmbeddedLinkInlineAuthController {
         self.configuration = configuration
         self.linkBrand = linkBrand
         self.experimentAnalyticsHelper = experimentAnalyticsHelper
+        self.linkAnalyticsHelper = linkAnalyticsHelper
         self.showsCard = EmbeddedLinkInlineVerificationExperiment.showsInlineVerification(for: experiment)
         coordinator.onUpdate = { [weak self] in self?.coordinatorDidUpdate() }
         coordinator.onFinish = { [weak self] result in self?.coordinatorDidFinish(result) }
@@ -133,7 +146,7 @@ final class EmbeddedLinkInlineAuthController {
         guard verifiesBeforeConfirming, confirmVerificationContinuation == nil else { return .unavailable }
         return await withCheckedContinuation { continuation in
             confirmVerificationContinuation = continuation
-            if !presentDialog() {
+            if !presentDialog(reason: "confirm") {
                 resumeConfirmVerification(.unavailable)
             }
         }
@@ -201,6 +214,7 @@ final class EmbeddedLinkInlineAuthController {
             experimentAnalyticsHelper.logExposure(experiment: experiment)
         }
         guard isShowingCard else { return }
+        linkAnalyticsHelper.logEmbeddedInlineAuthShown()
         Task { await sendFirstCode() }
     }
 
@@ -233,7 +247,7 @@ final class EmbeddedLinkInlineAuthController {
         if !apiClient.isTestmode {
             // Native Link needs an attested app; without one, verification would fall back to the web.
             guard await apiClient.stripeAttest.prepareAttestation() else {
-                invalidate()
+                fallBack(reason: "attestation_failed")
                 return
             }
         }
@@ -247,10 +261,11 @@ final class EmbeddedLinkInlineAuthController {
         guard isShowingCard, dialog == nil, let cardView else { return }
         switch codeEntry() {
         case .inline:
+            linkAnalyticsHelper.logEmbeddedInlineAuthFocused()
             keyboardAvoider?.activate()
             cardView.focusCode()
-        case .dialog:
-            presentDialog()
+        case .dialog(let reason):
+            presentDialog(reason: reason.analyticsValue)
         }
     }
 
@@ -262,7 +277,7 @@ final class EmbeddedLinkInlineAuthController {
     /// The keyboard covered the code field after all, so the code is entered in the dialog instead.
     private func fallBackToDialog() {
         guard cardView?.isCodeFocused == true else { return }
-        presentDialog()
+        presentDialog(reason: DialogReason.obscured.analyticsValue)
     }
 
     private func perform(_ action: LinkAuthFlowCoordinator.Action) {
@@ -272,13 +287,14 @@ final class EmbeddedLinkInlineAuthController {
         case .email:
             // Email codes can need a phone number match first, which only the dialog shows.
             coordinator.sendToEmail()
-            presentDialog()
+            presentDialog(reason: "email")
         }
     }
 
     private func dismiss() {
         guard isShowingCard else { return }
         endInlineEntry()
+        linkAnalyticsHelper.logEmbeddedInlineAuthDismissed()
         EmbeddedLinkInlineAuthRegistry.recordDismissal(email: linkAccount.email)
         phase = .collapsed
         stopResendTimer()
@@ -289,10 +305,12 @@ final class EmbeddedLinkInlineAuthController {
 
     // MARK: - Dialog
 
+    /// - Parameter reason: Why the dialog is shown instead of the card, for analytics.
     @discardableResult
-    private func presentDialog() -> Bool {
+    private func presentDialog(reason: String) -> Bool {
         guard dialog == nil, phase != .finished, let presenter = host?.linkInlineAuthPresentingViewController() else { return false }
         endInlineEntry()
+        linkAnalyticsHelper.logEmbeddedInlineAuthDialogShown(reason: reason)
         let dialog = LinkVerificationController(
             mode: .inlineLogin,
             sharedCoordinator: coordinator,
@@ -322,6 +340,14 @@ final class EmbeddedLinkInlineAuthController {
         return true
     }
 
+    /// Ends the attempt because the card can't continue it, showing the regular Link row instead.
+    private func fallBack(reason: String) {
+        if isShowingCard {
+            linkAnalyticsHelper.logEmbeddedInlineAuthFellBack(reason: reason)
+        }
+        invalidate()
+    }
+
     private func resumeConfirmVerification(_ result: ConfirmVerificationResult) {
         let continuation = confirmVerificationContinuation
         confirmVerificationContinuation = nil
@@ -341,12 +367,14 @@ final class EmbeddedLinkInlineAuthController {
         case .otp:
             if !didStartCodeChallenge {
                 // The first code couldn't be sent, e.g. because of rate limits. Fall back to the regular Link row.
-                invalidate()
+                fallBack(reason: "send_failed")
             }
         case .phoneMatch:
-            presentDialog()
-        case .blocked, .webHandoff:
-            invalidate()
+            presentDialog(reason: "phone_match")
+        case .blocked:
+            fallBack(reason: "blocked")
+        case .webHandoff:
+            fallBack(reason: "web_handoff")
         case .loading:
             break
         }
@@ -365,7 +393,7 @@ final class EmbeddedLinkInlineAuthController {
         if let dialog {
             dialog.coordinatorDidRequestWebHandoff(url)
         } else {
-            invalidate()
+            fallBack(reason: "web_handoff")
         }
     }
 

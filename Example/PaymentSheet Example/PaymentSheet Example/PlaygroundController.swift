@@ -285,6 +285,21 @@ import UIKit
             }
         }()
 
+        switch settings.embeddedLinkInlineVerification {
+        case .off:
+            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = false
+            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = nil
+        case .on:
+            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = true
+            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = false
+        case .forceDialog:
+            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = true
+            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = true
+        case .server:
+            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = nil
+            PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = nil
+        }
+
         var configuration = EmbeddedPaymentElement.Configuration()
         configuration.formSheetAction = formSheetAction
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
