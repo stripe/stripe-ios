@@ -58,6 +58,14 @@ final class OneTimeCodeTextFieldTests: XCTestCase {
         XCTAssertLessThan(frames.first?.width ?? .infinity, 48)
     }
 
+    func testCustomInputAccessoryView() {
+        let field = makeField(configuration: .init())
+        XCTAssertNil(field.inputAccessoryView)
+        let toolbar = UIToolbar()
+        field.customInputAccessoryView = toolbar
+        XCTAssertTrue(field.inputAccessoryView === toolbar)
+    }
+
     private func makeField(configuration: OneTimeCodeTextField.Configuration) -> OneTimeCodeTextField {
         return OneTimeCodeTextField(configuration: configuration, theme: .default)
     }

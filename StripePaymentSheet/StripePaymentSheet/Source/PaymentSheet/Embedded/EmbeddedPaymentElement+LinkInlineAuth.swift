@@ -31,6 +31,7 @@ extension EmbeddedPaymentElement {
             experiment: experiment,
             configuration: configuration,
             linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: eligible.linkAccount),
+            forcesDialog: loadResult.elementsSession.linkEmbeddedInlineVerificationForcesDialog,
             experimentAnalyticsHelper: analyticsHelper.experimentAnalyticsHelper
         )
         controller.host = self
@@ -54,7 +55,10 @@ extension EmbeddedPaymentElement {
                 && loadResult.elementsSession.linkEmbeddedInlineVerificationEnabled
                 && PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
                 && LinkAccountContext.shared.account === linkInlineAuth.linkAccount
-            guard !canContinue else { return }
+            guard !canContinue else {
+                linkInlineAuth.forcesDialog = loadResult.elementsSession.linkEmbeddedInlineVerificationForcesDialog
+                return
+            }
             linkInlineAuth.invalidate()
             self.linkInlineAuth = nil
             linkInlineAuthVisibilityMonitor = nil
