@@ -1,5 +1,5 @@
 diff --git a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
-index 25e5009784..ca719eb600 100644
+index 5b0dda25493..74b14ec2a25 100644
 --- a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
 +++ b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
 @@ -3,11 +3,12 @@
@@ -32,7 +32,17 @@ index 25e5009784..ca719eb600 100644
  			);
  			productName = CocoapodsTest;
  			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
-@@ -280,7 +283,11 @@
+@@ -192,6 +195,9 @@
+ 			);
+ 			mainGroup = C176897A20616C7E003DE895;
+ 			productRefGroup = C176898420616C7E003DE895 /* Products */;
++			packageReferences = (
++				3180059A2BC0AF5000BC6B82 /* XCLocalSwiftPackageReference "{{PACKAGE_PATH}}" */,
++			);
+ 			projectDirPath = "";
+ 			projectRoot = "";
+ 			targets = (
+@@ -280,7 +286,11 @@
  				DEVELOPMENT_TEAM = Y28TH9SHX7;
  				INFOPLIST_FILE = SPMTestUITests/Info.plist;
  				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -45,7 +55,7 @@ index 25e5009784..ca719eb600 100644
  				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
  				MTL_FAST_MATH = YES;
  				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTestUITests;
-@@ -304,11 +311,16 @@
+@@ -304,11 +314,16 @@
  				DEVELOPMENT_TEAM = Y28TH9SHX7;
  				INFOPLIST_FILE = SPMTestUITests/Info.plist;
  				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -64,7 +74,7 @@ index 25e5009784..ca719eb600 100644
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
  				TEST_TARGET_NAME = SPMTest;
-@@ -432,10 +444,14 @@
+@@ -432,10 +447,14 @@
  				CODE_SIGN_STYLE = Automatic;
  				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
  				INFOPLIST_FILE = SPMTest/Info.plist;
@@ -82,7 +92,7 @@ index 25e5009784..ca719eb600 100644
  				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
-@@ -451,10 +467,14 @@
+@@ -451,10 +470,14 @@
  				CODE_SIGN_STYLE = Automatic;
  				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
  				INFOPLIST_FILE = SPMTest/Info.plist;
@@ -100,14 +110,22 @@ index 25e5009784..ca719eb600 100644
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
  			};
-@@ -491,6 +511,13 @@
+@@ -491,6 +514,21 @@
  			defaultConfigurationName = Release;
  		};
  /* End XCConfigurationList section */
 +
++/* Begin XCLocalSwiftPackageReference section */
++		3180059A2BC0AF5000BC6B82 /* XCLocalSwiftPackageReference "{{PACKAGE_PATH}}" */ = {
++			isa = XCLocalSwiftPackageReference;
++			relativePath = "{{PACKAGE_PATH}}";
++		};
++/* End XCLocalSwiftPackageReference section */
++
 +/* Begin XCSwiftPackageProductDependency section */
 +		3180058F2BC0AF5000BC6B82 /* {{SDK}} */ = {
 +			isa = XCSwiftPackageProductDependency;
++			package = 3180059A2BC0AF5000BC6B82 /* XCLocalSwiftPackageReference "{{PACKAGE_PATH}}" */;
 +			productName = {{SDK}};
 +		};
 +/* End XCSwiftPackageProductDependency section */
@@ -115,7 +133,7 @@ index 25e5009784..ca719eb600 100644
  	rootObject = C176897B20616C7E003DE895 /* Project object */;
  }
 diff --git a/Tests/installation_tests/size_test/SPMTest/ViewController.swift b/Tests/installation_tests/size_test/SPMTest/ViewController.swift
-index dd31eb2d03..4f1b644e15 100644
+index dd31eb2d037..5f0f5865c72 100644
 --- a/Tests/installation_tests/size_test/SPMTest/ViewController.swift
 +++ b/Tests/installation_tests/size_test/SPMTest/ViewController.swift
 @@ -7,5 +7,11 @@
