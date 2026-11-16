@@ -229,3 +229,42 @@ final class EmbeddedLinkInlineVerificationFlagsTests: XCTestCase {
         return STPElementsSession._testValue(linkSettings: linkSettings)
     }
 }
+
+@MainActor
+final class EmbeddedLinkInlineVerificationViewStateTests: XCTestCase {
+    func testStateBeforeTheCodeIsSent() throws {
+        // Given an SMS challenge with an email alternative that hasn't been sent yet
+        let session = ConsumerSession.make(
+            clientSecret: "client_secret",
+            emailAddress: "jane.diaz@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **72",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: "US",
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil,
+            currentAuthenticationLevel: .notAuthenticated,
+            minimumAuthenticationLevel: .oneFactorAuth,
+            availableVerificationFactors: [
+                .init(type: .sms, providesFurtherVerification: true, temporarilyDisabled: false, id: "sms_factor"),
+                .init(type: .email, providesFurtherVerification: true, temporarilyDisabled: false, id: "email_factor"),
+            ]
+        )
+        let account = PaymentSheetLinkAccount(email: "jane.diaz@example.com", session: session, publishableKey: "pk_test_123", displayablePaymentDetails: nil, useMobileEndpoints: true, canSyncAttestationState: false, supportedVerificationTypes: [.sms, .email])
+        let coordinator = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init(analyticsClient: STPAnalyticsClient()))
+        coordinator.prepare()
+
+        // When the card's state is derived from it
+        let state = EmbeddedLinkInlineVerificationView.State(coordinator: coordinator, email: account.email)
+
+        // Then the masked number shows, entry waits for the code, and both actions sit behind a loading "More options"
+        XCTAssertEqual(state.recipient, "(•••) ••• ••72")
+        XCTAssertFalse(state.isCodeEntryEnabled)
+        XCTAssertTrue(state.isActionLoading)
+        guard case .menu(let items, let isEnabled) = state.actions else {
+            return XCTFail("Expected a More options menu, got \(state.actions)")
+        }
+        XCTAssertFalse(isEnabled)
+        XCTAssertEqual(items.map(\.action), [.resend, .email])
+    }
+}
