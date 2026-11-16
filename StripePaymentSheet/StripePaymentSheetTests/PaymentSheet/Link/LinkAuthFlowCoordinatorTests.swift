@@ -1,6 +1,7 @@
 // Copyright © 2026 Stripe, Inc. All rights reserved.
 
 @testable @_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
@@ -397,6 +398,66 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         await settle()
         XCTAssertEqual(openedURL, newURL)
         XCTAssertEqual(account.refreshes, [false])
+    }
+
+    func testInvalidateEndsTheAttemptWithoutLoggingOrFinishing() async {
+        // Given a started SMS challenge whose host listens for completion
+        let analyticsClient = STPTestingAnalyticsClient()
+        let account = AuthAccountStub()
+        let flow = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init(analyticsClient: analyticsClient))
+        var finishes = 0
+        flow.onFinish = { _ in finishes += 1 }
+        XCTAssertFalse(flow.hasStarted)
+        flow.start()
+        await settle()
+        XCTAssertTrue(flow.hasStarted)
+
+        // When the host invalidates the attempt
+        flow.invalidate()
+
+        // Then it ends quietly: no completion, no cancel event, and no further requests
+        XCTAssertTrue(flow.isFinished)
+        XCTAssertEqual(finishes, 0)
+        XCTAssertFalse(analyticsClient._testLogHistory.contains { $0["event"] as? String == "link.2fa.cancel" })
+        flow.confirm(code: "123456")
+        flow.resend()
+        flow.cancel()
+        await settle()
+        XCTAssertEqual(account.starts.count, 1)
+        XCTAssertTrue(account.confirms.isEmpty)
+        XCTAssertEqual(finishes, 0)
+    }
+
+    func testAnalyticsSurfaceIsAddedToVerificationEvents() async throws {
+        // Given an attempt that starts inline
+        let analyticsClient = STPTestingAnalyticsClient()
+        let flow = LinkAuthFlowCoordinator(account: AuthAccountStub(), analyticsHelper: .init(analyticsClient: analyticsClient))
+        flow.analyticsSurface = .embeddedInline
+        flow.prepare()
+        flow.start()
+        await settle()
+
+        // When the same attempt moves to the dialog and is canceled there
+        flow.analyticsSurface = .embeddedDialog
+        flow.cancel()
+
+        // Then each event carries the surface it happened on
+        let events = analyticsClient._testLogHistory
+        let start = try XCTUnwrap(events.first { $0["event"] as? String == "link.2fa.start" })
+        XCTAssertEqual(start["link_auth_surface"] as? String, "embedded_inline")
+        XCTAssertEqual(start["verification_type"] as? String, "SMS")
+        let cancel = try XCTUnwrap(events.first { $0["event"] as? String == "link.2fa.cancel" })
+        XCTAssertEqual(cancel["link_auth_surface"] as? String, "embedded_dialog")
+    }
+
+    func testVerificationEventsOmitSurfaceByDefault() async throws {
+        let analyticsClient = STPTestingAnalyticsClient()
+        let flow = LinkAuthFlowCoordinator(account: AuthAccountStub(), analyticsHelper: .init(analyticsClient: analyticsClient))
+        flow.start()
+        await settle()
+
+        let start = try XCTUnwrap(analyticsClient._testLogHistory.first { $0["event"] as? String == "link.2fa.start" })
+        XCTAssertNil(start["link_auth_surface"])
     }
 
     private func makeFlow(_ account: AuthAccountStub) -> LinkAuthFlowCoordinator {

@@ -91,6 +91,8 @@ final class LinkAuthFlowCoordinator {
     var onUpdate: (() -> Void)?
     var onFinish: ((LinkVerificationResult) -> Void)?
     var onWebHandoff: ((URL) -> Void)?
+    /// Labels this attempt's 2FA analytics with where the customer enters the code.
+    var analyticsSurface: LinkAnalyticsHelper.AuthSurface?
 
     init(
         account: LinkAuthAccount,
@@ -102,6 +104,16 @@ final class LinkAuthFlowCoordinator {
         self.analyticsHelper = analyticsHelper
         self.consentGranted = consentGranted
         self.now = now
+    }
+
+    /// Whether `start()` ran, so the first code may already have been sent.
+    var hasStarted: Bool {
+        didStart
+    }
+
+    /// Whether the attempt ended. A finished coordinator sends no further requests.
+    var isFinished: Bool {
+        finished
     }
 
     var showsBackButton: Bool {
@@ -155,14 +167,19 @@ final class LinkAuthFlowCoordinator {
     func start() {
         guard !didStart, !finished else { return }
         didStart = true
-        self.analyticsHelper.log2FAStart(type: challenge?.type)
+        self.analyticsHelper.log2FAStart(type: challenge?.type, surface: analyticsSurface)
         advance()
     }
 
     func cancel(switchAccount: Bool = false) {
         guard !finished else { return }
-        self.analyticsHelper.log2FACancel(type: challenge?.type)
+        self.analyticsHelper.log2FACancel(type: challenge?.type, surface: analyticsSurface)
         finish(switchAccount ? .switchAccount : .canceled)
+    }
+
+    /// Ends the attempt without logging a cancellation or calling `onFinish`, for hosts that are going away.
+    func invalidate() {
+        end()
     }
 
     func goBack() {
@@ -189,7 +206,7 @@ final class LinkAuthFlowCoordinator {
 
     func resend() {
         guard canResend else { return }
-        self.analyticsHelper.log2FAResendCode(type: challenge?.type)
+        self.analyticsHelper.log2FAResendCode(type: challenge?.type, surface: analyticsSurface)
         sendCode(isResending: true)
     }
 
@@ -212,7 +229,7 @@ final class LinkAuthFlowCoordinator {
                 self.resetInput()
                 self.advance(previous: challenge.type)
             case .failure(let error):
-                self.analyticsHelper.log2FAFailure(type: challenge.type)
+                self.analyticsHelper.log2FAFailure(type: challenge.type, surface: self.analyticsSurface)
                 self.invalidCodeRevision += 1
                 self.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
                 let errorCode = error._stp_error_code.flatMap(LinkUtils.ConsumerErrorCode.init(rawValue:))
@@ -273,7 +290,7 @@ final class LinkAuthFlowCoordinator {
                 onUpdate?()
                 return
             }
-            self.analyticsHelper.log2FAComplete(type: previous ?? challenge?.type)
+            self.analyticsHelper.log2FAComplete(type: previous ?? challenge?.type, surface: analyticsSurface)
             finish(.completed)
             return
         }
@@ -361,7 +378,7 @@ final class LinkAuthFlowCoordinator {
                 self.previousChallenges[challenge.type] = self.challenge
                 self.onUpdate?()
             case .failure(let error):
-                self.analyticsHelper.log2FAStartFailure(type: challenge.type)
+                self.analyticsHelper.log2FAStartFailure(type: challenge.type, surface: self.analyticsSurface)
                 let errorCode = error._stp_error_code.flatMap(LinkUtils.ConsumerErrorCode.init(rawValue:))
                 if challenge.type == .email, errorCode == .phoneNumberMissing || errorCode == .phoneNumberMismatch {
                     self.screen = .phoneMatch
@@ -424,13 +441,18 @@ final class LinkAuthFlowCoordinator {
 
     private func finish(_ result: LinkVerificationResult) {
         guard !finished else { return }
+        end()
+        onFinish?(result)
+    }
+
+    private func end() {
+        guard !finished else { return }
         finished = true
         generation += 1
         isLoading = false
         history.removeAll()
         challenge = nil
         previousChallenges.removeAll()
-        onFinish?(result)
     }
 
     private typealias Request = (@escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void) -> Void
