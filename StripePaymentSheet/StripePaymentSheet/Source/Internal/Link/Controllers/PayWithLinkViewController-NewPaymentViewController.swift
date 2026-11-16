@@ -151,9 +151,9 @@ extension PayWithLinkViewController {
             super.viewDidLoad()
             addChild(addPaymentMethodVC)
 
-            context.totalUpdater?.addObserver { [weak self] in
-                guard let self, !self.isConfirming else { return }
-                self.updateConfirmButton()
+            context.totalUpdater?.addObserver(self) { viewController in
+                guard !viewController.isConfirming else { return }
+                viewController.updateConfirmButton()
             }
 
             view.backgroundColor = .linkSurfacePrimary

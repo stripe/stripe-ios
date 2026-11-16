@@ -92,13 +92,28 @@ final class LinkTotalUpdaterTests: XCTestCase {
         // Given an updater that keeps the same total
         let updater = LinkTotalUpdater(amount: 1000) { _ in 1000 }
         var notificationCount = 0
-        updater.addObserver { notificationCount += 1 }
+        updater.addObserver(self) { _ in notificationCount += 1 }
 
         // When syncing without showing progress
         let changed = try await updater.sync(billingAddress: usAddress, showsProgress: false)
 
         // Then observers aren't notified, since nothing visible changed
         XCTAssertFalse(changed)
+        XCTAssertEqual(notificationCount, 0)
+    }
+
+    func testObserver_isRemovedWhenOwnerIsDeallocated() async throws {
+        // Given an observer whose owner goes away
+        let updater = LinkTotalUpdater(amount: 1000) { _ in 1100 }
+        var notificationCount = 0
+        var owner: NSObject? = NSObject()
+        updater.addObserver(owner!) { _ in notificationCount += 1 }
+        owner = nil
+
+        // When the total changes
+        try await updater.sync(billingAddress: usAddress)
+
+        // Then the observer isn't called
         XCTAssertEqual(notificationCount, 0)
     }
 

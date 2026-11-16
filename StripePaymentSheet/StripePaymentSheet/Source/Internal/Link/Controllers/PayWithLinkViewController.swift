@@ -920,7 +920,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: .wallet(brand: context.linkBrand))
             return
         }
-        guard context.totalUpdater == nil else {
+        guard !context.intent.collectsTaxFromBillingAddress else {
             // Web Link can't update its total while it's open, so it can't support a billing-address-dependent total.
             let error = PaymentSheetError.unknown(debugDescription: "Native Link failed, and web Link doesn't support a total that depends on the billing address.")
             finish(withResult: .failed(error: error), deferredIntentConfirmationType: nil)
