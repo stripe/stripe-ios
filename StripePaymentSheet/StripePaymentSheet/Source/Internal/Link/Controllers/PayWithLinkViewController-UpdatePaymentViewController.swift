@@ -78,10 +78,7 @@ extension PayWithLinkViewController {
 
             var configuration = context.configuration
             configuration.defaultBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
-            if context.requiresAutomaticTaxBillingAddress {
-                // Tax is calculated from the billing address, so collect a full one.
-                configuration.billingDetailsCollectionConfiguration.address = .full
-            }
+            configuration.billingDetailsCollectionConfiguration = context.billingDetailsCollectionConfiguration
             return configuration
         }
 

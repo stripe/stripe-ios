@@ -109,12 +109,14 @@ final class PayWithLinkViewController: NSObject {
             return .pay(amount: totalUpdater.amount, currency: currency, withLock: withLock)
         }
 
-        /// Whether the billing address of the selected payment details must satisfy automatic tax requirements.
-        var requiresAutomaticTaxBillingAddress: Bool {
-            guard case .checkout(let session) = intent else {
-                return false
+        /// The billing details to collect for Link payment details.
+        /// When tax is calculated from the billing address, this collects a full address.
+        var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
+            var billingDetailsCollectionConfiguration = configuration.billingDetailsCollectionConfiguration
+            if intent.collectsTaxFromBillingAddress {
+                billingDetailsCollectionConfiguration.address = .full
             }
-            return session.collectsTaxFromBillingAddress
+            return billingDetailsCollectionConfiguration
         }
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
@@ -818,7 +820,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         Task { @MainActor in
             do {
                 let totalChanged = try await totalUpdater.sync(
-                    billingAddress: paymentDetails.billingAddress,
+                    billingAddress: paymentDetails.billingDetails?.address,
                     showsProgress: false
                 )
                 guard !totalChanged else {

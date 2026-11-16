@@ -26,20 +26,8 @@ extension PaymentOption {
         case .applePay:
             return nil
         case .link(let confirmOption):
-            switch confirmOption {
-            case .wallet:
-                // The payment details aren't known yet. Native Link updates the tax region while it's open.
-                return nil
-            case .signUp(_, _, _, _, _, let intentConfirmParams):
-                return intentConfirmParams.paymentMethodParams.billingDetails
-            case .withPaymentMethod(_, let paymentMethod):
-                return paymentMethod.billingDetails
-            case .withPaymentDetails(_, _, let paymentDetails, _, _):
-                return STPPaymentMethodBillingDetails(
-                    billingAddress: paymentDetails.billingAddress,
-                    email: paymentDetails.billingEmailAddress
-                )
-            }
+            // For `.wallet`, the payment details aren't known yet. Native Link updates the tax region while it's open.
+            return confirmOption.billingDetails
         }
     }
 }

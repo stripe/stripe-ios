@@ -3,15 +3,15 @@
 //  StripePaymentSheetTests
 //
 
-@_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 @testable import StripePaymentSheet
 import XCTest
 
 @MainActor
 final class LinkTotalUpdaterTests: XCTestCase {
 
-    private let usAddress = BillingAddress(line1: "1 Main St", city: "Seattle", state: "WA", postalCode: "98101", countryCode: "US")
-    private let caAddress = BillingAddress(postalCode: "M5V 3L9", countryCode: "CA")
+    private let usAddress = LinkTotalUpdaterTests.makeAddress(line1: "1 Main St", city: "Seattle", state: "WA", postalCode: "98101", country: "US")
+    private let caAddress = LinkTotalUpdaterTests.makeAddress(postalCode: "M5V 3L9", country: "CA")
 
     func testSync_updatesAmountAndReportsChange() async throws {
         // Given an updater that returns a higher total for any address
@@ -47,9 +47,9 @@ final class LinkTotalUpdaterTests: XCTestCase {
         // Given an updater whose handler records the order of requests
         var handledCountries: [String?] = []
         let updater = LinkTotalUpdater(amount: 1000) { address in
-            handledCountries.append(address?.countryCode)
+            handledCountries.append(address?.country)
             await Task.yield()
-            return address?.countryCode == "US" ? 1100 : 1200
+            return address?.country == "US" ? 1100 : 1200
         }
 
         // When two addresses are synced back to back
@@ -100,5 +100,21 @@ final class LinkTotalUpdaterTests: XCTestCase {
         // Then observers aren't notified, since nothing visible changed
         XCTAssertFalse(changed)
         XCTAssertEqual(notificationCount, 0)
+    }
+
+    private static func makeAddress(
+        line1: String? = nil,
+        city: String? = nil,
+        state: String? = nil,
+        postalCode: String?,
+        country: String
+    ) -> STPPaymentMethodAddress {
+        let address = STPPaymentMethodAddress()
+        address.line1 = line1
+        address.city = city
+        address.state = state
+        address.postalCode = postalCode
+        address.country = country
+        return address
     }
 }
