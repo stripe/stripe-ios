@@ -127,11 +127,19 @@ final class PayWithLinkViewController: NSObject {
             shippingAddresses.first { $0.id == selectedShippingAddressID }
         }
 
-        /// Whether the shipping address is in a country the session ships to.
-        func isShippingAddressSupported(_ shippingAddress: ShippingAddressesResponse.ShippingAddress) -> Bool {
+        /// The countries the session ships to, or `nil` if it ships anywhere.
+        var allowedShippingCountries: [String]? {
             guard case .checkout(let session) = intent,
                   let allowedCountries = session.allowedShippingCountries,
                   !allowedCountries.isEmpty else {
+                return nil
+            }
+            return allowedCountries
+        }
+
+        /// Whether the shipping address is in a country the session ships to.
+        func isShippingAddressSupported(_ shippingAddress: ShippingAddressesResponse.ShippingAddress) -> Bool {
+            guard let allowedCountries = allowedShippingCountries else {
                 return true
             }
             guard let countryCode = shippingAddress.address.countryCode else {

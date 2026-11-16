@@ -51,6 +51,14 @@ struct ShippingAddressesResponse: Decodable {
     }
 }
 
+struct CreateShippingAddressResponse: Decodable {
+    let shippingAddress: ShippingAddressesResponse.ShippingAddress
+
+    private enum CodingKeys: String, CodingKey {
+        case shippingAddress = "shipping_address"
+    }
+}
+
 extension ShippingAddressesResponse.ShippingAddress {
     func toPaymentSheetAddress() -> PaymentSheet.Address {
         .init(

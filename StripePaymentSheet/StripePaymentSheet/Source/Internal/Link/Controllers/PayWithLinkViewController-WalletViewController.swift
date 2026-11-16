@@ -962,7 +962,13 @@ extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPic
         _ picker: LinkShippingAddressPicker,
         sourceRect: CGRect
     ) {
-        // TODO(link): Collect a new shipping address.
+        let addShippingAddressVC = PayWithLinkViewController.AddShippingAddressViewController(
+            linkAccount: linkAccount,
+            context: context
+        )
+        addShippingAddressVC.delegate = self
+
+        coordinator?.pushContentViewController(addShippingAddressVC)
     }
 
     private func shippingAddressActions(for index: Int, includeCancelAction: Bool) -> [Action] {
@@ -1033,6 +1039,16 @@ extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPic
         ))
 
         present(alertController, animated: true)
+    }
+}
+
+// MARK: - AddShippingAddressViewControllerDelegate
+
+extension PayWithLinkViewController.WalletViewController: AddShippingAddressViewControllerDelegate {
+
+    func didAdd(shippingAddress: ShippingAddressesResponse.ShippingAddress) {
+        viewModel.addShippingAddress(shippingAddress)
+        shippingAddressPicker.setExpanded(false, animated: false)
     }
 }
 
