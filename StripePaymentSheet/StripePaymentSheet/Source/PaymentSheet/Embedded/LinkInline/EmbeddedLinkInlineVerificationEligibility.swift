@@ -13,8 +13,8 @@
 enum EmbeddedLinkInlineVerificationEligibility {
     enum IneligibleReason: String, Error {
         case disabledByServer = "disabled_by_server"
+        /// Also how Checkout Elements opts out for now.
         case disabledByMerchant = "disabled_by_merchant"
-        case checkoutElements = "checkout_elements"
         case linkNotDisplayed = "link_not_displayed"
         case notReturningLinkUser = "not_returning_link_user"
         case alreadyVerified = "already_verified"
@@ -24,6 +24,12 @@ enum EmbeddedLinkInlineVerificationEligibility {
         case hasSavedPaymentMethods = "has_saved_payment_methods"
         /// Verification wouldn't start with an SMS code, e.g. it needs an email phone match first.
         case unsupportedVerification = "unsupported_verification"
+        /// The customer closed the card earlier in this app session.
+        case dismissedThisSession = "dismissed_this_session"
+        /// Another Embedded instance is already showing the card.
+        case shownElsewhere = "shown_elsewhere"
+        /// A code was sent automatically a moment ago, e.g. before the merchant recreated the element.
+        case codeRecentlySent = "code_recently_sent"
     }
 
     struct Eligible {
@@ -38,7 +44,6 @@ enum EmbeddedLinkInlineVerificationEligibility {
         configuration: EmbeddedPaymentElement.Configuration,
         linkAccount: PaymentSheetLinkAccount?,
         savedPaymentMethods: [STPPaymentMethod],
-        isCheckoutElements: Bool,
         analyticsHelper: LinkAnalyticsHelper
     ) -> Result<Eligible, IneligibleReason> {
         guard elementsSession.linkEmbeddedInlineVerificationEnabled else {
@@ -46,9 +51,6 @@ enum EmbeddedLinkInlineVerificationEligibility {
         }
         guard configuration.allowsLinkInlineVerification else {
             return .failure(.disabledByMerchant)
-        }
-        guard !isCheckoutElements else {
-            return .failure(.checkoutElements)
         }
         guard PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration) else {
             return .failure(.linkNotDisplayed)
@@ -72,6 +74,9 @@ enum EmbeddedLinkInlineVerificationEligibility {
         // Saved payment methods are a better first choice than Link, same as PaymentSheet.
         guard savedPaymentMethods.isEmpty else {
             return .failure(.hasSavedPaymentMethods)
+        }
+        if let reason = EmbeddedLinkInlineAuthRegistry.ineligibleReason(email: linkAccount.email) {
+            return .failure(reason)
         }
         let coordinator = LinkAuthFlowCoordinator(account: linkAccount, analyticsHelper: analyticsHelper)
         coordinator.prepare()

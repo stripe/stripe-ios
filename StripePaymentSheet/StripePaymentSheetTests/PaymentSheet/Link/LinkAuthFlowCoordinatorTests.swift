@@ -8,7 +8,7 @@ import XCTest
 @MainActor
 final class LinkAuthFlowCoordinatorTests: XCTestCase {
     func testStartsSMSOnceAndOnlyCompletesWhenSatisfied() async {
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         let flow = makeFlow(account)
         var completions = 0
         flow.onFinish = { if case .completed = $0 { completions += 1 } }
@@ -37,7 +37,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         flow.prepare()
         XCTAssertEqual(flow.challenge?.verificationSessionID, challengeID)
 
-        account.confirmResult = .success(.init(consumerSession: authSession(current: .oneFactorAuth)))
+        account.confirmResult = .success(.init(consumerSession: LinkAuthStubs.session(current: .oneFactorAuth)))
         flow.confirm(code: "123456")
         await settle()
         XCTAssertEqual(completions, 1)
@@ -46,14 +46,14 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testSMSAdvancesToEmailWhenMinimumRises() async {
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         let flow = makeFlow(account)
         var completed = false
         flow.onFinish = { if case .completed = $0 { completed = true } }
         flow.start()
         await settle()
 
-        account.confirmResult = .success(.init(consumerSession: authSession(current: .oneFactorAuth, minimum: .twoFactorAuth, factors: [sms(advances: false), email()])))
+        account.confirmResult = .success(.init(consumerSession: LinkAuthStubs.session(current: .oneFactorAuth, minimum: .twoFactorAuth, factors: [LinkAuthStubs.sms(advances: false), LinkAuthStubs.email()])))
         flow.confirm(code: "123456")
         await settle()
 
@@ -64,7 +64,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         XCTAssertFalse(flow.canGoBack)
         XCTAssertEqual(account.starts.map(\.type), [.sms, .email])
 
-        account.confirmResult = .success(.init(consumerSession: authSession(current: .twoFactorAuth, minimum: .twoFactorAuth)))
+        account.confirmResult = .success(.init(consumerSession: LinkAuthStubs.session(current: .twoFactorAuth, minimum: .twoFactorAuth)))
         flow.confirm(code: "654321")
         await settle()
         XCTAssertTrue(completed)
@@ -72,13 +72,13 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testEmailAdvancesToSMS() async {
-        let account = AuthAccountStub(session: authSession(minimum: .twoFactorAuth, factors: [email()]))
+        let account = LinkAuthAccountStub(session: LinkAuthStubs.session(minimum: .twoFactorAuth, factors: [LinkAuthStubs.email()]))
         let flow = makeFlow(account)
         flow.start()
         await settle()
         XCTAssertEqual(flow.challenge?.type, .email)
 
-        account.confirmResult = .success(.init(consumerSession: authSession(current: .oneFactorAuth, minimum: .twoFactorAuth, factors: [sms(), email(advances: false)])))
+        account.confirmResult = .success(.init(consumerSession: LinkAuthStubs.session(current: .oneFactorAuth, minimum: .twoFactorAuth, factors: [LinkAuthStubs.sms(), LinkAuthStubs.email(advances: false)])))
         flow.confirm(code: "123456")
         await settle()
         XCTAssertEqual(account.starts.map(\.type), [.email, .sms])
@@ -86,7 +86,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testDefaultCapabilitiesAuthenticateEmailOnlyAccount() async {
-        let account = AuthAccountStub(session: authSession(factors: [email()]))
+        let account = LinkAuthAccountStub(session: LinkAuthStubs.session(factors: [LinkAuthStubs.email()]))
         let flow = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init())
         flow.start()
         await settle()
@@ -96,7 +96,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
 
     func testPreparingEmailPhoneMatchWaitsForPhoneSubmission() async {
         // Given email is the only native factor and phone matching is required.
-        let account = AuthAccountStub(session: authSession(factors: [email()]))
+        let account = LinkAuthAccountStub(session: LinkAuthStubs.session(factors: [LinkAuthStubs.email()]))
         account.authLookupSettings = .init(emailOtpRequiresAdditionalInfo: true)
         let flow = makeFlow(account)
 
@@ -119,7 +119,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
 
     func testPreparingVerifiedSessionDefersCompletionUntilStart() {
         // Given a session already satisfies the required authentication level.
-        let account = AuthAccountStub(session: authSession(current: .oneFactorAuth))
+        let account = LinkAuthAccountStub(session: LinkAuthStubs.session(current: .oneFactorAuth))
         let flow = makeFlow(account)
         var completions = 0
         flow.onFinish = { if case .completed = $0 { completions += 1 } }
@@ -137,7 +137,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testPhoneMatchDefersEmailStartAndReusesPhoneForResend() async {
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         account.authLookupSettings = .init(emailOtpRequiresAdditionalInfo: true)
         let flow = makeFlow(account)
         flow.start()
@@ -159,7 +159,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testBackRestoresChallengeWithoutSendingAndPreservesCooldown() async {
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         let flow = makeFlow(account)
         flow.start()
         await settle()
@@ -178,7 +178,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
 
     func testDisabledAndUnknownFactorsAreNeverSelected() async {
         let unknown = ConsumerSession.VerificationFactor(type: .unparsable, providesFurtherVerification: true, temporarilyDisabled: false, id: "unknown")
-        let account = AuthAccountStub(session: authSession(factors: [sms(disabled: true), unknown, email()]))
+        let account = LinkAuthAccountStub(session: LinkAuthStubs.session(factors: [LinkAuthStubs.sms(disabled: true), unknown, LinkAuthStubs.email()]))
         let flow = makeFlow(account)
         flow.start()
         await settle()
@@ -187,7 +187,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testRepeatedFactorSwitchingReusesAnExistingChallenge() async {
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         let flow = makeFlow(account)
         flow.start()
         await settle()
@@ -201,7 +201,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testNoUsableFactorBlocksWithoutSending() {
-        let account = AuthAccountStub(session: authSession(factors: [sms(disabled: true), email(advances: false)]))
+        let account = LinkAuthAccountStub(session: LinkAuthStubs.session(factors: [LinkAuthStubs.sms(disabled: true), LinkAuthStubs.email(advances: false)]))
         let flow = makeFlow(account)
         flow.start()
         XCTAssertEqual(flow.screen, .blocked)
@@ -211,7 +211,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
 
     func testSMSOnlyCapabilitiesBlockEmailOnlyAccount() async {
         // Given an email-only account while the MFA auth flow is disabled
-        let account = AuthAccountStub(session: authSession(factors: [email()]))
+        let account = LinkAuthAccountStub(session: LinkAuthStubs.session(factors: [LinkAuthStubs.email()]))
         account.supportedVerificationTypes = SupportedVerificationType.nativeCapabilities(mfaAuthFlowEnabled: false)
         let flow = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init())
 
@@ -225,7 +225,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testCapabilitiesControlSelectionAndActions() async {
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         account.supportedVerificationTypes = [.sms]
         let flow = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init())
         flow.start()
@@ -236,12 +236,12 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testResendCooldownOnlyStartsOnSuccess() async {
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         var date = Date(timeIntervalSince1970: 100)
         let flow = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init(), now: { date })
         flow.start()
         await settle()
-        account.nextStartResult = .failure(authError("rate_limit_exceeded"))
+        account.nextStartResult = .failure(LinkAuthStubs.error("rate_limit_exceeded"))
         flow.resend()
         await settle()
         XCTAssertTrue(flow.canResend)
@@ -256,15 +256,15 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testPhoneMissingOverridesLookupHintAndMismatchStaysInline() async {
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         let flow = makeFlow(account)
         flow.start()
         await settle()
-        account.nextStartResult = .failure(authError("phone_number_missing"))
+        account.nextStartResult = .failure(LinkAuthStubs.error("phone_number_missing"))
         flow.sendToEmail()
         await settle()
         XCTAssertEqual(flow.screen, .phoneMatch)
-        account.nextStartResult = .failure(authError("phone_number_mismatch"))
+        account.nextStartResult = .failure(LinkAuthStubs.error("phone_number_mismatch"))
         flow.submitPhoneNumber("+14155550123")
         await settle()
         XCTAssertEqual(flow.screen, .phoneMatch)
@@ -273,13 +273,13 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testWrongCodeSignalsInvalidCodeAndMaxAttemptsDisablesConfirmation() async {
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         let flow = makeFlow(account)
         flow.start()
         await settle()
         let inputRevision = flow.inputRevision
         let invalidCodeRevision = flow.invalidCodeRevision
-        account.confirmResult = .failure(authError("consumer_verification_code_invalid"))
+        account.confirmResult = .failure(LinkAuthStubs.error("consumer_verification_code_invalid"))
         flow.confirm(code: "000000")
         await settle()
         // The field is cleared by the invalid-code animation rather than an input reset.
@@ -289,7 +289,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         XCTAssertTrue(flow.canSubmitCode)
         flow.codeDidChange()
         XCTAssertNil(flow.errorMessage)
-        account.confirmResult = .failure(authError("consumer_verification_max_attempts_exceeded"))
+        account.confirmResult = .failure(LinkAuthStubs.error("consumer_verification_max_attempts_exceeded"))
         flow.confirm(code: "000000")
         await settle()
         XCTAssertFalse(flow.canSubmitCode)
@@ -301,12 +301,12 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
             LinkUtils.ConsumerErrorCode.consumerVerificationExpired,
             .consumerVerificationNotFound,
         ] {
-            let account = AuthAccountStub()
+            let account = LinkAuthAccountStub()
             let flow = makeFlow(account)
             flow.start()
             await settle()
-            account.confirmResult = .failure(authError(errorCode.rawValue))
-            account.nextStartResult = .failure(authError("rate_limit_exceeded"))
+            account.confirmResult = .failure(LinkAuthStubs.error(errorCode.rawValue))
+            account.nextStartResult = .failure(LinkAuthStubs.error("rate_limit_exceeded"))
             flow.confirm(code: "000000")
             await settle()
             XCTAssertEqual(account.starts.count, 2)
@@ -316,9 +316,9 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testCredentialsRefreshOnceThenReplayOriginalRequest() async {
-        let account = AuthAccountStub()
-        account.nextStartResult = .failure(authError("consumer_session_expired"))
-        account.refreshResult = .success(.init(consumerSession: authSession(secret: "new_secret"), settings: .init(emailOtpRequiresAdditionalInfo: true)))
+        let account = LinkAuthAccountStub()
+        account.nextStartResult = .failure(LinkAuthStubs.error("consumer_session_expired"))
+        account.refreshResult = .success(.init(consumerSession: LinkAuthStubs.session(secret: "new_secret"), settings: .init(emailOtpRequiresAdditionalInfo: true)))
         let flow = makeFlow(account)
         flow.start()
         await settle()
@@ -330,8 +330,8 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testRefreshFailureReturnsOriginalError() async {
-        let account = AuthAccountStub()
-        account.nextStartResult = .failure(authError("consumer_session_credentials_invalid"))
+        let account = LinkAuthAccountStub()
+        account.nextStartResult = .failure(LinkAuthStubs.error("consumer_session_credentials_invalid"))
         let flow = makeFlow(account)
         var errorCode: String?
         flow.onFinish = { if case .failed(let error) = $0 { errorCode = error._stp_error_code } }
@@ -342,7 +342,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     }
 
     func testCancelIgnoresLateResponseAndCompletesOnce() async {
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         account.deferStart = true
         let flow = makeFlow(account)
         var results = 0
@@ -351,7 +351,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         let initialSession = account.currentSession
         flow.cancel()
         flow.cancel()
-        account.pendingStart?(.success(.init(consumerSession: authSession(current: .twoFactorAuth))))
+        account.pendingStart?(.success(.init(consumerSession: LinkAuthStubs.session(current: .twoFactorAuth))))
         await settle()
         XCTAssertEqual(results, 1)
         XCTAssertTrue(account.currentSession === initialSession)
@@ -359,7 +359,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
 
     func testWebCompletionRefreshesAndRequiresSatisfiedSession() async {
         let url = URL(string: "https://checkout.link.com/#test")!
-        let account = AuthAccountStub(session: authSession(fallback: fallbackParams(url)))
+        let account = LinkAuthAccountStub(session: LinkAuthStubs.session(fallback: LinkAuthStubs.fallbackParams(url)))
         let flow = makeFlow(account)
         var urls: [URL] = []
         var completed = false
@@ -374,7 +374,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         XCTAssertEqual(urls, [url])
         XCTAssertEqual(account.visitedFallbackURLs, [url])
         XCTAssertTrue(account.starts.isEmpty)
-        account.refreshResult = .success(.init(consumerSession: authSession(factors: [])))
+        account.refreshResult = .success(.init(consumerSession: LinkAuthStubs.session(factors: [])))
         flow.webHandoffFinished(.completed)
         await settle()
         XCTAssertFalse(completed)
@@ -385,9 +385,9 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     func testConsumedWebURLIsRefreshedBeforeOpening() async {
         let oldURL = URL(string: "https://checkout.link.com/#old")!
         let newURL = URL(string: "https://checkout.link.com/#new")!
-        let account = AuthAccountStub(session: authSession(fallback: fallbackParams(oldURL)))
+        let account = LinkAuthAccountStub(session: LinkAuthStubs.session(fallback: LinkAuthStubs.fallbackParams(oldURL)))
         account.visitedFallbackURLs = [oldURL]
-        account.refreshResult = .success(.init(consumerSession: authSession(fallback: fallbackParams(newURL))))
+        account.refreshResult = .success(.init(consumerSession: LinkAuthStubs.session(fallback: LinkAuthStubs.fallbackParams(newURL))))
         let flow = makeFlow(account)
         var openedURL: URL?
         flow.onWebHandoff = { openedURL = $0 }
@@ -403,7 +403,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     func testInvalidateEndsTheAttemptWithoutLoggingOrFinishing() async {
         // Given a started SMS challenge whose host listens for completion
         let analyticsClient = STPTestingAnalyticsClient()
-        let account = AuthAccountStub()
+        let account = LinkAuthAccountStub()
         let flow = LinkAuthFlowCoordinator(account: account, analyticsHelper: .init(analyticsClient: analyticsClient))
         var finishes = 0
         flow.onFinish = { _ in finishes += 1 }
@@ -431,7 +431,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
     func testAnalyticsSurfaceIsAddedToVerificationEvents() async throws {
         // Given an attempt that starts inline
         let analyticsClient = STPTestingAnalyticsClient()
-        let flow = LinkAuthFlowCoordinator(account: AuthAccountStub(), analyticsHelper: .init(analyticsClient: analyticsClient))
+        let flow = LinkAuthFlowCoordinator(account: LinkAuthAccountStub(), analyticsHelper: .init(analyticsClient: analyticsClient))
         flow.analyticsSurface = .embeddedInline
         flow.prepare()
         flow.start()
@@ -452,7 +452,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
 
     func testVerificationEventsOmitSurfaceByDefault() async throws {
         let analyticsClient = STPTestingAnalyticsClient()
-        let flow = LinkAuthFlowCoordinator(account: AuthAccountStub(), analyticsHelper: .init(analyticsClient: analyticsClient))
+        let flow = LinkAuthFlowCoordinator(account: LinkAuthAccountStub(), analyticsHelper: .init(analyticsClient: analyticsClient))
         flow.start()
         await settle()
 
@@ -460,7 +460,7 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         XCTAssertNil(start["link_auth_surface"])
     }
 
-    private func makeFlow(_ account: AuthAccountStub) -> LinkAuthFlowCoordinator {
+    private func makeFlow(_ account: LinkAuthAccountStub) -> LinkAuthFlowCoordinator {
         LinkAuthFlowCoordinator(account: account, analyticsHelper: .init())
     }
 
@@ -469,73 +469,5 @@ final class LinkAuthFlowCoordinatorTests: XCTestCase {
         for _ in 0..<4 {
             await withCheckedContinuation { continuation in DispatchQueue.main.async { continuation.resume() } }
         }
-    }
-}
-
-private func sms(advances: Bool = true, disabled: Bool = false) -> ConsumerSession.VerificationFactor {
-    .init(type: .sms, providesFurtherVerification: advances, temporarilyDisabled: disabled, id: "sms_factor")
-}
-
-private func email(advances: Bool = true) -> ConsumerSession.VerificationFactor {
-    .init(type: .email, providesFurtherVerification: advances, temporarilyDisabled: false, id: "email_factor")
-}
-
-private func authSession(secret: String = "secret", current: ConsumerSession.AuthenticationLevel = .notAuthenticated, minimum: ConsumerSession.AuthenticationLevel = .oneFactorAuth, factors: [ConsumerSession.VerificationFactor] = [sms(), email()], sessions: [ConsumerSession.VerificationSession] = [], fallback: ConsumerSession.MobileFallbackWebviewParams? = nil) -> ConsumerSession {
-    ConsumerSession.make(clientSecret: secret, emailAddress: "jane@example.com", redactedFormattedPhoneNumber: "(***) *** **23", unredactedPhoneNumber: nil, phoneNumberCountry: "US", verificationSessions: sessions, supportedPaymentDetailsTypes: [], mobileFallbackWebviewParams: fallback, currentAuthenticationLevel: current, minimumAuthenticationLevel: minimum, availableVerificationFactors: factors)
-}
-
-private func authError(_ code: String) -> Error {
-    NSError(domain: STPError.stripeDomain, code: 400, userInfo: [STPError.stripeErrorCodeKey: code, NSLocalizedDescriptionKey: code])
-}
-
-private func fallbackParams(_ url: URL) -> ConsumerSession.MobileFallbackWebviewParams {
-    let data = try! JSONSerialization.data(withJSONObject: ["webview_open_url": url.absoluteString, "webview_requirement_type": "required"])
-    return try! StripeJSONDecoder().decode(ConsumerSession.MobileFallbackWebviewParams.self, from: data)
-}
-
-private final class AuthAccountStub: LinkAuthAccount {
-    var currentSession: ConsumerSession?
-    var authLookupSettings: ConsumerSession.LookupSettings? = .init(emailOtpRequiresAdditionalInfo: false)
-    var useMobileEndpoints = true
-    var supportedVerificationTypes: [SupportedVerificationType] = [.sms, .email]
-    var visitedFallbackURLs: [URL] = []
-    var sessionState: PaymentSheetLinkAccount.SessionState { currentSession?.meetsMinimumAuthenticationLevel == true ? .verified : .requiresVerification }
-    var nextStartResult: Result<ConsumerSession.AuthResponse, Error>?
-    var confirmResult: Result<ConsumerSession.AuthResponse, Error> = .failure(authError("consumer_verification_code_invalid"))
-    var refreshResult: Result<ConsumerSession.AuthResponse, Error> = .failure(authError("consumer_session_expired"))
-    var starts: [(type: SupportedVerificationType, phone: String?, resend: Bool)] = []
-    var confirms: [SupportedVerificationType] = []
-    var refreshes: [Bool] = []
-    var deferStart = false
-    var pendingStart: ((Result<ConsumerSession.AuthResponse, Error>) -> Void)?
-
-    init(session: ConsumerSession = authSession()) { currentSession = session }
-
-    func applyAuthResponse(_ response: ConsumerSession.AuthResponse) {
-        currentSession = response.consumerSession
-        if let settings = response.settings { authLookupSettings = settings }
-    }
-
-    func startAuthVerification(type: SupportedVerificationType, phoneNumber: String?, isResending: Bool, completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void) {
-        starts.append((type, phoneNumber, isResending))
-        if deferStart {
-            pendingStart = completion
-        } else if let result = nextStartResult {
-            nextStartResult = nil
-            completion(result)
-        } else {
-            let session = currentSession!
-            completion(.success(.init(consumerSession: authSession(secret: session.clientSecret, current: session.currentAuthenticationLevel!, minimum: session.minimumAuthenticationLevel!, factors: session.availableVerificationFactors!, sessions: [.init(type: type == .sms ? .sms : .email, state: .started)]), verificationSessionId: "verification_\(starts.count)")))
-        }
-    }
-
-    func confirmAuthVerification(type: SupportedVerificationType, code: String, consentGranted: Bool?, completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void) {
-        confirms.append(type)
-        completion(confirmResult)
-    }
-
-    func refreshAuthSession(recoverCredentials: Bool, completion: @escaping (Result<ConsumerSession.AuthResponse, Error>) -> Void) {
-        refreshes.append(recoverCredentials)
-        completion(refreshResult)
     }
 }
