@@ -97,8 +97,25 @@ final class PayWithLinkViewController: NSObject {
         let canContinueWithoutLink: Bool
         let launchedFromFlowController: Bool
         let initiallySelectedPaymentDetailsID: String?
-        let callToAction: ConfirmButton.CallToActionType
+        private let baseCallToAction: ConfirmButton.CallToActionType
         let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
+        /// Updates the displayed total when it depends on the billing address (e.g. automatic tax). Only used in full mode.
+        let totalUpdater: LinkTotalUpdater?
+
+        var callToAction: ConfirmButton.CallToActionType {
+            guard let totalUpdater, case .pay(_, let currency, let withLock) = baseCallToAction else {
+                return baseCallToAction
+            }
+            return .pay(amount: totalUpdater.amount, currency: currency, withLock: withLock)
+        }
+
+        /// Whether the billing address of the selected payment details must satisfy automatic tax requirements.
+        var requiresAutomaticTaxBillingAddress: Bool {
+            guard case .checkout(let session) = intent else {
+                return false
+            }
+            return session.collectsTaxFromBillingAddress
+        }
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
         let linkAppearance: LinkAppearance?
@@ -165,7 +182,8 @@ final class PayWithLinkViewController: NSObject {
             supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             linkAppearance: LinkAppearance? = nil,
-            linkConfiguration: LinkConfiguration? = nil
+            linkConfiguration: LinkConfiguration? = nil,
+            totalUpdater: LinkTotalUpdater? = nil
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -177,11 +195,12 @@ final class PayWithLinkViewController: NSObject {
             self.canContinueWithoutLink = canContinueWithoutLink
             self.launchedFromFlowController = launchedFromFlowController
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
-            self.callToAction = callToAction ?? .makeDefaultType(intent: intent, withLock: false)
+            self.baseCallToAction = callToAction ?? .makeDefaultType(intent: intent, withLock: false)
             self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
             self.analyticsHelper = analyticsHelper
             self.linkAppearance = linkAppearance
             self.linkConfiguration = linkConfiguration
+            self.totalUpdater = totalUpdater
         }
     }
 
@@ -223,7 +242,8 @@ final class PayWithLinkViewController: NSObject {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
-        linkConfiguration: LinkConfiguration? = nil
+        linkConfiguration: LinkConfiguration? = nil,
+        totalUpdater: LinkTotalUpdater? = nil
     ) {
         LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
 
@@ -243,7 +263,8 @@ final class PayWithLinkViewController: NSObject {
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 analyticsHelper: analyticsHelper,
                 linkAppearance: linkAppearance,
-                linkConfiguration: linkConfiguration
+                linkConfiguration: linkConfiguration,
+                totalUpdater: totalUpdater
             ),
             linkAccount: linkAccount,
             nativeSheetPresentation: nativeSheetPresentation
@@ -783,6 +804,46 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         confirmationExtras: LinkConfirmationExtras?,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
+        guard let totalUpdater = context.totalUpdater else {
+            confirmWithoutSyncingTotal(
+                with: linkAccount,
+                paymentDetails: paymentDetails,
+                confirmationExtras: confirmationExtras,
+                completion: completion
+            )
+            return
+        }
+        // Make sure the total reflects the billing address we're about to pay with. If it changed,
+        // stop so the customer can review the new total before paying.
+        Task { @MainActor in
+            do {
+                let totalChanged = try await totalUpdater.sync(
+                    billingAddress: paymentDetails.billingAddress,
+                    showsProgress: false
+                )
+                guard !totalChanged else {
+                    completion(.failed(error: LinkTotalUpdater.Error.totalChanged), nil)
+                    return
+                }
+            } catch {
+                completion(.failed(error: error), nil)
+                return
+            }
+            confirmWithoutSyncingTotal(
+                with: linkAccount,
+                paymentDetails: paymentDetails,
+                confirmationExtras: confirmationExtras,
+                completion: completion
+            )
+        }
+    }
+
+    private func confirmWithoutSyncingTotal(
+        with linkAccount: PaymentSheetLinkAccount,
+        paymentDetails: ConsumerPaymentDetails,
+        confirmationExtras: LinkConfirmationExtras?,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
         payWithLinkDelegate?.payWithLinkViewControllerDidConfirm(
             self,
             intent: context.intent,
@@ -855,6 +916,12 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             // The wallet confirm option will trigger Link at the time of confirmation, where we can
             // use the web flow without issue.
             payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: .wallet(brand: context.linkBrand))
+            return
+        }
+        guard context.totalUpdater == nil else {
+            // Web Link can't update its total while it's open, so it can't support a billing-address-dependent total.
+            let error = PaymentSheetError.unknown(debugDescription: "Native Link failed, and web Link doesn't support a total that depends on the billing address.")
+            finish(withResult: .failed(error: error), deferredIntentConfirmationType: nil)
             return
         }
         isBailingToWebFlow = true

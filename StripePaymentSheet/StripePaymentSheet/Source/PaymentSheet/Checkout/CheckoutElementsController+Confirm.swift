@@ -337,7 +337,7 @@ extension CheckoutElementsController {
                 case .applePay(let parameters):
                     result = await self.confirmApplePay(checkoutSession: self.session, parameters: parameters)
                 case .link(let parameters):
-                    result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters)
+                    result = await Self.confirmLink(checkoutSession: self.session, parameters: parameters, checkoutWalletUpdater: self, currentSession: { self.session })
                 case .paymentMethod(let paymentMethodParameters, let integrationShape):
                     // 2. Do pre-confirm actions (CVC recollection, etc)
                     if self.requiresSEPAMandate(for: paymentMethodParameters.option) {

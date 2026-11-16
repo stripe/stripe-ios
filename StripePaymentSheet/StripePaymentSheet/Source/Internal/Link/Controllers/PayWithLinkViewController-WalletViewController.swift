@@ -260,6 +260,31 @@ extension PayWithLinkViewController {
                 // Automatically expand, since the user is likely here to change the payment method
                 paymentPicker.setExpanded(true, animated: false)
             }
+
+            context.totalUpdater?.addObserver { [weak self] in
+                guard let self, !self.isConfirming else { return }
+                self.updateUI(animated: true)
+            }
+            syncTotalForSelectedPaymentMethod()
+        }
+
+        /// Whether a confirmation is in progress. While confirming, total updates don't touch the UI.
+        private var isConfirming = false
+
+        /// Updates the displayed total for the selected payment method's billing address, if the total depends on it.
+        private func syncTotalForSelectedPaymentMethod() {
+            guard let totalUpdater = context.totalUpdater,
+                  !isConfirming,
+                  let billingAddress = viewModel.selectedPaymentMethod?.billingAddress else {
+                return
+            }
+            Task { @MainActor [weak self] in
+                do {
+                    try await totalUpdater.sync(billingAddress: billingAddress)
+                } catch {
+                    self?.updateErrorLabel(for: error)
+                }
+            }
         }
 
         func updateUI(animated: Bool) {
@@ -407,12 +432,18 @@ extension PayWithLinkViewController {
             #endif
             updateErrorLabel(for: nil)
             confirmButton.update(status: .processing)
+            isConfirming = true
 
             coordinator?.confirm(
                 with: linkAccount,
                 paymentDetails: paymentDetails,
                 confirmationExtras: confirmationExtras
             ) { [weak self] result, deferredIntentConfirmationType in
+                self?.isConfirming = false
+                if case .failed = result {
+                    // The total may have changed while confirming. Refresh the button's call to action.
+                    self?.updateUI(animated: true)
+                }
                 switch result {
                 case .completed:
                     #if !os(visionOS)
@@ -692,6 +723,7 @@ extension PayWithLinkViewController.WalletViewController: PayWithLinkWalletViewM
 
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.WalletViewModel) {
         updateUI(animated: true)
+        syncTotalForSelectedPaymentMethod()
     }
 
 }

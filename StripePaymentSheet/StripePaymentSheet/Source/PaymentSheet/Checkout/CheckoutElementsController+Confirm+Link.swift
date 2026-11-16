@@ -23,7 +23,92 @@ extension CheckoutElementsController {
     // directly as `.withPaymentDetails`.
     static func confirmLink(
         checkoutSession: Session,
-        parameters: LinkConfirmationParameters
+        parameters: LinkConfirmationParameters,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater? = nil,
+        currentSession: (@MainActor () -> Session?)? = nil
+    ) async -> InternalConfirmResult {
+        // Native Link can update its total while it's open, so it may change the session's tax region.
+        // Read the latest session when confirming so the expected amount matches what the customer saw.
+        let latestSession: () -> Session = {
+            currentSession?() ?? checkoutSession
+        }
+        let linkTotalUpdater = makeLinkTotalUpdater(
+            checkoutSession: checkoutSession,
+            parameters: parameters,
+            checkoutWalletUpdater: checkoutWalletUpdater,
+            latestSession: latestSession
+        )
+        let initialTaxRegion = checkoutWalletUpdater?.currentTaxRegion
+        let result = await confirmLink(
+            checkoutSession: checkoutSession,
+            parameters: parameters,
+            checkoutWalletUpdater: checkoutWalletUpdater,
+            latestSession: latestSession,
+            linkTotalUpdater: linkTotalUpdater
+        )
+        if let linkTotalUpdater, let checkoutWalletUpdater, case .canceled = result {
+            // Mirror Apple Pay: if the customer leaves Link, restore the tax region they started with.
+            await linkTotalUpdater.waitUntilIdle()
+            if checkoutWalletUpdater.currentTaxRegion != initialTaxRegion {
+                _ = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+                    address: initialTaxRegion,
+                    canUpdateWhileSheetPresented: true,
+                    confirmationSource: parameters.attribution.confirmingElement
+                )
+            }
+        }
+        return result
+    }
+
+    /// Creates an updater that recalculates tax while native Link is open, if the session's tax depends on the billing address.
+    @MainActor
+    private static func makeLinkTotalUpdater(
+        checkoutSession: Session,
+        parameters: LinkConfirmationParameters,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater?,
+        latestSession: @escaping () -> Session
+    ) -> LinkTotalUpdater? {
+        guard let checkoutWalletUpdater,
+              case .wallet = parameters.confirmOption,
+              checkoutSession.collectsTaxFromBillingAddress,
+              deviceCanUseNativeLink(elementsSession: checkoutSession.elementsSession, configuration: parameters.configuration) else {
+            return nil
+        }
+        let confirmationSource = parameters.attribution.confirmingElement
+        return LinkTotalUpdater(amount: checkoutSession.amount) { [weak checkoutWalletUpdater] billingAddress in
+            guard let checkoutWalletUpdater else {
+                throw CheckoutError.unknown(debugDescription: "Checkout was deallocated while Link was open.")
+            }
+            guard let country = billingAddress?.countryCode?.nonEmpty else {
+                // Without a country there's nothing to calculate tax from.
+                return latestSession().amount
+            }
+            let address = Address(
+                country: country,
+                line1: billingAddress?.line1?.nonEmpty,
+                line2: billingAddress?.line2?.nonEmpty,
+                city: billingAddress?.city?.nonEmpty,
+                state: billingAddress?.state?.nonEmpty,
+                postalCode: billingAddress?.postalCode?.nonEmpty
+            )
+            guard address != checkoutWalletUpdater.currentTaxRegion else {
+                return latestSession().amount
+            }
+            let session = try await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+                address: address,
+                canUpdateWhileSheetPresented: true,
+                confirmationSource: confirmationSource
+            )
+            return session.amount
+        }
+    }
+
+    private static func confirmLink(
+        checkoutSession: Session,
+        parameters: LinkConfirmationParameters,
+        checkoutWalletUpdater: CheckoutSessionWalletUpdater?,
+        latestSession: @escaping () -> Session,
+        linkTotalUpdater: LinkTotalUpdater?
     ) async -> InternalConfirmResult {
         let elementsSession = checkoutSession.elementsSession
         // Derive the customer from the same session snapshot as the rest of this confirmation.
@@ -94,7 +179,7 @@ extension CheckoutElementsController {
                         attribution: parameters.attribution
                     )
                     let result = await Self.confirmLinkPaymentMethod(
-                        checkoutSession: checkoutSession,
+                        checkoutSession: latestSession(),
                         parameters: paymentMethodParameters
                     )
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
@@ -123,7 +208,7 @@ extension CheckoutElementsController {
                         attribution: parameters.attribution
                     )
                     let result = await Self.confirmLinkPaymentMethod(
-                        checkoutSession: checkoutSession,
+                        checkoutSession: latestSession(),
                         parameters: paymentMethodParameters
                     )
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
@@ -152,7 +237,7 @@ extension CheckoutElementsController {
                         return
                     }
                     let result = await Self.confirmLink(
-                        checkoutSession: checkoutSession,
+                        checkoutSession: latestSession(),
                         parameters: LinkConfirmationParameters(
                             confirmOption: confirmOption,
                             canContinueWithoutLink: parameters.canContinueWithoutLink,
@@ -164,7 +249,9 @@ extension CheckoutElementsController {
                             authenticationContext: linkAuthenticationContext,
                             paymentHandler: parameters.paymentHandler,
                             attribution: parameters.attribution
-                        )
+                        ),
+                        checkoutWalletUpdater: checkoutWalletUpdater,
+                        currentSession: { latestSession() }
                     )
                     if let response = result.checkoutSessionResponse {
                         latestSessionResponse = response
@@ -187,6 +274,7 @@ extension CheckoutElementsController {
                 confirmationChallenge: confirmationChallenge,
                 canContinueWithoutLink: parameters.canContinueWithoutLink,
                 clientAttributionMetadata: clientAttributionMetadata,
+                linkTotalUpdater: linkTotalUpdater,
                 isSettingUp: isSettingUp,
                 setAllowRedisplay: setAllowRedisplay,
                 confirmWithPaymentMethodParams: confirmWithPaymentMethodParams(paymentMethodParams:linkAccount:saveForFutureUseCheckboxState:),
