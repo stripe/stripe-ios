@@ -53,6 +53,76 @@ class PayWithLinkViewControllerTests: XCTestCase {
     }
 
     @MainActor
+    func testPaymentMethodSelectionTreatsWebFallbackEndingsAsClosingLink() throws {
+        // Given each way the web fallback can end a payment method selection
+        let error = NSError(domain: "test", code: 1)
+        let failed = PayWithNativeLinkController.paymentMethodSelectionValues(
+            for: .full(result: .failed(error: error), deferredIntentConfirmationType: nil, didFinish: true)
+        )
+        let canceled = PayWithNativeLinkController.paymentMethodSelectionValues(
+            for: .full(result: .canceled, deferredIntentConfirmationType: nil, didFinish: false)
+        )
+        let completed = PayWithNativeLinkController.paymentMethodSelectionValues(
+            for: .full(result: .completed, deferredIntentConfirmationType: nil, didFinish: true)
+        )
+        let selected = PayWithNativeLinkController.paymentMethodSelectionValues(
+            for: .paymentMethodSelection(confirmOption: .wallet(brand: .link), shouldReturnToPaymentSheet: false)
+        )
+
+        // Then failures report the error, other endings behave like closing Link, and selections pass through
+        XCTAssertEqual(try XCTUnwrap(failed.error) as NSError, error)
+        XCTAssertNil(failed.confirmOption)
+        XCTAssertNil(canceled.confirmOption)
+        XCTAssertNil(canceled.error)
+        XCTAssertFalse(canceled.shouldReturnToPaymentSheet)
+        XCTAssertNil(completed.confirmOption)
+        XCTAssertNil(completed.error)
+        XCTAssertNotNil(selected.confirmOption)
+    }
+
+    @MainActor
+    func testPaymentMethodSelectionReleasesControllerAfterSelecting() async throws {
+        // Given a payment method selection presented from a window
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let configuration = PaymentSheet.Configuration()
+        var controller: PayWithNativeLinkController? = PayWithNativeLinkController(
+            mode: .paymentMethodSelection,
+            intent: ._testValue(),
+            elementsSession: ._testValue(intent: ._testValue()),
+            configuration: configuration,
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            analyticsHelper: ._testValue()
+        )
+        weak var weakController = controller
+        let selected = expectation(description: "selection reported")
+        controller?.presentForPaymentMethodSelection(from: presenter, initiallySelectedPaymentDetailsID: nil) { confirmOption, _, _ in
+            XCTAssertNotNil(confirmOption)
+            selected.fulfill()
+        }
+        let presented = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in presenter.presentedViewController != nil }, object: nil)
+        await fulfillment(of: [presented], timeout: 3)
+
+        // When the wallet reports a selection
+        let wallet = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: configuration, analyticsHelper: ._testValue())
+        controller?.payWithLinkViewControllerDidFinish(wallet, confirmOption: .wallet(brand: .link))
+        await fulfillment(of: [selected], timeout: 3)
+
+        // Then the controller no longer keeps itself alive
+        controller = nil
+        XCTAssertNil(weakController)
+    }
+
+    @MainActor
     func testNativeWalletResizesWhenPaymentPickerExpandsAndCollapses() async throws {
         // Given a presented wallet with two saved cards and a collapsed payment picker
         let (window, wallet, sheet, picker) = try await presentNativeWallet()
