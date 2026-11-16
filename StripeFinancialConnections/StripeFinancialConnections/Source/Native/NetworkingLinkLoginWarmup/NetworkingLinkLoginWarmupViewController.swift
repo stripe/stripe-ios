@@ -55,8 +55,13 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
     }
 
     private lazy var warmupFooterView: NetworkingLinkLoginWarmupFooterView = {
+        let appearance = dataSource.manifest.appearance
+        let isLink = appearance.colors == .link
+        let primaryButtonTitle: PaneLayoutView.AccessibleText = isLink
+            ? .init(String.Localized.continue)
+            : continueText
         let secondaryButtonTitle: String
-        if dataSource.manifest.isProductInstantDebits {
+        if isLink || dataSource.manifest.isProductInstantDebits {
             secondaryButtonTitle = String.Localized.cancel
         } else {
             secondaryButtonTitle = STPLocalizedString(
@@ -66,7 +71,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
         }
         return PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                title: continueText,
+                title: primaryButtonTitle,
                 accessibilityIdentifier: "link_continue_button",
                 action: { [weak self] in
                     self?.didSelectContinue()
@@ -78,7 +83,8 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                     self?.didSelectSkip()
                 }
             ),
-            appearance: dataSource.manifest.appearance
+            appearance: appearance,
+            preferHorizontalButtonsForLink: true
         )
     }()
 
@@ -96,19 +102,23 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let appearance = dataSource.manifest.appearance
+        let isLink = appearance.colors == .link
         setup(
             withContentView: PaneLayoutView.createContentView(
-                iconView: RoundedIconView(
+                iconView: isLink ? nil : RoundedIconView(
                     image: .image(.person),
                     style: .circle,
-                    appearance: dataSource.manifest.appearance
+                    appearance: appearance
                 ),
                 accessibleTitle: continueText,
                 accessibleSubtitle: savedInfoSubtitle,
                 contentView: NetworkingLinkLoginWarmupBodyView(
                     // `email` should always be non-null, and since the email is only used as a visual, it's not worth to throw an error if it is null
                     email: dataSource.email ?? "you"
-                )
+                ),
+                isSheet: true,
+                appearance: appearance
             ),
             footerView: warmupFooterView.footerView
         )

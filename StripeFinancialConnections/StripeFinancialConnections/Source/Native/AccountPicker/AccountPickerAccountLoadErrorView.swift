@@ -76,7 +76,8 @@ final class AccountPickerAccountLoadErrorView: UIView {
                     institution.name
                 ),
                 subtitle: subtitle,
-                contentView: nil
+                contentView: nil,
+                appearance: appearance
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: primaryButtonConfiguration,

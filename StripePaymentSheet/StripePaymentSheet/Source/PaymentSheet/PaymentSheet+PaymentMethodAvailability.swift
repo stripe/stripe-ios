@@ -320,6 +320,9 @@ extension PaymentSheet {
         /// The Bank payment method is disabled.
         case instantDebitsDisabledForOnboarding
 
+        /// Requires a customer configured with a CustomerSession
+        case customerSession
+
         /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
         var debugDescription: String {
             switch self {
@@ -343,6 +346,8 @@ extension PaymentSheet {
                 return "The provided configuration must either collect an email, or a default email must be provided. See https://docs.stripe.com/payments/payment-element/control-billing-details-collection"
             case .instantDebitsDisabledForOnboarding:
                 return "The Bank tab is configured to be hidden for your account."
+            case .customerSession:
+                return "PaymentSheet.Configuration.customer must be configured with a CustomerSession. See https://docs.stripe.com/payments/accept-a-payment?platform=ios&ui=payment-sheet"
             }
         }
     }

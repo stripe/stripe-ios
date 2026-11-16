@@ -784,6 +784,22 @@ import UIKit
 
         rootViewController.present(vc, animated: true, completion: nil)
     }
+    func lpmScenariosTapped() {
+        let vc = UIHostingController(rootView: LPMScenarioPickerView(settings: settings, onSelect: { scenario in
+            self.rootViewController.dismiss(animated: true, completion: nil)
+            PlaygroundController.resetCustomer()
+            var updatedSettings = self.settings
+            scenario.apply(to: &updatedSettings)
+            self.settings = updatedSettings
+            // Settings changes only reload on their own when autoreload is on
+            if updatedSettings.autoreload == .off {
+                self.load(reinitializeControllers: true)
+            }
+        }, onCancel: {
+            self.rootViewController.dismiss(animated: true, completion: nil)
+        }))
+        rootViewController.present(vc, animated: true, completion: nil)
+    }
     func paymentMethodOptionsSetupFutureUsageSettingsTapped() {
         let vc = UIHostingController(rootView: PaymentMethodOptionsSetupFutureUsagePlaygroundView(viewModel: settings, doneAction: { updatedSettings in
             self.settings = updatedSettings
@@ -1079,10 +1095,16 @@ extension PlaygroundController {
         }
 
         if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
-            body["supported_payment_methods"] = supportedPaymentMethods
+            let paymentMethodTypes = supportedPaymentMethods
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
                 .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+            body["supported_payment_methods"] = paymentMethodTypes
+            // Vipps is in preview, so its intents must be created with the preview API version.
+            // 2020-08-27 is the backend's default intent API version.
+            if paymentMethodTypes.contains("vipps") {
+                body["stripe_version"] = "2020-08-27; vipps_preview=v1"
+            }
         }
 
         // Only set PMO SFU on the Intent if we're Intent-first, never set it for deferred intents.
