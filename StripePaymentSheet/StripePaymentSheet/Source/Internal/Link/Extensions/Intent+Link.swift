@@ -55,6 +55,18 @@ extension STPElementsSession {
         linkSettings?.linkFlags ?? [:]
     }
 
+    /// Whether the server enables inline Link verification in the Embedded Payment Element. Also its kill switch.
+    var linkEmbeddedInlineVerificationEnabled: Bool {
+        PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride
+            ?? (linkFlags["link_mobile_enable_embedded_inline_otp"] == true)
+    }
+
+    /// Whether inline Link verification opens the verification dialog instead of focusing the inline code field.
+    var linkEmbeddedInlineVerificationForcesDialog: Bool {
+        PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride
+            ?? (linkFlags["link_mobile_embedded_inline_otp_force_dialog"] == true)
+    }
+
     var linkMFAAuthFlowEnabled: Bool {
         linkSettings?.mfaAuthFlowEnabled ?? false
     }
