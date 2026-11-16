@@ -17,6 +17,7 @@ class EmbeddedPaymentElementContainerView: UIView {
     }
 
     var needsUpdateSuperviewHeight: () -> Void = {}
+    var didMoveToWindowHandler: () -> Void = {}
     private var contentView: EmbeddedPaymentMethodsView
     private var bottomAnchorConstraint: NSLayoutConstraint!
 
@@ -29,6 +30,11 @@ class EmbeddedPaymentElementContainerView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError()
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        didMoveToWindowHandler()
     }
 
     private func setContentView(_ view: UIView) {

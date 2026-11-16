@@ -146,6 +146,8 @@ public final class EmbeddedPaymentElement {
         // Cancel the old task and let it finish so that merchants receive update results in order
         latestUpdateTask?.cancel()
         _ = await latestUpdateTask?.value
+        // An inline Link verification in progress keeps its account, so the code the customer was sent stays valid.
+        let preservedLinkAccount = linkInlineAuth?.accountToPreserveOnUpdate
         // Start the new update task
         let currentUpdateTask: Task<UpdateResult, Never> = Task { @MainActor [weak self, configuration, analyticsHelper] in
             // ⚠️ Don't modify `self` until after all `awaits` to avoid being canceled halfway through and leaving self in a partially updated state.
@@ -159,7 +161,8 @@ public final class EmbeddedPaymentElement {
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
                     integrationShape: .embedded,
-                    isUpdate: true
+                    isUpdate: true,
+                    preservingLinkAccount: preservedLinkAccount
                 )
             } catch {
                 return UpdateResult.failed(error: error)
@@ -263,12 +266,15 @@ public final class EmbeddedPaymentElement {
                 return true
             }
         }()
+        refreshLinkInlineAuth(loadResult: loadResult)
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,
             analyticsHelper: analyticsHelper,
             previousSelection: shouldSelectPreviousRow ? previousSelectedRowType : nil,
             previousSelectedRowChangeButtonState: shouldSelectPreviousRow ? previousSelectedRowChangeButtonState : nil,
+            placesLinkFirst: placesLinkFirst,
+            linkInlineVerificationView: linkInlineAuth?.makeCardView(appearance: configuration.appearance),
             delegate: self
         )
         // Keep the rebuilt view loading while the billing sync finishes.
@@ -345,6 +351,8 @@ public final class EmbeddedPaymentElement {
         loadResult: loadResult,
         analyticsHelper: analyticsHelper,
         previousSelection: initialSelection,
+        placesLinkFirst: placesLinkFirst,
+        linkInlineVerificationView: linkInlineAuth?.makeCardView(appearance: configuration.appearance),
         delegate: self
        )
     }()
@@ -416,6 +424,12 @@ public final class EmbeddedPaymentElement {
 
     internal var confirmationChallenge: ConfirmationChallenge?
     internal var linkAccountObserver: LinkAccountContextObserver?
+    /// A returning Link customer's inline verification, kept across updates.
+    internal var linkInlineAuth: EmbeddedLinkInlineAuthController?
+    /// Detects when the element is first on screen, which is when inline verification sends its code.
+    internal var linkInlineAuthVisibilityMonitor: EmbeddedVisibilityMonitor?
+    /// Link stays first once inline verification showed it there, so later updates don't reorder the rows.
+    internal var placesLinkFirst = false
     var notifiesDelegateOnInitialHeight: Bool {
         get {
             return embeddedPaymentMethodsView.notifiesDelegateOnInitialHeight
@@ -447,6 +461,11 @@ public final class EmbeddedPaymentElement {
 
         analyticsHelper.logInitialized()
         analyticsHelper.startTimeMeasurement(.checkout)
+        // Before the list view is created, since it shows the card.
+        setUpLinkInlineAuthIfEligible(loadResult: loadResult)
+        self.containerView.didMoveToWindowHandler = { [weak self] in
+            self?.linkInlineAuthVisibilityMonitor?.viewDidMoveToWindow()
+        }
         self.containerView.needsUpdateSuperviewHeight = { [weak self] in
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
@@ -454,6 +473,7 @@ public final class EmbeddedPaymentElement {
         self.linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
             Task { @MainActor [weak self] in
                 guard let self else { return }
+                self.linkInlineAuth?.linkAccountDidChange(LinkAccountContext.shared.account)
                 self.embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: true)
                 self.informDelegateIfPaymentOptionUpdated()
             }
@@ -469,6 +489,7 @@ extension EmbeddedPaymentElement {
 
     var isPresentingPaymentUI: Bool {
         return presentedSheet?.presentingViewController != nil
+            || linkInlineAuth?.isPresentingUI == true
     }
 
     /// The view controller `confirm()` presents authentication screens from.
