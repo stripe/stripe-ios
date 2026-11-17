@@ -20,6 +20,12 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     var onDismiss: (() -> Void)?
 
+    /// Called with an inline component's content height, in points
+    var didChangeContentHeight: ((CGFloat) -> Void)?
+
+    /// Shows the windows an inline component opens as native sheets. Nil for other components.
+    private(set) var inlineSheets: InlineSheetCoordinator?
+
     /// The embedded component manager that will be used for requests.
     let componentManager: EmbeddedComponentManager
 
@@ -109,6 +115,10 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         // embedded in the web view instead of full screen. Also works for
         // embedded YouTube videos.
         config.allowsInlineMediaPlayback = true
+        if componentType.isInline {
+            // Connect.js opens sheets after async work, which loses the user gesture.
+            config.preferences.javaScriptCanOpenWindowsAutomatically = true
+        }
         let allowedHosts = (StripeConnectConstants.allowedHosts + [self.componentManager.baseURL.host]).compactMap({ $0 })
         let analyticsClient = analyticsClientFactory(.init(
             params: ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient, publicKeyOverride: componentManager.publicKeyOverride)))
@@ -117,6 +127,28 @@ class ConnectComponentWebViewController: ConnectWebViewController {
             analyticsClient: analyticsClient,
             allowedHosts: allowedHosts
         )
+
+        if componentType.isInline {
+            inlineSheets = InlineSheetCoordinator(
+                host: self,
+                componentWebView: webView,
+                componentURL: componentManager.baseURL,
+                backgroundColor: componentManager.appearance.colors.background ?? .white,
+                sendSheetClosed: { [weak self] sheetId in
+                    self?.sendMessage(SheetClosedSender(payload: .init(sheetId: sheetId)))
+                },
+                openWindow: { [weak self] configuration, navigationAction in
+                    guard let self else { return nil }
+                    // Today's link handling, so windows a sheet opens never become sheets.
+                    return openWindow(configuration: configuration,
+                                      navigationAction: navigationAction,
+                                      from: InlineSheetCoordinator.topmostPresenter(from: self))
+                }
+            )
+            // The app's screen scrolls instead of the component.
+            webView.scrollView.isScrollEnabled = false
+            webView.scrollView.contentInsetAdjustmentBehavior = .never
+        }
 
         // Setup views
         webView.addSubview(activityIndicator)
@@ -138,7 +170,10 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
         // Load the web page
         if loadContent {
-            activityIndicator.startAnimating()
+            // Inline components show Connect.js's loading UI at the height it reports.
+            if !componentType.isInline {
+                activityIndicator.startAnimating()
+            }
             do {
                 let url = try ConnectJSURLParams(component: componentType, apiClient: componentManager.apiClient, publicKeyOverride: componentManager.publicKeyOverride).url(baseURL: componentManager.baseURL)
                 analyticsClient.loadStart = .now
@@ -235,6 +270,20 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         return await super.webView(webView, decidePolicyFor: navigationResponse)
     }
 
+    override func webView(_ webView: WKWebView,
+                          createWebViewWith configuration: WKWebViewConfiguration,
+                          for navigationAction: WKNavigationAction,
+                          windowFeatures: WKWindowFeatures) -> WKWebView? {
+        // Windows that ask to be sheets never fall back to popups, even when they're refused.
+        if let inlineSheets,
+           navigationAction.targetFrame == nil,
+           let url = navigationAction.request.url,
+           InlineContract.isSheetRequest(url) {
+            return inlineSheets.openSheet(from: webView, configuration: configuration, navigationAction: navigationAction)
+        }
+        return super.webView(webView, createWebViewWith: configuration, for: navigationAction, windowFeatures: windowFeatures)
+    }
+
     struct ComponentProcessDidTerminateError: Error, AnalyticLoggableErrorV2 {
         let component: ComponentType
 
@@ -243,7 +292,14 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         }
     }
 
+    override func webViewDidCommitNavigation() {
+        super.webViewDidCommitNavigation()
+        // Sheets belong to the document that opened them.
+        inlineSheets?.dismissAll()
+    }
+
     override func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        inlineSheets?.dismissAll()
         super.webViewWebContentProcessDidTerminate(webView)
         analyticsClient.logClientError(ComponentProcessDidTerminateError(component: componentType))
     }
@@ -251,7 +307,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     // If the component fails to load entirely we show a native error screen
     // if the component has loaded then it's the component's responsibility to display the error.
     func showErrorScreenIfNeeded() {
-        guard !pageLoaded else { return }
+        // An inline component is only as tall as its content, so the app shows its own error.
+        guard !pageLoaded, !componentType.isInline else { return }
         let errorScreen = WebViewErrorScreen(title: STPLocalizedString(
             "Something went wrong.",
             "Title for error message when component fails to load"
@@ -441,6 +498,19 @@ private extension ConnectComponentWebViewController {
         self.addMessageHandler(CallSupplementalFunctionMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: self.analyticsClient, didReceiveMessage: { [weak self] payload in
             self?.dispatch(payload)
         }))
+
+        guard componentType.isInline else { return }
+        addMessageHandler(ComponentHeightChangedMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: analyticsClient) { [weak self] payload in
+            guard let height = InlineContract.clampedHeight(payload.height) else { return }
+            self?.didChangeContentHeight?(height)
+        })
+        addMessageHandler(SheetChangedMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: analyticsClient) { [weak self] payload in
+            guard InlineContract.isValidSheetId(payload.sheetId),
+                  let height = InlineContract.clampedHeight(payload.height) else {
+                return
+            }
+            self?.inlineSheets?.sheetDidChange(sheetId: payload.sheetId, height: height)
+        })
     }
 
     /// Adds NotificationCenter observers
@@ -462,6 +532,7 @@ private extension ConnectComponentWebViewController {
 
         self.view.backgroundColor = backgroundColor
         webView.backgroundColor = backgroundColor
+        inlineSheets?.backgroundColor = backgroundColor
         webView.isOpaque = false
         activityIndicator.tintColor = appearance.colors.loadingIndicatorColor
 

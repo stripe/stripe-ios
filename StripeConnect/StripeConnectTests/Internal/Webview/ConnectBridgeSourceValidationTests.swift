@@ -450,6 +450,169 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         XCTAssertEqual(event.result, .resolved("stripe-connect://trusted-return"))
         XCTAssertEqual(sessionFactory.createdURLs, [URL(string: "https://example.test/auth")!])
     }
+
+    // MARK: - Inline sheets
+
+    func testSheetWebViewSharesComponentUserContentController() async throws {
+        let controller = makeController(secretProvider: SecretProvider(secret: "unused-secret"), componentType: .notificationBanner)
+
+        let sheetWebView = try await openSheet(from: controller)
+
+        XCTAssertTrue(sheetWebView.configuration.userContentController === controller.webView.configuration.userContentController)
+        XCTAssertFalse(sheetWebView === controller.webView)
+    }
+
+    func testSheetWebViewCannotFetchClientSecret() async throws {
+        // Given a sheet web view opened by an inline component
+        let secretProvider = SecretProvider(secret: "sheet-test-secret")
+        let controller = makeController(secretProvider: secretProvider, componentType: .notificationBanner)
+        let sheetWebView = try await openSheet(from: controller)
+
+        // When the sheet's document on the trusted origin fetches a client secret
+        let event = try await loadDocumentAndFetchClientSecret(
+            in: sheetWebView,
+            baseURL: InlineSheetTestURLs.accessoryLayer,
+            expectedComponentWebView: controller.webView
+        )
+
+        // Then the bridge rejects it because it didn't come from the component web view
+        XCTAssertFalse(event.wasSentByExpectedWebView)
+        assertExpectedHTTPSOrigin(event.document, host: "connect-js.stripe.com", isExpectedSource: false)
+        XCTAssertEqual(event.result, .rejected("Invalid message origin"))
+        let fetchCount = await secretProvider.fetchCount
+        XCTAssertEqual(fetchCount, 0)
+    }
+
+    func testSheetWebViewCannotReportComponentHeight() async throws {
+        // Given a sheet web view opened by an inline component
+        let controller = makeController(secretProvider: SecretProvider(secret: "unused-secret"), componentType: .notificationBanner)
+        var reportedHeights: [CGFloat] = []
+        controller.didChangeContentHeight = { reportedHeights.append($0) }
+        let sheetWebView = try await openSheet(from: controller)
+
+        // When the sheet's document reports a component height
+        let event = try await loadBridgeFixture(
+            in: sheetWebView,
+            baseURL: InlineSheetTestURLs.accessoryLayer,
+            html: Self.componentHeightFixtureHTML,
+            expectedComponentWebView: controller.webView
+        )
+
+        // Then the height is ignored
+        XCTAssertFalse(event.wasSentByExpectedWebView)
+        XCTAssertEqual(reportedHeights, [])
+    }
+
+    func testTrustedComponentDocumentCanReportComponentHeight() async throws {
+        let controller = makeController(secretProvider: SecretProvider(secret: "unused-secret"), componentType: .notificationBanner)
+        var reportedHeights: [CGFloat] = []
+        controller.didChangeContentHeight = { reportedHeights.append($0) }
+
+        let event = try await loadBridgeFixture(
+            in: controller.webView,
+            baseURL: StripeConnectConstants.connectJSBaseURL,
+            html: Self.componentHeightFixtureHTML
+        )
+
+        XCTAssertTrue(event.wasSentByExpectedWebView)
+        XCTAssertEqual(reportedHeights, [120])
+    }
+
+    func testForeignMainDocumentCannotReportComponentHeight() async throws {
+        let controller = makeController(secretProvider: SecretProvider(secret: "unused-secret"), componentType: .notificationBanner)
+        var reportedHeights: [CGFloat] = []
+        controller.didChangeContentHeight = { reportedHeights.append($0) }
+
+        let event = try await loadBridgeFixture(
+            in: controller.webView,
+            baseURL: URL(string: "https://foreign.test/attack.html")!,
+            html: Self.componentHeightFixtureHTML
+        )
+
+        XCTAssertTrue(event.wasSentByExpectedWebView)
+        XCTAssertEqual(reportedHeights, [])
+    }
+
+    func testSheetWebViewCannotShowSheet() async throws {
+        // Given a pending sheet opened by an inline component on screen
+        let controller = makeController(secretProvider: SecretProvider(secret: "unused-secret"), componentType: .notificationBanner)
+        let window = UIWindow()
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let sheetWebView = try await openSheet(from: controller)
+
+        // When the sheet's own document reports sheetChanged for itself
+        let event = try await loadBridgeFixture(
+            in: sheetWebView,
+            baseURL: InlineSheetTestURLs.accessoryLayer,
+            html: Self.sheetChangedFixtureHTML,
+            expectedComponentWebView: controller.webView
+        )
+
+        // Then the sheet is never presented
+        XCTAssertFalse(event.wasSentByExpectedWebView)
+        XCTAssertNil(controller.requestedPresentation)
+    }
+
+    func testTrustedComponentDocumentCanShowSheet() async throws {
+        let controller = makeController(secretProvider: SecretProvider(secret: "unused-secret"), componentType: .notificationBanner)
+        let window = UIWindow()
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        try await controller.webView.loadTrustedDocumentPreservingDelegate()
+        let sheetWebView = try await openSheet(from: controller)
+
+        try await controller.webView.evaluateMessage(name: "sheetChanged", json: #"{"sheetId": "sheet-1", "height": 300}"#)
+
+        let presentedSheet = try await TestHelpers.withTimeout { @MainActor in
+            while true {
+                if let sheet = controller.requestedPresentation as? InlineSheetViewController {
+                    return sheet
+                }
+                try await Task.sleep(nanoseconds: 10_000_000)
+            }
+        }
+        XCTAssertTrue(presentedSheet.webView === sheetWebView)
+    }
+
+    func testSheetWebViewCannotCallSetters() async throws {
+        let controller = makeController(secretProvider: SecretProvider(secret: "unused-secret"), componentType: .notificationBanner)
+        var notificationsChangeCount = 0
+        controller.addMessageHandler(OnNotificationsChangeHandler { _ in notificationsChangeCount += 1 })
+        let sheetWebView = try await openSheet(from: controller)
+
+        let event = try await loadBridgeFixture(
+            in: sheetWebView,
+            baseURL: InlineSheetTestURLs.accessoryLayer,
+            html: Self.notificationsChangeFixtureHTML,
+            expectedComponentWebView: controller.webView
+        )
+
+        XCTAssertFalse(event.wasSentByExpectedWebView)
+        XCTAssertEqual(notificationsChangeCount, 0)
+    }
+
+    func testSheetWebViewCannotOpenAuthenticationSession() async throws {
+        let sessionFactory = AuthenticationSessionFactoryProbe()
+        let controller = makeController(
+            secretProvider: SecretProvider(secret: "unused-secret"),
+            authenticatedWebViewManager: AuthenticatedWebViewManager(sessionFactory: sessionFactory.makeSession),
+            componentType: .notificationBanner
+        )
+        let sheetWebView = try await openSheet(from: controller)
+
+        let event = try await loadBridgeFixture(
+            in: sheetWebView,
+            baseURL: InlineSheetTestURLs.accessoryLayer,
+            html: Self.foreignAuthenticationFixtureHTML,
+            expectedComponentWebView: controller.webView
+        )
+
+        XCTAssertFalse(event.wasSentByExpectedWebView)
+        XCTAssertEqual(sessionFactory.createdURLs, [])
+    }
 }
 
 private extension ConnectBridgeSourceValidationTests {
@@ -457,7 +620,8 @@ private extension ConnectBridgeSourceValidationTests {
         secretProvider: SecretProvider,
         authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
         analyticsTransport: AnalyticsTransport = .init(),
-        baseURL: URL = StripeConnectConstants.connectJSBaseURL
+        baseURL: URL = StripeConnectConstants.connectJSBaseURL,
+        componentType: ComponentType = .payouts
     ) -> BridgePresentationComponentController {
         let componentManager = EmbeddedComponentManager(
             apiClient: .init(publishableKey: "test"),
@@ -468,7 +632,7 @@ private extension ConnectBridgeSourceValidationTests {
         componentManager.baseURL = baseURL
         return BridgePresentationComponentController(
             componentManager: componentManager,
-            componentType: .payouts,
+            componentType: componentType,
             loadContent: false,
             analyticsClientFactory: { commonFields in
                 ComponentAnalyticsClient(
@@ -480,6 +644,19 @@ private extension ConnectBridgeSourceValidationTests {
             didFailLoadWithError: { _ in },
             authenticatedWebViewManager: authenticatedWebViewManager
         )
+    }
+
+    /// Opens a sheet the way WebKit does for a `window.open` from the component's Connect.js frame
+    func openSheet(from controller: BridgePresentationComponentController) async throws -> WKWebView {
+        let componentOrigin = try await inlineSheetSecurityOrigin(for: StripeConnectConstants.connectJSBaseURL)
+        let action = InlineSheetMockNavigationAction(
+            url: InlineSheetTestURLs.accessoryLayer,
+            sourceFrame: InlineSheetMockFrameInfo(isMainFrame: false, securityOrigin: componentOrigin)
+        )
+        return try XCTUnwrap(controller.webView(controller.webView,
+                                                createWebViewWith: controller.webView.configuration,
+                                                for: action,
+                                                windowFeatures: WKWindowFeatures()))
     }
 
     func withFixturePhase<Value>(_ phase: String, operation: () async throws -> Value) async throws -> Value {
@@ -781,6 +958,48 @@ private extension ConnectBridgeSourceValidationTests {
     window.webkit.messageHandlers.openAuthenticatedWebView.postMessage({
       url: "https://example.test/auth",
       id: "trusted-authentication"
+    });
+    </script>
+    """
+
+    static let componentHeightFixtureHTML = """
+    <!doctype html>
+    <script>
+    window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({ kind: "ready" });
+    window.webkit.messageHandlers.componentHeightChanged.postMessage({ height: 120 });
+    window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({
+      kind: "result",
+      locationOrigin: window.location.origin,
+      result: { kind: "resolved", value: "submitted" }
+    });
+    </script>
+    """
+
+    static let sheetChangedFixtureHTML = """
+    <!doctype html>
+    <script>
+    window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({ kind: "ready" });
+    window.webkit.messageHandlers.sheetChanged.postMessage({ sheetId: "sheet-1", height: 300 });
+    window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({
+      kind: "result",
+      locationOrigin: window.location.origin,
+      result: { kind: "resolved", value: "submitted" }
+    });
+    </script>
+    """
+
+    static let notificationsChangeFixtureHTML = """
+    <!doctype html>
+    <script>
+    window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({ kind: "ready" });
+    window.webkit.messageHandlers.onSetterFunctionCalled.postMessage({
+      setter: "setOnNotificationsChange",
+      value: { total: 1, actionRequired: 1 }
+    });
+    window.webkit.messageHandlers.connectBridgeTestObserver.postMessage({
+      kind: "result",
+      locationOrigin: window.location.origin,
+      result: { kind: "resolved", value: "submitted" }
     });
     </script>
     """

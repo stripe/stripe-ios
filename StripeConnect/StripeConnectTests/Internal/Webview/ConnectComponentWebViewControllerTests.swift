@@ -854,3 +854,173 @@ private class MockFinancialConnectionsPresenter: FinancialConnectionsPresenter {
         await overridePresentForToken(componentManager, clientSecret, connectedAccountId, presentingViewController)
     }
 }
+
+// MARK: - Inline components
+
+extension ConnectComponentWebViewControllerTests {
+    @MainActor
+    func testNotificationBannerRegistersInlineMessageHandlers() async throws {
+        let webVC = makeInlineGatingController(componentType: .notificationBanner)
+
+        let handlerTypes = try await inlineMessageHandlerTypes(in: webVC)
+
+        XCTAssertEqual(handlerTypes, "object,object")
+    }
+
+    @MainActor
+    func testPayoutsDoesNotRegisterInlineMessageHandlers() async throws {
+        let webVC = makeInlineGatingController(componentType: .payouts)
+
+        let handlerTypes = try await inlineMessageHandlerTypes(in: webVC)
+
+        XCTAssertEqual(handlerTypes, "undefined,undefined")
+    }
+
+    @MainActor
+    func testPaymentsDoesNotRegisterInlineMessageHandlers() async throws {
+        let webVC = makeInlineGatingController(componentType: .payments)
+
+        let handlerTypes = try await inlineMessageHandlerTypes(in: webVC)
+
+        XCTAssertEqual(handlerTypes, "undefined,undefined")
+    }
+
+    @MainActor
+    func testAccountOnboardingDoesNotRegisterInlineMessageHandlers() async throws {
+        let webVC = makeInlineGatingController(componentType: .onboarding)
+
+        let handlerTypes = try await inlineMessageHandlerTypes(in: webVC)
+
+        XCTAssertEqual(handlerTypes, "undefined,undefined")
+    }
+
+    @MainActor
+    func testAccountManagementDoesNotRegisterInlineMessageHandlers() async throws {
+        let webVC = makeInlineGatingController(componentType: .accountManagement)
+
+        let handlerTypes = try await inlineMessageHandlerTypes(in: webVC)
+
+        XCTAssertEqual(handlerTypes, "undefined,undefined")
+    }
+
+    @MainActor
+    func testPaymentDetailsDoesNotRegisterInlineMessageHandlers() async throws {
+        let webVC = makeInlineGatingController(componentType: .paymentDetails)
+
+        let handlerTypes = try await inlineMessageHandlerTypes(in: webVC)
+
+        XCTAssertEqual(handlerTypes, "undefined,undefined")
+    }
+
+    @MainActor
+    func testCheckScanningDoesNotRegisterInlineMessageHandlers() async throws {
+        let webVC = makeInlineGatingController(componentType: .checkScanning)
+
+        let handlerTypes = try await inlineMessageHandlerTypes(in: webVC)
+
+        XCTAssertEqual(handlerTypes, "undefined,undefined")
+    }
+
+    @MainActor
+    func testOnlyNotificationBannerIsInline() {
+        XCTAssertTrue(ComponentType.notificationBanner.isInline)
+        XCTAssertFalse(ComponentType.payouts.isInline)
+        XCTAssertFalse(ComponentType.payments.isInline)
+        XCTAssertFalse(ComponentType.onboarding.isInline)
+        XCTAssertFalse(ComponentType.accountManagement.isInline)
+        XCTAssertFalse(ComponentType.paymentDetails.isInline)
+        XCTAssertFalse(ComponentType.checkScanning.isInline)
+    }
+
+    @MainActor
+    func testPayoutsHasNoSheetCoordinator() {
+        let webVC = makeInlineGatingController(componentType: .payouts)
+
+        XCTAssertNil(webVC.inlineSheets)
+    }
+
+    @MainActor
+    func testPayoutsOpensAccessoryLayerWindowAsPopup() async throws {
+        let webVC = makeInlineGatingController(componentType: .payouts)
+        let componentOrigin = try await inlineSheetSecurityOrigin(for: StripeConnectConstants.connectJSBaseURL)
+        let action = InlineSheetMockNavigationAction(
+            url: InlineSheetTestURLs.accessoryLayer,
+            sourceFrame: InlineSheetMockFrameInfo(isMainFrame: false, securityOrigin: componentOrigin)
+        )
+
+        let windowWebView = webVC.webView(webVC.webView,
+                                          createWebViewWith: webVC.webView.configuration,
+                                          for: action,
+                                          windowFeatures: WKWindowFeatures())
+
+        let popup = (webVC.lastPresentedController as? UINavigationController)?.topViewController as? PopupWebViewController
+        popup?.webView.stopLoading()
+        XCTAssertNotNil(popup)
+        XCTAssertTrue(popup?.webView === windowWebView)
+    }
+
+    @MainActor
+    func testPayoutsCannotOpenWindowsWithoutUserGesture() {
+        let webVC = makeInlineGatingController(componentType: .payouts)
+
+        XCTAssertFalse(webVC.webView.configuration.preferences.javaScriptCanOpenWindowsAutomatically)
+    }
+
+    @MainActor
+    func testNotificationBannerCanOpenSheetWindowsWithoutUserGesture() {
+        let webVC = makeInlineGatingController(componentType: .notificationBanner)
+
+        XCTAssertTrue(webVC.webView.configuration.preferences.javaScriptCanOpenWindowsAutomatically)
+    }
+
+    @MainActor
+    func testPayoutsWebViewScrolls() {
+        let webVC = makeInlineGatingController(componentType: .payouts)
+
+        XCTAssertTrue(webVC.webView.scrollView.isScrollEnabled)
+    }
+
+    @MainActor
+    func testNotificationBannerWebViewDoesNotScroll() {
+        let webVC = makeInlineGatingController(componentType: .notificationBanner)
+
+        XCTAssertFalse(webVC.webView.scrollView.isScrollEnabled)
+    }
+
+    @MainActor
+    func testPayoutsShowsNativeErrorScreen() {
+        let webVC = makeInlineGatingController(componentType: .payouts)
+
+        webVC.showErrorScreenIfNeeded()
+
+        XCTAssertNotNil(webVC.errorScreen)
+    }
+
+    @MainActor
+    func testNotificationBannerDoesNotShowNativeErrorScreen() {
+        let webVC = makeInlineGatingController(componentType: .notificationBanner)
+
+        webVC.showErrorScreenIfNeeded()
+
+        XCTAssertNil(webVC.errorScreen)
+    }
+
+    @MainActor
+    private func makeInlineGatingController(componentType: ComponentType) -> InlineSheetHostController {
+        InlineSheetHostController(
+            componentManager: EmbeddedComponentManager(apiClient: .init(publishableKey: "test"), fetchClientSecret: { nil }),
+            componentType: componentType,
+            loadContent: false,
+            analyticsClientFactory: MockComponentAnalyticsClient.init,
+            didFailLoadWithError: { _ in }
+        )
+    }
+
+    @MainActor
+    private func inlineMessageHandlerTypes(in webVC: ConnectComponentWebViewController) async throws -> String? {
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
+        return try await webVC.webView.evaluateJavaScriptAndWait("""
+        [typeof window.webkit.messageHandlers.componentHeightChanged, typeof window.webkit.messageHandlers.sheetChanged].join(",");
+        """) as? String
+    }
+}
