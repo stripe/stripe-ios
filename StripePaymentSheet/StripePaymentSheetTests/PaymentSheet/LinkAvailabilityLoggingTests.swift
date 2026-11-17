@@ -16,7 +16,11 @@ final class LinkAvailabilityLoggingTests: XCTestCase {
     override func setUp() {
         super.setUp()
         previousLogger = PaymentSheetLoader.availabilityLogger
-        PaymentSheetLoader.availabilityLogger = { [weak self] in self?.logs.append($0) }
+        PaymentSheetLoader.availabilityLogger = { [weak self] message in
+            if message.contains("could not offer Link:") || message.contains("could not show the Link button:") {
+                self?.logs.append(message)
+            }
+        }
         LinkAccountContext.shared.account = nil
         PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = false
     }
@@ -38,7 +42,7 @@ final class LinkAvailabilityLoggingTests: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.name = .always
 
         // When checking availability after loading
-        PaymentSheetLoader.logLinkAvailability(elementsSession: elementsSession, configuration: configuration)
+        logPaymentElementAvailability(elementsSession: elementsSession, configuration: configuration)
 
         // Then all reasons are explained in a single developer-facing message
         let expectedMessage = """
@@ -52,10 +56,18 @@ final class LinkAvailabilityLoggingTests: XCTestCase {
         XCTAssertEqual(logs, [expectedMessage])
     }
 
+    func testDoesNotLogLinkAvailabilityWhenLoggingIsDisabled() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+
+        logPaymentElementAvailability(elementsSession: elementsSession, configuration: PaymentSheet.Configuration(), logAvailability: false)
+
+        XCTAssertEqual(logs, [])
+    }
+
     func testDoesNotLogWhenLinkIsAvailableButSignupIsDisabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card", "link"], disableLinkSignup: true)
 
-        PaymentSheetLoader.logLinkAvailability(elementsSession: elementsSession, configuration: PaymentSheet.Configuration())
+        logPaymentElementAvailability(elementsSession: elementsSession, configuration: PaymentSheet.Configuration())
 
         XCTAssertEqual(logs, [])
     }
@@ -70,7 +82,7 @@ final class LinkAvailabilityLoggingTests: XCTestCase {
             configuration: configuration,
             logAvailability: true
         )
-        PaymentSheetLoader.logLinkAvailability(elementsSession: elementsSession, configuration: configuration)
+        PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: elementsSession, configuration: configuration))
 
         XCTAssertFalse(logs.contains { $0.hasPrefix("[Stripe SDK]: PaymentSheet could not offer Link:") })
         XCTAssertFalse(logs.contains { $0.hasPrefix("[Stripe SDK]: PaymentSheet could not show the Link button:") })
@@ -83,7 +95,7 @@ final class LinkAvailabilityLoggingTests: XCTestCase {
         configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         configuration.billingDetailsCollectionConfiguration.name = .always
 
-        PaymentSheetLoader.logLinkAvailability(elementsSession: elementsSession, configuration: configuration)
+        logPaymentElementAvailability(elementsSession: elementsSession, configuration: configuration)
 
         XCTAssertEqual(logs, [])
     }
@@ -94,7 +106,7 @@ final class LinkAvailabilityLoggingTests: XCTestCase {
         configuration.link = .init(display: .walletButtonHidden)
         LinkAccountContext.shared.account = ._testValue(email: "private@example.com", isRegistered: false)
 
-        PaymentSheetLoader.logLinkAvailability(elementsSession: elementsSession, configuration: configuration)
+        logPaymentElementAvailability(elementsSession: elementsSession, configuration: configuration)
 
         XCTAssertTrue(PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration))
         XCTAssertEqual(logs, ["[Stripe SDK]: PaymentSheet could not show the Link button:\n\t* LinkConfiguration.display is set to .walletButtonHidden and no existing Link user was found."])
@@ -106,7 +118,7 @@ final class LinkAvailabilityLoggingTests: XCTestCase {
         configuration.link = .init(display: .walletButtonHidden)
         LinkAccountContext.shared.account = ._testValue(email: "private@example.com", isRegistered: true)
 
-        PaymentSheetLoader.logLinkAvailability(elementsSession: elementsSession, configuration: configuration)
+        logPaymentElementAvailability(elementsSession: elementsSession, configuration: configuration)
 
         XCTAssertEqual(logs, [])
     }
@@ -122,7 +134,7 @@ final class LinkAvailabilityLoggingTests: XCTestCase {
         ])
         let session = response.makePublicSession(expressCheckoutConfiguration: configuration)
 
-        ExpressCheckoutElementUtilities.logLinkAvailability(session: session, configuration: configuration, apiClient: STPAPIClient(publishableKey: "pk_test_123"))
+        PaymentSheet.PaymentMethodType.logLinkAvailability(.expressCheckout(session: session, configuration: configuration, apiClient: STPAPIClient(publishableKey: "pk_test_123")))
 
         let expectedMessage = """
         [Stripe SDK]: Express Checkout Element could not offer Link:
@@ -147,7 +159,7 @@ final class LinkAvailabilityLoggingTests: XCTestCase {
             applePayMerchantId: "merchant.com.example"
         )
 
-        ExpressCheckoutElementUtilities.logLinkAvailability(session: session, configuration: configuration, apiClient: STPAPIClient(publishableKey: "pk_test_123"))
+        PaymentSheet.PaymentMethodType.logLinkAvailability(.expressCheckout(session: session, configuration: configuration, apiClient: STPAPIClient(publishableKey: "pk_test_123")))
 
         XCTAssertEqual(logs, ["[Stripe SDK]: Express Checkout Element could not show the Link button:\n\t* The configured button layout does not have room for the Link button."])
     }
@@ -156,8 +168,22 @@ final class LinkAvailabilityLoggingTests: XCTestCase {
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"]).makePublicSession(expressCheckoutConfiguration: configuration)
 
-        ExpressCheckoutElementUtilities.logLinkAvailability(session: session, configuration: configuration, apiClient: STPAPIClient(publishableKey: "pk_test_123"))
+        PaymentSheet.PaymentMethodType.logLinkAvailability(.expressCheckout(session: session, configuration: configuration, apiClient: STPAPIClient(publishableKey: "pk_test_123")))
 
         XCTAssertEqual(logs, [])
     }
+
+    private func logPaymentElementAvailability(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration, logAvailability: Bool = true) {
+        _ = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: ._testValue(),
+            elementsSession: elementsSession,
+            configuration: configuration,
+            logAvailability: logAvailability
+        )
+        PaymentSheet.PaymentMethodType.logLinkAvailability(
+            .paymentElementButton(elementsSession: elementsSession, configuration: configuration),
+            logAvailability: logAvailability
+        )
+    }
+
 }

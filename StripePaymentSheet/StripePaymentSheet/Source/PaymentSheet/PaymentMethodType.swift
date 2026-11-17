@@ -179,6 +179,13 @@ extension PaymentSheet {
             }
         }
 
+        static func logLinkAvailability(_ diagnostic: @autoclosure () -> LinkAvailabilityDiagnostic?, logAvailability: Bool = true) {
+            #if DEBUG
+            guard logAvailability, let diagnostic = diagnostic() else { return }
+            PaymentSheetLoader.availabilityLogger("[Stripe SDK]: \(diagnostic.debugDescription)")
+            #endif
+        }
+
         @MainActor
         private static func locallyFilteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
         {
@@ -189,6 +196,17 @@ extension PaymentSheet {
                     #endif
                 }
             }
+
+            let elementName: String
+            if case .checkout = intent {
+                elementName = "Payment Element"
+            } else {
+                elementName = "PaymentSheet"
+            }
+            logLinkAvailability(
+                .paymentElementAvailability(elementsSession: elementsSession, configuration: configuration, elementName: elementName),
+                logAvailability: logAvailability
+            )
 
             var recommendedStripePaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
             recommendedStripePaymentMethodTypes = recommendedStripePaymentMethodTypes.filter { paymentMethodType in

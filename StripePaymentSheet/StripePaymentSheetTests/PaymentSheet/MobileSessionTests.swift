@@ -518,7 +518,8 @@ class MobileSessionTests: XCTestCase {
         )
 
         PaymentSheetLoader.logAvailabilityMessages(elementsSession: elementsSession)
-        PaymentSheetLoader.logLinkAvailability(elementsSession: elementsSession, configuration: PaymentSheet.Configuration())
+        _ = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: PaymentSheet.Configuration(), logAvailability: true)
+        PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: elementsSession, configuration: PaymentSheet.Configuration()))
 
         XCTAssertEqual(availabilityLogs, [message])
     }
@@ -534,7 +535,8 @@ class MobileSessionTests: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.name = .always
         PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = false
 
-        PaymentSheetLoader.logLinkAvailability(elementsSession: elementsSession, configuration: configuration)
+        _ = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+        PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: elementsSession, configuration: configuration))
 
         XCTAssertEqual(availabilityLogs, [])
     }
@@ -548,7 +550,8 @@ class MobileSessionTests: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.link = .init(display: .never)
 
-        PaymentSheetLoader.logLinkAvailability(elementsSession: elementsSession, configuration: configuration)
+        _ = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+        PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: elementsSession, configuration: configuration))
 
         XCTAssertEqual(availabilityLogs, ["[Stripe SDK]: PaymentSheet could not show the Link button:\n\t* LinkConfiguration.display is set to .never."])
     }

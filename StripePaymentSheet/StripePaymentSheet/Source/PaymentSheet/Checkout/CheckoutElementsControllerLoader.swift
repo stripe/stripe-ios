@@ -80,10 +80,10 @@ enum CheckoutElementsControllerLoader {
         paymentElementConfiguration: PaymentSheet.Configuration?
     ) {
         if let paymentElementConfiguration {
-            PaymentSheetLoader.logLinkAvailability(elementsSession: session.elementsSession, configuration: paymentElementConfiguration, elementName: "Payment Element")
+            PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: session.elementsSession, configuration: paymentElementConfiguration, elementName: "Payment Element"))
         }
         if let expressCheckoutConfiguration = configuration.expressCheckoutElement {
-            ExpressCheckoutElementUtilities.logLinkAvailability(session: session, configuration: expressCheckoutConfiguration, apiClient: configuration.apiClient)
+            PaymentSheet.PaymentMethodType.logLinkAvailability(.expressCheckout(session: session, configuration: expressCheckoutConfiguration, apiClient: configuration.apiClient))
         }
     }
 
