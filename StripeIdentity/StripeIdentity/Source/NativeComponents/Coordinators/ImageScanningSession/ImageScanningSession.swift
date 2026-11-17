@@ -307,14 +307,13 @@ final class ImageScanningSession<
 
         if let capturedData = delegate?.imageScanningSession(
             self,
-            captureFallbackForClassification: expectedClassification
+            didTimeoutForClassification: expectedClassification
         ) {
             setStateScanned(expectedClassification: expectedClassification, capturedData: capturedData)
         } else {
             stopScanning()
             state = .timeout(expectedClassification)
         }
-        delegate?.imageScanningSession(self, didTimeoutForClassification: expectedClassification)
     }
 
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate

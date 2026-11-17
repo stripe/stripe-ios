@@ -709,8 +709,15 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
 
     func imageScanningSession(
         _ scanningSession: DocumentImageScanningSession,
-        captureFallbackForClassification documentSide: DocumentSide
+        didTimeoutForClassification documentSide: DocumentSide
     ) -> UIImage? {
+        if let sheetController {
+            sheetController.analyticsClient.logDocumentCaptureTimeout(
+                documentSide: documentSide,
+                sheetController: sheetController
+            )
+        }
+
         guard !isManualCaptureMode,
             let bestFallbackFrame,
             bestFallbackFrame.output.matchesDocument(side: documentSide)
@@ -718,18 +725,6 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             return nil
         }
         return uploadDocumentFrame(bestFallbackFrame, for: documentSide)
-    }
-
-    func imageScanningSession(
-        _ scanningSession: DocumentImageScanningSession,
-        didTimeoutForClassification documentSide: DocumentSide
-    ) {
-        if let sheetController {
-            sheetController.analyticsClient.logDocumentCaptureTimeout(
-                documentSide: documentSide,
-                sheetController: sheetController
-            )
-        }
     }
 
     func imageScanningSession(

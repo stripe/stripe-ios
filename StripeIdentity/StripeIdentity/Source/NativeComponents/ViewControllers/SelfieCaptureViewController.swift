@@ -787,10 +787,11 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     func imageScanningSession(
         _ scanningSession: SelfieImageScanningSession,
         didTimeoutForClassification classification: EmptyClassificationType
-    ) {
+    ) -> FaceCaptureData? {
         if let sheetController = sheetController {
             sheetController.analyticsClient.logSelfieCaptureTimeout(sheetController: sheetController)
         }
+        return nil
     }
 
     func imageScanningSession(

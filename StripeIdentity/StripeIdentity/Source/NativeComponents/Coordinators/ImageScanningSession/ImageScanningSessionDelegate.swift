@@ -40,16 +40,11 @@ protocol ImageScanningSessionDelegate: AnyObject {
 
     func imageScanningSessionDidReset(_ scanningSession: ScanningSession)
 
-    /// Captures a cached frame before timing out, or returns nil if no fallback is available.
-    func imageScanningSession(
-        _ scanningSession: ScanningSession,
-        captureFallbackForClassification classification: ExpectedClassificationType
-    ) -> CapturedDataType?
-
+    /// Returns a captured fallback to finish scanning, or nil to enter the timeout state.
     func imageScanningSession(
         _ scanningSession: ScanningSession,
         didTimeoutForClassification classification: ExpectedClassificationType
-    )
+    ) -> CapturedDataType?
 
     func imageScanningSession(
         _ scanningSession: ScanningSession,
@@ -72,13 +67,6 @@ protocol ImageScanningSessionDelegate: AnyObject {
 // MARK: - Default Implementation
 
 extension ImageScanningSessionDelegate {
-    func imageScanningSession(
-        _ scanningSession: ScanningSession,
-        captureFallbackForClassification classification: ExpectedClassificationType
-    ) -> CapturedDataType? {
-        return nil
-    }
-
     func imageScanningSessionShouldScanCameraOutput(_ scanningSession: ScanningSession) -> Bool {
         return true
     }
@@ -119,12 +107,6 @@ extension ImageScanningSession {
             ) -> Void
 
         private let didTimeout:
-            (
-                _ scanningSession: ScanningSession,
-                _ classification: ExpectedClassificationType
-            ) -> Void
-
-        private let captureFallback:
             (
                 _ scanningSession: ScanningSession,
                 _ classification: ExpectedClassificationType
@@ -184,13 +166,6 @@ extension ImageScanningSession {
 
             didReset = { [weak delegate] scanningSession in
                 delegate?.imageScanningSessionDidReset(scanningSession)
-            }
-
-            captureFallback = { [weak delegate] scanningSession, classification in
-                delegate?.imageScanningSession(
-                    scanningSession,
-                    captureFallbackForClassification: classification
-                )
             }
 
             didTimeout = { [weak delegate] scanningSession, classification in
@@ -262,16 +237,9 @@ extension ImageScanningSession {
 
         func imageScanningSession(
             _ scanningSession: ScanningSession,
-            captureFallbackForClassification classification: ExpectedClassificationType
-        ) -> CapturedDataType? {
-            return captureFallback(scanningSession, classification)
-        }
-
-        func imageScanningSession(
-            _ scanningSession: ScanningSession,
             didTimeoutForClassification classification: ExpectedClassificationType
-        ) {
-            didTimeout(scanningSession, classification)
+        ) -> CapturedDataType? {
+            return didTimeout(scanningSession, classification)
         }
 
         func imageScanningSession(
