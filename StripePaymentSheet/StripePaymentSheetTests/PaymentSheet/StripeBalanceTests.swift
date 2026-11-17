@@ -198,6 +198,27 @@ final class StripeBalanceTests: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(row(for: "fa_1", in: element)).accessibilityLabel, "Account fa_1")
     }
 
+    func testElementShowsANegativeBalance() throws {
+        // Given an account whose available balance is negative
+        let account = StripeBalanceFinancialAccount(
+            id: "fa_1",
+            displayName: "Account fa_1",
+            balance: .init(available: ["usd": .init(value: -500, currency: "usd")]),
+            eligible: false,
+            ineligibleReason: .insufficientBalance
+        )
+
+        // When
+        let element = makeElement(accounts: [account])
+
+        // Then the row shows the negative balance
+        let negativeBalance = String.localizedAmountDisplayString(for: -500, currency: "usd")
+        XCTAssertEqual(
+            try XCTUnwrap(row(for: "fa_1", in: element)).accessibilityLabel,
+            "Account fa_1, \(negativeBalance) available, Insufficient balance"
+        )
+    }
+
     // MARK: - Helpers
 
     private func makeAccount(
