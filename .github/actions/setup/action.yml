@@ -63,9 +63,20 @@ runs:
           if xcrun simctl list runtimes | grep -q "iOS ${runtime}"; then
             echo "iOS ${runtime} runtime already installed"
           else
-            echo "Installing iOS ${runtime} runtime..."
-            # Newer runtimes are only distributed through xcodebuild.
-            sudo xcodes runtimes install "iOS ${runtime}" || xcodebuild -downloadPlatform iOS -buildVersion "${runtime}"
+            # Apple's download endpoint intermittently times out when many jobs
+            # start at once, so retry with backoff. Newer runtimes are only
+            # distributed through xcodebuild.
+            for attempt in 1 2 3 4 5; do
+              echo "Installing iOS ${runtime} runtime (attempt ${attempt})..."
+              if sudo xcodes runtimes install "iOS ${runtime}" || xcodebuild -downloadPlatform iOS -buildVersion "${runtime}"; then
+                break
+              fi
+              if [ "$attempt" -eq 5 ]; then
+                echo "Could not install the iOS ${runtime} runtime" >&2
+                exit 1
+              fi
+              sleep $((attempt * 30))
+            done
           fi
         done
         xcrun simctl list runtimes

@@ -112,6 +112,20 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/setup
         if: steps.key.outputs.available == 'true'
+      # Homebrew refuses formulas from the untrusted lokalise/cli-2 tap, so
+      # install the pinned release directly.
+      - name: Install lokalise2
+        if: steps.key.outputs.available == 'true'
+        run: |
+          set -euo pipefail
+          lokalise_dir="$RUNNER_TEMP/lokalise2"
+          mkdir -p "$lokalise_dir"
+          curl --fail --location --silent --show-error --retry 3 \
+            https://github.com/lokalise/lokalise-cli-2-go/releases/download/v3.1.7/lokalise2_darwin_arm64.tar.gz \
+            --output "$lokalise_dir/lokalise2.tar.gz"
+          echo "7835a61f834a1cc10fd74416a27a751511274b4252dab318c0850e1b6f1596e7  $lokalise_dir/lokalise2.tar.gz" | shasum -a 256 --check
+          tar -xzf "$lokalise_dir/lokalise2.tar.gz" -C "$lokalise_dir" lokalise2
+          echo "$lokalise_dir" >> "$GITHUB_PATH"
       - name: Upload strings to Lokalise
         if: steps.key.outputs.available == 'true'
         run: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
