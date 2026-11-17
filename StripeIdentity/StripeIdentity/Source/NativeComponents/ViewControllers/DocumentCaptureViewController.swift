@@ -356,6 +356,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     private let availableIDTypes: [String]
 
     private let bestFramePicker: BestFramePicker
+    private let timeoutFrameCache = DocumentFrameCache()
 
     // MARK: Coordinators
     let documentUploader: DocumentUploaderProtocol
@@ -600,6 +601,25 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         )
     }
 
+    private func captureAutomaticPhoto(_ candidate: BestFramePicker.Candidate, for documentSide: DocumentSide) {
+        documentUploader.uploadImages(
+            for: documentSide,
+            originalImage: candidate.cgImage,
+            documentScannerOutput: candidate.output,
+            exifMetadata: candidate.exif,
+            method: .autoCapture
+        )
+
+        if case .legacy(_, _, _, _, let blurResult) = candidate.output {
+            sheetController?.analyticsClient.updateBlurScore(blurResult.variance, for: documentSide)
+        }
+
+        imageScanningSession.setStateScanned(
+            expectedClassification: documentSide,
+            capturedData: UIImage(cgImage: candidate.cgImage)
+        )
+    }
+
     private func saveFrontAndDecideBack(
         frontImage: UIImage
     ) {
@@ -685,6 +705,8 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
     }
 
     func imageScanningSessionDidReset(_ scanningSession: DocumentImageScanningSession) {
+        bestFramePicker.reset()
+        timeoutFrameCache.reset()
         latestCapturedCameraFrame = nil
         documentUploader.reset()
     }
@@ -699,6 +721,13 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
                 sheetController: sheetController
             )
         }
+
+        guard !isManualCaptureMode,
+            let candidate = timeoutFrameCache.bestCandidate(for: documentSide)
+        else {
+            return
+        }
+        captureAutomaticPhoto(candidate, for: documentSide)
     }
 
     func imageScanningSession(
@@ -771,8 +800,18 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             imageScanningSession.startTimeoutTimer(expectedClassification: documentSide)
         }
 
-        // If this isn't the classification we're looking for, update the state
-        // to display a different message to the user
+        // Keep matching frames for the entire session, including frames rejected
+        // by the quality checks, in case auto-capture times out.
+        if let scannerOutput = scannerOutputOptional {
+            timeoutFrameCache.consider(
+                cgImage: image,
+                output: scannerOutput,
+                exif: exifMetadata,
+                side: documentSide
+            )
+        }
+
+        // If this frame doesn't pass the quality checks, update the instructions.
         guard let scannerOutput = scannerOutputOptional,
             scannerOutput.isHighQuality(side: documentSide)
         else {
@@ -793,22 +832,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             imageScanningSession.updateScanningState(scannerOutputOptional)
             return
         case .picked(let best):
-            switch best.output {
-            case .legacy(_, _, _, _, let blurResult):
-                documentUploader.uploadImages(
-                    for: documentSide,
-                    originalImage: best.cgImage,
-                    documentScannerOutput: best.output,
-                    exifMetadata: best.exif,
-                    method: .autoCapture
-                )
-                sheetController?.analyticsClient.updateBlurScore(blurResult.variance, for: documentSide)
-
-                imageScanningSession.setStateScanned(
-                    expectedClassification: documentSide,
-                    capturedData: UIImage(cgImage: best.cgImage)
-                )
-            }
+            captureAutomaticPhoto(best, for: documentSide)
         }
     }
 }

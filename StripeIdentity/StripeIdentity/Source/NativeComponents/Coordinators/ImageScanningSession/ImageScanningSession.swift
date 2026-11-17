@@ -152,7 +152,13 @@ final class ImageScanningSession<
         expectedClassification: ExpectedClassificationType,
         capturedData: CapturedDataType
     ) {
+        let previousState = state
         state = .scanned(expectedClassification, capturedData)
+        // A timeout already stopped the camera and logged scanning metrics.
+        // A delegate can still recover a previously captured frame afterward.
+        if case .timeout = previousState {
+            return
+        }
         stopScanning()
     }
 
