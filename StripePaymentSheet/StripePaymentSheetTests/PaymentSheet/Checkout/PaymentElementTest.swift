@@ -794,6 +794,32 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(errorPayload["error_code"] as? String, "payment_element_view_not_in_window")
     }
 
+    func testConfirmPresentsFromHostWhileFormIsDismissing() async throws {
+        // Given a Payment Element view whose card form is open
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let embeddedPaymentElement = paymentElement.embeddedPaymentElement
+        let window = try await makeWindow(isKey: true)
+        let host = try XCTUnwrap(window.rootViewController)
+        host.view.addSubview(paymentElement.uiView)
+        let embeddedView = embeddedPaymentElement.embeddedPaymentMethodsView
+        let cardRow = try XCTUnwrap(embeddedView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.card)) })
+        embeddedView.didTap(rowButton: cardRow)
+        let formSheet = try XCTUnwrap(embeddedPaymentElement.presentedSheet)
+
+        // When the form starts dismissing, e.g. right after the customer taps Continue
+        let dismissed = expectation(description: "Form dismissed")
+        formSheet.dismiss(animated: true) { dismissed.fulfill() }
+
+        // Then confirming presents from the host instead of the dismissing form
+        XCTAssertIdentical(embeddedPaymentElement.confirmPresentingViewController, host)
+        // ...and still does once the form is gone
+        await fulfillment(of: [dismissed], timeout: 5)
+        XCTAssertIdentical(embeddedPaymentElement.confirmPresentingViewController, host)
+    }
+
     func testCheckoutAndElementsDoNotRetainEachOther() async throws {
         weak var weakCheckout: CheckoutElementsController?
         weak var weakPaymentElement: PaymentElement?
