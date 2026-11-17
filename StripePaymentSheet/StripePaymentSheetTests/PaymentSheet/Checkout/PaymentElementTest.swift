@@ -728,6 +728,49 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertFalse(try XCTUnwrap(embeddedView.errorLabel.text).isEmpty)
     }
 
+    func testEmbeddedViewPresentsFromNewHostAfterOriginalHostIsDismissed() async throws {
+        // Given a Payment Element view hosted in a sheet that was used to present a form
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let window = try await makeWindow(isKey: true)
+        let firstHost = UIViewController()
+        firstHost.view.addSubview(paymentElement.uiView)
+        await present(firstHost, from: try XCTUnwrap(window.rootViewController))
+        XCTAssertIdentical(paymentElement.embeddedPaymentElement.resolvedPresentingViewController, firstHost)
+
+        // When the merchant dismisses that sheet and hosts the view in a new sheet
+        await dismiss(firstHost)
+        let secondHost = UIViewController()
+        secondHost.view.addSubview(paymentElement.uiView)
+        await present(secondHost, from: try XCTUnwrap(window.rootViewController))
+
+        // Then forms present from the new sheet instead of the dismissed one
+        XCTAssertIdentical(paymentElement.embeddedPaymentElement.resolvedPresentingViewController, secondHost)
+        // ...and the merchant-facing property is never set on their behalf
+        XCTAssertNil(paymentElement.embeddedPaymentElement.presentingViewController)
+        await dismiss(secondHost)
+    }
+
+    func testEmbeddedViewPresentsFromItsOwnWindowInsteadOfKeyWindow() async throws {
+        // Given a Payment Element view in a window that isn't the key window
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
+        )
+        let paymentElement = checkout.getPaymentElement()
+        _ = try await makeWindow(isKey: true)
+        let window = try await makeWindow(isKey: false)
+        let host = try XCTUnwrap(window.rootViewController)
+        host.view.addSubview(paymentElement.uiView)
+
+        // When the Payment Element resolves its presenting view controller
+        let resolvedPresentingViewController = paymentElement.embeddedPaymentElement.resolvedPresentingViewController
+
+        // Then it uses the window displaying the Payment Element view
+        XCTAssertIdentical(resolvedPresentingViewController, host)
+    }
+
     func testCheckoutAndElementsDoNotRetainEachOther() async throws {
         weak var weakCheckout: CheckoutElementsController?
         weak var weakPaymentElement: PaymentElement?
@@ -759,6 +802,42 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertNil(weakCurrencySelectorUIView)
         XCTAssertNil(weakFlowController)
         XCTAssertNil(weakEmbeddedPaymentElement)
+    }
+
+    private func makeWindow(isKey: Bool) async throws -> UIWindow {
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = UIViewController()
+        if isKey {
+            window.makeKeyAndVisible()
+        } else {
+            window.isHidden = false
+        }
+        addTeardownBlock { @MainActor in
+            window.isHidden = true
+        }
+        return window
+    }
+
+    private func present(_ viewController: UIViewController, from presenter: UIViewController) async {
+        await withCheckedContinuation { continuation in
+            presenter.present(viewController, animated: false) {
+                continuation.resume()
+            }
+        }
+    }
+
+    private func dismiss(_ viewController: UIViewController) async {
+        await withCheckedContinuation { continuation in
+            viewController.dismiss(animated: false) {
+                continuation.resume()
+            }
+        }
     }
 
     /// `CheckoutSession.json` already has automatic tax sourced from billing and a saved card with a full billing address.
