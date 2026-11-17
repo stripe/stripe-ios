@@ -1,0 +1,142 @@
+name: Prepare iOS CI job
+description: >-
+  Shared setup for the GitHub Actions port of bitrise.yml (prep_source,
+  prep_simulator and install-runtime-* workflows).
+inputs:
+  xcode:
+    description: Xcode version under /Applications/Xcode_<version>.app
+    default: 26.4.1
+  runtime:
+    description: >-
+      iOS simulator runtime for the default "iPhone 12 mini" device (for example
+      16.4 or 26.4). Leave empty to skip simulator setup.
+    default: ''
+  extra-runtimes:
+    description: Space-separated iOS runtimes to install without booting a device.
+    default: ''
+  merge:
+    description: Merge pull requests with their destination branch, like Bitrise.
+    default: 'true'
+runs:
+  using: composite
+  steps:
+    - name: Select Xcode
+      shell: bash
+      env:
+        XCODE_VERSION: ${{ inputs.xcode }}
+      run: |
+        sudo xcode-select -s "/Applications/Xcode_${XCODE_VERSION}.app/Contents/Developer"
+        xcodebuild -version
+
+    - name: Export Bitrise compatibility environment
+      shell: bash
+      run: |
+        mkdir -p "$RUNNER_TEMP/deploy"
+        echo "$GITHUB_WORKSPACE/ci_scripts/github_actions/bin" >> "$GITHUB_PATH"
+        {
+          echo "BITRISE_SOURCE_DIR=$GITHUB_WORKSPACE"
+          echo "BITRISE_DEPLOY_DIR=$RUNNER_TEMP/deploy"
+          echo "BITRISE_HTML_REPORT_DIR=$RUNNER_TEMP/deploy/html-reports"
+          echo "CONFIGURATION_BUILD_DIR=$GITHUB_WORKSPACE/stpbuild/products"
+          echo "CONFIGURATION_TEMP_DIR=$GITHUB_WORKSPACE/stpbuild/intermediates"
+        } >> "$GITHUB_ENV"
+
+    - name: Merge PR with destination using scoped history
+      if: inputs.merge == 'true'
+      shell: bash
+      run: ruby ci_scripts/prepare_ci_branch.rb
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+      with:
+        ruby-version: '3.3'
+        bundler-cache: true
+
+    - name: Install simulator runtimes
+      if: inputs.runtime != '' || inputs.extra-runtimes != ''
+      shell: bash
+      env:
+        RUNTIMES: ${{ inputs.runtime }} ${{ inputs.extra-runtimes }}
+      run: |
+        set -euo pipefail
+        for runtime in $RUNTIMES; do
+          if xcrun simctl list runtimes | grep -q "iOS ${runtime}"; then
+            echo "iOS ${runtime} runtime already installed"
+          else
+            # Apple's download endpoint intermittently times out, so retry with
+            # backoff. Nothing runs under sudo: the runner can't stop root
+            # processes when a run is cancelled.
+            download_dir="$RUNNER_TEMP/runtime-${runtime}"
+            for attempt in 1 2 3 4 5; do
+              echo "Installing iOS ${runtime} runtime (attempt ${attempt})..."
+              if [ "${runtime%%.*}" -ge 18 ]; then
+                # Xcode 26 also needs its matching iOS platform component, which
+                # only xcodebuild installs alongside the runtime. Without
+                # -buildVersion (which takes a build number, not a version), it
+                # installs the platform for the selected Xcode; the check below
+                # confirms that's the requested runtime.
+                if xcodebuild -downloadPlatform iOS; then
+                  break
+                fi
+              else
+                # xcodebuild can't download runtimes this old.
+                rm -rf "$download_dir"
+                mkdir -p "$download_dir"
+                if xcodes runtimes download "iOS ${runtime}" --directory "$download_dir"; then
+                  dmg="$(find "$download_dir" -name '*.dmg' -print -quit)"
+                  if [ -n "$dmg" ] && xcrun simctl runtime add "$dmg"; then
+                    rm -rf "$download_dir"
+                    break
+                  fi
+                fi
+              fi
+              if [ "$attempt" -eq 5 ]; then
+                echo "Could not install the iOS ${runtime} runtime" >&2
+                exit 1
+              fi
+              sleep $((attempt * 30))
+            done
+            # simctl mounts and verifies added runtimes in the background.
+            for _ in $(seq 60); do
+              xcrun simctl list runtimes | grep -q "iOS ${runtime}" && break
+              sleep 5
+            done
+            if ! xcrun simctl list runtimes | grep -q "iOS ${runtime}"; then
+              echo "iOS ${runtime} runtime didn't become available" >&2
+              exit 1
+            fi
+          fi
+        done
+        xcrun simctl list runtimes
+
+    - name: Boot iPhone 12 mini simulator
+      if: inputs.runtime != ''
+      shell: bash
+      env:
+        RUNTIME: ${{ inputs.runtime }}
+      run: |
+        set -euo pipefail
+        read -r runtime_id os_version < <(xcrun simctl list runtimes --json | ruby -rjson -e '
+          wanted = ENV.fetch("RUNTIME")
+          runtimes = JSON.parse(STDIN.read)["runtimes"].select do |r|
+            r["isAvailable"] && r["platform"] == "iOS" && (r["version"] == wanted || r["version"].start_with?("#{wanted}."))
+          end
+          abort "No iOS #{wanted} runtime available" if runtimes.empty?
+          runtime = runtimes.max_by { |r| Gem::Version.new(r["version"]) }
+          puts "#{runtime["identifier"]} #{runtime["version"]}"
+        ')
+        device_id="$(xcrun simctl list devices available --json | ruby -rjson -e '
+          device = JSON.parse(STDIN.read)["devices"].fetch(ARGV[0], []).find { |d| d["name"] == "iPhone 12 mini" }
+          puts device ? device["udid"] : ""
+        ' "$runtime_id")"
+        if [ -z "$device_id" ]; then
+          device_id="$(xcrun simctl create "iPhone 12 mini" com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini "$runtime_id")"
+        fi
+        echo "Booting $device_id on $runtime_id ($os_version)"
+        xcrun simctl bootstatus "$device_id" -b
+        xcrun simctl spawn "$device_id" defaults write com.apple.keyboard.preferences DidShowContinuousPathIntroduction -bool true
+        xcrun simctl spawn "$device_id" defaults write com.apple.keyboard.preferences DidShowGestureKeyboardIntroduction -bool true
+        {
+          echo "DEVICE_ID_FROM_USER_SETTINGS=$device_id"
+          echo "DEFAULT_TEST_DEVICE=platform=iOS Simulator,id=$device_id"
+        } >> "$GITHUB_ENV"
