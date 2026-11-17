@@ -19,7 +19,23 @@ extension ExpressCheckoutElement.Configuration.Appearance.ButtonTheme: CaseItera
 }
 
 enum CheckoutPlayground {
+    enum PaymentElementApplePayDisplay: String, CaseIterable, Identifiable, Codable {
+        case automatic
+        case never
+
+        var id: String { rawValue }
+
+        var sdkValue: PaymentElement.Configuration.ApplePayConfiguration.Display {
+            switch self {
+            case .automatic: return .automatic
+            case .never: return .never
+            }
+        }
+    }
+
     enum ApplePayButtonType: String, CaseIterable, Identifiable, Codable {
+        /// Leaves `buttonType` as `nil` so the SDK picks its default.
+        case unset
         case plain
         case buy
         case setup
@@ -29,6 +45,7 @@ enum CheckoutPlayground {
 
         var displayName: String {
             switch self {
+            case .unset: return "nil"
             case .plain: return "Plain"
             case .buy: return "Buy"
             case .setup: return "Set Up"
@@ -36,8 +53,9 @@ enum CheckoutPlayground {
             }
         }
 
-        var pkPaymentButtonType: PKPaymentButtonType {
+        var pkPaymentButtonType: PKPaymentButtonType? {
             switch self {
+            case .unset: return nil
             case .plain: return .plain
             case .buy: return .buy
             case .setup: return .setUp
@@ -161,7 +179,7 @@ enum CheckoutPlayground {
         var displayName: String {
             switch self {
             case .none: return "None"
-            case .checkoutSession: return "Server — Checkout Session"
+            case .checkoutSession: return "Server — Session"
             case .customer: return "Server — Customer"
             case .local: return "Local"
             }
@@ -317,6 +335,29 @@ enum CheckoutPlayground {
         }
     }
 
+    /// How Payment Element is presented when it is shown. `IntegrationType.eceOnly` means Payment Element is hidden.
+    enum PaymentElementPresentation: String, CaseIterable, Identifiable {
+        case sheet
+        case view
+
+        var id: String { rawValue }
+
+        var integrationType: IntegrationType {
+            switch self {
+            case .sheet: return .flowController
+            case .view: return .embedded
+            }
+        }
+
+        init?(integrationType: IntegrationType) {
+            switch integrationType {
+            case .flowController: self = .sheet
+            case .embedded: self = .view
+            case .eceOnly: return nil
+            }
+        }
+    }
+
     struct LineItemConfig: Identifiable, Codable {
 
         let id: UUID
@@ -355,9 +396,9 @@ enum CheckoutPlayground {
         var displayName: String {
             switch self {
             case .standard:
-                return "Standard cart"
+                return "Clothing"
             case .zeroAmount:
-                return "$0 cart"
+                return "Free T-Shirt ($0)"
             }
         }
 
@@ -411,7 +452,7 @@ enum CheckoutPlayground {
 
         init(
             isEnabled: Bool = true,
-            applePayButtonType: ApplePayButtonType = .plain,
+            applePayButtonType: ApplePayButtonType = .unset,
             linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display = .automatic,
             appearance: ExpressCheckoutElement.Configuration.Appearance = .init()
         ) {
@@ -442,7 +483,7 @@ enum CheckoutPlayground {
 
             self.init(
                 isEnabled: try container.decodeIfPresent(Bool.self, forKey: .isEnabled) ?? true,
-                applePayButtonType: try container.decodeIfPresent(ApplePayButtonType.self, forKey: .applePayButtonType) ?? .plain,
+                applePayButtonType: try container.decodeIfPresent(ApplePayButtonType.self, forKey: .applePayButtonType) ?? .unset,
                 linkDisplay: try container.decodeIfPresent(String.self, forKey: .linkDisplay)
                     .flatMap(ExpressCheckoutElement.Configuration.LinkConfiguration.Display.init(rawValue:)) ?? .automatic,
                 appearance: appearance
@@ -466,6 +507,8 @@ enum CheckoutPlayground {
         var uiFramework: UIFramework = .swiftUI
         var integrationType: IntegrationType = .flowController
         var expressCheckoutElement = ExpressCheckoutElementSettings()
+        var applePayEnabled = true
+        var paymentElementApplePayDisplay: PaymentElementApplePayDisplay = .automatic
         var linkMode: LinkMode = .native
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
@@ -477,13 +520,15 @@ enum CheckoutPlayground {
         var billingAddressCollection: BillingAddressCollection = .automatic
         var defaultBillingAddressOption: DefaultAddressOption? = DefaultAddressOption.none
         var customDefaultBillingAddress: DefaultAddress? = .usTestAddress
+        var defaultPhone: String?
         var automaticTax = true
         var checkoutSessionPaymentMethodSave = true
         var checkoutSessionPaymentMethodRemove = true
         var adaptivePricingCountry: AdaptivePricingCountry = .none
-        var automaticPaymentMethods = false
+        var automaticPaymentMethods = true
         var paymentMethodTypes: Set<String> = ["card"]
-        var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+        var currencySelectorAppearance = CurrencySelectorElement.Configuration.Appearance()
+        var paymentElementAppearance: PaymentSheet.Appearance?
         var checkoutEndpointOption: EndpointOption = .hosted
         var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
         var delayCheckoutClientRequests = false

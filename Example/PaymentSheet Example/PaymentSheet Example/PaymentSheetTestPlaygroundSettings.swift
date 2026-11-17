@@ -161,6 +161,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case brl
         case chf
         case cny
+        case dkk
         case eur
         case gbp
         case idr
@@ -197,7 +198,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case mondu
         case MX
         case MY
-        case NG = "ng"
+        case NG
         case ngWallet = "ng_wallet"
         case SG
         case stripeShop = "stripe_shop_test"
@@ -360,6 +361,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     enum ForceOnelinkConsumer: String, PickerEnum {
         static var enumName: String { "Force onelink consumer" }
+
+        case on
+        case off
+    }
+
+    enum MobileSessionSidecar: String, PickerEnum {
+        static var enumName: String { "Enable mobile_session sidecar" }
 
         case on
         case off
@@ -736,32 +744,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    // MARK: - Checkout Session enums
-    enum CSAllowPromotionCodes: String, PickerEnum {
-        static var enumName: String { "Allow Promotion Codes" }
-        case on, off
-    }
-    enum CSAutomaticTax: String, PickerEnum {
-        static var enumName: String { "Automatic Tax" }
-        case on, off
-    }
-    enum CSAdaptivePricing: String, PickerEnum {
-        static var enumName: String { "Adaptive Pricing" }
-        case on, off
-    }
-    enum CSDisplayShippingRates: String, PickerEnum {
-        static var enumName: String { "Display Shipping Rates" }
-        case on, off
-    }
-    enum CSAdjustableQuantity: String, PickerEnum {
-        static var enumName: String { "Adjustable Quantity" }
-        case on, off
-    }
-    enum CSManualCapture: String, PickerEnum {
-        static var enumName: String { "Manual Capture" }
-        case on, off
-    }
-
     var uiStyle: UIStyle
     // Keep this optional so saved settings and QR payloads from older builds remain decodable.
     var nativeSheetOverride: NativeSheetOverride?
@@ -779,6 +761,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     // For testing purposes only; keys should typically not be defined on the client
     var customSecretKey: String?
     var customPublishableKey: String?
+    /// A Stripe API host such as a devbox's `pay tunnel` host, used by the SDK and the backend. Requires custom keys.
+    var customStripeAPI: String?
+    /// The SDK version to report in `X-Stripe-User-Agent` instead of the real one.
+    var sdkVersionOverride: String?
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
     var paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage
@@ -801,20 +787,11 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkDisplay: LinkDisplay
     var forceOnelink: ForceOnelink
     var forceOnelinkConsumer: ForceOnelinkConsumer
+    var mobileSessionSidecar: MobileSessionSidecar
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
     var checkoutEndpoint: String
-
-    // MARK: - Checkout Session settings
-    var csAllowPromotionCodes: CSAllowPromotionCodes
-    var csAutomaticTax: CSAutomaticTax
-    var csAdaptivePricing: CSAdaptivePricing
-    var csDisplayShippingRates: CSDisplayShippingRates
-    var csAdjustableQuantity: CSAdjustableQuantity
-    var csManualCapture: CSManualCapture
-    var csPaymentMethodConfiguration: String?
-    var csCustomerEmail: String?
 
     var autoreload: Autoreload
     var shakeAmbiguousViews: ShakeAmbiguousViews
@@ -882,18 +859,11 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkDisplay: .automatic,
             forceOnelink: .off,
             forceOnelinkConsumer: .off,
+            mobileSessionSidecar: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
-            csAllowPromotionCodes: .off,
-            csAutomaticTax: .off,
-            csAdaptivePricing: .off,
-            csDisplayShippingRates: .off,
-            csAdjustableQuantity: .off,
-            csManualCapture: .off,
-            csPaymentMethodConfiguration: nil,
-            csCustomerEmail: nil,
             autoreload: .on,
             shakeAmbiguousViews: .off,
             instantDebitsIncentives: .off,
@@ -943,6 +913,20 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     var base64URL: URL {
         URL(string: "stp-paymentsheet-playground://?\(base64Data)")!
+    }
+
+    /// Decodes settings from a JSON object with any subset of the settings' keys, using the defaults for the rest.
+    /// Lets scripts configure the playground (see `STP_PLAYGROUND_SETTINGS_JSON` in SceneDelegate) without LZFSE.
+    static func fromPartialJSON(_ json: String) throws -> PaymentSheetTestPlaygroundSettings {
+        let defaults = try JSONSerialization.jsonObject(with: JSONEncoder().encode(defaultValues())) as? [String: Any] ?? [:]
+        guard let overrides = try JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any] else {
+            throw DecodingError.typeMismatch(
+                [String: Any].self,
+                DecodingError.Context(codingPath: [], debugDescription: "Expected a JSON object")
+            )
+        }
+        let merged = defaults.merging(overrides) { _, override in override }
+        return try JSONDecoder().decode(Self.self, from: JSONSerialization.data(withJSONObject: merged))
     }
 
     static func fromBase64<T: Decodable>(base64: String, className: T.Type) -> T? {

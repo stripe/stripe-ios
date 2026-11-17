@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Prie programėlės prijungta derinimo programa.";
+
+"An emulator is being used to run the App." = "Programėlei paleisti naudojamas emuliatorius.";
+
 "An error occurred. Please try again." = "Įvyko klaida. Bandykite dar kartą.";
+
+"Cancel" = "Atšaukti";
 
 "Card brand was not updated. Please try again." = "Kortelės prekės ženklas neatnaujintas. Bandykite dar kartą.";
 
 "Close" = "Užverti";
+
+"Collapsed" = "Sutraukta";
 
 "Confirm it's you" = "Patvirtinkite, kad tai jūs";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Įveskite į %@ išsiųstą kodą.";
 
+"Expanded" = "Išskleista";
+
 "Failed to connect" = "Susieti nepavyko";
+
+"Loading" = "Kraunama";
+
+"No" = "Ne";
 
 "Resend code" = "Siųsti kodą iš naujo";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Nuskaityti kortelę";
 
+"Secure checkout" = "Saugus pirkimo užbaigimas";
+
+"Selected" = "Pasirinkta";
+
 "The IBAN you entered is invalid." = "Įvedėte neteisingą IBAN.";
+
+"The OS or the OS Version is not supported." = "OS arba OS versija nepalaikoma.";
+
+"The device is jailbroken." = "Įrenginys yra nulaužtas.";
+
+"The integrity of the SDK has been tampered." = "Pažeistas SDK vientisumas.";
 
 "There was an error processing your card -- try again in a few seconds" = "Įvyko kortelės apdorojimo klaida, po kelių sekundžių bandykite dar kartą";
 
 "There was an unexpected error -- try again in a few seconds" = "Įvyko netikėta klaida, po kelių sekundžių bandykite dar kartą";
 
+"Timeout" = "Laiko viršijimas";
+
 "Try again" = "Bandyti dar kartą";
 
+"Unselected" = "Nepasirinkta";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Naudojame \"Stripe\", kad patikrintume jūsų kortelės duomenis. \"Stripe\" gali naudoti ir saugoti jūsų duomenis pagal savo privatumo politiką. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Sužinokite daugiau</u></a>";
+
+"Yes" = "Taip";
 
 "Your card has expired" = "Kortelė baigė galioti";
 

@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Rakendusega on ühendatud silur.";
+
+"An emulator is being used to run the App." = "Rakenduse käitamiseks kasutatakse emulaatorit.";
+
 "An error occurred. Please try again." = "Ilmnes tõrge. Palun proovige uuesti.";
+
+"Cancel" = "Tühista";
 
 "Card brand was not updated. Please try again." = "Kaardi kaubamärki ei värskendatud. Palun proovige uuesti.";
 
 "Close" = "Sule";
+
+"Collapsed" = "Ahendatud";
 
 "Confirm it's you" = "Kinnitage, et see olete teie";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Sisestage numbrile %@ saadetud kood.";
 
+"Expanded" = "Laiendatud";
+
 "Failed to connect" = "Ühenduse loomine ebaõnnestus";
+
+"Loading" = "Laeb";
+
+"No" = "Ei";
 
 "Resend code" = "Saada kood uuesti";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Skanni kaart";
 
+"Secure checkout" = "Turvaline makse lõpuleviimine";
+
+"Selected" = "Valitud";
+
 "The IBAN you entered is invalid." = "Sisestatud IBAN on kehtetu.";
+
+"The OS or the OS Version is not supported." = "OS-i või OS-i versiooni ei toetata.";
+
+"The device is jailbroken." = "Seade on lahti murtud.";
+
+"The integrity of the SDK has been tampered." = "SDK terviklikkust on rikutud.";
 
 "There was an error processing your card -- try again in a few seconds" = "Kaardi töötlemisel esines tõrge – proovige mõne sekundi pärast uuesti";
 
 "There was an unexpected error -- try again in a few seconds" = "Esines ootamatu tõrge – proovige mõne sekundi pärast uuesti";
 
+"Timeout" = "Ajalõpp";
+
 "Try again" = "Proovi uuesti";
 
+"Unselected" = "Valimata";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Kasutame teie kaardiandmete kontrollimiseks Stripe'i. Stripe võib teie andmeid kasutada ja säilitada vastavalt oma privaatsuspoliitikale. <a href='https://support.stripe.com/questions/stripes-card-image-verification'>Vaata lähemalt</u></a><u>";
+
+"Yes" = "Jah";
 
 "Your card has expired" = "Kaart on aegunud";
 

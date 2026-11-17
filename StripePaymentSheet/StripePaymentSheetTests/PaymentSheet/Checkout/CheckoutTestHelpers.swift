@@ -21,7 +21,8 @@ extension CheckoutClientAPIResponse {
     /// Convenience for fixtures that contain no client-local session state.
     func makePublicSession(
         clientSecret: String? = nil,
-        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil,
+        applePayMerchantId: String? = nil
     ) -> CheckoutElementsController.Session {
         let configuration = expressCheckoutConfiguration.map { expressConfiguration in
             var configuration = CheckoutElementsController.Configuration(
@@ -29,6 +30,7 @@ extension CheckoutClientAPIResponse {
                 returnURL: "stripe-ios-test://checkout-return"
             )
             configuration.expressCheckoutElement = expressConfiguration
+            configuration.applePayMerchantId = applePayMerchantId
             return configuration
         }
         return CheckoutElementsController.Session(
@@ -43,11 +45,13 @@ extension CheckoutClientAPIResponse {
 extension ExpressCheckoutElementUtilities {
     static func availablePaymentMethodsWithoutCheckoutRequirements(
         for elementsSession: STPElementsSession,
-        configuration: ExpressCheckoutElement.Configuration
+        configuration: ExpressCheckoutElement.Configuration,
+        applePayMerchantId: String? = nil
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         availablePaymentMethods(
             for: elementsSession,
             configuration: configuration,
+            applePayMerchantId: applePayMerchantId,
             usesWebLink: false,
             requiresShippingAddress: false,
             billingDetailsCollectionRequired: false
@@ -191,6 +195,24 @@ enum CheckoutTestHelpers {
         ]
     }
 
+    static func makeTotalSummaryJSON(
+        subtotal: Int = 1000,
+        total: Int? = nil,
+        taxExclusive: Int = 0,
+        taxInclusive: Int = 0,
+        totalTaxAmounts: [[String: Any]] = []
+    ) -> [String: Any] {
+        let total = total ?? subtotal + taxExclusive
+        return [
+            "subtotal": subtotal,
+            "total": total,
+            "due": total,
+            "tax_exclusive": taxExclusive,
+            "tax_inclusive": taxInclusive,
+            "total_tax_amounts": totalTaxAmounts,
+        ]
+    }
+
     static let baseSessionJSON: [String: Any] = [
         "id": "cs_test",
         "ui_mode": "mobile_elements",
@@ -200,6 +222,7 @@ enum CheckoutTestHelpers {
         "presentment_currency": "usd",
         "integration_currency": "usd",
         "items": makeOneTimePriceCheckoutItems(),
+        "total_summary": makeTotalSummaryJSON(),
         "merchant_info": ["country": "US"],
         "elements_session_id": "es_test",
         "ordered_payment_method_types_and_wallets": ["card"],
@@ -449,6 +472,7 @@ enum CheckoutTestHelpers {
             currency: currency,
             unitAmount: integrationAmount
         )
+        json["total_summary"] = makeTotalSummaryJSON(subtotal: integrationAmount)
         let localCurrencyOption: [AnyHashable: Any] = [
             "currency": "gbp",
             "amount": localAmount,
@@ -568,7 +592,7 @@ extension CheckoutElementsController.ApplePayConfirmationParameters {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        merchantId: String = "merchant.com.test",
         shippingAddressRequired: Bool = false,
         defaultBillingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
@@ -578,7 +602,7 @@ extension CheckoutElementsController.ApplePayConfirmationParameters {
         attribution: CheckoutAttributionContext = .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
     ) -> CheckoutElementsController.ApplePayConfirmationParameters {
         CheckoutElementsController.ApplePayConfirmationParameters(
-            applePayConfiguration: applePayConfiguration,
+            merchantId: merchantId,
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: merchantDisplayName,

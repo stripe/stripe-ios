@@ -586,7 +586,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                     elementsSession = try await apiClient.retrieveDeferredElementsSession(
                         withIntentConfig: intentConfig,
                         clientDefaultPaymentMethod: nil,
-                        configuration: configuration
+                        configuration: configuration,
+                        customerProvider: CustomerProvider(customer: configuration.customer)
                     )
                 case .checkout:
                     elementsSession = ._testValue(intent: intent)
@@ -2062,6 +2063,8 @@ extension PaymentSheetLPMConfirmFlowTests {
             return
         }
 
+        let returnURL = configuration.returnURL!
+
         Task { @MainActor in
             let result: CheckoutElementsController.InternalConfirmResult
             switch paymentOption {
@@ -2069,6 +2072,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutElementsController.PaymentMethodConfirmationParameters(
                     option: .new(confirmParams),
                     configuration: configuration,
+                    returnURL: returnURL,
                     nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     authenticationContext: self,
@@ -2103,6 +2107,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutElementsController.PaymentMethodConfirmationParameters(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
+                    returnURL: returnURL,
                     nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     authenticationContext: self,
@@ -2137,6 +2142,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutElementsController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
                     configuration: configuration,
+                    returnURL: returnURL,
                     nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     analyticsHelper: analyticsHelper,

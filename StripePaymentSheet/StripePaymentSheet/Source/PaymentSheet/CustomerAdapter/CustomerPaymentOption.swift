@@ -16,7 +16,7 @@ public enum CustomerPaymentOption: Equatable {
     /// A Stripe payment method backed by a Stripe PaymentMethod ID.
     case stripeId(String)
 
-    @_spi(InternalOnlyAPI) public init(value: String) {
+    @_spi(ReactNativeSDK) public init(value: String) {
         switch value {
         case "apple_pay":
             self = .applePay
@@ -27,7 +27,7 @@ public enum CustomerPaymentOption: Equatable {
         }
     }
 
-    @_spi(InternalOnlyAPI) public var value: String {
+    @_spi(ReactNativeSDK) public var value: String {
         switch self {
         case .applePay:
             return "apple_pay"

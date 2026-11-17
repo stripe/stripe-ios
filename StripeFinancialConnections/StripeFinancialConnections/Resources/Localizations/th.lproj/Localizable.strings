@@ -124,7 +124,7 @@
 
 "We found 1 %@ account but you can only link US checking accounts." = "เราพบ 1 บัญชี %@ แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันของสหรัฐอเมริกาเท่านั้น";
 
-"We found 1 %@ account but you can only link checking or savings accounts to %@." = "เราพบ 1 บัญชี %1$li แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันหรือบัญชีออมทรัพย์กับ %2$@ เท่านั้น";
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "เราพบบัญชี %1$li จำนวน 1 รายการ แต่คุณสามารถลิงก์ได้เฉพาะบัญชีกระแสรายวันหรือบัญชีออมทรัพย์กับ %2$@ เท่านั้น";
 
 "We found 1 %@ account but you can only link checking or savings accounts." = "เราพบ 1 บัญชี %@ แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันหรือบัญชีออมทรัพย์เท่านั้น";
 

@@ -12,10 +12,6 @@ import Foundation
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
 extension String.Localized {
-    static var loading: String {
-        return STPLocalizedString("Loading", "Status while screen is loading")
-    }
-
     // MARK: - Additional Info fields
 
     static var date_of_birth_invalid: String {

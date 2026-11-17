@@ -283,6 +283,7 @@ import UIKit
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
                 paymentElementConfiguration.returnURL = configuration?.returnURL
+                paymentElementConfiguration.cardBrandAcceptance = configuration?.cardBrandAcceptance ?? .all
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,
@@ -303,6 +304,7 @@ import UIKit
                     return
                 }
 
+                analyticsHelper.didLoad(loadResult)
                 let controller = LinkController(
                     apiClient: apiClient,
                     mode: mode,
@@ -348,6 +350,7 @@ import UIKit
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
                 paymentElementConfiguration.returnURL = configuration?.returnURL
+                paymentElementConfiguration.cardBrandAcceptance = configuration?.cardBrandAcceptance ?? .all
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,
@@ -368,6 +371,7 @@ import UIKit
                     return
                 }
 
+                analyticsHelper.didLoad(loadResult)
                 let controller = LinkController(
                     apiClient: apiClient,
                     mode: .setup,

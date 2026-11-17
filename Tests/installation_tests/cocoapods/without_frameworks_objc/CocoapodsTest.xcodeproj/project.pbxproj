@@ -18,6 +18,7 @@
 		3B3F01B027444A1B00C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F01AF27444A1B00C53D34 /* StripeUICoreAssetTests.swift */; };
 		3BD97FE22741566500B09BCD /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD97FE12741566500B09BCD /* ModelTests.swift */; };
 		63C36A39E4024CEE3D1DE88F /* libPods-CocoapodsTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CF59F9D61B86C24C79ADF3D /* libPods-CocoapodsTest.a */; };
+		9E4A4317E8FF0089D3E0A35D /* Stripe3DS2LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365EB5068F7558AD21215B85 /* Stripe3DS2LocalizationTests.swift */; };
 		A4168F00BDC2B618734BF50E /* libPods-CocoapodsTestTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4023FEE11583FC1663F0D49 /* libPods-CocoapodsTestTests.a */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +49,7 @@
 		317C4FFE27604C84003771D7 /* PodAnalyticsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PodAnalyticsTests.swift; path = ../../../shared_unit_tests/StripeCore/PodAnalyticsTests.swift; sourceTree = "<group>"; };
 		31D03DD6253E45AE00E259BD /* CocoapodsTest-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CocoapodsTest-Bridging-Header.h"; sourceTree = "<group>"; };
 		31D03DD7253E45AF00E259BD /* Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Empty.swift; path = CocoapodsTest/Empty.swift; sourceTree = "<group>"; };
+		365EB5068F7558AD21215B85 /* Stripe3DS2LocalizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Stripe3DS2LocalizationTests.swift; path = ../../shared_unit_tests/Stripe3DS2/Stripe3DS2LocalizationTests.swift; sourceTree = "<group>"; };
 		3B3F01AF27444A1B00C53D34 /* StripeUICoreAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeUICoreAssetTests.swift; path = ../../../shared_unit_tests/StripeUICore/StripeUICoreAssetTests.swift; sourceTree = "<group>"; };
 		3BD97FDE2741566500B09BCD /* CocoapodsTestTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CocoapodsTestTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		3BD97FE12741566500B09BCD /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = ../../../shared_unit_tests/StripeCardScan/ModelTests.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 				31D03DD6253E45AE00E259BD /* CocoapodsTest-Bridging-Header.h */,
 				82084355D5BAF0AAC45F4FD6 /* Pods */,
 				44D3435C13F23FE67A0F9ABC /* Frameworks */,
+				365EB5068F7558AD21215B85 /* Stripe3DS2LocalizationTests.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -363,6 +366,7 @@
 				3B3F01B027444A1B00C53D34 /* StripeUICoreAssetTests.swift in Sources */,
 				317C4FFF27604C84003771D7 /* PodAnalyticsTests.swift in Sources */,
 				3BD97FE22741566500B09BCD /* ModelTests.swift in Sources */,
+				9E4A4317E8FF0089D3E0A35D /* Stripe3DS2LocalizationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

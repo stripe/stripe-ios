@@ -83,6 +83,7 @@ extension PaymentElementConfiguration {
         if FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
             reqs.append(.financialConnectionsSDK)
         }
+        if case .customerSession = customer?.customerAccessProvider { reqs.append(.customerSession) }
         return reqs
     }
 

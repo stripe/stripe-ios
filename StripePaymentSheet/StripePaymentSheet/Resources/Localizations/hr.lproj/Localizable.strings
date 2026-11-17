@@ -14,8 +14,6 @@
 
 "Add bank account" = "Dodajte bankovni račun";
 
-"Add card" = "Dodaj karticu";
-
 "Add new card" = "Dodajte novu karticu";
 
 "Add new payment method" = "Dodajte novi način plaćanja";
@@ -92,7 +90,7 @@
 
 "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Davanjem svoje adrese e-pošte, pristajete otvoriti račun %1$@ i spremiti podatke o plaćanju na %1$@, prema %1$@ <terms>uvjetima</terms> i <privacy>pravilima o privatnosti</privacy>.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Unošenjem vaših podataka o plaćanju, ovlašćujete (A) %@ i Stripe, našeg davatelja usluga platnog prometa, da vašoj banci pošalje upute za terećenje vašeg računa, i (B) vašu banku za terećenje vašeg računa u skladu s tim uputama. U sklopu vaših prava, imate pravo na povrat novca od svoje banke prema uvjetima i odredbama ugovora s bankom. Povrat novca mora se zatražiti u roku od 8 tjedana počevši od datuma terećenja vašeg računa. Vaša prava objašnjena su u izjavi koju možete dobiti od svoje banke. Slažete se s primanjem obavijesti o budućim terećenjima do 2 dana prije njihova izvršenja.";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Pružanjem podataka o plaćanju i potvrdom ovog plaćanja ovlašćujete (A) %@ i Stripe, našeg pružatelja usluga platnog prometa, da vašoj banci pošalju upute za terećenje vašeg računa te (B) vašu banku da tereti vaš račun u skladu s tim uputama. Kao dio svojih prava, imate pravo na povrat od svoje banke pod uvjetima iz ugovora koji imate s bankom. Povrat se mora zatražiti u roku od osam tjedana počevši od datuma terećenja vašeg računa. Vaša prava objašnjena su u izjavi koju možete dobiti od svoje banke. Suglasni ste primati obavijesti o budućim terećenjima do dva dana prije nego što se ona dogode.";
 
 "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Davanjem telefonskog broja pristajete otvoriti račun %1$@ i spremiti podatke o plaćanju na %1$@, prema %1$@ <terms>uvjetima</terms> i <privacy>pravilima o privatnosti</privacy>.";
 
@@ -102,7 +100,7 @@
 
 "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Slanjem narudžbe na %1$@ i %2$@ pristajete na spremanje svojih podataka s %3$@ za buduće kupnje i pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Podnošenjem narudžbe za %@ pristajete na odobravanje plaćanja kojim ćete se pridržavati <terms>ovih uvjeta</terms>.";
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Slanjem narudžbe poduzeću %@ suglasni ste s odobravanjem plaćanja na temelju <terms>ovih uvjeta</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
