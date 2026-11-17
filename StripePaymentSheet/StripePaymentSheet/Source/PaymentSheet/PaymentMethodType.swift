@@ -143,9 +143,9 @@ extension PaymentSheet {
                         return .linkCardBrand
                     case _ where type.hasPrefix("external_"):
                         guard
-                            configuration.externalPaymentMethodConfiguration != nil,
+                            !configuration._externalPaymentMethods.isEmpty,
                             let externalPaymentMethod = elementsSession.externalPaymentMethods.first(where: { $0.type == type }),
-                            let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, configuration: configuration.externalPaymentMethodConfiguration)
+                            let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, confirmHandler: configuration._externalPaymentMethodConfirmHandler)
                         else {
                             return nil
                         }
