@@ -968,6 +968,50 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(mockDocumentUploader.uploadCount, 1)
     }
 
+    func testLateTimeoutDoesNotReplaceCapturedFrame() throws {
+        // Given capture finishes before the camera start completion arrives
+        let vc = makeViewController(state: .scanning(.front, nil))
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront))
+        verify(vc, expectedState: .scanned(.front, UIImage()), expectedButtonState: .enabled)
+        let capturedState = vc.imageScanningSession.state
+
+        // When the delayed start completion creates a timer and it fires
+        waitForCameraSessionToStart()
+        let timer = try XCTUnwrap(vc.imageScanningSession.timeoutTimer)
+        XCTAssertTrue(timer.isValid)
+        timer.fire()
+
+        // Then the captured frame is preserved without another upload or timeout event
+        XCTAssertEqual(vc.imageScanningSession.state, capturedState)
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 1)
+        XCTAssertTrue(mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "document_timeout").isEmpty)
+        waitForCameraSessionToStop()
+    }
+
+    func testLateTimeoutDoesNotInterruptSaving() throws {
+        // Given capture has reached saving before the camera start completion arrives
+        let vc = makeViewController(state: .scanning(.front, nil))
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront))
+        let capturedImage = UIImage(cgImage: try XCTUnwrap(mockDocumentUploader.uploadedImage))
+        vc.imageScanningSession.setStateSaving(expectedClassification: .front, capturedData: capturedImage)
+
+        // When the delayed start completion creates a timer and it fires
+        waitForCameraSessionToStart()
+        let timer = try XCTUnwrap(vc.imageScanningSession.timeoutTimer)
+        XCTAssertTrue(timer.isValid)
+        timer.fire()
+
+        // Then saving continues without another upload or timeout event
+        XCTAssertEqual(vc.imageScanningSession.state, .saving(.front, capturedImage))
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 1)
+        XCTAssertTrue(mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "document_timeout").isEmpty)
+        waitForCameraSessionToStop()
+    }
+
     func testResetClearsTimeoutFallback() throws {
         // Given a cached frame from the previous scan attempt
         let vc = makeViewController(state: .scanning(.front, nil))
@@ -1032,6 +1076,26 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, output))
         XCTAssertEqual(mockDocumentUploader.uploadCount, 0)
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
+    }
+
+    func testForegroundingClearsTimeoutFallback() throws {
+        // Given a matching frame was cached before the app entered the background
+        let vc = makeViewController(state: .scanning(.front, nil))
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront, isBlurry: false))
+        mockTimeoutTimer(vc)
+        vc.imageScanningSession.appDidEnterBackground()
+        waitForCameraSessionToStop()
+
+        // When the app resumes and the new scan times out without receiving a frame
+        vc.imageScanningSession.appDidEnterForeground()
+        waitForCameraSessionToStart()
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+
+        // Then the old frame is not submitted
+        verify(vc, expectedState: .timeout(.front), expectedButtonState: .enabled)
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 0)
+        XCTAssertEqual(mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "document_timeout").count, 1)
     }
 
     func testScanAttemptsFront() {

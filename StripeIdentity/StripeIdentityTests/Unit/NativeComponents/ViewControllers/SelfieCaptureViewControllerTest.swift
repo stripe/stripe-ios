@@ -29,7 +29,7 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
     private var mockAnalyticsClient: MockAnalyticsClientV2!
     private var mockSheetController: VerificationSheetControllerMock!
     private var mockFaceScanner: FaceScannerMock!
-    private var mockSelfieUploader: SelfieUploaderProtocol!
+    private var mockSelfieUploader: SelfieUploaderMock!
 
     override func setUp() {
         super.setUp()
@@ -132,6 +132,33 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         XCTAssert(analytic: analytic, hasMetadata: "camera_event_kind", withValue: "runtime_error")
     }
 
+    func testScanningTimeoutStopsScanningWithoutUploading() throws {
+        // Given an active selfie scan with no completed capture
+        let vc = makeViewController(initialState: .scanning(.empty, .initialValue()))
+        vc.imageScanningSession.startScanning()
+        mockCameraSession.respondToStartSession()
+        wait(for: [mockCameraSession.startSessionCompletionExp], timeout: 1)
+        let timer = try XCTUnwrap(vc.imageScanningSession.timeoutTimer)
+
+        // When the scan times out
+        timer.fire()
+
+        // Then the timeout state is shown without uploading a selfie
+        XCTAssertEqual(vc.imageScanningSession.state, .timeout(.empty))
+        XCTAssertFalse(timer.isValid)
+        XCTAssertEqual(mockSelfieUploader.uploadCount, 0)
+        XCTAssertEqual(
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "selfie_timeout").count,
+            1
+        )
+
+        // ...and the camera stops and its scanning coordinators reset
+        mockCameraSession.respondToStopSession()
+        wait(for: [mockCameraSession.stopSessionCompletionExp], timeout: 1)
+        XCTAssertTrue(mockFaceScanner.didReset)
+        XCTAssertTrue(mockConcurrencyManager.didReset)
+    }
+
     func testAutoCaptureStatesDoNotShowBottomButton() {
         XCTAssertTrue(
             makeViewController(initialState: .initial).buttonViewModels.isEmpty
@@ -192,9 +219,10 @@ private extension SelfieCaptureViewControllerTest {
 
 private final class SelfieUploaderMock: SelfieUploaderProtocol {
     var uploadFuture: Future<SelfieUploader.FileData>?
+    private(set) var uploadCount = 0
 
     func uploadImages(_ capturedImages: FaceCaptureData) {
-        // no-op
+        uploadCount += 1
     }
 
     func reset() {
