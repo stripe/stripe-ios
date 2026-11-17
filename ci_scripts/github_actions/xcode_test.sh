@@ -32,7 +32,7 @@ if [ -z "$scheme" ] || [ -z "$destination" ]; then
 fi
 
 name="${name:-${scheme}${test_plan:+-$test_plan}}"
-safe_name="$(echo "$name" | tr -c 'A-Za-z0-9._-' '_')"
+safe_name="$(printf '%s' "$name" | tr -c 'A-Za-z0-9._-' '_')"
 output_dir="${BITRISE_DEPLOY_DIR:-${RUNNER_TEMP:-/tmp}/deploy}"
 mkdir -p "$output_dir"
 
@@ -40,6 +40,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 run_attempt() {
   local attempt="$1"
+  shift
   local log_path="$output_dir/${safe_name}-attempt${attempt}.log"
   local result_bundle="$output_dir/${safe_name}-attempt${attempt}.xcresult"
   rm -rf "$result_bundle"
