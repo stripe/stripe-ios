@@ -787,11 +787,11 @@ final class PaymentElementTest: XCTestCase {
 
         // Then it doesn't find one, asserts, and reports the unexpected error
         XCTAssertNil(resolvedPresentingViewController)
-        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("payment_element_view_not_in_window"))
+        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("payment_element_presenting_view_controller_unavailable"))
         let errorPayload = try XCTUnwrap(analyticsClient._testLogHistory.last {
             $0["event"] as? String == STPAnalyticEvent.unexpectedCheckoutElementsError.rawValue
         })
-        XCTAssertEqual(errorPayload["error_code"] as? String, "payment_element_view_not_in_window")
+        XCTAssertEqual(errorPayload["error_code"] as? String, "payment_element_presenting_view_controller_unavailable")
     }
 
     func testConfirmPresentsFromHostWhileFormIsDismissing() async throws {

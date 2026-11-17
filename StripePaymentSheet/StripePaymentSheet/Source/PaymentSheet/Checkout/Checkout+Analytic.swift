@@ -12,8 +12,6 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
     enum ErrorCode: String {
         case paymentElementPresentingViewControllerUnavailable =
             "payment_element_presenting_view_controller_unavailable"
-        case paymentElementViewNotInWindow =
-            "payment_element_view_not_in_window"
         case shippingAddressElementPresentingViewControllerUnavailable =
             "shipping_address_element_presenting_view_controller_unavailable"
         case checkoutClientResponseParsingFailed =
