@@ -55,7 +55,7 @@ final class EmbeddedLinkInlineVerificationView: UIView {
 
     private let appearance: PaymentSheet.Appearance
     private let isFloating: Bool
-    private let emailButton = ChevronMenuButton()
+    private let emailButton = DropdownMenuButton()
     private lazy var closeButton = CircularButton(style: .close, iconColor: appearance.colors.icon)
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
@@ -225,14 +225,16 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         addAndPinSubview(container)
 
         var emailButtonConfiguration = UIButton.Configuration.plain()
-        emailButtonConfiguration.contentInsets = .zero
+        emailButtonConfiguration.contentInsets = .init(top: 4, leading: 8, bottom: 4, trailing: 8)
         // Keeps the merchant's text color instead of the tint color.
         emailButtonConfiguration.baseForegroundColor = appearance.colors.text
-        emailButtonConfiguration.image = UIImage(systemName: "chevron.down", withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .semibold))
+        emailButtonConfiguration.image = Self.makeChevronImage()
         emailButtonConfiguration.imagePlacement = .trailing
         emailButtonConfiguration.imagePadding = 4
         emailButtonConfiguration.titleLineBreakMode = .byTruncatingMiddle
         emailButton.configuration = emailButtonConfiguration
+        emailButton.contentBackgroundView.backgroundColor = Self.makeShadedBackgroundColor(appearance: appearance)
+        emailButton.contentBackgroundView.layer.cornerRadius = 6
         emailButton.contentHorizontalAlignment = .leading
         emailButton.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         if #available(iOS 14.0, *) {
@@ -309,6 +311,7 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         let content = UIStackView(arrangedSubviews: [header, makeDivider(), focusRegion, makeDivider(), footer])
         content.axis = .vertical
         content.spacing = 16
+        content.setCustomSpacing(10, after: header)
         // The card can scroll under a navigation bar or the status bar; its padding shouldn't grow when it does.
         container.insetsLayoutMarginsFromSafeArea = false
         container.addAndPinSubview(content, directionalLayoutMargins: .init(top: 12, leading: 16, bottom: 16, trailing: 16))
@@ -317,13 +320,31 @@ final class EmbeddedLinkInlineVerificationView: UIView {
     /// Unfocused digits are shaded and borderless; the focused digit takes the component background.
     private static func makeCodeFieldTheme(appearance: PaymentSheet.Appearance) -> ElementsAppearance {
         var theme = appearance.asElementsTheme
+        theme.colors.componentBackground = makeShadedBackgroundColor(appearance: appearance)
+        theme.colors.border = .clear
+        return theme
+    }
+
+    /// A shade of the component background, for the email and the unfocused digits.
+    private static func makeShadedBackgroundColor(appearance: PaymentSheet.Appearance) -> UIColor {
         let componentBackground = appearance.colors.componentBackground
-        theme.colors.componentBackground = UIColor { traitCollection in
+        return UIColor { traitCollection in
             let resolvedColor = componentBackground.resolvedColor(with: traitCollection)
             return resolvedColor.isBright ? resolvedColor.darken(by: 0.04) : resolvedColor.lighten(by: 0.08)
         }
-        theme.colors.border = .clear
-        return theme
+    }
+
+    /// The chevron next to the email, lowered so it looks centered on the text rather than sitting high.
+    private static func makeChevronImage() -> UIImage? {
+        guard let chevron = UIImage(systemName: "chevron.down", withConfiguration: UIImage.SymbolConfiguration(pointSize: 8, weight: .semibold)) else {
+            return nil
+        }
+        let offset: CGFloat = 2
+        // Padding the top by twice the offset moves the chevron's center down by the offset.
+        let size = CGSize(width: chevron.size.width, height: chevron.size.height + offset * 2)
+        return UIGraphicsImageRenderer(size: size).image { _ in
+            chevron.draw(at: CGPoint(x: 0, y: offset * 2))
+        }.withRenderingMode(.alwaysTemplate)
     }
 
     private func makeDivider() -> UIView {
@@ -467,26 +488,70 @@ extension EmbeddedLinkInlineVerificationView.State {
     }
 }
 
-/// A button whose menu opens from its chevron, so the menu doesn't cover the title.
-private final class ChevronMenuButton: UIButton {
-    override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
-        guard let imageView else { return super.menuAttachmentPoint(for: configuration) }
-        return convert(CGPoint(x: imageView.bounds.midX, y: imageView.bounds.maxY), from: imageView)
+/// A leading-aligned button whose menu opens just below its title and chevron, like a dropdown, instead of covering them.
+///
+/// The button stretches across its row so UIKit lines the menu up with the button's leading edge.
+/// `contentBackgroundView` sits behind just the title and chevron.
+private final class DropdownMenuButton: UIButton {
+    let contentBackgroundView = UIView()
+
+    /// The title and chevron plus the content insets, in the button's coordinates.
+    private var contentFrame: CGRect? {
+        guard let titleLabel, let imageView, let insets = configuration?.contentInsets else { return nil }
+        let frame = titleLabel.frame.union(imageView.frame)
+        return frame.inset(by: UIEdgeInsets(top: -insets.top, left: -insets.leading, bottom: -insets.bottom, right: -insets.trailing))
     }
 
-    // The menu grows out of this preview.
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentBackgroundView.isUserInteractionEnabled = false
+        insertSubview(contentBackgroundView, at: 0)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        sendSubviewToBack(contentBackgroundView)
+        contentBackgroundView.frame = contentFrame ?? .zero
+    }
+
+    override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
+        guard let contentFrame else { return super.menuAttachmentPoint(for: configuration) }
+        return CGPoint(x: contentFrame.midX, y: contentFrame.maxY)
+    }
+
     @available(iOS 16.0, *)
     override func contextMenuInteraction(
         _ interaction: UIContextMenuInteraction,
         configuration: UIContextMenuConfiguration,
         highlightPreviewForItemWithIdentifier identifier: any NSCopying
     ) -> UITargetedPreview? {
-        guard let imageView, imageView.window != nil else {
-            return super.contextMenuInteraction(interaction, configuration: configuration, highlightPreviewForItemWithIdentifier: identifier)
-        }
+        anchorPreview()
+            ?? super.contextMenuInteraction(interaction, configuration: configuration, highlightPreviewForItemWithIdentifier: identifier)
+    }
+
+    @available(iOS 16.0, *)
+    override func contextMenuInteraction(
+        _ interaction: UIContextMenuInteraction,
+        configuration: UIContextMenuConfiguration,
+        dismissalPreviewForItemWithIdentifier identifier: any NSCopying
+    ) -> UITargetedPreview? {
+        anchorPreview()
+            ?? super.contextMenuInteraction(interaction, configuration: configuration, dismissalPreviewForItemWithIdentifier: identifier)
+    }
+
+    /// An empty strip under the title and chevron for the menu to grow out of and shrink back into. UIKit hides the
+    /// view a preview is made from while the menu animates, so this doesn't use the button's own views.
+    private func anchorPreview() -> UITargetedPreview? {
+        guard let contentFrame, window != nil else { return nil }
         let parameters = UIPreviewParameters()
         parameters.backgroundColor = .clear
-        return UITargetedPreview(view: imageView, parameters: parameters)
+        let anchor = UIView(frame: CGRect(origin: .zero, size: CGSize(width: contentFrame.width, height: 1)))
+        let center = CGPoint(x: contentFrame.midX, y: contentFrame.maxY)
+        return UITargetedPreview(view: anchor, parameters: parameters, target: UIPreviewTarget(container: self, center: center))
     }
 }
 
