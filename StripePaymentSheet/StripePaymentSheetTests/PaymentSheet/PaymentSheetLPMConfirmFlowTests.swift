@@ -2004,11 +2004,9 @@ extension PaymentSheetLPMConfirmFlowTests {
         XCTAssertNil(form.getTextFieldElement("Address line 2"))
         XCTAssertNil(form.getTextFieldElement(addressSpec.cityNameType.localizedLabel))
         XCTAssertNil(getState(from: form))
-        // Klarna has a bug where the country is still shown; rather than change this and potentially break integrations,
-        // we'll preserve existing behavior until the next major version.
         // Wero's country dropdown is a required payment method field (selects which country's banking system to redirect to),
         // not a billing detail, so it's always shown regardless of billing details collection configuration.
-        if ![.klarna, .wero].contains(paymentMethodType) {
+        if paymentMethodType != .wero {
             XCTAssertNil(form.getDropdownFieldElement("Country or region"))
         }
         XCTAssertNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
