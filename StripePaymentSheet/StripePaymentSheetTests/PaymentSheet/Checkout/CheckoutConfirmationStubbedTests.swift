@@ -1001,6 +1001,16 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let content = try XCTUnwrap(sheet.contentStack.first as? PayWithLinkViewController.BaseViewController)
         let wallet = try XCTUnwrap(content.coordinator as? PayWithLinkViewController)
 
+        // Then Express Checkout hides alternate-payment actions but keeps the close button
+        XCTAssertFalse(content.context.canContinueWithoutLink)
+        let walletViewModel = PayWithLinkViewController.WalletViewModel(
+            linkAccount: LinkStubs.account(),
+            context: content.context,
+            paymentMethods: LinkStubs.paymentMethods()
+        )
+        XCTAssertNil(walletViewModel.cancelButtonConfiguration)
+        XCTAssertFalse(content.navigationBar.closeButtonRight.isHidden)
+
         // When a payment attempt fails, the wallet stays open for another attempt
         var declinedResponse = makeConfirmedSessionJSON(paymentResponseStatus: "requires_payment_method", status: "open", paymentStatus: "unpaid")
         declinedResponse["customer_email"] = "after-decline@example.com"
@@ -1038,7 +1048,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             wallet.finish(withResult: retryResult, deferredIntentConfirmationType: nil)
         } else {
             // ...and the customer closes the wallet without retrying
-            wallet.cancel(shouldReturnToPaymentSheet: false)
+            content.navigationBar.closeButtonRight.sendActions(for: .touchUpInside)
         }
         try await waitUntil { finalCheckoutResult != nil }
         await confirmation.value

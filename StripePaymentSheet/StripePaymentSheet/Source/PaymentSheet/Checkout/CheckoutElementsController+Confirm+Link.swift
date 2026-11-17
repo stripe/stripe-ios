@@ -182,6 +182,7 @@ extension CheckoutElementsController {
                 // Link controllers still require PaymentSheet analytics; keep that coupling on this typed path.
                 analyticsHelper: parameters.analyticsHelper,
                 confirmationChallenge: confirmationChallenge,
+                canContinueWithoutLink: parameters.attribution.confirmingElement != .expressCheckoutElement,
                 clientAttributionMetadata: clientAttributionMetadata,
                 isSettingUp: isSettingUp,
                 setAllowRedisplay: setAllowRedisplay,

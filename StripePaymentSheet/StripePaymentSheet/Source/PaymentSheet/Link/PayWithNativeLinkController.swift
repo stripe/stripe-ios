@@ -101,13 +101,15 @@ final class PayWithNativeLinkController {
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
         shouldFinishOnClose: Bool,
+        canContinueWithoutLink: Bool = true,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?, _ didFinish: Bool) -> Void
     ) {
         presentAsSheetInternal(
             from: presentingController,
             shouldOfferApplePay: shouldOfferApplePay,
             hidingUnderlyingBottomSheet: hidingUnderlyingBottomSheet,
-            shouldFinishOnClose: shouldFinishOnClose
+            shouldFinishOnClose: shouldFinishOnClose,
+            canContinueWithoutLink: canContinueWithoutLink
         ) { completionResult in
             guard case .full(let result, let deferredIntentConfirmationType, let didFinish) = completionResult else {
                 return

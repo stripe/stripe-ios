@@ -660,6 +660,7 @@ extension PaymentSheet {
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         confirmationChallenge: ConfirmationChallenge?,
+        canContinueWithoutLink: Bool = true,
         clientAttributionMetadata: STPClientAttributionMetadata,
         isSettingUp: @escaping (STPPaymentMethodType) -> Bool,
         setAllowRedisplay: @escaping (IntentConfirmParams, STPPaymentMethodType) -> Void,
@@ -765,9 +766,15 @@ extension PaymentSheet {
                     confirmationChallenge: confirmationChallenge,
                     confirmHandler: confirmHandler
                 )
-                linkController.presentAsSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
-                    completion(result, confirmationType)
-                })
+                linkController.presentAsSheet(
+                    from: authenticationContext.authenticationPresentingViewController(),
+                    shouldOfferApplePay: false,
+                    shouldFinishOnClose: false,
+                    canContinueWithoutLink: canContinueWithoutLink,
+                    completion: { result, confirmationType, _ in
+                        completion(result, confirmationType)
+                    }
+                )
             } else {
                 let linkController = PayWithLinkController(
                     intent: intent,
