@@ -398,6 +398,7 @@ final class LinkInlineSignupViewModel {
         allowsDefaultOptIn: Bool,
         signupOptInFeatureEnabled: Bool,
         signupOptInInitialValue: Bool,
+        previouslyDeclinedSignup: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
         country: String? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper? = nil
@@ -430,7 +431,8 @@ final class LinkInlineSignupViewModel {
             case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
                 return false
             case .checkboxWithDefaultOptIn:
-                return true
+                // Don't opt the customer back in if they unchecked the box before the form was rebuilt
+                return !previouslyDeclinedSignup
             case .signupOptIn:
                 return signupOptInInitialValue
             }

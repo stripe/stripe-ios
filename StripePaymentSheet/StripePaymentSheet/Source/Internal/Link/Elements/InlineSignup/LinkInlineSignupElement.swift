@@ -51,6 +51,7 @@ final class LinkInlineSignupElement: Element {
         allowsDefaultOptIn: Bool,
         signupOptInFeatureEnabled: Bool,
         signupOptInInitialValue: Bool,
+        previouslyDeclinedSignup: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper? = nil
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
@@ -62,6 +63,7 @@ final class LinkInlineSignupElement: Element {
             allowsDefaultOptIn: allowsDefaultOptIn,
             signupOptInFeatureEnabled: signupOptInFeatureEnabled,
             signupOptInInitialValue: signupOptInInitialValue,
+            previouslyDeclinedSignup: previouslyDeclinedSignup,
             linkAccount: linkAccount,
             country: country,
             analyticsHelper: analyticsHelper

@@ -167,6 +167,20 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(sut.mode, .checkboxWithDefaultOptIn)
     }
 
+    func test_defaultOptIn_startsChecked() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
+        XCTAssertTrue(sut.saveCheckboxChecked)
+    }
+
+    func test_defaultOptIn_startsUnchecked_ifCustomerPreviouslyDeclined() {
+        // Given a customer who unchecked the default opt-in box before the form was rebuilt
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true, previouslyDeclinedSignup: true)
+        // Then the rebuilt box stays unchecked, and the customer continues without Link
+        XCTAssertEqual(sut.mode, .checkboxWithDefaultOptIn)
+        XCTAssertFalse(sut.saveCheckboxChecked)
+        XCTAssertEqual(sut.action, .continueWithoutLink)
+    }
+
     func test_defaultOptIn_not_allowed_for_ineligible_merchant() {
         let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: false)
         XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
@@ -341,7 +355,8 @@ extension LinkInlineSignupViewModelTests {
         shouldFailLookup: Bool = false,
         allowsDefaultOptIn: Bool = false,
         signupOptInFeatureEnabled: Bool = false,
-        signupOptInInitialValue: Bool = false
+        signupOptInInitialValue: Bool = false,
+        previouslyDeclinedSignup: Bool = false
     ) -> LinkInlineSignupViewModel {
         let linkAccount: PaymentSheetLinkAccount? = hasAccountObject
         ? PaymentSheetLinkAccount(
@@ -363,6 +378,7 @@ extension LinkInlineSignupViewModelTests {
             allowsDefaultOptIn: allowsDefaultOptIn,
             signupOptInFeatureEnabled: signupOptInFeatureEnabled,
             signupOptInInitialValue: signupOptInInitialValue,
+            previouslyDeclinedSignup: previouslyDeclinedSignup,
             linkAccount: linkAccount,
             country: country
         )

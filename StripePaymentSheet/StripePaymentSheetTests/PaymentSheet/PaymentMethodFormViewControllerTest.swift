@@ -144,6 +144,48 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         XCTAssertEqual(metadata.merchantIntegrationAdditionalElements, ["mobile-payment-element", "mobile-shipping-address-element"])
     }
 
+    func testRebuiltCardFormKeepsDeclinedLinkInlineSignup() throws {
+        // Given a US card form that offers Link inline signup with the box pre-checked (default opt-in)
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: [
+            "payment_method_preference": ["ordered_payment_method_types": ["card", "link"], "country_code": "US"],
+            "session_id": "123",
+            "config_id": "123",
+            "link_settings": ["link_funding_sources": ["CARD"]],
+        ])!
+        let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card, .link])
+        let configuration = PaymentSheet.Configuration()
+        func makeCardForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
+            PaymentMethodFormViewController(type: .stripe(.card), intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+        }
+        func linkSignup(in formViewController: PaymentMethodFormViewController) -> LinkInlineSignupElement? {
+            formViewController.form.getAllUnwrappedSubElements().compactMap { $0 as? LinkInlineSignupElement }.first
+        }
+        let firstForm = makeCardForm(previousCustomerInput: nil)
+        let firstSignup = try XCTUnwrap(linkSignup(in: firstForm))
+        XCTAssertEqual(firstSignup.viewModel.mode, .checkboxWithDefaultOptIn)
+        XCTAssertTrue(firstSignup.isChecked)
+
+        // When the customer enters a card and unchecks the box
+        firstForm.form.getTextFieldElement("Card number").setText("4242424242424242")
+        firstForm.form.getTextFieldElement("MM / YY").setText("1240")
+        firstForm.form.getTextFieldElement("CVC").setText("123")
+        firstForm.form.getTextFieldElement("ZIP").setText("65432")
+        firstSignup.viewModel.saveCheckboxChecked = false
+        guard case .new(let confirmParams) = firstForm.paymentOption else {
+            return XCTFail("Expected a new card, got \(String(describing: firstForm.paymentOption))")
+        }
+        XCTAssertTrue(confirmParams.didDeclineLinkInlineSignup)
+
+        // ...and the form is rebuilt from that input, as it is after a session update
+        let rebuiltForm = makeCardForm(previousCustomerInput: confirmParams)
+
+        // Then the box stays unchecked, so the card alone still completes the form
+        XCTAssertFalse(try XCTUnwrap(linkSignup(in: rebuiltForm)).isChecked)
+        guard case .new = rebuiltForm.paymentOption else {
+            return XCTFail("Expected the card to still be selected, got \(String(describing: rebuiltForm.paymentOption))")
+        }
+    }
+
     // MARK: - logBillingAddressCompletionIfNeeded
 
     func testLogBillingAddressCompletionIfNeeded_withoutAutocomplete() {
