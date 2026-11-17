@@ -30,6 +30,7 @@ class MainViewController: UITableViewController {
         case payouts = "Payouts"
         case payments = "Payments"
         case checkScanning = "Check scanning"
+        case notificationBanner = "Notification banner"
 
         var label: String { rawValue }
 
@@ -56,7 +57,7 @@ class MainViewController: UITableViewController {
             switch self {
             case .onboarding, .payouts, .payments:
                 return nil
-            case .checkScanning:
+            case .checkScanning, .notificationBanner:
                 return "Private Preview"
             }
         }
@@ -71,6 +72,8 @@ class MainViewController: UITableViewController {
                 return "Show payments and allow your users to view payment details and manage disputes."
             case .checkScanning:
                 return "Show a form to allow users to scan paper checks."
+            case .notificationBanner:
+                return "Show open tasks that can affect the account's capabilities."
             }
         }
     }
@@ -159,6 +162,8 @@ class MainViewController: UITableViewController {
             checkScanning.title = row.label
             checkScanning.present(from: self, animated: true)
             return
+        case .notificationBanner:
+            viewControllerToPresent = NotificationBannerExampleViewController(embeddedComponentManager: embeddedComponentManager)
         }
 
         // Fetch ViewController presentation settings
