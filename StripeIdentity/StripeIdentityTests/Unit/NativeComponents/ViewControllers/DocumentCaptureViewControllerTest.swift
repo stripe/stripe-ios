@@ -354,6 +354,56 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, true)
     }
 
+    func testCameraInterruptionPausesScanningTimeout() {
+        // Given a scan with a running timeout
+        let vc = makeViewController(state: .scanning(.front, nil))
+        mockTimeoutTimer(vc)
+
+        // When the camera is interrupted
+        mockCameraSession.mockInterruption(isInterrupted: true)
+
+        // Then the timeout stops
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
+
+        // When the interruption ends
+        mockCameraSession.mockInterruption(isInterrupted: false)
+
+        // Then the timeout runs again
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, true)
+    }
+
+    func testTimeoutStartedDuringCameraInterruptionWaitsUntilItEnds() {
+        // Given an interrupted camera
+        let vc = makeViewController(state: .scanning(.front, nil))
+        mockCameraSession.mockInterruption(isInterrupted: true)
+
+        // When a frame that was already in the scanner restarts the timeout
+        vc.imageScanningSession.startTimeoutTimer(expectedClassification: .front)
+
+        // Then the timeout does not run yet
+        XCTAssertNotEqual(vc.imageScanningSession.timeoutTimer?.isValid, true)
+
+        // When the interruption ends
+        mockCameraSession.mockInterruption(isInterrupted: false)
+
+        // Then the timeout runs
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, true)
+    }
+
+    func testCameraInterruptionDoesNotRestartStoppedTimeout() {
+        // Given a scan whose timeout was stopped on purpose, as in manual capture
+        let vc = makeViewController(state: .scanning(.front, nil))
+        mockTimeoutTimer(vc)
+        vc.imageScanningSession.stopTimeoutTimer()
+
+        // When the camera is interrupted and the interruption ends
+        mockCameraSession.mockInterruption(isInterrupted: true)
+        mockCameraSession.mockInterruption(isInterrupted: false)
+
+        // Then the timeout stays stopped
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
+    }
+
     func testSaveDataFrontAndTransition() {
         let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
 
