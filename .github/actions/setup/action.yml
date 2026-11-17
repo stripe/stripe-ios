@@ -63,13 +63,29 @@ runs:
           if xcrun simctl list runtimes | grep -q "iOS ${runtime}"; then
             echo "iOS ${runtime} runtime already installed"
           else
-            # Apple's download endpoint intermittently times out when many jobs
-            # start at once, so retry with backoff. Newer runtimes are only
-            # distributed through xcodebuild.
+            # Apple's download endpoint intermittently times out, so retry with
+            # backoff. Nothing runs under sudo: the runner can't stop root
+            # processes when a run is cancelled.
+            download_dir="$RUNNER_TEMP/runtime-${runtime}"
             for attempt in 1 2 3 4 5; do
               echo "Installing iOS ${runtime} runtime (attempt ${attempt})..."
-              if sudo xcodes runtimes install "iOS ${runtime}" || xcodebuild -downloadPlatform iOS -buildVersion "${runtime}"; then
-                break
+              if [ "${runtime%%.*}" -ge 18 ]; then
+                # Xcode 26 also needs its matching iOS platform component, which
+                # only xcodebuild installs alongside the runtime.
+                if xcodebuild -downloadPlatform iOS -buildVersion "${runtime}"; then
+                  break
+                fi
+              else
+                # xcodebuild can't download runtimes this old.
+                rm -rf "$download_dir"
+                mkdir -p "$download_dir"
+                if xcodes runtimes download "iOS ${runtime}" --directory "$download_dir"; then
+                  dmg="$(find "$download_dir" -name '*.dmg' -print -quit)"
+                  if [ -n "$dmg" ] && xcrun simctl runtime add "$dmg"; then
+                    rm -rf "$download_dir"
+                    break
+                  fi
+                fi
               fi
               if [ "$attempt" -eq 5 ]; then
                 echo "Could not install the iOS ${runtime} runtime" >&2
@@ -77,6 +93,15 @@ runs:
               fi
               sleep $((attempt * 30))
             done
+            # simctl mounts and verifies added runtimes in the background.
+            for _ in $(seq 60); do
+              xcrun simctl list runtimes | grep -q "iOS ${runtime}" && break
+              sleep 5
+            done
+            if ! xcrun simctl list runtimes | grep -q "iOS ${runtime}"; then
+              echo "iOS ${runtime} runtime didn't become available" >&2
+              exit 1
+            fi
           fi
         done
         xcrun simctl list runtimes

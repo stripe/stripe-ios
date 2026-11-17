@@ -230,24 +230,11 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  # SPM only: the CocoaPods installation tests aren't ported because no
+  # CocoaPods release is planned before the CocoaPods trunk deprecation.
   installation-tests:
-    name: installation-tests (${{ matrix.name }})
     runs-on: macos-26
     timeout-minutes: 120
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: cocoapods
-            lanes: >-
-              installation_cocoapods_without_frameworks_objc
-              installation_cocoapods_frameworks_objc
-              installation_cocoapods_frameworks_swift
-          - name: spm
-            lanes: >-
-              installation_spm_objc
-              installation_spm_swift
-              installation_spm_identity_trait
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
@@ -257,11 +244,9 @@ jobs:
         with:
           runtime: '16.4'
       - name: Run installation tests
-        env:
-          LANES: ${{ matrix.lanes }}
         run: |
           set -euo pipefail
-          for lane in $LANES; do
+          for lane in installation_spm_objc installation_spm_swift installation_spm_identity_trait; do
             echo "::group::fastlane $lane"
             bundle exec fastlane "$lane"
             echo "::endgroup::"
