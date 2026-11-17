@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Minimal stand-in for Bitrise's envman so CI scripts written for Bitrise can
+# export variables to later GitHub Actions steps. Only `envman add --key K --value V`
+# is supported. Set ENVMAN_ENV_FILE to capture exports in a specific file.
+set -euo pipefail
+
+if [ "${1:-}" != "add" ]; then
+  echo "envman shim: only 'add' is supported" >&2
+  exit 1
+fi
+shift
+
+key=""
+value=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --key) key="$2"; shift 2 ;;
+    --value) value="$2"; shift 2 ;;
+    *) echo "envman shim: unsupported argument $1" >&2; exit 1 ;;
+  esac
+done
+
+if [ -z "$key" ]; then
+  echo "envman shim: --key is required" >&2
+  exit 1
+fi
+
+env_file="${ENVMAN_ENV_FILE:-${GITHUB_ENV:?GITHUB_ENV is not set}}"
+delimiter="ENVMAN_$(uuidgen)"
+{
+  echo "${key}<<${delimiter}"
+  echo "${value}"
+  echo "${delimiter}"
+} >> "$env_file"
