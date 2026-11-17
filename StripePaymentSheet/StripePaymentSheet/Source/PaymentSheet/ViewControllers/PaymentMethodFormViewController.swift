@@ -49,7 +49,7 @@ class PaymentMethodFormViewController: UIViewController {
                         )
                     )
                 case .continueWithoutLink:
-                    let showsCheckbox = [.checkbox, .checkboxWithDefaultOptIn].contains(linkInlineSignupElement.viewModel.mode)
+                    let showsCheckbox = [.checkbox, .checkboxWithDefaultOptIn, .signupOptIn].contains(linkInlineSignupElement.viewModel.mode)
                     params.didDeclineLinkInlineSignup = showsCheckbox && !linkInlineSignupElement.isChecked
                     return .new(confirmParams: params)
                 case .none:

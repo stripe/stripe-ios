@@ -265,6 +265,23 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
         )
         XCTAssertFalse(sut.saveCheckboxChecked)
     }
+
+    func test_signupOptIn_startsUnchecked_ifCustomerPreviouslyDeclined() {
+        // Given a customer who unchecked the pre-checked signup opt-in box before the form was rebuilt
+        let sut = makeSUT(
+            country: "US",
+            showCheckbox: true,
+            hasAccountObject: true,
+            allowsDefaultOptIn: true,
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: true,
+            previouslyDeclinedSignup: true
+        )
+        // Then the rebuilt box stays unchecked, so they aren't signed up for Link
+        XCTAssertEqual(sut.mode, .signupOptIn)
+        XCTAssertFalse(sut.saveCheckboxChecked)
+        XCTAssertEqual(sut.action, .continueWithoutLink)
+    }
 }
 
 extension LinkInlineSignupViewModelTests {

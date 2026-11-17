@@ -191,6 +191,63 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         }
     }
 
+    func testRebuiltCardFormKeepsDeclinedLinkSignupOptInAndMandate() throws {
+        // Given a card form in the signup opt-in mode, pre-checked, with the mandate that says the customer will be signed up for Link
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: [
+            "payment_method_preference": ["ordered_payment_method_types": ["card", "link"], "country_code": "US"],
+            "session_id": "123",
+            "config_id": "123",
+            "flags": ["elements_mobile_force_setup_future_use_behavior_and_new_mandate_text": true],
+            "link_settings": [
+                "link_funding_sources": ["CARD"],
+                "link_sign_up_opt_in_feature_enabled": true,
+                "link_sign_up_opt_in_initial_value": true,
+            ],
+        ])!
+        let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card, .link])
+        // ...for a customer whose email is known but who doesn't have a Link account
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        let originalLinkAccount = LinkAccountContext.shared.account
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        defer { LinkAccountContext.shared.account = originalLinkAccount }
+        func makeCardForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
+            PaymentMethodFormViewController(type: .stripe(.card), intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+        }
+        func linkSignup(in formViewController: PaymentMethodFormViewController) -> LinkInlineSignupElement? {
+            formViewController.form.getAllUnwrappedSubElements().compactMap { $0 as? LinkInlineSignupElement }.first
+        }
+        func mandateText(_ shouldSignUpToLink: Bool) -> String {
+            PaymentSheetFormFactory.makeMandateText(variant: .updated(shouldSignUpToLink: shouldSignUpToLink), merchantName: configuration.merchantDisplayName).string
+        }
+        let firstForm = makeCardForm(previousCustomerInput: nil)
+        let firstSignup = try XCTUnwrap(linkSignup(in: firstForm))
+        XCTAssertEqual(firstSignup.viewModel.mode, .signupOptIn)
+        XCTAssertTrue(firstSignup.isChecked)
+        XCTAssertEqual(firstForm.form.getMandateElement()?.mandateTextView.attributedText?.string, mandateText(true))
+
+        // When the customer enters a card, unchecks the box, and the form is rebuilt from that input
+        firstForm.form.getTextFieldElement("Card number").setText("4242424242424242")
+        firstForm.form.getTextFieldElement("MM / YY").setText("1240")
+        firstForm.form.getTextFieldElement("CVC").setText("123")
+        firstForm.form.getTextFieldElement("ZIP").setText("65432")
+        firstSignup.viewModel.saveCheckboxChecked = false
+        firstForm.viewDidAppear(false) // Marks the mandate as displayed, which the form requires
+        let confirmParams = try XCTUnwrap(firstForm.paymentOption?.newConfirmParams)
+        let rebuiltForm = makeCardForm(previousCustomerInput: confirmParams)
+
+        // Then the box stays unchecked, and the mandate no longer says they'll be signed up for Link
+        XCTAssertFalse(try XCTUnwrap(linkSignup(in: rebuiltForm)).isChecked)
+        XCTAssertEqual(rebuiltForm.form.getMandateElement()?.mandateTextView.attributedText?.string, mandateText(false))
+    }
+
     // MARK: - logBillingAddressCompletionIfNeeded
 
     func testLogBillingAddressCompletionIfNeeded_withoutAutocomplete() {

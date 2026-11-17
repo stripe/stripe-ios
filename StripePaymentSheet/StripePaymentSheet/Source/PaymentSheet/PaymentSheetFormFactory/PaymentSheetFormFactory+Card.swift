@@ -194,7 +194,8 @@ extension PaymentSheetFormFactory {
     }
 
     private func makeMandate() -> SimpleMandateElement {
-        let shouldCheckSignupCheckbox = showLinkInlineCardSignup && signupOptInFeatureEnabled && signupOptInInitialValue
+        let previouslyDeclinedSignup = previousCustomerInput?.didDeclineLinkInlineSignup ?? false
+        let shouldCheckSignupCheckbox = showLinkInlineCardSignup && signupOptInFeatureEnabled && signupOptInInitialValue && !previouslyDeclinedSignup
         let shouldSignUpToLink = shouldCheckSignupCheckbox && !isLinkUI
         let variant: MandateVariant = forceSaveFutureUseBehavior
             ? .updated(shouldSignUpToLink: shouldSignUpToLink)

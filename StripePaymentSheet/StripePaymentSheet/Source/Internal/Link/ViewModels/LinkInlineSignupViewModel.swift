@@ -427,12 +427,13 @@ final class LinkInlineSignupViewModel {
         self.country = country
 
         self.saveCheckboxChecked = {
+            // Don't opt the customer back in if they unchecked the box before the form was rebuilt
+            guard !previouslyDeclinedSignup else { return false }
             switch mode {
             case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
                 return false
             case .checkboxWithDefaultOptIn:
-                // Don't opt the customer back in if they unchecked the box before the form was rebuilt
-                return !previouslyDeclinedSignup
+                return true
             case .signupOptIn:
                 return signupOptInInitialValue
             }
