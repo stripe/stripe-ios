@@ -153,7 +153,12 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             "link_settings": ["link_funding_sources": ["CARD"]],
         ])!
         let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card, .link])
-        let configuration = PaymentSheet.Configuration()
+        // ...for a customer without a Link account, in test mode so inline signup shows even if Link was used before
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        let originalLinkAccount = LinkAccountContext.shared.account
+        LinkAccountContext.shared.account = nil
+        defer { LinkAccountContext.shared.account = originalLinkAccount }
         func makeCardForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
             PaymentMethodFormViewController(type: .stripe(.card), intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
         }

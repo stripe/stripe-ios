@@ -2254,6 +2254,11 @@ extension IntentConfirmParams: Equatable {
             return false
         }
 
+        if lhs.didDeclineLinkInlineSignup != rhs.didDeclineLinkInlineSignup {
+            print("Did decline Link inline signup states not equal: \(lhs.didDeclineLinkInlineSignup) vs \(rhs.didDeclineLinkInlineSignup)")
+            return false
+        }
+
         if lhs.financialConnectionsLinkedBank != rhs.financialConnectionsLinkedBank {
             print("Financial connections linked banks not equal: \(lhs.financialConnectionsLinkedBank.debugDescription) vs \(rhs.financialConnectionsLinkedBank.debugDescription)")
             return false
@@ -2267,7 +2272,7 @@ extension IntentConfirmParams: Equatable {
         // Sanity check to make sure when we add new properties, we check them here
         let mirror = Mirror(reflecting: lhs)
         let propertyCount = mirror.children.count
-        XCTAssertEqual(propertyCount, 8)
+        XCTAssertEqual(propertyCount, 9)
 
         return true
     }
