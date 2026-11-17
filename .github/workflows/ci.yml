@@ -2,7 +2,8 @@ name: CI
 # GitHub Actions port of the main-trigger-pipeline and master-trigger-pipeline
 # in bitrise.yml. Job names match the Bitrise workflows they replace. Shared
 # setup lives in .github/actions/setup, and ci_scripts/github_actions provides
-# the Bitrise compatibility layer (envman and the xcode-test step).
+# the Bitrise compatibility layer (envman and the xcode-test step). Test jobs
+# use the xlarge runner: timing-sensitive tests time out on the 3-vCPU runner.
 on:
   pull_request:
   push:
@@ -59,7 +60,7 @@ jobs:
   # pushes made with GITHUB_TOKEN don't trigger CI. Lokalise uploads run in
   # upload-strings-to-lokalise.
   snapshot-tests:
-    runs-on: macos-26
+    runs-on: macos-26-xlarge
     timeout-minutes: 150
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
@@ -134,7 +135,7 @@ jobs:
   # split into parallel jobs for the smaller GitHub-hosted runners.
   unit-tests:
     name: unit-tests (${{ matrix.name }})
-    runs-on: macos-26
+    runs-on: macos-26-xlarge
     timeout-minutes: 150
     strategy:
       fail-fast: false
@@ -199,7 +200,7 @@ jobs:
           retention-days: 7
 
   framework-tests-and-builds-xcode-26-1:
-    runs-on: macos-26
+    runs-on: macos-26-xlarge
     timeout-minutes: 150
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
@@ -267,7 +268,7 @@ jobs:
           done
 
   integration-tests:
-    runs-on: macos-26
+    runs-on: macos-26-xlarge
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
@@ -347,7 +348,7 @@ jobs:
 
   ui-tests-paymentsheet:
     name: ui-tests-paymentsheet (${{ matrix.shard }})
-    runs-on: macos-26
+    runs-on: macos-26-xlarge
     timeout-minutes: 150
     strategy:
       fail-fast: false
@@ -382,7 +383,7 @@ jobs:
           retention-days: 7
 
   ui-tests-connect-crypto:
-    runs-on: macos-26
+    runs-on: macos-26-xlarge
     timeout-minutes: 150
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
