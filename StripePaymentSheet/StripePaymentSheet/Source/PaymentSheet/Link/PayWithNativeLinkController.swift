@@ -101,7 +101,7 @@ final class PayWithNativeLinkController {
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
         shouldFinishOnClose: Bool,
-        canContinueWithoutLink: Bool = true,
+        showSecondaryButton: Bool = true,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?, _ didFinish: Bool) -> Void
     ) {
         presentAsSheetInternal(
@@ -109,7 +109,7 @@ final class PayWithNativeLinkController {
             shouldOfferApplePay: shouldOfferApplePay,
             hidingUnderlyingBottomSheet: hidingUnderlyingBottomSheet,
             shouldFinishOnClose: shouldFinishOnClose,
-            canContinueWithoutLink: canContinueWithoutLink
+            showSecondaryButton: showSecondaryButton
         ) { completionResult in
             guard case .full(let result, let deferredIntentConfirmationType, let didFinish) = completionResult else {
                 return
@@ -154,6 +154,7 @@ final class PayWithNativeLinkController {
         initiallySelectedPaymentDetailsID: String? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
         shouldFinishOnClose: Bool,
+        showSecondaryButton: Bool = true,
         canContinueWithoutLink: Bool = true,
         completion: @escaping (CompletionResult) -> Void
     ) {
@@ -172,6 +173,7 @@ final class PayWithNativeLinkController {
                 nativeSheetPresentation: self.nativeSheetPresentation,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
+                showSecondaryButton: showSecondaryButton,
                 canContinueWithoutLink: canContinueWithoutLink,
                 launchedFromFlowController: launchedFromFlowController,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,

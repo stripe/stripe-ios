@@ -2147,6 +2147,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             case .link(let confirmOption):
                 let parameters = CheckoutElementsController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
+                    showSecondaryButtonForLink: true,
                     configuration: configuration,
                     returnURL: returnURL,
                     nativeSheetPresentation: nil,

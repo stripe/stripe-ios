@@ -92,6 +92,7 @@ final class PayWithLinkViewController: NSObject {
         var linkBrand: LinkBrand
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
+        let showSecondaryButton: Bool
         let canContinueWithoutLink: Bool
         let launchedFromFlowController: Bool
         let initiallySelectedPaymentDetailsID: String?
@@ -104,11 +105,12 @@ final class PayWithLinkViewController: NSObject {
 
         var isDismissible: Bool = true
 
-        var secondaryButtonLabel: String {
+        var secondaryButtonLabel: String? {
+            guard showSecondaryButton && canContinueWithoutLink else { return nil }
             if intent.isPaymentIntent && !launchedFromFlowController {
-                String.Localized.pay_another_way
+                return String.Localized.pay_another_way
             } else {
-                String.Localized.continue_another_way
+                return String.Localized.continue_another_way
             }
         }
 
@@ -139,6 +141,7 @@ final class PayWithLinkViewController: NSObject {
         ///   - configuration: PaymentSheet configuration.
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
+        ///   - showSecondaryButton: Whether to show the secondary button for continuing without Link.
         ///   - canContinueWithoutLink: Whether the user can exit Link and pay with a different method (e.g. via PaymentSheet).
         ///   - launchedFromFlowController: Whether the flow was opened from `FlowController`.
         ///   - initiallySelectedPaymentDetailsID: The ID of an initially selected payment method. This is set when opened instead of FlowController.
@@ -154,6 +157,7 @@ final class PayWithLinkViewController: NSObject {
             linkBrand: LinkBrand,
             shouldOfferApplePay: Bool,
             shouldFinishOnClose: Bool,
+            showSecondaryButton: Bool = true,
             canContinueWithoutLink: Bool = true,
             launchedFromFlowController: Bool = false,
             initiallySelectedPaymentDetailsID: String?,
@@ -169,6 +173,7 @@ final class PayWithLinkViewController: NSObject {
             self.linkBrand = linkBrand
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
+            self.showSecondaryButton = showSecondaryButton
             self.canContinueWithoutLink = canContinueWithoutLink
             self.launchedFromFlowController = launchedFromFlowController
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
@@ -210,6 +215,7 @@ final class PayWithLinkViewController: NSObject {
         nativeSheetPresentation: SheetImplementationResolver? = nil,
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false,
+        showSecondaryButton: Bool = true,
         canContinueWithoutLink: Bool = true,
         launchedFromFlowController: Bool = false,
         initiallySelectedPaymentDetailsID: String? = nil,
@@ -229,6 +235,7 @@ final class PayWithLinkViewController: NSObject {
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
+                showSecondaryButton: showSecondaryButton,
                 canContinueWithoutLink: canContinueWithoutLink,
                 launchedFromFlowController: launchedFromFlowController,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,

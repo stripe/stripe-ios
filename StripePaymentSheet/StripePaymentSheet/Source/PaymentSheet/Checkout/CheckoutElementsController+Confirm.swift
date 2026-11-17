@@ -59,6 +59,7 @@ extension CheckoutElementsController {
 
         // TODO: Lots of stuff in here because current Link code nominally requires it but it may not all really be necessary.
         let confirmOption: PaymentSheet.LinkConfirmOption
+        let showSecondaryButtonForLink: Bool
         let configuration: PaymentElementConfiguration
         let returnURL: String
         let nativeSheetPresentation: SheetImplementationResolver?
@@ -230,6 +231,7 @@ extension CheckoutElementsController {
             : paymentElement.embeddedPaymentElement.analyticsHelper
             return .link(.init(
                 confirmOption: confirmOption,
+                showSecondaryButtonForLink: true,
                 configuration: configuration,
                 returnURL: self.configuration.returnURL,
                 nativeSheetPresentation: nativeSheetPresentation,

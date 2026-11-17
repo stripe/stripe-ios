@@ -75,17 +75,17 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var payAnotherWayButton: Button? = {
-            guard context.canContinueWithoutLink else {
+            guard let secondaryButtonLabel = context.secondaryButtonLabel else {
                 return nil
             }
-            let button = Button(configuration: primaryButtonConfiguration, title: context.secondaryButtonLabel)
+            let button = Button(configuration: primaryButtonConfiguration, title: secondaryButtonLabel)
             button.addTarget(self, action: #selector(payAnotherWayButtonTapped), for: .touchUpInside)
             return button
         }()
 
         private lazy var useAnotherAccountButton: Button = {
-            // When the user can't leave Link, logging in to another account is the only action, so it becomes the primary button.
-            let configuration = context.canContinueWithoutLink ? secondaryButtonConfiguration : primaryButtonConfiguration
+            // Without an alternate-payment action, logging in to another account becomes the primary button.
+            let configuration = context.secondaryButtonLabel == nil ? primaryButtonConfiguration : secondaryButtonConfiguration
             let button = Button(configuration: configuration, title: String.Localized.log_in_to_another_account)
             button.addTarget(self, action: #selector(useAnotherAccountButtonTapped), for: .touchUpInside)
             return button

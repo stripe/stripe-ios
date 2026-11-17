@@ -443,11 +443,18 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
     func testShouldShowSecondaryButtonEnabled() throws {
         let sut = try makeSUT(canContinueWithoutLink: true)
         XCTAssertNotNil(sut.cancelButtonConfiguration)
+        XCTAssertEqual(sut.context.secondaryButtonLabel, String.Localized.pay_another_way)
     }
 
     func testShouldShowSecondaryButtonDisabled() throws {
         let sut = try makeSUT(canContinueWithoutLink: false)
         XCTAssertNil(sut.cancelButtonConfiguration)
+    }
+
+    func testSecondaryButtonLabelIsAbsentWhenHidden() throws {
+        let sut = try makeSUT(showSecondaryButton: false)
+        XCTAssertNil(sut.context.secondaryButtonLabel)
+        XCTAssertTrue(sut.context.canContinueWithoutLink)
     }
 }
 
@@ -463,6 +470,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         linkPassthroughModeEnabled: Bool? = nil,
         isSettingUp: Bool = false,
         linkPMOSFU: Bool? = nil,
+        showSecondaryButton: Bool = true,
         canContinueWithoutLink: Bool = true,
         linkPaymentMethodBankAccountDataConsent: String? = nil
     ) throws -> PayWithLinkViewController.WalletViewModel {
@@ -504,6 +512,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
+                showSecondaryButton: showSecondaryButton,
                 canContinueWithoutLink: canContinueWithoutLink,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,

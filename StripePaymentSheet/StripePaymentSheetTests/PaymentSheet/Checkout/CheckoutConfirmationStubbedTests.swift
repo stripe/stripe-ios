@@ -912,6 +912,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         } else {
             XCTFail("Expected a Link wallet confirmation option")
         }
+        XCTAssertFalse(parameters.showSecondaryButtonForLink)
         XCTAssertIdentical(parameters.configuration.apiClient, checkout.configuration.apiClient)
         XCTAssertEqual(parameters.configuration.returnURL, "stripe-ios-test://custom-return")
         XCTAssertEqual(parameters.configuration.merchantDisplayName, "Test ECE Merchant")
@@ -1002,7 +1003,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let wallet = try XCTUnwrap(content.coordinator as? PayWithLinkViewController)
 
         // Then Express Checkout hides alternate-payment actions but keeps the close button
-        XCTAssertFalse(content.context.canContinueWithoutLink)
+        XCTAssertFalse(content.context.showSecondaryButton)
+        XCTAssertTrue(content.context.canContinueWithoutLink)
         XCTAssertFalse(content.navigationBar.closeButtonRight.isHidden)
 
         // When a payment attempt fails, the wallet stays open for another attempt

@@ -54,12 +54,12 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var cancelButton: Button? = {
-            guard linkAccount.isInSignupFlow && context.canContinueWithoutLink else {
+            guard linkAccount.isInSignupFlow, let secondaryButtonLabel = context.secondaryButtonLabel else {
                 return nil
             }
             let button = Button(
                 configuration: .linkPlain(),
-                title: context.secondaryButtonLabel
+                title: secondaryButtonLabel
             )
             button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
             return button
