@@ -71,8 +71,11 @@ runs:
               echo "Installing iOS ${runtime} runtime (attempt ${attempt})..."
               if [ "${runtime%%.*}" -ge 18 ]; then
                 # Xcode 26 also needs its matching iOS platform component, which
-                # only xcodebuild installs alongside the runtime.
-                if xcodebuild -downloadPlatform iOS -buildVersion "${runtime}"; then
+                # only xcodebuild installs alongside the runtime. Without
+                # -buildVersion (which takes a build number, not a version), it
+                # installs the platform for the selected Xcode; the check below
+                # confirms that's the requested runtime.
+                if xcodebuild -downloadPlatform iOS; then
                   break
                 fi
               else

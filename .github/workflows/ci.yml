@@ -263,8 +263,11 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           runtime: '26.4'
+      # Run serially on the simulator setup already booted. Parallel testing
+      # boots fresh clones mid-job, and the first app launch or Apple Pay sheet
+      # on a cold clone misses the tests' 10-second waits on these runners.
       - name: Run IntegrationTester
-        run: ci_scripts/github_actions/xcode_test.sh --scheme IntegrationTester
+        run: ci_scripts/github_actions/xcode_test.sh --scheme IntegrationTester -- -parallel-testing-enabled NO
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
