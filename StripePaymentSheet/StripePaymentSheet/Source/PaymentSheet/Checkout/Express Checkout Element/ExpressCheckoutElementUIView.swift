@@ -20,6 +20,7 @@ public final class ExpressCheckoutElementUIView: UIView {
         static let buttonHeight: CGFloat = 44
         static let buttonSpacing: CGFloat = 8
         static let cornerRadius: CGFloat = 6
+        static let disabledAlpha: CGFloat = 0.5
     }
 
     // MARK: - Private Properties
@@ -209,7 +210,7 @@ public final class ExpressCheckoutElementUIView: UIView {
 
     private func makeApplePayButton() -> PKPaymentButton {
         let buttonType = configuration.applePayConfiguration.buttonType ?? .plain
-        let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
+        let button = ApplePayButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
         button.isEnabled = isUserInteractionEnabled
         // `cornerConfiguration` doesn't work on PKPaymentButton, so set the radius directly.
         button.cornerRadius = configuration.appearance.cornerRadius ?? (LiquidGlassDetector.isEnabledInMerchantApp
@@ -265,6 +266,16 @@ public final class ExpressCheckoutElementUIView: UIView {
                 presentationWindow: window
             ) else { return }
             self.configuration.completion(result)
+        }
+    }
+
+    /// `PKPaymentButton` doesn't dim itself when disabled (unlike e.g. `PayWithLinkButton`), so this
+    /// subclass does it explicitly to avoid a visual mismatch between the two buttons.
+    private final class ApplePayButton: PKPaymentButton {
+        override var isEnabled: Bool {
+            didSet {
+                alpha = isEnabled ? 1 : Constants.disabledAlpha
+            }
         }
     }
 }
