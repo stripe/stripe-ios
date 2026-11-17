@@ -1,0 +1,420 @@
+name: CI
+# GitHub Actions port of the main-trigger-pipeline and master-trigger-pipeline
+# in bitrise.yml. Job names match the Bitrise workflows they replace. Shared
+# setup lives in .github/actions/setup, and ci_scripts/github_actions provides
+# the Bitrise compatibility layer (envman and the xcode-test step).
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # Bitrise variables read by ci_scripts.
+  BITRISE_PULL_REQUEST: ${{ github.event.pull_request.number }}
+  BITRISE_GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
+  BITRISEIO_GIT_BRANCH_DEST: ${{ github.base_ref }}
+  BITRISE_GIT_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+  FASTLANE_XCODE_LIST_TIMEOUT: '120'
+  FASTLANE_SKIP_UPDATE_CHECK: '1'
+  FASTLANE_HIDE_CHANGELOG: '1'
+
+jobs:
+  lint-tests:
+    runs-on: macos-26
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ env.BITRISE_GIT_COMMIT }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - name: Run swiftlint
+        if: github.event_name == 'pull_request'
+        run: ./ci_scripts/lint_modified_files.sh
+      - name: Check PaymentSheet test sharding
+        if: always()
+        run: ./ci_scripts/check_paymentsheet_test_sharding.rb
+      - name: Check png image format is 8-bit
+        if: always()
+        run: ./ci_scripts/check_image_format.sh
+      - name: Test release build scripts
+        if: always()
+        run: ruby ci_scripts/tests/framework_architecture_validator_test.rb
+      - name: fastlane build_extras
+        run: bundle exec fastlane build_extras
+      - name: fastlane analyze
+        run: bundle exec fastlane analyze
+
+  # Replaces record-all-snapshots-and-lokalise. Bitrise pushed re-recorded images
+  # back to the branch; here the job fails and attaches them instead, because
+  # pushes made with GITHUB_TOKEN don't trigger CI. Lokalise uploads run in
+  # upload-strings-to-lokalise.
+  snapshot-tests:
+    runs-on: macos-26
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ env.BITRISE_GIT_COMMIT }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          runtime: '16.4'
+      - name: Install ImageMagick
+        run: brew install imagemagick
+      - name: Record and compare snapshots
+        run: ruby ci_scripts/record_snapshots.rb --check --version 16.4 --version 26.4.1
+      - name: Collect recorded snapshots
+        if: failure()
+        run: |
+          if [ -d /tmp/snapshot-all-recorded ]; then
+            cp -R /tmp/snapshot-all-recorded "$BITRISE_DEPLOY_DIR/recorded-snapshots"
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: snapshot-tests-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/deploy
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # The Lokalise step of record-all-snapshots-and-lokalise. It needs a
+  # write-capable LOKALISE_API_KEY secret (LOKALISE_API_KEY_READONLY can't
+  # upload) and is skipped until one is configured. Not part of ci-gate.
+  upload-strings-to-lokalise:
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+    steps:
+      - name: Check for Lokalise API key
+        id: key
+        run: |
+          if [ -z "$LOKALISE_API_KEY" ]; then
+            echo "::notice::LOKALISE_API_KEY isn't configured; skipping the Lokalise upload."
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        if: steps.key.outputs.available == 'true'
+        with:
+          ref: ${{ env.BITRISE_GIT_COMMIT }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        if: steps.key.outputs.available == 'true'
+      - name: Upload strings to Lokalise
+        if: steps.key.outputs.available == 'true'
+        run: bundle exec ./ci_scripts/upload_localized_strings_to_lokalise.sh
+
+  # framework-tests, framework-tests-paymentsheet and lpm-confirm-flow-tests,
+  # split into parallel jobs for the smaller GitHub-hosted runners.
+  unit-tests:
+    name: unit-tests (${{ matrix.name }})
+    runs-on: macos-26
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: preflight-3ds2
+            command: |
+              status=0
+              bundle exec fastlane preflight || status=1
+              bundle exec fastlane threeds2_tests || status=1
+              exit $status
+          - name: stripeios
+            command: ci_scripts/github_actions/xcode_test.sh --scheme StripeiOS -- "${framework_options[@]}"
+          - name: framework-tests-ci
+            command: ci_scripts/github_actions/xcode_test.sh --scheme FrameworkTests-CI -- "${framework_options[@]}"
+          - name: issuing-cryptoonramp
+            command: |
+              status=0
+              ci_scripts/github_actions/xcode_test.sh --scheme StripeIssuing || status=1
+              ci_scripts/github_actions/xcode_test.sh --scheme StripeCryptoOnramp || status=1
+              exit $status
+          - name: paymentsheet
+            command: |
+              ci_scripts/github_actions/xcode_test.sh --scheme StripePaymentSheet -- "${framework_options[@]}" \
+                -skip-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests
+          # These two methods take about half of PaymentSheetLPMConfirmFlowTests' execution time.
+          - name: lpm-confirm-flow-1
+            command: |
+              ci_scripts/github_actions/xcode_test.sh --scheme StripePaymentSheet --name lpm-confirm-flow -- \
+                -only-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests/testAmazonPayConfirmFlows \
+                -only-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests/testTwintConfirmFlows
+          - name: lpm-confirm-flow-2
+            command: |
+              ci_scripts/github_actions/xcode_test.sh --scheme StripePaymentSheet --name lpm-confirm-flow -- \
+                -only-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests \
+                -skip-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests/testAmazonPayConfirmFlows \
+                -skip-testing:StripePaymentSheetTests/PaymentSheetLPMConfirmFlowTests/testTwintConfirmFlows
+    env:
+      # snapshot-tests runs the snapshot classes.
+      CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: 'true'
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ env.BITRISE_GIT_COMMIT }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          runtime: '16.4'
+      - name: Run tests
+        env:
+          COMMAND: ${{ matrix.command }}
+        run: |
+          set -euo pipefail
+          eval "framework_options=($(ruby ci_scripts/framework_test_options.rb))"
+          eval "$COMMAND"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: unit-tests-${{ matrix.name }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/deploy
+          if-no-files-found: ignore
+          retention-days: 7
+
+  framework-tests-and-builds-xcode-26-1:
+    runs-on: macos-26
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ env.BITRISE_GIT_COMMIT }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          xcode: 26.1.1
+          runtime: '26.1'
+      - name: Generate iOS 26 test plan
+        run: ruby ci_scripts/generate_ios26_testplan.rb
+      - name: Run AllStripeFrameworks-iOS26
+        run: ci_scripts/github_actions/xcode_test.sh --scheme AllStripeFrameworks-iOS26
+      - name: Build AllStripeFrameworks for testing
+        if: always()
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing -workspace Stripe.xcworkspace -scheme AllStripeFrameworks \
+            -destination 'generic/platform=iOS Simulator' ARCHS=arm64 COMPILER_INDEX_STORE_ENABLE=NO \
+            | xcbeautify --renderer github-actions
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: xcode-26-1-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/deploy
+          if-no-files-found: ignore
+          retention-days: 7
+
+  installation-tests:
+    name: installation-tests (${{ matrix.name }})
+    runs-on: macos-26
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: cocoapods
+            lanes: >-
+              installation_cocoapods_without_frameworks_objc
+              installation_cocoapods_frameworks_objc
+              installation_cocoapods_frameworks_swift
+          - name: spm
+            lanes: >-
+              installation_spm_objc
+              installation_spm_swift
+              installation_spm_identity_trait
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ env.BITRISE_GIT_COMMIT }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          runtime: '16.4'
+      - name: Run installation tests
+        env:
+          LANES: ${{ matrix.lanes }}
+        run: |
+          set -euo pipefail
+          for lane in $LANES; do
+            echo "::group::fastlane $lane"
+            bundle exec fastlane "$lane"
+            echo "::endgroup::"
+          done
+
+  integration-tests:
+    runs-on: macos-26
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ env.BITRISE_GIT_COMMIT }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          runtime: '26.4'
+      - name: Run IntegrationTester
+        run: ci_scripts/github_actions/xcode_test.sh --scheme IntegrationTester
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: integration-tests-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/deploy
+          if-no-files-found: ignore
+          retention-days: 7
+
+  size-report:
+    name: size-report (${{ matrix.shard }})
+    runs-on: macos-26
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2]
+    env:
+      BITRISE_IO_PARALLEL_TOTAL: '3'
+      BITRISE_IO_PARALLEL_INDEX: ${{ matrix.shard }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ env.BITRISE_GIT_COMMIT }}
+          persist-credentials: false
+      # Size reports build both revisions themselves, so don't merge.
+      - uses: ./.github/actions/setup
+        with:
+          merge: 'false'
+      - name: Prepare exact size baseline cache keys
+        run: ruby ci_scripts/size_report_cache.rb
+      # Every bundle lives under build/size-cache so restores share a cache version.
+      - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: build/size-cache
+          key: ${{ env.SIZE_REPORT_BASE_KEY }}-0
+      - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: build/size-cache
+          key: ${{ env.SIZE_REPORT_BASE_KEY }}-1
+      - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: build/size-cache
+          key: ${{ env.SIZE_REPORT_BASE_KEY }}-2
+      - name: Generate size report
+        run: bundle exec fastlane size_report
+      - name: Keep only this shard's measurements
+        if: env.SIZE_REPORT_PUBLISH == 'true'
+        run: |
+          set -euo pipefail
+          staged="$RUNNER_TEMP/size-cache-head"
+          rm -rf "$staged"
+          mkdir -p "$staged"
+          if [ -d "$SIZE_REPORT_SAVE_PATH" ]; then
+            cp -R "$SIZE_REPORT_SAVE_PATH" "$staged/shard"
+          fi
+          rm -rf build/size-cache
+          if [ -d "$staged/shard" ]; then
+            mkdir -p "$(dirname "$SIZE_REPORT_SAVE_PATH")"
+            mv "$staged/shard" "$SIZE_REPORT_SAVE_PATH"
+          fi
+      - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        if: env.SIZE_REPORT_PUBLISH == 'true'
+        with:
+          path: build/size-cache
+          key: ${{ env.SIZE_REPORT_HEAD_KEY }}
+
+  ui-tests-paymentsheet:
+    name: ui-tests-paymentsheet (${{ matrix.shard }})
+    runs-on: macos-26
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    env:
+      UI_TEST_WORKERS: '2'
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ env.BITRISE_GIT_COMMIT }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          runtime: '16.4'
+      - name: Warm up simulator
+        run: open -a "$(xcode-select -p)/Applications/Simulator.app" --args -CurrentDeviceUDID "$DEVICE_ID_FROM_USER_SETTINGS"
+      - name: Run PaymentSheet UI tests
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          sysctl machdep.cpu.brand_string hw.ncpu hw.memsize
+          ci_scripts/github_actions/xcode_test.sh --scheme "PaymentSheet Example" \
+            --test-plan "PaymentSheet Example-Shard${SHARD}" -- \
+            -parallel-testing-enabled YES -parallel-testing-worker-count "$UI_TEST_WORKERS"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: ui-tests-paymentsheet-${{ matrix.shard }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/deploy
+          if-no-files-found: ignore
+          retention-days: 7
+
+  ui-tests-connect-crypto:
+    runs-on: macos-26
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ env.BITRISE_GIT_COMMIT }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          runtime: '16.4'
+      - name: Warm up simulator
+        run: open -a "$(xcode-select -p)/Applications/Simulator.app" --args -CurrentDeviceUDID "$DEVICE_ID_FROM_USER_SETTINGS"
+      - name: Run StripeConnect UI tests
+        run: |
+          ci_scripts/github_actions/xcode_test.sh --scheme "StripeConnect Example" --test-plan StripeConnectExample -- \
+            -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+      - name: Run CryptoOnramp UI tests
+        if: always()
+        run: |
+          ci_scripts/github_actions/xcode_test.sh --scheme "CryptoOnramp Example" --test-plan CryptoOnrampExampleUITests -- \
+            -parallel-testing-enabled YES -parallel-testing-worker-count 2
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: ui-tests-connect-crypto-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/deploy
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # Single check for branch protection.
+  ci-gate:
+    if: always()
+    needs:
+      - lint-tests
+      - snapshot-tests
+      - unit-tests
+      - framework-tests-and-builds-xcode-26-1
+      - installation-tests
+      - integration-tests
+      - size-report
+      - ui-tests-paymentsheet
+      - ui-tests-connect-crypto
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          echo "$RESULTS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
+          echo "$RESULTS" | jq -e 'all(.[]; .result == "success")' > /dev/null
