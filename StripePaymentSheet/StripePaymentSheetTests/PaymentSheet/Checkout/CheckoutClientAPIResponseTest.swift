@@ -506,6 +506,25 @@ class CheckoutClientAPIResponseTest: XCTestCase {
         XCTAssertEqual(session.amount, 2345)
     }
 
+    func testLinkAccountSessionAmountOmitsZeroAmount() {
+        // Given a $0 session and a $23.45 session
+        let freeSession = CheckoutTestHelpers.makeSession([
+            "payment_status": "no_payment_required",
+            "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 0),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 0),
+        ]).makePublicSession()
+        let paidSession = CheckoutTestHelpers.makeSession([
+            "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2345),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 2345),
+        ]).makePublicSession()
+
+        // Then the $0 session omits the amount, which the backend rejects when creating a Link account session
+        XCTAssertEqual(freeSession.amount, 0)
+        XCTAssertNil(freeSession.linkAccountSessionAmount)
+        // ...and the paid session sends its total
+        XCTAssertEqual(paidSession.linkAccountSessionAmount, 2345)
+    }
+
     func testDecodedObjectParsesResolvedSetupFutureUsage() {
         let session = CheckoutTestHelpers.makeSession([
             "setup_future_usage_for_payment_method_type": [
