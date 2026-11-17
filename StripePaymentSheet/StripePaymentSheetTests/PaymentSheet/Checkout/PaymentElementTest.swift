@@ -771,6 +771,29 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertIdentical(resolvedPresentingViewController, host)
     }
 
+    func testEmbeddedViewOutsideWindowAssertsAndSendsAnalytic() async throws {
+        // Given a Payment Element view that isn't in a window
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = [] }
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+
+        // When the Payment Element resolves its presenting view controller
+        let resolvedPresentingViewController = paymentElement.embeddedPaymentElement.resolvedPresentingViewController
+
+        // Then it doesn't find one, asserts, and reports the unexpected error
+        XCTAssertNil(resolvedPresentingViewController)
+        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("payment_element_view_not_in_window"))
+        let errorPayload = try XCTUnwrap(analyticsClient._testLogHistory.last {
+            $0["event"] as? String == STPAnalyticEvent.unexpectedCheckoutElementsError.rawValue
+        })
+        XCTAssertEqual(errorPayload["error_code"] as? String, "payment_element_view_not_in_window")
+    }
+
     func testCheckoutAndElementsDoNotRetainEachOther() async throws {
         weak var weakCheckout: CheckoutElementsController?
         weak var weakPaymentElement: PaymentElement?

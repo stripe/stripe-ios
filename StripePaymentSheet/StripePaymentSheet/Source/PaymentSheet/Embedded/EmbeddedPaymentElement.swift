@@ -472,7 +472,20 @@ extension EmbeddedPaymentElement {
         }
 
         // e.g. Checkout merchants can't set `presentingViewController`.
-        guard let visibleViewController = view.window?.rootViewController?.findTopMostPresentedViewController() else {
+        guard let window = view.window else {
+            if checkout != nil {
+                // We only present in response to the customer interacting with `view`, so it should be in a window.
+                // Logging an unexpected error also fires an stpAssertionFailure.
+                STPAnalyticsClient.sharedClient.log(
+                    analytic: UnexpectedCheckoutElementsErrorAnalytic(
+                        errorCode: .paymentElementViewNotInWindow,
+                        errorMessage: "EmbeddedPaymentElement can't present because its view isn't in a window."
+                    )
+                )
+            }
+            return nil
+        }
+        guard let visibleViewController = window.rootViewController?.findTopMostPresentedViewController() else {
             return nil
         }
 
