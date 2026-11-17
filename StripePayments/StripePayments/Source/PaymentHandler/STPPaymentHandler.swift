@@ -870,6 +870,7 @@ public class STPPaymentHandler: NSObject {
             .ngUSSD,
             .ngWallet,
             .mondu,
+            .stripeBalance,
             .alipay,
             .iDEAL,
             .FPX,

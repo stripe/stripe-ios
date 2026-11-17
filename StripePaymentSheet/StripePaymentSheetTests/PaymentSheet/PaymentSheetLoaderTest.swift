@@ -862,7 +862,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             return ""
         }
 
-        let privatePreviewPaymentMethodTypes: [STPPaymentMethodType] = [.wero, .payByBank]
+        let privatePreviewPaymentMethodTypes: [STPPaymentMethodType] = [.wero, .payByBank, .stripeBalance]
         // Payment methods whose payment_method_options aren't recognized by /v1/elements/sessions yet
         let unsupportedPMOPaymentMethodTypes: [STPPaymentMethodType] = [
             .bizum,
