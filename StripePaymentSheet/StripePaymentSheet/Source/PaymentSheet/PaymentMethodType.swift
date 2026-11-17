@@ -200,7 +200,8 @@ extension PaymentSheet {
                     supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
                 )
 
-                if availabilityStatus != .supported {
+                // Link is offered as a wallet, with separate availability diagnostics.
+                if availabilityStatus != .supported && paymentMethodType != .link {
                     // This payment method is being filtered out, log the reason/s why
                     logIfNecessary("PaymentSheet could not offer \(paymentMethodType.displayName):\n\t* \(availabilityStatus.debugDescription)")
                 }

@@ -15,6 +15,21 @@ enum ExpressCheckoutElementUtilities {
         case automaticTaxAddress = "automatic_tax_address"
         case shippingAddressRequired = "shipping_address_required"
         case billingDetailsCollection = "billing_details_collection"
+
+        var debugDescription: String {
+            switch self {
+            case .notSupportedInSession:
+                return "Link is not supported by this Checkout Session."
+            case .linkConfiguration:
+                return "LinkConfiguration.display is set to .never."
+            case .automaticTaxAddress:
+                return "Checkout Sessions with automatic tax using the billing address do not support Link."
+            case .shippingAddressRequired:
+                return "The Link button in Express Checkout Element does not support collecting a shipping address."
+            case .billingDetailsCollection:
+                return "Collecting a billing address requires native Link; the web Link flow does not support it."
+            }
+        }
     }
 
     static func availablePaymentMethods(
@@ -106,6 +121,27 @@ enum ExpressCheckoutElementUtilities {
         }
 
         return reasons
+    }
+
+    static func logLinkAvailability(session: CheckoutElementsController.Session, configuration: ExpressCheckoutElement.Configuration, apiClient: STPAPIClient) {
+        #if DEBUG
+        let reasons = linkDisabledReasons(
+            for: session.elementsSession,
+            configuration: configuration,
+            usesWebLink: !deviceCanUseNativeLink(elementsSession: session.elementsSession, apiClient: apiClient),
+            requiresShippingAddress: session.requiresShippingAddress,
+            billingDetailsCollectionRequired: session.billingAddressCollection == .required
+        )
+        if !reasons.isEmpty {
+            PaymentSheetLoader.logUnavailableLink(reasons: reasons.map { $0.debugDescription }, elementName: "Express Checkout Element")
+        } else if !session.availableExpressCheckoutPaymentMethods.contains(.link) {
+            PaymentSheetLoader.logUnavailableLink(
+                reasons: ["The configured button layout does not have room for the Link button."],
+                elementName: "Express Checkout Element",
+                buttonOnly: true
+            )
+        }
+        #endif
     }
 
     private static func availablePaymentMethodTypes(

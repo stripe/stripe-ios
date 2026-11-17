@@ -74,6 +74,19 @@ enum CheckoutElementsControllerLoader {
         )
     }
 
+    static func logLinkAvailability(
+        session: CheckoutElementsController.Session,
+        configuration: CheckoutElementsController.Configuration,
+        paymentElementConfiguration: PaymentSheet.Configuration?
+    ) {
+        if let paymentElementConfiguration {
+            PaymentSheetLoader.logLinkAvailability(elementsSession: session.elementsSession, configuration: paymentElementConfiguration, elementName: "Payment Element")
+        }
+        if let expressCheckoutConfiguration = configuration.expressCheckoutElement {
+            ExpressCheckoutElementUtilities.logLinkAvailability(session: session, configuration: expressCheckoutConfiguration, apiClient: configuration.apiClient)
+        }
+    }
+
     /// This method contains all the stuff we have to do after (1) init and (2) updates i.e. when the session+elements session changes:
     ///
     /// - Apply Financial Connections settings

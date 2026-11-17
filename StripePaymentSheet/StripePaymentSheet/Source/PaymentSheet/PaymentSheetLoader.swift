@@ -121,6 +121,8 @@ final class PaymentSheetLoader {
                 linkAnalytics: analyticsHelper.linkAnalytics
             )
 
+            logLinkAvailability(elementsSession: elementsSession, configuration: configuration)
+
             loadTimings.logStart("computePaymentMethodTypes")
             let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
 
@@ -347,6 +349,41 @@ final class PaymentSheetLoader {
             """
             availabilityLogger(message)
         }
+    }
+
+    static func logLinkAvailability(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, elementName: String = "PaymentSheet") {
+        #if DEBUG
+        // Server availability messages explain the server's decision, not the shadowed local rules.
+        if elementsSession.serverPaymentMethodAvailability == nil {
+            let reasons = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration)
+            if !reasons.isEmpty {
+                logUnavailableLink(reasons: reasons.map { $0.debugDescription }, elementName: elementName)
+                return
+            }
+        }
+        guard PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration),
+              !PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration) else {
+            return
+        }
+        let reason: String
+        switch configuration.link.display {
+        case .automatic:
+            return
+        case .never:
+            reason = "LinkConfiguration.display is set to .never."
+        case .walletButtonHidden:
+            reason = "LinkConfiguration.display is set to .walletButtonHidden and no existing Link user was found."
+        }
+        logUnavailableLink(reasons: [reason], elementName: elementName, buttonOnly: true)
+        #endif
+    }
+
+    static func logUnavailableLink(reasons: [String], elementName: String, buttonOnly: Bool = false) {
+        guard !reasons.isEmpty else { return }
+        #if DEBUG
+        let message = buttonOnly ? "could not show the Link button" : "could not offer Link"
+        availabilityLogger("[Stripe SDK]: \(elementName) \(message):\n\t* \(reasons.joined(separator: "\n\t* "))")
+        #endif
     }
 
     static func shouldFallback(for error: Error) -> Bool {

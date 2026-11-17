@@ -149,6 +149,21 @@ extension PaymentSheet {
         case billingDetailsCollection = "billing_details_collection"
         /// Automatic tax with billing address source is incompatible with Link.
         case automaticTaxBillingAddress = "automatic_tax_billing_address"
+
+        var debugDescription: String {
+            switch self {
+            case .notSupportedInElementsSession:
+                return "Link is not supported by this Elements Session."
+            case .linkConfiguration:
+                return "LinkConfiguration.display is set to .never."
+            case .cardBrandFiltering:
+                return "Card brand filtering requires native Link; the web Link flow does not support it."
+            case .billingDetailsCollection:
+                return "Collecting additional billing details requires native Link; the web Link flow does not support it."
+            case .automaticTaxBillingAddress:
+                return "Checkout Sessions with automatic tax using the billing address do not support Link."
+            }
+        }
     }
 
     enum LinkSignupDisabledReason: String {
