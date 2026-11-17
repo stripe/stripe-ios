@@ -34,8 +34,11 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
 
     private(set) var uploadImagesExp = XCTestExpectation(description: "Document Images uploaded")
     private(set) var uploadedSide: DocumentSide?
+    private(set) var uploadedImage: CGImage?
     private(set) var uploadedDocumentScannerOutput: DocumentScannerOutput?
+    private(set) var uploadedExifMetadata: CameraExifMetadata?
     private(set) var uploadMethod: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod?
+    private(set) var uploadCount = 0
     private(set) var didReset = false
 
     func uploadImages(
@@ -46,8 +49,11 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
         method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         uploadedSide = side
+        uploadedImage = originalImage
         uploadedDocumentScannerOutput = documentScannerOutput
+        uploadedExifMetadata = exifMetadata
         uploadMethod = method
+        uploadCount += 1
         uploadImagesExp.fulfill()
     }
 

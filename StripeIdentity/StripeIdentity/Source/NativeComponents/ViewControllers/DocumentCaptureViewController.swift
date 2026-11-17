@@ -356,6 +356,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     private let availableIDTypes: [String]
 
     private let bestFramePicker: BestFramePicker
+    private var bestFallbackFrame: BestFramePicker.Candidate?
 
     // MARK: Coordinators
     let documentUploader: DocumentUploaderProtocol
@@ -545,6 +546,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
         self.captureMode = captureMode
         bestFramePicker.reset()
+        bestFallbackFrame = nil
 
         switch imageScanningSession.state {
         case .scanning(let documentSide, _):
@@ -598,6 +600,22 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             expectedClassification: documentSide,
             capturedData: UIImage(cgImage: latestCapturedCameraFrame.image)
         )
+    }
+
+    private func uploadDocumentFrame(_ frame: BestFramePicker.Candidate, for documentSide: DocumentSide) -> UIImage {
+        bestFallbackFrame = nil
+        bestFramePicker.reset()
+        documentUploader.uploadImages(
+            for: documentSide,
+            originalImage: frame.cgImage,
+            documentScannerOutput: frame.output,
+            exifMetadata: frame.exif,
+            method: .autoCapture
+        )
+        if case .legacy(_, _, _, _, let blurResult) = frame.output {
+            sheetController?.analyticsClient.updateBlurScore(blurResult.variance, for: documentSide)
+        }
+        return UIImage(cgImage: frame.cgImage)
     }
 
     private func saveFrontAndDecideBack(
@@ -691,6 +709,19 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
 
     func imageScanningSession(
         _ scanningSession: DocumentImageScanningSession,
+        captureFallbackForClassification documentSide: DocumentSide
+    ) -> UIImage? {
+        guard !isManualCaptureMode,
+            let bestFallbackFrame,
+            bestFallbackFrame.output.matchesDocument(side: documentSide)
+        else {
+            return nil
+        }
+        return uploadDocumentFrame(bestFallbackFrame, for: documentSide)
+    }
+
+    func imageScanningSession(
+        _ scanningSession: DocumentImageScanningSession,
         didTimeoutForClassification documentSide: DocumentSide
     ) {
         if let sheetController {
@@ -707,6 +738,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
     ) {
         // Reset best-frame window when a new side starts
         bestFramePicker.reset()
+        bestFallbackFrame = nil
         latestCapturedCameraFrame = nil
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
@@ -771,6 +803,20 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             imageScanningSession.startTimeoutTimer(expectedClassification: documentSide)
         }
 
+        // Retain matching frames even when they do not pass every quality check,
+        // so a timeout can use the best frame from this scan attempt.
+        if let scannerOutput = scannerOutputOptional,
+            scannerOutput.matchesDocument(side: documentSide) {
+            let score = scannerOutput.qualityScore(side: documentSide)
+            let isHighQuality = scannerOutput.isHighQuality(side: documentSide)
+            let bestIsHighQuality = bestFallbackFrame?.output.isHighQuality(side: documentSide) ?? false
+            // Prefer an approved frame if its selection window is still pending at timeout.
+            if (isHighQuality && !bestIsHighQuality)
+                || (isHighQuality == bestIsHighQuality && score > (bestFallbackFrame?.score ?? -Float.infinity)) {
+                bestFallbackFrame = .init(cgImage: image, output: scannerOutput, exif: exifMetadata, score: score)
+            }
+        }
+
         // If this isn't the classification we're looking for, update the state
         // to display a different message to the user
         guard let scannerOutput = scannerOutputOptional,
@@ -793,22 +839,10 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             imageScanningSession.updateScanningState(scannerOutputOptional)
             return
         case .picked(let best):
-            switch best.output {
-            case .legacy(_, _, _, _, let blurResult):
-                documentUploader.uploadImages(
-                    for: documentSide,
-                    originalImage: best.cgImage,
-                    documentScannerOutput: best.output,
-                    exifMetadata: best.exif,
-                    method: .autoCapture
-                )
-                sheetController?.analyticsClient.updateBlurScore(blurResult.variance, for: documentSide)
-
-                imageScanningSession.setStateScanned(
-                    expectedClassification: documentSide,
-                    capturedData: UIImage(cgImage: best.cgImage)
-                )
-            }
+            imageScanningSession.setStateScanned(
+                expectedClassification: documentSide,
+                capturedData: uploadDocumentFrame(best, for: documentSide)
+            )
         }
     }
 }

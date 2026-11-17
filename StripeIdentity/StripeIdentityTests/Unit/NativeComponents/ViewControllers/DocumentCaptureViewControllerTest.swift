@@ -788,6 +788,252 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssert(analytic: analytic, hasMetadata: "side", withValue: "front")
     }
 
+    func testScanningTimeoutUploadsBestMatchingFrame() throws {
+        // Given several matching frames that do not pass the quality checks
+        let vc = makeViewController(state: .scanning(.front, nil))
+        let bestImage = try XCTUnwrap(CapturedImageMock.frontDriversLicense.image.cgImage)
+        let otherImage = try XCTUnwrap(CapturedImageMock.backDriversLicense.image.cgImage)
+        let bestExif = CameraExifMetadata(brightnessValue: 2, focalLength: 4, lensModel: "best frame")
+        let scores: [Float] = [0.4, 0.9, 0.6]
+        var bestOutput: DocumentScannerOutput?
+        for score in scores {
+            let output = makeDocumentScannerOutputLegacyWithIddetectorOutput(
+                .init(
+                    classification: .idCardFront,
+                    documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
+                    allClassificationScores: [.idCardFront: score]
+                ),
+                isBlurry: true
+            )
+            XCTAssertFalse(output.isHighQuality(side: .front))
+            if score == 0.9 {
+                bestOutput = output
+            }
+            vc.imageScanningSessionDidScanImage(
+                vc.imageScanningSession,
+                image: score == 0.9 ? bestImage : otherImage,
+                scannerOutput: output,
+                exifMetadata: score == 0.9 ? bestExif : nil,
+                expectedClassification: .front
+            )
+        }
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 0)
+        mockTimeoutTimer(vc)
+        // ...and another frame is still being processed when the timer fires
+        mockCameraFrameCaptured(vc)
+
+        // When scanning times out
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+
+        // Then the highest-scoring frame and its metadata are uploaded together
+        verify(vc, expectedState: .scanned(.front, UIImage()), expectedButtonState: .enabled)
+        XCTAssertTrue(mockDocumentUploader.uploadedImage === bestImage)
+        XCTAssertEqual(mockDocumentUploader.uploadedDocumentScannerOutput, bestOutput)
+        XCTAssertEqual(mockDocumentUploader.uploadedExifMetadata, bestExif)
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
+        XCTAssertEqual(mockSheetController.analyticsClient.blurScoreFront, 0.1)
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
+        guard case .scanned(_, let capturedImage) = vc.imageScanningSession.state else {
+            return XCTFail("Expected scanned image")
+        }
+        XCTAssertTrue(capturedImage.cgImage === bestImage)
+        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "document_timeout").first
+        XCTAssert(analytic: analytic, hasMetadata: "side", withValue: "front")
+
+        // ...and the late scanner result cannot upload or replace the image again
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront))
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 1)
+        XCTAssertTrue(mockDocumentUploader.uploadedImage === bestImage)
+        waitForCameraSessionToStop()
+        XCTAssertTrue(mockDocumentScanner.didReset)
+        XCTAssertTrue(mockConcurrencyManager.didReset)
+    }
+
+    func testScanningTimeoutUploadsMatchingBackFrame() throws {
+        // Given a back frame that does not pass the quality checks
+        let vc = makeViewController(state: .scanning(.back, nil))
+        let output = makeDocumentScannerOutputLegacy(with: .idCardBack, isBlurry: false)
+        XCTAssertFalse(output.isHighQuality(side: .back))
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: output)
+        vc.imageScanningSession.startTimeoutTimer(expectedClassification: .back)
+
+        // When scanning the back times out
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+
+        // Then the cached frame is submitted for the back
+        verify(vc, expectedState: .scanned(.back, UIImage()), expectedButtonState: .enabled)
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .back)
+        XCTAssertEqual(mockDocumentUploader.uploadedDocumentScannerOutput, output)
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
+    }
+
+    func testScanningTimeoutWithoutMatchingFrameDoesNotUpload() throws {
+        // Given frames with no detection or the wrong document side
+        let vc = makeViewController(state: .scanning(.front, nil))
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: nil)
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .invalid))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardBack))
+        mockTimeoutTimer(vc)
+
+        // When scanning times out
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+
+        // Then the existing timeout screen is shown without an upload
+        verify(vc, expectedState: .timeout(.front), expectedButtonState: .enabled)
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 0)
+    }
+
+    func testScanningTimeoutKeepsMatchingFrameAfterDetectionIsLost() throws {
+        // Given a matching frame followed by the wrong side and then no detection
+        let vc = makeViewController(state: .scanning(.front, nil))
+        let output = makeDocumentScannerOutputLegacy(with: .idCardFront, isBlurry: false)
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: output)
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardBack))
+        mockConcurrencyManager.respondToScan(output: nil)
+        mockTimeoutTimer(vc)
+
+        // When the scan times out after losing the document
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+
+        // Then the earlier matching frame is still available for submission
+        verify(vc, expectedState: .scanned(.front, UIImage()), expectedButtonState: .enabled)
+        XCTAssertEqual(mockDocumentUploader.uploadedDocumentScannerOutput, output)
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 1)
+    }
+
+    func testTimeoutForPreviousSideDoesNotInterruptCurrentScan() throws {
+        // Given a cached back frame and a timeout callback for the previous side
+        let vc = makeViewController(state: .scanning(.back, nil))
+        let output = makeDocumentScannerOutputLegacy(with: .idCardBack, isBlurry: false)
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: output)
+        vc.imageScanningSession.startTimeoutTimer(expectedClassification: .front)
+
+        // When the old side's timeout fires
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+
+        // Then the current scan continues without uploading or reporting a timeout
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.back, output))
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 0)
+        XCTAssertTrue(mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "document_timeout").isEmpty)
+
+        // ...and the current side can still submit its cached frame on timeout
+        vc.imageScanningSession.startTimeoutTimer(expectedClassification: .back)
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+        verify(vc, expectedState: .scanned(.back, UIImage()), expectedButtonState: .enabled)
+        XCTAssertEqual(mockDocumentUploader.uploadedDocumentScannerOutput, output)
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .back)
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 1)
+    }
+
+    func testScanningTimeoutUploadsFrameWhileBestFrameWindowIsPending() throws {
+        // Given an approved frame between higher-scoring blurry frames while the selection window is open
+        let vc = makeViewController(state: .scanning(.front, nil), bestFrameWindow: 60)
+        let output = makeDocumentScannerOutputLegacyWithIddetectorOutput(
+            .init(
+                classification: .idCardFront,
+                documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
+                allClassificationScores: [.idCardFront: 0.4]
+            )
+        )
+        let blurryOutput = makeDocumentScannerOutputLegacyWithIddetectorOutput(
+            .init(
+                classification: .idCardFront,
+                documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
+                allClassificationScores: [.idCardFront: 0.9]
+            ),
+            isBlurry: true
+        )
+        XCTAssertTrue(output.isHighQuality(side: .front))
+        XCTAssertFalse(blurryOutput.isHighQuality(side: .front))
+        XCTAssertGreaterThan(blurryOutput.qualityScore(side: .front), output.qualityScore(side: .front))
+        for frame in [blurryOutput, output, blurryOutput] {
+            mockCameraFrameCaptured(vc)
+            mockConcurrencyManager.respondToScan(output: frame)
+        }
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 0)
+        mockTimeoutTimer(vc)
+
+        // When scanning times out before another frame completes the window
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+
+        // Then the approved frame is submitted despite its lower score
+        verify(vc, expectedState: .scanned(.front, UIImage()), expectedButtonState: .enabled)
+        XCTAssertEqual(mockDocumentUploader.uploadedDocumentScannerOutput, output)
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 1)
+    }
+
+    func testResetClearsTimeoutFallback() throws {
+        // Given a cached frame from the previous scan attempt
+        let vc = makeViewController(state: .scanning(.front, nil))
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront, isBlurry: false))
+
+        // When the scan resets and the next attempt times out without a frame
+        vc.reset()
+        mockTimeoutTimer(vc)
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+
+        // Then the old frame is not submitted
+        verify(vc, expectedState: .timeout(.front), expectedButtonState: .enabled)
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 0)
+    }
+
+    func testStartingNewSideClearsTimeoutFallback() throws {
+        // Given a cached front frame
+        let vc = makeViewController(state: .scanning(.front, nil))
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront, isBlurry: false))
+
+        // When scanning the back starts and times out without a frame
+        vc.imageScanningSession.startScanning(expectedClassification: .back)
+        vc.imageScanningSession.startTimeoutTimer(expectedClassification: .back)
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+
+        // Then the front frame is not submitted as the back
+        verify(vc, expectedState: .timeout(.back), expectedButtonState: .enabled)
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 0)
+    }
+
+    func testChangingCaptureModeClearsTimeoutFallback() throws {
+        // Given a cached frame from live capture
+        let vc = makeViewController(state: .scanning(.front, nil))
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront, isBlurry: false))
+
+        // When the user switches to manual capture, returns to live capture, and times out
+        let control = try switchToManualCapture(vc)
+        control.selectedSegmentIndex = 0
+        vc.didChangeCaptureMode(control)
+        try XCTUnwrap(vc.imageScanningSession.timeoutTimer).fire()
+
+        // Then a frame from before the mode change is not submitted
+        verify(vc, expectedState: .timeout(.front), expectedButtonState: .enabled)
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 0)
+    }
+
+    func testBackgroundingDoesNotSubmitTimeoutFallback() {
+        // Given a cached frame from live capture
+        let vc = makeViewController(state: .scanning(.front, nil))
+        mockCameraFrameCaptured(vc)
+        let output = makeDocumentScannerOutputLegacy(with: .idCardFront, isBlurry: false)
+        mockConcurrencyManager.respondToScan(output: output)
+        mockTimeoutTimer(vc)
+
+        // When the app enters the background
+        vc.imageScanningSession.appDidEnterBackground()
+
+        // Then stopping the camera does not submit a fallback
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, output))
+        XCTAssertEqual(mockDocumentUploader.uploadCount, 0)
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
+    }
+
     func testScanAttemptsFront() {
         let vc = makeViewController(
             state: .scanning(.front, nil)
@@ -1082,7 +1328,8 @@ extension DocumentCaptureViewControllerTest {
     fileprivate func makeViewController(
         state: DocumentCaptureViewController.State,
         apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage =
-            DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture
+            DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture,
+        bestFrameWindow: TimeInterval = 0
     ) -> DocumentCaptureViewController {
         return .init(
             apiConfig: apiConfig,
@@ -1095,12 +1342,13 @@ extension DocumentCaptureViewControllerTest {
             concurrencyManager: mockConcurrencyManager,
             appSettingsHelper: mockAppSettingsHelper,
             avaialableIDTypes: DocumentCaptureViewControllerTest.mockVerificationPage.documentSelect.idDocumentTypeAllowlistKeys,
-            bestFramePicker: .init(window: 0)
+            bestFramePicker: .init(window: bestFrameWindow)
         )
     }
 
     fileprivate func makeDocumentScannerOutputLegacyWithIddetectorOutput(
-        _ output: IDDetectorOutput
+        _ output: IDDetectorOutput,
+        isBlurry: Bool = false
     ) -> DocumentScannerOutput {
         return .legacy(
             output,
@@ -1126,7 +1374,7 @@ extension DocumentCaptureViewControllerTest {
                     isAdjustingFocus: false
                 )
             ),
-            .init(isBlurry: false, variance: 0.1)
+            .init(isBlurry: isBlurry, variance: 0.1)
         )
     }
 

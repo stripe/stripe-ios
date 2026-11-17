@@ -301,8 +301,19 @@ final class ImageScanningSession<
     }
 
     private func handleTimeout(expectedClassification: ExpectedClassificationType) {
-        stopScanning()
-        state = .timeout(expectedClassification)
+        guard case .scanning(expectedClassification, _) = state else {
+            return
+        }
+
+        if let capturedData = delegate?.imageScanningSession(
+            self,
+            captureFallbackForClassification: expectedClassification
+        ) {
+            setStateScanned(expectedClassification: expectedClassification, capturedData: capturedData)
+        } else {
+            stopScanning()
+            state = .timeout(expectedClassification)
+        }
         delegate?.imageScanningSession(self, didTimeoutForClassification: expectedClassification)
     }
 
