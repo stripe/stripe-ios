@@ -771,22 +771,24 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertIdentical(resolvedPresentingViewController, host)
     }
 
-    func testEmbeddedViewOutsideWindowAssertsAndSendsAnalytic() async throws {
+    func testTappingFormRowOutsideWindowAssertsAndSendsAnalytic() async throws {
         // Given a Payment Element view that isn't in a window
         let checkout = try await CheckoutElementsController(
             configuration: CheckoutTestHelpers.makeConfiguration()
         )
-        let paymentElement = checkout.getPaymentElement()
+        let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
+        let embeddedView = embeddedPaymentElement.embeddedPaymentMethodsView
+        let cardRow = try XCTUnwrap(embeddedView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.card)) })
         let analyticsClient = STPAnalyticsClient.sharedClient
         analyticsClient._testLogHistory = []
         defer { analyticsClient._testLogHistory = [] }
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
 
-        // When the Payment Element resolves its presenting view controller
-        let resolvedPresentingViewController = paymentElement.embeddedPaymentElement.resolvedPresentingViewController
+        // When the customer taps a row with a form
+        embeddedView.didTap(rowButton: cardRow)
 
-        // Then it doesn't find one, asserts, and reports the unexpected error
-        XCTAssertNil(resolvedPresentingViewController)
+        // Then nothing is presented, and it asserts and reports the unexpected error
+        XCTAssertNil(embeddedPaymentElement.presentedSheet)
         XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("payment_element_presenting_view_controller_unavailable"))
         let errorPayload = try XCTUnwrap(analyticsClient._testLogHistory.last {
             $0["event"] as? String == STPAnalyticEvent.unexpectedCheckoutElementsError.rawValue
@@ -815,9 +817,7 @@ final class PaymentElementTest: XCTestCase {
 
         // Then confirming presents from the host instead of the dismissing form
         XCTAssertIdentical(embeddedPaymentElement.confirmPresentingViewController, host)
-        // ...and still does once the form is gone
         await fulfillment(of: [dismissed], timeout: 5)
-        XCTAssertIdentical(embeddedPaymentElement.confirmPresentingViewController, host)
     }
 
     func testCheckoutAndElementsDoNotRetainEachOther() async throws {

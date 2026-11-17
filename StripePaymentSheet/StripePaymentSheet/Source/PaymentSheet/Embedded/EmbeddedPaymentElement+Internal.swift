@@ -345,10 +345,23 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     private func presentSheet(_ sheet: any PaymentSheetContainer) {
-        let presentingViewController = resolvedPresentingViewController
-        assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+        guard let presentingViewController = resolvedPresentingViewController else {
+            if checkout != nil {
+                // Checkout merchants can't set `presentingViewController`, and we only present in response to the customer interacting with `view`, so we should always find one.
+                // Logging an unexpected error also fires an stpAssertionFailure.
+                STPAnalyticsClient.sharedClient.log(
+                    analytic: UnexpectedCheckoutElementsErrorAnalytic(
+                        errorCode: .paymentElementPresentingViewControllerUnavailable,
+                        errorMessage: "Payment Element couldn't find a view controller to present from."
+                    )
+                )
+            } else {
+                assertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+            }
+            return
+        }
         presentedSheet = sheet
-        presentingViewController?.presentAsSheet(sheet)
+        presentingViewController.presentAsSheet(sheet)
     }
 
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {
