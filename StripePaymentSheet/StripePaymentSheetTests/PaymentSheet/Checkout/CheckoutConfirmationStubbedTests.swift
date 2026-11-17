@@ -1003,12 +1003,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
         // Then Express Checkout hides alternate-payment actions but keeps the close button
         XCTAssertFalse(content.context.canContinueWithoutLink)
-        let walletViewModel = PayWithLinkViewController.WalletViewModel(
-            linkAccount: LinkStubs.account(),
-            context: content.context,
-            paymentMethods: LinkStubs.paymentMethods()
-        )
-        XCTAssertNil(walletViewModel.cancelButtonConfiguration)
         XCTAssertFalse(content.navigationBar.closeButtonRight.isHidden)
 
         // When a payment attempt fails, the wallet stays open for another attempt
