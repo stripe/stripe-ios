@@ -41,13 +41,13 @@ jobs:
         if: github.event_name == 'pull_request'
         run: ./ci_scripts/lint_modified_files.sh
       - name: Check PaymentSheet test sharding
-        if: always()
+        if: ${{ !cancelled() }}
         run: ./ci_scripts/check_paymentsheet_test_sharding.rb
       - name: Check png image format is 8-bit
-        if: always()
+        if: ${{ !cancelled() }}
         run: ./ci_scripts/check_image_format.sh
       - name: Test release build scripts
-        if: always()
+        if: ${{ !cancelled() }}
         run: ruby ci_scripts/tests/framework_architecture_validator_test.rb
       - name: fastlane build_extras
         run: bundle exec fastlane build_extras
@@ -215,7 +215,7 @@ jobs:
       - name: Run AllStripeFrameworks-iOS26
         run: ci_scripts/github_actions/xcode_test.sh --scheme AllStripeFrameworks-iOS26
       - name: Build AllStripeFrameworks for testing
-        if: always()
+        if: ${{ !cancelled() }}
         run: |
           set -o pipefail
           xcodebuild build-for-testing -workspace Stripe.xcworkspace -scheme AllStripeFrameworks \
@@ -399,7 +399,7 @@ jobs:
           ci_scripts/github_actions/xcode_test.sh --scheme "StripeConnect Example" --test-plan StripeConnectExample -- \
             -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
       - name: Run CryptoOnramp UI tests
-        if: always()
+        if: ${{ !cancelled() }}
         run: |
           ci_scripts/github_actions/xcode_test.sh --scheme "CryptoOnramp Example" --test-plan CryptoOnrampExampleUITests -- \
             -parallel-testing-enabled YES -parallel-testing-worker-count 2
