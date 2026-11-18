@@ -12,6 +12,7 @@ import Foundation
 class FetchAppInfoMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, FetchAppInfoMessageHandler.Reply> {
     struct Reply: Encodable {
         let applicationId: String
+        let supportsNativeOverlayPresentation: Bool = true
     }
     init(sourcePolicy: STPWebMessageSourcePolicy,
          didReceiveMessage: @escaping (VoidPayload) async throws -> Reply) {
