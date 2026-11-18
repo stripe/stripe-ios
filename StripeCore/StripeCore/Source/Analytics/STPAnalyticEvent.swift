@@ -245,6 +245,9 @@ import Foundation
     case paymentMethodMessagingFetchBegin = "payment_method_messaging_fetch_begin"
     case paymentMethodMessagingDisplayed = "payment_method_messaging_displayed"
 
+    // MARK: - Stripe balance
+    case paymentSheetStripeBalanceFinancialAccountsLoadFailed = "mc_stripe_balance_financial_accounts_load_failed"
+
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
     case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"
