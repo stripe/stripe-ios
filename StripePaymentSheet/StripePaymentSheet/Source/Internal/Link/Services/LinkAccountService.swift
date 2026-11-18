@@ -214,6 +214,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             linkAuthTokenClientSecret,
             sessionID: sessionID,
             customerID: customerID,
+            with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
             supportedVerificationTypes: supportedVerificationTypes,

@@ -175,7 +175,7 @@ extension ConsumerSession {
         emailSource: EmailSource?,
         sessionID: String,
         customerID: String?,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         supportedVerificationTypes: [SupportedVerificationType],
@@ -201,7 +201,7 @@ extension ConsumerSession {
         _ linkAuthTokenClientSecret: String,
         sessionID: String,
         customerID: String?,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         supportedVerificationTypes: [SupportedVerificationType],
@@ -224,7 +224,7 @@ extension ConsumerSession {
         linkAuthIntentID: String,
         sessionID: String,
         customerID: String?,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         supportedVerificationTypes: [SupportedVerificationType],
@@ -252,7 +252,7 @@ extension ConsumerSession {
         consentAction: String?,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<SessionWithPublishableKey, Error>) -> Void
     ) {
@@ -272,7 +272,7 @@ extension ConsumerSession {
 
     func createPaymentDetails(
         paymentMethodParams: STPPaymentMethodParams,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         isDefault: Bool = false,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
@@ -307,7 +307,7 @@ extension ConsumerSession {
 
     func createPaymentDetails(
         linkedAccountId: String,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         isDefault: Bool,
         clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
@@ -326,7 +326,7 @@ extension ConsumerSession {
         type: VerificationSession.SessionType = .sms,
         locale: Locale = .autoupdatingCurrent,
         isResendingSmsCode: Bool = false,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -341,7 +341,7 @@ extension ConsumerSession {
 
     func confirmSMSVerification(
         with code: String,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         requestSurface: LinkRequestSurface = .default,
         consentGranted: Bool? = nil,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
@@ -355,7 +355,7 @@ extension ConsumerSession {
     }
 
     func createLinkAccountSession(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
         permissions: [String]? = nil,
@@ -374,7 +374,7 @@ extension ConsumerSession {
     }
 
     func listPaymentDetails(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         supportedPaymentDetailsTypes: [ParsedEnum<ConsumerPaymentDetails.DetailsType>],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
@@ -387,7 +387,7 @@ extension ConsumerSession {
     }
 
     func listShippingAddress(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ShippingAddressesResponse, Error>) -> Void
     ) {
@@ -398,7 +398,7 @@ extension ConsumerSession {
     }
 
     func deletePaymentDetails(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         id: String,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<Void, Error>) -> Void
@@ -411,7 +411,7 @@ extension ConsumerSession {
     }
 
     func updatePaymentDetails(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         id: String,
         updateParams: UpdatePaymentDetailsParams,
         clientAttributionMetadata: STPClientAttributionMetadata?,
@@ -427,7 +427,7 @@ extension ConsumerSession {
     }
 
     func sharePaymentDetails(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         id: String,
         cvc: String?,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
@@ -450,7 +450,7 @@ extension ConsumerSession {
     }
 
     func recordConnectionsConsentAcquired(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         localizedConsentText: String,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<EmptyResponse, Error>) -> Void
@@ -464,7 +464,7 @@ extension ConsumerSession {
     }
 
     func logout(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -475,7 +475,7 @@ extension ConsumerSession {
     }
 
     func refreshSession(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         supportedVerificationTypes: [SupportedVerificationType],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
