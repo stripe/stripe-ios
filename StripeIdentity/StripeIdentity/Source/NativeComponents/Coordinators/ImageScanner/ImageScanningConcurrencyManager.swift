@@ -11,8 +11,6 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 import Vision
 
-let kConcurrentImageScannerDefaultMaxConcurrentScans: Int = 2
-
 /// Dependency-injectable protocol for ImageScanningConcurrencyManager
 protocol ImageScanningConcurrencyManagerProtocol {
     func scanImage<ScannerOutput>(
@@ -21,10 +19,15 @@ protocol ImageScanningConcurrencyManagerProtocol {
         sampleBuffer: CMSampleBuffer,
         cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
-        completion: @escaping (ScannerOutput) -> Void
+        shouldScan: @escaping () -> Bool,
+        completion: @escaping (ScannerOutput, CGImage, CameraExifMetadata?) -> Void
     )
 
-    func reset()
+    func reset<ScannerOutput>(
+        with scanner: AnyImageScanner<ScannerOutput>,
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    )
 
     func getPerformanceMetrics(
         completeOn queue: DispatchQueue,
@@ -32,8 +35,7 @@ protocol ImageScanningConcurrencyManagerProtocol {
     )
 }
 
-/// Manages scanning images using an ImageScanner concurrently while optimizing the
-/// maximum number of concurrent image scans.
+/// Processes one camera frame at a time without blocking camera session operations.
 final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProtocol {
 
     /// Manages stateful properties used to track performance metrics
@@ -48,17 +50,16 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     private var perfLastScanEndTime: Date?
     private var perfNumFramesScanned = 0
 
-    /// Detectors will perform scans concurrently to optimize CPU and GPU overlap.
-    /// No more than `maxConcurrentScans` tasks will run on this queue.
-    let concurrentQueue = DispatchQueue(
-        label: "com.stripe.identity.concurrent-image-scanner",
-        attributes: .concurrent
+    private let processingQueue = DispatchQueue(
+        label: "com.stripe.identity.image-scanner.processing",
+        qos: .userInitiated
     )
-    /// Semaphore used to block the current thread until detectors have completed
-    private let semaphore: DispatchSemaphore
-
-    private var amountOfFutures = 0
-    private var futureQueue: DispatchQueue = DispatchQueue(label: "com.stripe.identity.concurrent-image-scanner.futures")
+    // Admission stays closed until result delivery finishes, so a busy UI cannot
+    // accumulate images either. Only these short state transitions take the lock.
+    private let admissionLock = NSLock()
+    private var isProcessingFrame = false
+    private var pendingResetCount = 0
+    private let frameGroup = DispatchGroup()
 
     private let analyticsClient: IdentityAnalyticsClient
     private let scannerName: IdentityAnalyticsClient.ScannerName
@@ -68,44 +69,24 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     init(
         sheetController: VerificationSheetControllerProtocol,
         scannerName: IdentityAnalyticsClient.ScannerName,
-        screenName: IdentityAnalyticsClient.ScreenName,
-        maxConcurrentScans: Int = kConcurrentImageScannerDefaultMaxConcurrentScans
+        screenName: IdentityAnalyticsClient.ScreenName
     ) {
         self.analyticsClient = sheetController.analyticsClient
         self.scannerName = scannerName
         self.screenName = screenName
         self.sheetController = sheetController
-        self.semaphore = DispatchSemaphore(value: maxConcurrentScans)
     }
 
-    deinit {
-        futureQueue.sync {
-            for _ in 0..<amountOfFutures {
-                self.semaphore.signal()
-            }
-        }
-    }
-
-    /// Scans a camera frame and calls a completion block with the scanned output
-    ///
-    /// - Note:
-    /// This can potentially block the current thread until the scan is complete.
-    ///
-    /// If `scanImage` is called concurrently multiple times, it will block the
-    /// caller thread until the previous calls have completed such that no more
-    /// than `maxConcurrentScans` are performing concurrently.
-    ///
-    /// This method is meant to be called from a concurrent video capture thread
-    /// (e.g. `AVCaptureVideoDataOutputSampleBufferDelegate.captureOutput`) so that
-    /// camera frames are dropped while the scanner is blocking the video capture
-    /// thread, ensuring only `maxConcurrentScans` number of pixel buffers are
-    /// being retained.
+    /// Attempts to scan a frame, dropping it immediately if a frame or reset is
+    /// already in progress. Call from the camera session's capture callback so
+    /// device properties can be captured before handing work to another queue.
     ///
     /// - Parameters:
     ///   - scanner: An image scanner to scan the image with
     ///   - pixelBuffer: Image to scan
     ///   - cameraSession: The CameraSession that the image was captured from
-    ///   - completionQueue: DispatchQueue to call the completion block on
+    ///   - completionQueue: Queue for the admission predicate and completion
+    ///   - shouldScan: Checks whether this frame still belongs to an active scan
     ///   - completion: Executed after the image has been analyzed
     func scanImage<ScannerOutput>(
         with scanner: AnyImageScanner<ScannerOutput>,
@@ -113,74 +94,116 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         sampleBuffer: CMSampleBuffer,
         cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
-        completion: @escaping (ScannerOutput) -> Void
+        shouldScan: @escaping () -> Bool,
+        completion: @escaping (ScannerOutput, CGImage, CameraExifMetadata?) -> Void
     ) {
         assert(!Thread.isMainThread, "`scanImage` should not be called from the main thread")
 
-        // Get camera session properties immediately before the camera state changes
+        guard beginFrame() else {
+            return
+        }
+
+        // This accessor must remain on the camera session queue.
         let cameraProperties = cameraSession.getCameraProperties()
 
-        let wrappedCompletion: (ScannerOutput) -> Void = { output in
-            completionQueue.async {
-                completion(output)
+        completionQueue.async {
+            guard shouldScan() else {
+                self.finishFrame()
+                return
             }
-        }
 
-        // Track when the scan started
-        let scanStartTime = Date()
-        perfQueue.async { [weak self] in
-            self?.perfFirstScanStartTime = self?.perfFirstScanStartTime ?? scanStartTime
-        }
+            self.processingQueue.async {
+                guard let image = pixelBuffer.cgImage() else {
+                    self.finishFrame()
+                    return
+                }
+                let exifMetadata = CameraExifMetadata(sampleBuffer: sampleBuffer)
 
-        semaphore.wait()
-        let future = scanner.scanImage(
-            pixelBuffer: pixelBuffer,
-            sampleBuffer: sampleBuffer,
-            cameraProperties: cameraProperties
-        )
+                let scanStartTime = Date()
+                self.perfQueue.async {
+                    self.perfFirstScanStartTime = self.perfFirstScanStartTime ?? scanStartTime
+                }
 
-        futureQueue.sync {
-            self.amountOfFutures += 1
-        }
-
-        future.observe(on: concurrentQueue) { result in
-            switch result {
-            case .success(let scannerOutput):
-                wrappedCompletion(scannerOutput)
-            case .failure(let error):
-                self.analyticsClient.logGenericError(
-                    error: error,
-                    additionalMetadata: [
-                        "error_context": "image_scan",
-                        "scanner_name": self.scannerName.rawValue,
-                        "screen_name": self.screenName.rawValue,
-                    ],
-                    sheetController: self.sheetController
+                let future = scanner.scanImage(
+                    pixelBuffer: pixelBuffer,
+                    sampleBuffer: sampleBuffer,
+                    cameraProperties: cameraProperties
                 )
+
+                future.observe(on: self.processingQueue) { result in
+                    let scanEndTime = Date()
+                    self.perfQueue.async {
+                        self.perfLastScanEndTime = scanEndTime
+                        self.perfNumFramesScanned += 1
+                    }
+
+                    switch result {
+                    case .success(let scannerOutput):
+                        completionQueue.async {
+                            defer { self.finishFrame() }
+                            completion(scannerOutput, image, exifMetadata)
+                        }
+                    case .failure(let error):
+                        self.finishFrame()
+                        self.analyticsClient.logGenericError(
+                            error: error,
+                            additionalMetadata: [
+                                "error_context": "image_scan",
+                                "scanner_name": self.scannerName.rawValue,
+                                "screen_name": self.screenName.rawValue,
+                            ],
+                            sheetController: self.sheetController
+                        )
+                    }
+                }
             }
-
-            // Track when the scan ended
-            let scanEndTime = Date()
-
-            // Update stateful properties on perfQueue
-            self.perfQueue.async {
-                self.perfLastScanEndTime = scanEndTime
-                self.perfNumFramesScanned += 1
-            }
-
-            self.futureQueue.sync {
-                self.amountOfFutures -= 1
-                self.semaphore.signal()
-            }
-
         }
     }
 
-    func reset() {
-        perfQueue.async { [weak self] in
-            self?.perfFirstScanStartTime = nil
-            self?.perfLastScanEndTime = nil
-            self?.perfNumFramesScanned = 0
+    private func beginFrame() -> Bool {
+        admissionLock.lock()
+        defer { admissionLock.unlock() }
+
+        guard !isProcessingFrame, pendingResetCount == 0 else {
+            return false
+        }
+        isProcessingFrame = true
+        frameGroup.enter()
+        return true
+    }
+
+    private func finishFrame() {
+        admissionLock.lock()
+        defer { admissionLock.unlock() }
+
+        isProcessingFrame = false
+        frameGroup.leave()
+    }
+
+    /// Closes admission immediately, then resets only after the accepted frame's
+    /// future and result delivery finish. Nothing waits on the camera or UI queue.
+    func reset<ScannerOutput>(
+        with scanner: AnyImageScanner<ScannerOutput>,
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    ) {
+        admissionLock.lock()
+        pendingResetCount += 1
+        admissionLock.unlock()
+
+        frameGroup.notify(queue: processingQueue) {
+            scanner.reset()
+            self.perfQueue.async {
+                self.perfFirstScanStartTime = nil
+                self.perfLastScanEndTime = nil
+                self.perfNumFramesScanned = 0
+
+                self.admissionLock.lock()
+                self.pendingResetCount -= 1
+                self.admissionLock.unlock()
+
+                queue.async(execute: completion)
+            }
         }
     }
 
