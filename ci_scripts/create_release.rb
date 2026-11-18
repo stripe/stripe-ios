@@ -28,6 +28,12 @@ end
 def create_branch
   return if @is_dry_run
 
+  if @is_headless
+    run_command('git fetch origin master:refs/remotes/origin/master')
+    run_command("git checkout -B #{@branchname} origin/master")
+    return
+  end
+
   run_command("git checkout -b #{@branchname}")
 end
 
@@ -55,11 +61,21 @@ def commit_changes
   return if @is_dry_run
 
   # Commit and push the changes
-  run_command("git add -u &&
-    git commit -m \"Update version to #{@version}\"")
+  run_command('git add -u')
+  if @is_headless && system('git diff --cached --quiet')
+    rputs 'No release file changes to commit.'
+    return
+  end
+
+  run_command("git commit -m \"Update version to #{@version}\"")
 end
 
 def push_changes
+  if @is_headless
+    run_command("git push --force-with-lease -u origin #{@branchname}")
+    return
+  end
+
   run_command("git push origin #{@branchname}") unless @is_dry_run
 end
 
@@ -85,12 +101,20 @@ end
 
 def run_download_localized_strings
   return if @is_dry_run
+  if @is_headless
+    rputs 'Skipping localized string download in headless mode.'
+    return
+  end
+
   `sh ci_scripts/download_localized_strings_from_lokalise.sh`
 end
 
-def create_pr
-  # Create a new pull request from the branch
-  pr_body = %{
+def pr_title
+  "Release version #{@version}"
+end
+
+def pr_body
+  body = %{
   - [ ] Verify CHANGELOG
     - [ ] Ensure notes for this release are not empty
     - [ ] Release date correct?
@@ -104,10 +128,34 @@ def create_pr
   - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
 }
 
+  if @is_headless
+    body += "  - [ ] Run `ci_scripts/download_localized_strings_from_lokalise.sh` locally if localized strings need to be refreshed for this release.\n"
+  end
+
   # Add React Native compatibility check if versions match
   if should_test_react_native?(@version)
     rn_version = get_stripe_react_native_stripe_ios_version
-    pr_body += "  - [ ] stripe-react-native is pinned to #{rn_version}.x and will use the proposed SDK version #{@version}. A stripe-react-native CI run has been kicked off that uses this branch [here](https://app.bitrise.io/app/cf3f9f9d-0fa5-484a-a09b-5649a1512f6b). Ensure that it passes.\n"
+    body += "  - [ ] stripe-react-native is pinned to #{rn_version}.x and will use the proposed SDK version #{@version}. A stripe-react-native CI run has been kicked off that uses this branch [here](https://app.bitrise.io/app/cf3f9f9d-0fa5-484a-a09b-5649a1512f6b). Ensure that it passes.\n"
+  end
+
+  body
+end
+
+def create_pr_url
+  "https://github.com/stripe/stripe-ios/compare/master...#{@branchname}?expand=1"
+end
+
+def print_headless_pr_details
+  rputs 'Headless release branch is ready.'
+  puts "\nPR title:\n#{pr_title}"
+  puts "\nPR body:\n#{pr_body}"
+  puts "\nCreate PR URL:\n#{create_pr_url}"
+end
+
+def create_pr
+  if @is_headless
+    print_headless_pr_details
+    return
   end
 
   return if @is_dry_run
@@ -116,13 +164,13 @@ def create_pr
     'stripe/stripe-ios',
     'master',
     @branchname,
-    "Release version #{@version}",
+    pr_title,
     pr_body
   )
 end
 
 def propose_release
-  return if @is_dry_run
+  return if @is_dry_run || @is_headless
 
   # Lookup PR
   all_prs = @github_client.pull_requests('stripe/stripe-ios', state: 'open')
