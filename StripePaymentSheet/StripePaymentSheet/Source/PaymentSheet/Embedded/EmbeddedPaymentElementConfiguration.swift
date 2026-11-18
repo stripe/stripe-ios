@@ -202,7 +202,8 @@ extension EmbeddedPaymentElement {
 
         /// Controls whether a returning Link customer can verify inside the view. When allowed, the Link row moves to the top and expands to show
         /// a verification code field, and the code is sent once the view is visible. Defaults to `true`.
-        @_spi(EmbeddedLinkInlineVerificationPrivatePreview) public var allowsLinkInlineVerification: Bool = true
+        /// TODO[mats]: Expose this property
+        @_spi(InternalOnlyAPI) public var allowsLinkInlineVerification: Bool = true
 
         internal var linkPaymentMethodsOnly: Bool = false
 
