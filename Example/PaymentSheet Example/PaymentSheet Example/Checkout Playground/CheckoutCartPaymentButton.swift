@@ -6,7 +6,6 @@
 //
 
 @_spi(InternalOnlyAPI) import StripePaymentSheet
-@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 struct CheckoutCartPaymentMethodSection: View {
@@ -145,7 +144,7 @@ struct CheckoutCartBuyButton: View {
     var body: some View {
         Button {
             Task { @MainActor in
-                onConfirm(await CheckoutPlayground.confirm(checkout))
+                onConfirm(await checkout.confirm())
             }
         } label: {
             HStack {
@@ -191,29 +190,6 @@ private struct CheckoutEmbeddedScreen: View {
                     }
                 }
             }
-        }
-    }
-}
-
-// The playground owns email collection for ordinary Payment Element payments.
-// Wallets collect the customer's email in their own confirmation flow.
-extension CheckoutPlayground {
-    @MainActor
-    static func confirm(
-        _ checkout: CheckoutElementsController,
-        from presentingViewController: UIViewController? = nil
-    ) async -> CheckoutElementsController.ConfirmResult {
-        let paymentMethodType = checkout.session.paymentOption?.paymentMethodType
-        if paymentMethodType != "apple_pay" && paymentMethodType != "link",
-           !STPEmailAddressValidator.stringIsValidEmailAddress(checkout.session.email ?? "") {
-            return .failed(EmailValidationError())
-        }
-        return await checkout.confirm(from: presentingViewController)
-    }
-
-    private struct EmailValidationError: LocalizedError {
-        var errorDescription: String? {
-            "Enter a valid email address using Edit email before paying."
         }
     }
 }

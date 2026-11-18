@@ -196,27 +196,6 @@ enum CheckoutPlayground {
         }
 
         var localDefaultEmail: String? { source == .local ? email : nil }
-
-        init(source: EmailSource = .checkoutSession, value: String = "jenny@example.com") {
-            self.source = source
-            self.value = value
-        }
-
-        private enum CodingKeys: String, CodingKey {
-            case source, value
-        }
-
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            if try container.decode(String.self, forKey: .source) == "none" {
-                // Preserve the empty email in settings saved before None was removed.
-                source = .local
-                value = ""
-            } else {
-                source = try container.decode(EmailSource.self, forKey: .source)
-                value = try container.decode(String.self, forKey: .value)
-            }
-        }
     }
 
     enum CustomerType: String, CaseIterable, Identifiable, Codable {

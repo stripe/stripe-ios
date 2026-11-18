@@ -83,11 +83,11 @@ struct CheckoutCartContentView: View {
                     emailDraft = checkout.session.email ?? ""
                     showsEmailEditor = true
                 }
-                .disabled(emailSource.isServer)
+                .disabled(emailSource != .local)
             }
             Text(checkout.session.email ?? "No email")
                 .accessibilityIdentifier("checkout_session_email")
-            Text(emailSource.isServer ? "Server email cannot be changed in checkout." : "Enter an email before paying.")
+            Text(emailSource.isServer ? "Server email cannot be changed in checkout." : emailSource == .local ? "Local email" : "No email source selected.")
                 .font(.caption)
                 .foregroundColor(.secondary)
             if let emailUpdateError {
