@@ -36,7 +36,7 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
 func logUnexpectedCheckoutElementsErrorAndAssert(
     _ message: String,
     apiClient: STPAPIClient,
-    file: StaticString = #file,
+    file: StaticString = #fileID,
     line: UInt = #line,
     analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
 ) {
