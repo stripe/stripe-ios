@@ -3,12 +3,12 @@ MAJOR
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
-* [Changed] Added @MainActor isolation to PaymentSheet and PaymentSheet.FlowController. Initialize and access these objects from the main actor.
+* [Changed] Added `@MainActor` isolation to `PaymentSheet` and `PaymentSheet.FlowController`. Initialize and access these objects from the main actor.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
 * [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
 
 ### CustomerSheet
-* [Changed] Added @MainActor isolation to CustomerSheet. Initialize and access from the main actor.
+* [Changed] Added `@MainActor` isolation to `CustomerSheet`. Initialize and access from the main actor.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added the optional `linkCardBrandAcceptance` parameter to `CryptoOnrampCoordinator.create(...)` to allow or block card brands in the Link UI. Defaults to accepting all supported brands.
