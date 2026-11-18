@@ -146,6 +146,11 @@ public final class CheckoutElementsController: ObservableObject {
                 configuration: configuration,
                 paymentElementConfiguration: handleSessionChangeResult.paymentElement?.flowController.configuration
             )
+            CheckoutElementsControllerLoader.logLinkAvailability(
+                session: self.session,
+                configuration: configuration,
+                paymentElementConfiguration: handleSessionChangeResult.paymentElement?.flowController.configuration
+            )
             // 6. Initialize PE
             if let paymentElementInitParameters = handleSessionChangeResult.paymentElement {
                 self.paymentElement = try PaymentElement(
@@ -612,6 +617,11 @@ extension CheckoutElementsController {
     func updateForSessionChange() {
         guard sessionIsOpen else { return }
         let result = CheckoutElementsControllerLoader.handleSessionChange(checkout: self)
+        CheckoutElementsControllerLoader.logLinkAvailability(
+            session: session,
+            configuration: configuration,
+            paymentElementConfiguration: result.paymentElement?.flowController.configuration
+        )
         // Update confirmation challenge. I'm not sure if this is necessary, but the intents integration does it too on `update`
         confirmationChallenge = result.confirmationChallenge
         // Update PE
