@@ -134,7 +134,7 @@ import UIKit
         return paymentDetails
     }
 
-    private var internalPaymentOption: PaymentOption? {
+    var internalPaymentOption: PaymentOption? {
         didSet {
             updatePaymentMethodPreview()
         }
@@ -694,7 +694,7 @@ import UIKit
             return
         }
 
-        if elementsSession.linkPassthroughModeEnabled {
+        if selectedPaymentDetails.shouldSharePaymentDetails(elementsSession) {
             createPaymentMethodInPassthroughMode(
                 paymentDetails: selectedPaymentDetails,
                 consumerSessionClientSecret: consumerSessionClientSecret,
@@ -1161,7 +1161,8 @@ import UIKit
             overridePublishableKey: overridePublishableKey,
             allowRedisplay: nil,
             cvc: paymentDetails.cvc,
-            expectedPaymentMethodType: nil,
+            expectedPaymentMethodType: paymentDetails.isIndiaCardOverride(elementsSession)
+                ? paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession) : nil,
             billingPhoneNumber: nil,
             clientAttributionMetadata: nil // LinkController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id so we don't want to send CAM here
         ) { shareResult in

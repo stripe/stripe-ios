@@ -96,6 +96,262 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         }
     }
 
+    func testIndiaCardPreservesOnSessionCardSetupOptions() {
+        var json = MockJson.paymentIntent
+        json["payment_method_options"] = [
+            "card": ["setup_future_usage": "on_session"],
+            "link": ["setup_future_usage": "off_session"],
+        ]
+        let intent = Intent.paymentIntent(STPPaymentIntent.decodedObject(fromAPIResponse: json)!)
+        stubConfirmPaymentExpecting(isPaymentIntent: true, paymentMethodId: MockParams.cardPaymentMethod.stripeId, setupFutureUsage: "on_session")
+        confirmReturningIndiaCard(intent: intent)
+    }
+
+    func testIndiaCardConfirmsSetupIntentWithSharedCard() {
+        stubConfirmPaymentExpecting(isPaymentIntent: false, paymentMethodId: MockParams.cardPaymentMethod.stripeId)
+        confirmReturningIndiaCard(intent: .setupIntent(STPSetupIntent.decodedObject(fromAPIResponse: MockJson.setupIntent)!))
+    }
+
+    private func confirmReturningIndiaCard(intent: Intent) {
+        stubLinkShareExpecting(consumerSessionClientSecret: "cs_xxx", paymentMethodID: "pd_india", expectedType: "card")
+        stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
+        let configuration = MockParams.configurationWithCustomer(pk: MockParams.publicKey)
+        let account = PaymentSheetLinkAccount(
+            email: "test@example.com", session: .make(
+                clientSecret: "cs_xxx", emailAddress: "test@example.com",
+                redactedFormattedPhoneNumber: "(***) *** **55", unredactedPhoneNumber: "(555) 555-5555",
+                phoneNumberCountry: "US", verificationSessions: [.init(type: .sms, state: .verified)],
+                supportedPaymentDetailsTypes: [ParsedEnum(.card)], mobileFallbackWebviewParams: nil
+            ), publishableKey: MockParams.publicKey, displayablePaymentDetails: nil,
+            useMobileEndpoints: false, canSyncAttestationState: false
+        )
+        let details = ConsumerPaymentDetails(
+            stripeID: "pd_india", details: .card(card: .init(
+                expiryYear: 2055, expiryMonth: 12, brand: "visa", networks: ["visa"],
+                last4: "4242", funding: .credit, checks: nil, country: "IN"
+            )), billingAddress: nil, billingEmailAddress: nil, nickname: nil, isDefault: true
+        )
+        let completed = expectation(description: "shared card confirmed")
+        PaymentSheet.confirm(
+            configuration: configuration, authenticationContext: self, intent: intent,
+            elementsSession: .indiaCardElementsSession(),
+            paymentOption: .link(option: .withPaymentDetails(
+                brand: .link, account: account, paymentDetails: details, confirmationExtras: nil, shippingAddress: nil
+            )), paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient), analyticsHelper: ._testValue()
+        ) { result, _ in
+            guard case .completed = result else {
+                XCTFail("Expected shared card confirmation to complete")
+                completed.fulfill()
+                return
+            }
+            completed.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testLinkControllerIndiaCardCreationSharesAndUsesOverrideKey() {
+        let configuration = MockParams.configuration(pk: MockParams.publicKey)
+        let account = PaymentSheetLinkAccount(
+            email: "test@example.com",
+            session: .make(
+                clientSecret: "cs_xxx", emailAddress: "test@example.com",
+                redactedFormattedPhoneNumber: "(***) *** **55", unredactedPhoneNumber: "(555) 555-5555",
+                phoneNumberCountry: "US", verificationSessions: [.init(type: .sms, state: .verified)],
+                supportedPaymentDetailsTypes: [ParsedEnum(.card)], mobileFallbackWebviewParams: nil
+            ),
+            publishableKey: MockParams.publicKey, displayablePaymentDetails: nil,
+            useMobileEndpoints: false, canSyncAttestationState: false
+        )
+        let previousAccount = LinkAccountContext.shared.account
+        LinkAccountContext.shared.account = account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        let details = ConsumerPaymentDetails(
+            stripeID: "pd_india", details: .card(card: .init(
+                expiryYear: 2055, expiryMonth: 12, brand: "visa", networks: ["visa"],
+                last4: "4242", funding: .credit, checks: nil, country: "IN"
+            )), billingAddress: nil, billingEmailAddress: nil, nickname: nil, isDefault: true
+        )
+        let controller = LinkController(
+            apiClient: configuration.apiClient, mode: .payment,
+            elementsSession: .indiaCardElementsSession(),
+            intent: .deferredIntent(intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.paymentIntentClientSecret)),
+            paymentElementConfiguration: configuration, linkBrand: .link, appearance: nil,
+            configuration: nil, analyticsHelper: ._testValue(), requestSurface: .default
+        )
+        controller.internalPaymentOption = .link(option: .withPaymentDetails(
+            brand: .link, account: account, paymentDetails: details, confirmationExtras: nil, shippingAddress: nil
+        ))
+        let share = expectation(description: "standalone India card shared once")
+        share.assertForOverFulfill = true
+        stub { $0.url?.pathComponents.last == "share" } response: { [self] request in
+            let params = bodyParams(from: request)
+            assertParam(params, named: "id", is: "pd_india")
+            assertParam(params, named: "expected_payment_method_type", is: "card")
+            XCTAssertTrue(request.value(forHTTPHeaderField: "Authorization")?.contains("pk_override") == true)
+            share.fulfill()
+            return HTTPStubsResponse(jsonObject: ["payment_method": MockJson.cardPaymentMethod], statusCode: 200, headers: nil)
+        }
+        let completed = expectation(description: "card PaymentMethod returned")
+        controller.createPaymentMethod(overridePublishableKey: "pk_override") { result in
+            switch result {
+            case .success(let paymentMethod):
+                XCTAssertEqual(paymentMethod.stripeId, MockParams.cardPaymentMethod.stripeId)
+                XCTAssertEqual(paymentMethod.type, .card)
+            case .failure(let error):
+                XCTFail("Unexpected error: \(error)")
+            }
+            completed.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testWebFallbackCardIsConfirmedDirectly() {
+        stubConfirmPaymentExpecting(isPaymentIntent: true, paymentMethodId: MockParams.cardPaymentMethod.stripeId)
+        let configuration = MockParams.configuration(pk: MockParams.publicKey)
+        let completed = expectation(description: "web card confirmed")
+        PaymentSheet.confirm(
+            configuration: configuration, authenticationContext: self,
+            intent: .deferredIntent(intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.paymentIntentClientSecret)),
+            elementsSession: .indiaCardElementsSession(),
+            paymentOption: .link(option: .withPaymentMethod(brand: .link, paymentMethod: MockParams.cardPaymentMethod)),
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient), analyticsHelper: ._testValue()
+        ) { _, _ in completed.fulfill() }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testIndiaCardShareFailureDoesNotConfirmLinkOrRawCard() {
+        stubLinkShareExpecting(consumerSessionClientSecret: "cs_xxx", paymentMethodID: "pd1", expectedType: "card", fail: true)
+
+        let configuration = MockParams.configurationWithCustomer(pk: MockParams.publicKey)
+        let exp = expectation(description: "confirm completed")
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+        let elementsSession = STPElementsSession.indiaCardElementsSession()
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .deferredIntent(intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.paymentIntentClientSecret)),
+            elementsSession: elementsSession,
+            paymentOption: .link(
+                option: .withPaymentDetails(
+                    brand: .link,
+                    account: .init(
+                        email: "test@example.com",
+                        session: .make(
+                            clientSecret: "cs_xxx",
+                            emailAddress: "test@example.com",
+                            redactedFormattedPhoneNumber: "(***) *** **55",
+                            unredactedPhoneNumber: "(555) 555-5555",
+                            phoneNumberCountry: "US",
+                            verificationSessions: [.init(type: .sms, state: .verified)],
+                            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+                            mobileFallbackWebviewParams: nil
+                        ),
+                        publishableKey: MockParams.publicKey,
+                        displayablePaymentDetails: nil,
+                        useMobileEndpoints: false,
+                        canSyncAttestationState: false
+                    ),
+                    paymentDetails: .init(
+                        stripeID: "pd1",
+                        details: .card(card: .init(
+                            expiryYear: 2055,
+                            expiryMonth: 12,
+                            brand: "visa",
+                            networks: ["visa"],
+                            last4: "1234",
+                            funding: .credit,
+                            checks: nil,
+                            country: "COUNTRY_IN"
+                        )),
+                        billingAddress: nil,
+                        billingEmailAddress: nil,
+                        nickname: nil,
+                        isDefault: true
+                    ),
+                    confirmationExtras: nil,
+                    shippingAddress: nil
+                )
+            ),
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { result, _ in
+                guard case .failed = result else {
+                    XCTFail("A failed India share must fail confirmation")
+                    exp.fulfill()
+                    return
+                }
+                exp.fulfill()
+            }
+        )
+
+        waitForExpectations(timeout: 10)
+    }
+
+    func testIndiaCardInPaymentMethodModeCallsShareOnce() {
+        stubConfirmPaymentExpecting(isPaymentIntent: true, paymentMethodId: MockParams.cardPaymentMethod.stripeId)
+        stubLinkShareExpecting(consumerSessionClientSecret: "cs_xxx", paymentMethodID: "pd1", expectedType: "card")
+        stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
+
+        let configuration = MockParams.configurationWithCustomer(pk: MockParams.publicKey)
+        let exp = expectation(description: "confirm completed")
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+        let elementsSession = STPElementsSession.indiaCardElementsSession()
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .deferredIntent(intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.paymentIntentClientSecret)),
+            elementsSession: elementsSession,
+            paymentOption: .link(
+                option: .withPaymentDetails(
+                    brand: .link,
+                    account: .init(
+                        email: "test@example.com",
+                        session: .make(
+                            clientSecret: "cs_xxx",
+                            emailAddress: "test@example.com",
+                            redactedFormattedPhoneNumber: "(***) *** **55",
+                            unredactedPhoneNumber: "(555) 555-5555",
+                            phoneNumberCountry: "US",
+                            verificationSessions: [.init(type: .sms, state: .verified)],
+                            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+                            mobileFallbackWebviewParams: nil
+                        ),
+                        publishableKey: MockParams.publicKey,
+                        displayablePaymentDetails: nil,
+                        useMobileEndpoints: false,
+                        canSyncAttestationState: false
+                    ),
+                    paymentDetails: .init(
+                        stripeID: "pd1",
+                        details: .card(card: .init(
+                            expiryYear: 2055,
+                            expiryMonth: 12,
+                            brand: "visa",
+                            networks: ["visa"],
+                            last4: "1234",
+                            funding: .credit,
+                            checks: nil,
+                            country: "COUNTRY_IN"
+                        )),
+                        billingAddress: nil,
+                        billingEmailAddress: nil,
+                        nickname: nil,
+                        isDefault: true
+                    ),
+                    confirmationExtras: nil,
+                    shippingAddress: nil
+                )
+            ),
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { _, _ in
+                exp.fulfill()
+            }
+        )
+
+        waitForExpectations(timeout: 10)
+    }
+
     func testPassthroughModeCallsSharePaymentDetails() {
         stubConfirmPaymentExpecting(isPaymentIntent: true, paymentMethodId: MockParams.cardPaymentMethod.stripeId)
         stubLinkShareExpecting(consumerSessionClientSecret: "cs_xxx", paymentMethodID: "pd1")
@@ -150,6 +406,139 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                     shippingAddress: nil
                 )
             ),
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { _, _ in
+                exp.fulfill()
+            }
+        )
+
+        waitForExpectations(timeout: 10)
+    }
+
+    func testIndiaCardInlineShareFailureDoesNotUseRawCardFallback() {
+        stubLinkSignup()
+        stubLinkCreatePaymentDetails(country: "COUNTRY_IN")
+        stubLinkShareExpecting(consumerSessionClientSecret: "pscs_abc123", paymentMethodID: "csmrpd_test_61QrpvXKaugSBvBsB41C40Oy4de1NQS8", expectedType: "card", allowRedisplay: "always", cvc: "123", fail: true)
+
+        let exp = expectation(description: "confirm completed")
+
+        var configuration = MockParams.configuration(pk: MockParams.publicKey)
+        configuration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123")
+
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+        let elementsSession = STPElementsSession.linkElementsSessionWithCustomerSessionAndIndiaOverride
+
+        var paymentIntentJSON = MockJson.paymentIntent
+        paymentIntentJSON["payment_method_types"] = ["card", "link"]
+
+        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJSON)!
+
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
+        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
+        confirmParams.paymentMethodParams.card?.expYear = 2040
+        confirmParams.paymentMethodParams.card?.cvc = "123"
+
+        // User selected to save the payment method
+        confirmParams.saveForFutureUseCheckboxState = .selected
+
+        // We're in payment method mode, so the PaymentOption is Link
+        let paymentOption: PaymentOption = .link(
+            option: .signUp(
+                brand: .link,
+                account: .init(
+                    email: "email@email.com",
+                    session: nil,
+                    publishableKey: "pk_123",
+                    displayablePaymentDetails: nil,
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
+                ),
+                phoneNumber: PhoneNumber(number: "5555555555", countryCode: "US")!,
+                consentAction: .implied_v0_0,
+                legalName: nil,
+                intentConfirmParams: confirmParams
+            )
+        )
+
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .paymentIntent(paymentIntent),
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { result, _ in
+                guard case .failed = result else {
+                    XCTFail("A failed India share must fail confirmation")
+                    exp.fulfill()
+                    return
+                }
+                exp.fulfill()
+            }
+        )
+
+        waitForExpectations(timeout: 10)
+    }
+
+    func testIndiaCardInlineSignupSharesReturnedDetails() {
+        stubLinkSignup()
+        stubLinkCreatePaymentDetails(country: "COUNTRY_IN")
+        stubLinkShareExpecting(consumerSessionClientSecret: "pscs_abc123", paymentMethodID: "csmrpd_test_61QrpvXKaugSBvBsB41C40Oy4de1NQS8", expectedType: "card", allowRedisplay: "always", cvc: "123")
+        stubConfirmPaymentExpecting(isPaymentIntent: true, paymentMethodId: MockParams.cardPaymentMethod.stripeId, setupFutureUsage: "off_session")
+        stubLinkLogout(consumerSessionClientSecret: "pscs_abc123")
+
+        let exp = expectation(description: "confirm completed")
+
+        var configuration = MockParams.configuration(pk: MockParams.publicKey)
+        configuration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123")
+
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+        let elementsSession = STPElementsSession.linkElementsSessionWithCustomerSessionAndIndiaOverride
+
+        var paymentIntentJSON = MockJson.paymentIntent
+        paymentIntentJSON["payment_method_types"] = ["card", "link"]
+
+        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJSON)!
+
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
+        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
+        confirmParams.paymentMethodParams.card?.expYear = 2040
+        confirmParams.paymentMethodParams.card?.cvc = "123"
+
+        // User selected to save the payment method
+        confirmParams.saveForFutureUseCheckboxState = .selected
+
+        // We're in payment method mode, so the PaymentOption is Link
+        let paymentOption: PaymentOption = .link(
+            option: .signUp(
+                brand: .link,
+                account: .init(
+                    email: "email@email.com",
+                    session: nil,
+                    publishableKey: "pk_123",
+                    displayablePaymentDetails: nil,
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
+                ),
+                phoneNumber: PhoneNumber(number: "5555555555", countryCode: "US")!,
+                consentAction: .implied_v0_0,
+                legalName: nil,
+                intentConfirmParams: confirmParams
+            )
+        )
+
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .paymentIntent(paymentIntent),
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             analyticsHelper: ._testValue(),
             completion: { _, _ in
@@ -296,9 +685,14 @@ private extension PaymentSheetAPIMockTest {
     func stubLinkShareExpecting(
         consumerSessionClientSecret: String,
         paymentMethodID: String,
+        expectedType: String? = nil,
+        allowRedisplay: String? = nil,
+        cvc: String? = nil,
+        fail: Bool = false,
         line: UInt = #line
     ) {
         let exp = expectation(description: "share payment method requested")
+        exp.assertForOverFulfill = true
 
         stub { urlRequest in
             guard let pathComponents = urlRequest.url?.pathComponents else { return false }
@@ -310,8 +704,20 @@ private extension PaymentSheetAPIMockTest {
             assertParam(params, named: "request_surface", is: "ios_payment_element", line: line)
             assertParam(params, named: "expand[0]", is: "payment_method", line: line)
             assertParam(params, named: "id", is: paymentMethodID, line: line)
+            if let expectedType {
+                assertParam(params, named: "expected_payment_method_type", is: expectedType, line: line)
+            }
+            if let allowRedisplay {
+                assertParam(params, named: "allow_redisplay", is: allowRedisplay, line: line)
+            }
+            if let cvc {
+                assertParam(params, named: "payment_method_options[card][cvc]", is: cvc, line: line)
+            }
 
             defer { exp.fulfill() }
+            if fail {
+                return HTTPStubsResponse(jsonObject: ["error": ["message": "share failed", "type": "api_error"]], statusCode: 400, headers: nil)
+            }
             let json = ["payment_method": MockJson.cardPaymentMethod]
 
             return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
@@ -380,6 +786,7 @@ private extension PaymentSheetAPIMockTest {
     }
 
     func stubLinkCreatePaymentDetails(
+        country: String = "COUNTRY_US",
         line: UInt = #line
     ) {
         let exp = expectation(description: "Link signup")
@@ -400,7 +807,7 @@ private extension PaymentSheetAPIMockTest {
                       "cvc_check" : "STATE_INVALID",
                       "address_line1_check" : "STATE_INVALID"
                     },
-                    "country" : "COUNTRY_US",
+                    "country" : "\(country)",
                     "exp_month" : 12,
                     "funding" : "CREDIT",
                     "preferred_network" : null,
@@ -454,11 +861,11 @@ private extension PaymentSheetAPIMockTest {
         }
     }
 
-    func assertParam(_ params: [String: String], named name: String, is value: String?, line: UInt) {
+    func assertParam(_ params: [String: String], named name: String, is value: String?, line: UInt = #line) {
         XCTAssertEqual(params[name], value, name, line: line)
     }
 
-    func bodyParams(from request: URLRequest, line: UInt) -> [String: String] {
+    func bodyParams(from request: URLRequest, line: UInt = #line) -> [String: String] {
         return RequestBodyTestHelpers.formEncodedBodyParams(from: request, omittingEmptyValues: true, line: line)
     }
 }

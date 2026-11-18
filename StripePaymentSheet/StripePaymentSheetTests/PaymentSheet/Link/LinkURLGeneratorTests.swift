@@ -16,6 +16,21 @@ import XCTest
 
 @MainActor
 class LinkURLGeneratorTests: XCTestCase {
+    func testIndiaOverrideFlagKeepsWebFallbackInPaymentMethodMode() throws {
+        let config = PaymentSheet.Configuration()
+        config.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in "" }
+        let session = STPElementsSession.indiaCardElementsSession()
+        let params = try LinkURLGenerator.linkParams(
+            configuration: config,
+            intent: .deferredIntent(intentConfig: intentConfig),
+            elementsSession: session
+        )
+        XCTAssertEqual(params.paymentObject, .link_payment_method)
+        XCTAssertEqual(params.flags["link_route_india_card_to_passthrough"], true)
+        XCTAssertFalse(session.linkPassthroughModeEnabled)
+    }
+
     override func setUp() {
         super.setUp()
         LinkAccountContext.shared.account = nil
@@ -454,6 +469,21 @@ extension STPElementsSession {
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
 
+    static func indiaCardElementsSession(flag: Bool? = true, mode: String? = "LINK_PAYMENT_METHOD") -> STPElementsSession {
+        var settings: [String: Any] = [
+            "link_funding_sources": ["CARD"],
+            "link_passthrough_mode_enabled": false,
+        ]
+        settings["link_route_india_card_to_passthrough"] = flag
+        settings["link_mode"] = mode
+        return STPElementsSession.decodedObject(fromAPIResponse: [
+            "payment_method_preference": ["ordered_payment_method_types": ["card", "link"], "country_code": "US"],
+            "session_id": "123",
+            "config_id": "123",
+            "link_settings": settings,
+        ])!
+    }
+
     static var linkElementsSession: STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
@@ -463,6 +493,47 @@ extension STPElementsSession {
                                           "link_settings": ["link_funding_sources": ["CARD"],
                                                             "link_passthrough_mode_enabled": false,
                                                            ],
+        ]
+
+        return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
+    }
+
+    static var linkElementsSessionWithCustomerSessionAndIndiaOverride: STPElementsSession {
+        let apiResponse: [String: Any] = [
+            "payment_method_preference": [
+                "ordered_payment_method_types": ["card", "link"],
+                "country_code": "US",
+            ],
+            "session_id": "123",
+            "config_id": "123",
+            "apple_pay_preference": "enabled",
+            "link_settings": [
+                "link_funding_sources": ["CARD"],
+                "link_passthrough_mode_enabled": false,
+                "link_route_india_card_to_passthrough": true,
+            ],
+            "customer": [
+                "customer_session": [
+                    "id": "cuss_123",
+                    "customer": "cus_123",
+                    "api_key": "ek_123",
+                    "api_key_expiry": 1716580929,
+                    "livemode": false,
+                    "components": [
+                        "mobile_payment_element": [
+                            "enabled": true,
+                            "features": [
+                              "payment_method_save": "enabled",
+                              "payment_method_remove": "enabled",
+                            ],
+                        ],
+                        "customer_sheet": [
+                          "enabled": false
+                        ],
+                    ],
+                ],
+                "payment_methods": [],
+            ],
         ]
 
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
