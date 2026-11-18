@@ -220,6 +220,56 @@ struct CustomerProvider {
         return updatedPaymentMethod
     }
 
+    @MainActor
+    func detach(
+        paymentMethod: STPPaymentMethod,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient
+    ) {
+        // Removal is optimistic; callers update their UI without waiting for the network response.
+        switch backing {
+        case .checkoutSession(let session):
+            Task {
+                try? await apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCheckoutSession: session.id,
+                    clientSecret: session.clientSecret
+                )
+            }
+        case .customer(let customer):
+            guard let customer,
+                  let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+                logMissingEphemeralKey()
+                return
+            }
+            switch customer.customerAccessProvider {
+            case .customerSession(let clientSecret):
+                // The Customer the CustomerSession is scoped to. For a CustomerSession created with a customer-configured
+                // Account, this is the Account's backing Customer, which v1 endpoints require instead of the merchant's `acct_` ID.
+                if paymentMethod.type == .card,
+                   let customerId = customer.resolvedID(elementsSession: elementsSession) {
+                    apiClient.detachPaymentMethodRemoveDuplicates(
+                        paymentMethod.stripeId,
+                        customerId: customerId,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                } else {
+                    apiClient.detachPaymentMethod(
+                        paymentMethod.stripeId,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                }
+            case .legacyCustomerEphemeralKey:
+                apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCustomerUsing: ephemeralKey
+                ) { _ in }
+            }
+        }
+    }
+
     private func logMissingEphemeralKey() {
         let errorAnalytic = ErrorAnalytic(
             event: .unexpectedPaymentSheetError,
