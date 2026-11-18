@@ -8,6 +8,9 @@ MAJOR
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
 * [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
 
+### Payments
+* [Changed] Marked `STPPaymentHandlerActionStatus` as `@frozen`, allowing exhaustive switches over `.succeeded`, `.canceled`, and `.failed`.
+
 ### CryptoOnramp (Alpha)
 * [Added] Added the optional `linkCardBrandAcceptance` parameter to `CryptoOnrampCoordinator.create(...)` to allow or block card brands in the Link UI. Defaults to accepting all supported brands.
 
