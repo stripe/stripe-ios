@@ -319,6 +319,20 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         XCTAssertFalse(uploaders.selfie.isTestMode)
     }
 
+    func testSelfieUploaderUsesServerMediaPipeCropPadding() throws {
+        let page = try VerificationPageMock.response200.make()
+        let uploader = try makeImageUploaders(staticContent: page).selfie
+
+        XCTAssertEqual(uploader.mediaPipeCropPadding, .faceLandmarks(side: 0.3, top: 0.4, bottom: 0.2))
+    }
+
+    func testSelfieUploaderDefaultsWhenMediaPipeCropPaddingIsMissing() throws {
+        let page = try VerificationPageMock.response200NoExp.make()
+        let uploader = try makeImageUploaders(staticContent: page).selfie
+
+        XCTAssertEqual(uploader.mediaPipeCropPadding, .faceLandmarks(side: 0.05, top: 0.45, bottom: 0.35))
+    }
+
     func testNextViewControllerSuccess() throws {
         let exp = expectation(description: "testNextViewControllerSuccess")
         try nextViewController(

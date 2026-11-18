@@ -7,6 +7,9 @@
 //
 
 import CoreGraphics
+import CoreMedia
+@_spi(InternalOnlyAPI) import StripeCameraCore
+@_spi(InternalOnlyAPI) import StripeCore
 import XCTest
 
 @testable import StripeIdentity
@@ -76,5 +79,51 @@ final class FaceScannerOutputTest: XCTestCase {
         // Then
         XCTAssertNil(output.validationIssue)
         XCTAssertTrue(output.isValid)
+        XCTAssertFalse(output.isFromMediaPipe)
+    }
+
+    func testMediaPipeSourceIsPreservedWithoutPose() throws {
+        // Given a MediaPipe detector result without pose data
+        let faceRect = CGRect(x: 0.3, y: 0.3, width: 0.4, height: 0.4)
+        let scanner = FaceScanner(
+            faceGeometryDetector: FaceGeometryDetectorMock(
+                geometry: .init(
+                    faceDetectorOutput: .init(predictions: [.init(rect: faceRect, score: 0.9)]),
+                    facePose: nil
+                )
+            ),
+            configuration: Self.scannerConfiguration
+        )
+        let sampleBuffer = try XCTUnwrap(CapturedImageMock.frontDriversLicense.image.convertToSampleBuffer())
+        let pixelBuffer = try XCTUnwrap(CMSampleBufferGetImageBuffer(sampleBuffer))
+        let completion = expectation(description: "Face scan completed")
+        var scanResult: Result<FaceScannerOutput, Error>?
+
+        // When the scanner processes the frame
+        scanner.scanImage(
+            pixelBuffer: pixelBuffer,
+            sampleBuffer: sampleBuffer,
+            cameraProperties: nil
+        ).observe { result in
+            scanResult = result
+            completion.fulfill()
+        }
+        wait(for: [completion], timeout: 1)
+
+        // Then the output preserves its source, original bounds, and first-frame motion blur gate
+        let output = try XCTUnwrap(scanResult).get()
+        XCTAssertTrue(output.isFromMediaPipe)
+        XCTAssertNil(output.facePose)
+        XCTAssertEqual(output.faceRect, faceRect)
+        XCTAssertEqual(output.validationIssue, .motionBlur)
+        XCTAssertFalse(output.isValid)
+    }
+}
+
+private struct FaceGeometryDetectorMock: FaceGeometryDetector {
+    let geometry: FaceGeometry
+
+    func detectFace(pixelBuffer: CVPixelBuffer) throws -> FaceGeometry? {
+        return geometry
     }
 }

@@ -16,6 +16,9 @@ extension StripeAPI {
         let filePurpose: String
         let highResImageCompressionQuality: CGFloat
         let highResImageCropPadding: CGFloat
+        let mediaPipeCropSidePadding: CGFloat?
+        let mediaPipeCropTopPadding: CGFloat?
+        let mediaPipeCropBottomPadding: CGFloat?
         let highResImageMaxDimension: Int
         let lowResImageCompressionQuality: CGFloat
         let lowResImageMaxDimension: Int
