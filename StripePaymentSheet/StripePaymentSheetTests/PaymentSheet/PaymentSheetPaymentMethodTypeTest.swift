@@ -109,7 +109,11 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertNil(paymentIntent.shipping)
         let intents: [Intent] = [
             .paymentIntent(paymentIntent),
-            ._testDeferredIntent(paymentMethodTypes: paymentMethodTypes),
+            .deferredIntent(intentConfig: .init(
+                mode: .payment(amount: 1010, currency: "USD"),
+                paymentMethodTypes: paymentMethodTypes.compactMap { STPPaymentMethod.string(from: $0) },
+                confirmHandler: { _, _ in return "" }
+            )),
         ]
         let configurations: [PaymentElementConfiguration] = [PaymentSheet.Configuration(), EmbeddedPaymentElement.Configuration()]
 
