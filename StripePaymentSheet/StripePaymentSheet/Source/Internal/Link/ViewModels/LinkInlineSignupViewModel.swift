@@ -67,6 +67,19 @@ final class LinkInlineSignupViewModel {
 
     private var didInteractWithSaveCheckbox = false
 
+    /// True if the customer unchecked the signup box before the form was rebuilt.
+    private let previouslyDeclinedSignup: Bool
+
+    /// True if the customer unchecked the signup box, in this form or before it was rebuilt.
+    var didDeclineSignup: Bool {
+        switch mode {
+        case .checkbox, .checkboxWithDefaultOptIn, .signupOptIn:
+            return (didInteractWithSaveCheckbox || previouslyDeclinedSignup) && !saveCheckboxChecked
+        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+            return false
+        }
+    }
+
     var emailAddress: String? {
         didSet {
             if emailAddress != oldValue {
@@ -425,6 +438,7 @@ final class LinkInlineSignupViewModel {
         }
         self.legalName = configuration.defaultBillingDetails.name
         self.country = country
+        self.previouslyDeclinedSignup = previouslyDeclinedSignup
 
         self.saveCheckboxChecked = {
             // Don't opt the customer back in if they unchecked the box before the form was rebuilt

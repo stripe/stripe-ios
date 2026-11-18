@@ -179,6 +179,22 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(sut.mode, .checkboxWithDefaultOptIn)
         XCTAssertFalse(sut.saveCheckboxChecked)
         XCTAssertEqual(sut.action, .continueWithoutLink)
+        // ...and the decline carries over to the next rebuild
+        XCTAssertTrue(sut.didDeclineSignup)
+    }
+
+    func test_didDeclineSignup_onlyAfterCustomerUnchecksTheBox() {
+        // Given an unchecked box the customer hasn't touched
+        let sut = makeSUT(country: "US", showCheckbox: true)
+        XCTAssertEqual(sut.mode, .checkbox)
+        // Then it doesn't count as declining
+        XCTAssertFalse(sut.didDeclineSignup)
+
+        // When the customer checks and then unchecks the box
+        sut.saveCheckboxChecked = true
+        sut.saveCheckboxChecked = false
+        // Then it counts as declining
+        XCTAssertTrue(sut.didDeclineSignup)
     }
 
     func test_defaultOptIn_not_allowed_for_ineligible_merchant() {

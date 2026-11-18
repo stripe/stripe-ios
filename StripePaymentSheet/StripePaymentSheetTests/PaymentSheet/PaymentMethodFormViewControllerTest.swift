@@ -186,9 +186,11 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
 
         // Then the box stays unchecked, so the card alone still completes the form
         XCTAssertFalse(try XCTUnwrap(linkSignup(in: rebuiltForm)).isChecked)
-        guard case .new = rebuiltForm.paymentOption else {
+        guard case .new(let rebuiltConfirmParams) = rebuiltForm.paymentOption else {
             return XCTFail("Expected the card to still be selected, got \(String(describing: rebuiltForm.paymentOption))")
         }
+        // ...and the decline carries over to the next rebuild
+        XCTAssertTrue(rebuiltConfirmParams.didDeclineLinkInlineSignup)
     }
 
     func testRebuiltCardFormKeepsDeclinedLinkSignupOptInAndMandate() throws {
@@ -209,14 +211,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         let originalLinkAccount = LinkAccountContext.shared.account
-        LinkAccountContext.shared.account = PaymentSheetLinkAccount(
-            email: "user@example.com",
-            session: nil,
-            publishableKey: nil,
-            displayablePaymentDetails: nil,
-            useMobileEndpoints: false,
-            canSyncAttestationState: false
-        )
+        LinkAccountContext.shared.account = ._testValue(email: "user@example.com", isRegistered: false)
         defer { LinkAccountContext.shared.account = originalLinkAccount }
         func makeCardForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
             PaymentMethodFormViewController(type: .stripe(.card), intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
