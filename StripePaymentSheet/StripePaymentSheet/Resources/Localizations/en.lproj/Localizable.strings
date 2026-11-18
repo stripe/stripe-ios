@@ -1,6 +1,9 @@
 /* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$d";
 
+/* The available balance of a customer's Stripe balance account; %@ is a formatted amount such as £392.04 */
+"%@ available" = "%@ available";
+
 /* Message shown in a confirmation prompt when removing a saved payment method. */
 "%@ will no longer be saved to your wallet." = "%@ will no longer be saved to your wallet.";
 
@@ -217,6 +220,9 @@ with the transaction. */
 /* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
 "Create an account with %@ for faster checkout across the web" = "Create an account with %@ for faster checkout across the web";
 
+/* Shown with a Stripe balance account that can't pay in the payment's currency; the account can't be selected */
+"Currency not supported" = "Currency not supported";
+
 /* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Debit or credit card";
 
@@ -262,6 +268,9 @@ with the transaction. */
 /* Title for the Link signup screen */
 "Fast, secure checkout" = "Fast, secure checkout";
 
+/* Name of a customer's Stripe balance account that has no name of its own; %@ is the last four characters of the account's ID */
+"Financial account · ...%@" = "Financial account · ...%@";
+
 /* Select a bank dropdown for FPX */
 "FPX Bank" = "FPX Bank";
 
@@ -279,6 +288,9 @@ with the transaction. */
 
 /* Label for an IBAN field */
 "IBAN" = "IBAN";
+
+/* Shown with a Stripe balance account whose available balance can't cover the payment; the account can't be selected */
+"Insufficient balance" = "Insufficient balance";
 
 /* Message shown when Mondu is selected */
 "Invoice payment for business buyers." = "Invoice payment for business buyers.";
@@ -380,6 +392,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Subtitle for the Link signup screen */
 "Pay faster everywhere Link is accepted." = "Pay faster everywhere Link is accepted.";
+
+/* Title above the list of the customer's Stripe balance accounts, asking them to choose the one to pay from */
+"Pay from" = "Pay from";
 
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
