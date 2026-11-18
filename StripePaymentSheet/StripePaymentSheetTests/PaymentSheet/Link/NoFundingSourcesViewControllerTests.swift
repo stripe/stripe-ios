@@ -95,28 +95,22 @@ final class NoFundingSourcesViewControllerTests: XCTestCase {
         XCTAssertEqual(coordinator.cancelCalls, [])
     }
 
-    func testHidesPayAnotherWayWhenUnavailable() {
-        for (showSecondaryButton, canContinueWithoutLink) in [(false, true), (true, false)] {
-            // Given a flow that hides the secondary button or can't continue without Link
-            let sut = NoFundingSourcesViewControllerTestHelpers.makeSUT(
-                showSecondaryButton: showSecondaryButton,
-                canContinueWithoutLink: canContinueWithoutLink
-            )
+    func testHidesPayAnotherWayWhenUserCannotContinueWithoutLink() {
+        // Given the error screen shown from a flow that can't continue without Link
+        let sut = NoFundingSourcesViewControllerTestHelpers.makeSUT(canContinueWithoutLink: false)
 
-            // When the view loads
-            sut.loadViewIfNeeded()
+        // When the view loads
+        sut.loadViewIfNeeded()
 
-            // Then only the "Log in to another account" button is shown
-            XCTAssertNil(sut.view.findButton(titled: String.Localized.pay_another_way))
-            XCTAssertNotNil(sut.view.findButton(titled: String.Localized.log_in_to_another_account))
-        }
+        // Then only the "Log in to another account" button is shown
+        XCTAssertNil(sut.view.findButton(titled: String.Localized.pay_another_way))
+        XCTAssertNotNil(sut.view.findButton(titled: String.Localized.log_in_to_another_account))
     }
 }
 
 @MainActor
 private enum NoFundingSourcesViewControllerTestHelpers {
     static func makeSUT(
-        showSecondaryButton: Bool = true,
         canContinueWithoutLink: Bool = true,
         linkAppearance: LinkAppearance? = nil
     ) -> PayWithLinkViewController.NoFundingSourcesViewController {
@@ -129,7 +123,6 @@ private enum NoFundingSourcesViewControllerTestHelpers {
                 linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
-                showSecondaryButton: showSecondaryButton,
                 canContinueWithoutLink: canContinueWithoutLink,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,

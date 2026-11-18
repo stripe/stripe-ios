@@ -99,7 +99,7 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
             )
             return .link(.init(
                 confirmOption: .wallet(brand: session.elementsSession.linkBrand ?? .link),
-                showSecondaryButtonForLink: false,
+                canContinueWithoutLink: false,
                 configuration: linkConfirmationConfiguration,
                 returnURL: configuration.returnURL,
                 nativeSheetPresentation: nil,
