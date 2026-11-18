@@ -113,6 +113,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     private func confirmReturningIndiaCard(intent: Intent) {
+        stubUnexpectedPaymentMethodCreation()
         stubLinkShareExpecting(consumerSessionClientSecret: "cs_xxx", paymentMethodID: "pd_india", expectedType: "card")
         stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = MockParams.configurationWithCustomer(pk: MockParams.publicKey)
@@ -150,6 +151,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testLinkControllerIndiaCardCreationSharesAndUsesOverrideKey() {
+        stubUnexpectedPaymentMethodCreation()
         let configuration = MockParams.configuration(pk: MockParams.publicKey)
         let account = PaymentSheetLinkAccount(
             email: "test@example.com",
@@ -206,6 +208,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testWebFallbackCardIsConfirmedDirectly() {
+        stubUnexpectedPaymentMethodCreation()
         stubConfirmPaymentExpecting(isPaymentIntent: true, paymentMethodId: MockParams.cardPaymentMethod.stripeId)
         let configuration = MockParams.configuration(pk: MockParams.publicKey)
         let completed = expectation(description: "web card confirmed")
@@ -220,6 +223,8 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testIndiaCardShareFailureDoesNotConfirmLinkOrRawCard() {
+        stubUnexpectedConfirmation()
+        stubUnexpectedPaymentMethodCreation()
         stubLinkShareExpecting(consumerSessionClientSecret: "cs_xxx", paymentMethodID: "pd1", expectedType: "card", fail: true)
 
         let configuration = MockParams.configurationWithCustomer(pk: MockParams.publicKey)
@@ -288,6 +293,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testIndiaCardInPaymentMethodModeCallsShareOnce() {
+        stubUnexpectedPaymentMethodCreation()
         stubConfirmPaymentExpecting(isPaymentIntent: true, paymentMethodId: MockParams.cardPaymentMethod.stripeId)
         stubLinkShareExpecting(consumerSessionClientSecret: "cs_xxx", paymentMethodID: "pd1", expectedType: "card")
         stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
@@ -417,6 +423,8 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testIndiaCardInlineShareFailureDoesNotUseRawCardFallback() {
+        stubUnexpectedConfirmation()
+        stubUnexpectedPaymentMethodCreation()
         stubLinkSignup()
         stubLinkCreatePaymentDetails(country: "COUNTRY_IN")
         stubLinkShareExpecting(consumerSessionClientSecret: "pscs_abc123", paymentMethodID: "csmrpd_test_61QrpvXKaugSBvBsB41C40Oy4de1NQS8", expectedType: "card", allowRedisplay: "always", cvc: "123", fail: true)
@@ -485,6 +493,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     }
 
     func testIndiaCardInlineSignupSharesReturnedDetails() {
+        stubUnexpectedPaymentMethodCreation()
         stubLinkSignup()
         stubLinkCreatePaymentDetails(country: "COUNTRY_IN")
         stubLinkShareExpecting(consumerSessionClientSecret: "pscs_abc123", paymentMethodID: "csmrpd_test_61QrpvXKaugSBvBsB41C40Oy4de1NQS8", expectedType: "card", allowRedisplay: "always", cvc: "123")
@@ -624,6 +633,21 @@ extension PaymentSheetAPIMockTest: STPAuthenticationContext {
 // MARK: - Helpers
 
 private extension PaymentSheetAPIMockTest {
+    func stubUnexpectedPaymentMethodCreation(line: UInt = #line) {
+        stub { $0.httpMethod == "POST" && $0.url?.pathComponents.last == "payment_methods" } response: { _ in
+            XCTFail("Shared or web-returned card must be consumed directly", line: line)
+            return HTTPStubsResponse(jsonObject: ["error": ["message": "Unexpected PaymentMethod creation"]], statusCode: 400, headers: nil)
+        }
+    }
+
+    func stubUnexpectedConfirmation(line: UInt = #line) {
+        stub { $0.url?.pathComponents.last == "confirm" } response: { _ in
+            XCTFail("A failed India share must not attempt confirmation", line: line)
+            return HTTPStubsResponse(jsonObject: ["error": ["message": "Unexpected confirmation"]], statusCode: 400, headers: nil)
+        }
+    }
+
+
     func stubConfirmPaymentExpecting(
         isPaymentIntent: Bool,
         paymentMethodId: String,
