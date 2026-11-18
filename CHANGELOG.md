@@ -12,6 +12,9 @@ MAJOR
 ### CustomerSheet
 * [Deprecated] Deprecated `CustomerSessionClientSecret.init(customerId:clientSecret:)`. Use `init(clientSecret:)` instead.
 
+### Payments
+* [Changed] Marked `STPPaymentHandlerActionStatus` as `@frozen`, allowing exhaustive switches over `.succeeded`, `.canceled`, and `.failed`.
+
 ### CryptoOnramp (Alpha)
 * [Added] Added the optional `linkCardBrandAcceptance` parameter to `CryptoOnrampCoordinator.create(...)` to allow or block card brands in the Link UI. Defaults to accepting all supported brands.
 
