@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 9c4b627a0dd5b3133c3a6be2a39d69cb;o=1
+x-cloud-trace-context: 7465a9706ad246392edeea05ec3201cf
 Via: 1.1 google
-Date: Tue, 10 Nov 2026 00:08:19 GMT
+Date: Tue, 10 Nov 2026 19:29:05 GMT
 Content-Length: 2514
-Alt-Svc: h3=":443"; ma=2592000
-Etag: W/"9d2-9qVGxFGp4iMxdqoJvrHrQiQgx0c"
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"9d2-1kj4W/60qddoFc38IE6+1cyhR7M"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1lAfdaNOzi72k4EUASXWkKozv5NK2SOuOVkQk45AaZ8yAnzqPBzIWp3Dd",
-  "client_secret" : "cs_test_a1lAfdaNOzi72k4EUASXWkKozv5NK2SOuOVkQk45AaZ8yAnzqPBzIWp3Dd_secret_dTXNYtbPivH33rWLcN9vtvsxE",
+  "id" : "cs_test_a1rxxzFHDvVtWgimd3bv5kcQkp2xq1HVgMnHJAaS22xRpnUGoE4uGCZFBY",
+  "client_secret" : "cs_test_a1rxxzFHDvVtWgimd3bv5kcQkp2xq1HVgMnHJAaS22xRpnUGoE4uGCZFBY_secret_z2UMWTwsZJwW5ooj5UspGb235",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"9d2-9qVGxFGp4iMxdqoJvrHrQiQgx0c"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1794269299,
+  "created" : 1794338945,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "sequra"
@@ -41,13 +41,13 @@ Etag: W/"9d2-9qVGxFGp4iMxdqoJvrHrQiQgx0c"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VbF5mkjo",
+      "key" : "checkout_item_VbXoRE7w",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ua2bnERR7vmXYYfNQ1DcQZq",
+            "price" : "price_1UaKj7ERR7vmXYYfTMBc8DJb",
             "tax_rates" : null
           }
         ],
@@ -153,6 +153,6 @@ Etag: W/"9d2-9qVGxFGp4iMxdqoJvrHrQiQgx0c"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1794355699,
+  "expires_at" : 1794425345,
   "marketing_attributions" : null
 }

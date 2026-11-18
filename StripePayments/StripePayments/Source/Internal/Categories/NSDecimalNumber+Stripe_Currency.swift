@@ -36,7 +36,7 @@ extension NSDecimalNumber {
         withAmount amount: Int,
         currency: String?
     ) -> NSDecimalNumber {
-        let number = self.init(mantissa: UInt64(amount), exponent: 0, isNegative: false)
+        let number = self.init(mantissa: UInt64(amount.magnitude), exponent: 0, isNegative: amount < 0)
         let decimalCount = decimalCount(for: currency)
         return number.multiplying(byPowerOf10: -Int16(decimalCount))
     }

@@ -192,6 +192,12 @@ class FCLiteUITests: XCTestCase {
             return
         }
 
+        // The pane may have advanced before the webview's accessibility tree caught up.
+        // Tapping blindly here would hit whatever is at the bottom of the next pane.
+        if nextPaneElement.waitForExistence(timeout: 5.0) {
+            return
+        }
+
         tapPrimaryButton()
         XCTAssertTrue(nextPaneElement.waitForExistence(timeout: 10.0))
     }

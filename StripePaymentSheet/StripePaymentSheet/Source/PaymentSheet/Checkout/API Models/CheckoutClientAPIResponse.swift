@@ -149,27 +149,39 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
 }
 
 extension CheckoutClientAPIResponse {
-    struct IntentReference: Decodable, CustomStringConvertible {
-        let id: String
-        let clientSecret: String
-
-        var description: String {
-            "<IntentReference; id = \(id); clientSecret = <redacted>>"
-        }
-    }
-
     struct AutomaticTax: Decodable {
         let enabled: Bool
         let status: String?
         let addressSource: String?
     }
 
-    /// CheckoutClient's canonical payment details. Intent references are retrieved separately for authentication.
+    /// CheckoutClient's canonical payment details, including the Intent used for next-action handling.
     struct PaymentResponse: Decodable {
         let status: Status
         let lastPaymentError: StripeAPIError?
-        let paymentIntent: IntentReference?
-        let setupIntent: IntentReference?
+        let paymentIntent: STPPaymentIntent?
+        let setupIntent: STPSetupIntent?
+
+        private enum CodingKeys: String, CodingKey {
+            case status
+            case lastPaymentError
+            case paymentIntent
+            case setupIntent
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            status = try container.decode(Status.self, forKey: .status)
+            lastPaymentError = try container.decodeIfPresent(StripeAPIError.self, forKey: .lastPaymentError)
+            paymentIntent = try container.decodeIfPresent(
+                LegacyDecoded<STPPaymentIntent>.self,
+                forKey: .paymentIntent
+            )?.value
+            setupIntent = try container.decodeIfPresent(
+                LegacyDecoded<STPSetupIntent>.self,
+                forKey: .setupIntent
+            )?.value
+        }
 
         enum Status: String, Decodable {
             case succeeded

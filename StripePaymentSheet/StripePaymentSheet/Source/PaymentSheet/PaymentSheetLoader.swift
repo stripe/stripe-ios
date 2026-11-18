@@ -21,6 +21,8 @@ final class PaymentSheetLoader {
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
         let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+        /// The buyer's financial accounts, if Stripe balance is offered
+        var stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
         let customerProvider: CustomerProvider
         var preselectLink: Bool = false
@@ -69,12 +71,7 @@ final class PaymentSheetLoader {
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
     ) async throws -> (LoadResult, ConfirmationChallenge) {
-        let customerProvider: CustomerProvider
-        if case .checkout(let checkout) = mode {
-            customerProvider = CustomerProvider(checkoutSession: checkout.session)
-        } else {
-            customerProvider = CustomerProvider(customer: configuration.customer)
-        }
+        let customerProvider = CustomerProvider(customer: configuration.customer)
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
         analyticsHelper.logLoadStarted(isUpdate: isUpdate, customerProvider: customerProvider)
@@ -114,6 +111,10 @@ final class PaymentSheetLoader {
             let elementsSessionAndIntent = try await elementsSessionAndIntentTask.value
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
+            // Fetch the buyer's financial accounts alongside the Link lookup, so the Stripe balance form has them when it appears
+            let stripeBalanceFinancialAccountsTask = Task {
+                await fetchStripeBalanceFinancialAccounts(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
+            }
             let didLinkLookupTimeOut = await loadLink(
                 elementsSession: elementsSession,
                 apiClient: configuration.apiClient,
@@ -127,6 +128,8 @@ final class PaymentSheetLoader {
                 linkAnalytics: analyticsHelper.linkAnalytics
             )
 
+            let stripeBalanceFinancialAccounts = await stripeBalanceFinancialAccountsTask.value
+
             loadTimings.logStart("computePaymentMethodTypes")
             let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
 
@@ -135,7 +138,13 @@ final class PaymentSheetLoader {
             // Send legacy analytics to r.stripe.com instead of q.stripe.com if enabled
             STPAnalyticsClient.sendAnalyticsToRStripe = elementsSession.isAnalyticsToRStripeEnabled
 
-            let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+            let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+                from: intent,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
+                logAvailability: true
+            )
 
             // Assert if using konbini or blik with confirmation tokens
             if case .deferredIntent(let intentConfiguration) = mode,
@@ -192,7 +201,7 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 surface: .paymentSheet
             ) == .link && PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
-            let preselectLink = !mode.isCheckout && PreselectLinkExperiment.shouldPreselectLink(
+            let preselectLink = PreselectLinkExperiment.shouldPreselectLink(
                 elementsSession: elementsSession,
                 configuration: configuration,
                 integrationShape: integrationShape,
@@ -219,6 +228,7 @@ final class PaymentSheetLoader {
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+                stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
                 paymentMethodOrientation: paymentMethodOrientation,
                 customerProvider: customerProvider,
                 preselectLink: preselectLink
@@ -348,9 +358,6 @@ final class PaymentSheetLoader {
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
-        case .checkout(let checkout):
-            elementsSession = checkout.session.elementsSession
-            intent = .checkout(checkout.session)
         }
 
         logAvailabilityMessages(elementsSession: elementsSession)

@@ -8,13 +8,13 @@ import XCTest
 final class LinkPreselectionTests: STPSnapshotTestCase {
     override func setUp() async throws {
         try await super.setUp()
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
         LinkAccountContext.shared.account = nil
         await AddressSpecProvider.shared.loadAddressSpecs()
     }
 
     override func tearDown() {
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
         LinkAccountContext.shared.account = nil
         super.tearDown()
     }
@@ -73,7 +73,7 @@ final class LinkPreselectionTests: STPSnapshotTestCase {
     }
 
     func testEmbeddedPreselectionReplacesUnavailableLastUsedApplePay() {
-        CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.applePay, forCustomer: nil)
         let view = EmbeddedPaymentElement.makeView(
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeLoadResult(),
@@ -93,7 +93,7 @@ final class LinkPreselectionTests: STPSnapshotTestCase {
 
     func testLastUsedLinkStillPresentsPaymentOptionsFirst() {
         LinkAccountContext.shared.account = LinkStubs.account()
-        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: nil)
         assertInitialPresentation(preselectLink: false)
     }
 

@@ -214,8 +214,6 @@ import UIKit
                     ) { [weak self] linkAccountSession, error in
                         self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                     }
-            case .checkout:
-                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession"))
             }
         }
 
@@ -307,8 +305,6 @@ import UIKit
                 intentType: .deferred,
                 financialConnectionsCompletion: completionHandler
             )
-        case .checkout:
-            completionHandler(nil, nil, PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession") as NSError)
         }
     }
 
@@ -438,8 +434,6 @@ import UIKit
                     customerProvider: customerProvider
                 )
                 linkBrand = elementsSession.linkBrand
-            case .checkout:
-                linkBrand = nil
             }
 
             fetchedLinkBrand = linkBrand
@@ -566,8 +560,6 @@ import UIKit
                         continuation.resume()
                     }
                 }
-            case .checkout:
-                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession"))
             }
         }
     }
@@ -616,8 +608,6 @@ private extension PaymentSheet.InitializationMode {
             case .setup:
                 return nil
             }
-        case .checkout:
-            return nil
         }
     }
 
@@ -634,8 +624,6 @@ private extension PaymentSheet.InitializationMode {
             case .setup(let currency, _):
                 return currency
             }
-        case .checkout:
-            return nil
         }
     }
 }

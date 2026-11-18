@@ -29,6 +29,54 @@ extension CheckoutPlayground {
         }
     }
 
+    /// Minimum height for single-line rows, so picker, toggle, and other rows line up.
+    static let rowMinHeight: CGFloat = 52
+
+    /// A top-level settings group, e.g. "Checkout Session", with an optional subtitle explaining where its settings take effect.
+    struct SettingsGroup<Content: View>: View {
+        let title: String
+        let icon: String
+        var subtitle: String?
+        @ViewBuilder let content: Content
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 2) {
+                    SectionHeader(title: title, icon: icon)
+                    if let subtitle {
+                        Text(subtitle)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.leading, 4)
+                    }
+                }
+                content
+            }
+        }
+    }
+
+    /// A card of rows within a `SettingsGroup`, with an optional title.
+    struct Subsection<Content: View>: View {
+        var title: String?
+        @ViewBuilder let content: Content
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 6) {
+                if let title {
+                    Text(title)
+                        .font(.footnote.weight(.semibold))
+                        .foregroundColor(.secondary)
+                        .padding(.leading, 4)
+                }
+                VStack(spacing: 1) {
+                    content
+                }
+                .background(Color(uiColor: .secondarySystemGroupedBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+        }
+    }
+
     struct PickerRow<T: Hashable & RawRepresentable & CaseIterable>: View where T.RawValue == String, T: Identifiable {
         let title: String
         var icon: String?
@@ -63,10 +111,13 @@ extension CheckoutPlayground {
                 }
                 .pickerStyle(.menu)
                 .labelsHidden()
+                .lineLimit(1)
+                .fixedSize()
                 .accessibilityIdentifier("checkout_picker_\(title)")
                 .accentColor(.secondary)
             }
-            .padding(.vertical, 12)
+            .padding(.vertical, 8)
+            .frame(minHeight: CheckoutPlayground.rowMinHeight)
             .padding(.horizontal, 16)
             .background(Color(uiColor: .secondarySystemGroupedBackground))
         }
@@ -92,6 +143,7 @@ extension CheckoutPlayground {
                     .labelsHidden()
             }
             .padding(.vertical, 8)
+            .frame(minHeight: CheckoutPlayground.rowMinHeight)
             .padding(.horizontal, 16)
             .background(Color(uiColor: .secondarySystemGroupedBackground))
         }
@@ -115,7 +167,7 @@ extension CheckoutPlayground {
 
                             InfoButton(
                                 title: "Adaptive Pricing Location",
-                                message: "Stripe's test backend recognizes +location_XX in a server email to simulate the country. Choose a server source in the Email section to use this override. Local or no email requires No Override."
+                                message: "Stripe's test backend recognizes +location_XX in a server email to simulate the country. Choose a server email source above to use this override. Local or no email requires No Override."
                             )
                         }
 
