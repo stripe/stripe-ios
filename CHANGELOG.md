@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### Identity
+* [Changed] Compressed the StripeIdentity selfie confirmation sound. This makes the bundled resources about 270 KB smaller.
+
 ## 26.16.1 2026-11-09
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".
