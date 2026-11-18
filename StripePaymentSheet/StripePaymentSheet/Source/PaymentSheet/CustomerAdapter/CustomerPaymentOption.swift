@@ -38,11 +38,12 @@ public enum CustomerPaymentOption: Equatable {
         }
     }
 
-    /// Sets the default payment method for a given customer.
+    /// Sets the default payment method for a given customer in local (on-device) storage.
+    /// - Note: This only updates local storage; it does not set the customer's default payment method on the backend.
     /// - Parameters:
     ///   - identifier: Payment method identifier.
     ///   - customerID: ID of the customer. Pass `nil` for anonymous users.
-    @_spi(InternalOnlyAPI) public static func setDefaultPaymentMethod(_ paymentMethodOption: CustomerPaymentOption?, forCustomer customerID: String?) {
+    @_spi(InternalOnlyAPI) public static func setLocalDefaultPaymentMethod(_ paymentMethodOption: CustomerPaymentOption?, forCustomer customerID: String?) {
         var customerToDefaultPaymentMethodID = UserDefaults.standard.customerToLastSelectedPaymentMethod ?? [:]
 
         let key = customerID ?? ""
@@ -116,7 +117,7 @@ extension CustomerPaymentOption {
             if selectedPaymentMethodWasDeleted(from: currentlyAvailableSavedPaymentMethods) {
                 clearDeletedSelectionIfNeeded()
             } else {
-                CustomerPaymentOption.setDefaultPaymentMethod(selectedPaymentOptionBeforePresentation, forCustomer: customerID)
+                CustomerPaymentOption.setLocalDefaultPaymentMethod(selectedPaymentOptionBeforePresentation, forCustomer: customerID)
             }
         }
 
@@ -135,7 +136,7 @@ extension CustomerPaymentOption {
             // Deletion may persist a fallback selection. Keep it, or clear the deleted selection
             // if no fallback was persisted.
             if CustomerPaymentOption.localDefaultPaymentMethod(for: customerID) == selectedPaymentOptionBeforePresentation {
-                CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID)
+                CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: customerID)
             }
         }
     }
