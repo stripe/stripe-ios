@@ -225,9 +225,11 @@ struct CustomerProvider {
             switch customer.customerAccessProvider {
             case .customerSession(let clientSecret):
                 if paymentMethod.type == .card {
+                    // The Customer the CustomerSession is scoped to. For a CustomerSession created with a customer-configured
+                    // Account, this is the Account's backing Customer, which v1 endpoints require instead of the merchant's `acct_` ID.
                     apiClient.detachPaymentMethodRemoveDuplicates(
                         paymentMethod.stripeId,
-                        customerId: customer.id,
+                        customerId: elementsSession.customer?.customerSession.customer ?? customer.id,
                         fromCustomerUsing: ephemeralKey,
                         withCustomerSessionClientSecret: clientSecret
                     ) { _ in }

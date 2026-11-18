@@ -956,11 +956,11 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 #endif
         switch selection {
         case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: loadResult.customerProvider.customerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.applePay, forCustomer: loadResult.customerProvider.customerID)
         case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: loadResult.customerProvider.customerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: loadResult.customerProvider.customerID)
         case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: loadResult.customerProvider.customerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: loadResult.customerProvider.customerID)
         case let .new(paymentMethodType: paymentMethodType):
             let pmFormVC = makeFormVC(paymentMethodType: paymentMethodType)
             if pmFormVC.form.collectsUserInput || paymentMethodType.isBankPayment {
@@ -1043,6 +1043,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             isLinkUI: false,
             delegate: self,
             previousLinkInlineSignupAction: previousLinkInlineSignupAction

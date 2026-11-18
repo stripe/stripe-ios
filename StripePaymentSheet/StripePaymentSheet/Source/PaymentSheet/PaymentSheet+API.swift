@@ -337,7 +337,7 @@ extension PaymentSheet {
                         completion: { actionStatus, paymentIntent, error in
                             Task { await confirmationChallenge?.complete() }
                             if let paymentIntent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), customerProvider: customerProvider, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                                setLocalDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), customerProvider: customerProvider, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                             }
                             paymentHandlerCompletion(actionStatus, error)
                         }
@@ -360,7 +360,7 @@ extension PaymentSheet {
                         completion: { actionStatus, setupIntent, error in
                             Task { await confirmationChallenge?.complete() }
                             if let setupIntent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), customerProvider: customerProvider, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                                setLocalDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), customerProvider: customerProvider, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                             }
                             paymentHandlerCompletion(actionStatus, error)
                         }
@@ -861,9 +861,10 @@ extension PaymentSheet {
 
     // MARK: - Helper methods
 
-    /// A helper method that sets the Customer's default payment method if necessary.
+    /// A helper method that sets the Customer's default payment method in local (on-device) storage, if necessary.
+    /// - Note: Skips the local write when `paymentMethodSetAsDefault` is `true`, since the backend has already recorded this as the default.
     /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
-    static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, customerProvider: CustomerProvider, paymentMethodSetAsDefault: Bool) {
+    static func setLocalDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, customerProvider: CustomerProvider, paymentMethodSetAsDefault: Bool) {
 
         guard
             // Did we successfully save this payment method?
@@ -878,7 +879,7 @@ extension PaymentSheet {
         else {
             return
         }
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: customer)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: customer)
     }
 
     static func makeShippingParams(for paymentIntent: STPPaymentIntent, configuration: PaymentElementConfiguration)
