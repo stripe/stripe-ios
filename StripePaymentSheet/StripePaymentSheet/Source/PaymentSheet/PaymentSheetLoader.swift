@@ -25,12 +25,6 @@ final class PaymentSheetLoader {
         var stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
         let customerProvider: CustomerProvider
-
-        /// The resolved customer ID, falling back to the customer resolved server-side from the
-        /// CustomerSession when the merchant didn't provide one explicitly.
-        var customerID: String? {
-            customerProvider.customerID(elementsSession: elementsSession)
-        }
     }
 
     enum IntegrationShape {
@@ -193,7 +187,7 @@ final class PaymentSheetLoader {
             loadTimings.logStart("makeViewModels")
             let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
                 savedPaymentMethods: filteredSavedPaymentMethods,
-                customerID: customerProvider.customerID(elementsSession: elementsSession),
+                customerID: customerProvider.resolvedCustomerID(elementsSession: elementsSession),
                 showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
                 showLink: integrationShape.canDefaultToLinkOrApplePay ? PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration) : false,
                 elementsSession: elementsSession,
@@ -413,7 +407,7 @@ final class PaymentSheetLoader {
         }
 
         // Move default PM to front
-        if let customerID = customerProvider.customerID(elementsSession: elementsSession) {
+        if let customerID = customerProvider.resolvedCustomerID(elementsSession: elementsSession) {
             let defaultPaymentMethodOption = CustomerPaymentOption.selectedPaymentMethod(for: customerID, elementsSession: elementsSession, surface: .paymentSheet)
             if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
                 $0.stripeId == defaultPaymentMethodOption?.value

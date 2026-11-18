@@ -50,7 +50,7 @@ extension EmbeddedPaymentElement {
             }
 
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
-            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: loadResult.customerID, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
+            let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession), elementsSession: loadResult.elementsSession, surface: .paymentSheet)
             switch customerDefault {
             case .applePay:
                 return .applePay
@@ -299,7 +299,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         }
         CustomerPaymentOption.setDefaultPaymentMethod(
             paymentOption,
-            forCustomer: loadResult.customerID
+            forCustomer: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession)
         )
     }
 

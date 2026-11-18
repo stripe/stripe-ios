@@ -37,9 +37,11 @@ struct CustomerProvider {
         }
     }
 
-    /// Resolves the customer ID, falling back to the customer resolved server-side from the
-    /// `elementsSession`'s CustomerSession when the configuration didn't provide one explicitly.
-    func customerID(elementsSession: STPElementsSession?) -> String? {
+    /// Resolves the customer ID. For CustomerSession integrations, the customer resolved server-side from
+    /// the `elementsSession`'s CustomerSession is authoritative once available, even if the configuration
+    /// also explicitly provided one. The configuration's ID is only used as a fallback before the Elements
+    /// Session has loaded, and always for the legacy ephemeral key integration.
+    func resolvedCustomerID(elementsSession: STPElementsSession?) -> String? {
         switch backing {
         case .customer(let customer):
             return customer?.resolvedID(elementsSession: elementsSession)
