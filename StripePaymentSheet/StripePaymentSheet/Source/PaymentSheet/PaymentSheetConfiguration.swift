@@ -354,7 +354,7 @@ extension PaymentSheet {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
 
-        stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
+            stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
         }
 
         /// Initializes a CustomerConfiguration with a customerSessionClientSecret.
@@ -363,7 +363,7 @@ extension PaymentSheet {
             self.id = nil
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
 
-        stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
+            stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
         }
 
         /// Resolves the customer ID. For CustomerSession integrations, this matches the Android and web SDKs:

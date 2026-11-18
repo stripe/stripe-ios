@@ -28,8 +28,6 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
 
     private var paymentSheetFlowController: PaymentSheet.FlowController!
 
-    // `PaymentSheet.CustomerConfiguration.id` is internal, so we keep our own copy of the
-    // customer ID to send along with our confirm-intent request.
     private var customerId: String?
 
     private let backendCheckoutUrl = URL(string: baseUrl + "/checkout")!

@@ -29,8 +29,6 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     var embeddedPaymentElement: EmbeddedPaymentElement!
     private var paymentMethodsViewController: EmbeddedPaymentElementWrapperViewController?
 
-    // `EmbeddedPaymentElement.Configuration.customer.id` is internal, so we keep our own copy of
-    // the customer ID to send along with our confirm-intent request.
     private var customerId: String?
 
     private let backendCheckoutUrl = URL(string: baseUrl + "/checkout")!
