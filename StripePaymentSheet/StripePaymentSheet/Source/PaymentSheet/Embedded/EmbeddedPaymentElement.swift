@@ -237,6 +237,7 @@ public final class EmbeddedPaymentElement {
             savedPaymentMethods: loadResult.savedPaymentMethods,
             analyticsHelper: self.analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: self.checkout,
             formCache: self.formCache,
             delegate: self
