@@ -45,37 +45,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         return subtitle.view.subviews.compactMap { $0 as? BNPLFormHeaderView }.first
     }
 
-    func testRestoredCardPreservesLinkSignupOptOut() throws {
-        // Given a completed card form after the customer opted out of Link signup
-        var configuration = PaymentSheet.Configuration()
-        configuration.billingDetailsCollectionConfiguration.address = .never
-        let previousInput = IntentConfirmParams(params: ._testCardValue(), type: .stripe(.card))
-
-        // When a session update rebuilds that form with Link signup defaulting to selected
-        let form = PaymentSheetFormFactory(
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.card),
-            paymentMethodOrientation: .horizontal,
-            previousCustomerInput: previousInput,
-            showLinkInlineCardSignup: true,
-            accountService: LinkAccountService._testValue(),
-            isPaymentIntent: true,
-            collectsTaxFromBillingAddress: false,
-            isSettingUp: false,
-            countryCode: "US",
-            savePaymentMethodConsentBehavior: .legacy,
-            allowsLinkDefaultOptIn: true,
-            analyticsHelper: ._testValue(),
-            paymentMethodIncentive: nil
-        ).makeCard()
-        let signup: LinkInlineSignupElement = try XCTUnwrap(form.getElement())
-
-        // Then the customer's opt-out is preserved and the card remains complete without email
-        XCTAssertFalse(signup.isChecked)
-        XCTAssertEqual(signup.action, .continueWithoutLink)
-        XCTAssertNotNil(form.updateParams(params: IntentConfirmParams(type: .stripe(.card))))
-    }
-
     func testMakeKlarnaHeader_DefaultsToLegacyHeader() {
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),

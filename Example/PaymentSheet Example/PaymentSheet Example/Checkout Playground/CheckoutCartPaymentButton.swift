@@ -56,7 +56,6 @@ struct CheckoutCartPaymentMethodSection: View {
             .cornerRadius(16)
             .padding(.horizontal)
             .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
-            .accessibilityIdentifier("checkout_payment_method")
             .accessibilityLabel("Select payment method")
             .accessibilityValue(session.paymentOption.map { [$0.label, $0.sublabel].compactMap { $0 }.joined(separator: ", ") } ?? "No payment method selected")
             .sheet(isPresented: $showEmbeddedScreen) {

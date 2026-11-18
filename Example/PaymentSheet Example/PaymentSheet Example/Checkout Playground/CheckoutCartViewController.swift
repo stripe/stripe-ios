@@ -616,7 +616,6 @@ final class CheckoutCartViewController: UIViewController {
 
     private func makePaymentMethodRow(session: CheckoutElementsController.Session) -> UIView {
         let rowView = UIButton(type: .custom)
-        rowView.accessibilityIdentifier = "checkout_payment_method"
         rowView.addTarget(self, action: #selector(paymentMethodButtonTapped), for: .touchUpInside)
 
         let paymentOptionStackView = UIStackView()
