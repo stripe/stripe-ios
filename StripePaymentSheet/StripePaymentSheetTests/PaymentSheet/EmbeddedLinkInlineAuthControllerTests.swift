@@ -6,7 +6,7 @@
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) @_spi(EmbeddedLinkInlineVerificationPrivatePreview) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
