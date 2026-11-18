@@ -77,7 +77,6 @@ public extension STPAPIClient {
         var parameters = additionalParameters
         parameters["unique_id"] = sessionId
         parameters["verification_method"] = STPPaymentMethodOptions.USBankAccount.VerificationMethod.automatic.rawValue // Hardcoded b/c the merchant can't choose in the deferred flow
-        // The backend rejects `amount=0` (e.g. $0 Checkout Sessions), so omit it, matching Stripe.js
         parameters["amount"] = amount.flatMap { $0 > 0 ? $0 : nil }
         parameters["currency"] = currency
         parameters["on_behalf_of"] = onBehalfOf
