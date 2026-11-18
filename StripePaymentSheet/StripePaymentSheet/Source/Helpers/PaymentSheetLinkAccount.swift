@@ -319,6 +319,7 @@ struct LinkPMDisplayDetails {
             }
 
             session.createLinkAccountSession(
+                with: self.apiClient,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -364,6 +365,7 @@ struct LinkPMDisplayDetails {
 
             session.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
+                with: self.apiClient,
                 isDefault: isDefault,
                 clientAttributionMetadata: clientAttributionMetadata,
                 requestSurface: self.requestSurface,
