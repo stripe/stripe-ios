@@ -219,7 +219,7 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
     ) -> CustomerSessionAdapter.CachedCustomerSessionClientSecret {
         return .init(customerSessionClientSecret: .init(customerId: "cus_123", clientSecret: "cuss_123"),
                      apiKey: "ek_123",
-                     elementsSession: .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: [.card]),
+                     customerId: "cus_123",
                      timeProvider: timeProvider)
     }
 

@@ -119,6 +119,19 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssertEqual(resolvedID, "cus_456")
     }
 
+    func testHasCustomer_customerSessionWithoutID() {
+        // Given a CustomerSession configuration that omits the customer ID
+        let customerConfig = PaymentSheet.CustomerConfiguration(customerSessionClientSecret: "cuss_12345")
+
+        // When wrapped in a CustomerProvider
+        let customerProvider = CustomerProvider(customer: customerConfig)
+
+        // Then it still counts as having a customer, even though there is no explicit ID yet
+        XCTAssertTrue(customerProvider.hasCustomer)
+        XCTAssertNil(customerProvider.customerID)
+        XCTAssertFalse(CustomerProvider(customer: nil).hasCustomer)
+    }
+
     func testResolvedID_ephemeralKey_alwaysUsesExplicitID() {
         // The legacy ephemeral key path always uses the explicit ID, regardless of the Elements Session.
         let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", ephemeralKeySecret: "ek_12345")

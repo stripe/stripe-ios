@@ -354,10 +354,7 @@ extension PaymentSheet {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
 
-            stpAssert(!customerSessionClientSecret.hasPrefix("ek_"),
-                      "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
-            stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
-                      "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+        stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
         }
 
         /// Initializes a CustomerConfiguration with a customerSessionClientSecret.
@@ -366,10 +363,7 @@ extension PaymentSheet {
             self.id = nil
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
 
-            stpAssert(!customerSessionClientSecret.hasPrefix("ek_"),
-                      "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
-            stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
-                      "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+        stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
         }
 
         /// Resolves the customer ID. For CustomerSession integrations, this matches the Android and web SDKs:
@@ -929,4 +923,12 @@ extension PaymentSheet {
         /// Accept all card funding types (internal - users should simply not set allowedCardFundingTypes to accept all)
         static let all: CardFundingType = [.debit, .credit, .prepaid, .unknown]
     }
+}
+
+/// Asserts that `clientSecret` looks like a CustomerSession client secret rather than an Ephemeral Key secret.
+func stpAssertCustomerSessionClientSecret(_ clientSecret: String) {
+    stpAssert(!clientSecret.hasPrefix("ek_"),
+              "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+    stpAssert(clientSecret.hasPrefix("cuss_"),
+              "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
 }

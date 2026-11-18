@@ -24,18 +24,15 @@ class CustomerSessionAdapter {
         let cacheDate: Date
         private let timeProvider: () -> Date
 
-        /// - Parameter customerId: The Customer the CustomerSession is scoped to, from `v1/elements/sessions`. For a CustomerSession
+        /// - Parameter customerId: The Customer the CustomerSession is scoped to. For a CustomerSession
         ///   created with a customer-configured Account, this is the Account's backing Customer, which v1 endpoints require
-        ///   instead of the merchant's `acct_` ID. Defaults to the merchant-provided ID.
+        ///   instead of the merchant's `acct_` ID. `nil` if neither the merchant nor `v1/elements/sessions` provided one.
         init(customerSessionClientSecret: CustomerSessionClientSecret,
              apiKey: String,
-             elementsSession: STPElementsSession,
+             customerId: String?,
              timeProvider: @escaping () -> Date = Date.init) {
             self.customerSessionClientSecret = customerSessionClientSecret
-            // The customer resolved server-side from the CustomerSession is authoritative, matching the
-            // Android and web SDKs. Only fall back to the explicitly provided customer ID if the response
-            // is missing it.
-            self.customerId = elementsSession.customer?.customerSession.customer ?? customerSessionClientSecret.customerId
+            self.customerId = customerId
             self.cacheDate = timeProvider()
             self.apiKey = apiKey
             self.timeProvider = timeProvider
@@ -95,7 +92,10 @@ class CustomerSessionAdapter {
 
             let tempCachedCustomerSessionClientSecret = CachedCustomerSessionClientSecret(customerSessionClientSecret: customerSessionClientSecret,
                                                                                           apiKey: apiKey,
-                                                                                          elementsSession: elementsSessionResponse,
+                                                                                          // The customer resolved server-side from the CustomerSession is authoritative, matching the
+                                                                                          // Android and web SDKs. Only fall back to the explicitly provided customer ID if the response
+                                                                                          // is missing it.
+                                                                                          customerId: elementsSessionResponse.customer?.customerSession.customer ?? customerSessionClientSecret.customerId,
                                                                                           timeProvider: timeProvider)
             self._cachedCustomerSessionClientSecret = tempCachedCustomerSessionClientSecret
             return (elementsSessionResponse, tempCachedCustomerSessionClientSecret)

@@ -51,7 +51,13 @@ struct CustomerProvider {
     }
 
     var hasCustomer: Bool {
-        return customerID != nil
+        switch backing {
+        case .customer(let customer):
+            // A CustomerSession configuration may not have an ID until the Elements Session loads.
+            return customer != nil
+        case .checkoutSession(let session):
+            return session.customer?.id != nil
+        }
     }
 
     var legacyEphemeralKeyCredentials: (customerID: String, ephemeralKeySecret: String)? {
