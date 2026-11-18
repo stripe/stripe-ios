@@ -79,4 +79,9 @@ class NSDecimalNumberStripeTest: XCTestCase {
         }
     }
 
+    func testDecimalAmount_negative() {
+        let decimalNumber = NSDecimalNumber.stp_decimalNumber(withAmount: -92123, currency: "usd")
+        XCTAssertEqual(decimalNumber, NSDecimalNumber(string: "-921.23"))
+    }
+
 }
