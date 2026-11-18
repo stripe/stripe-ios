@@ -366,10 +366,7 @@ extension PaymentSheet {
             stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
         }
 
-        /// Resolves the customer ID. For CustomerSession integrations, this matches the Android and web SDKs:
-        /// the customer resolved server-side from the CustomerSession is authoritative once available, even if
-        /// an `id` was also explicitly provided. The explicit `id` is only used as a fallback before the
-        /// Elements Session has loaded, and always for the legacy ephemeral key integration.
+        /// Resolves the customer ID. For CustomerSession integrations, the customer resolved server-side from the CustomerSession is authoritative once the Elements Session has loaded.
         func resolvedID(elementsSession: STPElementsSession?) -> String? {
             guard case .customerSession = customerAccessProvider else {
                 return id
