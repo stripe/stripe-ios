@@ -464,7 +464,7 @@ extension ConsumerSession {
     }
 
     func logout(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
