@@ -89,7 +89,7 @@ extension PaymentSheet {
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setLocalDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
@@ -105,7 +105,7 @@ extension PaymentSheet {
                         ) { status, paymentIntent, error in
                             let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setLocalDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }
@@ -129,7 +129,7 @@ extension PaymentSheet {
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setLocalDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
@@ -145,7 +145,7 @@ extension PaymentSheet {
                         ) { status, setupIntent, error in
                             let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
                             if let intent {
-                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                                setLocalDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, customerProvider: customerProvider, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
                             }
                             continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }

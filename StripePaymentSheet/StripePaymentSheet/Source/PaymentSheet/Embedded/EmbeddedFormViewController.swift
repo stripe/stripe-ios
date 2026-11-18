@@ -90,6 +90,7 @@ class EmbeddedFormViewController: UIViewController {
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    private let stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
     private weak var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
@@ -147,6 +148,7 @@ class EmbeddedFormViewController: UIViewController {
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
             isLinkUI: false,
             delegate: self
         )
@@ -167,6 +169,7 @@ class EmbeddedFormViewController: UIViewController {
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+         stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
          checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
          formCache: PaymentMethodFormCache = .init(),
          delegate: EmbeddedFormViewControllerDelegate
@@ -179,6 +182,7 @@ class EmbeddedFormViewController: UIViewController {
         self.paymentOptionToRestoreOnCancellation = previousPaymentOption
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        self.stripeBalanceFinancialAccounts = stripeBalanceFinancialAccounts
         self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache

@@ -735,7 +735,7 @@ extension PaymentSheet {
                     )
                     if case .completed = result, case .link = paymentOption {
                         // Remember Link as default payment method for users who just created an account.
-                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.viewController.loadResult.customerProvider.customerID)
+                        CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: self.viewController.loadResult.customerProvider.customerID)
                     }
 
                     completion(result)
@@ -855,6 +855,7 @@ extension PaymentSheet {
                 savedPaymentMethods: savedPaymentMethods,
                 paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: viewController.loadResult.paymentMethodMessagingPromotionsHelper,
+                stripeBalanceFinancialAccounts: viewController.loadResult.stripeBalanceFinancialAccounts,
                 paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation,
                 customerProvider: viewController.loadResult.customerProvider
             )

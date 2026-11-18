@@ -62,6 +62,7 @@ class AddPaymentMethodViewController: UIViewController {
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    private let stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
     private let linkAppearance: LinkAppearance?
     private let isLinkUI: Bool
     var previousCustomerInput: IntentConfirmParams?
@@ -72,7 +73,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, customerProvider: customerProvider, paymentMethodOrientation: paymentMethodOrientation, headerView: nil, analyticsHelper: analyticsHelper, paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, customerProvider: customerProvider, paymentMethodOrientation: paymentMethodOrientation, headerView: nil, analyticsHelper: analyticsHelper, paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper, stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -117,6 +118,7 @@ class AddPaymentMethodViewController: UIViewController {
         formCache: PaymentMethodFormCache,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
         isLinkUI: Bool = false,
         delegate: AddPaymentMethodViewControllerDelegate? = nil,
         linkAppearance: LinkAppearance? = nil
@@ -138,6 +140,7 @@ class AddPaymentMethodViewController: UIViewController {
         self.formCache = formCache
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        self.stripeBalanceFinancialAccounts = stripeBalanceFinancialAccounts
         self.isLinkUI = isLinkUI
         self.linkAppearance = linkAppearance
         super.init(nibName: nil, bundle: nil)
@@ -208,6 +211,7 @@ class AddPaymentMethodViewController: UIViewController {
                 headerView: nil,
                 analyticsHelper: analyticsHelper,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+                stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
                 isLinkUI: isLinkUI,
                 delegate: self,
                 linkAppearance: linkAppearance

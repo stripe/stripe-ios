@@ -209,7 +209,7 @@ extension STPPaymentMethodType {
     /// light/dark agnostic icons
     var iconRequiresTinting: Bool {
         switch self {
-        case .card, .AUBECSDebit, .USBankAccount, .konbini, .boleto, .bacsDebit, .payByBank:
+        case .card, .AUBECSDebit, .USBankAccount, .konbini, .boleto, .bacsDebit, .payByBank, .stripeBalance:
             return true
         default:
             return false
@@ -310,6 +310,8 @@ extension STPPaymentMethodType {
                 return .pm_type_ng_wallet
             case .mondu:
                 return .pm_type_mondu
+            case .stripeBalance:
+                return .pm_type_stripe_balance
             case .goPay:
                 return .pm_type_gopay
             case .grabPay:

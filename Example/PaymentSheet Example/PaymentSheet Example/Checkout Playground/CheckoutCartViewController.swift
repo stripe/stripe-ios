@@ -20,12 +20,14 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let shippingAddressCollection: Bool
     let defaultShippingAddress: CheckoutPlayground.DefaultAddress?
     let defaultBillingAddress: CheckoutPlayground.DefaultAddress?
+    let defaultPhone: String?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     let applePayEnabled: Bool
     let paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay
     let currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance
+    let paymentElementAppearance: PaymentSheet.Appearance
     let delayCheckoutClientRequests: Bool
 
     func makeUIViewController(context: Context) -> UINavigationController {
@@ -35,12 +37,14 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             shippingAddressCollection: shippingAddressCollection,
             defaultShippingAddress: defaultShippingAddress,
             defaultBillingAddress: defaultBillingAddress,
+            defaultPhone: defaultPhone,
             adaptivePricing: adaptivePricing,
             integrationType: integrationType,
             expressCheckoutElementSettings: expressCheckoutElementSettings,
             applePayEnabled: applePayEnabled,
             paymentElementApplePayDisplay: paymentElementApplePayDisplay,
             currencySelectorAppearance: currencySelectorAppearance,
+            paymentElementAppearance: paymentElementAppearance,
             delayCheckoutClientRequests: delayCheckoutClientRequests,
             closeAction: { dismiss() }
         )
@@ -58,12 +62,14 @@ final class CheckoutCartViewController: UIViewController {
     private let shippingAddressCollection: Bool
     private let defaultShippingAddress: CheckoutPlayground.DefaultAddress?
     private let defaultBillingAddress: CheckoutPlayground.DefaultAddress?
+    private let defaultPhone: String?
     private let adaptivePricing: Bool
     private let integrationType: CheckoutPlayground.IntegrationType
     private let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     private let applePayEnabled: Bool
     private let paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay
     private let currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance
+    private let paymentElementAppearance: PaymentSheet.Appearance
     private let delayCheckoutClientRequests: Bool
     private let closeAction: () -> Void
     private let diagnostics = CheckoutSessionDiagnostics()
@@ -95,12 +101,14 @@ final class CheckoutCartViewController: UIViewController {
         shippingAddressCollection: Bool,
         defaultShippingAddress: CheckoutPlayground.DefaultAddress?,
         defaultBillingAddress: CheckoutPlayground.DefaultAddress?,
+        defaultPhone: String?,
         adaptivePricing: Bool,
         integrationType: CheckoutPlayground.IntegrationType,
         expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings,
         applePayEnabled: Bool,
         paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay,
         currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance,
+        paymentElementAppearance: PaymentSheet.Appearance,
         delayCheckoutClientRequests: Bool,
         closeAction: @escaping () -> Void
     ) {
@@ -109,12 +117,14 @@ final class CheckoutCartViewController: UIViewController {
         self.shippingAddressCollection = shippingAddressCollection
         self.defaultShippingAddress = defaultShippingAddress
         self.defaultBillingAddress = defaultBillingAddress
+        self.defaultPhone = defaultPhone
         self.adaptivePricing = adaptivePricing
         self.integrationType = integrationType
         self.expressCheckoutElementSettings = expressCheckoutElementSettings
         self.applePayEnabled = applePayEnabled
         self.paymentElementApplePayDisplay = paymentElementApplePayDisplay
         self.currencySelectorAppearance = currencySelectorAppearance
+        self.paymentElementAppearance = paymentElementAppearance
         self.delayCheckoutClientRequests = delayCheckoutClientRequests
         self.closeAction = closeAction
         super.init(nibName: nil, bundle: nil)
@@ -221,10 +231,12 @@ final class CheckoutCartViewController: UIViewController {
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
                 paymentElementConfiguration.applePayConfiguration.display = paymentElementApplePayDisplay.sdkValue
+                paymentElementConfiguration.appearance = paymentElementAppearance
                 configuration.paymentElement = paymentElementConfiguration
             }
             configuration.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             configuration.defaults.billingDetails = defaultBillingAddress?.checkoutBillingDetails
+            configuration.defaults.phone = defaultPhone
             configuration.defaults.email = emailSettings.localDefaultEmail
             if shippingAddressCollection {
                 configuration.shippingAddressElement = .init()
