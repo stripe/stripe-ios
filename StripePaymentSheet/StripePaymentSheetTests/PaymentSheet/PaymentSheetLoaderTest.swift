@@ -136,9 +136,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     func testPaymentSheetLoadDeferredIntentSucceeds() {
         // Given a saved guest card, customerless loads must still match requests with no client default.
         let previousGuestDefault = CustomerPaymentOption.localDefaultPaymentMethod(for: nil)
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId("pm_guest_default"), forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId("pm_guest_default"), forCustomer: nil)
         defer {
-            CustomerPaymentOption.setDefaultPaymentMethod(previousGuestDefault, forCustomer: nil)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(previousGuestDefault, forCustomer: nil)
         }
 
         // Test PaymentSheetLoader.load can load various IntentConfigurations
@@ -429,13 +429,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // Set the card as default
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             .stripeId("pm_1Sc4CpFY0qyl6XeWThu3QpWE"),
             forCustomer: testCustomerID
         )
         defer {
             // Unset this global state to avoid pollution
-            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: testCustomerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: testCustomerID)
         }
         // Note the card (the older PM) is actually expected to be first, because it is the default
         let expectedSavedPms = [
