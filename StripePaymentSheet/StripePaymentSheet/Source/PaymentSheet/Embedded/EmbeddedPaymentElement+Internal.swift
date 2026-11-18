@@ -199,10 +199,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Present the current selection's form VC
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         let bottomSheet = bottomSheetController(with: selectedFormViewController)
-        let presentingViewController = resolvedPresentingViewController
-        assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
-        presentingViewController?.presentAsSheet(bottomSheet)
+        presentSheet(bottomSheet)
     }
 
     private func handleSelectionWithoutForm() {
@@ -329,7 +327,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
-            resolvedPresentingViewController?.presentAsSheet(bottomSheetVC)
+            presentSheet(bottomSheetVC)
             return
         }
 
@@ -345,7 +343,27 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
-        resolvedPresentingViewController?.presentAsSheet(bottomSheetVC)
+        presentSheet(bottomSheetVC)
+    }
+
+    private func presentSheet(_ sheet: any PaymentSheetContainer) {
+        guard let presentingViewController = resolvedPresentingViewController else {
+            if checkout != nil {
+                // Checkout merchants can't set `presentingViewController`, and we only present in response to the customer interacting with `view`, so we should always find one.
+                // Logging an unexpected error also fires an stpAssertionFailure.
+                STPAnalyticsClient.sharedClient.log(
+                    analytic: UnexpectedCheckoutElementsErrorAnalytic(
+                        errorCode: .paymentElementPresentingViewControllerUnavailable,
+                        errorMessage: "Payment Element couldn't find a view controller to present from."
+                    )
+                )
+            } else {
+                assertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+            }
+            return
+        }
+        presentedSheet = sheet
+        presentingViewController.presentAsSheet(sheet)
     }
 
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {
@@ -390,7 +408,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: false,
                                                                accessoryType: accessoryType)
-        presentingViewController?.dismiss(animated: true)
+        presentedSheet?.presentingViewController?.dismiss(animated: true)
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
@@ -427,7 +445,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
-        presentingViewController?.dismiss(animated: true)
+        presentedSheet?.presentingViewController?.dismiss(animated: true)
         return .success
     }
 
@@ -463,7 +481,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
-        presentingViewController?.dismiss(animated: true)
+        presentedSheet?.presentingViewController?.dismiss(animated: true)
     }
 
     private func getAccessoryButton(savedPaymentMethods: [STPPaymentMethod]) -> RowButton.RightAccessoryButton.AccessoryType? {
@@ -502,7 +520,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
-        presentingViewController?.dismiss(animated: true)
+        presentedSheet?.presentingViewController?.dismiss(animated: true)
     }
 }
 
