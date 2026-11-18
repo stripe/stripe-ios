@@ -104,6 +104,44 @@ final class StripeBalanceTests: XCTestCase {
         }
     }
 
+    func testOnlyOffersStripeBalanceWhenItsAccountsLoaded() {
+        // Given
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .stripeBalance])
+        let elementsSession = makeElementsSessionWithCustomerSession(paymentMethodTypes: ["card", "stripe_balance"])
+        func paymentMethodTypes(financialAccounts: StripeBalanceFinancialAccounts?) -> [PaymentSheet.PaymentMethodType] {
+            PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+                from: intent,
+                elementsSession: elementsSession,
+                configuration: makeCustomerSessionConfiguration(),
+                stripeBalanceFinancialAccounts: financialAccounts
+            )
+        }
+
+        // Then Stripe balance is offered when its accounts loaded
+        XCTAssertEqual(
+            paymentMethodTypes(financialAccounts: .init(accounts: [makeAccount(id: "fa_1")], currency: "usd")),
+            [.stripe(.card), .stripe(.stripeBalance)]
+        )
+        // ...but not when they didn't, since there'd be nothing to pay from
+        XCTAssertEqual(paymentMethodTypes(financialAccounts: nil), [.stripe(.card)])
+    }
+
+    func testDoesNotOfferStripeBalanceWhenTheBuyerHasNoAccounts() {
+        // Given the buyer's accounts loaded, but there are none to pay from
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .stripeBalance])
+
+        // When
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: makeElementsSessionWithCustomerSession(paymentMethodTypes: ["card", "stripe_balance"]),
+            configuration: makeCustomerSessionConfiguration(),
+            stripeBalanceFinancialAccounts: .init(accounts: [], currency: "usd")
+        )
+
+        // Then
+        XCTAssertEqual(paymentMethodTypes, [.stripe(.card)])
+    }
+
     // MARK: - Loading
 
     func testOnlyFetchesAccountsWhenStripeBalanceIsOfferedWithACustomerSession() async {
@@ -139,7 +177,148 @@ final class StripeBalanceTests: XCTestCase {
         XCTAssertFalse(fallbackElementsSession)
     }
 
+    // MARK: - Element
+
+    func testElementIsInvalidUntilAnAccountIsSelected() throws {
+        // Given
+        let element = makeElement(accounts: [makeAccount(id: "fa_1"), makeAccount(id: "fa_2")])
+        XCTAssertFalse(element.validationState.isValid)
+        XCTAssertNil(element.updateParams(params: IntentConfirmParams(type: .stripe(.stripeBalance))))
+
+        // When the buyer selects an account
+        try XCTUnwrap(row(for: "fa_2", in: element)).sendActions(for: .touchUpInside)
+
+        // Then
+        XCTAssertTrue(element.validationState.isValid)
+        let params = try XCTUnwrap(element.updateParams(params: IntentConfirmParams(type: .stripe(.stripeBalance))))
+        XCTAssertEqual(params.paymentMethodParams.additionalAPIParameters["stripe_balance[financial_account]"] as? String, "fa_2")
+        XCTAssertEqual(row(for: "fa_2", in: element)?.isSelected, true)
+        XCTAssertEqual(row(for: "fa_1", in: element)?.isSelected, false)
+    }
+
+    func testElementDoesNotSelectAccountsThatCantCoverThePayment() throws {
+        // Given
+        let element = makeElement(accounts: [makeAccount(id: "fa_1", eligible: false, ineligibleReason: .insufficientBalance)])
+        let row = try XCTUnwrap(row(for: "fa_1", in: element))
+
+        // When
+        row.sendActions(for: .touchUpInside)
+
+        // Then
+        XCTAssertFalse(row.isEnabled)
+        XCTAssertFalse(element.validationState.isValid)
+        XCTAssertTrue(row.accessibilityLabel?.contains("Insufficient balance") ?? false)
+    }
+
+    func testElementSelectsTheDefaultAccountOnlyIfItsSelectable() {
+        // Given
+        let accounts = [makeAccount(id: "fa_1"), makeAccount(id: "fa_2", eligible: false, ineligibleReason: .insufficientBalance)]
+
+        // When
+        let selectableDefault = makeElement(accounts: accounts, defaultFinancialAccountID: "fa_1")
+        let unselectableDefault = makeElement(accounts: accounts, defaultFinancialAccountID: "fa_2")
+
+        // Then
+        XCTAssertEqual(selectableDefault.selectedFinancialAccountID, "fa_1")
+        XCTAssertEqual(row(for: "fa_1", in: selectableDefault)?.isSelected, true)
+        XCTAssertNil(unselectableDefault.selectedFinancialAccountID)
+    }
+
+    func testElementShowsNoBalanceWhenSettingUp() throws {
+        // Given accounts loaded without a currency, as when setting up
+        let element = StripeBalanceFinancialAccountsElement(
+            financialAccounts: .init(accounts: [makeAccount(id: "fa_1")], currency: nil),
+            defaultFinancialAccountID: nil,
+            appearance: .default
+        )
+
+        // Then the row only shows the account's name
+        XCTAssertEqual(try XCTUnwrap(row(for: "fa_1", in: element)).accessibilityLabel, "Account fa_1")
+    }
+
+    func testElementShowsANegativeBalance() throws {
+        // Given an account whose available balance is negative
+        let account = StripeBalanceFinancialAccount(
+            id: "fa_1",
+            displayName: "Account fa_1",
+            balance: .init(available: ["usd": .init(value: -500, currency: "usd")]),
+            eligible: false,
+            ineligibleReason: .insufficientBalance
+        )
+
+        // When
+        let element = makeElement(accounts: [account])
+
+        // Then the row shows the negative balance
+        let negativeBalance = String.localizedAmountDisplayString(for: -500, currency: "usd")
+        XCTAssertEqual(
+            try XCTUnwrap(row(for: "fa_1", in: element)).accessibilityLabel,
+            "Account fa_1, \(negativeBalance) available, Insufficient balance"
+        )
+    }
+
+    // MARK: - Form
+
+    func testFormListsFinancialAccounts() throws {
+        // Given
+        let configuration = makeCustomerSessionConfiguration()
+
+        // When
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.stripeBalance]),
+            elementsSession: makeElementsSessionWithCustomerSession(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.stripeBalance),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService._testValue(),
+            analyticsHelper: ._testValue(),
+            stripeBalanceFinancialAccounts: .init(accounts: [makeAccount(id: "fa_1")], currency: "usd")
+        ).make()
+
+        // Then
+        let elements = form.getAllUnwrappedSubElements()
+        let financialAccountsElement = try XCTUnwrap(elements.compactMap { $0 as? StripeBalanceFinancialAccountsElement }.first)
+        XCTAssertNotNil(row(for: "fa_1", in: financialAccountsElement))
+    }
+
     // MARK: - Helpers
+
+    private func makeAccount(
+        id: String,
+        eligible: Bool = true,
+        ineligibleReason: StripeBalanceFinancialAccount.IneligibleReason? = nil
+    ) -> StripeBalanceFinancialAccount {
+        StripeBalanceFinancialAccount(
+            id: id,
+            displayName: "Account \(id)",
+            balance: .init(available: ["usd": .init(value: 1000, currency: "usd")]),
+            eligible: eligible,
+            ineligibleReason: ineligibleReason
+        )
+    }
+
+    private func makeElement(
+        accounts: [StripeBalanceFinancialAccount],
+        defaultFinancialAccountID: String? = nil
+    ) -> StripeBalanceFinancialAccountsElement {
+        StripeBalanceFinancialAccountsElement(
+            financialAccounts: .init(accounts: accounts, currency: "usd"),
+            defaultFinancialAccountID: defaultFinancialAccountID,
+            appearance: .default
+        )
+    }
+
+    private func row(for financialAccountID: String, in element: StripeBalanceFinancialAccountsElement) -> StripeBalanceFinancialAccountRow? {
+        func rows(in view: UIView) -> [StripeBalanceFinancialAccountRow] {
+            view.subviews.flatMap { subview -> [StripeBalanceFinancialAccountRow] in
+                if let row = subview as? StripeBalanceFinancialAccountRow {
+                    return [row]
+                }
+                return rows(in: subview)
+            }
+        }
+        return rows(in: element.view).first { $0.financialAccount.id == financialAccountID }
+    }
 
     private func makeCustomerSessionConfiguration() -> PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
