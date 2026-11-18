@@ -102,7 +102,7 @@ class ConfirmationChallengeTests: XCTestCase {
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
         await confirmationChallenge.setTimeout(timeout: 30)
         // wait to make sure that the tokens will be ready by the time we call fetchToken
-        try await Task.sleep(nanoseconds: 6_000_000_000)
+        try await Task.sleep(nanoseconds: 10_000_000_000)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
         // didn't take the full timeout time, exited early
