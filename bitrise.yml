@@ -523,7 +523,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  installation-tests:
+  installation-tests: &installation_tests
     description: Run Swift Package Manager installation tests with one simulator and dependency setup.
     before_run:
     - install-runtime-16
@@ -538,20 +538,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  installation-tests-spm:
-    before_run:
-    - install-runtime-16
-    - prep_all
-    - installation-spm-steps
-    steps:
-    - deploy-to-bitrise-io@2:
-        is_always_run: true
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
-    meta:
-      bitrise.io:
-        stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
+  installation-tests-spm: *installation_tests
   installation-spm-steps:
     steps:
     - fastlane@3:
