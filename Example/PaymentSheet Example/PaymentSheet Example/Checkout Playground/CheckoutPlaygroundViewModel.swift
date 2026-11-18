@@ -56,7 +56,14 @@ extension CheckoutPlayground {
             }
         }
         @Published var currency: Currency
-        @Published var customerType: CustomerType
+        @Published var customerType: CustomerType {
+            didSet {
+                // Like the PaymentSheet playground, changing the customer type starts over with a fresh New customer.
+                if customerType != oldValue {
+                    Self.resetNewCustomer()
+                }
+            }
+        }
         @Published var email: EmailSettings
         @Published var cartScenario: CartScenario
         @Published var shippingAddressCollection: Bool
@@ -229,7 +236,15 @@ extension CheckoutPlayground {
                 let backend = PlaygroundBackend(baseURL: backendURL)
                 let publishableKey = try await backend.fetchPublishableKey()
                 let apiClient = STPAPIClient(publishableKey: publishableKey)
-                let clientSecret = try await SessionFactory(backend: backend, apiClient: apiClient).create(
+                // Only reuse the stored New customer if this backend created it with the email this session would
+                // give it. Otherwise, a new one is created.
+                let customerEmail = resolvedEmail.customerEmail
+                let storedNewCustomer = UserDefaults.standard.data(forKey: NewCustomer.nsUserDefaultsKey)
+                    .flatMap { try? JSONDecoder().decode(NewCustomer.self, from: $0) }
+                let reusableNewCustomerID = storedNewCustomer.flatMap {
+                    $0.backendURL == backendURL.absoluteString && $0.email == customerEmail ? $0.id : nil
+                }
+                let (clientSecret, customerID) = try await SessionFactory(backend: backend, apiClient: apiClient).create(
                     currency: currency,
                     customerType: customerType,
                     lineItems: lineItems,
@@ -240,8 +255,15 @@ extension CheckoutPlayground {
                     paymentMethodRemove: checkoutSessionPaymentMethodRemove,
                     email: resolvedEmail,
                     automaticPaymentMethods: automaticPaymentMethods,
-                    paymentMethodTypes: paymentMethodTypes
+                    paymentMethodTypes: paymentMethodTypes,
+                    newCustomerID: reusableNewCustomerID
                 )
+
+                // Store the New customer so the next session reuses it.
+                if customerType == .new, let customerID {
+                    let newCustomer = NewCustomer(id: customerID, backendURL: backendURL.absoluteString, email: customerEmail)
+                    UserDefaults.standard.set(try? JSONEncoder().encode(newCustomer), forKey: NewCustomer.nsUserDefaultsKey)
+                }
 
                 // Example app behavior: the local backend response controls the Stripe publishable key.
                 STPAPIClient.shared.publishableKey = publishableKey
@@ -334,6 +356,11 @@ extension CheckoutPlayground {
             } catch {
                 print("Unable to serialize Checkout playground settings: \(error)")
             }
+        }
+
+        /// Forgets the stored New customer, so the next New session creates a fresh one.
+        static func resetNewCustomer() {
+            UserDefaults.standard.removeObject(forKey: NewCustomer.nsUserDefaultsKey)
         }
 
         private static func settingsFromDefaults() -> Settings? {
