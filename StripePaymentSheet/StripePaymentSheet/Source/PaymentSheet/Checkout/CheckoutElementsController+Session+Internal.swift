@@ -36,12 +36,6 @@ extension CheckoutElementsController.Session {
         return totals.total.minorUnitsAmount
     }
 
-    /// The amount to send when creating a Link account session, or `nil` for $0 sessions.
-    /// The backend rejects `amount=0`, so we omit it, matching Stripe.js.
-    var linkAccountSessionAmount: Int? {
-        return amount > 0 ? amount : nil
-    }
-
     /// The currency associated with the session's amounts.
     var activePresentmentCurrency: String? {
         return presentmentDetails?.presentmentCurrency ?? currency
