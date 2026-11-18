@@ -388,11 +388,6 @@ extension STPAPIClient {
             }
         } catch StripeError.apiError(let apiError) {
             throw checkoutSessionError(from: apiError)
-        } catch {
-            if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
-            }
-            throw error
         }
     }
 
@@ -431,11 +426,6 @@ extension STPAPIClient {
             }
         } catch StripeError.apiError(let apiError) where useServerErrorMessage {
             throw checkoutSessionError(from: apiError)
-        } catch {
-            if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
-            }
-            throw error
         }
     }
 
