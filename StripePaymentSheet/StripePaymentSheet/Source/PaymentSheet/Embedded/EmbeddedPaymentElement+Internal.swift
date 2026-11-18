@@ -336,7 +336,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let verticalSavedPaymentMethodsViewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: loadResult.customerProvider,
-            intent: intent,
             checkout: checkout,
             selectedPaymentMethod: selectedSavedPaymentMethod,
             paymentMethods: savedPaymentMethods,
@@ -372,7 +371,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: StripePayments.STPPaymentMethod) {
         // Detach the payment method from the customer
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        loadResult.customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // if it's the default pm, unset it

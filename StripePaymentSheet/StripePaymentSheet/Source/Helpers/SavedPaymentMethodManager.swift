@@ -19,7 +19,6 @@ final class SavedPaymentMethodManager {
 
     let configuration: PaymentElementConfiguration
     let elementsSession: STPElementsSession
-    let intent: Intent
 
     private lazy var ephemeralKey: String? = {
         guard let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession) else {
@@ -33,62 +32,9 @@ final class SavedPaymentMethodManager {
         return ephemeralKey
     }()
 
-    /// The Customer the CustomerSession is scoped to. For a CustomerSession created with a customer-configured
-    /// Account, this is the Account's backing Customer, which v1 endpoints require instead of the merchant's `acct_` ID.
-    private var customerSessionCustomerID: String? {
-        elementsSession.customer?.customerSession.customer ?? configuration.customer?.id
-    }
-
-    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent) {
+    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) {
         self.configuration = configuration
         self.elementsSession = elementsSession
-        self.intent = intent
-    }
-
-    func detach(paymentMethod: STPPaymentMethod) {
-        switch intent {
-        case .checkout(let session):
-            Task {
-                try? await configuration.apiClient.detachPaymentMethod(
-                    paymentMethod.stripeId,
-                    fromCheckoutSession: session.id,
-                    clientSecret: session.clientSecret
-                )
-            }
-        case .paymentIntent, .setupIntent, .deferredIntent:
-            guard let ephemeralKey else {
-                return
-            }
-
-            if let customerAccessProvider = configuration.customer?.customerAccessProvider,
-               case .customerSession(let customerSessionClientSecret) = customerAccessProvider,
-               let customerId = customerSessionCustomerID {
-                if paymentMethod.type == .card {
-                    configuration.apiClient.detachPaymentMethodRemoveDuplicates(
-                        paymentMethod.stripeId,
-                        customerId: customerId,
-                        fromCustomerUsing: ephemeralKey,
-                        withCustomerSessionClientSecret: customerSessionClientSecret
-                    ) { (_) in
-                        // no-op
-                    }
-                } else {
-                    configuration.apiClient.detachPaymentMethod(
-                        paymentMethod.stripeId,
-                        fromCustomerUsing: ephemeralKey,
-                        withCustomerSessionClientSecret: customerSessionClientSecret) { (_) in
-                            // no-op
-                        }
-                }
-            } else {
-                configuration.apiClient.detachPaymentMethod(
-                    paymentMethod.stripeId,
-                    fromCustomerUsing: ephemeralKey
-                ) { (_) in
-                    // no-op
-                }
-            }
-        }
     }
 
     func setAsDefaultPaymentMethod(defaultPaymentMethodId: String) async throws -> STPCustomer {
