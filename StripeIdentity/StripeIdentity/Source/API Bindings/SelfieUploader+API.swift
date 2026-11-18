@@ -52,7 +52,6 @@ extension StripeAPI.VerificationPageDataFace {
             rightHighResImage: rightHighResImage,
             bestFaceScore: .init(capturedImages.bestMiddle.scannerOutput.faceScore),
             faceScoreVariance: .init(capturedImages.faceScoreVariance),
-            numFrames: capturedImages.numSamples,
             bestBrightnessValue: bestFrameExifMetadata?.brightnessValue.map {
                 TwoDecimalFloat(double: $0)
             },
