@@ -51,6 +51,62 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         XCTAssertNotNil(coordinator)
     }
 
+    func testLinkCardBrandAcceptanceIsHonored() async throws {
+        // This flag allows us to use `configHeader` for inspection. We restore it to its previous value afterwards.
+        let previousFlag = PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        defer {
+            PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = previousFlag
+        }
+
+        var configHeader: String?
+        stub { $0.url?.path == "/v1/elements/sessions" } response: { request in
+            configHeader = request.value(forHTTPHeaderField: MobileSession.configHeaderName)
+            return HTTPStubsResponse(jsonObject: Self.linkElementsSession, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_1234"
+
+        // Default: all supported card brands are accepted.
+        _ = try await CryptoOnrampCoordinator.create(apiClient: apiClient)
+
+        let defaultHeader = try XCTUnwrap(configHeader)
+        let defaultJSON = try JSONSerialization.jsonObject(with: Data(defaultHeader.utf8)) as? [String: Any]
+        let defaultConfiguration = defaultJSON?["payment_element_config"] as? [String: Any]
+        let defaultAcceptance = defaultConfiguration?["card_brand_acceptance"] as? [String: Any]
+        XCTAssertEqual(defaultAcceptance?["filter"] as? String, "all")
+        XCTAssertEqual(defaultAcceptance?["brands"] as? [String], [])
+
+        // Allow list: only Visa and Mastercard are accepted.
+        configHeader = nil
+        _ = try await CryptoOnrampCoordinator.create(
+            apiClient: apiClient,
+            linkCardBrandAcceptance: .allowed(brands: [.visa, .mastercard])
+        )
+
+        let allowedHeader = try XCTUnwrap(configHeader)
+        let allowedJSON = try JSONSerialization.jsonObject(with: Data(allowedHeader.utf8)) as? [String: Any]
+        let allowedConfiguration = allowedJSON?["payment_element_config"] as? [String: Any]
+        let allowedAcceptance = allowedConfiguration?["card_brand_acceptance"] as? [String: Any]
+        XCTAssertEqual(allowedAcceptance?["filter"] as? String, "allowed")
+        XCTAssertEqual(allowedAcceptance?["brands"] as? [String], ["visa", "mastercard"])
+
+        // Deny list: American Express is blocked.
+        configHeader = nil
+        _ = try await CryptoOnrampCoordinator.create(
+            apiClient: apiClient,
+            linkCardBrandAcceptance: .disallowed(brands: [.amex])
+        )
+
+        let disallowedHeader = try XCTUnwrap(configHeader)
+        let disallowedJSON = try JSONSerialization.jsonObject(with: Data(disallowedHeader.utf8)) as? [String: Any]
+        let disallowedConfiguration = disallowedJSON?["payment_element_config"] as? [String: Any]
+        let disallowedAcceptance = disallowedConfiguration?["card_brand_acceptance"] as? [String: Any]
+        XCTAssertEqual(disallowedAcceptance?["filter"] as? String, "disallowed")
+        XCTAssertEqual(disallowedAcceptance?["brands"] as? [String], ["amex"])
+    }
+
     @MainActor
     func testPreAuthSameMerchantUsesOriginalPaymentMethodWithoutHint() async throws {
         try await assertMatchingMerchant(countryHint: nil)
@@ -553,6 +609,7 @@ final class CryptoOnrampCoordinatorTests: APIStubbedTestCase {
         "link_settings": [
             "link_funding_sources": ["CARD"],
             "link_mobile_use_attestation_endpoints": true,
+            "link_passthrough_mode_enabled": true,
         ],
         "merchant_country": "US",
         "ordered_payment_method_types_and_wallets": ["card"],

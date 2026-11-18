@@ -78,7 +78,7 @@
 
 "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Devam ettiğinizde, %@ şirketine satın alma veya abonelik planınıza uygun olarak Twint Bakiyenizi otomatik olarak yinelenen bir şekilde borçlandırma yetkisi vermiş olursunuz.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Devam ederek %1$@ şirketinin bu ödeme ve gelecekteki ödemeler için Cash Uygulaması hesabınızı %2$@ şirketinin şartlarına uygun olarak borçlandırmasına izin vermiş olursunuz. Bu durum, izin iptal edilene kadar geçerli olur. İstediğiniz zaman Cash Uygulamasının Ayarlarından bu izni değiştirebilirsiniz.";
+"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Devam ederek, bu yetkilendirme iptal edilene kadar, %2$@ koşulları uyarınca bu ödeme ve gelecekteki ödemeler için Cash App hesabınızı borçlandırması konusunda %1$@ tarafını yetkilendirirsiniz. Bunu istediğiniz zaman Cash App Ayarlarınızdan değiştirebilirsiniz.";
 
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "%@’e katılarak <terms>Koşulları</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
 

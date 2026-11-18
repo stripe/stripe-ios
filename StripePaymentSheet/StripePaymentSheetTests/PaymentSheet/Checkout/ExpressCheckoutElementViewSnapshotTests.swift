@@ -122,6 +122,7 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         let view = ExpressCheckoutElementUIView(
             session: session,
             configuration: configuration,
+            userInterfaceStyle: .automatic,
             delegate: Delegate()
         )
         view.update(

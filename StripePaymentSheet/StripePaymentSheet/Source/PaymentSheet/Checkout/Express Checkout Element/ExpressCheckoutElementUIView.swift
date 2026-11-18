@@ -40,6 +40,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     init(
         session: CheckoutElementsController.Session,
         configuration: ExpressCheckoutElement.Configuration,
+        userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient = .shared,
         analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
@@ -64,6 +65,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+        userInterfaceStyle.configure(self)
     }
 
     @available(*, unavailable)

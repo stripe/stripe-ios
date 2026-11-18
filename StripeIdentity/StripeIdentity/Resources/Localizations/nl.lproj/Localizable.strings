@@ -8,9 +8,9 @@
 
 "Auto" = "Automatisch";
 
-"Back %@ photo successfully uploaded" = "Terug %@ foto succesvol geüpload";
+"Back %@ photo successfully uploaded" = "Foto van achterkant van %@ succesvol geüpload";
 
-"Back identity document photo successfully uploaded" = "Foto van identiteitsbewijs succesvol geüpload";
+"Back identity document photo successfully uploaded" = "Foto van achterkant van identiteitsbewijs succesvol geüpload";
 
 "Back of %@" = "Achterkant van %@";
 
@@ -56,7 +56,7 @@
 
 "Front %@ photo successfully uploaded" = "Voorkant %@ foto succesvol geüpload";
 
-"Front identity document photo successfully uploaded" = "Foto voor identiteitsbewijs succesvol geüpload";
+"Front identity document photo successfully uploaded" = "Foto van voorkant van identiteitsbewijs succesvol geüpload";
 
 "Front of %@" = "Voorkant van %@";
 
@@ -101,8 +101,6 @@
 "Keep ID level" = "Houd het identiteitsbewijs recht";
 
 "Last 4 of Social Security number" = "Laatste vier cijfers van socialezekerheidsnummer";
-
-"Loading" = "Bezig met laden";
 
 "Make sure you're in a well lit space." = "Zorg dat er voldoende belichting is.";
 

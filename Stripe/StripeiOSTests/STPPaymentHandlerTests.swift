@@ -740,6 +740,153 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
     }
 }
 
+// MARK: - Closing the hosted instructions web view
+class STPPaymentHandlerWebViewDismissTests: XCTestCase {
+    final class PollingAuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
+        func authenticationPresentingViewController() -> UIViewController { UIViewController() }
+        func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {}
+        func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) { completion?() }
+        func presentPollingVCForAction(action: STPPaymentHandlerActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {}
+    }
+
+    let authenticationContext = PollingAuthenticationContext()
+
+    @MainActor
+    func testPixPaymentIntentWebViewDismissLetsPollingCompleteAction() {
+        XCTAssertEqual(paymentIntentStatusesAfterWebViewDismissThenPollingSuccess(paymentMethodType: "pix"), [.succeeded])
+    }
+
+    @MainActor
+    func testPixSetupIntentWebViewDismissLetsPollingCompleteAction() {
+        XCTAssertEqual(setupIntentStatusesAfterWebViewDismissThenPollingSuccess(paymentMethodType: "pix"), [.succeeded])
+    }
+
+    @MainActor
+    func testPayNowPaymentIntentWebViewDismissLetsPollingCompleteAction() {
+        XCTAssertEqual(paymentIntentStatusesAfterWebViewDismissThenPollingSuccess(paymentMethodType: "paynow"), [.succeeded])
+    }
+
+    @MainActor
+    func testPromptPayPaymentIntentWebViewDismissLetsPollingCompleteAction() {
+        XCTAssertEqual(paymentIntentStatusesAfterWebViewDismissThenPollingSuccess(paymentMethodType: "promptpay"), [.succeeded])
+    }
+
+    @MainActor
+    func testRedirectPaymentIntentWebViewDismissCancels() {
+        XCTAssertEqual(paymentIntentStatusesAfterWebViewDismissThenPollingSuccess(paymentMethodType: "bancontact"), [.canceled])
+    }
+
+    @MainActor
+    func testRedirectSetupIntentWebViewDismissCancels() {
+        XCTAssertEqual(setupIntentStatusesAfterWebViewDismissThenPollingSuccess(paymentMethodType: "bancontact"), [.canceled])
+    }
+
+    // MARK: Helpers
+
+    private func nextAction(paymentMethodType: String) -> [String: Any] {
+        guard ["pix", "paynow", "promptpay"].contains(paymentMethodType) else {
+            return [
+                "type": "redirect_to_url",
+                "redirect_to_url": ["url": "https://example.com", "return_url": "test://stripe-redirect"],
+            ]
+        }
+        return [
+            "type": "\(paymentMethodType)_display_qr_code",
+            "\(paymentMethodType)_display_qr_code": [
+                "data": "qr-data",
+                "image_url_png": "https://qr.stripe.com/test.png",
+                "image_url_svg": "https://qr.stripe.com/test.svg",
+                "expires_at": Int(Date().addingTimeInterval(3600).timeIntervalSince1970),
+                "hosted_instructions_url": "https://payments.stripe.com/qr/instructions/test",
+            ],
+        ]
+    }
+
+    /// Returns the statuses the PaymentIntent action's completion receives when the customer closes the web view
+    /// while the intent is still `requires_action`, and the polling screen later sees the intent succeed.
+    @MainActor
+    private func paymentIntentStatusesAfterWebViewDismissThenPollingSuccess(paymentMethodType: String) -> [STPPaymentHandlerActionStatus] {
+        // Given a PaymentIntent that still requires action whenever it's refetched
+        let fixture = STPFixtures.paymentIntent(
+            paymentMethodTypes: [paymentMethodType],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": paymentMethodType, "created": 1_652_736_692]
+        )
+        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: fixture.allResponseFields.merging([
+            "next_action": nextAction(paymentMethodType: paymentMethodType),
+        ]) { _, new in new })!
+        let apiClient = STPAPIClientPollingMock()
+        var retrieveCount = 0
+        apiClient.retrievePaymentIntentHandler = { _, _, completion in
+            retrieveCount += 1
+            completion(paymentIntent, nil)
+        }
+        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+        var statuses: [STPPaymentHandlerActionStatus] = []
+        let action = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: apiClient,
+            authenticationContext: authenticationContext,
+            threeDSCustomizationSettings: .init(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, _ in
+            statuses.append(status)
+            paymentHandler.currentAction = nil
+        }
+        paymentHandler.currentAction = action
+
+        // When the customer closes the web view
+        paymentHandler.safariViewControllerDidFinish(SFSafariViewController(url: URL(string: "https://example.com")!))
+        XCTAssertEqual(retrieveCount, 1)
+
+        // ...and the polling screen later sees the intent succeed
+        action.complete(with: .succeeded, error: nil)
+        return statuses
+    }
+
+    /// Returns the statuses the SetupIntent action's completion receives when the customer closes the web view
+    /// while the intent is still `requires_action`, and the polling screen later sees the intent succeed.
+    @MainActor
+    private func setupIntentStatusesAfterWebViewDismissThenPollingSuccess(paymentMethodType: String) -> [STPPaymentHandlerActionStatus] {
+        // Given a SetupIntent that still requires action whenever it's refetched
+        let fixture = STPFixtures.setupIntent(
+            paymentMethodTypes: [paymentMethodType],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": paymentMethodType, "created": 1_652_736_692]
+        )
+        let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: fixture.allResponseFields.merging([
+            "next_action": nextAction(paymentMethodType: paymentMethodType),
+        ]) { _, new in new })!
+        let apiClient = STPAPIClientPollingMock()
+        var retrieveCount = 0
+        apiClient.retrieveSetupIntentHandler = { _, _, completion in
+            retrieveCount += 1
+            completion(setupIntent, nil)
+        }
+        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+        var statuses: [STPPaymentHandlerActionStatus] = []
+        let action = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: apiClient,
+            authenticationContext: authenticationContext,
+            threeDSCustomizationSettings: .init(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, _ in
+            statuses.append(status)
+            paymentHandler.currentAction = nil
+        }
+        paymentHandler.currentAction = action
+
+        // When the customer closes the web view
+        paymentHandler.safariViewControllerDidFinish(SFSafariViewController(url: URL(string: "https://example.com")!))
+        XCTAssertEqual(retrieveCount, 1)
+
+        // ...and the polling screen later sees the intent succeed
+        action.complete(with: .succeeded, error: nil)
+        return statuses
+    }
+}
+
 // MARK: - Mock Classes
 class STPAPIClientPollingMock: STPAPIClient {
     var retrievePaymentIntentHandler: ((String, [String]?, @escaping STPPaymentIntentCompletionBlock) -> Void)?

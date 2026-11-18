@@ -62,7 +62,7 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         var providerCallCount = 0
         let adapter = makeAdapter(timeProvider: timeReference.now) {
             providerCallCount += 1
-            return .init(customerId: "cus_123", clientSecret: "cuss_123")
+            return .init(customerId: "cus_123456", clientSecret: "cuss_123")
         }
         let originalSession = try await adapter.cachedCustomerSessionClientSecret()
 
@@ -92,7 +92,7 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         var providerCallCount = 0
         let adapter = makeAdapter(timeProvider: timeReference.now) {
             providerCallCount += 1
-            return .init(customerId: "cus_123", clientSecret: "cuss_123")
+            return .init(customerId: "cus_123456", clientSecret: "cuss_123")
         }
         let (_, originalSession) = try await adapter.elementsSessionWithCustomerSessionClientSecret()
 
@@ -123,6 +123,24 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
 
         // Then the customer ID is resolved from the server's response
         XCTAssertEqual(cachedSession.customerId, "cus_123456")
+    }
+
+    /// A CustomerSession created with a customer-configured Account is scoped to the Account's backing Customer.
+    /// Calls that take a customer ID, like listing cards before removing one, must use it instead of the merchant's `acct_` ID.
+    func testCachedCustomerSessionClientSecretUsesCustomerSessionCustomer() async throws {
+        // Given a merchant that provides a customer Account ID
+        StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheet_200)
+        let adapter = makeAdapter {
+            return .init(customerId: "acct_123", clientSecret: "cuss_123")
+        }
+
+        // When the CustomerSession is claimed
+        let cachedSession = try await adapter.cachedCustomerSessionClientSecret()
+
+        // Then the Customer from `v1/elements/sessions` is used
+        XCTAssertEqual(cachedSession.customerId, "cus_123456")
+        // ...and the merchant's ID is kept for local defaults
+        XCTAssertEqual(cachedSession.customerSessionClientSecret.customerId, "acct_123")
     }
 
     func testCachedCustomerSessionClientSecretRefreshesExpiredSession() async throws {

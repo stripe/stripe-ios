@@ -108,7 +108,7 @@
 
 "Card details cannot be changed." = "Vous ne pouvez pas modifier les informations de la carte.";
 
-"Card number. Supported cards include %@" = "Numéro de carte bancaire. Les cartes bancaires prises en charge incluent [ %s]";
+"Card number. Supported cards include %@" = "Numéro de carte bancaire. Les cartes bancaires prises en charge incluent %@";
 
 "Change" = "Modifier";
 

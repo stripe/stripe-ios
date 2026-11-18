@@ -2069,6 +2069,8 @@ extension PaymentSheetLPMConfirmFlowTests {
             return
         }
 
+        let returnURL = configuration.returnURL!
+
         Task { @MainActor in
             let result: CheckoutElementsController.InternalConfirmResult
             switch paymentOption {
@@ -2076,6 +2078,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutElementsController.PaymentMethodConfirmationParameters(
                     option: .new(confirmParams),
                     configuration: configuration,
+                    returnURL: returnURL,
                     nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     authenticationContext: self,
@@ -2110,6 +2113,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutElementsController.PaymentMethodConfirmationParameters(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
+                    returnURL: returnURL,
                     nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     authenticationContext: self,
@@ -2144,6 +2148,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutElementsController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
                     configuration: configuration,
+                    returnURL: returnURL,
                     nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
                     analyticsHelper: analyticsHelper,

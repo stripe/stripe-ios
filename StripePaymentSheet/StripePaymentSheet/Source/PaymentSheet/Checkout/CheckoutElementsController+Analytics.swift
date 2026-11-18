@@ -68,7 +68,7 @@ private extension PaymentElement.Configuration {
     var checkoutAnalyticsPayload: [String: Any] {
         var params: [String: Any] = [
             "apple_pay_configuration": applePayConfiguration.checkoutAnalyticsPayload,
-            "link_configuration": (linkConfiguration ?? .init()).checkoutAnalyticsPayload,
+            "link_configuration": linkConfiguration.checkoutAnalyticsPayload,
             "save_payment_method_opt_in_behavior": savePaymentMethodOptInBehavior.description,
             "appearance": appearance.analyticPayload,
             "remove_saved_payment_method_message": removeSavedPaymentMethodMessage != nil,

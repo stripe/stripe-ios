@@ -301,6 +301,20 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNil(LinkAccountContext.shared.account)
     }
 
+    func testClearLocalCustomerDataLogsAnalytic() {
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        let previousLogHistory = analyticsClient._testLogHistory
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = previousLogHistory }
+
+        CheckoutElementsController.clearLocalCustomerData()
+
+        let events = analyticsClient._testLogHistory.filter {
+            $0["event"] as? String == "checkout_elements.clear_local_customer_data"
+        }
+        XCTAssertEqual(events.count, 1)
+    }
+
     private func promotionCode(in session: CheckoutElementsController.Session?) -> String? {
         session?.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
     }

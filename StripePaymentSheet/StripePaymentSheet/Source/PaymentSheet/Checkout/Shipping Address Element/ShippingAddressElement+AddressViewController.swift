@@ -43,7 +43,7 @@ extension ShippingAddressElement.Configuration {
     }
 }
 
-extension ShippingAddressElement.Appearance {
+extension ShippingAddressElement.Configuration.Appearance {
     func makePaymentSheetAppearance() -> PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
         appearance.font.sizeScaleFactor = font.sizeScaleFactor

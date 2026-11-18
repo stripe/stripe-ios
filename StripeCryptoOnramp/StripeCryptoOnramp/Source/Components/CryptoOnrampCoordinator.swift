@@ -28,13 +28,15 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter cryptoCustomerID: The crypto customer's ID, if available.
     /// - Parameter additionalSDKVersions: Additional wrapper SDK versions to include in developer diagnostics, such as the Stripe React Native SDK version. Do not include Stripe iOS; it is always included automatically.
     /// - Parameter countryHint: An optional two-letter country code (ISO 3166-1 alpha-2) used to help select a merchant of record for a customer who does not yet have an established KYC region. Must be merchant-provided. Ignored once the customer has an established KYC region.
+    /// - Parameter linkCardBrandAcceptance: The card brands accepted when collecting cards through Link. Defaults to accepting all supported brands. This filtering is client-side only. To configure accepted card brands for Apple Pay, set `supportedNetworks` on the `PKPaymentRequest` passed to `collectPaymentMethod(type:from:)` using `.applePay(paymentRequest:)`.
     /// - Returns: A configured `CryptoOnrampCoordinator`.
     static func create(
         apiClient: STPAPIClient,
         appearance: LinkAppearance,
         cryptoCustomerID: String?,
         additionalSDKVersions: [SDKVersion],
-        countryHint: String?
+        countryHint: String?,
+        linkCardBrandAcceptance: PaymentSheet.CardBrandAcceptance
     ) async throws -> Self
 
     /// Whether or not the provided email is associated with an existing Link consumer.
@@ -294,11 +296,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
-    private static let linkConfiguration: LinkConfiguration = LinkConfiguration(
-        hintMessage: String.Localized.debitIsMostLikelyToBeAccepted,
-        allowLogout: false
-    )
-
     private init(
         linkController: LinkController,
         cryptoCustomerID: String?,
@@ -325,7 +322,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         appearance: LinkAppearance = .init(),
         cryptoCustomerID: String? = nil,
         additionalSDKVersions: [SDKVersion] = [],
-        countryHint: String? = nil
+        countryHint: String? = nil,
+        linkCardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
     ) async throws -> CryptoOnrampCoordinator {
         let analyticsClient = CryptoOnrampAnalyticsClient()
 
@@ -334,7 +332,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 apiClient: apiClient,
                 mode: .payment,
                 appearance: appearance,
-                linkConfiguration: Self.linkConfiguration,
+                linkConfiguration: LinkConfiguration(
+                    hintMessage: String.Localized.debitIsMostLikelyToBeAccepted,
+                    allowLogout: false,
+                    cardBrandAcceptance: linkCardBrandAcceptance
+                ),
                 requestSurface: .cryptoOnramp
             )
 

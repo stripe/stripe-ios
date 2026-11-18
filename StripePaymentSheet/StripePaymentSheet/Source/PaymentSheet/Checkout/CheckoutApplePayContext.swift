@@ -140,9 +140,11 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     paymentMethodData: paymentMethodData,
                     confirmationSource: attribution.confirmingElement,
                     expectedAmount: checkoutSession.amount,
+                    savePaymentMethod: nil,
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,
+                    paymentMethodOptions: nil,
                     clientAttributionMetadata: clientAttributionMetadata,
                     collectedInformation: .init(email: checkoutSession.localState.email)
                 )
