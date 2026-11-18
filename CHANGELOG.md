@@ -1,8 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+MAJOR
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
+* [Deprecated] Deprecated `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress`. This configuration no longer has an effect. Payment methods that require a shipping address are always allowed.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
 * [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
 

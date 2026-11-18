@@ -89,9 +89,12 @@ extension PaymentSheet {
         /// - Seealso: https://stripe.com/docs/payments/payment-methods#payment-notification
         public var allowsDelayedPaymentMethods: Bool = false
 
-        /// This property has no effect. Payment methods no longer require a shipping address.
-        /// It will be removed in the next major version.
-        @available(*, deprecated, message: "This property has no effect. Payment methods no longer require a shipping address.")
+        /// This no longer has an effect. Payment methods that require a shipping address are always allowed.
+        @available(
+            *,
+            deprecated,
+            message: "This no longer has an effect. Payment methods that require a shipping address are always allowed."
+        )
         public var allowsPaymentMethodsRequiringShippingAddress: Bool = false
 
         /// The APIClient instance used to make requests to Stripe
