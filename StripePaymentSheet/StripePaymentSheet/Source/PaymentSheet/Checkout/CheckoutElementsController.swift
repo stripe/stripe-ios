@@ -164,6 +164,7 @@ public final class CheckoutElementsController: ObservableObject {
                 self.expressCheckoutElement = ExpressCheckoutElement(
                     sessionSource: sessionSource,
                     configuration: expressCheckoutElementConfiguration,
+                    userInterfaceStyle: configuration.userInterfaceStyle,
                     delegate: self,
                     apiClient: apiClient
                 )
@@ -174,15 +175,15 @@ public final class CheckoutElementsController: ObservableObject {
                 self.currencySelectorElement = await CurrencySelectorElement(
                     sessionSource: sessionSource,
                     configuration: currencySelectorConfiguration,
+                    userInterfaceStyle: configuration.userInterfaceStyle,
                     delegate: self
                 )
             }
             var params = configurationParams
             params["ordered_lpms"] = paymentElement?.embeddedPaymentElement.loadResult.paymentMethodTypes.map { $0.identifier }.joined(separator: ",")
-                ?? configuration.expressCheckoutElement.map {
-                    ExpressCheckoutElementUtilities.availablePaymentMethods(for: session, configuration: $0, apiClient: apiClient)
-                        .map(\.rawValue).joined(separator: ",")
-                }
+                ?? (configuration.expressCheckoutElement != nil
+                    ? session.availableExpressCheckoutPaymentMethodsOrdered.map(\.rawValue).joined(separator: ",")
+                    : nil)
             analyticsHelper.logSucceeded(startedAction, session: self.session, additionalParams: params)
         } catch {
             analyticsHelper.logFailed(startedAction, error: error, session: analyticsSession, additionalParams: configurationParams)
@@ -236,7 +237,10 @@ public final class CheckoutElementsController: ObservableObject {
     /// You must call this method when the user logs out from your app.
     /// This will ensure that any persisted authentication state in CheckoutElementsController
     /// is also cleared during logout.
-    nonisolated public static func resetCustomer() {
+    nonisolated public static func clearLocalCustomerData() {
+        STPAnalyticsClient.sharedClient.log(
+            analytic: PaymentSheetAnalytic(event: .checkoutElementsClearLocalCustomerData, additionalParams: [:])
+        )
         LinkAccountContext.shared.resetCustomer()
     }
 

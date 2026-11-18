@@ -1695,7 +1695,7 @@ extension STPPaymentMethodParams {
             ngBankTransfer = STPPaymentMethodNgBankTransferParams()
         case .ngCard:
             ngCard = STPPaymentMethodNgCardParams()
-        case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum, .pix:
+        case .cardPresent, .paynow, .zip, .konbini, .promptPay, .mbWay, .bizum, .pix, .stripeBalance:
             // These payment methods don't have any params
             break
         case .unknown:

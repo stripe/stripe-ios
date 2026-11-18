@@ -41,6 +41,7 @@ public final class CurrencySelectorElement {
     init?(
         sessionSource: CheckoutSessionSource,
         configuration: Configuration,
+        userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
         delegate: CurrencySelectorElementCheckoutDelegate
     ) async {
         // Assign the callback's weak reference after the views finish initializing.
@@ -49,6 +50,7 @@ public final class CurrencySelectorElement {
             session: sessionSource.initialSession,
             delegate: delegate,
             appearance: configuration.appearance,
+            userInterfaceStyle: userInterfaceStyle,
             needsUpdateSuperviewHeight: {
                 guard let element else { return }
                 element.delegate?.currencySelectorElementDidUpdateHeight(currencySelectorElement: element)

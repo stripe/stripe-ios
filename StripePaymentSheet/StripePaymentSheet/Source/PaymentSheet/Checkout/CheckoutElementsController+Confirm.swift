@@ -41,7 +41,7 @@ extension CheckoutElementsController {
             CheckoutSessionConfirmationRequestParameters
         ) async -> InternalConfirmResult
 
-        let applePayConfiguration: any CheckoutApplePayConfiguration
+        let merchantId: String
         let apiClient: STPAPIClient
         let returnURL: String
         let merchantDisplayName: String
@@ -60,6 +60,7 @@ extension CheckoutElementsController {
         // TODO: Lots of stuff in here because current Link code nominally requires it but it may not all really be necessary.
         let confirmOption: PaymentSheet.LinkConfirmOption
         let configuration: PaymentElementConfiguration
+        let returnURL: String
         let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -78,6 +79,7 @@ extension CheckoutElementsController {
 
         let option: Option
         let configuration: PaymentElementConfiguration
+        let returnURL: String
         let nativeSheetPresentation: SheetImplementationResolver?
         let confirmationChallenge: (any CheckoutConfirmationChallenge)?
         let authenticationContext: STPAuthenticationContext
@@ -200,11 +202,12 @@ extension CheckoutElementsController {
         switch paymentOption {
         case .applePay:
             guard let paymentElementConfiguration = self.configuration.paymentElement,
-                  let applePayConfiguration = paymentElementConfiguration.applePayConfiguration else {
+                  paymentElementConfiguration.applePayConfiguration.display != .never,
+                  let merchantId = self.configuration.applePayMerchantId else {
                 return nil
             }
             return .applePay(.init(
-                applePayConfiguration: applePayConfiguration,
+                merchantId: merchantId,
                 apiClient: apiClient,
                 returnURL: self.configuration.returnURL,
                 merchantDisplayName: effectiveMerchantDisplayName,
@@ -228,6 +231,7 @@ extension CheckoutElementsController {
             return .link(.init(
                 confirmOption: confirmOption,
                 configuration: configuration,
+                returnURL: self.configuration.returnURL,
                 nativeSheetPresentation: nativeSheetPresentation,
                 confirmationChallenge: confirmationChallenge,
                 analyticsHelper: analyticsHelper,
@@ -240,6 +244,7 @@ extension CheckoutElementsController {
                 .init(
                     option: .new(confirmParams),
                     configuration: configuration,
+                    returnURL: self.configuration.returnURL,
                     nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
@@ -253,6 +258,7 @@ extension CheckoutElementsController {
                 .init(
                     option: .saved(paymentMethod, confirmParams),
                     configuration: configuration,
+                    returnURL: self.configuration.returnURL,
                     nativeSheetPresentation: nativeSheetPresentation,
                     confirmationChallenge: confirmationChallenge,
                     authenticationContext: authenticationContext,
@@ -310,13 +316,14 @@ extension CheckoutElementsController {
                         confirmationSource: .paymentElement,
                         expectedAmount: self.session.amount,
                         returnURL: self.configuration.returnURL,
+                        shipping: self.session.shippingAddress?.shippingDetailsParams,
                         clientAttributionMetadata: STPClientAttributionMetadata.makeClientAttributionMetadata(
                             checkoutSession: self.session,
                             attribution: .init(confirmingElement: .paymentElement, configuredElements: self.configuration.configuredElements)
                         ),
                         // Due to legacy reasons, in the no-PM case /confirm requires customerData be sent with at least email
                         // TODO: Remove this once no-PM confirmation can use the Checkout Session's server email without `customer_data`.
-                        customerData: self.session.email.map { ["email": $0] }
+                        customerData: .init(email: self.session.email)
                     )
                     result = await Self.confirmCheckoutSession(
                         with: requestParameters,
@@ -485,7 +492,7 @@ extension CheckoutElementsController {
                 confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
                 savePaymentMethod: checkoutSession.noPaymentRequired ? nil : savePaymentMethod,
-                returnURL: configuration.returnURL,
+                returnURL: paymentMethodParameters.returnURL,
                 shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
                 paymentMethodOptions: confirmParams.confirmPaymentMethodOptions,
                 clientAttributionMetadata: clientAttributionMetadata,
@@ -502,7 +509,8 @@ extension CheckoutElementsController {
                 confirmationSource: paymentMethodParameters.attribution.confirmingElement,
                 expectedAmount: checkoutSession.amount,
                 expectedPaymentMethodType: savedPaymentMethod.type.identifier,
-                returnURL: configuration.returnURL,
+                savePaymentMethod: nil,
+                returnURL: paymentMethodParameters.returnURL,
                 shipping: STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration),
                 paymentMethodOptions: paymentMethodOptions,
                 clientAttributionMetadata: clientAttributionMetadata,
@@ -543,15 +551,15 @@ extension CheckoutElementsController {
         // Release the assertion only after the request using it has finished, before handling next actions.
         await confirmationChallenge?.complete()
 
-        // 2. Retrieve the referenced Intent and handle next actions only when required.
+        // 2. Handle the returned Intent's next action only when required.
         if response.paymentResponse == nil {
             // No payment response means no Intent next action to handle; continue with Session/poll handling.
         } else if response.paymentResponse?.status != .requiresAction {
             // If status != requires_action, continue.
-        } else if let paymentIntentReference = response.paymentResponse?.paymentIntent {
+        } else if let paymentIntent = response.paymentResponse?.paymentIntent {
             let result = await paymentHandler.handleNextAction(
-                paymentIntentClientSecret: paymentIntentReference.clientSecret,
-                authenticationContext: authenticationContext,
+                for: paymentIntent,
+                with: authenticationContext,
                 returnURL: requestParameters.returnURL
             )
             switch result.0 {
@@ -566,10 +574,10 @@ extension CheckoutElementsController {
                 let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a PaymentIntent.")
                 return .failed(error, sessionResponse: response)
             }
-        } else if let setupIntentReference = response.paymentResponse?.setupIntent {
+        } else if let setupIntent = response.paymentResponse?.setupIntent {
             let result = await paymentHandler.handleNextAction(
-                setupIntentClientSecret: setupIntentReference.clientSecret,
-                authenticationContext: authenticationContext,
+                for: setupIntent,
+                with: authenticationContext,
                 returnURL: requestParameters.returnURL
             )
             switch result.0 {
@@ -578,7 +586,7 @@ extension CheckoutElementsController {
             case .canceled:
                 return .canceled(sessionResponse: response)
             case .failed:
-                let error = result.2 ?? PaymentSheetError.errorHandlingNextAction
+                let error: Error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
                 let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a SetupIntent.")

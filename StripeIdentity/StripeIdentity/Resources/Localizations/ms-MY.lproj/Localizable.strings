@@ -42,7 +42,7 @@
 
 "Date of birth does not look valid" = "Tarikh lahir tampaknya tidak sah";
 
-"Decline" = "Kemerosotan";
+"Decline" = "Penolakan";
 
 "Details not visible" = "Butiran tidak kelihatan";
 
@@ -101,8 +101,6 @@
 "Keep ID level" = "Pastikan ID mendatar";
 
 "Last 4 of Social Security number" = "Empat digit terakhir nombor Keselamatan Sosial";
-
-"Loading" = "Sedang dimuatkan";
 
 "Make sure you're in a well lit space." = "Pastikan anda berada di ruang yang cukup terang.";
 

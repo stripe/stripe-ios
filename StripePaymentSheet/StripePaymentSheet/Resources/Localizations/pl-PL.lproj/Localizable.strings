@@ -14,8 +14,6 @@
 
 "Add bank account" = "Dodaj rachunek bankowy";
 
-"Add card" = "Dodaj kartę";
-
 "Add new card" = "Dodaj nową kartę";
 
 "Add new payment method" = "Dodaj nową metodę płatności";
@@ -192,6 +190,8 @@
 
 "Last 4 digits of SSN" = "Ostatnie 4 cyfry numeru SSN";
 
+"Log in to another account" = "Zaloguj się na inne konto";
+
 "Manage SEPA debit" = "Zarządzaj poleceniem zapłaty SEPA";
 
 "Manage US bank account" = "Zarządzaj amerykańskim kontem bankowym";
@@ -221,6 +221,8 @@
 "New payment method" = "Nowa metoda płatności";
 
 "No %@ promo" = "Bez promocji %@";
+
+"None of the payment methods in your %@ account work with this business." = "Żadna z metod płatności na Twoim koncie %@ nie działa z tą firmą.";
 
 "Not you?" = "To nie Ty?";
 
@@ -389,6 +391,8 @@
 "We couldn't verify your account. Please close this window and try again." = "Nie udało nam się zweryfikować Twojego konta. Zamknij to okno i spróbuj ponownie.";
 
 "Yes, update" = "Tak, aktualizuj";
+
+"You can't pay with %@ here" = "Nie możesz tutaj zapłacić za pomocą %@";
 
 "Your IBAN should start with a two-letter country code." = "IBAN powinien się zaczynać od dwuliterowego kodu kraju.";
 

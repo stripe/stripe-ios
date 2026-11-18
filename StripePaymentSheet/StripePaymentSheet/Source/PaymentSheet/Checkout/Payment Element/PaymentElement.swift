@@ -100,7 +100,10 @@ public final class PaymentElement {
         )
         self.embeddedPaymentElement.checkout = checkout
         self.embeddedPaymentElement.notifiesDelegateOnInitialHeight = true
-        let uiView = PaymentElementUIView(contentView: embeddedPaymentElement.view)
+        let uiView = PaymentElementUIView(
+            contentView: embeddedPaymentElement.view,
+            userInterfaceStyle: embeddedPaymentElementInitParameters.configuration.style
+        )
         self.view = PaymentElementView(viewModel: PaymentElementViewModel(uiView: uiView))
         self.uiView = uiView
         self.embeddedPaymentElement.delegate = self

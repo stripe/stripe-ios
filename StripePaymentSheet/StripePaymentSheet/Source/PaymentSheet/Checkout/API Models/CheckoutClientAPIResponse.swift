@@ -31,7 +31,7 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
     let setupFutureUsageForPaymentMethodType: [String: String]?
     let billingAddressCollection: String?
     let shippingAddressCollection: ShippingAddressCollection?
-    let totalSummary: TotalSummary?
+    let totalSummary: TotalSummary
     let adaptivePricingInfo: AdaptivePricingInfo?
     let automaticTax: AutomaticTax?
     let automaticPaymentMethodTypes: Bool?
@@ -135,7 +135,7 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
             ShippingAddressCollection.self,
             forKey: .shippingAddressCollection
         )
-        totalSummary = try container.decodeIfPresent(TotalSummary.self, forKey: .totalSummary)
+        totalSummary = try container.decode(TotalSummary.self, forKey: .totalSummary)
         adaptivePricingInfo = try container.decodeIfPresent(AdaptivePricingInfo.self, forKey: .adaptivePricingInfo)
         automaticTax = try container.decodeIfPresent(AutomaticTax.self, forKey: .automaticTax)
         automaticPaymentMethodTypes = try container.decodeIfPresent(Bool.self, forKey: .automaticPaymentMethodTypes)
@@ -149,27 +149,39 @@ struct CheckoutClientAPIResponse: UnknownFieldsDecodable, CustomStringConvertibl
 }
 
 extension CheckoutClientAPIResponse {
-    struct IntentReference: Decodable, CustomStringConvertible {
-        let id: String
-        let clientSecret: String
-
-        var description: String {
-            "<IntentReference; id = \(id); clientSecret = <redacted>>"
-        }
-    }
-
     struct AutomaticTax: Decodable {
         let enabled: Bool
         let status: String?
         let addressSource: String?
     }
 
-    /// CheckoutClient's canonical payment details. Intent references are retrieved separately for authentication.
+    /// CheckoutClient's canonical payment details, including the Intent used for next-action handling.
     struct PaymentResponse: Decodable {
         let status: Status
         let lastPaymentError: StripeAPIError?
-        let paymentIntent: IntentReference?
-        let setupIntent: IntentReference?
+        let paymentIntent: STPPaymentIntent?
+        let setupIntent: STPSetupIntent?
+
+        private enum CodingKeys: String, CodingKey {
+            case status
+            case lastPaymentError
+            case paymentIntent
+            case setupIntent
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            status = try container.decode(Status.self, forKey: .status)
+            lastPaymentError = try container.decodeIfPresent(StripeAPIError.self, forKey: .lastPaymentError)
+            paymentIntent = try container.decodeIfPresent(
+                LegacyDecoded<STPPaymentIntent>.self,
+                forKey: .paymentIntent
+            )?.value
+            setupIntent = try container.decodeIfPresent(
+                LegacyDecoded<STPSetupIntent>.self,
+                forKey: .setupIntent
+            )?.value
+        }
 
         enum Status: String, Decodable {
             case succeeded
@@ -239,7 +251,7 @@ extension CheckoutClientAPIResponse {
         let quantity: Int
         let amountDetails: AmountDetails
         let unitAmount: Int?
-        let unitAmountDecimal: Double?
+        let unitAmountDecimal: Decimal?
         let unitLabel: String?
         let adjustableQuantity: AdjustableQuantity?
 
@@ -277,7 +289,7 @@ extension CheckoutClientAPIResponse {
                 String.self,
                 forKey: .unitAmountDecimal
             ) {
-                guard let parsedUnitAmountDecimal = Double(rawUnitAmountDecimal),
+                guard let parsedUnitAmountDecimal = Decimal(string: rawUnitAmountDecimal),
                       parsedUnitAmountDecimal.isFinite else {
                     throw decoder.dataCorrupted("unit_amount_decimal must be a finite number")
                 }
@@ -329,7 +341,11 @@ extension CheckoutClientAPIResponse {
     }
 
     struct TotalSummary: Decodable {
-        let totalTaxAmounts: [TaxAmount]?
+        let subtotal: Int
+        let total: Int
+        let taxExclusive: Int
+        let taxInclusive: Int
+        let totalTaxAmounts: [TaxAmount]
     }
 
     struct TaxAmount: Decodable {
@@ -468,6 +484,7 @@ extension CheckoutClientAPIResponse {
         }
 
         private struct MerchantInfo: Decodable {
+            let accountId: String?
             let displayName: String?
             let country: String
             let logoUrl: String?
@@ -525,8 +542,7 @@ extension CheckoutClientAPIResponse {
                 countryCode: try container.decodeIfPresent(String.self, forKey: .countryCode),
                 merchantCountryCode: merchant.country,
                 merchantLogoUrl: merchant.logoUrl.flatMap(URL.init(string:)),
-                // TODO(porter) account ID: Decode CheckoutClient's resolved account_id once the backend returns it.
-                accountID: nil,
+                accountID: merchant.accountId,
                 linkSettings: try container.decodeIfPresent(LegacyLinkSettings.self, forKey: .linkSettings)?.value,
                 experimentsData: try container.decodeIfPresent(LegacyDecoded<ExperimentsData>.self, forKey: .experimentsData)?.value,
                 flags: flags,
