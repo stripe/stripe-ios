@@ -11,6 +11,9 @@ MAJOR
 ### CustomerSheet
 * [Changed] Added `@MainActor` isolation to `CustomerSheet`. Initialize and access from the main actor.
 
+### Payments
+* [Changed] Marked `STPPaymentHandlerActionStatus` as `@frozen`, allowing exhaustive switches over `.succeeded`, `.canceled`, and `.failed`.
+
 ### CryptoOnramp (Alpha)
 * [Added] Added the optional `linkCardBrandAcceptance` parameter to `CryptoOnrampCoordinator.create(...)` to allow or block card brands in the Link UI. Defaults to accepting all supported brands.
 
