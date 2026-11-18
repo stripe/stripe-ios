@@ -232,8 +232,12 @@ jobs:
 
   # SPM only: the CocoaPods installation tests aren't ported because no
   # CocoaPods release is planned before the CocoaPods trunk deprecation.
+  # Uses the xlarge runner like the other simulator jobs. On the 3-vCPU runner,
+  # the iOS 16.4 simulator's background daemons starve the machine, so launching
+  # the SPMTest host takes 170-245s instead of about 13s and intermittently
+  # fails with "Simulator device failed to launch com.stripe.SPMTest".
   installation-tests:
-    runs-on: macos-26
+    runs-on: macos-26-xlarge
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
@@ -251,6 +255,20 @@ jobs:
             bundle exec fastlane "$lane"
             echo "::endgroup::"
           done
+      - name: Collect installation test results
+        if: failure()
+        run: |
+          mkdir -p "$BITRISE_DEPLOY_DIR/installation-tests"
+          cp -R ~/Library/Logs/scan "$BITRISE_DEPLOY_DIR/installation-tests/scan-logs" 2>/dev/null || true
+          find ~/Library/Developer/Xcode/DerivedData -maxdepth 4 -path '*/SPMTest-*/Logs/Test/*.xcresult' \
+            -exec cp -R {} "$BITRISE_DEPLOY_DIR/installation-tests/" \; 2>/dev/null || true
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: installation-tests-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/deploy
+          if-no-files-found: ignore
+          retention-days: 7
 
   integration-tests:
     runs-on: macos-26-xlarge
