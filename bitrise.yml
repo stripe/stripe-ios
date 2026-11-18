@@ -63,7 +63,6 @@ pipelines:
       framework-tests-no-mocks: {}
       framework-tests-and-builds-xcode-26-1: {}
       deploy-docs: {}
-      installation-tests-cocoapods: {}
       installation-tests-spm: {}
       integration-tests: {}
       size-report:
@@ -73,7 +72,6 @@ pipelines:
       ui-tests-connect-crypto: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
-      pod-lint-tests: {}
 
   nightly-pipeline:
     workflows:
@@ -82,7 +80,6 @@ pipelines:
       legacy-tests-15: {}
       legacy-tests-16: {}
       deploy-dry-run: {}
-      pod-lint-tests: {}
 workflows:
   record-all-snapshots-and-lokalise:
     description: Standalone recorder for both runtimes, including artifact upload, one snapshot push, and localization updates.
@@ -527,11 +524,10 @@ workflows:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
   installation-tests:
-    description: Run all five package installation variants with one simulator and dependency setup.
+    description: Run Swift Package Manager installation tests with one simulator and dependency setup.
     before_run:
     - install-runtime-16
     - prep_all
-    - installation-cocoapods-steps
     - installation-spm-steps
     steps:
     - deploy-to-bitrise-io@2:
@@ -542,34 +538,6 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  installation-tests-cocoapods:
-    before_run:
-    - install-runtime-16
-    - prep_all
-    - installation-cocoapods-steps
-    steps:
-    - deploy-to-bitrise-io@2:
-        is_always_run: true
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
-    meta:
-      bitrise.io:
-        stack: osx-xcode-26.4.x
-        machine_type_id: g2.mac.large
-  installation-cocoapods-steps:
-    steps:
-    - fastlane@3:
-        inputs:
-        - lane: installation_cocoapods_without_frameworks_objc
-        title: fastlane installation_cocoapods_without_frameworks_objc
-    - fastlane@3:
-        inputs:
-        - lane: installation_cocoapods_frameworks_objc
-        title: fastlane installation_cocoapods_frameworks_objc
-    - fastlane@3:
-        inputs:
-        - lane: installation_cocoapods_frameworks_swift
-        title: fastlane installation_cocoapods_frameworks_swift
   installation-tests-spm:
     before_run:
     - install-runtime-16
@@ -746,38 +714,6 @@ workflows:
         title: Send notification if failed
         is_always_run: true
         run_if: .IsBuildFailed
-  pod-lint-tests:
-    steps:
-    - script@1:
-        inputs:
-        - content: |-
-            #!/usr/bin/env bash
-            set -euo pipefail
-            # StripeCore is the only podspec without dependencies, so CocoaPods disables remote
-            # spec sources when linting it. Lint it alone so the included podspecs don't pull in
-            # external dependencies (such as StripeMediaPipe) that it can't resolve.
-            pod lib lint StripeCore.podspec
-            pod lib lint --include-podspecs='*.podspec' --external-podspecs='ExternalPodspecs/*.podspec' \
-              Stripe.podspec \
-              StripeApplePay.podspec \
-              StripeCameraCore.podspec \
-              StripeCardScan.podspec \
-              StripeConnect.podspec \
-              StripeCryptoOnramp.podspec \
-              StripeFinancialConnections.podspec \
-              StripeFinancialConnectionsLite.podspec \
-              StripeIdentity.podspec \
-              StripeIssuing.podspec \
-              StripePayments.podspec \
-              StripePaymentSheet.podspec \
-              StripePaymentsUI.podspec \
-              StripeUICore.podspec
-        title: pod lib lint
-    before_run:
-    - install-runtime-16
-    - prep_all
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   install-runtime-16:
     before_run:
     - install-xcodes
