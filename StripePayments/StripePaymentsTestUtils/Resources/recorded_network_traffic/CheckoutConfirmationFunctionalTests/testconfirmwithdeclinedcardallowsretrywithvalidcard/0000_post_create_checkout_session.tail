@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 417d7cf66469ffac95d65a9853cb7b02
+x-cloud-trace-context: 72d9c413bbd6fad38b81a88e04c1c5de
 Via: 1.1 google
-Date: Mon, 09 Nov 2026 23:44:09 GMT
+Date: Tue, 10 Nov 2026 19:04:23 GMT
 Content-Length: 2580
-Alt-Svc: h3=":443"; ma=2592000
-Etag: W/"a14-zVXqsmY9pBA3ouYQcNHCoNbQZxQ"
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Etag: W/"a14-Kga+YmXuhFauPP4Jerg2xKoUSGo"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a1dMCaT0iCPoaHIFm5ZH4oiMtJkTDwfMe5QvCmGcqhOGeT6iGHnu9pU7E7",
-  "client_secret" : "cs_test_a1dMCaT0iCPoaHIFm5ZH4oiMtJkTDwfMe5QvCmGcqhOGeT6iGHnu9pU7E7_secret_jckkwjyRGB7qFikFzR2aHPBAu",
+  "id" : "cs_test_a0J96toVwOdU2B9AidBzrvIEFqHDX8K0SZ0inHBRWpXd359fweEJvEqaFP",
+  "client_secret" : "cs_test_a0J96toVwOdU2B9AidBzrvIEFqHDX8K0SZ0inHBRWpXd359fweEJvEqaFP_secret_e3x9zDDGCMP9PWfPk6y9pRNq7",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a14-zVXqsmY9pBA3ouYQcNHCoNbQZxQ"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1794267849,
+  "created" : 1794337463,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "card"
@@ -41,13 +41,13 @@ Etag: W/"a14-zVXqsmY9pBA3ouYQcNHCoNbQZxQ"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VbEh9Hda",
+      "key" : "checkout_item_VbXQLaJA",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ua2EPLu5o3P18ZpvFPsdruY",
+            "price" : "price_1UaKLDLu5o3P18ZpBUQBEW14",
             "tax_rates" : null
           }
         ],
@@ -157,6 +157,6 @@ Etag: W/"a14-zVXqsmY9pBA3ouYQcNHCoNbQZxQ"
   },
   "livemode" : false,
   "customer_email" : "test@example.com",
-  "expires_at" : 1794354249,
+  "expires_at" : 1794423863,
   "marketing_attributions" : null
 }

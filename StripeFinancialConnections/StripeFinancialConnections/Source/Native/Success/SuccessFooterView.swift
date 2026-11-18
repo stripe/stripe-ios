@@ -21,7 +21,7 @@ final class SuccessFooterView: UIView {
         doneButton.addTarget(self, action: #selector(didSelectDoneButton), for: .touchUpInside)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            doneButton.heightAnchor.constraint(equalToConstant: 56)
+            doneButton.heightAnchor.constraint(equalToConstant: appearance.buttonHeight)
         ])
         doneButton.accessibilityIdentifier = "success_done_button"
         return doneButton

@@ -198,9 +198,9 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.checkout = checkout
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = defaultPaymentMethod
-        self.paymentMethodRemove = intent.allowsPaymentMethodRemoval(elementsSession: elementsSession)
+        self.paymentMethodRemove = customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession)
         self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)
-        self.paymentMethodUpdate = intent.allowsPaymentMethodUpdate(elementsSession: elementsSession)
+        self.paymentMethodUpdate = customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
         self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
@@ -446,7 +446,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         guard !elementsSession.paymentMethodSetAsDefaultForPaymentSheet else {
             return
         }
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             .stripeId(paymentMethod.stripeId),
             forCustomer: customerProvider.customerID
         )
@@ -531,8 +531,12 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     private func updateCard(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams, hasOnlyChangedCardBrand: Bool) async -> Result<Void, Error> {
         do {
             // Update the payment method
-            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
-            updatedPaymentMethod.updateLocalFields(from: paymentMethod)
+            let updatedPaymentMethod = try await customerProvider.update(
+                paymentMethod: paymentMethod,
+                with: updateParams,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())
         } catch {

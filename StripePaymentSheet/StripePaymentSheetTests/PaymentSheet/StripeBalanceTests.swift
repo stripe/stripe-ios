@@ -1,0 +1,351 @@
+//
+//  StripeBalanceTests.swift
+//  StripePaymentSheetTests
+//
+//  Created by Nick Porter on 11/12/26.
+//
+
+import XCTest
+
+@testable@_spi(InternalOnlyAPI) import StripeCore
+@testable@_spi(InternalOnlyAPI) import StripePayments
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripeUICore
+
+@MainActor
+final class StripeBalanceTests: XCTestCase {
+
+    // MARK: - Decoding
+
+    func testDecodesFinancialAccounts() throws {
+        // Given the response shape served by `v1/elements/stripe_balance/customer_session/financial_accounts`
+        let json = """
+        {
+          "object": "list",
+          "has_more": false,
+          "data": [
+            {
+              "object": "stripe_balance.financial_account",
+              "id": "fa_operating",
+              "display_name": "Operating account",
+              "status": "OPEN",
+              "balance": {"available": {"usd": {"value": 25000, "currency": "usd"}}},
+              "eligible": true,
+              "ineligible_reason": null
+            },
+            {
+              "object": "stripe_balance.financial_account",
+              "id": "fa_reserve",
+              "display_name": null,
+              "balance": {"available": {"usd": {"value": 2500, "currency": "usd"}}},
+              "eligible": false,
+              "ineligible_reason": "insufficient_balance"
+            },
+            {
+              "id": "fa_gbp",
+              "balance": {"available": {"gbp": {"value": 100, "currency": "gbp"}}},
+              "eligible": false,
+              "ineligible_reason": "some_future_reason"
+            },
+            {
+              "id": "fa_untagged",
+              "balance": {"available": {"usd": {"value": 100, "currency": "usd"}}}
+            }
+          ]
+        }
+        """
+        struct List: Decodable { let data: [StripeBalanceFinancialAccount] }
+
+        // When
+        let accounts = try StripeJSONDecoder().decode(List.self, from: Data(json.utf8)).data
+
+        // Then
+        XCTAssertEqual(accounts.map(\.id), ["fa_operating", "fa_reserve", "fa_gbp", "fa_untagged"])
+        XCTAssertEqual(accounts[0].displayName, "Operating account")
+        XCTAssertEqual(accounts[0].availableBalance(in: "USD"), .init(value: 25000, currency: "usd"))
+        XCTAssertTrue(accounts[0].isSelectable)
+        XCTAssertNil(accounts[1].displayName)
+        XCTAssertEqual(accounts[1].ineligibleReason, .insufficientBalance)
+        XCTAssertFalse(accounts[1].isSelectable)
+        // ...and accounts missing optional fields or with unknown reasons still decode
+        XCTAssertNil(accounts[2].displayName)
+        XCTAssertEqual(accounts[2].ineligibleReason, .unparsable)
+        XCTAssertNil(accounts[2].availableBalance(in: "usd"))
+        // ...and an account the server didn't tag as eligible or not can be selected
+        XCTAssertNil(accounts[3].eligible)
+        XCTAssertTrue(accounts[3].isSelectable)
+    }
+
+    // MARK: - Availability
+
+    func testRequiresCustomerSessionForPaymentsAndSetup() {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.stripeBalance])
+        var legacyCustomerConfiguration = PaymentSheet.Configuration()
+        legacyCustomerConfiguration.customer = .init(id: "cus_123", ephemeralKeySecret: "ek_123")
+
+        // When
+        let withoutCustomer = supportsAdding(intent: paymentIntent, configuration: PaymentSheet.Configuration())
+        let withLegacyEphemeralKey = supportsAdding(intent: paymentIntent, configuration: legacyCustomerConfiguration)
+        let withCustomerSession = supportsAdding(intent: paymentIntent, configuration: makeCustomerSessionConfiguration())
+
+        // Then
+        XCTAssertEqual(withoutCustomer, .missingRequirements([.customerSession]))
+        XCTAssertEqual(withLegacyEphemeralKey, .missingRequirements([.customerSession]))
+        XCTAssertEqual(withCustomerSession, .supported)
+        let setupIntents: [Intent] = [
+            ._testPaymentIntent(paymentMethodTypes: [.stripeBalance], setupFutureUsage: .offSession),
+            ._testSetupIntent(paymentMethodTypes: [.stripeBalance]),
+        ]
+        // ...and setting up for future use works the same way
+        for intent in setupIntents {
+            XCTAssertEqual(supportsAdding(intent: intent, configuration: makeCustomerSessionConfiguration()), .supported)
+            XCTAssertEqual(supportsAdding(intent: intent, configuration: PaymentSheet.Configuration()), .missingRequirements([.customerSession]))
+        }
+    }
+
+    func testOnlyOffersStripeBalanceWhenItsAccountsLoaded() {
+        // Given
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .stripeBalance])
+        let elementsSession = makeElementsSessionWithCustomerSession(paymentMethodTypes: ["card", "stripe_balance"])
+        func paymentMethodTypes(financialAccounts: StripeBalanceFinancialAccounts?) -> [PaymentSheet.PaymentMethodType] {
+            PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+                from: intent,
+                elementsSession: elementsSession,
+                configuration: makeCustomerSessionConfiguration(),
+                stripeBalanceFinancialAccounts: financialAccounts
+            )
+        }
+
+        // Then Stripe balance is offered when its accounts loaded
+        XCTAssertEqual(
+            paymentMethodTypes(financialAccounts: .init(accounts: [makeAccount(id: "fa_1")], currency: "usd")),
+            [.stripe(.card), .stripe(.stripeBalance)]
+        )
+        // ...but not when they didn't, since there'd be nothing to pay from
+        XCTAssertEqual(paymentMethodTypes(financialAccounts: nil), [.stripe(.card)])
+    }
+
+    func testDoesNotOfferStripeBalanceWhenTheBuyerHasNoAccounts() {
+        // Given the buyer's accounts loaded, but there are none to pay from
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .stripeBalance])
+
+        // When
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: makeElementsSessionWithCustomerSession(paymentMethodTypes: ["card", "stripe_balance"]),
+            configuration: makeCustomerSessionConfiguration(),
+            stripeBalanceFinancialAccounts: .init(accounts: [], currency: "usd")
+        )
+
+        // Then
+        XCTAssertEqual(paymentMethodTypes, [.stripe(.card)])
+    }
+
+    // MARK: - Loading
+
+    func testOnlyFetchesAccountsWhenStripeBalanceIsOfferedWithACustomerSession() async {
+        // Given
+        let paymentIntent = Intent._testPaymentIntent(paymentMethodTypes: [.stripeBalance])
+        let configuration = makeCustomerSessionConfiguration()
+        let elementsSessionWithCustomerSession = makeElementsSessionWithCustomerSession()
+        func didFetch(
+            intent: Intent = paymentIntent,
+            elementsSession: STPElementsSession = elementsSessionWithCustomerSession,
+            configuration: PaymentSheet.Configuration = configuration
+        ) async -> Bool {
+            let loadTimings = PaymentSheetLoader.LoadTimings()
+            let financialAccounts = await PaymentSheetLoader.fetchStripeBalanceFinancialAccounts(
+                intent: intent,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+                loadTimings: loadTimings
+            )
+            XCTAssertNil(financialAccounts)
+            return loadTimings.jsonObject["fetchStripeBalanceFinancialAccounts"] != nil
+        }
+
+        // Then nothing is fetched when Stripe balance isn't offered
+        let notOffered = await didFetch(elementsSession: makeElementsSessionWithCustomerSession(paymentMethodTypes: ["card"]))
+        XCTAssertFalse(notOffered)
+        // ...or the merchant didn't use a CustomerSession
+        let withoutCustomerSession = await didFetch(configuration: PaymentSheet.Configuration())
+        XCTAssertFalse(withoutCustomerSession)
+        // ...or ElementsSession didn't return one, e.g. a fallback ElementsSession
+        let fallbackElementsSession = await didFetch(elementsSession: ._testValue(paymentMethodTypes: ["stripe_balance"]))
+        XCTAssertFalse(fallbackElementsSession)
+    }
+
+    // MARK: - Element
+
+    func testElementIsInvalidUntilAnAccountIsSelected() throws {
+        // Given
+        let element = makeElement(accounts: [makeAccount(id: "fa_1"), makeAccount(id: "fa_2")])
+        XCTAssertFalse(element.validationState.isValid)
+        XCTAssertNil(element.updateParams(params: IntentConfirmParams(type: .stripe(.stripeBalance))))
+
+        // When the buyer selects an account
+        try XCTUnwrap(row(for: "fa_2", in: element)).sendActions(for: .touchUpInside)
+
+        // Then
+        XCTAssertTrue(element.validationState.isValid)
+        let params = try XCTUnwrap(element.updateParams(params: IntentConfirmParams(type: .stripe(.stripeBalance))))
+        XCTAssertEqual(params.paymentMethodParams.additionalAPIParameters["stripe_balance[financial_account]"] as? String, "fa_2")
+        XCTAssertEqual(row(for: "fa_2", in: element)?.isSelected, true)
+        XCTAssertEqual(row(for: "fa_1", in: element)?.isSelected, false)
+    }
+
+    func testElementDoesNotSelectAccountsThatCantCoverThePayment() throws {
+        // Given
+        let element = makeElement(accounts: [makeAccount(id: "fa_1", eligible: false, ineligibleReason: .insufficientBalance)])
+        let row = try XCTUnwrap(row(for: "fa_1", in: element))
+
+        // When
+        row.sendActions(for: .touchUpInside)
+
+        // Then
+        XCTAssertFalse(row.isEnabled)
+        XCTAssertFalse(element.validationState.isValid)
+        XCTAssertTrue(row.accessibilityLabel?.contains("Insufficient balance") ?? false)
+    }
+
+    func testElementSelectsTheDefaultAccountOnlyIfItsSelectable() {
+        // Given
+        let accounts = [makeAccount(id: "fa_1"), makeAccount(id: "fa_2", eligible: false, ineligibleReason: .insufficientBalance)]
+
+        // When
+        let selectableDefault = makeElement(accounts: accounts, defaultFinancialAccountID: "fa_1")
+        let unselectableDefault = makeElement(accounts: accounts, defaultFinancialAccountID: "fa_2")
+
+        // Then
+        XCTAssertEqual(selectableDefault.selectedFinancialAccountID, "fa_1")
+        XCTAssertEqual(row(for: "fa_1", in: selectableDefault)?.isSelected, true)
+        XCTAssertNil(unselectableDefault.selectedFinancialAccountID)
+    }
+
+    func testElementShowsNoBalanceWhenSettingUp() throws {
+        // Given accounts loaded without a currency, as when setting up
+        let element = StripeBalanceFinancialAccountsElement(
+            financialAccounts: .init(accounts: [makeAccount(id: "fa_1")], currency: nil),
+            defaultFinancialAccountID: nil,
+            appearance: .default
+        )
+
+        // Then the row only shows the account's name
+        XCTAssertEqual(try XCTUnwrap(row(for: "fa_1", in: element)).accessibilityLabel, "Account fa_1")
+    }
+
+    func testElementShowsANegativeBalance() throws {
+        // Given an account whose available balance is negative
+        let account = StripeBalanceFinancialAccount(
+            id: "fa_1",
+            displayName: "Account fa_1",
+            balance: .init(available: ["usd": .init(value: -500, currency: "usd")]),
+            eligible: false,
+            ineligibleReason: .insufficientBalance
+        )
+
+        // When
+        let element = makeElement(accounts: [account])
+
+        // Then the row shows the negative balance
+        let negativeBalance = String.localizedAmountDisplayString(for: -500, currency: "usd")
+        XCTAssertEqual(
+            try XCTUnwrap(row(for: "fa_1", in: element)).accessibilityLabel,
+            "Account fa_1, \(negativeBalance) available, Insufficient balance"
+        )
+    }
+
+    // MARK: - Form
+
+    func testFormListsFinancialAccounts() throws {
+        // Given
+        let configuration = makeCustomerSessionConfiguration()
+
+        // When
+        let form = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.stripeBalance]),
+            elementsSession: makeElementsSessionWithCustomerSession(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.stripeBalance),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService._testValue(),
+            analyticsHelper: ._testValue(),
+            stripeBalanceFinancialAccounts: .init(accounts: [makeAccount(id: "fa_1")], currency: "usd")
+        ).make()
+
+        // Then
+        let elements = form.getAllUnwrappedSubElements()
+        let financialAccountsElement = try XCTUnwrap(elements.compactMap { $0 as? StripeBalanceFinancialAccountsElement }.first)
+        XCTAssertNotNil(row(for: "fa_1", in: financialAccountsElement))
+    }
+
+    // MARK: - Helpers
+
+    private func makeAccount(
+        id: String,
+        eligible: Bool = true,
+        ineligibleReason: StripeBalanceFinancialAccount.IneligibleReason? = nil
+    ) -> StripeBalanceFinancialAccount {
+        StripeBalanceFinancialAccount(
+            id: id,
+            displayName: "Account \(id)",
+            balance: .init(available: ["usd": .init(value: 1000, currency: "usd")]),
+            eligible: eligible,
+            ineligibleReason: ineligibleReason
+        )
+    }
+
+    private func makeElement(
+        accounts: [StripeBalanceFinancialAccount],
+        defaultFinancialAccountID: String? = nil
+    ) -> StripeBalanceFinancialAccountsElement {
+        StripeBalanceFinancialAccountsElement(
+            financialAccounts: .init(accounts: accounts, currency: "usd"),
+            defaultFinancialAccountID: defaultFinancialAccountID,
+            appearance: .default
+        )
+    }
+
+    private func row(for financialAccountID: String, in element: StripeBalanceFinancialAccountsElement) -> StripeBalanceFinancialAccountRow? {
+        func rows(in view: UIView) -> [StripeBalanceFinancialAccountRow] {
+            view.subviews.flatMap { subview -> [StripeBalanceFinancialAccountRow] in
+                if let row = subview as? StripeBalanceFinancialAccountRow {
+                    return [row]
+                }
+                return rows(in: subview)
+            }
+        }
+        return rows(in: element.view).first { $0.financialAccount.id == financialAccountID }
+    }
+
+    private func makeCustomerSessionConfiguration() -> PaymentSheet.Configuration {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123_secret_456")
+        return configuration
+    }
+
+    private func makeElementsSessionWithCustomerSession(paymentMethodTypes: [String] = ["stripe_balance"]) -> STPElementsSession {
+        ._testValue(
+            paymentMethodTypes: paymentMethodTypes,
+            customerSessionData: [
+                "mobile_payment_element": [
+                    "enabled": true,
+                    "features": ["payment_method_save": "disabled", "payment_method_remove": "disabled"],
+                ],
+                "customer_sheet": ["enabled": false],
+            ]
+        )
+    }
+
+    private func supportsAdding(intent: Intent, configuration: PaymentSheet.Configuration) -> PaymentSheet.PaymentMethodAvailabilityStatus {
+        PaymentSheet.PaymentMethodType.supportsAdding(
+            paymentMethod: .stripeBalance,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: ._testValue(intent: intent),
+            supportedPaymentMethods: [.stripeBalance]
+        )
+    }
+}

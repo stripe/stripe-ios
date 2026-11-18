@@ -39,9 +39,10 @@ class DocumentCollectionViewController<Content: View>: UIHostingController<Conte
 
         // Without Liquid Glass, omit the preceding screen's title from the back button, leaving just the "<" to match designs.
         if !LiquidGlassDetector.isEnabledInMerchantApp,
-           let controllers = navigationController?.viewControllers,
-           let index = controllers.firstIndex(of: self), index > 0 {
-            controllers[index - 1].navigationItem.backButtonDisplayMode = .minimal
+           let navigationController,
+           let index = navigationController.viewControllers.firstIndex(of: self), index > 0 {
+            navigationController.navigationBar.tintColor = .secondaryLabel
+            navigationController.viewControllers[index - 1].navigationItem.backButtonDisplayMode = .minimal
         }
     }
 

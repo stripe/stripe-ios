@@ -135,9 +135,8 @@ public final class EmbeddedPaymentElement {
             return result
         }
 
-        // If we currently have a sheet presented, fail the update (unless it's a checkout session update, which may occur during billing sync)
-        if !mode.isCheckout,
-           isPresentingPaymentUI {
+        // If we currently have a sheet presented, fail the update
+        if isPresentingPaymentUI {
             let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented)
             analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
             return result
@@ -238,6 +237,7 @@ public final class EmbeddedPaymentElement {
             savedPaymentMethods: loadResult.savedPaymentMethods,
             analyticsHelper: self.analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: self.checkout,
             formCache: self.formCache,
             delegate: self
@@ -400,9 +400,9 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
-    internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
+    internal var savedPaymentMethodManager: SavedPaymentMethodManager {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
-    }()
+    }
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 

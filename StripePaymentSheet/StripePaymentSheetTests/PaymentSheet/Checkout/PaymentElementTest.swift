@@ -24,12 +24,12 @@ final class PaymentElementTest: XCTestCase {
             expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
     }
 
     override func tearDown() {
         HTTPStubs.removeAllStubs()
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
         super.tearDown()
     }
 

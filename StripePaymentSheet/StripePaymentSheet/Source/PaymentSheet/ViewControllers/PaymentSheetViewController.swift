@@ -169,12 +169,11 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-                allowsRemovalOfPaymentMethods: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                allowsRemovalOfPaymentMethods: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                allowsUpdatePaymentMethod: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession)
+                allowsUpdatePaymentMethod: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession)
             ),
             paymentSheetConfiguration: configuration,
-            intent: intent,
             appearance: configuration.appearance,
             elementsSession: elementsSession,
             cbcEligible: elementsSession.isCardBrandChoiceEligible,
@@ -205,7 +204,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,
             analyticsHelper: analyticsHelper,
-            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts
         )
         self.analyticsHelper = analyticsHelper
 
@@ -561,8 +561,12 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
-        return try await savedPaymentMethodManager.update(paymentMethod: paymentMethod,
-                                                                  with: updateParams)
+        return try await loadResult.customerProvider.update(
+            paymentMethod: paymentMethod,
+            with: updateParams,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
     }
 
     func didSelectUpdateDefault(viewController: SavedPaymentOptionsViewController,

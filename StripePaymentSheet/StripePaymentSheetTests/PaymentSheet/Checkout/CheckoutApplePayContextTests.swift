@@ -1089,7 +1089,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             "payment_status": "paid",
             "payment_response": [
                 "status": "succeeded",
-                "payment_intent": ["id": "pi_test_123", "client_secret": "pi_test_123_secret_abc"],
+                "payment_intent": STPTestUtils.jsonNamed("CheckoutPaymentIntent")!,
             ],
         ])
     }

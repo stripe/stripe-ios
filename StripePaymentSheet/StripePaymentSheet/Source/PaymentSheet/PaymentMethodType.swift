@@ -101,8 +101,25 @@ extension PaymentSheet {
         /// - Parameters:
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
+        ///   - stripeBalanceFinancialAccounts: The buyer's financial accounts loaded with PaymentSheet. Stripe balance isn't offered if they didn't load or there are none, since there'd be nothing to pay from.
         @MainActor
-        static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
+        static func filteredPaymentMethodTypes(
+            from intent: Intent,
+            elementsSession: STPElementsSession,
+            configuration: PaymentElementConfiguration,
+            stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
+            logAvailability: Bool = false
+        ) -> [PaymentMethodType] {
+            let paymentMethodTypes = serverOrLocalPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: logAvailability)
+            guard let stripeBalanceFinancialAccounts, !stripeBalanceFinancialAccounts.accounts.isEmpty else {
+                return paymentMethodTypes.filter { $0 != .stripe(.stripeBalance) }
+            }
+            return paymentMethodTypes
+        }
+
+        /// The server's `payment_method_availability` if it sent one, otherwise the local availability logic's.
+        @MainActor
+        private static func serverOrLocalPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool) -> [PaymentMethodType]
         {
             guard let serverPaymentMethodAvailability = elementsSession.serverPaymentMethodAvailability else {
                 return locallyFilteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: logAvailability)
@@ -350,6 +367,9 @@ extension PaymentSheet {
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
+                    case .stripeBalance:
+                        // The buyer's financial accounts are listed using the CustomerSession
+                        return [.customerSession]
                     case .iDEAL, .bancontact:
                         // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
@@ -372,6 +392,9 @@ extension PaymentSheet {
                     switch paymentMethod {
                     case .blik, .card, .cardPresent, .weChatPay, .paynow, .promptPay, .mbWay, .bizum, .pix:
                         return []
+                    case .stripeBalance:
+                        // The buyer's financial accounts are listed using the CustomerSession
+                        return [.customerSession]
                     case .momo, .shopeePay, .qris, .gcash, .ngCard, .ngBankTransfer, .ngUSSD, .ngWallet, .mondu, .touchNGo, .trueMoney, .goPay, .alipay, .EPS, .FPX, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
                             .mobilePay, .vipps, .swish, .twint, .sunbit, .billie, .satispay, .crypto, .afterpayClearpay, .payPay,
@@ -634,7 +657,7 @@ extension STPPaymentMethodParams {
             } else {
                 return "FPX"
             }
-        case .momo, .shopeePay, .qris, .gcash, .ngCard, .ngBankTransfer, .ngUSSD, .ngWallet, .mondu, .touchNGo, .trueMoney, .goPay, .paynow, .zip, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .payPay, .wero, .payByBank, .mbWay, .bizum, .kakaoPay, .krCard, .naverPay, .payco, .sequra, .scalapay, .pix:
+        case .momo, .shopeePay, .qris, .gcash, .ngCard, .ngBankTransfer, .ngUSSD, .ngWallet, .mondu, .touchNGo, .trueMoney, .goPay, .paynow, .zip, .amazonPay, .alma, .mobilePay, .vipps, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent, .payPay, .wero, .payByBank, .mbWay, .bizum, .kakaoPay, .krCard, .naverPay, .payco, .sequra, .scalapay, .pix, .stripeBalance:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         case .unknown:

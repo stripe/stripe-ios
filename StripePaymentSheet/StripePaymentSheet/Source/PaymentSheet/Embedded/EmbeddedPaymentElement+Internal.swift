@@ -39,8 +39,8 @@ extension EmbeddedPaymentElement {
             isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: loadResult.intent.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
-            allowsPaymentMethodUpdate: loadResult.intent.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodRemoval: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
         let initialSelection: RowButtonType? = {
@@ -115,6 +115,7 @@ extension EmbeddedPaymentElement {
         savedPaymentMethods: [STPPaymentMethod],
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
+        stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?,
         checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?,
         formCache: PaymentMethodFormCache,
         delegate: EmbeddedFormViewControllerDelegate
@@ -132,6 +133,7 @@ extension EmbeddedPaymentElement {
             previousPaymentOption: previousPaymentOption,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
             formCache: formCache,
             delegate: delegate
@@ -180,6 +182,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
             delegate: self
@@ -301,7 +304,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         case .new, nil:
             return
         }
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             paymentOption,
             forCustomer: loadResult.customerProvider.customerID
         )
@@ -317,8 +320,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                hostedSurface: .paymentSheet,
                                                                                checkoutSessionID: analyticsHelper.checkoutSessionID,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
-                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-                                                                               canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                                                                               canUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
@@ -361,6 +364,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: nil, // This is just to check if there's a form, so this data isn't necessary
+            stripeBalanceFinancialAccounts: nil,
             checkoutBillingAddressUpdater: checkout,
             formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
             delegate: self
@@ -432,7 +436,12 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                             updateParams: StripePayments.STPPaymentMethodUpdateParams,
                             hasOnlyChangedCardBrand: Bool) async -> Result<Void, Error> {
         do {
-            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+            let updatedPaymentMethod = try await loadResult.customerProvider.update(
+                paymentMethod: paymentMethod,
+                with: updateParams,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
 
             // Update savedPaymentMethods
             if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
@@ -464,8 +473,8 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-            allowsPaymentMethodUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+            allowsPaymentMethodRemoval: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+            allowsPaymentMethodUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
     }
@@ -576,6 +585,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
             delegate: self
@@ -831,9 +841,15 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
     }
 
     func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        // Initialize the polling view controller and flag it for presentation
-        self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
-                                                      appearance: self.appearance, safariViewController: safariViewController)
+        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
+                                              appearance: self.appearance, safariViewController: safariViewController)
+        // Without a web view in front (e.g. BLIK, MB WAY, Bizum), present the polling view controller right away
+        guard safariViewController != nil else {
+            self._presentingViewController.present(pollingVC, animated: true)
+            return
+        }
+        // Otherwise, flag it for presentation once the web view is dismissed
+        self.pollingVC = pollingVC
         shouldPresentPollingVC = true
     }
 
