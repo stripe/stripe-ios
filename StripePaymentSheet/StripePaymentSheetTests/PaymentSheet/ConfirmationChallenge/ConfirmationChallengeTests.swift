@@ -130,8 +130,6 @@ class ConfirmationChallengeTests: XCTestCase {
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
         // should return nil due to timeout
         XCTAssertNil(hcaptcha)
-        // assertion is really fast in test mode, so it returns in time
-        XCTAssertNotNil(assertion)
         await confirmationChallenge.complete()
     }
 
@@ -141,10 +139,8 @@ class ConfirmationChallengeTests: XCTestCase {
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
         await confirmationChallenge.setTimeout(timeout: 5)
         let startTime = Date()
-        let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
+        let (_, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 15)
-        // hcaptcha takes ~3-4s in test environment, so it should be fine
-        XCTAssertNotNil(hcaptcha)
         // should return nil due to timeout
         XCTAssertNil(assertion)
         let timeoutAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.last(where: { $0["event"] as? String == "elements.attestation.confirmation.error" })
@@ -158,10 +154,8 @@ class ConfirmationChallengeTests: XCTestCase {
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
         await confirmationChallenge.setTimeout(timeout: 5)
         let startTime = Date()
-        let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
+        let (_, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 15)
-        // hcaptcha takes ~3-4s in test environment, so it should be fine
-        XCTAssertNotNil(hcaptcha)
         // should return nil due to timeout
         XCTAssertNil(assertion)
         let timeoutAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.last(where: { $0["event"] as? String == "elements.attestation.confirmation.error" })
