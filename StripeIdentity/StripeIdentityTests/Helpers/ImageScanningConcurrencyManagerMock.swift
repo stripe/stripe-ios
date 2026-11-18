@@ -21,10 +21,12 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
     var mockNumFramesScannedMetric: Int = 0
 
     private(set) var didReset = false
+    private(set) var resetCallCount = 0
     private(set) var scanCallCount = 0
     private var completion: ((Any?) -> Void)?
     var automaticallyCompletesReset = true
     private var resetCompletions: [() -> Void] = []
+    private var readinessCompletions: [() -> Void] = []
 
     func scanImage<ScannerOutput>(
         with scanner: AnyImageScanner<ScannerOutput>,
@@ -58,6 +60,7 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
         completion: @escaping () -> Void
     ) {
         didReset = true
+        resetCallCount += 1
         let reset = {
             scanner.reset()
             completion()
@@ -73,6 +76,23 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
         let completions = resetCompletions
         resetCompletions.removeAll()
         completions.forEach { $0() }
+        if resetCompletions.isEmpty {
+            let ready = readinessCompletions
+            readinessCompletions.removeAll()
+            ready.forEach { $0() }
+        }
+    }
+
+    func whenReady<ScannerOutput>(
+        with scanner: AnyImageScanner<ScannerOutput>,
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    ) {
+        if resetCompletions.isEmpty {
+            completion()
+        } else {
+            readinessCompletions.append(completion)
+        }
     }
 
     func getPerformanceMetrics(

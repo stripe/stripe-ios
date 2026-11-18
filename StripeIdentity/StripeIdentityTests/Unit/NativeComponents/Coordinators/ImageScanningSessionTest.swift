@@ -65,6 +65,88 @@ final class ImageScanningSessionTest: XCTestCase {
         XCTAssertNil(session.timeoutTimer)
     }
 
+    func testTimeoutWaitsForScannerResetAfterCameraStarts() {
+        // Given a previous attempt whose scanner reset has not finished
+        manager.automaticallyCompletesReset = false
+        let session = makeSession()
+        session.reset(to: 1)
+
+        // When the camera starts before the scanner is ready
+        camera.respondToStartSession()
+        drainMainQueue()
+        XCTAssertNil(session.timeoutTimer)
+
+        // Then the new timeout starts only after scanner reset finishes
+        manager.completePendingResets()
+        drainMainQueue()
+        XCTAssertEqual(session.timeoutTimer?.isValid, true)
+        session.stopTimeoutTimer()
+    }
+
+    func testReadinessAfterStopDoesNotStartTimeout() {
+        manager.automaticallyCompletesReset = false
+        let session = makeSession()
+        session.reset(to: 1)
+        camera.respondToStartSession()
+        drainMainQueue()
+
+        session.stopScanning()
+        manager.completePendingResets()
+        drainMainQueue()
+
+        XCTAssertNil(session.timeoutTimer)
+    }
+
+    func testExplicitTimeoutPauseIsPreservedWhenScannerBecomesReady() {
+        // Given a camera that is running while scanner reset finishes
+        manager.automaticallyCompletesReset = false
+        let session = makeSession()
+        session.reset(to: 1)
+        camera.respondToStartSession()
+        drainMainQueue()
+
+        // When manual capture or pose collection disables the timeout
+        session.stopTimeoutTimer()
+        manager.completePendingResets()
+        drainMainQueue()
+
+        // Then delayed readiness cannot turn the timeout back on
+        XCTAssertNil(session.timeoutTimer)
+    }
+
+    func testStateDelegateCanStopBeforeCameraStarts() {
+        let camera = SessionCameraSpy()
+        let session = makeSession(initialState: .initial, cameraSession: camera)
+        delegate.didUpdate = { $0.stopScanning() }
+
+        session.startScanning(expectedClassification: 1)
+
+        XCTAssertEqual(camera.startCount, 0)
+        XCTAssertEqual(camera.stopCount, 1)
+    }
+
+    func testStartDelegateCanStopBeforeCameraStarts() {
+        let camera = SessionCameraSpy()
+        let session = makeSession(cameraSession: camera)
+        delegate.willStart = { $0.stopScanning() }
+
+        session.startScanning(expectedClassification: 1)
+
+        XCTAssertEqual(camera.startCount, 0)
+        XCTAssertEqual(camera.stopCount, 1)
+    }
+
+    func testStopDelegateCanRestartWithoutObsoleteCameraStop() {
+        let camera = SessionCameraSpy()
+        let session = makeSession(cameraSession: camera)
+        delegate.willStop = { $0.startScanning(expectedClassification: 1) }
+
+        session.stopScanning()
+
+        XCTAssertEqual(camera.startCount, 1)
+        XCTAssertEqual(camera.stopCount, 0)
+    }
+
     func testLateStopCompletionDoesNotNotifyRestartedSession() {
         // Given an outstanding camera stop
         let session = makeSession()
@@ -139,6 +221,15 @@ final class ImageScanningSessionTest: XCTestCase {
         XCTAssertEqual(delegate.outputs, [])
     }
 
+    func testFrameDelegateCannotAdmitFrameAfterStopping() throws {
+        let session = makeSession()
+        delegate.beforeShouldScan = { $0.stopScanning() }
+
+        try captureFrame(session)
+
+        XCTAssertEqual(manager.scanCallCount, 0)
+    }
+
     func testDeinitResetsScannerThroughManager() {
         var session: Session? = makeSession()
         weak var releasedSession = session
@@ -148,6 +239,99 @@ final class ImageScanningSessionTest: XCTestCase {
         XCTAssertNil(releasedSession)
         XCTAssertTrue(manager.didReset)
         XCTAssertTrue(scanner.didReset)
+    }
+
+    func testDeinitDoesNotResetScannerAgainAfterStop() {
+        var session: Session? = makeSession()
+        session?.stopScanning()
+
+        session = nil
+
+        XCTAssertEqual(manager.resetCallCount, 1)
+    }
+
+    func testPermissionCompletionAfterStopDoesNotConfigureCamera() {
+        let permissions = SessionPermissionsSpy()
+        let camera = SessionCameraSpy()
+        let session = makeSession(initialState: .initial, cameraSession: camera, permissionsManager: permissions)
+        session.startIfNeeded(expectedClassification: 1)
+
+        session.stopScanning()
+        permissions.respond(granted: true)
+        drainMainQueue()
+
+        XCTAssertEqual(camera.configureCount, 0)
+        XCTAssertEqual(session.state, .initial)
+    }
+
+    func testConfigurationCompletionAfterStopDoesNotRestartCamera() {
+        let permissions = SessionPermissionsSpy()
+        let camera = SessionCameraSpy()
+        let session = makeSession(initialState: .initial, cameraSession: camera, permissionsManager: permissions)
+        session.startIfNeeded(expectedClassification: 1)
+        permissions.respond(granted: true)
+        drainMainQueue()
+        XCTAssertEqual(camera.configureCount, 1)
+
+        session.stopScanning()
+        camera.completeConfiguration(.success)
+
+        XCTAssertEqual(camera.startCount, 0)
+        XCTAssertEqual(session.state, .initial)
+    }
+
+    func testConfigurationDeliveredOffMainUpdatesSessionOnMain() {
+        let permissions = SessionPermissionsSpy()
+        let camera = SessionCameraSpy()
+        let session = makeSession(initialState: .initial, cameraSession: camera, permissionsManager: permissions)
+        session.startIfNeeded(expectedClassification: 1)
+        permissions.respond(granted: true)
+        drainMainQueue()
+        let started = expectation(description: "Cached camera configuration starts on main")
+        delegate.willStart = { _ in
+            XCTAssertTrue(Thread.isMainThread)
+            started.fulfill()
+        }
+
+        DispatchQueue.global().async {
+            camera.completeConfiguration(.success)
+        }
+        wait(for: [started], timeout: 2)
+
+        XCTAssertEqual(session.state, .scanning(1, nil))
+        XCTAssertEqual(camera.startCount, 1)
+    }
+
+    func testForegroundResumesInterruptedInitialSetup() {
+        let permissions = SessionPermissionsSpy()
+        let camera = SessionCameraSpy()
+        let session = makeSession(initialState: .initial, cameraSession: camera, permissionsManager: permissions)
+        session.startIfNeeded(expectedClassification: 1)
+        session.appDidEnterBackground()
+        permissions.respond(granted: true)
+        drainMainQueue()
+        XCTAssertEqual(camera.configureCount, 0)
+
+        session.appDidEnterForeground()
+        XCTAssertEqual(permissions.requestCount, 2)
+        permissions.respond(granted: true)
+        drainMainQueue()
+        camera.completeConfiguration(.success)
+
+        XCTAssertEqual(camera.startCount, 1)
+        XCTAssertEqual(session.state, .scanning(1, nil))
+    }
+
+    func testExplicitStopCancelsPendingForegroundSetup() {
+        let permissions = SessionPermissionsSpy()
+        let session = makeSession(initialState: .initial, permissionsManager: permissions)
+        session.startIfNeeded(expectedClassification: 1)
+        session.appDidEnterBackground()
+
+        session.stopScanning()
+        session.appDidEnterForeground()
+
+        XCTAssertEqual(permissions.requestCount, 1)
     }
 
     func testQueuedFrameIsRejectedBeforeScanningAfterRestart() throws {
@@ -171,7 +355,7 @@ final class ImageScanningSessionTest: XCTestCase {
         // When the same classification restarts before that predicate runs
         session.reset(to: 1)
         let reset = expectation(description: "Old frame drained and scanner reset")
-        realManager.reset(with: .init(scanner), completeOn: .main) {
+        realManager.reset(with: session.scanner, completeOn: .main) {
             reset.fulfill()
         }
         wait(for: [reset], timeout: 2)
@@ -191,15 +375,20 @@ final class ImageScanningSessionTest: XCTestCase {
         XCTAssertEqual(delegate.outputs, [1])
     }
 
-    private func makeSession(concurrencyManager: ImageScanningConcurrencyManagerProtocol? = nil) -> Session {
+    private func makeSession(
+        initialState: Session.State = .scanning(1, nil),
+        cameraSession: CameraSessionProtocol? = nil,
+        permissionsManager: CameraPermissionsManagerProtocol? = nil,
+        concurrencyManager: ImageScanningConcurrencyManagerProtocol? = nil
+    ) -> Session {
         let session = Session(
-            initialState: .scanning(1, nil),
+            initialState: initialState,
             initialCameraPosition: .back,
             autocaptureTimeout: 60,
-            cameraSession: camera,
+            cameraSession: cameraSession ?? camera,
             scanner: .init(scanner),
             concurrencyManager: concurrencyManager ?? manager,
-            cameraPermissionsManager: MockCameraPermissionsManager(),
+            cameraPermissionsManager: permissionsManager ?? MockCameraPermissionsManager(),
             appSettingsHelper: MockAppSettingsHelper()
         )
         session.setDelegate(delegate: delegate)
@@ -247,9 +436,14 @@ final class ImageScanningSessionTest: XCTestCase {
         var outputs: [Int] = []
         var didStopCount = 0
         var didScan: (() -> Void)?
+        var didUpdate: ((ScanningSession) -> Void)?
+        var willStart: ((ScanningSession) -> Void)?
+        var willStop: ((ScanningSession) -> Void)?
+        var beforeShouldScan: ((ScanningSession) -> Void)?
 
         func imageScanningSessionShouldScanCameraOutput(_ scanningSession: ScanningSession) -> Bool {
             XCTAssertTrue(Thread.isMainThread)
+            beforeShouldScan?(scanningSession)
             return shouldScan
         }
 
@@ -271,10 +465,80 @@ final class ImageScanningSessionTest: XCTestCase {
 
         func imageScanningSession(_ scanningSession: ScanningSession, cameraDidError: Error) {}
         func imageScanningSession(_ scanningSession: ScanningSession, didRequestCameraAccess isGranted: Bool?) {}
-        func imageScanningSessionDidUpdate(_ scanningSession: ScanningSession) {}
+        func imageScanningSessionDidUpdate(_ scanningSession: ScanningSession) {
+            XCTAssertTrue(Thread.isMainThread)
+            didUpdate?(scanningSession)
+        }
         func imageScanningSessionDidReset(_ scanningSession: ScanningSession) {}
         func imageScanningSession(_ scanningSession: ScanningSession, didTimeoutForClassification classification: Int) {}
-        func imageScanningSession(_ scanningSession: ScanningSession, willStartScanningForClassification classification: Int) {}
-        func imageScanningSessionWillStopScanning(_ scanningSession: ScanningSession) {}
+        func imageScanningSession(_ scanningSession: ScanningSession, willStartScanningForClassification classification: Int) {
+            willStart?(scanningSession)
+        }
+        func imageScanningSessionWillStopScanning(_ scanningSession: ScanningSession) {
+            willStop?(scanningSession)
+        }
     }
+}
+
+private final class SessionPermissionsSpy: CameraPermissionsManagerProtocol {
+    var hasCameraAccess = false
+    private(set) var requestCount = 0
+    private var completion: ((Bool?) -> Void)?
+
+    func requestCameraAccess(completeOnQueue queue: DispatchQueue, completion: @escaping CompletionBlock) {
+        requestCount += 1
+        self.completion = { granted in
+            queue.async { completion(granted) }
+        }
+    }
+
+    func respond(granted: Bool?) {
+        completion?(granted)
+    }
+}
+
+private final class SessionCameraSpy: CameraSessionProtocol {
+    var previewView: CameraPreviewView?
+    private(set) var configureCount = 0
+    private(set) var startCount = 0
+    private(set) var stopCount = 0
+    private var configureCompletion: ((CameraSession.SetupResult) -> Void)?
+
+    func configureSession(
+        configuration: CameraSession.Configuration,
+        delegate: AVCaptureVideoDataOutputSampleBufferDelegate,
+        completeOn queue: DispatchQueue,
+        completion: @escaping (CameraSession.SetupResult) -> Void
+    ) {
+        configureCount += 1
+        configureCompletion = completion
+    }
+
+    func completeConfiguration(_ result: CameraSession.SetupResult) {
+        configureCompletion?(result)
+    }
+
+    func startSession(completeOn queue: DispatchQueue, completion: @escaping () -> Void) {
+        startCount += 1
+        queue.async(execute: completion)
+    }
+
+    func stopSession(completeOn queue: DispatchQueue, completion: @escaping () -> Void) {
+        stopCount += 1
+        queue.async(execute: completion)
+    }
+
+    func setVideoOrientation(orientation: AVCaptureVideoOrientation) {}
+
+    func toggleCamera(
+        to position: CameraSession.CameraPosition,
+        completeOn queue: DispatchQueue,
+        completion: @escaping (CameraSession.SetupResult) -> Void
+    ) {
+        queue.async { completion(.success) }
+    }
+
+    func toggleTorch() {}
+
+    func getCameraProperties() -> CameraSession.DeviceProperties? { nil }
 }

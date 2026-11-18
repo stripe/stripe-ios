@@ -83,6 +83,10 @@ final class ImageScanningSession<
     private let scanningLock = NSLock()
     private var scanningGeneration: UUID?
     private var lifecycleGeneration = UUID()
+    private var pendingSetupClassification: ExpectedClassificationType?
+    private var setupToResumeOnForeground: ExpectedClassificationType?
+    private var needsScannerReset = false
+    private var shouldStartTimeoutWhenReady = false
 
     // MARK: Coordinators
     let concurrencyManager: ImageScanningConcurrencyManagerProtocol
@@ -116,6 +120,7 @@ final class ImageScanningSession<
 
         if case .scanning = initialState {
             scanningGeneration = lifecycleGeneration
+            needsScannerReset = true
         }
 
         addObservers()
@@ -129,7 +134,9 @@ final class ImageScanningSession<
 
     deinit {
         // A frame may still be finishing after the session is released.
-        concurrencyManager.reset(with: scanner, completeOn: .main, completion: {})
+        if needsScannerReset {
+            concurrencyManager.reset(with: scanner, completeOn: .main, completion: {})
+        }
     }
 
     // MARK: - Internal
@@ -180,11 +187,12 @@ final class ImageScanningSession<
     }
 
     func stopTimeoutTimer() {
+        shouldStartTimeoutWhenReady = false
         timeoutTimer?.invalidate()
     }
 
     func startIfNeeded(expectedClassification: ExpectedClassificationType) {
-        if state == .initial {
+        if state == .initial, pendingSetupClassification == nil {
             setupCameraAndStartScanning(expectedClassification: expectedClassification)
         }
     }
@@ -192,34 +200,50 @@ final class ImageScanningSession<
     func startScanning(expectedClassification: ExpectedClassificationType) {
         let generation = UUID()
         lifecycleGeneration = generation
+        pendingSetupClassification = nil
+        setupToResumeOnForeground = nil
+        needsScannerReset = true
+        shouldStartTimeoutWhenReady = true
         setScanningGeneration(generation)
         timeoutTimer?.invalidate()
         self.state = .scanning(expectedClassification, .initialValue())
+        guard currentScanningGeneration() == generation, case .scanning = state else { return }
 
         delegate?.imageScanningSession(
             self,
             willStartScanningForClassification: expectedClassification
         )
+        guard currentScanningGeneration() == generation, case .scanning = state else { return }
 
         cameraSession.startSession(completeOn: .main) { [weak self] in
             guard let self = self,
                 self.currentScanningGeneration() == generation
             else { return }
-            self.startTimeoutTimer(expectedClassification: expectedClassification)
+            self.concurrencyManager.whenReady(with: self.scanner, completeOn: .main) { [weak self] in
+                guard let self = self,
+                    self.currentScanningGeneration() == generation,
+                    self.shouldStartTimeoutWhenReady
+                else { return }
+                self.startTimeoutTimer(expectedClassification: expectedClassification)
+            }
         }
     }
 
     func stopScanning() {
         let generation = UUID()
         lifecycleGeneration = generation
+        pendingSetupClassification = nil
+        setupToResumeOnForeground = nil
         setScanningGeneration(nil)
+        stopTimeoutTimer()
         delegate?.imageScanningSessionWillStopScanning(self)
-        timeoutTimer?.invalidate()
+        guard lifecycleGeneration == generation else { return }
 
         // Close frame admission immediately, including during an immediate
         // restart. Reset waits for the accepted frame without delaying the camera.
         let stopped = DispatchGroup()
         stopped.enter()
+        needsScannerReset = false
         concurrencyManager.reset(with: scanner, completeOn: .main) {
             stopped.leave()
         }
@@ -248,6 +272,7 @@ final class ImageScanningSession<
     }
 
     func startTimeoutTimer(expectedClassification: ExpectedClassificationType) {
+        shouldStartTimeoutWhenReady = false
         timeoutTimer?.invalidate()
         let generation = lifecycleGeneration
 
@@ -282,12 +307,20 @@ final class ImageScanningSession<
     // MARK: - App Backgrounding
 
     @objc func appDidEnterBackground() {
+        let interruptedSetup = pendingSetupClassification
         stopScanning()
+        if state == .initial {
+            setupToResumeOnForeground = interruptedSetup
+        }
     }
 
     @objc func appDidEnterForeground() {
+        let interruptedSetup = setupToResumeOnForeground
+        setupToResumeOnForeground = nil
         if case .scanning(let expectedClassification, _) = state {
             startScanning(expectedClassification: expectedClassification)
+        } else if state == .initial, let interruptedSetup {
+            setupCameraAndStartScanning(expectedClassification: interruptedSetup)
         }
     }
 
@@ -296,14 +329,19 @@ final class ImageScanningSession<
     private func setupCameraAndStartScanning(
         expectedClassification: ExpectedClassificationType
     ) {
+        let generation = UUID()
+        lifecycleGeneration = generation
+        pendingSetupClassification = expectedClassification
         permissionsManager.requestCameraAccess(completeOnQueue: .main) { [weak self] granted in
-            guard let self = self else {
+            guard let self = self, self.lifecycleGeneration == generation else {
                 return
             }
 
             self.delegate?.imageScanningSession(self, didRequestCameraAccess: granted)
+            guard self.lifecycleGeneration == generation else { return }
 
             guard granted == true else {
+                self.pendingSetupClassification = nil
                 self.state = .noCameraAccess
                 return
             }
@@ -328,18 +366,39 @@ final class ImageScanningSession<
                 delegate: self,
                 completeOn: .main
             ) { [weak self] result in
-                guard let self = self else {
-                    return
+                // A cached CameraSession configuration can complete on its
+                // session queue. Keep all lifecycle and delegate work on main.
+                let handleResult: () -> Void = { [weak self] in
+                    self?.handleCameraSetupResult(
+                        result,
+                        generation: generation,
+                        expectedClassification: expectedClassification
+                    )
                 }
-
-                switch result {
-                case .success:
-                    self.startScanning(expectedClassification: expectedClassification)
-                case .failed(let error):
-                    self.delegate?.imageScanningSession(self, cameraDidError: error)
-                    self.state = .cameraError
+                if Thread.isMainThread {
+                    handleResult()
+                } else {
+                    DispatchQueue.main.async(execute: handleResult)
                 }
             }
+        }
+    }
+
+    private func handleCameraSetupResult(
+        _ result: CameraSession.SetupResult,
+        generation: UUID,
+        expectedClassification: ExpectedClassificationType
+    ) {
+        guard lifecycleGeneration == generation else { return }
+        pendingSetupClassification = nil
+
+        switch result {
+        case .success:
+            startScanning(expectedClassification: expectedClassification)
+        case .failed(let error):
+            delegate?.imageScanningSession(self, cameraDidError: error)
+            guard lifecycleGeneration == generation else { return }
+            state = .cameraError
         }
     }
 
@@ -373,7 +432,12 @@ final class ImageScanningSession<
                     self.currentScanningGeneration() == generation,
                     case .scanning = self.state
                 else { return false }
-                return self.delegate?.imageScanningSessionShouldScanCameraOutput(self) != false
+                let shouldScan = self.delegate?.imageScanningSessionShouldScanCameraOutput(self) != false
+                guard shouldScan,
+                    self.currentScanningGeneration() == generation,
+                    case .scanning = self.state
+                else { return false }
+                return true
             }
         ) { [weak self] scannerOutput, image, exifMetadata in
             // Classification alone cannot distinguish a stopped scan from a

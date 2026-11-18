@@ -29,6 +29,12 @@ protocol ImageScanningConcurrencyManagerProtocol {
         completion: @escaping () -> Void
     )
 
+    func whenReady<ScannerOutput>(
+        with scanner: AnyImageScanner<ScannerOutput>,
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    )
+
     func getPerformanceMetrics(
         completeOn queue: DispatchQueue,
         completion: @escaping (_ averageFPS: Double?, _ numFramesScanned: Int) -> Void
@@ -49,17 +55,6 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     private var perfFirstScanStartTime: Date?
     private var perfLastScanEndTime: Date?
     private var perfNumFramesScanned = 0
-
-    private let processingQueue = DispatchQueue(
-        label: "com.stripe.identity.image-scanner.processing",
-        qos: .userInitiated
-    )
-    // Admission stays closed until result delivery finishes, so a busy UI cannot
-    // accumulate images either. Only these short state transitions take the lock.
-    private let admissionLock = NSLock()
-    private var isProcessingFrame = false
-    private var pendingResetCount = 0
-    private let frameGroup = DispatchGroup()
 
     private let analyticsClient: IdentityAnalyticsClient
     private let scannerName: IdentityAnalyticsClient.ScannerName
@@ -99,7 +94,8 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     ) {
         assert(!Thread.isMainThread, "`scanImage` should not be called from the main thread")
 
-        guard beginFrame() else {
+        let coordinator = scanner.processingCoordinator
+        guard coordinator.beginFrame() else {
             return
         }
 
@@ -108,21 +104,18 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
 
         completionQueue.async {
             guard shouldScan() else {
-                self.finishFrame()
+                coordinator.finishFrame()
                 return
             }
 
-            self.processingQueue.async {
+            coordinator.processingQueue.async {
                 guard let image = pixelBuffer.cgImage() else {
-                    self.finishFrame()
+                    coordinator.finishFrame()
                     return
                 }
                 let exifMetadata = CameraExifMetadata(sampleBuffer: sampleBuffer)
 
                 let scanStartTime = Date()
-                self.perfQueue.async {
-                    self.perfFirstScanStartTime = self.perfFirstScanStartTime ?? scanStartTime
-                }
 
                 let future = scanner.scanImage(
                     pixelBuffer: pixelBuffer,
@@ -130,9 +123,10 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
                     cameraProperties: cameraProperties
                 )
 
-                future.observe(on: self.processingQueue) { result in
+                future.observe(on: coordinator.processingQueue) { result in
                     let scanEndTime = Date()
                     self.perfQueue.async {
+                        self.perfFirstScanStartTime = self.perfFirstScanStartTime ?? scanStartTime
                         self.perfLastScanEndTime = scanEndTime
                         self.perfNumFramesScanned += 1
                     }
@@ -140,11 +134,11 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
                     switch result {
                     case .success(let scannerOutput):
                         completionQueue.async {
-                            defer { self.finishFrame() }
+                            defer { coordinator.finishFrame() }
                             completion(scannerOutput, image, exifMetadata)
                         }
                     case .failure(let error):
-                        self.finishFrame()
+                        coordinator.finishFrame()
                         self.analyticsClient.logGenericError(
                             error: error,
                             additionalMetadata: [
@@ -160,26 +154,6 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         }
     }
 
-    private func beginFrame() -> Bool {
-        admissionLock.lock()
-        defer { admissionLock.unlock() }
-
-        guard !isProcessingFrame, pendingResetCount == 0 else {
-            return false
-        }
-        isProcessingFrame = true
-        frameGroup.enter()
-        return true
-    }
-
-    private func finishFrame() {
-        admissionLock.lock()
-        defer { admissionLock.unlock() }
-
-        isProcessingFrame = false
-        frameGroup.leave()
-    }
-
     /// Closes admission immediately, then resets only after the accepted frame's
     /// future and result delivery finish. Nothing waits on the camera or UI queue.
     func reset<ScannerOutput>(
@@ -187,24 +161,28 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         completeOn queue: DispatchQueue,
         completion: @escaping () -> Void
     ) {
-        admissionLock.lock()
-        pendingResetCount += 1
-        admissionLock.unlock()
+        scanner.processingCoordinator.reset(
+            work: {
+                scanner.reset()
+                // This queue only accesses metrics; it never waits for scanning
+                // or UI work. Clear metrics before reopening frame admission.
+                self.perfQueue.sync {
+                    self.perfFirstScanStartTime = nil
+                    self.perfLastScanEndTime = nil
+                    self.perfNumFramesScanned = 0
+                }
+            },
+            completeOn: queue,
+            completion: completion
+        )
+    }
 
-        frameGroup.notify(queue: processingQueue) {
-            scanner.reset()
-            self.perfQueue.async {
-                self.perfFirstScanStartTime = nil
-                self.perfLastScanEndTime = nil
-                self.perfNumFramesScanned = 0
-
-                self.admissionLock.lock()
-                self.pendingResetCount -= 1
-                self.admissionLock.unlock()
-
-                queue.async(execute: completion)
-            }
-        }
+    func whenReady<ScannerOutput>(
+        with scanner: AnyImageScanner<ScannerOutput>,
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    ) {
+        scanner.processingCoordinator.whenReady(completeOn: queue, completion: completion)
     }
 
     func getPerformanceMetrics(
