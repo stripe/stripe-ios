@@ -107,6 +107,7 @@ class PaymentMethodFormViewController: UIViewController {
         headerView: UIView?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
         isLinkUI: Bool = false,
         delegate: PaymentMethodFormViewControllerDelegate,
         linkAppearance: LinkAppearance? = nil,
@@ -134,6 +135,7 @@ class PaymentMethodFormViewController: UIViewController {
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession, analyticsHelper: analyticsHelper.linkAnalytics),
                 analyticsHelper: analyticsHelper,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+                stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
                 linkAppearance: linkAppearance,
                 previousLinkInlineSignupAction: previousLinkInlineSignupAction
             ).make()
