@@ -7,6 +7,117 @@ import XCTest
 
 final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
+    func testLegacyNoEmailSettingsDecodeAsEmptyLocalEmail() throws {
+        let data = Data(#"{"source":"none","value":"previous@example.com"}"#.utf8)
+        let settings = try JSONDecoder().decode(CheckoutPlayground.EmailSettings.self, from: data)
+        XCTAssertEqual(settings.source, .local)
+        XCTAssertEqual(settings.value, "")
+        XCTAssertNil(settings.localDefaultEmail)
+    }
+
+    func testMissingEmailCanBeCollectedInSwiftUICheckout() throws {
+        try assertMissingEmailCanBeCollected(uiFramework: .swiftUI)
+    }
+
+    func testMissingEmailCanBeCollectedInUIKitCheckout() throws {
+        try assertMissingEmailCanBeCollected(uiFramework: .uiKit)
+    }
+
+    private func assertMissingEmailCanBeCollected(uiFramework: CheckoutPlayground.UIFramework) throws {
+        // Given a checkout with no email and required shipping and billing addresses
+        var settings = CheckoutPlayground.Settings()
+        settings.uiFramework = uiFramework
+        settings.email = .init(source: .local)
+        settings.automaticPaymentMethods = false
+        settings.billingAddressCollection = .required
+        settings.automaticTax = false
+        loadCheckoutPlayground(app, settings)
+        XCTAssertTrue(app.buttons["checkout_clear_email"].waitForExistence(timeout: 5))
+        attachCheckoutScreenshot("Email settings - \(uiFramework.rawValue)")
+        app.buttons["checkout_clear_email"].tap()
+        XCTAssertTrue(app.buttons["checkout_clear_email"].waitForNonExistence(timeout: 5))
+        let scrollStart = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.6))
+        let scrollEnd = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.3))
+        XCTAssertTrue(app.buttons["Create Checkout Session"].waitForExistenceAndTap())
+        XCTAssertTrue(app.navigationBars["Your Cart"].waitForExistence(timeout: 20))
+
+        // When the customer selects a card, then adds their shipping address
+        let paymentMethodButton = app.buttons["checkout_payment_method"]
+        paymentMethodButton.scrollToAndTap(in: app)
+        if !app.textFields["Card number"].waitForExistence(timeout: 2) {
+            let addButton = app.buttons["+ Add"].exists
+                ? app.buttons["+ Add"] : app.buttons["Add new payment method"]
+            addButton.forceTapWhenHittableInTestCase(self)
+        }
+        try fillCardData(app, postalEnabled: false)
+        app.stp_dismissKeyboard()
+        app.textFields["Address"].scrollToAndTap(in: app)
+        XCTAssertTrue(app.buttons["Enter address manually"].waitForExistenceAndTap())
+        app.textFields["Address line 1"].waitForExistenceAndTap()
+        app.typeText("510 Townsend St")
+        app.textFields["City"].tap()
+        app.typeText("San Francisco")
+        app.textFields["State"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
+        app.textFields["ZIP"].tap()
+        app.typeText("94102")
+        app.stp_dismissKeyboard()
+        let saveSwitch = app.switches["Save my info for faster checkout with Link"]
+        if saveSwitch.exists && saveSwitch.isSelected {
+            saveSwitch.tap()
+        }
+        app.buttons["Continue"].forceTapWhenHittableInTestCase(self)
+        let selectedCard = app.buttons.matching(NSPredicate(
+            format: "label CONTAINS %@ OR value CONTAINS %@", "4242", "4242"
+        )).firstMatch
+        XCTAssertTrue(selectedCard.waitForExistence(timeout: 10))
+        for _ in 0..<3 {
+            scrollEnd.press(forDuration: 0.1, thenDragTo: scrollStart)
+        }
+        app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Add shipping address"))
+            .firstMatch.scrollToAndTap(in: app)
+        fillShippingAddress()
+        app.stp_dismissKeyboard()
+        app.buttons["Save Address"].forceTapWhenHittableInTestCase(self)
+
+        // Then the selected card survives the shipping update, and missing email is actionable
+        XCTAssertTrue(selectedCard.waitForExistence(timeout: 10))
+        app.buttons["checkout_buy_button"].scrollToAndTap(in: app)
+        let errorAlert = app.alerts["Unable to complete checkout"]
+        XCTAssertTrue(errorAlert.waitForExistence(timeout: 5))
+        XCTAssertTrue(errorAlert.staticTexts.matching(NSPredicate(
+            format: "label CONTAINS %@", "Enter a valid email address using Edit email before paying."
+        )).firstMatch.exists)
+        if uiFramework == .swiftUI {
+            XCTAssertFalse(analyticsLog.contains { $0[string: "event"] == "checkout_elements.confirm.started" })
+        }
+        attachCheckoutScreenshot("Missing email validation - \(uiFramework.rawValue)")
+        errorAlert.buttons["OK"].tap()
+
+        // When the customer adds a valid checkout email, they can pay with the same card
+        for _ in 0..<3 {
+            scrollEnd.press(forDuration: 0.1, thenDragTo: scrollStart)
+        }
+        app.buttons["Edit email"].scrollToAndTap(in: app)
+        let emailEditor = app.alerts["Edit email"]
+        XCTAssertTrue(emailEditor.waitForExistence(timeout: 5))
+        emailEditor.textFields.firstMatch.tap()
+        emailEditor.textFields.firstMatch.typeText("checkout@example.com")
+        emailEditor.buttons["Save email"].tap()
+        XCTAssertTrue(app.staticTexts["checkout@example.com"].waitForExistence(timeout: 5))
+        XCTAssertTrue(selectedCard.exists)
+        app.buttons["checkout_buy_button"].scrollToAndTap(in: app)
+        XCTAssertTrue(app.alerts["Success"].waitForExistence(timeout: 20))
+        attachCheckoutScreenshot("Checkout completed - \(uiFramework.rawValue)")
+    }
+
+    private func attachCheckoutScreenshot(_ name: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
     func testSavedPaymentMethodControls() throws {
         // Given a Checkout Session for a returning customer with saved payment method controls enabled
         app.launchEnvironment["STP_CHECKOUT_ELEMENTS"] = "true"
@@ -273,7 +384,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         settings.automaticPaymentMethods = false
         settings.linkMode = .native
         settings.currency = .eur
-        settings.email = .init(source: .none)
+        settings.email = .init(source: .local, value: "")
         settings.shippingAddressCollection = false
         settings.automaticTax = false
         loadCheckoutPlayground(app, settings)

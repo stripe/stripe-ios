@@ -161,6 +161,11 @@ extension PaymentSheetFormFactory {
                 signupOptInInitialValue: signupOptInInitialValue,
                 analyticsHelper: analyticsHelper
             )
+            if previousCardInput != nil && !previouslyHadLinkSignupSelected {
+                // Completed card input without a Link signup action means the customer chose
+                // to continue without Link. Preserve that choice when rebuilding the form.
+                inlineSignupElement.viewModel.saveCheckboxChecked = false
+            }
             elements.append(inlineSignupElement)
         }
 

@@ -616,6 +616,7 @@ final class CheckoutCartViewController: UIViewController {
 
     private func makePaymentMethodRow(session: CheckoutElementsController.Session) -> UIView {
         let rowView = UIButton(type: .custom)
+        rowView.accessibilityIdentifier = "checkout_payment_method"
         rowView.addTarget(self, action: #selector(paymentMethodButtonTapped), for: .touchUpInside)
 
         let paymentOptionStackView = UIStackView()
@@ -945,7 +946,7 @@ final class CheckoutCartViewController: UIViewController {
         emailLabel.numberOfLines = 0
         emailLabel.accessibilityIdentifier = "checkout_session_email"
         let sourceLabel = UILabel()
-        sourceLabel.text = emailSettings.source.isServer ? "Server email cannot be changed in checkout." : emailSettings.source == .local ? "Local email" : "No email source selected."
+        sourceLabel.text = emailSettings.source.isServer ? "Server email cannot be changed in checkout." : "Enter an email before paying."
         sourceLabel.font = .preferredFont(forTextStyle: .caption1)
         sourceLabel.textColor = .secondaryLabel
         sourceLabel.numberOfLines = 0
@@ -954,13 +955,13 @@ final class CheckoutCartViewController: UIViewController {
         details.spacing = 8
         let editButton = UIButton(type: .system)
         editButton.setTitle("Edit email", for: .normal)
-        editButton.isEnabled = emailSettings.source == .local
+        editButton.isEnabled = !emailSettings.source.isServer
         editButton.addTarget(self, action: #selector(editEmailButtonTapped), for: .touchUpInside)
         return makeSection(title: "Email", content: details, accessory: editButton)
     }
 
     @objc private func editEmailButtonTapped() {
-        guard let checkout, emailSettings.source == .local else { return }
+        guard let checkout, !emailSettings.source.isServer else { return }
         let alert = UIAlertController(title: "Edit email", message: "Updates the local Checkout email.", preferredStyle: .alert)
         alert.addTextField { field in
             field.placeholder = "Email address"
@@ -996,7 +997,7 @@ final class CheckoutCartViewController: UIViewController {
     @objc private func checkoutButtonTapped() {
         guard let checkout else { return }
         Task { @MainActor in
-            let result = await checkout.confirm(from: self)
+            let result = await CheckoutPlayground.confirm(checkout, from: self)
             handleConfirmResult(result)
         }
     }

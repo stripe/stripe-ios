@@ -169,7 +169,6 @@ enum CheckoutPlayground {
     }
 
     enum EmailSource: String, CaseIterable, Identifiable, Codable {
-        case none
         case checkoutSession
         case customer
         case local
@@ -178,7 +177,6 @@ enum CheckoutPlayground {
 
         var displayName: String {
             switch self {
-            case .none: return "None"
             case .checkoutSession: return "Server — Session"
             case .customer: return "Server — Customer"
             case .local: return "Local"
@@ -194,10 +192,31 @@ enum CheckoutPlayground {
 
         var email: String? {
             let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-            return source == .none || trimmed.isEmpty ? nil : trimmed
+            return trimmed.isEmpty ? nil : trimmed
         }
 
         var localDefaultEmail: String? { source == .local ? email : nil }
+
+        init(source: EmailSource = .checkoutSession, value: String = "jenny@example.com") {
+            self.source = source
+            self.value = value
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case source, value
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            if try container.decode(String.self, forKey: .source) == "none" {
+                // Preserve the empty email in settings saved before None was removed.
+                source = .local
+                value = ""
+            } else {
+                source = try container.decode(EmailSource.self, forKey: .source)
+                value = try container.decode(String.self, forKey: .value)
+            }
+        }
     }
 
     enum CustomerType: String, CaseIterable, Identifiable, Codable {

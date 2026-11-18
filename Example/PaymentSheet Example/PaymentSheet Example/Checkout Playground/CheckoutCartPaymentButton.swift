@@ -6,6 +6,7 @@
 //
 
 @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
 
 struct CheckoutCartPaymentMethodSection: View {
@@ -55,6 +56,7 @@ struct CheckoutCartPaymentMethodSection: View {
             .cornerRadius(16)
             .padding(.horizontal)
             .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+            .accessibilityIdentifier("checkout_payment_method")
             .accessibilityLabel("Select payment method")
             .accessibilityValue(session.paymentOption.map { [$0.label, $0.sublabel].compactMap { $0 }.joined(separator: ", ") } ?? "No payment method selected")
             .sheet(isPresented: $showEmbeddedScreen) {
@@ -144,7 +146,7 @@ struct CheckoutCartBuyButton: View {
     var body: some View {
         Button {
             Task { @MainActor in
-                onConfirm(await checkout.confirm())
+                onConfirm(await CheckoutPlayground.confirm(checkout))
             }
         } label: {
             HStack {
@@ -190,6 +192,29 @@ private struct CheckoutEmbeddedScreen: View {
                     }
                 }
             }
+        }
+    }
+}
+
+// The playground owns email collection for ordinary Payment Element payments.
+// Wallets collect the customer's email in their own confirmation flow.
+extension CheckoutPlayground {
+    @MainActor
+    static func confirm(
+        _ checkout: CheckoutElementsController,
+        from presentingViewController: UIViewController? = nil
+    ) async -> CheckoutElementsController.ConfirmResult {
+        let paymentMethodType = checkout.session.paymentOption?.paymentMethodType
+        if paymentMethodType != "apple_pay" && paymentMethodType != "link",
+           !STPEmailAddressValidator.stringIsValidEmailAddress(checkout.session.email ?? "") {
+            return .failed(EmailValidationError())
+        }
+        return await checkout.confirm(from: presentingViewController)
+    }
+
+    private struct EmailValidationError: LocalizedError {
+        var errorDescription: String? {
+            "Enter a valid email address using Edit email before paying."
         }
     }
 }

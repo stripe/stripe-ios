@@ -154,7 +154,7 @@ extension CheckoutPlayground {
                 return "AP location simulation requires server email. Set Adaptive Pricing Location to No Override, or select a server email source."
             }
             if email.source.isServer && resolvedEmail.email == nil {
-                return "Enter a server email, or choose None for no email."
+                return "Enter a server email, or choose Local and clear the email field."
             }
             return nil
         }
@@ -172,7 +172,8 @@ extension CheckoutPlayground {
             if settings.customerType == .guest {
                 return .init()
             }
-            return .init(source: settings.adaptivePricingCountry == .none ? .none : .customer)
+            return settings.adaptivePricingCountry == .none
+                ? .init(source: .local, value: "") : .init(source: .customer)
         }
 
         var lineItems: [LineItemConfig] {
