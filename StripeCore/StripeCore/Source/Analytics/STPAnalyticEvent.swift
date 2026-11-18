@@ -175,6 +175,16 @@ import Foundation
     case link2FAResendCode = "link.2fa.resend_code"
     case linkNativeBailed = "link.native.bailed"
 
+    // MARK: - Link Embedded inline verification
+    case linkEmbeddedInlineAuthShown = "link.embedded_inline_auth.shown"
+    case linkEmbeddedInlineAuthFocused = "link.embedded_inline_auth.focused"
+    case linkEmbeddedInlineAuthDialogShown = "link.embedded_inline_auth.dialog_shown"
+    case linkEmbeddedInlineAuthDismissed = "link.embedded_inline_auth.dismissed"
+    case linkEmbeddedInlineAuthFellBack = "link.embedded_inline_auth.fell_back"
+    case linkEmbeddedInlineAuthWalletSelected = "link.embedded_inline_auth.wallet_selected"
+    case linkEmbeddedInlineAuthWalletClosed = "link.embedded_inline_auth.wallet_closed"
+    case linkEmbeddedInlineAuthIneligible = "link.embedded_inline_auth.ineligible"
+
     // MARK: - Link Misc
     case linkAccountLookupComplete = "link.account_lookup.complete"
     case linkAccountLookupFailure = "link.account_lookup.failure"

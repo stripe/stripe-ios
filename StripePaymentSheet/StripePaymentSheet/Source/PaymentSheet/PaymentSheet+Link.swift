@@ -131,6 +131,12 @@ extension PaymentSheet {
 
         /// Overrides whether native Link is available. Intended for test playgrounds only.
         @_spi(InternalOnlyAPI) public static var nativeLinkEnabledOverride: Bool?
+
+        /// Overrides the server flag that enables inline Link verification in Embedded. Intended for test playgrounds only.
+        @_spi(InternalOnlyAPI) public static var embeddedInlineVerificationEnabledOverride: Bool?
+
+        /// Overrides the server flag that sends inline Link verification to the dialog. Intended for test playgrounds only.
+        @_spi(InternalOnlyAPI) public static var embeddedInlineVerificationForcesDialogOverride: Bool?
     }
 }
 

@@ -143,9 +143,12 @@ public final class EmbeddedPaymentElement {
         }
 
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
+        linkInlineAuth?.endInlineEntry()
         // Cancel the old task and let it finish so that merchants receive update results in order
         latestUpdateTask?.cancel()
         _ = await latestUpdateTask?.value
+        // An inline Link verification in progress keeps its account, so the code the customer was sent stays valid.
+        let preservedLinkAccount = linkInlineAuth?.accountToPreserveOnUpdate
         // Start the new update task
         let currentUpdateTask: Task<UpdateResult, Never> = Task { @MainActor [weak self, configuration, analyticsHelper] in
             // ⚠️ Don't modify `self` until after all `awaits` to avoid being canceled halfway through and leaving self in a partially updated state.
@@ -159,7 +162,8 @@ public final class EmbeddedPaymentElement {
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
                     integrationShape: .embedded,
-                    isUpdate: true
+                    isUpdate: true,
+                    preservingLinkAccount: preservedLinkAccount
                 )
             } catch {
                 return UpdateResult.failed(error: error)
@@ -226,7 +230,12 @@ public final class EmbeddedPaymentElement {
             }
         }()
         let previousSelectedRowType = self.embeddedPaymentMethodsView.selectedRowButton?.type
-        let previousSelectedRowChangeButtonState = self.embeddedPaymentMethodsView.selectedRowChangeButtonState
+        var previousSelectedRowChangeButtonState = self.embeddedPaymentMethodsView.selectedRowChangeButtonState
+        if previousSelectedRowType == .link, let linkConfirmOption, !isLinkConfirmOptionStillValid(linkConfirmOption) {
+            // Fall back to paying through the Link wallet.
+            self.linkConfirmOption = nil
+            previousSelectedRowChangeButtonState = nil
+        }
         // Make the new form VC for the previously selected row type if it's still in the list
         let selectedFormViewController = Self.makeFormViewControllerIfNecessary(
             selection: isPreviousPaymentOptionStillDisplayed ? previousSelectedRowType : nil,
@@ -251,12 +260,18 @@ public final class EmbeddedPaymentElement {
                 return true
             }
         }()
+        if !shouldSelectPreviousRow || previousSelectedRowType != .link {
+            linkConfirmOption = nil
+        }
+        refreshLinkInlineAuth(loadResult: loadResult)
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,
             analyticsHelper: analyticsHelper,
             previousSelection: shouldSelectPreviousRow ? previousSelectedRowType : nil,
             previousSelectedRowChangeButtonState: shouldSelectPreviousRow ? previousSelectedRowChangeButtonState : nil,
+            placesLinkFirst: placesLinkFirst,
+            linkInlineVerificationView: linkInlineAuth?.makeCardView(appearance: configuration.appearance),
             delegate: self
         )
         // Keep the rebuilt view loading while the billing sync finishes.
@@ -274,6 +289,7 @@ public final class EmbeddedPaymentElement {
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
         analyticsHelper.log(event: .mcConfirmEmbedded)
+        linkInlineAuth?.endInlineEntry()
         // TODO: stpAssert + log error if resolvedPresentingViewController == nil when this is called from Checkout SDK.
         guard let presentingViewController = resolvedPresentingViewController else {
             let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
@@ -283,6 +299,17 @@ public final class EmbeddedPaymentElement {
         guard let paymentOption = _paymentOption else {
             assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
             return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
+        }
+        if let linkInlineAuth {
+            guard !linkInlineAuth.isPresentingUI else {
+                return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: "confirm was called while Link verification is presented."))
+            }
+            // Verify a Link customer who closed the card in the Link dialog, which reuses the code they were sent.
+            if case .link(let linkConfirmOption) = paymentOption, case .wallet = linkConfirmOption,
+               await linkInlineAuth.verifyBeforeConfirming() == .canceled {
+                clearPaymentOptionIfNeeded()
+                return .canceled
+            }
         }
         let authContext = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: configuration.appearance)
         let confirmResult = await _confirm(paymentOption: paymentOption, authContext: authContext).result
@@ -302,6 +329,7 @@ public final class EmbeddedPaymentElement {
 
         // Clear out the form controller to clear any payment option
         selectedFormViewController = nil
+        linkConfirmOption = nil
 
         // Reset the selection on the `embeddedPaymentMethodsView`
         embeddedPaymentMethodsView.resetSelection()
@@ -334,6 +362,8 @@ public final class EmbeddedPaymentElement {
         loadResult: loadResult,
         analyticsHelper: analyticsHelper,
         previousSelection: initialSelection,
+        placesLinkFirst: placesLinkFirst,
+        linkInlineVerificationView: linkInlineAuth?.makeCardView(appearance: configuration.appearance),
         delegate: self
        )
     }()
@@ -378,6 +408,9 @@ public final class EmbeddedPaymentElement {
         case .applePay:
             return .applePay
         case .link:
+            if let linkConfirmOption, isLinkConfirmOptionStillValid(linkConfirmOption) {
+                return .link(option: linkConfirmOption)
+            }
             return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)))
         case let .new(paymentMethodType: paymentMethodType):
             let params = IntentConfirmParams(type: paymentMethodType)
@@ -407,6 +440,15 @@ public final class EmbeddedPaymentElement {
 
     internal var confirmationChallenge: ConfirmationChallenge?
     internal var linkAccountObserver: LinkAccountContextObserver?
+    /// A returning Link customer's inline verification, kept across updates.
+    internal var linkInlineAuth: EmbeddedLinkInlineAuthController?
+    /// Detects when the element is first on screen, which is when inline verification sends its code.
+    internal var linkInlineAuthVisibilityMonitor: EmbeddedVisibilityMonitor?
+    /// Link stays first once inline verification showed it there, so later updates don't reorder the rows.
+    internal var placesLinkFirst = false
+    /// The Link payment details last picked in the Link wallet, used while the Link row is selected. Nil means Link pays through the wallet.
+    /// It's kept while another row's form is open, so canceling the form restores Link as it was.
+    internal var linkConfirmOption: PaymentSheet.LinkConfirmOption?
     var notifiesDelegateOnInitialHeight: Bool {
         get {
             return embeddedPaymentMethodsView.notifiesDelegateOnInitialHeight
@@ -438,6 +480,11 @@ public final class EmbeddedPaymentElement {
 
         analyticsHelper.logInitialized()
         analyticsHelper.startTimeMeasurement(.checkout)
+        // Before the list view is created, since it shows the card.
+        setUpLinkInlineAuthIfEligible(loadResult: loadResult, logsIneligibility: true)
+        self.containerView.didMoveToWindowHandler = { [weak self] in
+            self?.linkInlineAuthVisibilityMonitor?.viewDidMoveToWindow()
+        }
         self.containerView.needsUpdateSuperviewHeight = { [weak self] in
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
@@ -445,6 +492,11 @@ public final class EmbeddedPaymentElement {
         self.linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
             Task { @MainActor [weak self] in
                 guard let self else { return }
+                self.linkInlineAuth?.linkAccountDidChange(LinkAccountContext.shared.account)
+                if let linkConfirmOption = self.linkConfirmOption, !self.isLinkConfirmOptionStillValid(linkConfirmOption) {
+                    self.linkConfirmOption = nil
+                    self.updateChangeButtonAndSublabelState(for: .link)
+                }
                 self.embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: true)
                 self.informDelegateIfPaymentOptionUpdated()
             }
@@ -458,8 +510,15 @@ public final class EmbeddedPaymentElement {
 
 extension EmbeddedPaymentElement {
 
+    /// Picked Link payment details stay usable while the account that picked them is still the verified current account.
+    func isLinkConfirmOptionStillValid(_ linkConfirmOption: PaymentSheet.LinkConfirmOption) -> Bool {
+        guard let account = linkConfirmOption.account else { return true }
+        return account === LinkAccountContext.shared.account && account.sessionState == .verified
+    }
+
     var isPresentingPaymentUI: Bool {
         return presentingViewController?.presentedViewController?.bottomSheetController != nil
+            || linkInlineAuth?.isPresentingUI == true
     }
 
     /// Returns the explicitly configured presenting view controller or tries to find one if nil.

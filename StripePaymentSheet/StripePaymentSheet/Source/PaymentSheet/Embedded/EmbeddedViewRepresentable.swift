@@ -53,7 +53,8 @@ struct EmbeddedViewRepresentable: UIViewRepresentable {
             return
         }
 
-        if !(visibleVC is any StripePaymentSheet.PaymentSheetContainer) {
+        // Skip UI the element presents itself, like its sheets and the Link verification dialog.
+        if !(visibleVC is any StripePaymentSheet.PaymentSheetContainer), !(visibleVC is LinkAuthFlowViewController) {
             viewModel.embeddedPaymentElement?.presentingViewController = visibleVC
         }
     }

@@ -90,6 +90,14 @@ import UIKit
         return true
     }
 
+    /// A view displayed above the keyboard while the field is first responder, such as a toolbar with a Done button.
+    /// Set this before the field becomes first responder.
+    public var customInputAccessoryView: UIView?
+
+    public override var inputAccessoryView: UIView? {
+        return customInputAccessoryView
+    }
+
     // MARK: - Private properties
 
     private let theme: ElementsAppearance
@@ -190,10 +198,14 @@ import UIKit
 
     @discardableResult
     public override func becomeFirstResponder() -> Bool {
+        let wasFirstResponder = isFirstResponder
         let result = super.becomeFirstResponder()
 
         if result {
             selectedTextRange = textStorage.endCaretRange
+            if !wasFirstResponder {
+                sendActions(for: .editingDidBegin)
+            }
         }
 
         return result
@@ -201,6 +213,7 @@ import UIKit
 
     @discardableResult
     public override func resignFirstResponder() -> Bool {
+        let wasFirstResponder = isFirstResponder
         let result = super.resignFirstResponder()
 
         if result {
@@ -208,6 +221,9 @@ import UIKit
             hideMenu()
             #endif
             update()
+            if wasFirstResponder {
+                sendActions(for: .editingDidEnd)
+            }
         }
 
         return result
@@ -371,7 +387,8 @@ public extension OneTimeCodeTextField {
 
     /// Performs a shake animation, useful for indicating a bad code.
     /// - Parameter shouldClearValue: Whether or not the field's value should be cleared at the end of the animation.
-    func performInvalidCodeAnimation(shouldClearValue: Bool = true) {
+    /// - Parameter refocusesWhenFinished: Whether the field becomes first responder again once the animation finishes.
+    func performInvalidCodeAnimation(shouldClearValue: Bool = true, refocusesWhenFinished: Bool = true) {
         // Temporarily disables user interaction while the animation plays.
         isUserInteractionEnabled = false
 
@@ -416,7 +433,9 @@ public extension OneTimeCodeTextField {
             }
 
             self?.isUserInteractionEnabled = true
-            self?.becomeFirstResponder()
+            if refocusesWhenFinished {
+                self?.becomeFirstResponder()
+            }
         }
     }
 

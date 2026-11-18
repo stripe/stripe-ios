@@ -5,11 +5,99 @@
 //  Created by Nick Porter on 10/4/24.
 //
 
+@_spi(InternalOnlyAPI) import StripeCore
 @testable import StripePaymentSheet
 import XCTest
 
 @MainActor
 final class EmbeddedPaymentMethodsViewTests: XCTestCase {
+
+    // MARK: Inline Link verification
+    func testLinkInlineVerificationReplacesTheLinkRowAtTheTop() throws {
+        // Given a returning Link customer who can verify inline, with flat rows and separators
+        let linkInlineVerificationView = EmbeddedLinkInlineVerificationView(appearance: .default, linkBrand: .link)
+        let embeddedView = EmbeddedPaymentMethodsView(
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            placesLinkFirst: true,
+            linkInlineVerificationView: linkInlineVerificationView
+        )
+
+        // Then Link leads, the card sits right after the hidden Link row, and the other rows keep their separators
+        let linkRow = try XCTUnwrap(embeddedView.rowButtons.first)
+        XCTAssertEqual(linkRow.type, .link)
+        XCTAssertTrue(linkRow.isHidden)
+        let arrangedSubviews = embeddedView.stackView.arrangedSubviews
+        let linkIndex = try XCTUnwrap(arrangedSubviews.firstIndex(of: linkRow))
+        XCTAssertTrue(linkInlineVerificationView.isDescendant(of: arrangedSubviews[linkIndex + 1]))
+        XCTAssertFalse(arrangedSubviews[linkIndex + 2] is RowButton, "Expected a separator after the card")
+        XCTAssertTrue(arrangedSubviews[linkIndex + 3] === embeddedView.rowButtons[1])
+        XCTAssertFalse(arrangedSubviews[linkIndex + 4] is RowButton, "Expected a separator after the next row")
+
+        // ...and the card, which has its own border, hides the separators on either side of it but no others
+        let separatorAbove = arrangedSubviews[linkIndex - 1]
+        let separatorBelow = arrangedSubviews[linkIndex + 2]
+        XCTAssertFalse(separatorAbove is RowButton, "Expected the top separator")
+        XCTAssertEqual(embeddedView.linkInlineVerificationHiddenSeparators, [separatorAbove, separatorBelow])
+        XCTAssertTrue(separatorAbove.isHidden)
+        XCTAssertTrue(separatorBelow.isHidden)
+        XCTAssertFalse(arrangedSubviews[linkIndex + 4].isHidden)
+
+        // When the card collapses
+        embeddedView.collapseLinkInlineVerification(animated: false)
+
+        // Then the regular Link row is back in the same place, with its separators
+        XCTAssertFalse(linkRow.isHidden)
+        XCTAssertFalse(separatorAbove.isHidden)
+        XCTAssertFalse(separatorBelow.isHidden)
+        XCTAssertTrue(embeddedView.linkInlineVerificationHiddenSeparators.isEmpty)
+        XCTAssertNil(embeddedView.linkInlineVerificationView)
+        XCTAssertFalse(linkInlineVerificationView.isDescendant(of: embeddedView))
+        XCTAssertTrue(embeddedView.stackView.arrangedSubviews[linkIndex + 1] === arrangedSubviews[linkIndex + 2])
+        XCTAssertTrue(embeddedView.rowButtons.first === linkRow)
+    }
+
+    func testLinkStaysInItsUsualPlaceByDefault() {
+        let embeddedView = EmbeddedPaymentMethodsView(
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            shouldShowApplePay: true,
+            shouldShowLink: true
+        )
+        XCTAssertEqual(embeddedView.rowButtons.map(\.type), [.new(paymentMethodType: .stripe(.card)), .applePay, .link, .new(paymentMethodType: .stripe(.cashApp))])
+        XCTAssertNil(embeddedView.rowButtons.first(where: { $0.type == .link })?.accessoryView)
+    }
+
+    func testDeselectingTheLinkRowRemovesItsPickedDetails() throws {
+        // Given Link leads and is selected with details picked in the Link wallet
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .link,
+            initialSelectedRowChangeButtonState: (shouldShowChangeButton: true, sublabel: "Visa •••• 4242"),
+            placesLinkFirst: true
+        )
+        let linkRow = try XCTUnwrap(embeddedView.rowButtons.first)
+        XCTAssertTrue(linkRow.isDisplayingAccessoryView)
+        XCTAssertEqual(sublabelText(of: linkRow), "Visa •••• 4242")
+
+        // When Link account changes are announced, the row keeps showing the picked details
+        embeddedView.updateLinkRow(for: nil, animated: false)
+        XCTAssertEqual(sublabelText(of: linkRow), "Visa •••• 4242")
+
+        // When another row is selected
+        let cardRow = try XCTUnwrap(embeddedView.rowButtons.first(where: { $0.type == .new(paymentMethodType: .stripe(.card)) }))
+        embeddedView.didTap(rowButton: cardRow)
+
+        // Then the Link row hides "Change" and goes back to its usual sublabel
+        let usualLinkRow = try XCTUnwrap(EmbeddedPaymentMethodsView(placesLinkFirst: true).rowButtons.first)
+        XCTAssertFalse(linkRow.isDisplayingAccessoryView)
+        XCTAssertNotNil(sublabelText(of: linkRow))
+        XCTAssertEqual(sublabelText(of: linkRow), sublabelText(of: usualLinkRow))
+    }
+
+    private func sublabelText(of rowButton: RowButton) -> String? {
+        (rowButton.sublabel as? RowButton.PlainSublabelView)?.textLabel.text
+    }
 
     // MARK: EmbeddedPaymentMethodsViewDelegate test
     func testEmbeddedPaymentMethodsView_delegateTest() {

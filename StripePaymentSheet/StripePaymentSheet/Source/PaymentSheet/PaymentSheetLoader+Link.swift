@@ -23,20 +23,27 @@ extension PaymentSheetLoader {
         loadTimings: LoadTimings,
         isUpdate: Bool,
         linkAnalytics: LinkAnalyticsHelper,
-        lookupTimeout: TimeInterval = 5.0
+        lookupTimeout: TimeInterval = 5.0,
+        preservingLinkAccount: PaymentSheetLinkAccount? = nil
     ) async -> Bool? {
         let lookupLinkAccountTask = Task { @MainActor in
-            let prefetchedLinkEmailAndSource = await prefetchedEmailAndSourceTask.value
-            let linkAccount = try? await Self.lookupLinkAccount(
-                elementsSession: elementsSession,
-                apiClient: apiClient,
-                isLinkEnabled: isLinkEnabled,
-                email: email,
-                prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
-                loadTimings: loadTimings,
-                isUpdate: isUpdate,
-                linkAnalytics: linkAnalytics
-            )
+            let linkAccount: PaymentSheetLinkAccount?
+            if isLinkEnabled, let preservingLinkAccount, preservingLinkAccount === LinkAccountContext.shared.account {
+                // Checked before awaiting the prefetch, so neither a new lookup nor a timeout can replace the session.
+                linkAccount = preservingLinkAccount
+            } else {
+                let prefetchedLinkEmailAndSource = await prefetchedEmailAndSourceTask.value
+                linkAccount = try? await Self.lookupLinkAccount(
+                    elementsSession: elementsSession,
+                    apiClient: apiClient,
+                    isLinkEnabled: isLinkEnabled,
+                    email: email,
+                    prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
+                    loadTimings: loadTimings,
+                    isUpdate: isUpdate,
+                    linkAnalytics: linkAnalytics
+                )
+            }
 
             // We don't want to set the global singleton if we timed out, because that means setting it after MPE has finished loading, which the code is not necessarily expecting.
             guard !Task.isCancelled else { return }

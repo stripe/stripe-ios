@@ -87,37 +87,88 @@ struct LinkAnalyticsHelper {
 
     // MARK: - 2FA
 
-    private func verificationTypeParams(_ type: SupportedVerificationType?) -> [String: Any] {
-        guard let type else { return [:] }
-        return ["verification_type": type.rawValue]
+    /// Where the customer enters a Link verification code, for flows that move between presentations.
+    enum AuthSurface: String {
+        case embeddedInline = "embedded_inline"
+        case embeddedDialog = "embedded_dialog"
     }
 
-    func log2FAStart(type: SupportedVerificationType?) {
-        analyticsClient.logPaymentSheetEvent(event: .link2FAStart, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
+    private func verificationParams(_ type: SupportedVerificationType?, surface: AuthSurface?) -> [String: Any] {
+        var params: [String: Any] = [:]
+        if let type {
+            params["verification_type"] = type.rawValue
+        }
+        if let surface {
+            params["link_auth_surface"] = surface.rawValue
+        }
+        return params
     }
 
-    func log2FAStartFailure(type: SupportedVerificationType?) {
-        analyticsClient.logPaymentSheetEvent(event: .link2FAStartFailure, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
+    func log2FAStart(type: SupportedVerificationType?, surface: AuthSurface? = nil) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FAStart, checkoutSessionID: checkoutSessionID, params: verificationParams(type, surface: surface))
     }
 
-    func log2FAComplete(type: SupportedVerificationType?) {
-        analyticsClient.logPaymentSheetEvent(event: .link2FAComplete, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
+    func log2FAStartFailure(type: SupportedVerificationType?, surface: AuthSurface? = nil) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FAStartFailure, checkoutSessionID: checkoutSessionID, params: verificationParams(type, surface: surface))
     }
 
-    func log2FAFailure(type: SupportedVerificationType?) {
-        analyticsClient.logPaymentSheetEvent(event: .link2FAFailure, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
+    func log2FAComplete(type: SupportedVerificationType?, surface: AuthSurface? = nil) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FAComplete, checkoutSessionID: checkoutSessionID, params: verificationParams(type, surface: surface))
     }
 
-    func log2FACancel(type: SupportedVerificationType?) {
-        analyticsClient.logPaymentSheetEvent(event: .link2FACancel, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
+    func log2FAFailure(type: SupportedVerificationType?, surface: AuthSurface? = nil) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FAFailure, checkoutSessionID: checkoutSessionID, params: verificationParams(type, surface: surface))
     }
 
-    func log2FAResendCode(type: SupportedVerificationType?) {
-        analyticsClient.logPaymentSheetEvent(event: .link2FAResendCode, checkoutSessionID: checkoutSessionID, params: verificationTypeParams(type))
+    func log2FACancel(type: SupportedVerificationType?, surface: AuthSurface? = nil) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FACancel, checkoutSessionID: checkoutSessionID, params: verificationParams(type, surface: surface))
+    }
+
+    func log2FAResendCode(type: SupportedVerificationType?, surface: AuthSurface? = nil) {
+        analyticsClient.logPaymentSheetEvent(event: .link2FAResendCode, checkoutSessionID: checkoutSessionID, params: verificationParams(type, surface: surface))
     }
 
     func logBailedToWebFlow() {
         analyticsClient.logPaymentSheetEvent(event: .linkNativeBailed, checkoutSessionID: checkoutSessionID)
+    }
+
+    // MARK: - Embedded inline verification
+
+    /// The card was first on screen.
+    func logEmbeddedInlineAuthShown() {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthShown, checkoutSessionID: checkoutSessionID)
+    }
+
+    /// The customer started typing their code in the card.
+    func logEmbeddedInlineAuthFocused() {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthFocused, checkoutSessionID: checkoutSessionID)
+    }
+
+    func logEmbeddedInlineAuthDialogShown(reason: String) {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthDialogShown, checkoutSessionID: checkoutSessionID, params: ["reason": reason])
+    }
+
+    /// The customer closed the card.
+    func logEmbeddedInlineAuthDismissed() {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthDismissed, checkoutSessionID: checkoutSessionID)
+    }
+
+    /// The card went back to the regular Link row without the customer closing it.
+    func logEmbeddedInlineAuthFellBack(reason: String) {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthFellBack, checkoutSessionID: checkoutSessionID, params: ["reason": reason])
+    }
+
+    func logEmbeddedInlineAuthWalletSelected() {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthWalletSelected, checkoutSessionID: checkoutSessionID)
+    }
+
+    func logEmbeddedInlineAuthWalletClosed() {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthWalletClosed, checkoutSessionID: checkoutSessionID)
+    }
+
+    /// A returning customer who needs to verify didn't get the card.
+    func logEmbeddedInlineAuthIneligible(reason: String) {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthIneligible, checkoutSessionID: checkoutSessionID, params: ["reason": reason])
     }
 
     // MARK: - popup

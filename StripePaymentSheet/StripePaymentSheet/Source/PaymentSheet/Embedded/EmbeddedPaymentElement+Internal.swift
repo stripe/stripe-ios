@@ -25,6 +25,8 @@ extension EmbeddedPaymentElement {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         previousSelection: RowButtonType? = nil,
         previousSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)? = nil,
+        placesLinkFirst: Bool = false,
+        linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
         // Restore the customer's previous payment method.
@@ -60,6 +62,8 @@ extension EmbeddedPaymentElement {
                 return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
             }
         }()
+        // The Link row is hidden while it's expanded for verification, so it can't start out selected.
+        let resolvedInitialSelection = linkInlineVerificationView != nil && initialSelection == .link ? nil : initialSelection
         let mandateProvider = VerticalListMandateProvider(
             configuration: configuration,
             elementsSession: loadResult.elementsSession,
@@ -67,7 +71,7 @@ extension EmbeddedPaymentElement {
             analyticsHelper: analyticsHelper
         )
         return EmbeddedPaymentMethodsView(
-            initialSelectedRowType: initialSelection,
+            initialSelectedRowType: resolvedInitialSelection,
             initialSelectedRowChangeButtonState: previousSelectedRowChangeButtonState,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
@@ -78,6 +82,8 @@ extension EmbeddedPaymentElement {
             linkBrandProvider: { [configuration, elementsSession = loadResult.elementsSession] in
                 configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
             },
+            placesLinkFirst: placesLinkFirst,
+            linkInlineVerificationView: linkInlineVerificationView,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
@@ -150,9 +156,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewWillSelect(_ rowButtonType: RowButtonType) {
+        linkInlineAuth?.endInlineEntry()
         guard checkout != nil,
               case .saved(let paymentMethod) = rowButtonType else {
-            persistDefaultPaymentMethodSelection(rowButtonType)
+            // Link is saved as the default once something is picked in the Link wallet.
+            if !(rowButtonType == .link && linkRowOpensWallet) {
+                persistDefaultPaymentMethodSelection(rowButtonType)
+            }
             return
         }
         // Save the current selection now; the tap callback uses it after the selected row changes.
@@ -164,6 +174,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewDidUpdateSelection() {
+        let selection = embeddedPaymentMethodsView.selectedRowButton?.type
+
         // 1. Update the currently selection's form VC to match the selection.
         // Note `paymentOption` derives from this property
         self.selectedFormViewController = Self.makeFormViewControllerIfNecessary(
@@ -182,7 +194,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
 
         // 2. Inform the delegate of the updated payment option if there is no form. If there is a form, we don't want to inform the delegate b/c the paymentOption is in an indeterminate state until the customer completes or cancels out of the form.
-        if self.selectedFormViewController == nil {
+        // The same goes for a Link row that opens the Link wallet.
+        if self.selectedFormViewController == nil, !(selection == .link && linkRowOpensWallet) {
             informDelegateIfPaymentOptionUpdated()
         }
     }
@@ -207,6 +220,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         guard let pendingSelection = pendingBillingAddressSyncSelection,
               let checkout else {
             pendingBillingAddressSyncSelection = nil
+            if embeddedPaymentMethodsView.selectedRowButton?.type == .link, linkRowOpensWallet {
+                // A tap that newly selected Link is undone if the customer closes the wallet; "Change" keeps what they had.
+                presentLinkWallet(revertsSelectionOnClose: embeddedPaymentMethodsView.previousSelectedRowButton?.type != .link)
+                return
+            }
             persistDefaultPaymentMethodSelection(embeddedPaymentMethodsView.selectedRowButton?.type)
             informDelegateIfPaymentOptionUpdated()
             completeImmediateRowSelectionIfNeeded()
@@ -279,13 +297,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 #endif
     }
 
-    private func completeImmediateRowSelectionIfNeeded() {
+    func completeImmediateRowSelectionIfNeeded() {
         if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
             didSelectPaymentOption()
         }
     }
 
-    private func persistDefaultPaymentMethodSelection(_ rowButtonType: RowButtonType?) {
+    func persistDefaultPaymentMethodSelection(_ rowButtonType: RowButtonType?) {
         let paymentOption: CustomerPaymentOption
         switch rowButtonType {
         case .applePay:
@@ -628,6 +646,10 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
 
     // Updates whether or not the change button shows and what sublabel (if any) the selected row button shows
     func updateChangeButtonAndSublabelState(for type: RowButtonType) {
+        if type == .link {
+            updateLinkChangeButtonAndSublabelState()
+            return
+        }
         guard let _paymentOption,
               let displayData = paymentOption,
               case .new = type,
@@ -664,6 +686,27 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         }
 
         embeddedPaymentMethodsView.selectedRowChangeButtonState = (shouldShowChangeButton, sublabel)
+    }
+
+    /// The selected Link row shows the payment details picked in the Link wallet, e.g. "Visa •••• 4242", and a "Change" button.
+    private func updateLinkChangeButtonAndSublabelState() {
+        guard let linkRowButton = embeddedPaymentMethodsView.selectedRowButton, linkRowButton.type == .link else { return }
+        let linkBrand = configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+        guard let sublabel = linkConfirmOption?.displayPaymentSheetSubLabel(brand: linkBrand) else {
+            embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
+            if linkRowButton.isDisplayingAccessoryView {
+                linkRowButton.removeChangeButton(shouldClearSublabel: false)
+            }
+            embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account)
+            return
+        }
+        // Don't show the change button for the disclosure style
+        let shouldShowChangeButton = configuration.appearance.embeddedPaymentElement.row.style != .flatWithDisclosure
+        if shouldShowChangeButton, !linkRowButton.isDisplayingAccessoryView {
+            linkRowButton.addChangeButton()
+        }
+        embeddedPaymentMethodsView.selectedRowChangeButtonState = (shouldShowChangeButton, sublabel)
+        linkRowButton.setSublabel(text: sublabel)
     }
 }
 
