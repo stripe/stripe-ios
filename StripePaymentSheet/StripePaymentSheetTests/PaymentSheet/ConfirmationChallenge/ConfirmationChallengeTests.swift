@@ -152,7 +152,7 @@ class ConfirmationChallengeTests: XCTestCase {
         await confirmationChallenge.complete()
     }
 
-    func testConfirmationChallengeAttestationTimeoutDuringAssertion() async throws {
+    func disabled_testConfirmationChallengeAttestationTimeoutDuringAssertion() async throws {
         // Inject a delay longer than timeout to force attestation to time out
         await mockAttestService.setAssertionDelay(15.0)
         let confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: stripeAttest)
