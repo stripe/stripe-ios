@@ -33,6 +33,12 @@ final class SavedPaymentMethodManager {
         return ephemeralKey
     }()
 
+    /// The Customer the CustomerSession is scoped to. For a CustomerSession created with a customer-configured
+    /// Account, this is the Account's backing Customer, which v1 endpoints require instead of the merchant's `acct_` ID.
+    private var customerSessionCustomerID: String? {
+        elementsSession.customer?.customerSession.customer ?? configuration.customer?.id
+    }
+
     init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent) {
         self.configuration = configuration
         self.elementsSession = elementsSession
@@ -56,7 +62,7 @@ final class SavedPaymentMethodManager {
 
             if let customerAccessProvider = configuration.customer?.customerAccessProvider,
                case .customerSession(let customerSessionClientSecret) = customerAccessProvider,
-               let customerId = configuration.customer?.id {
+               let customerId = customerSessionCustomerID {
                 if paymentMethod.type == .card {
                     configuration.apiClient.detachPaymentMethodRemoveDuplicates(
                         paymentMethod.stripeId,
