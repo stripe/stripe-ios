@@ -53,6 +53,7 @@ nonisolated extension PaymentSheet {
         .pix,
         .goPay,
         .mondu,
+        .stripeBalance,
         .ngUSSD,
         .qris,
         .ngWallet,
