@@ -60,10 +60,10 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
     func testCancelRevertsPersistedSelectionAfterDismissal() {
         // Given card A is persisted when PaymentSheet is presented
         let customerID = "cus_ps_cancel"
-        defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID) }
+        defer { CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: customerID) }
         let cardA = makeCard(id: "pm_a", last4: "4242")
         let cardB = makeCard(id: "pm_b", last4: "0005")
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(cardA.stripeId), forCustomer: customerID)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(cardA.stripeId), forCustomer: customerID)
         let configuration = makeConfiguration(customerID: customerID)
         let sheet = PaymentSheet(
             paymentIntentClientSecret: "pi_123_secret_456",
@@ -107,10 +107,10 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
 
     func testSnapshotDoesNotRestoreDeletedSavedPaymentMethod() {
         let customerID = "cus_deleted"
-        defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID) }
+        defer { CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: customerID) }
         let deletedCard = makeCard(id: "pm_deleted", last4: "4242")
         let remainingCard = makeCard(id: "pm_remaining", last4: "0005")
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(deletedCard.stripeId), forCustomer: customerID)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(deletedCard.stripeId), forCustomer: customerID)
         let snapshot = CustomerPaymentOption.PersistedSelectionSnapshot(
             customerID: customerID,
             availableSavedPaymentMethods: [deletedCard, remainingCard]
@@ -121,12 +121,12 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
         XCTAssertNil(CustomerPaymentOption.localDefaultPaymentMethod(for: customerID))
 
         // A fallback persisted by deletion is preserved.
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(deletedCard.stripeId), forCustomer: customerID)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(deletedCard.stripeId), forCustomer: customerID)
         let snapshotWithFallback = CustomerPaymentOption.PersistedSelectionSnapshot(
             customerID: customerID,
             availableSavedPaymentMethods: [deletedCard, remainingCard]
         )
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(remainingCard.stripeId), forCustomer: customerID)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(remainingCard.stripeId), forCustomer: customerID)
         snapshotWithFallback.revertPersistedSelection(using: [remainingCard])
         XCTAssertEqual(
             CustomerPaymentOption.localDefaultPaymentMethod(for: customerID),
@@ -136,15 +136,15 @@ final class PaymentSheetCancelPersistenceTests: XCTestCase {
 
     func testSnapshotRestoresSavedPaymentMethodUnavailableAtBothTimes() {
         let customerID = "cus_filtered"
-        defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID) }
+        defer { CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: customerID) }
         let hiddenCard = makeCard(id: "pm_hidden", last4: "4242")
         let visibleCard = makeCard(id: "pm_visible", last4: "0005")
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(hiddenCard.stripeId), forCustomer: customerID)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(hiddenCard.stripeId), forCustomer: customerID)
         let snapshot = CustomerPaymentOption.PersistedSelectionSnapshot(
             customerID: customerID,
             availableSavedPaymentMethods: [visibleCard]
         )
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(visibleCard.stripeId), forCustomer: customerID)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(visibleCard.stripeId), forCustomer: customerID)
 
         snapshot.revertPersistedSelection(using: [visibleCard])
 
