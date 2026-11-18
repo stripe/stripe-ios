@@ -3,7 +3,7 @@ MAJOR
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
-* [Deprecated] Deprecated `PaymentSheet.CustomerConfiguration.init(id:customerSessionClientSecret:)`. Use `init(customerSessionClientSecret:) instead`.
+* [Deprecated] Deprecated `PaymentSheet.CustomerConfiguration.init(id:customerSessionClientSecret:)`. Use `init(customerSessionClientSecret:)` instead.
 * [Removed] Removed public access to `PaymentSheet.CustomerConfiguration.id`.
 * [Added] Added support for Stripe balance (private preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
