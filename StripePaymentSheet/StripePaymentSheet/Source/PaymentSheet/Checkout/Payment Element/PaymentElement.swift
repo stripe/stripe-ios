@@ -52,9 +52,9 @@ public final class PaymentElement {
             return
         }
 
-        paymentSheetFlowController.presentPaymentOptions(from: presentingViewController) { [weak self] _ in
-            // The customer used FlowController's sheet, so its selection is now Checkout's payment option.
-            if let self, let checkout {
+        paymentSheetFlowController.presentPaymentOptions(from: presentingViewController) { [weak self] didCancel in
+            // The customer continued from FlowController's sheet, so its selection is now Checkout's payment option.
+            if !didCancel, let self, let checkout {
                 paymentOptionSourceOfTruthIsFlowController = true
                 updatePaymentOption(checkout: checkout)
             }
@@ -183,7 +183,7 @@ extension PaymentElement {
     func updatePaymentOption(checkout: CheckoutElementsController) {
         // Update payment option
         // Problem: Since (unfortunately) we have two sources of truth for payment option (FC and Embedded), we need to know which one to pick. We can't just let them both update payment option - then the last one to update will win, even when it wasn't actually used by the customer.
-        // Hacky solution: We determine which one to pick based on which one last reported a payment option update.
+        // Hacky solution: We pick FlowController once the customer continues from its sheet, and Embedded once they select a payment option in it.
         // If neither was used, their payment options should be equal (the default), and we pick one arbitrarily.
         let paymentOption = {
             if paymentOptionSourceOfTruthIsFlowController {

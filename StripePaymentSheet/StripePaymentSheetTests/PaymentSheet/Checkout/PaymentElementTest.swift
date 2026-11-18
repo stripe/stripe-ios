@@ -535,6 +535,28 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
     }
 
+    func testCancelingSheetKeepsEmbeddedSelection() async throws {
+        // Given PayNow selected in Embedded
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card", "paynow"])
+        ))
+        let paymentElement = checkout.getPaymentElement()
+        let embedded = paymentElement.embeddedPaymentElement
+        let row = try XCTUnwrap(embedded.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.paynow)) })
+        embedded.embeddedPaymentMethodsView.didTap(rowButton: row)
+
+        // When the customer opens the FlowController sheet and cancels it
+        let closed = expectation(description: "PaymentElement sheet closed")
+        paymentElement.present(from: UIViewController()) { closed.fulfill() }
+        let flowController = paymentElement.paymentSheetFlowController
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: true)
+        await fulfillment(of: [closed], timeout: 2)
+
+        // Then Checkout keeps the Embedded selection
+        XCTAssertFalse(paymentElement.paymentOptionSourceOfTruthIsFlowController)
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
+    }
+
     func testEmbeddedPublishesChangesToLinkSublabel() async throws {
         // Given Checkout with a Link card selected
         let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
