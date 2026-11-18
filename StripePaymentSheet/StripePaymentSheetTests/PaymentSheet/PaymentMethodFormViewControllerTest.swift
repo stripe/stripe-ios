@@ -146,35 +146,18 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
 
     func testRebuiltCardFormKeepsDeclinedLinkInlineSignup() throws {
         // Given a US card form that offers Link inline signup with the box pre-checked (default opt-in)
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: [
-            "payment_method_preference": ["ordered_payment_method_types": ["card", "link"], "country_code": "US"],
-            "session_id": "123",
-            "config_id": "123",
-            "link_settings": ["link_funding_sources": ["CARD"]],
-        ])!
-        let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card, .link])
+        let elementsSession = makeLinkElementsSession()
         // ...for a customer without a Link account, in test mode so inline signup shows even if Link was used before
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         let originalLinkAccount = LinkAccountContext.shared.account
         LinkAccountContext.shared.account = nil
         defer { LinkAccountContext.shared.account = originalLinkAccount }
-        func makeCardForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
-            PaymentMethodFormViewController(type: .stripe(.card), intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
-        }
-        func linkSignup(in formViewController: PaymentMethodFormViewController) -> LinkInlineSignupElement? {
-            formViewController.form.getAllUnwrappedSubElements().compactMap { $0 as? LinkInlineSignupElement }.first
-        }
-        let firstForm = makeCardForm(previousCustomerInput: nil)
+        let firstForm = makeCardForm(elementsSession: elementsSession, previousCustomerInput: nil)
         let firstSignup = try XCTUnwrap(linkSignup(in: firstForm))
         XCTAssertEqual(firstSignup.viewModel.mode, .checkboxWithDefaultOptIn)
         XCTAssertTrue(firstSignup.isChecked)
 
         // When the customer enters a card and unchecks the box
-        firstForm.form.getTextFieldElement("Card number").setText("4242424242424242")
-        firstForm.form.getTextFieldElement("MM / YY").setText("1240")
-        firstForm.form.getTextFieldElement("CVC").setText("123")
-        firstForm.form.getTextFieldElement("ZIP").setText("65432")
+        enterCard(in: firstForm)
         firstSignup.viewModel.saveCheckboxChecked = false
         guard case .new(let confirmParams) = firstForm.paymentOption else {
             return XCTFail("Expected a new card, got \(String(describing: firstForm.paymentOption))")
@@ -182,7 +165,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         XCTAssertTrue(confirmParams.didDeclineLinkInlineSignup)
 
         // ...and the form is rebuilt from that input, as it is after a session update
-        let rebuiltForm = makeCardForm(previousCustomerInput: confirmParams)
+        let rebuiltForm = makeCardForm(elementsSession: elementsSession, previousCustomerInput: confirmParams)
 
         // Then the box stays unchecked, so the card alone still completes the form
         XCTAssertFalse(try XCTUnwrap(linkSignup(in: rebuiltForm)).isChecked)
@@ -195,52 +178,66 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
 
     func testRebuiltCardFormKeepsDeclinedLinkSignupOptInAndMandate() throws {
         // Given a card form in the signup opt-in mode, pre-checked, with the mandate that says the customer will be signed up for Link
-        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: [
-            "payment_method_preference": ["ordered_payment_method_types": ["card", "link"], "country_code": "US"],
-            "session_id": "123",
-            "config_id": "123",
-            "flags": ["elements_mobile_force_setup_future_use_behavior_and_new_mandate_text": true],
-            "link_settings": [
-                "link_funding_sources": ["CARD"],
+        let elementsSession = makeLinkElementsSession(
+            flags: ["elements_mobile_force_setup_future_use_behavior_and_new_mandate_text": true],
+            linkSettings: [
                 "link_sign_up_opt_in_feature_enabled": true,
                 "link_sign_up_opt_in_initial_value": true,
-            ],
-        ])!
-        let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card, .link])
+            ]
+        )
         // ...for a customer whose email is known but who doesn't have a Link account
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
         let originalLinkAccount = LinkAccountContext.shared.account
         LinkAccountContext.shared.account = ._testValue(email: "user@example.com", isRegistered: false)
         defer { LinkAccountContext.shared.account = originalLinkAccount }
-        func makeCardForm(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
-            PaymentMethodFormViewController(type: .stripe(.card), intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
-        }
-        func linkSignup(in formViewController: PaymentMethodFormViewController) -> LinkInlineSignupElement? {
-            formViewController.form.getAllUnwrappedSubElements().compactMap { $0 as? LinkInlineSignupElement }.first
-        }
         func mandateText(_ shouldSignUpToLink: Bool) -> String {
-            PaymentSheetFormFactory.makeMandateText(variant: .updated(shouldSignUpToLink: shouldSignUpToLink), merchantName: configuration.merchantDisplayName).string
+            PaymentSheetFormFactory.makeMandateText(variant: .updated(shouldSignUpToLink: shouldSignUpToLink), merchantName: PaymentSheet.Configuration().merchantDisplayName).string
         }
-        let firstForm = makeCardForm(previousCustomerInput: nil)
+        let firstForm = makeCardForm(elementsSession: elementsSession, previousCustomerInput: nil)
         let firstSignup = try XCTUnwrap(linkSignup(in: firstForm))
         XCTAssertEqual(firstSignup.viewModel.mode, .signupOptIn)
         XCTAssertTrue(firstSignup.isChecked)
         XCTAssertEqual(firstForm.form.getMandateElement()?.mandateTextView.attributedText?.string, mandateText(true))
 
         // When the customer enters a card, unchecks the box, and the form is rebuilt from that input
-        firstForm.form.getTextFieldElement("Card number").setText("4242424242424242")
-        firstForm.form.getTextFieldElement("MM / YY").setText("1240")
-        firstForm.form.getTextFieldElement("CVC").setText("123")
-        firstForm.form.getTextFieldElement("ZIP").setText("65432")
+        enterCard(in: firstForm)
         firstSignup.viewModel.saveCheckboxChecked = false
         firstForm.viewDidAppear(false) // Marks the mandate as displayed, which the form requires
         let confirmParams = try XCTUnwrap(firstForm.paymentOption?.newConfirmParams)
-        let rebuiltForm = makeCardForm(previousCustomerInput: confirmParams)
+        let rebuiltForm = makeCardForm(elementsSession: elementsSession, previousCustomerInput: confirmParams)
 
         // Then the box stays unchecked, and the mandate no longer says they'll be signed up for Link
         XCTAssertFalse(try XCTUnwrap(linkSignup(in: rebuiltForm)).isChecked)
         XCTAssertEqual(rebuiltForm.form.getMandateElement()?.mandateTextView.attributedText?.string, mandateText(false))
+    }
+
+    // MARK: - Link inline signup helpers
+
+    private func makeLinkElementsSession(flags: [String: Bool] = [:], linkSettings: [String: Any] = [:]) -> STPElementsSession {
+        STPElementsSession.decodedObject(fromAPIResponse: [
+            "payment_method_preference": ["ordered_payment_method_types": ["card", "link"], "country_code": "US"],
+            "session_id": "123",
+            "config_id": "123",
+            "flags": flags,
+            "link_settings": linkSettings.merging(["link_funding_sources": ["CARD"]]) { current, _ in current },
+        ])!
+    }
+
+    private func makeCardForm(elementsSession: STPElementsSession, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        let intent: Intent = ._testPaymentIntent(paymentMethodTypes: [.card, .link])
+        return PaymentMethodFormViewController(type: .stripe(.card), intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+    }
+
+    private func linkSignup(in formViewController: PaymentMethodFormViewController) -> LinkInlineSignupElement? {
+        formViewController.form.getAllUnwrappedSubElements().compactMap { $0 as? LinkInlineSignupElement }.first
+    }
+
+    private func enterCard(in formViewController: PaymentMethodFormViewController) {
+        formViewController.form.getTextFieldElement("Card number").setText("4242424242424242")
+        formViewController.form.getTextFieldElement("MM / YY").setText("1240")
+        formViewController.form.getTextFieldElement("CVC").setText("123")
+        formViewController.form.getTextFieldElement("ZIP").setText("65432")
     }
 
     // MARK: - logBillingAddressCompletionIfNeeded
