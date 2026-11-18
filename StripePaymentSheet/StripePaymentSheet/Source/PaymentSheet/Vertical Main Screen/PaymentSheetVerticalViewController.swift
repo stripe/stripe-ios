@@ -960,11 +960,11 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 #endif
         switch selection {
         case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession))
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.applePay, forCustomer: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession))
         case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession))
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession))
         case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession))
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession))
         case let .new(paymentMethodType: paymentMethodType):
             let pmFormVC = makeFormVC(paymentMethodType: paymentMethodType)
             if pmFormVC.form.collectsUserInput || paymentMethodType.isBankPayment {

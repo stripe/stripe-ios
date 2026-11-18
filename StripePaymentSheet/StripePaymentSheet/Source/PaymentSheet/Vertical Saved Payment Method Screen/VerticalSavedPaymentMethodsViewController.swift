@@ -446,7 +446,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         guard !elementsSession.paymentMethodSetAsDefaultForPaymentSheet else {
             return
         }
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             .stripeId(paymentMethod.stripeId),
             forCustomer: customerProvider.resolvedCustomerID(elementsSession: elementsSession)
         )

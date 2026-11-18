@@ -297,7 +297,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         case .new, nil:
             return
         }
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             paymentOption,
             forCustomer: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession)
         )

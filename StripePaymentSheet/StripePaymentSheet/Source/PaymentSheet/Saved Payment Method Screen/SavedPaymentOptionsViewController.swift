@@ -511,7 +511,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         if let selectedIndexPath {
             collectionView.deselectItem(at: selectedIndexPath, animated: true)
         }
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             snapshot.persistedPaymentOption,
             forCustomer: configuration.customerID
         )
@@ -669,11 +669,11 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure()
         case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
         case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
         case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(
                 .stripeId(paymentMethod.stripeId),
                 forCustomer: configuration.customerID
             )

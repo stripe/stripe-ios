@@ -733,7 +733,7 @@ extension PaymentSheet {
                     )
                     if case .completed = result, case .link = paymentOption {
                         // Remember Link as default payment method for users who just created an account.
-                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: self.viewController.loadResult.customerProvider.resolvedCustomerID(elementsSession: self.viewController.loadResult.elementsSession))
+                        CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: self.viewController.loadResult.customerProvider.resolvedCustomerID(elementsSession: self.viewController.loadResult.elementsSession))
                     }
 
                     completion(result)
