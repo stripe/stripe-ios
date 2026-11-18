@@ -237,6 +237,7 @@ public final class EmbeddedPaymentElement {
             savedPaymentMethods: loadResult.savedPaymentMethods,
             analyticsHelper: self.analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: self.checkout,
             formCache: self.formCache,
             delegate: self
@@ -400,7 +401,7 @@ public final class EmbeddedPaymentElement {
         }
     }
     internal var savedPaymentMethodManager: SavedPaymentMethodManager {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)

@@ -111,6 +111,7 @@ extension EmbeddedPaymentElement {
         savedPaymentMethods: [STPPaymentMethod],
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
+        stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?,
         checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?,
         formCache: PaymentMethodFormCache,
         delegate: EmbeddedFormViewControllerDelegate
@@ -128,6 +129,7 @@ extension EmbeddedPaymentElement {
             previousPaymentOption: previousPaymentOption,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
             formCache: formCache,
             delegate: delegate
@@ -176,6 +178,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
             delegate: self
@@ -297,7 +300,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         case .new, nil:
             return
         }
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             paymentOption,
             forCustomer: loadResult.customerProvider.customerID
         )
@@ -333,7 +336,6 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let verticalSavedPaymentMethodsViewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: loadResult.customerProvider,
-            intent: intent,
             checkout: checkout,
             selectedPaymentMethod: selectedSavedPaymentMethod,
             paymentMethods: savedPaymentMethods,
@@ -357,6 +359,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: nil, // This is just to check if there's a form, so this data isn't necessary
+            stripeBalanceFinancialAccounts: nil,
             checkoutBillingAddressUpdater: checkout,
             formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
             delegate: self
@@ -368,7 +371,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: StripePayments.STPPaymentMethod) {
         // Detach the payment method from the customer
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        loadResult.customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // if it's the default pm, unset it
@@ -577,6 +584,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
             delegate: self
