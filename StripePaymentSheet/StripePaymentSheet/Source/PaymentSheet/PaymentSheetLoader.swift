@@ -192,7 +192,7 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 surface: .paymentSheet
             ) == .link && PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
-            let preselectLink = !mode.isCheckout && PreselectLinkExperiment.shouldPreselectLink(
+            let preselectLink = PreselectLinkExperiment.shouldPreselectLink(
                 elementsSession: elementsSession,
                 configuration: configuration,
                 integrationShape: integrationShape,
