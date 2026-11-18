@@ -12,6 +12,9 @@ MINOR
 ### Financial Connections
 * [Changed] Updated Link-branded Financial Connections flows, including Instant Debits, to the new Link design system.
 
+### Identity
+* [Changed] Compressed the StripeIdentity selfie confirmation sound. This makes the bundled resources about 270 KB smaller.
+
 ## 26.16.1 2026-11-09
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".

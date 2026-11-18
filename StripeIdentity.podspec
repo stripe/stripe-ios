@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
     'OTHER_LDFLAGS' => '$(inherited) -ObjC',
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'x86_64',
   }
-  s.ios.resource_bundle            = { 'StripeIdentityBundle' => 'StripeIdentity/StripeIdentity/Resources/**/*.{lproj,json,png,wav,xcassets,task}' }
+  s.ios.resource_bundle            = { 'StripeIdentityBundle' => 'StripeIdentity/StripeIdentity/Resources/**/*.{lproj,json,png,m4a,xcassets,task}' }
   s.preserve_paths                 = 'NOTICE'
   s.dependency                       'StripeCore', "#{s.version}"
   s.dependency                       'StripeUICore', "#{s.version}"

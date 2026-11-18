@@ -16,7 +16,7 @@ protocol SelfieCaptureFeedbackGeneratorProtocol {
 final class SelfieCaptureFeedbackGenerator: SelfieCaptureFeedbackGeneratorProtocol {
     private enum Constants {
         static let confirmationSoundName = "selfie_capture_confirmed"
-        static let confirmationSoundExtension = "wav"
+        static let confirmationSoundExtension = "m4a"
     }
 
     private let notificationFeedbackGenerator = UINotificationFeedbackGenerator()
