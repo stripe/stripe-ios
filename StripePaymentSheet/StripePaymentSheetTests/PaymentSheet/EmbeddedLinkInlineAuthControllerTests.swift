@@ -681,6 +681,7 @@ final class EmbeddedPaymentElementLinkInlineAuthTests: XCTestCase {
     private func makeConfiguration() -> EmbeddedPaymentElement.Configuration {
         var configuration = EmbeddedPaymentElement.Configuration()
         configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        configuration.allowsLinkInlineVerification = true
         return configuration
     }
 
