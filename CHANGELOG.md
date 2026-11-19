@@ -2,7 +2,10 @@ The next release's version bump will so far be:
 MAJOR
 
 ## X.Y.Z - changes pending release
+This major version introduces several breaking changes. Please see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) to help you migrate.
+
 ### PaymentSheet
+* [Deprecated] Deprecated External Payment Methods in favor of Custom Payment Methods. See the [CPM integration guide](https://docs.stripe.com/payments/mobile/custom-payment-methods?platform=ios).
 * [Removed] Removed public access to `PaymentSheetError`.
 * [Deprecated] Deprecated `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress`. This configuration no longer has an effect. Payment methods that require a shipping address are always allowed.
 * [Added] Added support for Stripe balance (private preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
