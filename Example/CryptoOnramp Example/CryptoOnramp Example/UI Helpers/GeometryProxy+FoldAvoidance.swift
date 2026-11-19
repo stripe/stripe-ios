@@ -18,7 +18,7 @@ extension GeometryProxy {
     /// - Parameter anchoredToBottom: Whether a horizontal fold should leave content above the fold instead of below it. Defaults to `false`.
     /// - Returns: Insets that exclude intersecting fold regions and their interaction margins.
     func activeFoldInsets(anchoredToBottom: Bool = false) -> EdgeInsets {
-        #if compiler(>=6.4)
+        #if canImport(SwiftUI, _version: 8.0.85)
         if #available(iOS 27.1, *) {
             let bounds = CGRect(origin: .zero, size: size)
             var insets = EdgeInsets()
