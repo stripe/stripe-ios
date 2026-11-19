@@ -10,14 +10,14 @@ import UIKit
 @MainActor
 final class EmbeddedVisibilityMonitor {
     private weak var view: UIView?
-    private let isVisible: (UIView) -> Bool
+    private let isVisible: @MainActor (UIView) -> Bool
     private let onFirstVisible: () -> Void
     private var timer: Timer?
     private(set) var hasFired = false
 
     init(
         view: UIView,
-        isVisible: @escaping (UIView) -> Bool = EmbeddedVisibilityMonitor.isOnScreen,
+        isVisible: @escaping @MainActor (UIView) -> Bool = EmbeddedVisibilityMonitor.isOnScreen,
         onFirstVisible: @escaping () -> Void
     ) {
         self.view = view
