@@ -98,6 +98,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
                 linkAccount: nil,
                 elementsSession: elementsSession,
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 analyticsHelper: ._testValue()
             )
             // ...and a logged-in Link account. The coordinator reads it from the shared context, so setting it
