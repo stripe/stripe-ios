@@ -631,3 +631,20 @@ extension CheckoutClientAPIResponse {
         return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
     }
 }
+
+// MARK: - PaymentElement sheet helpers
+
+@MainActor
+extension XCTestCase {
+    /// Presents the Payment Element's sheet, runs `customerActions` while it's open, and taps its primary button.
+    func presentAndContinue(_ paymentElement: PaymentElement, customerActions: () -> Void = {}) {
+        let closed = expectation(description: "PaymentElement sheet closed")
+        paymentElement.present(from: UIViewController()) {
+            closed.fulfill()
+        }
+        customerActions()
+        let flowController = paymentElement.paymentSheetFlowController
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
+        wait(for: [closed], timeout: 2)
+    }
+}
