@@ -16,7 +16,6 @@ This major version introduces several breaking changes. See [MIGRATING.md](https
 ### PaymentSheet
 * [Added] Added `allowedPaymentMethodTypes` and `excludedPaymentMethodTypes` to `PaymentSheet.IntentConfiguration`. If your server creates the PaymentIntent or SetupIntent with `allowed_payment_method_types` or `excluded_payment_method_types`, set the matching property to the same list.
 * [Changed] `PaymentSheet.IntentConfiguration.Mode.payment` now requires an explicit `captureMethod`. Pass the capture method of the PaymentIntent your server creates. If you didn't previously set `captureMethod`, pass `.automatic`.
-* [Changed] PaymentSheet and PaymentSheet.FlowController fail to load with the client secret of a completed or processing PaymentIntent or SetupIntent, and return an API error. Previously, some of these intents failed with `PaymentSheetError.paymentIntentInTerminalState` or `PaymentSheetError.setupIntentInTerminalState`, and others loaded. CustomerSheet also fails to save a payment method with the client secret of such a SetupIntent. Create a new intent for each payment or setup.
 
 ## 26.16.0 2026-11-02
 ### PaymentSheet
