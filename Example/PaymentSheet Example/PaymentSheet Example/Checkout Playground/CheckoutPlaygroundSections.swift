@@ -117,9 +117,19 @@ struct CheckoutPlaygroundCustomerRows: View {
             title: "Customer",
             icon: "person.fill",
             selection: $viewModel.customerType,
-            tooltip: "Simulates different customer states.\n\n• Guest: No customer object attached.\n• New: Creates a new Customer object.\n• Returning: Attaches a pre-existing Customer ID.",
+            tooltip: "Simulates different customer states.\n\n• Guest: No customer object attached.\n• New: Creates a new Customer object. Once a checkout completes, it's reused with a Server — Customer email until the customer type, backend, or email changes.\n• Returning: Attaches a pre-existing Customer ID.",
             displayText: { $0.rawValue.capitalized }
         )
+        if let reusableNewCustomer = viewModel.reusableNewCustomer {
+            Text("Reusing customer \(reusableNewCustomer.id)")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 52)
+                .padding(.trailing, 16)
+                .padding(.bottom, 12)
+                .background(Color(uiColor: .secondarySystemGroupedBackground))
+        }
         CheckoutPlayground.PickerRow(
             title: "Email",
             icon: "envelope.fill",

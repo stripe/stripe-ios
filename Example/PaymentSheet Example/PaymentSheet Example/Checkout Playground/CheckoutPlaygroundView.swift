@@ -80,7 +80,8 @@ struct CheckoutPlaygroundView: View {
                             paymentElementApplePayDisplay: viewModel.paymentElementApplePayDisplay,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             paymentElementAppearance: viewModel.paymentElementAppearance,
-                            delayCheckoutClientRequests: viewModel.delayCheckoutClientRequests
+                            delayCheckoutClientRequests: viewModel.delayCheckoutClientRequests,
+                            onCheckoutCompleted: { viewModel.checkoutDidComplete(email: $0) }
                         )
                     case .uiKit:
                         CheckoutCartUIKitView(
@@ -97,7 +98,8 @@ struct CheckoutPlaygroundView: View {
                             paymentElementApplePayDisplay: viewModel.paymentElementApplePayDisplay,
                             currencySelectorAppearance: viewModel.currencySelectorAppearance,
                             paymentElementAppearance: viewModel.paymentElementAppearance,
-                            delayCheckoutClientRequests: viewModel.delayCheckoutClientRequests
+                            delayCheckoutClientRequests: viewModel.delayCheckoutClientRequests,
+                            onCheckoutCompleted: { viewModel.checkoutDidComplete(email: $0) }
                         )
                     }
                 }

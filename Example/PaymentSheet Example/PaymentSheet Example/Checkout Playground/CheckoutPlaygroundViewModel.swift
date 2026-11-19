@@ -60,7 +60,7 @@ extension CheckoutPlayground {
             didSet {
                 // Like the PaymentSheet playground, changing the customer type starts over with a fresh New customer.
                 if customerType != oldValue {
-                    Self.resetNewCustomer()
+                    storedNewCustomer = nil
                 }
             }
         }
@@ -89,6 +89,19 @@ extension CheckoutPlayground {
         @Published var errorMessage: String?
         @Published var clientSecret: String?
         @Published var navigateToCheckout = false
+
+        /// The New customer from the last completed checkout, persisted so later sessions can reuse it.
+        @Published private(set) var storedNewCustomer: NewCustomer? {
+            didSet {
+                if let storedNewCustomer, let data = try? JSONEncoder().encode(storedNewCustomer) {
+                    UserDefaults.standard.set(data, forKey: NewCustomer.nsUserDefaultsKey)
+                } else {
+                    Self.resetNewCustomer()
+                }
+            }
+        }
+        /// The New customer of the session in checkout, stored for reuse if the checkout completes.
+        private var newCustomerInCheckout: (id: String, backendURL: String)?
 
         private var settingsSaveSubscription: AnyCancellable?
         private var isLinkModeOverrideActive = false
@@ -124,6 +137,8 @@ extension CheckoutPlayground {
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = EndpointOption.normalizedBaseURL(from: settings.checkoutEndpoint)
             delayCheckoutClientRequests = settings.delayCheckoutClientRequests
+            storedNewCustomer = UserDefaults.standard.data(forKey: NewCustomer.nsUserDefaultsKey)
+                .flatMap { try? JSONDecoder().decode(NewCustomer.self, from: $0) }
             settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
                 guard let self else {
                     return
@@ -172,6 +187,19 @@ extension CheckoutPlayground {
                 resolved.value = "test+location_\(adaptivePricingCountry.rawValue.uppercased())@example.com"
             }
             return resolved
+        }
+
+        /// The stored New customer, if the next session will reuse it. It's only reused through the backend that
+        /// created it and while the Server — Customer email matches its email, so the email setting stays accurate.
+        var reusableNewCustomer: NewCustomer? {
+            guard customerType == .new,
+                  let storedNewCustomer,
+                  storedNewCustomer.backendURL == EndpointOption.normalizedBaseURL(from: checkoutEndpoint),
+                  storedNewCustomer.email == resolvedEmail.customerEmail
+            else {
+                return nil
+            }
+            return storedNewCustomer
         }
 
         private static func legacyEmailSettings(_ settings: Settings) -> EmailSettings {
@@ -236,14 +264,6 @@ extension CheckoutPlayground {
                 let backend = PlaygroundBackend(baseURL: backendURL)
                 let publishableKey = try await backend.fetchPublishableKey()
                 let apiClient = STPAPIClient(publishableKey: publishableKey)
-                // Only reuse the stored New customer if this backend created it with the email this session would
-                // give it. Otherwise, a new one is created.
-                let customerEmail = resolvedEmail.customerEmail
-                let storedNewCustomer = UserDefaults.standard.data(forKey: NewCustomer.nsUserDefaultsKey)
-                    .flatMap { try? JSONDecoder().decode(NewCustomer.self, from: $0) }
-                let reusableNewCustomerID = storedNewCustomer.flatMap {
-                    $0.backendURL == backendURL.absoluteString && $0.email == customerEmail ? $0.id : nil
-                }
                 let (clientSecret, customerID) = try await SessionFactory(backend: backend, apiClient: apiClient).create(
                     currency: currency,
                     customerType: customerType,
@@ -256,13 +276,14 @@ extension CheckoutPlayground {
                     email: resolvedEmail,
                     automaticPaymentMethods: automaticPaymentMethods,
                     paymentMethodTypes: paymentMethodTypes,
-                    newCustomerID: reusableNewCustomerID
+                    newCustomerID: reusableNewCustomer?.id
                 )
 
-                // Store the New customer so the next session reuses it.
+                // Remember the New customer so it can be stored for reuse if this checkout completes.
                 if customerType == .new, let customerID {
-                    let newCustomer = NewCustomer(id: customerID, backendURL: backendURL.absoluteString, email: customerEmail)
-                    UserDefaults.standard.set(try? JSONEncoder().encode(newCustomer), forKey: NewCustomer.nsUserDefaultsKey)
+                    newCustomerInCheckout = (id: customerID, backendURL: EndpointOption.normalizedBaseURL(from: checkoutEndpoint))
+                } else {
+                    newCustomerInCheckout = nil
                 }
 
                 // Example app behavior: the local backend response controls the Stripe publishable key.
@@ -271,6 +292,21 @@ extension CheckoutPlayground {
                 navigateToCheckout = true
             } catch {
                 errorMessage = error.localizedDescription
+            }
+        }
+
+        /// Stores the New customer of a completed checkout so that later sessions reuse it.
+        /// - Parameter email: The email the checkout completed with.
+        func checkoutDidComplete(email: String?) {
+            guard let newCustomerInCheckout else {
+                return
+            }
+
+            storedNewCustomer = NewCustomer(id: newCustomerInCheckout.id, backendURL: newCustomerInCheckout.backendURL, email: email)
+            // Checkout saved this email to the Customer if it had none, so later sessions get it from the Customer.
+            // Switch to the matching Server — Customer email so the next session reuses the Customer.
+            if let email, resolvedEmail.customerEmail != email {
+                self.email = EmailSettings(source: .customer, value: email)
             }
         }
 
