@@ -130,6 +130,32 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
+    func testSavedPaymentMethodConfirmationHasNoConfirmationChallenge() async throws {
+        // Given the Payment Element has a previously saved card selected
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration())
+        let element = checkout.getPaymentElement()
+        element.embeddedPaymentElement._test_paymentOption = .saved(paymentMethod: STPPaymentMethod._testCard(), confirmParams: nil)
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+        element.paymentOptionSourceOfTruthIsFlowController = false
+
+        // When Checkout builds the confirmation flow
+        let flow = try XCTUnwrap(checkout.makeConfirmationFlow(
+            for: element,
+            presentingViewController: UIViewController()
+        ))
+
+        // Then it has no confirmation challenge, so no passive captcha token is minted
+        guard case .paymentMethod(let parameters, _) = flow else {
+            XCTFail("Expected payment method confirmation")
+            return
+        }
+        guard case .saved = parameters.option else {
+            XCTFail("Expected a saved payment method")
+            return
+        }
+        XCTAssertNil(parameters.confirmationChallenge)
+    }
+
     func testPaymentElementIsNotCreatedWhenNotConfigured() async throws {
         // Given a Checkout configuration without Payment Element configuration
         let configuration = CheckoutTestHelpers.makeConfiguration(paymentElementConfiguration: nil)

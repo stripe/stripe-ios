@@ -265,7 +265,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         STPAnalyticsClient.sharedClient._testLogHistory = []
         defer { STPAnalyticsClient.sharedClient._testLogHistory = previousHistory }
 
-        // Given an open Checkout Session and a saved payment method
+        // Given an open Checkout Session and a payment method confirmed by ID with a confirmation challenge,
+        // as Link does for a payment method it just created
         let checkout = try await makeCheckout()
         let paymentMethod = STPPaymentMethod._testCard()
         let challenge = TestConfirmationChallenge()

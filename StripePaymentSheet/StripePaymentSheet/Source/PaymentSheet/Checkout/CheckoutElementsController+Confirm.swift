@@ -260,7 +260,8 @@ extension CheckoutElementsController {
                     configuration: configuration,
                     returnURL: self.configuration.returnURL,
                     nativeSheetPresentation: nativeSheetPresentation,
-                    confirmationChallenge: confirmationChallenge,
+                    // Previously saved PaymentMethods don't get a confirmation challenge; see `passiveCaptchaToken`.
+                    confirmationChallenge: nil,
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     attribution: attribution
@@ -508,6 +509,7 @@ extension CheckoutElementsController {
             // MARK: - Saved PM
             let paymentMethodOptions = preconfirmedIntentParams?.confirmPaymentMethodOptions
                 ?? confirmParams?.confirmPaymentMethodOptions
+            // Only Link passes a challenge here, for a PaymentMethod it just created; see `passiveCaptchaToken`.
             // /confirm by ID has no nested Radar options, so only the passive captcha token is sent.
             let passiveCaptchaToken = await confirmationChallenge?.makeRadarOptions(for: savedPaymentMethod.type)?.hcaptchaToken
             return .createWithPaymentMethodID(
