@@ -113,6 +113,10 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The client attribution metadata for analytics.
     let clientAttributionMetadata: STPClientAttributionMetadata
 
+    /// The passive hCaptcha token. CheckoutClient's captcha check reads only this top-level field,
+    /// not `payment_method_data[radar_options][hcaptcha_token]`.
+    let passiveCaptchaToken: String?
+
     static func createWithoutPaymentMethod(
         sessionId: String,
         clientSecret: String,
@@ -131,7 +135,8 @@ struct CheckoutSessionConfirmationRequestParameters {
             expectedAmount: expectedAmount,
             returnURL: returnURL,
             shipping: shipping,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: nil
         )
     }
 
@@ -147,7 +152,8 @@ struct CheckoutSessionConfirmationRequestParameters {
         shipping: STPPaymentIntentShippingDetailsParams?,
         paymentMethodOptions: STPConfirmPaymentMethodOptions?,
         clientAttributionMetadata: STPClientAttributionMetadata,
-        collectedInformation: CollectedInformation
+        collectedInformation: CollectedInformation,
+        passiveCaptchaToken: String?
     ) -> Self {
         Self(
             sessionId: sessionId,
@@ -165,7 +171,8 @@ struct CheckoutSessionConfirmationRequestParameters {
             expectedAmount: expectedAmount,
             returnURL: returnURL,
             shipping: shipping,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: passiveCaptchaToken
         )
     }
 
@@ -180,7 +187,8 @@ struct CheckoutSessionConfirmationRequestParameters {
         shipping: STPPaymentIntentShippingDetailsParams?,
         paymentMethodOptions: STPConfirmPaymentMethodOptions?,
         clientAttributionMetadata: STPClientAttributionMetadata,
-        collectedInformation: CollectedInformation
+        collectedInformation: CollectedInformation,
+        passiveCaptchaToken: String?
     ) -> Self {
         Self(
             sessionId: sessionId,
@@ -197,7 +205,8 @@ struct CheckoutSessionConfirmationRequestParameters {
             expectedAmount: expectedAmount,
             returnURL: returnURL,
             shipping: shipping,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: passiveCaptchaToken
         )
     }
 }
@@ -358,6 +367,10 @@ extension STPAPIClient {
         }
 
         parameters["return_url"] = requestParameters.returnURL
+
+        if let passiveCaptchaToken = requestParameters.passiveCaptchaToken {
+            parameters["passive_captcha_token"] = passiveCaptchaToken
+        }
 
         if let shipping = requestParameters.shipping {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
