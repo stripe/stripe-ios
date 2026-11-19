@@ -54,7 +54,7 @@ class ExternalPaymentOptionTests: XCTestCase {
             }
         )
 
-        let paymentOption = ExternalPaymentOption.from(mockExternalPaymentMethod, configuration: mockConfiguration)
+        let paymentOption = ExternalPaymentOption.from(mockExternalPaymentMethod, confirmHandler: mockConfiguration.externalPaymentMethodConfirmHandler)
 
         XCTAssertNotNil(paymentOption)
         XCTAssertEqual(paymentOption?.type, "external_paypal")
@@ -149,7 +149,7 @@ class ExternalPaymentOptionTests: XCTestCase {
             }
         )
 
-        guard let paymentOption = ExternalPaymentOption.from(mockExternalPaymentMethod, configuration: mockConfiguration) else {
+        guard let paymentOption = ExternalPaymentOption.from(mockExternalPaymentMethod, confirmHandler: mockConfiguration.externalPaymentMethodConfirmHandler) else {
             XCTFail("Failed to create external payment option")
             return
         }
@@ -171,7 +171,7 @@ class ExternalPaymentOptionTests: XCTestCase {
             }
         )
 
-        guard let paymentOption = ExternalPaymentOption.from(mockExternalPaymentMethod, configuration: mockConfiguration) else {
+        guard let paymentOption = ExternalPaymentOption.from(mockExternalPaymentMethod, confirmHandler: mockConfiguration.externalPaymentMethodConfirmHandler) else {
             XCTFail("Failed to create external payment option")
             return
         }
@@ -204,8 +204,8 @@ class ExternalPaymentOptionTests: XCTestCase {
             darkImageUrl: URL(string: "https://example.com/dark2.png")! // Different URL
         )
 
-        let option1 = ExternalPaymentOption.from(mockExternalPaymentMethod1, configuration: mockConfig)
-        let option2 = ExternalPaymentOption.from(mockExternalPaymentMethod2, configuration: mockConfig)
+        let option1 = ExternalPaymentOption.from(mockExternalPaymentMethod1, confirmHandler: mockConfig.externalPaymentMethodConfirmHandler)
+        let option2 = ExternalPaymentOption.from(mockExternalPaymentMethod2, confirmHandler: mockConfig.externalPaymentMethodConfirmHandler)
 
         XCTAssertEqual(option1, option2, "Options with same type should be equal despite different properties")
     }
@@ -230,8 +230,8 @@ class ExternalPaymentOptionTests: XCTestCase {
             darkImageUrl: mockDarkImageURL
         )
 
-        let option1 = ExternalPaymentOption.from(mockExternalPaymentMethod1, configuration: mockConfig)
-        let option2 = ExternalPaymentOption.from(mockExternalPaymentMethod2, configuration: mockConfig)
+        let option1 = ExternalPaymentOption.from(mockExternalPaymentMethod1, confirmHandler: mockConfig.externalPaymentMethodConfirmHandler)
+        let option2 = ExternalPaymentOption.from(mockExternalPaymentMethod2, confirmHandler: mockConfig.externalPaymentMethodConfirmHandler)
 
         XCTAssertNotEqual(option1, option2, "Options with different types should not be equal")
     }
@@ -261,11 +261,11 @@ class ExternalPaymentOptionTests: XCTestCase {
 
         let paypalOption = ExternalPaymentOption.from(
             paypalMethod,
-            configuration: mockConfig
+            confirmHandler: mockConfig.externalPaymentMethodConfirmHandler
         )!
         let klarnaOption = ExternalPaymentOption.from(
             klarnaMethod,
-            configuration: mockConfig
+            confirmHandler: mockConfig.externalPaymentMethodConfirmHandler
         )!
 
         // Different object but same type as paypalOption
@@ -278,7 +278,7 @@ class ExternalPaymentOptionTests: XCTestCase {
                 )!,
                 darkImageUrl: nil
             ),
-            configuration: mockConfig
+            confirmHandler: mockConfig.externalPaymentMethodConfirmHandler
         )!
 
         var paymentOptions: [ExternalPaymentOption: String] = [:]

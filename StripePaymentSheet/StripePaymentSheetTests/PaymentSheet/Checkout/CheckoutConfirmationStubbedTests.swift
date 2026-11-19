@@ -1324,7 +1324,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     private func assertNewPaymentMethodConfirmation(
         session: CheckoutClientAPIResponse,
         paymentMethodType: PaymentSheet.PaymentMethodType,
-        checkboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
+        checkboxState: IntentConfirmParams.CheckboxState,
         expectedAllowRedisplay: String,
         expectedSavePaymentMethod: Bool?,
         checkoutEmail: String? = nil,
