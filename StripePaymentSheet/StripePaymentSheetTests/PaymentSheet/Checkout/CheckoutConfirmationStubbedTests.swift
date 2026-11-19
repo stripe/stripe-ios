@@ -1112,7 +1112,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let flow = CheckoutElementsController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
-            customerProvider: checkout.getPaymentElement().embeddedPaymentElement.loadResult.customerProvider,
             returnURL: checkout.configuration.returnURL,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: nil,
@@ -1146,7 +1145,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let flow = CheckoutElementsController.CheckoutConfirmationFlow.link(.init(
             confirmOption: makeLinkConfirmOption(),
             configuration: configuration,
-            customerProvider: checkout.getPaymentElement().embeddedPaymentElement.loadResult.customerProvider,
             returnURL: checkout.configuration.returnURL,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
             confirmationChallenge: nil,
