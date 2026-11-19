@@ -20,7 +20,6 @@ public final class ExpressCheckoutElementUIView: UIView {
         static let buttonHeight: CGFloat = 44
         static let buttonSpacing: CGFloat = 8
         static let cornerRadius: CGFloat = 6
-        static let disabledAlpha: CGFloat = 0.5
     }
 
     // MARK: - Private Properties
@@ -272,9 +271,12 @@ public final class ExpressCheckoutElementUIView: UIView {
     /// `PKPaymentButton` doesn't dim itself when disabled (unlike e.g. `PayWithLinkButton`), so this
     /// subclass does it explicitly to avoid a visual mismatch between the two buttons.
     private final class ApplePayButton: PKPaymentButton {
+        /// Matches the 0.5 alpha `PayWithLinkButton` applies to its disabled colors.
+        private static let disabledAlpha: CGFloat = 0.5
+
         override var isEnabled: Bool {
             didSet {
-                alpha = isEnabled ? 1 : Constants.disabledAlpha
+                alpha = isEnabled ? 1 : Self.disabledAlpha
             }
         }
     }
