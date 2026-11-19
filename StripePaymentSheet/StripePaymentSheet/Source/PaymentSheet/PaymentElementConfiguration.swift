@@ -18,7 +18,6 @@ import UIKit
 protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
 
     var allowsDelayedPaymentMethods: Bool { get set }
-    var allowsPaymentMethodsRequiringShippingAddress: Bool { get set }
     var apiClient: STPAPIClient { get set }
     var applePay: PaymentSheet.ApplePayConfiguration? { get set }
     var link: PaymentSheet.LinkConfiguration { get set }
@@ -84,7 +83,6 @@ extension PaymentElementConfiguration {
         var reqs = [PaymentMethodTypeRequirement]()
         if returnURL != nil { reqs.append(.returnURL) }
         if allowsDelayedPaymentMethods { reqs.append(.userSupportsDelayedPaymentMethods) }
-        if allowsPaymentMethodsRequiringShippingAddress { reqs.append(.shippingAddress) }
         if FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
             reqs.append(.financialConnectionsSDK)
         }

@@ -446,7 +446,7 @@ struct CheckoutCartSheet: View {
 
                 CheckoutCartContentView(
                     checkout: checkout,
-                    emailSource: .none,
+                    emailSource: .local,
                     showsCurrencySelectorElement: false,
                     showsShippingAddressSection: true,
                     errorMessage: nil,
