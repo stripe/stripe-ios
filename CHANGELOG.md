@@ -2,6 +2,9 @@ The next release's version bump will so far be:
 MAJOR
 
 ## X.Y.Z - changes pending release
+### Identity
+* [Fixed] Fixed camera orientation, document capture, and layout issues on iPhone Duo.
+
 ### PaymentSheet
 * [Added] Added support for Stripe balance (private preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.

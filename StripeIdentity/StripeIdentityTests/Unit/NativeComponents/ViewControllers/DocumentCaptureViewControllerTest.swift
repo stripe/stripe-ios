@@ -139,7 +139,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
                     documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
                     allClassificationScores: [
                         .idCardFront: frontScore
-                    ]
+                    ],
+                    originalImageSize: CGSize(width: 1080, height: 1920)
                 )
             )
         }
@@ -341,7 +342,12 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             state: .scanning(
                 .front,
                 makeDocumentScannerOutputLegacyWithIddetectorOutput(
-                    .init(classification: .passport, documentBounds: CGRect(), allClassificationScores: [.invalid: 0])
+                    .init(
+                        classification: .passport,
+                        documentBounds: CGRect(),
+                        allClassificationScores: [.invalid: 0],
+                        originalImageSize: CGSize(width: 1080, height: 1920)
+                    )
                 )
             )
         )
@@ -826,10 +832,10 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // verify the state is updated accordingly
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .invalid))
 
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0], originalImageSize: CGSize(width: 1080, height: 1920)))))
 
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardBack))
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0], originalImageSize: CGSize(width: 1080, height: 1920)))))
 
         mockConcurrencyManager.respondToScan(output: nil)
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
@@ -838,7 +844,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockConcurrencyManager.respondToScan(
             output: makeDocumentScannerOutputLegacy(with: .idCardFront, isBlurry: false)
         )
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .idCardFront, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .idCardFront, documentBounds: CGRect(), allClassificationScores: [.invalid: 0], originalImageSize: CGSize(width: 1080, height: 1920)))))
 
         // Mock that scanner found desired classification
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront))
@@ -858,10 +864,10 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // verify the state is updated accordingly
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .invalid))
 
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .invalid, documentBounds: CGRect(), allClassificationScores: [.invalid: 0], originalImageSize: CGSize(width: 1080, height: 1920)))))
 
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardBack))
-        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .idCardBack, documentBounds: CGRect(), allClassificationScores: [.invalid: 0], originalImageSize: CGSize(width: 1080, height: 1920)))))
 
         mockConcurrencyManager.respondToScan(output: nil)
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
@@ -1141,7 +1147,8 @@ extension DocumentCaptureViewControllerTest {
                 documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
                 allClassificationScores: [
                     classification: 0.9
-                ]
+                ],
+                originalImageSize: CGSize(width: 1080, height: 1920)
             ),
             .init(
                 hasBarcode: hasBarcode,

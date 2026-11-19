@@ -57,9 +57,11 @@ import UIKit
     /// - Parameters:
     ///   - captureSession: The capture session to set on this view
     ///   - cameraSessionQueue: The CameraSession's queue to configure the session
+    ///   - completion: Called on the main queue after the session is set on the layer
     func setCaptureSession(
         _ captureSession: AVCaptureSession?,
-        on cameraSessionQueue: DispatchQueue
+        on cameraSessionQueue: DispatchQueue,
+        completion: @escaping () -> Void = {}
     ) {
         // Get reference to videoPreviewLayer on main queue then dispatch to
         // worker queue to set session so it doesn't block main.
@@ -68,6 +70,7 @@ import UIKit
             guard let self = self else { return }
             cameraSessionQueue.async { [weak videoPreviewLayer = self.videoPreviewLayer] in
                 videoPreviewLayer?.session = captureSession
+                DispatchQueue.main.async(execute: completion)
             }
         }
 

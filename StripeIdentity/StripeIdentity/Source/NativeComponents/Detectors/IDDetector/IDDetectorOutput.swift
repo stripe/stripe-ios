@@ -32,6 +32,9 @@ struct IDDetectorOutput: Equatable {
 
     /// The scores of all the classifications detected by the model
     let allClassificationScores: [Classification: Float]
+
+    /// The size of the image the document was detected in
+    let originalImageSize: CGSize
 }
 
 /// Represents a single prediction from the IDDetector ML model.
@@ -200,7 +203,8 @@ extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
             documentBounds: bestPrediction.rect.convertFromNormalizedCenterCropSquare(
                 toOriginalSize: originalImageSize
             ),
-            allClassificationScores: allClassificationScores
+            allClassificationScores: allClassificationScores,
+            originalImageSize: originalImageSize
         )
     }
 
@@ -225,9 +229,10 @@ extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
     }
 
     func computeZoomLevel() -> ZoomLevel {
-        // The full input frame's height is always longer than width, the input to ML model centerCrops the square in the middle with size fullFrame.width x fullFrame.width.
-        // documentBounds.width = boundingBoxWidth/fullFrameWidth, use it calcuate zoom level.
-        let zoomLevel = documentBounds.width * 10
+        // Measure against the center-cropped square the ML model sees, which is narrower than
+        // landscape frames
+        let squareSide = min(originalImageSize.width, originalImageSize.height)
+        let zoomLevel = documentBounds.width * originalImageSize.width / squareSide * 10
 
         if zoomLevel > IDDetectorOutput.maxZoomLevel {
             return .tooClose

@@ -130,12 +130,19 @@ import AVKit
 
             // Remove captureSession from previous view and add it to new one
             oldValue?.setCaptureSession(nil, on: sessionQueue)
-            previewView?.setCaptureSession(session, on: sessionQueue)
+            previewView?.setCaptureSession(session, on: sessionQueue) { [weak self] in
+                if #available(iOS 17.0, *) {
+                    self?.followRotationCoordinator()
+                }
+            }
         }
     }
 
     private let session: AVCaptureSession = AVCaptureSession()
     private var captureConnection: AVCaptureConnection?
+    // An `AVCaptureDevice.RotationCoordinator`, untyped because it's iOS 17+
+    private var rotationCoordinator: NSObject?
+    private var rotationObservations: [NSKeyValueObservation] = []
     private let sessionQueue = DispatchQueue(label: "com.stripe.camera-session")
     private var torchDevice: Torch?
     private var setupResult: SetupResult?
@@ -211,6 +218,9 @@ import AVKit
     /// Attempts to change the video orientation of both the session output
     /// and the preview view layer.
     ///
+    /// - Note: On iOS 17 and later, `orientation` is ignored in favor of the system's
+    ///   recommended rotation.
+    ///
     /// - Parameters:
     ///   - orientation: The desired video orientation
     public func setVideoOrientation(
@@ -219,8 +229,12 @@ import AVKit
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
 
-            self.captureConnection?.videoOrientation = orientation
-            self.previewView?.videoPreviewLayer.connection?.videoOrientation = orientation
+            if #available(iOS 17.0, *) {
+                self.followRotationCoordinator()
+            } else {
+                self.captureConnection?.videoOrientation = orientation
+                self.previewView?.videoPreviewLayer.connection?.videoOrientation = orientation
+            }
         }
     }
 
@@ -321,6 +335,37 @@ import AVKit
 // MARK: - Private
 
 extension CameraSession {
+    /// Unlike the device orientation, the coordinator stays correct while the device lies flat and
+    /// on displays mounted rotated relative to the camera, as on an unfolded iPhone Duo.
+    @available(iOS 17.0, *)
+    fileprivate func followRotationCoordinator() {
+        guard let device = videoDeviceInput?.device, let previewLayer = previewView?.videoPreviewLayer else {
+            return
+        }
+        let coordinator = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: previewLayer)
+        let apply: (AVCaptureDevice.RotationCoordinator, NSKeyValueObservedChange<CGFloat>) -> Void = {
+            [weak self] coordinator, _ in
+            DispatchQueue.main.async { self?.applyRotation(from: coordinator) }
+        }
+        rotationCoordinator = coordinator
+        rotationObservations = [
+            coordinator.observe(\.videoRotationAngleForHorizonLevelPreview, options: .initial, changeHandler: apply),
+            coordinator.observe(\.videoRotationAngleForHorizonLevelCapture, changeHandler: apply),
+        ]
+    }
+
+    @available(iOS 17.0, *)
+    fileprivate func applyRotation(from coordinator: AVCaptureDevice.RotationCoordinator) {
+        for (connection, angle) in [
+            (previewView?.videoPreviewLayer.connection, coordinator.videoRotationAngleForHorizonLevelPreview),
+            (captureConnection, coordinator.videoRotationAngleForHorizonLevelCapture),
+        ] {
+            if let connection, connection.isVideoRotationAngleSupported(angle) {
+                connection.videoRotationAngle = angle
+            }
+        }
+    }
+
     fileprivate func configureSessionInput(
         with position: CameraPosition
     ) -> Future<Void> {

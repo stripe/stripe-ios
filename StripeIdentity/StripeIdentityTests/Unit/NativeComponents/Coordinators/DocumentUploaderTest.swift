@@ -57,7 +57,8 @@ final class DocumentUploaderTest: XCTestCase {
                 .idCardBack: 0.8,
                 .passport: 0.7,
                 .invalid: 0.6,
-            ]
+            ],
+            originalImageSize: CGSize(width: 1080, height: 1920)
         ),
         .init(
             hasBarcode: true,

@@ -41,6 +41,8 @@ class IdentityFlowView: UIView {
         )
         static let buttonBottomSpacing: CGFloat = 16
         static let stackViewSpacing: CGFloat = 8
+        // Wider than any phone, so only wider screens are affected
+        static let maxContentWidth: CGFloat = 480
 
         static func buttonConfiguration(
             isPrimary: Bool,
@@ -136,6 +138,14 @@ class IdentityFlowView: UIView {
 
     private let buttonTopContentView = HTMLTextView()
     private let buttonBottomContentContainer = UIView()
+    private let contentColumnGuide = UILayoutGuide()
+    // Required, so conflicting content constraints, like a hidden camera view's, can't narrow it
+    private lazy var contentColumnFillsSafeArea = contentColumnGuide.widthAnchor.constraint(
+        equalTo: safeAreaLayoutGuide.widthAnchor
+    )
+    private lazy var contentColumnHasMaxWidth = contentColumnGuide.widthAnchor.constraint(
+        equalToConstant: Style.maxContentWidth
+    )
 
     private var flowViewDelegate: IdentityFlowViewDelegate?
 
@@ -200,6 +210,12 @@ class IdentityFlowView: UIView {
     }
 
     override func layoutSubviews() {
+        let isSafeAreaWiderThanMax = bounds.inset(by: safeAreaInsets).width > Style.maxContentWidth
+        if contentColumnHasMaxWidth.isActive != isSafeAreaWiderThanMax {
+            NSLayoutConstraint.deactivate([contentColumnFillsSafeArea, contentColumnHasMaxWidth])
+            (isSafeAreaWiderThanMax ? contentColumnHasMaxWidth : contentColumnFillsSafeArea).isActive = true
+        }
+
         super.layoutSubviews()
 
         // Update the scrollView's inset based on the height of the button
@@ -252,7 +268,7 @@ extension IdentityFlowView {
         scrollContainerStackView.translatesAutoresizingMaskIntoConstraints = false
 
         // Arrange container stack view: scroll + button
-        addAndPinSubview(scrollView)
+        addSubview(scrollView)
         addSubview(buttonTopBackgroundView)
         buttonTopBackgroundView.addSubview(buttonTopContentView)
 
@@ -262,33 +278,53 @@ extension IdentityFlowView {
             buttonStackView,
             insets: Style.buttonInsets
         )
+
+        addLayoutGuide(contentColumnGuide)
     }
 
     fileprivate func installConstraints() {
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         buttonBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         buttonTopBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         buttonTopContentView.translatesAutoresizingMaskIntoConstraints = false
 
+        // The view's center, not the safe area's, whose insets can be one-sided (iPhone Duo)
+        let centeredInView = contentColumnGuide.centerXAnchor.constraint(equalTo: centerXAnchor)
+        centeredInView.priority = .defaultLow
+
         NSLayoutConstraint.activate([
+            // Below the top safe area, so scrolled content can't show above the navigation bar
+            scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            contentColumnGuide.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            contentColumnGuide.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            contentColumnGuide.leadingAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.leadingAnchor),
+            contentColumnGuide.trailingAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.trailingAnchor),
+            contentColumnFillsSafeArea,
+            centeredInView,
+
             scrollContainerStackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             scrollContainerStackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            scrollContainerStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            scrollContainerStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            scrollContainerStackView.leadingAnchor.constraint(equalTo: contentColumnGuide.leadingAnchor),
+            scrollContainerStackView.trailingAnchor.constraint(equalTo: contentColumnGuide.trailingAnchor),
 
             // Constrain buttonTop top of buttons
-            buttonTopBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            buttonTopBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            buttonTopBackgroundView.leadingAnchor.constraint(equalTo: contentColumnGuide.leadingAnchor),
+            buttonTopBackgroundView.trailingAnchor.constraint(equalTo: contentColumnGuide.trailingAnchor),
             buttonTopBackgroundView.bottomAnchor.constraint(equalTo: buttonBackgroundView.topAnchor),
 
-            buttonTopContentView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
+            buttonTopContentView.centerXAnchor.constraint(equalTo: contentColumnGuide.centerXAnchor),
             // Limit width without pinning
-            buttonTopContentView.widthAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.widthAnchor, constant: -(Style.buttonInsets.leading + Style.buttonInsets.trailing)),
+            buttonTopContentView.widthAnchor.constraint(lessThanOrEqualTo: contentColumnGuide.widthAnchor, constant: -(Style.buttonInsets.leading + Style.buttonInsets.trailing)),
             buttonTopContentView.topAnchor.constraint(equalTo: buttonTopBackgroundView.topAnchor, constant: Style.buttontopInsets.top),
             buttonTopContentView.bottomAnchor.constraint(equalTo: buttonTopBackgroundView.bottomAnchor, constant: Style.buttontopInsets.bottom),
 
             // Constrain buttons to bottom
-            buttonBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            buttonBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            buttonBackgroundView.leadingAnchor.constraint(equalTo: contentColumnGuide.leadingAnchor),
+            buttonBackgroundView.trailingAnchor.constraint(equalTo: contentColumnGuide.trailingAnchor),
             buttonBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
 
             // Make scroll view's content full-width
@@ -314,12 +350,11 @@ extension IdentityFlowView {
         primaryButtonStyle: IdentityVerificationSheet.Configuration.PrimaryButtonStyle,
         secondaryButtonStyle: IdentityVerificationSheet.Configuration.SecondaryButtonStyle
     ) {
-        // If there are no buttons to display, hide the container view
+        // Hide only the buttons: the container's background keeps covering scrolled content
+        buttonStackView.isHidden = buttonViewModels.isEmpty
         guard buttonViewModels.count > 0 else {
-            buttonBackgroundView.isHidden = true
             return
         }
-        buttonBackgroundView.isHidden = false
 
         // Configure buttons and tapActions based from models after we ensure
         // there are the right number of buttons
