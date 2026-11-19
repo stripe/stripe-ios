@@ -216,13 +216,15 @@ public final class EmbeddedPaymentElement {
             case .applePay:
                 return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
             case .link(let confirmOption):
-                // A card with Link signup is shown in the card row, not the Link row
+                // If `signupConfirmParams` exists, this is a card the customer entered in the card form with Link signup
+                // opted in (`.signUp`), not a Link wallet selection. It's shown in the card row, so check that row, not the Link button.
                 if let signupConfirmParams = confirmOption.signupConfirmParams {
                     return loadResult.paymentMethodTypes.contains(signupConfirmParams.paymentMethodType)
                 }
                 return PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
             case .saved(paymentMethod: let paymentMethod, confirmParams: let confirmParams):
-                // A linked bank is shown in its Instant Debits or Link Card Brand row, not the saved payment methods
+                // If `instantDebitsLinkedBank` exists, this is a bank the customer linked in the Instant Debits or Link Card Brand
+                // form, not a saved payment method. It's shown in that form's row, so check that row, not the saved payment methods.
                 if let confirmParams, confirmParams.instantDebitsLinkedBank != nil {
                     return loadResult.paymentMethodTypes.contains(confirmParams.paymentMethodType)
                 }
