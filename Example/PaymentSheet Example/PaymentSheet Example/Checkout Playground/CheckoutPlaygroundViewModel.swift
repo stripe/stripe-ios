@@ -321,6 +321,10 @@ extension CheckoutPlayground {
             apply(Settings())
         }
 
+        var exportURL: URL? {
+            settings.exportURL
+        }
+
         private var settings: Settings {
             Settings(
                 uiFramework: uiFramework,
