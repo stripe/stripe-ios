@@ -289,7 +289,12 @@ final class EmbeddedLinkInlineVerificationView: UIView {
         logo.contentMode = .scaleAspectFit
         logo.isAccessibilityElement = true
         logo.accessibilityLabel = linkBrand.accessibilityDisplayName
-        logo.heightAnchor.constraint(equalToConstant: titleLabel.font.pointSize).isActive = true
+        // Match the image's aspect ratio so the scaled logo isn't centered in its unscaled width, which would inset it from the leading edge.
+        let logoSize = linkBrand.paymentSheetLogoImage.size
+        NSLayoutConstraint.activate([
+            logo.heightAnchor.constraint(equalToConstant: titleLabel.font.pointSize),
+            logo.widthAnchor.constraint(equalTo: logo.heightAnchor, multiplier: logoSize.width / logoSize.height),
+        ])
         let footer = UIStackView(arrangedSubviews: [logo, UIView()])
 
         let content = UIStackView(arrangedSubviews: [header, makeDivider(), focusRegion, makeDivider(), footer])
