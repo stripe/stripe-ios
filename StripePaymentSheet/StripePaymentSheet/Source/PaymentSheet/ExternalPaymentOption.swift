@@ -10,7 +10,7 @@ import Foundation
 
 enum ExternalPaymentOptionConfirmHandler {
     case custom(PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod, PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodConfirmHandler)
-    case external(PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler)
+    case external((_ externalPaymentMethodType: String, _ billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult)
 }
 
 /// A type that can represent either a custom or external payment method and handle confirmation
@@ -64,10 +64,10 @@ class ExternalPaymentOption {
     /// Creates an ExternalPaymentOption from an ExternalPaymentMethod.
     /// - Parameters:
     ///   - externalPaymentMethod: The external payment method to use
-    ///   - configuration: `PaymentSheet.ExternalPaymentMethodConfiguration` containing the confirm handler
+    ///   - confirmHandler: The confirm handler configured via `PaymentSheet.ExternalPaymentMethodConfiguration`
     /// - Returns: A new ExternalPaymentOption instance or nil if creation fails
-    static func from(_ externalPaymentMethod: ExternalPaymentMethod, configuration: PaymentSheet.ExternalPaymentMethodConfiguration?) -> ExternalPaymentOption? {
-        guard let confirmHandler = configuration?.externalPaymentMethodConfirmHandler else {
+    static func from(_ externalPaymentMethod: ExternalPaymentMethod, confirmHandler: ((_ externalPaymentMethodType: String, _ billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult)?) -> ExternalPaymentOption? {
+        guard let confirmHandler else {
             assertionFailure("Attempting to create an external payment method, but externalPaymentMethodConfirmHandler isn't set!")
             return nil
         }

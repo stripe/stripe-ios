@@ -102,7 +102,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             externalPaymentMethodConfirmHandler: { _, _ in .completed }
         )
         let externalPaymentOption = try XCTUnwrap(
-            ExternalPaymentOption.from(externalPaymentMethod, configuration: externalConfiguration)
+            ExternalPaymentOption.from(externalPaymentMethod, confirmHandler: externalConfiguration.externalPaymentMethodConfirmHandler)
         )
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Jane Doe"
