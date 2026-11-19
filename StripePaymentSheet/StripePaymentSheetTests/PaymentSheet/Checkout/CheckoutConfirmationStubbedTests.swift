@@ -1060,7 +1060,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     }
 
     private func confirmLinkWalletAttempt(_ wallet: PayWithLinkViewController) async -> PaymentSheetResult {
-        guard case let .withPaymentDetails(_, account, paymentDetails, confirmationExtras, _) = makeLinkConfirmOption() else {
+        guard case let .withPaymentDetails(_, account, paymentDetails, confirmationExtras, _) = CheckoutTestHelpers.makeLinkConfirmOption() else {
             preconditionFailure("Expected Link payment details fixture")
         }
         return await withCheckedContinuation { continuation in
@@ -1114,7 +1114,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let flow = CheckoutElementsController.CheckoutConfirmationFlow.link(.init(
-            confirmOption: makeLinkConfirmOption(),
+            confirmOption: CheckoutTestHelpers.makeLinkConfirmOption(),
             configuration: configuration,
             returnURL: checkout.configuration.returnURL,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
@@ -1147,7 +1147,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let flow = CheckoutElementsController.CheckoutConfirmationFlow.link(.init(
-            confirmOption: makeLinkConfirmOption(),
+            confirmOption: CheckoutTestHelpers.makeLinkConfirmOption(),
             configuration: configuration,
             returnURL: checkout.configuration.returnURL,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
@@ -1283,6 +1283,173 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
     }
 
+    // MARK: - Passive captcha
+
+    // These confirm through `confirm(from:)` with the `ConfirmationChallenge` Checkout builds from the session and a
+    // real passive hCaptcha, so only Stripe API requests are stubbed.
+
+    func testNewCardSendsTopLevelPassiveCaptchaToken() async throws {
+        let window = makeKeyWindow()
+        defer { window.isHidden = true }
+        // Given passive captcha is on and the customer entered a new card
+        let checkout = try await makePassiveCaptchaCheckout()
+        select(.new(confirmParams: makeConfirmParams(type: .stripe(.card))), in: checkout)
+        let confirm = stubConfirm { params in
+            // Then /confirm sends the token at the top level only
+            XCTAssertEqual(params["payment_method_data[type]"], "card")
+            XCTAssertFalse((params["passive_captcha_token"] ?? "").isEmpty)
+            XCTAssertNil(params["payment_method_data[radar_options][hcaptcha_token]"])
+        }
+
+        // When the merchant confirms
+        let result = await checkout.confirm(from: window.rootViewController)
+
+        assertSucceeded(result)
+        await fulfillment(of: [confirm], timeout: 10)
+    }
+
+    func testNewCardWithoutPassiveCaptchaSendsNoToken() async throws {
+        let window = makeKeyWindow()
+        defer { window.isHidden = true }
+        // Given passive captcha is off and the customer entered a new card
+        let checkout = try await makePassiveCaptchaCheckout(passiveCaptcha: false)
+        select(.new(confirmParams: makeConfirmParams(type: .stripe(.card))), in: checkout)
+        let confirm = stubConfirm { params in
+            // Then /confirm sends no token
+            XCTAssertNil(params["passive_captcha_token"])
+            XCTAssertNil(params["payment_method_data[radar_options][hcaptcha_token]"])
+        }
+
+        // When the merchant confirms
+        let result = await checkout.confirm(from: window.rootViewController)
+
+        assertSucceeded(result)
+        await fulfillment(of: [confirm], timeout: 10)
+    }
+
+    func testSavedCardSendsNoPassiveCaptchaToken() async throws {
+        let window = makeKeyWindow()
+        defer { window.isHidden = true }
+        // Given passive captcha is on and the customer selected a previously saved card
+        let checkout = try await makePassiveCaptchaCheckout()
+        let paymentMethod = STPPaymentMethod._testCard()
+        select(.saved(paymentMethod: paymentMethod, confirmParams: nil), in: checkout)
+        let confirm = stubConfirm { params in
+            // Then /confirm sends the saved card without a token
+            XCTAssertEqual(params["payment_method"], paymentMethod.stripeId)
+            XCTAssertNil(params["passive_captcha_token"])
+        }
+
+        // When the merchant confirms
+        let result = await checkout.confirm(from: window.rootViewController)
+
+        assertSucceeded(result)
+        await fulfillment(of: [confirm], timeout: 10)
+    }
+
+    func testNewLinkPaymentMethodSendsTopLevelPassiveCaptchaToken() async throws {
+        let window = makeKeyWindow()
+        defer { window.isHidden = true }
+        // Given passive captcha is on and the customer pays with a Link card outside passthrough mode
+        let checkout = try await makePassiveCaptchaCheckout()
+        select(.link(option: CheckoutTestHelpers.makeLinkConfirmOption()), in: checkout)
+        let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
+        let confirm = stubConfirm { params in
+            // Then /confirm creates a Link payment method and sends the token at the top level only
+            XCTAssertEqual(params["payment_method_data[type]"], "link")
+            XCTAssertFalse((params["passive_captcha_token"] ?? "").isEmpty)
+            XCTAssertNil(params["payment_method_data[radar_options][hcaptcha_token]"])
+        }
+
+        // When the merchant confirms
+        let result = await checkout.confirm(from: window.rootViewController)
+
+        assertSucceeded(result)
+        await fulfillment(of: [confirm, logout], timeout: 10)
+    }
+
+    func testLinkSharedPaymentMethodSendsTopLevelPassiveCaptchaToken() async throws {
+        let window = makeKeyWindow()
+        defer { window.isHidden = true }
+        // Given passive captcha and Link passthrough mode are on, and the customer pays with a Link card
+        let checkout = try await makePassiveCaptchaCheckout(linkPassthrough: true)
+        select(.link(option: CheckoutTestHelpers.makeLinkConfirmOption()), in: checkout)
+        let logout = stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
+        let share = expectation(description: "Link payment details shared")
+        stub { request in
+            request.url?.path.hasSuffix("/consumers/payment_details/share") == true
+        } response: { _ in
+            share.fulfill()
+            return HTTPStubsResponse(jsonObject: ["payment_method": STPPaymentMethod._testCardJSON], statusCode: 200, headers: nil)
+        }
+        let confirm = stubConfirm { params in
+            // Then /confirm sends the payment method Link shared, by ID, with a top-level token
+            XCTAssertEqual(params["payment_method"], "pm_123card")
+            XCTAssertFalse((params["passive_captcha_token"] ?? "").isEmpty)
+        }
+
+        // When the merchant confirms
+        let result = await checkout.confirm(from: window.rootViewController)
+
+        assertSucceeded(result)
+        await fulfillment(of: [share, confirm, logout], timeout: 10, enforceOrder: true)
+    }
+
+    /// HCaptcha's web view needs a key window in the app's scene.
+    private func makeKeyWindow() -> UIWindow {
+        let window: UIWindow
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            window = UIWindow(windowScene: windowScene)
+        } else {
+            window = UIWindow(frame: UIScreen.main.bounds)
+        }
+        window.rootViewController = UIViewController()
+        window.makeKeyAndVisible()
+        return window
+    }
+
+    private func makePassiveCaptchaCheckout(
+        passiveCaptcha: Bool = true,
+        linkPassthrough: Bool = false
+    ) async throws -> CheckoutElementsController {
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["customer"] = ["id": "cus_123"]
+        if passiveCaptcha {
+            // OCS mobile test key from https://dashboard.hcaptcha.com/sites/edit/143aadb6-fb60-4ab6-b128-f7fe53426d4a
+            json["flags"] = ["elements_enable_passive_captcha": true]
+            json["passive_captcha"] = ["site_key": "143aadb6-fb60-4ab6-b128-f7fe53426d4a"]
+        }
+        if linkPassthrough {
+            json["link_settings"] = [
+                "link_funding_sources": ["CARD"],
+                "link_passthrough_mode_enabled": true,
+            ]
+        }
+        let checkout = try await makeCheckout(apiResponse: CheckoutClientAPIResponse.decode(fromAPIResponse: json))
+        XCTAssertEqual(checkout.session.elementsSession.passiveCaptchaData != nil, passiveCaptcha)
+        XCTAssertEqual(checkout.session.elementsSession.linkPassthroughModeEnabled, linkPassthrough)
+        return checkout
+    }
+
+    private func select(_ paymentOption: PaymentOption, in checkout: CheckoutElementsController) {
+        let element = checkout.getPaymentElement()
+        element.embeddedPaymentElement._test_paymentOption = paymentOption
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+        element.paymentOptionSourceOfTruthIsFlowController = false
+    }
+
+    private func stubConfirm(inspect: @escaping ([String: String]) -> Void) -> XCTestExpectation {
+        let confirm = expectation(description: "Checkout Session confirmed")
+        stub { request in
+            request.url?.path.hasSuffix("/confirm") == true
+        } response: { request in
+            inspect(RequestBodyTestHelpers.formEncodedBodyParams(from: request, omittingEmptyValues: true))
+            confirm.fulfill()
+            return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: nil)
+        }
+        return confirm
+    }
+
     // MARK: - Helpers
 
     private static var confirmedSessionJSON: [AnyHashable: Any] {
@@ -1378,47 +1545,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             confirmParams.paymentMethodParams.card = card
         }
         return confirmParams
-    }
-
-    private func makeLinkConfirmOption() -> PaymentSheet.LinkConfirmOption {
-        .withPaymentDetails(
-            brand: .link,
-            account: .init(
-                email: "test@example.com",
-                session: .make(
-                    clientSecret: "cs_xxx",
-                    emailAddress: "test@example.com",
-                    redactedFormattedPhoneNumber: "(***) *** **55",
-                    unredactedPhoneNumber: "(555) 555-5555",
-                    phoneNumberCountry: "US",
-                    verificationSessions: [.init(type: .sms, state: .verified)],
-                    supportedPaymentDetailsTypes: [ParsedEnum(.card)],
-                    mobileFallbackWebviewParams: nil
-                ),
-                publishableKey: "pk_xxx",
-                displayablePaymentDetails: nil,
-                useMobileEndpoints: false,
-                canSyncAttestationState: false
-            ),
-            paymentDetails: .init(
-                stripeID: "pd1",
-                details: .card(card: .init(
-                    expiryYear: 2055,
-                    expiryMonth: 12,
-                    brand: "visa",
-                    networks: ["visa"],
-                    last4: "1234",
-                    funding: .credit,
-                    checks: nil
-                )),
-                billingAddress: nil,
-                billingEmailAddress: "test@example.com",
-                nickname: nil,
-                isDefault: true
-            ),
-            confirmationExtras: nil,
-            shippingAddress: nil
-        )
     }
 
     nonisolated private static func pollResponse(
