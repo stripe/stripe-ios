@@ -598,6 +598,13 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             return
         }
 
+        // PaymentIntents and SetupIntents send their own ID. Deferred intents and Checkout Sessions send the elements
+        // session ID, as Android and web do. The backend only accepts a Checkout Session ID along with a merchant token.
+        let intentToken: String? = switch context.intent {
+        case .paymentIntent, .setupIntent: context.intent.stripeId
+        case .deferredIntent, .checkout: context.elementsSession.sessionID
+        }
+
         // Provides either the existing session or fetches a new session.
         let sessionProvider: (@escaping (Result<ConsumerSession, Error>) -> Void) -> Void = { completion in
             if let existingSession = linkAccount.currentSession {
@@ -617,7 +624,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                 session.createLinkAccountSession(
                     with: linkAccount.apiClient,
                     linkMode: self?.context.elementsSession.linkSettings?.linkMode,
-                    intentToken: self?.context.intent.stripeId ?? self?.context.elementsSession.sessionID,
+                    intentToken: intentToken,
                     permissions: requestedPermissions,
                     merchantToken: requestedPermissions == nil ? nil : self?.context.elementsSession.accountID
                 ) { [session, weak self] linkAccountSessionResult in
