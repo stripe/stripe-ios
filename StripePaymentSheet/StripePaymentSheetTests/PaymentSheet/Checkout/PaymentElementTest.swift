@@ -190,6 +190,46 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertEqual(LinkAccountContext.shared.account?.email, account.email)
     }
 
+    func testUpdateEmailLooksUpNewEmailInLink() async throws {
+        // Given Link is enabled, the session has no server email, and the previous email's Link account is loaded
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: Self.openSessionJSON(paymentMethodTypes: ["card", "link"]))
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: response))
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount(
+            email: "previous@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            apiClient: checkout.apiClient,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        var lookedUpEmails: [String?] = []
+        HTTPStubs.stubRequests(passingTest: { $0.url?.path.hasSuffix("/sessions/lookup") == true }) { request in
+            let email = RequestBodyTestHelpers.formEncodedBodyParams(from: request)["email_address"]
+            lookedUpEmails.append(email)
+            // A Link consumer for the looked-up email
+            return HTTPStubsResponse(jsonObject: [
+                "exists": true,
+                "publishable_key": "pk_test_abc123",
+                "consumer_session": [
+                    "client_secret": "pscs_abc123",
+                    "email_address": email ?? "",
+                    "redacted_formatted_phone_number": "(***) *** **12",
+                    "verification_sessions": [],
+                ],
+            ], statusCode: 200, headers: nil)
+        }
+
+        // When the merchant updates the email
+        try await checkout.updateEmail("new@example.com")
+
+        // Then Link looks up the new email, and its account replaces the previous email's account
+        XCTAssertEqual(lookedUpEmails, ["new@example.com"])
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "new@example.com")
+    }
+
     func testConfigurationSetsCheckoutMerchantDisplayName() async throws {
         // Given Checkout merchant display name
         var checkoutConfiguration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")
