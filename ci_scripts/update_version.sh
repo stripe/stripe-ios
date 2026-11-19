@@ -46,13 +46,3 @@ extension StripeAPIConfiguration {
 EOF
 
 echo "Successfully updated 'StripeAPIConfiguration+Version.swift'"
-
-
-# Replace the version in all .podspec files
-for podspec in ${script_dir}/../*.podspec
-do
-  cat $podspec | sed -E "s|(s\.version *= *)'(.*)'|\1'$release_version'|" > $podspec.copy
-  mv $podspec.copy $podspec
-
-  echo "Successfully updated '$(basename $podspec)'"
-done

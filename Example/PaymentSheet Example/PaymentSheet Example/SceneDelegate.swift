@@ -32,7 +32,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 // normally does, if any.
 
                 // In this case, we'll pass it to the playground for test configuration.
-                if url.scheme == "stp-paymentsheet-playground" {
+                if CheckoutPlayground.Settings.isExportURL(url) {
+                    importCheckoutPlaygroundSettings(from: url, windowScene: windowScene)
+                } else if url.scheme == "stp-paymentsheet-playground" {
                     launchWith(base64String: url.query!, windowScene: windowScene)
                 }
             }
@@ -74,9 +76,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let settings = ProcessInfo.processInfo.environment["STP_CHECKOUT_PLAYGROUND_SETTINGS"]
             .flatMap { Data(base64Encoded: $0) }
             .flatMap { try? JSONDecoder().decode(CheckoutPlayground.Settings.self, from: $0) }
-        let hostingController = UIHostingController(rootView: CheckoutPlaygroundView(settings: settings))
+        launchCheckoutElements(settings: settings, windowScene: windowScene)
+    }
+
+    func launchCheckoutElements(settings: CheckoutPlayground.Settings?, errorMessage: String? = nil, windowScene: UIWindowScene) {
+        let hostingController = UIHostingController(rootView: CheckoutPlaygroundView(settings: settings, errorMessage: errorMessage))
         let navigationController = UINavigationController(rootViewController: hostingController)
         windowScene.windows.first!.rootViewController = navigationController
+    }
+
+    /// Opens the Checkout Playground from a link made by its QR export. Settings the link leaves out, such as
+    /// appearance, keep their current values. Saves the settings first so they persist like settings changed
+    /// in the playground.
+    func importCheckoutPlaygroundSettings(from url: URL, windowScene: UIWindowScene) {
+        let currentSettings = UserDefaults.standard.data(forKey: CheckoutPlayground.Settings.nsUserDefaultsKey)
+            .flatMap { try? JSONDecoder().decode(CheckoutPlayground.Settings.self, from: $0) }
+        guard let settings = CheckoutPlayground.Settings(exportURL: url, base: currentSettings ?? CheckoutPlayground.Settings()),
+              let data = try? JSONEncoder().encode(settings) else {
+            launchCheckoutElements(
+                settings: nil,
+                errorMessage: "Couldn't import Checkout Playground settings from the link.",
+                windowScene: windowScene
+            )
+            return
+        }
+        UserDefaults.standard.set(data, forKey: CheckoutPlayground.Settings.nsUserDefaultsKey)
+        launchCheckoutElements(settings: nil, windowScene: windowScene)
     }
 
     func scene(

@@ -166,7 +166,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
             address: PaymentSheet.Address(
                 city: "South San Francisco",
@@ -240,7 +239,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
             address: PaymentSheet.Address(
                 city: "South San Francisco",
@@ -395,7 +393,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
             address: PaymentSheet.Address(
                 city: "São Paulo",
@@ -938,7 +935,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         configuration.billingDetailsCollectionConfiguration.name = .never
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.customer = PaymentSheet.CustomerConfiguration(
             id: customerAndCustomerSession.customer,
             customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
@@ -1346,7 +1342,6 @@ extension PaymentSheetLPMConfirmFlowTests {
             var config = PaymentSheet.Configuration()
             config.allowsDelayedPaymentMethods = true
             config.returnURL = "https://foo.com"
-            config.allowsPaymentMethodsRequiringShippingAddress = true
             return config
         }()
         configuration.apiClient = apiClient
@@ -1903,7 +1898,6 @@ extension PaymentSheetLPMConfirmFlowTests {
         configuration.apiClient = apiClient
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.customer = PaymentSheet.CustomerConfiguration(
             id: customerAndEphemeralKey.customer,
             ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret

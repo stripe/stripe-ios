@@ -155,36 +155,6 @@ platform :ios do
   end
 
 
-  lane :installation_cocoapods_without_frameworks_objc do
-    Dir.chdir('..') do
-      sh('./Tests/installation_tests/cocoapods/setup.sh without_frameworks_objc')
-    end
-    run_tests(
-      workspace: './Tests/installation_tests/cocoapods/without_frameworks_objc/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
-    )
-  end
-
-  lane :installation_cocoapods_frameworks_objc do
-    Dir.chdir('..') do
-      sh('./Tests/installation_tests/cocoapods/setup.sh with_frameworks_objc')
-    end
-    run_tests(
-      workspace: './Tests/installation_tests/cocoapods/with_frameworks_objc/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
-    )
-  end
-
-  lane :installation_cocoapods_frameworks_swift do
-    Dir.chdir('..') do
-      sh('./Tests/installation_tests/cocoapods/setup.sh with_frameworks_swift')
-    end
-    run_tests(
-      workspace: './Tests/installation_tests/cocoapods/with_frameworks_swift/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
-    )
-  end
-
   lane :installation_spm_objc do
     run_tests(
       workspace: './Tests/installation_tests/swift_package_manager/with_objc/SPMTest.xcworkspace',
