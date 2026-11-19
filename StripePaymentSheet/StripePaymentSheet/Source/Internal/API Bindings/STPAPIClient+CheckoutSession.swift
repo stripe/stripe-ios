@@ -68,12 +68,6 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     private let input: ConfirmationInput
 
-    /// The data used to create a new PaymentMethod during confirmation, instead of a PaymentMethod ID.
-    var paymentMethodData: STPPaymentMethodParams? {
-        guard case .withPaymentMethodData(let data, _) = input else { return nil }
-        return data
-    }
-
     var inputParameters: [String: Any] {
         switch input {
         case .withoutPaymentMethod(let customerData):
