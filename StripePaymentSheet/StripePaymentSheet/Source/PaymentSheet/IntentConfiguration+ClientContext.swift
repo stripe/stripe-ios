@@ -35,6 +35,8 @@ extension PaymentSheet.IntentConfiguration {
 
         // Map common properties
         clientContext.paymentMethodTypes = paymentMethodTypes
+        clientContext.allowedPaymentMethodTypes = allowedPaymentMethodTypes
+        clientContext.excludedPaymentMethodTypes = excludedPaymentMethodTypes
         clientContext.onBehalfOf = onBehalfOf
         clientContext.paymentMethodConfiguration = paymentMethodConfigurationId
         clientContext.customer = customerId
