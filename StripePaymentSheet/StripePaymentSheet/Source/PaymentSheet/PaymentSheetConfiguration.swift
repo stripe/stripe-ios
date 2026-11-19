@@ -332,7 +332,8 @@ extension PaymentSheet {
 
     /// Configuration related to the Stripe Customer
     public struct CustomerConfiguration {
-        /// The identifier of the Stripe Customer object, if one was provided.
+        /// The identifier of the Stripe Customer object. Only provided for the legacy ephemeral key integration;
+        /// a CustomerSession's customer is determined from the Elements Session.
         /// See https://stripe.com/docs/api/customers/object#customer_object-id
         let id: String?
 
@@ -351,7 +352,8 @@ extension PaymentSheet {
             message: "You no longer need to pass a Customer ID."
         )
         public init(id: String, customerSessionClientSecret: String) {
-            self.id = id
+            // The customer is determined from the CustomerSession, so the ID is ignored.
+            self.id = nil
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
 
             stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
@@ -366,12 +368,15 @@ extension PaymentSheet {
             stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
         }
 
-        /// Resolves the customer ID. For CustomerSession integrations, the customer resolved server-side from the CustomerSession is authoritative once the Elements Session has loaded.
+        /// Resolves the customer ID. For CustomerSession integrations, the customer is determined only by the
+        /// Elements Session, so this is nil until it has loaded. The legacy ephemeral key integration uses `id`.
         func resolvedID(elementsSession: STPElementsSession?) -> String? {
-            guard case .customerSession = customerAccessProvider else {
+            switch customerAccessProvider {
+            case .customerSession:
+                return elementsSession?.customer?.customerSession.customer
+            case .legacyCustomerEphemeralKey:
                 return id
             }
-            return elementsSession?.customer?.customerSession.customer ?? id
         }
     }
     /// TermsDisplay controls how mandates or other legal agreements are displayed. Use 'never' to never display legal agreements.

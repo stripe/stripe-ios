@@ -269,7 +269,7 @@ final class PaymentSheetLoader {
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod: String? = {
             // Only send a default associated with a resolved customer.
-            guard let customerID = customerProvider.customerID else {
+            guard let customerID = customerProvider.resolvedCustomerID(elementsSession: nil) else {
                 return nil
             }
             return defaultStripePaymentMethodId(forCustomerID: customerID)

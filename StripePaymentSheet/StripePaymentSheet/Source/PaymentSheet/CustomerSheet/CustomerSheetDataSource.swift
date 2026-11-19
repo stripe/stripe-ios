@@ -39,8 +39,8 @@ class CustomerSheetDataSource {
                 let fetchSessionsTask = Task { try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret() }
                 defer { fetchSessionsTask.cancel() }
 
-                let (elementSession, customerSessionClientSecret) = try await fetchSessionsTask.value
-                let customerId = customerSessionClientSecret.customerId
+                let (elementSession, cachedCustomerSessionClientSecret) = try await fetchSessionsTask.value
+                let customerId = cachedCustomerSessionClientSecret.customerId
                 let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId, elementsSession: elementSession)
 
                 let savedPaymentMethods = elementSession.customer?.paymentMethods.filter({ paymentMethod in

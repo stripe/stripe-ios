@@ -19,21 +19,19 @@ final class CustomerProviderTests: XCTestCase {
         let provider = CustomerProvider(customer: nil)
 
         XCTAssertFalse(provider.hasCustomer)
-        XCTAssertNil(provider.customerID)
+        XCTAssertNil(provider.resolvedCustomerID(elementsSession: nil))
     }
 
     func testMerchantCustomerIdentity() {
-        let customers: [PaymentSheet.CustomerConfiguration] = [
-            .init(id: "cus_merchant", ephemeralKeySecret: "ek_test"),
-            .init(id: "cus_merchant", customerSessionClientSecret: "cuss_test"),
-        ]
+        // Given an ephemeral key configuration, the merchant's ID is the customer
+        let ephemeralKeyProvider = CustomerProvider(customer: .init(id: "cus_merchant", ephemeralKeySecret: "ek_test"))
+        XCTAssertTrue(ephemeralKeyProvider.hasCustomer)
+        XCTAssertEqual(ephemeralKeyProvider.resolvedCustomerID(elementsSession: nil), "cus_merchant")
 
-        for customer in customers {
-            let provider = CustomerProvider(customer: customer)
-
-            XCTAssertTrue(provider.hasCustomer)
-            XCTAssertEqual(provider.customerID, "cus_merchant")
-        }
+        // ...but a CustomerSession configuration ignores any explicit ID; the customer comes from the Elements Session
+        let customerSessionProvider = CustomerProvider(customer: .init(id: "cus_merchant", customerSessionClientSecret: "cuss_test"))
+        XCTAssertTrue(customerSessionProvider.hasCustomer)
+        XCTAssertNil(customerSessionProvider.resolvedCustomerID(elementsSession: nil))
     }
 
     func testCheckoutCustomerIdentity() {
@@ -43,13 +41,13 @@ final class CustomerProviderTests: XCTestCase {
         let provider = CustomerProvider(checkoutSession: session)
 
         XCTAssertTrue(provider.hasCustomer)
-        XCTAssertEqual(provider.customerID, "cus_checkout")
+        XCTAssertEqual(provider.resolvedCustomerID(elementsSession: nil), "cus_checkout")
 
         let guestProvider = CustomerProvider(
             checkoutSession: CheckoutTestHelpers.makeSession().makePublicSession()
         )
         XCTAssertFalse(guestProvider.hasCustomer)
-        XCTAssertNil(guestProvider.customerID)
+        XCTAssertNil(guestProvider.resolvedCustomerID(elementsSession: nil))
     }
 
     func testLoaderOrdersSavedMethodsUsingCheckoutCustomerDefault() {

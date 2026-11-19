@@ -105,12 +105,21 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssertEqual(resolvedID, "cus_456")
     }
 
-    func testResolvedID_customerSession_fallsBackToExplicitIDWhenElementsSessionUnavailable() {
-        // Before the Elements Session has loaded, fall back to the explicit ID (if any) so pre-fetch usages
-        // (e.g. the default payment method request param) still work.
+    func testResolvedID_customerSession_ignoresExplicitID() {
+        // Given a CustomerSession configuration created with the deprecated initializer and an explicit ID
         let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", customerSessionClientSecret: "cuss_12345")
-        let resolvedID = customerConfig.resolvedID(elementsSession: nil)
-        XCTAssertEqual(resolvedID, "cus_12345")
+
+        // Then the ID is unknown until the Elements Session loads...
+        XCTAssertNil(customerConfig.resolvedID(elementsSession: nil))
+
+        // ...and the Elements Session's customer is used, not the explicit ID
+        let resolvedID = customerConfig.resolvedID(elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"))
+        XCTAssertEqual(resolvedID, "cus_456")
+    }
+
+    func testResolvedID_ephemeralKey_usesExplicitID() {
+        let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", ephemeralKeySecret: "ek_12345")
+        XCTAssertEqual(customerConfig.resolvedID(elementsSession: nil), "cus_12345")
     }
 
     func testResolvedID_customerSession_fallsBackToElementsSessionWhenIDOmitted() {
@@ -128,7 +137,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
 
         // Then it still counts as having a customer, even though there is no explicit ID yet
         XCTAssertTrue(customerProvider.hasCustomer)
-        XCTAssertNil(customerProvider.customerID)
+        XCTAssertNil(customerProvider.resolvedCustomerID(elementsSession: nil))
         XCTAssertFalse(CustomerProvider(customer: nil).hasCustomer)
     }
 

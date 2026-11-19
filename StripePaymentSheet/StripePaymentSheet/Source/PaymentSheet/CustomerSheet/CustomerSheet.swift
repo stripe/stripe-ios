@@ -362,9 +362,9 @@ extension CustomerSheet {
         }
         switch customerSheetDataSource.dataSource {
         case .customerSession(let customerSessionAdapter):
-            let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
+            let (elementsSession, cachedCustomerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
 
-            let selectedPaymentOption = CustomerPaymentOption.selectedPaymentMethod(for: customerSessionClientSecret.customerId, elementsSession: elementsSession, surface: .customerSheet)
+            let selectedPaymentOption = CustomerPaymentOption.selectedPaymentMethod(for: cachedCustomerSessionClientSecret.customerId, elementsSession: elementsSession, surface: .customerSheet)
 
             switch selectedPaymentOption {
             case .applePay:
@@ -428,10 +428,6 @@ public extension CustomerSheet {
 }
 
 public struct CustomerSessionClientSecret {
-    /// The identifier of the Stripe Customer object, if one was provided.
-    /// See https://stripe.com/docs/api/customers/object#customer_object-id
-    internal let customerId: String?
-
     /// Customer session client secret
     /// See: https://docs.stripe.com/api/customer_sessions/object
     internal let clientSecret: String
@@ -442,7 +438,7 @@ public struct CustomerSessionClientSecret {
         message: "You no longer need to pass a Customer ID."
     )
     public init(customerId: String, clientSecret: String) {
-        self.customerId = customerId
+        // The customer is determined from the CustomerSession, so the ID is ignored.
         self.clientSecret = clientSecret
 
         stpAssertCustomerSessionClientSecret(clientSecret)
@@ -451,7 +447,6 @@ public struct CustomerSessionClientSecret {
     /// Initializes a `CustomerSessionClientSecret`.
     /// The customer is determined from the CustomerSession, so no Customer ID is required.
     public init(clientSecret: String) {
-        self.customerId = nil
         self.clientSecret = clientSecret
 
         stpAssertCustomerSessionClientSecret(clientSecret)

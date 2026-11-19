@@ -140,7 +140,6 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         // Then the Customer from `v1/elements/sessions` is used
         XCTAssertEqual(cachedSession.customerId, "cus_123456")
         // ...and the merchant's ID is kept for local defaults
-        XCTAssertEqual(cachedSession.customerSessionClientSecret.customerId, "acct_123")
     }
 
     func testCachedCustomerSessionClientSecretRefreshesExpiredSession() async throws {

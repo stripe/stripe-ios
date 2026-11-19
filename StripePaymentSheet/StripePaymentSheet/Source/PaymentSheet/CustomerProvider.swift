@@ -28,19 +28,9 @@ struct CustomerProvider {
         backing = .checkoutSession(checkoutSession)
     }
 
-    var customerID: String? {
-        switch backing {
-        case .customer(let customer):
-            return customer?.id
-        case .checkoutSession(let session):
-            return session.customer?.id
-        }
-    }
-
-    /// Resolves the customer ID. For CustomerSession integrations, the customer resolved server-side from
-    /// the `elementsSession`'s CustomerSession is authoritative once available, even if the configuration
-    /// also explicitly provided one. The configuration's ID is only used as a fallback before the Elements
-    /// Session has loaded, and always for the legacy ephemeral key integration.
+    /// Resolves the customer ID. For CustomerSession integrations, the customer is determined only by the
+    /// `elementsSession`, so this is nil until it has loaded. The legacy ephemeral key integration uses the ID the
+    /// merchant provided, and Checkout uses the session's customer.
     func resolvedCustomerID(elementsSession: STPElementsSession?) -> String? {
         switch backing {
         case .customer(let customer):

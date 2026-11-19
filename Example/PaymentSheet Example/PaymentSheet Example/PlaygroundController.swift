@@ -149,17 +149,18 @@ import UIKit
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
         guard settings.customerMode != .guest,
-              let customerId = self.customerId else {
+              self.customerId != nil else {
             return nil
         }
         switch self.settings.customerKeyType {
         case .legacy:
-            if let ephemeralKey {
+            // Ephemeral keys still need the Customer ID; CustomerSessions determine the customer themselves.
+            if let customerId, let ephemeralKey {
                 return PaymentSheet.CustomerConfiguration(id: customerId, ephemeralKeySecret: ephemeralKey)
             }
         case .customerSession:
             if let customerSessionClientSecret {
-                return PaymentSheet.CustomerConfiguration(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
+                return PaymentSheet.CustomerConfiguration(customerSessionClientSecret: customerSessionClientSecret)
             }
         }
         return nil

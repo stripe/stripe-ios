@@ -416,7 +416,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                         return paymentRequest
                     })
                 )
-                configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
+                configuration.customer = .init(customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
                 configuration.appearance = self.appearance ?? PaymentSheet.Appearance()

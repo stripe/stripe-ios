@@ -80,11 +80,12 @@ class CustomerSessionAdapter {
     func elementsSessionWithCustomerSessionClientSecret(setupIntentClientSecret: String? = nil) async throws -> (STPElementsSession, CachedCustomerSessionClientSecret) {
         if let cachedCustomerSessionClientSecret = self._cachedCustomerSessionClientSecret,
            !cachedCustomerSessionClientSecret.isExpired() {
-            let elementsSession = try await elementsSession(customerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret, setupIntentClientSecret: setupIntentClientSecret)
+            let elementsSession = try await elementsSession(customerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret, customerId: cachedCustomerSessionClientSecret.customerId, setupIntentClientSecret: setupIntentClientSecret)
             return (elementsSession, cachedCustomerSessionClientSecret)
         } else {
             let customerSessionClientSecret = try await customerSessionClientSecretProvider()
-            let elementsSessionResponse = try await elementsSession(customerSessionClientSecret: customerSessionClientSecret, setupIntentClientSecret: setupIntentClientSecret)
+            // The customer isn't known until the Elements Session responds, so no local default can be sent on this first request.
+            let elementsSessionResponse = try await elementsSession(customerSessionClientSecret: customerSessionClientSecret, customerId: nil, setupIntentClientSecret: setupIntentClientSecret)
             guard let customerSession = elementsSessionResponse.customer?.customerSession,
                   !customerSession.apiKey.isEmpty else {
                 throw CustomerSheetError.unknown(debugDescription: "Failed to claim CustomerSession")
@@ -99,8 +100,8 @@ class CustomerSessionAdapter {
         }
     }
 
-    private func elementsSession(customerSessionClientSecret: CustomerSessionClientSecret, setupIntentClientSecret: String?) async throws -> STPElementsSession {
-        let clientDefaultPaymentMethod = fetchClientDefaultPaymentMethod(for: customerSessionClientSecret.customerId)
+    private func elementsSession(customerSessionClientSecret: CustomerSessionClientSecret, customerId: String?, setupIntentClientSecret: String?) async throws -> STPElementsSession {
+        let clientDefaultPaymentMethod = fetchClientDefaultPaymentMethod(for: customerId)
         if let setupIntentClientSecret {
             return try await self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(setupIntentClientSecret: setupIntentClientSecret,
                                                                                                   clientDefaultPaymentMethod: clientDefaultPaymentMethod,
