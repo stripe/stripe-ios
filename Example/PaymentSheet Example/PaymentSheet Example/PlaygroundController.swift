@@ -303,6 +303,7 @@ import UIKit
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.link = linkConfiguration
+        configuration.allowsLinkInlineVerification = settings.embeddedLinkInlineVerification != .off
         configuration.customer = customerConfiguration
         configuration.appearance = appearance
         if settings.userOverrideCountry != .off {
