@@ -18,10 +18,6 @@ import SwiftUI
 struct CheckoutPlaygroundSessionSection: View {
     @ObservedObject var viewModel: CheckoutPlayground.ViewModel
 
-    private var shouldShowAutomaticTax: Bool {
-        viewModel.customerType != .new
-    }
-
     private var cartScenarioTooltip: String {
         let scenarios = CheckoutPlayground.CartScenario.allCases.map { scenario in
             let items = scenario.lineItems.map { "\($0.quantity)× \($0.name)" }.joined(separator: ", ")
@@ -82,13 +78,11 @@ struct CheckoutPlaygroundSessionSection: View {
                     tooltip: "Sets `billing_address_collection` to `auto` or `required`.",
                     displayText: { $0.displayName }
                 )
-                if shouldShowAutomaticTax {
-                    CheckoutPlayground.ToggleRow(
-                        title: "Automatic Tax",
-                        isOn: $viewModel.automaticTax,
-                        tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
-                    )
-                }
+                CheckoutPlayground.ToggleRow(
+                    title: "Automatic Tax",
+                    isOn: $viewModel.automaticTax,
+                    tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
+                )
             }
         }
     }
