@@ -267,17 +267,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         let bankRow = try XCTUnwrap(sut.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .instantDebits) })
         sut.embeddedPaymentMethodsView.didTap(rowButton: bankRow)
         let bankForm = try XCTUnwrap(sut.formCache[.instantDebits] as? InstantDebitsPaymentMethodElement)
-        let paymentMethod = STPPaymentMethod._testUSBankAccount()
-        var linkBankPaymentMethod = LinkBankPaymentMethod(id: paymentMethod.stripeId)
-        linkBankPaymentMethod._allResponseFieldsStorage = NonEncodableParameters(storage: paymentMethod.allResponseFields as? [String: Any] ?? [:])
-        bankForm.setLinkedBank(InstantDebitsLinkedBank(
-            paymentMethod: linkBankPaymentMethod,
-            bankName: "StripeBank",
-            last4: "6789",
-            linkMode: .linkPaymentMethod,
-            incentiveEligible: false,
-            linkAccountSessionId: "fcsess_123"
-        ))
+        bankForm.setLinkedBank(._testValue())
         sut.selectedFormViewController?.didTapPrimaryButton()
         XCTAssertEqual(sut.paymentOption?.label, "••••6789")
 

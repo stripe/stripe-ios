@@ -589,6 +589,25 @@ extension LinkAccountService {
     }
 }
 
+extension InstantDebitsLinkedBank {
+    /// A linked bank whose payment method decodes, so forms can restore it.
+    static func _testValue() -> InstantDebitsLinkedBank {
+        let paymentMethod = STPPaymentMethod._testUSBankAccount()
+        var linkBankPaymentMethod = LinkBankPaymentMethod(id: paymentMethod.stripeId)
+        linkBankPaymentMethod._allResponseFieldsStorage = NonEncodableParameters(
+            storage: paymentMethod.allResponseFields as? [String: Any] ?? [:]
+        )
+        return InstantDebitsLinkedBank(
+            paymentMethod: linkBankPaymentMethod,
+            bankName: "StripeBank",
+            last4: "6789",
+            linkMode: .linkPaymentMethod,
+            incentiveEligible: false,
+            linkAccountSessionId: "fcsess_123"
+        )
+    }
+}
+
 extension STPCardBrandChoice {
     static func _testValue() -> STPCardBrandChoice {
         return .init(
