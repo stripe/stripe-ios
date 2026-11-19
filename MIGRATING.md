@@ -2,6 +2,30 @@
 ### Migrating from CocoaPods
 Read our migration guide in [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md).
 
+### Migrating from versions < 27.0.0
+#### PaymentSheet
+##### MainActor Changes
+`PaymentSheet` and `PaymentSheet.FlowController` are now main-actor isolated. Initialize and access them from the main actor.
+
+```diff
++@MainActor
+ final class CheckoutCoordinator {
+     var paymentSheet: PaymentSheet?
+     var flowController: PaymentSheet.FlowController?
+ }
+```
+
+#### CustomerSheet
+##### MainActor Changes
+`CustomerSheet` is now main-actor isolated. Initialize and access from the main actor.
+
+```diff
++@MainActor
+ final class CheckoutCoordinator {
+     var customerSheet: CustomerSheet?
+ }
+```
+
 ### Migrating from versions < 26.7.0
 * StripePaymentSheet now depends on `StripeFinancialConnectionsLite`. If you manually link StripePaymentSheet or use Carthage, you must also embed `StripeFinancialConnectionsLite.xcframework` in your app. No action is required for CocoaPods or Swift Package Manager users.
 
