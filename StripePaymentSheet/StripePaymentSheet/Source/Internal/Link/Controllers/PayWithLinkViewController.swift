@@ -622,6 +622,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                 // request data permissions. Use the normalized request to determine the session's authentication mode.
                 let requestedPermissions = (permissions?.isEmpty ?? true) ? nil : permissions
                 session.createLinkAccountSession(
+                    with: linkAccount.apiClient,
                     linkMode: self?.context.elementsSession.linkSettings?.linkMode,
                     intentToken: intentToken,
                     permissions: requestedPermissions,

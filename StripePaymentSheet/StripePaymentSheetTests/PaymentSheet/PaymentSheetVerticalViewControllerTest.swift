@@ -170,7 +170,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         }
 
         // If there's a customer default...
-        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: "cus_test")
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: "cus_test")
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "cus_test", ephemeralKeySecret: "")
         configuration.applePay = .init(merchantId: "merch_test", merchantCountryCode: "US")
@@ -179,13 +179,13 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .link)
 
         // If the customer default won't appear in the list...
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId("non_existent"), forCustomer: "cus_test")
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId("non_existent"), forCustomer: "cus_test")
         // ...it should default to Apple Pay
         vc = makeVC(configuration: configuration)
         XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .applePay)
 
         // If there's no customer default...
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: "cus_test")
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: "cus_test")
         // ...it should default to Apple Pay
         vc = makeVC(configuration: configuration)
         XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .applePay)
@@ -197,7 +197,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .saved(paymentMethod: ._testCard()))
 
         // And if there is no saved PM but Link is the customer default...
-        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: "cus_test")
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: "cus_test")
         vc = makeVC(configuration: configuration, hasSavedPM: false)
         // ...it should default to the Link wallet button
         if case .link(.wallet) = vc.selectedPaymentOption {
@@ -223,7 +223,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         }
 
         // And if there is no saved PM or customer default...
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: "cus_test")
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: "cus_test")
         vc = makeVC(configuration: configuration, hasSavedPM: false)
         // ...it should default to nothing
         XCTAssertNil(vc.selectedPaymentOption)
@@ -256,17 +256,17 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         configuration.applePay = .init(merchantId: "merch_test", merchantCountryCode: "US")
 
         // If the customer default is a saved PM...
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(savedPM.stripeId), forCustomer: "cus_test")
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(savedPM.stripeId), forCustomer: "cus_test")
         // ...it should default to that...
         var vc = makeVC(configuration: configuration)
         XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .saved(paymentMethod: savedPM))
 
         // If the customer default doesn't appear in the list (Apple Pay / Link)
-        CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: "cus_test")
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.applePay, forCustomer: "cus_test")
         vc = makeVC(configuration: configuration)
         // ...it should default to the saved PM
         XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .saved(paymentMethod: savedPM))
-        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: "cus_test")
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: "cus_test")
         vc = makeVC(configuration: configuration)
         XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .saved(paymentMethod: savedPM))
 
