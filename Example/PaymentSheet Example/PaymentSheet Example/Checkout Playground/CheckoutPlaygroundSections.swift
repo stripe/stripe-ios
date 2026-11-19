@@ -18,10 +18,6 @@ import SwiftUI
 struct CheckoutPlaygroundSessionSection: View {
     @ObservedObject var viewModel: CheckoutPlayground.ViewModel
 
-    private var shouldShowAutomaticTax: Bool {
-        viewModel.customerType != .new
-    }
-
     private var cartScenarioTooltip: String {
         let scenarios = CheckoutPlayground.CartScenario.allCases.map { scenario in
             let items = scenario.lineItems.map { "\($0.quantity)× \($0.name)" }.joined(separator: ", ")
@@ -82,13 +78,11 @@ struct CheckoutPlaygroundSessionSection: View {
                     tooltip: "Sets `billing_address_collection` to `auto` or `required`.",
                     displayText: { $0.displayName }
                 )
-                if shouldShowAutomaticTax {
-                    CheckoutPlayground.ToggleRow(
-                        title: "Automatic Tax",
-                        isOn: $viewModel.automaticTax,
-                        tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
-                    )
-                }
+                CheckoutPlayground.ToggleRow(
+                    title: "Automatic Tax",
+                    isOn: $viewModel.automaticTax,
+                    tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
+                )
             }
         }
     }
@@ -104,10 +98,9 @@ struct CheckoutPlaygroundCustomerRows: View {
     private static let emailSourceTooltip = """
         Where the customer's email comes from.
 
-        • None: No email is set.
         • Server — Session: Sends `customer_email` when creating the session. Requires a Guest customer.
         • Server — Customer: Sets `email` on the Customer. Requires a New or Returning customer.
-        • Local: Sets `CheckoutElementsController.Configuration.defaults.email`. The customer can update or clear it in checkout. Leave blank to start without an email.
+        • Local: Sets `CheckoutElementsController.Configuration.defaults.email`. The customer can update or clear it in checkout. Clear the field to start without an email.
 
         Server emails cannot be changed in checkout. When Adaptive Pricing Location is set, the server email is replaced with test+location_XX@example.com and can't be edited.
         """
@@ -117,9 +110,19 @@ struct CheckoutPlaygroundCustomerRows: View {
             title: "Customer",
             icon: "person.fill",
             selection: $viewModel.customerType,
-            tooltip: "Simulates different customer states.\n\n• Guest: No customer object attached.\n• New: Creates a new Customer object.\n• Returning: Attaches a pre-existing Customer ID.",
+            tooltip: "Simulates different customer states.\n\n• Guest: No customer object attached.\n• New: Creates a new Customer object. Once a checkout completes, it's reused with a Server — Customer email until the customer type, backend, or email changes.\n• Returning: Attaches a pre-existing Customer ID.",
             displayText: { $0.rawValue.capitalized }
         )
+        if let reusableNewCustomer = viewModel.reusableNewCustomer {
+            Text("Reusing customer \(reusableNewCustomer.id)")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 52)
+                .padding(.trailing, 16)
+                .padding(.bottom, 12)
+                .background(Color(uiColor: .secondarySystemGroupedBackground))
+        }
         CheckoutPlayground.PickerRow(
             title: "Email",
             icon: "envelope.fill",
@@ -127,34 +130,42 @@ struct CheckoutPlaygroundCustomerRows: View {
             tooltip: Self.emailSourceTooltip,
             displayText: { $0.displayName }
         )
-        if viewModel.email.source != .none {
-            HStack(spacing: 8) {
-                TextField("Email address", text: Binding(
-                    get: { viewModel.resolvedEmail.value },
-                    set: { viewModel.email.value = $0 }
-                ))
-                .keyboardType(.emailAddress)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .disabled(usesLocationEmail)
-                .foregroundColor(usesLocationEmail ? .secondary : .primary)
-                .accessibilityIdentifier("checkout_email_value")
-                if usesLocationEmail {
-                    Image(systemName: "lock.fill")
-                        .font(.caption)
+        HStack(spacing: 8) {
+            TextField("Email address", text: Binding(
+                get: { viewModel.resolvedEmail.value },
+                set: { viewModel.email.value = $0 }
+            ))
+            .keyboardType(.emailAddress)
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+            .disabled(usesLocationEmail)
+            .foregroundColor(usesLocationEmail ? .secondary : .primary)
+            .accessibilityIdentifier("checkout_email_value")
+            if usesLocationEmail {
+                Image(systemName: "lock.fill")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } else if !viewModel.email.value.isEmpty {
+                Button {
+                    viewModel.email.value = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Clear email")
+                .accessibilityIdentifier("checkout_clear_email")
             }
-            .padding(.horizontal, 12)
-            .frame(height: 40)
-            .background(Color(uiColor: .tertiarySystemFill))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            // Align with the row titles: 16pt row inset + 24pt icon + 12pt spacing.
-            .padding(.leading, 52)
-            .padding(.trailing, 16)
-            .padding(.bottom, 12)
-            .background(Color(uiColor: .secondarySystemGroupedBackground))
         }
+        .padding(.horizontal, 12)
+        .frame(height: 40)
+        .background(Color(uiColor: .tertiarySystemFill))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        // Align with the row titles: 16pt row inset + 24pt icon + 12pt spacing.
+        .padding(.leading, 52)
+        .padding(.trailing, 16)
+        .padding(.bottom, 12)
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
         if let error = viewModel.emailConfigurationError {
             Text(error)
                 .font(.caption)

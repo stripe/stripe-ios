@@ -62,7 +62,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
     func testUpdate() async throws {
         STPAnalyticsClient.sharedClient._testLogHistory = []
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
 
         let rowSelectionBehaviorExpectation = XCTestExpectation(description: "immediateAction handler only called once.")
         rowSelectionBehaviorExpectation.expectedFulfillmentCount = 1
@@ -164,7 +164,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         testWindow.rootViewController = UIViewController()
 
         STPAnalyticsClient.sharedClient._testLogHistory = []
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
 
         // Given a EmbeddedPaymentElement instance...
         let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
@@ -199,6 +199,84 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertEqual(updateResult, .canceled)
         XCTAssertEqual(updateResult2, .succeeded)
         XCTAssertFalse(sut.intent.isPaymentIntent)
+    }
+
+    func testUpdateKeepsCardWithLinkSignupWhenLinkButtonIsHidden() async throws {
+        // Given a customer with an email but no Link account, and a Payment Element that hides the Link button
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        let originalLinkAccount = LinkAccountContext.shared.account
+        LinkAccountContext.shared.account = ._testValue(email: "user@example.com", isRegistered: false)
+        defer { LinkAccountContext.shared.account = originalLinkAccount }
+        var config = EmbeddedPaymentElement.Configuration()
+        config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        config.link = .init(display: .walletButtonHidden)
+        config.defaultBillingDetails.phone = "+12015550123"
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .link]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card", "link"], linkFundingSources: [ParsedEnum(.card)]),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
+        )
+        let sut = EmbeddedPaymentElement(configuration: config, loadResult: loadResult, analyticsHelper: ._testValue())
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+        XCTAssertFalse(PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: config))
+        // ...and a card entered with Link signup
+        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card"))
+        let cardForm = try XCTUnwrap(sut.formCache[.stripe(.card)])
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1240")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        cardForm.getTextFieldElement("ZIP").setText("65432")
+        sut.selectedFormViewController?.didTapPrimaryButton()
+        guard case .link(.signUp) = sut._paymentOption else {
+            return XCTFail("Expected a card with Link signup, got \(String(describing: sut._paymentOption))")
+        }
+
+        // When the element is rebuilt after an update
+        sut.applyLoadResult(loadResult, confirmationChallenge: nil, configuration: config)
+
+        // Then the card row stays selected with the card and Link signup
+        XCTAssertEqual(sut.embeddedPaymentMethodsView.selectedRowButton?.type, .new(paymentMethodType: .stripe(.card)))
+        guard case .link(.signUp) = sut._paymentOption else {
+            return XCTFail("Expected a card with Link signup, got \(String(describing: sut._paymentOption))")
+        }
+    }
+
+    func testUpdateKeepsLinkedBank() async throws {
+        // Given a bank linked in the Instant Debits form
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        var config = EmbeddedPaymentElement.Configuration()
+        config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        config.defaultBillingDetails.email = "test@example.com"
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .instantDebits],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
+            paymentMethodOrientation: .vertical,
+            customerProvider: CustomerProvider(customer: nil)
+        )
+        let sut = EmbeddedPaymentElement(configuration: config, loadResult: loadResult, analyticsHelper: ._testValue())
+        sut.presentingViewController = UIViewController()
+        sut.view.autosizeHeight(width: 320)
+        let bankRow = try XCTUnwrap(sut.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .instantDebits) })
+        sut.embeddedPaymentMethodsView.didTap(rowButton: bankRow)
+        let bankForm = try XCTUnwrap(sut.formCache[.instantDebits] as? InstantDebitsPaymentMethodElement)
+        bankForm.setLinkedBank(._testValue())
+        sut.selectedFormViewController?.didTapPrimaryButton()
+        XCTAssertEqual(sut.paymentOption?.label, "••••6789")
+
+        // When the element is rebuilt after an update
+        sut.applyLoadResult(loadResult, confirmationChallenge: nil, configuration: config)
+
+        // Then the bank row stays selected with the linked bank
+        XCTAssertEqual(sut.embeddedPaymentMethodsView.selectedRowButton?.type, .new(paymentMethodType: .instantDebits))
+        XCTAssertEqual(sut.paymentOption?.label, "••••6789")
     }
 
     func testConfirmHandlesInflightUpdateThatSucceeds() async throws {

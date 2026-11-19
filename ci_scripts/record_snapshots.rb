@@ -31,14 +31,12 @@ FUZZ = '5%' # per-pixel color tolerance before counting as different
 
 commit = false
 dry_run = false
-check = false
 all_tests = false
 versions = []
 OptionParser.new do |opts|
   opts.banner = "Usage: record_snapshots.rb [options]"
   opts.on('--commit', 'Commit changes (for CI)') { commit = true }
   opts.on('--dry-run', 'Show what would change without updating') { dry_run = true }
-  opts.on('--check', 'Fail without updating if snapshots changed (for CI without push access)') { check = true }
   opts.on('--all', 'Record all snapshot targets, including on pull requests') { all_tests = true }
   opts.on('--version VERSION', 'iOS version to record (can be specified multiple times)') { |v| versions << v }
 end.parse!
@@ -284,11 +282,6 @@ if !changed_files.empty?
 end
 
 exit 0 if dry_run
-
-if check
-  abort "==> Snapshots changed. Record them locally with ci_scripts/record_snapshots.rb and commit the results.\n" \
-        '    The recorded images and diffs are attached to this CI run.'
-end
 
 # Step 4: Copy changed files to reference directory
 (changed_files.merge(added_files)).each do |rel_path, recorded_file|

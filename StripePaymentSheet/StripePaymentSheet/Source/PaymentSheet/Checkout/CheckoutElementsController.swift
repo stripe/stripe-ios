@@ -139,6 +139,7 @@ public final class CheckoutElementsController: ObservableObject {
             // 4. The session is now finalized - do post-session-change stuff
             let handleSessionChangeResult = CheckoutElementsControllerLoader.handleSessionChange(checkout: self)
             confirmationChallenge = handleSessionChangeResult.confirmationChallenge
+            CheckoutElementsControllerLoader.logStripeBalanceUnsupportedIfNeeded(checkout: self)
 
             // 5. Resolve Link before constructing payment elements, reusing the prepared PE configuration.
             await CheckoutElementsControllerLoader.loadLink(
