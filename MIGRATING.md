@@ -7,6 +7,8 @@ Read our migration guide in [MIGRATING-COCOAPODS.md](https://github.com/stripe/s
 ##### Other changes
 `PaymentSheetError` is no longer public. Do not identify internal error cases by comparing descriptions or undocumented `NSError` codes.
 
+`PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress` are deprecated. Payment methods that require a shipping address are always allowed.
+
 #### CustomerSheet
 ##### Other changes
 `CustomerSheetError` is no longer public. Do not identify internal error cases by comparing descriptions or undocumented `NSError` codes.

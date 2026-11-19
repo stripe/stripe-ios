@@ -1,10 +1,9 @@
 source "https://rubygems.org"
 
-gem "cocoapods"
 gem "colorize"
 gem "dotstrings"
 gem "fastlane"
-gem "mail"
+gem "minitest"
 gem "rubyzip"
 gem "octokit", "~> 4.25.1"
 gem "mime-types"

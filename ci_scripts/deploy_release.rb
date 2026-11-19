@@ -116,7 +116,6 @@ def finish_deployment
   notify_user
 end
 
-# CocoaPods publication and owner maintenance are explicit operations via pod_tools.rb.
 steps = [
   method(:export_builds_from_xcode_cloud),
   method(:approve_pr),
