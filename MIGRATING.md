@@ -15,6 +15,9 @@ Read our migration guide in [MIGRATING-COCOAPODS.md](https://github.com/stripe/s
  }
 ```
 
+##### Other changes
+`PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress` are deprecated. Payment methods that require a shipping address are always allowed.
+
 #### CustomerSheet
 ##### MainActor Changes
 `CustomerSheet` is now main-actor isolated. Initialize and access from the main actor.
