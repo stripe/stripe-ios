@@ -169,7 +169,6 @@ enum CheckoutPlayground {
     }
 
     enum EmailSource: String, CaseIterable, Identifiable, Codable {
-        case none
         case checkoutSession
         case customer
         case local
@@ -178,7 +177,6 @@ enum CheckoutPlayground {
 
         var displayName: String {
             switch self {
-            case .none: return "None"
             case .checkoutSession: return "Server — Session"
             case .customer: return "Server — Customer"
             case .local: return "Local"
@@ -194,7 +192,7 @@ enum CheckoutPlayground {
 
         var email: String? {
             let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-            return source == .none || trimmed.isEmpty ? nil : trimmed
+            return trimmed.isEmpty ? nil : trimmed
         }
 
         var localDefaultEmail: String? { source == .local ? email : nil }
