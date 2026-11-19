@@ -1,14 +1,22 @@
 The next release's version bump will so far be:
-MINOR
+MAJOR
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
 * [Added] Added a banner to Link's OTP verification screen in sandbox and test mode with instructions for entering a test verification code.
+* [Added] Added support for Stripe balance (private preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
 * [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
+* [Fixed] Fixed an issue where adding a bank account in native Link or signing out of Link could fail when the configured API client used a different publishable key from `STPAPIClient.shared`.
+
+### Payments
+* [Changed] Marked `STPPaymentHandlerActionStatus` as `@frozen`, allowing exhaustive switches over `.succeeded`, `.canceled`, and `.failed`.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added the optional `linkCardBrandAcceptance` parameter to `CryptoOnrampCoordinator.create(...)` to allow or block card brands in the Link UI. Defaults to accepting all supported brands.
+
+### Financial Connections
+* [Changed] Updated Link-branded Financial Connections flows, including Instant Debits, to the new Link design system.
 
 ## 26.16.1 2026-11-09
 ### PaymentSheet

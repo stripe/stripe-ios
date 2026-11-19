@@ -67,17 +67,17 @@ final class CustomerProviderTests: XCTestCase {
                 ],
             ],
         ]).makePublicSession()
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             .stripeId("pm_merchant_default"),
             forCustomer: merchantCustomerID
         )
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             .stripeId("pm_checkout_default"),
             forCustomer: checkoutCustomerID
         )
         defer {
-            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: merchantCustomerID)
-            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: checkoutCustomerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: merchantCustomerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: checkoutCustomerID)
         }
 
         // When the loader orders the Checkout session's saved payment methods
@@ -259,6 +259,20 @@ final class CustomerProviderTests: XCTestCase {
 
             XCTAssertEqual(provider.allowsPaymentMethodRemoval(elementsSession: elementsSession), expected.removal, description)
             XCTAssertEqual(provider.allowsPaymentMethodUpdate(elementsSession: elementsSession), expected.update, description)
+        }
+    }
+
+    func testCheckoutAndGuestCustomersDoNotUseElementsSessionEphemeralKeys() {
+        let checkoutSession = CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()
+        let providers: [CustomerProvider] = [
+            .init(customer: nil),
+            .init(checkoutSession: checkoutSession),
+        ]
+        let elementsSession = STPElementsSession
+            .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_unrelated")
+
+        for provider in providers {
+            XCTAssertNil(provider.ephemeralKeySecret(basedOn: elementsSession))
         }
     }
 }

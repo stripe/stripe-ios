@@ -25,13 +25,17 @@ struct CheckoutCartView: View {
     let shippingAddressCollection: Bool
     let defaultShippingAddress: CheckoutPlayground.DefaultAddress?
     let defaultBillingAddress: CheckoutPlayground.DefaultAddress?
+    let defaultPhone: String?
     let adaptivePricing: Bool
     let integrationType: CheckoutPlayground.IntegrationType
     let expressCheckoutElementSettings: CheckoutPlayground.ExpressCheckoutElementSettings
     let applePayEnabled: Bool
     let paymentElementApplePayDisplay: CheckoutPlayground.PaymentElementApplePayDisplay
     var currencySelectorAppearance = CurrencySelectorElement.Configuration.Appearance()
+    var paymentElementAppearance = PaymentSheet.Appearance.default
     var delayCheckoutClientRequests = false
+    /// Called with the session's email when a checkout completes.
+    let onCheckoutCompleted: (String?) -> Void
 
     var body: some View {
         NavigationView {
@@ -139,6 +143,7 @@ struct CheckoutCartView: View {
         }
         confirmResult = nil
         if confirmationSucceeded {
+            onCheckoutCompleted(checkout?.session.email)
             dismiss()
         }
     }
@@ -155,10 +160,12 @@ struct CheckoutCartView: View {
             if integrationType != .eceOnly {
                 var paymentElementConfiguration = PaymentElement.Configuration()
                 paymentElementConfiguration.applePayConfiguration.display = paymentElementApplePayDisplay.sdkValue
+                paymentElementConfiguration.appearance = paymentElementAppearance
                 config.paymentElement = paymentElementConfiguration
             }
             config.defaults.shippingDetails = defaultShippingAddress?.checkoutShippingDetails
             config.defaults.billingDetails = defaultBillingAddress?.checkoutBillingDetails
+            config.defaults.phone = defaultPhone
             config.defaults.email = emailSettings.localDefaultEmail
             if shippingAddressCollection {
                 var shippingAddressElementConfiguration = ShippingAddressElement.Configuration()
