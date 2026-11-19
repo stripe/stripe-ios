@@ -216,8 +216,8 @@ public final class EmbeddedPaymentElement {
             case .applePay:
                 return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
             case .link(let confirmOption):
-                // If `signupConfirmParams` exists, this is a card the customer entered in the card form with Link signup
-                // opted in (`.signUp`), not a Link wallet selection. It's shown in the card row, so check that row, not the Link button.
+                // If `signupConfirmParams` exists, `confirmOption` is `PaymentSheet.LinkConfirmOption.signUp`: a card the customer
+                // entered in the card form while opting in to Link signup. It's shown in the card row, so check that row, not the Link button.
                 if let signupConfirmParams = confirmOption.signupConfirmParams {
                     return loadResult.paymentMethodTypes.contains(signupConfirmParams.paymentMethodType)
                 }
