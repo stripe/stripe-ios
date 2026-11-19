@@ -198,6 +198,6 @@ extension ExternalPaymentOption {
             lightImageUrl: URL(string: "https://todo.com")!,
             darkImageUrl: URL(string: "https://todo.com")!
         )
-        return .from(epm, configuration: config)!
+        return .from(epm, confirmHandler: config.externalPaymentMethodConfirmHandler)!
     }
 }
