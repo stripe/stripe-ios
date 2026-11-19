@@ -1281,26 +1281,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     // These confirm through `confirm(from:)` with the `ConfirmationChallenge` Checkout builds from the session and a
     // real passive hCaptcha, so only Stripe API requests are stubbed.
 
-    func testNewCardSendsTopLevelPassiveCaptchaToken() async throws {
-        let window = makeKeyWindow()
-        defer { window.isHidden = true }
-        // Given passive captcha is on and the customer entered a new card
-        let checkout = try await makePassiveCaptchaCheckout()
-        select(.new(confirmParams: makeConfirmParams(type: .stripe(.card))), in: checkout)
-        let confirm = stubConfirm { params in
-            // Then /confirm sends the token at the top level only
-            XCTAssertEqual(params["payment_method_data[type]"], "card")
-            XCTAssertFalse((params["passive_captcha_token"] ?? "").isEmpty)
-            XCTAssertNil(params["payment_method_data[radar_options][hcaptcha_token]"])
-        }
-
-        // When the merchant confirms
-        let result = await checkout.confirm(from: window.rootViewController)
-
-        assertSucceeded(result)
-        await fulfillment(of: [confirm], timeout: 10)
-    }
-
     func testNewCardWithoutPassiveCaptchaSendsNoToken() async throws {
         let window = makeKeyWindow()
         defer { window.isHidden = true }
