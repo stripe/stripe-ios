@@ -52,12 +52,10 @@ struct CustomerProvider {
 
     var legacyEphemeralKeyCredentials: (customerID: String, ephemeralKeySecret: String)? {
         guard case .customer(let customer) = backing,
-              let customer,
-              let id = customer.id,
-              case .legacyCustomerEphemeralKey(let ephemeralKeySecret) = customer.customerAccessProvider else {
+              case .legacyCustomerEphemeralKey(let customerId, let ephemeralKeySecret) = customer?.customerAccessProvider else {
             return nil
         }
-        return (id, ephemeralKeySecret)
+        return (customerId, ephemeralKeySecret)
     }
 
     func savedPaymentMethods(
@@ -92,7 +90,7 @@ struct CustomerProvider {
             return
         }
         switch customer?.customerAccessProvider {
-        case .legacyCustomerEphemeralKey(let ephemeralKeySecret):
+        case .legacyCustomerEphemeralKey(_, let ephemeralKeySecret):
             parameters["legacy_customer_ephemeral_key"] = ephemeralKeySecret
         case .customerSession(let clientSecret):
             parameters["customer_session_client_secret"] = clientSecret

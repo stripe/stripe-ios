@@ -1351,7 +1351,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         }()
         configuration.apiClient = apiClient
 
-        let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, amount: amount, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, customer: configuration.customer?.id, apiClient: apiClient)
+        let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, amount: amount, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, customer: configuration.customer?.resolvedID(elementsSession: nil), apiClient: apiClient)
 
         // Check that the form respects billingDetailsCollection
         verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)

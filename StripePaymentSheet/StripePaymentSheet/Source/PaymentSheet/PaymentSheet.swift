@@ -314,7 +314,7 @@ public class PaymentSheet {
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
         persistedSelectionSnapshotBeforePresentation = .init(
-            customerID: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession),
+            customerID: loadResult.customerID,
             availableSavedPaymentMethods: loadResult.savedPaymentMethods
         )
         switch loadResult.paymentMethodOrientation {

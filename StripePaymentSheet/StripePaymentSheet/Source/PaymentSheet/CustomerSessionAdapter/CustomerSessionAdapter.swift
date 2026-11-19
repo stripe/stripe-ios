@@ -101,7 +101,7 @@ class CustomerSessionAdapter {
     }
 
     private func elementsSession(customerSessionClientSecret: CustomerSessionClientSecret, customerId: String?, setupIntentClientSecret: String?) async throws -> STPElementsSession {
-        let clientDefaultPaymentMethod = fetchClientDefaultPaymentMethod(for: customerId)
+        let clientDefaultPaymentMethod = customerId.flatMap { fetchClientDefaultPaymentMethod(for: $0) }
         if let setupIntentClientSecret {
             return try await self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(setupIntentClientSecret: setupIntentClientSecret,
                                                                                                   clientDefaultPaymentMethod: clientDefaultPaymentMethod,
@@ -115,16 +115,15 @@ class CustomerSessionAdapter {
     }
 }
 extension CustomerSessionAdapter {
-    func fetchClientDefaultPaymentMethod(for customerId: String?) -> String? {
-        guard let customerId,
-              let defaultPaymentMethod = CustomerPaymentOption.localDefaultPaymentMethod(for: customerId),
+    func fetchClientDefaultPaymentMethod(for customerId: String) -> String? {
+        guard let defaultPaymentMethod = CustomerPaymentOption.localDefaultPaymentMethod(for: customerId),
            case .stripeId(let stripePaymentMethodId) = defaultPaymentMethod else {
             return nil
         }
         return stripePaymentMethodId
     }
 
-    func fetchSelectedPaymentOption(for customerId: String?, elementsSession: STPElementsSession) -> CustomerPaymentOption? {
+    func fetchSelectedPaymentOption(for customerId: String, elementsSession: STPElementsSession) -> CustomerPaymentOption? {
         return CustomerPaymentOption.selectedPaymentMethod(for: customerId, elementsSession: elementsSession, surface: .customerSheet)
     }
 

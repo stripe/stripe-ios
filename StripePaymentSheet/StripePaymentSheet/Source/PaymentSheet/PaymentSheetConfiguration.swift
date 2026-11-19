@@ -317,7 +317,7 @@ extension PaymentSheet {
     }
 
     internal enum CustomerAccessProvider {
-        case legacyCustomerEphemeralKey(String)
+        case legacyCustomerEphemeralKey(customerId: String, ephemeralKeySecret: String)
         case customerSession(String)
 
         var analyticValue: String {
@@ -332,17 +332,11 @@ extension PaymentSheet {
 
     /// Configuration related to the Stripe Customer
     public struct CustomerConfiguration {
-        /// The identifier of the Stripe Customer object. Only provided for the legacy ephemeral key integration;
-        /// a CustomerSession's customer is determined from the Elements Session.
-        /// See https://stripe.com/docs/api/customers/object#customer_object-id
-        let id: String?
-
         internal let customerAccessProvider: CustomerAccessProvider
 
         /// Initializes a CustomerConfiguration with an ephemeralKeySecret
         public init(id: String, ephemeralKeySecret: String) {
-            self.id = id
-            self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
+            self.customerAccessProvider = .legacyCustomerEphemeralKey(customerId: id, ephemeralKeySecret: ephemeralKeySecret)
         }
 
         /// Initializes a CustomerConfiguration with a customerSessionClientSecret
@@ -353,7 +347,6 @@ extension PaymentSheet {
         )
         public init(id: String, customerSessionClientSecret: String) {
             // The customer is determined from the CustomerSession, so the ID is ignored.
-            self.id = nil
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
 
             stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
@@ -362,20 +355,19 @@ extension PaymentSheet {
         /// Initializes a CustomerConfiguration with a customerSessionClientSecret.
         /// The customer is determined from the CustomerSession, so no Customer ID is required.
         public init(customerSessionClientSecret: String) {
-            self.id = nil
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
 
             stpAssertCustomerSessionClientSecret(customerSessionClientSecret)
         }
 
         /// Resolves the customer ID. For CustomerSession integrations, the customer is determined only by the
-        /// Elements Session, so this is nil until it has loaded. The legacy ephemeral key integration uses `id`.
+        /// Elements Session, so this is nil until it has loaded. The legacy ephemeral key integration uses the ID the merchant provided.
         func resolvedID(elementsSession: STPElementsSession?) -> String? {
             switch customerAccessProvider {
             case .customerSession:
                 return elementsSession?.customer?.customerSession.customer
-            case .legacyCustomerEphemeralKey:
-                return id
+            case .legacyCustomerEphemeralKey(let customerId, _):
+                return customerId
             }
         }
     }
@@ -858,8 +850,8 @@ extension STPPaymentMethodBillingDetails {
 extension PaymentSheet.CustomerConfiguration {
     func ephemeralKeySecret(basedOn elementsSession: STPElementsSession?) -> String? {
         switch customerAccessProvider {
-        case .legacyCustomerEphemeralKey(let legacy):
-            return legacy
+        case .legacyCustomerEphemeralKey(_, let ephemeralKeySecret):
+            return ephemeralKeySecret
         case .customerSession:
             return elementsSession?.customer?.customerSession.apiKey
         }

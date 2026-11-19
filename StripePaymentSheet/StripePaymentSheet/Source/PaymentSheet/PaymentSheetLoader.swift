@@ -25,6 +25,9 @@ final class PaymentSheetLoader {
         var stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
         let customerProvider: CustomerProvider
+        var customerID: String? {
+            return customerProvider.resolvedCustomerID(elementsSession: elementsSession)
+        }
     }
 
     enum IntegrationShape {
@@ -268,8 +271,9 @@ final class PaymentSheetLoader {
         let intent: Intent
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod: String? = {
-            // Only send a default associated with a resolved customer.
-            guard let customerID = customerProvider.resolvedCustomerID(elementsSession: nil) else {
+            // Only legacy ephemeral key integrations know the customer before the Elements Session loads,
+            // so only send a default for those.
+            guard let customerID = customerProvider.legacyEphemeralKeyCredentials?.customerID else {
                 return nil
             }
             return defaultStripePaymentMethodId(forCustomerID: customerID)

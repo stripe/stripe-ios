@@ -161,7 +161,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
-                customerID: loadResult.customerProvider.resolvedCustomerID(elementsSession: loadResult.elementsSession),
+                customerID: loadResult.customerID,
                 showApplePay: false,
                 showLink: false,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),

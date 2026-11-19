@@ -273,4 +273,41 @@ final class CustomerProviderTests: XCTestCase {
             XCTAssertNil(provider.ephemeralKeySecret(basedOn: elementsSession))
         }
     }
+
+    // MARK: - LoadResult customer ID
+
+    private func makeLoadResult(customerProvider: CustomerProvider) -> PaymentSheetLoader.LoadResult {
+        return PaymentSheetLoader.LoadResult(
+            intent: ._testValue(),
+            elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_test"),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [],
+            paymentMethodMessagingPromotionsHelper: nil,
+            paymentMethodOrientation: .vertical,
+            customerProvider: customerProvider
+        )
+    }
+
+    func testLoadResultCustomerID_customerSessionUsesElementsSessionCustomer() {
+        // Given a CustomerSession configuration, which doesn't know its customer until the Elements Session loads
+        let provider = CustomerProvider(customer: .init(customerSessionClientSecret: "cuss_test"))
+        XCTAssertNil(provider.resolvedCustomerID(elementsSession: nil))
+
+        // Then a LoadResult, which has the Elements Session, knows the customer
+        XCTAssertEqual(makeLoadResult(customerProvider: provider).customerID, "cus_456")
+    }
+
+    func testLoadResultCustomerID_ephemeralKeyAndCheckoutKeepTheirOwnCustomer() {
+        // An ephemeral key configuration keeps the merchant's ID; the Elements Session doesn't override it
+        let ephemeralKeyProvider = CustomerProvider(customer: .init(id: "cus_merchant", ephemeralKeySecret: "ek_test"))
+        XCTAssertEqual(makeLoadResult(customerProvider: ephemeralKeyProvider).customerID, "cus_merchant")
+
+        // A Checkout Session's customer comes from the session
+        let session = CheckoutTestHelpers.makeSession().withCustomer(id: "cus_checkout").makePublicSession()
+        XCTAssertEqual(makeLoadResult(customerProvider: CustomerProvider(checkoutSession: session)).customerID, "cus_checkout")
+    }
+
+    func testLoadResultCustomerID_nilWithoutCustomer() {
+        XCTAssertNil(makeLoadResult(customerProvider: CustomerProvider(customer: nil)).customerID)
+    }
 }
