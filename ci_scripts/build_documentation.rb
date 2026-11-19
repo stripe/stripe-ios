@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'cocoapods'
 require 'fileutils'
 require 'optparse'
 require 'pathname'
@@ -177,7 +176,7 @@ def build_module_docs(modules, release_version, docs_root_directory)
 end
 
 # Creates an index page that lists all modules with docs enabled and links to their docs
-# directory. The descriptions of the modules are from their podspec summaries.
+# directory. The descriptions of the modules are from modules.yaml.
 def build_index_page(modules, release_version, docs_root_directory)
   # Copy the docc bundle template
   temp_docc_dir = Dir.mktmpdir('stripe-docs-index-build')
@@ -196,9 +195,7 @@ def build_index_page(modules, release_version, docs_root_directory)
   modules
     .sort_by { |m| m['framework_name'] }
     .each do |m|
-      # Load podspec to get module name and summary
-      podspec = Pod::Specification.from_file(File.join_if_safe($ROOT_DIR, m['podspec']))
-      index_content += "**[#{podspec.name}](../../#{m['framework_name'].downcase}/documentation/#{m['framework_name'].downcase})**\n\n#{podspec.summary}\n\n"
+      index_content += "**[#{m['framework_name']}](../../#{m['framework_name'].downcase}/documentation/#{m['framework_name'].downcase})**\n\n#{m['docs'].fetch('summary')}\n\n"
   end
 
   File.write(index_path, index_content)

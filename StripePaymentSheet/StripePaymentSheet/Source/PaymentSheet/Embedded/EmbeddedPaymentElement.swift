@@ -215,9 +215,19 @@ public final class EmbeddedPaymentElement {
                 return true
             case .applePay:
                 return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
-            case .link:
+            case .link(let confirmOption):
+                // If `signupConfirmParams` exists, `confirmOption` is `PaymentSheet.LinkConfirmOption.signUp`: a card the customer
+                // entered in the card form while opting in to Link signup. It's shown in the card row, so check that row, not the Link button.
+                if let signupConfirmParams = confirmOption.signupConfirmParams {
+                    return loadResult.paymentMethodTypes.contains(signupConfirmParams.paymentMethodType)
+                }
                 return PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
-            case .saved(paymentMethod: let paymentMethod, confirmParams: _):
+            case .saved(paymentMethod: let paymentMethod, confirmParams: let confirmParams):
+                // If `instantDebitsLinkedBank` exists, this is a bank the customer linked in the Instant Debits or Link Card Brand
+                // form, not a saved payment method. It's shown in that form's row, so check that row, not the saved payment methods.
+                if let confirmParams, confirmParams.instantDebitsLinkedBank != nil {
+                    return loadResult.paymentMethodTypes.contains(confirmParams.paymentMethodType)
+                }
                 return loadResult.savedPaymentMethods.contains(paymentMethod)
             case .new(confirmParams: let confirmParams):
                 return loadResult.paymentMethodTypes.contains(confirmParams.paymentMethodType)
@@ -401,10 +411,6 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
-    internal var savedPaymentMethodManager: SavedPaymentMethodManager {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
-    }
-
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     internal var confirmationChallenge: ConfirmationChallenge?
@@ -579,6 +585,11 @@ extension EmbeddedPaymentElement {
     public typealias BillingDetails = PaymentSheet.BillingDetails
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
+    @available(
+        *,
+        deprecated,
+        message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+    )
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
     public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
     @_spi(CardFundingFilteringPrivatePreview) public typealias CardFundingType = PaymentSheet.CardFundingType
