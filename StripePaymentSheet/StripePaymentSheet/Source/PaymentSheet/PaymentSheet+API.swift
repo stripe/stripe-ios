@@ -447,7 +447,7 @@ extension PaymentSheet {
             func confirmWithPaymentMethodParams(
                 _ paymentMethodParams: STPPaymentMethodParams,
                 _ linkAccount: PaymentSheetLinkAccount?,
-                _ saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState
+                _ saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState
             ) {
                 Task { @MainActor in
                     let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethodParams.type)
@@ -521,7 +521,7 @@ extension PaymentSheet {
             func confirmWithPaymentMethod(
                 _ paymentMethod: STPPaymentMethod,
                 _ linkAccount: PaymentSheetLinkAccount?,
-                _ saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
+                _ saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState,
                 _ clientAttributionMetadata: STPClientAttributionMetadata?
             ) {
                 Task { @MainActor in
@@ -663,8 +663,8 @@ extension PaymentSheet {
         clientAttributionMetadata: STPClientAttributionMetadata,
         isSettingUp: @escaping (STPPaymentMethodType) -> Bool,
         setAllowRedisplay: @escaping (IntentConfirmParams, STPPaymentMethodType) -> Void,
-        confirmWithPaymentMethodParams: @escaping (STPPaymentMethodParams, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState) -> Void,
-        confirmWithPaymentMethod: @escaping (STPPaymentMethod, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState, STPClientAttributionMetadata?) -> Void,
+        confirmWithPaymentMethodParams: @escaping (STPPaymentMethodParams, PaymentSheetLinkAccount?, IntentConfirmParams.CheckboxState) -> Void,
+        confirmWithPaymentMethod: @escaping (STPPaymentMethod, PaymentSheetLinkAccount?, IntentConfirmParams.CheckboxState, STPClientAttributionMetadata?) -> Void,
         confirmHandler: @escaping (STPAuthenticationContext, Intent, STPElementsSession, PaymentOption, @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void,
         paymentHandlerCompletion: @escaping (STPPaymentHandlerActionStatus, NSError?) -> Void,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
@@ -676,7 +676,7 @@ extension PaymentSheet {
                 ConsumerPaymentDetails,
                 String?, // cvc
                 String?, // phone number
-                IntentConfirmParams.SaveForFutureUseCheckboxState,
+                IntentConfirmParams.CheckboxState,
                 STPPaymentMethodAllowRedisplay?
             ) -> Void = { linkAccount, paymentDetails, cvc, billingPhoneNumber, saveForFutureUseCheckboxState, allowRedisplay in
                 guard let paymentMethodParams = linkAccount.makePaymentMethodParams(
@@ -697,7 +697,7 @@ extension PaymentSheet {
             (
                 PaymentSheetLinkAccount,
                 STPPaymentMethodParams,
-                IntentConfirmParams.SaveForFutureUseCheckboxState
+                IntentConfirmParams.CheckboxState
             ) -> Void = { linkAccount, paymentMethodParams, saveForFutureUseCheckboxState in
                 paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                 guard linkAccount.sessionState == .verified else {
@@ -815,7 +815,7 @@ extension PaymentSheet {
         case .withPaymentMethod(_, let paymentMethod):
             confirmWithPaymentMethod(paymentMethod, nil, .hidden, clientAttributionMetadata) // from Link web controller
         case .withPaymentDetails(_, let linkAccount, let paymentDetails, let confirmationExtras, _):
-            let saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState = .hidden // we don't show a save-to-merchant checkbox in Link VC
+            let saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState = .hidden // we don't show a save-to-merchant checkbox in Link VC
             let allowRedisplay = paymentDetails.computeAllowRedisplay(
                 elementsSession: elementsSession,
                 isSettingUp: isSettingUp
@@ -885,14 +885,14 @@ extension PaymentSheet {
         /// - saveForFutureUseCheckboxState: The single source of truth for save consent when confirming with a new
         ///   payment method. It preserves whether the save checkbox was hidden, shown and deselected, or shown and
         ///   selected so intent-based flows can derive the API parameters they need.
-        case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState, shouldSetAsDefaultPM: Bool? = nil)
+        case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState, shouldSetAsDefaultPM: Bool? = nil)
 
         /// Projects the unified checkbox state into intent save semantics.
         var shouldSaveForIntent: Bool {
             saveForFutureUseCheckboxState == .selected
         }
 
-        private var saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState {
+        private var saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState {
             switch self {
             case .saved:
                 return .hidden

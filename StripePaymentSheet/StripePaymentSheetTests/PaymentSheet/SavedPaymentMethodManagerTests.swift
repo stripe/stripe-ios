@@ -567,6 +567,7 @@ extension STPPaymentMethod {
         ]
     }
 
+    // Each card has its own fingerprint so removing a card with a CustomerSession doesn't also detach the others as duplicates
     static var paymentMethodsJson: [String: Any] = [
         "data": [
             [
@@ -576,6 +577,7 @@ extension STPPaymentMethod {
                 "card": [
                     "last4": "4242",
                     "brand": "visa",
+                    "fingerprint": "B8XXs2y2JsVBtB9f",
                 ],
             ],
             [
@@ -585,6 +587,7 @@ extension STPPaymentMethod {
                 "card": [
                     "last4": "5555",
                     "brand": "mastercard",
+                    "fingerprint": "M4sTeRcArDfPrInT",
                 ],
             ],
             [
@@ -594,6 +597,7 @@ extension STPPaymentMethod {
                 "card": [
                     "last4": "6789",
                     "brand": "amex",
+                    "fingerprint": "AmExFiNgErPrInT1",
                 ],
             ],
         ],

@@ -77,7 +77,7 @@ public extension STPAPIClient {
         var parameters = additionalParameters
         parameters["unique_id"] = sessionId
         parameters["verification_method"] = STPPaymentMethodOptions.USBankAccount.VerificationMethod.automatic.rawValue // Hardcoded b/c the merchant can't choose in the deferred flow
-        parameters["amount"] = amount
+        parameters["amount"] = amount.flatMap { $0 > 0 ? $0 : nil }
         parameters["currency"] = currency
         parameters["on_behalf_of"] = onBehalfOf
 

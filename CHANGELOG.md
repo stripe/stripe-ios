@@ -2,7 +2,11 @@ The next release's version bump will so far be:
 MAJOR
 
 ## X.Y.Z - changes pending release
+This major version introduces several breaking changes. Please see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) to help you migrate.
+
 ### PaymentSheet
+* [Deprecated] Deprecated External Payment Methods in favor of Custom Payment Methods. See the [CPM integration guide](https://docs.stripe.com/payments/mobile/custom-payment-methods?platform=ios).
+* [Deprecated] Deprecated `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress`. This configuration no longer has an effect. Payment methods that require a shipping address are always allowed.
 * [Added] Added a banner to Link's OTP verification screen in sandbox and test mode with instructions for entering a test verification code.
 * [Added] Added support for Stripe balance (private preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
