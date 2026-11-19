@@ -48,7 +48,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
     private var didFinish = false
     private var shippingContactUpdateTask: Task<Void, Never>?
-    private var paymentMethodUpdateTask: Task<Void, Never>?
+    /// The most recent billing tax update, which throws if the update failed.
+    /// Apple Pay doesn't display errors returned from a payment method update, so authorization awaits this and fails with
+    /// the error instead of letting the customer pay stale totals.
+    private var paymentMethodUpdateTask: Task<Void, Error>?
 
     init(
         checkoutSession: CheckoutElementsController.Session,
@@ -81,6 +84,19 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         // - If you call the completion block w/ a status of .failure and an error, the user is prompted to try again.
 
         Task {
+            // A billing tax update may still be in flight, or may have failed. Apple Pay doesn't display errors returned from
+            // a payment method update, so surface the failure here, where it is shown, and let the customer try again.
+            do {
+                try await self.paymentMethodUpdateTask?.value
+            } catch {
+                let billingError = PKPaymentRequest.paymentBillingAddressInvalidError(
+                    withKey: CNPostalAddressPostalCodeKey,
+                    localizedDescription: error.nonGenericDescription
+                )
+                completion(PKPaymentAuthorizationResult(status: .failure, errors: [billingError]))
+                return
+            }
+
             // Helpers to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
             // Helper 1: Handle an unsuccessful result
             let handleUnsuccessfulResult = { (result: CheckoutElementsController.InternalConfirmResult, error: Error?) in
@@ -170,7 +186,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case .notStarted:
             Task {
                 await shippingContactUpdateTask?.value
-                await paymentMethodUpdateTask?.value
+                try? await paymentMethodUpdateTask?.value
                 await restoreInitialTaxRegionIfNecessary()
                 await controller.dismiss()
                 self.resume(with: .canceled())
@@ -208,17 +224,18 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
               let postalAddress = paymentMethod.billingAddress?.postalAddresses.first?.value,
               let address = Self.makeCheckoutAddress(from: postalAddress),
               let checkoutWalletUpdater else {
+            // No tax update is needed for this payment method, so there's no failure to report.
+            paymentMethodUpdateTask = nil
             handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
             return
         }
         paymentMethodUpdateTask = Task { @MainActor in
-            if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+            // If the update throws, the totals are stale and authorization reports the failure.
+            self.session = try await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
                 address: address,
                 canUpdateWhileSheetPresented: true,
                 confirmationSource: attribution.confirmingElement
-            ) {
-                self.session = updatedSession
-            }
+            )
             handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
         }
     }
@@ -248,14 +265,25 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             return
         }
         shippingContactUpdateTask = Task { @MainActor in
-            if let updatedSession = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
-                address: address,
-                canUpdateWhileSheetPresented: true,
-                confirmationSource: attribution.confirmingElement
-            ) {
-                self.session = updatedSession
+            do {
+                self.session = try await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+                    address: address,
+                    canUpdateWhileSheetPresented: true,
+                    confirmationSource: attribution.confirmingElement
+                )
+                handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
+            } catch {
+                // Surface the failure in the Apple Pay sheet. The totals are stale, so the customer must not authorize them.
+                let shippingError = PKPaymentRequest.paymentShippingAddressInvalidError(
+                    withKey: CNPostalAddressPostalCodeKey,
+                    localizedDescription: error.nonGenericDescription
+                )
+                handler(PKPaymentRequestShippingContactUpdate(
+                    errors: [shippingError],
+                    paymentSummaryItems: summaryItems(),
+                    shippingMethods: []
+                ))
             }
-            handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
         }
     }
 
