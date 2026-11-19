@@ -11,6 +11,7 @@ import Foundation
 
 extension PaymentSheetLoader {
     /// Loads Link and records experiment exposure. Returns whether lookup timed out, or nil when Link is disabled.
+    /// If Link is enabled and the lookup fails or times out, `LinkAccountContext.shared.account` is cleared, so Link treats the email as having no Link account.
     @MainActor
     static func loadLink(
         elementsSession: STPElementsSession,
