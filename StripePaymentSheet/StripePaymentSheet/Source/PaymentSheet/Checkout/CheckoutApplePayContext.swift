@@ -231,12 +231,12 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
         paymentMethodUpdateTask = Task { @MainActor in
             // If the update throws, the totals are stale and authorization reports the failure.
+            defer { handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems())) }
             self.session = try await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
                 address: address,
                 canUpdateWhileSheetPresented: true,
                 confirmationSource: attribution.confirmingElement
             )
-            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
         }
     }
 
