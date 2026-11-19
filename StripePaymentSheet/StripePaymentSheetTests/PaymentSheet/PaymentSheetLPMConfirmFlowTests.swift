@@ -2143,7 +2143,6 @@ extension PaymentSheetLPMConfirmFlowTests {
                 let parameters = CheckoutElementsController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
                     configuration: configuration,
-                    customerProvider: CustomerProvider(checkoutSession: checkoutSession),
                     returnURL: returnURL,
                     nativeSheetPresentation: nil,
                     confirmationChallenge: nil,
