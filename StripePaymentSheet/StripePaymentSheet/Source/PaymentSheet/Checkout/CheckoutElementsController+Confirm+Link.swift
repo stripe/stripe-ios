@@ -73,7 +73,7 @@ extension CheckoutElementsController {
             func confirmWithPaymentMethodParams(
                 paymentMethodParams: STPPaymentMethodParams,
                 linkAccount: PaymentSheetLinkAccount?,
-                saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState
+                saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState
             ) {
                 Task { @MainActor in
                     let confirmParams = IntentConfirmParams(
@@ -106,7 +106,7 @@ extension CheckoutElementsController {
             func confirmWithPaymentMethod(
                 paymentMethod: STPPaymentMethod,
                 linkAccount: PaymentSheetLinkAccount?,
-                saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
+                saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState,
                 linkClientAttributionMetadata _: STPClientAttributionMetadata?
             ) {
                 Task { @MainActor in

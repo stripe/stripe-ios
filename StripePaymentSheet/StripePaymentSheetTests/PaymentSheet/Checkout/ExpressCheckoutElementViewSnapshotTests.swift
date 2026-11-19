@@ -98,6 +98,15 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         verify(makeView(appearance: appearance))
     }
 
+    // Both buttons should dim by the same amount when disabled; previously Apple Pay barely
+    // changed while Link dimmed noticeably, creating a visual mismatch.
+    func testDisabledState() {
+        let view = makeView()
+        view.setEnabled(false)
+
+        verify(view)
+    }
+
     // MARK: - Helpers
 
     private struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {

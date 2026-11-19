@@ -98,10 +98,8 @@ def create_pr
   - [ ] Verify MIGRATING is updated (if necessary).
   - [ ] Verify the following files are updated to use the new version string:
     - [ ] Version.xcconfig
-    - [ ] All *.podspec files
     - [ ] StripeAPIConfiguration+Version.swift
   - [ ] Verify changes to localized strings seem sane (e.g. No major removal of langauges or large removal of strings)
-  - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
 }
 
   # Add React Native compatibility check if versions match

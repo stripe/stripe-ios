@@ -89,9 +89,12 @@ extension PaymentSheet {
         /// - Seealso: https://stripe.com/docs/payments/payment-methods#payment-notification
         public var allowsDelayedPaymentMethods: Bool = false
 
-        /// If `true`, allows payment methods that require a shipping address, like Afterpay and Affirm. Defaults to `false`.
-        /// Set this to `true` if you collect shipping addresses and set `Configuration.shippingDetails` or set `shipping` details directly on the PaymentIntent.
-        /// - Note: PaymentSheet considers this property `true` and allows payment methods that require a shipping address if `shipping` details are present on the PaymentIntent when PaymentSheet loads.
+        /// This no longer has an effect. Payment methods that require a shipping address are always allowed.
+        @available(
+            *,
+            deprecated,
+            message: "This no longer has an effect. Payment methods that require a shipping address are always allowed."
+        )
         public var allowsPaymentMethodsRequiringShippingAddress: Bool = false
 
         /// The APIClient instance used to make requests to Stripe
@@ -194,8 +197,28 @@ extension PaymentSheet {
         /// Optional configuration to display a custom message when a saved payment method is removed.
         public var removeSavedPaymentMethodMessage: String?
 
+        // Internal, nondeprecated storage backing the deprecated `externalPaymentMethodConfiguration` API below.
+        // SDK-internal code should read these instead of `externalPaymentMethodConfiguration` to avoid
+        // depending on a deprecated public type.
+        var _externalPaymentMethods: [String] = []
+        var _externalPaymentMethodConfirmHandler: ((_ externalPaymentMethodType: String, _ billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult)?
+
         /// Configuration for external payment methods.
-        public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
+        @available(
+            *,
+            deprecated,
+            message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+        )
+        public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration? {
+            get {
+                guard let handler = _externalPaymentMethodConfirmHandler else { return nil }
+                return ExternalPaymentMethodConfiguration(externalPaymentMethods: _externalPaymentMethods, externalPaymentMethodConfirmHandler: handler)
+            }
+            set {
+                _externalPaymentMethods = newValue?.externalPaymentMethods ?? []
+                _externalPaymentMethodConfirmHandler = newValue?.externalPaymentMethodConfirmHandler
+            }
+        }
 
         /// Configuration for custom payment methods.
         public var customPaymentMethodConfiguration: CustomPaymentMethodConfiguration?
@@ -710,12 +733,22 @@ extension PaymentSheet {
 
     /// Configuration for external payment methods
     /// - Seealso: See the [integration guide](https://stripe.com/docs/payments/external-payment-methods?platform=ios).
+    @available(
+        *,
+        deprecated,
+        message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+    )
     public struct ExternalPaymentMethodConfiguration {
 
         /// Initializes an `ExternalPaymentMethodConfiguration`
         /// - Parameter externalPaymentMethods: A list of external payment methods to display in PaymentSheet e.g., ["external_paypal"].
         /// - Parameter externalPaymentMethodConfirmHandler: A handler called when the customer confirms the payment using an external payment method.
         /// - Seealso: See the [integration guide](https://stripe.com/docs/payments/external-payment-methods?platform=ios).
+        @available(
+            *,
+            deprecated,
+            message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+        )
         public init(externalPaymentMethods: [String], externalPaymentMethodConfirmHandler: @escaping PaymentSheet.ExternalPaymentMethodConfiguration.ExternalPaymentMethodConfirmHandler) {
             self.externalPaymentMethods = externalPaymentMethods
             self.externalPaymentMethodConfirmHandler = externalPaymentMethodConfirmHandler
@@ -723,11 +756,21 @@ extension PaymentSheet {
 
         /// A list of external payment methods to display in PaymentSheet.
         /// e.g. ["external_paypal"].
+        @available(
+            *,
+            deprecated,
+            message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+        )
         public var externalPaymentMethods: [String] = []
 
         /// - Parameter externalPaymentMethodType: The external payment method to confirm payment with e.g., "external_paypal"
         /// - Parameter billingDetails: An object containing any billing details you've configured PaymentSheet to collect.
         /// - Returns: The result of the attempt to confirm payment using the given external payment method.
+        @available(
+            *,
+            deprecated,
+            message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+        )
         public typealias ExternalPaymentMethodConfirmHandler = (
             _ externalPaymentMethodType: String,
             _ billingDetails: STPPaymentMethodBillingDetails
@@ -736,6 +779,11 @@ extension PaymentSheet {
         /// This handler is called when the customer confirms the payment using an external payment method.
         /// Your implementation should complete the payment and return the result.
         /// - Note: This is always called on the main thread.
+        @available(
+            *,
+            deprecated,
+            message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+        )
         public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
     }
 
