@@ -77,7 +77,8 @@ import UIKit
         }
         set {
             textStorage.value = newValue
-            update()
+            // Keep the caret within the new value, so the next digit typed is the one shown as focused.
+            selectedTextRange = textStorage.endCaretRange
         }
     }
 

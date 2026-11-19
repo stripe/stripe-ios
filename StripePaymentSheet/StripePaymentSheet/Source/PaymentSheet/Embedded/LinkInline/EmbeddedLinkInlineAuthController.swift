@@ -187,7 +187,7 @@ final class EmbeddedLinkInlineAuthController {
         if UIAccessibility.isVoiceOverRunning {
             return .dialog(.voiceOver)
         }
-        guard coordinator.screen == .otp, coordinator.challenge?.type == .sms, coordinator.step == 1 else {
+        guard coordinator.screen == .otp, coordinator.challenge != nil, coordinator.step == 1 else {
             return .dialog(.unsupportedStep)
         }
         switch keyboardAvoider?.decide() ?? .dialog(.notInWindow) {
@@ -285,9 +285,8 @@ final class EmbeddedLinkInlineAuthController {
         case .resend:
             coordinator.resend()
         case .email:
-            // Email codes can need a phone number match first, which only the dialog shows.
+            // If the email code needs a phone number match first, `coordinatorDidUpdate` moves it to the dialog.
             coordinator.sendToEmail()
-            presentDialog(reason: "email")
         }
     }
 
