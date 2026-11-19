@@ -166,7 +166,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
 
         let firstClose = present(flowController, expectedDidCancel: false)
         try tapRow(.new(paymentMethodType: .instantDebits), in: viewController)
-        let linkedBank = makeLinkedBank()
+        let linkedBank = InstantDebitsLinkedBank._testValue()
         let bankForm = try XCTUnwrap(viewController.formCache[.instantDebits] as? InstantDebitsPaymentMethodElement)
         bankForm.setLinkedBank(linkedBank)
         flowController.flowControllerViewControllerShouldClose(viewController, didCancel: false)
@@ -190,7 +190,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
 
     func testHorizontalRebuildRestoresSelectedBank() throws {
         // Given a completed Instant Debits selection that must be restored
-        let linkedBank = makeLinkedBank()
+        let linkedBank = InstantDebitsLinkedBank._testValue()
         let confirmParams = IntentConfirmParams(type: .instantDebits)
         confirmParams.instantDebitsLinkedBank = linkedBank
         let paymentMethod = try XCTUnwrap(linkedBank.paymentMethod.decode())
@@ -351,22 +351,6 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: orientation,
             customerProvider: customerProvider
-        )
-    }
-
-    private func makeLinkedBank() -> InstantDebitsLinkedBank {
-        let paymentMethod = STPPaymentMethod._testUSBankAccount()
-        var linkBankPaymentMethod = LinkBankPaymentMethod(id: paymentMethod.stripeId)
-        linkBankPaymentMethod._allResponseFieldsStorage = NonEncodableParameters(
-            storage: paymentMethod.allResponseFields as? [String: Any] ?? [:]
-        )
-        return InstantDebitsLinkedBank(
-            paymentMethod: linkBankPaymentMethod,
-            bankName: "StripeBank",
-            last4: "6789",
-            linkMode: .linkPaymentMethod,
-            incentiveEligible: false,
-            linkAccountSessionId: "fcsess_123"
         )
     }
 
