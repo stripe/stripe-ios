@@ -8,6 +8,7 @@ MAJOR
 * [Added] Added support for Stripe balance (private preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
 * [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
+* [Fixed] Fixed an issue where adding a bank account in native Link or signing out of Link could fail when the configured API client used a different publishable key from `STPAPIClient.shared`.
 
 ### CustomerSheet
 * [Deprecated] Deprecated `CustomerSessionClientSecret.init(customerId:clientSecret:)`. Use `init(clientSecret:)` instead.
