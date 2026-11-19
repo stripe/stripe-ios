@@ -167,7 +167,6 @@ The Stripe iOS SDK is organized as a multi-module framework with clear dependenc
 
 ### Package Manager Support
 - **Swift Package Manager**: Defined in `Package.swift` with iOS 13+ minimum deployment
-- **CocoaPods**: Individual `.podspec` files for each module
 
 ## Development Workflow
 
