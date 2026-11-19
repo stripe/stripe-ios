@@ -68,6 +68,37 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertEqual((deferredIntent["payment_method_configuration"] as? [String: Any])?["id"] as? String, "pmc_234")
     }
 
+    func testElementsSessionParameters_DeferredIntent_AllowedAndExcludedPaymentMethodTypes() throws {
+        // Given IntentConfigurations that use allowed and excluded payment method types
+        let allowedIntentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 2000, currency: "USD", captureMethod: .automaticAsync),
+                                                                   allowedPaymentMethodTypes: ["card", "cashapp"],
+                                                                   confirmHandler: { _, _ in return "" })
+        let excludedIntentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD"),
+                                                                    excludedPaymentMethodTypes: ["us_bank_account"],
+                                                                    confirmationTokenConfirmHandler: { _ in return "" })
+
+        // When making elements/sessions parameters for each
+        let deferredIntents = try [allowedIntentConfig, excludedIntentConfig].map { intentConfig in
+            let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+                mode: .deferredIntent(intentConfig),
+                externalPaymentMethods: [],
+                cpmConfiguration: nil,
+                clientDefaultPaymentMethod: nil,
+                customerProvider: CustomerProvider(customer: nil),
+                linkDisallowFundingSourceCreation: []
+            )
+            return try XCTUnwrap(parameters["deferred_intent"] as? [String: Any])
+        }
+
+        // Then each sends only the payment method type parameter it was configured with
+        XCTAssertEqual(deferredIntents[0]["allowed_payment_method_types"] as? [String], ["card", "cashapp"])
+        XCTAssertNil(deferredIntents[0]["excluded_payment_method_types"])
+        XCTAssertNil(deferredIntents[0]["payment_method_types"])
+        XCTAssertEqual(deferredIntents[1]["excluded_payment_method_types"] as? [String], ["us_bank_account"])
+        XCTAssertNil(deferredIntents[1]["allowed_payment_method_types"])
+        XCTAssertNil(deferredIntents[1]["payment_method_types"])
+    }
+
     func testElementsSessionParameters_DeferredSetup() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
                                                                            setupFutureUsage: .offSession),
