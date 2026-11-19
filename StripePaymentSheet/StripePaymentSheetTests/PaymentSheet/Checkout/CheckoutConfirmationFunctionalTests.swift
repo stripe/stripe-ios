@@ -57,6 +57,8 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
             localDefaultEmail: nil
         )
         selectCard(on: checkout)
+        // ...and passive captcha on, so the recorded /confirm only matches with a top-level passive_captcha_token
+        XCTAssertNotNil(checkout.session.elementsSession.passiveCaptchaData)
 
         // When the coordinator confirms the Checkout Session
         let result = await checkout.confirm(from: UIViewController())
@@ -206,7 +208,23 @@ final class CheckoutConfirmationFunctionalTests: STPNetworkStubbingTestCase {
         configuration.defaults.email = localDefaultEmail
         configuration.defaults.billingDetails = defaultBillingDetails
         configuration.paymentElement = .init()
+        makeKeyWindow()
         return try await CheckoutElementsController(configuration: configuration)
+    }
+
+    /// Passive hCaptcha needs a key window in the app's scene for its web view, or confirmation sends no token.
+    private func makeKeyWindow() {
+        let window: UIWindow
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            window = UIWindow(windowScene: windowScene)
+        } else {
+            window = UIWindow(frame: UIScreen.main.bounds)
+        }
+        window.rootViewController = UIViewController()
+        window.makeKeyAndVisible()
+        addTeardownBlock { @MainActor in
+            window.isHidden = true
+        }
     }
 
     private func selectCard(on checkout: CheckoutElementsController, cardNumber: String = "4242424242424242") {
