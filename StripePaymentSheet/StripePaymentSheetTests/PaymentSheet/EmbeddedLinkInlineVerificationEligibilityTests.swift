@@ -48,6 +48,10 @@ final class EmbeddedLinkInlineVerificationEligibilityTests: XCTestCase {
         assertIneligible(evaluate(configuration: configuration, linkAccount: makeLinkAccount()), .disabledByMerchant)
     }
 
+    func testDisabledByDefault() {
+        assertIneligible(evaluate(configuration: .init(), linkAccount: makeLinkAccount()), .disabledByMerchant)
+    }
+
     func testCheckoutElements() {
         assertIneligible(evaluate(linkAccount: makeLinkAccount(), isCheckoutElements: true), .checkoutElements)
     }
@@ -99,7 +103,11 @@ final class EmbeddedLinkInlineVerificationEligibilityTests: XCTestCase {
 
     private func evaluate(
         elementsSession: STPElementsSession = ._testValue(paymentMethodTypes: ["card", "link"], linkUseAttestation: true),
-        configuration: EmbeddedPaymentElement.Configuration = .init(),
+        configuration: EmbeddedPaymentElement.Configuration = {
+            var configuration = EmbeddedPaymentElement.Configuration()
+            configuration.allowsLinkInlineVerification = true
+            return configuration
+        }(),
         linkAccount: PaymentSheetLinkAccount?,
         savedPaymentMethods: [STPPaymentMethod] = [],
         isCheckoutElements: Bool = false
