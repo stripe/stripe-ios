@@ -196,6 +196,9 @@ enum CheckoutPlayground {
         }
 
         var localDefaultEmail: String? { source == .local ? email : nil }
+
+        /// The email to create the Customer with, if any.
+        var customerEmail: String? { source == .customer ? email : nil }
     }
 
     enum CustomerType: String, CaseIterable, Identifiable, Codable {
@@ -532,5 +535,19 @@ enum CheckoutPlayground {
         var delayCheckoutClientRequests = false
 
         static let nsUserDefaultsKey = "CheckoutPlaygroundSettings"
+    }
+
+    /// A Customer created for the New customer type, stored once a checkout with it completes. Like the PaymentSheet
+    /// playground's New customer, it's reused for later sessions so that payment methods saved to it are offered again.
+    struct NewCustomer: Codable {
+
+        let id: String
+        /// The playground backend that created the Customer, since backends can use different Stripe accounts.
+        let backendURL: String
+        /// The email the checkout completed with. Checkout saves it to a Customer without an email, so later
+        /// sessions get it from the Customer as a server email.
+        let email: String?
+
+        static let nsUserDefaultsKey = "CheckoutPlaygroundNewCustomer"
     }
 }
