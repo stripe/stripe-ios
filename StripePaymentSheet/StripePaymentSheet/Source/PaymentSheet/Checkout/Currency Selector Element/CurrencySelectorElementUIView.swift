@@ -11,8 +11,8 @@
 import UIKit
 
 /// A UIKit view that displays an Adaptive Pricing currency selector.
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionsPreview)
 @MainActor
 public final class CurrencySelectorElementUIView: UIView {
 

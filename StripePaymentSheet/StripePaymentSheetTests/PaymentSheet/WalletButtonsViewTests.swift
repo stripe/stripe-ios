@@ -5,7 +5,7 @@
 
 import Foundation
 
-@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import SwiftUI
 import XCTest
 

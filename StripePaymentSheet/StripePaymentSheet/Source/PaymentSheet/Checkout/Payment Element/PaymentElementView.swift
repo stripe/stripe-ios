@@ -9,7 +9,8 @@ import SwiftUI
 import UIKit
 
 /// A view that displays payment methods.
-@_spi(InternalOnlyAPI)
+@_spi(ReactNativeSDK)
+@_spi(CheckoutSessionsPreview)
 public struct PaymentElementView: View {
     @ObservedObject private var viewModel: PaymentElementViewModel
 

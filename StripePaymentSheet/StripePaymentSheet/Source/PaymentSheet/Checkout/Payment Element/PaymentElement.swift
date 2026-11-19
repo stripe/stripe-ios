@@ -12,8 +12,8 @@ import UIKit
 
 /// PaymentElement collects the customer's payment method, either in an embeddable view or presented in a sheet.
 @MainActor
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionsPreview)
 public final class PaymentElement {
     // MARK: - Public Properties
 
@@ -208,16 +208,16 @@ extension PaymentElement {
 // MARK: - EmbeddedPaymentElementDelegate
 
 // Note: The EPE delegate methods just get forwarded to the PaymentElementUIView delegate
-extension PaymentElement: EmbeddedPaymentElementDelegate {
-    public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
+@_spi(InternalOnlyAPI) extension PaymentElement: EmbeddedPaymentElementDelegate {
+    @_spi(InternalOnlyAPI) public func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
         uiView.embeddedPaymentElementDidUpdateHeight()
     }
 
-    public func embeddedPaymentElementWillPresent(embeddedPaymentElement: EmbeddedPaymentElement) {
+    @_spi(InternalOnlyAPI) public func embeddedPaymentElementWillPresent(embeddedPaymentElement: EmbeddedPaymentElement) {
         uiView.embeddedPaymentElementWillPresent()
     }
 
-    public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
+    @_spi(InternalOnlyAPI) public func embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: EmbeddedPaymentElement) {
         guard !isSuppressingPaymentOptionUpdates else {
             return
         }

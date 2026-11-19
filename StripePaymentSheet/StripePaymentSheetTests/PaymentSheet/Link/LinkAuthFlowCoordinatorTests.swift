@@ -1,7 +1,7 @@
 // Copyright © 2026 Stripe, Inc. All rights reserved.
 
 @testable @_spi(InternalOnlyAPI) import StripeCore
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import XCTest
 
 @MainActor

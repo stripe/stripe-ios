@@ -21,8 +21,8 @@ protocol ExpressCheckoutElementDelegate: AnyObject {
 ///
 /// Obtain an instance from ``CheckoutElementsController/getExpressCheckoutElement()`` and use
 /// ``view`` in SwiftUI or ``uiView`` in UIKit.
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionsPreview)
 @MainActor
 public final class ExpressCheckoutElement {
 

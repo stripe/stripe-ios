@@ -6,8 +6,8 @@
 //
 
 import Combine
-@_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentSheet
+import StripePayments
+@_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 

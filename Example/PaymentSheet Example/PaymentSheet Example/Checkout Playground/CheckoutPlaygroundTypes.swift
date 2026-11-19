@@ -6,7 +6,7 @@
 
 import Foundation
 import PassKit
-@_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(CheckoutSessionsPreview) import StripePaymentSheet
 
 extension ExpressCheckoutElement.Configuration.LinkConfiguration.Display: CaseIterable, Identifiable {
     public static var allCases: [Self] { [.automatic, .never] }

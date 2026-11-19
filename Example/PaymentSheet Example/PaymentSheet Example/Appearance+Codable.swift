@@ -8,7 +8,7 @@
 //  These extensions are only for the example app and don't affect the public API.
 
 import Foundation
-@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 

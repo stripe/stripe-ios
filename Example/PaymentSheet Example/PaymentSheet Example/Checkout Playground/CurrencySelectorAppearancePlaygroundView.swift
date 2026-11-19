@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 5/18/26.
 //
 
-@_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import SwiftUI
 
 struct CurrencySelectorAppearancePlaygroundView: View {

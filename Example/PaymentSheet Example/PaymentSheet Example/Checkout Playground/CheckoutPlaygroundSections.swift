@@ -4,7 +4,7 @@
 //
 //  Created by Nick Porter on 2/24/26.
 
-@_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import SwiftUI
 
 // Settings are grouped by where they take effect:

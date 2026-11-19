@@ -8,7 +8,7 @@
 import Foundation
 @_spi(InternalOnlyAPI) @testable import StripeCore
 @_spi(InternalOnlyAPI) @testable import StripeCoreTestUtils
-@_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @testable @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import XCTest
 
 class STPAnalyticsClientPaymentSheetTest: XCTestCase {

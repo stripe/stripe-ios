@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 7/22/26.
 //
 
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionsPreview)
 extension CurrencySelectorElement {
     /// Configuration for Currency Selector Element.
     public struct Configuration {

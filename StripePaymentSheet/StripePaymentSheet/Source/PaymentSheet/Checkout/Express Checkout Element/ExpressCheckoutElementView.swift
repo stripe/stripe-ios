@@ -9,8 +9,8 @@ import Combine
 import SwiftUI
 
 /// A SwiftUI view that displays wallet payment buttons (Apple Pay, Link).
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionsPreview)
 public struct ExpressCheckoutElementView: View {
     @ObservedObject private var viewModel: ExpressCheckoutElementViewModel
 

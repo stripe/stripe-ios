@@ -15,8 +15,8 @@ import UIKit
 
 /// Use this class to build a [Checkout elements](todo) integration.
 /// It manages a CheckoutSession object and UI elements (e.g. PaymentElement, ShippingAddressElement).
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionsPreview)
 @MainActor
 public final class CheckoutElementsController: ObservableObject {
     // MARK: - Public Properties

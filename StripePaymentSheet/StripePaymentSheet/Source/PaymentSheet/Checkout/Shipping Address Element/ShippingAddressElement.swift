@@ -17,8 +17,8 @@ protocol ShippingAddressElementDelegate: AnyObject {
 
 /// A shipping address form backed by a Checkout Session.
 @MainActor
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionsPreview)
 public final class ShippingAddressElement {
 
     private(set) var addressViewController: AddressViewController!
@@ -187,9 +187,9 @@ extension ShippingAddressElement: AddressViewController.IntegrationDelegate {
     }
 }
 
-extension ShippingAddressElement: AddressViewControllerDelegate {
+@_spi(InternalOnlyAPI) extension ShippingAddressElement: AddressViewControllerDelegate {
 
-    public func addressViewControllerDidFinish(
+    @_spi(InternalOnlyAPI) public func addressViewControllerDidFinish(
         _ addressViewController: AddressViewController,
         with address: AddressViewController.AddressDetails?
     ) {
