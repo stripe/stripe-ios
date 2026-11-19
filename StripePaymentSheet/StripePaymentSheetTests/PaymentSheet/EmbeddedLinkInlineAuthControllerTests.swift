@@ -309,10 +309,49 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         // ...and so does a card that isn't on screen
         card.removeFromSuperview()
         XCTAssertEqual(controller.codeEntry(), .dialog(.layout(.notInWindow)))
+    }
 
-        // ...and an email code
-        controller.coordinator.sendToEmail()
+    func testSwitchingToAnEmailCodeKeepsTypingInTheCard() async throws {
+        // Given a card whose code was sent, in a scrolling screen, for an account whose email codes need no phone number match
+        let (controller, account) = makeController()
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
         await settle()
+        placeInScrollingScreen(card)
+        host.presenter = try XCTUnwrap(window?.rootViewController)
+
+        // When the customer picks "Email code"
+        card.onAction?(.email)
+        await settle()
+
+        // Then the email code is sent and typed in the card, without the dialog
+        XCTAssertEqual(account.starts.map(\.type), [.sms, .email])
+        XCTAssertEqual(controller.coordinator.screen, .otp)
+        XCTAssertEqual(controller.codeEntry(), .inline)
+        XCTAssertEqual(host.presentations, 0)
+        XCTAssertNil(host.presenter?.presentedViewController)
+    }
+
+    func testSwitchingToAnEmailCodeThatNeedsAPhoneNumberMatchOpensTheDialog() async throws {
+        // Given a card whose code was sent, for an account whose email codes need a phone number match
+        let (controller, account) = makeController()
+        account.authLookupSettings = .init(emailOtpRequiresAdditionalInfo: true)
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+        let presenter = makePresenterInWindow()
+        host.presenter = presenter
+
+        // When the customer picks "Email code"
+        card.onAction?(.email)
+        await settle()
+
+        // Then the phone number match continues in the dialog, before any email code is sent
+        try await waitUntil { presenter.presentedViewController != nil }
+        XCTAssertEqual(controller.coordinator.screen, .phoneMatch)
+        XCTAssertEqual(account.starts.map(\.type), [.sms])
+        XCTAssertEqual(host.presentations, 1)
+        // ...and the card can't take that step
         XCTAssertEqual(controller.codeEntry(), .dialog(.unsupportedStep))
     }
 
