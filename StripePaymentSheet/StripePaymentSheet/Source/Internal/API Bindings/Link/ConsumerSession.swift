@@ -307,7 +307,7 @@ extension ConsumerSession {
 
     func createPaymentDetails(
         linkedAccountId: String,
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         isDefault: Bool,
         clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
@@ -355,7 +355,7 @@ extension ConsumerSession {
     }
 
     func createLinkAccountSession(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
         permissions: [String]? = nil,
@@ -464,7 +464,7 @@ extension ConsumerSession {
     }
 
     func logout(
-        with apiClient: STPAPIClient = STPAPIClient.shared,
+        with apiClient: STPAPIClient,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
