@@ -275,6 +275,9 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
             XCTAssertEqual(params["payment_method"], paymentMethod.stripeId)
             XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") })
+            XCTAssertEqual(params["passive_captcha_token"], "captcha_token")
+            // Check before supplying the response, without relying on a response delay.
+            XCTAssertEqual(challenge.completions, 0)
             return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: ["Request-Id": "req_confirm_success"])
         }
 
@@ -294,7 +297,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
         XCTAssertEqual(paymentStatus, .paid)
         XCTAssertEqual(checkout.session.status, .complete(.paid))
-        XCTAssertEqual(challenge.completions, 0)
+        XCTAssertEqual(challenge.completions, 1)
 
         // ...and analytics records the result, session, and source without a successful request ID
         let events = confirmationEvents
@@ -1218,7 +1221,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             request.url?.path.hasSuffix("/confirm") == true
         } response: { request in
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request, omittingEmptyValues: true)
-            XCTAssertEqual(params["payment_method_data[radar_options][hcaptcha_token]"], "captcha_token")
+            XCTAssertEqual(params["passive_captcha_token"], "captcha_token")
+            XCTAssertNil(params["payment_method_data[radar_options][hcaptcha_token]"])
             XCTAssertEqual(
                 params["payment_method_data[radar_options][ios_verification_object][test_assertion]"],
                 "assertion"
@@ -1473,7 +1477,8 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
                 checkoutSession: checkout.session,
                 attribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
             ),
-            collectedInformation: .init(email: checkout.session.localState.email)
+            collectedInformation: .init(email: checkout.session.localState.email),
+            passiveCaptchaToken: nil
         )
         return await CheckoutElementsController.confirmCheckoutSession(
             with: requestParameters,

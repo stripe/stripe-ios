@@ -127,7 +127,6 @@ extension CheckoutElementsController {
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
                     }
-                    await confirmationChallenge?.complete()
                     completion(result, nil)
                 }
             }
@@ -214,7 +213,7 @@ extension CheckoutElementsController {
             apiClient: parameters.configuration.apiClient,
             authenticationContext: parameters.authenticationContext,
             paymentHandler: parameters.paymentHandler,
-            confirmationChallenge: requestParameters.paymentMethodData == nil ? nil : parameters.confirmationChallenge
+            confirmationChallenge: parameters.confirmationChallenge
         )
     }
 
