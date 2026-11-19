@@ -10,6 +10,7 @@
 @testable @_spi(InternalOnlyAPI) import StripePayments
 @testable @_spi(InternalOnlyAPI) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
+import UIKit
 import XCTest
 
 final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
@@ -142,6 +143,57 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         // 5. Verify response
         XCTAssertEqual(response.makePublicSession().status, .complete(.paid))
         XCTAssertNotNil(response.paymentResponse?.paymentIntent)
+    }
+
+    @MainActor
+    func testConfirmNewCardWithPassiveCaptchaToken() async throws {
+        // HCaptcha's web view needs a key window in the app's scene.
+        let window: UIWindow
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            window = UIWindow(windowScene: windowScene)
+        } else {
+            window = UIWindow(frame: UIScreen.main.bounds)
+        }
+        window.rootViewController = UIViewController()
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+
+        // Given a Checkout Session for a merchant with passive captcha on
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession(
+            returnURL: "stripe-ios-test://checkout-return",
+            customerEmail: "test@example.com"
+        )
+        var configuration = CheckoutElementsController.Configuration(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            returnURL: "stripe-ios-test://checkout-return"
+        )
+        configuration.paymentElement = .init()
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await CheckoutElementsController(configuration: configuration)
+        XCTAssertNotNil(checkout.session.elementsSession.passiveCaptchaData)
+
+        // ...and the customer entered a new card
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        let card = STPPaymentMethodCardParams()
+        card.number = "4242424242424242"
+        card.expMonth = 12
+        card.expYear = 2030
+        card.cvc = "123"
+        confirmParams.paymentMethodParams.card = card
+        let element = checkout.getPaymentElement()
+        element.embeddedPaymentElement._test_paymentOption = .new(confirmParams: confirmParams)
+        element.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: element.embeddedPaymentElement)
+        element.paymentOptionSourceOfTruthIsFlowController = false
+
+        // When the merchant confirms, sending a real passive hCaptcha token at the top level
+        let result = await checkout.confirm(from: window.rootViewController)
+
+        // Then the backend accepts the request and the payment completes
+        guard case .completed(let paymentStatus) = result else {
+            return XCTFail("Expected confirmation to complete, got \(result)")
+        }
+        XCTAssertEqual(paymentStatus, .paid)
+        XCTAssertEqual(checkout.session.status, .complete(.paid))
     }
 
     // MARK: - Adaptive Pricing
