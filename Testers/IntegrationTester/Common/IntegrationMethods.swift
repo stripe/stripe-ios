@@ -80,7 +80,6 @@ extension IntegrationMethod {
         cardParams.cvc = "123"
           return STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
       case .weChatPay:
-//            return STPPaymentMethodParams(weChatPay: STPPaymentMethodWeChatPayParams(), billingDetails: nil, metadata: nil)
         assertionFailure("WeChat Pay is currently unavailable")
         return STPPaymentMethodParams()
       case .applePay:
