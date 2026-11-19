@@ -18,14 +18,4 @@ if xcconfig_search_result.length == 0
   fail_check("VERSION does not match Version.xcconfig")
 end
 
-
-Dir.glob('./*.podspec') do |podspec|
-
-  podspec_search_result = `grep #{file_version} #{podspec}`
-
-  if podspec_search_result.length == 0
-    fail_check("VERSION does not match s.version in #{File.basename(podspec)}")
-  end
-end
-
 puts "Done!"

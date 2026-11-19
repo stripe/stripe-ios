@@ -215,7 +215,6 @@ import UIKit
         }
 
         if settings.shippingInfo != .off {
-            configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
                 return self?.addressDetails
             }
@@ -341,7 +340,6 @@ import UIKit
         }
 
         if settings.shippingInfo != .off {
-            configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
                 return self?.addressDetails
             }

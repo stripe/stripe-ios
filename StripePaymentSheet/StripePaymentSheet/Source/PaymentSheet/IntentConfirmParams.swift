@@ -14,8 +14,8 @@ import UIKit
 /// An internal type representing both `STPPaymentIntentConfirmParams` and `STPSetupIntentConfirmParams`
 /// - Note: Assumes you're confirming with a new payment method, unless a payment method ID is provided
 final class IntentConfirmParams {
-    /// An enum for the three possible states of the e.g. "Save this card for future payments" checkbox
-    enum SaveForFutureUseCheckboxState {
+    /// An enum for the three possible states of a checkbox in the form, e.g. "Save this card for future payments"
+    enum CheckboxState {
         /// The checkbox wasn't displayed
         case hidden
         /// The checkbox was displayed and selected
@@ -30,9 +30,11 @@ final class IntentConfirmParams {
     let confirmPaymentMethodOptions: STPConfirmPaymentMethodOptions
 
     /// True if the customer opts to save their payment method for future payments.
-    var saveForFutureUseCheckboxState: SaveForFutureUseCheckboxState = .hidden
+    var saveForFutureUseCheckboxState: CheckboxState = .hidden
     /// If `true`, a mandate (e.g. "By continuing you authorize Foo Corp to use your payment details for recurring payments...") was displayed to the customer.
     var didDisplayMandate: Bool = false
+    /// Hack: Not actually data sent to /confirm. The state of the "Save my info for faster checkout with Link" checkbox. Used to restore the customer's choice when the form is rebuilt.
+    var linkInlineSignupCheckboxState: CheckboxState = .hidden
 
     var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
     var instantDebitsLinkedBank: InstantDebitsLinkedBank?
