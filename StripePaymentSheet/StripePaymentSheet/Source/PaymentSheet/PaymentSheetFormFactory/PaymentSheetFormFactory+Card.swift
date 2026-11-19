@@ -159,6 +159,7 @@ extension PaymentSheetFormFactory {
                 allowsDefaultOptIn: allowsLinkDefaultOptIn,
                 signupOptInFeatureEnabled: signupOptInFeatureEnabled,
                 signupOptInInitialValue: signupOptInInitialValue,
+                restoredCheckboxState: previousCustomerInput?.linkInlineSignupCheckboxState ?? .hidden,
                 analyticsHelper: analyticsHelper
             )
             elements.append(inlineSignupElement)
