@@ -20,16 +20,16 @@ class CustomerSessionAdapter {
     struct CachedCustomerSessionClientSecret {
         let customerSessionClientSecret: CustomerSessionClientSecret
         let apiKey: String
-        let customerId: String?
+        let customerId: String
         let cacheDate: Date
         private let timeProvider: () -> Date
 
         /// - Parameter customerId: The Customer the CustomerSession is scoped to, from `v1/elements/sessions`. For a CustomerSession
         ///   created with a customer-configured Account, this is the Account's backing Customer, which v1 endpoints require
-        ///   instead of the merchant's `acct_` ID. `nil` if neither the merchant nor `v1/elements/sessions` provided one.
+        ///   instead of the merchant's `acct_` ID.
         init(customerSessionClientSecret: CustomerSessionClientSecret,
              apiKey: String,
-             customerId: String?,
+             customerId: String,
              timeProvider: @escaping () -> Date = Date.init) {
             self.customerSessionClientSecret = customerSessionClientSecret
             self.customerId = customerId
@@ -85,14 +85,14 @@ class CustomerSessionAdapter {
         } else {
             let customerSessionClientSecret = try await customerSessionClientSecretProvider()
             let elementsSessionResponse = try await elementsSession(customerSessionClientSecret: customerSessionClientSecret, setupIntentClientSecret: setupIntentClientSecret)
-            guard let apiKey = elementsSessionResponse.customer?.customerSession.apiKey,
-                  !apiKey.isEmpty else {
+            guard let customerSession = elementsSessionResponse.customer?.customerSession,
+                  !customerSession.apiKey.isEmpty else {
                 throw CustomerSheetError.unknown(debugDescription: "Failed to claim CustomerSession")
             }
 
             let tempCachedCustomerSessionClientSecret = CachedCustomerSessionClientSecret(customerSessionClientSecret: customerSessionClientSecret,
-                                                                                          apiKey: apiKey,
-                                                                                          customerId: elementsSessionResponse.customer?.customerSession.customer ?? customerSessionClientSecret.customerId,
+                                                                                          apiKey: customerSession.apiKey,
+                                                                                          customerId: customerSession.customer,
                                                                                           timeProvider: timeProvider)
             self._cachedCustomerSessionClientSecret = tempCachedCustomerSessionClientSecret
             return (elementsSessionResponse, tempCachedCustomerSessionClientSecret)
@@ -130,14 +130,11 @@ extension CustomerSessionAdapter {
     func detachPaymentMethod(paymentMethod: STPPaymentMethod) async throws {
 
         let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()
-        guard let customerId = cachedCustomerSessionClientSecret.customerId else {
-            throw CustomerSheetError.unknown(debugDescription: "Failed to read customerId while detaching a payment method.")
-        }
         return try await withCheckedThrowingContinuation({ continuation in
             if paymentMethod.type == .card {
                 self.configuration.apiClient.detachPaymentMethodRemoveDuplicates(
                     paymentMethod.stripeId,
-                    customerId: customerId,
+                    customerId: cachedCustomerSessionClientSecret.customerId,
                     fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey,
                     withCustomerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret.clientSecret) { error in
                         if let error = error {
@@ -170,9 +167,6 @@ extension CustomerSessionAdapter {
 
     func setAsDefaultPaymentMethod(paymentMethodId: String) async throws -> STPCustomer {
         let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()
-        guard let customerId = cachedCustomerSessionClientSecret.customerId else {
-            throw CustomerSheetError.unknown(debugDescription: "Failed to read customerId while setting a payment method as default.")
-        }
-        return try await self.configuration.apiClient.setAsDefaultPaymentMethod(paymentMethodId, for: customerId, using: cachedCustomerSessionClientSecret.apiKey)
+        return try await self.configuration.apiClient.setAsDefaultPaymentMethod(paymentMethodId, for: cachedCustomerSessionClientSecret.customerId, using: cachedCustomerSessionClientSecret.apiKey)
     }
 }
