@@ -1041,6 +1041,7 @@ import UIKit
         }
 
         session.logout(
+            with: apiClient,
             requestSurface: requestSurface,
             completion: { result in
                 switch result {
