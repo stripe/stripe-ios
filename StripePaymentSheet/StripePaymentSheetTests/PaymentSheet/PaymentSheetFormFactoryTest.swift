@@ -2358,7 +2358,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.address = .never
         return PaymentSheetFormFactory(
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             paymentMethodOrientation: .horizontal,
             previousCustomerInput: previousCustomerInput,
