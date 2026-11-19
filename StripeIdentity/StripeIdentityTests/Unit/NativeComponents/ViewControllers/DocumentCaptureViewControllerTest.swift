@@ -836,7 +836,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         // Mock that scanner found desired classification, but is blurry
         mockConcurrencyManager.respondToScan(
-            output: makeDocumentScannerOutputLegacy(with: .idCardFront, isBlurry: false)
+            output: makeDocumentScannerOutputLegacy(with: .idCardFront, hasMotionBlur: true, isAdjustingFocus: true)
         )
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, makeDocumentScannerOutputLegacyWithIddetectorOutput(.init(classification: .idCardFront, documentBounds: CGRect(), allClassificationScores: [.invalid: 0]))))
 
@@ -873,6 +873,72 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock that scanner found desired classification
         mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutputLegacy(with: .idCardFront))
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
+    }
+
+    func testBackOfIDWithBarcodeIsNotCapturedOnFrontStep() {
+        // Given a scan of the front of the document
+        let vc = makeViewController(state: .scanning(.front, nil))
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
+        waitForCameraSessionToStart()
+        mockCameraFrameCaptured(vc)
+        let backWithBarcode = makeDocumentScannerOutputLegacy(with: .idCardBack, hasBarcode: true)
+
+        // When the scanner finds the back of the ID and decodes its barcode
+        mockConcurrencyManager.respondToScan(output: backWithBarcode)
+
+        // Then the back is not captured as the front, and the hint says so
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, backWithBarcode))
+        XCTAssertEqual(
+            vc.scanningInstructionText(for: .front, documentScannerOutput: backWithBarcode, availableIDTypes: []),
+            "Front of ID not detected"
+        )
+    }
+
+    func testCaptureBlocker() {
+        let cases: [(name: String, side: DocumentSide, output: DocumentScannerOutput, expected: DocumentScannerOutput.CaptureBlocker?)] = [
+            ("front", .front, makeDocumentScannerOutputLegacy(with: .idCardFront), nil),
+            ("passport", .front, makeDocumentScannerOutputLegacy(with: .passport), nil),
+            ("invalid", .front, makeDocumentScannerOutputLegacy(with: .invalid), .wrongDocument),
+            ("back with barcode on front step", .front, makeDocumentScannerOutputLegacy(with: .idCardBack, hasBarcode: true), .wrongDocument),
+            ("too close", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, documentBounds: Self.tooCloseBounds), .tooClose),
+            ("too far", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, documentBounds: Self.tooFarBounds), .tooFar),
+            ("too close and blurry", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, documentBounds: Self.tooCloseBounds, isLaplacianBlurry: true), .tooClose),
+            ("blurry", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, isLaplacianBlurry: true), .blurry),
+            ("motion blur", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, hasMotionBlur: true), .motionBlur),
+            ("focusing", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, isAdjustingFocus: true), .adjustingFocus),
+            ("off center", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, documentBounds: Self.offCenterBounds), nil),
+            ("back with barcode, moving and focusing", .back, makeDocumentScannerOutputLegacy(with: .idCardBack, hasBarcode: true, hasMotionBlur: true, isAdjustingFocus: true), nil),
+            ("blurry back with barcode", .back, makeDocumentScannerOutputLegacy(with: .idCardBack, hasBarcode: true, isLaplacianBlurry: true), .blurry),
+        ]
+
+        for testCase in cases {
+            XCTAssertEqual(testCase.output.captureBlocker(side: testCase.side), testCase.expected, testCase.name)
+            XCTAssertEqual(testCase.output.isHighQuality(side: testCase.side), testCase.expected == nil, testCase.name)
+        }
+    }
+
+    func testScanningInstructionText() {
+        let vc = makeViewController(state: .scanning(.front, nil))
+        let cases: [(name: String, side: DocumentSide, output: DocumentScannerOutput, expected: String)] = [
+            ("front", .front, makeDocumentScannerOutputLegacy(with: .idCardFront), "Hold still, scanning"),
+            ("invalid", .front, makeDocumentScannerOutputLegacy(with: .invalid), "Invalid document"),
+            ("back on front step", .front, makeDocumentScannerOutputLegacy(with: .idCardBack), "Front of ID not detected"),
+            ("front on back step", .back, makeDocumentScannerOutputLegacy(with: .idCardFront), "Back of ID not detected"),
+            ("off center", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, documentBounds: Self.offCenterBounds), "Center ID in view"),
+            ("too close", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, documentBounds: Self.tooCloseBounds), "Move farther"),
+            ("too far", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, documentBounds: Self.tooFarBounds), "Move closer"),
+            ("too close and blurry", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, documentBounds: Self.tooCloseBounds, isLaplacianBlurry: true), "Move farther"),
+            ("blurry", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, isLaplacianBlurry: true), "Image is blurry. Hold your phone steady and try again."),
+            ("motion blur", .front, makeDocumentScannerOutputLegacy(with: .idCardFront, hasMotionBlur: true), "Hold still, scanning"),
+        ]
+
+        for testCase in cases {
+            XCTAssertEqual(
+                vc.scanningInstructionText(for: testCase.side, documentScannerOutput: testCase.output, availableIDTypes: []),
+                testCase.expected,
+                testCase.name
+            )
+        }
     }
 
     func testAppBackgrounded() {
@@ -1130,15 +1196,25 @@ extension DocumentCaptureViewControllerTest {
         )
     }
 
+    // Document widths outside 0.6...0.9 of the frame are too far or too close.
+    fileprivate static let tooCloseBounds = CGRect(x: 0.02, y: 0.3, width: 0.96, height: 0.4)
+    fileprivate static let tooFarBounds = CGRect(x: 0.25, y: 0.4, width: 0.5, height: 0.2)
+    // Inside the square the ID detector reads, with its center 0.09 below the
+    // frame center: just outside the 0.08 centering tolerance.
+    fileprivate static let offCenterBounds = CGRect(x: 0.1, y: 0.425, width: 0.8, height: 0.33)
+
     fileprivate func makeDocumentScannerOutputLegacy(
         with classification: IDDetectorOutput.Classification,
-        isBlurry: Bool = true,
-        hasBarcode: Bool = false
+        hasBarcode: Bool = false,
+        documentBounds: CGRect = CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
+        hasMotionBlur: Bool = false,
+        isAdjustingFocus: Bool = false,
+        isLaplacianBlurry: Bool = false
     ) -> DocumentScannerOutput {
         return .legacy(
             .init(
                 classification: classification,
-                documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
+                documentBounds: documentBounds,
                 allClassificationScores: [
                     classification: 0.9
                 ]
@@ -1150,7 +1226,7 @@ extension DocumentCaptureViewControllerTest {
                 timeTryingToFindBarcode: 1
             ),
             .init(
-                hasMotionBlur: !isBlurry,
+                hasMotionBlur: hasMotionBlur,
                 iou: nil,
                 frameCount: 0,
                 duration: 0
@@ -1162,10 +1238,10 @@ extension DocumentCaptureViewControllerTest {
                     isVirtualDevice: nil,
                     lensPosition: 0,
                     exposureISO: 0,
-                    isAdjustingFocus: !isBlurry
+                    isAdjustingFocus: isAdjustingFocus
                 )
             ),
-            .init(isBlurry: false, variance: 0.1)
+            .init(isBlurry: isLaplacianBlurry, variance: 0.1)
         )
     }
 

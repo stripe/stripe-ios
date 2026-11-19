@@ -64,21 +64,17 @@ extension DocumentCaptureViewController {
         switch documentScannerOutput {
         case .none:
             return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
-        case .some(.legacy(let idDetectorOutput, _, let motionblur, _, _)):
-            let foundClassification = idDetectorOutput.classification
-            let matchesClassification = foundClassification.matchesDocument(side: side)
-            let zoomLevel = idDetectorOutput.computeZoomLevel()
-
-            if foundClassification == .invalid {
-                return String.Localized.invalid_document
-            }
-            // If document appears off-center, ask user to center it (only when the side matches)
-            if matchesClassification && !idDetectorOutput.isCentered() {
+        case .some(let documentScannerOutput):
+            let captureBlocker = documentScannerOutput.captureBlocker(side: side)
+            // Centering is advice only: an off-center document can still be captured.
+            if captureBlocker != .wrongDocument && !documentScannerOutput.idDetectorOutput.isCentered() {
                 return String.Localized.center_id_in_view
             }
-            switch (side, matchesClassification, zoomLevel) {
-            case (.front, false, _), (.back, false, _):
-                switch (side, foundClassification) {
+            switch captureBlocker {
+            case .wrongDocument:
+                switch (side, documentScannerOutput.idDetectorOutput.classification) {
+                case (_, .invalid):
+                    return String.Localized.invalid_document
                 case (.front, .idCardBack):
                     return String.Localized.front_of_id_not_detected
                 case (.back, .idCardFront), (.back, .passport):
@@ -86,15 +82,14 @@ extension DocumentCaptureViewController {
                 default:
                     return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
                 }
-            case (_, true, .ok):
-                if motionblur.hasMotionBlur {
-                    return String.Localized.reduce_blur
-                }
-                return String.Localized.scanning
-            case (_, true, .tooClose):
+            case .tooClose:
                 return String.Localized.move_farther
-            case (_, true, .tooFar):
+            case .tooFar:
                 return String.Localized.move_closer
+            case .blurry:
+                return String.Localized.reduce_blur
+            case .motionBlur, .adjustingFocus, .none:
+                return String.Localized.scanning
             }
         }
     }
