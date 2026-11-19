@@ -2,9 +2,11 @@ The next release's version bump will so far be:
 MAJOR
 
 ## X.Y.Z - changes pending release
+This major version introduces several breaking changes. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) to help you migrate.
+
 ### General
-* [Changed] The SDK now uses Stripe API version `2026-10-28.endive` instead of `2020-08-27`. Your server can keep using its current API version. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) and the below changes for more information.
-* [Changed] `allResponseFields` on API objects, such as `STPPaymentIntent`, now reflects API version `2026-10-28.endive`. Some fields were removed or renamed, and some values changed. For example, `cancellation_reason` is `expired` instead of `automatic` when an authorization expires.
+* [Changed] The SDK now uses Stripe API version `2026-09-30.endive` instead of `2020-08-27`. Your server can keep using its current API version. Parameters that you pass in `additionalAPIParameters` must be valid for `2026-09-30.endive`.
+* [Changed] `allResponseFields` on API objects, such as `STPPaymentIntent`, now reflects API version `2026-09-30.endive`. Compared to `2020-08-27`, some fields are removed or renamed, and some values are different. For example, `cancellation_reason` is `expired` instead of `automatic` when an authorization expires.
 
 ### Payments
 * [Changed] For failed Bancontact, EPS, iDEAL, Klarna, and Przelewy24 payments, `STPPaymentIntentLastPaymentError.code` now returns specific codes, such as `payment_method_customer_decline`, instead of `payment_intent_authentication_failure`. For failed Bancontact and iDEAL setups, `STPSetupIntentLastSetupError.code` returns the specific codes instead of `setup_intent_authentication_failure`. `STPPaymentHandler` now reports these failures with `STPPaymentHandlerErrorCode.paymentErrorCode` instead of `.notAuthenticatedErrorCode`, and PaymentSheet shows customers a different error message. Errors from confirming some TWINT and Zip payments also have the specific codes instead of `payment_intent_authentication_failure`. Expired Klarna payments return `payment_intent_payment_attempt_expired` instead of `payment_intent_payment_attempt_failed`.
@@ -12,7 +14,9 @@ MAJOR
 * [Changed] When you set `STPAPIClient.stripeAccount` and use a platform's publishable key, `fingerprint` on `STPPaymentMethodUSBankAccount`, `STPPaymentMethodSEPADebit`, `STPPaymentMethodBacsDebit`, and `STPPaymentMethodAUBECSDebit`, and in the `acss_debit` hash of `STPPaymentMethod.allResponseFields`, is now scoped to the platform instead of the connected account.
 
 ### PaymentSheet
-* [Changed] `PaymentSheet.IntentConfiguration.Mode.payment` no longer defaults `captureMethod` to `.automatic`. Pass the capture method of the PaymentIntent your server creates. PaymentIntents created with API version `2024-04-10` or later use `automatic_async` when you don't specify `capture_method`.
+* [Added] Added `allowedPaymentMethodTypes` and `excludedPaymentMethodTypes` to `PaymentSheet.IntentConfiguration`. If your server creates the PaymentIntent or SetupIntent with `allowed_payment_method_types` or `excluded_payment_method_types`, set the matching property to the same list.
+* [Changed] `PaymentSheet.IntentConfiguration.Mode.payment` now requires an explicit `captureMethod`. Pass the capture method of the PaymentIntent your server creates. If you didn't previously set `captureMethod`, pass `.automatic`.
+* [Changed] PaymentSheet and PaymentSheet.FlowController fail to load with the client secret of a completed or processing PaymentIntent or SetupIntent, and return an API error. Previously, some of these intents failed with `PaymentSheetError.paymentIntentInTerminalState` or `PaymentSheetError.setupIntentInTerminalState`, and others loaded. CustomerSheet also fails to save a payment method with the client secret of such a SetupIntent. Create a new intent for each payment or setup.
 
 ## 26.16.0 2026-11-02
 ### PaymentSheet

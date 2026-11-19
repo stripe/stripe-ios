@@ -28,6 +28,12 @@ import Foundation
     /// The payment method types for the intent
     @objc public var paymentMethodTypes: [String]?
 
+    /// The allowlist of payment method types for the intent
+    @objc public var allowedPaymentMethodTypes: [String]?
+
+    /// The payment method types excluded from the intent's dynamic payment methods
+    @objc public var excludedPaymentMethodTypes: [String]?
+
     /// The account (if any) for which the funds of the intent are intended
     @objc public var onBehalfOf: String?
 
@@ -51,6 +57,8 @@ import Foundation
             "setupFutureUsage = \(setupFutureUsage ?? "")",
             "captureMethod = \(captureMethod ?? "")",
             "paymentMethodTypes = \(String(describing: paymentMethodTypes))",
+            "allowedPaymentMethodTypes = \(String(describing: allowedPaymentMethodTypes))",
+            "excludedPaymentMethodTypes = \(String(describing: excludedPaymentMethodTypes))",
             "onBehalfOf = \(onBehalfOf ?? "")",
             "paymentMethodConfiguration = \(paymentMethodConfiguration ?? "")",
             "customer = \(customer ?? "")",
@@ -74,6 +82,8 @@ import Foundation
             NSStringFromSelector(#selector(getter: setupFutureUsage)): "setup_future_usage",
             NSStringFromSelector(#selector(getter: captureMethod)): "capture_method",
             NSStringFromSelector(#selector(getter: paymentMethodTypes)): "payment_method_types",
+            NSStringFromSelector(#selector(getter: allowedPaymentMethodTypes)): "allowed_payment_method_types",
+            NSStringFromSelector(#selector(getter: excludedPaymentMethodTypes)): "excluded_payment_method_types",
             NSStringFromSelector(#selector(getter: onBehalfOf)): "on_behalf_of",
             NSStringFromSelector(#selector(getter: paymentMethodConfiguration)): "payment_method_configuration",
             NSStringFromSelector(#selector(getter: customer)): "customer",

@@ -1774,6 +1774,17 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_payment_method_types),
             ["deferred-intent"]
         )
+        let intentConfig_with_allowed_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD", captureMethod: .automatic), allowedPaymentMethodTypes: ["card"], confirmHandler: { _, _ in return "" })
+        XCTAssertEqual(
+            PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_allowed_payment_method_types),
+            ["deferred-intent"]
+        )
+        // Excluding payment method types still uses automatic payment methods
+        let intentConfig_with_excluded_payment_method_types = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: "USD", captureMethod: .automatic), excludedPaymentMethodTypes: ["card"], confirmHandler: { _, _ in return "" })
+        XCTAssertEqual(
+            PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig_with_excluded_payment_method_types),
+            ["deferred-intent", "autopm"]
+        )
     }
 
     // MARK: - Set default payment method tests

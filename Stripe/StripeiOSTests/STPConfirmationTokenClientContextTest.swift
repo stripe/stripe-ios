@@ -41,6 +41,8 @@ class STPConfirmationTokenClientContextTest: XCTestCase {
         XCTAssertEqual(mapping["setupFutureUsage"], "setup_future_usage")
         XCTAssertEqual(mapping["captureMethod"], "capture_method")
         XCTAssertEqual(mapping["paymentMethodTypes"], "payment_method_types")
+        XCTAssertEqual(mapping["allowedPaymentMethodTypes"], "allowed_payment_method_types")
+        XCTAssertEqual(mapping["excludedPaymentMethodTypes"], "excluded_payment_method_types")
         XCTAssertEqual(mapping["onBehalfOf"], "on_behalf_of")
         XCTAssertEqual(mapping["paymentMethodConfiguration"], "payment_method_configuration")
         XCTAssertEqual(mapping["customer"], "customer")
@@ -56,6 +58,8 @@ class STPConfirmationTokenClientContextTest: XCTestCase {
         clientContext.setupFutureUsage = "off_session"
         clientContext.captureMethod = "automatic_async"
         clientContext.paymentMethodTypes = ["card", "apple_pay"]
+        clientContext.allowedPaymentMethodTypes = ["card", "klarna"]
+        clientContext.excludedPaymentMethodTypes = ["us_bank_account"]
         clientContext.onBehalfOf = "acct_123456"
         clientContext.paymentMethodConfiguration = "pmc_123456"
         clientContext.customer = "cus_123456"
@@ -76,6 +80,8 @@ class STPConfirmationTokenClientContextTest: XCTestCase {
         XCTAssertEqual(clientContextDict?["setup_future_usage"] as? String, "off_session")
         XCTAssertEqual(clientContextDict?["capture_method"] as? String, "automatic_async")
         XCTAssertEqual(clientContextDict?["payment_method_types"] as? [String], ["card", "apple_pay"])
+        XCTAssertEqual(clientContextDict?["allowed_payment_method_types"] as? [String], ["card", "klarna"])
+        XCTAssertEqual(clientContextDict?["excluded_payment_method_types"] as? [String], ["us_bank_account"])
         XCTAssertEqual(clientContextDict?["on_behalf_of"] as? String, "acct_123456")
         XCTAssertEqual(clientContextDict?["payment_method_configuration"] as? String, "pmc_123456")
         XCTAssertEqual(clientContextDict?["customer"] as? String, "cus_123456")
@@ -97,6 +103,8 @@ class STPConfirmationTokenClientContextTest: XCTestCase {
         XCTAssertNil(clientContextDict?["setup_future_usage"])
         XCTAssertNil(clientContextDict?["capture_method"])
         XCTAssertNil(clientContextDict?["payment_method_types"])
+        XCTAssertNil(clientContextDict?["allowed_payment_method_types"])
+        XCTAssertNil(clientContextDict?["excluded_payment_method_types"])
         XCTAssertNil(clientContextDict?["on_behalf_of"])
         XCTAssertNil(clientContextDict?["payment_method_configuration"])
         XCTAssertNil(clientContextDict?["customer"])
@@ -116,6 +124,8 @@ class STPConfirmationTokenClientContextTest: XCTestCase {
         XCTAssertNil(clientContextDict?["setup_future_usage"])
         XCTAssertNil(clientContextDict?["capture_method"])
         XCTAssertNil(clientContextDict?["payment_method_types"])
+        XCTAssertNil(clientContextDict?["allowed_payment_method_types"])
+        XCTAssertNil(clientContextDict?["excluded_payment_method_types"])
         XCTAssertNil(clientContextDict?["on_behalf_of"])
         XCTAssertNil(clientContextDict?["payment_method_configuration"])
         XCTAssertNil(clientContextDict?["customer"])

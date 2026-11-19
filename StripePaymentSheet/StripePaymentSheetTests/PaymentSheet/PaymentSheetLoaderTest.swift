@@ -151,6 +151,10 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             .init(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), confirmHandler: confirmHandler),
             // Payment config with explicit PM types
             .init(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), paymentMethodTypes: ["card"], confirmHandler: confirmHandler),
+            // Payment config with allowed PM types
+            .init(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), allowedPaymentMethodTypes: ["card", "cashapp"], confirmHandler: confirmHandler),
+            // Payment config with excluded PM types
+            .init(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), excludedPaymentMethodTypes: ["cashapp"], confirmHandler: confirmHandler),
             // Typical auto pm setup config
             .init(mode: .setup(currency: "USD"), confirmHandler: confirmHandler),
             // Setup config with explicit PM types

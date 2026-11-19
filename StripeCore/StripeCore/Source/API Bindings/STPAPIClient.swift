@@ -280,7 +280,7 @@ import UIKit
 
 }
 
-private let APIVersion = "2026-10-28.endive"
+private let APIVersion = "2026-09-30.endive"
 private let APIBaseURL = "https://api.stripe.com/v1"
 
 // MARK: Modern bindings
