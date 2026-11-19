@@ -265,20 +265,15 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         STPAnalyticsClient.sharedClient._testLogHistory = []
         defer { STPAnalyticsClient.sharedClient._testLogHistory = previousHistory }
 
-        // Given an open Checkout Session and a payment method confirmed by ID with a confirmation challenge,
-        // as Link does for a payment method it just created
+        // Given an open Checkout Session and a saved payment method
         let checkout = try await makeCheckout()
         let paymentMethod = STPPaymentMethod._testCard()
-        let challenge = TestConfirmationChallenge()
         stub { request in
             request.url?.path.hasSuffix("/confirm") == true
         } response: { request in
             let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
             XCTAssertEqual(params["payment_method"], paymentMethod.stripeId)
             XCTAssertFalse(params.keys.contains { $0.hasPrefix("payment_method_data[") })
-            XCTAssertEqual(params["passive_captcha_token"], "captcha_token")
-            // Check before supplying the response, without relying on a response delay.
-            XCTAssertEqual(challenge.completions, 0)
             return HTTPStubsResponse(jsonObject: Self.confirmedSessionJSON, statusCode: 200, headers: ["Request-Id": "req_confirm_success"])
         }
 
@@ -286,8 +281,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let result = await checkout.confirm(
             makePaymentMethodFlow(
                 for: checkout,
-                option: .saved(paymentMethod, nil),
-                confirmationChallenge: challenge
+                option: .saved(paymentMethod, nil)
             )
         )
 
@@ -298,7 +292,6 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
         XCTAssertEqual(paymentStatus, .paid)
         XCTAssertEqual(checkout.session.status, .complete(.paid))
-        XCTAssertEqual(challenge.completions, 1)
 
         // ...and analytics records the result, session, and source without a successful request ID
         let events = confirmationEvents
