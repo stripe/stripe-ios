@@ -441,7 +441,7 @@ final class EmbeddedPaymentElementLinkInlineAuthTests: XCTestCase {
         PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
         LinkAccountContext.shared.account = nil
         // Selecting Link saves it as the default for customer-less sessions.
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
         super.tearDown()
     }
 
