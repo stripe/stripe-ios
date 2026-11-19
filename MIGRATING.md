@@ -2,6 +2,33 @@
 ### Migrating from CocoaPods
 Read our migration guide in [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md).
 
+### Migrating from versions < 27.0.0
+#### PaymentSheet
+##### CustomerConfiguration
+`PaymentSheet.CustomerConfiguration` no longer requires `id` when using a `CustomerSession`. The customer is determined from the session client secret. This applies to PaymentSheet, FlowController, and EmbeddedPaymentElement.
+
+```diff
+ configuration.customer = .init(
+-    id: customerID,
+     customerSessionClientSecret: customerSessionClientSecret
+ )
+```
+
+The ephemeral-key initializer is unchanged and still requires both values. The `PaymentSheet.CustomerConfiguration.id` property is no longer public; retain the ID in your app if needed.
+
+#### CustomerSheet
+##### CustomerConfiguration
+`CustomerSessionClientSecret` no longer requires `customerId`. Remove the argument when returning the wrapper from your CustomerSession client-secret provider:
+
+```diff
+ return CustomerSessionClientSecret(
+-    customerId: customerID,
+     clientSecret: customerSessionClientSecret
+ )
+```
+
+Your backend still creates the session for the authenticated customer; the SDK resolves the customer from that session.
+
 ### Migrating from versions < 26.7.0
 * StripePaymentSheet now depends on `StripeFinancialConnectionsLite`. If you manually link StripePaymentSheet or use Carthage, you must also embed `StripeFinancialConnectionsLite.xcframework` in your app. No action is required for CocoaPods or Swift Package Manager users.
 
