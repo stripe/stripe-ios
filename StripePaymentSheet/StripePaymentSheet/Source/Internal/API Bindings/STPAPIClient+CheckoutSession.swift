@@ -109,6 +109,11 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     /// The passive hCaptcha token. CheckoutClient's captcha check reads only this top-level field,
     /// not `payment_method_data[radar_options][hcaptcha_token]`.
+    ///
+    /// Matching Android Checkout and PaymentSheet, this is only sent when the session has passive captcha
+    /// enabled and the confirm uses a card or Link PaymentMethod that is either new or was just created by
+    /// Link for this confirm (e.g. Link inline signup in passthrough mode, or web Link). Previously saved
+    /// PaymentMethods, Apple Pay, and confirms without a PaymentMethod don't send it.
     let passiveCaptchaToken: String?
 
     static func createWithoutPaymentMethod(
