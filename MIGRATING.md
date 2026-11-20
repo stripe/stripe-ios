@@ -4,6 +4,15 @@ Read our migration guide in [MIGRATING-COCOAPODS.md](https://github.com/stripe/s
 
 ### Migrating from versions < 27.0.0
 #### PaymentSheet
+##### CustomerConfiguration
+When using a CustomerSession with PaymentSheet, FlowController, or EmbeddedPaymentElement, pass only its client secret:
+
+```swift
+configuration.customer = .init(customerSessionClientSecret: customerSessionClientSecret)
+```
+
+The ephemeral-key initializer still requires a Customer ID. `PaymentSheet.CustomerConfiguration.id` is no longer public; retain the ID in your app if you need it.
+
 ##### Migrating from External Payment Methods to Custom Payment Methods
 `PaymentSheet.ExternalPaymentMethodConfiguration` is deprecated in favor of `PaymentSheet.CustomPaymentMethodConfiguration`.
 Create the custom payment method in the Dashboard and complete the accompanying backend/provider integration using the [CPM guide](https://docs.stripe.com/payments/mobile/custom-payment-methods?platform=ios). Then update your configuration using its `cpmt_...` identifier:
@@ -47,6 +56,9 @@ Migrate your application-owned confirmation handler from a method-name string to
 
 ##### Other changes
 `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress` are deprecated. Payment methods that require a shipping address are always allowed.
+
+#### CustomerSheet
+Return `CustomerSessionClientSecret(clientSecret: customerSessionClientSecret)` from your CustomerSession client-secret provider. Your server still creates the session for the authenticated customer; the SDK resolves the customer from the session.
 
 ### Migrating from versions < 26.7.0
 * StripePaymentSheet now depends on `StripeFinancialConnectionsLite`. If you manually link StripePaymentSheet or use Carthage, you must also embed `StripeFinancialConnectionsLite.xcframework` in your app. No action is required for CocoaPods or Swift Package Manager users.

@@ -357,7 +357,7 @@ extension PaymentSheet {
     public struct CustomerConfiguration {
         /// The identifier of the Stripe Customer object.
         /// See https://stripe.com/docs/api/customers/object#customer_object-id
-        public let id: String
+        internal let id: String?
 
         internal let customerAccessProvider: CustomerAccessProvider
 
@@ -368,7 +368,17 @@ extension PaymentSheet {
         }
 
         /// Initializes a CustomerConfiguration with a customerSessionClientSecret
+        @available(*, deprecated, message: "You no longer need to pass a Customer ID. Use init(customerSessionClientSecret:) instead.")
         public init(id: String, customerSessionClientSecret: String) {
+            self.init(customerSessionClientSecret: customerSessionClientSecret, id: id)
+        }
+
+        /// Initializes a CustomerConfiguration with the CustomerSession client secret returned by your server.
+        public init(customerSessionClientSecret: String) {
+            self.init(customerSessionClientSecret: customerSessionClientSecret, id: nil)
+        }
+
+        private init(customerSessionClientSecret: String, id: String?) {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
 

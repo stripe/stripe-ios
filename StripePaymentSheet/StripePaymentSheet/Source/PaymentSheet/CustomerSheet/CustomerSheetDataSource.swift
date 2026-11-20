@@ -36,12 +36,12 @@ class CustomerSheetDataSource {
                                completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
             do {
-                let fetchSessionsTask = Task { try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret() }
-                defer { fetchSessionsTask.cancel() }
-
-                let (elementSession, customerSessionClientSecret) = try await fetchSessionsTask.value
-                let customerId = customerSessionClientSecret.customerId
-                let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId, elementsSession: elementSession)
+                let (elementSession, cachedSession) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
+                let paymentOption = CustomerPaymentOption.selectedPaymentMethod(
+                    for: cachedSession.localCustomerId,
+                    elementsSession: elementSession,
+                    surface: .customerSheet
+                )
 
                 let savedPaymentMethods = elementSession.customer?.paymentMethods.filter({ paymentMethod in
                     guard let card = paymentMethod.card else { return true }
@@ -151,8 +151,8 @@ extension CustomerSheetDataSource {
         case .customerAdapter(let customerAdapter):
             try await customerAdapter.setSelectedPaymentOption(paymentOption: paymentOption)
         case .customerSession(let customerSessionAdapter):
-            let customerSessionClientSecret = try await customerSessionAdapter.customerSessionClientSecretProvider()
-            CustomerPaymentOption.setLocalDefaultPaymentMethod(paymentOption, forCustomer: customerSessionClientSecret.customerId)
+            let cachedSession = try await customerSessionAdapter.cachedCustomerSessionClientSecret()
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(paymentOption, forCustomer: cachedSession.localCustomerId)
         }
     }
 

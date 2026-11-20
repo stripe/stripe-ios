@@ -364,7 +364,7 @@ extension CustomerSheet {
         case .customerSession(let customerSessionAdapter):
             let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
 
-            let selectedPaymentOption = CustomerPaymentOption.selectedPaymentMethod(for: customerSessionClientSecret.customerId, elementsSession: elementsSession, surface: .customerSheet)
+            let selectedPaymentOption = CustomerPaymentOption.selectedPaymentMethod(for: customerSessionClientSecret.localCustomerId, elementsSession: elementsSession, surface: .customerSheet)
 
             switch selectedPaymentOption {
             case .applePay:
@@ -430,13 +430,23 @@ public extension CustomerSheet {
 public struct CustomerSessionClientSecret {
     /// The identifier of the Stripe Customer object.
     /// See https://stripe.com/docs/api/customers/object#customer_object-id
-    internal let customerId: String
+    internal let customerId: String?
 
     /// Customer session client secret
     /// See: https://docs.stripe.com/api/customer_sessions/object
     internal let clientSecret: String
 
+    @available(*, deprecated, message: "You no longer need to pass a Customer ID. Use init(clientSecret:) instead.")
     public init(customerId: String, clientSecret: String) {
+        self.init(clientSecret: clientSecret, customerId: customerId)
+    }
+
+    /// Initializes a CustomerSessionClientSecret with the client secret returned by your server.
+    public init(clientSecret: String) {
+        self.init(clientSecret: clientSecret, customerId: nil)
+    }
+
+    private init(clientSecret: String, customerId: String?) {
         self.customerId = customerId
         self.clientSecret = clientSecret
 

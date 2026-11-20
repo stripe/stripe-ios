@@ -177,7 +177,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         return CustomerSheet(configuration: configuration,
                              intentConfiguration: intentConfiguration,
                              customerSessionClientSecretProvider: {
-            .init(customerId: customerId, clientSecret: customerSessionClientSecret!)
+            .init(clientSecret: customerSessionClientSecret!)
         })
     }
 

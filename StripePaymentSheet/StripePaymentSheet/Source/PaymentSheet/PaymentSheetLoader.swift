@@ -70,10 +70,10 @@ final class PaymentSheetLoader {
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
     ) async throws -> (LoadResult, ConfirmationChallenge) {
-        let customerProvider = CustomerProvider(customer: configuration.customer)
+        let configuredCustomerProvider = CustomerProvider(customer: configuration.customer)
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
-        analyticsHelper.logLoadStarted(isUpdate: isUpdate, customerProvider: customerProvider)
+        analyticsHelper.logLoadStarted(isUpdate: isUpdate, customerProvider: configuredCustomerProvider)
         loadTimings.logEnd("logLoadStarted")
         // Note loadTimings isn't on PaymentSheetAnalyticsHelper because of an issue where multiple `update` calls can trigger concurrent loads, overwriting the storage of the single analytics helper. We need storage specific to *this* load.
         do {
@@ -90,16 +90,16 @@ final class PaymentSheetLoader {
             // Fetch ElementsSession
             // ⚠️ Note using `async let` instead of Tasks here triggered a crash when compiling with Xcode 26.4 / Swift 6.3
             let elementsSessionAndIntentTask = Task {
-                try await fetchElementsSessionAndIntent(mode: mode, configuration: configuration, customerProvider: customerProvider, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
+                try await fetchElementsSessionAndIntent(mode: mode, configuration: configuration, customerProvider: configuredCustomerProvider, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
             }
 
             // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.
             let prefetchedLinkEmailAndSourceTask = Task {
-                try? await getCustomerEmailForLinkWithEphemeralKey(configuration: configuration, customerProvider: customerProvider, loadTimings: loadTimings)
+                try? await getCustomerEmailForLinkWithEphemeralKey(configuration: configuration, customerProvider: configuredCustomerProvider, loadTimings: loadTimings)
             }
             // Fetch Customer SPMs if using EK b/c they're not in the v1/e/s response.
             let prefetchedSavedPaymentMethodsTask = Task {
-                try await fetchSavedPaymentMethodsWithEphemeralKey(configuration: configuration, customerProvider: customerProvider, loadTimings: loadTimings)
+                try await fetchSavedPaymentMethodsWithEphemeralKey(configuration: configuration, customerProvider: configuredCustomerProvider, loadTimings: loadTimings)
             }
 
             // Load misc singletons
@@ -110,6 +110,7 @@ final class PaymentSheetLoader {
             let elementsSessionAndIntent = try await elementsSessionAndIntentTask.value
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
+            let customerProvider = CustomerProvider(customer: configuration.customer, elementsSession: elementsSession)
             // Fetch the buyer's financial accounts alongside the Link lookup, so the Stripe balance form has them when it appears
             let stripeBalanceFinancialAccountsTask = Task {
                 await fetchStripeBalanceFinancialAccounts(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
@@ -234,7 +235,7 @@ final class PaymentSheetLoader {
             )
             return (loadResult, confirmationChallenge)
         } catch {
-            analyticsHelper.logLoadFailed(error: error, loadTimings: loadTimings, isUpdate: isUpdate, customerProvider: customerProvider)
+            analyticsHelper.logLoadFailed(error: error, loadTimings: loadTimings, isUpdate: isUpdate, customerProvider: configuredCustomerProvider)
             throw error
         }
     }

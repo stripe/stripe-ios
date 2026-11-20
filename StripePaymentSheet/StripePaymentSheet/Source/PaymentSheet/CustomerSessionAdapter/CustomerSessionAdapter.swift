@@ -11,9 +11,16 @@ private let CachedCustomerMaxAge: TimeInterval = 60 * 30 // 30 minutes, server-s
 class CustomerSessionAdapter {
     typealias CustomerSessionClientSecretProvider = () async throws -> CustomerSessionClientSecret
 
-    let customerSessionClientSecretProvider: CustomerSessionClientSecretProvider
+    private let customerSessionClientSecretProvider: CustomerSessionClientSecretProvider
     private var _cachedCustomerSessionClientSecret: CachedCustomerSessionClientSecret?
     private let timeProvider: () -> Date
+
+    private var unexpiredCachedSession: CachedCustomerSessionClientSecret? {
+        guard let cachedSession = _cachedCustomerSessionClientSecret, !cachedSession.isExpired() else {
+            return nil
+        }
+        return cachedSession
+    }
     let intentConfiguration: CustomerSheet.IntentConfiguration
     let configuration: CustomerSheet.Configuration
 
@@ -24,15 +31,17 @@ class CustomerSessionAdapter {
         let cacheDate: Date
         private let timeProvider: () -> Date
 
-        /// - Parameter customerId: The Customer the CustomerSession is scoped to, from `v1/elements/sessions`. For a CustomerSession
-        ///   created with a customer-configured Account, this is the Account's backing Customer, which v1 endpoints require
-        ///   instead of the merchant's `acct_` ID. Defaults to the merchant-provided ID.
+        // Preserve existing local selections for integrations that still supply a Customer ID.
+        var localCustomerId: String {
+            return customerSessionClientSecret.customerId ?? customerId
+        }
+
         init(customerSessionClientSecret: CustomerSessionClientSecret,
              apiKey: String,
-             customerId: String? = nil,
+             customerId: String,
              timeProvider: @escaping () -> Date = Date.init) {
             self.customerSessionClientSecret = customerSessionClientSecret
-            self.customerId = customerId ?? customerSessionClientSecret.customerId
+            self.customerId = customerId
             self.cacheDate = timeProvider()
             self.apiKey = apiKey
             self.timeProvider = timeProvider
@@ -54,12 +63,11 @@ class CustomerSessionAdapter {
     }
 
     func cachedCustomerSessionClientSecret() async throws -> CachedCustomerSessionClientSecret {
-        if let cachedCustomerSessionClientSecret = self._cachedCustomerSessionClientSecret,
-           !cachedCustomerSessionClientSecret.isExpired() {
-            return cachedCustomerSessionClientSecret
+        if let cachedSession = unexpiredCachedSession {
+            return cachedSession
         }
-        let (_, cachedCustomerSessionClientSecret) = try await elementsSessionWithCustomerSessionClientSecret()
-        return cachedCustomerSessionClientSecret
+        let (_, cachedSession) = try await elementsSessionWithCustomerSessionClientSecret()
+        return cachedSession
     }
 
     func elementsSession() async throws -> STPElementsSession {
@@ -78,29 +86,39 @@ class CustomerSessionAdapter {
     }
 
     func elementsSessionWithCustomerSessionClientSecret(setupIntentClientSecret: String? = nil) async throws -> (STPElementsSession, CachedCustomerSessionClientSecret) {
-        if let cachedCustomerSessionClientSecret = self._cachedCustomerSessionClientSecret,
-           !cachedCustomerSessionClientSecret.isExpired() {
-            let elementsSession = try await elementsSession(customerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret, setupIntentClientSecret: setupIntentClientSecret)
-            return (elementsSession, cachedCustomerSessionClientSecret)
+        let cachedSession = unexpiredCachedSession
+        let clientSecret: CustomerSessionClientSecret
+        if let cachedSession {
+            clientSecret = cachedSession.customerSessionClientSecret
         } else {
-            let customerSessionClientSecret = try await customerSessionClientSecretProvider()
-            let elementsSessionResponse = try await elementsSession(customerSessionClientSecret: customerSessionClientSecret, setupIntentClientSecret: setupIntentClientSecret)
-            guard let apiKey = elementsSessionResponse.customer?.customerSession.apiKey,
-                  !apiKey.isEmpty else {
-                throw CustomerSheetError.unknown(debugDescription: "Failed to claim CustomerSession")
-            }
-
-            let tempCachedCustomerSessionClientSecret = CachedCustomerSessionClientSecret(customerSessionClientSecret: customerSessionClientSecret,
-                                                                                          apiKey: apiKey,
-                                                                                          customerId: elementsSessionResponse.customer?.customerSession.customer,
-                                                                                          timeProvider: timeProvider)
-            self._cachedCustomerSessionClientSecret = tempCachedCustomerSessionClientSecret
-            return (elementsSessionResponse, tempCachedCustomerSessionClientSecret)
+            clientSecret = try await customerSessionClientSecretProvider()
         }
+
+        let elementsSession = try await elementsSession(
+            customerSessionClientSecret: clientSecret,
+            setupIntentClientSecret: setupIntentClientSecret,
+            customerId: cachedSession?.localCustomerId ?? clientSecret.customerId
+        )
+        if let cachedSession {
+            return (elementsSession, cachedSession)
+        }
+        guard let customerSession = elementsSession.customer?.customerSession,
+              !customerSession.apiKey.isEmpty else {
+            throw CustomerSheetError.unknown(debugDescription: "Failed to claim CustomerSession")
+        }
+
+        let newSession = CachedCustomerSessionClientSecret(
+            customerSessionClientSecret: clientSecret,
+            apiKey: customerSession.apiKey,
+            customerId: customerSession.customer,
+            timeProvider: timeProvider
+        )
+        _cachedCustomerSessionClientSecret = newSession
+        return (elementsSession, newSession)
     }
 
-    private func elementsSession(customerSessionClientSecret: CustomerSessionClientSecret, setupIntentClientSecret: String?) async throws -> STPElementsSession {
-        let clientDefaultPaymentMethod = fetchClientDefaultPaymentMethod(for: customerSessionClientSecret.customerId)
+    private func elementsSession(customerSessionClientSecret: CustomerSessionClientSecret, setupIntentClientSecret: String?, customerId: String?) async throws -> STPElementsSession {
+        let clientDefaultPaymentMethod = customerId.flatMap { fetchClientDefaultPaymentMethod(for: $0) }
         if let setupIntentClientSecret {
             return try await self.configuration.apiClient.retrieveElementsSessionForCustomerSheet(setupIntentClientSecret: setupIntentClientSecret,
                                                                                                   clientDefaultPaymentMethod: clientDefaultPaymentMethod,
@@ -120,10 +138,6 @@ extension CustomerSessionAdapter {
             return nil
         }
         return stripePaymentMethodId
-    }
-
-    func fetchSelectedPaymentOption(for customerId: String, elementsSession: STPElementsSession) -> CustomerPaymentOption? {
-        return CustomerPaymentOption.selectedPaymentMethod(for: customerId, elementsSession: elementsSession, surface: .customerSheet)
     }
 
     func detachPaymentMethod(paymentMethod: STPPaymentMethod) async throws {

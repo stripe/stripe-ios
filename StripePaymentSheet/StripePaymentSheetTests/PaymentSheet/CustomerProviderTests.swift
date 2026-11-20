@@ -23,16 +23,18 @@ final class CustomerProviderTests: XCTestCase {
     }
 
     func testMerchantCustomerIdentity() {
-        let customers: [PaymentSheet.CustomerConfiguration] = [
-            .init(id: "cus_merchant", ephemeralKeySecret: "ek_test"),
-            .init(id: "cus_merchant", customerSessionClientSecret: "cuss_test"),
+        let configuredID = "test_customer"
+        let cases: [(PaymentSheet.CustomerConfiguration, String?)] = [
+            (.init(id: configuredID, ephemeralKeySecret: "ek_test"), configuredID),
+            (.init(id: configuredID, customerSessionClientSecret: "cuss_test"), configuredID),
+            (.init(customerSessionClientSecret: "cuss_test"), nil),
         ]
 
-        for customer in customers {
+        for (customer, expectedID) in cases {
             let provider = CustomerProvider(customer: customer)
 
             XCTAssertTrue(provider.hasCustomer)
-            XCTAssertEqual(provider.customerID, "cus_merchant")
+            XCTAssertEqual(provider.customerID, expectedID)
         }
     }
 

@@ -62,18 +62,22 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         var providerCallCount = 0
         let adapter = makeAdapter(timeProvider: timeReference.now) {
             providerCallCount += 1
-            return .init(customerId: "cus_123456", clientSecret: "cuss_123")
+            return .init(clientSecret: "cuss_123")
         }
-        let originalSession = try await adapter.cachedCustomerSessionClientSecret()
+        let (elementsSession, originalSession) = try await adapter.elementsSessionWithCustomerSessionClientSecret()
+        let customerId = try XCTUnwrap(elementsSession.customer?.customerSession.customer)
+        let previousSelection = CustomerPaymentOption.localDefaultPaymentMethod(for: customerId)
+        defer { CustomerPaymentOption.setLocalDefaultPaymentMethod(previousSelection, forCustomer: customerId) }
 
-        // When the cached session is requested again before it expires
         timeReference.advanceBy(30 * 60 - 1)
         let cachedSession = try await adapter.cachedCustomerSessionClientSecret()
+        let selection = CustomerPaymentOption.stripeId("pm_test_selection")
+        try await CustomerSheetDataSource(adapter).setSelectedPaymentOption(paymentOption: selection)
 
-        // Then the same credentials are returned without calling the provider or API again
+        XCTAssertEqual(CustomerPaymentOption.localDefaultPaymentMethod(for: customerId), selection)
         XCTAssertEqual(providerCallCount, 1)
         XCTAssertEqual(elementsSessionRequestCount, 1)
-        XCTAssertEqual(cachedSession.customerId, "cus_123456")
+        XCTAssertEqual(cachedSession.customerId, customerId)
         XCTAssertEqual(cachedSession.customerSessionClientSecret.clientSecret, "cuss_123")
         XCTAssertEqual(cachedSession.apiKey, originalSession.apiKey)
         XCTAssertEqual(cachedSession.cacheDate, originalSession.cacheDate)
@@ -199,8 +203,9 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
     private func makeCachedSession(
         timeProvider: @escaping () -> Date = Date.init
     ) -> CustomerSessionAdapter.CachedCustomerSessionClientSecret {
-        return .init(customerSessionClientSecret: .init(customerId: "cus_123", clientSecret: "cuss_123"),
-                     apiKey: "ek_123",
+        return .init(customerSessionClientSecret: .init(clientSecret: "cuss_test"),
+                     apiKey: "ek_test",
+                     customerId: "test_customer",
                      timeProvider: timeProvider)
     }
 

@@ -331,7 +331,7 @@ extension PaymentSheet {
                         completion: { actionStatus, paymentIntent, error in
                             Task { await confirmationChallenge?.complete() }
                             if let paymentIntent {
-                                setLocalDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                                setLocalDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, elementsSession: elementsSession, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                             }
                             paymentHandlerCompletion(actionStatus, error)
                         }
@@ -354,7 +354,7 @@ extension PaymentSheet {
                         completion: { actionStatus, setupIntent, error in
                             Task { await confirmationChallenge?.complete() }
                             if let setupIntent {
-                                setLocalDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                                setLocalDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, elementsSession: elementsSession, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                             }
                             paymentHandlerCompletion(actionStatus, error)
                         }
@@ -849,12 +849,13 @@ extension PaymentSheet {
     /// A helper method that sets the Customer's default payment method in local (on-device) storage, if necessary.
     /// - Note: Skips the local write when `paymentMethodSetAsDefault` is `true`, since the backend has already recorded this as the default.
     /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
-    static func setLocalDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration, paymentMethodSetAsDefault: Bool) {
+    static func setLocalDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration, elementsSession: STPElementsSession?, paymentMethodSetAsDefault: Bool) {
+        let customerProvider = CustomerProvider(customer: configuration.customer, elementsSession: elementsSession)
 
         guard
             // Did we successfully save this payment method?
             actionStatus == .succeeded,
-            let customer = configuration.customer?.id,
+            let customer = customerProvider.customerID,
             let paymentMethod = intent.paymentMethod,
             intent.isSetupFutureUsageSet(paymentMethodType: paymentMethod.type),
             // Can it appear in the list of saved PMs?

@@ -19,35 +19,43 @@ struct CustomerProvider {
     }
 
     private let backing: Backing
+    private let sessionCustomerID: String?
 
-    init(customer: PaymentSheet.CustomerConfiguration?) {
+    init(customer: PaymentSheet.CustomerConfiguration?, elementsSession: STPElementsSession? = nil) {
         backing = .customer(customer)
+        if case .customerSession = customer?.customerAccessProvider {
+            sessionCustomerID = elementsSession?.customer?.customerSession.customer
+        } else {
+            sessionCustomerID = nil
+        }
     }
 
     init(checkoutSession: CheckoutElementsController.Session) {
         backing = .checkoutSession(checkoutSession)
+        sessionCustomerID = nil
     }
 
     var customerID: String? {
         switch backing {
         case .customer(let customer):
-            return customer?.id
+            return customer?.id ?? sessionCustomerID
         case .checkoutSession(let session):
             return session.customer?.id
         }
     }
 
     var hasCustomer: Bool {
-        return customerID != nil
+        return usesCustomerSession || customerID != nil
     }
 
     var legacyEphemeralKeyCredentials: (customerID: String, ephemeralKeySecret: String)? {
         guard case .customer(let customer) = backing,
               let customer,
+              let customerID = customer.id,
               case .legacyCustomerEphemeralKey(let ephemeralKeySecret) = customer.customerAccessProvider else {
             return nil
         }
-        return (customer.id, ephemeralKeySecret)
+        return (customerID, ephemeralKeySecret)
     }
 
     func savedPaymentMethods(
@@ -224,12 +232,11 @@ struct CustomerProvider {
             }
             switch customer.customerAccessProvider {
             case .customerSession(let clientSecret):
-                if paymentMethod.type == .card {
-                    // The Customer the CustomerSession is scoped to. For a CustomerSession created with a customer-configured
-                    // Account, this is the Account's backing Customer, which v1 endpoints require instead of the merchant's `acct_` ID.
+                if paymentMethod.type == .card,
+                   let customerID = elementsSession.customer?.customerSession.customer {
                     apiClient.detachPaymentMethodRemoveDuplicates(
                         paymentMethod.stripeId,
-                        customerId: elementsSession.customer?.customerSession.customer ?? customer.id,
+                        customerId: customerID,
                         fromCustomerUsing: ephemeralKey,
                         withCustomerSessionClientSecret: clientSecret
                     ) { _ in }
@@ -261,14 +268,15 @@ struct CustomerProvider {
                 debugDescription: "Failed to read ephemeral key while setting a payment method as default."
             )
         }
-        guard let customerID else {
+        let resolvedCustomerID = usesCustomerSession ? elementsSession.customer?.customerSession.customer : customerID
+        guard let resolvedCustomerID else {
             throw PaymentSheetError.unknown(
                 debugDescription: "Failed to read customerId while setting a payment method as default."
             )
         }
         return try await apiClient.setAsDefaultPaymentMethod(
             paymentMethodID,
-            for: customerID,
+            for: resolvedCustomerID,
             using: ephemeralKey
         )
     }

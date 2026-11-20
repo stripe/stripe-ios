@@ -391,7 +391,7 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
 
     func testDetachPaymentMethod_customerSessions() {
         var configuration = configuration
-        configuration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_test")
+        configuration.customer = .init(customerSessionClientSecret: "cuss_test")
         _testDetachPaymentMethodWithCustomerSession(configuration: configuration, expectedCustomerId: "cus_123")
     }
 
