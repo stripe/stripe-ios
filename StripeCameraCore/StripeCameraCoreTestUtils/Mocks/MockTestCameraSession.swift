@@ -38,6 +38,17 @@ import XCTest
         // no-op
     }
 
+    // MARK: interruptions
+
+    public private(set) var isInterrupted = false
+
+    public var interruptionHandler: ((_ isInterrupted: Bool) -> Void)?
+
+    public func mockInterruption(isInterrupted: Bool) {
+        self.isInterrupted = isInterrupted
+        interruptionHandler?(isInterrupted)
+    }
+
     // MARK: configureSession
 
     private var configureCompletion: ((CameraSession.SetupResult) -> Void)?

@@ -20,6 +20,12 @@ import AVKit
 
     var previewView: CameraPreviewView? { get set }
 
+    /// Whether the system has interrupted the camera, for example because another app uses it.
+    var isInterrupted: Bool { get }
+
+    /// Called on the main queue when an interruption begins (`true`) or ends (`false`).
+    var interruptionHandler: ((_ isInterrupted: Bool) -> Void)? { get set }
+
     func configureSession(
         configuration: CameraSession.Configuration,
         delegate: AVCaptureVideoDataOutputSampleBufferDelegate,
@@ -134,7 +140,14 @@ import AVKit
         }
     }
 
+    public var isInterrupted: Bool {
+        session.isInterrupted
+    }
+
+    public var interruptionHandler: ((_ isInterrupted: Bool) -> Void)?
+
     private let session: AVCaptureSession = AVCaptureSession()
+    private var interruptionObservers: [NSObjectProtocol] = []
     private var captureConnection: AVCaptureConnection?
     private let sessionQueue = DispatchQueue(label: "com.stripe.camera-session")
     private var torchDevice: Torch?
@@ -152,7 +165,20 @@ import AVKit
     // MARK: - Public
 
     public init() {
-        // This is needed to expose init publicly
+        interruptionObservers = [
+            (AVCaptureSession.wasInterruptedNotification, true),
+            (AVCaptureSession.interruptionEndedNotification, false),
+        ].map { name, isInterrupted in
+            NotificationCenter.default.addObserver(forName: name, object: session, queue: nil) { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.interruptionHandler?(isInterrupted)
+                }
+            }
+        }
+    }
+
+    deinit {
+        interruptionObservers.forEach { NotificationCenter.default.removeObserver($0) }
     }
 
     /// Configures the camera session with the initial inputs and outputs.

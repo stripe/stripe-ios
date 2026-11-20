@@ -76,6 +76,8 @@ final class ImageScanningSession<
     // MARK: Instance Properties
 
     private(set) var timeoutTimer: Timer?
+    /// Whether the timeout restarts, with its full duration, when the camera interruption ends.
+    private var restartsTimeoutAfterInterruption = false
     private var delegate: AnyDelegate?
 
     // MARK: Coordinators
@@ -109,6 +111,9 @@ final class ImageScanningSession<
         super.init()
 
         addObservers()
+        cameraSession.interruptionHandler = { [weak self] isInterrupted in
+            self?.cameraInterruptionChanged(isInterrupted: isInterrupted)
+        }
     }
 
     required init?(
@@ -172,6 +177,7 @@ final class ImageScanningSession<
 
     func stopTimeoutTimer() {
         timeoutTimer?.invalidate()
+        restartsTimeoutAfterInterruption = false
     }
 
     func startIfNeeded(expectedClassification: ExpectedClassificationType) {
@@ -199,7 +205,7 @@ final class ImageScanningSession<
 
     func stopScanning() {
         delegate?.imageScanningSessionWillStopScanning(self)
-        timeoutTimer?.invalidate()
+        stopTimeoutTimer()
         cameraSession.stopSession(completeOn: .main) { [weak self] in
             guard let self = self else { return }
             self.scanner.reset()
@@ -210,6 +216,12 @@ final class ImageScanningSession<
 
     func startTimeoutTimer(expectedClassification: ExpectedClassificationType) {
         timeoutTimer?.invalidate()
+
+        // An interrupted camera delivers no frames, so the user cannot finish the scan in that time.
+        restartsTimeoutAfterInterruption = cameraSession.isInterrupted
+        guard !restartsTimeoutAfterInterruption else {
+            return
+        }
 
         timeoutTimer = Timer.scheduledTimer(
             withTimeInterval: autocaptureTimeout,
@@ -234,6 +246,24 @@ final class ImageScanningSession<
             name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
+    }
+
+    // MARK: - Camera Interruptions
+
+    private func cameraInterruptionChanged(isInterrupted: Bool) {
+        if isInterrupted {
+            // Only a running timeout restarts, because callers also stop it on purpose
+            // during scanning, for example in manual capture.
+            guard timeoutTimer?.isValid == true else {
+                return
+            }
+            timeoutTimer?.invalidate()
+            restartsTimeoutAfterInterruption = true
+        } else if restartsTimeoutAfterInterruption,
+            case .scanning(let expectedClassification, _) = state
+        {
+            startTimeoutTimer(expectedClassification: expectedClassification)
+        }
     }
 
     // MARK: - App Backgrounding

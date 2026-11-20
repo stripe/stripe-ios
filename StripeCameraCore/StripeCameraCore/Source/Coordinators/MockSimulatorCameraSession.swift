@@ -49,6 +49,10 @@ import Foundation
         }
     }
 
+    public let isInterrupted = false
+
+    public var interruptionHandler: ((_ isInterrupted: Bool) -> Void)?
+
     public init(
         images: [UIImage]
     ) {
