@@ -156,7 +156,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             paymentMethodTypes: ["card"],
             onBehalfOf: nil,
             clientDefaultPaymentMethod: "pm_12345",
-            customerSessionClientSecret: CustomerSessionClientSecret(customerId: "cus_12345", clientSecret: "cuss_54321"))
+            customerSessionClientSecret: CustomerSessionClientSecret(clientSecret: "cuss_54321"))
 
         XCTAssertEqual(parameters["type"] as? String, "deferred_intent")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
@@ -190,7 +190,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             paymentMethodTypes: ["card"],
             onBehalfOf: "acct_connect",
             clientDefaultPaymentMethod: "pm_12345",
-            customerSessionClientSecret: CustomerSessionClientSecret(customerId: "cus_12345", clientSecret: "cuss_54321"))
+            customerSessionClientSecret: CustomerSessionClientSecret(clientSecret: "cuss_54321"))
 
         XCTAssertEqual(parameters["type"] as? String, "deferred_intent")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
@@ -207,7 +207,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParamsForCustomerSheet(
             setupIntentClientSecret: "seti_123456",
             clientDefaultPaymentMethod: "pm_12345",
-            customerSessionClientSecret: CustomerSessionClientSecret(customerId: "cus_12345", clientSecret: "cuss_54321"))
+            customerSessionClientSecret: CustomerSessionClientSecret(clientSecret: "cuss_54321"))
 
         XCTAssertEqual(parameters["type"] as? String, "setup_intent")
         XCTAssertEqual(parameters["client_secret"] as? String, "seti_123456")

@@ -29,7 +29,7 @@ final class CustomerProviderTests: XCTestCase {
         XCTAssertEqual(ephemeralKeyProvider.resolvedCustomerID(elementsSession: nil), "cus_merchant")
 
         // ...but a CustomerSession configuration ignores any explicit ID; the customer comes from the Elements Session
-        let customerSessionProvider = CustomerProvider(customer: .init(id: "cus_merchant", customerSessionClientSecret: "cuss_test"))
+        let customerSessionProvider = CustomerProvider(customer: .init(customerSessionClientSecret: "cuss_test"))
         XCTAssertTrue(customerSessionProvider.hasCustomer)
         XCTAssertNil(customerSessionProvider.resolvedCustomerID(elementsSession: nil))
     }
@@ -113,7 +113,7 @@ final class CustomerProviderTests: XCTestCase {
         let cases: [(CustomerProvider, [String]?)] = [
             (.init(customer: nil), nil),
             (.init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_legacy")), ["pm_prefetched"]),
-            (.init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_secret")), ["pm_1234", "pm_4567"]),
+            (.init(customer: .init(customerSessionClientSecret: "cuss_secret")), ["pm_1234", "pm_4567"]),
             (.init(checkoutSession: checkoutSession), ["pm_checkout"]),
         ]
 
@@ -138,7 +138,7 @@ final class CustomerProviderTests: XCTestCase {
 
         let otherProviders: [CustomerProvider] = [
             .init(customer: nil),
-            .init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")),
+            .init(customer: .init(customerSessionClientSecret: "cuss_test")),
             .init(checkoutSession: CheckoutTestHelpers.makeSession().withCustomer().makePublicSession()),
         ]
         for provider in otherProviders {
@@ -156,7 +156,7 @@ final class CustomerProviderTests: XCTestCase {
                 false
             ),
             (
-                .init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")),
+                .init(customer: .init(customerSessionClientSecret: "cuss_test")),
                 ["customer_session_client_secret": "cuss_test"],
                 true
             ),
@@ -179,7 +179,7 @@ final class CustomerProviderTests: XCTestCase {
         let cases: [(CustomerProvider, String?)] = [
             (.init(customer: nil), nil),
             (.init(customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")), "legacy"),
-            (.init(customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")), "customer_session"),
+            (.init(customer: .init(customerSessionClientSecret: "cuss_test")), "customer_session"),
             (.init(checkoutSession: checkoutSession), "checkout_session"),
         ]
 
@@ -203,7 +203,7 @@ final class CustomerProviderTests: XCTestCase {
 
     func testCustomerPermissionsUseTheElementsSession() {
         let customerSessionProvider = CustomerProvider(
-            customer: .init(id: "cus_session", customerSessionClientSecret: "cuss_test")
+            customer: .init(customerSessionClientSecret: "cuss_test")
         )
         let legacyProvider = CustomerProvider(
             customer: .init(id: "cus_legacy", ephemeralKeySecret: "ek_test")

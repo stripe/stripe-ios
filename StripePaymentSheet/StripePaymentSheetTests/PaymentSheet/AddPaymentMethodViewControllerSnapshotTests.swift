@@ -37,7 +37,7 @@ final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.payPal, .card, .cashApp])
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
         // ...and a "Save this card" checkbox...
-        config.customer = .init(id: "id", customerSessionClientSecret: "cuss_123")
+        config.customer = .init(customerSessionClientSecret: "cuss_123")
         // ...the AddPMVC should show the card type selected with the form pre-filled with the previous input
         let sut = AddPaymentMethodViewController(
             intent: intent,

@@ -163,7 +163,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
         for (shape, shapeString) in integrationShapes {
             var configuration = PaymentSheet.Configuration()
-            configuration.customer = .init(id: "cus_test", customerSessionClientSecret: "cuss_test")
+            configuration.customer = .init(customerSessionClientSecret: "cuss_test")
             let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: configuration, analyticsClient: analyticsClient)
 
             // Reset the analytics client for each iteration

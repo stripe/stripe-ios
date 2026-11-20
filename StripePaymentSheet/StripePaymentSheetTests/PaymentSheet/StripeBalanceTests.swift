@@ -322,7 +322,7 @@ final class StripeBalanceTests: XCTestCase {
 
     private func makeCustomerSessionConfiguration() -> PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
-        configuration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123_secret_456")
+        configuration.customer = .init(customerSessionClientSecret: "cuss_123_secret_456")
         return configuration
     }
 

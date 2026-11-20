@@ -54,7 +54,7 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
         let expectation = stubUpdatePaymentMethod(paymentMethod: paymentMethod,
                                 ephemeralKey: "ek_12345")
         var configuration = configuration
-        configuration.customer = .init(id: "cus_test123", customerSessionClientSecret: "cuss_test")
+        configuration.customer = .init(customerSessionClientSecret: "cuss_test")
 
         let elementsSession: STPElementsSession = ._testValue(paymentMethodTypes: ["card"], customerSessionData: [
             "mobile_payment_element": [
@@ -86,7 +86,7 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
         var embeddedConfiguration = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         embeddedConfiguration.apiClient = configuration.apiClient
         // Configure the same customer as the load result, as a merchant integration would
-        embeddedConfiguration.customer = .init(id: "cus_test", customerSessionClientSecret: "cuss_test")
+        embeddedConfiguration.customer = .init(customerSessionClientSecret: "cuss_test")
         let customerProvider = CustomerProvider(customer: embeddedConfiguration.customer)
         func makeLoadResult(apiKey: String) -> PaymentSheetLoader.LoadResult {
             return .init(
@@ -277,7 +277,7 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
 
     func testMissingCustomerSessionKeyPreservesOperationErrorsAndAnalytics() async {
         // Given a Customer Session whose loaded response has no ephemeral key
-        let sut = CustomerProvider(customer: .init(id: "cus_test", customerSessionClientSecret: "cuss_test"))
+        let sut = CustomerProvider(customer: .init(customerSessionClientSecret: "cuss_test"))
         let elementsSession = STPElementsSession._testCardValue()
         let apiClient = configuration.apiClient
         let analyticsClient = STPAnalyticsClient.sharedClient
@@ -391,7 +391,7 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
 
     func testDetachPaymentMethod_customerSessions() {
         var configuration = configuration
-        configuration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_test")
+        configuration.customer = .init(customerSessionClientSecret: "cuss_test")
         _testDetachPaymentMethodWithCustomerSession(configuration: configuration, expectedCustomerId: "cus_123")
     }
 
@@ -399,7 +399,7 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
     /// Listing cards by the merchant's `acct_` ID is rejected, so removal must use the backing Customer from `v1/elements/sessions`.
     func testDetachPaymentMethod_customerSessions_customerAccount() {
         var configuration = configuration
-        configuration.customer = .init(id: "acct_123", customerSessionClientSecret: "cuss_test")
+        configuration.customer = .init(customerSessionClientSecret: "cuss_test")
         _testDetachPaymentMethodWithCustomerSession(configuration: configuration, expectedCustomerId: "cus_123")
     }
 

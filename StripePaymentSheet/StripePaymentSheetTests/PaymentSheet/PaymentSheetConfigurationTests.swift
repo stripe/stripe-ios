@@ -92,17 +92,9 @@ class PaymentSheetConfigurationTests: XCTestCase {
     }
 
     func testReturnsEphemeralKeyFromElements() {
-        let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", customerSessionClientSecret: "cuss_12345")
+        let customerConfig = PaymentSheet.CustomerConfiguration(customerSessionClientSecret: "cuss_12345")
         let key = customerConfig.ephemeralKeySecret(basedOn: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"))
         XCTAssertEqual(key, "ek_11223344")
-    }
-
-    func testResolvedID_customerSession_prefersSessionResolvedIDOverExplicitID() {
-        // Matches Android/web: the server-resolved customer is authoritative for CustomerSession integrations,
-        // even if a (possibly stale) explicit ID was also provided.
-        let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", customerSessionClientSecret: "cuss_12345")
-        let resolvedID = customerConfig.resolvedID(elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"))
-        XCTAssertEqual(resolvedID, "cus_456")
     }
 
     func testResolvedID_customerSession_ignoresExplicitID() {

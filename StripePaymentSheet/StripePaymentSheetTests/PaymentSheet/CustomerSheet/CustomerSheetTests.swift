@@ -248,7 +248,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration,
                                           intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
-                                          customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
+                                          customerSessionClientSecretProvider: { return .init(clientSecret: "cuss_123") })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
         csDataSource.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
@@ -271,7 +271,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration,
                                           intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
-                                          customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
+                                          customerSessionClientSecretProvider: { return .init(clientSecret: "cuss_123") })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
         csDataSource.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
@@ -294,7 +294,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let expectedFailure = expectation(description: "loadPaymentMethodInfo failed")
         let customerSheet = CustomerSheet(configuration: configuration,
                                           intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
-                                          customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
+                                          customerSessionClientSecretProvider: { return .init(clientSecret: "cuss_123") })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
         csDataSource.loadPaymentMethodInfo { result in
             guard case .failure(let error) = result else {
@@ -321,7 +321,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration,
                                           intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
-                                          customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
+                                          customerSessionClientSecretProvider: { return .init(clientSecret: "cuss_123") })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
         csDataSource.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, _, _)) = result else {
@@ -343,7 +343,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration,
                                           intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
-                                          customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
+                                          customerSessionClientSecretProvider: { return .init(clientSecret: "cuss_123") })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
         csDataSource.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {
@@ -366,7 +366,7 @@ class CustomerSheetTests: APIStubbedTestCase {
         let loadPaymentMethodInfo = expectation(description: "loadPaymentMethodInfo completed")
         let customerSheet = CustomerSheet(configuration: configuration,
                                           intentConfiguration: .init(setupIntentClientSecretProvider: { return "si_123" }),
-                                          customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
+                                          customerSessionClientSecretProvider: { return .init(clientSecret: "cuss_123") })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
         csDataSource.loadPaymentMethodInfo { result in
             guard case .success((let paymentMethods, let selectedPaymentMethod, _)) = result else {

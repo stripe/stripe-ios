@@ -4,6 +4,8 @@
 //
 
 import Foundation
+import OHHTTPStubs
+import OHHTTPStubsSwift
 import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
 import XCTest
@@ -62,7 +64,7 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         var providerCallCount = 0
         let adapter = makeAdapter(timeProvider: timeReference.now) {
             providerCallCount += 1
-            return .init(customerId: "cus_123456", clientSecret: "cuss_123")
+            return .init(clientSecret: "cuss_123")
         }
         let originalSession = try await adapter.cachedCustomerSessionClientSecret()
 
@@ -92,7 +94,7 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         var providerCallCount = 0
         let adapter = makeAdapter(timeProvider: timeReference.now) {
             providerCallCount += 1
-            return .init(customerId: "cus_123456", clientSecret: "cuss_123")
+            return .init(clientSecret: "cuss_123")
         }
         let (_, originalSession) = try await adapter.elementsSessionWithCustomerSessionClientSecret()
 
@@ -125,21 +127,51 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         XCTAssertEqual(cachedSession.customerId, "cus_123456")
     }
 
-    /// A CustomerSession created with a customer-configured Account is scoped to the Account's backing Customer.
-    /// Calls that take a customer ID, like listing cards before removing one, must use it instead of the merchant's `acct_` ID.
-    func testCachedCustomerSessionClientSecretUsesCustomerSessionCustomer() async throws {
-        // Given a merchant that provides a customer Account ID
+    func testCustomerSessionClientSecret_deprecatedInitIgnoresCustomerId() async throws {
+        // Given a CustomerSessionClientSecret created with the deprecated initializer and a merchant Account ID
         StubbedBackend.stubSessions(fileMock: .elementsSessions_customerSessionsCustomerSheet_200)
         let adapter = makeAdapter {
-            return .init(customerId: "acct_123", clientSecret: "cuss_123")
+            return CustomerSessionClientSecret(customerId: "acct_123", clientSecret: "cuss_123")
         }
 
         // When the CustomerSession is claimed
         let cachedSession = try await adapter.cachedCustomerSessionClientSecret()
 
-        // Then the Customer from `v1/elements/sessions` is used
+        // Then the secret is kept...
+        XCTAssertEqual(cachedSession.customerSessionClientSecret.clientSecret, "cuss_123")
+        // ...and the Customer from `v1/elements/sessions` is used, not the merchant's ID
         XCTAssertEqual(cachedSession.customerId, "cus_123456")
-        // ...and the merchant's ID is kept for local defaults
+    }
+
+    func testCustomerSessionClientSecret_init() {
+        XCTAssertEqual(CustomerSessionClientSecret(clientSecret: "cuss_123").clientSecret, "cuss_123")
+    }
+
+    func testElementsSessionRefreshAfterExpirySendsCachedCustomersLocalDefault() async throws {
+        // Given an adapter whose cached customer has a local default payment method
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId("pm_local_default"), forCustomer: "cus_123456")
+        addTeardownBlock { CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: "cus_123456") }
+        let timeReference = MockTimeReference()
+        var requestURLs: [String] = []
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
+        } response: { urlRequest in
+            requestURLs.append(urlRequest.url?.absoluteString ?? "")
+            return HTTPStubsResponse(data: try! FileMock.elementsSessions_customerSessionsCustomerSheet_200.data(), statusCode: 200, headers: nil)
+        }
+        let adapter = makeAdapter(timeProvider: timeReference.now) {
+            return .init(clientSecret: "cuss_123")
+        }
+        _ = try await adapter.elementsSessionWithCustomerSessionClientSecret()
+
+        // When the cached customer session expires and a new one is claimed
+        timeReference.advanceBy(30 * 60 + 1)
+        _ = try await adapter.elementsSessionWithCustomerSessionClientSecret()
+
+        // Then only the first-ever request, before the customer was known, omits the local default
+        XCTAssertEqual(requestURLs.count, 2)
+        XCTAssertFalse(requestURLs[0].contains("pm_local_default"))
+        XCTAssertTrue(requestURLs[1].contains("pm_local_default"))
     }
 
     func testCachedCustomerSessionClientSecretRefreshesExpiredSession() async throws {
@@ -153,7 +185,7 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         var providerCallCount = 0
         let adapter = makeAdapter(timeProvider: timeReference.now) {
             providerCallCount += 1
-            return .init(customerId: "cus_123", clientSecret: "cuss_\(providerCallCount)")
+            return .init(clientSecret: "cuss_\(providerCallCount)")
         }
         let originalSession = try await adapter.cachedCustomerSessionClientSecret()
 
@@ -189,7 +221,7 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
         var providerCallCount = 0
         let adapter = makeAdapter(timeProvider: timeReference.now) {
             providerCallCount += 1
-            return .init(customerId: "cus_123", clientSecret: "cuss_\(providerCallCount)")
+            return .init(clientSecret: "cuss_\(providerCallCount)")
         }
         let (_, originalSession) = try await adapter.elementsSessionWithCustomerSessionClientSecret()
 
@@ -216,7 +248,7 @@ class CustomerSessionAdapterTests: APIStubbedTestCase {
     private func makeCachedSession(
         timeProvider: @escaping () -> Date = Date.init
     ) -> CustomerSessionAdapter.CachedCustomerSessionClientSecret {
-        return .init(customerSessionClientSecret: .init(customerId: "cus_123", clientSecret: "cuss_123"),
+        return .init(customerSessionClientSecret: .init(clientSecret: "cuss_123"),
                      apiKey: "ek_123",
                      customerId: "cus_123",
                      timeProvider: timeProvider)

@@ -169,7 +169,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         let exp = expectation(description: "confirm completed")
 
         var configuration = MockParams.configuration(pk: MockParams.publicKey)
-        configuration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123")
+        configuration.customer = .init(customerSessionClientSecret: "cuss_123")
 
         let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
         let elementsSession = STPElementsSession.linkElementsSessionWithCustomerSession

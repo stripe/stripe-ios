@@ -84,8 +84,8 @@ class CustomerSessionAdapter {
             return (elementsSession, cachedCustomerSessionClientSecret)
         } else {
             let customerSessionClientSecret = try await customerSessionClientSecretProvider()
-            // The customer isn't known until the Elements Session responds, so no local default can be sent on this first request.
-            let elementsSessionResponse = try await elementsSession(customerSessionClientSecret: customerSessionClientSecret, customerId: nil, setupIntentClientSecret: setupIntentClientSecret)
+            // Even when expired, the cached customer lets us send the local default; a first-ever request has none.
+            let elementsSessionResponse = try await elementsSession(customerSessionClientSecret: customerSessionClientSecret, customerId: _cachedCustomerSessionClientSecret?.customerId, setupIntentClientSecret: setupIntentClientSecret)
             guard let customerSession = elementsSessionResponse.customer?.customerSession,
                   !customerSession.apiKey.isEmpty else {
                 throw CustomerSheetError.unknown(debugDescription: "Failed to claim CustomerSession")

@@ -728,7 +728,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Create a new CS for the Customer
         let customerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: testCustomerID, merchantCountry: "us")
-        configuration.customer = .init(id: testCustomerID, customerSessionClientSecret: customerSession.customerSessionClientSecret)
+        configuration.customer = .init(customerSessionClientSecret: customerSession.customerSessionClientSecret)
         // This should disable us bank account, a delayed payment method
         configuration.allowsDelayedPaymentMethods = false
 

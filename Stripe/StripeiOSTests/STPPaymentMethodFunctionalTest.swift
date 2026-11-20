@@ -196,7 +196,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
                                                                                                       merchantCountry: nil)
         var configuration = PaymentSheet.Configuration()
-        configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
+        configuration.customer = PaymentSheet.CustomerConfiguration(customerSessionClientSecret: cscs.customerSessionClientSecret)
         let elementSession = try await client.retrieveDeferredElementsSession(
             withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
                                     confirmHandler: { _, _ in
@@ -296,7 +296,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
                                                                                                       merchantCountry: "fr")
         var configuration = PaymentSheet.Configuration()
-        configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
+        configuration.customer = PaymentSheet.CustomerConfiguration(customerSessionClientSecret: cscs.customerSessionClientSecret)
         let elementSession = try await client.retrieveDeferredElementsSession(
             withIntentConfig: .init(mode: .payment(amount: 5000, currency: "eur", setupFutureUsage: .offSession, captureMethod: .automatic),
                                     confirmHandler: { _, _ in

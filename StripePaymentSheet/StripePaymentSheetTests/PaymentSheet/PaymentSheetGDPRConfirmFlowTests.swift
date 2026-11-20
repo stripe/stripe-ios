@@ -511,7 +511,7 @@ final class PaymentSheetGDPRConfirmFlowTests: STPNetworkStubbingTestCase {
             var config = PaymentSheet.Configuration()
             config.returnURL = "https://foo.com"
             config.apiClient = apiClient
-            config.customer = PaymentSheet.CustomerConfiguration(id: customerId, customerSessionClientSecret: "cuss_123")
+            config.customer = PaymentSheet.CustomerConfiguration(customerSessionClientSecret: "cuss_123")
             return config
         }()
 

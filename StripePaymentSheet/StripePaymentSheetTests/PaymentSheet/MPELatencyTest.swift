@@ -152,7 +152,7 @@ final class MPELatencyTest: XCTestCase {
             paymentMethodRemove: true,
             paymentMethodSetAsDefault: true
         )
-        configuration.customer = .init(id: customerAndCustomerSession.customer, customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret)
+        configuration.customer = .init(customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret)
 
         try await _measureLoadLatency(configuration: configuration)
         XCTAssertFalse(didCallLinkLookupEndpoint, "Did not expect Link lookup endpoint to be called")
@@ -204,7 +204,7 @@ final class MPELatencyTest: XCTestCase {
             paymentMethodRemove: true,
             paymentMethodSetAsDefault: true
         )
-        configuration.customer = .init(id: customerAndCustomerSession.customer, customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret)
+        configuration.customer = .init(customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret)
 
         try await _measureLoadLatency(configuration: configuration)
         XCTAssertTrue(didCallLinkLookupEndpoint, "Expected Link lookup endpoint to be called")
@@ -249,7 +249,7 @@ final class MPELatencyTest: XCTestCase {
             paymentMethodRemove: true,
             paymentMethodSetAsDefault: true
         )
-        configuration.customer = .init(id: customerAndCustomerSession.customer, customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret)
+        configuration.customer = .init(customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret)
 
         try await _measureLoadLatency(configuration: configuration)
         XCTAssertTrue(didCallLinkLookupEndpoint, "Expected Link lookup endpoint to be called")
