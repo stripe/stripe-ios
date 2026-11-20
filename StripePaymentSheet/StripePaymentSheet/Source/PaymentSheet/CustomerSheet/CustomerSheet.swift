@@ -436,7 +436,7 @@ public struct CustomerSessionClientSecret {
     /// See: https://docs.stripe.com/api/customer_sessions/object
     internal let clientSecret: String
 
-    @available(*, deprecated, message: "You no longer need to pass a Customer ID. Use init(clientSecret:) instead.")
+    @available(*, deprecated, message: "You no longer need to pass a Customer ID.")
     public init(customerId: String, clientSecret: String) {
         self.init(clientSecret: clientSecret, customerId: customerId)
     }

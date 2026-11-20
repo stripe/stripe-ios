@@ -5,13 +5,16 @@ Read our migration guide in [MIGRATING-COCOAPODS.md](https://github.com/stripe/s
 ### Migrating from versions < 27.0.0
 #### PaymentSheet
 ##### CustomerConfiguration
-When using a CustomerSession with PaymentSheet, FlowController, or EmbeddedPaymentElement, pass only its client secret:
+`PaymentSheet.CustomerConfiguration` no longer requires `id` when using a `CustomerSession`. The SDK resolves the customer from the session client secret. This applies to PaymentSheet, FlowController, and EmbeddedPaymentElement.
 
-```swift
-configuration.customer = .init(customerSessionClientSecret: customerSessionClientSecret)
+```diff
+ configuration.customer = .init(
+-    id: customerID,
+     customerSessionClientSecret: customerSessionClientSecret
+ )
 ```
 
-The ephemeral-key initializer still requires a Customer ID. `PaymentSheet.CustomerConfiguration.id` is no longer public; retain the ID in your app if you need it.
+The ephemeral-key initializer is unchanged and still requires both values. `PaymentSheet.CustomerConfiguration.id` is no longer public; retain the ID in your app if you need it.
 
 ##### Migrating from External Payment Methods to Custom Payment Methods
 `PaymentSheet.ExternalPaymentMethodConfiguration` is deprecated in favor of `PaymentSheet.CustomPaymentMethodConfiguration`.
@@ -58,7 +61,17 @@ Migrate your application-owned confirmation handler from a method-name string to
 `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress` are deprecated. Payment methods that require a shipping address are always allowed.
 
 #### CustomerSheet
-Return `CustomerSessionClientSecret(clientSecret: customerSessionClientSecret)` from your CustomerSession client-secret provider. Your server still creates the session for the authenticated customer; the SDK resolves the customer from the session.
+##### CustomerConfiguration
+`CustomerSessionClientSecret` no longer requires `customerId`. Remove the argument when returning the wrapper from your CustomerSession client-secret provider:
+
+```diff
+ return CustomerSessionClientSecret(
+-    customerId: customerID,
+     clientSecret: customerSessionClientSecret
+ )
+```
+
+Your server still creates the session for the authenticated customer; the SDK resolves the customer from that session.
 
 ### Migrating from versions < 26.7.0
 * StripePaymentSheet now depends on `StripeFinancialConnectionsLite`. If you manually link StripePaymentSheet or use Carthage, you must also embed `StripeFinancialConnectionsLite.xcframework` in your app. No action is required for CocoaPods or Swift Package Manager users.

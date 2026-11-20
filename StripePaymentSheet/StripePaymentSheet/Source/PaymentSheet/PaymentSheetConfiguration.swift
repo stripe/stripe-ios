@@ -368,7 +368,7 @@ extension PaymentSheet {
         }
 
         /// Initializes a CustomerConfiguration with a customerSessionClientSecret
-        @available(*, deprecated, message: "You no longer need to pass a Customer ID. Use init(customerSessionClientSecret:) instead.")
+        @available(*, deprecated, message: "You no longer need to pass a Customer ID.")
         public init(id: String, customerSessionClientSecret: String) {
             self.init(customerSessionClientSecret: customerSessionClientSecret, id: id)
         }
