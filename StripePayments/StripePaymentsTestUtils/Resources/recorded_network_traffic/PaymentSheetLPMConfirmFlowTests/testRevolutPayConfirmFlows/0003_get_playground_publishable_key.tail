@@ -7,10 +7,8 @@ Content-Type: application/json
 Strict-Transport-Security: max-age=63072000
 Age: 0
 Date: Fri, 20 Nov 2026 22:58:23 GMT
-x-vercel-id: sfo1::iad1::g56zs-1795215503067-ce7a7c8be682
 Content-Length: 130
 Cache-Control: public, max-age=0, must-revalidate
-x-vercel-cache: MISS
 
 {
   "publishable_key" : "pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b"

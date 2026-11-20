@@ -407,6 +407,10 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     [tail appendFormat:@"%@%@\n", response.MIMEType, [self toBase64Body:request andResponse:response] ? @";base64": @""];
     NSEnumerator *headerKeys = [response.allHeaderFields keyEnumerator];
     for (NSString *key in headerKeys) {
+        // Vercel's own headers, which the test backends' deployment adds, aren't the backend's response.
+        if ([key.lowercaseString hasPrefix:@"x-vercel-"]) {
+            continue;
+        }
         [tail appendFormat:@"%@: %@\n", key, (NSString*)[response.allHeaderFields objectForKey:key]];
     }
     
@@ -501,6 +505,9 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
      
     NSDictionary *headers = response.allHeaderFields;
     for(NSString *key in headers){
+        if ([key.lowercaseString hasPrefix:@"x-vercel-"]) {
+            continue;
+        }
         [dataString appendFormat:@"%@: %@\n", key, headers[key]];
     }
     

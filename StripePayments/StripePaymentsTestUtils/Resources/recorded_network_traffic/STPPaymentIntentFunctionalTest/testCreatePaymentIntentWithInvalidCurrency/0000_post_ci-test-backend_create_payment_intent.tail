@@ -6,9 +6,7 @@ Server: Vercel
 Content-Type: text/html;charset=utf-8
 Strict-Transport-Security: max-age=63072000
 Date: Fri, 20 Nov 2026 22:34:48 GMT
-x-vercel-id: sfo1::iad1::7sjf9-1795214088248-2037daed01a9
 Content-Length: 166
-x-vercel-cache: MISS
 Cache-Control: public, max-age=0, must-revalidate
 
 Error creating PaymentIntent: The currency provided (usd) is invalid. Payments with bancontact support the following currencies: eur. (request_id: req_iM0q99ThTAOuoK)

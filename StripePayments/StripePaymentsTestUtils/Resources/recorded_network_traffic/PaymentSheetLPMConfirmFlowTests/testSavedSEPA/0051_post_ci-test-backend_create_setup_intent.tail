@@ -6,9 +6,7 @@ Server: Vercel
 Content-Type: application/json
 Strict-Transport-Security: max-age=63072000
 Date: Fri, 20 Nov 2026 23:01:29 GMT
-x-vercel-id: sfo1::iad1::7sjf9-1795215689695-df2070f761b9
 Content-Length: 292
-x-vercel-cache: MISS
 Cache-Control: public, max-age=0, must-revalidate
 
 {

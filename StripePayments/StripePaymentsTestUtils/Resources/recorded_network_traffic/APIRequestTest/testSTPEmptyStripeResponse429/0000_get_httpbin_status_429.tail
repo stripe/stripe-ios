@@ -6,8 +6,6 @@ Server: Vercel
 Content-Type: text/html;charset=utf-8
 Strict-Transport-Security: max-age=63072000
 Date: Fri, 20 Nov 2026 22:33:40 GMT
-x-vercel-id: sfo1::iad1::d5lgp-1795214020473-7de4e8880029
 Content-Length: 0
-x-vercel-cache: BYPASS
 Cache-Control: public, max-age=0, must-revalidate
 

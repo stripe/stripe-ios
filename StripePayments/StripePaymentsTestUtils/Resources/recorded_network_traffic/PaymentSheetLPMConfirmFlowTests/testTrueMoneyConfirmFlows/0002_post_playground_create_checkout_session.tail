@@ -7,9 +7,7 @@ Content-Type: application/json
 Strict-Transport-Security: max-age=63072000
 Date: Fri, 20 Nov 2026 23:03:51 GMT
 Content-Encoding: br
-x-vercel-id: sfo1::iad1::vfgrm-1795215831469-a9ac45ba52b0
 Cache-Control: public, max-age=0, must-revalidate
-x-vercel-cache: MISS
 
 {
   "billing_address_collection" : null,
