@@ -1,7 +1,7 @@
 # Apple Pay tax update failures: problems and fixes
 
 This is an overview of how Checkout's Apple Pay flow handles a failed tax update while the sheet is open.
-It covers what goes wrong today and in [#7697](https://github.com/stripe/stripe-ios/pull/7697), why, and a fix that I verified.
+It covers what goes wrong today and in [#7697](https://github.com/stripe/stripe-ios/pull/7697), why, and a proposed fix.
 Every claim about Apple Pay's behavior was checked on the iOS 18.5 simulator against the playground backend. The screenshots are in [`screenshots/`](screenshots).
 
 - **Fix:** branch [`yuki/fix-apple-pay-tax-update-recovery`](https://github.com/stripe/stripe-ios/compare/joyceqin/fix-apple-pay...yuki/fix-apple-pay-tax-update-recovery), stacked on #7697. The diff is in [`fix.diff`](fix.diff).
@@ -86,65 +86,113 @@ So a tax update that fails while the sheet is open is almost always a network, s
    So the buyer's only ways out are to change their address, pick another card, or cancel.
 4. **The raw server message is shown to buyers.** `error.nonGenericDescription` is the server's `message`, because Checkout sets `useServerErrorMessage`.
    It isn't localized by the client, and it appears in Apple's otherwise localized sheet ([09](screenshots/09-card-details-shows-our-message.png)).
+   The fix always shows the localized generic message instead.
 5. **Two explanations in #7697 need correcting:**
    - The PR description says the billing address isn't available until authorization. It is available in `didSelectPaymentMethod`, redacted, and the PR's own code uses it.
      The real reason errors have to go at authorization is that Apple ignores errors from `didSelectPaymentMethod`.
    - The code comment "instead of letting the customer pay stale totals" overstates the risk, because the server already blocks that. The real benefit is UX.
 
-### Why retrying only at authorization isn't enough
+### Why the sheet can't always recover on its own
 
-This is the obvious next fix, and I tried it.
-At authorization the full billing address is available, so the retry works mechanically. But the sheet still shows the pre-tax $120, and a successful retry produces $131.70.
+At authorization the full billing address is available, so retrying the update there works mechanically.
+But the sheet still shows the pre-tax $120, and a successful retry produces $131.70.
 Apple can't show the new total after Pay is tapped, so the code has to choose:
 - Confirm, which charges an amount the buyer never saw. The server won't catch this, because the client session now matches it.
-- Fail, which leaves the buyer stuck again ([08](screenshots/08-still-stale-120-after-reselect.png)).
+- Fail and keep the sheet open, which leaves the buyer stuck ([08](screenshots/08-still-stale-120-after-reselect.png)). Re-selecting the same card doesn't call `didSelectPaymentMethod` again.
+- Close the sheet, so the next Apple Pay attempt starts from the new total.
 
-So the main recovery has to happen **before** Pay, in the callbacks that can still update the totals.
+The fix closes the sheet.
 
 ## 4. The fix
 
 All of it lives in `CheckoutApplePayContext` ([`fix.diff`](fix.diff)).
+Nothing retries on its own. The buyer retries by tapping Pay again or by saving the shipping address again.
+No failure is blamed on a specific address field, because the update endpoint accepted every bad address I tried. The buyer always sees the localized generic message, "There was an unexpected error -- try again in a few seconds".
 
-1. **Retry transient failures in the callbacks that can still update totals.**
-   `updateTaxRegion(to:using:)` retries network errors (`NSURLErrorDomain`) and `api_error` (5xx) responses twice, after 0.5s and then 1s.
-   Both `didSelectPaymentMethod` and `didSelectShippingContact` use it, before calling their handler. The delay is short because Apple times the sheet out after about 30s.
-2. **Only blame an address field when the API names one.** `invalidAddressKey(for:)` maps a `tax_region[country|line1|line2|city|state|postal_code]` `param` to the matching `CNPostalAddress*Key`.
-   - **If the API named a field:** return `paymentShippingAddressInvalidError` / `paymentBillingAddressInvalidError` for that field, with the server message.
-   - **Shipping, for any other failure:** return `paymentContactInvalidError(withContactField: .postalAddress, localizedDescription: stp_unexpectedErrorMessage())`.
-     It's the only shipping error that blocks Pay without a misleading alert, and re-saving the address recovers ([13](screenshots/13-shipping-contact-error-blocks-pay.png), [14](screenshots/14-shipping-list-shows-message.png), [20](screenshots/20-fix-shipping-recovered-after-resave.png)).
-3. **Billing at authorization, when the last update failed and the address isn't to blame:** `recoverFromFailedBillingTaxUpdate(_:payment:)` re-runs the update using `payment.billingContact`.
-   - **Still failing:** return `.failure` with a `PKPaymentErrorDomain` / `.unknownError` error and the localized generic message. The sheet stays open with no field marked, and the next Pay tap retries ([16](screenshots/16-fix-persistent-failure-sheet-stays-open.png)).
-   - **Succeeds with the same total**, for example when tax is $0: confirm.
-   - **Succeeds with a different total:** set `paymentState = .error` and the result to `.failed(CheckoutError.totalChanged)`, then return `.failure` with no errors so Apple closes the sheet.
-     The merchant gets a failure with the localized generic message. The session already has the new total, so the next Apple Pay attempt shows it and can succeed ([17](screenshots/17-fix-total-changed-closes-sheet.png) → [18](screenshots/18-fix-reopen-shows-new-total.png) → [19](screenshots/19-fix-second-attempt-paid.png)).
+### Billing, in plain steps
 
-What the fix leaves alone:
-- The server message is still shown when the API names an address field, since it explains that field.
+These are the real numbers from the simulator: a $120 cart where billing tax should bring the total to $131.70.
+
+**Setup: the update fails while the buyer is picking a card.**
+
+1. The buyer opens Apple Pay and picks a card.
+2. We ask the server to recalculate tax for that card's billing address, and the request fails, say because of a network blip.
+3. We can't put an error on the sheet at this point, because Apple ignores errors returned here ([screenshot 02](screenshots/02-pm-update-error-ignored.png)). So the sheet keeps showing **$120**, with no tax, and looks completely normal.
+4. We remember that the tax update failed.
+
+**Then the buyer taps Pay.**
+This is the next point where our code runs (`retryFailedBillingTaxUpdate(payment:)`). We see the earlier failure and send the same tax request once more, this time with the full billing address Apple provides at authorization. One of three things happens.
+
+**A. The request fails again** (still offline).
+- We tell Apple "payment failed" with a generic `PKPaymentErrorDomain` / `.unknownError` error.
+- That keeps the sheet open, marks no address field and shows no misleading message.
+- The buyer can tap Pay again, which tries once more, or cancel.
+
+<img src="screenshots/16-fix-persistent-failure-sheet-stays-open.png" width="220">
+
+**B. The request succeeds and the total is still $120.**
+- This happens when tax comes out to $0 for that address.
+- The buyer saw $120 and is charged $120, so we go ahead with the payment.
+
+**C. The request succeeds and the total is now $131.70.**
+- The sheet still says $120, and Apple doesn't let us change the amount once Pay has been tapped.
+- If we confirmed now, we'd charge $131.70 for a sheet that said $120. The server wouldn't stop this, because our session now says $131.70 too.
+- So we close the sheet and return a failure, `CheckoutError.totalChanged`, shown with the generic message.
+- The buyer taps Apple Pay again. The sheet now shows **$131.70**, since the session already has the right total, and they pay.
+
+<img src="screenshots/17-fix-total-changed-closes-sheet.png" width="220"> <img src="screenshots/18-fix-reopen-shows-new-total.png" width="220"> <img src="screenshots/19-fix-second-attempt-paid.png" width="220">
+
+Option C is the clunky one, because the buyer has to open Apple Pay a second time.
+But it's the only honest choice: the sheet's amount can't be updated after Pay is tapped, and we don't want to charge a number the buyer never saw.
+
+### Shipping, in plain steps
+
+Shipping is simpler, because Apple calls `didSelectShippingContact` again when the buyer saves the address.
+
+1. The buyer picks a shipping address, and the tax update fails.
+2. We return `paymentContactInvalidError(withContactField: .postalAddress)` with the generic message.
+   The sheet says "Update Shipping Address" and blocks Pay, without marking a field.
+   We use this error because the alternatives are worse:
+   - An unserviceable error pops up "<App> Doesn't Ship to Your Shipping Address".
+   - A generic PassKit error is ignored, and Pay stays enabled with the stale total.
+3. The buyer opens the address and saves it again. Apple calls `didSelectShippingContact`, and the update runs again.
+4. If it succeeds, the sheet shows the new total, in the simulator $130.35, and the buyer pays.
+
+<img src="screenshots/13-shipping-contact-error-blocks-pay.png" width="220"> <img src="screenshots/14-shipping-list-shows-message.png" width="220"> <img src="screenshots/20-fix-shipping-recovered-after-resave.png" width="220">
+
+### What the fix leaves alone
+
 - The confirm path's `pkPaymentError(forStripeError:)` still passes non-ZIP errors through as non-PassKit errors, so the sheet closes. That's existing behavior.
+- Genuine address problems still surface at confirm, for example as `customer_tax_location_invalid`, through the existing confirm error path.
 
 ## 5. Verification
 
-**Unit tests**: all 43 `CheckoutApplePayContextTests` pass. New tests cover:
-- retrying billing and shipping after a single network failure;
-- marking only the field the API named;
-- the shipping error for failures the address didn't cause;
-- authorization when the update keeps failing, when the retry keeps the total, and when the retry changes the total.
+**Unit tests:** all 39 `CheckoutApplePayContextTests` pass. New tests cover:
+- a failed shipping tax update flagging the address without marking a field, with the generic message;
+- tapping Pay when the billing update keeps failing: the sheet stays open without marking a field;
+- tapping Pay when the retried billing update keeps the total: the payment confirms, using the billing address from authorization;
+- tapping Pay when the retried billing update changes the total: the sheet closes and reports a total-changed failure.
 
 **Simulator, real backend, with network failures forced in the experiment build:**
 
 | Scenario | Result | Screenshots |
 |---|---|---|
-| Billing update fails once | The in-sheet retry succeeds, the sheet shows $131.70, payment completes | <img src="screenshots/15-fix-in-sheet-retry-shows-taxed-total.png" width="220"> |
 | Billing update keeps failing | The sheet stays open after two Pay taps, with no field marked | <img src="screenshots/16-fix-persistent-failure-sheet-stays-open.png" width="220"> |
 | Billing fails in the sheet, then succeeds at authorization with a new total | The sheet closes with the generic error. Reopening shows $131.70, and payment completes | <img src="screenshots/17-fix-total-changed-closes-sheet.png" width="220"> <img src="screenshots/18-fix-reopen-shows-new-total.png" width="220"> <img src="screenshots/19-fix-second-attempt-paid.png" width="220"> |
 | Shipping fails in the sheet | The address shows the generic message. Re-saving it re-runs the update, the sheet shows $130.35, and payment completes | <img src="screenshots/14-shipping-list-shows-message.png" width="220"> <img src="screenshots/20-fix-shipping-recovered-after-resave.png" width="220"> |
+
+These runs were on an earlier version of the fix, which also retried twice automatically inside the sheet.
+Each run forced enough failures to use up those retries, so the flows shown are the ones the current code takes. I haven't re-run them on the final code.
+That earlier version's in-sheet retry, which brought the sheet to $131.70 with no buyer action, is in [screenshot 15](screenshots/15-fix-in-sheet-retry-shows-taxed-total.png) for reference.
 
 ## 6. Open questions
 
 - **Real device.** Everything above is from one simulator runtime with simulated cards.
 - **Should a total-changed retry close the sheet, or keep it open?** Closing means a second Apple Pay tap. Keeping it open strands the buyer, so I chose closing.
 - **`CheckoutError.invalidShippingCountry`** is still passed to Apple as a non-PassKit error with an English message. `paymentShippingAddressUnserviceableError` is the right error for that case. Not touched here.
-- **Does `checkout_client/update` ever return a `tax_region[...]` `param`?** I couldn't get one. If it never does, `invalidAddressKey(for:)` is just defensive.
+- **Should field-level address errors come back?** The update endpoint never returned one in testing, so the fix doesn't try to map server errors to address fields.
+  If the Checkout backend confirms a field-level error contract, marking the field could be added then.
+- **Should transient failures retry automatically inside the sheet?** That would avoid option C in most network blips, at the cost of a slower sheet. The fix leaves retrying to the buyer.
 
 ## 7. stripe-android, for comparison
 
