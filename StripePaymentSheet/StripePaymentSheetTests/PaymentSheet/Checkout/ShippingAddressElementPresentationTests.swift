@@ -6,7 +6,7 @@
 
 import OHHTTPStubs
 @_spi(InternalOnlyAPI) @testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) @testable import StripeUICore
 import UIKit
 import XCTest

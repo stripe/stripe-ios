@@ -8,7 +8,7 @@
 import UIKit
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension CurrencySelectorElement.Configuration {
     /// Appearance configuration for ``CurrencySelectorElement``.
     public struct Appearance {

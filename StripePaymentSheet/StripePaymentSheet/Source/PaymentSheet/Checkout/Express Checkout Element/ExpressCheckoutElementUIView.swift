@@ -12,7 +12,7 @@ import UIKit
 
 /// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 @MainActor
 public final class ExpressCheckoutElementUIView: UIView {
 

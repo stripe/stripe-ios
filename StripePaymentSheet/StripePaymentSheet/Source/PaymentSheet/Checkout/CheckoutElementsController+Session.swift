@@ -13,7 +13,7 @@ import UIKit
 // MARK: - Session
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController {
     /// A read-only representation of a Stripe Checkout Session.
     public struct Session: Identifiable {

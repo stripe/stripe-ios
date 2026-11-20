@@ -9,7 +9,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import XCTest
 
 final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {

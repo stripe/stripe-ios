@@ -7,7 +7,7 @@
 
 import Foundation
 import StripeCoreTestUtils
-@testable @_spi(InternalOnlyAPI) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import XCTest
 
 @MainActor

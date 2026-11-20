@@ -9,7 +9,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController {
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
 
@@ -138,7 +138,7 @@ extension CheckoutElementsController {
 }
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController.Configuration {
     /// Default customer details used to pre-populate Checkout integrations.
     public struct Defaults {

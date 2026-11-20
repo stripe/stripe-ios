@@ -9,7 +9,7 @@ import PassKit
 @_spi(InternalOnlyAPI) import StripeCore
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension ExpressCheckoutElement {
     /// Configuration options for ``ExpressCheckoutElement``.
     public struct Configuration {

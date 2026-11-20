@@ -6,7 +6,7 @@
 //
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension CurrencySelectorElement {
     /// Configuration for Currency Selector Element.
     public struct Configuration {

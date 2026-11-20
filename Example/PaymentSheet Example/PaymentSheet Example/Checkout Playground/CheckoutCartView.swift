@@ -6,7 +6,7 @@
 //
 
 import StripePayments
-@_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(CheckoutSessionPreview) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutCartView: View {

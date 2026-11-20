@@ -12,7 +12,7 @@ import PassKit
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 import XCTest

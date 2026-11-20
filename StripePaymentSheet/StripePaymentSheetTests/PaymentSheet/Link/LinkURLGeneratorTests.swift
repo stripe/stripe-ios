@@ -7,7 +7,7 @@ import Foundation
 
 @_spi(InternalOnlyAPI) @testable import StripeCore
 @_spi(InternalOnlyAPI) @testable import StripePayments
-@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable @_spi(CheckoutSessionPreview) import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift

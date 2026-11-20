@@ -18,7 +18,7 @@ protocol ShippingAddressElementDelegate: AnyObject {
 /// A shipping address form backed by a Checkout Session.
 @MainActor
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 public final class ShippingAddressElement {
 
     private(set) var addressViewController: AddressViewController!

@@ -6,7 +6,7 @@
 
 import Combine
 @_spi(InternalOnlyAPI) import StripeCore
-@_spi(InternalOnlyAPI) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import SwiftUI
 
 extension CheckoutPlayground {

@@ -3,7 +3,7 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import XCTest
 
 private extension CheckoutClientAPIResponse {

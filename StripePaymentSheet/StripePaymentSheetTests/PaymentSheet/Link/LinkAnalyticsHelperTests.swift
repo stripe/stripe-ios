@@ -5,7 +5,7 @@
 
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripeCoreTestUtils
-@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import XCTest
 
 final class LinkAnalyticsHelperTests: XCTestCase {

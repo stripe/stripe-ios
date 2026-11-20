@@ -8,7 +8,7 @@
 import UIKit
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension ShippingAddressElement.Configuration {
     /// Appearance configuration for ``ShippingAddressElement``.
     public struct Appearance: Equatable {

@@ -8,7 +8,7 @@
 import Foundation
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController.Session {
     /// Aggregate amounts for a checkout session.
     ///

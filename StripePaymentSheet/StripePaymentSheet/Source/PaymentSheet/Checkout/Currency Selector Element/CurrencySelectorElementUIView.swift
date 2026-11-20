@@ -12,7 +12,7 @@ import UIKit
 
 /// A UIKit view that displays an Adaptive Pricing currency selector.
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 @MainActor
 public final class CurrencySelectorElementUIView: UIView {
 

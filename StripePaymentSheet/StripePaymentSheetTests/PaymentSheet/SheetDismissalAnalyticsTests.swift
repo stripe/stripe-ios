@@ -7,7 +7,7 @@
 //
 
 @_spi(InternalOnlyAPI) @testable import StripeCore
-@_spi(InternalOnlyAPI) @_spi(CryptoOnrampAlpha) @testable @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(InternalOnlyAPI) @_spi(CryptoOnrampAlpha) @testable @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import UIKit
 import XCTest
 

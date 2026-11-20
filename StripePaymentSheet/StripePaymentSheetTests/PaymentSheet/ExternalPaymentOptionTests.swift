@@ -6,7 +6,7 @@
 //
 
 @_spi(InternalOnlyAPI) import StripeCore
-@testable @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import XCTest
 
 class ExternalPaymentOptionTests: XCTestCase {

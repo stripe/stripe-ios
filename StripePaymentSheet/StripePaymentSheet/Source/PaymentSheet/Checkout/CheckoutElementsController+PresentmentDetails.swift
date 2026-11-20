@@ -8,7 +8,7 @@
 import Foundation
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController.Session {
     /// Details about the currency presented to the customer when adaptive pricing is active.
     public struct PresentmentDetails: Sendable, Hashable {

@@ -13,7 +13,7 @@ import UIKit
 /// PaymentElement collects the customer's payment method, either in an embeddable view or presented in a sheet.
 @MainActor
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 public final class PaymentElement {
     // MARK: - Public Properties
 

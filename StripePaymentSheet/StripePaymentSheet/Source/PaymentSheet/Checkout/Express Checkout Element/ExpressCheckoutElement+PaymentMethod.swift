@@ -6,7 +6,7 @@
 //
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension ExpressCheckoutElement {
     /// A payment method supported by Express Checkout Element.
     public enum PaymentMethod: String, Equatable {

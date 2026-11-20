@@ -9,7 +9,7 @@
 import Foundation
 
 @_spi(ReactNativeSDK)
-@_spi(CheckoutSessionsPreview)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController {
     /// A postal address.
     public struct Address: Equatable, Hashable, Sendable {
