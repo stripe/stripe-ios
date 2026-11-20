@@ -52,6 +52,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     /// Apple Pay doesn't display errors returned from a payment method update, so authorization awaits this and fails with
     /// the error instead of letting the customer pay stale totals.
     private var paymentMethodUpdateTask: Task<Void, Error>?
+    private var apexpSelectCount = 0
+    private var apexpAuthCount = 0
+    private var apexpDisplayedTotal: NSDecimalNumber?
+    private var apexpTotalsStale = false
 
     init(
         checkoutSession: CheckoutElementsController.Session,
@@ -86,6 +90,50 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         Task {
             // A billing tax update may still be in flight, or may have failed. Apple Pay doesn't display errors returned from
             // a payment method update, so surface the failure here, where it is shown, and let the customer try again.
+            if (ProcessInfo.processInfo.environment["APPLEPAY_EXPERIMENT"] ?? "").hasPrefix("retry") {
+                self.apexpAuthCount += 1
+                let n = self.apexpAuthCount
+                var failed = false
+                do { try await self.paymentMethodUpdateTask?.value } catch { failed = true }
+                NSLog("APEXP auth#%d: previousUpdateFailed=%@ totalsStale=%@ displayed=%@", n, "\(failed)", "\(self.apexpTotalsStale)", String(describing: self.apexpDisplayedTotal))
+                if self.apexpTotalsStale {
+                    NSLog("APEXP auth#%d: totals on sheet are stale -> .failure (no errors)", n)
+                    completion(PKPaymentAuthorizationResult(status: .failure, errors: Self.apexpFailureErrors()))
+                    return
+                }
+                if failed {
+                    if n == 1 {
+                        NSLog("APEXP auth#%d: simulated retry failure -> .failure (no errors)", n)
+                        completion(PKPaymentAuthorizationResult(status: .failure, errors: Self.apexpFailureErrors()))
+                        return
+                    }
+                    guard let pa = payment.billingContact?.postalAddress,
+                          let addr = Self.makeCheckoutAddress(from: pa),
+                          let updater = self.checkoutWalletUpdater else {
+                        NSLog("APEXP auth#%d: no billing contact at authorization", n)
+                        completion(PKPaymentAuthorizationResult(status: .failure, errors: Self.apexpFailureErrors()))
+                        return
+                    }
+                    NSLog("APEXP auth#%d: retrying tax update with billingContact %@", n, String(describing: pa))
+                    do {
+                        self.session = try await updater.updateTaxRegionWithoutEnqueueing(address: addr, canUpdateWhileSheetPresented: true, confirmationSource: self.attribution.confirmingElement)
+                        self.paymentMethodUpdateTask = nil
+                    } catch {
+                        NSLog("APEXP auth#%d: retry failed %@", n, String(describing: error))
+                        completion(PKPaymentAuthorizationResult(status: .failure, errors: Self.apexpFailureErrors()))
+                        return
+                    }
+                    let newTotal = self.summaryItems().last?.amount
+                    NSLog("APEXP auth#%d: retry succeeded. displayed=%@ new=%@", n, String(describing: self.apexpDisplayedTotal), String(describing: newTotal))
+                    if newTotal != self.apexpDisplayedTotal {
+                        self.apexpTotalsStale = true
+                        NSLog("APEXP auth#%d: total changed -> .failure (no errors)", n)
+                        completion(PKPaymentAuthorizationResult(status: .failure, errors: Self.apexpFailureErrors()))
+                        return
+                    }
+                }
+                NSLog("APEXP auth#%d: proceeding to confirm", n)
+            } else {
             do {
                 try await self.paymentMethodUpdateTask?.value
             } catch {
@@ -95,6 +143,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 )
                 completion(PKPaymentAuthorizationResult(status: .failure, errors: [billingError]))
                 return
+            }
             }
 
             // Helpers to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
@@ -224,12 +273,49 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
               let postalAddress = paymentMethod.billingAddress?.postalAddresses.first?.value,
               let address = Self.makeCheckoutAddress(from: postalAddress),
               let checkoutWalletUpdater else {
+            NSLog("APEXP didSelectPaymentMethod: no tax update. collectsTax=%@ billingAddress=%@", "\(session.collectsTaxFromBillingAddress)", String(describing: paymentMethod.billingAddress))
             // No tax update is needed for this payment method, so there's no failure to report.
             paymentMethodUpdateTask = nil
             handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
             return
         }
+        let experiment = ProcessInfo.processInfo.environment["APPLEPAY_EXPERIMENT"] ?? "none"
+        NSLog("APEXP didSelectPaymentMethod: experiment=%@ address=%@", experiment, String(describing: postalAddress))
+        if experiment.hasPrefix("pmupdate") {
+            let message = "EXPERIMENT tax failure (\(experiment))"
+            let error: Error = switch experiment {
+            case "pmupdate_billing":
+                PKPaymentRequest.paymentBillingAddressInvalidError(withKey: CNPostalAddressPostalCodeKey, localizedDescription: message)
+            default:
+                NSError(domain: PKPaymentErrorDomain, code: PKPaymentError.unknownError.rawValue, userInfo: [NSLocalizedDescriptionKey: message])
+            }
+            paymentMethodUpdateTask = nil
+            if #available(iOS 15.0, *) {
+                handler(PKPaymentRequestPaymentMethodUpdate(errors: [error], paymentSummaryItems: summaryItems()))
+            }
+            return
+        }
         paymentMethodUpdateTask = Task { @MainActor in
+            if experiment.hasPrefix("retry") {
+                self.apexpSelectCount += 1
+                let n = self.apexpSelectCount
+                defer {
+                    self.apexpDisplayedTotal = self.summaryItems().last?.amount
+                    NSLog("APEXP select#%d: handler called, displayed total=%@", n, String(describing: self.apexpDisplayedTotal))
+                    handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: self.summaryItems()))
+                }
+                if n == 1 {
+                    NSLog("APEXP select#%d: forcing network failure", n)
+                    throw CheckoutError.apiError(message: URLError(.notConnectedToInternet).localizedDescription, underlyingError: URLError(.notConnectedToInternet))
+                }
+                self.session = try await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(address: address, canUpdateWhileSheetPresented: true, confirmationSource: attribution.confirmingElement)
+                self.apexpTotalsStale = false
+                return
+            }
+            if experiment == "baseline" {
+                defer { handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems())) }
+                throw CheckoutError.apiError(message: "EXPERIMENT tax failure (baseline)")
+            }
             // If the update throws, the totals are stale and authorization reports the failure.
             defer { handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems())) }
             self.session = try await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
@@ -377,6 +463,18 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     }
 
     // MARK: - Helpers
+
+    private static func apexpFailureErrors() -> [Error]? {
+        let message = "EXPERIMENT transient failure"
+        switch ProcessInfo.processInfo.environment["APPLEPAY_EXPERIMENT"] {
+        case "retry_unknown":
+            return [NSError(domain: PKPaymentErrorDomain, code: PKPaymentError.unknownError.rawValue, userInfo: [NSLocalizedDescriptionKey: message])]
+        case "retry_plain":
+            return [NSError(domain: "com.stripe.experiment", code: 1, userInfo: [NSLocalizedDescriptionKey: message])]
+        default:
+            return nil
+        }
+    }
 
     private func summaryItems() -> [PKPaymentSummaryItem] {
         return Self.makeSummaryItems(for: session, label: merchantLabel)

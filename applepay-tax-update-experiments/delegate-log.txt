@@ -1,0 +1,26 @@
+APEXP didSelectPaymentMethod: experiment=baseline address=<CNPostalAddress: 0x6000023f5d10: street=, subLocality=, city=Cupertino, subAdministrativeArea=, state=CA, postalCode=95014, country=United States, countryCode=US>
+APEXP didSelectPaymentMethod: experiment=pmupdate_billing address=<CNPostalAddress: 0x6000023e4140: street=, subLocality=, city=Cupertino, subAdministrativeArea=, state=CA, postalCode=95014, country=United States, countryCode=US>
+APEXP didSelectPaymentMethod: experiment=pmupdate_unknown address=<CNPostalAddress: 0x6000023cd8b0: street=, subLocality=, city=Cupertino, subAdministrativeArea=, state=CA, postalCode=95014, country=United States, countryCode=US>
+APEXP didSelectPaymentMethod: experiment=retry address=<CNPostalAddress: 0x6000023e0140: street=, subLocality=, city=Cupertino, subAdministrativeArea=, state=CA, postalCode=95014, country=United States, countryCode=US>
+APEXP select#1: forcing network failure
+APEXP select#1: handler called, displayed total=Optional(120)
+APEXP auth#1: previousUpdateFailed=true totalsStale=false displayed=Optional(120)
+APEXP auth#1: simulated retry failure -> .failure (no errors)
+APEXP didSelectPaymentMethod: experiment=retry_plain address=<CNPostalAddress: 0x6000023e9450: street=, subLocality=, city=Cupertino, subAdministrativeArea=, state=CA, postalCode=95014, country=United States, countryCode=US>
+APEXP select#1: forcing network failure
+APEXP select#1: handler called, displayed total=Optional(120)
+APEXP auth#1: previousUpdateFailed=true totalsStale=false displayed=Optional(120)
+APEXP auth#1: simulated retry failure -> .failure (no errors)
+APEXP didSelectPaymentMethod: experiment=retry_unknown address=<CNPostalAddress: 0x600002279400: street=, subLocality=, city=Cupertino, subAdministrativeArea=, state=CA, postalCode=95014, country=United States, countryCode=US>
+APEXP select#1: forcing network failure
+APEXP select#1: handler called, displayed total=Optional(120)
+APEXP auth#1: previousUpdateFailed=true totalsStale=false displayed=Optional(120)
+APEXP auth#1: simulated retry failure -> .failure (no errors)
+APEXP auth#2: previousUpdateFailed=true totalsStale=false displayed=Optional(120)
+APEXP auth#2: retrying tax update with billingContact <CNPostalAddress: 0x60000211e710: street=One Apple Park Way, subLocality=, city=Cupertino, subAdministrativeArea=, state=CA, postalCode=95014, country=United States, countryCode=US>
+APEXP auth#2: retry succeeded. displayed=Optional(120) new=Optional(131.7)
+APEXP auth#2: total changed -> .failure (no errors)
+APEXP auth#3: previousUpdateFailed=false totalsStale=true displayed=Optional(120)
+APEXP auth#3: totals on sheet are stale -> .failure (no errors)
+APEXP auth#4: previousUpdateFailed=false totalsStale=true displayed=Optional(120)
+APEXP auth#4: totals on sheet are stale -> .failure (no errors)
