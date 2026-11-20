@@ -24,7 +24,7 @@ extension STPClientAttributionMetadata {
                          paymentIntentCreationFlow: .standard,
                          paymentMethodSelectionFlow: isAutomaticPaymentMethodsEnabled ? .automatic : .merchantSpecified)
         case .deferredIntent(let intentConfig):
-            let isAutomaticPaymentMethodsEnabled = intentConfig.paymentMethodTypes?.isEmpty ?? true // if no payment method types specified in the intent config, default to automatic
+            let isAutomaticPaymentMethodsEnabled = (intentConfig.paymentMethodTypes?.isEmpty ?? true) && (intentConfig.allowedPaymentMethodTypes?.isEmpty ?? true) // if no payment method types or allowed payment method types specified in the intent config, default to automatic
             return .init(elementsSessionConfigId: elementsSessionConfigId,
                          paymentIntentCreationFlow: .deferred,
                          paymentMethodSelectionFlow: isAutomaticPaymentMethodsEnabled ? .automatic : .merchantSpecified)
