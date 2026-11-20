@@ -88,6 +88,37 @@ enum DocumentScannerOutput: Equatable {
         return idDetectorOutput.allClassificationScores
     }
 
+    /// Ranks timeout fallbacks using equally weighted sharpness, frame coverage,
+    /// and ID confidence, each normalized to 0...1.
+    func timeoutQualityScore(side: DocumentSide) -> Float {
+        switch self {
+        case let .legacy(idDetectorOutput, _, _, _, blurResult):
+            let scores = idDetectorOutput.allClassificationScores
+            let confidence: Float
+            switch side {
+            case .front:
+                let front = scores[.idCardFront] ?? 0
+                let passport = scores[.passport] ?? 0
+                guard front.isFinite, passport.isFinite else {
+                    return .nan
+                }
+                confidence = max(front, passport)
+            case .back:
+                confidence = scores[.idCardBack] ?? 0
+            }
+
+            let bounds = idDetectorOutput.documentBounds
+            let coverage = Float(bounds.width * bounds.height)
+            guard confidence.isFinite, coverage.isFinite, blurResult.variance.isFinite else {
+                return .nan
+            }
+
+            // The Laplacian detector reports the mean of three UInt8 channels.
+            let sharpness = min(max(blurResult.variance / 255, 0), 1)
+            return (sharpness + min(max(coverage, 0), 1) + min(max(confidence, 0), 1)) / 3
+        }
+    }
+
     func qualityScore(side: DocumentSide) -> Float {
         switch self {
         case let .legacy(idDetectorOutput, _, motionBlur, _, _):
