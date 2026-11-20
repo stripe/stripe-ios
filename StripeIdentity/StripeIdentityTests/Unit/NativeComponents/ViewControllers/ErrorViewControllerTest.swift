@@ -12,6 +12,7 @@ import XCTest
 
 @testable import StripeIdentity
 
+@MainActor
 final class ErrorViewControllerTest: XCTestCase {
 
     var mockAnalyticsClient: MockAnalyticsClientV2!
@@ -52,9 +53,17 @@ final class ErrorViewControllerTest: XCTestCase {
         XCTAssertEqual(errorDict?["line"] as? UInt, 123)
     }
 
-    func testTappingContinueButton() {
+    func testTappingContinueButton() async {
         let continueText = "continue"
         let backText = "back"
+        let forceConfirmStarted = expectation(description: "Force confirm started")
+        forceConfirmStarted.assertForOverFulfill = false
+        var forceConfirmCount = 0
+        mockSheetController.forceDocumentFrontAndDecideBackHandler = {
+            forceConfirmCount += 1
+            forceConfirmStarted.fulfill()
+            return false
+        }
         let vc = ErrorViewController(
             sheetController: mockSheetController,
             error: .inputError(
@@ -75,6 +84,43 @@ final class ErrorViewControllerTest: XCTestCase {
         vc.buttonViewModels[0].didTap()
         XCTAssertEqual(vc.buttonViewModels[0].state, .loading)
         XCTAssertEqual(vc.buttonViewModels[1].state, .disabled)
+        // A second tap while saving does not force-confirm again
+        vc.buttonViewModels[0].didTap()
+        await fulfillment(of: [forceConfirmStarted], timeout: 1)
+        XCTAssertEqual(forceConfirmCount, 1)
+    }
 
+    func testFailedContinueAllowsRetry() async {
+        // Given force-confirming the document front fails
+        let forceConfirmExp = expectation(description: "Force confirm attempted")
+        mockSheetController.forceDocumentFrontAndDecideBackHandler = {
+            forceConfirmExp.fulfill()
+            throw NSError(domain: "mock_error", code: 100)
+        }
+        let vc = ErrorViewController(
+            sheetController: mockSheetController,
+            error: .inputError(
+                .init(
+                    backButtonText: "back",
+                    body: "body",
+                    continueButtonText: "continue",
+                    requirement: .idDocumentFront,
+                    title: "title"
+                )
+            )
+        )
+
+        // When the user taps continue
+        vc.buttonViewModels[0].didTap()
+
+        // Then both buttons become enabled again so the user can retry
+        await fulfillment(
+            of: [
+                forceConfirmExp,
+                expectation(for: vc, keyPath: \.buttonViewModels[0].state, equalsToValue: .enabled),
+            ],
+            timeout: 4
+        )
+        XCTAssertEqual(vc.buttonViewModels[1].state, .enabled)
     }
 }

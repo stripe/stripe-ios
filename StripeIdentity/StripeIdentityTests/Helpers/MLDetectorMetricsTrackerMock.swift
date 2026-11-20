@@ -14,6 +14,7 @@ final class MLDetectorMetricsTrackerMock: MLDetectorMetricsTrackerProtocol {
     var modelName: String
     var mockAverageMetrics: MLDetectorMetricsTracker.Metrics
     var mockNumFrames: Int
+    var getPerformanceMetricsCallback: (() -> Void)?
 
     init(
         modelName: String,
@@ -27,13 +28,15 @@ final class MLDetectorMetricsTrackerMock: MLDetectorMetricsTrackerProtocol {
 
     func trackScan(inferenceStart: Date, inferenceEnd: Date, postProcessEnd: Date) {}
 
-    func reset() {}
+    func reset() {
+        mockNumFrames = 0
+    }
 
-    func getPerformanceMetrics(
-        completeOn queue: DispatchQueue,
-        completion: @escaping (_ averageMetrics: MLDetectorMetricsTracker.Metrics, _ numFrames: Int)
-            -> Void
+    func getPerformanceMetrics() -> (
+        averageMetrics: MLDetectorMetricsTracker.Metrics,
+        numFrames: Int
     ) {
-        completion(mockAverageMetrics, mockNumFrames)
+        getPerformanceMetricsCallback?()
+        return (mockAverageMetrics, mockNumFrames)
     }
 }

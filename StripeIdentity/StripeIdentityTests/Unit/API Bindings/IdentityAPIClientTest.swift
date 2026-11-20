@@ -22,7 +22,6 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
     static let mockEAK = "ephemeral_key_secret"
 
     private var apiClient: IdentityAPIClientImpl!
-    private var exp: XCTestExpectation!
 
     override func setUp() {
         super.setUp()
@@ -32,8 +31,6 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             ephemeralKeySecret: IdentityAPIClientTest.mockEAK
         )
         stubClient()
-
-        exp = expectation(description: "Request completed")
     }
 
     func stubClient() {
@@ -42,47 +39,47 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         apiClient.apiClient.urlSession = URLSession(configuration: urlSessionConfig)
     }
 
-    func testCreateVerificationPageWithTypeDoc() throws {
-        try testVerificationPage(with: VerificationPageMock.response200)
+    func testCreateVerificationPageWithTypeDoc() async throws {
+        try await testVerificationPage(with: VerificationPageMock.response200)
     }
 
-    func testCreateVerificationPageWithTypeDocRequireLifeCapture() throws {
-        try testVerificationPage(with: VerificationPageMock.requireLiveCapture)
+    func testCreateVerificationPageWithTypeDocRequireLifeCapture() async throws {
+        try await testVerificationPage(with: VerificationPageMock.requireLiveCapture)
     }
 
-    func testCreateVerificationPageWithTypeDocNoSelfie() throws {
-        try testVerificationPage(with: VerificationPageMock.noSelfie)
+    func testCreateVerificationPageWithTypeDocNoSelfie() async throws {
+        try await testVerificationPage(with: VerificationPageMock.noSelfie)
     }
 
-    func testCreateVerificationPageWithTypeDocRequireIdNumber() throws {
-        try testVerificationPage(with: VerificationPageMock.typeDocumentRequireIdNumber)
+    func testCreateVerificationPageWithTypeDocRequireIdNumber() async throws {
+        try await testVerificationPage(with: VerificationPageMock.typeDocumentRequireIdNumber)
     }
 
-    func testCreateVerificationPageWithTypeDocRequireAddress() throws {
-        try testVerificationPage(with: VerificationPageMock.typeDocumentRequireAddress)
+    func testCreateVerificationPageWithTypeDocRequireAddress() async throws {
+        try await testVerificationPage(with: VerificationPageMock.typeDocumentRequireAddress)
     }
 
-    func testCreateVerificationPageWithTypeDocRequireIdNumberAndAddress() throws {
-        try testVerificationPage(with: VerificationPageMock.typeDocumentRequireIdNumberAndAddress)
+    func testCreateVerificationPageWithTypeDocRequireIdNumberAndAddress() async throws {
+        try await testVerificationPage(with: VerificationPageMock.typeDocumentRequireIdNumberAndAddress)
     }
 
-    func testCreateVerificationPageWithTypeIdNumber() throws {
-        try testVerificationPage(with: VerificationPageMock.typeIdNumber)
+    func testCreateVerificationPageWithTypeIdNumber() async throws {
+        try await testVerificationPage(with: VerificationPageMock.typeIdNumber)
     }
 
-    func testCreateVerificationPageWithTypeAddress() throws {
-        try testVerificationPage(with: VerificationPageMock.typeAddress)
+    func testCreateVerificationPageWithTypeAddress() async throws {
+        try await testVerificationPage(with: VerificationPageMock.typeAddress)
     }
 
-    func testUpdateVerificationPageData() throws {
-        try testUpdateVerificationPageData(
+    func testUpdateVerificationPageData() async throws {
+        try await testUpdateVerificationPageData(
             with: VerificationPageDataUpdateMock.default,
             expectedMediaPipeAvailable: FaceGeometryDetectorFactory.isAvailable
         )
     }
 
-    func testUpdateVerificationPageDataWithoutFaceOmitsMediaPipeAvailability() throws {
-        try testUpdateVerificationPageData(
+    func testUpdateVerificationPageDataWithoutFaceOmitsMediaPipeAvailability() async throws {
+        try await testUpdateVerificationPageData(
             with: VerificationPageDataUpdateMock.frontOnly,
             expectedMediaPipeAvailable: nil
         )
@@ -91,7 +88,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
     private func testUpdateVerificationPageData(
         with mockVerificationData: StripeAPI.VerificationPageDataUpdate,
         expectedMediaPipeAvailable: Bool?
-    ) throws {
+    ) async throws {
         var expectedParameters = try mockVerificationData.encodeJSONDictionary()
         expectedParameters["media_pipe_available"] = expectedMediaPipeAvailable
         let encodedMockVerificationData = URLEncoder.queryString(
@@ -123,40 +120,32 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
-        apiClient.updateIdentityVerificationPageData(
+        let response = try await apiClient.updateIdentityVerificationPageData(
             updating: mockVerificationData
-        ).observe { result in
-            switch result {
-            case .success(let response):
-                XCTAssertEqual(response, mockResponse)
-            case .failure(let error):
-                XCTFail("Request returned error \(error)")
-            }
-            self.exp.fulfill()
-        }
+        )
 
-        wait(for: [exp], timeout: 1)
+        XCTAssertEqual(response, mockResponse)
     }
 
-    func testSubmitIdentityVerificationSession() throws {
-        try verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/submit") {
-            apiClient.submitIdentityVerificationPage()
+    func testSubmitIdentityVerificationSession() async throws {
+        try await verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/submit") {
+            try await apiClient.submitIdentityVerificationPage()
         }
     }
 
-    func testGeneratePhoneOtp() throws {
-        try verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/phone_otp/generate") {
-            apiClient.generatePhoneOtp()
+    func testGeneratePhoneOtp() async throws {
+        try await verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/phone_otp/generate") {
+            try await apiClient.generatePhoneOtp()
         }
     }
 
-    func testCannotPhoneVerifyOtp() throws {
-        try verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/phone_otp/cannot_verify") {
-            apiClient.cannotPhoneVerifyOtp()
+    func testCannotPhoneVerifyOtp() async throws {
+        try await verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/phone_otp/cannot_verify") {
+            try await apiClient.cannotPhoneVerifyOtp()
         }
     }
 
-    func testUploadImage() throws {
+    func testUploadImage() async throws {
         let mockPurpose = "purpose"
 
         let mockImage = CapturedImageMock.frontDriversLicense.image
@@ -183,25 +172,16 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
-        apiClient.uploadImage(
+        let (response, _) = try await apiClient.uploadImage(
             mockImage,
             compressionQuality: 0.5,
             purpose: mockPurpose,
             fileName: "filename"
-        ).observe { result in
-            switch result {
-            case .success((let response, _)):
-                XCTAssertEqual(response, mockResponse)
-            case .failure(let error):
-                XCTFail("Request returned error \(error)")
-            }
-            self.exp.fulfill()
-        }
-
-        wait(for: [exp], timeout: 1)
+        )
+        XCTAssertEqual(response, mockResponse)
     }
 
-    private func testVerificationPage(with responseMock: VerificationPageMock) throws {
+    private func testVerificationPage(with responseMock: VerificationPageMock) async throws {
         let mockVerificationPage = responseMock
         let mockResponseData = try mockVerificationPage.data()
         let mockResponse = try mockVerificationPage.make()
@@ -221,20 +201,11 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
-        apiClient.getIdentityVerificationPage().observe { result in
-            switch result {
-            case .success(let response):
-                XCTAssertEqual(response, mockResponse)
-            case .failure(let error):
-                XCTFail("Request returned error \(error)")
-            }
-            self.exp.fulfill()
-        }
-
-        wait(for: [exp], timeout: 1)
+        let response = try await apiClient.getIdentityVerificationPage()
+        XCTAssertEqual(response, mockResponse)
     }
 
-    private func verifyPostWithSuffix(expectedSuffix: String, apiCall: () -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData>) throws {
+    private func verifyPostWithSuffix(expectedSuffix: String, apiCall: () async throws -> StripeCore.StripeAPI.VerificationPageData) async throws {
         let mockVerificationPageData = VerificationPageDataMock.response200
         let mockResponseData = try mockVerificationPageData.data()
         let mockResponse = try mockVerificationPageData.make()
@@ -254,18 +225,12 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
 
-        apiCall().observe { result in
-            switch result {
-            case .success(let response):
-                XCTAssertEqual(response, mockResponse)
-            case .failure(let error):
-                XCTFail("Request returned error \(error)")
-            }
-            self.exp.fulfill()
+        do {
+            let response = try await apiCall()
+            XCTAssertEqual(response, mockResponse)
+        } catch {
+            XCTFail("Request returned error \(error)")
         }
-
-        wait(for: [exp], timeout: 1)
-
     }
 }
 
