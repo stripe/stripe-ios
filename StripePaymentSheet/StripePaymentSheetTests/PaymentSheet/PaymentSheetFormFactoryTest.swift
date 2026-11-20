@@ -2236,7 +2236,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            configuration: .paymentElement(PaymentSheet.Configuration()),
+            configuration: .paymentElement(PaymentSheet.Configuration(), customerProvider: CustomerProvider(customer: nil)),
             paymentMethod: .instantDebits,
             previousCustomerInput: previousCustomerInput
         )
