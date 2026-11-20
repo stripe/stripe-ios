@@ -7,8 +7,8 @@
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 extension ShippingAddressElement.Configuration {
     /// Appearance configuration for ``ShippingAddressElement``.
     public struct Appearance: Equatable {

@@ -19,8 +19,8 @@ protocol CurrencySelectorElementCheckoutDelegate: AnyObject {
 /// Obtain an instance from ``CheckoutElementsController/getCurrencySelectorElement()`` and use
 /// ``view`` in SwiftUI or ``uiView`` in UIKit.
 @MainActor
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 public final class CurrencySelectorElement {
     // MARK: - Public Properties
 
@@ -76,8 +76,8 @@ public final class CurrencySelectorElement {
 }
 
 @MainActor
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 public protocol CurrencySelectorElementDelegate: AnyObject {
     /// Called inside an animation block when the CurrencySelectorElement view is updating its height. Your implementation should call `setNeedsLayout()` and `layoutIfNeeded` on the scroll view that contains the CurrencySelectorElement view. This enables a smooth animation of the height change.
     func currencySelectorElementDidUpdateHeight(currencySelectorElement: CurrencySelectorElement)
