@@ -181,9 +181,13 @@ Shipping is simpler, because Apple calls `didSelectShippingContact` again when t
 | Billing fails in the sheet, then succeeds at authorization with a new total | The sheet closes with the generic error. Reopening shows $131.70, and payment completes | <img src="screenshots/17-fix-total-changed-closes-sheet.png" width="220"> <img src="screenshots/18-fix-reopen-shows-new-total.png" width="220"> <img src="screenshots/19-fix-second-attempt-paid.png" width="220"> |
 | Shipping fails in the sheet | The address shows the generic message. Re-saving it re-runs the update, the sheet shows $130.35, and payment completes | <img src="screenshots/14-shipping-list-shows-message.png" width="220"> <img src="screenshots/20-fix-shipping-recovered-after-resave.png" width="220"> |
 
-These runs were on an earlier version of the fix, which also retried twice automatically inside the sheet.
-Each run forced enough failures to use up those retries, so the flows shown are the ones the current code takes. I haven't re-run them on the final code.
-That earlier version's in-sheet retry, which brought the sheet to $131.70 with no buyer action, is in [screenshot 15](screenshots/15-fix-in-sheet-retry-shows-taxed-total.png) for reference.
+These runs used the final code ([`b3be844`](https://github.com/stripe/stripe-ios/commit/b3be844905b21f30e095379a9d7ccd09be773db4)), with one forced network failure for the first two rows' recovery and every update failing for the persistent case.
+The delegate log matches each flow:
+- persistent failure: 3 attempts (the card selection, then two Pay taps);
+- total changed: the sheet's update fails, the Pay-tap retry succeeds, and the reopened sheet updates;
+- shipping: the update fails, and re-saving the address succeeds.
+
+An earlier version of the fix also retried twice automatically inside the sheet. [Screenshot 15](screenshots/15-fix-in-sheet-retry-shows-taxed-total.png) shows that version bringing the sheet to $131.70 with no buyer action. It's kept for reference only.
 
 ## 6. Open questions
 
