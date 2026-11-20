@@ -62,13 +62,16 @@ final class PaymentSheetLoader {
 
     /// Loads everything needed to render and use all MPE variants (PaymentSheet, FlowController, EmbeddedPaymentElement).
     /// ⚠️ Everything that takes time to load (eg fetched from network or disk) should be in this method so that `logLoadSucceeded` accurately captures the amount of time it took to load.
+    /// - Parameter preservingLinkAccount: A Link account mid-verification to keep instead of looking it up again, which would replace its session
+    ///   and invalidate a code the customer was sent. Only kept if it's still `LinkAccountContext.shared.account`.
     @MainActor
     static func load(
         mode: PaymentSheet.InitializationMode,
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
-        isUpdate: Bool = false
+        isUpdate: Bool = false,
+        preservingLinkAccount: PaymentSheetLinkAccount? = nil
     ) async throws -> (LoadResult, ConfirmationChallenge) {
         let customerProvider = CustomerProvider(customer: configuration.customer)
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
@@ -124,7 +127,8 @@ final class PaymentSheetLoader {
                 prefetchedEmailAndSourceTask: prefetchedLinkEmailAndSourceTask,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate,
-                linkAnalytics: analyticsHelper.linkAnalytics
+                linkAnalytics: analyticsHelper.linkAnalytics,
+                preservingLinkAccount: preservingLinkAccount
             )
 
             let stripeBalanceFinancialAccounts = await stripeBalanceFinancialAccountsTask.value

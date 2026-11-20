@@ -49,11 +49,71 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
             LinkUtils.ConsumerErrorCode.consumerVerificationMaxAttemptsExceeded.localizedDescription
         )
     }
+
+    @MainActor
+    func testClosingAttachedFlowDetachesWithoutCanceling() {
+        // Given a dialog attached to an attempt that another host owns
+        let analyticsClient = STPTestingAnalyticsClient()
+        let linkAccount = makeLinkAccount()
+        let coordinator = LinkAuthFlowCoordinator(account: linkAccount, analyticsHelper: .init(analyticsClient: analyticsClient))
+        let sut = LinkAuthFlowViewController(sharedCoordinator: coordinator, linkAccount: linkAccount, brand: .link)
+        var detachRequests = 0
+        sut.onDetachRequested = { detachRequests += 1 }
+        sut.onFinish = { _ in XCTFail("Closing an attached dialog shouldn't finish the attempt") }
+        sut.loadViewIfNeeded()
+
+        // When the customer closes it
+        sut.close()
+
+        // Then the host is asked to detach, and the attempt stays alive without a cancel event
+        XCTAssertEqual(detachRequests, 1)
+        XCTAssertFalse(coordinator.isFinished)
+        XCTAssertFalse(analyticsClient._testLogHistory.contains { $0["event"] as? String == "link.2fa.cancel" })
+    }
+
+    @MainActor
+    func testAttachedFlowLeavesCoordinatorCallbacksToItsHost() {
+        // Given a host observing the attempt
+        let linkAccount = makeLinkAccount()
+        let coordinator = LinkAuthFlowCoordinator(account: linkAccount, analyticsHelper: .init(analyticsClient: STPTestingAnalyticsClient()))
+        var hostUpdates = 0
+        coordinator.onUpdate = { hostUpdates += 1 }
+
+        // When a dialog attaches and the attempt changes
+        let sut = LinkAuthFlowViewController(sharedCoordinator: coordinator, linkAccount: linkAccount, brand: .link)
+        sut.loadViewIfNeeded()
+        coordinator.prepare()
+
+        // Then the host still receives the update
+        XCTAssertGreaterThan(hostUpdates, 0)
+    }
+
+    @MainActor
+    func testClosingOwnedFlowStillCancels() {
+        // Given a dialog that owns its attempt
+        let sut = makeSUT(analyticsHelper: .init(analyticsClient: STPTestingAnalyticsClient()))
+        var result: LinkVerificationResult?
+        sut.onFinish = { result = $0 }
+        sut.loadViewIfNeeded()
+
+        // When the customer closes it
+        sut.close()
+
+        // Then the attempt is canceled as before
+        guard case .canceled = result else {
+            return XCTFail("Expected .canceled, got \(String(describing: result))")
+        }
+        XCTAssertTrue(sut.coordinator.isFinished)
+    }
 }
 
 private extension LinkVerificationViewControllerTests {
     @MainActor
     func makeSUT(analyticsHelper: LinkAnalyticsHelper) -> LinkAuthFlowViewController {
+        LinkAuthFlowViewController(linkAccount: makeLinkAccount(), brand: .link, analyticsHelper: analyticsHelper)
+    }
+
+    func makeLinkAccount() -> PaymentSheetLinkAccount {
         let session = ConsumerSession.make(
             clientSecret: "client_secret",
             emailAddress: "jane.diaz@example.com",
@@ -76,8 +136,7 @@ private extension LinkVerificationViewControllerTests {
             useMobileEndpoints: true,
             canSyncAttestationState: false
         )
-
-        return LinkAuthFlowViewController(linkAccount: linkAccount, brand: .link, analyticsHelper: analyticsHelper)
+        return linkAccount
     }
 }
 
