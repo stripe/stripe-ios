@@ -10,7 +10,7 @@ import Foundation
 
 protocol InstitutionDataSource: AnyObject {
 
-    var manifest: FinancialConnectionsSessionManifest { get }
+    var manifest: FinancialConnectionsSessionManifest { get set }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var featuredInstitutions: [FinancialConnectionsInstitution] { get }
 
@@ -24,7 +24,7 @@ class InstitutionAPIDataSource: InstitutionDataSource {
 
     // MARK: - Properties
 
-    let manifest: FinancialConnectionsSessionManifest
+    var manifest: FinancialConnectionsSessionManifest
     private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
