@@ -2199,6 +2199,53 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(defaultEmailInstantDebitsSection.enableCTA)
     }
 
+    func testMakeInstantDebits_previousLinkedBank_showsBankWithoutBreakingConstraints() throws {
+        // Fail on any constraint UIKit breaks, using the callback behind the example app's broken-constraint alerts
+        let selector = NSSelectorFromString("engine:willBreakConstraint:dueToMutuallyExclusiveConstraints:")
+        let method = try XCTUnwrap(class_getInstanceMethod(UIView.self, selector))
+        let originalImplementation = method_getImplementation(method)
+        typealias ConstraintCallback = @convention(c) (UIView, Selector, AnyObject, NSLayoutConstraint, NSArray) -> Void
+        let originalCallback = unsafeBitCast(originalImplementation, to: ConstraintCallback.self)
+        let callback: @convention(block) (UIView, AnyObject, NSLayoutConstraint, NSArray) -> Void = { view, engine, constraint, conflicts in
+            XCTFail("Broken constraint: \(constraint)")
+            originalCallback(view, selector, engine, constraint, conflicts)
+        }
+        let implementation = imp_implementationWithBlock(callback)
+        method_setImplementation(method, implementation)
+        defer {
+            method_setImplementation(method, originalImplementation)
+            imp_removeBlock(implementation)
+        }
+
+        // Given a bank the customer already linked in the Instant Debits form
+        let previousCustomerInput = IntentConfirmParams(type: .instantDebits)
+        previousCustomerInput.instantDebitsLinkedBank = ._testValue()
+
+        // When the form is rebuilt from it, before it's on screen, e.g. after a session update
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .instantDebits,
+            previousCustomerInput: previousCustomerInput
+        )
+        let instantDebitsSection = try XCTUnwrap(factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement)
+
+        // Then no constraint breaks (checked by the callback above), and the form shows the linked bank
+        XCTAssertEqual(instantDebitsSection.getLinkedBank()?.last4, "6789")
+        var pendingViews = [instantDebitsSection.view]
+        var last4Label: UILabel?
+        while last4Label == nil, let view = pendingViews.popLast() {
+            last4Label = (view as? UILabel).flatMap { $0.text == "••••6789" ? $0 : nil }
+            pendingViews.append(contentsOf: view.subviews)
+        }
+        var ancestor = try XCTUnwrap(last4Label, "The form should contain the linked bank's last 4 digits") as UIView?
+        while let view = ancestor, view !== instantDebitsSection.view {
+            XCTAssertFalse(view.isHidden, "The linked bank should be visible, but \(type(of: view)) is hidden")
+            ancestor = view.superview
+        }
+    }
+
     // MARK: - Previous Customer Input tests
 
     // Covers:
@@ -2341,6 +2388,61 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let cardForm_payment_2_params = cardForm_payment_2.updateParams(params: .init(type: .stripe(.card)))
         XCTAssertEqual(cardForm_payment_2_params?.saveForFutureUseCheckboxState, .deselected)
 
+    }
+
+    private func makeCardFormWithLinkDefaultOptIn(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        return PaymentSheetFormFactory(
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            paymentMethodOrientation: .horizontal,
+            previousCustomerInput: previousCustomerInput,
+            showLinkInlineCardSignup: true,
+            accountService: LinkAccountService._testValue(),
+            isPaymentIntent: true,
+            collectsTaxFromBillingAddress: false,
+            isSettingUp: false,
+            countryCode: "US",
+            savePaymentMethodConsentBehavior: .legacy,
+            allowsLinkDefaultOptIn: true,
+            analyticsHelper: ._testValue(),
+            paymentMethodIncentive: nil
+        ).makeCard()
+    }
+
+    func testAppliesPreviousCustomerInput_linkSignupCheckbox_optOut() throws {
+        // Given a completed card form where Link signup defaults to checked
+        let form = makeCardFormWithLinkDefaultOptIn(previousCustomerInput: IntentConfirmParams(params: ._testCardValue(), type: .stripe(.card)))
+        let signup: LinkInlineSignupElement = try XCTUnwrap(form.getElement())
+        XCTAssertTrue(signup.isChecked)
+        // ...and the customer unchecks it
+        signup.viewModel.saveCheckboxChecked = false
+        let params = try XCTUnwrap(form.updateParams(params: IntentConfirmParams(type: .stripe(.card))))
+        XCTAssertEqual(params.linkInlineSignupCheckboxState, .deselected)
+
+        // When the form is rebuilt from that input, e.g. after a session update
+        let restoredForm = makeCardFormWithLinkDefaultOptIn(previousCustomerInput: params)
+        let restoredSignup: LinkInlineSignupElement = try XCTUnwrap(restoredForm.getElement())
+
+        // Then the opt-out is preserved and the card remains complete without an email
+        XCTAssertFalse(restoredSignup.isChecked)
+        XCTAssertEqual(restoredSignup.action, .continueWithoutLink)
+        XCTAssertNotNil(restoredForm.updateParams(params: IntentConfirmParams(type: .stripe(.card))))
+    }
+
+    func testAppliesPreviousCustomerInput_linkSignupCheckbox_optIn() throws {
+        // Given a completed card form where the customer left Link signup checked
+        let form = makeCardFormWithLinkDefaultOptIn(previousCustomerInput: IntentConfirmParams(params: ._testCardValue(), type: .stripe(.card)))
+        let params = try XCTUnwrap(form.updateParams(params: IntentConfirmParams(type: .stripe(.card))))
+        XCTAssertEqual(params.linkInlineSignupCheckboxState, .selected)
+
+        // When the form is rebuilt from that input without a previous Link signup action, as Embedded does
+        let restoredForm = makeCardFormWithLinkDefaultOptIn(previousCustomerInput: params)
+        let restoredSignup: LinkInlineSignupElement = try XCTUnwrap(restoredForm.getElement())
+
+        // Then the opt-in is preserved
+        XCTAssertTrue(restoredSignup.isChecked)
     }
 
     func testAppliesPreviousCustomerInput_for_different_payment_method_type() {

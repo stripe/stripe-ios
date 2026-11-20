@@ -22,8 +22,8 @@ extension PaymentSheetFormFactory {
             $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
         }.first
 
-        // Collect the full address, just the country, or nothing, depending on the billing address collection configuration.
-        let addressElement: PaymentMethodElementWrapper<AddressSectionElement>? = configuration.billingDetailsCollectionConfiguration.address == .never
+        // Payments don't need a billing country, but setting up Klarna does: the API requires a country or a currency
+        let addressElement: PaymentMethodElementWrapper<AddressSectionElement>? = configuration.billingDetailsCollectionConfiguration.address == .never && isPaymentIntent
             ? nil
             : makeCountryOrAddressSection(
                 countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
