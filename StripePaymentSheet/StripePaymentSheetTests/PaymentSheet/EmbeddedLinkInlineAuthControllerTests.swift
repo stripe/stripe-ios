@@ -14,6 +14,7 @@ import XCTest
 final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
     private let host = HostSpy()
     private let experimentAnalyticsClient = MockAnalyticsClientV2()
+    private let analyticsClient = STPTestingAnalyticsClient()
     private var window: UIWindow?
 
     override func setUp() {
@@ -48,6 +49,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertEqual(exposures.count, 1)
         XCTAssertEqual(exposures.first?["assignment_group"] as? String, "treatment")
         XCTAssertTrue(controller.coordinator.canSubmitCode)
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthShown).count, 1)
     }
 
     func testControlGroupKeepsTheLinkRowButLogsTheSameExposure() async {
@@ -62,6 +64,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertTrue(account.starts.isEmpty)
         let exposures = experimentAnalyticsClient.loggedAnalyticPayloads(withEventName: ExperimentAnalyticsHelper.eventName)
         XCTAssertEqual(exposures.first?["assignment_group"] as? String, "control")
+        XCTAssertTrue(loggedEvents(.linkEmbeddedInlineAuthShown).isEmpty)
     }
 
     func testSessionsWithoutAnAssignmentShowTheCardWithoutLoggingExposure() async {
@@ -99,6 +102,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertNotNil(controller.accountToPreserveOnUpdate)
         XCTAssertEqual(EmbeddedLinkInlineAuthRegistry.ineligibleReason(email: controller.linkAccount.email), .dismissedThisSession)
         XCTAssertNil(controller.makeCardView(appearance: .default))
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthDismissed).count, 1)
     }
 
     func testSwitchingAccountsLogsOut() async throws {
@@ -132,6 +136,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertEqual(controller.phase, .finished)
         XCTAssertEqual(host.collapses, 1)
         XCTAssertFalse(controller.isShowingCard)
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthFellBack).map { $0.params["reason"] as? String }, ["send_failed"])
     }
 
     func testAnotherSurfaceReplacingTheAccountEndsTheAttempt() async {
@@ -187,6 +192,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertTrue(controller.isPresentingUI)
         XCTAssertEqual(host.presentations, 1)
         XCTAssertFalse(controller.verifiesBeforeConfirming)
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthDialogShown).map { $0.params["reason"] as? String }, ["confirm"])
 
         // ...and enter the code they were sent in the dialog
         account.confirmResult = .success(.init(consumerSession: LinkAuthStubs.session(current: .oneFactorAuth)))
@@ -247,6 +253,154 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertEqual(host.presentations, 0)
     }
 
+    func testTappingTheCodeTypesInTheCardWhenTheLayoutCanKeepItVisible() async throws {
+        // Given a card whose code was sent, near the top of a scrolling screen
+        let (controller, _) = makeController()
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+        placeInScrollingScreen(card)
+        XCTAssertEqual(controller.codeEntry(), .inline)
+
+        // When the customer taps the code
+        card.onTapCode?()
+
+        // Then they type in the card rather than a dialog
+        XCTAssertTrue(card.isCodeFocused)
+        XCTAssertEqual(host.presentations, 0)
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthFocused).count, 1)
+
+        // When the merchant's app ends editing
+        let endEditing = card.onCodeEditingEnded
+        var editingEndedCount = 0
+        card.onCodeEditingEnded = {
+            editingEndedCount += 1
+            endEditing?()
+        }
+        card.window?.endEditing(true)
+
+        // Then the card hears about it once
+        XCTAssertFalse(card.isCodeFocused)
+        XCTAssertEqual(editingEndedCount, 1)
+
+        // When they tap the code again, then close the card
+        card.onTapCode?()
+        XCTAssertTrue(card.isCodeFocused)
+        card.onClose?()
+
+        // Then typing ends
+        XCTAssertFalse(card.isCodeFocused)
+        XCTAssertEqual(editingEndedCount, 2)
+    }
+
+    func testCodeEntryUsesTheDialogWhenTheCardCanNotTakeIt() async throws {
+        // Given a card whose code was sent, in a scrolling screen
+        let (controller, _) = makeController()
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+        placeInScrollingScreen(card)
+
+        // Then the server can send every code to the dialog
+        controller.forcesDialog = true
+        XCTAssertEqual(controller.codeEntry(), .dialog(.forcedByServer))
+        controller.forcesDialog = false
+
+        // ...and so does a card that isn't on screen
+        card.removeFromSuperview()
+        XCTAssertEqual(controller.codeEntry(), .dialog(.layout(.notInWindow)))
+    }
+
+    func testSwitchingToAnEmailCodeKeepsTypingInTheCard() async throws {
+        // Given a card whose code was sent, in a scrolling screen, for an account whose email codes need no phone number match
+        let (controller, account) = makeController()
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+        placeInScrollingScreen(card)
+        host.presenter = try XCTUnwrap(window?.rootViewController)
+
+        // When the customer picks "Email code"
+        card.onAction?(.email)
+        await settle()
+
+        // Then the email code is sent and typed in the card, without the dialog
+        XCTAssertEqual(account.starts.map(\.type), [.sms, .email])
+        XCTAssertEqual(controller.coordinator.screen, .otp)
+        XCTAssertEqual(controller.codeEntry(), .inline)
+        XCTAssertEqual(host.presentations, 0)
+        XCTAssertNil(host.presenter?.presentedViewController)
+    }
+
+    func testSwitchingToAnEmailCodeThatNeedsAPhoneNumberMatchOpensTheDialog() async throws {
+        // Given a card whose code was sent, for an account whose email codes need a phone number match
+        let (controller, account) = makeController()
+        account.authLookupSettings = .init(emailOtpRequiresAdditionalInfo: true)
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+        let presenter = makePresenterInWindow()
+        host.presenter = presenter
+
+        // When the customer picks "Email code"
+        card.onAction?(.email)
+        await settle()
+
+        // Then the phone number match continues in the dialog, before any email code is sent
+        try await waitUntil { presenter.presentedViewController != nil }
+        XCTAssertEqual(controller.coordinator.screen, .phoneMatch)
+        XCTAssertEqual(account.starts.map(\.type), [.sms])
+        XCTAssertEqual(host.presentations, 1)
+        // ...and the card can't take that step
+        XCTAssertEqual(controller.codeEntry(), .dialog(.unsupportedStep))
+    }
+
+    func testForcedDialogOpensWhenTheCodeIsTapped() async throws {
+        let (controller, _) = makeController()
+        controller.forcesDialog = true
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+        let presenter = makePresenterInWindow()
+        host.presenter = presenter
+
+        card.onTapCode?()
+
+        XCTAssertFalse(card.isCodeFocused)
+        XCTAssertEqual(host.presentations, 1)
+        XCTAssertTrue(controller.isPresentingUI)
+        XCTAssertEqual(loggedEvents(.linkEmbeddedInlineAuthDialogShown).map { $0.params["reason"] as? String }, ["forced_by_server"])
+        controller.invalidate()
+        try await waitUntil { presenter.presentedViewController == nil }
+    }
+
+    func testTypedDigitsCarryIntoARebuiltCardUntilTheFieldIsCleared() async throws {
+        // Given a card whose code was sent
+        let account = LinkAuthAccountStub()
+        let (controller, _) = makeController(account: account)
+        let card = try XCTUnwrap(controller.makeCardView(appearance: .default))
+        controller.elementBecameVisible()
+        await settle()
+
+        // When the customer types two digits, then an update rebuilds the list
+        card.onCodeChanged?("12")
+        let rebuiltCard = try XCTUnwrap(controller.makeCardView(appearance: .default))
+
+        // Then the new card shows them, without submitting anything
+        XCTAssertEqual(rebuiltCard.codeField.value, "12")
+        XCTAssertTrue(account.confirms.isEmpty)
+
+        // When they finish a wrong code, which clears the field
+        rebuiltCard.onCodeChanged?("123456")
+        rebuiltCard.onCodeEntered?("123456")
+        await settle()
+        let cardAfterWrongCode = try XCTUnwrap(controller.makeCardView(appearance: .default))
+
+        // Then the digits aren't carried over again
+        XCTAssertEqual(account.confirms.count, 1)
+        XCTAssertEqual(cardAfterWrongCode.codeField.value, "")
+    }
+
     func testShowingTheCardClaimsItForThisInstance() {
         let (controller, _) = makeController()
         XCTAssertEqual(EmbeddedLinkInlineAuthRegistry.ineligibleReason(email: "other@example.com"), .shownElsewhere)
@@ -284,19 +438,40 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
             experiment: experiment,
             configuration: configuration,
             linkBrand: .link,
-            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .embedded, analyticsClientV2: experimentAnalyticsClient)
+            experimentAnalyticsHelper: ExperimentAnalyticsHelper(integrationShape: .embedded, analyticsClientV2: experimentAnalyticsClient),
+            linkAnalyticsHelper: LinkAnalyticsHelper(analyticsClient: analyticsClient)
         )
         controller.host = host
         return (controller, account)
     }
 
     private func makePresenterInWindow() -> UIViewController {
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+        let window = UIWindow.makeForTesting()
         let presenter = UIViewController()
         window.rootViewController = presenter
         window.makeKeyAndVisible()
         self.window = window
         return presenter
+    }
+
+    private func loggedEvents(_ event: STPAnalyticEvent) -> [Analytic] {
+        analyticsClient.events.filter { $0.event == event }
+    }
+
+    /// Puts the card near the top of a full-screen scroll view in a window.
+    private func placeInScrollingScreen(_ card: UIView) {
+        let presenter = makePresenterInWindow()
+        let scrollView = UIScrollView()
+        presenter.view.addAndPinSubview(scrollView)
+        card.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(card)
+        NSLayoutConstraint.activate([
+            card.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 40),
+            card.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
+            card.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
+            card.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -800),
+        ])
+        presenter.view.layoutIfNeeded()
     }
 
     private func waitUntil(timeout: TimeInterval = 5, _ condition: () -> Bool) async throws {
@@ -490,6 +665,30 @@ final class EmbeddedPaymentElementLinkInlineAuthTests: XCTestCase {
         XCTAssertNil(element.linkInlineAuth)
         XCTAssertNil(element.embeddedPaymentMethodsView.linkInlineVerificationView)
         XCTAssertNotEqual(element.embeddedPaymentMethodsView.rowButtons.first?.type, .link)
+    }
+
+    func testReturningCustomersWhoDontGetTheCardAreLoggedOncePerElement() {
+        // Given a returning customer who needs to verify, with a merchant that opted out
+        LinkAccountContext.shared.account = makeLinkAccountRequiringVerification()
+        var configuration = makeConfiguration()
+        configuration.allowsLinkInlineVerification = false
+        let analyticsClient = STPTestingAnalyticsClient()
+
+        // When the element loads, then updates
+        let element = EmbeddedPaymentElement(configuration: configuration, loadResult: makeLoadResult(isLinkEnabled: true), analyticsHelper: ._testValue(integrationShape: .embedded, analyticsClient: analyticsClient))
+        element.applyLoadResult(makeLoadResult(isLinkEnabled: true), confirmationChallenge: nil, configuration: configuration)
+
+        // Then the reason is logged once
+        XCTAssertNil(element.linkInlineAuth)
+        let ineligible = analyticsClient.events.filter { $0.event == .linkEmbeddedInlineAuthIneligible }
+        XCTAssertEqual(ineligible.map { $0.params["reason"] as? String }, ["disabled_by_merchant"])
+    }
+
+    func testCustomersWithoutALinkAccountArentLoggedAsIneligible() {
+        LinkAccountContext.shared.account = nil
+        let analyticsClient = STPTestingAnalyticsClient()
+        _ = EmbeddedPaymentElement(configuration: makeConfiguration(), loadResult: makeLoadResult(isLinkEnabled: true), analyticsHelper: ._testValue(integrationShape: .embedded, analyticsClient: analyticsClient))
+        XCTAssertFalse(analyticsClient.events.contains { $0.event == .linkEmbeddedInlineAuthIneligible })
     }
 
     func testPickingPaymentDetailsInTheLinkWalletSelectsLinkWithThem() throws {

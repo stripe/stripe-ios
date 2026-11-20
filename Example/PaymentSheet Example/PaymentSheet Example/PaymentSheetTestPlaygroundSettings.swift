@@ -712,6 +712,18 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case immediateAction
     }
 
+    /// A local override for inline Link OTP for returning Link customers in Embedded.
+    /// Off by default, so other tests never send a code on their own.
+    enum EmbeddedLinkInlineVerification: String, PickerEnum {
+        static let enumName: String = "Embedded inline Link OTP"
+        case off
+        case on
+        /// Always enters the code in the Link dialog.
+        case forceDialog
+        /// Uses the server's flags.
+        case server
+    }
+
     enum CardBrandAcceptance: String, PickerEnum {
         static let enumName: String = "cardBrandAcceptance"
         case all
@@ -814,6 +826,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var rowSelectionBehavior: RowSelectionBehavior
+    var embeddedLinkInlineVerification: EmbeddedLinkInlineVerification
     var cardBrandAcceptance: CardBrandAcceptance
     var cardFundingAcceptance: CardFundingAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
@@ -884,6 +897,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             formSheetAction: .continue,
             embeddedViewDisplaysMandateText: .on,
             rowSelectionBehavior: .default,
+            embeddedLinkInlineVerification: .off,
             cardBrandAcceptance: .all,
             cardFundingAcceptance: .all,
             opensCardScannerAutomatically: .off,

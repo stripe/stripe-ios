@@ -158,6 +158,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewWillSelect(_ rowButtonType: RowButtonType) {
+        linkInlineAuth?.endInlineEntry()
         guard checkout != nil,
               case .saved(let paymentMethod) = rowButtonType else {
             // Link is saved as the default once something is picked in the Link wallet.
