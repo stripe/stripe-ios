@@ -18,7 +18,6 @@ import UIKit
 protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
 
     var allowsDelayedPaymentMethods: Bool { get set }
-    var allowsPaymentMethodsRequiringShippingAddress: Bool { get set }
     var apiClient: STPAPIClient { get set }
     var applePay: PaymentSheet.ApplePayConfiguration? { get set }
     var link: PaymentSheet.LinkConfiguration { get set }
@@ -36,7 +35,10 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var userOverrideCountry: String? { get set }
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration { get set }
     var removeSavedPaymentMethodMessage: String? { get set }
-    var externalPaymentMethodConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration? { get set }
+    // Internal, nondeprecated storage for the deprecated `externalPaymentMethodConfiguration` API.
+    // See the comment on `Configuration.externalPaymentMethodConfiguration` for more context.
+    var _externalPaymentMethods: [String] { get set }
+    var _externalPaymentMethodConfirmHandler: ((_ externalPaymentMethodType: String, _ billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult)? { get set }
     var customPaymentMethodConfiguration: PaymentSheet.CustomPaymentMethodConfiguration? { get set }
     var paymentMethodOrder: [String]? { get set }
     var allowsRemovalOfLastSavedPaymentMethod: Bool { get set }
@@ -81,7 +83,6 @@ extension PaymentElementConfiguration {
         var reqs = [PaymentMethodTypeRequirement]()
         if returnURL != nil { reqs.append(.returnURL) }
         if allowsDelayedPaymentMethods { reqs.append(.userSupportsDelayedPaymentMethods) }
-        if allowsPaymentMethodsRequiringShippingAddress { reqs.append(.shippingAddress) }
         if FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
             reqs.append(.financialConnectionsSDK)
         }

@@ -273,7 +273,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         settings.automaticPaymentMethods = false
         settings.linkMode = .native
         settings.currency = .eur
-        settings.email = .init(source: .none)
+        settings.email = .init(source: .local, value: "")
         settings.shippingAddressCollection = false
         settings.automaticTax = false
         loadCheckoutPlayground(app, settings)

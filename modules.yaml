@@ -1,9 +1,6 @@
 # List of all modules in this repo with settings needed by various `ci_scripts`.
 # Note: Stripe3DS2 should not be included in this list.
 #
-# - podspec (required):
-#   The podspec file for this module.
-#
 # - scheme (required):
 #   The Xcode scheme name for this module. This is used to build and export the
 #   module by `export_builds.rb`.
@@ -58,6 +55,9 @@
 #   Configurations used by `build_documentation.rb` to generate docs.
 #   If omitted, docs will not be generated for this module.
 #
+#   - summary (required):
+#     The module description displayed on the documentation index page.
+#
 #   - output (required):
 #     The output directory for generated docs.
 #
@@ -69,15 +69,13 @@
 #   - include (optional):
 #     An array of modules to be combined with this module, for the purpose of documentation.
 #
-# TODO(mludowise): Update localization, export_builds, & pod_tools scripts to use modules.yaml
-#
 modules:
-- podspec: Stripe.podspec
-  scheme: StripeiOS
+- scheme: StripeiOS
   framework_name: Stripe
   custom_string_convertible_dir: Stripe/StripeiOS/Source
   supports_catalyst: true
   docs:
+    summary: Accept online payments using Stripe.
     output: docs/docs
     readme: README.md
     include:
@@ -88,13 +86,13 @@ modules:
   size_report:
     max_incremental_uncompressed_size: 100
 
-- podspec: StripePayments.podspec
-  scheme: StripePayments
+- scheme: StripePayments
   localization_dir: StripePayments/StripePayments
   framework_name: StripePayments
   supports_catalyst: true
   custom_string_convertible_dir: StripePayments/StripePayments/Categories
   docs:
+    summary: Bindings for the Stripe Payments API.
     output: docs/stripepayments
     readme: StripePayments/README.md
     include:
@@ -102,12 +100,12 @@ modules:
   size_report:
     max_incremental_uncompressed_size: 100
 
-- podspec: StripePaymentsUI.podspec
-  scheme: StripePaymentsUI
+- scheme: StripePaymentsUI
   framework_name: StripePaymentsUI
   localization_dir: StripePaymentsUI/StripePaymentsUI
   custom_string_convertible_dir: StripePaymentsUI/StripePaymentsUI/Categories
   docs:
+    summary: UI elements and API bindings for building a custom payment flow using Stripe.
     output: docs/stripepaymentsui
     readme: StripePaymentsUI/README.md
     include:
@@ -116,12 +114,12 @@ modules:
   size_report:
     max_incremental_uncompressed_size: 100
 
-- podspec: StripePaymentSheet.podspec
-  scheme: StripePaymentSheet
+- scheme: StripePaymentSheet
   framework_name: StripePaymentSheet
   localization_dir: StripePaymentSheet/StripePaymentSheet
   supports_catalyst: true
   docs:
+    summary: Stripe's prebuilt payment UI.
     output: docs/stripepaymentsheet
     readme: StripePaymentSheet/README.md
     include:
@@ -129,20 +127,17 @@ modules:
   size_report:
     max_incremental_uncompressed_size: 100
 
-- podspec: StripeCameraCore.podspec
-  scheme: StripeCameraCore
+- scheme: StripeCameraCore
   framework_name: StripeCameraCore
   supports_catalyst: false
 
-- podspec: StripeCore.podspec
-  scheme: StripeCore
+- scheme: StripeCore
   framework_name: StripeCore
   localization_dir: StripeCore/StripeCore
   custom_string_convertible_dir: StripeCore/StripeCore/Source/Categories
   supports_catalyst: true
 
-- podspec: StripeIdentity.podspec
-  scheme: StripeIdentity
+- scheme: StripeIdentity
   framework_name: StripeIdentity
   simulator_architectures:
     - arm64
@@ -150,17 +145,18 @@ modules:
   custom_string_convertible_dir: StripeIdentity/StripeIdentity/Source
   supports_catalyst: false
   docs:
+    summary: Securely capture ID documents and selfies on iOS for use with Stripe's Identity API to confirm the identity of global users.
     output: docs/stripeidentity
     readme: StripeIdentity/README.md
   size_report: true
 
-- podspec: StripeIssuing.podspec
-  scheme: StripeIssuing
+- scheme: StripeIssuing
   framework_name: StripeIssuing
   localization_dir: StripeIssuing/StripeIssuing
   custom_string_convertible_dir: StripeIssuing/StripeIssuing/Source
   supports_catalyst: false
   docs:
+    summary: Use to setup ios integration for Issuing Token Push Provision
     output: docs/stripeissuing
     readme: StripeIssuing/README.md
     include:
@@ -169,11 +165,11 @@ modules:
        - StripePaymentsUI
   size_report: true
 
-- podspec: StripeApplePay.podspec
-  scheme: StripeApplePay
+- scheme: StripeApplePay
   framework_name: StripeApplePay
   supports_catalyst: true
   docs:
+    summary: StripeApplePay is a lightweight Apple Pay SDK intended for building App Clips or other size-constrained apps.
     output: docs/stripeapplepay
     readme: StripeApplePay/README.md
   size_report:
@@ -181,25 +177,24 @@ modules:
     max_uncompressed_size: 1800
     max_incremental_uncompressed_size: 100
 
-- podspec: StripeCardScan.podspec
-  scheme: StripeCardScan
+- scheme: StripeCardScan
   framework_name: StripeCardScan
   supports_catalyst: false
   docs:
+    summary: Scan credit and debit cards to verify that they're genuine
     output: docs/stripecardscan
     readme: StripeCardScan/README.md
   localization_dir: StripeCardScan/StripeCardScan
 
-- podspec: StripeFinancialConnectionsLite.podspec
-  scheme: StripeFinancialConnectionsLite
+- scheme: StripeFinancialConnectionsLite
   framework_name: StripeFinancialConnectionsLite
   supports_catalyst: true
 
-- podspec: StripeFinancialConnections.podspec
-  scheme: StripeFinancialConnections
+- scheme: StripeFinancialConnections
   framework_name: StripeFinancialConnections
   localization_dir: StripeFinancialConnections/StripeFinancialConnections
   docs:
+    summary: Securely connect financial accounts to Stripe's merchant account.
     output: docs/stripefinancialconnections
     readme: StripeFinancialConnections/README.md
     include:
@@ -209,56 +204,34 @@ modules:
     max_uncompressed_size: 5000
     max_incremental_uncompressed_size: 100
 
-- podspec: StripeUICore.podspec
-  scheme: StripeUICore
+- scheme: StripeUICore
   framework_name: StripeUICore
   localization_dir: StripeUICore/StripeUICore
   custom_string_convertible_dir: StripeUICore/StripeUICore/Source/Categories
   supports_catalyst: true
 
-- podspec: StripeConnect.podspec
-  scheme: StripeConnect
+- scheme: StripeConnect
   framework_name: StripeConnect
   localization_dir: StripeConnect/StripeConnect
   supports_catalyst: false
   docs:
+    summary: Use Connect embedded components to add connected account dashboard functionality to your app.
     output: docs/stripeconnect
     readme: StripeConnect/README.md
     include:
       - StripeCore
   size_report: true
 
-- podspec: StripeCryptoOnramp.podspec
-  scheme: StripeCryptoOnramp
+- scheme: StripeCryptoOnramp
   framework_name: StripeCryptoOnramp
   simulator_architectures:
     - arm64
   localization_dir: StripeCryptoOnramp/StripeCryptoOnramp
   supports_catalyst: false
   docs:
+    summary: Facilitates crypto onramp transactions with built-in KYC and identity verification.
     output: docs/stripecryptoonramp
     readme: StripeCryptoOnramp/README.md
     include:
       - StripeCore
   size_report: true
-
-# All podspecs that get pushed to Cocoapods in the order of dependencies such
-# that a pods dependencies must appear before it in the list.
-# This is the order that podspecs will be pushed to `pod trunk`.
-pod_push_order:
-- StripeCore.podspec
-- StripeUICore.podspec
-- StripeFinancialConnectionsLite.podspec
-- StripeCameraCore.podspec
-- StripeApplePay.podspec
-- StripePayments.podspec
-- StripePaymentsUI.podspec
-- StripePaymentSheet.podspec
-- StripeIssuing.podspec
-- Stripe.podspec
-- StripeIdentity.podspec
-- StripeCardScan.podspec
-- StripeFinancialConnections.podspec
-- StripeConnect.podspec
-- StripeCryptoOnramp.podspec
-

@@ -73,7 +73,7 @@ extension CheckoutElementsController {
             func confirmWithPaymentMethodParams(
                 paymentMethodParams: STPPaymentMethodParams,
                 linkAccount: PaymentSheetLinkAccount?,
-                saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState
+                saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState
             ) {
                 Task { @MainActor in
                     let confirmParams = IntentConfirmParams(
@@ -106,7 +106,7 @@ extension CheckoutElementsController {
             func confirmWithPaymentMethod(
                 paymentMethod: STPPaymentMethod,
                 linkAccount: PaymentSheetLinkAccount?,
-                saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
+                saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState,
                 linkClientAttributionMetadata _: STPClientAttributionMetadata?
             ) {
                 Task { @MainActor in
@@ -127,7 +127,6 @@ extension CheckoutElementsController {
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
                     }
-                    await confirmationChallenge?.complete()
                     completion(result, nil)
                 }
             }
@@ -216,7 +215,7 @@ extension CheckoutElementsController {
             apiClient: parameters.configuration.apiClient,
             authenticationContext: parameters.authenticationContext,
             paymentHandler: parameters.paymentHandler,
-            confirmationChallenge: requestParameters.paymentMethodData == nil ? nil : parameters.confirmationChallenge
+            confirmationChallenge: parameters.confirmationChallenge
         )
     }
 
