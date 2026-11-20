@@ -541,7 +541,9 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let error = update.errors?.first as NSError?
         XCTAssertEqual(updater.updateCallCount, 1)
         XCTAssertEqual(error?.domain, PKPaymentErrorDomain)
-        XCTAssertEqual(error?.code, PKPaymentError.shippingAddressUnserviceableError.rawValue)
+        XCTAssertEqual(error?.code, PKPaymentError.shippingContactInvalidError.rawValue)
+        XCTAssertEqual(error?.userInfo[PKPaymentErrorKey.contactFieldUserInfoKey.rawValue] as? PKContactField, .postalAddress)
+        XCTAssertNil(error?.userInfo[PKPaymentErrorKey.postalAddressUserInfoKey.rawValue])
         XCTAssertEqual(error?.localizedDescription, NSError.stp_unexpectedErrorMessage())
     }
 

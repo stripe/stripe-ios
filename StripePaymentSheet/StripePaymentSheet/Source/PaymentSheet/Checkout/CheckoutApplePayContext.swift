@@ -274,9 +274,11 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                         localizedDescription: error.nonGenericDescription
                     )
                 } else {
-                    // The address isn't the problem, so don't ask the customer to fix a field.
-                    shippingError = PKPaymentRequest.paymentShippingAddressUnserviceableError(
-                        withLocalizedDescription: NSError.stp_unexpectedErrorMessage()
+                    // The address isn't the problem, so don't ask the customer to fix a field. Apple Pay ignores a
+                    // generic PassKit error here, and an unserviceable error says the merchant doesn't ship to the address.
+                    shippingError = PKPaymentRequest.paymentContactInvalidError(
+                        withContactField: .postalAddress,
+                        localizedDescription: NSError.stp_unexpectedErrorMessage()
                     )
                 }
                 handler(PKPaymentRequestShippingContactUpdate(
