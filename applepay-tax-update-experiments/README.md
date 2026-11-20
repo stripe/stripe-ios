@@ -181,7 +181,7 @@ Shipping is simpler, because Apple calls `didSelectShippingContact` again when t
 | Billing fails in the sheet, then succeeds at authorization with a new total | The sheet closes with the generic error. Reopening shows $131.70, and payment completes | <img src="screenshots/17-fix-total-changed-closes-sheet.png" width="220"> <img src="screenshots/18-fix-reopen-shows-new-total.png" width="220"> <img src="screenshots/19-fix-second-attempt-paid.png" width="220"> |
 | Shipping fails in the sheet | The address shows the generic message. Re-saving it re-runs the update, the sheet shows $130.35, and payment completes | <img src="screenshots/14-shipping-list-shows-message.png" width="220"> <img src="screenshots/20-fix-shipping-recovered-after-resave.png" width="220"> |
 
-These runs used the final code ([`b3be844`](https://github.com/stripe/stripe-ios/commit/b3be844905b21f30e095379a9d7ccd09be773db4)), with one forced network failure for the first two rows' recovery and every update failing for the persistent case.
+These runs used the final code ([`b3be844`](https://github.com/stripe/stripe-ios/commit/b3be844905b21f30e095379a9d7ccd09be773db4)), forcing every update to fail for the first row, and only the first update to fail for the other two.
 The delegate log matches each flow:
 - persistent failure: 3 attempts (the card selection, then two Pay taps);
 - total changed: the sheet's update fails, the Pay-tap retry succeeds, and the reopened sheet updates;
