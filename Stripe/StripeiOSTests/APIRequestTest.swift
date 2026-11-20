@@ -42,7 +42,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
         apiClient.apiURL = URL(
             string: STPTestingAPIClient.testBackendURL(
                 prefix: "httpbin",
-                hostedURL: "https://stripe-mobile-luxurious-alpine-devourer.stripedemos.com/"
+                recordedURL: "https://stripe-mobile-luxurious-alpine-devourer.stripedemos.com/"
             )
         )
         if !STPTestingAPIClient.testBackendsHeaders.isEmpty {

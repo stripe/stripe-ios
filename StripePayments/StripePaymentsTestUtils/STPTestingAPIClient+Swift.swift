@@ -10,10 +10,10 @@ import Foundation
 
 extension STPTestingAPIClient {
     public static var STPTestingBackendURL: String {
-        testBackendURL(prefix: "ci-test-backend", hostedURL: "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/")
+        testBackendURL(prefix: "ci-test-backend", recordedURL: "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/")
     }
     public static var STPTestingPlaygroundBackendURL: String {
-        testBackendURL(prefix: "playground", hostedURL: "https://stp-mobile-playground-backend-v7.stripedemos.com/")
+        testBackendURL(prefix: "playground", recordedURL: "https://stp-mobile-playground-backend-v7.stripedemos.com/")
     }
     static let checkoutMobileElementsAPISettings = "2026-08-26.preview"
     public static var shared: STPTestingAPIClient {

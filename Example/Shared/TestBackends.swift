@@ -2,10 +2,11 @@
 //  TestBackends.swift
 //  Example
 //
-//  The example backends that the example apps and testers call. Each is a hosted
-//  stripedemos.com backend unless STRIPE_TEST_BACKENDS_URL, in the app's environment, names the
-//  root of the unified test backends (oss-android-sdk's ci/test-backends); then each backend is
-//  `<root><prefix>`. UI tests pass the variables on to the app in `launchEnvironment`.
+//  The example backends that the example apps and testers call: the unified test backends
+//  (oss-android-sdk's ci/test-backends), each under its own prefix, `<root><prefix>`. The root is
+//  their Vercel deployment, or STRIPE_TEST_BACKENDS_URL in the app's environment, such as a local
+//  copy's `http://127.0.0.1:4567/`. UI tests pass the variables on to the app in
+//  `launchEnvironment`.
 //
 
 import Foundation
@@ -24,7 +25,9 @@ enum TestBackend: String {
     case linkPayoutsDemo = "link-payouts-demo"
     case cardScanCIVExample = "card-scan-civ-example"
 
+    /// Overrides `defaultURL`.
     static let urlEnvironmentKey = "STRIPE_TEST_BACKENDS_URL"
+    static let defaultURL = "https://stripe-mobile-example-ci-backends.vercelapp.stripe.dev/"
     static let tokenEnvironmentKey = "STRIPE_TEST_BACKENDS_TOKEN"
     /// Overrides `defaultBypass`.
     static let bypassEnvironmentKey = "STRIPE_TEST_BACKENDS_BYPASS"
@@ -42,16 +45,12 @@ enum TestBackend: String {
 
     /// The bypass secret that requests to the test backends carry: STRIPE_TEST_BACKENDS_BYPASS,
     /// or else `defaultBypass` unless STRIPE_TEST_BACKENDS_URL is a local copy of the backends,
-    /// which isn't behind Vercel. Nil when STRIPE_TEST_BACKENDS_URL is unset.
+    /// which isn't behind Vercel.
     static var bypass: String? {
-        let environment = ProcessInfo.processInfo.environment
-        guard let root = rootURL else {
-            return nil
-        }
-        if let bypass = environment[bypassEnvironmentKey], !bypass.isEmpty {
+        if let bypass = ProcessInfo.processInfo.environment[bypassEnvironmentKey], !bypass.isEmpty {
             return bypass
         }
-        let host = URL(string: root)?.host?.lowercased()
+        let host = URL(string: rootURL)?.host?.lowercased()
         return ["127.0.0.1", "localhost", "::1"].contains(host) ? nil : defaultBypass
     }
 
@@ -74,10 +73,10 @@ enum TestBackend: String {
     /// every later request. Web views have their own cookies: load the first page with
     /// `addingBypass(to:)`.
     private static let setBypassCookie: Void = {
-        guard let bypass, let root = URL(string: rootURL ?? "") else {
+        guard let bypass, let root = URL(string: rootURL) else {
             return
         }
-        var request = URLRequest(url: root, timeoutInterval: 30)
+        var request = URLRequest(url: root, timeoutInterval: 15)
         request.setValue(bypass, forHTTPHeaderField: "x-vercel-protection-bypass")
         request.setValue("true", forHTTPHeaderField: "x-vercel-set-bypass-cookie")
         let done = DispatchSemaphore(value: 0)
@@ -87,16 +86,14 @@ enum TestBackend: String {
             }
             done.signal()
         }.resume()
-        _ = done.wait(timeout: .now() + 30)
+        _ = done.wait(timeout: .now() + 15)
     }()
 
-    /// `<STRIPE_TEST_BACKENDS_URL>/`, plus `_t/<token>/` with STRIPE_TEST_BACKENDS_TOKEN set too;
-    /// nil when STRIPE_TEST_BACKENDS_URL is unset.
-    private static var rootURL: String? {
+    /// STRIPE_TEST_BACKENDS_URL or `defaultURL`, with a trailing slash, plus `_t/<token>/` with
+    /// STRIPE_TEST_BACKENDS_TOKEN set.
+    private static var rootURL: String {
         let environment = ProcessInfo.processInfo.environment
-        guard var root = environment[urlEnvironmentKey], !root.isEmpty else {
-            return nil
-        }
+        var root = environment[urlEnvironmentKey].flatMap { $0.isEmpty ? nil : $0 } ?? defaultURL
         if !root.hasSuffix("/") {
             root += "/"
         }
@@ -112,31 +109,11 @@ enum TestBackend: String {
     /// prefix, which the test backends accept in place of the X-Test-Backends-Token header, so
     /// that every request the apps make, web views included, has it.
     var baseURL: String {
-        guard let root = Self.rootURL else {
-            return hostedURL
-        }
         _ = Self.setBypassCookie
-        return root + rawValue
+        return Self.rootURL + rawValue
     }
 
     var url: URL {
         URL(string: baseURL)!
-    }
-
-    private var hostedURL: String {
-        switch self {
-        case .playground: return "https://stp-mobile-playground-backend-v7.stripedemos.com"
-        case .paymentSheet: return "https://stripe-mobile-payment-sheet.stripedemos.com"
-        case .paymentSheetCustomDeferred: return "https://stripe-mobile-payment-sheet-custom-deferred.stripedemos.com"
-        case .identityPlayground: return "https://stripe-mobile-identity-verification-playground.stripedemos.com"
-        case .connectExample: return "https://stripe-connect-mobile-example-v1.stripedemos.com"
-        case .cryptoOnramp: return "https://crypto-onramp-example.stripedemos.com"
-        case .connectionsWebview: return "https://connections-webview-example.stripedemos.com"
-        case .iosFinancialConnectionsPlayground: return "https://ios-financial-connections-playground.stripedemos.com"
-        case .integrationTester: return "https://stp-integration-tester-v3.stripedemos.com"
-        case .linkControllerPreviewDemo: return "https://link-controller-preview-demo.stripedemos.com"
-        case .linkPayoutsDemo: return "https://link-payouts-demo.stripedemos.com"
-        case .cardScanCIVExample: return "https://stripe-card-scan-civ-example-app.stripedemos.com"
-        }
     }
 }

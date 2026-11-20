@@ -9,9 +9,13 @@
 #import "STPTestingAPIClient.h"
 @import StripeCore;
 
-static NSString * const STPTestingHostedBackendURL = @"https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/";
+// The hosted backend that the ci-test-backend's recorded network traffic names.
+static NSString * const STPTestingRecordedBackendURL = @"https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/";
 
-static BOOL STPUsesHostedTestBackends = NO;
+// The unified test backends' Vercel deployment. STRIPE_TEST_BACKENDS_URL overrides it.
+static NSString * const STPTestingDefaultTestBackendsURL = @"https://stripe-mobile-example-ci-backends.vercelapp.stripe.dev/";
+
+static BOOL STPUsesRecordedBackendURLs = NO;
 
 // The unified test backends' Vercel deployment answers only requests with its Protection Bypass for
 // Automation secret, which is deliberately public. STRIPE_TEST_BACKENDS_BYPASS overrides it.
@@ -22,12 +26,12 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation STPTestingAPIClient
 
 + (nullable NSString *)testBackendsURL {
-    if (STPUsesHostedTestBackends) {
+    if (STPUsesRecordedBackendURLs) {
         return nil;
     }
     NSString *url = NSProcessInfo.processInfo.environment[@"STRIPE_TEST_BACKENDS_URL"];
     if (url.length == 0) {
-        return nil;
+        url = STPTestingDefaultTestBackendsURL;
     }
     return [url hasSuffix:@"/"] ? url : [url stringByAppendingString:@"/"];
 }
@@ -55,24 +59,24 @@ NS_ASSUME_NONNULL_BEGIN
     return headers;
 }
 
-+ (BOOL)usesHostedTestBackends {
-    return STPUsesHostedTestBackends;
++ (BOOL)usesRecordedBackendURLs {
+    return STPUsesRecordedBackendURLs;
 }
 
-+ (void)setUsesHostedTestBackends:(BOOL)usesHostedTestBackends {
-    STPUsesHostedTestBackends = usesHostedTestBackends;
++ (void)setUsesRecordedBackendURLs:(BOOL)usesRecordedBackendURLs {
+    STPUsesRecordedBackendURLs = usesRecordedBackendURLs;
 }
 
-+ (NSString *)testBackendURLWithPrefix:(NSString *)prefix hostedURL:(NSString *)hostedURL {
++ (NSString *)testBackendURLWithPrefix:(NSString *)prefix recordedURL:(NSString *)recordedURL {
     NSString *root = self.testBackendsURL;
     if (root == nil) {
-        return hostedURL;
+        return recordedURL;
     }
     return [NSString stringWithFormat:@"%@%@/", root, prefix];
 }
 
 + (NSString *)backendURL {
-    return [self testBackendURLWithPrefix:@"ci-test-backend" hostedURL:STPTestingHostedBackendURL];
+    return [self testBackendURLWithPrefix:@"ci-test-backend" recordedURL:STPTestingRecordedBackendURL];
 }
 
 + (instancetype)sharedClient {
