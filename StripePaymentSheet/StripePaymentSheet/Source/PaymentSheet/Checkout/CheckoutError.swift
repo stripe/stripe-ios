@@ -23,6 +23,9 @@ enum CheckoutError: Error, LocalizedError, Sendable {
     /// Polling reported failed confirmation, and retrieving the Session for error details failed.
     case pollFailedAndSessionRetrievalFailed
 
+    /// The total changed while the Apple Pay sheet was presented, after the customer could no longer see it.
+    case totalChanged
+
     /// The provided shipping country is not in the session's list of allowed shipping countries.
     case invalidShippingCountry(countryCode: String)
 
@@ -43,6 +46,8 @@ enum CheckoutError: Error, LocalizedError, Sendable {
         case .timedOut:
             return "Timed out waiting for a Checkout operation to complete."
         case .pollFailedAndSessionRetrievalFailed:
+            return NSError.stp_unexpectedErrorMessage()
+        case .totalChanged:
             return NSError.stp_unexpectedErrorMessage()
         case .invalidShippingCountry(let countryCode):
             return "Country code '\(countryCode)' is not in allowedShippingCountries"
