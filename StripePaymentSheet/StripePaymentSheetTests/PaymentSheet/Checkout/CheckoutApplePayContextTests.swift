@@ -521,8 +521,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     }
 
     func testDidSelectShippingContactSurfacesTaxUpdateFailureWithoutBlamingAddress() async {
-        // Given a Checkout Session that calculates automatic tax from shipping, and a tax update that fails for a reason
-        // other than the address
+        // Given a Checkout Session that calculates automatic tax from shipping, and a tax update that fails
         let updater = MockCheckoutSessionWalletUpdater(errorToThrow: CheckoutError.apiError(message: "Tax calculation failed"))
         let (context, controller) = makeShippingContext(
             allowedCountries: ["US"],
@@ -545,56 +544,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(error?.userInfo[PKPaymentErrorKey.contactFieldUserInfoKey.rawValue] as? PKContactField, .postalAddress)
         XCTAssertNil(error?.userInfo[PKPaymentErrorKey.postalAddressUserInfoKey.rawValue])
         XCTAssertEqual(error?.localizedDescription, NSError.stp_unexpectedErrorMessage())
-    }
-
-    func testDidSelectShippingContactReportsAddressFieldRejectedByTaxUpdate() async {
-        // Given a shipping tax update that the Stripe API rejects because of the postal code
-        let updater = MockCheckoutSessionWalletUpdater(errorToThrow: makeInvalidAddressError(param: "tax_region[postal_code]"))
-        let (context, controller) = makeShippingContext(
-            allowedCountries: ["US"],
-            automaticTaxAddressSource: "shipping",
-            checkoutWalletUpdater: updater
-        )
-
-        // When Apple Pay selects the shipping contact
-        let update = await withCheckedContinuation { continuation in
-            context.paymentAuthorizationController(controller, didSelectShippingContact: makeShippingContact(country: "US", postalCode: "00000")) {
-                continuation.resume(returning: $0)
-            }
-        }
-
-        // Then the Apple Pay sheet asks the customer to fix the postal code
-        let error = update.errors?.first as NSError?
-        XCTAssertEqual(error?.code, PKPaymentError.shippingContactInvalidError.rawValue)
-        XCTAssertEqual(error?.userInfo[PKPaymentErrorKey.postalAddressUserInfoKey.rawValue] as? String, CNPostalAddressPostalCodeKey)
-        XCTAssertEqual(error?.localizedDescription, "Invalid postal code")
-    }
-
-    func testDidSelectShippingContactRetriesTransientTaxUpdateFailure() async {
-        // Given a shipping tax update that fails once because of the network
-        let updatedSession = CheckoutTestHelpers.makeSession([
-            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(taxExclusive: 200),
-            "automatic_tax": ["enabled": true, "status": "ready", "address_source": "shipping"],
-        ]).makePublicSession()
-        let updater = MockCheckoutSessionWalletUpdater(sessionToReturn: updatedSession, errorsToThrowFirst: [makeNetworkError()])
-        let (context, controller) = makeShippingContext(
-            allowedCountries: ["US"],
-            automaticTaxAddressSource: "shipping",
-            checkoutWalletUpdater: updater
-        )
-        context.taxUpdateRetryDelays = [0, 0]
-
-        // When Apple Pay selects the shipping contact
-        let update = await withCheckedContinuation { continuation in
-            context.paymentAuthorizationController(controller, didSelectShippingContact: makeShippingContact(country: "US", postalCode: "94107")) {
-                continuation.resume(returning: $0)
-            }
-        }
-
-        // Then the retry succeeds and the Apple Pay sheet shows the updated total
-        XCTAssertEqual(updater.updateCallCount, 2)
-        XCTAssertNil(update.errors?.first)
-        XCTAssertEqual(update.paymentSummaryItems.last?.amount, NSDecimalNumber(string: "12"))
     }
 
     func testDidSelectShippingContactDoesNotUpdateBillingSourcedTaxRegion() {
@@ -929,46 +878,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(result.paymentSheetResult, .completed)
     }
 
-    func testDidSelectPaymentMethodRetriesTransientBillingTaxUpdateFailure() async {
-        // Given a billing tax update that fails once because of the network
-        let updatedSession = makeBillingTaxSession(taxExclusive: 200)
-        let updater = MockCheckoutSessionWalletUpdater(sessionToReturn: updatedSession, errorsToThrowFirst: [makeNetworkError()])
-        let (context, controller) = makeContext(collectsTaxFromBillingAddress: true, checkoutWalletUpdater: updater)
-        context.taxUpdateRetryDelays = [0, 0]
-
-        // When Apple Pay selects the payment method
-        let update = await withCheckedContinuation { continuation in
-            context.paymentAuthorizationController(controller, didSelectPaymentMethod: MockPKPaymentMethod(billingAddress: makeBillingContact())) {
-                continuation.resume(returning: $0)
-            }
-        }
-
-        // Then the retry succeeds and the Apple Pay sheet shows the updated total
-        XCTAssertEqual(updater.updateCallCount, 2)
-        XCTAssertEqual(update.paymentSummaryItems.last?.amount, NSDecimalNumber(string: "12"))
-    }
-
-    func testAuthorizationReportsBillingFieldRejectedByTaxUpdate() async {
-        // Given a billing tax update that the Stripe API rejected because of the state
-        let updater = MockCheckoutSessionWalletUpdater(errorToThrow: makeInvalidAddressError(param: "tax_region[state]"))
-        let (context, controller) = makeContext(collectsTaxFromBillingAddress: true, checkoutWalletUpdater: updater) { _ in
-            XCTFail("Should not confirm with stale totals")
-            return .canceled()
-        }
-        await selectBillingPaymentMethod(context, controller)
-
-        // When the customer authorizes the payment
-        let result = await authorize(context, controller, payment: makePaymentWithBillingAddress())
-
-        // Then Apple Pay asks the customer to fix the state, without retrying a request the API rejected
-        let error = result.errors.first as NSError?
-        XCTAssertEqual(result.status, .failure)
-        XCTAssertEqual(error?.code, PKPaymentError.billingContactInvalidError.rawValue)
-        XCTAssertEqual(error?.userInfo[PKPaymentErrorKey.postalAddressUserInfoKey.rawValue] as? String, CNPostalAddressStateKey)
-        XCTAssertEqual(updater.updateCallCount, 1)
-        XCTAssertEqual(context.paymentState, .notStarted)
-    }
-
     func testAuthorizationKeepsSheetOpenWithoutBlamingAddressWhenBillingTaxUpdateKeepsFailing() async {
         // Given a billing tax update that keeps failing because of the network
         let updater = MockCheckoutSessionWalletUpdater(errorToThrow: makeNetworkError())
@@ -976,19 +885,18 @@ final class CheckoutApplePayContextTests: XCTestCase {
             XCTFail("Should not confirm with stale totals")
             return .canceled()
         }
-        context.taxUpdateRetryDelays = [0, 0]
         await selectBillingPaymentMethod(context, controller)
 
         // When the customer authorizes the payment
         let result = await authorize(context, controller, payment: makePaymentWithBillingAddress())
 
-        // Then authorization retries the update, and Apple Pay keeps the sheet open without marking a field
+        // Then tapping Pay retries the update, and Apple Pay keeps the sheet open without marking a field
         let error = result.errors.first as NSError?
         XCTAssertEqual(result.status, .failure)
         XCTAssertEqual(error?.domain, PKPaymentErrorDomain)
         XCTAssertEqual(error?.code, PKPaymentError.unknownError.rawValue)
         XCTAssertEqual(error?.localizedDescription, NSError.stp_unexpectedErrorMessage())
-        XCTAssertEqual(updater.updateCallCount, 6)
+        XCTAssertEqual(updater.updateCallCount, 2)
         XCTAssertEqual(context.paymentState, .notStarted)
     }
 
@@ -996,7 +904,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Given a billing tax update that failed while the sheet was up, and succeeds without changing the total when retried
         let updater = MockCheckoutSessionWalletUpdater(
             sessionToReturn: makeBillingTaxSession(taxExclusive: 0),
-            errorsToThrowFirst: Array(repeating: makeNetworkError(), count: 3)
+            errorsToThrowFirst: [makeNetworkError()]
         )
         let confirmed = expectation(description: "Checkout confirmed")
         let (context, controller) = makeContext(collectsTaxFromBillingAddress: true, checkoutWalletUpdater: updater) { parameters in
@@ -1004,7 +912,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
             confirmed.fulfill()
             return .canceled()
         }
-        context.taxUpdateRetryDelays = [0, 0]
         APIStubbedTestCase.stubAllOutgoingRequests()
         stub(condition: isPath("/v1/tokens")) { _ in
             HTTPStubsResponse(jsonObject: self.tokenJSON(), statusCode: 200, headers: nil)
@@ -1016,7 +923,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
         // Then authorization retries the update with the billing address and confirms the total the customer saw
         await fulfillment(of: [confirmed], timeout: 5)
-        XCTAssertEqual(updater.updateCallCount, 4)
+        XCTAssertEqual(updater.updateCallCount, 2)
         XCTAssertEqual(updater.lastAddress?.postalCode, "94110")
     }
 
@@ -1024,13 +931,12 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Given a billing tax update that failed while the sheet was up, and changes the total when retried
         let updater = MockCheckoutSessionWalletUpdater(
             sessionToReturn: makeBillingTaxSession(taxExclusive: 200),
-            errorsToThrowFirst: Array(repeating: makeNetworkError(), count: 3)
+            errorsToThrowFirst: [makeNetworkError()]
         )
         let (context, controller) = makeContext(collectsTaxFromBillingAddress: true, checkoutWalletUpdater: updater) { _ in
             XCTFail("Should not confirm a total the customer didn't see")
             return .canceled()
         }
-        context.taxUpdateRetryDelays = [0, 0]
         let resultTask = Task { await context.presentApplePay() }
         await Task.yield()
         await selectBillingPaymentMethod(context, controller)
@@ -1280,11 +1186,6 @@ final class CheckoutApplePayContextTests: XCTestCase {
 
     private func makeNetworkError() -> Error {
         CheckoutError.apiError(message: "Offline", underlyingError: URLError(.notConnectedToInternet))
-    }
-
-    private func makeInvalidAddressError(param: String) -> Error {
-        let apiError = StripeAPIError(type: .invalidRequestError, code: nil, message: "Invalid postal code", param: param)
-        return CheckoutError.apiError(message: "Invalid postal code", underlyingError: StripeError.apiError(apiError))
     }
 
     private func makeBillingTaxSession(taxExclusive: Int) -> CheckoutElementsController.Session {
