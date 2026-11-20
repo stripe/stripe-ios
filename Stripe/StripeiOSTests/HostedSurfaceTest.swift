@@ -16,7 +16,7 @@ class HostedSurfaceTest: XCTestCase {
 
     // Test the initializer
     func testHostedSurfaceInitializer() {
-        let paymentSheetConfig = PaymentSheetFormFactoryConfig.paymentElement(PaymentSheet.Configuration.init(), customerProvider: CustomerProvider(customer: nil))
+        let paymentSheetConfig = PaymentSheetFormFactoryConfig.paymentElement(PaymentSheet.Configuration.init())
 
         let hostedSurfaceForPaymentSheet = HostedSurface(config: paymentSheetConfig)
         XCTAssertEqual(hostedSurfaceForPaymentSheet, .paymentSheet)

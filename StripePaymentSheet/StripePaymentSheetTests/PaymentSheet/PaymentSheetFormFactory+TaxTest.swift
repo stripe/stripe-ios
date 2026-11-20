@@ -68,7 +68,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
             let form = PaymentSheetFormFactory(
                 intent: makeCheckoutIntent(),
                 elementsSession: ._testCardValue(),
-                configuration: .paymentElement(makeConfiguration(country: "US"), customerProvider: CustomerProvider(customer: makeConfiguration(country: "US").customer)),
+                configuration: .paymentElement(makeConfiguration(country: "US")),
                 paymentMethod: paymentMethod
             ).make()
 
@@ -179,7 +179,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         PaymentSheetFormFactory(
             intent: intent,
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
+            configuration: .paymentElement(configuration),
             paymentMethod: .stripe(paymentMethod)
         )
     }

@@ -242,7 +242,6 @@ public final class EmbeddedPaymentElement {
             selection: isPreviousPaymentOptionStillDisplayed ? previousSelectedRowType : nil,
             previousPaymentOption: previousPaymentOption,
             configuration: self.configuration,
-            customerProvider: loadResult.customerProvider,
             intent: loadResult.intent,
             elementsSession: loadResult.elementsSession,
             savedPaymentMethods: loadResult.savedPaymentMethods,

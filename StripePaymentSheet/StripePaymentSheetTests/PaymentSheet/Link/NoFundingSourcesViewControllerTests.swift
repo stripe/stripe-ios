@@ -120,7 +120,6 @@ private enum NoFundingSourcesViewControllerTestHelpers {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: PaymentSheet.Configuration(),
-                customerProvider: CustomerProvider(customer: nil),
                 linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,

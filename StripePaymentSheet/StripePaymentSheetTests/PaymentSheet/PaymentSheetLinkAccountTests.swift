@@ -352,7 +352,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             ], statusCode: 400, headers: nil)
         }
 
-        let controller = PayWithLinkViewController(intent: ._testValue(), linkAccount: account, elementsSession: ._testValue(), configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), analyticsHelper: ._testValue())
+        let controller = PayWithLinkViewController(intent: ._testValue(), linkAccount: account, elementsSession: ._testValue(), configuration: configuration, analyticsHelper: ._testValue())
         controller.startFinancialConnections { _ in }
         await fulfillment(of: [responseExpectation], timeout: 2)
     }

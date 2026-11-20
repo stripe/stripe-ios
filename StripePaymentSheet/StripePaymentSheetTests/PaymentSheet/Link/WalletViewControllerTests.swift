@@ -149,7 +149,6 @@ private extension WalletViewControllerTests {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: configuration,
-                customerProvider: CustomerProvider(customer: configuration.customer),
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: nil),
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,

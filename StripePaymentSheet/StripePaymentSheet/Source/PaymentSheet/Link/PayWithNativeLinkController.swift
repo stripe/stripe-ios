@@ -170,7 +170,6 @@ final class PayWithNativeLinkController {
                 linkAccount: LinkAccountContext.shared.account,
                 elementsSession: self.elementsSession,
                 configuration: self.configuration,
-                customerProvider: self.customerProvider,
                 nativeSheetPresentation: self.nativeSheetPresentation,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,

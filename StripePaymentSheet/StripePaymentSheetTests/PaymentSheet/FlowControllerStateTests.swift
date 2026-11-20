@@ -31,7 +31,6 @@ class FlowControllerStateTests: XCTestCase {
             intent: intent,
             elementsSession: .emptyElementsSession,
             configuration: config,
-            customerProvider: CustomerProvider(customer: config.customer),
             paymentMethodTypes: [.stripe(.card)],
             formCache: .init(),
             analyticsHelper: ._testValue(),
