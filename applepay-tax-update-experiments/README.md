@@ -37,25 +37,25 @@ Apple's docs don't describe most of this, and in one case they're wrong. Everyth
 
 | What we return | What the buyer sees | Screenshot |
 |---|---|---|
-| Any error in `PKPaymentRequestPaymentMethodUpdate(errors:)` | **Ignored.** No error, Pay stays enabled. This contradicts [Apple's docs](https://developer.apple.com/documentation/passkit/pkpaymentrequestpaymentmethodupdate/init(errors:paymentsummaryitems:)) | [02](screenshots/02-pm-update-error-ignored.png) |
-| ...and then the buyer pays the stale total | The server rejects it: "$120.00 does not match … $131.70" | [03](screenshots/03-pm-update-error-server-rejects-amount.png) |
-| `.failure` with `paymentBillingAddressInvalidError` (what #7697 does) | The sheet stays open. The card turns red, and Pay becomes "Update Billing Address" | [01](screenshots/01-pr-auth-error-update-billing-address.png) |
-| ...and the buyer opens the card | **Our `localizedDescription` is shown**, here the raw server message | [09](screenshots/09-card-details-shows-our-message.png) |
-| ...and the buyer opens the billing editor | The ZIP is red and **Done stays disabled** until a field changes. Retyping the same ZIP doesn't enable it | [10](screenshots/10-billing-editor-done-disabled.png) |
-| ...and the buyer re-selects the same card | **`didSelectPaymentMethod` is not called again** | [07](screenshots/07-reselect-same-card.png), [08](screenshots/08-still-stale-120-after-reselect.png) |
-| `.failure` with `errors: nil` | **The sheet closes.** The app gets "Canceled" | [04](screenshots/04-failure-no-errors-dismisses.png) |
-| `.failure` with a non-PassKit error (also what the confirm path does for non-ZIP errors) | **The sheet closes.** The app gets "Canceled" | [05](screenshots/05-failure-plain-error-dismisses.png) |
-| `.failure` with `PKPaymentErrorDomain` / `.unknownError` | **The sheet stays open.** No field marked, and Pay can be tapped again | [06](screenshots/06-failure-unknown-error-stays-open.png) |
+| Any error in `PKPaymentRequestPaymentMethodUpdate(errors:)` | **Ignored.** No error, Pay stays enabled. This contradicts [Apple's docs](https://developer.apple.com/documentation/passkit/pkpaymentrequestpaymentmethodupdate/init(errors:paymentsummaryitems:)) | <img src="screenshots/02-pm-update-error-ignored.png" width="220"> |
+| ...and then the buyer pays the stale total | The server rejects it: "$120.00 does not match … $131.70" | <img src="screenshots/03-pm-update-error-server-rejects-amount.png" width="220"> |
+| `.failure` with `paymentBillingAddressInvalidError` (what #7697 does) | The sheet stays open. The card turns red, and Pay becomes "Update Billing Address" | <img src="screenshots/01-pr-auth-error-update-billing-address.png" width="220"> |
+| ...and the buyer opens the card | **Our `localizedDescription` is shown**, here the raw server message | <img src="screenshots/09-card-details-shows-our-message.png" width="220"> |
+| ...and the buyer opens the billing editor | The ZIP is red and **Done stays disabled** until a field changes. Retyping the same ZIP doesn't enable it | <img src="screenshots/10-billing-editor-done-disabled.png" width="220"> |
+| ...and the buyer re-selects the same card | **`didSelectPaymentMethod` is not called again** | <img src="screenshots/07-reselect-same-card.png" width="220">, <img src="screenshots/08-still-stale-120-after-reselect.png" width="220"> |
+| `.failure` with `errors: nil` | **The sheet closes.** The app gets "Canceled" | <img src="screenshots/04-failure-no-errors-dismisses.png" width="220"> |
+| `.failure` with a non-PassKit error (also what the confirm path does for non-ZIP errors) | **The sheet closes.** The app gets "Canceled" | <img src="screenshots/05-failure-plain-error-dismisses.png" width="220"> |
+| `.failure` with `PKPaymentErrorDomain` / `.unknownError` | **The sheet stays open.** No field marked, and Pay can be tapped again | <img src="screenshots/06-failure-unknown-error-stays-open.png" width="220"> |
 
 ### Shipping (`didSelectShippingContact`)
 
 | Error in `PKPaymentRequestShippingContactUpdate(errors:)` | What the buyer sees | Screenshot |
 |---|---|---|
-| `paymentShippingAddressUnserviceableError` | A system alert: **"<App> Doesn't Ship to Your Shipping Address"** | [11](screenshots/11-shipping-unserviceable-alert.png) |
-| `PKPaymentErrorDomain` / `.unknownError` | **Ignored.** Pay stays enabled with the stale total | [12](screenshots/12-shipping-unknown-error-ignored.png) |
-| `paymentContactInvalidError(.postalAddress)` | "Update Shipping Address", Pay blocked, no field marked | [13](screenshots/13-shipping-contact-error-blocks-pay.png) |
-| ...and the buyer opens the address list | Our `localizedDescription` appears under the address | [14](screenshots/14-shipping-list-shows-message.png) |
-| ...and the buyer re-saves the same address and taps Done | **`didSelectShippingContact` is called again**, unlike billing. The buyer can recover inside the sheet | [20](screenshots/20-fix-shipping-recovered-after-resave.png) |
+| `paymentShippingAddressUnserviceableError` | A system alert: **"<App> Doesn't Ship to Your Shipping Address"** | <img src="screenshots/11-shipping-unserviceable-alert.png" width="220"> |
+| `PKPaymentErrorDomain` / `.unknownError` | **Ignored.** Pay stays enabled with the stale total | <img src="screenshots/12-shipping-unknown-error-ignored.png" width="220"> |
+| `paymentContactInvalidError(.postalAddress)` | "Update Shipping Address", Pay blocked, no field marked | <img src="screenshots/13-shipping-contact-error-blocks-pay.png" width="220"> |
+| ...and the buyer opens the address list | Our `localizedDescription` appears under the address | <img src="screenshots/14-shipping-list-shows-message.png" width="220"> |
+| ...and the buyer re-saves the same address and taps Done | **`didSelectShippingContact` is called again**, unlike billing. The buyer can recover inside the sheet | <img src="screenshots/20-fix-shipping-recovered-after-resave.png" width="220"> |
 
 ### The server
 
@@ -132,12 +132,12 @@ What the fix leaves alone:
 
 **Simulator, real backend, with network failures forced in the experiment build:**
 
-| Scenario | Result |
-|---|---|
-| Billing update fails once | The in-sheet retry succeeds, the sheet shows $131.70, payment completes ([15](screenshots/15-fix-in-sheet-retry-shows-taxed-total.png)) |
-| Billing update keeps failing | The sheet stays open after two Pay taps, with no field marked ([16](screenshots/16-fix-persistent-failure-sheet-stays-open.png)) |
-| Billing fails in the sheet, then succeeds at authorization with a new total | The sheet closes with the generic error. Reopening shows $131.70, and payment completes ([17](screenshots/17-fix-total-changed-closes-sheet.png)–[19](screenshots/19-fix-second-attempt-paid.png)) |
-| Shipping fails in the sheet | The address shows the generic message. Re-saving it re-runs the update, the sheet shows $130.35, and payment completes ([14](screenshots/14-shipping-list-shows-message.png), [20](screenshots/20-fix-shipping-recovered-after-resave.png)) |
+| Scenario | Result | Screenshots |
+|---|---|---|
+| Billing update fails once | The in-sheet retry succeeds, the sheet shows $131.70, payment completes | <img src="screenshots/15-fix-in-sheet-retry-shows-taxed-total.png" width="220"> |
+| Billing update keeps failing | The sheet stays open after two Pay taps, with no field marked | <img src="screenshots/16-fix-persistent-failure-sheet-stays-open.png" width="220"> |
+| Billing fails in the sheet, then succeeds at authorization with a new total | The sheet closes with the generic error. Reopening shows $131.70, and payment completes | <img src="screenshots/17-fix-total-changed-closes-sheet.png" width="220"> <img src="screenshots/18-fix-reopen-shows-new-total.png" width="220"> <img src="screenshots/19-fix-second-attempt-paid.png" width="220"> |
+| Shipping fails in the sheet | The address shows the generic message. Re-saving it re-runs the update, the sheet shows $130.35, and payment completes | <img src="screenshots/14-shipping-list-shows-message.png" width="220"> <img src="screenshots/20-fix-shipping-recovered-after-resave.png" width="220"> |
 
 ## 6. Open questions
 
