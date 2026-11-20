@@ -85,7 +85,10 @@ static NSString * const STPTestingPaymentsOrchestrationPublishableKey = @"pk_tes
 
 /**
  The headers that requests to `testBackendsURL` carry: X-Test-Backends-Token, from the optional
- STRIPE_TEST_BACKENDS_TOKEN environment variable. Empty when either variable is unset.
+ STRIPE_TEST_BACKENDS_TOKEN environment variable, and x-vercel-protection-bypass, the Vercel
+ deployment's public protection bypass secret, which STRIPE_TEST_BACKENDS_BYPASS overrides. A
+ local `testBackendsURL` (127.0.0.1, localhost) gets the bypass only from the variable. Empty
+ when `testBackendsURL` is nil.
  */
 @property (class, nonatomic, readonly) NSDictionary<NSString *, NSString *> *testBackendsHeaders;
 

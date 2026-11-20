@@ -70,7 +70,7 @@ final class WebViewViewController: UIViewController {
             frame: .zero,
             configuration: WKWebViewConfiguration()
         )
-        let request = URLRequest(url: websiteURL)
+        let request = URLRequest(url: TestBackend.addingBypass(to: websiteURL))
         webView.load(request)
 
         webView.translatesAutoresizingMaskIntoConstraints = false

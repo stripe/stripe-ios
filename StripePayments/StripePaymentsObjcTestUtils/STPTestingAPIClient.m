@@ -13,6 +13,10 @@ static NSString * const STPTestingHostedBackendURL = @"https://stp-mobile-ci-tes
 
 static BOOL STPUsesHostedTestBackends = NO;
 
+// The unified test backends' Vercel deployment answers only requests with its Protection Bypass for
+// Automation secret, which is deliberately public. STRIPE_TEST_BACKENDS_BYPASS overrides it.
+static NSString * const STPTestingDefaultTestBackendsBypass = @"PublicAvailableiOSAndroidBackend";
+
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation STPTestingAPIClient
@@ -29,11 +33,26 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (NSDictionary<NSString *, NSString *> *)testBackendsHeaders {
-    NSString *token = NSProcessInfo.processInfo.environment[@"STRIPE_TEST_BACKENDS_TOKEN"];
-    if (self.testBackendsURL == nil || token.length == 0) {
-        return @{};
+    NSMutableDictionary<NSString *, NSString *> *headers = [NSMutableDictionary dictionary];
+    if (self.testBackendsURL == nil) {
+        return headers;
     }
-    return @{@"X-Test-Backends-Token": token};
+    NSDictionary<NSString *, NSString *> *environment = NSProcessInfo.processInfo.environment;
+    NSString *token = environment[@"STRIPE_TEST_BACKENDS_TOKEN"];
+    if (token.length > 0) {
+        headers[@"X-Test-Backends-Token"] = token;
+    }
+    NSString *bypass = environment[@"STRIPE_TEST_BACKENDS_BYPASS"];
+    if (bypass.length == 0) {
+        // A local copy of the backends isn't behind Vercel.
+        NSString *host = [NSURL URLWithString:self.testBackendsURL].host;
+        BOOL isLocal = [@[@"127.0.0.1", @"localhost", @"::1"] containsObject:host.lowercaseString];
+        bypass = isLocal ? nil : STPTestingDefaultTestBackendsBypass;
+    }
+    if (bypass.length > 0) {
+        headers[@"x-vercel-protection-bypass"] = bypass;
+    }
+    return headers;
 }
 
 + (BOOL)usesHostedTestBackends {

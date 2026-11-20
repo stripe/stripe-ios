@@ -728,16 +728,22 @@ workflows:
         inputs:
         - content: |-
             #!/usr/bin/env bash
-            # STRIPE_TEST_BACKENDS_URL (an app env var) and the STRIPE_TEST_BACKENDS_TOKEN secret point
-            # the tests and example apps at the unified test backends instead of the hosted
-            # stripedemos.com ones. xcodebuild passes TEST_RUNNER_<name> on to the tests as <name>, and
-            # UI tests hand both to the app in launchEnvironment. Unset, nothing changes.
+            # STRIPE_TEST_BACKENDS_URL (an app env var) points the tests and example apps at the
+            # unified test backends instead of the hosted stripedemos.com ones. Optional, both as
+            # Bitrise Secrets: STRIPE_TEST_BACKENDS_TOKEN, if the deployment sets TEST_BACKENDS_TOKEN
+            # (never commit it: this repository is public), and STRIPE_TEST_BACKENDS_BYPASS, which
+            # overrides the Vercel protection bypass committed in STPTestingAPIClient.m and
+            # Example/Shared/TestBackends.swift. xcodebuild passes TEST_RUNNER_<name> on to the tests
+            # as <name>, and UI tests hand them to the app in launchEnvironment. Unset, nothing changes.
             set -euo pipefail
             if [ -n "${STRIPE_TEST_BACKENDS_URL:-}" ]; then
               envman add --key TEST_RUNNER_STRIPE_TEST_BACKENDS_URL --value "$STRIPE_TEST_BACKENDS_URL"
             fi
             if [ -n "${STRIPE_TEST_BACKENDS_TOKEN:-}" ]; then
               envman add --key TEST_RUNNER_STRIPE_TEST_BACKENDS_TOKEN --value "$STRIPE_TEST_BACKENDS_TOKEN" --sensitive
+            fi
+            if [ -n "${STRIPE_TEST_BACKENDS_BYPASS:-}" ]; then
+              envman add --key TEST_RUNNER_STRIPE_TEST_BACKENDS_BYPASS --value "$STRIPE_TEST_BACKENDS_BYPASS" --sensitive
             fi
   prep_simulator:
     steps:
