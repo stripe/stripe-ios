@@ -90,7 +90,6 @@ enum VerificationPageDataUpdateMock {
                 lastLowResImage: "last_low_res_id",
                 bestFaceScore: .init(0.9),
                 faceScoreVariance: .init(0.2),
-                numFrames: 8,
                 bestBrightnessValue: nil,
                 bestCameraLensModel: nil,
                 bestExposureDuration: nil,

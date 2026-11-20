@@ -32,7 +32,7 @@ extension StripeAPI {
         let bestFaceScore: TwoDecimalFloat
         /// Variance of the FaceDetector scores over all selfie frames.
         let faceScoreVariance: TwoDecimalFloat
-        /// The total number of selfie frames taken.
+        /// The number of selfie images this request references.
         let numFrames: Int
         /// Camera brightness value for the best selfie frame.
         let bestBrightnessValue: TwoDecimalFloat?
@@ -66,7 +66,6 @@ extension StripeAPI {
             rightHighResImage: String? = nil,
             bestFaceScore: TwoDecimalFloat,
             faceScoreVariance: TwoDecimalFloat,
-            numFrames: Int,
             bestBrightnessValue: TwoDecimalFloat?,
             bestCameraLensModel: String?,
             bestExposureDuration: Int?,
@@ -90,7 +89,17 @@ extension StripeAPI {
             self.rightHighResImage = rightHighResImage
             self.bestFaceScore = bestFaceScore
             self.faceScoreVariance = faceScoreVariance
-            self.numFrames = numFrames
+            let images: [String?] = [
+                bestHighResImage,
+                bestLowResImage,
+                firstHighResImage,
+                firstLowResImage,
+                lastHighResImage,
+                lastLowResImage,
+                leftHighResImage,
+                rightHighResImage,
+            ]
+            self.numFrames = images.compactMap { $0 }.count
             self.bestBrightnessValue = bestBrightnessValue
             self.bestCameraLensModel = bestCameraLensModel
             self.bestExposureDuration = bestExposureDuration
