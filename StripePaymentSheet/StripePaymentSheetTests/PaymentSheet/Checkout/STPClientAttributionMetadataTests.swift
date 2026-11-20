@@ -62,7 +62,7 @@ class STPClientAttributionMetadataTests: XCTestCase {
 
     func testDefaultMetadataPreservesMobileElementsInBothEncoders() throws {
         AnalyticsHelper.shared.generateSessionID()
-        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 100, currency: "usd")) { _, _ in
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 100, currency: "usd", captureMethod: .automatic)) { _, _ in
             return ""
         })
         let metadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
