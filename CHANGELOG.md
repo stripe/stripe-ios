@@ -3,6 +3,7 @@ MINOR
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
+* [Changed] Klarna payments no longer ask for a country when billingDetailsCollectionConfiguration.address is .never.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
 * [Fixed] Fixed an issue where EmbeddedPaymentElement didn't show the approval screen for BLIK, MB WAY and Bizum payments.
 
