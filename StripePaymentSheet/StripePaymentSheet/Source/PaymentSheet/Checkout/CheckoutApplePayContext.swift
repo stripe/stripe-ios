@@ -296,6 +296,25 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             return
         }
         paymentMethodUpdateTask = Task { @MainActor in
+            if experiment.hasPrefix("realbad") {
+                let bad: CheckoutElementsController.Address = switch experiment {
+                case "realbad_zip": .init(country: address.country, line1: address.line1, city: address.city, state: address.state, postalCode: "00000")
+                case "realbad_state": .init(country: address.country, line1: address.line1, city: address.city, state: "ZZ", postalCode: address.postalCode)
+                default: .init(country: "ZZ", line1: address.line1, city: address.city, state: address.state, postalCode: address.postalCode)
+                }
+                defer { handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: self.summaryItems())) }
+                do {
+                    self.session = try await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(address: bad, canUpdateWhileSheetPresented: true, confirmationSource: attribution.confirmingElement)
+                    NSLog("APEXP %@: update SUCCEEDED total=%@", experiment, String(describing: self.summaryItems().last?.amount))
+                } catch {
+                    if case .apiError(_, let underlying) = error as? CheckoutError, case .apiError(let apiError)? = underlying as? StripeError {
+                        NSLog("APEXP %@: type=%@ code=%@ param=%@ message=%@", experiment, apiError.type.rawValue, apiError.code ?? "nil", apiError.param ?? "nil", apiError.message ?? "nil")
+                    } else {
+                        NSLog("APEXP %@: other error %@", experiment, String(describing: error))
+                    }
+                }
+                return
+            }
             if experiment.hasPrefix("retry") {
                 self.apexpSelectCount += 1
                 let n = self.apexpSelectCount
