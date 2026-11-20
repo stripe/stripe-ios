@@ -40,6 +40,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     }
 
     private var computedTotals: ComputedTotals!
+    private var customerID: String?
 
     // MARK: - Create an IntentConfiguration
     private var intentConfig: PaymentSheet.IntentConfiguration {
@@ -276,6 +277,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
                 configuration: configuration
             )
             embeddedPaymentElement.presentingViewController = self
+            self.customerID = customerId
             self.embeddedPaymentElement = embeddedPaymentElement
             self.paymentMethodButton.isEnabled = true
             self.hotDogStepper.isEnabled = true
@@ -314,7 +316,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
-            "customer_id": embeddedPaymentElement.configuration.customer?.id,
+            "customer_id": customerID,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])

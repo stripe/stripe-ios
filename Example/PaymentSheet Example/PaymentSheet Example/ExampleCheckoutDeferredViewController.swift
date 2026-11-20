@@ -35,6 +35,7 @@ class ExampleDeferredCheckoutViewController: UIViewController {
     }
 
     private var computedTotals: ComputedTotals!
+    private var customerID: String?
 
     private var currencyFormatter: NumberFormatter {
         let formatter = NumberFormatter()
@@ -237,6 +238,7 @@ class ExampleDeferredCheckoutViewController: UIViewController {
                     STPAPIClient.shared.publishableKey = publishableKey
 
                     // MARK: Update the configuration.customer details
+                    self.customerID = customerId
                     self.paymentSheetConfiguration.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                     [self.hotDogStepper, self.saladStepper, self.subscribeSwitch, self.buyButton].forEach { $0?.isEnabled = true }
                     self.updateLabels()
@@ -260,7 +262,7 @@ class ExampleDeferredCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
-            "customer_id": paymentSheetConfiguration.customer?.id,
+            "customer_id": customerID,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])

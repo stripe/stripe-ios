@@ -27,6 +27,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     @IBOutlet weak var subscribeSwitch: UISwitch!
 
     private var paymentSheetFlowController: PaymentSheet.FlowController!
+    private var customerID: String?
 
     private let backendCheckoutUrl = URL(string: baseUrl + "/checkout")!
     private let confirmIntentUrl = URL(string: baseUrl + "/confirm_intent")!
@@ -288,6 +289,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                         case .failure(let error):
                             print(error)
                         case .success(let paymentSheetFlowController):
+                            self?.customerID = customerId
                             self?.paymentSheetFlowController = paymentSheetFlowController
                             self?.paymentMethodButton.isEnabled = true
                             self?.hotDogStepper.isEnabled = true
@@ -317,7 +319,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
             "should_save_payment_method": shouldSavePaymentMethod,
             "return_url": "payments-example://stripe-redirect",
-            "customer_id": paymentSheetFlowController.configuration.customer?.id,
+            "customer_id": customerID,
         ]
 
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
