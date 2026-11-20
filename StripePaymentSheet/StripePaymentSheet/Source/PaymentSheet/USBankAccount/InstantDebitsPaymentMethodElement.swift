@@ -32,7 +32,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let linkedBankInfoView: BankAccountInfoView
     private var linkedBank: InstantDebitsLinkedBank? {
         didSet {
-            renderLinkedBank(linkedBank)
+            renderLinkedBank(linkedBank, animated: true)
         }
     }
     private let theme: ElementsAppearance
@@ -194,6 +194,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         sellerName: String?,
         isSettingUp: Bool,
         linkBrand: LinkBrand,
+        initialLinkedBank: InstantDebitsLinkedBank?,
         appearance: PaymentSheet.Appearance = .default
     ) {
         let theme = appearance.asElementsTheme
@@ -212,7 +213,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         self.phoneElement = phoneElement?.element
         self.addressElement = addressElement?.element
 
-        self.linkedBank = nil
+        self.linkedBank = initialLinkedBank
         self.linkedBankInfoSectionElement.view.isHidden = true
         self.incentive = incentive
         self.theme = theme
@@ -242,6 +243,9 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         )
         formElement.delegate = self
         linkedBankInfoView.delegate = self
+        // Show a bank restored from previous customer input without animating. The form isn't on screen yet, and
+        // animating lays out its detached, zero-size view, which breaks every field's constraints.
+        renderLinkedBank(initialLinkedBank, animated: false)
     }
 
     func setLinkedBank(_ linkedBank: InstantDebitsLinkedBank) {
@@ -249,7 +253,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         self.delegate?.didUpdate(element: self)
     }
 
-    fileprivate func renderLinkedBank(_ linkedBank: InstantDebitsLinkedBank?) {
+    fileprivate func renderLinkedBank(_ linkedBank: InstantDebitsLinkedBank?, animated: Bool) {
         if let linkedBank, let last4ofBankAccount = linkedBank.last4, let bankName = linkedBank.bankName {
             linkedBankInfoView.setBankName(text: bankName)
             linkedBankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
@@ -259,7 +263,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         formElement.toggleElements(
             linkedBankElements,
             hidden: linkedBank == nil,
-            animated: true
+            animated: animated
         )
 
         if let promoDisclaimerElement {
@@ -267,7 +271,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             formElement.toggleElements(
                 [promoDisclaimerElement],
                 hidden: hideDisclaimer,
-                animated: true
+                animated: animated
             )
         }
     }
