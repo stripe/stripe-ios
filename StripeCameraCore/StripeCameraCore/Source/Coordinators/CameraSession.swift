@@ -139,6 +139,9 @@ import AVKit
     private let sessionQueue = DispatchQueue(label: "com.stripe.camera-session")
     private var torchDevice: Torch?
     private var setupResult: SetupResult?
+    /// Whether the client wants the session running. Only access on `sessionQueue`.
+    private var shouldRun = false
+    private var runtimeErrorObserver: NSObjectProtocol?
 
     private var videoDeviceInput: AVCaptureDeviceInput? {
         didSet {
@@ -152,7 +155,28 @@ import AVKit
     // MARK: - Public
 
     public init() {
-        // This is needed to expose init publicly
+        // A media services reset stops the session, and it does not restart by
+        // itself. Interruptions need no handling here: AVCaptureSession restarts
+        // after an interruption ends.
+        runtimeErrorObserver = NotificationCenter.default.addObserver(
+            forName: AVCaptureSession.runtimeErrorNotification,
+            object: session,
+            queue: nil
+        ) { [weak self] notification in
+            guard (notification.userInfo?[AVCaptureSessionErrorKey] as? AVError)?.code == .mediaServicesWereReset else {
+                return
+            }
+            self?.sessionQueue.async { [weak self] in
+                guard let self, self.shouldRun else { return }
+                self.session.startRunning()
+            }
+        }
+    }
+
+    deinit {
+        if let runtimeErrorObserver {
+            NotificationCenter.default.removeObserver(runtimeErrorObserver)
+        }
     }
 
     /// Configures the camera session with the initial inputs and outputs.
@@ -291,6 +315,7 @@ import AVKit
                 return
             }
 
+            self.shouldRun = true
             self.session.startRunning()
         }
     }
@@ -313,6 +338,7 @@ import AVKit
                 return
             }
 
+            self.shouldRun = false
             self.session.stopRunning()
         }
     }
