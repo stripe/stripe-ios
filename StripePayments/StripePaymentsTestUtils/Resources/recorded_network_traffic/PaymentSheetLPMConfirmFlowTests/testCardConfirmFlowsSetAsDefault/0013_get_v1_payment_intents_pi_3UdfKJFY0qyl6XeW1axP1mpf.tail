@@ -1,23 +1,23 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3UVdfWFY0qyl6XeW1mgKk8YT\?client_secret=pi_3UVdfWFY0qyl6XeW1mgKk8YT_secret_mjXrhapGqOv4vDoIrSpqHCvCl$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3UdfKJFY0qyl6XeW1axP1mpf\?client_secret=pi_3UdfKJFY0qyl6XeW1axP1mpf_secret_uycunUlYPvHfqhmBiBvjSRd2G&expand%5B0%5D=payment_method$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ltJXnVzPL1xBnVOoXZWjEcRF_3AhqnKmWJzXCxzxAHnS5AeS7pvlJl4TTrtcvjAQQqhaH52VpsD_VKrz; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2c1O1pnRJ7b9T2UV-H3OTVsAkesx6BYc7F2jYF0FJ-lQt2Y0FciywPnUr9tzFyVL8PlvZMtWgHBPCRf4; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=ltJXnVzPL1xBnVOoXZWjEcRF_3AhqnKmWJzXCxzxAHnS5AeS7pvlJl4TTrtcvjAQQqhaH52VpsD_VKrz&t=1"
-stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=2c1O1pnRJ7b9T2UV-H3OTVsAkesx6BYc7F2jYF0FJ-lQt2Y0FciywPnUr9tzFyVL8PlvZMtWgHBPCRf4&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=ltJXnVzPL1xBnVOoXZWjEcRF_3AhqnKmWJzXCxzxAHnS5AeS7pvlJl4TTrtcvjAQQqhaH52VpsD_VKrz&t=1"}],"include_subdomains":true}
-request-id: req_EdKkxAXTBMY2U4
-Content-Length: 1003
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=2c1O1pnRJ7b9T2UV-H3OTVsAkesx6BYc7F2jYF0FJ-lQt2Y0FciywPnUr9tzFyVL8PlvZMtWgHBPCRf4&t=1"}],"include_subdomains":true}
+request-id: req_hR0NYvWKlUgCBE
+Content-Length: 994
 Vary: Origin
-Date: Wed, 28 Oct 2026 20:41:59 GMT
+Date: Fri, 20 Nov 2026 00:05:15 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -46,8 +46,8 @@ Content-Type: application/json
     "amount_tax" : 0
   },
   "payment_method" : null,
-  "client_secret" : "pi_3UVdfWFY0qyl6XeW1mgKk8YT_secret_mjXrhapGqOv4vDoIrSpqHCvCl",
-  "id" : "pi_3UVdfWFY0qyl6XeW1mgKk8YT",
+  "client_secret" : "pi_3UdfKJFY0qyl6XeW1axP1mpf_secret_uycunUlYPvHfqhmBiBvjSRd2G",
+  "id" : "pi_3UdfKJFY0qyl6XeW1axP1mpf",
   "allowed_payment_method_types" : null,
   "confirmation_method" : "automatic",
   "amount_details" : {
@@ -61,7 +61,7 @@ Content-Type: application/json
   "payment_method_types" : [
     "card"
   ],
-  "setup_future_usage" : "off_session",
-  "created" : 1793220118,
+  "setup_future_usage" : null,
+  "created" : 1795133115,
   "description" : null
 }

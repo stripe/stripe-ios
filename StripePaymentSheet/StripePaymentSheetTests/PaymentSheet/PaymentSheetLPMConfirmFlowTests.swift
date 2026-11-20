@@ -945,6 +945,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             paymentMethodType: .card,
             merchantCountry: merchantCountry,
             configuration: configuration,
+            customerID: customerAndCustomerSession.customer,
             allowsSetAsDefaultPM: true
         ) { form in
             form.getCardSection().panElement.setText("4242424242424242")
@@ -1280,6 +1281,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         paymentMethodType: STPPaymentMethodType,
         merchantCountry: MerchantCountry = .US,
         configuration: PaymentSheet.Configuration? = nil,
+        customerID: String? = nil,
         defaultCountry: String = "US",
         allowsSetAsDefaultPM: Bool = false,
         expectedHierarchy: FormHierarchyNode? = nil,
@@ -1293,6 +1295,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 paymentMethodType: paymentMethodType,
                 merchantCountry: merchantCountry,
                 configuration: configuration,
+                customerID: customerID,
                 defaultCountry: defaultCountry,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 expectedHierarchy: expectedHierarchy,
@@ -1319,6 +1322,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         paymentMethodType: STPPaymentMethodType,
         merchantCountry: MerchantCountry = .US,
         configuration: PaymentSheet.Configuration? = nil,
+        customerID: String? = nil,
         defaultCountry: String,
         allowsSetAsDefaultPM: Bool = false,
         expectedHierarchy: FormHierarchyNode? = nil,
@@ -1346,7 +1350,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         }()
         configuration.apiClient = apiClient
 
-        let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, amount: amount, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, customer: configuration.customer?.resolvedID(elementsSession: nil), apiClient: apiClient)
+        let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, amount: amount, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, customer: customerID ?? configuration.customer?.resolvedID(elementsSession: nil), apiClient: apiClient)
 
         // Check that the form respects billingDetailsCollection
         verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)

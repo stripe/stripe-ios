@@ -1,23 +1,23 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1UVdfoFY0qyl6XeW7XscxKQC\?client_secret=seti_1UVdfoFY0qyl6XeW7XscxKQC_secret_VWh3FHwd63SC3C2zilAyb2yEBWEflvK&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1UdfKTFY0qyl6XeWLhhdh2p1\?client_secret=seti_1UdfKTFY0qyl6XeWLhhdh2p1_secret_VezJ1ujlOM7JOa8BiIz8vIZ9KnEJS0J&expand%5B0%5D=payment_method$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=b4MXI8Sa6IElArqFNJ9u9yTrofKmO56F_WZMqNaGqSZ9UXlhyGjknRf7efNk6zrgtkHMrGFRYrCbLbo2; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=3BvDbNyaGRZIQPtqpJa0WYB7JRy3Zd2pN_2PIUMwvbfWbKMdU-mGlYIIEttiXF32pceARplWNEoBAChu; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=b4MXI8Sa6IElArqFNJ9u9yTrofKmO56F_WZMqNaGqSZ9UXlhyGjknRf7efNk6zrgtkHMrGFRYrCbLbo2&t=1"
-stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-09-30.endive. See https://docs.stripe.com/upgrades
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=3BvDbNyaGRZIQPtqpJa0WYB7JRy3Zd2pN_2PIUMwvbfWbKMdU-mGlYIIEttiXF32pceARplWNEoBAChu&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=b4MXI8Sa6IElArqFNJ9u9yTrofKmO56F_WZMqNaGqSZ9UXlhyGjknRf7efNk6zrgtkHMrGFRYrCbLbo2&t=1"}],"include_subdomains":true}
-request-id: req_r8UHm5BdkEbSbj
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=3BvDbNyaGRZIQPtqpJa0WYB7JRy3Zd2pN_2PIUMwvbfWbKMdU-mGlYIIEttiXF32pceARplWNEoBAChu&t=1"}],"include_subdomains":true}
+request-id: req_8SW5waXionBTPd
 Content-Length: 1771
 Vary: Origin
-Date: Wed, 28 Oct 2026 20:42:17 GMT
+Date: Fri, 20 Nov 2026 00:05:26 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -25,14 +25,14 @@ access-control-allow-credentials: true
 Content-Type: application/json
 
 {
-  "id" : "seti_1UVdfoFY0qyl6XeW7XscxKQC",
+  "id" : "seti_1UdfKTFY0qyl6XeWLhhdh2p1",
   "description" : null,
   "excluded_payment_method_types" : null,
   "next_action" : null,
   "livemode" : false,
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1UVdfoFY0qyl6XeWdsOdHB2r",
+    "id" : "pm_1UdfKTFY0qyl6XeWdxfocmwG",
     "billing_details" : {
       "email" : null,
       "phone" : null,
@@ -74,10 +74,10 @@ Content-Type: application/json
       "country" : "US"
     },
     "livemode" : false,
-    "created" : 1793220136,
+    "created" : 1795133125,
     "allow_redisplay" : "unspecified",
     "shared_payment_granted_token" : null,
-    "customer" : "cus_VWh3175rXKzkGo",
+    "customer" : "cus_VezIwzqwj6pR5k",
     "type" : "card",
     "customer_account" : null
   },
@@ -89,8 +89,8 @@ Content-Type: application/json
   ],
   "object" : "setup_intent",
   "last_setup_error" : null,
-  "created" : 1793220136,
-  "client_secret" : "seti_1UVdfoFY0qyl6XeW7XscxKQC_secret_VWh3FHwd63SC3C2zilAyb2yEBWEflvK",
+  "created" : 1795133125,
+  "client_secret" : "seti_1UdfKTFY0qyl6XeWLhhdh2p1_secret_VezJ1ujlOM7JOa8BiIz8vIZ9KnEJS0J",
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
   "status" : "succeeded"
