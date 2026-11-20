@@ -86,9 +86,11 @@ final class PayWithLinkViewController: NSObject {
 
     @MainActor
     final class Context {
+
         let intent: Intent
         let elementsSession: STPElementsSession
         let configuration: PaymentElementConfiguration
+        let customerProvider: CustomerProvider
         var linkBrand: LinkBrand
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
@@ -137,6 +139,7 @@ final class PayWithLinkViewController: NSObject {
         ///   - intent: Intent.
         ///   - elementsSession: elements/session response.
         ///   - configuration: PaymentSheet configuration.
+        ///   - customerProvider: The customer resolved for this load.
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
         ///   - canContinueWithoutLink: Whether the user can exit Link and pay with a different method (e.g. via PaymentSheet).
@@ -151,6 +154,7 @@ final class PayWithLinkViewController: NSObject {
             intent: Intent,
             elementsSession: STPElementsSession,
             configuration: PaymentElementConfiguration,
+            customerProvider: CustomerProvider,
             linkBrand: LinkBrand,
             shouldOfferApplePay: Bool,
             shouldFinishOnClose: Bool,
@@ -166,6 +170,7 @@ final class PayWithLinkViewController: NSObject {
             self.intent = intent
             self.elementsSession = elementsSession
             self.configuration = configuration
+            self.customerProvider = customerProvider
             self.linkBrand = linkBrand
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
@@ -207,6 +212,7 @@ final class PayWithLinkViewController: NSObject {
         linkAccount: PaymentSheetLinkAccount?,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         nativeSheetPresentation: SheetImplementationResolver? = nil,
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false,
@@ -226,6 +232,7 @@ final class PayWithLinkViewController: NSObject {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,

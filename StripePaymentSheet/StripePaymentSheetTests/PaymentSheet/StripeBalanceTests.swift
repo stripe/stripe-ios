@@ -267,7 +267,7 @@ final class StripeBalanceTests: XCTestCase {
         let form = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.stripeBalance]),
             elementsSession: makeElementsSessionWithCustomerSession(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.stripeBalance),
             paymentMethodOrientation: .vertical,
             accountService: LinkAccountService._testValue(),
