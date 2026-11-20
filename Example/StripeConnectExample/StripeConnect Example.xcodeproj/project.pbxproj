@@ -16,6 +16,8 @@
 		E62B3CD82C99EA020098B607 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E62B3CD62C99EA020098B607 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E640C9D92CC1970F009D0C6E /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E640C9D82CC1970F009D0C6E /* StripeFinancialConnections.framework */; };
 		E640C9DA2CC1970F009D0C6E /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E640C9D82CC1970F009D0C6E /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AB2EEE3450CB58BA17903B7B /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F65270FBE11051664B083AC /* TestBackends.swift */; };
+		85E5A465470C06291A0BC9B2 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F65270FBE11051664B083AC /* TestBackends.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,7 @@
 		416E9EC72C76BDFE00A0B917 /* StripeConnect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeConnect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E62B3CD62C99EA020098B607 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E640C9D82CC1970F009D0C6E /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F65270FBE11051664B083AC /* TestBackends.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestBackends.swift; path = ../Shared/TestBackends.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -114,6 +117,7 @@
 		416E9E8A2C76BD4400A0B917 = {
 			isa = PBXGroup;
 			children = (
+				5F65270FBE11051664B083AC /* TestBackends.swift */,
 				31C5F82F2EB2ADA9005770FA /* Resources */,
 				413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */,
 				31C5F8072EB2ADA5005770FA /* StripeConnectExample */,
@@ -250,6 +254,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB2EEE3450CB58BA17903B7B /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85E5A465470C06291A0BC9B2 /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

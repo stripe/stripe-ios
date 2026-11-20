@@ -40,6 +40,7 @@ class PaymentSheetUITestCase: XCTestCase {
             "FinancialConnectionsSDKAvailable": "true",
             "FinancialConnectionsStubbedResult": "false",
         ]
+        app.launchEnvironment.merge(TestBackend.launchEnvironment) { _, new in new }
     }
 }
 

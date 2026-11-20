@@ -57,7 +57,7 @@ struct ExampleSwiftUICustomerSheet: View {
 
 class MyBackendCustomerSheetModel: ObservableObject {
     // An example backend endpoint
-    let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com")!
+    let backendCheckoutUrl = TestBackend.playground.url
 
     @Published var customerSheet: CustomerSheet?
     @Published var customerSheetStatusViewModel: CustomerSheetStatusViewModel?

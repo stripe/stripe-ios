@@ -108,7 +108,7 @@ enum CheckoutPlayground {
         var endpoint: String? {
             switch self {
             case .hosted:
-                return "https://stp-mobile-playground-backend-v7.stripedemos.com"
+                return TestBackend.playground.baseURL
             case .localhost:
                 return "http://127.0.0.1:8081"
             case .manual:

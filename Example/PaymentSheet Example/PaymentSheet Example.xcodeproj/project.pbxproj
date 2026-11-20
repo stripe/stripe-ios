@@ -47,6 +47,10 @@
 		F74B1A181019E2C5F2EF884F /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E565B552830E657F863C4F8 /* StripePayments.framework */; };
 		3AA7017E58431972ACB322B4 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */; };
 		A525F02743D4836922125866 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9C96D25ED549D6255FC274 /* StripeUICore.framework */; };
+		FB087D06021B7F39220536C5 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71934F3A295C6BA9B401884A /* TestBackends.swift */; };
+		00B5A683B017CB586E7D50A8 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71934F3A295C6BA9B401884A /* TestBackends.swift */; };
+		30D5E4B12E9854C4358A652C /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71934F3A295C6BA9B401884A /* TestBackends.swift */; };
+		FC8586A378835AE4DE98DC87 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71934F3A295C6BA9B401884A /* TestBackends.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -159,6 +163,7 @@
 		EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheet-Example-Debug.xcconfig"; sourceTree = "<group>"; };
 		D5CEADB172292F9558E181C0 /* PaymentSheetExampleNoGlass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaymentSheetExampleNoGlass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23D2D818483A33558DAF37B0 /* Info-LiquidGlassOptOut.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-LiquidGlassOptOut.plist"; sourceTree = "<group>"; };
+		71934F3A295C6BA9B401884A /* TestBackends.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestBackends.swift; path = ../Shared/TestBackends.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -322,6 +327,7 @@
 		C9D5B927CC2F83061D0651E5 = {
 			isa = PBXGroup;
 			children = (
+				71934F3A295C6BA9B401884A /* TestBackends.swift */,
 				B69C155A2B9FDCBD009CE667 /* PaymentSheet Example.entitlements */,
 				ACF2A07E6D470CDF889DE14C /* Project */,
 				66001906438D4343D9E72825 /* Frameworks */,
@@ -536,6 +542,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC8586A378835AE4DE98DC87 /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -543,6 +550,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30D5E4B12E9854C4358A652C /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,6 +558,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB087D06021B7F39220536C5 /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,6 +566,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00B5A683B017CB586E7D50A8 /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

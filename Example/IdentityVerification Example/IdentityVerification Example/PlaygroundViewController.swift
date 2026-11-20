@@ -13,7 +13,7 @@ class PlaygroundViewController: UIViewController {
 
     // Constants
     // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
-    let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
+    let baseURL = TestBackend.identityPlayground.baseURL
     let verifyEndpoint = "/verification-sessions"
     let testVerifyEndpoint = "/test/verification-sessions"
     let reuseEndpoint = "/reuse-verification-session"

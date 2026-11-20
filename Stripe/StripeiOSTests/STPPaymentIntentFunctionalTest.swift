@@ -1672,7 +1672,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         options: STPConfirmKlarnaOptions
     ) async throws -> STPPaymentIntent {
         let playgroundCheckoutURL = try XCTUnwrap(
-            URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")
+            URL(string: STPTestingAPIClient.STPTestingPlaygroundBackendURL + "checkout")
         )
         var request = URLRequest(url: playgroundCheckoutURL)
         request.httpMethod = "POST"
@@ -1686,6 +1686,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             "supported_payment_methods": ["klarna"],
         ])
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        STPTestingAPIClient.addTestBackendsHeaders(to: &request)
 
         let session = URLSession(configuration: STPTestingAPIClient.shared.sessionConfig)
         let (data, response) = try await session.data(for: request)

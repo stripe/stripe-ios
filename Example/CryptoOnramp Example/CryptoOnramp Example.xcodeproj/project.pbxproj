@@ -35,6 +35,8 @@
 		0BA5FE472E32AD5100D44BFE /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE452E32AD5100D44BFE /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1A3D03AA10B605C9447FF7E4 /* StripeFinancialConnectionsLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B4BB65B07DA65BA163B12B /* StripeFinancialConnectionsLite.framework */; };
 		FF6447D9710B3FB24940E05B /* StripeFinancialConnectionsLite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40B4BB65B07DA65BA163B12B /* StripeFinancialConnectionsLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B97265DCDC0E1AE174F975B8 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAD02A499BE869A73AB3DFC /* TestBackends.swift */; };
+		2F0E87E0CAD3308024D200A4 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAD02A499BE869A73AB3DFC /* TestBackends.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +94,7 @@
 		0BD66FCB2EDE0E800044DB52 /* CryptoOnrampExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CryptoOnrampExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		40B4BB65B07DA65BA163B12B /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7AC31AE49804BBF9B53AF96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8CAD02A499BE869A73AB3DFC /* TestBackends.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestBackends.swift; path = ../Shared/TestBackends.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -134,6 +137,7 @@
 		0BA5FE292E32A11600D44BFE = {
 			isa = PBXGroup;
 			children = (
+				8CAD02A499BE869A73AB3DFC /* TestBackends.swift */,
 				E7AC31AE49804BBF9B53AF96 /* Info.plist */,
 				0BA5FE342E32A11600D44BFE /* CryptoOnramp Example */,
 				0BD66FCC2EDE0E800044DB52 /* CryptoOnrampExampleUITests */,
@@ -282,6 +286,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B97265DCDC0E1AE174F975B8 /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F0E87E0CAD3308024D200A4 /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,6 +17,8 @@
 		D9F9006AAA76C41F44315600 /* AppClipExampleClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 8FDB2A87374049BA75496715 /* AppClipExampleClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E1F51EB51C34EDDF0CE0F005 /* AppClip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73241689160B1EC3894FDD6 /* AppClip.framework */; };
 		E31EBD365B001C9C59401F55 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A4C7B955C33DE75C85832A /* StripeApplePay.framework */; };
+		2093C9209DC8524A31403D8B /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4976E82E6D8462FAFDEDC7CC /* TestBackends.swift */; };
+		5C60A9B47EA3248FE415AB0E /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4976E82E6D8462FAFDEDC7CC /* TestBackends.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +143,7 @@
 		DD91FC958226D99379B2DEFB /* AppClipExample-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExample-Debug.xcconfig"; sourceTree = "<group>"; };
 		E8886339F9F82BE463762B03 /* AppClipExample-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExample-Release.xcconfig"; sourceTree = "<group>"; };
 		F22AD92C29237B736ECC75B3 /* AppClipExampleClip-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "AppClipExampleClip-Release.xcconfig"; sourceTree = "<group>"; };
+		4976E82E6D8462FAFDEDC7CC /* TestBackends.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestBackends.swift; path = ../Shared/TestBackends.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -208,6 +211,7 @@
 		147102A5DFEB955422AA2EE6 = {
 			isa = PBXGroup;
 			children = (
+				4976E82E6D8462FAFDEDC7CC /* TestBackends.swift */,
 				4B185B1F44EE5F4D5BC5EFD5 /* Project */,
 				A39ABB2C7FB01B17AA563E7C /* Frameworks */,
 				B6570EB574B6F847FEABCEB7 /* Products */,
@@ -481,6 +485,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C60A9B47EA3248FE415AB0E /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2093C9209DC8524A31403D8B /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,7 +15,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     @IBOutlet weak var paymentMethodImage: UIImageView!
     @IBOutlet weak var deferredSwitch: UISwitch!
     var instantBankPaymentsController: InstantBankPaymentsController!
-    static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
+    static let baseEndpoint = TestBackend.playground.baseURL
     var backendCheckoutUrl: String {
         "\(ExampleLinkPaymentCheckoutViewController.baseEndpoint)/checkout"
     }

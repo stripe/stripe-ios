@@ -9,11 +9,52 @@
 #import "STPTestingAPIClient.h"
 @import StripeCore;
 
-static NSString * const STPTestingBackendURL = @"https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/";
+static NSString * const STPTestingHostedBackendURL = @"https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/";
+
+static BOOL STPUsesHostedTestBackends = NO;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation STPTestingAPIClient
+
++ (nullable NSString *)testBackendsURL {
+    if (STPUsesHostedTestBackends) {
+        return nil;
+    }
+    NSString *url = NSProcessInfo.processInfo.environment[@"STRIPE_TEST_BACKENDS_URL"];
+    if (url.length == 0) {
+        return nil;
+    }
+    return [url hasSuffix:@"/"] ? url : [url stringByAppendingString:@"/"];
+}
+
++ (NSDictionary<NSString *, NSString *> *)testBackendsHeaders {
+    NSString *token = NSProcessInfo.processInfo.environment[@"STRIPE_TEST_BACKENDS_TOKEN"];
+    if (self.testBackendsURL == nil || token.length == 0) {
+        return @{};
+    }
+    return @{@"X-Test-Backends-Token": token};
+}
+
++ (BOOL)usesHostedTestBackends {
+    return STPUsesHostedTestBackends;
+}
+
++ (void)setUsesHostedTestBackends:(BOOL)usesHostedTestBackends {
+    STPUsesHostedTestBackends = usesHostedTestBackends;
+}
+
++ (NSString *)testBackendURLWithPrefix:(NSString *)prefix hostedURL:(NSString *)hostedURL {
+    NSString *root = self.testBackendsURL;
+    if (root == nil) {
+        return hostedURL;
+    }
+    return [NSString stringWithFormat:@"%@%@/", root, prefix];
+}
+
++ (NSString *)backendURL {
+    return [self testBackendURLWithPrefix:@"ci-test-backend" hostedURL:STPTestingHostedBackendURL];
+}
 
 + (instancetype)sharedClient {
     static dispatch_once_t onceToken;
@@ -52,11 +93,14 @@ NS_ASSUME_NONNULL_BEGIN
                            apiVersion:(nullable NSString *)apiVersion
                            completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion {
     NSURLSession *session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
-    NSURL *url = [NSURL URLWithString:[STPTestingBackendURL stringByAppendingString:@"create_payment_intent"]];
+    NSURL *url = [NSURL URLWithString:[[STPTestingAPIClient backendURL] stringByAppendingString:@"create_payment_intent"]];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [STPTestingAPIClient.testBackendsHeaders enumerateKeysAndObjectsUsingBlock:^(NSString *field, NSString *value, __unused BOOL *stop) {
+        [request setValue:value forHTTPHeaderField:field];
+    }];
 
     NSData *postData = [NSJSONSerialization dataWithJSONObject:@{@"account" : account ?: @"",
                                                                  @"create_params": params ?: @{},
@@ -122,11 +166,14 @@ NS_ASSUME_NONNULL_BEGIN
                          apiVersion:(nullable NSString *)apiVersion
                          completion:(void (^)(NSString *_Nullable, NSError * _Nullable))completion {
     NSURLSession *session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
-    NSURL *url = [NSURL URLWithString:[STPTestingBackendURL stringByAppendingString:@"create_setup_intent"]];
+    NSURL *url = [NSURL URLWithString:[[STPTestingAPIClient backendURL] stringByAppendingString:@"create_setup_intent"]];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [STPTestingAPIClient.testBackendsHeaders enumerateKeysAndObjectsUsingBlock:^(NSString *field, NSString *value, __unused BOOL *stop) {
+        [request setValue:value forHTTPHeaderField:field];
+    }];
 
     NSData *postData = [NSJSONSerialization dataWithJSONObject:@{@"account" : account ?: @"",
                                                                  @"create_params": params ?: @{},

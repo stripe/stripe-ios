@@ -45,6 +45,10 @@ import XCTest
             return
         }
 
+        // Recordings name the hosted backends, so record and play back with them even when
+        // STRIPE_TEST_BACKENDS_URL names the unified test backends.
+        STPTestingAPIClient.usesHostedTestBackends = true
+
         // Set some default FraudDetectionData
         FraudDetectionData.shared.sid = "00000000-0000-0000-0000-000000000000"
         FraudDetectionData.shared.muid = "00000000-0000-0000-0000-000000000000"
@@ -198,6 +202,7 @@ import XCTest
 
     open override func tearDown() {
         super.tearDown()
+        STPTestingAPIClient.usesHostedTestBackends = false
 
         if disableMocking {
             // No teardown needed

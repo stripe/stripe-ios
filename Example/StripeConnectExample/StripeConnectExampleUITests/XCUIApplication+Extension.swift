@@ -11,7 +11,8 @@ import XCTest
 // General
 extension XCUIApplication {
     static func sc_launch(account: String? = nil) -> XCUIApplication {
-        let launchEnvironment: [String: String] = [StripeConnectExampleAppKeys.initialAccountEnvironmentKey: account ?? "acct_1N9FIXQ26HdRlxHg"]
+        var launchEnvironment: [String: String] = [StripeConnectExampleAppKeys.initialAccountEnvironmentKey: account ?? "acct_1N9FIXQ26HdRlxHg"]
+        launchEnvironment.merge(TestBackend.launchEnvironment) { _, new in new }
 
         let app = XCUIApplication()
         app.launchEnvironment = launchEnvironment

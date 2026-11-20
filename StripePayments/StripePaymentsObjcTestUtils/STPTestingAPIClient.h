@@ -75,6 +75,32 @@ static NSString * const STPTestingPaymentsOrchestrationPublishableKey = @"pk_tes
 
 + (instancetype)sharedClient;
 
+/**
+ The root URL of the unified test backends (oss-android-sdk's ci/test-backends), from the
+ STRIPE_TEST_BACKENDS_URL environment variable, with a trailing slash; nil when it's unset, and while
+ `usesHostedTestBackends` is set. Bitrise sets it, as TEST_RUNNER_STRIPE_TEST_BACKENDS_URL, so that
+ xcodebuild passes it on to the tests. Each backend answers under its own prefix: `<root>ci-test-backend/`.
+ */
+@property (class, nonatomic, nullable, readonly) NSString *testBackendsURL;
+
+/**
+ The headers that requests to `testBackendsURL` carry: X-Test-Backends-Token, from the optional
+ STRIPE_TEST_BACKENDS_TOKEN environment variable. Empty when either variable is unset.
+ */
+@property (class, nonatomic, readonly) NSDictionary<NSString *, NSString *> *testBackendsHeaders;
+
+/**
+ Set while STPNetworkStubbingTestCase records or plays back network traffic, whose recordings
+ name the hosted backends' URLs.
+ */
+@property (class, nonatomic) BOOL usesHostedTestBackends;
+
+/**
+ `<testBackendsURL><prefix>/`, or `hostedURL` when `testBackendsURL` is nil. `hostedURL` ends in a slash.
+ */
++ (NSString *)testBackendURLWithPrefix:(NSString *)prefix
+                             hostedURL:(NSString *)hostedURL NS_SWIFT_NAME(testBackendURL(prefix:hostedURL:));
+
 // Set this to the Stripe SDK session for SWHTTPRecorder recording to work correctly
 @property (nonatomic, readwrite) NSURLSessionConfiguration *sessionConfig;
 

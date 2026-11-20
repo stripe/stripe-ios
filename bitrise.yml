@@ -723,6 +723,22 @@ workflows:
     - prep_source
     steps:
     - restore-spm-cache@2.1: {}
+    - script@1:
+        title: Pass the test backends to the tests
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # STRIPE_TEST_BACKENDS_URL (an app env var) and the STRIPE_TEST_BACKENDS_TOKEN secret point
+            # the tests and example apps at the unified test backends instead of the hosted
+            # stripedemos.com ones. xcodebuild passes TEST_RUNNER_<name> on to the tests as <name>, and
+            # UI tests hand both to the app in launchEnvironment. Unset, nothing changes.
+            set -euo pipefail
+            if [ -n "${STRIPE_TEST_BACKENDS_URL:-}" ]; then
+              envman add --key TEST_RUNNER_STRIPE_TEST_BACKENDS_URL --value "$STRIPE_TEST_BACKENDS_URL"
+            fi
+            if [ -n "${STRIPE_TEST_BACKENDS_TOKEN:-}" ]; then
+              envman add --key TEST_RUNNER_STRIPE_TEST_BACKENDS_TOKEN --value "$STRIPE_TEST_BACKENDS_TOKEN" --sensitive
+            fi
   prep_simulator:
     steps:
     - xcode-start-simulator@0:

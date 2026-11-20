@@ -7,6 +7,7 @@
 //
 
 import Stripe
+import StripePaymentsTestUtils
 import XCTest
 
 class STPE2ETest: XCTestCase {
@@ -19,9 +20,9 @@ class STPE2ETest: XCTestCase {
     }
 
     class E2EBackend {
-        static let backendAPIURL = URL(
-            string: "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/e2e"
-        )!
+        static var backendAPIURL: URL {
+            URL(string: STPTestingAPIClient.STPTestingBackendURL + "e2e")!
+        }
 
         func createPaymentIntent(
             completion: @escaping (STPPaymentIntentConfirmParams, E2EExpectation) -> Void
@@ -72,6 +73,7 @@ class STPE2ETest: XCTestCase {
             url.queryItems = queryItems
             var request = URLRequest(url: url.url!)
             request.httpMethod = method
+            STPTestingAPIClient.addTestBackendsHeaders(to: &request)
             let task = URLSession.shared.dataTask(
                 with: request,
                 completionHandler: { (data, _, error) in

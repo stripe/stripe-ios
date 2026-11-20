@@ -11,7 +11,7 @@ import StripeApplePay
 class BackendModel {
     // You can replace this with your own backend URL.
     // If you want to edit our backend, visit https://codesandbox.io/p/devbox/3c3ymr, login, and fork.
-    static let backendAPIURL = URL(string: "https://stp-integration-tester-v3.stripedemos.com/")!
+    static let backendAPIURL = TestBackend.integrationTester.url
 
     static let returnURL = "stp-integration-tester://stripe-redirect"
 
@@ -51,7 +51,7 @@ class BackendModel {
           guard let unwrappedData = data,
                 let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String: Any] else {
             if let data = data {
-                print("\(String(decoding: data, as: UTF8.self))")
+                print(String(bytes: data, encoding: .utf8) ?? "")
             } else {
                 print("\(error ?? NSError())")  // swiftlint:disable:this discouraged_direct_init
             }

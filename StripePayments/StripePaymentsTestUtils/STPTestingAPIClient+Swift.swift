@@ -9,8 +9,12 @@ import Foundation
 @_exported import StripePaymentsObjcTestUtils
 
 extension STPTestingAPIClient {
-    static let STPTestingBackendURL = "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/"
-    static let STPTestingPlaygroundBackendURL = "https://stp-mobile-playground-backend-v7.stripedemos.com/"
+    public static var STPTestingBackendURL: String {
+        testBackendURL(prefix: "ci-test-backend", hostedURL: "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/")
+    }
+    public static var STPTestingPlaygroundBackendURL: String {
+        testBackendURL(prefix: "playground", hostedURL: "https://stp-mobile-playground-backend-v7.stripedemos.com/")
+    }
     static let checkoutMobileElementsAPISettings = "2026-08-26.preview"
     public static var shared: STPTestingAPIClient {
         return .shared()
@@ -356,6 +360,13 @@ extension STPTestingAPIClient {
 
     // MARK: - Helpers
 
+    /// Adds `testBackendsHeaders`, the test backends' token, to a request for one of the backends.
+    public static func addTestBackendsHeaders(to request: inout URLRequest) {
+        for (field, value) in testBackendsHeaders {
+            request.setValue(value, forHTTPHeaderField: field)
+        }
+    }
+
     fileprivate func makeRequest<ResponseType: Decodable>(
         endpoint: String,
         params: [String: Any?]
@@ -365,6 +376,7 @@ extension STPTestingAPIClient {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        Self.addTestBackendsHeaders(to: &request)
         request.httpBody = try! JSONSerialization.data(withJSONObject: params)
         let (data, _) = try await session.data(for: request)
         let jsonDecoder = JSONDecoder()
@@ -421,6 +433,7 @@ extension STPTestingAPIClient {
         let url = URL(string: Self.STPTestingPlaygroundBackendURL + endpoint)!
         var request = URLRequest(url: url)
         request.httpMethod = method
+        Self.addTestBackendsHeaders(to: &request)
         if let params {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = try JSONSerialization.data(withJSONObject: params)
