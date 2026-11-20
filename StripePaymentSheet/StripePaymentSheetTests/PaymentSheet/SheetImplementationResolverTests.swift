@@ -74,7 +74,7 @@ final class SheetImplementationResolverTests: XCTestCase {
 
         // When complete PaymentSheet reuses its configuration
         let paymentSheet = PaymentSheet(
-            intentConfiguration: .init(mode: .payment(amount: 1000, currency: "usd")) { _, _ in "" },
+            intentConfiguration: .init(mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic)) { _, _ in "" },
             configuration: flowController.configuration
         )
 
@@ -124,7 +124,7 @@ final class SheetImplementationResolverTests: XCTestCase {
             // Given a complete PaymentSheet whose container was created with the playground override
             PaymentSheet.NativeSheetFeatureFlags.nativeSheetEnabledOverride = override
             let paymentSheet = PaymentSheet(
-                intentConfiguration: .init(mode: .payment(amount: 1000, currency: "usd")) { _, _ in "" },
+                intentConfiguration: .init(mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic)) { _, _ in "" },
                 configuration: .init()
             )
             let paymentSheetUsesNativeSheet = paymentSheet.bottomSheetViewController is NativeSheetContainerViewController
@@ -146,6 +146,7 @@ final class SheetImplementationResolverTests: XCTestCase {
                 from: presenter,
                 intent: loadResult.intent,
                 elementsSession: loadResult.elementsSession,
+                customerProvider: loadResult.customerProvider,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false
             )
@@ -177,6 +178,7 @@ final class SheetImplementationResolverTests: XCTestCase {
                 mode: .payment,
                 elementsSession: loadResult.elementsSession,
                 intent: loadResult.intent,
+                customerProvider: loadResult.customerProvider,
                 paymentElementConfiguration: PaymentSheet.Configuration(),
                 linkBrand: .link,
                 appearance: nil,
@@ -238,7 +240,7 @@ final class SheetImplementationResolverTests: XCTestCase {
     }
 
     private func makeLoadResult(flag: Bool?) -> PaymentSheetLoader.LoadResult {
-        let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd")) { _, _ in "" }
+        let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic)) { _, _ in "" }
         return .init(
             intent: .deferredIntent(intentConfig: intentConfiguration),
             elementsSession: makeSession(flag: flag),

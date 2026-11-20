@@ -50,7 +50,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             allResponseFields: [:]
         )
         let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
         let analyticsHelper = PaymentSheetAnalyticsHelper(
@@ -87,7 +87,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
 
     func testInit_noAssignment_returnsNil() {
         let elementsSession = STPElementsSession._testValue(experimentsData: nil)
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
         let helper = PaymentMethodMessagingPromotionsHelper(
@@ -113,7 +113,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             allResponseFields: [:]
         )
         let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
         let analyticsHelper = PaymentSheetAnalyticsHelper(
@@ -155,7 +155,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             allResponseFields: [:]
         )
         let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
         let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
@@ -198,7 +198,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             allResponseFields: [:]
         )
         let elementsSession = STPElementsSession._testValue(countryCode: "PR", experimentsData: experimentsData)
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
         let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
@@ -232,7 +232,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             allResponseFields: [:]
         )
         let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
         let analyticsHelper = PaymentSheetAnalyticsHelper(
@@ -264,7 +264,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             allResponseFields: [:]
         )
         let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
         let analyticsHelper = PaymentSheetAnalyticsHelper(
@@ -296,7 +296,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             allResponseFields: [:]
         )
         let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
         let analyticsHelper = PaymentSheetAnalyticsHelper(
@@ -332,7 +332,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             allResponseFields: [:]
         )
         let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
         let analyticsHelper = PaymentSheetAnalyticsHelper(
@@ -367,7 +367,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             allResponseFields: [:]
         )
         let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
         let analyticsHelper = PaymentSheetAnalyticsHelper(

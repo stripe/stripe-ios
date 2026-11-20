@@ -139,6 +139,7 @@ public final class CheckoutElementsController: ObservableObject {
             // 4. The session is now finalized - do post-session-change stuff
             let handleSessionChangeResult = CheckoutElementsControllerLoader.handleSessionChange(checkout: self)
             confirmationChallenge = handleSessionChangeResult.confirmationChallenge
+            CheckoutElementsControllerLoader.logStripeBalanceUnsupportedIfNeeded(checkout: self)
 
             // 5. Resolve Link before constructing payment elements, reusing the prepared PE configuration.
             await CheckoutElementsControllerLoader.loadLink(
@@ -278,7 +279,17 @@ public final class CheckoutElementsController: ObservableObject {
             try await enqueueSessionUpdate {
                 guard self.canSetLocalEmail() else { return }
                 guard self.session.localState.email != email else { return }
-                // TODO: Refresh Link account lookup when the email changes.
+                try self.requireSheetNotPresented()
+                // Look up the new email in Link before the Payment Element is rebuilt, so Link UI and Link flows use
+                // the new email's Link account instead of the one looked up for the previous email.
+                var sessionWithUpdatedEmail = self.session
+                sessionWithUpdatedEmail.localState.email = email
+                await CheckoutElementsControllerLoader.loadLink(
+                    session: sessionWithUpdatedEmail,
+                    configuration: self.configuration,
+                    // Only used to check whether Payment Element uses Link; FlowController and Embedded configurations agree on that.
+                    paymentElementConfiguration: self.paymentElement?.paymentSheetFlowController.configuration
+                )
                 try await self.performUnqueuedUpdate(mutateLocalState: { localState in
                     localState.email = email
                 })

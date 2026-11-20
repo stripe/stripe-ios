@@ -113,15 +113,36 @@ extension LinkStubs {
 
     static func account(
         email: String = "user@example.com",
-        session: ConsumerSession? = Self.consumerSession()
+        session: ConsumerSession? = Self.consumerSession(),
+        apiClient: STPAPIClient = .shared
     ) -> PaymentSheetLinkAccount {
         .init(
             email: email,
             session: session,
             publishableKey: nil,
             displayablePaymentDetails: nil,
+            apiClient: apiClient,
             useMobileEndpoints: false,
             canSyncAttestationState: false
+        )
+    }
+
+    @MainActor
+    static func makeLinkController(with apiClient: STPAPIClient) -> LinkController {
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = apiClient
+        return LinkController(
+            apiClient: apiClient,
+            mode: .payment,
+            elementsSession: ._testValue(),
+            intent: ._testValue(),
+            customerProvider: CustomerProvider(customer: configuration.customer),
+            paymentElementConfiguration: configuration,
+            linkBrand: .link,
+            appearance: nil,
+            configuration: nil,
+            analyticsHelper: ._testValue(),
+            requestSurface: .default
         )
     }
 

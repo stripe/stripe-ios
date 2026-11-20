@@ -102,6 +102,53 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
     }
 
+    func testPaymentMethodsAvailableWithoutShippingAddress() {
+        // Given payment methods and configurations without shipping details
+        let paymentMethodTypes: [STPPaymentMethodType] = [.affirm, .afterpayClearpay]
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: paymentMethodTypes, shippingProvided: false)
+        XCTAssertNil(paymentIntent.shipping)
+        let intents: [Intent] = [
+            .paymentIntent(paymentIntent),
+            .deferredIntent(intentConfig: .init(
+                mode: .payment(amount: 1010, currency: "USD"),
+                paymentMethodTypes: paymentMethodTypes.compactMap { STPPaymentMethod.string(from: $0) },
+                confirmHandler: { _, _ in return "" }
+            )),
+        ]
+        let configurations: [PaymentElementConfiguration] = [PaymentSheet.Configuration(), EmbeddedPaymentElement.Configuration()]
+
+        for intent in intents {
+            let elementsSession = STPElementsSession._testValue(intent: intent)
+            for var configuration in configurations {
+                XCTAssertNil(configuration.shippingDetails())
+
+                // Without a return URL, both payment methods are unavailable for that reason alone
+                for paymentMethod in paymentMethodTypes {
+                    XCTAssertEqual(
+                        PaymentSheet.PaymentMethodType.supportsAdding(
+                            paymentMethod: paymentMethod,
+                            configuration: configuration,
+                            intent: intent,
+                            elementsSession: elementsSession
+                        ),
+                        .missingRequirements([.returnURL])
+                    )
+                }
+
+                // With a return URL, both remain available without shipping details
+                configuration.returnURL = "example://return"
+                XCTAssertEqual(
+                    PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+                        from: intent,
+                        elementsSession: elementsSession,
+                        configuration: configuration
+                    ),
+                    [.stripe(.affirm), .stripe(.afterpayClearpay)]
+                )
+            }
+        }
+    }
+
     // MARK: - Pix
 
     func testPixSupportsPaymentPaymentWithSetupFutureUsageAndSetup() {
@@ -1750,7 +1797,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
         func callFilteredPaymentMethodTypes(withIntentTypes paymentMethodTypes: [String], externalPMTypes: [String]) -> [PaymentSheet.PaymentMethodType] {
             let intent = Intent.deferredIntent(
-                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
+                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic), confirmHandler: { _, _ in return "" })
             )
             // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
             return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes, externalPaymentMethodTypes: externalPMTypes), configuration: configuration)
@@ -1824,7 +1871,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let intent = Intent.deferredIntent(
-            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
+            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic), confirmHandler: { _, _ in return "" })
         )
 
         // Mixed-case CPM id in paymentMethodOrder is matched correctly
