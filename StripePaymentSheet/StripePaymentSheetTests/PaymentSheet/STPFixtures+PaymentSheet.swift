@@ -135,7 +135,6 @@ extension STPElementsSession {
         defaultPaymentMethod: String? = nil,
         paymentMethods: [[AnyHashable: Any]]? = nil,
         linkUseAttestation: Bool? = nil,
-        linkSuppress2FA: Bool? = nil,
         linkEnableMFAAuthFlow: Bool? = nil,
         hasLinkConsumerIncentive: Bool = false,
         linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
@@ -183,10 +182,6 @@ extension STPElementsSession {
 
         if let linkUseAttestation {
             json[jsonDict: "link_settings"]!["link_use_attestation"] = linkUseAttestation
-        }
-
-        if let linkSuppress2FA {
-            json[jsonDict: "link_settings"]!["link_mobile_suppress_2fa_modal"] = linkSuppress2FA
         }
 
         if let linkEnableMFAAuthFlow {
