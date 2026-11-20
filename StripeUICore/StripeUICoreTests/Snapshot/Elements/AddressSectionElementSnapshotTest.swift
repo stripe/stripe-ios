@@ -49,4 +49,37 @@ class AddressSectionElementSnapshotTest: STPSnapshotTestCase {
         XCTAssertEqual(sut.view.effectiveUserInterfaceLayoutDirection, .rightToLeft)
         STPSnapshotVerifyView(sut.view)
     }
+
+    func test_billing_address_same_as_shipping_spacingSeparatorStyle() throws {
+        let sut = AddressSectionElement(
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(address: .init(city: "San Francisco", country: "US", line1: "510 Townsend St.", line2: nil, postalCode: "94102", state: "California")),
+            additionalFields: .init(
+                billingSameAsShippingCheckbox: .enabled(isOptional: false)
+            ),
+            separatorStyle: .spacing(12)
+        )
+        sut.view.autosizeHeight(width: 300)
+        STPSnapshotVerifyView(sut.view)
+    }
+
+    func testRightToLeftWithLeftToRightValues_spacingSeparatorStyle() {
+        let sut = AddressSectionElement(
+            addressSpecProvider: dummyAddressSpecProvider,
+            defaults: .init(address: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St.",
+                line2: nil,
+                postalCode: "94102",
+                state: "California"
+            )),
+            separatorStyle: .spacing(12)
+        )
+        sut.view.forceRightToLeftLayout()
+        sut.view.autosizeHeight(width: 300)
+
+        XCTAssertEqual(sut.view.effectiveUserInterfaceLayoutDirection, .rightToLeft)
+        STPSnapshotVerifyView(sut.view)
+    }
 }
