@@ -1,0 +1,17 @@
+GET
+https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/playground\/publishable_key\?merchant=MX$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Age: 0
+Date: Fri, 20 Nov 2026 22:55:27 GMT
+x-vercel-id: sfo1::iad1::x7jvp-1795215327057-a0727f1079db
+Content-Length: 130
+Cache-Control: public, max-age=0, must-revalidate
+x-vercel-cache: MISS
+
+{
+  "publishable_key" : "pk_test_51NnSH9FAuts2AnGl15kIvSBIqIEPtAPAGntLwW7uih6XuEbc2P1bTCSQhkJDgnetaTqbLMU9KYvIMgv2GeNu5Idg00k22SjRUn"
+}

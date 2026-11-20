@@ -1,0 +1,17 @@
+GET
+https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/playground\/publishable_key\?merchant=AU$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Age: 0
+Date: Fri, 20 Nov 2026 23:06:48 GMT
+x-vercel-id: sfo1::iad1::mf2md-1795216008686-21b0f10feab2
+Content-Length: 130
+Cache-Control: public, max-age=0, must-revalidate
+x-vercel-cache: MISS
+
+{
+  "publishable_key" : "pk_test_51KaoFxCPXw4rvZpfi7MgGvQHAyqydlZgq7qfazb65457ApNZVN12LdVmiZh0bmDfgBEDUlXtSM72F9rPweMN0QJP00hVaYXMkx"
+}

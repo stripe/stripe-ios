@@ -1,0 +1,47 @@
+POST
+https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/playground\/create_customer$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 22:35:48 GMT
+x-vercel-id: sfo1::iad1::8vjml-1795214148454-1622053613b6
+Content-Length: 588
+x-vercel-cache: MISS
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "description" : null,
+  "test_clock" : null,
+  "metadata" : {
+
+  },
+  "default_source" : null,
+  "livemode" : false,
+  "invoice_settings" : {
+    "custom_fields" : null,
+    "default_payment_method" : null,
+    "rendering_options" : null,
+    "footer" : null
+  },
+  "object" : "customer",
+  "currency" : null,
+  "shipping" : null,
+  "discount" : null,
+  "customer_account" : null,
+  "balance" : 0,
+  "name" : null,
+  "tax_exempt" : "none",
+  "id" : "cus_VfL5qEuFRPARo6",
+  "delinquent" : false,
+  "email" : "test@example.com",
+  "preferred_locales" : [
+
+  ],
+  "phone" : null,
+  "next_invoice_sequence" : 1,
+  "invoice_prefix" : "CVTVBCE9",
+  "address" : null,
+  "created" : 1795214148
+}

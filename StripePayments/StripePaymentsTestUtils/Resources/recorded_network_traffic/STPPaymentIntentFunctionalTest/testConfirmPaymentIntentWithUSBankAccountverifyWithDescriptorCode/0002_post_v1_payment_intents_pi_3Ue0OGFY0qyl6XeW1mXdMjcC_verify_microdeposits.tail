@@ -1,0 +1,76 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Ue0OGFY0qyl6XeW1mXdMjcC\/verify_microdeposits$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=6g4bfhX0FE2pQyHUNoXnHqsfKd4N1ebfQ1hi-ZEVVWmX0SrX6lhZVB7FCOjsY4TpqtYAF4O8feJKVaYY; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=6g4bfhX0FE2pQyHUNoXnHqsfKd4N1ebfQ1hi-ZEVVWmX0SrX6lhZVB7FCOjsY4TpqtYAF4O8feJKVaYY&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=6g4bfhX0FE2pQyHUNoXnHqsfKd4N1ebfQ1hi-ZEVVWmX0SrX6lhZVB7FCOjsY4TpqtYAF4O8feJKVaYY&t=1"}],"include_subdomains":true}
+request-id: req_YHwl93UUPJRnxn
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1124
+Vary: Origin
+Date: Fri, 20 Nov 2026 22:34:45 GMT
+original-request: req_YHwl93UUPJRnxn
+stripe-version: 2020-08-27
+idempotency-key: 96ba5cfd-8b3f-4283-9c8e-3716192f2b5c
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3Ue0OGFY0qyl6XeW1mXdMjcC_secret_HXIXbGngCkR3NNSCjPnBTx5iT&descriptor_code=SM11AA
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 1000,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "payment_method_options" : {
+    "us_bank_account" : {
+      "verification_method" : "automatic"
+    }
+  },
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 1000,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "status" : "processing",
+  "payment_method" : "pm_1Ue0OGFY0qyl6XeW3nbmuzSd",
+  "client_secret" : "pi_3Ue0OGFY0qyl6XeW1mXdMjcC_secret_HXIXbGngCkR3NNSCjPnBTx5iT",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "id" : "pi_3Ue0OGFY0qyl6XeW1mXdMjcC",
+  "allowed_payment_method_types" : null,
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "us_bank_account"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1795214084,
+  "description" : null
+}

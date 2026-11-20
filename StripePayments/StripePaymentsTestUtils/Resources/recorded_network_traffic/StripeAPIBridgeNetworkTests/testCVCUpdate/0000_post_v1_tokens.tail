@@ -3,22 +3,25 @@ https:\/\/api\.stripe\.com\/v1\/tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=nzBmRNdLkZmHF5HoFkSSnJoSsmyp1Ga_leFfV71pJd2PnP7x77VlSCd4_7DA5ncM59dNmf44KVq3Uhtv
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=GavaRq8JapT10IO_i6eQ5NR1M-ybXwzWk40SkB_8O2F-PCVMFWwnfK4NLYVMzznLt5awtCCIbbdlFK6n; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=GavaRq8JapT10IO_i6eQ5NR1M-ybXwzWk40SkB_8O2F-PCVMFWwnfK4NLYVMzznLt5awtCCIbbdlFK6n&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
+x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=GavaRq8JapT10IO_i6eQ5NR1M-ybXwzWk40SkB_8O2F-PCVMFWwnfK4NLYVMzznLt5awtCCIbbdlFK6n&t=1"}],"include_subdomains":true}
+request-id: req_ruIbcjaK08uQ1a
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_I7jknsYZMwMt67
-Content-Length: 185
+Content-Length: 186
 Vary: Origin
-Date: Tue, 03 Jun 2025 15:29:46 GMT
-original-request: req_I7jknsYZMwMt67
+Date: Fri, 20 Nov 2026 22:35:17 GMT
+original-request: req_ruIbcjaK08uQ1a
 stripe-version: 2020-08-27
-idempotency-key: 381a0e26-f691-42e8-91b0-d8720c463574
+idempotency-key: 121d7889-e771-4a36-9bb9-4e45d793c296
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,10 +30,10 @@ X-Stripe-Mock-Request: cvc_update\[cvc]=123&guid=.*&muid=.*&payment_user_agent=.
 
 {
   "object" : "token",
-  "id" : "cvctok_1RVwmcFY0qyl6XeWXxslx91v",
+  "id" : "cvctok_1Ue0OnFY0qyl6XeWdpTlBjoX",
   "livemode" : false,
-  "client_ip" : "136.35.196.25",
-  "created" : 1748964586,
+  "client_ip" : "136.24.137.206",
+  "created" : 1795214117,
   "used" : false,
   "type" : "cvc_update"
 }

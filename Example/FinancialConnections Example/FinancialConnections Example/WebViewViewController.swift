@@ -32,7 +32,7 @@ import WebKit
 //    (ex. `stripe.financialConnections.sessions.create`).
 //
 //    The `return_url` should be a link to your website. In this example code,
-//    the `return_url` is `https://connections-webview-example.stripedemos.com/redirect`.
+//    the `return_url` is `https://connections-webview-example.stripesandbox.com/redirect`.
 //
 // 2. Add client code (shown below) that will open an extra browser that
 //    will handle the bank OAuth pop-up.

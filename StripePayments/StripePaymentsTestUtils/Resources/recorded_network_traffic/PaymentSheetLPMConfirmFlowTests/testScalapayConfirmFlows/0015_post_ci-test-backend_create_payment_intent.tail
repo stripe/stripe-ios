@@ -1,0 +1,19 @@
+POST
+https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/ci-test-backend\/create_payment_intent$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 23:01:39 GMT
+x-vercel-id: sfo1::iad1::flvvd-1795215699397-0fa7486ab849
+Content-Length: 274
+x-vercel-cache: MISS
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "secret" : "pi_3Ue0oJIFbdis1OxT1Qbg2S6N_secret_uBH3EHCgQdSCIkueIjIFfskhx",
+  "status" : "requires_action",
+  "publishable_key" : "pk_test_51PSnETIFbdis1OxTALF4Z8ugUQpVS06UQDVahMSmwrbEYphjNYitXtOSqMPVKfzl3jukg6gLLrtZNnPlDrRbDpMd00U0tId6iv",
+  "intent" : "pi_3Ue0oJIFbdis1OxT1Qbg2S6N"
+}

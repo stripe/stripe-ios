@@ -1,0 +1,17 @@
+GET
+https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/playground\/publishable_key\?merchant=BR$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Age: 0
+Date: Fri, 20 Nov 2026 22:46:26 GMT
+x-vercel-id: sfo1::iad1::j4scm-1795214786101-46edccf472a5
+Content-Length: 130
+Cache-Control: public, max-age=0, must-revalidate
+x-vercel-cache: MISS
+
+{
+  "publishable_key" : "pk_test_51NnifYAAYNo78uxtG7V4j08xPQl026Zv62elrbCuWDncoMZ66WBOctuXHSn9McbzQmzPsfaroEImZljghMrkofVF00LW2AVgXj"
+}

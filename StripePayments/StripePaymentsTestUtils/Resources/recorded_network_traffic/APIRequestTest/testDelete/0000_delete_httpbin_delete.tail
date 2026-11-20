@@ -1,0 +1,67 @@
+DELETE
+https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/httpbin\/delete\?$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 22:33:39 GMT
+Content-Encoding: br
+x-vercel-id: sfo1::iad1::6vnkh-1795214019888-9efa3966155a
+Cache-Control: public, max-age=0, must-revalidate
+x-vercel-cache: MISS
+
+{
+  "origin" : "136.24.137.206",
+  "form" : {
+
+  },
+  "json" : null,
+  "data" : "",
+  "headers" : {
+    "Accept" : "*\/*",
+    "X-Vercel-Oidc-Token" : "eyJ0eXAiOiJKV1QiLCJraWQiOiJtcmstNDMwMmVjMWI2NzBmNDhhOThhZDYxZGFkZTRhMjNiZTciLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJvd25lcjpzdHJpcGU6cHJvamVjdDpzdHJpcGUtbW9iaWxlLWV4YW1wbGUtY2ktYmFja2VuZHM6ZW52aXJvbm1lbnQ6cHJvZHVjdGlvbiIsIm5iZiI6MTc5NTIxMjI5OCwiaXNzIjoiaHR0cHM6XC9cL29pZGMudmVyY2VsLmNvbVwvc3RyaXBlIiwiaWF0IjoxNzk1MjEyMjk4LCJwbGFuIjoiZW50ZXJwcmlzZSIsIm93bmVyIjoic3RyaXBlIiwiZXhwIjoxNzk1MjE5NDk4LCJkZXBsb3ltZW50X2lkIjoiZHBsXzhnZzhvVnNQS1lQUXpES3RVQmhVTjR1RUdmeEsiLCJwcm9qZWN0X2lkIjoicHJqX0NBSTFRSVJXQmEzWUJyWFN0Y0w4VmxHNjBxMHEiLCJvd25lcl9pZCI6InRlYW1fdFZsUURZRXRZeEl6RkYwbnF1YWdoWmg5Iiwic2NvcGUiOiJvd25lcjpzdHJpcGU6cHJvamVjdDpzdHJpcGUtbW9iaWxlLWV4YW1wbGUtY2ktYmFja2VuZHM6ZW52aXJvbm1lbnQ6cHJvZHVjdGlvbiIsImVudmlyb25tZW50IjoicHJvZHVjdGlvbiIsInByb2plY3QiOiJzdHJpcGUtbW9iaWxlLWV4YW1wbGUtY2ktYmFja2VuZHMiLCJhdWQiOiJodHRwczpcL1wvdmVyY2VsLmNvbVwvc3RyaXBlIn0.RcvhMmcTx-Mxv4UsweFfoYS9fy1YpCUZTih_0ffJ5_C6pMwn0RuMb2wSIko3WedqoyhWaOyXpTGjHn3nYmcVc-20bb2OCHFX1ZAf-MWarZHY6zht0Xq_gSPijXwMrsQKWUlzFnnvnt4XmDSx-thq6gHNNzC26mj1sJpyQM7sB5C2hyQSxTGFr0o1JmnRXMDmaAzvJnt50_xsDzneInRhzdcM6rfmwiWfOadplxp5vGFP2pSbT9844apRz0TkZtNlyiuVkGpp7uwz3maF8wzR9eVYp6EC4QoO3oY05AvsXVnkTFIzeRi6Ug2oVJJKJqRV1ez53My26q_4aRmEPmFBXw",
+    "Accept-Encoding" : "gzip, deflate, br",
+    "X-Vercel-Firewall-Bypass" : "true",
+    "X-Vercel-Ip-Continent" : "NA",
+    "X-Vercel-Ja4-Digest" : "t13d2013h2_a09f3c656075_7f0f34a4126d",
+    "X-Vercel-Proxy-Signature" : "Bearer 4becb33390fe69dde5d9c96d9232092020edb614055c3e9ee4600d3e1a156b02",
+    "X-Vercel-Id" : "sfo1::6vnkh-1795214019888-9efa3966155a",
+    "X-Vercel-Ip-Timezone" : "America\/Los_Angeles",
+    "X-Vercel-Deployment-Url" : "stripe-mobile-example-ci-backends-huovv5f3z.vercelapp.stripe.dev",
+    "X-Vercel-Enable-Rewrite-Caching" : "1",
+    "X-Vercel-Ip-Longitude" : "-122.41942",
+    "Content-Type" : "",
+    "X-Vercel-Ip-Postal-Code" : "94102",
+    "X-Vercel-Proxied-For" : "136.24.137.206",
+    "Accept-Language" : "en-US,en;q=0.9",
+    "User-Agent" : "xctest\/25435 CFNetwork\/3860.500.112 Darwin\/27.2.0",
+    "X-Vercel-Ip-Country" : "US",
+    "X-Vercel-Forwarded-For" : "136.24.137.206",
+    "X-Vercel-Protection-Bypass" : "PublicAvailableiOSAndroidBackend",
+    "Host" : "stripe-mobile-example-ci-backends.vercelapp.stripe.dev",
+    "Priority" : "u=3, i",
+    "Forwarded" : "for=136.24.137.206;host=stripe-mobile-example-ci-backends.vercelapp.stripe.dev;proto=https;sig=0QmVhcmVyIDRiZWNiMzMzOTBmZTY5ZGRlNWQ5Yzk2ZDkyMzIwOTIwMjBlZGI2MTQwNTVjM2U5ZWU0NjAwZDNlMWExNTZiMDI=;exp=1795214319",
+    "X-Stripe-User-Agent" : "{\"vendor_identifier\":\"53C8B487-2836-44E4-80F7-743359F2E598\",\"os_version\":\"26.4.1\",\"bindings_version\":\"26.16.1\",\"type\":\"arm64\",\"model\":\"iPhone\",\"lang\":\"objective-c\"}",
+    "Authorization" : "Bearer",
+    "X-Forwarded-Proto" : "https",
+    "X-Vercel-Ip-Country-Region" : "CA",
+    "X-Vercel-Ip-As-Number" : "19165",
+    "X-Vercel-Ip-Latitude" : "37.77493",
+    "X-Real-Ip" : "136.24.137.206",
+    "X-Forwarded-For" : "136.24.137.206",
+    "Stripe-Version" : "2020-08-27",
+    "X-Vercel-Ip-City" : "San%20Francisco",
+    "Connection" : "close",
+    "Content-Length" : "0",
+    "X-Forwarded-Host" : "stripe-mobile-example-ci-backends.vercelapp.stripe.dev",
+    "X-Vercel-Proxy-Signature-Ts" : "1795214319"
+  },
+  "args" : {
+
+  },
+  "files" : {
+
+  },
+  "url" : "https:\/\/stripe-mobile-example-ci-backends.vercelapp.stripe.dev\/httpbin\/delete"
+}

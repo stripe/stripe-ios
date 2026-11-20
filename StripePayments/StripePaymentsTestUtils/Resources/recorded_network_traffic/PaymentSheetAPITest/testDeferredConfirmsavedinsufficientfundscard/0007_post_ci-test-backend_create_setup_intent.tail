@@ -1,0 +1,14 @@
+POST
+https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/ci-test-backend\/create_setup_intent$
+402
+text/html
+Server: Vercel
+Content-Type: text/html;charset=utf-8
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 22:36:35 GMT
+x-vercel-id: sfo1::iad1::4tvgm-1795214195219-35435c266662
+Content-Length: 152
+x-vercel-cache: MISS
+Cache-Control: public, max-age=0, must-revalidate
+
+Error creating SetupIntent: Your card has insufficient funds. Use a different payment method to complete this purchase. (request_id: req_8QAcEiXAV7o7jG)

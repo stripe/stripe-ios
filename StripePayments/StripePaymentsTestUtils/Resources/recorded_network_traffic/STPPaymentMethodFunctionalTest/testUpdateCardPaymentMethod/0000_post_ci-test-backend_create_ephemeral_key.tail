@@ -1,0 +1,17 @@
+POST
+https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/ci-test-backend\/create_ephemeral_key$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 22:34:59 GMT
+x-vercel-id: sfo1::iad1::f7dxz-1795214099374-71f38e88f940
+Content-Length: 152
+x-vercel-cache: MISS
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "customer" : "cus_PTf9mhkFv9ZGXl",
+  "ephemeral_key_secret" : "ek_test_YWNjdF8xSnRnZlFLRzZ2YzdyN1lDLFA1VkNCY0dDRXc2MmpaMU5NY2hDSzN2TkE2U3lERzE_00iJdxLlMK"
+}

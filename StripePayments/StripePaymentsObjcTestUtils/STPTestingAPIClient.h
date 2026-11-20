@@ -78,33 +78,30 @@ static NSString * const STPTestingPaymentsOrchestrationPublishableKey = @"pk_tes
 /**
  The root URL of the unified test backends (oss-android-sdk's ci/test-backends), with a trailing
  slash: their Vercel deployment, or the STRIPE_TEST_BACKENDS_URL environment variable, such as a
- local copy's `http://127.0.0.1:4567/`; nil while `usesRecordedBackendURLs` is set. xcodebuild
+ local copy's `http://127.0.0.1:4567/`, unless `usesDefaultTestBackendsURL` is set. xcodebuild
  passes TEST_RUNNER_STRIPE_TEST_BACKENDS_URL on to the tests as the variable. Each backend answers
  under its own prefix: `<root>ci-test-backend/`.
  */
-@property (class, nonatomic, nullable, readonly) NSString *testBackendsURL;
+@property (class, nonatomic, readonly) NSString *testBackendsURL;
 
 /**
  The headers that requests to `testBackendsURL` carry: X-Test-Backends-Token, from the optional
  STRIPE_TEST_BACKENDS_TOKEN environment variable, and x-vercel-protection-bypass, the Vercel
  deployment's public protection bypass secret, which STRIPE_TEST_BACKENDS_BYPASS overrides. A
- local `testBackendsURL` (127.0.0.1, localhost) gets the bypass only from the variable. Empty
- while `usesRecordedBackendURLs` is set.
+ local `testBackendsURL` (127.0.0.1, localhost) gets the bypass only from the variable.
  */
 @property (class, nonatomic, readonly) NSDictionary<NSString *, NSString *> *testBackendsHeaders;
 
 /**
  Set while STPNetworkStubbingTestCase records or plays back network traffic, whose recordings
- name the backends' old hosted URLs.
+ name the Vercel deployment's URL, so that STRIPE_TEST_BACKENDS_URL doesn't apply.
  */
-@property (class, nonatomic) BOOL usesRecordedBackendURLs;
+@property (class, nonatomic) BOOL usesDefaultTestBackendsURL;
 
 /**
- `<testBackendsURL><prefix>/`, or, while `usesRecordedBackendURLs` is set, `recordedURL`, the URL
- that the backend's recordings name. `recordedURL` ends in a slash.
+ `<testBackendsURL><prefix>/`, such as `<testBackendsURL>ci-test-backend/`.
  */
-+ (NSString *)testBackendURLWithPrefix:(NSString *)prefix
-                           recordedURL:(NSString *)recordedURL NS_SWIFT_NAME(testBackendURL(prefix:recordedURL:));
++ (NSString *)testBackendURLWithPrefix:(NSString *)prefix NS_SWIFT_NAME(testBackendURL(prefix:));
 
 // Set this to the Stripe SDK session for SWHTTPRecorder recording to work correctly
 @property (nonatomic, readwrite) NSURLSessionConfiguration *sessionConfig;

@@ -45,9 +45,9 @@ import XCTest
             return
         }
 
-        // Recordings name the backends' old hosted URLs, so record and play back with them
-        // rather than the unified test backends.
-        STPTestingAPIClient.usesRecordedBackendURLs = true
+        // Recordings name the test backends' Vercel deployment, so record and play back with it
+        // even when STRIPE_TEST_BACKENDS_URL names another copy.
+        STPTestingAPIClient.usesDefaultTestBackendsURL = true
 
         // Set some default FraudDetectionData
         FraudDetectionData.shared.sid = "00000000-0000-0000-0000-000000000000"
@@ -202,7 +202,7 @@ import XCTest
 
     open override func tearDown() {
         super.tearDown()
-        STPTestingAPIClient.usesRecordedBackendURLs = false
+        STPTestingAPIClient.usesDefaultTestBackendsURL = false
 
         if disableMocking {
             // No teardown needed

@@ -2,32 +2,35 @@ GET
 https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_1GGCGfFY0qyl6XeWbSAsh2hn\?client_secret=pi_1GGCGfFY0qyl6XeWbSAsh2hn_secret_jbhwsI0DGWhKreJs3CCrluUGe$
 404
 application/json
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=o4s2UpZk1xhhuKUQbbbal3r0pqL99elLEhYafPCOYeg961PedPArmGazzbJN3djPYuUrRGjaEF8iP2T2
-x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=9F6b4Notu7aS-Eq15zc8cOHw_iI-Uge9tk60of2mUAFX1Ce-b6Ah_vd0ckf7ZcRZByDSZI2DVM-Z7fmF; report-to csp
 Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=9F6b4Notu7aS-Eq15zc8cOHw_iI-Uge9tk60of2mUAFX1Ce-b6Ah_vd0ckf7ZcRZByDSZI2DVM-Z7fmF&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=9F6b4Notu7aS-Eq15zc8cOHw_iI-Uge9tk60of2mUAFX1Ce-b6Ah_vd0ckf7ZcRZByDSZI2DVM-Z7fmF&t=1"}],"include_subdomains":true}
+request-id: req_GBsVmdSxuSyFAf
+Content-Length: 378
+Vary: Origin
+Date: Fri, 20 Nov 2026 22:34:48 GMT
+stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
-Content-Language: en-us
-Cache-Control: no-cache, no-store
-Date: Mon, 13 Oct 2025 18:57:47 GMT
-stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 352
-x-stripe-routing-context-priority-tier: api-testmode
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Vary: Origin
-request-id: req_TeLRAbeaePsWt7
+Content-Type: application/json
+Content-Language: en-us
 
 {
   "error" : {
     "code" : "resource_missing",
     "message" : "No such payment_intent: 'pi_1GGCGfFY0qyl6XeWbSAsh2hn'",
     "param" : "intent",
-    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_TeLRAbeaePsWt7?t=1760381867",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/acct_1JtgfQKG6vc7r7YC\/test\/workbench\/logs?object=req_GBsVmdSxuSyFAf",
     "type" : "invalid_request_error",
     "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/resource-missing"
   }

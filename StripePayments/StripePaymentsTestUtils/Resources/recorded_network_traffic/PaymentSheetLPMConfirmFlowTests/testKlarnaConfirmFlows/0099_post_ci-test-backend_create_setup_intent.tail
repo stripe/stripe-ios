@@ -1,0 +1,19 @@
+POST
+https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/ci-test-backend\/create_setup_intent$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 22:51:43 GMT
+x-vercel-id: sfo1::iad1::hnlmf-1795215102779-ad902aa7f0bb
+Content-Length: 284
+x-vercel-cache: MISS
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "secret" : "seti_1Ue0egKG6vc7r7YCYKY9ZwMD_secret_VfLLWThRXNGmtkYktonGApvNMu4rda1",
+  "status" : "requires_action",
+  "publishable_key" : "pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt",
+  "intent" : "seti_1Ue0egKG6vc7r7YCYKY9ZwMD"
+}

@@ -1,0 +1,17 @@
+POST
+https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/ci-test-backend\/create_customer_session_cs$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 22:37:27 GMT
+x-vercel-id: sfo1::iad1::6vnkh-1795214247204-b656db9b3b17
+Content-Length: 131
+x-vercel-cache: MISS
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "customer_session_client_secret" : "cuss_secret_VfL7w2pHgdp4dAfDDKEpTqyHam49UeMFWBOPQbCnlgd2Kxq",
+  "customer" : "cus_VfL7Io38B5zNkX"
+}
