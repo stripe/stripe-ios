@@ -17,6 +17,7 @@ import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
 
+@MainActor
 final class PaymentSheetConfirmParamsTest: APIStubbedTestCase {
     enum MockJson {
         static let cardPaymentMethod = STPTestUtils.jsonNamed("CardPaymentMethod")!

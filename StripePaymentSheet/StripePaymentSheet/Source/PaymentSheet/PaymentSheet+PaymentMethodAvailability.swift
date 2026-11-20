@@ -11,7 +11,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 @_spi(InternalOnlyAPI) import StripePaymentsUI
 
-extension PaymentSheet {
+nonisolated extension PaymentSheet {
 
     /// An unordered list of paymentMethod types that can be used with PaymentSheet
     /// - Note: This is a var so that we can enable experimental payment methods in PaymentSheetTestPlayground.

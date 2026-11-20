@@ -13,11 +13,12 @@
 @testable@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
+@MainActor
 final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
     var apiClient: STPAPIClient!
     lazy var paymentHandler = STPPaymentHandler(apiClient: apiClient)
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
         apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
     }
 
