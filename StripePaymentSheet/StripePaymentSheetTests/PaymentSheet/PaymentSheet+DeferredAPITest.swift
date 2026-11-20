@@ -80,6 +80,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         _ = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .new(params: examplePaymentMethodParams, paymentOptions: .init(), paymentMethod: nil, saveForFutureUseCheckboxState: .hidden, shouldSetAsDefaultPM: nil),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: paymentHandler,
@@ -291,6 +292,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         let result = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
@@ -361,6 +363,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
                 shouldSetAsDefaultPM: false
             ),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
@@ -402,6 +405,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         let result = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
@@ -444,6 +448,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         let result = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
@@ -490,6 +495,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         _ = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),

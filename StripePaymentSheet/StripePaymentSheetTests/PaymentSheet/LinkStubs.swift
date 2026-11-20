@@ -136,6 +136,7 @@ extension LinkStubs {
             mode: .payment,
             elementsSession: ._testValue(),
             intent: ._testValue(),
+            customerProvider: CustomerProvider(customer: configuration.customer),
             paymentElementConfiguration: configuration,
             linkBrand: .link,
             appearance: nil,

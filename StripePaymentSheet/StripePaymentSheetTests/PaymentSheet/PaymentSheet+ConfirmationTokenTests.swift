@@ -128,6 +128,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -160,6 +161,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -190,6 +192,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -210,6 +213,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             allowsSetAsDefaultPM: true,
             elementsSession: .emptyElementsSession
@@ -225,6 +229,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             allowsSetAsDefaultPM: false,
             elementsSession: .emptyElementsSession
@@ -242,6 +247,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -256,6 +262,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -283,6 +290,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -309,6 +317,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -332,6 +341,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -368,12 +378,14 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let paymentIntentParams = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: paymentIntentConfig,
             elementsSession: .emptyElementsSession
         )
         let setupIntentParams = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: setupIntentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -409,6 +421,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -442,6 +455,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -456,6 +470,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )

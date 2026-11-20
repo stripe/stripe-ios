@@ -580,6 +580,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         presentNativeLink(
             selectedPaymentDetailsID: nil,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,

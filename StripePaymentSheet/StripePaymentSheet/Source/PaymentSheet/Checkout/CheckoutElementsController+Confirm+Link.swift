@@ -26,6 +26,8 @@ extension CheckoutElementsController {
         parameters: LinkConfirmationParameters
     ) async -> InternalConfirmResult {
         let elementsSession = checkoutSession.elementsSession
+        // Derive the customer from the same session snapshot as the rest of this confirmation.
+        let customerProvider = CustomerProvider(checkoutSession: checkoutSession)
         let configuration = parameters.configuration
         let confirmationChallenge = parameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -173,6 +175,7 @@ extension CheckoutElementsController {
             PaymentSheet.confirmLinkPaymentOption(
                 confirmOption: parameters.confirmOption,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 paymentHandler: parameters.paymentHandler,
                 nativeSheetPresentation: parameters.nativeSheetPresentation,
                 authenticationContext: parameters.authenticationContext,

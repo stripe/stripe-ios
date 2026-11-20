@@ -547,6 +547,7 @@ final class PaymentSheetGDPRConfirmFlowTests: STPNetworkStubbingTestCase {
         // Confirm the intent with the form details
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: intent,
             elementsSession: elementsSession,
