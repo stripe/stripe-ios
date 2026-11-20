@@ -134,7 +134,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
                 checkoutSession: checkoutSession,
                 attribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
             ),
-            collectedInformation: .init(email: nil)
+            collectedInformation: .init(email: nil),
+            passiveCaptchaToken: nil
         )
         let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 
@@ -355,7 +356,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
                 checkoutSession: checkoutSession,
                 attribution: .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
             ),
-            collectedInformation: .init(email: nil)
+            collectedInformation: .init(email: nil),
+            passiveCaptchaToken: nil
         )
         let response = try await apiClient.confirmCheckoutSession(with: requestParameters)
 

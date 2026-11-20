@@ -1118,12 +1118,9 @@ extension PaymentSheetFormFactory {
             sellerName: sellerName,
             isSettingUp: isSettingUp || forceSaveFutureUseBehavior,
             linkBrand: linkBrand,
+            initialLinkedBank: previousCustomerInput?.instantDebitsLinkedBank,
             appearance: configuration.appearance
         )
-
-        if let linkedBank = previousCustomerInput?.instantDebitsLinkedBank {
-            element.setLinkedBank(linkedBank)
-        }
 
         return element
     }
