@@ -157,8 +157,12 @@ extension FinancialConnectionsNavigationController {
         appearance: FinancialConnectionsAppearance
     ) {
         let iconHeight: CGFloat = 20
-        let logoView: UIView? = {
-            guard !shouldHideLogo else { return nil }
+        let logoView: UIView = {
+            guard !shouldHideLogo else {
+                // When bar buttons move into the iPhone Duo's side column, a navigation bar without
+                // a title collapses. Keep an empty title so the bar height doesn't change between panes.
+                return UIView(frame: CGRect(x: 0, y: 0, width: 1, height: iconHeight))
+            }
 
             let logoImage = FinancialConnectionsLogoImageView(appearance: appearance)
             logoImage.contentMode = .scaleAspectFit
