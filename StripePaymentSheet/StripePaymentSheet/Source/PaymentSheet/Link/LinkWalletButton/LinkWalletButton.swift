@@ -3,287 +3,89 @@
 //  StripePaymentSheet
 //
 
-import Combine
-@_spi(InternalOnlyAPI) import StripeCore
-@_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripeUICore
+import SwiftUI
 import UIKit
 
-/// The delegate of a `LinkWalletButton`.
-@MainActor
-@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public protocol LinkWalletButtonDelegate: AnyObject {
-    /// Called when the Link flow launched by the button finishes.
-    /// - Parameter button: The button that launched the Link flow.
-    /// - Parameter result: `.success(.completed(paymentMethod))` when the flow completes: the payment or setup was confirmed
-    ///   if the `LinkController` was created with an `IntentConfiguration`, otherwise the customer selected a payment method.
-    ///   `.success(.canceled)` when they dismiss the flow, or `.failure(error)` on an error.
-    func linkWalletButton(
-        _ button: LinkWalletButton,
-        didCompleteWith result: Result<LinkController.PaymentMethodResult, Error>
-    )
-
-    /// Called right before the button presents the Link flow.
-    func linkWalletButtonWillPresent(_ button: LinkWalletButton)
-}
-
-@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public extension LinkWalletButtonDelegate {
-    func linkWalletButtonWillPresent(_ button: LinkWalletButton) {}
-}
-
-/// A "Pay with Link" button that launches the Link flow using a `LinkController`.
+/// A SwiftUI "Pay with Link" button that launches the Link flow using a `LinkWalletButtonViewModel`.
 ///
-/// The button reflects the customer's Link account: it shows their email once they're recognized as a Link user,
-/// and their payment method once one is available. Tapping it presents Link with `LinkController.present`, which either
-/// completes the payment or setup, or collects a payment method, depending on how the `LinkController` was created.
-/// The result is delivered to the `delegate`.
-@MainActor
-@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public final class LinkWalletButton: UIView {
-
-    /// The delegate that receives the result of the Link flow.
-    public weak var delegate: LinkWalletButtonDelegate?
-
-    /// The view controller to present the Link flow from.
-    /// If `nil`, the top-most view controller of the button's window is used.
-    public var presentingViewController: UIViewController?
-
-    /// The customer's email address. The button looks up the associated Link account to display its details.
-    /// If `nil`, the button shows "Pay with Link", and tapping it lets the customer sign in to or sign up for Link.
-    /// Once they complete the Link flow, the button shows their Link account.
-    public var email: String? {
-        didSet {
-            guard oldValue != email else { return }
-            // The merchant identified the customer, so stop showing the customer who signed in through the button
-            signedInEmail = nil
-            updateButton()
-            lookUpIfNeeded()
-        }
-    }
-
-    /// Without an `email`, the email of the customer who completed a Link flow launched by the button.
-    private var signedInEmail: String?
-
-    /// The email of the customer whose Link account the button shows: the merchant-provided `email`, or else the
-    /// customer who signed in through the button. The button never shows other Link accounts on the device.
-    private var displayedEmail: String? {
-        if let email, !email.isEmpty {
-            return email
-        }
-        return signedInEmail
-    }
-
-    /// The customer's phone number in E.164 format, used to prefill the Link signup form.
-    public var phoneNumber: String?
-
-    /// Whether the button shows the customer's Link payment method (e.g. "Visa •••• 4242") once one is available.
-    /// If `false`, the button shows the customer's email instead. Defaults to `true`.
-    public var showsPaymentMethodPreview: Bool = true {
-        didSet {
-            guard oldValue != showsPaymentMethodPreview else { return }
-            updateButton()
-        }
-    }
-
-    private let linkController: LinkWalletButtonControlling
-    private let button: PayWithLinkButton
-    /// Whether a Link flow launched by the button is in progress. The button shows a loading indicator meanwhile,
-    /// e.g. while Link opens, and while the payment method is created or the payment is confirmed after Link closes.
-    private(set) var isPresenting = false {
-        didSet {
-            guard oldValue != isPresenting else { return }
-            updateButton()
-        }
-    }
-    private var isLookingUp = false
-    private var cancellables: Set<AnyCancellable> = []
-
-    static let stateTransitionDuration: TimeInterval = 0.25
+/// It behaves like `LinkWalletButtonUIView`, and delivers the result of the Link flow to `onCompletion`.
+@_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public struct LinkWalletButton: View {
+    private let viewModel: LinkWalletButtonViewModel
+    private let onWillPresent: () -> Void
+    private let onCompletion: (LinkWalletButtonResult) -> Void
 
     /// Creates a `LinkWalletButton`.
-    /// - Parameter linkController: The `LinkController` used to look up the customer and present the Link flow.
-    /// - Parameter email: The customer's email address, if you have it. If `nil`, the customer enters it in Link.
-    /// - Parameter phoneNumber: The customer's phone number in E.164 format, used to prefill the Link signup form.
-    public convenience init(linkController: LinkController, email: String? = nil, phoneNumber: String? = nil) {
-        self.init(controller: linkController, email: email, phoneNumber: phoneNumber)
+    /// - Parameter viewModel: The view model that looks up the customer and presents the Link flow.
+    /// - Parameter onWillPresent: Called right before the button presents the Link flow.
+    ///   Use it to clear old error messages, for example.
+    /// - Parameter onCompletion: Called when the Link flow finishes, with the same result as
+    ///   `LinkWalletButtonUIViewDelegate.linkWalletButtonUIView(_:didFinishWith:)`.
+    public init(
+        viewModel: LinkWalletButtonViewModel,
+        onWillPresent: @escaping () -> Void = {},
+        onCompletion: @escaping (LinkWalletButtonResult) -> Void
+    ) {
+        self.viewModel = viewModel
+        self.onWillPresent = onWillPresent
+        self.onCompletion = onCompletion
     }
 
-    init(controller: LinkWalletButtonControlling, email: String?, phoneNumber: String?) {
-        self.linkController = controller
-        self.email = email
-        self.phoneNumber = phoneNumber
-        self.button = PayWithLinkButton(brand: controller.resolvedLinkBrand, observesLinkAccountContext: false)
-        super.init(frame: CGRect(origin: .zero, size: PayWithLinkButton.Constants.defaultSize))
-
-        button.applyDefaultCornerStyle()
-        button.accessibilityIdentifier = "link_wallet_button"
-        button.addTarget(self, action: #selector(didTap), for: .touchUpInside)
-        addAndPinSubview(button)
-
-        controller.stateDidChange
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.updateButton()
-            }
-            .store(in: &cancellables)
-
-        updateButton()
-        lookUpIfNeeded()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    public override var intrinsicContentSize: CGSize {
-        button.intrinsicContentSize
-    }
-
-    // MARK: - Internal
-
-    /// The account and payment method preview that the button displays.
-    var displayedLinkAccount: PaymentSheetLinkAccount? { button.linkAccount as? PaymentSheetLinkAccount }
-    var displayedPaymentMethodPreview: LinkPaymentMethodPreview? { button.paymentMethodPreview }
-    var isDisplayingLoadingIndicator: Bool { button.isLoading }
-
-    static func accountMatches(_ linkAccount: PaymentSheetLinkAccount?, email: String?) -> Bool {
-        guard let linkAccount, let email else { return false }
-        return linkAccount.email.lowercased() == email.lowercased()
-    }
-
-    /// Returns the payment method to display, in order of preference: the payment method selected in this session
-    /// (in native Link, or else in the Link web popup), then the account's default payment method.
-    static func paymentMethodPreview(
-        selectedPaymentDetails: ConsumerPaymentDetails?,
-        selectedWebPaymentMethod: STPPaymentMethod? = nil,
-        linkAccount: PaymentSheetLinkAccount
-    ) -> LinkPaymentMethodPreview? {
-        if let preview = selectedPaymentDetails.flatMap(LinkPaymentMethodPreview.init(from:)) {
-            return preview
-        }
-        if let selectedWebPaymentMethod {
-            // Don't fall back to the default payment method, which may not be the one the customer selected
-            return LinkPaymentMethodPreview(from: selectedWebPaymentMethod)
-        }
-        return LinkPaymentMethodPreview(from: linkAccount.displayablePaymentDetails)
-    }
-
-    func updateButton() {
-        let brand = linkController.resolvedLinkBrand
-        let linkAccount: PaymentSheetLinkAccount?
-        let paymentMethodPreview: LinkPaymentMethodPreview?
-        // Only show account details for the customer the merchant provided, or who signed in through the button
-        if let account = linkController.linkAccount, Self.accountMatches(account, email: displayedEmail) {
-            linkAccount = account
-            paymentMethodPreview = showsPaymentMethodPreview
-                ? Self.paymentMethodPreview(
-                    selectedPaymentDetails: linkController.selectedPaymentDetails,
-                    selectedWebPaymentMethod: linkController.selectedWebPaymentMethod,
-                    linkAccount: account
-                )
-                : nil
-        } else {
-            linkAccount = nil
-            paymentMethodPreview = nil
-        }
-
-        // Animate once the button is on screen, e.g. when the lookup reveals the customer's email
-        let isLoading = isPresenting
-        button.performStateChange(animated: window != nil, duration: Self.stateTransitionDuration) { [button] in
-            button.brand = brand
-            button.linkAccount = linkAccount
-            button.paymentMethodPreview = paymentMethodPreview
-            button.isLoading = isLoading
-        }
-    }
-
-    func lookUpIfNeeded() {
-        // Re-evaluated when the in-flight lookup completes
-        guard !isLookingUp else { return }
-
-        guard let email = displayedEmail, !email.isEmpty, !Self.accountMatches(linkController.linkAccount, email: email) else {
-            return
-        }
-
-        isLookingUp = true
-        linkController.lookupConsumer(with: email) { [weak self] _ in
-            // Errors are ignored: the button keeps showing "Pay with Link", and `present` looks up the customer again.
-            guard let self else { return }
-            self.isLookingUp = false
-            if self.displayedEmail != email {
-                self.lookUpIfNeeded()
-            }
-        }
-    }
-
-    @objc
-    func didTap() {
-        guard !isPresenting else { return }
-
-        guard let presentingViewController = presentingViewController ?? window?.findTopMostPresentedViewController() ?? UIWindow.visibleViewController else {
-            delegate?.linkWalletButton(
-                self,
-                didCompleteWith: .failure(PaymentSheetError.unknown(debugDescription: "Could not find a view controller to present Link from. Set LinkWalletButton.presentingViewController."))
-            )
-            return
-        }
-
-        isPresenting = true
-        delegate?.linkWalletButtonWillPresent(self)
-        linkController.present(email: email, phoneNumber: phoneNumber, from: presentingViewController) { [weak self] result in
-            guard let self else { return }
-            // Adopt the customer before leaving the loading state, so the button changes to their account in one transition
-            self.adoptSignedInCustomerIfNeeded(after: result)
-            self.isPresenting = false
-            self.lookUpIfNeeded()
-            self.delegate?.linkWalletButton(self, didCompleteWith: result)
-        }
-    }
-}
-
-extension LinkWalletButton {
-    /// Without a merchant-provided `email`, remembers the customer who completed the Link flow, so the button shows their
-    /// Link account: the signed-in account with native Link, or the email on the payment method from the Link web popup.
-    func adoptSignedInCustomerIfNeeded(after result: Result<LinkController.PaymentMethodResult, Error>) {
-        guard email?.isEmpty ?? true else {
-            return
-        }
-        if let account = linkController.linkAccount, account.sessionState == .verified {
-            signedInEmail = account.email
-        } else if case .success(.completed(let paymentMethod)) = result,
-                  let paymentMethodEmail = paymentMethod.billingDetails?.email,
-                  !paymentMethodEmail.isEmpty {
-            signedInEmail = paymentMethodEmail
-        }
-    }
-}
-
-// MARK: - LinkWalletButtonControlling
-
-/// The subset of `LinkController` used by `LinkWalletButton`.
-@MainActor
-protocol LinkWalletButtonControlling: AnyObject {
-    var linkAccount: PaymentSheetLinkAccount? { get }
-    var selectedPaymentDetails: ConsumerPaymentDetails? { get }
-    /// The payment method selected in the Link web popup, which has no `selectedPaymentDetails`.
-    var selectedWebPaymentMethod: STPPaymentMethod? { get }
-    var resolvedLinkBrand: LinkBrand { get }
-    /// Emits when `linkAccount` or `selectedPaymentDetails` may have changed.
-    var stateDidChange: AnyPublisher<Void, Never> { get }
-
-    func lookupConsumer(with email: String, completion: @escaping (Result<Bool, Error>) -> Void)
-    func present(
-        email: String?,
-        phoneNumber: String?,
-        from presentingViewController: UIViewController,
-        completion: @escaping (Result<LinkController.PaymentMethodResult, Error>) -> Void
-    )
-}
-
-extension LinkController: LinkWalletButtonControlling {
-    var stateDidChange: AnyPublisher<Void, Never> {
-        Publishers.Merge(
-            $linkAccount.map { _ in () },
-            $paymentMethodPreview.map { _ in () }
+    public var body: some View {
+        LinkWalletButtonRepresentable(
+            viewModel: viewModel,
+            onWillPresent: onWillPresent,
+            onCompletion: onCompletion
         )
-        .eraseToAnyPublisher()
+        .fixedSize(horizontal: false, vertical: true)
+        // A new view model needs a new button, since the button is bound to its view model
+        .id(ObjectIdentifier(viewModel))
+    }
+}
+
+private struct LinkWalletButtonRepresentable: UIViewRepresentable {
+    let viewModel: LinkWalletButtonViewModel
+    let onWillPresent: () -> Void
+    let onCompletion: (LinkWalletButtonResult) -> Void
+
+    func makeCoordinator() -> LinkWalletButtonCoordinator {
+        LinkWalletButtonCoordinator(onWillPresent: onWillPresent, onCompletion: onCompletion)
+    }
+
+    func makeUIView(context: Context) -> LinkWalletButtonUIView {
+        let button = LinkWalletButtonUIView(viewModel: viewModel)
+        button.delegate = context.coordinator
+        return button
+    }
+
+    func updateUIView(_ uiView: LinkWalletButtonUIView, context: Context) {
+        // Use the latest closures, which may capture new state
+        context.coordinator.onWillPresent = onWillPresent
+        context.coordinator.onCompletion = onCompletion
+    }
+}
+
+/// Forwards the `LinkWalletButtonUIView`'s delegate calls to the `LinkWalletButton`'s closures.
+@MainActor
+final class LinkWalletButtonCoordinator: LinkWalletButtonUIViewDelegate {
+    var onWillPresent: () -> Void
+    var onCompletion: (LinkWalletButtonResult) -> Void
+
+    init(
+        onWillPresent: @escaping () -> Void,
+        onCompletion: @escaping (LinkWalletButtonResult) -> Void
+    ) {
+        self.onWillPresent = onWillPresent
+        self.onCompletion = onCompletion
+    }
+
+    func linkWalletButtonUIViewWillPresent(_ button: LinkWalletButtonUIView) {
+        onWillPresent()
+    }
+
+    func linkWalletButtonUIView(
+        _ button: LinkWalletButtonUIView,
+        didFinishWith result: LinkWalletButtonResult
+    ) {
+        onCompletion(result)
     }
 }

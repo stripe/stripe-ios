@@ -160,6 +160,24 @@ enum LinkControllerDemoBackendClient {
         return try await post("payment-intents/deferred", body: body)
     }
 
+    struct UnconfirmedPaymentIntentResponse: Decodable {
+        let clientSecret: String
+        let paymentIntentId: String
+    }
+
+    /// Creates a PaymentIntent without a payment method, for `LinkWalletButtonViewModel`: its `.payment` mode, and
+    /// `confirmPaymentIntent` with a payment method the customer selected in Link.
+    static func createUnconfirmedPaymentIntent(
+        customerId: String,
+        amount: Int,
+        currency: String
+    ) async throws -> UnconfirmedPaymentIntentResponse {
+        try await post(
+            "payment-intents/unconfirmed",
+            body: ["customerId": customerId, "amount": amount, "currency": currency]
+        )
+    }
+
     static func fetchPaymentIntentStatus(piId: String) async throws -> PaymentIntentResponse {
         try await get("payment-intents/\(piId)")
     }

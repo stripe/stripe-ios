@@ -19,16 +19,26 @@ final class LinkControllerPreviewAPITests: XCTestCase {
         _ = LinkConfiguration(financialConnectionsPermissions: ["payment_method", "balances"]).financialConnectionsPermissions
         _ = LinkConfiguration(returnURL: "example://stripe-redirect").returnURL
 
-        let result: LinkController.PaymentMethodResult = .canceled
-        _ = result
+        // Merchants switch over every case of the result
+        let handleResult: (LinkController.PaymentMethodResult) -> Void = { result in
+            switch result {
+            case .completed(let paymentMethod):
+                _ = paymentMethod
+            case .confirmed(let paymentMethod):
+                _ = paymentMethod
+            case .canceled:
+                break
+            }
+        }
+        handleResult(.canceled)
 
         let integrationErrors: [LinkController.IntegrationError] = [
             .noPaymentMethodSelected,
             .noActiveLinkConsumer,
             .missingAppAttestation,
             .linkUnavailable,
-            .unsupportedIntentConfiguration,
             .configurationRequiresNativeLink,
+            .intentMismatch,
         ]
         _ = integrationErrors.map(\.errorDescription)
 
@@ -37,6 +47,41 @@ final class LinkControllerPreviewAPITests: XCTestCase {
         ) { _, _ in "pi_secret_123" }
 
         if false {
+            LinkWalletButtonViewModel.create(mode: .paymentMethod) { result in
+                _ = result
+            }
+
+            Task { @MainActor in
+                let viewModel = try await LinkWalletButtonViewModel.create(
+                    mode: .payment(clientSecretProvider: { "pi_123_secret_abc" }),
+                    appearance: nil,
+                    configuration: .init(merchantDisplayName: "Example, Inc.")
+                )
+                _ = try await LinkWalletButtonViewModel.create(mode: .setup(clientSecretProvider: { "seti_123_secret_abc" }))
+
+                // The customer the button looks up and prefills in Link
+                viewModel.email = "jenny.rosen@example.com"
+                viewModel.phoneNumber = "+14155551234"
+                _ = viewModel.paymentMethodPreview
+
+                let button = LinkWalletButtonUIView(viewModel: viewModel)
+                _ = button
+                _ = LinkWalletButton(viewModel: viewModel) { result in
+                    switch result {
+                    case .completed(let paymentMethod):
+                        _ = paymentMethod
+                    case .canceled:
+                        break
+                    case .failed(let error):
+                        _ = error
+                    }
+                }
+                _ = LinkWalletButton(viewModel: viewModel, onWillPresent: {}, onCompletion: { _ in })
+
+                _ = await viewModel.confirmPaymentIntent(clientSecret: "pi_123_secret_abc", from: UIViewController())
+                _ = await viewModel.confirmSetupIntent(clientSecret: "seti_123_secret_abc", from: UIViewController())
+            }
+
             LinkController.create(
                 configuration: .init(supportedPaymentMethodTypes: [.card], paymentMethodTypes: ["link"])
             ) { result in

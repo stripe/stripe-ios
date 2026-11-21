@@ -245,14 +245,17 @@ struct LinkControllerDemoView: View {
             )
 
             switch result {
+            case .confirmed(let paymentMethod):
+                // The PaymentIntent was created by the confirm handler and confirmed inside Link.
+                try? await refreshSavedPaymentMethods()
+                statusTint = .green
+                statusMessage = "Payment succeeded!"
+                phase = .completed(paymentMethod)
             case .completed(let paymentMethod):
                 switch configuration.intentMode {
                 case .serverPaymentIntent:
-                    // The PaymentIntent was created by the confirm handler and confirmed inside Link.
-                    try? await refreshSavedPaymentMethods()
-                    statusTint = .green
-                    statusMessage = "Payment succeeded!"
-                    phase = .completed(paymentMethod)
+                    // Not returned: with an intent configuration, Link confirms the payment and returns `.confirmed`
+                    break
                 case .serverSetupIntent:
                     // PM selected — wait for the merchant to tap "Confirm & Save".
                     statusTint = .secondary
@@ -354,7 +357,7 @@ struct LinkControllerDemoView: View {
             )
 
             switch confirmResult {
-            case .completed(let paymentMethod):
+            case .completed(let paymentMethod), .confirmed(let paymentMethod):
                 try? await refreshSavedPaymentMethods()
                 statusTint = .green
                 statusMessage = "Payment method saved!"

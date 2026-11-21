@@ -11,20 +11,6 @@ import Foundation
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
 extension String.Localized {
-    @_spi(InternalOnlyAPI) public static func continue_with_link(brand: LinkBrand) -> String {
-        String(
-            format: STPLocalizedString(
-                "Continue with %@",
-                """
-                A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
-                   The title of a screen where users are informed that they can sign-in-to Link.
-                   The placeholder is a Stripe brand name and should not be translated.
-                """
-            ),
-            brand.displayName
-        )
-    }
-
     @_spi(InternalOnlyAPI) public static func use_information_you_previously_saved_with_your_brand_account(brand: LinkBrand) -> String {
         String(
             format: STPLocalizedString(

@@ -1036,7 +1036,8 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
     return rhs == lhsConverted
 }
 
-private extension ConsumerPaymentDetails {
+// Also used by `LinkController` to create payment methods the same way when confirming inside Link
+extension ConsumerPaymentDetails {
 
     var bankAccountDetails: ConsumerPaymentDetails.Details.BankAccount? {
         switch details {

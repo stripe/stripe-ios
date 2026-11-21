@@ -27,6 +27,19 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         verify(brand: .onelink, identifier: "logged_out_onelink")
     }
 
+    func testLoggedOutContinueLink() {
+        verify(brand: .link, callToAction: .continue, identifier: "logged_out_continue_link")
+    }
+
+    func testLoggedOutContinueOnelink() {
+        verify(brand: .onelink, callToAction: .continue, identifier: "logged_out_continue_onelink")
+    }
+
+    func testLoggedOutContinueLinkAtMinimumWidth() {
+        // The narrowest width before the button switches to its compact layout
+        verify(brand: .link, callToAction: .continue, width: 200, identifier: "logged_out_continue_link_minimum_width")
+    }
+
     func testLoggedInShortEmailLink() {
         verify(
             brand: .link,
@@ -123,6 +136,7 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         email: String? = nil,
         paymentMethodType: ConsumerSession.DisplayablePaymentDetails.PaymentType? = nil,
         isLoading: Bool = false,
+        callToAction: PayWithLinkButton.CallToAction = .pay,
         width: CGFloat = 260,
         userInterfaceStyle: UIUserInterfaceStyle = .unspecified,
         identifier: String,
@@ -132,6 +146,7 @@ final class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         let button = PayWithLinkButton(brand: brand)
         button.frame = CGRect(origin: .zero, size: CGSize(width: width, height: 44))
         button.overrideUserInterfaceStyle = userInterfaceStyle
+        button.callToAction = callToAction
 
         if let email {
             button.linkAccount = LinkAccountStub(
