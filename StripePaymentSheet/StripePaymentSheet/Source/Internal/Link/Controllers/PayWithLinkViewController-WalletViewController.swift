@@ -797,6 +797,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     }
 
     private func addBankAccount() {
+        updateErrorLabel(for: nil)
         confirmButton.update(status: .disabled)
         paymentPicker.setAddButtonIsLoading(true)
         coordinator?.startFinancialConnections { [weak self] result in
@@ -805,12 +806,15 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
                 self?.paymentPicker.setAddButtonIsLoading(false)
             }
 
-            guard case .completed = result else {
+            switch result {
+            case .completed:
+                self?.reloadPaymentDetails(completion: completion)
+            case .canceled:
                 completion()
-                return
+            case .failed(let error):
+                self?.updateErrorLabel(for: error)
+                completion()
             }
-
-            self?.reloadPaymentDetails(completion: completion)
         }
     }
 
