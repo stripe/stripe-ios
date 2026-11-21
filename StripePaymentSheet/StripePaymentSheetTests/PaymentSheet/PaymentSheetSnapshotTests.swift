@@ -9,6 +9,7 @@
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import UIKit
 import XCTest
 
@@ -18,15 +19,13 @@ import XCTest
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
-    private let backendCheckoutUrl = URL(
-        string: "https://stripe-mobile-test-playground-v6.stripedemos.com/checkout"
-    )!
+    private let backendCheckoutUrl = URL(string: STPTestingAPIClient.STPTestingPlaygroundBackendURL + "checkout")!
 
     var paymentSheet: PaymentSheet!
 
     private var configuration = PaymentSheet.Configuration()
 
-    // Change this to true to hit the real glitch backend. This may be required
+    // Change this to true to hit the real playground backend. This may be required
     // to capture data for new use cases
     var runAgainstLiveService: Bool = false
     override func setUp() {
@@ -1071,13 +1070,12 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
+        STPTestingAPIClient.addTestBackendsHeaders(to: &urlRequest)
         let task = session.dataTask(with: urlRequest) { data, _, error in
             guard
                 error == nil,
                 let data = data,
                 let json = try? JSONDecoder().decode([String: String].self, from: data),
-                let customerId = json["customerId"],
-                let customerEphemeralKeySecret = json["customerEphemeralKeySecret"],
                 let paymentIntentClientSecret = json["intentClientSecret"],
                 let publishableKey = json["publishableKey"]
             else {
@@ -1087,7 +1085,14 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
             var config = self.configuration
             config.apiClient = STPAPIClient(publishableKey: publishableKey)
+            // The playground creates no customer for guests.
             if customer != "guest" {
+                guard let customerId = json["customerId"],
+                      let customerEphemeralKeySecret = json["customerEphemeralKeySecret"]
+                else {
+                    XCTFail("Failed to parse response")
+                    return
+                }
                 config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
             }
             config.appearance = appearance
