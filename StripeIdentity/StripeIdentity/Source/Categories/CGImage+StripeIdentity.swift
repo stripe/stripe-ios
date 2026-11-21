@@ -19,43 +19,43 @@ enum STPCGImageError: String, Error {
 
 extension CGImage {
 
-    enum CropPaddingComputationMethod {
+    enum CropPaddingComputationMethod: Equatable {
         /// The pixel crop padding is a function of the maximum width or height of the image
         case maxImageWidthOrHeight
         /// The pixel crop padding is a function of the width of the region of interest
         case regionWidth
+        /// Add a fraction of face width on every edge, plus fractions of face height above and below.
+        case faceLandmarks(side: CGFloat, top: CGFloat, bottom: CGFloat)
     }
 
     /// Crops the image to a given region of interest plus padding.
     ///
     /// - Parameters:
-    ///   - normalizedRegion: A rect, in image coordinates, defining the area to add padding to and then crop, where origin is bottom-left.
-    ///   - cropPadding: A value, ranging between 0–1, that is added as padding to the region of interest.
+    ///   - normalizedRegion: A normalized rect with its origin at the top left of the image.
+    ///   - cropPadding: The padding fraction for the uniform padding methods.
     ///   - computationMethod: The method which the crop padding pixel value is computed from.
     ///
     /// - Returns: An image cropped to the given specifications.
     ///
     /// - Throws: STPCGImageError if the image could not be cropped
-    ///
-    /// - Note:
-    /// The pixel value of the padding added to region of interest is defined as `cropPadding * max(width, height)`.
     func cropping(
         toNormalizedRegion normalizedRegion: CGRect,
         withPadding cropPadding: CGFloat,
         computationMethod: CropPaddingComputationMethod
     ) throws -> CGImage {
-        guard
-            let image = cropping(
-                to: computePixelCropArea(
-                    normalizedRegion: normalizedRegion,
-                    pixelPadding: computePixelPadding(
-                        padding: cropPadding,
-                        normalizedRegion: normalizedRegion,
-                        computationMethod: computationMethod
-                    )
-                )
-            )
-        else {
+        let pixelPadding = computePixelPadding(
+            padding: cropPadding,
+            normalizedRegion: normalizedRegion,
+            computationMethod: computationMethod
+        )
+        var cropArea = computePixelCropArea(normalizedRegion: normalizedRegion, pixelPadding: pixelPadding)
+        if case .faceLandmarks(_, let top, let bottom) = computationMethod {
+            let faceHeight = normalizedRegion.height * CGFloat(height)
+            cropArea.origin.y -= top * faceHeight
+            cropArea.size.height += top * faceHeight + bottom * faceHeight
+        }
+        // CGImage clips the final pixel rectangle to the source image.
+        guard let image = cropping(to: cropArea) else {
             throw STPCGImageError.unableToCrop
         }
         return image
@@ -71,6 +71,8 @@ extension CGImage {
             return padding * CGFloat(max(width, height))
         case .regionWidth:
             return padding * normalizedRegion.width * CGFloat(width)
+        case .faceLandmarks(let side, _, _):
+            return side * normalizedRegion.width * CGFloat(width)
         }
     }
 

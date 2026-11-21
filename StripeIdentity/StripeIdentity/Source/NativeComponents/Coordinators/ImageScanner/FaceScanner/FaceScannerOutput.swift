@@ -31,6 +31,7 @@ struct FaceScannerOutput: Equatable {
     }
 
     let faceDetectorOutput: FaceDetectorOutput
+    let isFromMediaPipe: Bool
     let cameraProperties: CameraSession.DeviceProperties?
     let motionBlurResult: MotionBlurDetector.Output?
     let facePose: FacePose?
@@ -45,9 +46,11 @@ struct FaceScannerOutput: Equatable {
         facePose: FacePose? = nil,
         faceLandmarkResult: String? = nil,
         validationIssue: ValidationIssue? = nil,
+        isFromMediaPipe: Bool = false,
         isValid: Bool
     ) {
         self.faceDetectorOutput = faceDetectorOutput
+        self.isFromMediaPipe = isFromMediaPipe
         self.cameraProperties = cameraProperties
         self.motionBlurResult = motionBlurResult
         self.facePose = facePose
@@ -110,6 +113,7 @@ extension FaceScannerOutput {
 
     init(
         faceDetectorOutput: FaceDetectorOutput,
+        isFromMediaPipe: Bool = false,
         cameraProperties: CameraSession.DeviceProperties?,
         configuration: FaceScanner.Configuration,
         motionBlurResult: MotionBlurDetector.Output? = nil,
@@ -130,6 +134,7 @@ extension FaceScannerOutput {
             facePose: facePose,
             faceLandmarkResult: faceLandmarkResult,
             validationIssue: validationIssue,
+            isFromMediaPipe: isFromMediaPipe,
             isValid: validationIssue == nil
         )
     }
