@@ -5,9 +5,76 @@
 
 @testable@_spi(InternalOnlyAPI) import StripeCore
 @testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePayments
 import XCTest
 
 class ConsumerPaymentDetailsEncodingTests: XCTestCase {
+
+    func testCardIssuerCountryDecodesIndependentlyOfBilling() throws {
+        let json: [String: Any] = [
+            "id": "pd_india",
+            "type": "CARD",
+            "is_default": false,
+            "card_details": [
+                "exp_year": 2055, "exp_month": 12, "brand": "visa", "networks": ["visa"],
+                "last4": "4242", "funding": "CREDIT", "country": "COUNTRY_IN",
+            ],
+        ]
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let details = try decoder.decode(ConsumerPaymentDetails.self, from: JSONSerialization.data(withJSONObject: json))
+        guard case .card(let card) = details.details else {
+            return XCTFail("Expected card details")
+        }
+        XCTAssertEqual(card.country, "COUNTRY_IN")
+        XCTAssertTrue(details.isIndiaCardOverride(.indiaCardElementsSession()))
+    }
+
+    func testIndiaRoutingPredicate() {
+        let cases: [(String?, Bool?, String?, Bool)] = [
+            ("IN", true, "LINK_PAYMENT_METHOD", true),
+            ("COUNTRY_IN", true, "LINK_PAYMENT_METHOD", true),
+            ("in", true, "LINK_PAYMENT_METHOD", true),
+            ("country_in", true, "LINK_PAYMENT_METHOD", true),
+            (nil, true, "LINK_PAYMENT_METHOD", false),
+            ("", true, "LINK_PAYMENT_METHOD", false),
+            (" ", true, "LINK_PAYMENT_METHOD", false),
+            ("IND", true, "LINK_PAYMENT_METHOD", false),
+            ("COUNTRY_UNKNOWN", true, "LINK_PAYMENT_METHOD", false),
+            ("US", true, "LINK_PAYMENT_METHOD", false),
+            ("IN", false, "LINK_PAYMENT_METHOD", false),
+            ("IN", nil, "LINK_PAYMENT_METHOD", false),
+            ("IN", true, nil, true),
+            ("IN", true, "PASSTHROUGH", false),
+            ("IN", true, "LINK_CARD_BRAND", false),
+        ]
+        for (country, flag, mode, expected) in cases {
+            let details = indiaCardDetails(country: country)
+            let session = STPElementsSession.indiaCardElementsSession(flag: flag, mode: mode)
+            XCTAssertEqual(details.shouldSharePaymentDetails(session), expected, "country=\(country ?? "nil"), mode=\(mode ?? "nil")")
+            XCTAssertFalse(session.linkPassthroughModeEnabled)
+        }
+        XCTAssertFalse(LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.bankAccount]
+            .isIndiaCardOverride(.indiaCardElementsSession()))
+    }
+
+    func testIndiaCardConsentUsesCardSetupOptions() {
+        let session = STPElementsSession.linkElementsSessionWithCustomerSessionAndIndiaOverride
+        let indiaCard = indiaCardDetails(country: "IN")
+        XCTAssertEqual(indiaCard.computeAllowRedisplay(elementsSession: session, isSettingUp: { $0 == .card }), .limited)
+        XCTAssertEqual(indiaCardDetails(country: "US").computeAllowRedisplay(elementsSession: session, isSettingUp: { $0 == .card }), .unspecified)
+    }
+
+    private func indiaCardDetails(country: String?) -> ConsumerPaymentDetails {
+        ConsumerPaymentDetails(
+            stripeID: "pd_india",
+            details: .card(card: .init(
+                expiryYear: 2055, expiryMonth: 12, brand: "visa", networks: ["visa"], last4: "4242",
+                funding: .credit, checks: nil, country: country
+            )),
+            billingAddress: nil, billingEmailAddress: nil, nickname: nil, isDefault: false
+        )
+    }
 
     // Verifies that encoding a ParsedEnum<DetailsType> for any known case
     // produces the same string as the enum's rawValue.
@@ -55,6 +122,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
             XCTFail("Expected .generic case")
         }
 
+        XCTAssertFalse(details.isIndiaCardOverride(.indiaCardElementsSession()))
         XCTAssertNotNil(details.display)
         XCTAssertEqual(details.display?.label, "Stablecoin")
         XCTAssertEqual(details.display?.sublabel, "Wallet •••2")
@@ -108,6 +176,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
 
         if case .card(let card) = details.details {
             XCTAssertEqual(card.last4, "4242")
+            XCTAssertNil(card.country)
         } else {
             XCTFail("Expected .card case")
         }

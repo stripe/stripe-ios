@@ -67,7 +67,9 @@ extension PayWithLinkViewController {
 
         /// The mandate text to show.
         var mandate: NSAttributedString? {
-            let isSettingUp = context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link)
+            let useShare = selectedPaymentMethod?.shouldSharePaymentDetails(context.elementsSession)
+                ?? context.elementsSession.linkPassthroughModeEnabled
+            let isSettingUp = context.intent.isSetupFutureUsageSet(for: useShare ? .card : .link)
 
             switch selectedPaymentMethod?.details {
             case .card:

@@ -248,6 +248,7 @@ extension ConsumerPaymentDetails.Details {
         let last4: String
         let funding: Funding
         let checks: CardChecks?
+        let country: String?
 
         private enum CodingKeys: String, CodingKey {
             case expiryYear = "expYear"
@@ -257,6 +258,7 @@ extension ConsumerPaymentDetails.Details {
             case last4
             case funding
             case checks
+            case country
         }
 
         /// A frontend convenience property, i.e. not part of the API Object
@@ -269,7 +271,8 @@ extension ConsumerPaymentDetails.Details {
              networks: [String],
              last4: String,
              funding: Funding,
-             checks: CardChecks?
+             checks: CardChecks?,
+             country: String? = nil
         ) {
             self.expiryYear = expiryYear
             self.expiryMonth = expiryMonth
@@ -278,6 +281,7 @@ extension ConsumerPaymentDetails.Details {
             self.last4 = last4
             self.funding = funding
             self.checks = checks
+            self.country = country
         }
     }
 }
