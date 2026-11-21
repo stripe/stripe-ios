@@ -13,11 +13,12 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
 
     open override func setUp() {
         super.setUp()
-        recordMode = true
+        recordMode = ProcessInfo.processInfo.environment["STRIPE_SNAPSHOT_REFERENCE_DIR"] == nil
     }
 
     open override func getReferenceImageDirectory(withDefault dir: String?) -> String {
-        return ProcessInfo.processInfo.environment["SNAPSHOT_RECORD_DIR"] ?? "/tmp/snapshot-records"
+        return ProcessInfo.processInfo.environment["STRIPE_SNAPSHOT_REFERENCE_DIR"]
+            ?? ProcessInfo.processInfo.environment["SNAPSHOT_RECORD_DIR"] ?? "/tmp/snapshot-records"
     }
 
     open override func record(_ issue: XCTIssue) {
