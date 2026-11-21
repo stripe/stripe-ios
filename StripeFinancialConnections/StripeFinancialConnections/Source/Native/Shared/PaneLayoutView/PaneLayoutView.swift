@@ -29,7 +29,7 @@ final class PaneLayoutView {
     private weak var presentingView: UIView?
     private let keepFooterAboveKeyboard: Bool
 
-    /// Whether or not the sheet is currently presented as a form sheet (which only happens on iPad).
+    /// Whether or not the sheet is currently presented as a form sheet (which only happens with a regular width).
     /// Unfortunately, the best way to know this is to check if the sheet's width is not equal to the window's width.
     private var isPresentedAsFormSheet: Bool {
         guard let window = UIApplication.shared.connectedScenes

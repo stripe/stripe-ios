@@ -445,8 +445,11 @@ final public class FinancialConnectionsSheet {
         _ navigationController: FinancialConnectionsNavigationController,
         _ presentingViewController: UIViewController
     ) {
+        // Present as a form sheet when there's room for one (e.g. on iPad), rather than based on the device,
+        // since the window can be narrow on iPad or wide on iPhone.
+        let usesFormSheet = presentingViewController.traitCollection.horizontalSizeClass == .regular
         let shouldUseWrapper: Bool = {
-            guard UIDevice.current.userInterfaceIdiom != .pad else {
+            guard !usesFormSheet else {
                 return false
             }
             if #available(iOS 26.0, *) {
@@ -458,7 +461,7 @@ final public class FinancialConnectionsSheet {
             }
         }()
 
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        if usesFormSheet {
             navigationController.modalPresentationStyle = .formSheet
         } else if shouldUseWrapper {
             wrapperViewController = ModalPresentationWrapperViewController(vc: navigationController)
