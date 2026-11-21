@@ -686,16 +686,17 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
         setIsLoadingImageFromFile(true, for: side)
         imageLoadingQueue.async { [weak self] in
             guard let self = self else { return }
+            defer {
+                DispatchQueue.main.async {
+                    self.setIsLoadingImageFromFile(false, for: side)
+                    self.updateUI()
+                }
+            }
 
             do {
                 let data = try Data(contentsOf: url)
                 guard let image = UIImage(data: data) else {
-                    self.logFileUploadError(
-                        DocumentFileUploadViewControllerError.documentPickerDataNotFormattedAsImage,
-                        side: side,
-                        uploadSource: .documentPicker
-                    )
-                    return
+                    throw DocumentFileUploadViewControllerError.documentPickerDataNotFormattedAsImage
                 }
                 self.upload(image: image, for: side, method: .fileUpload)
             } catch {
@@ -704,10 +705,18 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
                     side: side,
                     uploadSource: .documentPicker
                 )
-            }
-            self.setIsLoadingImageFromFile(false, for: side)
-            DispatchQueue.main.async { [weak self] in
-                self?.updateUI()
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(
+                        title: nil,
+                        message: STPLocalizedString(
+                            "We couldn't read this image. Please select another image.",
+                            "Error message when an identity document image cannot be read from a selected file"
+                        ),
+                        preferredStyle: .alert
+                    )
+                    alert.addAction(.init(title: String.Localized.ok, style: .default))
+                    self.present(alert, animated: true)
+                }
             }
         }
 
