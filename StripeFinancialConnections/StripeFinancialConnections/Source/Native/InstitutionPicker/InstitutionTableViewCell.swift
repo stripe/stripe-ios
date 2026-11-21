@@ -180,7 +180,7 @@ extension InstitutionTableViewCell {
         if dividerView.superview == nil {
             contentView.addSubview(dividerView)
             NSLayoutConstraint.activate([
-                dividerView.heightAnchor.constraint(equalToConstant: FinancialConnectionsAppearance.linkDividerThickness),
+                dividerView.stp_heightConstraint(pixels: FinancialConnectionsAppearance.linkDividerPixelThickness),
                 dividerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 72),
                 dividerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                 dividerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),

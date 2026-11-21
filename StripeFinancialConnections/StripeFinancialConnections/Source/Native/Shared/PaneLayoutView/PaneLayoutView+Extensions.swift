@@ -339,7 +339,9 @@ extension PaneLayoutView {
             if useHorizontalLayout {
                 // Set the border through the configuration so `Button` re-resolves the
                 // dynamic color on trait changes (a raw `layer.borderColor` stays light-mode).
-                secondaryButton.configuration.borderWidth = 1 / stp_screenNativeScale
+                secondaryButton.stp_updateForDisplayScale { secondaryButton, displayScale in
+                    secondaryButton.configuration.borderWidth = 1 / displayScale
+                }
                 secondaryButton.configuration.borderColor = appearance.colors.border
                 secondaryButton.configuration.cornerRadius = appearance.buttonHeight / 2
                 secondaryButton.clipsToBounds = true
