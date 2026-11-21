@@ -622,15 +622,15 @@ private class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransit
             // WARNING: Do not use autolayout because it
             //          breaks the custom presentation
             //          when other VC is presented on top
-            // dim the whole window, even when the sheet only covers the form sheet
-            containerView.addSubview(backgroundDimmingView)
-            backgroundDimmingView.frame = containerView.bounds
-            backgroundDimmingView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
             let sheetContainerView = UIView(frame: containerView.bounds)
             sheetContainerView.backgroundColor = .clear
             sheetContainerView.clipsToBounds = true
             containerView.addSubview(sheetContainerView)
+
+            // only dim the form sheet that the sheet covers
+            sheetContainerView.addSubview(backgroundDimmingView)
+            backgroundDimmingView.frame = sheetContainerView.bounds
+            backgroundDimmingView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
             sheetContainerView.addSubview(toViewController.view)
             toViewController.view.frame = sheetContainerView.bounds
