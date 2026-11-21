@@ -360,7 +360,7 @@ extension STPTestingAPIClient {
 
     // MARK: - Helpers
 
-    /// Adds `testBackendsHeaders`, the test backends' token and Vercel bypass, to a request for one of the backends.
+    /// Adds `testBackendsHeaders`, the test backends' Vercel bypass, to a request for one of the backends.
     public static func addTestBackendsHeaders(to request: inout URLRequest) {
         for (field, value) in testBackendsHeaders {
             request.setValue(value, forHTTPHeaderField: field)

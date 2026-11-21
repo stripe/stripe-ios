@@ -23,31 +23,30 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation STPTestingAPIClient
 
 + (NSString *)testBackendsURL {
-    NSString *url = NSProcessInfo.processInfo.environment[@"STRIPE_TEST_BACKENDS_URL"];
+    return [self testBackendsURLForEnvironment:NSProcessInfo.processInfo.environment];
+}
+
++ (NSDictionary<NSString *, NSString *> *)testBackendsHeaders {
+    return [self testBackendsHeadersForEnvironment:NSProcessInfo.processInfo.environment];
+}
+
++ (NSString *)testBackendsURLForEnvironment:(NSDictionary<NSString *, NSString *> *)environment {
+    NSString *url = environment[@"STRIPE_TEST_BACKENDS_URL"];
     if (url.length == 0 || STPUsesDefaultTestBackendsURL) {
         url = STPTestingDefaultTestBackendsURL;
     }
     return [url hasSuffix:@"/"] ? url : [url stringByAppendingString:@"/"];
 }
 
-+ (NSDictionary<NSString *, NSString *> *)testBackendsHeaders {
-    NSMutableDictionary<NSString *, NSString *> *headers = [NSMutableDictionary dictionary];
-    NSDictionary<NSString *, NSString *> *environment = NSProcessInfo.processInfo.environment;
-    NSString *token = environment[@"STRIPE_TEST_BACKENDS_TOKEN"];
-    if (token.length > 0) {
-        headers[@"X-Test-Backends-Token"] = token;
-    }
++ (NSDictionary<NSString *, NSString *> *)testBackendsHeadersForEnvironment:(NSDictionary<NSString *, NSString *> *)environment {
     NSString *bypass = environment[@"STRIPE_TEST_BACKENDS_BYPASS"];
     if (bypass.length == 0) {
         // A local copy of the backends isn't behind Vercel.
-        NSString *host = [NSURL URLWithString:self.testBackendsURL].host;
+        NSString *host = [NSURL URLWithString:[self testBackendsURLForEnvironment:environment]].host;
         BOOL isLocal = [@[@"127.0.0.1", @"localhost", @"::1"] containsObject:host.lowercaseString];
         bypass = isLocal ? nil : STPTestingDefaultTestBackendsBypass;
     }
-    if (bypass.length > 0) {
-        headers[@"x-vercel-protection-bypass"] = bypass;
-    }
-    return headers;
+    return bypass.length > 0 ? @{@"x-vercel-protection-bypass": bypass} : @{};
 }
 
 + (BOOL)usesDefaultTestBackendsURL {

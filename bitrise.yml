@@ -730,17 +730,13 @@ workflows:
             #!/usr/bin/env bash
             # The tests and example apps call the unified test backends' Vercel deployment, with its
             # public protection bypass, both committed in STPTestingAPIClient.m and
-            # Example/Shared/TestBackends.swift. Nothing needs setting here. Optional overrides:
-            # STRIPE_TEST_BACKENDS_URL and STRIPE_TEST_BACKENDS_BYPASS, for another deployment, and
-            # STRIPE_TEST_BACKENDS_TOKEN as a Secret if the deployment sets TEST_BACKENDS_TOKEN (never
-            # commit it: this repository is public). xcodebuild passes TEST_RUNNER_<name> on to the
-            # tests as <name>, and UI tests hand them to the app in launchEnvironment.
+            # Example/Shared/TestBackends.swift. Nothing needs setting here. Optional overrides, for
+            # another deployment: STRIPE_TEST_BACKENDS_URL and STRIPE_TEST_BACKENDS_BYPASS. xcodebuild
+            # passes TEST_RUNNER_<name> on to the tests as <name>, and UI tests hand them to the app in
+            # launchEnvironment.
             set -euo pipefail
             if [ -n "${STRIPE_TEST_BACKENDS_URL:-}" ]; then
               envman add --key TEST_RUNNER_STRIPE_TEST_BACKENDS_URL --value "$STRIPE_TEST_BACKENDS_URL"
-            fi
-            if [ -n "${STRIPE_TEST_BACKENDS_TOKEN:-}" ]; then
-              envman add --key TEST_RUNNER_STRIPE_TEST_BACKENDS_TOKEN --value "$STRIPE_TEST_BACKENDS_TOKEN" --sensitive
             fi
             if [ -n "${STRIPE_TEST_BACKENDS_BYPASS:-}" ]; then
               envman add --key TEST_RUNNER_STRIPE_TEST_BACKENDS_BYPASS --value "$STRIPE_TEST_BACKENDS_BYPASS" --sensitive
