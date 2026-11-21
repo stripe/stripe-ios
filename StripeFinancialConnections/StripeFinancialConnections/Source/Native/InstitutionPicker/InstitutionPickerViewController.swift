@@ -152,9 +152,17 @@ class InstitutionPickerViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
-        let horizontalMargin = dataSource.manifest.appearance.colors == .link
-            ? Constants.Layout.navigationBarAlignedHorizontalMargin
-            : 0
+        if dataSource.manifest.appearance.colors == .link {
+            // Inset the content through the safe area instead of the table's frame, so the table
+            // spans the full width and its scroll indicator can sit at the screen edge, past any
+            // side column (e.g. on iPhone Duo).
+            additionalSafeAreaInsets = UIEdgeInsets(
+                top: 0,
+                left: Constants.Layout.navigationBarAlignedHorizontalMargin,
+                bottom: 0,
+                right: Constants.Layout.navigationBarAlignedHorizontalMargin
+            )
+        }
         institutionTableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(institutionTableView)
         NSLayoutConstraint.activate([
@@ -162,8 +170,8 @@ class InstitutionPickerViewController: UIViewController {
             // where the navigation bar doesn't cover them (e.g. on iPhone Duo).
             institutionTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             institutionTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            institutionTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalMargin),
-            institutionTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalMargin),
+            institutionTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            institutionTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         institutionTableView.setTableHeaderView(headerView)
         if !dataSource.manifest.institutionSearchDisabled {
