@@ -156,22 +156,9 @@ class SheetViewController: UIViewController {
 
     /// The physical edges where the system can place the iPhone Duo's side column.
     private var sideColumnEdges: UIRectEdge {
-        #if compiler(>=6.4.2) && !os(visionOS)
-        if #available(iOS 27.1, *) {
-            // `verticalBarEdge` follows the layout direction, while safe area insets use physical edges.
-            let isRightToLeft = view.effectiveUserInterfaceLayoutDirection == .rightToLeft
-            switch traitCollection.verticalBarEdge {
-            case .leading:
-                return isRightToLeft ? .right : .left
-            case .trailing:
-                return isRightToLeft ? .left : .right
-            case .unspecified:
-                return []
-            @unknown default:
-                return []
-            }
+        if let verticalBarEdges = view.stp_verticalBarEdges {
+            return verticalBarEdges
         }
-        #endif
         // Without the trait, assume portrait insets come from the side column. In landscape,
         // horizontal insets come from the sensor housing instead, which the sheet doesn't cover.
         return traitCollection.verticalSizeClass == .regular ? [.left, .right] : []

@@ -231,7 +231,7 @@ private class AutomaticShadowScrollView: UIScrollView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         // The content is inset horizontally through constraints, so only inset vertically here.
-        // UIKit's automatic adjustments would also inset the scroll indicator from the screen edge.
+        // The scroll indicator is inset manually too, so it can sit past a side column (e.g. on iPhone Duo).
         contentInsetAdjustmentBehavior = .never
         automaticallyAdjustsScrollIndicatorInsets = false
     }
@@ -242,6 +242,7 @@ private class AutomaticShadowScrollView: UIScrollView {
 
     override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
+        updateHorizontalScrollIndicatorInsets()
         let topInset = safeAreaInsets.top
         guard contentInset.top != topInset else { return }
         let isScrolledToTop = contentOffset.y <= -contentInset.top
@@ -249,6 +250,18 @@ private class AutomaticShadowScrollView: UIScrollView {
         verticalScrollIndicatorInsets.top = topInset
         if isScrolledToTop {
             contentOffset.y = -topInset
+        }
+    }
+
+    /// Keeps the scroll indicator clear of the sensor housing and rounded corners, like UIKit does,
+    /// except on the edge with the side column, where it sits at the screen edge.
+    private func updateHorizontalScrollIndicatorInsets() {
+        let verticalBarEdges = stp_verticalBarEdges ?? []
+        let leftInset = verticalBarEdges.contains(.left) ? 0 : safeAreaInsets.left
+        let rightInset = verticalBarEdges.contains(.right) ? 0 : safeAreaInsets.right
+        if verticalScrollIndicatorInsets.left != leftInset || verticalScrollIndicatorInsets.right != rightInset {
+            verticalScrollIndicatorInsets.left = leftInset
+            verticalScrollIndicatorInsets.right = rightInset
         }
     }
 
@@ -299,6 +312,8 @@ private class AutomaticShadowScrollView: UIScrollView {
     // CGColor's need to be manually updated when the system theme changes.
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        // The side column's edge is a trait, and can change without the safe area changing.
+        updateHorizontalScrollIndicatorInsets()
         guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
 
         shadowView?.layer.shadowColor = FinancialConnectionsAppearance.Colors.textDefault.cgColor
