@@ -223,13 +223,13 @@ final class InstitutionTableView: UIView {
     }
 
     private func updateScrollIndicatorInsets() {
-        // Keep the scroll indicator at the screen edge. UIKit insets it by the safe area, which would
-        // otherwise place it next to the list instead of past a side column (e.g. on iPhone Duo).
-        // The indicator sits on the left in right-to-left layouts, and the side column can be on either edge.
-        let isRightToLeft = tableView.effectiveUserInterfaceLayoutDirection == .rightToLeft
+        // UIKit insets the scroll indicator by the safe area, which keeps it clear of the sensor housing
+        // and rounded corners. Only cancel that on the edge with the side column (e.g. on iPhone Duo),
+        // so the indicator sits past it instead of next to the list.
+        let verticalBarEdges = tableView.stp_verticalBarEdges ?? []
         var insets = tableView.verticalScrollIndicatorInsets
-        insets.left = isRightToLeft ? -tableView.safeAreaInsets.left : 0
-        insets.right = isRightToLeft ? 0 : -tableView.safeAreaInsets.right
+        insets.left = verticalBarEdges.contains(.left) ? -tableView.safeAreaInsets.left : 0
+        insets.right = verticalBarEdges.contains(.right) ? -tableView.safeAreaInsets.right : 0
         if tableView.verticalScrollIndicatorInsets != insets {
             tableView.verticalScrollIndicatorInsets = insets
         }
