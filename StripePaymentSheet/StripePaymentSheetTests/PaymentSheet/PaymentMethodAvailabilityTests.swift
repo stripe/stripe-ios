@@ -434,7 +434,6 @@ extension LinkSettings {
             popupWebviewOption: nil,
             passthroughModeEnabled: true,
             disableSignup: disableSignup,
-            suppress2FAModal: false,
             disableFlowControllerRUX: true,
             useAttestationEndpoints: true,
             linkMode: .passthrough,

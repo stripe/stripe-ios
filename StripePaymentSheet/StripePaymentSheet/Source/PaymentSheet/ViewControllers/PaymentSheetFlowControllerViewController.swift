@@ -537,6 +537,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         updateUI()
     }
 
+    func presentLinkForPaymentMethodSelection() {
+        presentLink()
+    }
+
     @objc
     private func didTapContinueButton() {
         // The user is continuing with an LPM, so we un-select Link
