@@ -16,16 +16,17 @@ struct LinkWalletButtonDemoConfiguration {
     var useCustomAppearance: Bool = false
     var uiFramework: UIFramework = .swiftUI
     var linkBrand: LinkBrandOverride = .automatic
-    var integration: Integration = .collectPaymentMethod
+    var integration: Integration = .paymentMethod
     var nativeLinkEnabled: Bool = true
-    var confirmOnServer: Bool = false
 
     let amount = 1099
     let currency = "usd"
 
+    /// The `LinkWalletButtonViewModel.Mode` to create the view model with.
     enum Integration: String, CaseIterable {
-        case collectPaymentMethod = "Collect payment method"
-        case payInLink = "Pay in Link"
+        case payment = "Payment"
+        case setup = "Setup"
+        case paymentMethod = "Payment method"
     }
 
     enum UIFramework: String, CaseIterable {
@@ -112,26 +113,27 @@ struct ExampleLinkWalletButtonConfigurationView: View {
                     }
                 }
 
-                DemoSection(title: "Intent Integration") {
+                DemoSection(title: "Mode") {
                     VStack(alignment: .leading, spacing: 16) {
-                        Picker("Intent Integration", selection: $configuration.integration) {
+                        Picker("Mode", selection: $configuration.integration) {
                             ForEach(LinkWalletButtonDemoConfiguration.Integration.allCases, id: \.self) { integration in
                                 Text(integration.rawValue).tag(integration)
                             }
                         }
                         .pickerStyle(.segmented)
 
-                        switch configuration.integration {
-                        case .collectPaymentMethod:
-                            Text("The LinkController is created without an IntentConfiguration. The button returns the selected payment method, and the merchant places the order.")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        case .payInLink:
-                            Text("The LinkController is created with a PaymentIntent IntentConfiguration ($10.99 USD). The Link wallet shows a Pay button; the confirm handler creates the payment intent, and Link confirms it.")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Toggle("Confirm on server", isOn: $configuration.confirmOnServer)
+                        Group {
+                            switch configuration.integration {
+                            case .payment:
+                                Text(".payment: when the button is tapped, the app creates a $10.99 USD PaymentIntent on the demo backend and returns its client secret. Link shows a Pay button and confirms it.")
+                            case .setup:
+                                Text(".setup: when the button is tapped, the app creates a SetupIntent on the demo backend and returns its client secret. Link confirms it, saving the payment method to the customer.")
+                            case .paymentMethod:
+                                Text(".paymentMethod: the button returns the selected payment method. \"Place order\" creates a PaymentIntent and confirms it with LinkWalletButtonViewModel.confirmPaymentIntent.")
+                            }
                         }
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                     }
                 }
 

@@ -16,7 +16,7 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonUIVie
         case loading
         /// With the UIKit integration, also the `LinkWalletButtonUIView`. The SwiftUI integration's `LinkWalletButton`
         /// creates its own.
-        case ready(LinkController, LinkWalletButtonUIView?)
+        case ready(LinkWalletButtonViewModel, LinkWalletButtonUIView?)
         case error(String)
     }
 
@@ -28,6 +28,7 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonUIVie
     @Published private(set) var phase: Phase = .loading
     @Published private(set) var paymentMethod: STPPaymentMethod?
     @Published private(set) var message: Message?
+    @Published private(set) var isPlacingOrder = false
 
     private var configuration = LinkWalletButtonDemoConfiguration()
     private var customerId: String?
@@ -40,14 +41,14 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonUIVie
             let config = try await LinkControllerDemoBackendClient.fetchConfig()
             STPAPIClient.shared.publishableKey = config.publishableKey
 
-            // Read when the controller is created and while Link is presented, so it's reset when the checkout screen disappears
+            // Read when the view model is created and while Link is presented, so it's reset when the checkout screen disappears
             PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = configuration.nativeLinkEnabled ? nil : false
 
-            // Only read when the controller is created, so reset it to avoid affecting other demos
+            // Only read when the view model is created, so reset it to avoid affecting other demos
             LinkController.forcedLinkBrandForTesting = configuration.linkBrand.brand
             defer { LinkController.forcedLinkBrandForTesting = nil }
-            let linkController = try await LinkController.create(
-                intentConfiguration: makeIntentConfiguration(),
+            let viewModel = try await LinkWalletButtonViewModel.create(
+                mode: makeMode(),
                 appearance: configuration.appearance,
                 configuration: .init(
                     supportedPaymentMethodTypes: Array(configuration.supportedPaymentMethodTypes),
@@ -55,70 +56,106 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonUIVie
                 )
             )
 
-            linkController.email = configuration.email.isEmpty ? nil : configuration.email
-            linkController.phoneNumber = configuration.phone.isEmpty ? nil : configuration.phone
+            viewModel.email = configuration.email.isEmpty ? nil : configuration.email
+            viewModel.phoneNumber = configuration.phone.isEmpty ? nil : configuration.phone
             switch configuration.uiFramework {
             case .swiftUI:
-                phase = .ready(linkController, nil)
+                phase = .ready(viewModel, nil)
             case .uiKit:
-                let button = LinkWalletButtonUIView(linkController: linkController)
+                let button = LinkWalletButtonUIView(viewModel: viewModel)
                 button.delegate = self
-                phase = .ready(linkController, button)
+                phase = .ready(viewModel, button)
             }
         } catch {
             phase = .error(error.localizedDescription)
         }
     }
 
-    /// With "Pay in Link", an intent configuration whose confirm handler creates the PaymentIntent on the demo backend,
-    /// so the button completes the payment inside Link. Otherwise `nil`, so the button returns the selected payment method.
-    private func makeIntentConfiguration() -> PaymentSheet.IntentConfiguration? {
-        guard configuration.integration == .payInLink else {
-            return nil
-        }
+    /// With `.payment` and `.setup`, the client secret provider creates the intent on the demo backend when the button is
+    /// tapped, and Link confirms it.
+    private func makeMode() -> LinkWalletButtonViewModel.Mode {
         let configuration = configuration
-        return .init(mode: .payment(amount: configuration.amount, currency: configuration.currency)) { [weak self] paymentMethod, _ in
-            guard let self else { throw CancellationError() }
-            let customerId = try await self.resolveCustomerId(for: paymentMethod)
-            let paymentIntent = try await LinkControllerDemoBackendClient.createDeferredPaymentIntent(
-                paymentMethodId: paymentMethod.stripeId,
-                customerId: customerId,
-                amount: configuration.amount,
-                currency: configuration.currency,
-                setupFutureUsage: nil,
-                confirmOnServer: configuration.confirmOnServer
-            )
-            return paymentIntent.clientSecret
+        switch configuration.integration {
+        case .payment:
+            return .payment(clientSecretProvider: { [weak self] in
+                guard let self else { throw CancellationError() }
+                return try await LinkControllerDemoBackendClient.createUnconfirmedPaymentIntent(
+                    customerId: self.resolveCustomerId(),
+                    amount: configuration.amount,
+                    currency: configuration.currency
+                ).clientSecret
+            })
+        case .setup:
+            return .setup(clientSecretProvider: { [weak self] in
+                guard let self else { throw CancellationError() }
+                return try await LinkControllerDemoBackendClient.createSetupIntent(customerId: self.resolveCustomerId())
+            })
+        case .paymentMethod:
+            return .paymentMethod
         }
     }
 
-    /// The demo backend's customer, created from the entered email, or, if none was entered,
-    /// from the email Link attaches to the payment method, or else a shared guest customer.
-    private func resolveCustomerId(for paymentMethod: STPPaymentMethod) async throws -> String {
+    /// The demo backend's customer, created from the entered email, or else a shared guest customer. The intent is created
+    /// before the customer signs in to Link, so there's no payment method email to use yet.
+    private func resolveCustomerId() async throws -> String {
         if let customerId {
             return customerId
         }
-        let email = LinkControllerDemoBackendClient.customerEmail(enteredEmail: configuration.email, paymentMethod: paymentMethod)
+        let email = configuration.email.isEmpty ? LinkControllerDemoBackendClient.guestCustomerEmail : configuration.email
         let customerId = try await LinkControllerDemoBackendClient.fetchOrCreateCustomer(email: email)
         self.customerId = customerId
         return customerId
+    }
+
+    /// With `.paymentMethod`: creates a PaymentIntent, and confirms it with the payment method the customer selected.
+    func placeOrder() async {
+        guard case .ready(let viewModel, _) = phase, let presentingViewController = UIViewController.topMostViewController() else {
+            return
+        }
+        isPlacingOrder = true
+        defer { isPlacingOrder = false }
+        message = nil
+        let result: LinkWalletButtonResult
+        do {
+            let paymentIntent = try await LinkControllerDemoBackendClient.createUnconfirmedPaymentIntent(
+                customerId: resolveCustomerId(),
+                amount: configuration.amount,
+                currency: configuration.currency
+            )
+            result = await viewModel.confirmPaymentIntent(clientSecret: paymentIntent.clientSecret, from: presentingViewController)
+        } catch {
+            result = .failed(error: error)
+        }
+        switch result {
+        case .completed(let paymentMethod):
+            self.paymentMethod = paymentMethod
+            message = .init(text: "Order placed!", tint: .green)
+        case .canceled:
+            message = .init(text: "Authentication canceled", tint: .orange)
+        case .failed(let error):
+            message = .init(text: "Error: \(error.localizedDescription)", tint: .red)
+        }
     }
 
     func linkWalletButtonWillPresent() {
         message = nil
     }
 
-    func linkWalletButtonDidComplete(with result: Result<LinkController.PaymentMethodResult, Error>) {
+    func linkWalletButtonDidFinish(with result: LinkWalletButtonResult) {
         switch result {
-        case .success(.completed(let paymentMethod)):
+        case .completed(let paymentMethod):
             self.paymentMethod = paymentMethod
-            message = .init(text: "Payment method selected", tint: .green)
-        case .success(.confirmed(let paymentMethod)):
-            self.paymentMethod = paymentMethod
-            message = .init(text: "Payment succeeded!", tint: .green)
-        case .success(.canceled):
+            switch configuration.integration {
+            case .payment:
+                message = .init(text: "Payment succeeded!", tint: .green)
+            case .setup:
+                message = .init(text: "Payment method saved", tint: .green)
+            case .paymentMethod:
+                message = .init(text: "Payment method selected", tint: .green)
+            }
+        case .canceled:
             message = .init(text: "Link flow canceled", tint: .orange)
-        case .failure(let error):
+        case .failed(let error):
             message = .init(text: "Error: \(error.localizedDescription)", tint: .red)
         }
     }
@@ -129,11 +166,8 @@ final class LinkWalletButtonDemoSession: ObservableObject, LinkWalletButtonUIVie
         linkWalletButtonWillPresent()
     }
 
-    func linkWalletButtonUIView(
-        _ button: LinkWalletButtonUIView,
-        didCompleteWith result: Result<LinkController.PaymentMethodResult, Error>
-    ) {
-        linkWalletButtonDidComplete(with: result)
+    func linkWalletButtonUIView(_ button: LinkWalletButtonUIView, didFinishWith result: LinkWalletButtonResult) {
+        linkWalletButtonDidFinish(with: result)
     }
 }
 
@@ -142,7 +176,6 @@ struct ExampleLinkWalletButtonCheckoutView: View {
     let configuration: LinkWalletButtonDemoConfiguration
 
     @StateObject private var session = LinkWalletButtonDemoSession()
-    @State private var isShowingOrderConfirmation = false
 
     private let lineItems: [(name: String, price: String)] = [
         ("Premium plan (monthly)", "$9.99"),
@@ -172,19 +205,19 @@ struct ExampleLinkWalletButtonCheckoutView: View {
                 case .loading:
                     HStack(spacing: 12) {
                         ProgressView()
-                        Text("Loading LinkController...")
+                        Text("Loading Link...")
                             .foregroundColor(.secondary)
                     }
                     .frame(maxWidth: .infinity, minHeight: 44)
-                case .ready(let linkController, let uiKitButton):
+                case .ready(let viewModel, let uiKitButton):
                     if let uiKitButton {
                         LinkWalletButtonUIKitHost(button: uiKitButton)
                             .frame(height: 44)
                     } else {
                         LinkWalletButton(
-                            linkController: linkController,
+                            viewModel: viewModel,
                             onWillPresent: { session.linkWalletButtonWillPresent() },
-                            onCompletion: { session.linkWalletButtonDidComplete(with: $0) }
+                            onCompletion: { session.linkWalletButtonDidFinish(with: $0) }
                         )
                     }
                 case .error(let errorMessage):
@@ -195,11 +228,11 @@ struct ExampleLinkWalletButtonCheckoutView: View {
                     MessageBanner(text: message.text, tint: message.tint)
                 }
 
-                if case .ready(let linkController, _) = session.phase {
+                if case .ready(let viewModel, _) = session.phase {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Payment Method")
                             .font(.headline)
-                        LinkControllerPreviewPaymentMethodView(linkController: linkController)
+                        LinkWalletButtonPaymentMethodView(viewModel: viewModel)
                         if let paymentMethod = session.paymentMethod {
                             VStack(alignment: .leading, spacing: 8) {
                                 PreviewInfoRow(label: "ID", value: paymentMethod.stripeId)
@@ -213,15 +246,20 @@ struct ExampleLinkWalletButtonCheckoutView: View {
                 }
 
                 switch configuration.integration {
-                case .collectPaymentMethod:
-                    Button("Place order") {
-                        isShowingOrderConfirmation = true
+                case .paymentMethod:
+                    let canPlaceOrder = session.paymentMethod != nil && !session.isPlacingOrder
+                    Button(session.isPlacingOrder ? "Placing order..." : "Place order") {
+                        Task { await session.placeOrder() }
                     }
                     .buttonStyle(PreviewPrimaryButtonStyle())
-                    .disabled(session.paymentMethod == nil)
-                    .opacity(session.paymentMethod == nil ? 0.4 : 1)
-                case .payInLink:
+                    .disabled(!canPlaceOrder)
+                    .opacity(canPlaceOrder ? 1 : 0.4)
+                case .payment:
                     Text("Tap the Link button to pay. The payment completes inside Link.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                case .setup:
+                    Text("Tap the Link button to save a payment method. Link confirms the SetupIntent.")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -237,11 +275,16 @@ struct ExampleLinkWalletButtonCheckoutView: View {
             // Don't affect other demos
             PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
         }
-        .alert("Order placed", isPresented: $isShowingOrderConfirmation) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("This is a mock checkout, so no payment was made.\n\nPayment method: \(session.paymentMethod?.stripeId ?? "")")
-        }
+    }
+}
+
+/// Shows the payment method the customer selected in Link, from the view model.
+@available(iOS 16.0, *)
+private struct LinkWalletButtonPaymentMethodView: View {
+    @ObservedObject var viewModel: LinkWalletButtonViewModel
+
+    var body: some View {
+        PaymentMethodPreviewCard(paymentMethodPreview: viewModel.paymentMethodPreview)
     }
 }
 

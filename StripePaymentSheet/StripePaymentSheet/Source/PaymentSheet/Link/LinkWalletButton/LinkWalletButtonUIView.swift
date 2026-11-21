@@ -14,13 +14,12 @@ import UIKit
 @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public protocol LinkWalletButtonUIViewDelegate: AnyObject {
     /// Called when the Link flow launched by the button finishes.
     /// - Parameter button: The button that launched the Link flow.
-    /// - Parameter result: `.success(.confirmed(paymentMethod))` once Link confirms the payment or setup (if the
-    ///   `LinkController` was created with an `IntentConfiguration`), `.success(.completed(paymentMethod))` once the customer
-    ///   selects a payment method (if it wasn't), `.success(.canceled)` when they dismiss the flow, or `.failure(error)`
-    ///   on an error.
+    /// - Parameter result: `.completed(paymentMethod)` once Link confirms the payment or setup, or once the customer
+    ///   selects a payment method with `LinkWalletButtonViewModel.Mode.paymentMethod`. `.canceled` if they dismiss the flow,
+    ///   or `.failed(error)` on an error.
     func linkWalletButtonUIView(
         _ button: LinkWalletButtonUIView,
-        didCompleteWith result: Result<LinkController.PaymentMethodResult, Error>
+        didFinishWith result: LinkWalletButtonResult
     )
 
     /// Called right before the button presents the Link flow.
@@ -31,12 +30,12 @@ import UIKit
     func linkWalletButtonUIViewWillPresent(_ button: LinkWalletButtonUIView) {}
 }
 
-/// A UIKit "Pay with Link" button that launches the Link flow using a `LinkController`. In SwiftUI, use `LinkWalletButton`.
+/// A UIKit "Pay with Link" button that launches the Link flow using a `LinkWalletButtonViewModel`. In SwiftUI, use
+/// `LinkWalletButton`.
 ///
 /// The button reflects the customer's Link account: it shows their email once they're recognized as a Link user,
-/// and their payment method once one is available. Tapping it presents Link with `LinkController.present`, which either
-/// completes the payment or setup, or collects a payment method, depending on how the `LinkController` was created.
-/// The result is delivered to the `delegate`.
+/// and their payment method once one is available. Tapping it presents Link, which completes the payment or setup, or
+/// collects a payment method, depending on the view model's `Mode`. The result is delivered to the `delegate`.
 @MainActor
 @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public final class LinkWalletButtonUIView: UIView {
 
@@ -79,13 +78,13 @@ import UIKit
 
     /// Creates a `LinkWalletButtonUIView`.
     ///
-    /// The button shows the Link account for the controller's `email`, and prefills its `email` and `phoneNumber` in Link.
-    /// If the controller has no `email`, the button shows "Pay with Link", or "Continue with Link" when collecting or setting
-    /// up a payment method, and tapping it lets the customer sign in to or sign up for Link. Once they complete the Link flow,
-    /// the button shows their Link account.
-    /// - Parameter linkController: The `LinkController` used to look up the customer and present the Link flow.
-    public convenience init(linkController: LinkController) {
-        self.init(controller: linkController)
+    /// The button shows the Link account for the view model's `email`, and prefills its `email` and `phoneNumber` in Link.
+    /// If the view model has no `email`, the button shows "Pay with Link", or "Continue with Link" when setting up or
+    /// collecting a payment method, and tapping it lets the customer sign in to or sign up for Link. Once they complete the
+    /// Link flow, the button shows their Link account.
+    /// - Parameter viewModel: The view model that looks up the customer and presents the Link flow.
+    public convenience init(viewModel: LinkWalletButtonViewModel) {
+        self.init(controller: viewModel.buttonController)
     }
 
     init(controller: LinkWalletButtonControlling) {
@@ -213,7 +212,7 @@ import UIKit
         guard let presentingViewController = presentingViewController ?? window?.findTopMostPresentedViewController() ?? UIWindow.visibleViewController else {
             delegate?.linkWalletButtonUIView(
                 self,
-                didCompleteWith: .failure(PaymentSheetError.unknown(debugDescription: "Could not find a view controller to present Link from. Set LinkWalletButtonUIView.presentingViewController."))
+                didFinishWith: .failed(error: PaymentSheetError.unknown(debugDescription: "Could not find a view controller to present Link from. Set LinkWalletButtonUIView.presentingViewController."))
             )
             return
         }
@@ -226,7 +225,7 @@ import UIKit
             self.adoptSignedInCustomerIfNeeded(after: result)
             self.isPresenting = false
             self.lookUpIfNeeded()
-            self.delegate?.linkWalletButtonUIView(self, didCompleteWith: result)
+            self.delegate?.linkWalletButtonUIView(self, didFinishWith: LinkWalletButtonResult(result))
         }
     }
 }

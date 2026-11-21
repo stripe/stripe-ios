@@ -182,7 +182,16 @@ struct LinkControllerPreviewPaymentMethodView: View {
     @ObservedObject var linkController: LinkController
 
     var body: some View {
-        if let paymentMethodPreview = linkController.paymentMethodPreview {
+        PaymentMethodPreviewCard(paymentMethodPreview: linkController.paymentMethodPreview)
+    }
+}
+
+@available(iOS 16.0, *)
+struct PaymentMethodPreviewCard: View {
+    let paymentMethodPreview: LinkController.PaymentMethodPreview?
+
+    var body: some View {
+        if let paymentMethodPreview {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Icon:")

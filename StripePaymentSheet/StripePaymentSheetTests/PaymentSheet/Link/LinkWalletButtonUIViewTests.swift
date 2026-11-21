@@ -394,7 +394,7 @@ final class LinkWalletButtonUIViewTests: XCTestCase {
 
         // Then the delegate receives the result
         XCTAssertEqual(delegate.results.count, 1)
-        guard case .success(.canceled) = delegate.results.first else {
+        guard case .canceled = delegate.results.first else {
             return XCTFail("Expected a canceled result, got \(String(describing: delegate.results.first))")
         }
     }
@@ -470,7 +470,7 @@ final class LinkWalletButtonUIViewTests: XCTestCase {
         let button = makeButton(controller: controller)
         button.presentingViewController = UIViewController()
         var willPresentCount = 0
-        var results: [Result<LinkController.PaymentMethodResult, Error>] = []
+        var results: [LinkWalletButtonResult] = []
         let coordinator = LinkWalletButtonCoordinator(
             onWillPresent: { willPresentCount += 1 },
             onCompletion: { results.append($0) }
@@ -488,7 +488,7 @@ final class LinkWalletButtonUIViewTests: XCTestCase {
 
         // Then `onCompletion` receives the result
         XCTAssertEqual(results.count, 1)
-        guard case .success(.canceled) = results.first else {
+        guard case .canceled = results.first else {
             return XCTFail("Expected a canceled result, got \(String(describing: results.first))")
         }
     }
@@ -505,7 +505,7 @@ final class LinkWalletButtonUIViewTests: XCTestCase {
         coordinator.onCompletion = { _ in newClosureCalled = true }
 
         // When the Link flow finishes
-        coordinator.linkWalletButtonUIView(button, didCompleteWith: .success(.canceled))
+        coordinator.linkWalletButtonUIView(button, didFinishWith: .canceled)
 
         // Then only the latest closure is called
         XCTAssertFalse(oldClosureCalled)
@@ -663,7 +663,7 @@ private final class MockLinkWalletButtonController: LinkWalletButtonControlling 
 @MainActor
 private final class MockLinkWalletButtonDelegate: LinkWalletButtonUIViewDelegate {
     private(set) var willPresentCount = 0
-    private(set) var results: [Result<LinkController.PaymentMethodResult, Error>] = []
+    private(set) var results: [LinkWalletButtonResult] = []
 
     func linkWalletButtonUIViewWillPresent(_ button: LinkWalletButtonUIView) {
         willPresentCount += 1
@@ -671,7 +671,7 @@ private final class MockLinkWalletButtonDelegate: LinkWalletButtonUIViewDelegate
 
     func linkWalletButtonUIView(
         _ button: LinkWalletButtonUIView,
-        didCompleteWith result: Result<LinkController.PaymentMethodResult, Error>
+        didFinishWith result: LinkWalletButtonResult
     ) {
         results.append(result)
     }

@@ -229,15 +229,76 @@ final class LinkControllerTests: XCTestCase {
         XCTAssertNil(LinkController.webPaymentMethodPreview(for: nil, linkBrand: .link, reduceLinkBranding: false))
     }
 
+    // MARK: - Link wallet button
+
+    func testIntentMismatchIsDetectedFromClientSecret() {
+        // A SetupIntent's client secret for a payment, and the other way around
+        XCTAssertEqual(LinkController.intentMismatchError(clientSecret: "seti_123_secret_abc", isPayment: true), .intentMismatch)
+        XCTAssertEqual(LinkController.intentMismatchError(clientSecret: "pi_123_secret_abc", isPayment: false), .intentMismatch)
+        // ...matching client secrets
+        XCTAssertNil(LinkController.intentMismatchError(clientSecret: "pi_123_secret_abc", isPayment: true))
+        XCTAssertNil(LinkController.intentMismatchError(clientSecret: "seti_123_secret_abc", isPayment: false))
+        // ...and malformed ones, which fail when the intent is loaded
+        XCTAssertNil(LinkController.intentMismatchError(clientSecret: "not_a_client_secret", isPayment: true))
+    }
+
+    func testPresentFailsWhenClientSecretProviderThrows() {
+        // Given a Link wallet button controller whose client secret provider fails
+        struct ProviderError: Error {}
+        let controller = makeController(
+            initialLinkBrand: .link,
+            brandOverride: nil,
+            buttonMode: .payment(clientSecretProvider: { throw ProviderError() })
+        )
+
+        // When Link is presented
+        let presented = expectation(description: "present completes")
+        controller.present(email: nil, from: UIViewController()) { result in
+            // Then it fails with the provider's error, without opening Link
+            guard case .failure(let error) = result else {
+                return XCTFail("Expected a failure, got \(result)")
+            }
+            XCTAssertTrue(error is ProviderError)
+            presented.fulfill()
+        }
+        wait(for: [presented], timeout: 5)
+    }
+
+    func testPresentFailsForMismatchedClientSecret() {
+        // Given a Link wallet button controller for a payment, whose provider returns a SetupIntent's client secret
+        let controller = makeController(
+            initialLinkBrand: .link,
+            brandOverride: nil,
+            buttonMode: .payment(clientSecretProvider: { "seti_123_secret_abc" })
+        )
+
+        // When Link is presented
+        let presented = expectation(description: "present completes")
+        controller.present(email: nil, from: UIViewController()) { result in
+            // Then it fails before loading the intent
+            guard case .failure(let error) = result else {
+                return XCTFail("Expected a failure, got \(result)")
+            }
+            XCTAssertEqual(error as? LinkController.IntegrationError, .intentMismatch)
+            presented.fulfill()
+        }
+        wait(for: [presented], timeout: 5)
+    }
+
     // MARK: - Helpers
 
-    private func makeController(initialLinkBrand: LinkBrand, brandOverride: LinkBrand?) -> LinkController {
+    private func makeController(
+        initialLinkBrand: LinkBrand,
+        brandOverride: LinkBrand?,
+        buttonMode: LinkWalletButtonViewModel.Mode? = nil
+    ) -> LinkController {
         var paymentElementConfiguration = PaymentSheet.Configuration()
         paymentElementConfiguration.link.brand = brandOverride
         return LinkController(
-            mode: .setup,
+            mode: buttonMode.map(LinkController.Mode.init) ?? .setup,
             elementsSession: ._testValue(intent: ._testValue()),
             intent: ._testValue(),
+            buttonMode: buttonMode,
             paymentElementConfiguration: paymentElementConfiguration,
             linkBrand: initialLinkBrand,
             appearance: nil,

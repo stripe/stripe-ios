@@ -6,53 +6,53 @@
 import SwiftUI
 import UIKit
 
-/// A SwiftUI "Pay with Link" button that launches the Link flow using a `LinkController`.
+/// A SwiftUI "Pay with Link" button that launches the Link flow using a `LinkWalletButtonViewModel`.
 ///
 /// It behaves like `LinkWalletButtonUIView`, and delivers the result of the Link flow to `onCompletion`.
 @_spi(InternalOnlyAPI) @_spi(LinkControllerPreview) public struct LinkWalletButton: View {
-    private let linkController: LinkController
+    private let viewModel: LinkWalletButtonViewModel
     private let onWillPresent: () -> Void
-    private let onCompletion: (Result<LinkController.PaymentMethodResult, Error>) -> Void
+    private let onCompletion: (LinkWalletButtonResult) -> Void
 
     /// Creates a `LinkWalletButton`.
-    /// - Parameter linkController: The `LinkController` used to look up the customer and present the Link flow.
+    /// - Parameter viewModel: The view model that looks up the customer and presents the Link flow.
     /// - Parameter onWillPresent: Called right before the button presents the Link flow.
     ///   Use it to clear old error messages, for example.
     /// - Parameter onCompletion: Called when the Link flow finishes, with the same result as
-    ///   `LinkWalletButtonUIViewDelegate.linkWalletButtonUIView(_:didCompleteWith:)`.
+    ///   `LinkWalletButtonUIViewDelegate.linkWalletButtonUIView(_:didFinishWith:)`.
     public init(
-        linkController: LinkController,
+        viewModel: LinkWalletButtonViewModel,
         onWillPresent: @escaping () -> Void = {},
-        onCompletion: @escaping (Result<LinkController.PaymentMethodResult, Error>) -> Void
+        onCompletion: @escaping (LinkWalletButtonResult) -> Void
     ) {
-        self.linkController = linkController
+        self.viewModel = viewModel
         self.onWillPresent = onWillPresent
         self.onCompletion = onCompletion
     }
 
     public var body: some View {
         LinkWalletButtonRepresentable(
-            linkController: linkController,
+            viewModel: viewModel,
             onWillPresent: onWillPresent,
             onCompletion: onCompletion
         )
         .fixedSize(horizontal: false, vertical: true)
-        // A new controller needs a new button, since the button is bound to its controller
-        .id(ObjectIdentifier(linkController))
+        // A new view model needs a new button, since the button is bound to its view model
+        .id(ObjectIdentifier(viewModel))
     }
 }
 
 private struct LinkWalletButtonRepresentable: UIViewRepresentable {
-    let linkController: LinkController
+    let viewModel: LinkWalletButtonViewModel
     let onWillPresent: () -> Void
-    let onCompletion: (Result<LinkController.PaymentMethodResult, Error>) -> Void
+    let onCompletion: (LinkWalletButtonResult) -> Void
 
     func makeCoordinator() -> LinkWalletButtonCoordinator {
         LinkWalletButtonCoordinator(onWillPresent: onWillPresent, onCompletion: onCompletion)
     }
 
     func makeUIView(context: Context) -> LinkWalletButtonUIView {
-        let button = LinkWalletButtonUIView(linkController: linkController)
+        let button = LinkWalletButtonUIView(viewModel: viewModel)
         button.delegate = context.coordinator
         return button
     }
@@ -68,11 +68,11 @@ private struct LinkWalletButtonRepresentable: UIViewRepresentable {
 @MainActor
 final class LinkWalletButtonCoordinator: LinkWalletButtonUIViewDelegate {
     var onWillPresent: () -> Void
-    var onCompletion: (Result<LinkController.PaymentMethodResult, Error>) -> Void
+    var onCompletion: (LinkWalletButtonResult) -> Void
 
     init(
         onWillPresent: @escaping () -> Void,
-        onCompletion: @escaping (Result<LinkController.PaymentMethodResult, Error>) -> Void
+        onCompletion: @escaping (LinkWalletButtonResult) -> Void
     ) {
         self.onWillPresent = onWillPresent
         self.onCompletion = onCompletion
@@ -84,7 +84,7 @@ final class LinkWalletButtonCoordinator: LinkWalletButtonUIViewDelegate {
 
     func linkWalletButtonUIView(
         _ button: LinkWalletButtonUIView,
-        didCompleteWith result: Result<LinkController.PaymentMethodResult, Error>
+        didFinishWith result: LinkWalletButtonResult
     ) {
         onCompletion(result)
     }
