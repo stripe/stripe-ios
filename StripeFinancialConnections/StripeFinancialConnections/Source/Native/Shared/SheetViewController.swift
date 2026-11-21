@@ -140,6 +140,7 @@ class SheetViewController: UIViewController {
     private func updateHorizontalSafeAreaInsets() {
         let ignoredEdges: UIRectEdge = panePresentationStyle == .sheet ? sideColumnEdges : []
         // `safeAreaInsets` already includes `additionalSafeAreaInsets`, so remove them to get the system insets.
+        // A view controller's root view doesn't clamp its safe area at 0, so this works even while they're negated.
         let systemLeftInset = view.safeAreaInsets.left - additionalSafeAreaInsets.left
         let systemRightInset = view.safeAreaInsets.right - additionalSafeAreaInsets.right
         let insets = UIEdgeInsets(
