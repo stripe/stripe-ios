@@ -134,21 +134,43 @@ class SheetViewController: UIViewController {
     }
 
     /// Sheets cover the iPhone Duo's side column, so their content can ignore its horizontal safe area inset.
-    /// In landscape, horizontal insets come from the sensor housing instead, which the sheet doesn't cover.
     private func updateHorizontalSafeAreaInsets() {
-        let ignoresHorizontalSafeArea = panePresentationStyle == .sheet && traitCollection.verticalSizeClass == .regular
+        let ignoredEdges: UIRectEdge = panePresentationStyle == .sheet ? sideColumnEdges : []
         // `safeAreaInsets` already includes `additionalSafeAreaInsets`, so remove them to get the system insets.
         let systemLeftInset = view.safeAreaInsets.left - additionalSafeAreaInsets.left
         let systemRightInset = view.safeAreaInsets.right - additionalSafeAreaInsets.right
         let insets = UIEdgeInsets(
             top: 0,
-            left: ignoresHorizontalSafeArea ? -systemLeftInset : 0,
+            left: ignoredEdges.contains(.left) ? -systemLeftInset : 0,
             bottom: 0,
-            right: ignoresHorizontalSafeArea ? -systemRightInset : 0
+            right: ignoredEdges.contains(.right) ? -systemRightInset : 0
         )
         if additionalSafeAreaInsets != insets {
             additionalSafeAreaInsets = insets
         }
+    }
+
+    /// The physical edges where the system can place the iPhone Duo's side column.
+    private var sideColumnEdges: UIRectEdge {
+        #if compiler(>=6.4.2) && !os(visionOS)
+        if #available(iOS 27.1, *) {
+            // `verticalBarEdge` follows the layout direction, while safe area insets use physical edges.
+            let isRightToLeft = view.effectiveUserInterfaceLayoutDirection == .rightToLeft
+            switch traitCollection.verticalBarEdge {
+            case .leading:
+                return isRightToLeft ? .right : .left
+            case .trailing:
+                return isRightToLeft ? .left : .right
+            case .unspecified:
+                return []
+            @unknown default:
+                return []
+            }
+        }
+        #endif
+        // Without the trait, assume portrait insets come from the side column. In landscape,
+        // horizontal insets come from the sensor housing instead, which the sheet doesn't cover.
+        return traitCollection.verticalSizeClass == .regular ? [.left, .right] : []
     }
 
     override func viewWillDisappear(_ animated: Bool) {
