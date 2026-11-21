@@ -14,10 +14,6 @@ static NSString * const STPTestingDefaultTestBackendsURL = @"https://stripe-mobi
 
 static BOOL STPUsesDefaultTestBackendsURL = NO;
 
-// The unified test backends' Vercel deployment answers only requests with its Protection Bypass for
-// Automation secret, which is deliberately public. STRIPE_TEST_BACKENDS_BYPASS overrides it.
-static NSString * const STPTestingDefaultTestBackendsBypass = @"PublicAvailableiOSAndroidBackend";
-
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation STPTestingAPIClient
@@ -26,27 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
     return [self testBackendsURLForEnvironment:NSProcessInfo.processInfo.environment];
 }
 
-+ (NSDictionary<NSString *, NSString *> *)testBackendsHeaders {
-    return [self testBackendsHeadersForEnvironment:NSProcessInfo.processInfo.environment];
-}
-
 + (NSString *)testBackendsURLForEnvironment:(NSDictionary<NSString *, NSString *> *)environment {
     NSString *url = environment[@"STRIPE_TEST_BACKENDS_URL"];
     if (url.length == 0 || STPUsesDefaultTestBackendsURL) {
         url = STPTestingDefaultTestBackendsURL;
     }
     return [url hasSuffix:@"/"] ? url : [url stringByAppendingString:@"/"];
-}
-
-+ (NSDictionary<NSString *, NSString *> *)testBackendsHeadersForEnvironment:(NSDictionary<NSString *, NSString *> *)environment {
-    NSString *bypass = environment[@"STRIPE_TEST_BACKENDS_BYPASS"];
-    if (bypass.length == 0) {
-        // A local copy of the backends isn't behind Vercel.
-        NSString *host = [NSURL URLWithString:[self testBackendsURLForEnvironment:environment]].host;
-        BOOL isLocal = [@[@"127.0.0.1", @"localhost", @"::1"] containsObject:host.lowercaseString];
-        bypass = isLocal ? nil : STPTestingDefaultTestBackendsBypass;
-    }
-    return bypass.length > 0 ? @{@"x-vercel-protection-bypass": bypass} : @{};
 }
 
 + (BOOL)usesDefaultTestBackendsURL {
@@ -107,9 +88,6 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [STPTestingAPIClient.testBackendsHeaders enumerateKeysAndObjectsUsingBlock:^(NSString *field, NSString *value, __unused BOOL *stop) {
-        [request setValue:value forHTTPHeaderField:field];
-    }];
 
     NSData *postData = [NSJSONSerialization dataWithJSONObject:@{@"account" : account ?: @"",
                                                                  @"create_params": params ?: @{},
@@ -180,9 +158,6 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [STPTestingAPIClient.testBackendsHeaders enumerateKeysAndObjectsUsingBlock:^(NSString *field, NSString *value, __unused BOOL *stop) {
-        [request setValue:value forHTTPHeaderField:field];
-    }];
 
     NSData *postData = [NSJSONSerialization dataWithJSONObject:@{@"account" : account ?: @"",
                                                                  @"create_params": params ?: @{},

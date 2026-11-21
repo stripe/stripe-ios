@@ -1070,7 +1070,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        STPTestingAPIClient.addTestBackendsHeaders(to: &urlRequest)
         let task = session.dataTask(with: urlRequest) { data, _, error in
             guard
                 error == nil,

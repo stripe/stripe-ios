@@ -40,10 +40,6 @@ class APIRequestTest: STPNetworkStubbingTestCase {
         apiClient = STPAPIClient()
         // HTTPBin clone
         apiClient.apiURL = URL(string: STPTestingAPIClient.testBackendURL(prefix: "httpbin"))
-        // A copy keeps the network recorder's hooks in the shared configuration.
-        let configuration = StripeAPIConfiguration.sharedUrlSessionConfiguration.copy() as! URLSessionConfiguration
-        configuration.httpAdditionalHeaders = STPTestingAPIClient.testBackendsHeaders
-        apiClient.urlSession = URLSession(configuration: configuration)
     }
 
     func testPublishableKeyAuthorization() {

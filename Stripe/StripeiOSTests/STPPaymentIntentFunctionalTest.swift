@@ -1686,7 +1686,6 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             "supported_payment_methods": ["klarna"],
         ])
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        STPTestingAPIClient.addTestBackendsHeaders(to: &request)
 
         let session = URLSession(configuration: STPTestingAPIClient.shared.sessionConfig)
         let (data, response) = try await session.data(for: request)

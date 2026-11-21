@@ -62,9 +62,6 @@ private let redirectURL = URL(string: "zzz-custom://open/customtab_return")!
 final class WebViewViewController: UIViewController {
 
     private var webAuthenticationSession: ASWebAuthenticationSession?
-    // The first page's request carries the test backends' Vercel bypass, which sets the cookie that
-    // the page's other requests need, so it's retried if it fails.
-    private var pageLoadRetries = 2
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,8 +70,8 @@ final class WebViewViewController: UIViewController {
             frame: .zero,
             configuration: WKWebViewConfiguration()
         )
-        webView.navigationDelegate = self
-        loadPage(in: webView)
+        let request = URLRequest(url: websiteURL)
+        webView.load(request)
 
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
@@ -93,49 +90,6 @@ final class WebViewViewController: UIViewController {
         // nothing happens. This is because `WKWebView` does not automatically
         // handle OAuth pop-ups. That's why the `return_url` parameter is necessary.
         webView.uiDelegate = self
-    }
-}
-
-extension WebViewViewController: WKNavigationDelegate {
-    private func loadPage(in webView: WKWebView) {
-        webView.load(URLRequest(url: TestBackend.addingBypass(to: websiteURL)))
-    }
-
-    private func retryPageLoad(in webView: WKWebView, after error: String) {
-        guard pageLoadRetries > 0 else {
-            print("Couldn't load the example page: \(error)")
-            return
-        }
-        pageLoadRetries -= 1
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.loadPage(in: webView)
-        }
-    }
-
-    func webView(
-        _ webView: WKWebView,
-        decidePolicyFor navigationResponse: WKNavigationResponse,
-        decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void
-    ) {
-        if navigationResponse.isForMainFrame,
-           webView.backForwardList.backItem == nil,
-           let response = navigationResponse.response as? HTTPURLResponse,
-           response.statusCode >= 400
-        {
-            decisionHandler(.cancel)
-            retryPageLoad(in: webView, after: "HTTP \(response.statusCode)")
-            return
-        }
-        decisionHandler(.allow)
-    }
-
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        let error = error as NSError
-        // Cancelling a response above, or a newer load, interrupts the navigation; that isn't a failure.
-        let wasInterrupted = (error.domain == NSURLErrorDomain && error.code == NSURLErrorCancelled)
-            || (error.domain == "WebKitErrorDomain" && error.code == 102)
-        guard webView.backForwardList.backItem == nil, !wasInterrupted else { return }
-        retryPageLoad(in: webView, after: error.localizedDescription)
     }
 }
 

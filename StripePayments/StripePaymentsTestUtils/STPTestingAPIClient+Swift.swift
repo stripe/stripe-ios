@@ -360,13 +360,6 @@ extension STPTestingAPIClient {
 
     // MARK: - Helpers
 
-    /// Adds `testBackendsHeaders`, the test backends' Vercel bypass, to a request for one of the backends.
-    public static func addTestBackendsHeaders(to request: inout URLRequest) {
-        for (field, value) in testBackendsHeaders {
-            request.setValue(value, forHTTPHeaderField: field)
-        }
-    }
-
     fileprivate func makeRequest<ResponseType: Decodable>(
         endpoint: String,
         params: [String: Any?]
@@ -376,7 +369,6 @@ extension STPTestingAPIClient {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        Self.addTestBackendsHeaders(to: &request)
         request.httpBody = try! JSONSerialization.data(withJSONObject: params)
         let (data, _) = try await session.data(for: request)
         let jsonDecoder = JSONDecoder()
@@ -433,7 +425,6 @@ extension STPTestingAPIClient {
         let url = URL(string: Self.STPTestingPlaygroundBackendURL + endpoint)!
         var request = URLRequest(url: url)
         request.httpMethod = method
-        Self.addTestBackendsHeaders(to: &request)
         if let params {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = try JSONSerialization.data(withJSONObject: params)
