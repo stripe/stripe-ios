@@ -123,6 +123,34 @@ class SheetViewController: UIViewController {
         }
     }
 
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateHorizontalSafeAreaInsets()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateHorizontalSafeAreaInsets()
+    }
+
+    /// Sheets cover the iPhone Duo's side column, so their content can ignore its horizontal safe area inset.
+    /// In landscape, horizontal insets come from the sensor housing instead, which the sheet doesn't cover.
+    private func updateHorizontalSafeAreaInsets() {
+        let ignoresHorizontalSafeArea = panePresentationStyle == .sheet && traitCollection.verticalSizeClass == .regular
+        // `safeAreaInsets` already includes `additionalSafeAreaInsets`, so remove them to get the system insets.
+        let systemLeftInset = view.safeAreaInsets.left - additionalSafeAreaInsets.left
+        let systemRightInset = view.safeAreaInsets.right - additionalSafeAreaInsets.right
+        let insets = UIEdgeInsets(
+            top: 0,
+            left: ignoresHorizontalSafeArea ? -systemLeftInset : 0,
+            bottom: 0,
+            right: ignoresHorizontalSafeArea ? -systemRightInset : 0
+        )
+        if additionalSafeAreaInsets != insets {
+            additionalSafeAreaInsets = insets
+        }
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if isBeingDismissed {
