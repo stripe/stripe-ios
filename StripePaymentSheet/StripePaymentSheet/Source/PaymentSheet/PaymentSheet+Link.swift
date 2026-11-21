@@ -138,6 +138,13 @@ extension PaymentSheet {
 
         /// Overrides the server flag that sends inline Link verification to the dialog. Intended for test playgrounds only.
         @_spi(InternalOnlyAPI) public static var embeddedInlineVerificationForcesDialogOverride: Bool?
+
+        /// Forgets which customers closed the inline Link verification card or were sent a code automatically in this app session,
+        /// so the next Embedded Payment Element can show the card again. Intended for test playgrounds only.
+        @MainActor
+        @_spi(InternalOnlyAPI) public static func resetEmbeddedInlineVerificationSession() {
+            EmbeddedLinkInlineAuthRegistry.reset()
+        }
     }
 }
 

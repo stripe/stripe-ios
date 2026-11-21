@@ -89,6 +89,7 @@ struct PaymentSheetExampleAppRootView: View {
         case linkStandaloneDemo
         case embeddedPaymentElement
         case embeddedPaymentElement_swiftUI
+        case embeddedPaymentElement_inlineLinkOTPHosts
         case walletButtonsView_swiftUI
         case addressCollection_swiftUI
 
@@ -119,6 +120,7 @@ struct PaymentSheetExampleAppRootView: View {
                      .linkStandaloneDemo,
                      .embeddedPaymentElement,
                      .embeddedPaymentElement_swiftUI,
+                     .embeddedPaymentElement_inlineLinkOTPHosts,
                      .walletButtonsView_swiftUI,
                      .addressCollection_swiftUI:
                     result[.examples]?.append(destination)
@@ -162,6 +164,8 @@ struct PaymentSheetExampleAppRootView: View {
                 return "EmbeddedPaymentElement"
             case .embeddedPaymentElement_swiftUI:
                 return "EmbeddedPaymentElement (SwiftUI)"
+            case .embeddedPaymentElement_inlineLinkOTPHosts:
+                return "EmbeddedPaymentElement inline Link OTP hosts"
             case .walletButtonsView_swiftUI:
                 return "WalletButtonsView (SwiftUI)"
             case .addressCollection_swiftUI:
@@ -252,6 +256,8 @@ struct PaymentSheetExampleAppRootView: View {
 
         case .embeddedPaymentElement_swiftUI:
             MyEmbeddedCheckoutView()
+        case .embeddedPaymentElement_inlineLinkOTPHosts:
+            InlineLinkOTPHostsDemoView()
         case .walletButtonsView_swiftUI:
             ExampleWalletButtonsContainerView()
         case .addressCollection_swiftUI:

@@ -52,7 +52,7 @@ enum EmbeddedLinkInlineAuthRegistry {
         autoSendDates[email.lowercased()] = now
     }
 
-    /// For tests.
+    /// For tests and test playgrounds.
     static func reset() {
         dismissedEmails = []
         autoSendDates = [:]
