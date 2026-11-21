@@ -534,13 +534,62 @@ private class SheetPresentationController: UIPresentationController {
         }
         guard let formSheetViewController = (presentedViewController as? SheetViewController)?.formSheetViewController else {
             sheetContainerView.frame = containerView.bounds
+            Self.roundCorners(of: sheetContainerView, like: nil)
             return
         }
         // Lay out the form sheet first, so its frame reflects the current window size.
         formSheetViewController.presentationController?.containerView?.layoutIfNeeded()
         let formSheetView = formSheetViewController.view!
         let formSheetFrame = formSheetView.convert(formSheetView.bounds, to: containerView)
-        sheetContainerView.frame = formSheetFrame.width < containerView.bounds.width ? formSheetFrame : containerView.bounds
+        let coversFormSheet = formSheetFrame.width < containerView.bounds.width
+        sheetContainerView.frame = coversFormSheet ? formSheetFrame : containerView.bounds
+        Self.roundCorners(
+            of: sheetContainerView,
+            like: coversFormSheet ? formSheetViewController : nil
+        )
+    }
+
+    /// Rounds each corner of `sheetContainerView` like the corresponding corner of the form sheet,
+    /// or squares them when there's no form sheet to match.
+    private static func roundCorners(of sheetContainerView: UIView, like formSheetViewController: UIViewController?) {
+        #if compiler(>=6.2)
+        if #available(iOS 26.0, *) {
+            // The system rounds sheets through `cornerConfiguration` on a superview, possibly split across
+            // nested views with one corner each, and leaves `layer.cornerRadius` at 0. Form sheets on iPad
+            // round every corner, while page sheets, such as on an unfolded iPhone Duo, only round the top.
+            func radius(_ corner: UIRectCorner) -> UICornerRadius {
+                guard let formSheetViewController, let formSheetView = formSheetViewController.view else {
+                    return .fixed(0)
+                }
+                let presentationContainerView = formSheetViewController.presentationController?.containerView
+                var view: UIView? = formSheetView
+                while let current = view, current !== presentationContainerView, current !== formSheetView.window {
+                    let radius = current.effectiveRadius(corner: corner)
+                    if radius > 0 {
+                        return .fixed(radius)
+                    }
+                    view = current.superview
+                }
+                return .fixed(0)
+            }
+            sheetContainerView.cornerConfiguration = .corners(
+                topLeftRadius: radius(.topLeft),
+                topRightRadius: radius(.topRight),
+                bottomLeftRadius: radius(.bottomLeft),
+                bottomRightRadius: radius(.bottomRight)
+            )
+            return
+        }
+        #endif
+        // Only iPad presents the flow as a form sheet, whose corners clip the sheet.
+        guard let formSheetViewController, formSheetViewController.modalPresentationStyle == .formSheet else {
+            sheetContainerView.layer.cornerRadius = 0
+            return
+        }
+        let defaultCornerRadius: CGFloat = 10
+        let superviewCornerRadius = formSheetViewController.view.superview?.layer.cornerRadius ?? 0
+        sheetContainerView.layer.cornerRadius = superviewCornerRadius > 0 ? superviewCornerRadius : defaultCornerRadius
+        sheetContainerView.layer.cornerCurve = .continuous
     }
 }
 
