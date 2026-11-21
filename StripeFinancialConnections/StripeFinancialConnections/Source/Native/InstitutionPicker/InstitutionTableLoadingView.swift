@@ -12,7 +12,7 @@ import UIKit
 final class InstitutionTableLoadingView: UIView {
 
     init(appearance: FinancialConnectionsAppearance = .stripe) {
-        super.init(frame: UIScreen.main.bounds)
+        super.init(frame: .zero)
         backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
         let verticalStackView = UIStackView(
             arrangedSubviews: (0..<10).map({ _ in

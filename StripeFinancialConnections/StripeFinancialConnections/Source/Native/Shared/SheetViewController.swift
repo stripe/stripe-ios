@@ -32,7 +32,7 @@ class SheetViewController: UIViewController {
     // The `contentView` represents the area of the sheet
     // where content is displayed. It's about 80% of the
     // screen and does NOT contain the dark overlay at the top.
-    private let contentView = UIView(frame: UIScreen.main.bounds)
+    private let contentView = UIView()
 
     // The `contentStackView` automatically resizes between the
     // bottom of `contentView` and the top of `contentView`.
@@ -88,6 +88,8 @@ class SheetViewController: UIViewController {
         view.backgroundColor = panePresentationStyle == .sheet ? .clear : FinancialConnectionsAppearance.Colors.surfacePrimary
 
         if panePresentationStyle == .sheet {
+            // `viewDidLayoutSubviews` sizes the sheet; start at the view's size until then.
+            contentView.frame = view.bounds
             view.addSubview(contentView)
 
             contentStackView.translatesAutoresizingMaskIntoConstraints = false
