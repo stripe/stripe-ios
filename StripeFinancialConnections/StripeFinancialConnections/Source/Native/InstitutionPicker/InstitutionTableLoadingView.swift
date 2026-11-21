@@ -30,8 +30,8 @@ final class InstitutionTableLoadingView: UIView {
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             verticalStackView.topAnchor.constraint(equalTo: topAnchor),
-            verticalStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            verticalStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            verticalStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            verticalStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             // height will be automatically determined by the UIStackView and it will be clipped beyond the frame
         ])
         clipsToBounds = true

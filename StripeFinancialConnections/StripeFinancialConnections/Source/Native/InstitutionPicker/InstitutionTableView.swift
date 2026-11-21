@@ -132,14 +132,6 @@ final class InstitutionTableView: UIView {
         super.init(frame: frame)
         if appearance.colors == .link {
             tableView.backgroundColor = .clear
-            // Cells and the footer own the card rounding. Leaving the table view unclipped lets
-            // the scroll indicator escape the card inset and render at the screen edge.
-            tableView.verticalScrollIndicatorInsets = UIEdgeInsets(
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: -Constants.Layout.navigationBarAlignedHorizontalMargin
-            )
             tableView.separatorStyle = .none
         } else {
             tableView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
@@ -177,6 +169,7 @@ final class InstitutionTableView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        updateScrollIndicatorInsets()
         // `UITableView` does not automatically resize `tableHeaderView`
         // so here we do it manually
         if let tableHeaderView = tableView.tableHeaderView {
@@ -227,6 +220,15 @@ final class InstitutionTableView: UIView {
             width: bounds.width,
             height: bounds.height - loadingViewY
         )
+    }
+
+    private func updateScrollIndicatorInsets() {
+        // Keep the scroll indicator at the screen edge. UIKit insets it by the safe area, which would
+        // otherwise place it next to the list instead of past a side column (e.g. on iPhone Duo).
+        let rightInset = -tableView.safeAreaInsets.right
+        if tableView.verticalScrollIndicatorInsets.right != rightInset {
+            tableView.verticalScrollIndicatorInsets.right = rightInset
+        }
     }
 
     func load(
