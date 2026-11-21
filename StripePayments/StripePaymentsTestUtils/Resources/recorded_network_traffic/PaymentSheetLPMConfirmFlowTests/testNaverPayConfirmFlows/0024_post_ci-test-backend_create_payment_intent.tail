@@ -1,0 +1,17 @@
+POST
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/ci-test-backend\/create_payment_intent$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 22:54:43 GMT
+Content-Length: 209
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "secret" : "pi_3Ue0hbFY0qyl6XeW0XqpLgkH_secret_XRKhUH7OD6n211LF4Taq17DNR",
+  "status" : "requires_action",
+  "publishable_key" : "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6",
+  "intent" : "pi_3Ue0hbFY0qyl6XeW0XqpLgkH"
+}

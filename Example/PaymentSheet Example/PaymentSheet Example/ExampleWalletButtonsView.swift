@@ -300,7 +300,7 @@ class ExampleWalletButtonsModel: ObservableObject {
     let rejectApplePay: Bool
     let rejectLink: Bool
 
-    let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
+    let backendCheckoutUrl = URL(string: TestBackend.playground.baseURL + "/checkout")!
     let SPTTestCustomerUrl = URL(string: "https://2f6qwl-3000.csb.app/api/customer")!
     let SPTTestCreateIntentUrl = URL(string: "https://2f6qwl-3000.csb.app/api/create-intent")!
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?

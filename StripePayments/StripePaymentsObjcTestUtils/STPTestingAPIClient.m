@@ -9,11 +9,43 @@
 #import "STPTestingAPIClient.h"
 @import StripeCore;
 
-static NSString * const STPTestingBackendURL = @"https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/";
+// The unified test backends' deployment, Cloud Run service stp-mobile-test-backends.
+// STRIPE_TEST_BACKENDS_URL overrides it.
+static NSString * const STPTestingDefaultTestBackendsURL = @"https://stp-mobile-test-backends-764603794666.us-central1.run.app/";
+
+static BOOL STPUsesDefaultTestBackendsURL = NO;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation STPTestingAPIClient
+
++ (NSString *)testBackendsURL {
+    return [self testBackendsURLForEnvironment:NSProcessInfo.processInfo.environment];
+}
+
++ (NSString *)testBackendsURLForEnvironment:(NSDictionary<NSString *, NSString *> *)environment {
+    NSString *url = environment[@"STRIPE_TEST_BACKENDS_URL"];
+    if (url.length == 0 || STPUsesDefaultTestBackendsURL) {
+        url = STPTestingDefaultTestBackendsURL;
+    }
+    return [url hasSuffix:@"/"] ? url : [url stringByAppendingString:@"/"];
+}
+
++ (BOOL)usesDefaultTestBackendsURL {
+    return STPUsesDefaultTestBackendsURL;
+}
+
++ (void)setUsesDefaultTestBackendsURL:(BOOL)usesDefaultTestBackendsURL {
+    STPUsesDefaultTestBackendsURL = usesDefaultTestBackendsURL;
+}
+
++ (NSString *)testBackendURLWithPrefix:(NSString *)prefix {
+    return [NSString stringWithFormat:@"%@%@/", self.testBackendsURL, prefix];
+}
+
++ (NSString *)backendURL {
+    return [self testBackendURLWithPrefix:@"ci-test-backend"];
+}
 
 + (instancetype)sharedClient {
     static dispatch_once_t onceToken;
@@ -52,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
                            apiVersion:(nullable NSString *)apiVersion
                            completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion {
     NSURLSession *session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
-    NSURL *url = [NSURL URLWithString:[STPTestingBackendURL stringByAppendingString:@"create_payment_intent"]];
+    NSURL *url = [NSURL URLWithString:[[STPTestingAPIClient backendURL] stringByAppendingString:@"create_payment_intent"]];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
@@ -122,7 +154,7 @@ NS_ASSUME_NONNULL_BEGIN
                          apiVersion:(nullable NSString *)apiVersion
                          completion:(void (^)(NSString *_Nullable, NSError * _Nullable))completion {
     NSURLSession *session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
-    NSURL *url = [NSURL URLWithString:[STPTestingBackendURL stringByAppendingString:@"create_setup_intent"]];
+    NSURL *url = [NSURL URLWithString:[[STPTestingAPIClient backendURL] stringByAppendingString:@"create_setup_intent"]];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";

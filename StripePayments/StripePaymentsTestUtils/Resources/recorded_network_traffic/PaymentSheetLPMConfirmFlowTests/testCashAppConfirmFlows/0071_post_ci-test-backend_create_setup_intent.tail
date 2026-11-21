@@ -1,0 +1,17 @@
+POST
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/ci-test-backend\/create_setup_intent$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 22:48:49 GMT
+Content-Length: 227
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "secret" : "seti_1Ue0btFY0qyl6XeWl6KMi09k_secret_VfLIRrW349Tw4QvJmELqjpsXMfKOO60",
+  "status" : "requires_payment_method",
+  "publishable_key" : "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6",
+  "intent" : "seti_1Ue0btFY0qyl6XeWl6KMi09k"
+}

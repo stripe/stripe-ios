@@ -1,0 +1,64 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1Ue0PrFY0qyl6XeWyJdN00ux\/link_account_sessions$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=99LH3vvNgPcIp2sWXJeqm2yxR81NndNmMVA044aH5sxFUv9fALz38D4eiVdTj9oDq6uW9mXgHcKUPsmq; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=99LH3vvNgPcIp2sWXJeqm2yxR81NndNmMVA044aH5sxFUv9fALz38D4eiVdTj9oDq6uW9mXgHcKUPsmq&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=99LH3vvNgPcIp2sWXJeqm2yxR81NndNmMVA044aH5sxFUv9fALz38D4eiVdTj9oDq6uW9mXgHcKUPsmq&t=1"}],"include_subdomains":true}
+request-id: req_TFV202f6IvJkR9
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 627
+Vary: Origin
+Date: Fri, 20 Nov 2026 22:36:24 GMT
+original-request: req_TFV202f6IvJkR9
+stripe-version: 2020-08-27
+idempotency-key: c6c5897f-f7dd-480e-9751-3647de0a8a20
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=seti_1Ue0PrFY0qyl6XeWyJdN00ux_secret_VfL6L8MZk9H0M5mFM1AYtelyf6mto67&hosted_surface=payment_element&link_mode=LINK_DISABLED&payment_method_data%5Bbilling_details%5D%5Bemail%5D=test%40example\.com&payment_method_data%5Bbilling_details%5D%5Bname%5D=John%20Doe&payment_method_data%5Btype%5D=us_bank_account
+
+{
+  "object" : "link_account_session",
+  "limits" : {
+    "accounts" : 1
+  },
+  "filters" : {
+    "countries" : [
+      "US"
+    ],
+    "require_payment_method_support" : "all",
+    "account_subcategories" : [
+      "checking",
+      "savings"
+    ]
+  },
+  "id" : "fcsess_1Ue0PsFY0qyl6XeWNsVwOCSz",
+  "livemode" : false,
+  "prefetch" : [
+
+  ],
+  "linked_accounts" : {
+    "has_more" : false,
+    "object" : "list",
+    "data" : [
+
+    ],
+    "total_count" : 0,
+    "url" : "\/v1\/linked_accounts?session=fcsess_1Ue0PsFY0qyl6XeWNsVwOCSz"
+  },
+  "client_secret" : "fcsess_client_secret_dGBDOALFyZBkr86ise1aENvI",
+  "permissions" : [
+    "payment_method"
+  ]
+}

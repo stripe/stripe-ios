@@ -1672,7 +1672,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         options: STPConfirmKlarnaOptions
     ) async throws -> STPPaymentIntent {
         let playgroundCheckoutURL = try XCTUnwrap(
-            URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")
+            URL(string: STPTestingAPIClient.STPTestingPlaygroundBackendURL + "checkout")
         )
         var request = URLRequest(url: playgroundCheckoutURL)
         request.httpMethod = "POST"

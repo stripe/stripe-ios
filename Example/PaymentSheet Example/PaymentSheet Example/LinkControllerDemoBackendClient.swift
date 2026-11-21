@@ -7,7 +7,7 @@ import Foundation
 
 enum LinkControllerDemoBackendClient {
 
-    static let baseURL = URL(string: "https://link-controller-preview-demo.stripedemos.com")!
+    static let baseURL = TestBackend.linkControllerPreviewDemo.url
 
     // MARK: - Config
 

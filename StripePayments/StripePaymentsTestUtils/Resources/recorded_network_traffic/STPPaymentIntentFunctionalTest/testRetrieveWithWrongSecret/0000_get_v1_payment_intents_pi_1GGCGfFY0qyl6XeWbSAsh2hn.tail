@@ -2,32 +2,35 @@ GET
 https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_1GGCGfFY0qyl6XeWbSAsh2hn\?client_secret=pi_1GGCGfFY0qyl6XeWbSAsh2hn_secret_bad-secret$
 400
 application/json
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=-FfuGAigM0EWO4vMMCtYoBaBARidecBMI6FVi9uZjU9Gp-jifrrAmc_g6yylR7X_fBqXJksP2Dgku9Sr
-x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=E3xiElUuceDZd8RsEsBxJ9DlK300-4kXVSU6rQYYg0p9Zl1d-BrXD3nHgvIxKsi8F9x8LENdNCcxTfyF; report-to csp
 Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=E3xiElUuceDZd8RsEsBxJ9DlK300-4kXVSU6rQYYg0p9Zl1d-BrXD3nHgvIxKsi8F9x8LENdNCcxTfyF&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=E3xiElUuceDZd8RsEsBxJ9DlK300-4kXVSU6rQYYg0p9Zl1d-BrXD3nHgvIxKsi8F9x8LENdNCcxTfyF&t=1"}],"include_subdomains":true}
+request-id: req_YIAFioKbOZP15Z
+Content-Length: 458
+Vary: Origin
+Date: Fri, 20 Nov 2026 22:34:49 GMT
+stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
-Content-Language: en-us
-Cache-Control: no-cache, no-store
-Date: Mon, 13 Oct 2025 18:57:48 GMT
-stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 432
-x-stripe-routing-context-priority-tier: api-testmode
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Vary: Origin
-request-id: req_u6YDjmrkuhVVzx
+Content-Type: application/json
+Content-Language: en-us
 
 {
   "error" : {
     "code" : "payment_intent_invalid_parameter",
     "message" : "The client_secret provided does not match the client_secret associated with the PaymentIntent.",
     "param" : "client_secret",
-    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_u6YDjmrkuhVVzx?t=1760381868",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/acct_1G6m1pFY0qyl6XeW\/test\/workbench\/logs?object=req_YIAFioKbOZP15Z",
     "type" : "invalid_request_error",
     "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/payment-intent-invalid-parameter"
   }

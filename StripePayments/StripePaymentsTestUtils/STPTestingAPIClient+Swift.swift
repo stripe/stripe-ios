@@ -9,8 +9,12 @@ import Foundation
 @_exported import StripePaymentsObjcTestUtils
 
 extension STPTestingAPIClient {
-    static let STPTestingBackendURL = "https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/"
-    static let STPTestingPlaygroundBackendURL = "https://stp-mobile-playground-backend-v7.stripedemos.com/"
+    static var STPTestingBackendURL: String {
+        testBackendURL(prefix: "ci-test-backend")
+    }
+    public static var STPTestingPlaygroundBackendURL: String {
+        testBackendURL(prefix: "playground")
+    }
     static let checkoutMobileElementsAPISettings = "2026-08-26.preview"
     public static var shared: STPTestingAPIClient {
         return .shared()

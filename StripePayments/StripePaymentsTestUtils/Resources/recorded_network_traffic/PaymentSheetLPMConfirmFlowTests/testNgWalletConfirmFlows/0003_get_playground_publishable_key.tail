@@ -1,0 +1,15 @@
+GET
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/publishable_key\?merchant=ng_wallet$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Age: 0
+Date: Fri, 20 Nov 2026 22:55:19 GMT
+Content-Length: 130
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "publishable_key" : "pk_test_51QSODeDVpqbmmLClhGlSJmLpCSqphqTUx0CAPuiO4R9lbpQ1p4lEVXwGR4I3trSK9nce7F9m98Q4TspvrQ9gKZ0s00Z7wMj6Bf"
+}

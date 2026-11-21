@@ -73,7 +73,7 @@ struct FlowControllerView: View {
 }
 
 class MyCustomBackendModel: ObservableObject {
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.stripedemos.com/checkout")!  // An example backend endpoint
+    let backendCheckoutUrl = URL(string: TestBackend.paymentSheet.baseURL + "/checkout")!  // An example backend endpoint
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentResult: PaymentSheetResult?
 

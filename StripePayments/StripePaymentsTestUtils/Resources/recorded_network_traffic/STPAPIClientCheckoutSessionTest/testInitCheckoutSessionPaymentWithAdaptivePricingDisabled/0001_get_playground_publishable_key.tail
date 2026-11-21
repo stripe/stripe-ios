@@ -1,0 +1,15 @@
+GET
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/publishable_key\?merchant=us_tax$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Age: 0
+Date: Fri, 20 Nov 2026 23:07:18 GMT
+Content-Length: 130
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "publishable_key" : "pk_test_51T6wBXK8p6Sx2i8adADCFk8mpPEn4UtaTLP3AZS8kzJBgX8ldmV2VCX9oKqXOTH969NHb0zKvYcBK1OC9wBaJE0O00F0x7v2ci"
+}

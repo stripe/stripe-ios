@@ -1,0 +1,15 @@
+POST
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/ci-test-backend\/create_customer_session_cs$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 23:01:20 GMT
+Content-Length: 131
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "customer_session_client_secret" : "cuss_secret_VfLVYqSviTvYEcYKQGzKpwM0QCijqqnXwmw7CNXW24iNVwx",
+  "customer" : "cus_VfLUfoDV0dexUG"
+}

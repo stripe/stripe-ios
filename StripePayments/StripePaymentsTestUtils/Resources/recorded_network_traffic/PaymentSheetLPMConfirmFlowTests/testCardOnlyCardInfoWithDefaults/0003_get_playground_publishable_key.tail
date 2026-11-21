@@ -1,0 +1,15 @@
+GET
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/publishable_key\?merchant=US$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Age: 0
+Date: Fri, 20 Nov 2026 22:47:27 GMT
+Content-Length: 130
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "publishable_key" : "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
+}

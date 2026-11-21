@@ -111,14 +111,6 @@ Generate new localized screenshots
 
 
 
-### ios e2e_only
-
-```sh
-[bundle exec] fastlane ios e2e_only
-```
-
-
-
 ### ios analyze
 
 ```sh

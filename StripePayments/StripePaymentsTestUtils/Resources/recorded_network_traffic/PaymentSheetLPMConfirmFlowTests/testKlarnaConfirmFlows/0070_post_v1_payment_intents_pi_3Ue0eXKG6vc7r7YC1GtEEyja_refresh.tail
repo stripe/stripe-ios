@@ -1,0 +1,102 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Ue0eXKG6vc7r7YC1GtEEyja\/refresh$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=TPbOWc6hImuwHawKExatJHO1nAVlDZ7nInWlLiUojd_8-N4s1zSjtlW6dgAWu-ns3So21yZYYkmlduO4; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=TPbOWc6hImuwHawKExatJHO1nAVlDZ7nInWlLiUojd_8-N4s1zSjtlW6dgAWu-ns3So21yZYYkmlduO4&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=TPbOWc6hImuwHawKExatJHO1nAVlDZ7nInWlLiUojd_8-N4s1zSjtlW6dgAWu-ns3So21yZYYkmlduO4&t=1"}],"include_subdomains":true}
+request-id: req_rQPFtkStkSYcOa
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1784
+Vary: Origin
+Date: Fri, 20 Nov 2026 22:51:34 GMT
+original-request: req_rQPFtkStkSYcOa
+stripe-version: 2020-08-27
+idempotency-key: be4b1287-1695-4b5c-87d0-a7e85d8b8808
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3Ue0eXKG6vc7r7YC1GtEEyja_secret_wFA8kUoZEiPS9X8seRmFEMD2R&expand\[0]=payment_method
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "payment_method_options" : {
+    "klarna" : {
+      "setup_future_usage" : "off_session"
+    }
+  },
+  "object" : "payment_intent",
+  "currency" : "eur",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1JtgfQKG6vc7r7YC\/pa_nonce_VfLL8CMlqsm1hfHs57RRhRMGwlMZS3u?useWebAuthSession=true&followRedirectsInSDK=true"
+    }
+  },
+  "status" : "requires_action",
+  "payment_method" : {
+    "object" : "payment_method",
+    "klarna" : {
+
+    },
+    "id" : "pm_1Ue0eWKG6vc7r7YCtEOOoQfQ",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : "US",
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1795215092,
+    "allow_redisplay" : "unspecified",
+    "type" : "klarna",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3Ue0eXKG6vc7r7YC1GtEEyja_secret_wFA8kUoZEiPS9X8seRmFEMD2R",
+  "id" : "pi_3Ue0eXKG6vc7r7YC1GtEEyja",
+  "allowed_payment_method_types" : null,
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "klarna"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1795215093,
+  "description" : null
+}

@@ -33,6 +33,7 @@ class IntegrationTesterUITests: XCTestCase {
 
         app = XCUIApplication()
         app.launchEnvironment = ["UITesting": "true"]
+        app.launchEnvironment.merge(TestBackend.launchEnvironment) { _, new in new }
         if !appLaunched {
             app.launch()
             appLaunched = true

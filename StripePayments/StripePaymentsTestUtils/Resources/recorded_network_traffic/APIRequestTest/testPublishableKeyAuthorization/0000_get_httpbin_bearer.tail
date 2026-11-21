@@ -1,0 +1,14 @@
+GET
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/httpbin\/bearer\?foo=bar$
+200
+application/json
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json
+Content-Length: 42
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 02:37:24 GMT
+
+{
+  "token" : "pk_foo",
+  "authenticated" : true
+}

@@ -1,0 +1,15 @@
+POST
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/ci-test-backend\/create_ephemeral_key$
+200
+application/json
+Server: Vercel
+Content-Type: application/json
+Strict-Transport-Security: max-age=63072000
+Date: Fri, 20 Nov 2026 22:38:55 GMT
+Content-Length: 152
+Cache-Control: public, max-age=0, must-revalidate
+
+{
+  "customer" : "cus_VfL8rosGGNwowO",
+  "ephemeral_key_secret" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLGFvUW9KNzJLZ2pmMkppVGh4NGhnYWNEbW15Y0Q5Tks_008nQ5nfci"
+}

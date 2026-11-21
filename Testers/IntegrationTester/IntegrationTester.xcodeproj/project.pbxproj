@@ -32,6 +32,8 @@
 		F6E1B67917A13FAEC6EA9B03 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 59F09608F8426DF923CDBAAF /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FC8479C77E3D33EF37A60381 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2A66CF44DC5D33737B41F3E /* StripeCore.framework */; };
 		FFD971A3A4A1386DAA94B53B /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA7414BE30CD6E4778C3982F /* Stripe.framework */; };
+		12288DA394AF5545B41ED2A6 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69177F4843F47CCCE44AD51A /* TestBackends.swift */; };
+		0E3D875E1E29AA9A7A20BF5B /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69177F4843F47CCCE44AD51A /* TestBackends.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,6 +125,7 @@
 		E6AAC1C0B685BBE74010651F /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		ED3F8E45FE6EF9639CC65B19 /* IntegrationTester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntegrationTester.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2A66CF44DC5D33737B41F3E /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		69177F4843F47CCCE44AD51A /* TestBackends.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestBackends.swift; path = ../../Example/Shared/TestBackends.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -194,6 +197,7 @@
 		62E25771CBB40F9DE7355718 = {
 			isa = PBXGroup;
 			children = (
+				69177F4843F47CCCE44AD51A /* TestBackends.swift */,
 				D9868DB1902B309E392F0424 /* Project */,
 				45CAD8BF21F7A74C359609B2 /* Frameworks */,
 				6614F1DA7647EB3A37737211 /* Products */,
@@ -372,6 +376,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E3D875E1E29AA9A7A20BF5B /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,6 +384,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12288DA394AF5545B41ED2A6 /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
