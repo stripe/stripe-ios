@@ -548,13 +548,43 @@ private class SheetPresentationController: UIPresentationController {
         }
         guard let formSheetViewController = (presentedViewController as? SheetViewController)?.formSheetViewController else {
             sheetContainerView.frame = containerView.bounds
+            sheetContainerView.layer.cornerRadius = 0
             return
         }
         // Lay out the form sheet first, so its frame reflects the current window size.
         formSheetViewController.presentationController?.containerView?.layoutIfNeeded()
         let formSheetView = formSheetViewController.view!
         let formSheetFrame = formSheetView.convert(formSheetView.bounds, to: containerView)
-        sheetContainerView.frame = formSheetFrame.width < containerView.bounds.width ? formSheetFrame : containerView.bounds
+        let coversFormSheet = formSheetFrame.width < containerView.bounds.width
+        sheetContainerView.frame = coversFormSheet ? formSheetFrame : containerView.bounds
+        // Only iPad presents the flow as a form sheet, whose corners clip the sheet. Page sheets, such as
+        // on an unfolded iPhone Duo, don't round the corners that the sheet covers.
+        let isFormSheet = coversFormSheet && formSheetViewController.modalPresentationStyle == .formSheet
+        sheetContainerView.layer.cornerRadius = isFormSheet ? Self.cornerRadius(of: formSheetView) : 0
+        sheetContainerView.layer.cornerCurve = .continuous
+    }
+
+    /// The corner radius that the system clips `formSheetView` to.
+    private static func cornerRadius(of formSheetView: UIView) -> CGFloat {
+        let defaultCornerRadius: CGFloat = 10
+        #if compiler(>=6.2)
+        if #available(iOS 26.0, *) {
+            // The system rounds form sheets through `cornerConfiguration` on a superview, possibly split
+            // across nested views with one corner each, and leaves `layer.cornerRadius` at 0.
+            var view: UIView? = formSheetView
+            while let current = view, current !== formSheetView.window {
+                let corners: [UIRectCorner] = [.topLeft, .topRight, .bottomLeft, .bottomRight]
+                let radius = corners.map { current.effectiveRadius(corner: $0) }.max() ?? 0
+                if radius > 0 {
+                    return radius
+                }
+                view = current.superview
+            }
+            return defaultCornerRadius
+        }
+        #endif
+        let superviewCornerRadius = formSheetView.superview?.layer.cornerRadius ?? 0
+        return superviewCornerRadius > 0 ? superviewCornerRadius : defaultCornerRadius
     }
 }
 
