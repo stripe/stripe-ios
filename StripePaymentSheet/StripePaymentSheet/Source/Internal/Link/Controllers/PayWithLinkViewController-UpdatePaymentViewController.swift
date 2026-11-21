@@ -78,6 +78,7 @@ extension PayWithLinkViewController {
 
             var configuration = context.configuration
             configuration.defaultBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
+            configuration.billingDetailsCollectionConfiguration = context.billingDetailsCollectionConfiguration
             return configuration
         }
 

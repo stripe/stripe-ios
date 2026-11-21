@@ -44,13 +44,13 @@ class LinkBillingDetailsValidator {
 
         let effectivePaymentDetails = consumerPaymentDetails.update(
             with: effectiveBillingDetails,
-            basedOn: context.configuration.billingDetailsCollectionConfiguration
+            basedOn: context.billingDetailsCollectionConfiguration
         )
 
         let hasRequiredBillingDetailsNow = effectivePaymentDetails.supports(
             context.configuration.billingDetailsCollectionConfiguration,
             in: linkAccount.currentSession
-        )
+        ) && satisfiesAutomaticTaxRequirements(effectivePaymentDetails)
 
         if hasRequiredBillingDetailsNow {
             // We have filled in all the missing fields. Now, update the payment details and confirm the intent.
@@ -77,6 +77,11 @@ class LinkBillingDetailsValidator {
     }
 
     private func isMissingRequestedBillingDetails(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+        if !satisfiesAutomaticTaxRequirements(paymentDetails) {
+            // Tax can't be calculated without these, so recollect them regardless of the merchant's setting.
+            return true
+        }
+
         guard context.configuration.link.collectMissingBillingDetailsForExistingPaymentMethods else {
             // Don't recollect even if details are missing
             return false
@@ -88,6 +93,14 @@ class LinkBillingDetailsValidator {
         )
 
         return !paymentDetailsAreSupported
+    }
+
+    /// Whether the payment details' billing address is enough to calculate automatic tax, if the total depends on it.
+    private func satisfiesAutomaticTaxRequirements(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+        guard context.intent.collectsTaxFromBillingAddress else {
+            return true
+        }
+        return AutomaticTaxBillingAddressRequirements.areSatisfied(by: paymentDetails.billingDetails?.address)
     }
 
     private func updateBillingDetails(

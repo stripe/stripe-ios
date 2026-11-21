@@ -25,9 +25,9 @@ extension PaymentOption {
             return billingDetails
         case .applePay:
             return nil
-        case .link:
-            // Link does not support automatic tax with billing address as source
-            return nil
+        case .link(let confirmOption):
+            // For `.wallet`, the payment details aren't known yet. Native Link updates the tax region while it's open.
+            return confirmOption.billingDetails
         }
     }
 }
