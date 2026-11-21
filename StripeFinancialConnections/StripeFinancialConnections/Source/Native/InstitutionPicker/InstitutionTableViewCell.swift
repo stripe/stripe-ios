@@ -21,6 +21,7 @@ final class InstitutionTableViewCell: UITableViewCell {
     private var isHighlightFrozen = false
     private var roundsTopCorners = false
     private var roundsBottomCorners = false
+    private var selectedBackgroundFillView: UIView?
 
     private lazy var dividerView: UIView = {
         let dividerView = UIView()
@@ -95,10 +96,23 @@ final class InstitutionTableViewCell: UITableViewCell {
 
         // fix a bug where the background color of a
         // rotated, selected cell was wrong
+        //
+        // UIKit sizes `selectedBackgroundView` to the full cell, so fill only the content view's
+        // frame to keep the selection inside the safe area (e.g. next to the iPhone Duo's side column).
+        let selectedBackgroundFillView = UIView()
+        selectedBackgroundFillView.backgroundColor = contentView.backgroundColor
+        updateCornerMask(for: selectedBackgroundFillView, isLinkAppearance: isLinkAppearance)
         let selectedBackgroundView = UIView()
-        selectedBackgroundView.backgroundColor = contentView.backgroundColor
-        updateCornerMask(for: selectedBackgroundView, isLinkAppearance: isLinkAppearance)
+        selectedBackgroundView.addSubview(selectedBackgroundFillView)
+        self.selectedBackgroundFillView = selectedBackgroundFillView
         self.selectedBackgroundView = selectedBackgroundView
+        setNeedsLayout()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // `selectedBackgroundView` shares the cell's coordinate space.
+        selectedBackgroundFillView?.frame = contentView.frame
     }
 
     private func updateCornerMask(for view: UIView, isLinkAppearance: Bool) {
@@ -166,7 +180,7 @@ extension InstitutionTableViewCell {
         if dividerView.superview == nil {
             contentView.addSubview(dividerView)
             NSLayoutConstraint.activate([
-                dividerView.heightAnchor.constraint(equalToConstant: FinancialConnectionsAppearance.linkDividerThickness),
+                dividerView.stp_heightConstraint(pixels: FinancialConnectionsAppearance.linkDividerPixelThickness),
                 dividerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 72),
                 dividerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                 dividerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),

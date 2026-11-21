@@ -153,18 +153,26 @@ class InstitutionPickerViewController: UIViewController {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
         if dataSource.manifest.appearance.colors == .link {
-            view.addAndPinSubview(
-                institutionTableView,
-                insets: NSDirectionalEdgeInsets(
-                    top: 0,
-                    leading: Constants.Layout.navigationBarAlignedHorizontalMargin,
-                    bottom: 0,
-                    trailing: Constants.Layout.navigationBarAlignedHorizontalMargin
-                )
+            // Inset the content through the safe area instead of the table's frame, so the table
+            // spans the full width and its scroll indicator can sit at the screen edge, past any
+            // side column (e.g. on iPhone Duo).
+            additionalSafeAreaInsets = UIEdgeInsets(
+                top: 0,
+                left: Constants.Layout.navigationBarAlignedHorizontalMargin,
+                bottom: 0,
+                right: Constants.Layout.navigationBarAlignedHorizontalMargin
             )
-        } else {
-            view.addAndPinSubview(institutionTableView)
         }
+        institutionTableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(institutionTableView)
+        NSLayoutConstraint.activate([
+            // Pin to the safe area so rows can't scroll into the area above the sticky search bar,
+            // where the navigation bar doesn't cover them (e.g. on iPhone Duo).
+            institutionTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            institutionTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            institutionTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            institutionTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
         institutionTableView.setTableHeaderView(headerView)
         if !dataSource.manifest.institutionSearchDisabled {
             institutionTableView.searchBarContainerView = searchBarContainerView

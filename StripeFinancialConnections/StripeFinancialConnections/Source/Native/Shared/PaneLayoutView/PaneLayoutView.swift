@@ -21,21 +21,18 @@ final class PaneLayoutView {
     private let paneLayoutView: UIView
     let scrollView: UIScrollView
 
-    private var footerView: UIView?
+    /// Holds the footer in the stack and insets it to the safe area, because the stack spans the full width.
+    private var footerContainerView: UIView?
     /// Pins `paneLayoutView` to the bottom of the presenting view's safe area.
     /// Its constant moves the footer above the keyboard.
     private var paneLayoutViewBottomConstraint: NSLayoutConstraint?
     private weak var presentingView: UIView?
     private let keepFooterAboveKeyboard: Bool
 
-    /// Whether or not the sheet is currently presented as a form sheet (which only happens on iPad).
+    /// Whether or not the sheet is currently presented as a form sheet (which only happens with a regular width).
     /// Unfortunately, the best way to know this is to check if the sheet's width is not equal to the window's width.
     private var isPresentedAsFormSheet: Bool {
-        guard let window = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene })
-            .flatMap({ $0.windows })
-            .first(where: { $0.isKeyWindow }) else { return false }
-        guard let presentingView else { return false }
+        guard let presentingView, let window = presentingView.window else { return false }
         return window.frame.width != presentingView.frame.width
     }
 
@@ -52,12 +49,18 @@ final class PaneLayoutView {
     /// This is required to prevent the keyboard observer notifications be removed.
     init(contentView: UIView, footerView: UIView?, keepFooterAboveKeyboard: Bool = false) {
         self.scrollViewContentView = contentView
-        self.footerView = footerView
         self.keepFooterAboveKeyboard = keepFooterAboveKeyboard
 
         let scrollView = AutomaticShadowScrollView()
         self.scrollView = scrollView
-        scrollView.addAndPinSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            // Content only scrolls vertically.
+            scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+        ])
 
         let verticalStackView = HitTestStackView(
             arrangedSubviews: [
@@ -65,7 +68,17 @@ final class PaneLayoutView {
             ]
         )
         if let footerView = footerView {
-            verticalStackView.addArrangedSubview(footerView)
+            let footerContainerView = HitTestView()
+            footerView.translatesAutoresizingMaskIntoConstraints = false
+            footerContainerView.addSubview(footerView)
+            NSLayoutConstraint.activate([
+                footerView.topAnchor.constraint(equalTo: footerContainerView.topAnchor),
+                footerView.bottomAnchor.constraint(equalTo: footerContainerView.bottomAnchor),
+                footerView.leadingAnchor.constraint(equalTo: footerContainerView.safeAreaLayoutGuide.leadingAnchor),
+                footerView.trailingAnchor.constraint(equalTo: footerContainerView.safeAreaLayoutGuide.trailingAnchor),
+            ])
+            self.footerContainerView = footerContainerView
+            verticalStackView.addArrangedSubview(footerContainerView)
         }
         verticalStackView.spacing = 0
         verticalStackView.axis = .vertical
@@ -78,18 +91,26 @@ final class PaneLayoutView {
         // must add `paneLayoutView` (and all it's subviews) to the `view`
         // BEFORE we can add a constraint for `UIScrollView` content
         self.presentingView = view
+        // Span the full width and extend under the top safe area, so the scroll view and its indicator
+        // reach the screen edges (e.g. past the iPhone Duo's side column, and up to the sheet's top edge
+        // when the navigation bar collapses), while the content and footer stay inside the safe area.
         paneLayoutView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(paneLayoutView)
         // Keep the bottom constraint so the whole pane, including its footer, can move above the keyboard
         let paneLayoutViewBottomConstraint = paneLayoutView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         self.paneLayoutViewBottomConstraint = paneLayoutViewBottomConstraint
         NSLayoutConstraint.activate([
-            paneLayoutView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            paneLayoutView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            paneLayoutView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            paneLayoutView.topAnchor.constraint(equalTo: view.topAnchor),
+            paneLayoutView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            paneLayoutView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             paneLayoutViewBottomConstraint,
         ])
-        scrollViewContentView?.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        if let scrollViewContentView {
+            NSLayoutConstraint.activate([
+                scrollViewContentView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                scrollViewContentView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            ])
+        }
 
         // Fit the scroll view height to be the size of the
         // scroll view contents
@@ -130,15 +151,24 @@ final class PaneLayoutView {
 
     @objc private func keyboardWillShow(_ notification: Notification) {
         guard shouldMoveFooterViewAboveKeyboard else { return }
-        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+        guard
+            let presentingView,
+            let keyboardFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+            // The notification's object is the keyboard's screen from iOS 16.1.
+            let screen = (notification.object as? UIScreen) ?? presentingView.window?.windowScene?.screen
+        else {
             return
         }
+        // The keyboard frame is in screen coordinates, so only count the part covering this view,
+        // which can be smaller than the screen (e.g. in a resized window).
+        let keyboardFrameInView = screen.coordinateSpace.convert(keyboardFrame, to: presentingView)
+        let keyboardHeight = presentingView.bounds.intersection(keyboardFrameInView).height
 
         // Only move the footer view if the keyboard height is above 200px
         // This is to prevent false-positives of the keyboard being shown.
-        guard keyboardSize.height > 200 else { return }
+        guard keyboardHeight > 200 else { return }
         animateAlongsideKeyboard(notification) { [weak self] in
-            self?.updateFooterViewConstraints(keyboardHeight: keyboardSize.height)
+            self?.updateFooterViewConstraints(keyboardHeight: keyboardHeight)
         }
     }
 
@@ -149,7 +179,7 @@ final class PaneLayoutView {
     }
 
     private func updateFooterViewConstraints(keyboardHeight: CGFloat) {
-        guard let presentingView, footerView != nil, let paneLayoutViewBottomConstraint else { return }
+        guard let presentingView, footerContainerView != nil, let paneLayoutViewBottomConstraint else { return }
         let adjustedKeyboardHeight: CGFloat
         if keyboardHeight > 0 {
             // Removes additional padding applied to footer view when showing above the keyboard.
@@ -198,6 +228,43 @@ private class AutomaticShadowScrollView: UIScrollView {
 
     private var shadowView: UIView?
 
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        // The content is inset horizontally through constraints, so only inset vertically here.
+        // The scroll indicator is inset manually too, so it can sit past a side column (e.g. on iPhone Duo).
+        contentInsetAdjustmentBehavior = .never
+        automaticallyAdjustsScrollIndicatorInsets = false
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        updateHorizontalScrollIndicatorInsets()
+        let topInset = safeAreaInsets.top
+        guard contentInset.top != topInset else { return }
+        let isScrolledToTop = contentOffset.y <= -contentInset.top
+        contentInset.top = topInset
+        verticalScrollIndicatorInsets.top = topInset
+        if isScrolledToTop {
+            contentOffset.y = -topInset
+        }
+    }
+
+    /// Keeps the scroll indicator clear of the sensor housing and rounded corners, like UIKit does,
+    /// except on the edge with the side column, where it sits at the screen edge.
+    private func updateHorizontalScrollIndicatorInsets() {
+        let verticalBarEdges = stp_verticalBarEdges ?? []
+        let leftInset = verticalBarEdges.contains(.left) ? 0 : safeAreaInsets.left
+        let rightInset = verticalBarEdges.contains(.right) ? 0 : safeAreaInsets.right
+        if verticalScrollIndicatorInsets.left != leftInset || verticalScrollIndicatorInsets.right != rightInset {
+            verticalScrollIndicatorInsets.left = leftInset
+            verticalScrollIndicatorInsets.right = rightInset
+        }
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -219,14 +286,16 @@ private class AutomaticShadowScrollView: UIScrollView {
         }
 
         if let shadowView {
-            // smaller shadow width "smoothens" the shadow 
+            // smaller shadow width "smoothens" the shadow
             // around the leading/trailing edges
-            let x = Constants.Layout.defaultHorizontalMargin / 2
+            let inset = Constants.Layout.defaultHorizontalMargin / 2
+            // keep the shadow inside the safe area, since the scroll view spans the full width
+            let x = safeAreaInsets.left + inset
             // move the `shadowView` to keep being at the bottom of visible bounds
             shadowView.frame = CGRect(
                 x: x,
                 y: contentOffset.y + bounds.height,
-                width: bounds.width - (2 * x),
+                width: bounds.width - safeAreaInsets.left - safeAreaInsets.right - (2 * inset),
                 height: 1
             )
 
@@ -243,6 +312,8 @@ private class AutomaticShadowScrollView: UIScrollView {
     // CGColor's need to be manually updated when the system theme changes.
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        // The side column's edge is a trait, and can change without the safe area changing.
+        updateHorizontalScrollIndicatorInsets()
         guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
 
         shadowView?.layer.shadowColor = FinancialConnectionsAppearance.Colors.textDefault.cgColor

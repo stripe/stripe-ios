@@ -33,7 +33,7 @@ func CreateLinkGroupedCardSeparatorView(leadingInset: CGFloat = 0) -> UIView {
     separatorView.translatesAutoresizingMaskIntoConstraints = false
     containerView.addSubview(separatorView)
     NSLayoutConstraint.activate([
-        separatorView.heightAnchor.constraint(equalToConstant: FinancialConnectionsAppearance.linkDividerThickness),
+        separatorView.stp_heightConstraint(pixels: FinancialConnectionsAppearance.linkDividerPixelThickness),
         separatorView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: leadingInset),
         separatorView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
         separatorView.topAnchor.constraint(equalTo: containerView.topAnchor),

@@ -41,14 +41,24 @@ final class InstitutionTableFooterView: UIView {
             subtitle: subtitle
         )
 
+        // Table footers aren't inset to the safe area like cell content views are, so inset the card
+        // to keep it aligned with the cells above (e.g. next to the iPhone Duo's side column).
+        let cardView = UIView()
         if appearance.colors == .link {
-            backgroundColor = appearance.colors.surfaceSecondary
-            layer.cornerRadius = 12
-            layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-            layer.masksToBounds = true
+            cardView.backgroundColor = appearance.colors.surfaceSecondary
+            cardView.layer.cornerRadius = 12
+            cardView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            cardView.layer.masksToBounds = true
         }
-
-        addAndPinSubview(institutionCellView)
+        cardView.addAndPinSubview(institutionCellView)
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(cardView)
+        NSLayoutConstraint.activate([
+            cardView.topAnchor.constraint(equalTo: topAnchor),
+            cardView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            cardView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            cardView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+        ])
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         tapGestureRecognizer.delegate = self

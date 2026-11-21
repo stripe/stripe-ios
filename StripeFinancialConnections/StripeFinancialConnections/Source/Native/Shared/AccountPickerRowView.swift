@@ -145,11 +145,11 @@ final class AccountPickerRowView: UIView {
                     transform: nil
                 )
                 layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.resolvedColor(with: traitCollection).cgColor
-                layer.shadowRadius = 1.5 / UIScreen.main.nativeScale
+                layer.shadowRadius = 1.5 / traitCollection.displayScale
                 layer.shadowOpacity = 0.23
                 layer.shadowOffset = CGSize(
                     width: 0,
-                    height: 1 / UIScreen.main.nativeScale
+                    height: 1 / traitCollection.displayScale
                 )
             } else {
                 layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.resolvedColor(with: traitCollection).cgColor
@@ -162,7 +162,11 @@ final class AccountPickerRowView: UIView {
     // CGColor's need to be manually updated when the system theme changes.
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+        // The shadow is also measured in pixels.
+        guard
+            traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection)
+                || traitCollection.displayScale != previousTraitCollection?.displayScale
+        else { return }
 
         updateLayer()
     }
