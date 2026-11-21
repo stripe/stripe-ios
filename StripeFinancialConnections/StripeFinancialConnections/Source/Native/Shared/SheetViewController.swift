@@ -58,6 +58,7 @@ class SheetViewController: UIViewController {
     }()
 
     private var contentViewMinY: CGFloat = 0
+    private var contentViewLayoutSize: CGSize = .zero
     private var performedSheetPresentationAnimation = false
     private var dismissAnimationInitialSpringVelocityY: CGFloat = 0
 
@@ -183,11 +184,13 @@ class SheetViewController: UIViewController {
             contentViewMinY += isLandscapePhone ? 0 : 24
             let didChangeContentViewMinY = (self.contentViewMinY != contentViewMinY)
             self.contentViewMinY = contentViewMinY
+            let didChangeViewSize = (contentViewLayoutSize != view.bounds.size)
+            contentViewLayoutSize = view.bounds.size
 
             // we only want `contentView.frame` to be adjusted
-            // if view changes (ex. first presentation or rotation)
+            // if view changes (ex. first presentation, rotation, or window resize)
             // otherwise, there could be layout/animation glitches
-            if didChangeContentViewMinY {
+            if didChangeContentViewMinY || didChangeViewSize {
                 var contentViewFrame = view.bounds
                 contentViewFrame.size.height -= contentViewMinY
                 contentViewFrame.origin.y = view.bounds.height - contentViewFrame.height
@@ -421,7 +424,15 @@ class SheetViewController: UIViewController {
     // MARK: - Presenting
 
     fileprivate let transitionDelegate = SheetTransitioningDelegate()
+    /// The view controller that the sheet covers on iPad, which is presented as a form sheet.
+    fileprivate weak var formSheetViewController: UIViewController?
+
     func present(on viewController: UIViewController) {
+        var formSheetViewController = viewController
+        while let parent = formSheetViewController.parent {
+            formSheetViewController = parent
+        }
+        self.formSheetViewController = formSheetViewController
         modalPresentationStyle = .custom
         transitioningDelegate = transitionDelegate
         PresentationManager.shared.present(self, from: viewController)
@@ -493,6 +504,44 @@ private class SheetTransitioningDelegate: NSObject, UIViewControllerTransitionin
         transitionAnimator.isPresenting = false
         return transitionAnimator
     }
+
+    func presentationController(
+        forPresented presented: UIViewController,
+        presenting: UIViewController?,
+        source: UIViewController
+    ) -> UIPresentationController? {
+        return SheetPresentationController(presentedViewController: presented, presenting: presenting)
+    }
+}
+
+private class SheetPresentationController: UIPresentationController {
+
+    override func containerViewDidLayoutSubviews() {
+        super.containerViewDidLayoutSubviews()
+        // The form sheet moves and resizes with the window, so keep the sheet matched to it.
+        layoutSheetContainerView()
+    }
+
+    /// Covers the form sheet when it's narrower than the window (e.g. on iPad or an unfolded iPhone Duo),
+    /// and the whole window otherwise.
+    func layoutSheetContainerView() {
+        guard
+            let containerView,
+            let sheetContainerView = presentedViewController.view.superview,
+            sheetContainerView !== containerView
+        else {
+            return
+        }
+        guard let formSheetViewController = (presentedViewController as? SheetViewController)?.formSheetViewController else {
+            sheetContainerView.frame = containerView.bounds
+            return
+        }
+        // Lay out the form sheet first, so its frame reflects the current window size.
+        formSheetViewController.presentationController?.containerView?.layoutIfNeeded()
+        let formSheetView = formSheetViewController.view!
+        let formSheetFrame = formSheetView.convert(formSheetView.bounds, to: containerView)
+        sheetContainerView.frame = formSheetFrame.width < containerView.bounds.width ? formSheetFrame : containerView.bounds
+    }
 }
 
 private let sheetAnimationDuration: TimeInterval = 0.3
@@ -525,72 +574,25 @@ private class SheetTransitionAnimator: NSObject, UIViewControllerAnimatedTransit
         let containerView = transitionContext.containerView
 
         if isPresenting {
-            // iPad
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                // the `sheetContainerView` is a
-                let sheetContainerView: UIView = {
-                    // the `fromViewController` has the right frame
-                    // (a sheet frame) so we use that to get the
-                    // right sheet size
-                    let origin = fromViewController.view.convert(
-                        fromViewController.view.frame.origin,
-                        to: fromViewController.view.window
-                    )
-                    let size = fromViewController.view.frame.size
+            // WARNING: Do not use autolayout because it
+            //          breaks the custom presentation
+            //          when other VC is presented on top
+            let sheetContainerView = UIView(frame: containerView.bounds)
+            sheetContainerView.backgroundColor = .clear
+            sheetContainerView.clipsToBounds = true
+            containerView.addSubview(sheetContainerView)
 
-                    let sheetContainerView = UIView(
-                        frame: CGRect(
-                            origin: origin,
-                            size: size
-                        )
-                    )
-                    sheetContainerView.backgroundColor = .clear
-                    return sheetContainerView
-                }()
-                sheetContainerView.clipsToBounds = true
-                sheetContainerView.layer.cornerRadius = {
-                    let defaultCornerRadius: CGFloat = 10
-                    let fromSuperView = fromViewController.view.superview
-                    if (fromSuperView?.layer.cornerRadius ?? 0) > 0 {
-                        return fromSuperView?.layer.cornerRadius ?? defaultCornerRadius
-                    } else {
-                        return defaultCornerRadius
-                    }
-                }() as CGFloat
+            // only dim the form sheet that the sheet covers
+            sheetContainerView.addSubview(backgroundDimmingView)
+            backgroundDimmingView.frame = sheetContainerView.bounds
+            backgroundDimmingView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-                // rotate if iPad rotates
-                containerView.addSubview(sheetContainerView)
-                sheetContainerView.autoresizingMask = [
-                    .flexibleLeftMargin,
-                    .flexibleTopMargin,
-                    .flexibleRightMargin,
-                    .flexibleBottomMargin,
-                ]
+            sheetContainerView.addSubview(toViewController.view)
+            toViewController.view.frame = sheetContainerView.bounds
+            toViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-                // WARNING: Do not use autolayout because it
-                //          breaks the custom presentation
-                //          when other VC is presented on top
-                sheetContainerView.addSubview(backgroundDimmingView)
-                backgroundDimmingView.frame = sheetContainerView.bounds
-                backgroundDimmingView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-                sheetContainerView.addSubview(toViewController.view)
-                toViewController.view.frame = sheetContainerView.bounds
-                toViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            }
-            // iPhone
-            else {
-                // WARNING: Do not use autolayout because it
-                //          breaks the custom presentation
-                //          when other VC is presented on top
-                containerView.addSubview(backgroundDimmingView)
-                backgroundDimmingView.frame = containerView.bounds
-                backgroundDimmingView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-                containerView.addSubview(toViewController.view)
-                toViewController.view.frame = containerView.bounds
-                toViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            }
+            // match the form sheet's frame, or the window's
+            (toViewController.presentationController as? SheetPresentationController)?.layoutSheetContainerView()
 
             backgroundDimmingView.alpha = 0.0
             UIView.animate(
