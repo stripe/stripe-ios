@@ -32,11 +32,7 @@ final class PaneLayoutView {
     /// Whether or not the sheet is currently presented as a form sheet (which only happens with a regular width).
     /// Unfortunately, the best way to know this is to check if the sheet's width is not equal to the window's width.
     private var isPresentedAsFormSheet: Bool {
-        guard let window = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene })
-            .flatMap({ $0.windows })
-            .first(where: { $0.isKeyWindow }) else { return false }
-        guard let presentingView else { return false }
+        guard let presentingView, let window = presentingView.window else { return false }
         return window.frame.width != presentingView.frame.width
     }
 
