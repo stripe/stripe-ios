@@ -9,8 +9,9 @@
 #import "STPTestingAPIClient.h"
 @import StripeCore;
 
-// The unified test backends' Vercel deployment. STRIPE_TEST_BACKENDS_URL overrides it.
-static NSString * const STPTestingDefaultTestBackendsURL = @"https://stripe-mobile-example-ci-backends.vercelapp.stripe.dev/";
+// The unified test backends' deployment, Cloud Run service stp-mobile-test-backends.
+// STRIPE_TEST_BACKENDS_URL overrides it.
+static NSString * const STPTestingDefaultTestBackendsURL = @"https://stp-mobile-test-backends-764603794666.us-central1.run.app/";
 
 static BOOL STPUsesDefaultTestBackendsURL = NO;
 

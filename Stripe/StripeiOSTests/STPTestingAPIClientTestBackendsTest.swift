@@ -7,7 +7,7 @@ import StripePaymentsTestUtils
 import XCTest
 
 class STPTestingAPIClientTestBackendsTest: XCTestCase {
-    private let defaultURL = "https://stripe-mobile-example-ci-backends.vercelapp.stripe.dev/"
+    private let defaultURL = "https://stp-mobile-test-backends-764603794666.us-central1.run.app/"
 
     override func tearDown() {
         STPTestingAPIClient.usesDefaultTestBackendsURL = false

@@ -1,5 +1,5 @@
 POST
-https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/playground\/create_checkout_session$
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/create_checkout_session$
 200
 application/json
 Server: Vercel

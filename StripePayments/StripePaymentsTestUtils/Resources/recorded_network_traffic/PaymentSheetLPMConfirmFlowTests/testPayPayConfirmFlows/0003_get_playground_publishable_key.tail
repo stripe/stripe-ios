@@ -1,5 +1,5 @@
 GET
-https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/playground\/publishable_key\?merchant=JP$
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/publishable_key\?merchant=JP$
 200
 application/json
 Server: Vercel

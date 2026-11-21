@@ -45,7 +45,7 @@ import XCTest
             return
         }
 
-        // Recordings name the test backends' Vercel deployment, so record and play back with it
+        // Recordings name the test backends' deployment, so record and play back with it
         // even when STRIPE_TEST_BACKENDS_URL names another copy.
         STPTestingAPIClient.usesDefaultTestBackendsURL = true
 

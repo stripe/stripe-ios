@@ -1,11 +1,10 @@
 GET
-https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/httpbin\/status\/429\?$
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/httpbin\/status\/429\?$
 429
 text/html
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: text/html;charset=utf-8
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 22:33:35 GMT
 Content-Length: 0
-Cache-Control: public, max-age=0, must-revalidate
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 02:37:19 GMT
 

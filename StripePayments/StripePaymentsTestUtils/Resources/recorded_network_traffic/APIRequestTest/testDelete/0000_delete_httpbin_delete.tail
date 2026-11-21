@@ -1,30 +1,28 @@
 DELETE
-https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/httpbin\/delete\?$
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/httpbin\/delete\?$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 23:45:00 GMT
-Content-Length: 709
-Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 695
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 02:37:24 GMT
 
 {
-  "origin" : "136.24.137.206",
+  "origin" : "169.254.169.126",
   "form" : {
 
   },
   "json" : null,
   "data" : "",
   "headers" : {
-    "Accept-Encoding" : "gzip, deflate, br",
     "Accept" : "*\/*",
-    "Content-Type" : "",
-    "Host" : "stripe-mobile-example-ci-backends.vercelapp.stripe.dev",
-    "Content-Length" : "0",
-    "X-Stripe-User-Agent" : "{\"lang\":\"objective-c\",\"os_version\":\"26.4.1\",\"type\":\"arm64\",\"vendor_identifier\":\"9CF6DDBA-263F-495B-B2F2-8FA78E54A7C7\",\"model\":\"iPhone\",\"bindings_version\":\"26.16.1\"}",
+    "Accept-Encoding" : "gzip, deflate, br",
+    "Host" : "stp-mobile-test-backends-764603794666.us-central1.run.app",
     "User-Agent" : "xctest\/25435 CFNetwork\/3860.500.112 Darwin\/27.2.0",
+    "Content-Length" : "0",
     "Accept-Language" : "en-US,en;q=0.9",
+    "X-Stripe-User-Agent" : "{\"os_version\":\"26.4.1\",\"lang\":\"objective-c\",\"type\":\"arm64\",\"model\":\"iPhone\",\"vendor_identifier\":\"13175857-FA04-4EB9-BF76-F3504854776F\",\"bindings_version\":\"26.16.1\"}",
     "Stripe-Version" : "2020-08-27"
   },
   "args" : {
@@ -33,5 +31,5 @@ Cache-Control: public, max-age=0, must-revalidate
   "files" : {
 
   },
-  "url" : "https:\/\/stripe-mobile-example-ci-backends.vercelapp.stripe.dev\/httpbin\/delete"
+  "url" : "http:\/\/stp-mobile-test-backends-764603794666.us-central1.run.app\/httpbin\/delete"
 }

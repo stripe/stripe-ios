@@ -1,13 +1,12 @@
 GET
-https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/httpbin\/bearer\?foo=bar$
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/httpbin\/bearer\?foo=bar$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 22:33:40 GMT
 Content-Length: 42
-Cache-Control: public, max-age=0, must-revalidate
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 02:37:24 GMT
 
 {
   "token" : "pk_foo",

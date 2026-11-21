@@ -4,7 +4,7 @@
 //
 //  The example backends that the example apps and testers call: the unified test backends
 //  (oss-android-sdk's ci/test-backends), each under its own prefix, `<root><prefix>`. The root is
-//  their Vercel deployment, or STRIPE_TEST_BACKENDS_URL in the app's environment, such as a local
+//  their Cloud Run deployment, or STRIPE_TEST_BACKENDS_URL in the app's environment, such as a local
 //  copy's `http://127.0.0.1:4567/`. UI tests pass the variables on to the app in
 //  `launchEnvironment`.
 //
@@ -27,7 +27,7 @@ enum TestBackend: String {
 
     /// Overrides `defaultURL`.
     static let urlEnvironmentKey = "STRIPE_TEST_BACKENDS_URL"
-    static let defaultURL = "https://stripe-mobile-example-ci-backends.vercelapp.stripe.dev/"
+    static let defaultURL = "https://stp-mobile-test-backends-764603794666.us-central1.run.app/"
 
     /// The variables that a UI test puts in the app's `launchEnvironment` to pass on the test
     /// backends it was given.

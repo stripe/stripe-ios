@@ -1,5 +1,5 @@
 POST
-https:\/\/stripe-mobile-example-ci-backends\.vercelapp\.stripe\.dev\/ci-test-backend\/create_ephemeral_key$
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/ci-test-backend\/create_ephemeral_key$
 200
 application/json
 Server: Vercel
