@@ -95,15 +95,16 @@ final class PaneLayoutView {
         // must add `paneLayoutView` (and all it's subviews) to the `view`
         // BEFORE we can add a constraint for `UIScrollView` content
         self.presentingView = view
-        // Span the full width so the scroll view and its indicator reach the screen edge, past any
-        // side column (e.g. on iPhone Duo), while the content and footer stay inside the safe area.
+        // Span the full width and extend under the top safe area, so the scroll view and its indicator
+        // reach the screen edges (e.g. past the iPhone Duo's side column, and up to the sheet's top edge
+        // when the navigation bar collapses), while the content and footer stay inside the safe area.
         paneLayoutView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(paneLayoutView)
         // Keep the bottom constraint so the whole pane, including its footer, can move above the keyboard
         let paneLayoutViewBottomConstraint = paneLayoutView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         self.paneLayoutViewBottomConstraint = paneLayoutViewBottomConstraint
         NSLayoutConstraint.activate([
-            paneLayoutView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            paneLayoutView.topAnchor.constraint(equalTo: view.topAnchor),
             paneLayoutView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             paneLayoutView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             paneLayoutViewBottomConstraint,
@@ -221,6 +222,30 @@ final class PaneLayoutView {
 private class AutomaticShadowScrollView: UIScrollView {
 
     private var shadowView: UIView?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        // The content is inset horizontally through constraints, so only inset vertically here.
+        // UIKit's automatic adjustments would also inset the scroll indicator from the screen edge.
+        contentInsetAdjustmentBehavior = .never
+        automaticallyAdjustsScrollIndicatorInsets = false
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        let topInset = safeAreaInsets.top
+        guard contentInset.top != topInset else { return }
+        let isScrolledToTop = contentOffset.y <= -contentInset.top
+        contentInset.top = topInset
+        verticalScrollIndicatorInsets.top = topInset
+        if isScrolledToTop {
+            contentOffset.y = -topInset
+        }
+    }
 
     override func layoutSubviews() {
         super.layoutSubviews()
