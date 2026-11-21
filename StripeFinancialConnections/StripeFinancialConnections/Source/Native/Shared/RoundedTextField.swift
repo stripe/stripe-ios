@@ -58,12 +58,14 @@ final class RoundedTextField: UIView {
         )
         containerStackView.layer.cornerRadius = 12
         containerStackView.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
-        containerStackView.layer.shadowRadius = 2 / UIScreen.main.nativeScale
         containerStackView.layer.shadowOpacity = 0.1
-        containerStackView.layer.shadowOffset = CGSize(
-            width: 0,
-            height: 1 / UIScreen.main.nativeScale
-        )
+        containerStackView.stp_updateForDisplayScale { containerStackView, displayScale in
+            containerStackView.layer.shadowRadius = 2 / displayScale
+            containerStackView.layer.shadowOffset = CGSize(
+                width: 0,
+                height: 1 / displayScale
+            )
+        }
         return containerStackView
     }()
     lazy var textFieldContainerView: UIView = {

@@ -263,7 +263,7 @@ private func CreateSeparatorView() -> UIView {
     separatorView.backgroundColor = FinancialConnectionsAppearance.Colors.borderNeutral
     separatorView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        separatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale)
+        separatorView.stp_heightConstraint(pixels: 1)
     ])
     return separatorView
 }
