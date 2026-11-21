@@ -49,6 +49,10 @@ extension EmbeddedPaymentElement {
                 return previousSelection
             }
 
+            if loadResult.preselectLink {
+                return .link
+            }
+
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
             let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: loadResult.customerProvider.customerID, elementsSession: loadResult.elementsSession, surface: .paymentSheet)
             switch customerDefault {
