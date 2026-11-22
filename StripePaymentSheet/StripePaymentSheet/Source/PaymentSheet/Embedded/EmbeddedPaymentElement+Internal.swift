@@ -169,7 +169,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         guard checkout != nil,
               case .saved(let paymentMethod) = rowButtonType else {
             // Link is saved as the default once something is picked in the Link wallet.
-            if !(rowButtonType == .link && linkRowOpensWallet) {
+            if !(rowButtonType == .link && linkRowSelectionOpensWallet(linkWasSelected: embeddedPaymentMethodsView.selectedRowButton?.type == .link)) {
                 persistDefaultPaymentMethodSelection(rowButtonType)
             }
             return
@@ -210,9 +210,15 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
         // 2. Inform the delegate of the updated payment option if there is no form. If there is a form, we don't want to inform the delegate b/c the paymentOption is in an indeterminate state until the customer completes or cancels out of the form.
         // The same goes for a Link row that opens the Link wallet.
-        if self.selectedFormViewController == nil, !(selection == .link && linkRowOpensWallet) {
+        if self.selectedFormViewController == nil,
+           !(selection == .link && linkRowSelectionOpensWallet(linkWasSelected: embeddedPaymentMethodsView.previousSelectedRowButton?.type == .link)) {
             informDelegateIfPaymentOptionUpdated()
         }
+    }
+
+    func embeddedPaymentMethodsViewLinkMandateText() -> NSAttributedString? {
+        guard let linkPaymentDetails else { return nil }
+        return Self.linkMandateText(for: linkPaymentDetails, context: makeLinkContext(linkAccount: LinkAccountContext.shared.account))
     }
 
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
@@ -233,10 +239,15 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         guard let pendingSelection = pendingBillingAddressSyncSelection,
               let checkout else {
             pendingBillingAddressSyncSelection = nil
-            if embeddedPaymentMethodsView.selectedRowButton?.type == .link, linkRowOpensWallet {
-                // A tap that newly selected Link is undone if the customer closes the wallet; "Change" keeps what they had.
-                presentLinkWallet(revertsSelectionOnClose: embeddedPaymentMethodsView.previousSelectedRowButton?.type != .link)
-                return
+            if embeddedPaymentMethodsView.selectedRowButton?.type == .link {
+                let linkWasSelected = embeddedPaymentMethodsView.previousSelectedRowButton?.type == .link
+                if linkRowSelectionOpensWallet(linkWasSelected: linkWasSelected) {
+                    // A tap that newly selected Link is undone if the customer closes the wallet; "Change" keeps what they had.
+                    presentLinkWallet(revertsSelectionOnClose: !linkWasSelected)
+                    return
+                }
+                // Show the Link payment details it pays with again, if any.
+                updateChangeButtonAndSublabelState(for: .link)
             }
             persistDefaultPaymentMethodSelection(embeddedPaymentMethodsView.selectedRowButton?.type)
             informDelegateIfPaymentOptionUpdated()
@@ -738,6 +749,8 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     /// The selected Link row shows the payment details picked in the Link wallet, e.g. "Visa •••• 4242", and a "Change" button.
     private func updateLinkChangeButtonAndSublabelState() {
         guard let linkRowButton = embeddedPaymentMethodsView.selectedRowButton, linkRowButton.type == .link else { return }
+        // The mandate depends on the payment details too.
+        defer { embeddedPaymentMethodsView.updateMandate() }
         let linkBrand = configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
         guard let sublabel = linkConfirmOption?.displayPaymentSheetSubLabel(brand: linkBrand) else {
             embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)

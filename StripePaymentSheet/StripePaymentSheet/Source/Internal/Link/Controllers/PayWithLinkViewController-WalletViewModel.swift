@@ -67,34 +67,7 @@ extension PayWithLinkViewController {
 
         /// The mandate text to show.
         var mandate: NSAttributedString? {
-            let isSettingUp = context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link)
-
-            switch selectedPaymentMethod?.details {
-            case .card:
-                if context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText {
-                    // Use the updated mandate text that can mention both payment method reuse and Link signup.
-                    // Since the user is already signed up for Link, we don't need to save to Link.
-                    return PaymentSheetFormFactory.makeMandateText(
-                        variant: .updated(shouldSignUpToLink: false),
-                        merchantName: context.configuration.merchantDisplayName
-                    )
-                } else if isSettingUp {
-                    let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
-                    return NSMutableAttributedString(string: string)
-                } else {
-                    return nil
-                }
-            case .bankAccount:
-                // Instant debit mandate should be shown when paying with bank account.
-                return PaymentSheetFormFactory.makeBankMandateText(
-                    isSettingUp: isSettingUp || context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
-                    merchantName: context.configuration.merchantDisplayName,
-                    sellerName: context.intent.sellerDetails?.businessName,
-                    brand: context.linkBrand
-                )
-            default:
-                return nil
-            }
+            Self.mandate(for: selectedPaymentMethod, context: context)
         }
 
         /// Whether or not the view should show the mandate text.
@@ -104,14 +77,7 @@ extension PayWithLinkViewController {
 
         /// The data-sharing consent message to show when a linked bank account is selected.
         var bankAccountDataConsent: NSAttributedString? {
-            guard case .bankAccount = selectedPaymentMethod?.details,
-                  let consentText = context.elementsSession.linkPaymentMethodBankAccountDataConsent,
-                  !consentText.isEmpty
-            else {
-                return nil
-            }
-
-            return STPStringUtils.attributedStringFromMarkdownLinks(in: consentText)
+            Self.bankAccountDataConsent(for: selectedPaymentMethod, context: context)
         }
 
         /// Whether or not the view should show the data-sharing consent message.
@@ -345,6 +311,81 @@ extension PayWithLinkViewController {
         func isPaymentMethodSupported(paymentMethod: ConsumerPaymentDetails?) -> Bool {
             paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, configuration: context.configuration, cardBrandFilter: context.configuration.cardBrandFilter, cardFundingFilter: context.configuration.cardFundingFilter(for: context.elementsSession)) ?? false
         }
+    }
+}
+
+extension PayWithLinkViewController.WalletViewModel {
+
+    /// The mandate text to show when paying with `paymentDetails`.
+    static func mandate(
+        for paymentDetails: ConsumerPaymentDetails?,
+        context: PayWithLinkViewController.Context
+    ) -> NSAttributedString? {
+        let isSettingUp = context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link)
+
+        switch paymentDetails?.details {
+        case .card:
+            if context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText {
+                // Use the updated mandate text that can mention both payment method reuse and Link signup.
+                // Since the user is already signed up for Link, we don't need to save to Link.
+                return PaymentSheetFormFactory.makeMandateText(
+                    variant: .updated(shouldSignUpToLink: false),
+                    merchantName: context.configuration.merchantDisplayName
+                )
+            } else if isSettingUp {
+                let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
+                return NSMutableAttributedString(string: string)
+            } else {
+                return nil
+            }
+        case .bankAccount:
+            // Instant debit mandate should be shown when paying with bank account.
+            return PaymentSheetFormFactory.makeBankMandateText(
+                isSettingUp: isSettingUp || context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
+                merchantName: context.configuration.merchantDisplayName,
+                sellerName: context.intent.sellerDetails?.businessName,
+                brand: context.linkBrand
+            )
+        default:
+            return nil
+        }
+    }
+
+    /// The data-sharing consent message to show when `paymentDetails` is a linked bank account.
+    static func bankAccountDataConsent(
+        for paymentDetails: ConsumerPaymentDetails?,
+        context: PayWithLinkViewController.Context
+    ) -> NSAttributedString? {
+        guard let consentText = bankAccountDataConsentText(for: paymentDetails, elementsSession: context.elementsSession) else {
+            return nil
+        }
+        return STPStringUtils.attributedStringFromMarkdownLinks(in: consentText)
+    }
+
+    /// Records that the customer agreed to the data-sharing consent shown for a linked bank account.
+    /// Consent recording must never block or fail payment confirmation, so errors are ignored.
+    static func recordBankAccountConsentIfNeeded(
+        for paymentDetails: ConsumerPaymentDetails,
+        linkAccount: PaymentSheetLinkAccount,
+        elementsSession: STPElementsSession
+    ) async {
+        guard let consentText = bankAccountDataConsentText(for: paymentDetails, elementsSession: elementsSession) else {
+            return
+        }
+        _ = try? await linkAccount.recordConnectionsConsentAcquired(localizedConsentText: consentText)
+    }
+
+    private static func bankAccountDataConsentText(
+        for paymentDetails: ConsumerPaymentDetails?,
+        elementsSession: STPElementsSession
+    ) -> String? {
+        guard case .bankAccount = paymentDetails?.details,
+              let consentText = elementsSession.linkPaymentMethodBankAccountDataConsent,
+              !consentText.isEmpty
+        else {
+            return nil
+        }
+        return consentText
     }
 }
 

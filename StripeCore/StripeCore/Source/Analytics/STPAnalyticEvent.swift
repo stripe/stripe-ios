@@ -183,6 +183,8 @@ import Foundation
     case linkEmbeddedInlineAuthFellBack = "link.embedded_inline_auth.fell_back"
     case linkEmbeddedInlineAuthWalletSelected = "link.embedded_inline_auth.wallet_selected"
     case linkEmbeddedInlineAuthWalletClosed = "link.embedded_inline_auth.wallet_closed"
+    case linkEmbeddedInlineAuthPreselected = "link.embedded_inline_auth.preselected"
+    case linkEmbeddedInlineAuthPreselectionFellBack = "link.embedded_inline_auth.preselection_fell_back"
     case linkEmbeddedInlineAuthIneligible = "link.embedded_inline_auth.ineligible"
 
     // MARK: - Link Misc

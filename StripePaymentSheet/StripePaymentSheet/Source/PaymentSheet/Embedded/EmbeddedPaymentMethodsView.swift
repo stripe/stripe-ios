@@ -29,6 +29,13 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     /// - Parameter rowButtonType: The type of row button being evaluated.
     /// - Returns: True if selecting this row button type will display a form.
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool
+
+    /// The mandate for the Link payment details the selected Link row shows, if any.
+    func embeddedPaymentMethodsViewLinkMandateText() -> NSAttributedString?
+}
+
+extension EmbeddedPaymentMethodsViewDelegate {
+    func embeddedPaymentMethodsViewLinkMandateText() -> NSAttributedString? { nil }
 }
 
 /// The view for an embedded payment element
@@ -363,6 +370,12 @@ class EmbeddedPaymentMethodsView: UIView {
         return true
     }
 
+    /// Shows the Link row loading and blocks taps, e.g. while the element works out which Link payment details to select.
+    func setLinkRowLoading(_ loading: Bool, animated: Bool = true) {
+        isUserInteractionEnabled = !loading
+        linkRowButton?.setLoading(loading, animated: animated)
+    }
+
     /// Replaces the expanded Link row with the regular Link row, which keeps its position.
     func collapseLinkInlineVerification(animated: Bool = true) {
         guard let container = linkInlineVerificationContainer else { return }
@@ -541,12 +554,16 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     // MARK: Mandate handling
-    private func updateMandate(animated: Bool = true) {
-        let mandateText = mandateProvider.mandate(
-            for: selectedRowButton?.type.paymentMethodType,
-            savedPaymentMethod: selectedRowButton?.type.savedPaymentMethod,
-            bottomNoticeAttributedString: nil
-        )
+    func updateMandate(animated: Bool = true) {
+        let mandateText: NSAttributedString? = if selectedRowButton?.type == .link {
+            delegate?.embeddedPaymentMethodsViewLinkMandateText()
+        } else {
+            mandateProvider.mandate(
+                for: selectedRowButton?.type.paymentMethodType,
+                savedPaymentMethod: selectedRowButton?.type.savedPaymentMethod,
+                bottomNoticeAttributedString: nil
+            )
+        }
         _updateMandate(mandateText: mandateText, animated: animated)
     }
 

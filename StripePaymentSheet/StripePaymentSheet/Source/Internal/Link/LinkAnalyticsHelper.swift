@@ -166,6 +166,16 @@ struct LinkAnalyticsHelper {
         analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthWalletClosed, checkoutSessionID: checkoutSessionID)
     }
 
+    /// After verifying, the Link row was selected with the customer's default Link payment method instead of opening the wallet.
+    func logEmbeddedInlineAuthPreselected(paymentDetailsType: String) {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthPreselected, checkoutSessionID: checkoutSessionID, params: ["payment_details_type": paymentDetailsType])
+    }
+
+    /// After verifying, the default Link payment method couldn't be used without the wallet, so the wallet opened instead.
+    func logEmbeddedInlineAuthPreselectionFellBack(reason: String) {
+        analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthPreselectionFellBack, checkoutSessionID: checkoutSessionID, params: ["reason": reason])
+    }
+
     /// A returning customer who needs to verify didn't get the card.
     func logEmbeddedInlineAuthIneligible(reason: String) {
         analyticsClient.logPaymentSheetEvent(event: .linkEmbeddedInlineAuthIneligible, checkoutSessionID: checkoutSessionID, params: ["reason": reason])

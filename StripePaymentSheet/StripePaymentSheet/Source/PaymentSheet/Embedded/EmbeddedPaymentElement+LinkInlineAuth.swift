@@ -114,12 +114,67 @@ extension EmbeddedPaymentElement {
 
     // MARK: - Link wallet
 
-    /// Whether tapping the Link row opens the Link wallet to pick what to pay with, rather than only selecting Link.
+    /// Whether the Link row can open the Link wallet to pick what to pay with.
     /// This is the case once a customer who saw inline verification is verified.
     var linkRowOpensWallet: Bool {
-        guard placesLinkFirst, case .continue = configuration.formSheetAction else { return false }
+        guard placesLinkFirst else { return false }
         return LinkAccountContext.shared.account?.sessionState == .verified
             && deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+    }
+
+    /// Whether selecting the Link row opens the Link wallet, rather than only selecting Link.
+    /// - Parameter linkWasSelected: Whether the Link row was already selected, i.e. the customer tapped it again or tapped "Change".
+    func linkRowSelectionOpensWallet(linkWasSelected: Bool) -> Bool {
+        guard linkRowOpensWallet else { return false }
+        // Selecting Link again keeps the payment details it showed. Tapping it while selected changes them.
+        if linkPaymentDetails != nil {
+            return linkWasSelected
+        }
+        // With nothing picked yet, `.confirm` pays in the Link wallet at confirm time instead.
+        if case .confirm = configuration.formSheetAction {
+            return false
+        }
+        return true
+    }
+
+    /// The Link payment details the Link row shows and pays with, if they're still usable.
+    var linkPaymentDetails: ConsumerPaymentDetails? {
+        guard let linkConfirmOption, isLinkConfirmOptionStillValid(linkConfirmOption),
+              case .withPaymentDetails(_, _, let paymentDetails, _, _) = linkConfirmOption else {
+            return nil
+        }
+        return paymentDetails
+    }
+
+    /// The context the Link wallet would use to pick payment details, for deciding what to pay with without opening it.
+    func makeLinkContext(linkAccount: PaymentSheetLinkAccount?) -> PayWithLinkViewController.Context {
+        PayWithLinkViewController.Context(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
+            shouldOfferApplePay: false,
+            shouldFinishOnClose: false,
+            launchedFromFlowController: true,
+            initiallySelectedPaymentDetailsID: nil,
+            callToAction: .continue,
+            analyticsHelper: analyticsHelper
+        )
+    }
+
+    /// The mandate and bank data-sharing consent the Link wallet shows for `paymentDetails`, combined.
+    static func linkMandateText(for paymentDetails: ConsumerPaymentDetails, context: PayWithLinkViewController.Context) -> NSAttributedString? {
+        let texts = [
+            PayWithLinkViewController.WalletViewModel.mandate(for: paymentDetails, context: context),
+            PayWithLinkViewController.WalletViewModel.bankAccountDataConsent(for: paymentDetails, context: context),
+        ].compactMap { $0 }
+        guard let first = texts.first else { return nil }
+        let combined = NSMutableAttributedString(attributedString: first)
+        for text in texts.dropFirst() {
+            combined.append(NSAttributedString(string: "\n\n"))
+            combined.append(text)
+        }
+        return combined
     }
 
     /// Opens the Link wallet so the customer can pick a payment method, then selects the Link row with it.
@@ -158,6 +213,11 @@ extension EmbeddedPaymentElement {
             }
             return
         }
+        selectLink(with: confirmOption)
+    }
+
+    /// Selects the Link row to pay with `confirmOption`.
+    private func selectLink(with confirmOption: PaymentSheet.LinkConfirmOption) {
         // `.wallet` means the wallet couldn't hand back payment details, so Link pays through the wallet at confirm time.
         if case .wallet = confirmOption {
             linkConfirmOption = nil
@@ -185,6 +245,125 @@ extension EmbeddedPaymentElement {
             updateChangeButtonAndSublabelState(for: restoredSelection)
         }
         informDelegateIfPaymentOptionUpdated()
+    }
+
+    // MARK: - Preselecting Link payment details
+
+    enum LinkPreselectionFallbackReason: String, Error {
+        case noSupportedTypes = "no_supported_types"
+        case loadFailed = "load_failed"
+        case noPaymentDetails = "no_payment_details"
+        case unsupported
+        case needsCardDetails = "needs_card_details"
+        case needsBillingDetails = "needs_billing_details"
+        /// With `.immediateAction`, the merchant moves on right away, so the customer wouldn't see the mandate below the list.
+        case mandateNotVisible = "mandate_not_visible"
+    }
+
+    /// After a customer verifies inline, selects the Link row with the payment details the Link wallet would select first, usually their default.
+    /// Opens the Link wallet instead if those payment details can't be used without it.
+    func preselectDefaultLinkPaymentMethod() {
+        guard linkPreselectionTask == nil else { return }
+        guard let linkAccount = LinkAccountContext.shared.account, linkAccount.sessionState == .verified else { return }
+        let selectionBeforePreselecting = embeddedPaymentMethodsView.selectedRowButton?.type
+        embeddedPaymentMethodsView.setLinkRowLoading(true)
+        linkPreselectionTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            let result = await self.loadDefaultLinkConfirmOption(linkAccount: linkAccount)
+            self.finishPreselectingLinkPaymentMethod(result, linkAccount: linkAccount, selectionBeforePreselecting: selectionBeforePreselecting)
+        }
+    }
+
+    private func loadDefaultLinkConfirmOption(linkAccount: PaymentSheetLinkAccount) async -> Result<PaymentSheet.LinkConfirmOption, LinkPreselectionFallbackReason> {
+        let supportedTypes = makeLinkContext(linkAccount: linkAccount).getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+        guard !supportedTypes.isEmpty else { return .failure(.noSupportedTypes) }
+        // Like the Link wallet, which also fetches the shipping address when it's opened to pick payment details.
+        let shippingAddressTask = Task {
+            try? await linkAccount.listShippingAddress(shouldRetryOnAuthError: false)
+        }
+        defer { shippingAddressTask.cancel() }
+        let paymentDetails: [ConsumerPaymentDetails]
+        do {
+            paymentDetails = try await linkAccount.listPaymentDetails(supportedTypes: supportedTypes.toSortedArray(), shouldRetryOnAuthError: false)
+        } catch {
+            return .failure(.loadFailed)
+        }
+        let shippingAddresses = await shippingAddressTask.value?.shippingAddresses
+        let shippingAddress = shippingAddresses?.first { $0.isDefault ?? false } ?? shippingAddresses?.first
+        return await defaultLinkConfirmOption(in: paymentDetails, linkAccount: linkAccount, shippingAddress: shippingAddress)
+    }
+
+    /// Picks the payment details the Link wallet would select first, if they can be used without opening it.
+    func defaultLinkConfirmOption(
+        in paymentDetails: [ConsumerPaymentDetails],
+        linkAccount: PaymentSheetLinkAccount,
+        shippingAddress: ShippingAddressesResponse.ShippingAddress?
+    ) async -> Result<PaymentSheet.LinkConfirmOption, LinkPreselectionFallbackReason> {
+        let context = makeLinkContext(linkAccount: linkAccount)
+        let viewModel = PayWithLinkViewController.WalletViewModel(linkAccount: linkAccount, context: context, paymentMethods: paymentDetails)
+        guard let selectedPaymentDetails = viewModel.selectedPaymentMethod else { return .failure(.noPaymentDetails) }
+        guard viewModel.selectedPaymentMethodIsSupported else { return .failure(.unsupported) }
+        guard !viewModel.shouldRecollectCardCVC, !viewModel.shouldRecollectCardExpiryDate else { return .failure(.needsCardDetails) }
+        if case .immediateAction = configuration.rowSelectionBehavior, configuration.embeddedViewDisplaysMandateText,
+           Self.linkMandateText(for: selectedPaymentDetails, context: context) != nil {
+            return .failure(.mandateNotVisible)
+        }
+        guard case let .complete(updatedPaymentDetails, confirmationExtras) = await LinkBillingDetailsValidator(linkAccount: linkAccount, context: context).validate(selectedPaymentDetails) else {
+            return .failure(.needsBillingDetails)
+        }
+        return .success(.withPaymentDetails(
+            brand: context.linkBrand,
+            account: linkAccount,
+            paymentDetails: updatedPaymentDetails,
+            confirmationExtras: confirmationExtras,
+            shippingAddress: shippingAddress
+        ))
+    }
+
+    func finishPreselectingLinkPaymentMethod(
+        _ result: Result<PaymentSheet.LinkConfirmOption, LinkPreselectionFallbackReason>,
+        linkAccount: PaymentSheetLinkAccount,
+        selectionBeforePreselecting: RowButtonType?
+    ) {
+        linkPreselectionTask = nil
+        embeddedPaymentMethodsView.setLinkRowLoading(false)
+        // Drop the result if the account changed, or the selection changed some other way, e.g. the merchant cleared it.
+        guard !hasConfirmedIntent,
+              LinkAccountContext.shared.account === linkAccount,
+              linkAccount.sessionState == .verified,
+              embeddedPaymentMethodsView.selectedRowButton?.type == selectionBeforePreselecting else {
+            return
+        }
+        switch result {
+        case .success(let confirmOption):
+            if case .withPaymentDetails(_, _, let paymentDetails, _, _) = confirmOption {
+                preselectedLinkPaymentDetailsID = paymentDetails.stripeID
+                analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPreselected(paymentDetailsType: paymentDetails.type.rawValue)
+            }
+            selectLink(with: confirmOption)
+        case .failure(let reason):
+            analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPreselectionFellBack(reason: reason.rawValue)
+            switch configuration.formSheetAction {
+            case .continue:
+                presentLinkWallet(revertsSelectionOnClose: false)
+            case .confirm(let completion):
+                payInLinkWallet(completion: completion)
+            }
+        }
+    }
+
+    /// Records the bank data-sharing consent shown below the list, before paying with bank account details preselected after verifying.
+    /// The Link wallet records it itself for payment details picked there.
+    func recordLinkBankAccountConsentIfNeeded(for paymentOption: PaymentOption) async {
+        guard case .link(.withPaymentDetails(_, let linkAccount, let paymentDetails, _, _)) = paymentOption,
+              paymentDetails.stripeID == preselectedLinkPaymentDetailsID else {
+            return
+        }
+        await PayWithLinkViewController.WalletViewModel.recordBankAccountConsentIfNeeded(
+            for: paymentDetails,
+            linkAccount: linkAccount,
+            elementsSession: elementsSession
+        )
     }
 
     /// With `formSheetAction = .confirm`, a customer who verifies inline pays in the Link wallet, the same way a form sheet pays.
@@ -227,11 +406,6 @@ extension EmbeddedPaymentElement: EmbeddedLinkInlineAuthControllerHost {
         embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: true)
         informDelegateIfPaymentOptionUpdated()
         guard fromCard else { return }
-        switch configuration.formSheetAction {
-        case .continue:
-            presentLinkWallet(revertsSelectionOnClose: false)
-        case .confirm(let completion):
-            payInLinkWallet(completion: completion)
-        }
+        preselectDefaultLinkPaymentMethod()
     }
 }

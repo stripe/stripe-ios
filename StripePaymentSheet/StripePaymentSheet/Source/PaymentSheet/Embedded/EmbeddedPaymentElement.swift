@@ -195,7 +195,7 @@ public final class EmbeddedPaymentElement {
             clearPaymentOptionIfNeeded()
         }
         // A billing sync may still be running when this update finishes.
-        embeddedPaymentMethodsView.isUserInteractionEnabled = pendingBillingAddressSyncSelection == nil
+        embeddedPaymentMethodsView.isUserInteractionEnabled = pendingBillingAddressSyncSelection == nil && linkPreselectionTask == nil
         analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
         return updateResult
     }
@@ -291,6 +291,10 @@ public final class EmbeddedPaymentElement {
             self.embeddedPaymentMethodsView.isUserInteractionEnabled = false
             self.embeddedPaymentMethodsView.selectedRowButton?.setLoading(true, animated: false)
         }
+        // Likewise while Link payment details are being preselected.
+        if self.linkPreselectionTask != nil {
+            self.embeddedPaymentMethodsView.setLinkRowLoading(true, animated: false)
+        }
         self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
         informDelegateIfPaymentOptionUpdated()
     }
@@ -322,6 +326,7 @@ public final class EmbeddedPaymentElement {
                 return .canceled
             }
         }
+        await recordLinkBankAccountConsentIfNeeded(for: paymentOption)
         let authContext = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: configuration.appearance)
         let confirmResult = await _confirm(paymentOption: paymentOption, authContext: authContext).result
         if confirmResult.isCanceledOrFailed {
@@ -460,6 +465,10 @@ public final class EmbeddedPaymentElement {
     /// The Link payment details last picked in the Link wallet, used while the Link row is selected. Nil means Link pays through the wallet.
     /// It's kept while another row's form is open, so canceling the form restores Link as it was.
     internal var linkConfirmOption: PaymentSheet.LinkConfirmOption?
+    /// Loads and selects Link payment details after inline verification.
+    internal var linkPreselectionTask: Task<Void, Never>?
+    /// The Link payment details last preselected after inline verification rather than picked in the Link wallet.
+    internal var preselectedLinkPaymentDetailsID: String?
     var notifiesDelegateOnInitialHeight: Bool {
         get {
             return embeddedPaymentMethodsView.notifiesDelegateOnInitialHeight
