@@ -5,12 +5,12 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: 591336613911b757860ae0dab1e9f8c3
+x-cloud-trace-context: 6030498a561534e9728b8b731b9fcd8e
 Via: 1.1 google
-Date: Tue, 10 Nov 2026 19:04:12 GMT
+Date: Thu, 19 Nov 2026 20:52:25 GMT
 Content-Length: 536
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"218-xMGhuBu7k2LL59EQ0uL5sVBPLmM"
+Etag: W/"218-gPErFkoWSADwpczlu4NlQt3tx3Q"
 
 {
   "description" : null,
@@ -34,7 +34,7 @@ Etag: W/"218-xMGhuBu7k2LL59EQ0uL5sVBPLmM"
   "balance" : 0,
   "name" : null,
   "tax_exempt" : "none",
-  "id" : "cus_VbXPdUBWMhOvOl",
+  "id" : "cus_VewCnpWJzKxyUL",
   "delinquent" : false,
   "email" : "test@example.com",
   "preferred_locales" : [
@@ -42,7 +42,7 @@ Etag: W/"218-xMGhuBu7k2LL59EQ0uL5sVBPLmM"
   ],
   "phone" : null,
   "next_invoice_sequence" : 1,
-  "invoice_prefix" : "DTWMCOWP",
+  "invoice_prefix" : "WGZKM5SV",
   "address" : null,
-  "created" : 1794337452
+  "created" : 1795121545
 }

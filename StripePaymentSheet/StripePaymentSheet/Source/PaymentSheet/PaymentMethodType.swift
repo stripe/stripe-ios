@@ -160,9 +160,9 @@ extension PaymentSheet {
                         return .linkCardBrand
                     case _ where type.hasPrefix("external_"):
                         guard
-                            configuration.externalPaymentMethodConfiguration != nil,
+                            !configuration._externalPaymentMethods.isEmpty,
                             let externalPaymentMethod = elementsSession.externalPaymentMethods.first(where: { $0.type == type }),
-                            let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, configuration: configuration.externalPaymentMethodConfiguration)
+                            let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, confirmHandler: configuration._externalPaymentMethodConfirmHandler)
                         else {
                             return nil
                         }
@@ -245,7 +245,7 @@ extension PaymentSheet {
             }
 
             // Log a warning if elements session doesn't contain all the merchant's desired external payment methods
-            let missingExternalPaymentMethods = Set(configuration.externalPaymentMethodConfiguration?.externalPaymentMethods.map { $0.lowercased() } ?? [])
+            let missingExternalPaymentMethods = Set(configuration._externalPaymentMethods.map { $0.lowercased() })
                 .subtracting(Set(elementsSession.externalPaymentMethods.map { $0.type }))
             if !missingExternalPaymentMethods.isEmpty {
                 logIfNecessary("PaymentSheet could not offer these external payment methods: \(missingExternalPaymentMethods). See https://stripe.com/docs/payments/external-payment-methods#available-external-payment-methods")
@@ -257,7 +257,7 @@ extension PaymentSheet {
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
                 + elementsSession.externalPaymentMethods.compactMap {
-                    guard let externalPaymentOption = ExternalPaymentOption.from($0, configuration: configuration.externalPaymentMethodConfiguration) else { return nil }
+                    guard let externalPaymentOption = ExternalPaymentOption.from($0, confirmHandler: configuration._externalPaymentMethodConfirmHandler) else { return nil }
                     return PaymentMethodType.external(externalPaymentOption)
                 }
                 // Custom Payment Methods

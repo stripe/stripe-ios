@@ -267,6 +267,7 @@ extension PaymentSheet {
             context.coordinator.presented = presented
         }
 
+        @MainActor
         class Coordinator {
 
             var parent: PaymentSheetPresenter

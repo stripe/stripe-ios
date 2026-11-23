@@ -6,7 +6,7 @@
 
 import Combine
 @_spi(InternalOnlyAPI) import StripeCore
-@_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import SwiftUI
 
 extension CheckoutPlayground {
@@ -56,7 +56,14 @@ extension CheckoutPlayground {
             }
         }
         @Published var currency: Currency
-        @Published var customerType: CustomerType
+        @Published var customerType: CustomerType {
+            didSet {
+                // Like the PaymentSheet playground, changing the customer type starts over with a fresh New customer.
+                if customerType != oldValue {
+                    storedNewCustomer = nil
+                }
+            }
+        }
         @Published var email: EmailSettings
         @Published var cartScenario: CartScenario
         @Published var shippingAddressCollection: Bool
@@ -82,6 +89,19 @@ extension CheckoutPlayground {
         @Published var errorMessage: String?
         @Published var clientSecret: String?
         @Published var navigateToCheckout = false
+
+        /// The New customer from the last completed checkout, persisted so later sessions can reuse it.
+        @Published private(set) var storedNewCustomer: NewCustomer? {
+            didSet {
+                if let storedNewCustomer, let data = try? JSONEncoder().encode(storedNewCustomer) {
+                    UserDefaults.standard.set(data, forKey: NewCustomer.nsUserDefaultsKey)
+                } else {
+                    Self.resetNewCustomer()
+                }
+            }
+        }
+        /// The New customer of the session in checkout, stored for reuse if the checkout completes.
+        private var newCustomerInCheckout: (id: String, backendURL: String)?
 
         private var settingsSaveSubscription: AnyCancellable?
         private var isLinkModeOverrideActive = false
@@ -117,6 +137,8 @@ extension CheckoutPlayground {
             checkoutEndpointOption = settings.checkoutEndpointOption
             checkoutEndpoint = EndpointOption.normalizedBaseURL(from: settings.checkoutEndpoint)
             delayCheckoutClientRequests = settings.delayCheckoutClientRequests
+            storedNewCustomer = UserDefaults.standard.data(forKey: NewCustomer.nsUserDefaultsKey)
+                .flatMap { try? JSONDecoder().decode(NewCustomer.self, from: $0) }
             settingsSaveSubscription = objectWillChange.sink { [weak self] _ in
                 guard let self else {
                     return
@@ -154,7 +176,7 @@ extension CheckoutPlayground {
                 return "AP location simulation requires server email. Set Adaptive Pricing Location to No Override, or select a server email source."
             }
             if email.source.isServer && resolvedEmail.email == nil {
-                return "Enter a server email, or choose None for no email."
+                return "Enter a server email, or choose Local and clear the email field."
             }
             return nil
         }
@@ -167,12 +189,26 @@ extension CheckoutPlayground {
             return resolved
         }
 
+        /// The stored New customer, if the next session will reuse it. It's only reused through the backend that
+        /// created it and while the Server — Customer email matches its email, so the email setting stays accurate.
+        var reusableNewCustomer: NewCustomer? {
+            guard customerType == .new,
+                  let storedNewCustomer,
+                  storedNewCustomer.backendURL == EndpointOption.normalizedBaseURL(from: checkoutEndpoint),
+                  storedNewCustomer.email == resolvedEmail.customerEmail
+            else {
+                return nil
+            }
+            return storedNewCustomer
+        }
+
         private static func legacyEmailSettings(_ settings: Settings) -> EmailSettings {
             // Preserve saved playground behavior when loading settings created before the email picker.
             if settings.customerType == .guest {
                 return .init()
             }
-            return .init(source: settings.adaptivePricingCountry == .none ? .none : .customer)
+            return settings.adaptivePricingCountry == .none
+                ? .init(source: .local, value: "") : .init(source: .customer)
         }
 
         var lineItems: [LineItemConfig] {
@@ -229,7 +265,7 @@ extension CheckoutPlayground {
                 let backend = PlaygroundBackend(baseURL: backendURL)
                 let publishableKey = try await backend.fetchPublishableKey()
                 let apiClient = STPAPIClient(publishableKey: publishableKey)
-                let clientSecret = try await SessionFactory(backend: backend, apiClient: apiClient).create(
+                let (clientSecret, customerID) = try await SessionFactory(backend: backend, apiClient: apiClient).create(
                     currency: currency,
                     customerType: customerType,
                     lineItems: lineItems,
@@ -240,8 +276,16 @@ extension CheckoutPlayground {
                     paymentMethodRemove: checkoutSessionPaymentMethodRemove,
                     email: resolvedEmail,
                     automaticPaymentMethods: automaticPaymentMethods,
-                    paymentMethodTypes: paymentMethodTypes
+                    paymentMethodTypes: paymentMethodTypes,
+                    newCustomerID: reusableNewCustomer?.id
                 )
+
+                // Remember the New customer so it can be stored for reuse if this checkout completes.
+                if customerType == .new, let customerID {
+                    newCustomerInCheckout = (id: customerID, backendURL: EndpointOption.normalizedBaseURL(from: checkoutEndpoint))
+                } else {
+                    newCustomerInCheckout = nil
+                }
 
                 // Example app behavior: the local backend response controls the Stripe publishable key.
                 STPAPIClient.shared.publishableKey = publishableKey
@@ -249,6 +293,21 @@ extension CheckoutPlayground {
                 navigateToCheckout = true
             } catch {
                 errorMessage = error.localizedDescription
+            }
+        }
+
+        /// Stores the New customer of a completed checkout so that later sessions reuse it.
+        /// - Parameter email: The email the checkout completed with.
+        func checkoutDidComplete(email: String?) {
+            guard let newCustomerInCheckout else {
+                return
+            }
+
+            storedNewCustomer = NewCustomer(id: newCustomerInCheckout.id, backendURL: newCustomerInCheckout.backendURL, email: email)
+            // Checkout saved this email to the Customer if it had none, so later sessions get it from the Customer.
+            // Switch to the matching Server — Customer email so the next session reuses the Customer.
+            if let email, resolvedEmail.customerEmail != email {
+                self.email = EmailSettings(source: .customer, value: email)
             }
         }
 
@@ -260,6 +319,10 @@ extension CheckoutPlayground {
 
         func reset() {
             apply(Settings())
+        }
+
+        var exportURL: URL? {
+            settings.exportURL
         }
 
         private var settings: Settings {
@@ -334,6 +397,11 @@ extension CheckoutPlayground {
             } catch {
                 print("Unable to serialize Checkout playground settings: \(error)")
             }
+        }
+
+        /// Forgets the stored New customer, so the next New session creates a fresh one.
+        static func resetNewCustomer() {
+            UserDefaults.standard.removeObject(forKey: NewCustomer.nsUserDefaultsKey)
         }
 
         private static func settingsFromDefaults() -> Settings? {

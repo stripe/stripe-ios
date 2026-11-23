@@ -247,6 +247,7 @@ import Foundation
 
     // MARK: - Stripe balance
     case paymentSheetStripeBalanceFinancialAccountsLoadFailed = "mc_stripe_balance_financial_accounts_load_failed"
+    case paymentSheetStripeBalanceCheckoutSessionUnsupported = "mc_stripe_balance_checkout_session_unsupported"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
