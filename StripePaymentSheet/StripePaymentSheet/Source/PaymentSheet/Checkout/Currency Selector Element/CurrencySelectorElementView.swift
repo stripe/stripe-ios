@@ -9,8 +9,8 @@ import Combine
 import SwiftUI
 
 /// A SwiftUI view that displays an Adaptive Pricing currency selector.
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 public struct CurrencySelectorElementView: View {
     @ObservedObject private var viewModel: CurrencySelectorElementViewModel
 

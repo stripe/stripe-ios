@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Delete cookies before running UI tests
             PaymentSheet.resetCustomer()
             PlaygroundController.resetCustomer()
+            CheckoutPlayground.ViewModel.resetNewCustomer()
 
             // Speed up animations for quicker CI times
             UIApplication.shared.connectedScenes

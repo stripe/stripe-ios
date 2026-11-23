@@ -107,10 +107,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         return selectedPaymentOption?.formConfirmParamsForCancellationRestoration
     }
 
-    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
-    }()
-
     // MARK: - Views
     private let addPaymentMethodViewController: AddPaymentMethodViewController
     let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
@@ -353,6 +349,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
@@ -672,7 +669,11 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
-        return try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+        return try await loadResult.customerProvider.setAsDefaultPaymentMethod(
+            paymentMethod.stripeId,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
     }
 
     func didUpdateSelection(
@@ -774,7 +775,11 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             return
         }
 
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        loadResult.customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {

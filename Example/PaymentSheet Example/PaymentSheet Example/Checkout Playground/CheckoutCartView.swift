@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 3/2/26.
 //
 
-@_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentSheet
+import StripePayments
+@_spi(CheckoutSessionPreview) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutCartView: View {
@@ -34,6 +34,8 @@ struct CheckoutCartView: View {
     var currencySelectorAppearance = CurrencySelectorElement.Configuration.Appearance()
     var paymentElementAppearance = PaymentSheet.Appearance.default
     var delayCheckoutClientRequests = false
+    /// Called with the session's email when a checkout completes.
+    let onCheckoutCompleted: (String?) -> Void
 
     var body: some View {
         NavigationView {
@@ -141,6 +143,7 @@ struct CheckoutCartView: View {
         }
         confirmResult = nil
         if confirmationSucceeded {
+            onCheckoutCompleted(checkout?.session.email)
             dismiss()
         }
     }

@@ -54,7 +54,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         static let cardPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: MockJson.cardPaymentMethod)!
 
         static func deferredPaymentIntentConfiguration(clientSecret: String) -> PaymentSheet.IntentConfiguration {
-            .init(mode: .payment(amount: 123, currency: "USD"), paymentMethodTypes: ["card"]) { _, _ in return clientSecret }
+            .init(mode: .payment(amount: 123, currency: "USD", captureMethod: .automatic), paymentMethodTypes: ["card"]) { _, _ in return clientSecret }
         }
     }
 
@@ -107,6 +107,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         let elementsSession = STPElementsSession.linkPassthroughElementsSession
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: .deferredIntent(intentConfig: MockParams.deferredPaymentIntentConfiguration(clientSecret: MockParams.paymentIntentClientSecret)),
             elementsSession: elementsSession,
@@ -210,6 +211,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: .paymentIntent(paymentIntent),
             elementsSession: elementsSession,
