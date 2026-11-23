@@ -136,17 +136,17 @@ public final class CheckoutElementsController: ObservableObject {
             // 3. Apply defaults; note this can trigger tax updates that change the session total.
             try await applyDefaults(shippingAddress: normalizedDefaultShippingAddress)
 
-            // 4. The session is now finalized - do post-session-change stuff
+            // 4. Resolve Link before evaluating experiments that depend on its login state.
+            await CheckoutElementsControllerLoader.loadLink(
+                session: self.session,
+                configuration: configuration
+            )
+
+            // 5. The session and Link account are now finalized - do post-session-change stuff.
             let handleSessionChangeResult = CheckoutElementsControllerLoader.handleSessionChange(checkout: self)
             confirmationChallenge = handleSessionChangeResult.confirmationChallenge
             CheckoutElementsControllerLoader.logStripeBalanceUnsupportedIfNeeded(checkout: self)
 
-            // 5. Resolve Link before constructing payment elements, reusing the prepared PE configuration.
-            await CheckoutElementsControllerLoader.loadLink(
-                session: self.session,
-                configuration: configuration,
-                paymentElementConfiguration: handleSessionChangeResult.paymentElement?.flowController.configuration
-            )
             // 6. Initialize PE
             if let paymentElementInitParameters = handleSessionChangeResult.paymentElement {
                 self.paymentElement = try PaymentElement(
@@ -286,9 +286,7 @@ public final class CheckoutElementsController: ObservableObject {
                 sessionWithUpdatedEmail.localState.email = email
                 await CheckoutElementsControllerLoader.loadLink(
                     session: sessionWithUpdatedEmail,
-                    configuration: self.configuration,
-                    // Only used to check whether Payment Element uses Link; FlowController and Embedded configurations agree on that.
-                    paymentElementConfiguration: self.paymentElement?.paymentSheetFlowController.configuration
+                    configuration: self.configuration
                 )
                 try await self.performUnqueuedUpdate(mutateLocalState: { localState in
                     localState.email = email

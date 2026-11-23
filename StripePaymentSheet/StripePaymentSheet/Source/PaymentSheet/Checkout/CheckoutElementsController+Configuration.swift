@@ -66,6 +66,11 @@ extension CheckoutElementsController {
         /// The color styling to use for Checkout UI.
         public var userInterfaceStyle: UserInterfaceStyle = .automatic
 
+        var analyticsClientV2: AnalyticsClientV2Protocol = AnalyticsClientV2(
+            clientId: "stripe-mobile-sdk",
+            origin: "stripe-mobile-sdk-ios"
+        )
+
         /// Initializes a `CheckoutElementsController.Configuration` with default values.
         /// - Parameter clientSecret: The CheckoutSession client secret.
         /// - Parameter returnURL: A URL that redirects back to your app after authenticating a payment method.
