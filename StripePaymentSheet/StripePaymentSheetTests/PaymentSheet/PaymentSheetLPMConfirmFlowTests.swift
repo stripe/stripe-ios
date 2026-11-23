@@ -10,7 +10,7 @@ import SafariServices
 @testable@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
@@ -2141,6 +2141,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             case .link(let confirmOption):
                 let parameters = CheckoutElementsController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
+                    canContinueWithoutLink: true,
                     configuration: configuration,
                     returnURL: returnURL,
                     nativeSheetPresentation: nil,

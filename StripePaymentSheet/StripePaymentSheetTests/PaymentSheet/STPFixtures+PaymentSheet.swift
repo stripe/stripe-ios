@@ -11,7 +11,7 @@ import PassKit
 @_spi(InternalOnlyAPI) @testable import StripeCore
 @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(InternalOnlyAPI) import StripeUICore
 

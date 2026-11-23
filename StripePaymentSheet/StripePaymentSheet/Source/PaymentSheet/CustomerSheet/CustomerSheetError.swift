@@ -7,7 +7,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 import StripePayments
 
-public enum CustomerSheetError: Error {
+@_spi(InternalOnlyAPI) public enum CustomerSheetError: Error {
     /// Error while fetching saved payment methods attached to a customer
     case errorFetchingSavedPaymentMethods(Error)
     /// Error if an unsupported payment method type is specified

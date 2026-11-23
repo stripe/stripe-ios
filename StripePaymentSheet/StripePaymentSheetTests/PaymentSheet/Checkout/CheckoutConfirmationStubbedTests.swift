@@ -8,7 +8,7 @@ import OHHTTPStubsSwift
 @testable @_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 import UIKit
 import XCTest
@@ -908,6 +908,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         } else {
             XCTFail("Expected a Link wallet confirmation option")
         }
+        XCTAssertFalse(parameters.canContinueWithoutLink)
         XCTAssertIdentical(parameters.configuration.apiClient, checkout.configuration.apiClient)
         XCTAssertEqual(parameters.configuration.returnURL, "stripe-ios-test://custom-return")
         XCTAssertEqual(parameters.configuration.merchantDisplayName, "Test ECE Merchant")
@@ -997,6 +998,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let content = try XCTUnwrap(sheet.contentStack.first as? PayWithLinkViewController.BaseViewController)
         let wallet = try XCTUnwrap(content.coordinator as? PayWithLinkViewController)
 
+        // Then Express Checkout hides alternate-payment actions but keeps the close button
+        XCTAssertFalse(content.context.canContinueWithoutLink)
+        XCTAssertFalse(content.navigationBar.closeButtonRight.isHidden)
+
         // When a payment attempt fails, the wallet stays open for another attempt
         var declinedResponse = makeConfirmedSessionJSON(paymentResponseStatus: "requires_payment_method", status: "open", paymentStatus: "unpaid")
         declinedResponse["customer_email"] = "after-decline@example.com"
@@ -1034,7 +1039,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
             wallet.finish(withResult: retryResult, deferredIntentConfirmationType: nil)
         } else {
             // ...and the customer closes the wallet without retrying
-            wallet.cancel(shouldReturnToPaymentSheet: false)
+            content.navigationBar.closeButtonRight.sendActions(for: .touchUpInside)
         }
         try await waitUntil { finalCheckoutResult != nil }
         await confirmation.value
@@ -1107,6 +1112,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let flow = CheckoutElementsController.CheckoutConfirmationFlow.link(.init(
             confirmOption: CheckoutTestHelpers.makeLinkConfirmOption(),
+            canContinueWithoutLink: true,
             configuration: configuration,
             returnURL: checkout.configuration.returnURL,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
@@ -1140,6 +1146,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let configuration = checkout.getPaymentElement().embeddedPaymentElement.configuration
         let flow = CheckoutElementsController.CheckoutConfirmationFlow.link(.init(
             confirmOption: CheckoutTestHelpers.makeLinkConfirmOption(),
+            canContinueWithoutLink: true,
             configuration: configuration,
             returnURL: checkout.configuration.returnURL,
             nativeSheetPresentation: checkout.getPaymentElement().embeddedPaymentElement.nativeSheetPresentation,
