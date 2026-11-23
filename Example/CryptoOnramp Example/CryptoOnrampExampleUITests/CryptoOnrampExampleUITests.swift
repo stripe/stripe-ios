@@ -199,8 +199,8 @@ final class CryptoOnrampNewUserCardUITests: CryptoOnrampExampleUITestCase {
         addPaymentMethodButton.tap()
 
         let cardNumberField = app.textFields["Card number"].firstMatch
-        enterText("4242424242424242", in: cardNumberField)
-        enterText("1249", inTextField: "expiration date")
+        enterText("4242424242424242", in: cardNumberField, ignoringFormatting: true)
+        enterText("1249", inTextField: "expiration date", ignoringFormatting: true)
         enterText("123", inTextField: "CVC")
 
         let zipField = app.textFields["ZIP"].firstMatch
