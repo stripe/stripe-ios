@@ -154,6 +154,7 @@ extension PaymentSheet {
     }
 
     /// A class that presents the individual steps of a payment flow
+    @MainActor @preconcurrency
     public class FlowController: ObservableObject {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer
@@ -382,6 +383,8 @@ extension PaymentSheet {
             self.viewController.flowControllerDelegate = self
             self.confirmationChallenge = confirmationChallenge
             self.linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+                // LinkAccountContext.account can be set from any thread, so this observer
+                // isn't guaranteed to fire on the main actor.
                 DispatchQueue.main.async {
                     self?.updatePaymentOption()
                 }
@@ -538,8 +541,7 @@ extension PaymentSheet {
             presentPaymentOptionsCompletionWithResult = wrappedCompletion
 
             // Mutations in-flight: show loading, await them, then present payment options internally.
-            // TODO(porter): Remove assumeIsolated once presentPaymentOptions is @MainActor (blocked on new FC API designs)
-            if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
+            if let checkout, !checkout.pendingOperations.isEmpty {
                 presentPaymentOptionsAwaitingMutations(
                     from: presentingViewController,
                     checkout: checkout,
@@ -604,7 +606,7 @@ extension PaymentSheet {
             )
             presentingViewController.presentAsSheet(bottomSheetVC)
 
-            pendingPresentTask = Task { @MainActor [weak self] in
+            pendingPresentTask = Task { [weak self] in
                 guard let self else { return }
                 do {
                     try await checkout.awaitPendingOperations()
@@ -654,6 +656,7 @@ extension PaymentSheet {
             presentingViewController.presentNativeLink(
                 selectedPaymentDetailsID: selectedPaymentDetailsID,
                 configuration: configuration,
+                customerProvider: viewController.loadResult.customerProvider,
                 nativeSheetPresentation: nativeSheetPresentation,
                 intent: intent,
                 elementsSession: elementsSession,
@@ -669,8 +672,6 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: @escaping (PaymentSheetResult) -> Void
         ) {
-            assert(Thread.isMainThread, "PaymentSheet.FlowController.confirm must be called from the main thread.")
-
             switch latestUpdateContext?.status {
             case .inProgress:
                 stpAssertionFailure("`confirm` should only be called when the last update has completed.")
@@ -716,6 +717,7 @@ extension PaymentSheet {
             func confirm() {
                 PaymentSheet.confirm(
                     configuration: self.configuration,
+                    customerProvider: self.viewController.loadResult.customerProvider,
                     nativeSheetPresentation: self.nativeSheetPresentation,
                     authenticationContext: authenticationContext,
                     intent: self.intent,
@@ -747,7 +749,6 @@ extension PaymentSheet {
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
         /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
         public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
-            assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
             performUpdate(mode: .deferredIntent(intentConfiguration), completion: completion)
         }
@@ -773,7 +774,6 @@ extension PaymentSheet {
                 integrationShape: .flowController,
                 isUpdate: true
             ) { [weak self] result in
-                assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")
                 guard let self = self else {
                     assertionFailure("The PaymentSheet.FlowController instance was destroyed during a call to `update`")
                     return
@@ -804,7 +804,6 @@ extension PaymentSheet {
         ) {
             // Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
             self.analyticsHelper.didLoad(loadResult)
-
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
                 nativeSheetPresentation: self.nativeSheetPresentation,
@@ -922,10 +921,7 @@ extension PaymentSheet {
             checkoutSessionID: String? = nil,
             didCancelNative3DS2: (() -> Void)? = nil
         ) -> any PaymentSheetContainer {
-            // FlowController's presentation APIs require the main thread but are not yet actor-isolated.
-            let usesNativeSheet = MainActor.assumeIsolated {
-                nativeSheetPresentation?.usesNativeSheet ?? false
-            }
+            let usesNativeSheet = nativeSheetPresentation?.usesNativeSheet ?? false
             let sheet = PaymentSheetContainerFactory.make(
                 contentViewController: contentViewController,
                 appearance: configuration.appearance,
@@ -1029,6 +1025,7 @@ extension PaymentSheet.FlowController: LoadingViewControllerDelegate {
 
 // MARK: - FlowControllerViewControllerDelegate
 
+@MainActor
 protocol FlowControllerViewControllerDelegate: AnyObject {
     func flowControllerViewControllerShouldClose(
         _ PaymentSheetFlowControllerViewController: FlowControllerViewControllerProtocol, didCancel: Bool)
@@ -1055,7 +1052,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
 @_spi(InternalOnlyAPI) extension PaymentSheet.FlowController: STPAnalyticsProtocol {
-    @_spi(InternalOnlyAPI) public static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
+    @_spi(InternalOnlyAPI) public nonisolated static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
 }
 
 // MARK: - PaymentSheetAuthenticationContext

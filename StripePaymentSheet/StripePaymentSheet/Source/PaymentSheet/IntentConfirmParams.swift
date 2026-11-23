@@ -35,6 +35,8 @@ final class IntentConfirmParams {
     var didDisplayMandate: Bool = false
     /// Hack: Not actually data sent to /confirm. The state of the "Save my info for faster checkout with Link" checkbox. Used to restore the customer's choice when the form is rebuilt.
     var linkInlineSignupCheckboxState: CheckboxState = .hidden
+    /// Whether the customer changed the Link checkbox. Preserved across form rebuilds to report the correct signup consent action.
+    var linkInlineSignupDidInteractWithSaveCheckbox: Bool = false
 
     var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
     var instantDebitsLinkedBank: InstantDebitsLinkedBank?
@@ -242,18 +244,18 @@ extension STPConfirmPaymentMethodOptions {
         _ shouldSave: Bool,
         currentSetupFutureUsage: String? = nil,
         paymentMethodType: STPPaymentMethodType,
-        customer: PaymentSheet.CustomerConfiguration?
+        customerProvider: CustomerProvider
     ) {
         // Something went wrong if we're trying to save and there's no Customer!
-        assert(!(shouldSave && customer == nil))
+        assert(!(shouldSave && !customerProvider.hasCustomer))
 
         var allowedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]
 
-        if let customer, case .customerSession = customer.customerAccessProvider {
+        if customerProvider.supportsLinkSetupFutureUsage {
             allowedPaymentMethodTypes.append(.link)
         }
 
-        guard customer != nil && allowedPaymentMethodTypes.contains(paymentMethodType) else {
+        guard customerProvider.hasCustomer && allowedPaymentMethodTypes.contains(paymentMethodType) else {
             return
         }
 

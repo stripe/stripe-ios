@@ -46,6 +46,7 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
         // Confirm the intent with the form details
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: intent,
             elementsSession: ._testCardValue(),
@@ -128,6 +129,7 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
         }
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: intent,
             elementsSession: ._testCardValue(),
@@ -155,6 +157,7 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
             }))
             PaymentSheet.confirm(
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 authenticationContext: self,
                 intent: intent,
                 elementsSession: ._testCardValue(),
@@ -186,7 +189,7 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
     }
 
     func makeForm(intent: Intent, configuration: PaymentSheet.Configuration) -> PaymentMethodElement {
-        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testCardValue(), configuration: .paymentElement(configuration), paymentMethod: .external(._testBufoPayValue(configuration.customPaymentMethodConfiguration!)))
+        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: ._testCardValue(), configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)), paymentMethod: .external(._testBufoPayValue(configuration.customPaymentMethodConfiguration!)))
         let paymentMethodForm = formFactory.make()
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view) // This gets rid of distracting autolayout warnings in the logs

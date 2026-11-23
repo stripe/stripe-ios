@@ -281,4 +281,22 @@ struct CustomerProvider {
         )
         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
     }
+
+    var supportsLinkSetupFutureUsage: Bool {
+        return usesCustomerSession
+    }
+
+    func savePaymentMethodConsentBehavior(
+        elementsSession: STPElementsSession
+    ) -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        switch backing {
+        case .checkoutSession(let session):
+            guard hasCustomer, session.savedPaymentMethodsOfferSave?.enabled == true else {
+                return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+            }
+            return .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
+        case .customer:
+            return elementsSession.savePaymentMethodConsentBehavior
+        }
+    }
 }

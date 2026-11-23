@@ -26,6 +26,8 @@ extension CheckoutElementsController {
         parameters: LinkConfirmationParameters
     ) async -> InternalConfirmResult {
         let elementsSession = checkoutSession.elementsSession
+        // Derive the customer from the same session snapshot as the rest of this confirmation.
+        let customerProvider = CustomerProvider(checkoutSession: checkoutSession)
         let configuration = parameters.configuration
         let confirmationChallenge = parameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -153,6 +155,7 @@ extension CheckoutElementsController {
                         checkoutSession: checkoutSession,
                         parameters: LinkConfirmationParameters(
                             confirmOption: confirmOption,
+                            canContinueWithoutLink: parameters.canContinueWithoutLink,
                             configuration: configuration,
                             returnURL: parameters.returnURL,
                             nativeSheetPresentation: parameters.nativeSheetPresentation,
@@ -173,6 +176,7 @@ extension CheckoutElementsController {
             PaymentSheet.confirmLinkPaymentOption(
                 confirmOption: parameters.confirmOption,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 paymentHandler: parameters.paymentHandler,
                 nativeSheetPresentation: parameters.nativeSheetPresentation,
                 authenticationContext: parameters.authenticationContext,
@@ -181,6 +185,7 @@ extension CheckoutElementsController {
                 // Link controllers still require PaymentSheet analytics; keep that coupling on this typed path.
                 analyticsHelper: parameters.analyticsHelper,
                 confirmationChallenge: confirmationChallenge,
+                canContinueWithoutLink: parameters.canContinueWithoutLink,
                 clientAttributionMetadata: clientAttributionMetadata,
                 isSettingUp: isSettingUp,
                 setAllowRedisplay: setAllowRedisplay,

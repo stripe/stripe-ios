@@ -4,7 +4,7 @@
 //
 
 @_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) import StripePayments
-@_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
+@_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) @_spi(AppearanceAPIAdditionsPreview) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleWalletButtonsContainerView: View {
@@ -287,6 +287,7 @@ struct WalletButtonsFlowControllerView: View {
     }
 }
 
+@MainActor
 class ExampleWalletButtonsModel: ObservableObject {
     let email: String
     let disableLink: Bool

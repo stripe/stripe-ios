@@ -11,7 +11,7 @@ import OHHTTPStubsSwift
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 #if !os(visionOS)
@@ -29,6 +29,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
             intent: .checkout(session),
             elementsSession: session.elementsSession,
             configuration: configuration,
+            customerProvider: CustomerProvider(checkoutSession: session),
             linkBrand: .link,
             shouldOfferApplePay: false,
             shouldFinishOnClose: false,
@@ -97,6 +98,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
                 linkAccount: nil,
                 elementsSession: elementsSession,
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 analyticsHelper: ._testValue()
             )
             // ...and a logged-in Link account. The coordinator reads it from the shared context, so setting it
@@ -184,6 +186,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: PaymentSheet.Configuration(),
+                customerProvider: CustomerProvider(customer: nil),
                 linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
@@ -263,6 +266,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
                     linkAccount: nil,
                     elementsSession: elementsSession,
                     configuration: configuration,
+                    customerProvider: CustomerProvider(customer: configuration.customer),
                     nativeSheetPresentation: SheetImplementationResolver(elementsSession: elementsSession),
                     analyticsHelper: ._testValue(),
                     supportedPaymentMethodTypes: [.card]
@@ -357,6 +361,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
                 linkAccount: nil,
                 elementsSession: elementsSession,
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 nativeSheetPresentation: SheetImplementationResolver(elementsSession: elementsSession),
                 analyticsHelper: ._testValue(),
                 supportedPaymentMethodTypes: [.card]
@@ -446,12 +451,13 @@ class PayWithLinkViewControllerTests: XCTestCase {
             intent: ._testValue(),
             elementsSession: ._testValue(intent: ._testValue()),
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             paymentHandler: STPPaymentHandler(apiClient: config.apiClient),
             analyticsHelper: ._testValue()
         )
 
         // Now make the fake PayWithLinkViewController and present it
-        let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
+        let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, customerProvider: CustomerProvider(customer: config.customer), analyticsHelper: ._testValue())
         vc.payWithLinkDelegate = paymentSheet
         hostVC.present(vc.sheetContainer, animated: true, completion: {})
 

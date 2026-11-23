@@ -1,6 +1,6 @@
 import OHHTTPStubs
 @testable @_spi(InternalOnlyAPI) import StripeCore
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
@@ -449,6 +449,47 @@ final class CheckoutDefaultsInitializationTests: XCTestCase {
 
         // Then no background lookup is scheduled either
         await fulfillment(of: [lookup], timeout: 0.2)
+    }
+
+    func testLogsLinkAvailabilityForConfiguredElementsOnInitAndUpdate() async throws {
+        // Given both elements disable Link
+        let previousLogger = PaymentSheetLoader.availabilityLogger
+        var logs: [String] = []
+        PaymentSheetLoader.availabilityLogger = { logs.append($0) }
+        defer { PaymentSheetLoader.availabilityLogger = previousLogger }
+        let response = CheckoutTestHelpers.makeSessionWithWalletTypes(["card", "link"])
+        var configuration = CheckoutTestHelpers.makeConfiguration(apiResponse: response)
+        configuration.paymentElement?.linkConfiguration = .init(display: .never)
+        configuration.expressCheckoutElement?.linkConfiguration.display = .never
+        let expectedLogs = [
+            "[Stripe SDK]: Payment Element could not offer Link:\n\t* LinkConfiguration.display is set to .never.",
+            "[Stripe SDK]: Express Checkout Element could not offer Link:\n\t* LinkConfiguration.display is set to .never.",
+        ]
+
+        // When Checkout initializes
+        let checkout = try await CheckoutElementsController(configuration: configuration)
+
+        // Then each configured element explains its availability once
+        XCTAssertEqual(logs, expectedLogs)
+
+        // When Checkout processes a session update
+        logs = []
+        checkout.updateForSessionChange()
+
+        // Then availability is explained again for the updated session
+        XCTAssertEqual(logs, expectedLogs)
+    }
+
+    func testLogsLinkAvailabilityWhenOnlyExpressCheckoutIsConfigured() async throws {
+        let previousLogger = PaymentSheetLoader.availabilityLogger
+        var logs: [String] = []
+        PaymentSheetLoader.availabilityLogger = { logs.append($0) }
+        defer { PaymentSheetLoader.availabilityLogger = previousLogger }
+        let configuration = CheckoutTestHelpers.makeConfiguration(paymentElementConfiguration: nil)
+
+        _ = try await CheckoutElementsController(configuration: configuration)
+
+        XCTAssertEqual(logs, ["[Stripe SDK]: Express Checkout Element could not offer Link:\n\t* Link is not supported by this Checkout Session."])
     }
 
     // MARK: - Stubs

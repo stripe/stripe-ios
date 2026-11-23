@@ -45,10 +45,37 @@ Migrate your application-owned confirmation handler from a method-name string to
  }
 ```
 
+##### MainActor Changes
+`PaymentSheet` and `PaymentSheet.FlowController` are now main-actor isolated. Initialize and access them from the main actor.
+
+```diff
++@MainActor
+ final class CheckoutCoordinator {
+     var paymentSheet: PaymentSheet?
+     var flowController: PaymentSheet.FlowController?
+ }
+```
+
 ##### Other changes
+`PaymentSheetError` is no longer public. Do not identify internal error cases by comparing descriptions or undocumented `NSError` codes.
+
 `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress` are deprecated. Payment methods that require a shipping address are always allowed.
 
 * **Payment method types**: Set the payment method type properties on `PaymentSheet.IntentConfiguration` to match the parameters your server uses to create the PaymentIntent or SetupIntent: `paymentMethodTypes` for `payment_method_types`, `allowedPaymentMethodTypes` for `allowed_payment_method_types`, and `excludedPaymentMethodTypes` for `excluded_payment_method_types`.
+
+#### CustomerSheet
+##### MainActor Changes
+`CustomerSheet` is now main-actor isolated. Initialize and access from the main actor.
+
+```diff
++@MainActor
+ final class CheckoutCoordinator {
+     var customerSheet: CustomerSheet?
+ }
+```
+
+##### Other changes
+`CustomerSheetError` is no longer public. Do not identify internal error cases by comparing descriptions or undocumented `NSError` codes.
 
 ### Migrating from versions < 26.7.0
 * StripePaymentSheet now depends on `StripeFinancialConnectionsLite`. If you manually link StripePaymentSheet or use Carthage, you must also embed `StripeFinancialConnectionsLite.xcframework` in your app. No action is required for CocoaPods or Swift Package Manager users.

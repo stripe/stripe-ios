@@ -10,7 +10,7 @@ import XCTest
 
 @testable@_spi(InternalOnlyAPI) import StripeCore
 @testable@_spi(InternalOnlyAPI) import StripePayments
-@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripeUICore
 
@@ -68,7 +68,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
             let form = PaymentSheetFormFactory(
                 intent: makeCheckoutIntent(),
                 elementsSession: ._testCardValue(),
-                configuration: .paymentElement(makeConfiguration(country: "US")),
+                configuration: .paymentElement(makeConfiguration(country: "US"), customerProvider: CustomerProvider(customer: makeConfiguration(country: "US").customer)),
                 paymentMethod: paymentMethod
             ).make()
 
@@ -179,7 +179,7 @@ final class PaymentSheetFormFactoryTaxTest: XCTestCase {
         PaymentSheetFormFactory(
             intent: intent,
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(paymentMethod)
         )
     }

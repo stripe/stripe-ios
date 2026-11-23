@@ -11,7 +11,7 @@ import OHHTTPStubsSwift
 @_spi(InternalOnlyAPI) @testable import StripeCore
 import StripeCoreTestUtils
 @_spi(InternalOnlyAPI) @testable import StripePayments
-@_spi(InternalOnlyAPI)@testable import StripePaymentSheet
+@_spi(InternalOnlyAPI)@testable @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest

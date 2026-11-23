@@ -11,8 +11,8 @@ import PassKit
 import UIKit
 
 /// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 @MainActor
 public final class ExpressCheckoutElementUIView: UIView {
 

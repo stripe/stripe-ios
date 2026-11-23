@@ -3,7 +3,7 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -23,6 +23,30 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         config.allowsDelayedPaymentMethods = true
         config.applePay = .init(merchantId: "foo", merchantCountryCode: "US")
         return config
+    }
+
+    func testLoadLogsLinkAvailability() async throws {
+        // Given a session that does not support Link
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
+        StubbedBackend.stubSessions(paymentMethods: "\"card\"")
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
+        let previousLogger = PaymentSheetLoader.availabilityLogger
+        var logs: [String] = []
+        PaymentSheetLoader.availabilityLogger = { logs.append($0) }
+        defer { PaymentSheetLoader.availabilityLogger = previousLogger }
+
+        // When PaymentSheet loads
+        _ = try await PaymentSheetLoader.load(
+            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+            configuration: configuration,
+            analyticsHelper: ._testValue(configuration: configuration),
+            integrationShape: .paymentSheet
+        )
+
+        // Then the developer sees why Link is missing
+        XCTAssertEqual(logs, ["[Stripe SDK]: PaymentSheet could not offer Link:\n\t* Link is not supported by this Elements Session."])
     }
 
     func testReturningCustomerWithNoSavedCards() throws {

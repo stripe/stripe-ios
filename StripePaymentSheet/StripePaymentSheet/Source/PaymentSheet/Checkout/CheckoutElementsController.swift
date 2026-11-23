@@ -15,8 +15,8 @@ import UIKit
 
 /// Use this class to build a [Checkout elements](todo) integration.
 /// It manages a CheckoutSession object and UI elements (e.g. PaymentElement, ShippingAddressElement).
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 @MainActor
 public final class CheckoutElementsController: ObservableObject {
     // MARK: - Public Properties
@@ -143,6 +143,11 @@ public final class CheckoutElementsController: ObservableObject {
 
             // 5. Resolve Link before constructing payment elements, reusing the prepared PE configuration.
             await CheckoutElementsControllerLoader.loadLink(
+                session: self.session,
+                configuration: configuration,
+                paymentElementConfiguration: handleSessionChangeResult.paymentElement?.flowController.configuration
+            )
+            CheckoutElementsControllerLoader.logLinkAvailability(
                 session: self.session,
                 configuration: configuration,
                 paymentElementConfiguration: handleSessionChangeResult.paymentElement?.flowController.configuration
@@ -279,7 +284,17 @@ public final class CheckoutElementsController: ObservableObject {
             try await enqueueSessionUpdate {
                 guard self.canSetLocalEmail() else { return }
                 guard self.session.localState.email != email else { return }
-                // TODO: Refresh Link account lookup when the email changes.
+                try self.requireSheetNotPresented()
+                // Look up the new email in Link before the Payment Element is rebuilt, so Link UI and Link flows use
+                // the new email's Link account instead of the one looked up for the previous email.
+                var sessionWithUpdatedEmail = self.session
+                sessionWithUpdatedEmail.localState.email = email
+                await CheckoutElementsControllerLoader.loadLink(
+                    session: sessionWithUpdatedEmail,
+                    configuration: self.configuration,
+                    // Only used to check whether Payment Element uses Link; FlowController and Embedded configurations agree on that.
+                    paymentElementConfiguration: self.paymentElement?.paymentSheetFlowController.configuration
+                )
                 try await self.performUnqueuedUpdate(mutateLocalState: { localState in
                     localState.email = email
                 })
@@ -613,6 +628,11 @@ extension CheckoutElementsController {
     func updateForSessionChange() {
         guard sessionIsOpen else { return }
         let result = CheckoutElementsControllerLoader.handleSessionChange(checkout: self)
+        CheckoutElementsControllerLoader.logLinkAvailability(
+            session: session,
+            configuration: configuration,
+            paymentElementConfiguration: result.paymentElement?.flowController.configuration
+        )
         // Update confirmation challenge. I'm not sure if this is necessary, but the intents integration does it too on `update`
         confirmationChallenge = result.confirmationChallenge
         // Update PE
