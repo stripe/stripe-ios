@@ -1357,9 +1357,15 @@ extension PaymentSheetLPMConfirmFlowTests {
             var configuration = configuration
             let apiClient = testIntent.checkoutAPIClient ?? apiClient
             configuration.apiClient = apiClient
+            let customerProvider: CustomerProvider
+            if case .checkout(let session) = intent {
+                customerProvider = CustomerProvider(checkoutSession: session)
+            } else {
+                customerProvider = CustomerProvider(customer: configuration.customer)
+            }
 
             func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
-                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, customerProvider: customerProvider, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
             }
             // Make the form
             let formVC = makeFormVC(previousCustomerInput: nil)
@@ -1990,7 +1996,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         noFieldsConfig.billingDetailsCollectionConfiguration.email = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.phone = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.address = .never
-        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(noFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(noFieldsConfig, customerProvider: CustomerProvider(customer: noFieldsConfig.customer)), paymentMethod: .stripe(paymentMethodType)).make()
 
         XCTAssertNil(getName(from: form))
         XCTAssertNil(form.getTextFieldElement("Email"))
@@ -2023,7 +2029,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 state: "CA"
             )
         )
-        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(allFieldsConfig, customerProvider: CustomerProvider(customer: allFieldsConfig.customer)), paymentMethod: .stripe(paymentMethodType)).make()
         XCTAssertNotNil(getName(from: form))
         XCTAssertNotNil(form.getTextFieldElement("Email"))
         XCTAssertNotNil(form.getPhoneNumberElement())
@@ -2210,6 +2216,21 @@ private class STPTestPKPaymentAuthorizationController: PKPaymentAuthorizationCon
 // MARK: - IntentConfirmParams
 
 extension PaymentSheetLPMConfirmFlowTests {
+    func testIntentConfirmParamsEquatable_linkSignupInteraction() {
+        // Given params with matching checkbox interaction history
+        let lhs = IntentConfirmParams(type: .stripe(.card))
+        let rhs = IntentConfirmParams(type: .stripe(.card))
+        XCTAssertEqual(lhs, rhs)
+
+        // When only one records customer interaction
+        lhs.linkInlineSignupDidInteractWithSaveCheckbox = true
+
+        // Then they differ until both record that interaction
+        XCTAssertNotEqual(lhs, rhs)
+        rhs.linkInlineSignupDidInteractWithSaveCheckbox = true
+        XCTAssertEqual(lhs, rhs)
+    }
+
     func testIntentConfirmParamsEquatable() {
         let lhs = IntentConfirmParams(type: .stripe(.card))
         let rhs = IntentConfirmParams(type: .stripe(.card))
@@ -2256,6 +2277,11 @@ extension IntentConfirmParams: Equatable {
             return false
         }
 
+        if lhs.linkInlineSignupDidInteractWithSaveCheckbox != rhs.linkInlineSignupDidInteractWithSaveCheckbox {
+            print("Link inline signup checkbox interaction states not equal: \(lhs.linkInlineSignupDidInteractWithSaveCheckbox) vs \(rhs.linkInlineSignupDidInteractWithSaveCheckbox)")
+            return false
+        }
+
         if lhs.financialConnectionsLinkedBank != rhs.financialConnectionsLinkedBank {
             print("Financial connections linked banks not equal: \(lhs.financialConnectionsLinkedBank.debugDescription) vs \(rhs.financialConnectionsLinkedBank.debugDescription)")
             return false
@@ -2269,7 +2295,7 @@ extension IntentConfirmParams: Equatable {
         // Sanity check to make sure when we add new properties, we check them here
         let mirror = Mirror(reflecting: lhs)
         let propertyCount = mirror.children.count
-        XCTAssertEqual(propertyCount, 9)
+        XCTAssertEqual(propertyCount, 10)
 
         return true
     }
