@@ -155,6 +155,7 @@ extension CheckoutElementsController {
                         checkoutSession: checkoutSession,
                         parameters: LinkConfirmationParameters(
                             confirmOption: confirmOption,
+                            canContinueWithoutLink: parameters.canContinueWithoutLink,
                             configuration: configuration,
                             returnURL: parameters.returnURL,
                             nativeSheetPresentation: parameters.nativeSheetPresentation,
@@ -184,6 +185,7 @@ extension CheckoutElementsController {
                 // Link controllers still require PaymentSheet analytics; keep that coupling on this typed path.
                 analyticsHelper: parameters.analyticsHelper,
                 confirmationChallenge: confirmationChallenge,
+                canContinueWithoutLink: parameters.canContinueWithoutLink,
                 clientAttributionMetadata: clientAttributionMetadata,
                 isSettingUp: isSettingUp,
                 setAllowRedisplay: setAllowRedisplay,
