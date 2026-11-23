@@ -505,6 +505,57 @@ class MobileSessionTests: XCTestCase {
         XCTAssertFalse(availabilityLogs.contains("[Stripe SDK]: Server message"))
     }
 
+    func testLinkAvailabilityLogs_doNotOverrideServerDecision() {
+        // Given the server disables Link even though local rules allow it
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let message = "[Stripe SDK]: PaymentSheet could not offer Link: server-provided reason"
+        let elementsSession = makeElementsSession(
+            paymentMethodTypes: ["card", "link"],
+            mobileSession: [
+                "payment_method_availability": ["payment_method_types": ["card"], "link_enabled": false] as [String: Any],
+                "log_messages": [message],
+            ] as [String: Any]
+        )
+
+        PaymentSheetLoader.logAvailabilityMessages(elementsSession: elementsSession)
+        _ = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: PaymentSheet.Configuration(), logAvailability: true)
+        PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: elementsSession, configuration: PaymentSheet.Configuration()))
+
+        XCTAssertEqual(availabilityLogs, [message])
+    }
+
+    func testLinkAvailabilityLogs_doNotLogShadowedLocalReasons() {
+        // Given the server enables Link but local rules would disable it
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card"], "link_enabled": true] as [String: Any]]
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = false
+
+        _ = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+        PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: elementsSession, configuration: configuration))
+
+        XCTAssertEqual(availabilityLogs, [])
+    }
+
+    func testLinkAvailabilityLogs_explainsClientButtonVisibilityWithServerAvailability() {
+        // Given server-enabled Link with its button hidden by client configuration
+        PaymentSheet.MobileSessionFeatureFlags.serverPaymentMethodAvailabilityEnabled = true
+        let elementsSession = makeElementsSession(
+            mobileSession: ["payment_method_availability": ["payment_method_types": ["card"], "link_enabled": true] as [String: Any]]
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(display: .never)
+
+        _ = filteredPaymentMethodTypes(elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+        PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: elementsSession, configuration: configuration))
+
+        XCTAssertEqual(availabilityLogs, ["[Stripe SDK]: PaymentSheet could not show the Link button:\n\t* LinkConfiguration.display is set to .never."])
+    }
+
     // MARK: - Helpers
 
     private var loggedEvents: [String] {

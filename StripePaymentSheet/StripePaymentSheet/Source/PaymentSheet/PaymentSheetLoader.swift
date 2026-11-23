@@ -127,6 +127,7 @@ final class PaymentSheetLoader {
                 linkAnalytics: analyticsHelper.linkAnalytics
             )
 
+            PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: elementsSession, configuration: configuration))
             let stripeBalanceFinancialAccounts = await stripeBalanceFinancialAccountsTask.value
 
             loadTimings.logStart("computePaymentMethodTypes")
