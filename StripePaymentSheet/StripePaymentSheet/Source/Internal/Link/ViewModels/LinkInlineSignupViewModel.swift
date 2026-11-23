@@ -65,7 +65,7 @@ final class LinkInlineSignupViewModel {
         }
     }
 
-    private var didInteractWithSaveCheckbox = false
+    private(set) var didInteractWithSaveCheckbox = false
 
     var emailAddress: String? {
         didSet {
@@ -399,6 +399,7 @@ final class LinkInlineSignupViewModel {
         signupOptInFeatureEnabled: Bool,
         signupOptInInitialValue: Bool,
         restoredCheckboxState: IntentConfirmParams.CheckboxState = .hidden,
+        restoredDidInteractWithSaveCheckbox: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
         country: String? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper? = nil
@@ -426,11 +427,9 @@ final class LinkInlineSignupViewModel {
         self.legalName = configuration.defaultBillingDetails.name
         self.country = country
 
+        self.didInteractWithSaveCheckbox = restoredDidInteractWithSaveCheckbox
         self.saveCheckboxChecked = {
             // Restore the customer's choice if the form was rebuilt, e.g. if they unchecked a checkbox that defaults to checked.
-            // TODO(RUN_LINK_MOBILE-322): `didInteractWithSaveCheckbox` isn't restored, so in `.signupOptIn` mode a customer who
-            // unchecked and re-checked the box before the rebuild signs up with the `sign_up_opt_in_mobile_prechecked`
-            // consent action instead of `sign_up_opt_in_mobile_checked`.
             switch restoredCheckboxState {
             case .selected:
                 return true
