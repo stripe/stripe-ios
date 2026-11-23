@@ -6,6 +6,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 
 ### PaymentSheet
 * [Deprecated] Deprecated External Payment Methods in favor of Custom Payment Methods. See the [CPM integration guide](https://docs.stripe.com/payments/mobile/custom-payment-methods?platform=ios).
+* [Changed] Added `@MainActor` isolation to `PaymentSheet` and `PaymentSheet.FlowController`. Initialize and access these objects from the main actor.
 * [Removed] Removed public access to `PaymentSheetError`.
 * [Deprecated] Deprecated `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress`. This configuration no longer has an effect. Payment methods that require a shipping address are always allowed.
 * [Added] Added Mobile Checkout Elements (private preview), a new integration powered by the Checkout Sessions API. See https://docs.stripe.com/payments/mobile/checkout-sessions
@@ -15,6 +16,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 * [Fixed] Fixed an issue where adding a bank account in native Link or signing out of Link could fail when the configured API client used a different publishable key from `STPAPIClient.shared`.
 
 ### CustomerSheet
+* [Changed] Added `@MainActor` isolation to `CustomerSheet`. Initialize and access from the main actor.
 * [Removed] Removed public access to `CustomerSheetError`.
 
 ### Payments
