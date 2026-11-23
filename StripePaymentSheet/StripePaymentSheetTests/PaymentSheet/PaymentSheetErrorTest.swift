@@ -6,7 +6,7 @@
 //
 
 @testable@_spi(InternalOnlyAPI) import StripeCore
-@testable import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) import StripePaymentSheet
 import XCTest
 
 final class PaymentSheetErrorTest: XCTestCase {

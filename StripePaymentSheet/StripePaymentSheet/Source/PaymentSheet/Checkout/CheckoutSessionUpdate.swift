@@ -8,7 +8,6 @@
 
 import Foundation
 
-@_spi(InternalOnlyAPI)
 extension CheckoutElementsController {
     enum SessionUpdate {
         case setPromotionCode(String)
