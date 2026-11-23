@@ -35,8 +35,9 @@ class RowButton: UIView, EventHandler {
     let accessoryView: UIView?
     /// The label indicating if this is the default saved payment method
     let defaultBadgeLabel: UILabel?
-    /// The view indicating any incentives associated with this payment method
-    let promoBadge: PromoBadgeView?
+    /// The trailing view indicating any incentives associated with this payment method (`PromoBadgeView`),
+    /// or the featured bank icons on the instant debits row (`BankInstitutionIconsView`)
+    let promoBadge: UIView?
     private lazy var loadingIndicator: ActivityIndicator = {
         let loadingIndicator = ActivityIndicator(size: .medium)
         loadingIndicator.tintColor = appearance.colors.primary
@@ -93,7 +94,7 @@ class RowButton: UIView, EventHandler {
         text: String,
         sublabel: SublabelView,
         badgeText: String? = nil,
-        promoBadge: PromoBadgeView? = nil,
+        promoBadge: UIView? = nil,
         accessoryView: UIView? = nil,
         shouldAnimateOnPress: Bool = false,
         isEmbedded: Bool = false,
@@ -358,7 +359,7 @@ extension RowButton {
                        text: String,
                        sublabel: SublabelView,
                        badgeText: String? = nil,
-                       promoBadge: PromoBadgeView? = nil,
+                       promoBadge: UIView? = nil,
                        accessoryView: UIView? = nil,
                        shouldAnimateOnPress: Bool = false,
                        isEmbedded: Bool = false,
@@ -501,6 +502,7 @@ extension RowButton {
         accessoryView: UIView? = nil,
         promoText: String? = nil,
         promotionsHelper: PaymentMethodMessagingPromotionsHelper?,
+        featuredInstitutionsLoader: FeaturedInstitutionsLoader? = nil,
         appearance: PaymentSheet.Appearance,
         originalCornerRadius: CGFloat? = nil,
         shouldAnimateOnPress: Bool,
@@ -551,14 +553,20 @@ extension RowButton {
             sublabel = PlainSublabelView(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
         }
 
-        let promoBadge: PromoBadgeView? = {
-            guard let promoText else { return nil }
-            return PromoBadgeView(
-                appearance: appearance,
-                cornerRadius: originalCornerRadius,
-                tinyMode: false,
-                text: promoText
-            )
+        let promoBadge: UIView? = {
+            if let promoText {
+                return PromoBadgeView(
+                    appearance: appearance,
+                    cornerRadius: originalCornerRadius,
+                    tinyMode: false,
+                    text: promoText
+                )
+            }
+            // An incentive takes precedence over the featured bank icons
+            if let featuredInstitutionsLoader, FeaturedInstitutionsLoader.isBankRow(paymentMethodType) {
+                return BankInstitutionIconsView(loader: featuredInstitutionsLoader)
+            }
+            return nil
         }()
 
         return RowButton.create(

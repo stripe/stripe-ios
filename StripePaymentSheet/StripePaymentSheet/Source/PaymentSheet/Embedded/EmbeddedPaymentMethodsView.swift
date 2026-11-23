@@ -43,6 +43,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
     private let currency: String?
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    private let featuredInstitutionsLoader: FeaturedInstitutionsLoader?
     private(set) var previousSelectedRowButton: RowButton? {
         didSet {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
@@ -137,6 +138,7 @@ class EmbeddedPaymentMethodsView: UIView {
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        featuredInstitutionsLoader: FeaturedInstitutionsLoader? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
@@ -145,6 +147,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.shouldShowMandate = shouldShowMandate
         self.currency = currency
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        self.featuredInstitutionsLoader = featuredInstitutionsLoader
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
         self.linkBrand = linkBrand
@@ -570,6 +573,7 @@ class EmbeddedPaymentMethodsView: UIView {
             accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
             promotionsHelper: paymentMethodMessagingPromotionsHelper,
+            featuredInstitutionsLoader: featuredInstitutionsLoader,
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
             shouldAnimateOnPress: delegate?.willDisplayForm(for: .new(paymentMethodType: paymentMethodType)) == true,
@@ -603,6 +607,8 @@ extension RowButton {
     func addChangeButton(animated: Bool = true) {
         // Hack: We assume the accessory view is "Change >"
         self.accessoryView?.isHidden = false
+        // The "Change" button replaces the featured bank icons once a bank is linked
+        (promoBadge as? BankInstitutionIconsView)?.isSuppressed = true
         makeSameHeightAsOtherRowButtonsIfNecessary()
         guard animated else {
             self.accessoryView?.alpha = 1
@@ -619,6 +625,7 @@ extension RowButton {
     func removeChangeButton(shouldClearSublabel: Bool) {
         // Hack: We assume the accessory view is "Change >"
         self.accessoryView?.isHidden = true
+        (promoBadge as? BankInstitutionIconsView)?.isSuppressed = false
         self.setNeedsLayout()
         self.layoutIfNeeded()
         if shouldClearSublabel {

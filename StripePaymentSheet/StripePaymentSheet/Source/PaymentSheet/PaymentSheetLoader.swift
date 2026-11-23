@@ -25,6 +25,8 @@ final class PaymentSheetLoader {
         var stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
         let customerProvider: CustomerProvider
+        /// Loads the featured bank icons shown on the instant debits "Bank" row; nil if there is no such row.
+        var featuredInstitutionsLoader: FeaturedInstitutionsLoader?
     }
 
     enum IntegrationShape {
@@ -175,6 +177,13 @@ final class PaymentSheetLoader {
             )
             paymentMethodMessagingPromotionsHelper?.fetchData()
 
+            // Also fire-and-forget; the "Bank" row shows the icons once they load.
+            var featuredInstitutionsLoader: FeaturedInstitutionsLoader?
+            if FeaturedInstitutionsLoader.shouldFetch(paymentMethodTypes: paymentMethodTypes) {
+                featuredInstitutionsLoader = FeaturedInstitutionsLoader(apiClient: configuration.apiClient, analyticsHelper: analyticsHelper)
+                featuredInstitutionsLoader?.fetch()
+            }
+
             // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, customerProvider: customerProvider, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
@@ -212,7 +221,8 @@ final class PaymentSheetLoader {
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                 stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
                 paymentMethodOrientation: paymentMethodOrientation,
-                customerProvider: customerProvider
+                customerProvider: customerProvider,
+                featuredInstitutionsLoader: featuredInstitutionsLoader
             )
             let confirmationChallenge = ConfirmationChallenge(
                 elementsSession: elementsSession,
