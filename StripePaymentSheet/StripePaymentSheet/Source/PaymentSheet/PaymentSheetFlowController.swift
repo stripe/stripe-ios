@@ -855,7 +855,8 @@ extension PaymentSheet {
                 paymentMethodMessagingPromotionsHelper: viewController.loadResult.paymentMethodMessagingPromotionsHelper,
                 stripeBalanceFinancialAccounts: viewController.loadResult.stripeBalanceFinancialAccounts,
                 paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation,
-                customerProvider: viewController.loadResult.customerProvider
+                customerProvider: viewController.loadResult.customerProvider,
+                preselectLink: viewController.loadResult.preselectLink
             )
         }
 
