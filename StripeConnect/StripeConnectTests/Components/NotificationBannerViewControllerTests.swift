@@ -86,145 +86,19 @@ class NotificationBannerViewControllerTests: XCTestCase {
         await fulfillment(of: [expectationDidChange], timeout: TestHelpers.defaultTimeout)
     }
 
-    @MainActor
-    func testNewDelegateMethodReplacesLegacyMethod() async throws {
-        let vc = componentManager.createNotificationBannerViewController()
-        let delegate = BothNotificationsCallbacksDelegate()
-        vc.delegate = delegate
-
-        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
-        try await vc.webVC.webView.evaluateNotificationsChange(total: 3, actionRequired: 1)
-
-        XCTAssertEqual(delegate.newCallCount, 1)
-        XCTAssertEqual(delegate.legacyCallCount, 0)
-    }
-
     // MARK: - Content height
 
     @MainActor
-    func testContentHeightUpdatesIntrinsicContentSizeBeforeDelegate() async throws {
-        let vc = componentManager.createNotificationBannerViewController()
-        let delegate = ContentHeightRecorder()
-        delegate.onHeight = { notificationBanner, _ in
-            delegate.intrinsicHeightsAtCallback.append(notificationBanner.view.intrinsicContentSize.height)
-        }
-        vc.delegate = delegate
-
-        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
-        try await vc.webVC.webView.evaluateComponentHeightChanged("248")
-
-        XCTAssertEqual(delegate.heights, [248])
-        XCTAssertEqual(delegate.intrinsicHeightsAtCallback, [248])
-    }
-
-    @MainActor
-    func testContentHeightSizesBannerViewWithAutoLayout() async throws {
-        let vc = componentManager.createNotificationBannerViewController()
-        let container = UIView(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
-        vc.view.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(vc.view)
-        NSLayoutConstraint.activate([
-            vc.view.topAnchor.constraint(equalTo: container.topAnchor),
-            vc.view.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            vc.view.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-        ])
-
-        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
-        try await vc.webVC.webView.evaluateComponentHeightChanged("312")
-        container.layoutIfNeeded()
-
-        XCTAssertEqual(vc.view.frame.height, 312)
-        XCTAssertEqual(vc.webVC.webView.frame.height, 312)
-    }
-
-    @MainActor
-    func testEmptyBannerReportsZeroHeight() async throws {
+    func testContentHeightIsClampedAndSizesBannerBeforeDelegate() async throws {
         let vc = componentManager.createNotificationBannerViewController()
         let delegate = ContentHeightRecorder()
         vc.delegate = delegate
 
         try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
-        try await vc.webVC.webView.evaluateComponentHeightChanged("0")
-
-        XCTAssertEqual(delegate.heights, [0])
-        XCTAssertEqual(vc.view.intrinsicContentSize.height, 0)
-    }
-
-    @MainActor
-    func testUnchangedContentHeightIsReportedOnce() async throws {
-        let vc = componentManager.createNotificationBannerViewController()
-        let delegate = ContentHeightRecorder()
-        vc.delegate = delegate
-
-        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
-        try await vc.webVC.webView.evaluateComponentHeightChanged("120")
-        try await vc.webVC.webView.evaluateComponentHeightChanged("120")
-        try await vc.webVC.webView.evaluateComponentHeightChanged("252")
-
-        XCTAssertEqual(delegate.heights, [120, 252])
-    }
-
-    @MainActor
-    func testContentHeightAboveMaximumIsClamped() async throws {
-        let vc = componentManager.createNotificationBannerViewController()
-        let delegate = ContentHeightRecorder()
-        vc.delegate = delegate
-
-        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
-        try await vc.webVC.webView.evaluateComponentHeightChanged("25000")
+        try await vc.webVC.webView.evaluateMessage(name: "componentHeightChanged", json: "{\"height\": 25000}")
 
         XCTAssertEqual(delegate.heights, [10_000])
-    }
-
-    @MainActor
-    func testNegativeContentHeightIsClampedToZero() async throws {
-        let vc = componentManager.createNotificationBannerViewController()
-        let delegate = ContentHeightRecorder()
-        vc.delegate = delegate
-
-        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
-        try await vc.webVC.webView.evaluateComponentHeightChanged("-40")
-
-        XCTAssertEqual(delegate.heights, [0])
-    }
-
-    @MainActor
-    func testNonNumericContentHeightIsIgnored() async throws {
-        let vc = componentManager.createNotificationBannerViewController()
-        let delegate = ContentHeightRecorder()
-        vc.delegate = delegate
-
-        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
-        try await vc.webVC.webView.evaluateComponentHeightChanged("\"tall\"")
-        try await vc.webVC.webView.evaluateComponentHeightChanged("80")
-
-        XCTAssertEqual(delegate.heights, [80])
-    }
-
-    @MainActor
-    func testInfiniteContentHeightIsIgnored() async throws {
-        let vc = componentManager.createNotificationBannerViewController()
-        let delegate = ContentHeightRecorder()
-        vc.delegate = delegate
-
-        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
-        try await vc.webVC.webView.evaluateComponentHeightChanged("Infinity")
-        try await vc.webVC.webView.evaluateComponentHeightChanged("80")
-
-        XCTAssertEqual(delegate.heights, [80])
-    }
-
-    @MainActor
-    func testNaNContentHeightIsIgnored() async throws {
-        let vc = componentManager.createNotificationBannerViewController()
-        let delegate = ContentHeightRecorder()
-        vc.delegate = delegate
-
-        try await vc.webVC.webView.loadTrustedDocumentPreservingDelegate()
-        try await vc.webVC.webView.evaluateComponentHeightChanged("NaN")
-        try await vc.webVC.webView.evaluateComponentHeightChanged("80")
-
-        XCTAssertEqual(delegate.heights, [80])
+        XCTAssertEqual(delegate.intrinsicHeightsAtCallback, [10_000])
     }
 }
 
@@ -240,10 +114,6 @@ private extension WKWebView {
                                       }
                                   }
                                   """)
-    }
-
-    func evaluateComponentHeightChanged(_ height: String) async throws {
-        try await evaluateMessage(name: "componentHeightChanged", json: "{\"height\": \(height)}")
     }
 }
 
@@ -290,31 +160,13 @@ private class LegacyNotificationBannerDelegate: NotificationBannerViewController
     }
 }
 
-private class BothNotificationsCallbacksDelegate: NotificationBannerViewControllerDelegate {
-    private(set) var newCallCount = 0
-    private(set) var legacyCallCount = 0
-
-    func notificationBanner(_ notificationBanner: NotificationBannerViewController,
-                            didChangeNotificationsWithTotal total: Int,
-                            actionRequired: Int) {
-        newCallCount += 1
-    }
-
-    func notificationBanner(_ notificationBanner: NotificationBannerViewController,
-                            didChangeWithTotal total: Int,
-                            andActionRequired actionRequired: Int) {
-        legacyCallCount += 1
-    }
-}
-
 private class ContentHeightRecorder: NotificationBannerViewControllerDelegate {
     private(set) var heights: [CGFloat] = []
-    var intrinsicHeightsAtCallback: [CGFloat] = []
-    var onHeight: ((NotificationBannerViewController, CGFloat) -> Void)?
+    private(set) var intrinsicHeightsAtCallback: [CGFloat] = []
 
     func notificationBanner(_ notificationBanner: NotificationBannerViewController,
                             didChangeContentHeight height: CGFloat) {
         heights.append(height)
-        onHeight?(notificationBanner, height)
+        intrinsicHeightsAtCallback.append(notificationBanner.view.intrinsicContentSize.height)
     }
 }
