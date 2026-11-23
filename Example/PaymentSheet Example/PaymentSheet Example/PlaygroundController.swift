@@ -215,7 +215,6 @@ import UIKit
         }
 
         if settings.shippingInfo != .off {
-            configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
                 return self?.addressDetails
             }
@@ -341,7 +340,6 @@ import UIKit
         }
 
         if settings.shippingInfo != .off {
-            configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
                 return self?.addressDetails
             }
@@ -791,6 +789,8 @@ import UIKit
             var updatedSettings = self.settings
             scenario.apply(to: &updatedSettings)
             self.settings = updatedSettings
+            // Pick up the scenario's customer, or forget the reset one
+            self.loadLastSavedCustomer()
             // Settings changes only reload on their own when autoreload is on
             if updatedSettings.autoreload == .off {
                 self.load(reinitializeControllers: true)

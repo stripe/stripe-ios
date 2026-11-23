@@ -122,12 +122,13 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             )
         }
 
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let confirmType = createTestSavedConfirmType()
 
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -145,7 +146,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     // MARK: - Payment Method Configuration Tests
 
     func testCreateConfirmationTokenParams_savedPaymentMethod() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let paymentMethod = createTestSavedPaymentMethod()
         let paymentOptions = STPConfirmPaymentMethodOptions()
         let clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123")
@@ -160,6 +161,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -171,7 +173,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_newPaymentMethod() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let paymentMethodParams = createTestPaymentMethodParams()
         let clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123")
         paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
@@ -190,6 +192,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -204,12 +207,13 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_setAsDefaultPM_whenAllowed() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let confirmType = createTestNewConfirmType(shouldSave: false, shouldSetAsDefaultPM: true)
 
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             allowsSetAsDefaultPM: true,
             elementsSession: .emptyElementsSession
@@ -219,12 +223,13 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_setAsDefaultPM_whenNotAllowed() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let confirmType = createTestNewConfirmType(shouldSave: false, shouldSetAsDefaultPM: true)
 
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             allowsSetAsDefaultPM: false,
             elementsSession: .emptyElementsSession
@@ -242,6 +247,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -250,12 +256,13 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_paymentIntent_withTopLevelSFU() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .onSession))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .onSession, captureMethod: .automatic))
         let confirmType = createTestNewConfirmType(shouldSave: false)
 
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -273,6 +280,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
                 amount: 100,
                 currency: "USD",
                 setupFutureUsage: .onSession, // Top-level SFU
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [.card: .none]) // PMO SFU=none
             )
         ) { _, _ in return "pi_test_123_secret_abc" }
@@ -282,6 +290,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -298,6 +307,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
                 amount: 100,
                 currency: "USD",
                 setupFutureUsage: .offSession, // Top-level SFU
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [.card: .none]) // PMO SFU should win
             )
         ) { _, _ in return "pi_test_123_secret_abc" }
@@ -307,6 +317,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -324,12 +335,13 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             paymentOptions: STPConfirmPaymentMethodOptions(),
             saveForFutureUseCheckboxState: .hidden
         )
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "PHP"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "PHP", captureMethod: .automatic))
 
         // When
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -354,6 +366,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 100,
                 currency: "USD",
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [.alipay: .offSession])
             )
         ) { _, _ in return "pi_test_123_secret_abc" }
@@ -365,12 +378,14 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let paymentIntentParams = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: paymentIntentConfig,
             elementsSession: .emptyElementsSession
         )
         let setupIntentParams = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: setupIntentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -398,6 +413,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 100,
                 currency: "USD",
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [.payPal: .offSession])
             )
         ) { _, _ in return "pi_test_123_secret_abc" }
@@ -405,6 +421,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -413,7 +430,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_autoGeneratedMandate_usBankAccount() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
 
         // Create a US Bank Account payment method
         let usBankPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
@@ -438,6 +455,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )
@@ -446,12 +464,13 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_cardWithoutSFU_noMandate() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
+        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic))
         let confirmType = createTestSavedConfirmType()
 
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             elementsSession: .emptyElementsSession
         )

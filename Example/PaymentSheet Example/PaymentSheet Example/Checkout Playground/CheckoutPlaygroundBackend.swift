@@ -3,7 +3,7 @@
 //  PaymentSheet Example
 //
 
-@_spi(InternalOnlyAPI) import StripePaymentSheet
+import StripePaymentSheet
 
 extension CheckoutPlayground {
     struct SessionFactory {
@@ -23,16 +23,22 @@ extension CheckoutPlayground {
             paymentMethodRemove: Bool,
             email: EmailSettings,
             automaticPaymentMethods: Bool,
-            paymentMethodTypes: Set<String>
-        ) async throws -> String {
+            paymentMethodTypes: Set<String>,
+            newCustomerID: String?
+        ) async throws -> (clientSecret: String, customerID: String?) {
             var customerID: String?
-            if customerType != .guest {
+            if customerType == .new, let newCustomerID {
+                // Reuse the New customer from an earlier session so payment methods saved to it are offered again.
+                customerID = newCustomerID
+            } else if customerType != .guest {
                 var customerParams: [String: Any] = [:]
-                if email.source == .customer, let serverEmail = email.email {
-                    customerParams["email"] = serverEmail
+                if let customerEmail = email.customerEmail {
+                    customerParams["email"] = customerEmail
                 }
                 customerID = try await backend.createCustomer(requestParams: customerParams)
 
+                // Returning always gets a fresh Customer with one saved card, so removing or adding saved cards
+                // doesn't carry over to later sessions.
                 if customerType == .returning,
                    let customerID {
                     try await createAndAttachCard(customerID: customerID)
@@ -111,10 +117,11 @@ extension CheckoutPlayground {
                 ]
             }
 
-            return try await backend.createCheckoutSession(
+            let clientSecret = try await backend.createCheckoutSession(
                 stripeVersion: Self.checkoutAPISettings,
                 requestParams: sessionParams
             )
+            return (clientSecret, customerID)
         }
 
         private func createAndAttachCard(customerID: String) async throws {
