@@ -66,6 +66,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 100,
                 currency: "USD",
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [.card: .offSession])
             )
         ) { _, shouldSavePaymentMethod in
@@ -80,6 +81,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         _ = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .new(params: examplePaymentMethodParams, paymentOptions: .init(), paymentMethod: nil, saveForFutureUseCheckboxState: .hidden, shouldSetAsDefaultPM: nil),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: paymentHandler,
@@ -101,6 +103,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
                 amount: 100,
                 currency: "USD",
                 setupFutureUsage: nil,  // This should be overridden by PMO SFU
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [.card: .offSession])
             )
         ) { _, _ in return "" }
@@ -111,6 +114,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 100,
                 currency: "USD",
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [.card: .onSession])
             )
         ) { _, _ in return "" }
@@ -121,6 +125,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 100,
                 currency: "USD",
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [.card: .none])
             )
         ) { _, _ in return "" }
@@ -132,7 +137,8 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 100,
                 currency: "USD",
-                setupFutureUsage: .offSession
+                setupFutureUsage: .offSession,
+                captureMethod: .automatic
             )
         ) { _, _ in return "" }
 
@@ -142,7 +148,8 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 100,
                 currency: "USD",
-                setupFutureUsage: .onSession
+                setupFutureUsage: .onSession,
+                captureMethod: .automatic
             )
         ) { _, _ in return "" }
 
@@ -150,7 +157,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // If nothing is set, don't set SFU
         let intentConfigWithoutSFU = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 100, currency: "USD")
+            mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic)
         ) { _, _ in return "" }
 
         XCTAssertFalse(PaymentSheet.getShouldSavePaymentMethodValue(for: .card, intentConfiguration: intentConfigWithoutSFU))
@@ -170,6 +177,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 100,
                 currency: "USD",
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [.card: .offSession])
             )
         ) { _, _ in return "" }
@@ -186,7 +194,8 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 100,
                 currency: "USD",
-                setupFutureUsage: .onSession
+                setupFutureUsage: .onSession,
+                captureMethod: .automatic
             )
         ) { _, _ in return "" }
 
@@ -202,6 +211,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
                 amount: 100,
                 currency: "USD",
                 setupFutureUsage: .offSession,  // This should be overridden by PMO SFU
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [.card: .none])
             )
         ) { _, _ in return "" }
@@ -274,7 +284,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         let intentConfig = PaymentSheet.IntentConfiguration(
-            sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD"),
+            sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic),
             sellerDetails: sellerDetails,
             preparePaymentMethodHandler: preparePaymentMethodHandler
         )
@@ -283,6 +293,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         let result = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
@@ -326,7 +337,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         }
 
         let intentConfig = PaymentSheet.IntentConfiguration(
-            sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD"),
+            sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic),
             sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "test_network", externalId: "test_external", businessName: "Till's Pills"),
             preparePaymentMethodHandler: preparePaymentMethodHandler
         )
@@ -353,6 +364,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
                 shouldSetAsDefaultPM: false
             ),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
@@ -394,6 +406,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         let result = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
@@ -428,7 +441,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         }
 
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "USD"),
+            mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic),
             confirmHandler: confirmHandler
         )
 
@@ -436,6 +449,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         let result = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
@@ -466,7 +480,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         }
 
         var intentConfig = PaymentSheet.IntentConfiguration(
-            sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD"),
+            sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic),
             sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "test_network", externalId: "test_external", businessName: "Till's Pills"),
             preparePaymentMethodHandler: preparePaymentMethodHandler
         )
@@ -482,6 +496,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         _ = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),

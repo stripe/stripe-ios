@@ -494,7 +494,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     func testPaymentSheetCVCRecollection() {
         stubReturningCustomerResponse()
 
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic),
                                                             confirmHandler: confirmHandler,
                                                             requireCVCRecollection: true)
 
@@ -724,7 +724,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     func testPaymentSheet_deferredIntent() {
         stubNewCustomerResponse()
 
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic),
                                                             confirmHandler: confirmHandler)
 
         preparePaymentSheet(intentConfig: intentConfig)
@@ -735,7 +735,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     func testPaymentSheet_disableTerms_deferredIntent() {
         stubNewCustomerResponse()
 
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic),
                                                             confirmHandler: confirmHandler)
         self.configuration.termsDisplay = [.card: .never]
         preparePaymentSheet(intentConfig: intentConfig)
@@ -749,7 +749,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubCustomers()
         stubConsumerSession()
 
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession, captureMethod: .automatic),
                                                             confirmHandler: confirmHandler)
 
         preparePaymentSheet(

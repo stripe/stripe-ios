@@ -26,6 +26,8 @@ extension CheckoutElementsController {
         parameters: LinkConfirmationParameters
     ) async -> InternalConfirmResult {
         let elementsSession = checkoutSession.elementsSession
+        // Derive the customer from the same session snapshot as the rest of this confirmation.
+        let customerProvider = CustomerProvider(checkoutSession: checkoutSession)
         let configuration = parameters.configuration
         let confirmationChallenge = parameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -73,7 +75,7 @@ extension CheckoutElementsController {
             func confirmWithPaymentMethodParams(
                 paymentMethodParams: STPPaymentMethodParams,
                 linkAccount: PaymentSheetLinkAccount?,
-                saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState
+                saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState
             ) {
                 Task { @MainActor in
                     let confirmParams = IntentConfirmParams(
@@ -106,7 +108,7 @@ extension CheckoutElementsController {
             func confirmWithPaymentMethod(
                 paymentMethod: STPPaymentMethod,
                 linkAccount: PaymentSheetLinkAccount?,
-                saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
+                saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState,
                 linkClientAttributionMetadata _: STPClientAttributionMetadata?
             ) {
                 Task { @MainActor in
@@ -127,7 +129,6 @@ extension CheckoutElementsController {
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
                     }
-                    await confirmationChallenge?.complete()
                     completion(result, nil)
                 }
             }
@@ -174,6 +175,7 @@ extension CheckoutElementsController {
             PaymentSheet.confirmLinkPaymentOption(
                 confirmOption: parameters.confirmOption,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 paymentHandler: parameters.paymentHandler,
                 nativeSheetPresentation: parameters.nativeSheetPresentation,
                 authenticationContext: parameters.authenticationContext,
@@ -214,7 +216,7 @@ extension CheckoutElementsController {
             apiClient: parameters.configuration.apiClient,
             authenticationContext: parameters.authenticationContext,
             paymentHandler: parameters.paymentHandler,
-            confirmationChallenge: requestParameters.paymentMethodData == nil ? nil : parameters.confirmationChallenge
+            confirmationChallenge: parameters.confirmationChallenge
         )
     }
 
