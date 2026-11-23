@@ -10,7 +10,7 @@ import XCTest
 
 @testable@_spi(InternalOnlyAPI) import StripeCore
 @testable@_spi(InternalOnlyAPI) import StripePayments
-@testable@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 @testable@_spi(InternalOnlyAPI) import StripeUICore
@@ -2197,6 +2197,53 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
 
         XCTAssertTrue(defaultEmailInstantDebitsSection.enableCTA)
+    }
+
+    func testMakeInstantDebits_previousLinkedBank_showsBankWithoutBreakingConstraints() throws {
+        // Fail on any constraint UIKit breaks, using the callback behind the example app's broken-constraint alerts
+        let selector = NSSelectorFromString("engine:willBreakConstraint:dueToMutuallyExclusiveConstraints:")
+        let method = try XCTUnwrap(class_getInstanceMethod(UIView.self, selector))
+        let originalImplementation = method_getImplementation(method)
+        typealias ConstraintCallback = @convention(c) (UIView, Selector, AnyObject, NSLayoutConstraint, NSArray) -> Void
+        let originalCallback = unsafeBitCast(originalImplementation, to: ConstraintCallback.self)
+        let callback: @convention(block) (UIView, AnyObject, NSLayoutConstraint, NSArray) -> Void = { view, engine, constraint, conflicts in
+            XCTFail("Broken constraint: \(constraint)")
+            originalCallback(view, selector, engine, constraint, conflicts)
+        }
+        let implementation = imp_implementationWithBlock(callback)
+        method_setImplementation(method, implementation)
+        defer {
+            method_setImplementation(method, originalImplementation)
+            imp_removeBlock(implementation)
+        }
+
+        // Given a bank the customer already linked in the Instant Debits form
+        let previousCustomerInput = IntentConfirmParams(type: .instantDebits)
+        previousCustomerInput.instantDebitsLinkedBank = ._testValue()
+
+        // When the form is rebuilt from it, before it's on screen, e.g. after a session update
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(PaymentSheet.Configuration()),
+            paymentMethod: .instantDebits,
+            previousCustomerInput: previousCustomerInput
+        )
+        let instantDebitsSection = try XCTUnwrap(factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement)
+
+        // Then no constraint breaks (checked by the callback above), and the form shows the linked bank
+        XCTAssertEqual(instantDebitsSection.getLinkedBank()?.last4, "6789")
+        var pendingViews = [instantDebitsSection.view]
+        var last4Label: UILabel?
+        while last4Label == nil, let view = pendingViews.popLast() {
+            last4Label = (view as? UILabel).flatMap { $0.text == "••••6789" ? $0 : nil }
+            pendingViews.append(contentsOf: view.subviews)
+        }
+        var ancestor = try XCTUnwrap(last4Label, "The form should contain the linked bank's last 4 digits") as UIView?
+        while let view = ancestor, view !== instantDebitsSection.view {
+            XCTAssertFalse(view.isHidden, "The linked bank should be visible, but \(type(of: view)) is hidden")
+            ancestor = view.superview
+        }
     }
 
     // MARK: - Previous Customer Input tests

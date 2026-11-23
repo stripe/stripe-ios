@@ -249,6 +249,30 @@ struct CustomerProvider {
         }
     }
 
+    @MainActor
+    func setAsDefaultPaymentMethod(
+        _ paymentMethodID: String,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient
+    ) async throws -> STPCustomer {
+        guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+            logMissingEphemeralKey()
+            throw PaymentSheetError.unknown(
+                debugDescription: "Failed to read ephemeral key while setting a payment method as default."
+            )
+        }
+        guard let customerID else {
+            throw PaymentSheetError.unknown(
+                debugDescription: "Failed to read customerId while setting a payment method as default."
+            )
+        }
+        return try await apiClient.setAsDefaultPaymentMethod(
+            paymentMethodID,
+            for: customerID,
+            using: ephemeralKey
+        )
+    }
+
     private func logMissingEphemeralKey() {
         let errorAnalytic = ErrorAnalytic(
             event: .unexpectedPaymentSheetError,
@@ -256,5 +280,9 @@ struct CustomerProvider {
             additionalNonPIIParams: ["customer_access_provider": analyticValue ?? "unknown"]
         )
         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+    }
+
+    var supportsLinkSetupFutureUsage: Bool {
+        return usesCustomerSession
     }
 }

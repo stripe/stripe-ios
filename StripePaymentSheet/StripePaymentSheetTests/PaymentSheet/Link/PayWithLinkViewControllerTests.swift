@@ -11,7 +11,7 @@ import OHHTTPStubsSwift
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 #if !os(visionOS)
@@ -446,6 +446,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
             intent: ._testValue(),
             elementsSession: ._testValue(intent: ._testValue()),
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             paymentHandler: STPPaymentHandler(apiClient: config.apiClient),
             analyticsHelper: ._testValue()
         )
