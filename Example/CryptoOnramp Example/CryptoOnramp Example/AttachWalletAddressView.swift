@@ -47,6 +47,7 @@ struct AttachWalletAddressView: View {
 
                     FormField("Wallet Address") {
                         TextField("Enter wallet address", text: $walletAddress, axis: .vertical)
+                            .accessibilityIdentifier("wallet_address")
                             .lineLimit(1...3)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .autocapitalization(.none)
