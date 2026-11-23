@@ -49,8 +49,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     private var didFinish = false
     private var shippingContactUpdateTask: Task<Void, Never>?
     /// The most recent billing tax update, which throws if the update failed.
-    /// Apple Pay doesn't display errors returned from a payment method update, so authorization awaits this and fails with
-    /// the error instead of letting the customer pay stale totals.
+    /// Apple Pay doesn't display errors returned from a payment method update, so authorization awaits this and handles
+    /// the failure instead of letting the customer pay stale totals.
     private var paymentMethodUpdateTask: Task<Void, Error>?
 
     init(
@@ -89,12 +89,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             do {
                 try await self.paymentMethodUpdateTask?.value
             } catch {
-                let billingError = PKPaymentRequest.paymentBillingAddressInvalidError(
-                    withKey: CNPostalAddressPostalCodeKey,
-                    localizedDescription: error.nonGenericDescription
-                )
-                completion(PKPaymentAuthorizationResult(status: .failure, errors: [billingError]))
-                return
+                if let failureResult = await self.retryFailedBillingTaxUpdate(payment: payment) {
+                    completion(failureResult)
+                    return
+                }
             }
 
             // Helpers to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
@@ -230,13 +228,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             return
         }
         paymentMethodUpdateTask = Task { @MainActor in
-            // If the update throws, the totals are stale and authorization reports the failure.
+            // If the update throws, the totals are stale and authorization handles the failure.
             defer { handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems())) }
-            self.session = try await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
-                address: address,
-                canUpdateWhileSheetPresented: true,
-                confirmationSource: attribution.confirmingElement
-            )
+            try await updateTaxRegion(to: address, using: checkoutWalletUpdater)
         }
     }
 
@@ -266,17 +260,16 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
         shippingContactUpdateTask = Task { @MainActor in
             do {
-                self.session = try await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
-                    address: address,
-                    canUpdateWhileSheetPresented: true,
-                    confirmationSource: attribution.confirmingElement
-                )
+                try await updateTaxRegion(to: address, using: checkoutWalletUpdater)
                 handler(PKPaymentRequestShippingContactUpdate(paymentSummaryItems: summaryItems()))
             } catch {
                 // Surface the failure in the Apple Pay sheet. The totals are stale, so the customer must not authorize them.
-                let shippingError = PKPaymentRequest.paymentShippingAddressInvalidError(
-                    withKey: CNPostalAddressPostalCodeKey,
-                    localizedDescription: error.nonGenericDescription
+                // Saving the address again retries the update. This doesn't mark a field, since the failure is rarely the
+                // address. Apple Pay ignores a generic PassKit error here, and an unserviceable error says the merchant
+                // doesn't ship to the address.
+                let shippingError = PKPaymentRequest.paymentContactInvalidError(
+                    withContactField: .postalAddress,
+                    localizedDescription: NSError.stp_unexpectedErrorMessage()
                 )
                 handler(PKPaymentRequestShippingContactUpdate(
                     errors: [shippingError],
@@ -377,6 +370,59 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     }
 
     // MARK: - Helpers
+
+    // MARK: - Tax updates
+
+    /// Updates the tax region while the Apple Pay sheet is presented.
+    private func updateTaxRegion(
+        to address: CheckoutElementsController.Address,
+        using checkoutWalletUpdater: CheckoutSessionWalletUpdater
+    ) async throws {
+        session = try await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+            address: address,
+            canUpdateWhileSheetPresented: true,
+            confirmationSource: attribution.confirmingElement
+        )
+    }
+
+    /// Retries a billing tax update that failed while the Apple Pay sheet was presented, using the billing address Apple Pay
+    /// provides at authorization.
+    /// - Returns: The authorization result to report, or `nil` if confirmation can continue.
+    private func retryFailedBillingTaxUpdate(payment: PKPayment) async -> PKPaymentAuthorizationResult? {
+        let displayedAmount = session.amount
+        guard let postalAddress = payment.billingContact?.postalAddress,
+              let address = Self.makeCheckoutAddress(from: postalAddress),
+              let checkoutWalletUpdater else {
+            return Self.makeRetryableFailureResult()
+        }
+        do {
+            try await updateTaxRegion(to: address, using: checkoutWalletUpdater)
+            paymentMethodUpdateTask = nil
+        } catch {
+            return Self.makeRetryableFailureResult()
+        }
+
+        guard session.amount == displayedAmount else {
+            // Apple Pay can't update the totals after authorization begins, so close the sheet instead of charging a
+            // total the customer didn't see. The session has the new total if they pay again.
+            paymentState = .error
+            result = .failed(CheckoutError.totalChanged)
+            return PKPaymentAuthorizationResult(status: .failure, errors: nil)
+        }
+        return nil
+    }
+
+    /// A failed authorization that keeps the Apple Pay sheet open so the customer can tap Pay again.
+    /// Apple Pay closes the sheet for a failure without a PassKit error. This doesn't mark a field, since the failure is
+    /// rarely the address.
+    private static func makeRetryableFailureResult() -> PKPaymentAuthorizationResult {
+        let error = NSError(
+            domain: PKPaymentErrorDomain,
+            code: PKPaymentError.unknownError.rawValue,
+            userInfo: [NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage()]
+        )
+        return PKPaymentAuthorizationResult(status: .failure, errors: [error])
+    }
 
     private func summaryItems() -> [PKPaymentSummaryItem] {
         return Self.makeSummaryItems(for: session, label: merchantLabel)
