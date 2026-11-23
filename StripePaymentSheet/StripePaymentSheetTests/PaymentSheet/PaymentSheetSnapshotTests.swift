@@ -9,7 +9,6 @@
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
-import StripePaymentsTestUtils
 import UIKit
 import XCTest
 
@@ -19,13 +18,15 @@ import XCTest
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
-    private let backendCheckoutUrl = URL(string: STPTestingAPIClient.STPTestingPlaygroundBackendURL + "checkout")!
+    private let backendCheckoutUrl = URL(
+        string: "https://stp-mobile-test-backends-764603794666.us-central1.run.app/playground/checkout"
+    )!
 
     var paymentSheet: PaymentSheet!
 
     private var configuration = PaymentSheet.Configuration()
 
-    // Change this to true to hit the real playground backend. This may be required
+    // Change this to true to hit the real glitch backend. This may be required
     // to capture data for new use cases
     var runAgainstLiveService: Bool = false
     override func setUp() {

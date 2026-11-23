@@ -28,8 +28,6 @@
 		DA6FA2C369E10A2B4663B434 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5785AD2F7A6D71D9470B0DB6 /* StripeFinancialConnections.framework */; };
 		E1256A693262E5E536213CFA /* StripeFinancialConnectionsLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D70180F2224B4577209331B /* StripeFinancialConnectionsLite.framework */; };
 		E4B8E60D7957A844D5A75E4B /* StripeCoreTestUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3E1E39731621D996DDD83DAC /* StripeCoreTestUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4AACB4F67F1064655D139403 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6CA17A627BD4022422AF8AF /* TestBackends.swift */; };
-		BB256E848E6317BBF2739FBF /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6CA17A627BD4022422AF8AF /* TestBackends.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,7 +95,6 @@
 		8D70180F2224B4577209331B /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADFEE494187576194F8B46BB /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB4F660DE48B172E1E0FCF5C /* FinancialConnectionsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FinancialConnectionsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D6CA17A627BD4022422AF8AF /* TestBackends.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestBackends.swift; path = ../Shared/TestBackends.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -164,7 +161,6 @@
 		16B505A9E0578F89DFF3F7BC = {
 			isa = PBXGroup;
 			children = (
-				D6CA17A627BD4022422AF8AF /* TestBackends.swift */,
 				496515B42D356DFF007B94BB /* FinancialConnections Example.entitlements */,
 				50C2BF2068C431D89BFF6E11 /* Project */,
 				35967318CD64200FCEDF41E7 /* Frameworks */,
@@ -319,7 +315,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4AACB4F67F1064655D139403 /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,7 +322,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB256E848E6317BBF2739FBF /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

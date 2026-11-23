@@ -6,7 +6,7 @@ Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
 Content-Length: 695
 Server: Google Frontend
-Date: Sat, 21 Nov 2026 02:37:24 GMT
+Date: Sat, 21 Nov 2026 02:58:59 GMT
 
 {
   "origin" : "169.254.169.126",
@@ -22,7 +22,7 @@ Date: Sat, 21 Nov 2026 02:37:24 GMT
     "User-Agent" : "xctest\/25435 CFNetwork\/3860.500.112 Darwin\/27.2.0",
     "Content-Length" : "0",
     "Accept-Language" : "en-US,en;q=0.9",
-    "X-Stripe-User-Agent" : "{\"os_version\":\"26.4.1\",\"lang\":\"objective-c\",\"type\":\"arm64\",\"model\":\"iPhone\",\"vendor_identifier\":\"13175857-FA04-4EB9-BF76-F3504854776F\",\"bindings_version\":\"26.16.1\"}",
+    "X-Stripe-User-Agent" : "{\"type\":\"arm64\",\"vendor_identifier\":\"4F70A834-ED86-460E-9887-CDA4917E5D6E\",\"os_version\":\"26.4.1\",\"bindings_version\":\"26.16.1\",\"model\":\"iPhone\",\"lang\":\"objective-c\"}",
     "Stripe-Version" : "2020-08-27"
   },
   "args" : {

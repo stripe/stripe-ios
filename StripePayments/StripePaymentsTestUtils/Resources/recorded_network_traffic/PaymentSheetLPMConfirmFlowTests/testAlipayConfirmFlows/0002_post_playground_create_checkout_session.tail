@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/create_checkout_session$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 22:41:08 GMT
-Content-Encoding: br
-Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 2820
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:07:00 GMT
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a0hunFeM6OgnIqp38fSAakgTqjVWvpMqY4SN7O4CT4dOnYypb6EqqKsEdN",
-  "client_secret" : "cs_test_a0hunFeM6OgnIqp38fSAakgTqjVWvpMqY4SN7O4CT4dOnYypb6EqqKsEdN_secret_yF2C2ufhjQ5HqZMzTAiwJcveX",
+  "id" : "cs_test_a07URjo9KSKl8Tv5M4SmMOLZeamgaOtFI5sZgjxCdnNbpMTQNeaYOOWklE",
+  "client_secret" : "cs_test_a07URjo9KSKl8Tv5M4SmMOLZeamgaOtFI5sZgjxCdnNbpMTQNeaYOOWklE_secret_iUt04pS8pK8pzRAqOMXBIIpnM",
   "discounts" : [
 
   ],
@@ -29,7 +28,7 @@ Cache-Control: public, max-age=0, must-revalidate
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1795214467,
+  "created" : 1795230420,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "alipay"
@@ -38,13 +37,13 @@ Cache-Control: public, max-age=0, must-revalidate
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VfLAL8lw",
+      "key" : "checkout_item_VfPSmmfz",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ue0URLu5o3P18Zph2HUYXxc",
+            "price" : "price_1Ue4dkLu5o3P18ZpvBaQZYsN",
             "tax_rates" : null
           }
         ],
@@ -157,6 +156,6 @@ Cache-Control: public, max-age=0, must-revalidate
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1795300867,
+  "expires_at" : 1795316820,
   "marketing_attributions" : null
 }

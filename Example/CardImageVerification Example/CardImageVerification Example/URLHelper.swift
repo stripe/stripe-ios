@@ -13,6 +13,6 @@ enum URLHelper: String {
     case verify = "verify"
 
         // If you want to edit our backend, visit https://codesandbox.io/p/devbox/d7sjq9, login, and fork.
-    private static let baseURL: URL = TestBackend.cardScanCIVExample.url
+    private static let baseURL: URL = URL(string: "https://stp-mobile-test-backends-764603794666.us-central1.run.app/card-scan-civ-example")!
     var verifyURL: URL { return URLHelper.baseURL.appendingPathComponent(self.rawValue) }
 }

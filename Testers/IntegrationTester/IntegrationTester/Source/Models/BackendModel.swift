@@ -12,7 +12,7 @@ import Stripe
 class BackendModel {
     // You can replace this with your own backend URL.
     // If you want to edit our backend, visit https://codesandbox.io/p/devbox/3c3ymr, login, and fork.
-    static let backendAPIURL = TestBackend.integrationTester.url
+    static let backendAPIURL = URL(string: "https://stp-mobile-test-backends-764603794666.us-central1.run.app/integration-tester/")!
 
     static let returnURL = "stp-integration-tester://stripe-redirect"
 

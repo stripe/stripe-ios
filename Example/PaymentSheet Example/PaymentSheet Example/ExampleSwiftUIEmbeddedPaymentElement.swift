@@ -17,7 +17,7 @@ class BackendViewModel: ObservableObject {
         let ephemeralKey: String
     }
 
-    private let baseUrl = TestBackend.paymentSheetCustomDeferred.baseURL
+    private let baseUrl = "https://stp-mobile-test-backends-764603794666.us-central1.run.app/payment-sheet-custom-deferred"
     private lazy var checkoutUrl = URL(string: baseUrl + "/checkout")!
     private lazy var confirmIntentUrl = URL(string: baseUrl + "/confirm_intent")!
     private lazy var computeTotalsUrl = URL(string: baseUrl + "/compute_totals")!

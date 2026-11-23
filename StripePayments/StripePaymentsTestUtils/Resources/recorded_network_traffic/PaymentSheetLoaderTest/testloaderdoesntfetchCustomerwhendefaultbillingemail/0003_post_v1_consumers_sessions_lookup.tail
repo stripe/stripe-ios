@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/consumers\/sessions\/lookup$
 200
 text/plain
 Content-Length: 346
-X-Stripe-Mock-Request: email_address=davidestes%40stripe\.com&email_source=customer_email&request_surface=ios_payment_element&session_id=elements_session_1fe1OUixW57
+X-Stripe-Mock-Request: email_address=davidestes%40stripe\.com&email_source=customer_email&request_surface=ios_payment_element&session_id=elements_session_1Glx4WMJmpi
 
 {
   "exists": true,

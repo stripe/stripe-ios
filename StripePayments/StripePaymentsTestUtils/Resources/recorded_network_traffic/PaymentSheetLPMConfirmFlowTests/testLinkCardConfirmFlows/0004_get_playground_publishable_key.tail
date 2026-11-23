@@ -2,13 +2,11 @@ GET
 https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/publishable_key\?merchant=GB$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Age: 0
-Date: Fri, 20 Nov 2026 22:52:58 GMT
 Content-Length: 130
-Cache-Control: public, max-age=0, must-revalidate
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:18:51 GMT
 
 {
   "publishable_key" : "pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b"

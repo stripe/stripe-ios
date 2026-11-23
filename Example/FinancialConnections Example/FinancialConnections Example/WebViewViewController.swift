@@ -49,7 +49,7 @@ import WebKit
 //    This is done automatically when using `ASWebAuthenticationSession`.
 
 /// The website that presents the Financial Connections Auth Flow.
-private let websiteURL = URL(string: TestBackend.connectionsWebview.baseURL + "/")!
+private let websiteURL = URL(string: "https://stp-mobile-test-backends-764603794666.us-central1.run.app/connections-webview/")!
 
 // ======================
 // IMPORTANT NOTE:

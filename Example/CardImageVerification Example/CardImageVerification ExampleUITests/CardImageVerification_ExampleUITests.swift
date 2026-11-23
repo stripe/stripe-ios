@@ -19,7 +19,6 @@ class CardImageVerification_ExampleUITests: XCTestCase {
 
         app = XCUIApplication()
         app.launchEnvironment = ["UITesting": "true"]
-        app.launchEnvironment.merge(TestBackend.launchEnvironment) { _, new in new }
         app.launch()
     }
 

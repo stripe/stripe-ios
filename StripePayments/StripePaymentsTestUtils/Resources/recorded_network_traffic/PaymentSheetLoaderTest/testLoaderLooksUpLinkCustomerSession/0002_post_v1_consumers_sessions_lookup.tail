@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/consumers\/sessions\/lookup$
 200
 text/plain
 Content-Length: 346
-X-Stripe-Mock-Request: email_address=yuki%40stripe\.com&email_source=customer_object&request_surface=ios_payment_element&session_id=elements_session_1QFHh0WsreW
+X-Stripe-Mock-Request: email_address=yuki%40stripe\.com&email_source=customer_object&request_surface=ios_payment_element&session_id=elements_session_1KVKDMSDjGv
 
 {
   "exists": true,

@@ -13,8 +13,6 @@
 		64765C8B6282414411C0AC44 /* CardImageVerification_EndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3AD4B2DE960BB1D29B7976 /* CardImageVerification_EndToEndTests.swift */; };
 		6A7E42DE4A21E27960D80463 /* StripeCardScan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42919CBDD4A22565A9C9DB78 /* StripeCardScan.framework */; };
 		7EDBB8A04C654F9936FB4D1F /* CardImageVerification_ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFE0B327286E7F0302D9D1B /* CardImageVerification_ExampleUITests.swift */; };
-		A01CA679E7256335219A11C9 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA9E222C5ED7DC1FD11A834 /* TestBackends.swift */; };
-		0A39B176AC9818322A5BE2D1 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA9E222C5ED7DC1FD11A834 /* TestBackends.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,7 +64,6 @@
 		C599E00EB175B047CB2B2F99 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		CE61EFDFCA27E45395CFA19C /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D61736BBB4914EEB9471D559 /* CardImageVerificationExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardImageVerificationExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CCA9E222C5ED7DC1FD11A834 /* TestBackends.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestBackends.swift; path = ../Shared/TestBackends.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -166,7 +163,6 @@
 		CC7F1C44A9EDF28E15BF9522 = {
 			isa = PBXGroup;
 			children = (
-				CCA9E222C5ED7DC1FD11A834 /* TestBackends.swift */,
 				C97C6861EE70006BF20BFD7A /* Project */,
 				44EC74304CAE5B297FCDFBC6 /* Frameworks */,
 				41474EC63599755CF3802E13 /* Products */,
@@ -294,7 +290,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A39B176AC9818322A5BE2D1 /* TestBackends.swift in Sources */,
 				64765C8B6282414411C0AC44 /* CardImageVerification_EndToEndTests.swift in Sources */,
 				7EDBB8A04C654F9936FB4D1F /* CardImageVerification_ExampleUITests.swift in Sources */,
 			);
@@ -304,7 +299,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A01CA679E7256335219A11C9 /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

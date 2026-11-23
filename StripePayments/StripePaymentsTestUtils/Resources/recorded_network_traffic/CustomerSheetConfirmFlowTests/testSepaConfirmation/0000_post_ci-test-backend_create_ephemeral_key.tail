@@ -2,14 +2,13 @@ POST
 https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/ci-test-backend\/create_ephemeral_key$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 22:36:22 GMT
 Content-Length: 152
-Cache-Control: public, max-age=0, must-revalidate
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:01:45 GMT
 
 {
-  "customer" : "cus_VfL6LN89lO5z1j",
-  "ephemeral_key_secret" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLFlXMGt6N3dUVkxFZDVBRk5xSEVFSGgwV1p3NmQxMkM_00p5DKhQ6L"
+  "customer" : "cus_VfPN8UikQYT4Wi",
+  "ephemeral_key_secret" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLElveGg0RDgxR0ljM2txTDZOZGV2MkpjT3hudVVOZ0I_00AzyceJAR"
 }

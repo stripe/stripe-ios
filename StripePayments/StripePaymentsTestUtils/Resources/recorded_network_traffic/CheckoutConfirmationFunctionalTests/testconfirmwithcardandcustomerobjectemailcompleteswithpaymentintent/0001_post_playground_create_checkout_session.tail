@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/create_checkout_session$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 22:35:49 GMT
-Content-Encoding: br
-Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 2828
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:01:11 GMT
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a0h6punmD8mEmuctLDkYKMclpP8Rp0eIhGnYVzVoHvYUa5GQlfaKnXwlIj",
-  "client_secret" : "cs_test_a0h6punmD8mEmuctLDkYKMclpP8Rp0eIhGnYVzVoHvYUa5GQlfaKnXwlIj_secret_bYRJUbXc20re15Jb7rj6YT46e",
+  "id" : "cs_test_a00WyVqSHm24PbdK5bYUXMBkjO0rdAIs2LZp6ZtBw7jcCRoDwB0qXdLtFP",
+  "client_secret" : "cs_test_a00WyVqSHm24PbdK5bYUXMBkjO0rdAIs2LZp6ZtBw7jcCRoDwB0qXdLtFP_secret_04XVp3L1SILuxDBEk5xIWrdr5",
   "discounts" : [
 
   ],
@@ -22,14 +21,14 @@ Cache-Control: public, max-age=0, must-revalidate
     "submit" : null,
     "after_submit" : null
   },
-  "customer" : "cus_VfL5qEuFRPARo6",
+  "customer" : "cus_VfPM5xgdjdASDJ",
   "metadata" : {
 
   },
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1795214149,
+  "created" : 1795230071,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "card"
@@ -38,13 +37,13 @@ Cache-Control: public, max-age=0, must-revalidate
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VfL5dR8M",
+      "key" : "checkout_item_VfPMoq1h",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ue0PJLu5o3P18Zp853pqIl3",
+            "price" : "price_1Ue4Y7Lu5o3P18Zp6uYVsCs7",
             "tax_rates" : null
           }
         ],
@@ -157,6 +156,6 @@ Cache-Control: public, max-age=0, must-revalidate
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1795300549,
+  "expires_at" : 1795316471,
   "marketing_attributions" : null
 }

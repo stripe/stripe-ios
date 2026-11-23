@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/create_checkout_session$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 22:55:38 GMT
-Content-Encoding: br
-Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 2776
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:21:37 GMT
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a0R7OgLDeE24o6ouyk3yRaMKP7W2C6hBYx8LDMN4eiFnvDW2Jq7cTNFyLj",
-  "client_secret" : "cs_test_a0R7OgLDeE24o6ouyk3yRaMKP7W2C6hBYx8LDMN4eiFnvDW2Jq7cTNFyLj_secret_VRy8t3c064TyEAjIZwwkvQbkT",
+  "id" : "cs_test_a0r17NwjuRd2eNaOO7qgtmofUSToizb3NcXFZBv2WP4YUlUtEMhI9DchsE",
+  "client_secret" : "cs_test_a0r17NwjuRd2eNaOO7qgtmofUSToizb3NcXFZBv2WP4YUlUtEMhI9DchsE_secret_Uj105HBsVOdCR17y42jF0GnRu",
   "discounts" : [
 
   ],
@@ -29,7 +28,7 @@ Cache-Control: public, max-age=0, must-revalidate
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1795215338,
+  "created" : 1795231297,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "pay_by_bank"
@@ -38,13 +37,13 @@ Cache-Control: public, max-age=0, must-revalidate
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VfLPKR66",
+      "key" : "checkout_item_VfPhsoZH",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ue0iUGoesj9fw9QePrGgmKC",
+            "price" : "price_1Ue4rtGoesj9fw9QvmnP8lp3",
             "tax_rates" : null
           }
         ],
@@ -153,6 +152,6 @@ Cache-Control: public, max-age=0, must-revalidate
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1795301738,
+  "expires_at" : 1795317697,
   "marketing_attributions" : null
 }

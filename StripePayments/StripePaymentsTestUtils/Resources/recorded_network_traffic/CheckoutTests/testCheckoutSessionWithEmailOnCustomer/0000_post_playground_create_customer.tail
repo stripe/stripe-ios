@@ -2,12 +2,11 @@ POST
 https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/create_customer$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 22:36:06 GMT
 Content-Length: 592
-Cache-Control: public, max-age=0, must-revalidate
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:01:27 GMT
 
 {
   "description" : null,
@@ -31,7 +30,7 @@ Cache-Control: public, max-age=0, must-revalidate
   "balance" : 0,
   "name" : null,
   "tax_exempt" : "none",
-  "id" : "cus_VfL5JCakgcsCah",
+  "id" : "cus_VfPNWHUfiL3zHE",
   "delinquent" : false,
   "email" : "customer@example.com",
   "preferred_locales" : [
@@ -39,7 +38,7 @@ Cache-Control: public, max-age=0, must-revalidate
   ],
   "phone" : null,
   "next_invoice_sequence" : 1,
-  "invoice_prefix" : "DOFYHNRZ",
+  "invoice_prefix" : "LNOMP8ZG",
   "address" : null,
-  "created" : 1795214165
+  "created" : 1795230087
 }

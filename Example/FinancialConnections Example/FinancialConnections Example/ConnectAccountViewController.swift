@@ -12,7 +12,7 @@ class ConnectAccountViewController: UIViewController {
 
     // MARK: - Constants
 
-    let baseURL = TestBackend.iosFinancialConnectionsPlayground.baseURL
+    let baseURL = "https://stp-mobile-test-backends-764603794666.us-central1.run.app/ios-financial-connections-playground"
     let financialConnectionsEndpoint = "/create_session"
 
     // MARK: - IBOutlets

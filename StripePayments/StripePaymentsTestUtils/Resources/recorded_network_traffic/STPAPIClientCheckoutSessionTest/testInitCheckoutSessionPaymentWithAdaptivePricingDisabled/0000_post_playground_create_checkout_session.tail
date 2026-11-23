@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/create_checkout_session$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 23:07:18 GMT
-Content-Encoding: br
-Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 2798
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:33:23 GMT
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a0g5Kwfh366MNZvMKr6bTwGyJcEe5l9kAZN2deUjsWZoQDmCvfwcMFezcN",
-  "client_secret" : "cs_test_a0g5Kwfh366MNZvMKr6bTwGyJcEe5l9kAZN2deUjsWZoQDmCvfwcMFezcN_secret_aNeMSTnOHmt28pDnuipiJxc8q",
+  "id" : "cs_test_a0if0zvTjoiZh3V8ENpMVO9MazHB8MgqQx7WyZtYrFLjMh8DjMISEozWiG",
+  "client_secret" : "cs_test_a0if0zvTjoiZh3V8ENpMVO9MazHB8MgqQx7WyZtYrFLjMh8DjMISEozWiG_secret_hmgYvTGjHRFEIqBZ422YqhTo9",
   "discounts" : [
 
   ],
@@ -29,7 +28,7 @@ Cache-Control: public, max-age=0, must-revalidate
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1795216038,
+  "created" : 1795232003,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "card"
@@ -38,13 +37,13 @@ Cache-Control: public, max-age=0, must-revalidate
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VfLaFpls",
+      "key" : "checkout_item_VfPtYrhE",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ue0tmK8p6Sx2i8aAclKFzW1",
+            "price" : "price_1Ue53HK8p6Sx2i8ay8ZN5agQ",
             "tax_rates" : null
           }
         ],
@@ -153,6 +152,6 @@ Cache-Control: public, max-age=0, must-revalidate
   },
   "livemode" : false,
   "customer_email" : "test+location_DE@example.com",
-  "expires_at" : 1795302438,
+  "expires_at" : 1795318403,
   "marketing_attributions" : null
 }

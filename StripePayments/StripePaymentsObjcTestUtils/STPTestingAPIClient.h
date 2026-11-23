@@ -75,29 +75,6 @@ static NSString * const STPTestingPaymentsOrchestrationPublishableKey = @"pk_tes
 
 + (instancetype)sharedClient;
 
-/**
- The root URL of the unified test backends (oss-android-sdk's ci/test-backends), with a trailing
- slash: their Cloud Run deployment, or the STRIPE_TEST_BACKENDS_URL environment variable, such as a
- local copy's `http://127.0.0.1:4567/`, unless `usesDefaultTestBackendsURL` is set. xcodebuild
- passes TEST_RUNNER_STRIPE_TEST_BACKENDS_URL on to the tests as the variable. Each backend answers
- under its own prefix: `<root>ci-test-backend/`.
- */
-@property (class, nonatomic, readonly) NSString *testBackendsURL;
-
-/// `testBackendsURL` for the given environment variables.
-+ (NSString *)testBackendsURLForEnvironment:(NSDictionary<NSString *, NSString *> *)environment;
-
-/**
- Set while STPNetworkStubbingTestCase records or plays back network traffic, whose recordings
- name the deployment's URL, so that STRIPE_TEST_BACKENDS_URL doesn't apply.
- */
-@property (class, nonatomic) BOOL usesDefaultTestBackendsURL;
-
-/**
- `<testBackendsURL><prefix>/`, such as `<testBackendsURL>ci-test-backend/`.
- */
-+ (NSString *)testBackendURLWithPrefix:(NSString *)prefix NS_SWIFT_NAME(testBackendURL(prefix:));
-
 // Set this to the Stripe SDK session for SWHTTPRecorder recording to work correctly
 @property (nonatomic, readwrite) NSURLSessionConfiguration *sessionConfig;
 

@@ -33,7 +33,7 @@ struct ExampleSwiftUIPaymentSheet: View {
 }
 
 class MyBackendModel: ObservableObject {
-    let backendCheckoutUrl = URL(string: TestBackend.paymentSheet.baseURL + "/checkout")!  // An example backend endpoint
+    let backendCheckoutUrl = URL(string: "https://stp-mobile-test-backends-764603794666.us-central1.run.app/payment-sheet/checkout")!  // An example backend endpoint
     @Published var paymentSheet: PaymentSheet?
     @Published var paymentResult: PaymentSheetResult?
 

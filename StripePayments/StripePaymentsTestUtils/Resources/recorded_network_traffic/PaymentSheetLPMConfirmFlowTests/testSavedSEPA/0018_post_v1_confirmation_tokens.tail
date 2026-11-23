@@ -3,33 +3,33 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=yeBCxHMnpIanaLa09SIoZKLpDQJ9D_Ic06r38NxWN3FdfVKfZ3hc1iJmrqvPU7KGRuA--a8Qgbh4E7JW; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=YG-mon3ClHpdTrr9XxvgMPe7WZax4g6k8_-yTuB3-77AgIxwC9LHm1eTxQUHt7K0MlxZLq3UmEkmAVGS; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=yeBCxHMnpIanaLa09SIoZKLpDQJ9D_Ic06r38NxWN3FdfVKfZ3hc1iJmrqvPU7KGRuA--a8Qgbh4E7JW&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=YG-mon3ClHpdTrr9XxvgMPe7WZax4g6k8_-yTuB3-77AgIxwC9LHm1eTxQUHt7K0MlxZLq3UmEkmAVGS&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=yeBCxHMnpIanaLa09SIoZKLpDQJ9D_Ic06r38NxWN3FdfVKfZ3hc1iJmrqvPU7KGRuA--a8Qgbh4E7JW&t=1"}],"include_subdomains":true}
-request-id: req_ZtsDPSgpUDsfzf
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=YG-mon3ClHpdTrr9XxvgMPe7WZax4g6k8_-yTuB3-77AgIxwC9LHm1eTxQUHt7K0MlxZLq3UmEkmAVGS&t=1"}],"include_subdomains":true}
+request-id: req_sUwkt69eYzhLcQ
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 1377
 Vary: Origin
-Date: Fri, 20 Nov 2026 23:01:15 GMT
-original-request: req_ZtsDPSgpUDsfzf
+Date: Sat, 21 Nov 2026 03:27:21 GMT
+original-request: req_sUwkt69eYzhLcQ
 stripe-version: 2020-08-27
-idempotency-key: ca91a0a0-4e55-4ca4-bcd6-90af95d625ed
+idempotency-key: a8f1c6ad-3227-409a-a7b0-544911fd2c39
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=eur&client_context\[customer]=cus_VfLUvOoxZ5DChV&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=sepa_debit&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1Ue0nnGoesj9fw9QLL2eBouR&return_url=https%3A\/\/foo\.com
+X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=eur&client_context\[customer]=cus_VfPmbVPkWiebAD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=sepa_debit&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1Ue4xJGoesj9fw9QaMOxHpuO&return_url=https%3A\/\/foo\.com
 
 {
-  "id" : "ctoken_1Ue0nvGoesj9fw9QJVjUKqPx",
+  "id" : "ctoken_1Ue4xRGoesj9fw9QCIub4Qkm",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
@@ -42,7 +42,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=
       }
     }
   },
-  "expires_at" : 1795258875,
+  "expires_at" : 1795274841,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : null,
   "object" : "confirmation_token",
@@ -62,7 +62,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=
         "postal_code" : "EC1V 9NR"
       }
     },
-    "customer" : "cus_VfLUvOoxZ5DChV",
+    "customer" : "cus_VfPmbVPkWiebAD",
     "sepa_debit" : {
       "fingerprint" : "TadlYGPrD03gCeZx",
       "country" : "AT",
@@ -77,7 +77,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=
     "type" : "sepa_debit",
     "customer_account" : null
   },
-  "created" : 1795215675,
+  "created" : 1795231641,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/create_checkout_session$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 22:46:16 GMT
-Content-Encoding: br
-Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 2762
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:12:16 GMT
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a0GwulpLArYwDQl4ce9rxLcM4SBsNSmh4idBmBnKyhoblT9eIdv5a46qfF",
-  "client_secret" : "cs_test_a0GwulpLArYwDQl4ce9rxLcM4SBsNSmh4idBmBnKyhoblT9eIdv5a46qfF_secret_sf7iG1t0SQ2WXgNGUlqDtICuO",
+  "id" : "cs_test_a0OdZvdIfUUH0xnhZcBnIyDWA8bQN60GnIuY2VmsqniAjx1GLdLhKGKZNM",
+  "client_secret" : "cs_test_a0OdZvdIfUUH0xnhZcBnIyDWA8bQN60GnIuY2VmsqniAjx1GLdLhKGKZNM_secret_KVVccCbIxV8Akad4yUCQ8Opjx",
   "discounts" : [
 
   ],
@@ -29,7 +28,7 @@ Cache-Control: public, max-age=0, must-revalidate
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1795214776,
+  "created" : 1795230736,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "bizum"
@@ -38,13 +37,13 @@ Cache-Control: public, max-age=0, must-revalidate
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VfLFD9Kr",
+      "key" : "checkout_item_VfPXJXfe",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1Ue0ZQKG6vc7r7YCPqSRcDr6",
+            "price" : "price_1Ue4iqKG6vc7r7YC2TmJNnjU",
             "tax_rates" : null
           }
         ],
@@ -153,6 +152,6 @@ Cache-Control: public, max-age=0, must-revalidate
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1795301176,
+  "expires_at" : 1795317136,
   "marketing_attributions" : null
 }

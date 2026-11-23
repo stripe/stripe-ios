@@ -79,7 +79,6 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
     func testCardFormAmexCVV() throws {
         let app = XCUIApplication()
-        app.launchEnvironment = TestBackend.launchEnvironment
         app.launch()
 
         app.staticTexts["PaymentSheet"].tap()

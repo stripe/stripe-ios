@@ -1,23 +1,23 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_secret=pi_3Ue0QbFY0qyl6XeW0M1a2tsL_secret_E7BQ6ycTGHJ4ardLfMAC1WlVP&expand%5B0%5D=payment_method_preference\.payment_intent\.payment_method&locale=.*&mobile_app_id=.*&type=payment_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_secret=pi_3Ue4ZVFY0qyl6XeW0ow5oZ7U_secret_OieMqzXhl8cR19aVgvFQgSTNN&expand%5B0%5D=payment_method_preference\.payment_intent\.payment_method&locale=.*&mobile_app_id=.*&type=payment_intent$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=0Uq-oVGwLZbVVfQ3dx8y2PJatFrF41E6b65_2vdMe8dW47BW3DcOmTXwr2VJUGmyany1oVFactWWJKwB; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=yDdgnhp67wbmiHCWmyjsk0cNBHA-mPvlMt660dtHvwIDM01X_DwG7O_KabLIig7o_l1tHmptuuxiDzqv; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=0Uq-oVGwLZbVVfQ3dx8y2PJatFrF41E6b65_2vdMe8dW47BW3DcOmTXwr2VJUGmyany1oVFactWWJKwB&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=yDdgnhp67wbmiHCWmyjsk0cNBHA-mPvlMt660dtHvwIDM01X_DwG7O_KabLIig7o_l1tHmptuuxiDzqv&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=0Uq-oVGwLZbVVfQ3dx8y2PJatFrF41E6b65_2vdMe8dW47BW3DcOmTXwr2VJUGmyany1oVFactWWJKwB&t=1"}],"include_subdomains":true}
-request-id: req_HboP40yRBtq5jT
-Content-Length: 31160
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=yDdgnhp67wbmiHCWmyjsk0cNBHA-mPvlMt660dtHvwIDM01X_DwG7O_KabLIig7o_l1tHmptuuxiDzqv&t=1"}],"include_subdomains":true}
+request-id: req_axBvTQ0xeBIdh4
+Content-Length: 31220
 Vary: Origin
-Date: Fri, 20 Nov 2026 22:37:09 GMT
+Date: Sat, 21 Nov 2026 03:02:38 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -50,8 +50,8 @@ Content-Type: application/json
         "amount_tax" : 0
       },
       "payment_method" : null,
-      "client_secret" : "pi_3Ue0QbFY0qyl6XeW0M1a2tsL_secret_E7BQ6ycTGHJ4ardLfMAC1WlVP",
-      "id" : "pi_3Ue0QbFY0qyl6XeW0M1a2tsL",
+      "client_secret" : "pi_3Ue4ZVFY0qyl6XeW0ow5oZ7U_secret_OieMqzXhl8cR19aVgvFQgSTNN",
+      "id" : "pi_3Ue4ZVFY0qyl6XeW0ow5oZ7U",
       "allowed_payment_method_types" : null,
       "confirmation_method" : "automatic",
       "amount_details" : {
@@ -68,7 +68,7 @@ Content-Type: application/json
         "bancontact"
       ],
       "setup_future_usage" : null,
-      "created" : 1795214229,
+      "created" : 1795230157,
       "description" : null
     },
     "ordered_payment_method_types" : [
@@ -113,7 +113,7 @@ Content-Type: application/json
     "paypal_send_settlement_merchant_id" : true,
     "elements_us_bank_account_manual_entry_first" : false,
     "elements_extend_hcaptcha_refresh_time" : true,
-    "link_enable_hashed_normalized_referrer_path" : true,
+    "link_enable_hashed_normalized_referrer_path" : false,
     "ocs_buyer_xp_elements_remove_cpm_redirect_text" : false,
     "link_payment_element_steerage_enabled" : true,
     "link_enable_signup_element" : false,
@@ -295,10 +295,10 @@ Content-Type: application/json
   },
   "merchant_logo_url" : null,
   "merchant_of_record_country" : "US",
-  "session_id" : "elements_session_0Fu4wDywL4e",
+  "session_id" : "elements_session_0Ufyvpwoefl",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "019c3b67-3c3f-41cf-95a4-5aa5ff73c52b",
+  "config_id" : "b40e9f7b-8282-4d93-b4c2-9b5b2aade2cc",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -322,7 +322,7 @@ Content-Type: application/json
   "google_pay_preference" : "enabled",
   "merchant_country" : "US",
   "experiments_data" : {
-    "arb_id" : "1e8665ef-2654-4b98-92ba-b4e5afc48b75",
+    "arb_id" : "a08d0a0b-d2d0-4b13-9e3f-fe930317f899",
     "experiment_metadata" : {
       "seed" : "",
       "semi_dominant_payment_methods" : [
@@ -401,7 +401,7 @@ Content-Type: application/json
       "elements_instant_debits_returning_user_bank_add_incentive_steerage_ui_phase_2" : "control",
       "link_ce_conversion_ncdv_aa" : "control",
       "ff_elements_ewcs_gpay_billing_tax_android_eff" : "control",
-      "ff_elements_habanero_generic_decline_recovery_eff" : "control",
+      "ff_elements_habanero_generic_decline_recovery_eff" : "treatment",
       "link_pe_signup_copy_aa" : "control",
       "link_signup_element_show_email" : "control",
       "link_sign_up_form_container" : "control",
@@ -412,7 +412,7 @@ Content-Type: application/json
       "ff_elements_google_pay_js_android_eff" : "control",
       "ff_elements_pix_luxe_eff" : "control",
       "connections_fc_lite_vs_native" : "control",
-      "link_lpm_elements_klarna_powered_by_link_aa" : "control",
+      "link_lpm_elements_klarna_powered_by_link_aa" : "control_test",
       "link_pe_inline_recollection_aa" : "control",
       "ff_elements_swish_luxe_eff" : "control",
       "link_pe_signup_green_logo" : "control",
@@ -437,6 +437,7 @@ Content-Type: application/json
       "ff_elements_ewcs_integration_error_fatal_reclassification_eff" : "control",
       "ff_elements_pmme_session_on_behalf_of_eff" : "control",
       "ff_elements_destroy_autocomplete_frames_eff" : "control",
+      "ff_elements_update_errors_eff" : "control",
       "link_ulm_in_ece_hab_guac" : "control",
       "link_ab_test_aa" : "control",
       "link_growth_ncdv_phone" : "control",
@@ -464,7 +465,7 @@ Content-Type: application/json
       "ff_elements_skeleton_loader_delay_eff" : "treatment",
       "ff_elements_preserve_billing_address_on_async_update_eff" : "control",
       "link_ce_conversion_unrecognized_aa" : "control",
-      "ff_elements_closed_accordion_validation_eff" : "control",
+      "ff_elements_closed_accordion_validation_eff" : "treatment",
       "ff_elements_p24_luxe_eff" : "treatment",
       "ff_elements_territory_countries_eff" : "control",
       "ff_elements_kakao_pay_luxe_eff" : "control",

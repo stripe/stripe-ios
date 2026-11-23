@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_VfL9vCI6jNhOaX&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_VfPQxxtjHYVMca&type=card$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
@@ -14,10 +14,10 @@ Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=yjlLy2gDg50PmXIPK4lLmsG1krRkLetpO-h5aLoBMkTX9Twh4wbjHCCHuZRrlMZt2gLDf5QT6MctDsKr&t=1"}],"include_subdomains":true}
-request-id: req_1hfJhjyFGozujo
+request-id: req_4RcqIzmRSr01oc
 Content-Length: 1418
 Vary: Origin
-Date: Fri, 20 Nov 2026 22:39:24 GMT
+Date: Sat, 21 Nov 2026 03:05:05 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -30,7 +30,7 @@ Content-Type: application/json
   "data" : [
     {
       "object" : "payment_method",
-      "id" : "pm_1Ue0SkFY0qyl6XeWiXJBeReP",
+      "id" : "pm_1Ue4brFY0qyl6XeWg2PTCz1H",
       "billing_details" : {
         "email" : null,
         "phone" : null,
@@ -73,10 +73,10 @@ Content-Type: application/json
         "country" : "US"
       },
       "livemode" : false,
-      "created" : 1795214362,
+      "created" : 1795230304,
       "allow_redisplay" : "unspecified",
       "shared_payment_granted_token" : null,
-      "customer" : "cus_VfL9vCI6jNhOaX",
+      "customer" : "cus_VfPQxxtjHYVMca",
       "type" : "card",
       "customer_account" : null
     }

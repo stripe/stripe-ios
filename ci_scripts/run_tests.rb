@@ -321,11 +321,6 @@ end
 
 FileUtils.rm_rf(options[:result_bundle_path]) if File.exist?(options[:result_bundle_path])
 
-# xcodebuild passes TEST_RUNNER_<name> on to the tests as <name>; UI tests hand these to the app.
-%w[STRIPE_TEST_BACKENDS_URL].each do |name|
-  ENV["TEST_RUNNER_#{name}"] ||= ENV[name] if ENV[name]
-end
-
 puts "Running: #{cmd.shelljoin}"
 puts "Result bundle: #{options[:result_bundle_path]}"
 success = system(*cmd)

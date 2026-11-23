@@ -13,7 +13,6 @@ extension XCUIApplication {
     static func fc_launch(playgroundConfigurationString: String? = nil) -> XCUIApplication {
         var launchEnvironment: [String: String] = ["UITesting": "true"]
         launchEnvironment["UITesting_playground_configuration_string"] = playgroundConfigurationString
-        launchEnvironment.merge(TestBackend.launchEnvironment) { _, new in new }
 
         let app = XCUIApplication()
         app.launchEnvironment = launchEnvironment

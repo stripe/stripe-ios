@@ -7,7 +7,7 @@ import Foundation
 
 enum LinkControllerDemoBackendClient {
 
-    static let baseURL = TestBackend.linkControllerPreviewDemo.url
+    static let baseURL = URL(string: "https://stp-mobile-test-backends-764603794666.us-central1.run.app/link-controller-preview-demo")!
 
     // MARK: - Config
 

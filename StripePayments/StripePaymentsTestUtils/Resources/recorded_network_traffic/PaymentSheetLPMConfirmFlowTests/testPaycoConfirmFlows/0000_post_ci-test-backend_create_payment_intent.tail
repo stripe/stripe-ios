@@ -2,16 +2,15 @@ POST
 https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/ci-test-backend\/create_payment_intent$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 22:55:45 GMT
 Content-Length: 217
-Cache-Control: public, max-age=0, must-revalidate
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:21:45 GMT
 
 {
-  "secret" : "pi_3Ue0ibFY0qyl6XeW1g6GrgYX_secret_wsdJEYhAEe0d88gXmKWiurSoe",
+  "secret" : "pi_3Ue4s1FY0qyl6XeW0Ym2hTxf_secret_2IilvZJPD2AvOHSyNXaZXjN4t",
   "status" : "requires_payment_method",
   "publishable_key" : "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6",
-  "intent" : "pi_3Ue0ibFY0qyl6XeW1g6GrgYX"
+  "intent" : "pi_3Ue4s1FY0qyl6XeW0Ym2hTxf"
 }

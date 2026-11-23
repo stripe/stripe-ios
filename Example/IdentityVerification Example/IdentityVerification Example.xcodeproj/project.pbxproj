@@ -17,7 +17,6 @@
 		B45485CEA2574141EC53065D /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F40A0A5D85C7D664264EC323 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4E23C4986F186D1A7A0A88 /* StripeIdentity.framework */; };
 		FB0DCB24D8B0434C232A7A93 /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AAE76BD5531A138F256081C /* StripeCameraCore.framework */; };
-		204A6667197362C8143DAEE3 /* TestBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73F5CA69617216094313D10 /* TestBackends.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,7 +48,6 @@
 		B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IdentityVerification-Example-Debug.xcconfig"; sourceTree = "<group>"; };
 		D20308A69311D54E2EB58609 /* IdentityVerificationExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IdentityVerificationExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0C9C4772586EA5972B7154B /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
-		C73F5CA69617216094313D10 /* TestBackends.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestBackends.swift; path = ../Shared/TestBackends.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -95,7 +93,6 @@
 		35836DA0844EF12C1E67C993 = {
 			isa = PBXGroup;
 			children = (
-				C73F5CA69617216094313D10 /* TestBackends.swift */,
 				4177E03BD0438BCEBF890D73 /* Project */,
 				18C80FCB205DB85724EA25A7 /* Frameworks */,
 				EFBE3BC5674253803108D51C /* Products */,
@@ -250,7 +247,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				204A6667197362C8143DAEE3 /* TestBackends.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

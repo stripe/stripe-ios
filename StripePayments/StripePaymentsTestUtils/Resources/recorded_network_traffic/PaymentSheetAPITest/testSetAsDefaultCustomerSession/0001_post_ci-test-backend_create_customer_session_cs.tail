@@ -2,14 +2,13 @@ POST
 https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/ci-test-backend\/create_customer_session_cs$
 200
 application/json
-Server: Vercel
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 Content-Type: application/json
-Strict-Transport-Security: max-age=63072000
-Date: Fri, 20 Nov 2026 22:37:25 GMT
 Content-Length: 131
-Cache-Control: public, max-age=0, must-revalidate
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:02:54 GMT
 
 {
-  "customer_session_client_secret" : "cuss_secret_VfL7Y8f5qSUyrup0jtZw14GmMvqJmnRWixfGZe48iU1HiLk",
-  "customer" : "cus_VfL7bkJtNK9Pwl"
+  "customer_session_client_secret" : "cuss_secret_VfPOtXmboUv9OHMsqTXvnZ2ckQVc2KJKglyXofsJZlorvQk",
+  "customer" : "cus_VfPOXfifCETLPx"
 }

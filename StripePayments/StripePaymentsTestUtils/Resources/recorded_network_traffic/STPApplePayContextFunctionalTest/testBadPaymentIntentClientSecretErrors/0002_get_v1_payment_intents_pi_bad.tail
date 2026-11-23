@@ -3,21 +3,21 @@ https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_bad\?client_secret=pi_bad_se
 404
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=GmDn1jH2JKbK7_WndReQixQrQCuiUEdOg1T_e7ApqBnvI2cbgGi6RgTaEeEbyAFqQ9bJ8yJag4PkL8yE; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QhothjnBrugZj7lq7taa8YDdfgPUZvSWKBx6B9Xialebnmh4ugGrUqNmL6YIQ1q8ECSR6a8R_LmfxYTc; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=GmDn1jH2JKbK7_WndReQixQrQCuiUEdOg1T_e7ApqBnvI2cbgGi6RgTaEeEbyAFqQ9bJ8yJag4PkL8yE&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=QhothjnBrugZj7lq7taa8YDdfgPUZvSWKBx6B9Xialebnmh4ugGrUqNmL6YIQ1q8ECSR6a8R_LmfxYTc&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=GmDn1jH2JKbK7_WndReQixQrQCuiUEdOg1T_e7ApqBnvI2cbgGi6RgTaEeEbyAFqQ9bJ8yJag4PkL8yE&t=1"}],"include_subdomains":true}
-request-id: req_6Cxx0RrRxIDPrP
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=QhothjnBrugZj7lq7taa8YDdfgPUZvSWKBx6B9Xialebnmh4ugGrUqNmL6YIQ1q8ECSR6a8R_LmfxYTc&t=1"}],"include_subdomains":true}
+request-id: req_bsPSUSJ35qbwMr
 Content-Length: 357
 Vary: Origin
-Date: Fri, 20 Nov 2026 22:33:50 GMT
+Date: Sat, 21 Nov 2026 02:59:06 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -30,7 +30,7 @@ Content-Language: en-us
     "code" : "resource_missing",
     "message" : "No such payment_intent: 'pi_bad'",
     "param" : "intent",
-    "request_log_url" : "https:\/\/dashboard.stripe.com\/acct_1G6m1pFY0qyl6XeW\/test\/workbench\/logs?object=req_6Cxx0RrRxIDPrP",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/acct_1G6m1pFY0qyl6XeW\/test\/workbench\/logs?object=req_bsPSUSJ35qbwMr",
     "type" : "invalid_request_error",
     "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/resource-missing"
   }

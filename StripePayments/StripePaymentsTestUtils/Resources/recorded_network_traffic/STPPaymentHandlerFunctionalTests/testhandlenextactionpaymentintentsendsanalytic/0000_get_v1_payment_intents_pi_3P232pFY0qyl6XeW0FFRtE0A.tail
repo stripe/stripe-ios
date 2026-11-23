@@ -3,21 +3,21 @@ https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3P232pFY0qyl6XeW0FFRtE0A\?cl
 400
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=5CICDlgysAvHBwJ-BfcleJXZy7hxr9gjVHy3wbO083a9BSxcAVRq7dw8LoVgGfT_qekCqx4sFyl4tNSX; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=OX1bJ3t_aU3MTrfMB9Nf7_i-oV7WkcMOELxayttowaQjMsxQI9A0y54gBDNGj4MS0DmVS0EBHWD3ISrO; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=5CICDlgysAvHBwJ-BfcleJXZy7hxr9gjVHy3wbO083a9BSxcAVRq7dw8LoVgGfT_qekCqx4sFyl4tNSX&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=OX1bJ3t_aU3MTrfMB9Nf7_i-oV7WkcMOELxayttowaQjMsxQI9A0y54gBDNGj4MS0DmVS0EBHWD3ISrO&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=5CICDlgysAvHBwJ-BfcleJXZy7hxr9gjVHy3wbO083a9BSxcAVRq7dw8LoVgGfT_qekCqx4sFyl4tNSX&t=1"}],"include_subdomains":true}
-request-id: req_8EAKf0arX1rNN0
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=OX1bJ3t_aU3MTrfMB9Nf7_i-oV7WkcMOELxayttowaQjMsxQI9A0y54gBDNGj4MS0DmVS0EBHWD3ISrO&t=1"}],"include_subdomains":true}
+request-id: req_umj8hv1aQvwHFB
 Content-Length: 458
 Vary: Origin
-Date: Fri, 20 Nov 2026 22:34:08 GMT
+Date: Sat, 21 Nov 2026 02:59:25 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -30,7 +30,7 @@ Content-Language: en-us
     "code" : "payment_intent_invalid_parameter",
     "message" : "The client_secret provided does not match the client_secret associated with the PaymentIntent.",
     "param" : "client_secret",
-    "request_log_url" : "https:\/\/dashboard.stripe.com\/acct_1G6m1pFY0qyl6XeW\/test\/workbench\/logs?object=req_8EAKf0arX1rNN0",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/acct_1G6m1pFY0qyl6XeW\/test\/workbench\/logs?object=req_umj8hv1aQvwHFB",
     "type" : "invalid_request_error",
     "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/payment-intent-invalid-parameter"
   }

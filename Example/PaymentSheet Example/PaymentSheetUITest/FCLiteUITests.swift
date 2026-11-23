@@ -16,7 +16,6 @@ class FCLiteUITests: XCTestCase {
         try super.setUpWithError()
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchEnvironment = TestBackend.launchEnvironment
     }
 
     func testFCLiteInitialPaneAndDismiss() throws {
