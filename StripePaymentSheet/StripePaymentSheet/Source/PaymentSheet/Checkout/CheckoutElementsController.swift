@@ -245,22 +245,6 @@ public final class CheckoutElementsController: ObservableObject {
         LinkAccountContext.shared.resetCustomer()
     }
 
-    // MARK: - Promotion Codes
-
-    /// Use this method to apply a promotion code that your customer enters.
-    public func applyPromotionCode(_ promotionCode: String) async throws {
-        try await analyticsHelper.track(.applyPromotionCode, checkout: self) {
-            try await performQueuedUpdate(.setPromotionCode(promotionCode))
-        }
-    }
-
-    /// Use this method to remove the currently applied promotion code, if applicable.
-    public func removePromotionCode() async throws {
-        try await analyticsHelper.track(.removePromotionCode, checkout: self) {
-            try await performQueuedUpdate(.setPromotionCode(""))
-        }
-    }
-
     // MARK: - Payment Option
 
     /// Clears the currently selected payment option.
@@ -503,6 +487,26 @@ public final class CheckoutElementsController: ObservableObject {
         case canceled
         /// Confirmation failed with an error.
         case failed(Error)
+    }
+}
+
+// MARK: - Promotion Codes
+
+// Not yet supported in CheckoutSessionPreview; exposed only to the React Native SDK.
+@_spi(ReactNativeSDK)
+extension CheckoutElementsController {
+    /// Use this method to apply a promotion code that your customer enters.
+    public func applyPromotionCode(_ promotionCode: String) async throws {
+        try await analyticsHelper.track(.applyPromotionCode, checkout: self) {
+            try await performQueuedUpdate(.setPromotionCode(promotionCode))
+        }
+    }
+
+    /// Use this method to remove the currently applied promotion code, if applicable.
+    public func removePromotionCode() async throws {
+        try await analyticsHelper.track(.removePromotionCode, checkout: self) {
+            try await performQueuedUpdate(.setPromotionCode(""))
+        }
     }
 }
 
