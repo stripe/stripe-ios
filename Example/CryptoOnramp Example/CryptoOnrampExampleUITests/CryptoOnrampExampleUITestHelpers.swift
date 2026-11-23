@@ -285,8 +285,16 @@ extension CryptoOnrampExampleUITestCase {
     private func dismissSavePasswordPromptIfPresent() {
         let safariViewService = XCUIApplication(bundleIdentifier: "com.apple.SafariViewService")
         let notNowButton = safariViewService.sheets["Save Password?"].buttons["Not Now"].firstMatch
-        // On a freshly booted simulator the password sheet can appear several seconds after registration loads.
-        if notNowButton.waitForExistence(timeout: 15) {
+        // The service may start late or have no accessible window when iOS doesn't offer to save the password.
+        let prompt = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            switch safariViewService.state {
+            case .runningForeground, .runningBackground:
+                return (try? notNowButton.snapshot()) != nil
+            default:
+                return false
+            }
+        }, object: nil)
+        if XCTWaiter.wait(for: [prompt], timeout: .animationTimeout) == .completed {
             notNowButton.tap()
         }
     }
