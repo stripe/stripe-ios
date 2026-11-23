@@ -3,7 +3,7 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 

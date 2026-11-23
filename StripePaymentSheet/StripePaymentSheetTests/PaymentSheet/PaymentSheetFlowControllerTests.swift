@@ -7,7 +7,7 @@
 
 @_spi(InternalOnlyAPI) @testable import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
@@ -280,7 +280,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             }
         )
 
-        let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, configuration: configuration)!
+        let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, confirmHandler: configuration.externalPaymentMethodConfirmHandler)!
         let billingDetails = STPPaymentMethodBillingDetails()
 
         let paymentOption = PaymentSheet.PaymentOption.external(paymentMethod: externalPaymentOption, billingDetails: billingDetails)

@@ -3,24 +3,8 @@ GEM
   specs:
     CFPropertyList (3.0.8)
     abbrev (0.1.2)
-    activesupport (7.1.6)
-      base64
-      benchmark (>= 0.3)
-      bigdecimal
-      concurrent-ruby (~> 1.0, >= 1.0.2)
-      connection_pool (>= 2.2.5)
-      drb
-      i18n (>= 1.6, < 2)
-      logger (>= 1.4.2)
-      minitest (>= 5.1)
-      mutex_m
-      securerandom (>= 0.3)
-      tzinfo (~> 2.0)
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
-    algoliasearch (1.27.5)
-      httpclient (~> 2.8, >= 2.8.3)
-      json (>= 1.5.1)
     artifactory (3.0.17)
     atomos (0.1.3)
     aws-eventstream (1.4.0)
@@ -47,64 +31,19 @@ GEM
     benchmark (0.5.0)
     bigdecimal (4.1.2)
     claide (1.1.0)
-    cocoapods (1.16.2)
-      addressable (~> 2.8)
-      claide (>= 1.0.2, < 2.0)
-      cocoapods-core (= 1.16.2)
-      cocoapods-deintegrate (>= 1.0.3, < 2.0)
-      cocoapods-downloader (>= 2.1, < 3.0)
-      cocoapods-plugins (>= 1.0.0, < 2.0)
-      cocoapods-search (>= 1.0.0, < 2.0)
-      cocoapods-trunk (>= 1.6.0, < 2.0)
-      cocoapods-try (>= 1.1.0, < 2.0)
-      colored2 (~> 3.1)
-      escape (~> 0.0.4)
-      fourflusher (>= 2.3.0, < 3.0)
-      gh_inspector (~> 1.0)
-      molinillo (~> 0.8.0)
-      nap (~> 1.0)
-      ruby-macho (>= 2.3.0, < 3.0)
-      xcodeproj (>= 1.27.0, < 2.0)
-    cocoapods-core (1.16.2)
-      activesupport (>= 5.0, < 8)
-      addressable (~> 2.8)
-      algoliasearch (~> 1.0)
-      concurrent-ruby (~> 1.1)
-      fuzzy_match (~> 2.0.4)
-      nap (~> 1.0)
-      netrc (~> 0.11)
-      public_suffix (~> 4.0)
-      typhoeus (~> 1.0)
-    cocoapods-deintegrate (1.0.5)
-    cocoapods-downloader (2.1)
-    cocoapods-plugins (1.0.0)
-      nap
-    cocoapods-search (1.0.1)
-    cocoapods-trunk (1.6.0)
-      nap (>= 0.8, < 2.0)
-      netrc (~> 0.11)
-    cocoapods-try (1.2.0)
     colored (1.2)
     colored2 (3.1.2)
     colorize (1.1.0)
     commander (4.6.0)
       highline (~> 2.0.0)
-    concurrent-ruby (1.3.6)
-    connection_pool (2.5.5)
     csv (3.3.5)
-    date (3.5.1)
     declarative (0.0.20)
     digest-crc (0.7.0)
       rake (>= 12.0.0, < 14.0.0)
     domain_name (0.6.20240107)
     dotenv (2.8.1)
     dotstrings (0.6.0)
-    drb (2.2.3)
     emoji_regex (3.2.3)
-    escape (0.0.4)
-    ethon (0.18.0)
-      ffi (>= 1.15.0)
-      logger
     excon (0.112.0)
     faraday (1.10.5)
       faraday-em_http (~> 1.0)
@@ -187,9 +126,6 @@ GEM
       xcpretty (~> 0.4.1)
       xcpretty-travis-formatter (>= 0.0.3, < 2.0.0)
     fastlane-sirp (1.1.0)
-    ffi (1.17.4)
-    fourflusher (2.3.1)
-    fuzzy_match (2.0.4)
     gh_inspector (1.1.3)
     google-apis-androidpublisher_v3 (0.102.0)
       google-apis-core (>= 0.15.0, < 2.a)
@@ -241,19 +177,11 @@ GEM
       multi_xml (>= 0.5.2)
     httpclient (2.9.0)
       mutex_m
-    i18n (1.14.8)
-      concurrent-ruby (~> 1.0)
     jmespath (1.6.2)
     json (2.19.9)
     jwt (3.2.0)
       base64
     logger (1.7.0)
-    mail (2.9.0)
-      logger
-      mini_mime (>= 0.1.1)
-      net-imap
-      net-pop
-      net-smtp
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
@@ -261,25 +189,13 @@ GEM
     mini_magick (4.13.2)
     mini_mime (1.1.5)
     minitest (5.26.1)
-    molinillo (0.8.0)
     multi_json (1.21.1)
     multi_xml (0.6.0)
     multipart-post (2.4.1)
     mutex_m (0.3.0)
     nanaimo (0.4.0)
-    nap (1.1.0)
     naturally (2.3.0)
-    net-imap (0.3.10)
-      date
-      net-protocol
-    net-pop (0.1.2)
-      net-protocol
-    net-protocol (0.2.2)
-      timeout
-    net-smtp (0.5.1)
-      net-protocol
     net-ssh (7.3.2)
-    netrc (0.11.0)
     nkf (0.3.0)
     octokit (4.25.1)
       faraday (>= 1, < 3)
@@ -298,13 +214,11 @@ GEM
     retriable (3.8.0)
     rexml (3.4.4)
     rouge (3.28.0)
-    ruby-macho (2.5.1)
     ruby2_keywords (0.0.5)
     rubyzip (2.4.1)
     sawyer (0.9.3)
       addressable (>= 2.3.5)
       faraday (>= 0.17.3, < 3)
-    securerandom (0.3.2)
     security (0.1.5)
     signet (0.22.0)
       addressable (~> 2.8)
@@ -316,16 +230,11 @@ GEM
     terminal-notifier (2.0.0)
     terminal-table (3.0.2)
       unicode-display_width (>= 1.1.1, < 3)
-    timeout (0.6.1)
     trailblazer-option (0.1.2)
     tty-cursor (0.7.1)
     tty-screen (0.8.2)
     tty-spinner (0.9.3)
       tty-cursor (~> 0.7)
-    typhoeus (1.6.0)
-      ethon (>= 0.18.0)
-    tzinfo (2.0.6)
-      concurrent-ruby (~> 1.0)
     uber (0.1.0)
     unicode-display_width (2.6.0)
     word_wrap (1.0.0)
@@ -350,13 +259,12 @@ PLATFORMS
 DEPENDENCIES
   CFPropertyList
   abbrev
-  cocoapods
   colorize
   dotstrings
   fastlane
   httparty
-  mail
   mime-types
+  minitest
   net-ssh
   octokit (~> 4.25.1)
   plist

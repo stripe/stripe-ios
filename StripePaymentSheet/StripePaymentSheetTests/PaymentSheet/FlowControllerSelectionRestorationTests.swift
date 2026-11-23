@@ -8,7 +8,7 @@
 @testable @_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
@@ -102,7 +102,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             externalPaymentMethodConfirmHandler: { _, _ in .completed }
         )
         let externalPaymentOption = try XCTUnwrap(
-            ExternalPaymentOption.from(externalPaymentMethod, configuration: externalConfiguration)
+            ExternalPaymentOption.from(externalPaymentMethod, confirmHandler: externalConfiguration.externalPaymentMethodConfirmHandler)
         )
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Jane Doe"
@@ -166,7 +166,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
 
         let firstClose = present(flowController, expectedDidCancel: false)
         try tapRow(.new(paymentMethodType: .instantDebits), in: viewController)
-        let linkedBank = makeLinkedBank()
+        let linkedBank = InstantDebitsLinkedBank._testValue()
         let bankForm = try XCTUnwrap(viewController.formCache[.instantDebits] as? InstantDebitsPaymentMethodElement)
         bankForm.setLinkedBank(linkedBank)
         flowController.flowControllerViewControllerShouldClose(viewController, didCancel: false)
@@ -190,7 +190,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
 
     func testHorizontalRebuildRestoresSelectedBank() throws {
         // Given a completed Instant Debits selection that must be restored
-        let linkedBank = makeLinkedBank()
+        let linkedBank = InstantDebitsLinkedBank._testValue()
         let confirmParams = IntentConfirmParams(type: .instantDebits)
         confirmParams.instantDebitsLinkedBank = linkedBank
         let paymentMethod = try XCTUnwrap(linkedBank.paymentMethod.decode())
@@ -351,22 +351,6 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: orientation,
             customerProvider: customerProvider
-        )
-    }
-
-    private func makeLinkedBank() -> InstantDebitsLinkedBank {
-        let paymentMethod = STPPaymentMethod._testUSBankAccount()
-        var linkBankPaymentMethod = LinkBankPaymentMethod(id: paymentMethod.stripeId)
-        linkBankPaymentMethod._allResponseFieldsStorage = NonEncodableParameters(
-            storage: paymentMethod.allResponseFields as? [String: Any] ?? [:]
-        )
-        return InstantDebitsLinkedBank(
-            paymentMethod: linkBankPaymentMethod,
-            bankName: "StripeBank",
-            last4: "6789",
-            linkMode: .linkPaymentMethod,
-            incentiveEligible: false,
-            linkAccountSessionId: "fcsess_123"
         )
     }
 

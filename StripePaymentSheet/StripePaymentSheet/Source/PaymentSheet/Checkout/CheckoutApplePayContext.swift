@@ -160,7 +160,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,
                     paymentMethodOptions: nil,
                     clientAttributionMetadata: clientAttributionMetadata,
-                    collectedInformation: .init(email: checkoutSession.localState.email)
+                    collectedInformation: .init(email: checkoutSession.localState.email),
+                    passiveCaptchaToken: nil
                 )
                 let result = await self.confirmationHandler(requestParameters)
                 switch result {

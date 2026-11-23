@@ -7,8 +7,8 @@
 
 import Foundation
 
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController.Session {
     /// The tax computation status for a checkout session.
     public struct Tax: Sendable, Hashable {

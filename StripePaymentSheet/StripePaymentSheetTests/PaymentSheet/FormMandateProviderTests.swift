@@ -25,11 +25,19 @@ class FormMandateProviderTests: XCTestCase {
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let formMandateProvider = VerticalListMandateProvider(configuration: embeddedConfiguration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
+        let formMandateProvider = VerticalListMandateProvider(
+            configuration: embeddedConfiguration,
+            elementsSession: elementsSession,
+            intent: intent,
+            analyticsHelper: ._testValue(),
+            shouldShowForm: {
+                EmbeddedPaymentElement.shouldShowForm($0, configuration: embeddedConfiguration)
+            }
+        )
 
         let result = formMandateProvider.mandate(for: .stripe(.card), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
         XCTAssertNil(result)
@@ -39,7 +47,7 @@ class FormMandateProviderTests: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -55,7 +63,7 @@ class FormMandateProviderTests: XCTestCase {
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["us_bank_account"])
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -73,7 +81,7 @@ class FormMandateProviderTests: XCTestCase {
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["sepa_debit"])
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "eur"),
+            mode: .payment(amount: 1000, currency: "eur", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -91,7 +99,7 @@ class FormMandateProviderTests: XCTestCase {
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -109,7 +117,7 @@ class FormMandateProviderTests: XCTestCase {
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["us_bank_account"])
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -143,7 +151,7 @@ class FormMandateProviderTests: XCTestCase {
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
+            mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession, captureMethod: .automatic),
             confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -160,7 +168,7 @@ class FormMandateProviderTests: XCTestCase {
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 100, currency: "USD"),
+            mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)

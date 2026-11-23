@@ -5,8 +5,8 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController.Session {
     /// Shipping address of the customer.
     public struct ShippingAddress: Equatable, Hashable, Sendable {
