@@ -10,7 +10,7 @@ import SafariServices
 @testable@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
@@ -2149,6 +2149,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             case .link(let confirmOption):
                 let parameters = CheckoutElementsController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
+                    canContinueWithoutLink: true,
                     configuration: configuration,
                     returnURL: returnURL,
                     nativeSheetPresentation: nil,
@@ -2215,6 +2216,21 @@ private class STPTestPKPaymentAuthorizationController: PKPaymentAuthorizationCon
 // MARK: - IntentConfirmParams
 
 extension PaymentSheetLPMConfirmFlowTests {
+    func testIntentConfirmParamsEquatable_linkSignupInteraction() {
+        // Given params with matching checkbox interaction history
+        let lhs = IntentConfirmParams(type: .stripe(.card))
+        let rhs = IntentConfirmParams(type: .stripe(.card))
+        XCTAssertEqual(lhs, rhs)
+
+        // When only one records customer interaction
+        lhs.linkInlineSignupDidInteractWithSaveCheckbox = true
+
+        // Then they differ until both record that interaction
+        XCTAssertNotEqual(lhs, rhs)
+        rhs.linkInlineSignupDidInteractWithSaveCheckbox = true
+        XCTAssertEqual(lhs, rhs)
+    }
+
     func testIntentConfirmParamsEquatable() {
         let lhs = IntentConfirmParams(type: .stripe(.card))
         let rhs = IntentConfirmParams(type: .stripe(.card))
@@ -2261,6 +2277,11 @@ extension IntentConfirmParams: Equatable {
             return false
         }
 
+        if lhs.linkInlineSignupDidInteractWithSaveCheckbox != rhs.linkInlineSignupDidInteractWithSaveCheckbox {
+            print("Link inline signup checkbox interaction states not equal: \(lhs.linkInlineSignupDidInteractWithSaveCheckbox) vs \(rhs.linkInlineSignupDidInteractWithSaveCheckbox)")
+            return false
+        }
+
         if lhs.financialConnectionsLinkedBank != rhs.financialConnectionsLinkedBank {
             print("Financial connections linked banks not equal: \(lhs.financialConnectionsLinkedBank.debugDescription) vs \(rhs.financialConnectionsLinkedBank.debugDescription)")
             return false
@@ -2274,7 +2295,7 @@ extension IntentConfirmParams: Equatable {
         // Sanity check to make sure when we add new properties, we check them here
         let mirror = Mirror(reflecting: lhs)
         let propertyCount = mirror.children.count
-        XCTAssertEqual(propertyCount, 9)
+        XCTAssertEqual(propertyCount, 10)
 
         return true
     }

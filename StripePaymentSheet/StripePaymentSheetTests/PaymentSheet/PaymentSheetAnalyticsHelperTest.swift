@@ -8,7 +8,7 @@
 @testable@_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI)@testable import StripeCoreTestUtils
 @_spi(InternalOnlyAPI)@testable import StripePayments
-@testable @_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(SharedPaymentToken) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI)@testable import StripePaymentsTestUtils
 import XCTest
 

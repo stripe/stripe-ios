@@ -7,7 +7,7 @@
 //
 
 @testable @_spi(InternalOnlyAPI) import StripeCore
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import XCTest
 
 @MainActor

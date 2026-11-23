@@ -10,7 +10,7 @@ import XCTest
 
 @testable@_spi(InternalOnlyAPI) import StripeCore
 @testable@_spi(InternalOnlyAPI) import StripePayments
-@testable@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable@_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePaymentsUI
 @testable@_spi(InternalOnlyAPI) import StripeUICore
@@ -2401,7 +2401,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     }
 
-    private func makeCardFormWithLinkDefaultOptIn(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
+    private func makeCardFormWithLinkSignup(previousCustomerInput: IntentConfirmParams?, signupOptInFeatureEnabled: Bool = false) -> PaymentMethodElement {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.address = .never
         return PaymentSheetFormFactory(
@@ -2410,6 +2410,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethodOrientation: .horizontal,
             previousCustomerInput: previousCustomerInput,
             showLinkInlineCardSignup: true,
+            linkAccount: signupOptInFeatureEnabled ? ._testValue(email: "user@example.com", isRegistered: false) : nil,
             accountService: LinkAccountService._testValue(),
             isPaymentIntent: true,
             collectsTaxFromBillingAddress: false,
@@ -2417,6 +2418,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             countryCode: "US",
             savePaymentMethodConsentBehavior: .legacy,
             allowsLinkDefaultOptIn: true,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            signupOptInInitialValue: true,
             analyticsHelper: ._testValue(),
             paymentMethodIncentive: nil
         ).makeCard()
@@ -2424,7 +2427,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testAppliesPreviousCustomerInput_linkSignupCheckbox_optOut() throws {
         // Given a completed card form where Link signup defaults to checked
-        let form = makeCardFormWithLinkDefaultOptIn(previousCustomerInput: IntentConfirmParams(params: ._testCardValue(), type: .stripe(.card)))
+        let form = makeCardFormWithLinkSignup(previousCustomerInput: IntentConfirmParams(params: ._testCardValue(), type: .stripe(.card)))
         let signup: LinkInlineSignupElement = try XCTUnwrap(form.getElement())
         XCTAssertTrue(signup.isChecked)
         // ...and the customer unchecks it
@@ -2433,7 +2436,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(params.linkInlineSignupCheckboxState, .deselected)
 
         // When the form is rebuilt from that input, e.g. after a session update
-        let restoredForm = makeCardFormWithLinkDefaultOptIn(previousCustomerInput: params)
+        let restoredForm = makeCardFormWithLinkSignup(previousCustomerInput: params)
         let restoredSignup: LinkInlineSignupElement = try XCTUnwrap(restoredForm.getElement())
 
         // Then the opt-out is preserved and the card remains complete without an email
@@ -2444,16 +2447,56 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testAppliesPreviousCustomerInput_linkSignupCheckbox_optIn() throws {
         // Given a completed card form where the customer left Link signup checked
-        let form = makeCardFormWithLinkDefaultOptIn(previousCustomerInput: IntentConfirmParams(params: ._testCardValue(), type: .stripe(.card)))
+        let form = makeCardFormWithLinkSignup(previousCustomerInput: IntentConfirmParams(params: ._testCardValue(), type: .stripe(.card)))
         let params = try XCTUnwrap(form.updateParams(params: IntentConfirmParams(type: .stripe(.card))))
         XCTAssertEqual(params.linkInlineSignupCheckboxState, .selected)
 
         // When the form is rebuilt from that input without a previous Link signup action, as Embedded does
-        let restoredForm = makeCardFormWithLinkDefaultOptIn(previousCustomerInput: params)
+        let restoredForm = makeCardFormWithLinkSignup(previousCustomerInput: params)
         let restoredSignup: LinkInlineSignupElement = try XCTUnwrap(restoredForm.getElement())
 
         // Then the opt-in is preserved
         XCTAssertTrue(restoredSignup.isChecked)
+    }
+
+    func testAppliesPreviousCustomerInput_linkSignupConsent_rechecked() throws {
+        // Given a prechecked signup opt-in that the customer unchecks and re-checks
+        let form = makeCardFormWithLinkSignup(previousCustomerInput: IntentConfirmParams(params: ._testCardValue(), type: .stripe(.card)), signupOptInFeatureEnabled: true)
+        let signup: LinkInlineSignupElement = try XCTUnwrap(form.getElement())
+        XCTAssertEqual(signup.viewModel.mode, .signupOptIn)
+        XCTAssertTrue(signup.isChecked)
+        signup.viewModel.saveCheckboxChecked = false
+        signup.viewModel.saveCheckboxChecked = true
+        XCTAssertEqual(signup.viewModel.consentAction, .sign_up_opt_in_mobile_checked)
+        var params = try XCTUnwrap(form.updateParams(params: IntentConfirmParams(type: .stripe(.card))))
+
+        // When the form is rebuilt repeatedly from its params
+        for _ in 0..<2 {
+            let restoredForm = makeCardFormWithLinkSignup(previousCustomerInput: params, signupOptInFeatureEnabled: true)
+            let restoredSignup: LinkInlineSignupElement = try XCTUnwrap(restoredForm.getElement())
+
+            // Then the checkbox and active consent are preserved
+            XCTAssertTrue(restoredSignup.isChecked)
+            XCTAssertEqual(restoredSignup.viewModel.consentAction, .sign_up_opt_in_mobile_checked)
+            params = try XCTUnwrap(restoredForm.updateParams(params: IntentConfirmParams(type: .stripe(.card))))
+        }
+    }
+
+    func testAppliesPreviousCustomerInput_linkSignupConsent_prechecked() throws {
+        // Given a prechecked signup opt-in that the customer leaves untouched
+        let form = makeCardFormWithLinkSignup(previousCustomerInput: IntentConfirmParams(params: ._testCardValue(), type: .stripe(.card)), signupOptInFeatureEnabled: true)
+        let signup: LinkInlineSignupElement = try XCTUnwrap(form.getElement())
+        XCTAssertEqual(signup.viewModel.mode, .signupOptIn)
+        XCTAssertEqual(signup.viewModel.consentAction, .sign_up_opt_in_mobile_prechecked)
+        let params = try XCTUnwrap(form.updateParams(params: IntentConfirmParams(type: .stripe(.card))))
+
+        // When the form is rebuilt from its params
+        let restoredForm = makeCardFormWithLinkSignup(previousCustomerInput: params, signupOptInFeatureEnabled: true)
+        let restoredSignup: LinkInlineSignupElement = try XCTUnwrap(restoredForm.getElement())
+
+        // Then restoration preserves passive consent without treating it as customer interaction
+        XCTAssertTrue(restoredSignup.isChecked)
+        XCTAssertEqual(restoredSignup.viewModel.consentAction, .sign_up_opt_in_mobile_prechecked)
     }
 
     func testAppliesPreviousCustomerInput_for_different_payment_method_type() {

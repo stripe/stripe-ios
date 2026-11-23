@@ -5,7 +5,7 @@
 //  Created by George Birch on 8/4/26.
 
 @_spi(InternalOnlyAPI) @testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import UIKit
 import XCTest
 
