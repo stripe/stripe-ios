@@ -10,16 +10,16 @@ import WebKit
 ///
 /// A window becomes a sheet only if the component's web view opened it from a frame on the Connect.js origin and
 /// its URL is an accessory layer page on that origin. A sheet is shown only once Connect.js reports its height with
-/// `sheetChanged`, and Connect.js hears `sheetClosed` whenever a shown sheet goes away. Connect.js decides when
-/// windows close, so a window it never reports stays hidden until it closes or the component's document goes away.
+/// `sheetChanged`, and Connect.js hears `sheetClosed` whenever a shown sheet goes away. A sheet Connect.js marks as
+/// not dismissible springs back from swipes and outside taps, which send `sheetCloseRequested` instead. Connect.js
+/// decides when windows close, so a window it never reports stays hidden until it closes or the component's
+/// document goes away.
 final class InlineSheetCoordinator {
     fileprivate enum State {
         /// Laid out off screen so Connect.js can draw and measure its dialog, but not shown
         case pending
         /// Shown to the user
         case showing
-        /// Dismissed by the user or the app. The window stays loaded in case its dialog stays open.
-        case hidden
     }
 
     fileprivate final class Sheet {
@@ -35,6 +35,7 @@ final class InlineSheetCoordinator {
     private weak var componentWebView: WKWebView?
     private let componentURL: URL
     private let sendSheetClosed: (String) -> Void
+    private let sendSheetCloseRequested: (String) -> Void
     private let openWindow: (WKWebViewConfiguration, WKNavigationAction) -> WKWebView?
     private var sheets: [String: Sheet] = [:]
 
@@ -49,12 +50,14 @@ final class InlineSheetCoordinator {
          componentURL: URL,
          backgroundColor: UIColor,
          sendSheetClosed: @escaping (String) -> Void,
+         sendSheetCloseRequested: @escaping (String) -> Void,
          openWindow: @escaping (WKWebViewConfiguration, WKNavigationAction) -> WKWebView?) {
         self.host = host
         self.componentWebView = componentWebView
         self.componentURL = componentURL
         self.backgroundColor = backgroundColor
         self.sendSheetClosed = sendSheetClosed
+        self.sendSheetCloseRequested = sendSheetCloseRequested
         self.openWindow = openWindow
     }
 
@@ -91,6 +94,7 @@ final class InlineSheetCoordinator {
             backgroundColor: backgroundColor
         )
         controller.didDismiss = { [weak self] in self?.sheetDidDismiss($0) }
+        controller.didRequestClose = { [weak self] in self?.sheetDidRequestClose($0) }
         controller.didCloseWindow = { [weak self] in self?.windowDidClose($0) }
         controller.openWindow = openWindow
         sheets[sheetId] = Sheet(controller: controller)
@@ -98,11 +102,11 @@ final class InlineSheetCoordinator {
         return controller.webView
     }
 
-    /// Shows a sheet at `height` points, including one the user closed whose dialog stayed open
-    func sheetDidChange(sheetId: String, height: CGFloat) {
+    /// Shows a sheet the first time Connect.js reports it, then resizes it and updates whether it's dismissible
+    func sheetDidChange(sheetId: String, height: CGFloat, dismissible: Bool) {
         guard let sheet = sheets[sheetId] else { return }
-        sheet.controller.updateContentHeight(height)
-        if sheet.state != .showing {
+        sheet.controller.update(contentHeight: height, dismissible: dismissible)
+        if sheet.state == .pending {
             present(sheet)
         }
     }
@@ -149,9 +153,7 @@ private extension InlineSheetCoordinator {
 
     func present(_ sheet: Sheet) {
         guard let host else { return }
-        if sheet.state == .pending {
-            unstage(sheet.controller)
-        }
+        unstage(sheet.controller)
         sheet.state = .showing
         sheet.controller.prepareForPresentation()
         Self.topmostPresenter(from: host).present(sheet.controller, animated: true)
@@ -163,8 +165,18 @@ private extension InlineSheetCoordinator {
               sheet.state == .showing else {
             return
         }
-        sheet.state = .hidden
+        sheets[controller.sheetId] = nil
+        release(sheet)
         sendSheetClosed(controller.sheetId)
+    }
+
+    func sheetDidRequestClose(_ controller: InlineSheetViewController) {
+        guard let sheet = sheets[controller.sheetId],
+              sheet.controller === controller,
+              sheet.state == .showing else {
+            return
+        }
+        sendSheetCloseRequested(controller.sheetId)
     }
 
     func windowDidClose(_ controller: InlineSheetViewController) {
@@ -183,6 +195,7 @@ private extension InlineSheetCoordinator {
             unstage(sheet.controller)
         }
         sheet.controller.didDismiss = nil
+        sheet.controller.didRequestClose = nil
         sheet.controller.didCloseWindow = nil
         sheet.controller.openWindow = nil
         sheet.controller.webView.stopLoading()

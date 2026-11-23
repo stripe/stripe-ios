@@ -137,6 +137,9 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                 sendSheetClosed: { [weak self] sheetId in
                     self?.sendMessage(SheetClosedSender(payload: .init(sheetId: sheetId)))
                 },
+                sendSheetCloseRequested: { [weak self] sheetId in
+                    self?.sendMessage(SheetCloseRequestedSender(payload: .init(sheetId: sheetId)))
+                },
                 openWindow: { [weak self] configuration, navigationAction in
                     guard let self else { return nil }
                     // Today's link handling, so windows a sheet opens never become sheets.
@@ -509,7 +512,7 @@ private extension ConnectComponentWebViewController {
                   let height = InlineContract.clampedHeight(payload.height) else {
                 return
             }
-            self?.inlineSheets?.sheetDidChange(sheetId: payload.sheetId, height: height)
+            self?.inlineSheets?.sheetDidChange(sheetId: payload.sheetId, height: height, dismissible: payload.dismissible ?? true)
         })
     }
 

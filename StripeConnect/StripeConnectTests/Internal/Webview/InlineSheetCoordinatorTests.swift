@@ -13,7 +13,8 @@ import XCTest
 final class InlineSheetCoordinatorTests: XCTestCase {
     private var window: UIWindow!
     private var controller: InlineSheetHostController!
-    private var sheetClosedRecorder: SheetClosedRecorder!
+    private var sheetClosedRecorder: SheetMessageRecorder!
+    private var sheetCloseRequestedRecorder: SheetMessageRecorder!
     private var componentOrigin: WKSecurityOrigin!
 
     override func setUp() async throws {
@@ -31,7 +32,8 @@ final class InlineSheetCoordinatorTests: XCTestCase {
         window.makeKeyAndVisible()
 
         try await controller.webView.loadTrustedDocumentPreservingDelegate()
-        sheetClosedRecorder = try await SheetClosedRecorder.install(in: controller.webView)
+        sheetClosedRecorder = try await SheetMessageRecorder.install(function: "sheetClosed", in: controller.webView)
+        sheetCloseRequestedRecorder = try await SheetMessageRecorder.install(function: "sheetCloseRequested", in: controller.webView)
         componentOrigin = try await inlineSheetSecurityOrigin(for: StripeConnectConstants.connectJSBaseURL)
     }
 
@@ -351,19 +353,110 @@ final class InlineSheetCoordinatorTests: XCTestCase {
         XCTAssertNil(controller.inlineSheets?.sheetWebView(for: "sheet-1"))
     }
 
-    func testSheetChangedAfterDismissalPresentsSameSheetAgain() async throws {
+    func testNativeDismissalReleasesSheet() async throws {
         openSheet()
         let sheet = try await sendSheetChangedAndWaitForPresentation(height: 300)
-        let sheetWebView = sheet.webView
+
         sheet.presentationControllerDidDismiss(try XCTUnwrap(sheet.presentationController))
-        try await sheetClosedRecorder.waitForSheetIds(count: 1)
+
+        XCTAssertNil(controller.inlineSheets?.sheetWebView(for: "sheet-1"))
+    }
+
+    func testSheetChangedAfterNativeDismissalDoesNotPresentAgain() async throws {
+        openSheet()
+        let sheet = try await sendSheetChangedAndWaitForPresentation(height: 300)
+        sheet.presentationControllerDidDismiss(try XCTUnwrap(sheet.presentationController))
 
         try await sendSheetChanged(height: 300)
 
-        XCTAssertEqual(controller.presentedControllers.count, 2)
-        XCTAssertTrue(controller.lastPresentedController === sheet)
-        XCTAssertTrue(sheet.webView === sheetWebView)
-        XCTAssertTrue(controller.inlineSheets?.sheetWebView(for: "sheet-1") === sheetWebView)
+        XCTAssertEqual(controller.presentedControllers.count, 1)
+    }
+
+    // MARK: - Dismissible
+
+    func testMissingDismissibleDefaultsToDismissible() async throws {
+        openSheet()
+
+        let sheet = try await sendSheetChangedAndWaitForPresentation(height: 300)
+
+        XCTAssertFalse(sheet.isModalInPresentation)
+    }
+
+    func testNonDismissibleSheetIsModalInPresentation() async throws {
+        openSheet()
+
+        let sheet = try await sendSheetChangedAndWaitForPresentation(height: 300, dismissible: false)
+
+        XCTAssertTrue(sheet.isModalInPresentation)
+    }
+
+    func testSheetChangedWithNonBooleanDismissibleIsIgnored() async throws {
+        openSheet()
+
+        try await controller.webView.evaluateJavaScriptAndWait("""
+        window.webkit.messageHandlers.sheetChanged.postMessage({ sheetId: "sheet-1", height: 300, dismissible: "no" });
+        true;
+        """)
+
+        XCTAssertTrue(controller.presentedControllers.isEmpty)
+    }
+
+    func testAttemptedDismissalOfNonDismissibleSheetSendsSheetCloseRequested() async throws {
+        openSheet()
+        let sheet = try await sendSheetChangedAndWaitForPresentation(height: 300, dismissible: false)
+
+        sheet.presentationControllerDidAttemptToDismiss(try XCTUnwrap(sheet.presentationController))
+
+        try await sheetCloseRequestedRecorder.waitForSheetIds(count: 1)
+        try await Task.sleep(nanoseconds: 200_000_000)
+        XCTAssertEqual(sheetCloseRequestedRecorder.sheetIds, ["sheet-1"])
+        XCTAssertTrue(sheetClosedRecorder.sheetIds.isEmpty)
+        XCTAssertNotNil(controller.inlineSheets?.sheetWebView(for: "sheet-1"))
+    }
+
+    func testDismissibleChangingToFalseWhileShownMakesSheetModal() async throws {
+        openSheet()
+        let sheet = try await sendSheetChangedAndWaitForPresentation(height: 300)
+
+        try await sendSheetChanged(height: 300, dismissible: false)
+
+        XCTAssertTrue(sheet.isModalInPresentation)
+        XCTAssertEqual(controller.presentedControllers.count, 1)
+    }
+
+    func testDismissibleChangingBackToTrueAllowsNativeDismissal() async throws {
+        openSheet()
+        let sheet = try await sendSheetChangedAndWaitForPresentation(height: 300, dismissible: false)
+
+        try await sendSheetChanged(height: 300, dismissible: true)
+        sheet.presentationControllerDidDismiss(try XCTUnwrap(sheet.presentationController))
+
+        XCTAssertFalse(sheet.isModalInPresentation)
+        XCTAssertEqual(controller.presentedControllers.count, 1)
+        try await sheetClosedRecorder.waitForSheetIds(count: 1)
+        XCTAssertEqual(sheetClosedRecorder.sheetIds, ["sheet-1"])
+    }
+
+    func testWindowCloseDismissesAndReleasesNonDismissibleSheet() async throws {
+        openSheet()
+        weak var weakSheet: InlineSheetViewController?
+        do {
+            let sheet = try await sendSheetChangedAndWaitForPresentation(height: 300, dismissible: false)
+            weakSheet = sheet
+            sheet.webViewDidClose(sheet.webView)
+        }
+
+        try await sheetClosedRecorder.waitForSheetIds(count: 1)
+        XCTAssertEqual(sheetClosedRecorder.sheetIds, ["sheet-1"])
+        XCTAssertTrue(sheetCloseRequestedRecorder.sheetIds.isEmpty)
+        XCTAssertNil(controller.inlineSheets?.sheetWebView(for: "sheet-1"))
+        controller.clearPresentedControllers()
+        try await TestHelpers.withTimeout {
+            while weakSheet != nil {
+                try await Task.sleep(nanoseconds: 10_000_000)
+            }
+        }
+        XCTAssertNil(weakSheet)
     }
 
     func testNewComponentDocumentDismissesSheets() async throws {
@@ -525,16 +618,17 @@ private extension InlineSheetCoordinatorTests {
         try XCTUnwrap(openSheet()?.navigationDelegate as? InlineSheetViewController)
     }
 
-    func sendSheetChanged(sheetId: String = "sheet-1", height: Double) async throws {
+    func sendSheetChanged(sheetId: String = "sheet-1", height: Double, dismissible: Bool? = nil) async throws {
+        let dismissibleField = dismissible.map { ", dismissible: \($0)" } ?? ""
         try await controller.webView.evaluateJavaScriptAndWait("""
-        window.webkit.messageHandlers.sheetChanged.postMessage({ sheetId: "\(sheetId)", height: \(height) });
+        window.webkit.messageHandlers.sheetChanged.postMessage({ sheetId: "\(sheetId)", height: \(height)\(dismissibleField) });
         true;
         """)
     }
 
-    func sendSheetChangedAndWaitForPresentation(height: Double) async throws -> InlineSheetViewController {
+    func sendSheetChangedAndWaitForPresentation(height: Double, dismissible: Bool? = nil) async throws -> InlineSheetViewController {
         let presentationCount = controller.presentedControllers.count
-        try await sendSheetChanged(height: height)
+        try await sendSheetChanged(height: height, dismissible: dismissible)
         return try await TestHelpers.withTimeout { @MainActor in
             while true {
                 if self.controller.presentedControllers.count > presentationCount,
@@ -552,17 +646,17 @@ private extension InlineSheetCoordinatorTests {
     }
 }
 
-private final class SheetClosedRecorder: NSObject, WKScriptMessageHandler {
-    static let name = "inlineSheetClosedRecorder"
-
+/// Records the sheet ids the SDK passes to one of Connect.js's `window` functions
+private final class SheetMessageRecorder: NSObject, WKScriptMessageHandler {
     private(set) var sheetIds: [String] = []
 
     @MainActor
-    static func install(in webView: WKWebView) async throws -> SheetClosedRecorder {
-        let recorder = SheetClosedRecorder()
-        webView.configuration.userContentController.add(recorder, name: name)
+    static func install(function: String, in webView: WKWebView) async throws -> SheetMessageRecorder {
+        let recorder = SheetMessageRecorder()
+        let handlerName = "inlineSheetRecorder_\(function)"
+        webView.configuration.userContentController.add(recorder, name: handlerName)
         try await webView.evaluateJavaScriptAndWait("""
-        window.sheetClosed = (message) => window.webkit.messageHandlers.\(name).postMessage(message);
+        window.\(function) = (message) => window.webkit.messageHandlers.\(handlerName).postMessage(message);
         true;
         """)
         return recorder

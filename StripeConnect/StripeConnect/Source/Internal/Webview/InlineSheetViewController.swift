@@ -32,6 +32,9 @@ final class InlineSheetViewController: UIViewController {
     /// The sheet went away while it was shown, from a swipe, a tap outside it, or its presenter going away
     var didDismiss: ((InlineSheetViewController) -> Void)?
 
+    /// The user swiped or tapped outside a sheet that isn't dismissible, and it sprang back
+    var didRequestClose: ((InlineSheetViewController) -> Void)?
+
     /// Connect.js closed the window
     var didCloseWindow: ((InlineSheetViewController) -> Void)?
 
@@ -112,7 +115,8 @@ final class InlineSheetViewController: UIViewController {
         }
     }
 
-    func updateContentHeight(_ height: CGFloat) {
+    func update(contentHeight height: CGFloat, dismissible: Bool) {
+        isModalInPresentation = !dismissible
         guard height != contentHeight else { return }
         contentHeight = height
         guard presentingViewController != nil,
@@ -132,6 +136,10 @@ final class InlineSheetViewController: UIViewController {
 extension InlineSheetViewController: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         didDismiss?(self)
+    }
+
+    func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
+        didRequestClose?(self)
     }
 }
 

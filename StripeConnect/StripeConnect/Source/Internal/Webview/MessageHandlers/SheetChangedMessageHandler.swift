@@ -6,14 +6,15 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 
-/// The content of a native sheet an inline component opened changed height, or its dialog stayed open after the
-/// sheet closed and should be shown again
+/// A native sheet an inline component opened changed height or whether it can be dismissed
 class SheetChangedMessageHandler: ScriptMessageHandler<SheetChangedMessageHandler.Payload> {
     struct Payload: Codable, Equatable {
         /// The sheet's id from its window URL
         let sheetId: String
         /// The sheet's content height, in CSS pixels
         let height: Double
+        /// Whether a swipe or an outside tap can close the sheet. Missing means true.
+        let dismissible: Bool?
     }
 
     init(sourcePolicy: STPWebMessageSourcePolicy,
