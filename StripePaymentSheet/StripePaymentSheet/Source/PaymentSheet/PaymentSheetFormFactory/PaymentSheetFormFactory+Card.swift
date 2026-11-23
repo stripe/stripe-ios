@@ -23,7 +23,7 @@ extension PaymentSheetFormFactory {
 
     var isLinkUI: Bool {
         switch configuration {
-        case .paymentElement(_, let isLinkUI):
+        case .paymentElement(_, _, let isLinkUI):
             return isLinkUI
         case .customerSheet:
             return false
@@ -143,7 +143,7 @@ extension PaymentSheetFormFactory {
             defaultCheckbox,
         ]
 
-        if case .paymentElement(let configuration, _) = configuration, let accountService, showLinkInlineSignup {
+        if case .paymentElement(let configuration, _, _) = configuration, let accountService, showLinkInlineSignup {
             // Restore the signup state on recreation
             let signupOptInInitialValue = signupOptInInitialValue || previouslyHadLinkSignupSelected
             let inlineSignupElement = LinkInlineSignupElement(

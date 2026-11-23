@@ -36,7 +36,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -78,7 +78,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -125,7 +125,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: specProvider
         )
@@ -164,7 +164,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: specProvider
         )
@@ -187,7 +187,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -253,7 +253,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -302,7 +302,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -338,7 +338,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -374,7 +374,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -409,7 +409,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -447,7 +447,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -485,7 +485,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -524,7 +524,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(PaymentSheet.Configuration()),
+            configuration: .paymentElement(PaymentSheet.Configuration(), customerProvider: CustomerProvider(customer: nil)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
@@ -552,7 +552,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: CustomerProvider(customer: configuration.customer)),
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
