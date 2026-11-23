@@ -118,6 +118,7 @@ extension EmbeddedPaymentElement {
         presenter.presentNativeLink(
             selectedPaymentDetailsID: linkConfirmOption.flatMap { PaymentOption.link(option: $0).currentLinkPaymentMethod },
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
