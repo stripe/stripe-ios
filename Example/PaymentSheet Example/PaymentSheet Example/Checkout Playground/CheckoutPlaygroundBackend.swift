@@ -77,6 +77,8 @@ extension CheckoutPlayground {
             }
             if automaticTax {
                 sessionParams["automatic_tax"] = ["enabled": true]
+                // Checkout rejects one-time-only sessions with automatic tax unless they create an invoice.
+                sessionParams["invoice_creation"] = ["enabled": true]
             }
             if billingAddressCollection == .required {
                 sessionParams["billing_address_collection"] = "required"
