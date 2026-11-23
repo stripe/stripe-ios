@@ -286,9 +286,7 @@ public final class CheckoutElementsController: ObservableObject {
                 sessionWithUpdatedEmail.localState.email = email
                 await CheckoutElementsControllerLoader.loadLink(
                     session: sessionWithUpdatedEmail,
-                    configuration: self.configuration,
-                    // Only used to check whether Payment Element uses Link; FlowController and Embedded configurations agree on that.
-                    paymentElementConfiguration: self.paymentElement?.paymentSheetFlowController.configuration
+                    configuration: self.configuration
                 )
                 try await self.performUnqueuedUpdate(mutateLocalState: { localState in
                     localState.email = email
