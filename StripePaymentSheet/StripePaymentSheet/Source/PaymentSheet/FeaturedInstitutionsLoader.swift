@@ -17,8 +17,15 @@ final class FeaturedInstitutionsLoader {
     /// The minimum number of icons needed to show anything. Matches Stripe.js.
     static let minimumIconCount = 4
 
-    static func shouldFetch(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> Bool {
-        return elementsSession.isFeaturedInstitutionsEnabled && paymentMethodTypes.contains(where: Self.isBankRow)
+    static func shouldFetch(
+        elementsSession: STPElementsSession,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        layout: PaymentSheet.PaymentMethodLayout.ResolvedLayout
+    ) -> Bool {
+        // Only the vertical layout's "Bank" row shows the icons
+        return layout == .vertical
+            && elementsSession.isFeaturedInstitutionsEnabled
+            && paymentMethodTypes.contains(where: Self.isBankRow)
     }
 
     static func isBankRow(_ paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {

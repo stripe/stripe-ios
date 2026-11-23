@@ -35,9 +35,13 @@ class RowButton: UIView, EventHandler {
     let accessoryView: UIView?
     /// The label indicating if this is the default saved payment method
     let defaultBadgeLabel: UILabel?
-    /// The trailing view indicating any incentives associated with this payment method (`PromoBadgeView`),
-    /// or the featured bank icons on the instant debits row (`BankInstitutionIconsView`)
-    let promoBadge: UIView?
+    /// The trailing view: either a `PromoBadgeView` indicating any incentives associated with this payment method,
+    /// or a `BankInstitutionIconsView` showing the featured bank icons on the instant debits row
+    let trailingBadge: UIView?
+    /// The featured bank icons, if `trailingBadge` shows them
+    var bankInstitutionIconsView: BankInstitutionIconsView? {
+        return trailingBadge as? BankInstitutionIconsView
+    }
     private lazy var loadingIndicator: ActivityIndicator = {
         let loadingIndicator = ActivityIndicator(size: .medium)
         loadingIndicator.tintColor = appearance.colors.primary
@@ -94,7 +98,7 @@ class RowButton: UIView, EventHandler {
         text: String,
         sublabel: SublabelView,
         badgeText: String? = nil,
-        promoBadge: UIView? = nil,
+        trailingBadge: UIView? = nil,
         accessoryView: UIView? = nil,
         shouldAnimateOnPress: Bool = false,
         isEmbedded: Bool = false,
@@ -110,7 +114,7 @@ class RowButton: UIView, EventHandler {
         self.sublabel = sublabel
         self.accessoryView = accessoryView
         self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: badgeText, appearance: appearance)
-        self.promoBadge = promoBadge
+        self.trailingBadge = trailingBadge
 
         super.init(frame: .zero)
         addAndPinSubview(accessibilityHelperView)
@@ -359,7 +363,7 @@ extension RowButton {
                        text: String,
                        sublabel: SublabelView,
                        badgeText: String? = nil,
-                       promoBadge: UIView? = nil,
+                       trailingBadge: UIView? = nil,
                        accessoryView: UIView? = nil,
                        shouldAnimateOnPress: Bool = false,
                        isEmbedded: Bool = false,
@@ -372,7 +376,7 @@ extension RowButton {
                 text: text,
                 sublabel: sublabel,
                 badgeText: badgeText,
-                promoBadge: promoBadge,
+                trailingBadge: trailingBadge,
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
@@ -389,7 +393,7 @@ extension RowButton {
                 text: text,
                 sublabel: sublabel,
                 badgeText: badgeText,
-                promoBadge: promoBadge,
+                trailingBadge: trailingBadge,
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
@@ -403,7 +407,7 @@ extension RowButton {
                 text: text,
                 sublabel: sublabel,
                 badgeText: badgeText,
-                promoBadge: promoBadge,
+                trailingBadge: trailingBadge,
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
@@ -417,7 +421,7 @@ extension RowButton {
                 text: text,
                 sublabel: sublabel,
                 badgeText: badgeText,
-                promoBadge: promoBadge,
+                trailingBadge: trailingBadge,
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
@@ -431,7 +435,7 @@ extension RowButton {
                 text: text,
                 sublabel: sublabel,
                 badgeText: badgeText,
-                promoBadge: promoBadge,
+                trailingBadge: trailingBadge,
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
@@ -553,7 +557,7 @@ extension RowButton {
             sublabel = PlainSublabelView(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
         }
 
-        let promoBadge: UIView? = {
+        let trailingBadge: UIView? = {
             if let promoText {
                 return PromoBadgeView(
                     appearance: appearance,
@@ -575,7 +579,7 @@ extension RowButton {
             imageView: imageView,
             text: text,
             sublabel: sublabel,
-            promoBadge: promoBadge,
+            trailingBadge: trailingBadge,
             accessoryView: accessoryView,
             shouldAnimateOnPress: shouldAnimateOnPress,
             isEmbedded: isEmbedded,

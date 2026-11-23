@@ -177,9 +177,14 @@ final class PaymentSheetLoader {
             )
             paymentMethodMessagingPromotionsHelper?.fetchData()
 
+            let paymentMethodOrientation = configuration.resolveLayout(
+                elementsSession: elementsSession,
+                paymentMethodTypes: paymentMethodTypes
+            )
+
             // Also fire-and-forget; the "Bank" row shows the icons once they load.
             var featuredInstitutionsLoader: FeaturedInstitutionsLoader?
-            if FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes) {
+            if FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes, layout: paymentMethodOrientation) {
                 featuredInstitutionsLoader = FeaturedInstitutionsLoader(apiClient: configuration.apiClient, analyticsHelper: analyticsHelper)
                 featuredInstitutionsLoader?.fetch()
             }
@@ -187,11 +192,6 @@ final class PaymentSheetLoader {
             // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, customerProvider: customerProvider, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
-
-            let paymentMethodOrientation = configuration.resolveLayout(
-                elementsSession: elementsSession,
-                paymentMethodTypes: paymentMethodTypes
-            )
 
             // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
             loadTimings.logStart("makeViewModels")

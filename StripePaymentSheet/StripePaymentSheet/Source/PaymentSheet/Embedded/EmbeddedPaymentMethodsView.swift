@@ -608,7 +608,7 @@ extension RowButton {
         // Hack: We assume the accessory view is "Change >"
         self.accessoryView?.isHidden = false
         // The "Change" button replaces the featured bank icons once a bank is linked
-        (promoBadge as? BankInstitutionIconsView)?.isSuppressed = true
+        bankInstitutionIconsView?.isSuppressed = true
         makeSameHeightAsOtherRowButtonsIfNecessary()
         guard animated else {
             self.accessoryView?.alpha = 1
@@ -625,7 +625,7 @@ extension RowButton {
     func removeChangeButton(shouldClearSublabel: Bool) {
         // Hack: We assume the accessory view is "Change >"
         self.accessoryView?.isHidden = true
-        (promoBadge as? BankInstitutionIconsView)?.isSuppressed = false
+        bankInstitutionIconsView?.isSuppressed = false
         self.setNeedsLayout()
         self.layoutIfNeeded()
         if shouldClearSublabel {

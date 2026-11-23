@@ -17,19 +17,25 @@ final class FeaturedInstitutionsLoaderTests: APIStubbedTestCase {
 
     func testShouldFetch_onlyWithBankRow() {
         let elementsSession = STPElementsSession._testValue()
-        XCTAssertTrue(FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .instantDebits]))
-        XCTAssertTrue(FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: [.linkCardBrand]))
-        XCTAssertFalse(FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]))
+        XCTAssertTrue(FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .instantDebits], layout: .vertical))
+        XCTAssertTrue(FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: [.linkCardBrand], layout: .vertical))
+        XCTAssertFalse(FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], layout: .vertical))
+    }
+
+    func testShouldFetch_onlyWithVerticalLayout() {
+        // Given a Bank row in the horizontal layout, which doesn't show the icons, then nothing is fetched
+        let elementsSession = STPElementsSession._testValue()
+        XCTAssertFalse(FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .instantDebits], layout: .horizontal))
     }
 
     func testShouldFetch_killswitch() {
         // Given the killswitch is on, then nothing is fetched even with a Bank row
         let killswitchOn = STPElementsSession._testValue(flags: ["elements_mobile_featured_institutions_killswitch": true])
-        XCTAssertFalse(FeaturedInstitutionsLoader.shouldFetch(elementsSession: killswitchOn, paymentMethodTypes: [.stripe(.card), .instantDebits]))
+        XCTAssertFalse(FeaturedInstitutionsLoader.shouldFetch(elementsSession: killswitchOn, paymentMethodTypes: [.stripe(.card), .instantDebits], layout: .vertical))
 
         // Given the killswitch is explicitly off, then the Bank row's icons are fetched
         let killswitchOff = STPElementsSession._testValue(flags: ["elements_mobile_featured_institutions_killswitch": false])
-        XCTAssertTrue(FeaturedInstitutionsLoader.shouldFetch(elementsSession: killswitchOff, paymentMethodTypes: [.stripe(.card), .instantDebits]))
+        XCTAssertTrue(FeaturedInstitutionsLoader.shouldFetch(elementsSession: killswitchOff, paymentMethodTypes: [.stripe(.card), .instantDebits], layout: .vertical))
     }
 
     func testFetch_keepsOnlyInstitutionsWithIcons() async {
