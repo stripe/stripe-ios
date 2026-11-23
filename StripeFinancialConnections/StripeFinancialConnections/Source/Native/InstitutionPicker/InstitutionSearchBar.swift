@@ -184,10 +184,10 @@ final class InstitutionSearchBar: UIView {
             layer.borderWidth = searchBarBorderWidth
             layer.shadowOpacity = shadowOpacity
             layer.shadowColor = UIColor.black.cgColor
-            layer.shadowRadius = 2 / UIScreen.main.nativeScale
+            layer.shadowRadius = 2 / traitCollection.displayScale
             layer.shadowOffset = CGSize(
                 width: 0,
-                height: 1 / UIScreen.main.nativeScale
+                height: 1 / traitCollection.displayScale
             )
         }
     }
@@ -195,7 +195,11 @@ final class InstitutionSearchBar: UIView {
     // CGColor's need to be manually updated when the system theme changes.
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+        // The shadow is also measured in pixels.
+        guard
+            traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection)
+                || traitCollection.displayScale != previousTraitCollection?.displayScale
+        else { return }
 
         layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
         highlightBorder(textField.isFirstResponder)

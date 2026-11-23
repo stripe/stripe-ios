@@ -140,15 +140,17 @@ final class InstitutionTableView: UIView {
         }
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 72
-        let hairline = 1.0 / UIScreen.main.nativeScale
-        tableView.contentInset = UIEdgeInsets(
-            // Link theme: no top inset — a hairline gap lets cell content peek above the sticky
-            // search bar header when scrolled. Stripe theme keeps the hairline to show separators.
-            top: appearance.colors == .link ? 0 : hairline,
-            left: 0,
-            bottom: hairline,
-            right: 0
-        )
+        tableView.stp_updateForDisplayScale { [appearance] tableView, displayScale in
+            let hairline = 1.0 / displayScale
+            tableView.contentInset = UIEdgeInsets(
+                // Link theme: no top inset — a hairline gap lets cell content peek above the sticky
+                // search bar header when scrolled. Stripe theme keeps the hairline to show separators.
+                top: appearance.colors == .link ? 0 : hairline,
+                left: 0,
+                bottom: hairline,
+                right: 0
+            )
+        }
         tableView.keyboardDismissMode = .onDrag
         // do not set this because it can cause unexpected
         // scrolling behavior

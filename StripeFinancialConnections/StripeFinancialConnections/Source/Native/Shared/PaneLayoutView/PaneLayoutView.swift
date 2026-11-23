@@ -32,11 +32,7 @@ final class PaneLayoutView {
     /// Whether or not the sheet is currently presented as a form sheet (which only happens with a regular width).
     /// Unfortunately, the best way to know this is to check if the sheet's width is not equal to the window's width.
     private var isPresentedAsFormSheet: Bool {
-        guard let window = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene })
-            .flatMap({ $0.windows })
-            .first(where: { $0.isKeyWindow }) else { return false }
-        guard let presentingView else { return false }
+        guard let presentingView, let window = presentingView.window else { return false }
         return window.frame.width != presentingView.frame.width
     }
 
@@ -155,15 +151,24 @@ final class PaneLayoutView {
 
     @objc private func keyboardWillShow(_ notification: Notification) {
         guard shouldMoveFooterViewAboveKeyboard else { return }
-        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+        guard
+            let presentingView,
+            let keyboardFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+            // The notification's object is the keyboard's screen from iOS 16.1.
+            let screen = (notification.object as? UIScreen) ?? presentingView.window?.windowScene?.screen
+        else {
             return
         }
+        // The keyboard frame is in screen coordinates, so only count the part covering this view,
+        // which can be smaller than the screen (e.g. in a resized window).
+        let keyboardFrameInView = screen.coordinateSpace.convert(keyboardFrame, to: presentingView)
+        let keyboardHeight = presentingView.bounds.intersection(keyboardFrameInView).height
 
         // Only move the footer view if the keyboard height is above 200px
         // This is to prevent false-positives of the keyboard being shown.
-        guard keyboardSize.height > 200 else { return }
+        guard keyboardHeight > 200 else { return }
         animateAlongsideKeyboard(notification) { [weak self] in
-            self?.updateFooterViewConstraints(keyboardHeight: keyboardSize.height)
+            self?.updateFooterViewConstraints(keyboardHeight: keyboardHeight)
         }
     }
 

@@ -30,9 +30,11 @@ extension StripeUICore.Button {
             ])
         } else {
             button.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
-            button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
             button.layer.shadowOpacity = 0.25
-            button.layer.shadowOffset = CGSize(width: 0, height: 2 / UIScreen.main.nativeScale)
+            button.stp_updateForDisplayScale { button, displayScale in
+                button.layer.shadowRadius = 5 / displayScale
+                button.layer.shadowOffset = CGSize(width: 0, height: 2 / displayScale)
+            }
         }
         ButtonFeedbackGeneratorHandler.attach(toButton: button)
         return button

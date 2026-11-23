@@ -32,7 +32,7 @@ class SheetViewController: UIViewController {
     // The `contentView` represents the area of the sheet
     // where content is displayed. It's about 80% of the
     // screen and does NOT contain the dark overlay at the top.
-    private let contentView = UIView(frame: UIScreen.main.bounds)
+    private let contentView = UIView()
 
     // The `contentStackView` automatically resizes between the
     // bottom of `contentView` and the top of `contentView`.
@@ -89,6 +89,8 @@ class SheetViewController: UIViewController {
         view.backgroundColor = panePresentationStyle == .sheet ? .clear : FinancialConnectionsAppearance.Colors.surfacePrimary
 
         if panePresentationStyle == .sheet {
+            // `viewDidLayoutSubviews` sizes the sheet; start at the view's size until then.
+            contentView.frame = view.bounds
             view.addSubview(contentView)
 
             contentStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -175,13 +177,13 @@ class SheetViewController: UIViewController {
         if panePresentationStyle == .sheet {
             // Note that using `UIDevice.current.orientation.isLandscape`
             // performed worse (/ was buggy) when testing on device
-            let isLandscapePhone = UIDevice.current.userInterfaceIdiom == .phone && (UIScreen.main.bounds.size.width > UIScreen.main.bounds.size.height)
+            let isVerticallyCompact = traitCollection.verticalSizeClass == .compact
             var contentViewMinY = view.window?.safeAreaInsets.top ?? 0
             // estimated iOS value of how far default sheet
             // stretches beyond safeAreaInset.top
-            contentViewMinY += isLandscapePhone ? 0 : 10
+            contentViewMinY += isVerticallyCompact ? 0 : 10
             contentViewMinY += UINavigationController().navigationBar.bounds.height
-            contentViewMinY += isLandscapePhone ? 0 : 24
+            contentViewMinY += isVerticallyCompact ? 0 : 24
             let didChangeContentViewMinY = (self.contentViewMinY != contentViewMinY)
             self.contentViewMinY = contentViewMinY
             let didChangeViewSize = (contentViewLayoutSize != view.bounds.size)
