@@ -31,11 +31,13 @@ struct FeaturedInstitutionList: Decodable, Equatable {
 
 extension STPAPIClient {
     /// Fetches the featured institutions shown on the instant debits "Bank" row.
-    /// Mirrors the Stripe.js request: only the publishable key is required, and instant debits is US-only.
-    func featuredInstitutionsForInstantDebits(limit: Int) async throws -> FeaturedInstitutionList {
+    /// Only the publishable key is required.
+    /// - Parameter country: The customer's country. The backend picks which country's institutions to return, so this
+    ///   lets IBP support more countries without an SDK update. Defaults to the US, where instant debits launched.
+    func featuredInstitutionsForInstantDebits(country: String?, limit: Int) async throws -> FeaturedInstitutionList {
         let parameters: [String: Any] = [
             "product": "instant_debits",
-            "country": "US",
+            "country": country ?? "US",
             "limit": limit,
         ]
         return try await withCheckedThrowingContinuation { continuation in

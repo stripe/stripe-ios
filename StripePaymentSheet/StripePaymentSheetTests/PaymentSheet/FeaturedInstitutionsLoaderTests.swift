@@ -57,10 +57,25 @@ final class FeaturedInstitutionsLoaderTests: APIStubbedTestCase {
 
         // Then only the institutions with icons are kept...
         XCTAssertEqual(icons.count, 5)
-        // ...and the request matches Stripe.js
+        // ...and the request asks for the instant debits institutions, defaulting to the US without a customer country
         XCTAssertEqual(requestQuery["product"], "instant_debits")
         XCTAssertEqual(requestQuery["country"], "US")
         XCTAssertEqual(requestQuery["limit"], "12")
+    }
+
+    func testFetch_sendsCustomerCountry() async {
+        // Given a customer in Canada
+        var requestQuery: [String: String] = [:]
+        stubFeaturedInstitutions(institutions: (0..<4).map { makeInstitution(index: $0) }, onRequest: { requestQuery = $0 })
+        stubIcons(failingIndices: [])
+
+        // When
+        let loader = makeLoader(country: "CA")
+        loader.fetch()
+        _ = await loader.loadedIcons()
+
+        // Then the backend is told the customer's country
+        XCTAssertEqual(requestQuery["country"], "CA")
     }
 
     func testFetch_dropsIconsThatFailToDownload() async {
@@ -137,7 +152,7 @@ final class FeaturedInstitutionsLoaderTests: APIStubbedTestCase {
 
     // MARK: - Helpers
 
-    private func makeLoader() -> FeaturedInstitutionsLoader {
+    private func makeLoader(country: String? = nil) -> FeaturedInstitutionsLoader {
         let apiClient = stubbedAPIClient()
         apiClient.publishableKey = "pk_test_123"
         var configuration = PaymentSheet.Configuration()
@@ -147,7 +162,7 @@ final class FeaturedInstitutionsLoaderTests: APIStubbedTestCase {
         let urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
         urlSessionConfig.urlCache = URLCache(memoryCapacity: 5_000_000, diskCapacity: 0)
         let downloadManager = DownloadManager(urlSessionConfiguration: urlSessionConfig, analyticsClient: analyticsClient, isTesting: true)
-        return FeaturedInstitutionsLoader(apiClient: apiClient, analyticsHelper: analyticsHelper, downloadManager: downloadManager)
+        return FeaturedInstitutionsLoader(apiClient: apiClient, country: country, analyticsHelper: analyticsHelper, downloadManager: downloadManager)
     }
 
     private func makeInstitution(index: Int, iconURL: String? = "default") -> [String: Any] {

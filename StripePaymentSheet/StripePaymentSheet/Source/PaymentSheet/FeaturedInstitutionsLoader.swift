@@ -44,16 +44,20 @@ final class FeaturedInstitutionsLoader {
     private let observers = NSHashTable<BankInstitutionIconsView>.weakObjects()
 
     private let apiClient: STPAPIClient
+    /// The customer's country, used to pick which institutions to feature
+    private let country: String?
     private let analyticsHelper: PaymentSheetAnalyticsHelper?
     private let downloadManager: DownloadManager
     private var didLogShown = false
 
     init(
         apiClient: STPAPIClient,
+        country: String?,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         downloadManager: DownloadManager = .sharedManager
     ) {
         self.apiClient = apiClient
+        self.country = country
         self.analyticsHelper = analyticsHelper
         self.downloadManager = downloadManager
     }
@@ -61,6 +65,7 @@ final class FeaturedInstitutionsLoader {
     /// Creates a loader with icons that are already loaded. Used for tests and snapshots.
     init(icons: [UIImage]) {
         self.apiClient = .shared
+        self.country = nil
         self.analyticsHelper = nil
         self.downloadManager = .sharedManager
         self.icons = icons.count >= Self.minimumIconCount ? icons : []
@@ -74,7 +79,7 @@ final class FeaturedInstitutionsLoader {
         fetchTask = Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                let institutions = try await apiClient.featuredInstitutionsForInstantDebits(limit: Self.fetchCount).data
+                let institutions = try await apiClient.featuredInstitutionsForInstantDebits(country: country, limit: Self.fetchCount).data
                 let downloadedIcons = await downloadIcons(for: institutions) { [weak self] leadingIcons in
                     // Show the icons as soon as there are enough for every slot
                     guard let self, leadingIcons.count >= Self.minimumIconCount, icons.isEmpty else { return }
