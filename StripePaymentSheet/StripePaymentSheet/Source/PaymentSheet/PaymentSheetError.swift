@@ -14,7 +14,7 @@ import StripePayments
 ///
 /// Most errors do not originate from PaymentSheet itself; instead, they come from the Stripe API
 /// or other SDK components like STPPaymentHandler, PassKit (Apple Pay), etc.
-public enum PaymentSheetError: Error, LocalizedError {
+@_spi(InternalOnlyAPI) public enum PaymentSheetError: Error, LocalizedError {
 
     /// An unknown error.
     case unknown(debugDescription: String)
@@ -70,7 +70,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     }
 }
 
-extension PaymentSheetError: CustomDebugStringConvertible {
+@_spi(InternalOnlyAPI) extension PaymentSheetError: CustomDebugStringConvertible {
     /// A description logged to a developer for debugging
     public var debugDescription: String {
         let errorMessageSuffix = {
@@ -109,7 +109,7 @@ extension PaymentSheetError: CustomDebugStringConvertible {
             case .linkSignUpNotRequired:
                 return "Don't call sign up if not needed"
             case .noPaymentMethodTypesAvailable(intentPaymentMethods: let intentPaymentMethods):
-                return "None of the payment methods on the PaymentIntent/SetupIntent can be used in PaymentSheet: \(intentPaymentMethods). You may need to set `allowsDelayedPaymentMethods` or `allowsPaymentMethodsRequiringShippingAddress` or set `returnURL` in your PaymentSheet.Configuration object."
+                return "None of the payment methods on the PaymentIntent/SetupIntent can be used in PaymentSheet: \(intentPaymentMethods). You may need to set `allowsDelayedPaymentMethods` or `returnURL` in your PaymentSheet.Configuration object."
             case .linkCallVerifyNotRequired:
                 return "Don't call verify if not needed"
             case .linkingWithoutValidSession:

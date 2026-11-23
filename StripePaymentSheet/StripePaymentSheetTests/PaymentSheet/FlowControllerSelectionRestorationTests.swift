@@ -8,7 +8,7 @@
 @testable @_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
@@ -17,12 +17,12 @@ import XCTest
 final class FlowControllerSelectionRestorationTests: XCTestCase {
     override func setUp() async throws {
         try await super.setUp()
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
         await AddressSpecProvider.shared.loadAddressSpecs()
     }
 
     override func tearDown() {
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
         super.tearDown()
     }
 
@@ -38,7 +38,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         // Given a FlowController with an accepted saved card
         let acceptedPaymentMethod = STPPaymentMethod._testCard(id: "pm_accepted", country: "US")
         let rejectedPaymentMethod = STPPaymentMethod._testCard(id: "pm_rejected", country: "US")
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(acceptedPaymentMethod.stripeId), forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(acceptedPaymentMethod.stripeId), forCustomer: nil)
         let flowController = makeFlowController(
             savedPaymentMethods: [acceptedPaymentMethod, rejectedPaymentMethod],
             orientation: .horizontal
@@ -102,7 +102,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             externalPaymentMethodConfirmHandler: { _, _ in .completed }
         )
         let externalPaymentOption = try XCTUnwrap(
-            ExternalPaymentOption.from(externalPaymentMethod, configuration: externalConfiguration)
+            ExternalPaymentOption.from(externalPaymentMethod, confirmHandler: externalConfiguration.externalPaymentMethodConfirmHandler)
         )
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Jane Doe"
@@ -125,7 +125,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         // Given a FlowController with a selected saved payment method
         let deletedPaymentMethod = STPPaymentMethod._testCard(id: "pm_deleted")
         let remainingPaymentMethod = STPPaymentMethod._testCard(id: "pm_remaining")
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(deletedPaymentMethod.stripeId), forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(deletedPaymentMethod.stripeId), forCustomer: nil)
         let flowController = makeFlowController(savedPaymentMethods: [deletedPaymentMethod, remainingPaymentMethod])
         let completion = present(flowController, expectedDidCancel: true)
 
@@ -151,7 +151,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
     func testCancelAfterReplacingLinkedBankRestoresSelectedBank() throws {
         // Given a linked bank was selected from the Instant Debits form
         let customerID = "cus_fc_linked_bank"
-        defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID) }
+        defer { CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: customerID) }
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         configuration.customer = .init(id: customerID, ephemeralKeySecret: "ek_test")
         configuration.defaultBillingDetails.email = "test@example.com"
@@ -166,7 +166,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
 
         let firstClose = present(flowController, expectedDidCancel: false)
         try tapRow(.new(paymentMethodType: .instantDebits), in: viewController)
-        let linkedBank = makeLinkedBank()
+        let linkedBank = InstantDebitsLinkedBank._testValue()
         let bankForm = try XCTUnwrap(viewController.formCache[.instantDebits] as? InstantDebitsPaymentMethodElement)
         bankForm.setLinkedBank(linkedBank)
         flowController.flowControllerViewControllerShouldClose(viewController, didCancel: false)
@@ -190,7 +190,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
 
     func testHorizontalRebuildRestoresSelectedBank() throws {
         // Given a completed Instant Debits selection that must be restored
-        let linkedBank = makeLinkedBank()
+        let linkedBank = InstantDebitsLinkedBank._testValue()
         let confirmParams = IntentConfirmParams(type: .instantDebits)
         confirmParams.instantDebitsLinkedBank = linkedBank
         let paymentMethod = try XCTUnwrap(linkedBank.paymentMethod.decode())
@@ -224,8 +224,8 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
     func testHorizontalRebuildPreservesCardSelectionOverLinkCustomerDefault() {
         // Given Link is the customer's default, but the customer completed the card form
         let customerID = "cus_fc_card_over_link_default"
-        defer { CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: customerID) }
-        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customerID)
+        defer { CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: customerID) }
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: customerID)
 
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         configuration.customer = .init(id: customerID, ephemeralKeySecret: "ek_test")
@@ -288,14 +288,13 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         let manageViewController = VerticalSavedPaymentMethodsViewController(
             configuration: viewController.configuration,
             customerProvider: CustomerProvider(customer: viewController.configuration.customer),
-            intent: viewController.intent,
             selectedPaymentMethod: paymentMethod,
             paymentMethods: reorderedPaymentMethods,
             elementsSession: viewController.elementsSession,
             analyticsHelper: viewController.analyticsHelper,
             defaultPaymentMethod: nil
         )
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: nil)
         viewController.didComplete(
             viewController: manageViewController,
             with: paymentMethod,
@@ -311,7 +310,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         // Given a FlowController with a selected saved payment method
         let firstPaymentMethod = STPPaymentMethod._testCard(id: "pm_first")
         let secondPaymentMethod = STPPaymentMethod._testCard(id: "pm_second")
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(firstPaymentMethod.stripeId), forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(firstPaymentMethod.stripeId), forCustomer: nil)
         let flowController = makeFlowController(
             savedPaymentMethods: [firstPaymentMethod, secondPaymentMethod],
             orientation: orientation
@@ -322,7 +321,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         // When a different saved payment method is selected and the sheet is canceled
         switch orientation {
         case .horizontal:
-            CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(secondPaymentMethod.stripeId), forCustomer: nil)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(secondPaymentMethod.stripeId), forCustomer: nil)
             flowController.updateForWalletButtonsView()
         case .vertical:
             selectSavedPaymentMethod(
@@ -352,22 +351,6 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: orientation,
             customerProvider: customerProvider
-        )
-    }
-
-    private func makeLinkedBank() -> InstantDebitsLinkedBank {
-        let paymentMethod = STPPaymentMethod._testUSBankAccount()
-        var linkBankPaymentMethod = LinkBankPaymentMethod(id: paymentMethod.stripeId)
-        linkBankPaymentMethod._allResponseFieldsStorage = NonEncodableParameters(
-            storage: paymentMethod.allResponseFields as? [String: Any] ?? [:]
-        )
-        return InstantDebitsLinkedBank(
-            paymentMethod: linkBankPaymentMethod,
-            bankName: "StripeBank",
-            last4: "6789",
-            linkMode: .linkPaymentMethod,
-            incentiveEligible: false,
-            linkAccountSessionId: "fcsess_123"
         )
     }
 

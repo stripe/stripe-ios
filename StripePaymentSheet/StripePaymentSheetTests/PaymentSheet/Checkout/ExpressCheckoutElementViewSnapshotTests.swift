@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
@@ -96,6 +96,15 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         appearance.buttonLayout.maxRows = 1
 
         verify(makeView(appearance: appearance))
+    }
+
+    // Both buttons should dim by the same amount when disabled; previously Apple Pay barely
+    // changed while Link dimmed noticeably, creating a visual mismatch.
+    func testDisabledState() {
+        let view = makeView()
+        view.setEnabled(false)
+
+        verify(view)
     }
 
     // MARK: - Helpers

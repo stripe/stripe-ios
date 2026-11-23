@@ -143,30 +143,6 @@ Generate new localized screenshots
 
 
 
-### ios installation_cocoapods_without_frameworks_objc
-
-```sh
-[bundle exec] fastlane ios installation_cocoapods_without_frameworks_objc
-```
-
-
-
-### ios installation_cocoapods_frameworks_objc
-
-```sh
-[bundle exec] fastlane ios installation_cocoapods_frameworks_objc
-```
-
-
-
-### ios installation_cocoapods_frameworks_swift
-
-```sh
-[bundle exec] fastlane ios installation_cocoapods_frameworks_swift
-```
-
-
-
 ### ios installation_spm_objc
 
 ```sh

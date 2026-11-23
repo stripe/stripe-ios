@@ -28,7 +28,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             return .completed
         })
 
-        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic), confirmHandler: { _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
             return ""
         }))
@@ -42,6 +42,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         // Confirm the intent with the form details
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: intent,
             elementsSession: ._testCardValue(),
@@ -95,7 +96,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             phone: "+15551234567"
         )
 
-        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic), confirmHandler: { _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
             return ""
         }))
@@ -119,6 +120,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         }
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             authenticationContext: self,
             intent: intent,
             elementsSession: ._testCardValue(),
@@ -138,12 +140,13 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
                 // The merchant's returned result should be passed back in `PaymentSheet.confirm`
                 return merchantReturnedResult
             })
-            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
+            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic), confirmHandler: { _, _ in
                 XCTFail("Intent confirm handler shouldn't be called")
                 return ""
             }))
             PaymentSheet.confirm(
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 authenticationContext: self,
                 intent: intent,
                 elementsSession: ._testCardValue(),
@@ -198,6 +201,6 @@ extension ExternalPaymentOption {
             lightImageUrl: URL(string: "https://todo.com")!,
             darkImageUrl: URL(string: "https://todo.com")!
         )
-        return .from(epm, configuration: config)!
+        return .from(epm, confirmHandler: config.externalPaymentMethodConfirmHandler)!
     }
 }

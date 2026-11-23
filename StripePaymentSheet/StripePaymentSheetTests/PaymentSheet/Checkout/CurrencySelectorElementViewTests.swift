@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 7/22/26.
 //
 
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 import XCTest

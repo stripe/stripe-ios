@@ -10,7 +10,7 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest
@@ -466,6 +466,50 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertNil(checkout.session.email)
         XCTAssertEqual(recorder.sessions.count, 1)
         XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    func testUpdateEmailLooksUpNewEmailInLink() async throws {
+        // Given Link is enabled, the session has no server email, and the previous email's Link account is loaded
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["ordered_payment_method_types_and_wallets"] = ["card", "link"]
+        json["merchant_info"] = ["country": "US", "display_name": NSNull()]
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: response))
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount(
+            email: "previous@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            apiClient: checkout.apiClient,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        var lookedUpEmails: [String?] = []
+        let lookupStub = HTTPStubs.stubRequests(passingTest: { $0.url?.path.hasSuffix("/sessions/lookup") == true }) { request in
+            let email = RequestBodyTestHelpers.formEncodedBodyParams(from: request)["email_address"]
+            lookedUpEmails.append(email)
+            // A Link consumer for the looked-up email
+            return HTTPStubsResponse(jsonObject: [
+                "exists": true,
+                "publishable_key": "pk_test_abc123",
+                "consumer_session": [
+                    "client_secret": "pscs_abc123",
+                    "email_address": email ?? "",
+                    "redacted_formatted_phone_number": "(***) *** **12",
+                    "verification_sessions": [],
+                ],
+            ], statusCode: 200, headers: nil)
+        }
+        defer { HTTPStubs.removeStub(lookupStub) }
+
+        // When the merchant updates the email
+        try await checkout.updateEmail("new@example.com")
+
+        // Then Link looks up the new email, and its account replaces the previous email's account
+        XCTAssertEqual(lookedUpEmails, ["new@example.com"])
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "new@example.com")
     }
 
     // MARK: - Address Override Tests

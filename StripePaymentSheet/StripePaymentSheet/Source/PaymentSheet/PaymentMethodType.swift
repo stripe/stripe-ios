@@ -101,8 +101,25 @@ extension PaymentSheet {
         /// - Parameters:
         ///   - intent: An `intent` to extract `PaymentMethodType`s from.
         ///   - configuration: A `PaymentSheet` configuration.
+        ///   - stripeBalanceFinancialAccounts: The buyer's financial accounts loaded with PaymentSheet. Stripe balance isn't offered if they didn't load or there are none, since there'd be nothing to pay from.
         @MainActor
-        static func filteredPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool = false) -> [PaymentMethodType]
+        static func filteredPaymentMethodTypes(
+            from intent: Intent,
+            elementsSession: STPElementsSession,
+            configuration: PaymentElementConfiguration,
+            stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
+            logAvailability: Bool = false
+        ) -> [PaymentMethodType] {
+            let paymentMethodTypes = serverOrLocalPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: logAvailability)
+            guard let stripeBalanceFinancialAccounts, !stripeBalanceFinancialAccounts.accounts.isEmpty else {
+                return paymentMethodTypes.filter { $0 != .stripe(.stripeBalance) }
+            }
+            return paymentMethodTypes
+        }
+
+        /// The server's `payment_method_availability` if it sent one, otherwise the local availability logic's.
+        @MainActor
+        private static func serverOrLocalPaymentMethodTypes(from intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, logAvailability: Bool) -> [PaymentMethodType]
         {
             guard let serverPaymentMethodAvailability = elementsSession.serverPaymentMethodAvailability else {
                 return locallyFilteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: logAvailability)
@@ -143,9 +160,9 @@ extension PaymentSheet {
                         return .linkCardBrand
                     case _ where type.hasPrefix("external_"):
                         guard
-                            configuration.externalPaymentMethodConfiguration != nil,
+                            !configuration._externalPaymentMethods.isEmpty,
                             let externalPaymentMethod = elementsSession.externalPaymentMethods.first(where: { $0.type == type }),
-                            let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, configuration: configuration.externalPaymentMethodConfiguration)
+                            let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, confirmHandler: configuration._externalPaymentMethodConfirmHandler)
                         else {
                             return nil
                         }
@@ -209,7 +226,7 @@ extension PaymentSheet {
             }
 
             // Log a warning if elements session doesn't contain all the merchant's desired external payment methods
-            let missingExternalPaymentMethods = Set(configuration.externalPaymentMethodConfiguration?.externalPaymentMethods.map { $0.lowercased() } ?? [])
+            let missingExternalPaymentMethods = Set(configuration._externalPaymentMethods.map { $0.lowercased() })
                 .subtracting(Set(elementsSession.externalPaymentMethods.map { $0.type }))
             if !missingExternalPaymentMethods.isEmpty {
                 logIfNecessary("PaymentSheet could not offer these external payment methods: \(missingExternalPaymentMethods). See https://stripe.com/docs/payments/external-payment-methods#available-external-payment-methods")
@@ -221,7 +238,7 @@ extension PaymentSheet {
                 recommendedStripePaymentMethodTypes.map { PaymentMethodType.stripe($0) }
                 // External Payment Methods
                 + elementsSession.externalPaymentMethods.compactMap {
-                    guard let externalPaymentOption = ExternalPaymentOption.from($0, configuration: configuration.externalPaymentMethodConfiguration) else { return nil }
+                    guard let externalPaymentOption = ExternalPaymentOption.from($0, confirmHandler: configuration._externalPaymentMethodConfirmHandler) else { return nil }
                     return PaymentMethodType.external(externalPaymentOption)
                 }
                 // Custom Payment Methods
@@ -350,6 +367,9 @@ extension PaymentSheet {
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
+                    case .stripeBalance:
+                        // The buyer's financial accounts are listed using the CustomerSession
+                        return [.customerSession]
                     case .iDEAL, .bancontact:
                         // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
@@ -361,7 +381,7 @@ extension PaymentSheet {
                         .netBanking, .OXXO, .afterpayClearpay, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .vipps, .unknown, .konbini, .promptPay, .swish, .multibanco,
                         .sunbit, .billie, .crypto, .payPay, .wero, .payByBank, .mbWay, .bizum,
-                        .payco, .sequra, .scalapay, .stripeBalance:
+                        .payco, .sequra, .scalapay:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]

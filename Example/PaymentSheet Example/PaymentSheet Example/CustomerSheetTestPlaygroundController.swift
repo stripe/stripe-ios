@@ -80,7 +80,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         load()
     }
     func didTapSetToUnsupported() {
-        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: settings.customerId)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: settings.customerId)
         self.load()
     }
 
