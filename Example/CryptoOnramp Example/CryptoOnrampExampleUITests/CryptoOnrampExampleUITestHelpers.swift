@@ -282,20 +282,13 @@ extension CryptoOnrampExampleUITestCase {
     }
 
     @MainActor
-    func dismissSavePasswordPromptIfPresent() {
-        // The prompt is owned by AuthenticationServicesAgent, so it must be handled as a system interruption.
-        let interruptionMonitor = addUIInterruptionMonitor(withDescription: "Save Password") { alert in
-            let notNowButton = alert.buttons["Not Now"].firstMatch
-            guard notNowButton.exists else {
-                return false
-            }
-
+    private func dismissSavePasswordPromptIfPresent() {
+        let safariViewService = XCUIApplication(bundleIdentifier: "com.apple.SafariViewService")
+        let notNowButton = safariViewService.sheets["Save Password?"].buttons["Not Now"].firstMatch
+        // On a freshly booted simulator the password sheet can appear several seconds after registration loads.
+        if notNowButton.waitForExistence(timeout: 15) {
             notNowButton.tap()
-            return true
         }
-
-        app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
-        removeUIInterruptionMonitor(interruptionMonitor)
     }
 
     func dismissKeyboard() {
