@@ -8,8 +8,8 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController {
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
 
@@ -32,6 +32,12 @@ extension CheckoutElementsController {
 
         /// Default customer details used to pre-populate Checkout integrations.
         public var defaults: Defaults = Defaults()
+
+        /// The Apple Pay merchant identifier, shared by Payment Element and Express Checkout Element.
+        ///
+        /// Set this property to enable Apple Pay in both Payment Element and Express Checkout Element.
+        /// The default value is `nil`, which disables Apple Pay in both.
+        public var applePayMerchantId: String?
 
         /// Configuration for Payment Element.
         ///
@@ -131,8 +137,8 @@ extension CheckoutElementsController {
     }
 }
 
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController.Configuration {
     /// Default customer details used to pre-populate Checkout integrations.
     public struct Defaults {

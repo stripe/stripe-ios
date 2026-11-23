@@ -13,7 +13,7 @@ import PassKit
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import UIKit
 import XCTest
 
@@ -21,7 +21,8 @@ extension CheckoutClientAPIResponse {
     /// Convenience for fixtures that contain no client-local session state.
     func makePublicSession(
         clientSecret: String? = nil,
-        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil
+        expressCheckoutConfiguration: ExpressCheckoutElement.Configuration? = nil,
+        applePayMerchantId: String? = nil
     ) -> CheckoutElementsController.Session {
         let configuration = expressCheckoutConfiguration.map { expressConfiguration in
             var configuration = CheckoutElementsController.Configuration(
@@ -29,6 +30,7 @@ extension CheckoutClientAPIResponse {
                 returnURL: "stripe-ios-test://checkout-return"
             )
             configuration.expressCheckoutElement = expressConfiguration
+            configuration.applePayMerchantId = applePayMerchantId
             return configuration
         }
         return CheckoutElementsController.Session(
@@ -43,11 +45,13 @@ extension CheckoutClientAPIResponse {
 extension ExpressCheckoutElementUtilities {
     static func availablePaymentMethodsWithoutCheckoutRequirements(
         for elementsSession: STPElementsSession,
-        configuration: ExpressCheckoutElement.Configuration
+        configuration: ExpressCheckoutElement.Configuration,
+        applePayMerchantId: String? = nil
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         availablePaymentMethods(
             for: elementsSession,
             configuration: configuration,
+            applePayMerchantId: applePayMerchantId,
             usesWebLink: false,
             requiresShippingAddress: false,
             billingDetailsCollectionRequired: false
@@ -191,6 +195,24 @@ enum CheckoutTestHelpers {
         ]
     }
 
+    static func makeTotalSummaryJSON(
+        subtotal: Int = 1000,
+        total: Int? = nil,
+        taxExclusive: Int = 0,
+        taxInclusive: Int = 0,
+        totalTaxAmounts: [[String: Any]] = []
+    ) -> [String: Any] {
+        let total = total ?? subtotal + taxExclusive
+        return [
+            "subtotal": subtotal,
+            "total": total,
+            "due": total,
+            "tax_exclusive": taxExclusive,
+            "tax_inclusive": taxInclusive,
+            "total_tax_amounts": totalTaxAmounts,
+        ]
+    }
+
     static let baseSessionJSON: [String: Any] = [
         "id": "cs_test",
         "ui_mode": "mobile_elements",
@@ -200,6 +222,7 @@ enum CheckoutTestHelpers {
         "presentment_currency": "usd",
         "integration_currency": "usd",
         "items": makeOneTimePriceCheckoutItems(),
+        "total_summary": makeTotalSummaryJSON(),
         "merchant_info": ["country": "US"],
         "elements_session_id": "es_test",
         "ordered_payment_method_types_and_wallets": ["card"],
@@ -246,6 +269,48 @@ enum CheckoutTestHelpers {
 
     static func makeSessionJSON(_ overrides: [String: Any] = [:]) -> [String: Any] {
         baseSessionJSON.merging(overrides) { _, new in new }
+    }
+
+    /// A native Link selection with verified-account card payment details.
+    static func makeLinkConfirmOption() -> PaymentSheet.LinkConfirmOption {
+        .withPaymentDetails(
+            brand: .link,
+            account: .init(
+                email: "test@example.com",
+                session: .make(
+                    clientSecret: "cs_xxx",
+                    emailAddress: "test@example.com",
+                    redactedFormattedPhoneNumber: "(***) *** **55",
+                    unredactedPhoneNumber: "(555) 555-5555",
+                    phoneNumberCountry: "US",
+                    verificationSessions: [.init(type: .sms, state: .verified)],
+                    supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+                    mobileFallbackWebviewParams: nil
+                ),
+                publishableKey: "pk_xxx",
+                displayablePaymentDetails: nil,
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
+            ),
+            paymentDetails: .init(
+                stripeID: "pd1",
+                details: .card(card: .init(
+                    expiryYear: 2055,
+                    expiryMonth: 12,
+                    brand: "visa",
+                    networks: ["visa"],
+                    last4: "1234",
+                    funding: .credit,
+                    checks: nil
+                )),
+                billingAddress: nil,
+                billingEmailAddress: "test@example.com",
+                nickname: nil,
+                isDefault: true
+            ),
+            confirmationExtras: nil,
+            shippingAddress: nil
+        )
     }
 
     // MARK: - Checkout-flow helpers
@@ -449,6 +514,7 @@ enum CheckoutTestHelpers {
             currency: currency,
             unitAmount: integrationAmount
         )
+        json["total_summary"] = makeTotalSummaryJSON(subtotal: integrationAmount)
         let localCurrencyOption: [AnyHashable: Any] = [
             "currency": "gbp",
             "amount": localAmount,
@@ -568,7 +634,7 @@ extension CheckoutElementsController.ApplePayConfirmationParameters {
         apiClient: STPAPIClient,
         returnURL: String = "stripe-ios-test://checkout-return",
         merchantDisplayName: String = "Test Merchant",
-        applePayConfiguration: CheckoutApplePayConfiguration = PaymentElement.Configuration.ApplePayConfiguration(merchantId: "merchant.com.test"),
+        merchantId: String = "merchant.com.test",
         shippingAddressRequired: Bool = false,
         defaultBillingDetails: CheckoutElementsController.Configuration.Defaults.BillingDetails? = nil,
         presentationWindow: UIWindow? = nil,
@@ -578,7 +644,7 @@ extension CheckoutElementsController.ApplePayConfirmationParameters {
         attribution: CheckoutAttributionContext = .init(confirmingElement: .paymentElement, configuredElements: [.paymentElement])
     ) -> CheckoutElementsController.ApplePayConfirmationParameters {
         CheckoutElementsController.ApplePayConfirmationParameters(
-            applePayConfiguration: applePayConfiguration,
+            merchantId: merchantId,
             apiClient: apiClient,
             returnURL: returnURL,
             merchantDisplayName: merchantDisplayName,
@@ -605,5 +671,22 @@ extension CheckoutClientAPIResponse {
     private func withOverrides(_ overrides: [String: Any]) -> CheckoutClientAPIResponse {
         let json = allResponseFields.merging(overrides) { _, new in new }
         return try! CheckoutClientAPIResponse.decode(fromAPIResponse: json)
+    }
+}
+
+// MARK: - PaymentElement sheet helpers
+
+@MainActor
+extension XCTestCase {
+    /// Presents the Payment Element's sheet, runs `customerActions` while it's open, and taps its primary button.
+    func presentAndContinue(_ paymentElement: PaymentElement, customerActions: () -> Void = {}) {
+        let closed = expectation(description: "PaymentElement sheet closed")
+        paymentElement.present(from: UIViewController()) {
+            closed.fulfill()
+        }
+        customerActions()
+        let flowController = paymentElement.paymentSheetFlowController
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
+        wait(for: [closed], timeout: 2)
     }
 }

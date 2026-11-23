@@ -140,11 +140,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                     paymentMethodData: paymentMethodData,
                     confirmationSource: attribution.confirmingElement,
                     expectedAmount: checkoutSession.amount,
+                    savePaymentMethod: nil,
                     returnURL: self.returnURL,
                     shipping: self.makeShippingDetailsParams(from: payment)
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,
+                    paymentMethodOptions: nil,
                     clientAttributionMetadata: clientAttributionMetadata,
-                    collectedInformation: .init(email: checkoutSession.localState.email)
+                    collectedInformation: .init(email: checkoutSession.localState.email),
+                    passiveCaptchaToken: nil
                 )
                 let result = await self.confirmationHandler(requestParameters)
                 switch result {
@@ -374,9 +377,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                         : item.displayName
                     // Prefer unitAmountDecimal for the edge case where the Stripe API doesn't return a `unitAmount`
                     // (and so becomes 0) for prices with sub-cent precision like $0.1234.
-                    let unitAmount = item.unitAmountDecimal ?? item.unitAmount
+                    let unitAmount = item.unitAmountDecimal?.minorUnitsAmount ?? Decimal(item.unitAmount.minorUnitsAmount)
                     let amount = makeApplePayAmount(
-                        minorUnitsAmount: unitAmount.minorUnitsAmount * Double(item.quantity),
+                        minorUnitsAmount: unitAmount * Decimal(item.quantity),
                         currency: currency
                     )
                     summaryItems.append(
@@ -397,7 +400,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 PKPaymentSummaryItem(
                     label: String.Localized.subtotal,
                     amount: makeApplePayAmount(
-                        minorUnitsAmount: totals.subtotal.minorUnitsAmount,
+                        minorUnitsAmount: Decimal(totals.subtotal.minorUnitsAmount),
                         currency: currency
                     ),
                     type: .final
@@ -407,14 +410,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 summaryItems.append(
                     PKPaymentSummaryItem(
                         label: String.Localized.tax,
-                        amount: makeApplePayAmount(minorUnitsAmount: tax, currency: currency),
+                        amount: makeApplePayAmount(minorUnitsAmount: Decimal(tax), currency: currency),
                         type: .final
                     )
                 )
             }
             if discount != 0 {
                 // `discount` is non-negative; flip the sign so Apple Pay shows it as a deduction.
-                let amount = makeApplePayAmount(minorUnitsAmount: discount, currency: currency)
+                let amount = makeApplePayAmount(minorUnitsAmount: Decimal(discount), currency: currency)
                 let negativeAmount = NSDecimalNumber(decimal: -amount.decimalValue)
                 summaryItems.append(
                     PKPaymentSummaryItem(
@@ -431,7 +434,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             PKPaymentSummaryItem(
                 label: label,
                 amount: makeApplePayAmount(
-                    minorUnitsAmount: totals.total.minorUnitsAmount,
+                    minorUnitsAmount: Decimal(totals.total.minorUnitsAmount),
                     currency: currency
                 ),
                 type: .final
@@ -442,10 +445,10 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     }
 
     private static func makeApplePayAmount(
-        minorUnitsAmount: Double,
+        minorUnitsAmount: Decimal,
         currency: String?
     ) -> NSDecimalNumber {
-        let amount = NSDecimalNumber(value: minorUnitsAmount)
+        let amount = NSDecimalNumber(decimal: minorUnitsAmount)
             .multiplying(by: NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency))
         return amount.roundedForApplePay(currency: currency)
     }
@@ -472,14 +475,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         checkoutSession: CheckoutElementsController.Session,
         applePayConfirmationParameters: CheckoutElementsController.ApplePayConfirmationParameters
     ) -> PKPaymentRequest {
-        let applePayConfig = applePayConfirmationParameters.applePayConfiguration
         let paymentRequest = StripeAPI.paymentRequest(
-            withMerchantIdentifier: applePayConfig.merchantId,
+            withMerchantIdentifier: applePayConfirmationParameters.merchantId,
             country: checkoutSession.merchantCountryCode,
             currency: checkoutSession.activePresentmentCurrency ?? "USD"
         )
 
-        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantId` on `ApplePayConfiguration`.")
+        assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `applePayMerchantId` on `CheckoutElementsController.Configuration`.")
 
         let merchantLabel = applePayConfirmationParameters.merchantDisplayName
         paymentRequest.paymentSummaryItems = CheckoutApplePayContext.makeSummaryItems(for: checkoutSession, label: merchantLabel)

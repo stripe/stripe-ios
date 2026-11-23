@@ -102,6 +102,53 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
     }
 
+    func testPaymentMethodsAvailableWithoutShippingAddress() {
+        // Given payment methods and configurations without shipping details
+        let paymentMethodTypes: [STPPaymentMethodType] = [.affirm, .afterpayClearpay]
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: paymentMethodTypes, shippingProvided: false)
+        XCTAssertNil(paymentIntent.shipping)
+        let intents: [Intent] = [
+            .paymentIntent(paymentIntent),
+            .deferredIntent(intentConfig: .init(
+                mode: .payment(amount: 1010, currency: "USD"),
+                paymentMethodTypes: paymentMethodTypes.compactMap { STPPaymentMethod.string(from: $0) },
+                confirmHandler: { _, _ in return "" }
+            )),
+        ]
+        let configurations: [PaymentElementConfiguration] = [PaymentSheet.Configuration(), EmbeddedPaymentElement.Configuration()]
+
+        for intent in intents {
+            let elementsSession = STPElementsSession._testValue(intent: intent)
+            for var configuration in configurations {
+                XCTAssertNil(configuration.shippingDetails())
+
+                // Without a return URL, both payment methods are unavailable for that reason alone
+                for paymentMethod in paymentMethodTypes {
+                    XCTAssertEqual(
+                        PaymentSheet.PaymentMethodType.supportsAdding(
+                            paymentMethod: paymentMethod,
+                            configuration: configuration,
+                            intent: intent,
+                            elementsSession: elementsSession
+                        ),
+                        .missingRequirements([.returnURL])
+                    )
+                }
+
+                // With a return URL, both remain available without shipping details
+                configuration.returnURL = "example://return"
+                XCTAssertEqual(
+                    PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+                        from: intent,
+                        elementsSession: elementsSession,
+                        configuration: configuration
+                    ),
+                    [.stripe(.affirm), .stripe(.afterpayClearpay)]
+                )
+            }
+        }
+    }
+
     // MARK: - Pix
 
     func testPixSupportsPaymentPaymentWithSetupFutureUsageAndSetup() {
@@ -1203,6 +1250,76 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(types, [.stripe(.card), .linkCardBrand])
     }
 
+    func testPaymentMethodTypesLinkCardBrand_goesLast() {
+        // Given Link card brand is available and card isn't first
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.cashApp, .card, .klarna])
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+
+        // When filtering
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: ._testValue(
+                intent: intent,
+                linkMode: .linkCardBrand,
+                linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+                linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
+            ),
+            configuration: configuration
+        )
+
+        // Then the bank option goes last
+        XCTAssertEqual(types, [.stripe(.cashApp), .stripe(.card), .stripe(.klarna), .linkCardBrand])
+    }
+
+    func testPaymentMethodTypesInstantDebits_goesLast() {
+        // Given Instant Debits is available and card isn't first
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.cashApp, .card, .link, .klarna])
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+
+        // When filtering
+        let types = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: intent,
+            elementsSession: instantDebitsElementsSession(intent: intent),
+            configuration: configuration
+        )
+
+        // Then the bank option goes last
+        XCTAssertEqual(types, [.stripe(.cashApp), .stripe(.card), .stripe(.klarna), .instantDebits])
+    }
+
+    func testPaymentMethodTypesInstantDebits_merchantPaymentMethodOrder() {
+        // Given Instant Debits is available
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link, .cashApp, .klarna])
+        let elementsSession = instantDebitsElementsSession(intent: intent)
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "http://return-to-url"
+
+        // When the merchant orders the bank option explicitly
+        configuration.paymentMethodOrder = ["klarna", "instant_debits"]
+        let explicitlyOrderedTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration)
+
+        // Then the merchant's order wins, and the rest keep the default order
+        XCTAssertEqual(explicitlyOrderedTypes, [.stripe(.klarna), .instantDebits, .stripe(.card), .stripe(.cashApp)])
+
+        // When the merchant orders other payment methods only
+        configuration.paymentMethodOrder = ["cashapp"]
+        let partiallyOrderedTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration)
+
+        // Then the bank option stays last among the rest
+        XCTAssertEqual(partiallyOrderedTypes, [.stripe(.cashApp), .stripe(.card), .stripe(.klarna), .instantDebits])
+    }
+
+    private func instantDebitsElementsSession(intent: Intent) -> STPElementsSession {
+        return ._testValue(
+            intent: intent,
+            linkMode: .linkPaymentMethod,
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
+        )
+    }
+
     func testPaymentMethodTypesLinkCardBrand_noDefaults() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         var configuration = PaymentSheet.Configuration()
@@ -1680,7 +1797,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
         func callFilteredPaymentMethodTypes(withIntentTypes paymentMethodTypes: [String], externalPMTypes: [String]) -> [PaymentSheet.PaymentMethodType] {
             let intent = Intent.deferredIntent(
-                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
+                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic), confirmHandler: { _, _ in return "" })
             )
             // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
             return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes, externalPaymentMethodTypes: externalPMTypes), configuration: configuration)
@@ -1754,7 +1871,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let intent = Intent.deferredIntent(
-            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
+            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic), confirmHandler: { _, _ in return "" })
         )
 
         // Mixed-case CPM id in paymentMethodOrder is matched correctly

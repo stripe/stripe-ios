@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Un depanator este atașat la Aplicație.";
+
+"An emulator is being used to run the App." = "Se folosește un emulator pentru a rula Aplicația.";
+
 "An error occurred. Please try again." = "A apărut o eroare. Încercați din nou.";
+
+"Cancel" = "Anulare";
 
 "Card brand was not updated. Please try again." = "Marca de card nu a fost actualizată. Încercați din nou.";
 
 "Close" = "Închidere";
+
+"Collapsed" = "Restrâns";
 
 "Confirm it's you" = "Confirmați că sunteți dvs.";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Introduceți codul trimis la %@.";
 
+"Expanded" = "Extins";
+
 "Failed to connect" = "Nu s-a reușit conectarea";
+
+"Loading" = "Se încarcă";
+
+"No" = "Nu";
 
 "Resend code" = "Retrimitere cod";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Scanare card";
 
+"Secure checkout" = "Finalizare comandă securizată";
+
+"Selected" = "Selectat";
+
 "The IBAN you entered is invalid." = "Codul IBAN pe care l-ați introdus nu este valid.";
+
+"The OS or the OS Version is not supported." = "Sistemul de operare sau versiunea sistemului de operare nu este acceptată.";
+
+"The device is jailbroken." = "Dispozitivul este deblocat (prin jailbreak).";
+
+"The integrity of the SDK has been tampered." = "Integritatea SDK-ului a fost alterată.";
 
 "There was an error processing your card -- try again in a few seconds" = "A apărut o eroare la procesarea cardului dvs. -- încercați din nou în câteva secunde";
 
 "There was an unexpected error -- try again in a few seconds" = "A apărut o eroare neașteptată -- încercați din nou în câteva secunde";
 
+"Timeout" = "Timp expirat";
+
 "Try again" = "Încercați din nou";
 
+"Unselected" = "Neselectat";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Folosim Stripe pentru a verifica detaliile cardului dvs. Stripe poate utiliza și stoca datele dvs. în conformitate cu politica sa de confidențialitate. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Aflați mai multe</u></a>";
+
+"Yes" = "Da";
 
 "Your card has expired" = "Cardul dvs. a expirat";
 

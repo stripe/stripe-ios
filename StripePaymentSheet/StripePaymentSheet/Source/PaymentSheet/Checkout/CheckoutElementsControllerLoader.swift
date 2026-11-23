@@ -54,7 +54,7 @@ enum CheckoutElementsControllerLoader {
         let paymentElementUsesLink = paymentElementConfiguration.map {
             PaymentSheet.isLinkEnabled(elementsSession: session.elementsSession, configuration: $0)
         } ?? false
-        let expressCheckoutUsesLink = session.availableExpressCheckoutPaymentMethods.contains(ExpressCheckoutElement.PaymentMethod.link.rawValue)
+        let expressCheckoutUsesLink = session.availableExpressCheckoutPaymentMethods.contains(.link)
         // Hack: Link experiment exposures send default billing details
         var defaultBillingDetails = PaymentSheet.BillingDetails()
         defaultBillingDetails.email = session.email
@@ -71,6 +71,23 @@ enum CheckoutElementsControllerLoader {
             loadTimings: .init(loadingStartDate: Date()),
             isUpdate: false,
             linkAnalytics: .init(checkoutSessionID: session.id)
+        )
+    }
+
+    /// Reports that the session offers Stripe balance to the Payment Element, which Checkout Sessions don't support yet.
+    /// Call once when the session loads, so it counts sessions rather than session updates.
+    static func logStripeBalanceUnsupportedIfNeeded(checkout: CheckoutElementsController) {
+        // TODO(porter) Stripe balance: Support Checkout Sessions once CheckoutClient can list the buyer's financial accounts.
+        // `v1/elements/stripe_balance/customer_session/financial_accounts` requires a CustomerSession, so until then Stripe
+        // balance isn't offered here. Report it so we know how many merchants offer Stripe balance with Checkout Sessions.
+        guard checkout.configuration.paymentElement != nil,
+              checkout.session.elementsSession.orderedPaymentMethodTypes.contains(.stripeBalance) else {
+            return
+        }
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+            event: .paymentSheetStripeBalanceCheckoutSessionUnsupported,
+            checkoutSessionID: checkout.session.id,
+            apiClient: checkout.apiClient
         )
     }
 
@@ -112,8 +129,7 @@ enum CheckoutElementsControllerLoader {
 
         let intent = Intent.checkout(session)
         let customerProvider = CustomerProvider(checkoutSession: session)
-        let experimentAnalyticsHelper = ExperimentAnalyticsHelper(integrationShape: .checkoutElements)
-        PaymentSheetLoader.warnAboutUnactivatedPaymentMethods(elementsSession: elementsSession)
+        PaymentSheetLoader.logAvailabilityMessages(elementsSession: elementsSession)
         // Filter PMs
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
             from: intent,
@@ -140,9 +156,7 @@ enum CheckoutElementsControllerLoader {
                 checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
             )
         let orientation = fcConfiguration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
-        flowControllerAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
-        flowControllerAnalyticsHelper.paymentMethodOrientation = orientation
-        // Create/reuse and update Embedded analytics helper
+        // Create/reuse Embedded analytics helper
         let embeddedAnalyticsHelper = checkout.paymentElement?.embeddedPaymentElement.analyticsHelper
         ?? PaymentSheetAnalyticsHelper(
             integrationShape: .embedded,
@@ -150,28 +164,13 @@ enum CheckoutElementsControllerLoader {
             checkoutSessionID: session.id,
             checkoutAttribution: .init(confirmingElement: .paymentElement, configuredElements: checkout.configuration.configuredElements)
         )
-        embeddedAnalyticsHelper.didLoad(intent: intent, elementsSession: elementsSession)
-        embeddedAnalyticsHelper.paymentMethodOrientation = .vertical
-        // Deal with PMM Promotions Helper
-        // TODO: Fix Checkout promotions exposure attribution. This uses the FC layout even
-        // when the merchant uses Embedded (vertical) or neither UI; the actual UI is unknown here.
-        // TODO: Restore Checkout promotions fetch/display analytics with the appropriate context.
-        // Leave analyticsHelper nil until then.
-        let promotionsHelper = PaymentMethodMessagingPromotionsHelper(
-            elementsSession: elementsSession,
-            intent: intent,
-            configuration: fcConfiguration,
-            paymentMethodTypes: paymentMethodTypes,
-            experimentAnalyticsHelper: experimentAnalyticsHelper
-        )
-        promotionsHelper?.fetchData()
         // Return
         let flowControllerLoadResult = PaymentSheetLoader.LoadResult(
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: paymentMethodTypes,
-            paymentMethodMessagingPromotionsHelper: promotionsHelper,
+            paymentMethodMessagingPromotionsHelper: nil,
             paymentMethodOrientation: orientation,
             customerProvider: customerProvider
         )
@@ -180,7 +179,7 @@ enum CheckoutElementsControllerLoader {
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: paymentMethodTypes,
-            paymentMethodMessagingPromotionsHelper: promotionsHelper,
+            paymentMethodMessagingPromotionsHelper: nil,
             paymentMethodOrientation: .vertical,
             customerProvider: customerProvider
         )
@@ -212,6 +211,7 @@ enum CheckoutElementsControllerLoader {
             defaults: configuration.defaults,
             merchantDisplayName: configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? "",
             merchantCountryCode: session.merchantCountryCode,
+            applePayMerchantId: configuration.applePayMerchantId,
             userInterfaceStyle: configuration.userInterfaceStyle
         )
         session.applyAddressOverrides(to: &paymentSheetConfiguration)
@@ -229,6 +229,7 @@ enum CheckoutElementsControllerLoader {
             defaults: configuration.defaults,
             merchantDisplayName: configuration.merchantDisplayName ?? session.businessName ?? Bundle.displayName ?? "",
             merchantCountryCode: session.merchantCountryCode,
+            applePayMerchantId: configuration.applePayMerchantId,
             userInterfaceStyle: configuration.userInterfaceStyle
         )
         session.applyAddressOverrides(to: &embeddedConfiguration)

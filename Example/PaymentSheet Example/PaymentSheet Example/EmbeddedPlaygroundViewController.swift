@@ -103,7 +103,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     private lazy var showElementBoundsSwitch: UISwitch = {
         let toggle = UISwitch()
-        toggle.isOn = true
+        toggle.isOn = false
         toggle.accessibilityLabel = "Show embedded element bounds"
         toggle.addTarget(self, action: #selector(didToggleElementBounds), for: .valueChanged)
         return toggle
@@ -236,7 +236,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     private func makeHighlightedContainer(for embeddedPaymentElementView: UIView) -> UIView {
         let containerView = UIView()
-        containerView.layer.borderColor = UIColor.systemRed.cgColor
+        containerView.layer.borderColor = UIColor.clear.cgColor
         containerView.layer.borderWidth = 4
         containerView.layoutMargins = .init(top: 8, left: 8, bottom: 8, right: 8)
         highlightedContainerView = containerView

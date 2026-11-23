@@ -524,7 +524,7 @@ extension String.Localized {
 
     static var add_card: String {
         STPLocalizedString(
-            "Add card",
+            "Add a card",
             "Title shown above a view allowing the customer to save their first card."
         )
     }

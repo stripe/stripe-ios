@@ -112,6 +112,7 @@ import UIKit
     private let mode: Mode
     private let elementsSession: STPElementsSession
     private let intent: Intent
+    private let customerProvider: CustomerProvider
     private let paymentElementConfiguration: PaymentElementConfiguration
     private let initialLinkBrand: LinkBrand
     private let appearance: LinkAppearance?
@@ -164,6 +165,7 @@ import UIKit
         mode: Mode,
         elementsSession: STPElementsSession,
         intent: Intent,
+        customerProvider: CustomerProvider,
         paymentElementConfiguration: PaymentElementConfiguration,
         linkBrand: LinkBrand,
         appearance: LinkAppearance?,
@@ -175,6 +177,7 @@ import UIKit
         self.mode = mode
         self.elementsSession = elementsSession
         self.intent = intent
+        self.customerProvider = customerProvider
         self.paymentElementConfiguration = paymentElementConfiguration
         self.initialLinkBrand = linkBrand
         self.appearance = appearance
@@ -283,6 +286,7 @@ import UIKit
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
                 paymentElementConfiguration.returnURL = configuration?.returnURL
+                paymentElementConfiguration.cardBrandAcceptance = configuration?.cardBrandAcceptance ?? .all
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,
@@ -303,11 +307,13 @@ import UIKit
                     return
                 }
 
+                analyticsHelper.didLoad(loadResult)
                 let controller = LinkController(
                     apiClient: apiClient,
                     mode: mode,
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
+                    customerProvider: loadResult.customerProvider,
                     paymentElementConfiguration: paymentElementConfiguration,
                     linkBrand: paymentElementConfiguration.resolvedLinkBrand(
                         elementsSession: loadResult.elementsSession,
@@ -348,6 +354,7 @@ import UIKit
                     paymentElementConfiguration.merchantDisplayName = merchantDisplayName
                 }
                 paymentElementConfiguration.returnURL = configuration?.returnURL
+                paymentElementConfiguration.cardBrandAcceptance = configuration?.cardBrandAcceptance ?? .all
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,
@@ -368,11 +375,13 @@ import UIKit
                     return
                 }
 
+                analyticsHelper.didLoad(loadResult)
                 let controller = LinkController(
                     apiClient: apiClient,
                     mode: .setup,
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
+                    customerProvider: loadResult.customerProvider,
                     paymentElementConfiguration: paymentElementConfiguration,
                     linkBrand: paymentElementConfiguration.resolvedLinkBrand(
                         elementsSession: loadResult.elementsSession,
@@ -536,6 +545,7 @@ import UIKit
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
             configuration: paymentElementConfiguration,
+            customerProvider: customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
@@ -597,6 +607,7 @@ import UIKit
             presentingViewController.presentNativeLink(
                 selectedPaymentDetailsID: nil,
                 configuration: paymentElementConfiguration,
+                customerProvider: customerProvider,
                 nativeSheetPresentation: self.nativeSheetPresentation,
                 intent: self.intent,
                 elementsSession: self.elementsSession,
@@ -1037,6 +1048,7 @@ import UIKit
         }
 
         session.logout(
+            with: apiClient,
             requestSurface: requestSurface,
             completion: { result in
                 switch result {

@@ -35,9 +35,6 @@ Section header for address fields */
 /* Placeholder for AU BECS BSB number */
 "BSB number" = "BSB number";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "Cancel";
-
 /* Label an input field to update card brand */
 "Card brand" = "Card brand";
 

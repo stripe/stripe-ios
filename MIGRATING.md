@@ -2,6 +2,79 @@
 ### Migrating from CocoaPods
 Read our migration guide in [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md).
 
+### Migrating from versions < 27.0.0
+#### PaymentSheet
+##### Migrating from External Payment Methods to Custom Payment Methods
+`PaymentSheet.ExternalPaymentMethodConfiguration` is deprecated in favor of `PaymentSheet.CustomPaymentMethodConfiguration`.
+Create the custom payment method in the Dashboard and complete the accompanying backend/provider integration using the [CPM guide](https://docs.stripe.com/payments/mobile/custom-payment-methods?platform=ios). Then update your configuration using its `cpmt_...` identifier:
+
+```diff
+-configuration.externalPaymentMethodConfiguration = .init(
+-    externalPaymentMethods: ["external_paypal"],
+-    externalPaymentMethodConfirmHandler: confirmExternalPayment
++configuration.customPaymentMethodConfiguration = .init(
++    customPaymentMethods: [.init(id: "cpmt_...")],
++    customPaymentMethodConfirmHandler: confirmCustomPayment
+)
+```
+
+If your integration configures `paymentMethodOrder`, replace the legacy string with the corresponding custom-method ID:
+
+```diff
+-configuration.paymentMethodOrder = ["external_paypal", "card"]
++configuration.paymentMethodOrder = ["cpmt_...", "card"]
+```
+
+The same configuration change applies to EmbeddedPaymentElement.
+
+Migrate your application-owned confirmation handler from a method-name string to a custom-method object. Update your adapter to handle the `CustomPaymentMethod` struct. Both callbacks return `PaymentSheetResult` directly, so no outcome wrapping changes are necessary.
+
+```diff
+-func confirmExternalPayment(
+-    _ externalPaymentMethodType: String,
++func confirmCustomPayment(
++    _ customPaymentMethod: PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod,
+     _ billingDetails: STPPaymentMethodBillingDetails
+ ) async -> PaymentSheetResult {
+-    await externalPaymentProvider.confirm(
+-        methodName: externalPaymentMethodType,
++    await customPaymentProvider.confirm(
++        customMethodID: customPaymentMethod.id,
+         billingDetails: billingDetails
+     )
+ }
+```
+
+##### MainActor Changes
+`PaymentSheet` and `PaymentSheet.FlowController` are now main-actor isolated. Initialize and access them from the main actor.
+
+```diff
++@MainActor
+ final class CheckoutCoordinator {
+     var paymentSheet: PaymentSheet?
+     var flowController: PaymentSheet.FlowController?
+ }
+```
+
+##### Other changes
+`PaymentSheetError` is no longer public. Do not identify internal error cases by comparing descriptions or undocumented `NSError` codes.
+
+`PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress` are deprecated. Payment methods that require a shipping address are always allowed.
+
+#### CustomerSheet
+##### MainActor Changes
+`CustomerSheet` is now main-actor isolated. Initialize and access from the main actor.
+
+```diff
++@MainActor
+ final class CheckoutCoordinator {
+     var customerSheet: CustomerSheet?
+ }
+```
+
+##### Other changes
+`CustomerSheetError` is no longer public. Do not identify internal error cases by comparing descriptions or undocumented `NSError` codes.
+
 ### Migrating from versions < 26.7.0
 * StripePaymentSheet now depends on `StripeFinancialConnectionsLite`. If you manually link StripePaymentSheet or use Carthage, you must also embed `StripeFinancialConnectionsLite.xcframework` in your app. No action is required for CocoaPods or Swift Package Manager users.
 

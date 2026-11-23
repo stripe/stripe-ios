@@ -330,6 +330,91 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         XCTAssertEqual(capturedFormFields["merchant_token"], "acct_123")
     }
 
+    @MainActor
+    func testCreatingLinkAccountSessionUsesLinkAccountClient() async {
+        // Create a custom API client with an identifiable PK to match when checking the Authorization header.
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_link_account"
+
+        let account = LinkStubs.account(apiClient: apiClient)
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = apiClient
+
+        // Set up the stub to check that we used the appropriate PK for the request.
+        let responseExpectation = expectation(description: "The stubbed request was provided and checked.")
+        stub { $0.url?.path == "/v1/consumers/link_account_sessions" } response: { request in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_link_account")
+            responseExpectation.fulfill()
+
+            // The response does not matter for our testing, so just return an error.
+            return HTTPStubsResponse(jsonObject: [
+                "error": ["type": "invalid_request_error", "code": "test_error"],
+            ], statusCode: 400, headers: nil)
+        }
+
+        let controller = PayWithLinkViewController(intent: ._testValue(), linkAccount: account, elementsSession: ._testValue(), configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), analyticsHelper: ._testValue())
+        controller.startFinancialConnections { _ in }
+        await fulfillment(of: [responseExpectation], timeout: 2)
+    }
+
+    func testCreatingBankPaymentDetailsUsesLinkAccountClient() {
+        // Create a custom API client with an identifiable PK to match when checking the Authorization header.
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_link_account"
+
+        let account = LinkStubs.account(session: makeVerifiedSession(), apiClient: apiClient)
+
+        // Set up the stub to check that we used the appropriate PK for the request.
+        let responseExpectation = expectation(description: "The stubbed request was provided and checked.")
+        stub { $0.url?.path == "/v1/consumers/payment_details" } response: { request in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_link_account")
+            responseExpectation.fulfill()
+
+            // The response does not matter for our testing, so just return an error.
+            return HTTPStubsResponse(jsonObject: [
+                "error": ["type": "invalid_request_error", "code": "test_error"],
+            ], statusCode: 400, headers: nil)
+        }
+
+        account.createPaymentDetails(linkedAccountId: "test", isDefault: false, clientAttributionMetadata: nil) { _ in }
+        wait(for: [responseExpectation], timeout: 2)
+    }
+
+    @MainActor
+    func testLinkControllerLogoutUsesConfiguredClient() async {
+        // Create a custom API client with an identifiable PK to match when checking the Authorization header.
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_link_account"
+
+        // We're replacing `LinkAccountContext.shared.account`, so set it back when we're done.
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+
+        let controller = LinkStubs.makeLinkController(with: apiClient)
+        LinkAccountContext.shared.account = LinkStubs.account(session: makeVerifiedSession(), apiClient: apiClient)
+
+        // Let the controller process the account change before logging out.
+        await withCheckedContinuation { continuation in
+            DispatchQueue.main.async { continuation.resume() }
+        }
+
+        stub { $0.url?.path == "/v1/consumers/sessions/log_out" } response: { request in
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test_link_account")
+
+            // The response does not matter for our testing, so just return an error.
+            return HTTPStubsResponse(jsonObject: [
+                "error": ["type": "invalid_request_error", "code": "test_error"],
+            ], statusCode: 400, headers: nil)
+        }
+
+        do {
+            try await controller.logOut()
+            XCTFail("Expected the API error that was stubbed")
+        } catch {
+            XCTAssertEqual(error._stp_error_code, "test_error")
+        }
+    }
+
     /// Decodes an `application/x-www-form-urlencoded` request body into a flat `[key: value]` map, keeping
     /// bracketed keys (e.g. `credentials[consumer_session_client_secret]`) as-is rather than nesting them.
     private static func decodeFormFields(from body: String) -> [String: String] {

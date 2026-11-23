@@ -8,7 +8,7 @@
 //  These extensions are only for the example app and don't affect the public API.
 
 import Foundation
-@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
@@ -419,7 +419,7 @@ extension PaymentSheet.Appearance: @retroactive Codable {
     }
 }
 
-extension CurrencySelectorElement.Appearance: @retroactive Codable {
+extension CurrencySelectorElement.Configuration.Appearance: @retroactive Codable {
 
     private enum CodingKeys: String, CodingKey {
         case contentVerticalPadding

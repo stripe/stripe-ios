@@ -230,8 +230,8 @@ final class LinkPaymentMethodPicker: UIView {
 
     private func updateTintColors() {
         let linkAppearancePrimaryColor = linkAppearance?.colors?.primary
-        tintColor = linkAppearancePrimaryColor ?? .linkIconBrand
-        addPaymentMethodButton.tintColor = linkAppearancePrimaryColor ?? .linkTextBrand
+        tintColor = linkAppearancePrimaryColor ?? .linkAccent
+        addPaymentMethodButton.tintColor = linkAppearancePrimaryColor ?? .linkTextPrimary
     }
 }
 

@@ -3,7 +3,7 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -405,7 +405,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         }
 
         // ...and we're using a deferred intent without PM types specified...
-        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _ in return "" })
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd", captureMethod: .automatic), confirmHandler: { _, _ in return "" })
 
         // ...and the customer has payment methods...
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
@@ -515,7 +515,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             XCTFail("Confirm handler shouldn't be called.")
             return ""
         }
-        let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
+        let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
@@ -744,6 +744,63 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         XCTAssertTrue(didCallLookup, "Expected Link lookup to run for the new email")
         XCTAssertEqual(linkAccount?.consumerSessionClientSecret, "pscs_abc123")
         XCTAssertEqual(linkAccount?.sessionState, .requiresVerification)
+    }
+
+    @MainActor
+    func testResetCustomer_logsOutAndClearsVerifiedLinkAccount() async throws {
+        // Given a verified Link account from a previous customer
+        let didLogOut = expectation(description: "Link logout")
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("consumers/sessions/log_out") == true
+        } response: { _ in
+            didLogOut.fulfill()
+            return HTTPStubsResponse(jsonObject: [:], statusCode: 200, headers: nil)
+        }
+        LinkAccountContext.shared.account = makeVerifiedLinkAccount(email: "user-a@example.com")
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        // When the merchant resets the customer on logout
+        PaymentSheet.resetCustomer()
+
+        // Then the Link account is cleared locally and logged out on the backend
+        XCTAssertNil(LinkAccountContext.shared.account)
+        await fulfillment(of: [didLogOut], timeout: 2)
+    }
+
+    @MainActor
+    func testLoadLink_lookupTimeout_clearsPreviousLinkAccount() async throws {
+        // Given a verified Link account from a previous customer
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true
+        } response: { _ in
+            HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+                .requestTime(1, responseTime: 0)
+        }
+        LinkAccountContext.shared.account = makeVerifiedLinkAccount(email: "user-a@example.com")
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        // When the Link lookup for the next customer times out
+        let didLinkLookupTimeOut = await PaymentSheetLoader.loadLink(
+            elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
+            apiClient: stubbedAPIClient(),
+            isLinkEnabled: true,
+            email: "user-b@example.com",
+            defaultBillingDetails: .init(),
+            analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .paymentSheet),
+            prefetchedEmailAndSourceTask: Task { nil },
+            loadTimings: .init(),
+            isUpdate: false,
+            linkAnalytics: .init(),
+            lookupTimeout: 0.1
+        )
+
+        // Then the previous customer's Link account is not kept around
+        XCTAssertEqual(didLinkLookupTimeOut, true)
+        XCTAssertNil(LinkAccountContext.shared.account)
     }
 
     // MARK: - Link Lookup Holdback Tests

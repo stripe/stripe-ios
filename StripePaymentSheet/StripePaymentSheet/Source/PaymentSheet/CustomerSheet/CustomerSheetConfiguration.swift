@@ -72,7 +72,7 @@ extension CustomerSheet {
         /// This is an experimental feature that may be removed at any time.
         /// If true (the default), the customer can delete all saved payment methods.
         /// If false, the customer can't delete if they only have one saved payment method remaining.
-        @_spi(InternalOnlyAPI) public var allowsRemovalOfLastSavedPaymentMethod = true
+        @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var allowsRemovalOfLastSavedPaymentMethod = true
 
         /// By default, CustomerSheet will accept all supported cards by Stripe.
         /// You can specify card brands CustomerSheet should block disallow or allow payment for by providing an array of those card brands.

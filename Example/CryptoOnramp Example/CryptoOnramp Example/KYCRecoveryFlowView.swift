@@ -62,6 +62,7 @@ struct KYCRecoveryFlowView: View {
                     switch route {
                     case .identity:
                         identityVerificationView
+                            .toolbar { cancelToolbarItem }
                     }
                 }
         }
@@ -101,8 +102,10 @@ struct KYCRecoveryFlowView: View {
     @ToolbarContentBuilder
     private var cancelToolbarItem: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button("Cancel") {
+            Button {
                 dismiss()
+            } label: {
+                Label("Cancel", systemImage: "xmark")
             }
         }
     }

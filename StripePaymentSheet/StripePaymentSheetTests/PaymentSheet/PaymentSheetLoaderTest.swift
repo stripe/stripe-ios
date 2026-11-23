@@ -136,9 +136,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     func testPaymentSheetLoadDeferredIntentSucceeds() {
         // Given a saved guest card, customerless loads must still match requests with no client default.
         let previousGuestDefault = CustomerPaymentOption.localDefaultPaymentMethod(for: nil)
-        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId("pm_guest_default"), forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId("pm_guest_default"), forCustomer: nil)
         defer {
-            CustomerPaymentOption.setDefaultPaymentMethod(previousGuestDefault, forCustomer: nil)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(previousGuestDefault, forCustomer: nil)
         }
 
         // Test PaymentSheetLoader.load can load various IntentConfigurations
@@ -148,7 +148,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         }
         let intentConfigTestcases: [PaymentSheet.IntentConfiguration] = [
             // Typical auto pm payment config
-            .init(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: confirmHandler),
+            .init(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), confirmHandler: confirmHandler),
             // Payment config with explicit PM types
             .init(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: confirmHandler),
             // Typical auto pm setup config
@@ -188,9 +188,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         }
         let intentConfigTestcases: [(config: PaymentSheet.IntentConfiguration, expectedErrorType: String)] = [
             // Bad currency
-            (.init(mode: .payment(amount: 1000, currency: "FOO"), confirmHandler: confirmHandler), "invalid_request_error"),
+            (.init(mode: .payment(amount: 1000, currency: "FOO", captureMethod: .automatic), confirmHandler: confirmHandler), "invalid_request_error"),
             // Bad amount
-            (.init(mode: .payment(amount: 0, currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: confirmHandler), "StripePaymentSheet.PaymentSheetError"),
+            (.init(mode: .payment(amount: 0, currency: "USD", captureMethod: .automatic), paymentMethodTypes: ["card"], confirmHandler: confirmHandler), "StripePaymentSheet.PaymentSheetError"),
             // Bad pm type
             (.init(mode: .setup(currency: "USD"), paymentMethodTypes: ["card", "foo"], confirmHandler: confirmHandler), "invalid_request_error"),
             // Bad OBO
@@ -348,7 +348,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             XCTFail("Confirm handler shouldn't be called.")
             return ""
         }
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY", captureMethod: .automatic), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
             loadExpectation.fulfill()
             switch result {
@@ -401,7 +401,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             return ""
         }
         // Set intent config to ONLY support cards, so we only fetch saved cards.
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: confirmHandler)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", captureMethod: .automatic), paymentMethodTypes: ["card"], confirmHandler: confirmHandler)
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
             switch result {
             case .success(let (loadResult, _)):
@@ -429,13 +429,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         // Set the card as default
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             .stripeId("pm_1Sc4CpFY0qyl6XeWThu3QpWE"),
             forCustomer: testCustomerID
         )
         defer {
             // Unset this global state to avoid pollution
-            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: testCustomerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: testCustomerID)
         }
         // Note the card (the older PM) is actually expected to be first, because it is the default
         let expectedSavedPms = [
@@ -601,7 +601,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             XCTFail("Confirm handler shouldn't be called.")
             return ""
         }
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY", captureMethod: .automatic), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .paymentSheet) { result in
             loadExpectation.fulfill()
             switch result {
@@ -649,7 +649,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             XCTFail("Confirm handler shouldn't be called.")
             return ""
         }
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY", captureMethod: .automatic), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .paymentSheet) { result in
             loadExpectation.fulfill()
             switch result {
@@ -678,7 +678,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Loading w/ ^ customer...
         let (loadResult, _) = try await PaymentSheetLoader.load(
-            mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD"), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
+            mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
@@ -711,7 +711,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Loading w/ ^ customer...
         _ = try await PaymentSheetLoader.load(
-            mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD"), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
+            mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
@@ -734,7 +734,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Loading w/ ^ customer...
         let (loadResult, _) = try await PaymentSheetLoader.load(
-            mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD"), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
+            mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
@@ -750,7 +750,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
     func testLoadPerformance() {
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in return "" }
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD"),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD", captureMethod: .automatic),
                                                             confirmHandler: confirmHandler)
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.apiClient = apiClient
@@ -774,88 +774,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         }
     }
 
-    // MARK: - CheckoutSession
-
-    @MainActor
-    func testPaymentSheetLoadWithDirectCheckoutSessionPayment() async throws {
-        let expectation = XCTestExpectation(description: "Load w/ direct CheckoutSession")
-        // Create a fresh checkout session with the test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let checkoutSessionId = checkoutSessionResponse.id
-        let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = customApiClient
-        configuration.defaultBillingDetails.email = "test@example.com"
-
-        var checkoutConfiguration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.apiClient = customApiClient
-        let checkout = try await CheckoutElementsController(configuration: checkoutConfiguration)
-        PaymentSheetLoader.load(
-            mode: .checkout(checkout),
-            configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
-            integrationShape: .paymentSheet
-        ) { result in
-            expectation.fulfill()
-            switch result {
-            case .success(let (loadResult, _)):
-                guard case let .checkout(loadedSession) = loadResult.intent else {
-                    XCTFail("Expected checkout intent type")
-                    return
-                }
-                XCTAssertEqual(loadedSession.id, checkoutSessionId)
-                XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
-                XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
-            case .failure(let error):
-                XCTFail(error.nonGenericDescription)
-            }
-        }
-        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
-    }
-
-    // TODO(porter): Setup mode is out of scope for unified-mode private preview.
-    // Rename back to `test...` once unified mode supports setup mode — but note
-    // `createCheckoutSession()` below creates a real payment-shaped modeless session, not
-    // a setup-style one, so the `.noPaymentRequired` assertion below will need reshaping
-    // too, not just the rename.
-    @MainActor
-    func disabled_testPaymentSheetLoadWithCheckoutSessionSetup() async throws {
-        let expectation = XCTestExpectation(description: "Load w/ CheckoutSession setup mode")
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.createCheckoutSession()
-        let checkoutSessionId = checkoutSessionResponse.id
-        let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = customApiClient
-        configuration.defaultBillingDetails.email = "test@example.com"
-
-        var checkoutConfiguration = CheckoutElementsController.Configuration(clientSecret: checkoutSessionResponse.clientSecret, returnURL: "stripe-ios-test://checkout-return")
-        checkoutConfiguration.apiClient = customApiClient
-        let checkout = try await CheckoutElementsController(configuration: checkoutConfiguration)
-
-        PaymentSheetLoader.load(
-            mode: .checkout(checkout),
-            configuration: configuration,
-            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
-            integrationShape: .paymentSheet
-        ) { result in
-            expectation.fulfill()
-            switch result {
-            case .success(let (loadResult, _)):
-                guard case let .checkout(loadedSession) = loadResult.intent else {
-                    XCTFail("Expected checkout intent type")
-                    return
-                }
-                XCTAssertEqual(loadedSession.id, checkoutSessionId)
-                XCTAssertEqual(loadedSession.status, .open)
-                XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
-                XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
-            case .failure(let error):
-                XCTFail(error.nonGenericDescription)
-            }
-        }
-        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
-    }
-
     // MARK: - PMO SFU
 
     @MainActor
@@ -872,6 +790,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 amount: 1000,
                 currency: "USD",
                 setupFutureUsage: .offSession,
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [
                     .crypto: .none
                 ])
@@ -909,6 +828,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             mode: .payment(
                 amount: 1000,
                 currency: "USD",
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [
                     .cardPresent: .offSession,
                     .OXXO: .offSession,
@@ -944,7 +864,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             return ""
         }
 
-        let privatePreviewPaymentMethodTypes: [STPPaymentMethodType] = [.wero, .payByBank]
+        let privatePreviewPaymentMethodTypes: [STPPaymentMethodType] = [.wero, .payByBank, .stripeBalance]
         // Payment methods whose payment_method_options aren't recognized by /v1/elements/sessions yet
         let unsupportedPMOPaymentMethodTypes: [STPPaymentMethodType] = [
             .bizum,
@@ -976,6 +896,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 amount: 1000,
                 currency: "USD",
                 setupFutureUsage: .offSession,
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: all_payment_methods_pmo_sfu_values)
             ),
             confirmHandler: confirmHandler

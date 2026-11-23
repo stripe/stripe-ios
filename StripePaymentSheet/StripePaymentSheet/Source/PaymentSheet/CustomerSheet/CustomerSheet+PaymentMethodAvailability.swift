@@ -6,7 +6,7 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
-extension CustomerSheet {
+nonisolated extension CustomerSheet {
     static let supportedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
     static let supportedDefaultPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
 }
@@ -56,7 +56,7 @@ extension Array where Element == STPPaymentMethodType {
     }
 }
 
-extension CustomerSheet {
+nonisolated extension CustomerSheet {
     /// Given a list of paymentMethodTypes, return an array of corresponding deduped list of STPPaymentMethodType that are supported
     /// within customer sheet.  If any unsupported payment method types are passed in, return an error.
     static func customerSheetSupportedPaymentMethodTypes(_ paymentMethodTypes: [String]) -> Result<[STPPaymentMethodType]?, Error> {

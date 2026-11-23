@@ -55,6 +55,12 @@ struct PaymentSheetTestPlayground: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+        SearchableSettingView(setting: $playgroundController.settings.mobileSessionSidecar, searchText: searchText)
+        SearchableView(searchableName: "SDK version override", searchText: searchText) {
+            TextField("SDK version override (e.g. 25.0.0)", text: sdkVersionOverrideBinding)
+                .autocapitalization(.none)
+                .autocorrectionDisabled()
+        }
         if playgroundController.settings.uiStyle != .embedded {
             SearchableSettingView(setting: $playgroundController.settings.layout, searchText: searchText)
         }
@@ -197,16 +203,26 @@ struct PaymentSheetTestPlayground: View {
                                         TextField("pk_(test/live)_...", text: customPublishableKeyBinding)
                                             .autocapitalization(.none)
                                             .autocorrectionDisabled()
+                                        TextField("Custom Stripe API (e.g. you-api.tunnel.stripe.me)", text: customStripeAPIBinding)
+                                            .autocapitalization(.none)
+                                            .autocorrectionDisabled()
+                                            .keyboardType(.URL)
                                     }
                                 }
                                 SearchableSettingView(setting: $playgroundController.settings.apmsEnabled, searchText: $searchText)
-                                if playgroundController.settings.apmsEnabled == .off {
-                                    SearchableView(searchableName: "Automatic PMs", searchText: $searchText) {
-                                        TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
-                                            .autocapitalization(.none)
-                                            .autocorrectionDisabled()
-                                    }
-                                }
+                            }
+                        }
+                        SearchableView(searchableName: "LPM Scenarios", searchText: $searchText) {
+                            HStack {
+                                Text("LPM Scenarios")
+                                    .font(.subheadline)
+                                Spacer()
+                                Button {
+                                    playgroundController.lpmScenariosTapped()
+                                } label: {
+                                    Text("Choose LPM")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
                             }
                         }
                         SearchableView(searchableName: "Payment Method Options", searchText: $searchText) {
@@ -387,6 +403,7 @@ struct PaymentSheetTestPlayground: View {
             if newCountry != .custom {
                 playgroundController.settings.customSecretKey = nil
                 playgroundController.settings.customPublishableKey = nil
+                playgroundController.settings.customStripeAPI = nil
             }
             playgroundController.settings.merchantCountryCode = newCountry
         }
@@ -414,6 +431,22 @@ struct PaymentSheetTestPlayground: View {
         }
     }
 
+    var customStripeAPIBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customStripeAPI ?? ""
+        } set: { newString in
+            playgroundController.settings.customStripeAPI = newString.isEmpty ? nil : newString
+        }
+    }
+
+    var sdkVersionOverrideBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.sdkVersionOverride ?? ""
+        } set: { newString in
+            playgroundController.settings.sdkVersionOverride = newString.isEmpty ? nil : newString
+        }
+    }
+
     var linkEnabledModeBinding: Binding<PaymentSheetTestPlaygroundSettings.LinkEnabledMode> {
         Binding<PaymentSheetTestPlaygroundSettings.LinkEnabledMode> {
             return playgroundController.settings.linkEnabledMode
@@ -423,14 +456,6 @@ struct PaymentSheetTestPlayground: View {
                 playgroundController.settings.customerMode = .guest
             }
             playgroundController.settings.linkEnabledMode = newMode
-        }
-    }
-
-    var supportedPaymentMethodsBinding: Binding<String> {
-        Binding<String> {
-            return playgroundController.settings.supportedPaymentMethods ?? ""
-        } set: { newString in
-            playgroundController.settings.supportedPaymentMethods = newString
         }
     }
 

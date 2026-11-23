@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension CurrencySelectorElement.Appearance: TwoOptionSelectorViewAppearance {
+extension CurrencySelectorElement.Configuration.Appearance: TwoOptionSelectorViewAppearance {
     var trackBackground: UIColor { background }
     var pillBackground: UIColor { selectedBackground }
     var selectedTextColor: UIColor { selectedText }

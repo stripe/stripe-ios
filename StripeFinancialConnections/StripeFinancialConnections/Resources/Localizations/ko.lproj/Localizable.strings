@@ -50,7 +50,7 @@
 
 "Maintenance is scheduled to end at %@." = "유지관리는 %@에 종료될 예정입니다.";
 
-"Maintenance is scheduled to end on %@ at %@." = "유지관리는 %2$@의 %1$@에 종료될 예정입니다.";
+"Maintenance is scheduled to end on %@ at %@." = "유지 보수는 %1$@ %2$@에 종료될 예정입니다.";
 
 "Manually enter details" = "직접 세부사항 입력";
 

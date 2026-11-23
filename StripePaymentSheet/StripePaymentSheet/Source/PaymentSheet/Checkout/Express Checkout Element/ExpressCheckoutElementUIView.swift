@@ -11,8 +11,8 @@ import PassKit
 import UIKit
 
 /// A UIKit view that displays wallet payment buttons (Apple Pay, Link).
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 @MainActor
 public final class ExpressCheckoutElementUIView: UIView {
 
@@ -40,6 +40,7 @@ public final class ExpressCheckoutElementUIView: UIView {
     init(
         session: CheckoutElementsController.Session,
         configuration: ExpressCheckoutElement.Configuration,
+        userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient = .shared,
         analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
@@ -64,6 +65,7 @@ public final class ExpressCheckoutElementUIView: UIView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+        userInterfaceStyle.configure(self)
     }
 
     @available(*, unavailable)
@@ -117,11 +119,8 @@ public final class ExpressCheckoutElementUIView: UIView {
                 event: .expressCheckoutElementInit,
                 additionalParams: [
                     "checkout_session_id": session.id,
-                    "ordered_lpms": session.availableExpressCheckoutPaymentMethods.joined(separator: ","),
-                    "ece_config": [
-                        "link_visibility": configuration.linkConfiguration.display.rawValue,
-                        "apple_pay_visibility": configuration.applePayConfiguration == nil ? "never" : "automatic",
-                    ],
+                    "ordered_lpms": session.availableExpressCheckoutPaymentMethodsOrdered.map(\.rawValue).joined(separator: ","),
+                    "ece_config": configuration.checkoutAnalyticsPayload,
                 ]
             ),
             apiClient: apiClient
@@ -209,8 +208,8 @@ public final class ExpressCheckoutElementUIView: UIView {
     }
 
     private func makeApplePayButton() -> PKPaymentButton {
-        let buttonType = configuration.applePayConfiguration?.buttonType ?? .plain
-        let button = PKPaymentButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
+        let buttonType = configuration.applePayConfiguration.buttonType ?? .plain
+        let button = ApplePayButton(paymentButtonType: buttonType, paymentButtonStyle: applePayButtonStyle)
         button.isEnabled = isUserInteractionEnabled
         // `cornerConfiguration` doesn't work on PKPaymentButton, so set the radius directly.
         button.cornerRadius = configuration.appearance.cornerRadius ?? (LiquidGlassDetector.isEnabledInMerchantApp
@@ -266,6 +265,19 @@ public final class ExpressCheckoutElementUIView: UIView {
                 presentationWindow: window
             ) else { return }
             self.configuration.completion(result)
+        }
+    }
+
+    /// `PKPaymentButton` doesn't dim itself when disabled (unlike e.g. `PayWithLinkButton`), so this
+    /// subclass does it explicitly to avoid a visual mismatch between the two buttons.
+    private final class ApplePayButton: PKPaymentButton {
+        /// Matches the 0.5 alpha `PayWithLinkButton` applies to its disabled colors.
+        private static let disabledAlpha: CGFloat = 0.5
+
+        override var isEnabled: Bool {
+            didSet {
+                alpha = isEnabled ? 1 : Self.disabledAlpha
+            }
         }
     }
 }

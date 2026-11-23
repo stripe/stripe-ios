@@ -13,7 +13,7 @@ import PassKit
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
 import UIKit
 import XCTest
@@ -32,6 +32,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Given a session with a single item and no tax
         let session = CheckoutTestHelpers.makeSession([
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 2500),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 2500),
             "presentment_currency": "usd",
         ]).makePublicSession()
 
@@ -100,6 +101,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
                     ],
                 ],
             ],
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 3000, taxExclusive: 200),
             "presentment_currency": "usd",
         ]).makePublicSession()
 
@@ -142,6 +144,32 @@ final class CheckoutApplePayContextTests: XCTestCase {
         XCTAssertEqual(session.amount, 6952)
     }
 
+    func testMakeSummaryItemsPreservesDecimalPrecisionBeforeRounding() {
+        // Given three units whose combined price is just above 1000 LBP
+        var checkoutItems = CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "lbp", unitAmount: 33333)
+        var oneTimePrice = checkoutItems[0]["one_time_price"] as! [String: Any]
+        var priceItems = oneTimePrice["items"] as! [[String: Any]]
+        priceItems[0]["unit_amount_decimal"] = "33333.333333333334"
+        priceItems[0]["quantity"] = 3
+        priceItems[0]["amount_details"] = [
+            "subtotal": 100000, "total": 100000,
+            "tax_inclusive": 0, "tax_exclusive": 0,
+        ]
+        oneTimePrice["items"] = priceItems
+        checkoutItems[0]["one_time_price"] = oneTimePrice
+        let session = CheckoutTestHelpers.makeSession([
+            "items": checkoutItems,
+            "presentment_currency": "lbp",
+            "integration_currency": "lbp",
+        ]).makePublicSession()
+
+        // When building the Apple Pay summary
+        let items = CheckoutApplePayContext.makeSummaryItems(for: session, label: "Test Store")
+
+        // Then the line item rounds up to a whole pound after exact decimal multiplication
+        XCTAssertEqual(items.first?.amount, NSDecimalNumber(string: "1001"))
+    }
+
     func testMakeSummaryItemsWithNoAmount() {
         // Given a no-payment-required session (e.g. free order)
         let session = CheckoutTestHelpers.makeSession(["payment_status": "no_payment_required"]).makePublicSession()
@@ -178,6 +206,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
                     ],
                 ],
                 "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: currency, unitAmount: amount),
+                "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: amount),
                 "presentment_currency": currency,
             ]).makePublicSession()
             let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
@@ -202,6 +231,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         // Given a checkout without an alternate currency
         let session = CheckoutTestHelpers.makeSession([
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 12000),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 12000),
             "presentment_currency": "usd",
         ]).makePublicSession()
         let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
@@ -259,6 +289,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             "integration_currency": "lbp",
             "presentment_currency": "lbp",
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(currency: "lbp", unitAmount: 2345),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 2345),
         ]).makePublicSession()
         let parameters = CheckoutElementsController.ApplePayConfirmationParameters.makeMock(
             apiClient: APIStubbedTestCase.stubbedAPIClient()
@@ -460,6 +491,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let updatedSession = CheckoutTestHelpers.makeSession([
             "shipping_address_collection": ["allowed_countries": ["US"]],
             "items": CheckoutTestHelpers.makeOneTimePriceCheckoutItems(unitAmount: 1200),
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(subtotal: 1200),
             "automatic_tax": [
                 "enabled": true,
                 "status": "ready",
@@ -782,23 +814,26 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
         let confirmed = expectation(description: "Checkout confirmed with inline Apple Pay data")
         let session = CheckoutTestHelpers.makeSession([
-            "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(),
             "customer": ["id": "cus_123"],
             "setup_future_usage_for_payment_method_type": ["card": "off_session"],
         ]).makePublicSession()
         XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
         let (context, controller) = makeContext(checkoutSession: session) { parameters in
-            XCTAssertNil(parameters.paymentMethodId)
-            XCTAssertNil(parameters.savePaymentMethod)
-            XCTAssertEqual(parameters.paymentMethodData?.card?.token, "tok_apple_pay")
-            XCTAssertEqual(parameters.expectedPaymentMethodType, "card")
+            let inputParameters = parameters.inputParameters
+            XCTAssertNil(inputParameters["payment_method"])
+            XCTAssertNil((inputParameters["collected_information"] as? [String: Any])?["save_payment_method"])
+            let paymentMethodData = inputParameters["payment_method_data"] as? [String: Any]
+            let billingDetails = paymentMethodData?["billing_details"] as? [String: Any]
+            XCTAssertEqual((paymentMethodData?["card"] as? [String: Any])?["token"] as? String, "tok_apple_pay")
+            XCTAssertEqual(inputParameters["expected_payment_method_type"] as? String, "card")
             XCTAssertEqual(parameters.expectedAmount, 1000)
-            XCTAssertEqual(parameters.paymentMethodData?.billingDetails?.name, "Jane Doe")
-            XCTAssertEqual(parameters.paymentMethodData?.billingDetails?.address?.line1, "123 Main St")
-            XCTAssertEqual(parameters.paymentMethodData?.billingDetails?.email, "wallet@example.com")
-            XCTAssertEqual(parameters.paymentMethodData?.billingDetails?.phone, "14155551234")
+            XCTAssertEqual(billingDetails?["name"] as? String, "Jane Doe")
+            XCTAssertEqual((billingDetails?["address"] as? [String: Any])?["line1"] as? String, "123 Main St")
+            XCTAssertEqual(billingDetails?["email"] as? String, "wallet@example.com")
+            XCTAssertEqual(billingDetails?["phone"] as? String, "14155551234")
             XCTAssertEqual(parameters.shipping?.address.line1, "510 Townsend St")
-            XCTAssertNotNil(parameters.paymentMethodData?.clientAttributionMetadata)
+            XCTAssertNotNil(paymentMethodData?["client_attribution_metadata"])
             XCTAssertNotNil(parameters.clientAttributionMetadata)
             confirmed.fulfill()
             return .completed(response)
@@ -843,11 +878,15 @@ final class CheckoutApplePayContextTests: XCTestCase {
             // Then the /confirm request parameters are tagged with that same component, so
             // payment_method_data[payment_user_agent] can be built for the right one downstream
             XCTAssertEqual(parameters.confirmationSource, confirmationSource, file: file, line: line)
-            for metadata in [parameters.clientAttributionMetadata, parameters.paymentMethodData?.clientAttributionMetadata] {
-                XCTAssertEqual(metadata?.merchantIntegrationSource, "mobile-checkout", file: file, line: line)
-                XCTAssertEqual(metadata?.merchantIntegrationSubtype, confirmationSource.rawValue, file: file, line: line)
-                XCTAssertEqual(metadata?.merchantIntegrationAdditionalElements, ["mobile-payment-element", "mobile-express-checkout-element"], file: file, line: line)
-            }
+            let topLevelMetadata = parameters.clientAttributionMetadata
+            XCTAssertEqual(topLevelMetadata.merchantIntegrationSource, "mobile-checkout", file: file, line: line)
+            XCTAssertEqual(topLevelMetadata.merchantIntegrationSubtype, confirmationSource.rawValue, file: file, line: line)
+            XCTAssertEqual(topLevelMetadata.merchantIntegrationAdditionalElements, ["mobile-payment-element", "mobile-express-checkout-element"], file: file, line: line)
+            let paymentMethodData = parameters.inputParameters["payment_method_data"] as? [String: Any]
+            let nestedMetadata = paymentMethodData?["client_attribution_metadata"] as? [String: Any]
+            XCTAssertEqual(nestedMetadata?["merchant_integration_source"] as? String, "mobile-checkout", file: file, line: line)
+            XCTAssertEqual(nestedMetadata?["merchant_integration_subtype"] as? String, confirmationSource.rawValue, file: file, line: line)
+            XCTAssertEqual(nestedMetadata?["merchant_integration_additional_elements"] as? [String], ["mobile-payment-element", "mobile-express-checkout-element"], file: file, line: line)
             confirmed.fulfill()
             return .completed(response)
         }
@@ -874,7 +913,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
         var confirmedTokens: [String?] = []
         let (context, controller) = makeContext { parameters in
-            confirmedTokens.append(parameters.paymentMethodData?.card?.token)
+            let paymentMethodData = parameters.inputParameters["payment_method_data"] as? [String: Any]
+            confirmedTokens.append((paymentMethodData?["card"] as? [String: Any])?["token"] as? String)
             if confirmedTokens.count == 1 {
                 return .failed(CheckoutError.unknown(debugDescription: "Declined"))
             }
@@ -974,7 +1014,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
     ) -> (CheckoutApplePayContext, MockPKPaymentAuthorizationController) {
         let resolvedAPIClient = apiClient ?? APIStubbedTestCase.stubbedAPIClient()
         let session = checkoutSession ?? CheckoutTestHelpers.makeSession([
-            "total_summary": ["subtotal": 1000, "total": 1000, "due": 1000],
+            "total_summary": CheckoutTestHelpers.makeTotalSummaryJSON(),
             "id": sessionId,
             "presentment_currency": "usd",
             "automatic_tax": [
@@ -1056,7 +1096,7 @@ final class CheckoutApplePayContextTests: XCTestCase {
             "payment_status": "paid",
             "payment_response": [
                 "status": "succeeded",
-                "payment_intent": ["id": "pi_test_123", "client_secret": "pi_test_123_secret_abc"],
+                "payment_intent": STPTestUtils.jsonNamed("CheckoutPaymentIntent")!,
             ],
         ])
     }

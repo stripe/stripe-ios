@@ -29,7 +29,7 @@ extension LinkVerificationView {
 
         private(set) lazy var button: Button = {
             let button = Button(
-                configuration: .linkPlain(foregroundColor: foregroundColor ?? .linkTextBrand),
+                configuration: .linkPlain(foregroundColor: foregroundColor ?? .linkTextPrimary),
                 title: STPLocalizedString(
                     "Not you?",
                     "Title for a button that allows the user to use a different email in the signup flow."

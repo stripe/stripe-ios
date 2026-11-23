@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Un débogueur est associé à l’application.";
+
+"An emulator is being used to run the App." = "Un émulateur est utilisé pour accéder à l’application.";
+
 "An error occurred. Please try again." = "Une erreur s'est produite. Veuillez réessayer.";
+
+"Cancel" = "Annuler";
 
 "Card brand was not updated. Please try again." = "La marque de la carte n'a pas été modifiée. Veuillez réessayer.";
 
 "Close" = "Fermer";
+
+"Collapsed" = "Réduit";
 
 "Confirm it's you" = "Confirmez votre identité";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Saisissez le code envoyé à %@.";
 
+"Expanded" = "Développé";
+
 "Failed to connect" = "Échec de la connexion";
+
+"Loading" = "Chargement";
+
+"No" = "Non";
 
 "Resend code" = "Renvoyer le code";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Scanner la carte";
 
+"Secure checkout" = "Paiement sécurisé";
+
+"Selected" = "Sélectionné";
+
 "The IBAN you entered is invalid." = "L'IBAN que vous avez saisi n'est pas valide.";
+
+"The OS or the OS Version is not supported." = "Le système d’exploitation ou la version du système d’exploitation ne sont pas pris en charge.";
+
+"The device is jailbroken." = "L’appareil est débridé.";
+
+"The integrity of the SDK has been tampered." = "L’intégrité du SDK a été altérée.";
 
 "There was an error processing your card -- try again in a few seconds" = "Une erreur est survenue lors du traitement de votre carte. Réessayez dans quelques secondes.";
 
 "There was an unexpected error -- try again in a few seconds" = "Une erreur inattendue est survenue. Réessayez dans quelques secondes.";
 
+"Timeout" = "Délai expiré";
+
 "Try again" = "Réessayer";
 
+"Unselected" = "Non sélectionné";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Nous faisons appel à Stripe pour vérifier les informations de votre carte. Stripe peut utiliser et stocker vos données conformément à sa politique de confidentialité. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>En savoir plus</u></a>";
+
+"Yes" = "Oui";
 
 "Your card has expired" = "Votre carte est arrivée à expiration.";
 

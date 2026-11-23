@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 3/3/26.
 //
 
-@_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentSheet
+import StripePayments
+@_spi(CheckoutSessionPreview) import StripePaymentSheet
 import SwiftUI
 
 struct CheckoutCartContentView: View {
@@ -142,7 +142,7 @@ struct CheckoutCartContentView: View {
                                 Text(item.displayName)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text("\((item.unitAmountDecimal ?? item.unitAmount).amount) × \(item.quantity)")
+                                Text("\(item.unitAmountDecimal?.amount ?? item.unitAmount.amount) × \(item.quantity)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .accessibilityIdentifier("checkout_line_item_amount")
@@ -446,7 +446,7 @@ struct CheckoutCartSheet: View {
 
                 CheckoutCartContentView(
                     checkout: checkout,
-                    emailSource: .none,
+                    emailSource: .local,
                     showsCurrencySelectorElement: false,
                     showsShippingAddressSection: true,
                     errorMessage: nil,

@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
@@ -98,6 +98,15 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         verify(makeView(appearance: appearance))
     }
 
+    // Both buttons should dim by the same amount when disabled; previously Apple Pay barely
+    // changed while Link dimmed noticeably, creating a visual mismatch.
+    func testDisabledState() {
+        let view = makeView()
+        view.setEnabled(false)
+
+        verify(view)
+    }
+
     // MARK: - Helpers
 
     private struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
@@ -115,19 +124,19 @@ final class ExpressCheckoutElementViewSnapshotTests: STPSnapshotTestCase {
         linkEmail: String? = nil
     ) -> ExpressCheckoutElementUIView {
         var configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        configuration.applePayConfiguration = .init(merchantId: "merchant.com.example")
         configuration.appearance = appearance
 
         let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link", "apple_pay"], customerEmail: "jenny@example.com")
-            .makePublicSession(expressCheckoutConfiguration: configuration)
+            .makePublicSession(expressCheckoutConfiguration: configuration, applePayMerchantId: "merchant.com.example")
         let view = ExpressCheckoutElementUIView(
             session: session,
             configuration: configuration,
+            userInterfaceStyle: .automatic,
             delegate: Delegate()
         )
         view.update(
             with: session,
-            buttons: buttons ?? session.availableExpressCheckoutPaymentMethods.compactMap { ExpressCheckoutElement.PaymentMethod(rawValue: $0) }
+            buttons: buttons ?? session.availableExpressCheckoutPaymentMethodsOrdered
         )
         let stackView = view.subviews.first as? UIStackView
         for row in stackView?.arrangedSubviews ?? [] {

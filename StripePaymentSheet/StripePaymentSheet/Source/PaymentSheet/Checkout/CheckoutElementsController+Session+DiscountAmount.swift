@@ -7,8 +7,8 @@
 
 import Foundation
 
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 extension CheckoutElementsController.Session {
     /// An aggregate discount amount calculated across all line items in a Checkout Session.
     public struct DiscountAmount: Sendable, Hashable {
@@ -16,7 +16,7 @@ extension CheckoutElementsController.Session {
         public let amount: String
 
         /// The numeric, unformatted representation of the discount amount in minor units.
-        public let minorUnitsAmount: Double
+        public let minorUnitsAmount: Int
 
         /// A user-facing description of the discount.
         public let displayName: String

@@ -51,6 +51,8 @@ final class LinkInlineSignupElement: Element {
         allowsDefaultOptIn: Bool,
         signupOptInFeatureEnabled: Bool,
         signupOptInInitialValue: Bool,
+        restoredCheckboxState: IntentConfirmParams.CheckboxState = .hidden,
+        restoredDidInteractWithSaveCheckbox: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper? = nil
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
@@ -62,6 +64,8 @@ final class LinkInlineSignupElement: Element {
             allowsDefaultOptIn: allowsDefaultOptIn,
             signupOptInFeatureEnabled: signupOptInFeatureEnabled,
             signupOptInInitialValue: signupOptInInitialValue,
+            restoredCheckboxState: restoredCheckboxState,
+            restoredDidInteractWithSaveCheckbox: restoredDidInteractWithSaveCheckbox,
             linkAccount: linkAccount,
             country: country,
             analyticsHelper: analyticsHelper
@@ -71,6 +75,23 @@ final class LinkInlineSignupElement: Element {
     init(viewModel: LinkInlineSignupViewModel) {
         self.signupView = LinkInlineSignupView(viewModel: viewModel)
         self.signupView.delegate = self
+    }
+
+}
+
+extension LinkInlineSignupElement: PaymentMethodElement {
+
+    func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
+        // Hack: Not actually data sent to /confirm. Record the checkbox state so it can be restored if the form is rebuilt.
+        switch viewModel.mode {
+        case .checkbox, .checkboxWithDefaultOptIn, .signupOptIn:
+            params.linkInlineSignupCheckboxState = viewModel.saveCheckboxChecked ? .selected : .deselected
+        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+            params.linkInlineSignupCheckboxState = .hidden
+        }
+        params.linkInlineSignupDidInteractWithSaveCheckbox = viewModel.didInteractWithSaveCheckbox
+        // Never return nil: that would mark the whole card form invalid.
+        return params
     }
 
 }

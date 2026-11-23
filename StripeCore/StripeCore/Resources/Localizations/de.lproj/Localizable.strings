@@ -1,8 +1,16 @@
+"A debugger is attached to the App." = "Ein Debugger ist an die App angeschlossen.";
+
+"An emulator is being used to run the App." = "Ein Emulator wird zum Ausführen dieser App verwendet.";
+
 "An error occurred. Please try again." = "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es noch einmal.";
+
+"Cancel" = "Abbrechen";
 
 "Card brand was not updated. Please try again." = "Die Kartenmarke wurde nicht geändert. Bitte versuchen Sie es erneut.";
 
 "Close" = "Schließen";
+
+"Collapsed" = "Reduziert";
 
 "Confirm it's you" = "Bestätigen Sie, dass Sie es sind";
 
@@ -10,7 +18,13 @@
 
 "Enter the code sent to %@." = "Geben Sie den Code ein, der an %@ geschickt wurde.";
 
+"Expanded" = "Erweitert";
+
 "Failed to connect" = "Verbindung fehlgeschlagen";
+
+"Loading" = "Wird geladen";
+
+"No" = "Nein";
 
 "Resend code" = "Code erneut senden";
 
@@ -18,15 +32,31 @@
 
 "Scan card" = "Karte scannen";
 
+"Secure checkout" = "Sicherer Bezahlvogang";
+
+"Selected" = "Ausgewählt";
+
 "The IBAN you entered is invalid." = "Die eingegebene IBAN ist ungültig.";
+
+"The OS or the OS Version is not supported." = "Das Betriebssystem oder die Betriebssystemversion wird nicht unterstützt.";
+
+"The device is jailbroken." = "Das Gerät ist beschädigt.";
+
+"The integrity of the SDK has been tampered." = "Die Integrität des SDK wurde manipuliert.";
 
 "There was an error processing your card -- try again in a few seconds" = "Fehler bei der Verarbeitung Ihrer Karte – versuchen Sie es in ein paar Sekunden noch einmal.";
 
 "There was an unexpected error -- try again in a few seconds" = "Unerwarteter Fehler – versuchen Sie es in ein paar Sekunden noch einmal.";
 
+"Timeout" = "Timeout";
+
 "Try again" = "Erneut versuchen";
 
+"Unselected" = "Nicht ausgewählt";
+
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Wir nutzen Stripe, um Ihre Kartenangaben zu verifizieren. Stripe kann im Einklang mit seiner Datenschutzerklärung Ihre Daten verwenden und speichern. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Mehr erfahren</u></a>";
+
+"Yes" = "Ja";
 
 "Your card has expired" = "Ihre Karte ist abgelaufen.";
 

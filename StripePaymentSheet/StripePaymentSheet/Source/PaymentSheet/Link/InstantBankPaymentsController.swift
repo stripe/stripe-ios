@@ -214,8 +214,6 @@ import UIKit
                     ) { [weak self] linkAccountSession, error in
                         self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                     }
-            case .checkout:
-                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession"))
             }
         }
 
@@ -307,8 +305,6 @@ import UIKit
                 intentType: .deferred,
                 financialConnectionsCompletion: completionHandler
             )
-        case .checkout:
-            completionHandler(nil, nil, PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession") as NSError)
         }
     }
 
@@ -411,31 +407,33 @@ import UIKit
         }
 
         do {
+            let customerProvider = CustomerProvider(customer: configuration.customer)
             let linkBrand: LinkBrand?
             switch mode {
             case .paymentIntentClientSecret(let clientSecret):
                 let (_, elementsSession) = try await configuration.apiClient.retrieveElementsSession(
                     paymentIntentClientSecret: clientSecret,
                     clientDefaultPaymentMethod: nil,
-                    configuration: configuration
+                    configuration: configuration,
+                    customerProvider: customerProvider
                 )
                 linkBrand = elementsSession.linkBrand
             case .setupIntentClientSecret(let clientSecret):
                 let (_, elementsSession) = try await configuration.apiClient.retrieveElementsSession(
                     setupIntentClientSecret: clientSecret,
                     clientDefaultPaymentMethod: nil,
-                    configuration: configuration
+                    configuration: configuration,
+                    customerProvider: customerProvider
                 )
                 linkBrand = elementsSession.linkBrand
             case .deferredIntent(let intentConfiguration):
                 let elementsSession = try await configuration.apiClient.retrieveDeferredElementsSession(
                     withIntentConfig: intentConfiguration,
                     clientDefaultPaymentMethod: nil,
-                    configuration: configuration
+                    configuration: configuration,
+                    customerProvider: customerProvider
                 )
                 linkBrand = elementsSession.linkBrand
-            case .checkout:
-                linkBrand = nil
             }
 
             fetchedLinkBrand = linkBrand
@@ -547,6 +545,7 @@ import UIKit
                         .routeDeferredIntentConfirmation(
                             confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), // InstantBankPaymentsController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id and doesn't have an elements session object so we don't want to send CAM here
                             configuration: configuration,
+                            customerProvider: CustomerProvider(customer: configuration.customer),
                             intentConfig: intentConfiguration,
                             authenticationContext: authenticationContext,
                             paymentHandler: STPPaymentHandler.shared(),
@@ -562,8 +561,6 @@ import UIKit
                         continuation.resume()
                     }
                 }
-            case .checkout:
-                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession"))
             }
         }
     }
@@ -612,8 +609,6 @@ private extension PaymentSheet.InitializationMode {
             case .setup:
                 return nil
             }
-        case .checkout:
-            return nil
         }
     }
 
@@ -630,8 +625,6 @@ private extension PaymentSheet.InitializationMode {
             case .setup(let currency, _):
                 return currency
             }
-        case .checkout:
-            return nil
         }
     }
 }

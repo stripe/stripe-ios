@@ -55,6 +55,7 @@ final class PayWithNativeLinkController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentElementConfiguration
+    private let customerProvider: CustomerProvider
     private let nativeSheetPresentation: SheetImplementationResolver?
     let logPayment: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -71,6 +72,7 @@ final class PayWithNativeLinkController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         paymentHandler: STPPaymentHandler,
         nativeSheetPresentation: SheetImplementationResolver? = nil,
         logPayment: Bool = true,
@@ -86,6 +88,7 @@ final class PayWithNativeLinkController {
         self.logPayment = logPayment
         self.elementsSession = elementsSession
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.nativeSheetPresentation = nativeSheetPresentation
         self.analyticsHelper = analyticsHelper
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
@@ -101,13 +104,15 @@ final class PayWithNativeLinkController {
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
         shouldFinishOnClose: Bool,
+        canContinueWithoutLink: Bool = true,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?, _ didFinish: Bool) -> Void
     ) {
         presentAsSheetInternal(
             from: presentingController,
             shouldOfferApplePay: shouldOfferApplePay,
             hidingUnderlyingBottomSheet: hidingUnderlyingBottomSheet,
-            shouldFinishOnClose: shouldFinishOnClose
+            shouldFinishOnClose: shouldFinishOnClose,
+            canContinueWithoutLink: canContinueWithoutLink
         ) { completionResult in
             guard case .full(let result, let deferredIntentConfirmationType, let didFinish) = completionResult else {
                 return
@@ -167,6 +172,7 @@ final class PayWithNativeLinkController {
                 linkAccount: LinkAccountContext.shared.account,
                 elementsSession: self.elementsSession,
                 configuration: self.configuration,
+                customerProvider: self.customerProvider,
                 nativeSheetPresentation: self.nativeSheetPresentation,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
@@ -247,6 +253,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: payWithLinkViewController.sheetContainer,
             intent: intent,
@@ -313,6 +320,7 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: payWithLinkWebController,
             intent: intent,

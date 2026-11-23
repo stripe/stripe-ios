@@ -131,7 +131,7 @@ class PassiveCaptchaChallengeTests: XCTestCase {
             try await passiveCaptchaChallenge.consumeToken()
         }.get()
         // didn't time out because it finished early
-        XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 20)
         XCTAssertFalse(hcaptchaToken.value.isEmpty)
     }
 

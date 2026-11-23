@@ -26,6 +26,8 @@ extension CheckoutElementsController {
         parameters: LinkConfirmationParameters
     ) async -> InternalConfirmResult {
         let elementsSession = checkoutSession.elementsSession
+        // Derive the customer from the same session snapshot as the rest of this confirmation.
+        let customerProvider = CustomerProvider(checkoutSession: checkoutSession)
         let configuration = parameters.configuration
         let confirmationChallenge = parameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -73,7 +75,7 @@ extension CheckoutElementsController {
             func confirmWithPaymentMethodParams(
                 paymentMethodParams: STPPaymentMethodParams,
                 linkAccount: PaymentSheetLinkAccount?,
-                saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState
+                saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState
             ) {
                 Task { @MainActor in
                     let confirmParams = IntentConfirmParams(
@@ -84,6 +86,7 @@ extension CheckoutElementsController {
                     let paymentMethodParameters = PaymentMethodConfirmationParameters(
                         option: .new(confirmParams),
                         configuration: configuration,
+                        returnURL: parameters.returnURL,
                         nativeSheetPresentation: parameters.nativeSheetPresentation,
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
@@ -105,13 +108,14 @@ extension CheckoutElementsController {
             func confirmWithPaymentMethod(
                 paymentMethod: STPPaymentMethod,
                 linkAccount: PaymentSheetLinkAccount?,
-                saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState,
+                saveForFutureUseCheckboxState: IntentConfirmParams.CheckboxState,
                 linkClientAttributionMetadata _: STPClientAttributionMetadata?
             ) {
                 Task { @MainActor in
                     let paymentMethodParameters = PaymentMethodConfirmationParameters(
                         option: .saved(paymentMethod, nil),
                         configuration: configuration,
+                        returnURL: parameters.returnURL,
                         nativeSheetPresentation: parameters.nativeSheetPresentation,
                         confirmationChallenge: confirmationChallenge,
                         authenticationContext: parameters.authenticationContext,
@@ -125,7 +129,6 @@ extension CheckoutElementsController {
                     if PaymentSheet.shouldLogOutOfLink(result: result.paymentSheetResult, elementsSession: elementsSession) {
                         linkAccount?.logout()
                     }
-                    await confirmationChallenge?.complete()
                     completion(result, nil)
                 }
             }
@@ -152,7 +155,9 @@ extension CheckoutElementsController {
                         checkoutSession: checkoutSession,
                         parameters: LinkConfirmationParameters(
                             confirmOption: confirmOption,
+                            canContinueWithoutLink: parameters.canContinueWithoutLink,
                             configuration: configuration,
+                            returnURL: parameters.returnURL,
                             nativeSheetPresentation: parameters.nativeSheetPresentation,
                             confirmationChallenge: confirmationChallenge,
                             analyticsHelper: parameters.analyticsHelper,
@@ -171,6 +176,7 @@ extension CheckoutElementsController {
             PaymentSheet.confirmLinkPaymentOption(
                 confirmOption: parameters.confirmOption,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 paymentHandler: parameters.paymentHandler,
                 nativeSheetPresentation: parameters.nativeSheetPresentation,
                 authenticationContext: parameters.authenticationContext,
@@ -179,6 +185,7 @@ extension CheckoutElementsController {
                 // Link controllers still require PaymentSheet analytics; keep that coupling on this typed path.
                 analyticsHelper: parameters.analyticsHelper,
                 confirmationChallenge: confirmationChallenge,
+                canContinueWithoutLink: parameters.canContinueWithoutLink,
                 clientAttributionMetadata: clientAttributionMetadata,
                 isSettingUp: isSettingUp,
                 setAllowRedisplay: setAllowRedisplay,
@@ -211,7 +218,7 @@ extension CheckoutElementsController {
             apiClient: parameters.configuration.apiClient,
             authenticationContext: parameters.authenticationContext,
             paymentHandler: parameters.paymentHandler,
-            confirmationChallenge: requestParameters.paymentMethodData == nil ? nil : parameters.confirmationChallenge
+            confirmationChallenge: parameters.confirmationChallenge
         )
     }
 

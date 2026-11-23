@@ -10,7 +10,7 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 import XCTest
@@ -167,6 +167,52 @@ final class CheckoutUnitTests: XCTestCase {
         let firstElement = try XCTUnwrap(checkout.getCurrencySelectorElement())
         let secondElement = try XCTUnwrap(checkout.getCurrencySelectorElement())
         XCTAssertTrue(firstElement === secondElement)
+    }
+
+    func testInlineElementsUseCheckoutUserInterfaceStyle() async throws {
+        let cases: [(style: PaymentSheet.UserInterfaceStyle, host: UIUserInterfaceStyle, expected: UIUserInterfaceStyle)] = [
+            (.alwaysDark, .light, .dark),
+            (.alwaysLight, .dark, .light),
+            (.automatic, .dark, .dark),
+        ]
+        for testCase in cases {
+            // Given a Checkout style and a host appearance
+            let session = CheckoutTestHelpers.makeAdaptivePricingSession()
+            var configuration = CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: session)
+            configuration.userInterfaceStyle = testCase.style
+            var selectorConfiguration = CurrencySelectorElement.Configuration()
+            selectorConfiguration.appearance.background = UIColor { traits in
+                traits.userInterfaceStyle == .dark ? .black : .white
+            }
+            configuration.currencySelectorElement = selectorConfiguration
+
+            // When Checkout's inline views are attached to the host
+            let checkout = try await CheckoutElementsController(configuration: configuration)
+            let paymentView = checkout.getPaymentElement().uiView
+            let currencyView = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
+            let expressView = checkout.getExpressCheckoutElement().uiView
+            let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 640))
+            let host = UIViewController()
+            host.overrideUserInterfaceStyle = testCase.host
+            window.rootViewController = host
+            window.makeKeyAndVisible()
+            defer { window.isHidden = true }
+
+            // Then all three views use Checkout's style, including the selector's dynamic colors
+            let overrideStyle: UIUserInterfaceStyle = testCase.style == .automatic ? .unspecified : testCase.expected
+            let views: [UIView] = [paymentView, currencyView, expressView]
+            for view in views {
+                host.view.addSubview(view)
+                XCTAssertEqual(view.overrideUserInterfaceStyle, overrideStyle)
+                XCTAssertEqual(view.traitCollection.userInterfaceStyle, testCase.expected)
+            }
+            XCTAssertEqual(paymentView.subviews.first?.traitCollection.userInterfaceStyle, testCase.expected)
+            XCTAssertEqual(currencyView.subviews.first?.traitCollection.userInterfaceStyle, testCase.expected)
+            XCTAssertEqual(
+                selectorConfiguration.appearance.background.resolvedColor(with: currencyView.traitCollection),
+                testCase.expected == .dark ? UIColor.black : UIColor.white
+            )
+        }
     }
 
     func testCurrencySelectorElementLogsInitializationOnce() async throws {
@@ -420,6 +466,50 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertNil(checkout.session.email)
         XCTAssertEqual(recorder.sessions.count, 1)
         XCTAssertEqual(recorder.loading, [true, false])
+    }
+
+    func testUpdateEmailLooksUpNewEmailInLink() async throws {
+        // Given Link is enabled, the session has no server email, and the previous email's Link account is loaded
+        var json = CheckoutTestHelpers.openSessionJSON
+        json["ordered_payment_method_types_and_wallets"] = ["card", "link"]
+        json["merchant_info"] = ["country": "US", "display_name": NSNull()]
+        let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: json)
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: response))
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount(
+            email: "previous@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            apiClient: checkout.apiClient,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        var lookedUpEmails: [String?] = []
+        let lookupStub = HTTPStubs.stubRequests(passingTest: { $0.url?.path.hasSuffix("/sessions/lookup") == true }) { request in
+            let email = RequestBodyTestHelpers.formEncodedBodyParams(from: request)["email_address"]
+            lookedUpEmails.append(email)
+            // A Link consumer for the looked-up email
+            return HTTPStubsResponse(jsonObject: [
+                "exists": true,
+                "publishable_key": "pk_test_abc123",
+                "consumer_session": [
+                    "client_secret": "pscs_abc123",
+                    "email_address": email ?? "",
+                    "redacted_formatted_phone_number": "(***) *** **12",
+                    "verification_sessions": [],
+                ],
+            ], statusCode: 200, headers: nil)
+        }
+        defer { HTTPStubs.removeStub(lookupStub) }
+
+        // When the merchant updates the email
+        try await checkout.updateEmail("new@example.com")
+
+        // Then Link looks up the new email, and its account replaces the previous email's account
+        XCTAssertEqual(lookedUpEmails, ["new@example.com"])
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "new@example.com")
     }
 
     // MARK: - Address Override Tests
@@ -740,16 +830,18 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_singleAmount() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["total_summary"] = [
-            "total_tax_amounts": [
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            subtotal: 12000,
+            taxExclusive: 1185,
+            totalTaxAmounts: [
                 [
                     "amount": 1185,
                     "inclusive": false,
                     "display_name": "Sales Tax",
                     "percentage": 9.875,
                 ],
-            ],
-        ]
+            ]
+        )
         setOneTimePriceAmounts(
             in: &json,
             subtotal: 12000,
@@ -763,8 +855,10 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testTotalTaxExclusive_multipleAmounts() {
         var json = CheckoutTestHelpers.openSessionJSON
-        json["total_summary"] = [
-            "total_tax_amounts": [
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            subtotal: 10000,
+            taxExclusive: 700,
+            totalTaxAmounts: [
                 [
                     "amount": 500,
                     "inclusive": false,
@@ -777,8 +871,8 @@ final class CheckoutUnitTests: XCTestCase {
                     "display_name": "County Tax",
                     "percentage": 2.0,
                 ],
-            ],
-        ]
+            ]
+        )
         setOneTimePriceAmounts(
             in: &json,
             subtotal: 10000,
@@ -790,25 +884,10 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(session.taxAmounts?.count, 2)
     }
 
-    func testTotalTaxAmounts_absent_isNil() {
-        // Given a total summary without total_tax_amounts
-        var json = CheckoutTestHelpers.openSessionJSON
-        json["total_summary"] = ["total": 1000]
-
-        // When decoding the public Session
-        let session = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession()
-
-        // Then taxAmounts is nil
-        XCTAssertEqual(session.totals.taxExclusive.minorUnitsAmount, 0)
-        XCTAssertNil(session.taxAmounts)
-    }
-
     func testTotalTaxAmounts_presentButEmpty_isEmpty() {
         // Given a response with an explicitly empty session-level total_tax_amounts array
         var json = CheckoutTestHelpers.openSessionJSON
-        json["total_summary"] = [
-            "total_tax_amounts": []
-        ]
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON()
 
         // When decoding the public Session
         let session = try! CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession()
@@ -828,9 +907,10 @@ final class CheckoutUnitTests: XCTestCase {
             "percentage": 9.75,
             "rate_type": "percentage",
         ]
-        json["total_summary"] = [
-            "total_tax_amounts": [totalTaxAmount]
-        ]
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            taxExclusive: 195,
+            totalTaxAmounts: [totalTaxAmount]
+        )
 
         // When decoding the public Session
         let session = try CheckoutClientAPIResponse.decode(fromAPIResponse: json).makePublicSession()
@@ -854,9 +934,10 @@ final class CheckoutUnitTests: XCTestCase {
         ]
         var json = CheckoutTestHelpers.openSessionJSON
         json["automatic_tax"] = ["enabled": true, "status": "ready", "address_source": "shipping"]
-        json["total_summary"] = [
-            "total_tax_amounts": [zeroTaxAmount]
-        ]
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            subtotal: 12000,
+            totalTaxAmounts: [zeroTaxAmount]
+        )
         setOneTimePriceAmounts(
             in: &json,
             subtotal: 12000,
@@ -897,9 +978,7 @@ final class CheckoutUnitTests: XCTestCase {
                 "currency": "usd",
             ],
         ]
-        sessionJSON["total_summary"] = [
-            "total_tax_amounts": []
-        ]
+        sessionJSON["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON()
         var session = try! CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON)
             .makePublicSession()
         session.localState.shippingAddress = .init(
@@ -1023,18 +1102,12 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(session.debugDescription.contains("sublabel: nil"))
     }
 
-    func testSessionDebugDescription_preservesAbsentAndEmptyTaxAmounts() {
-        // Given sessions with absent and present-but-empty tax amounts
-        let absent = CheckoutTestHelpers.makeOpenSession().makePublicSession()
-        var emptyJSON = CheckoutTestHelpers.openSessionJSON
-        emptyJSON["total_summary"] = [
-            "total_tax_amounts": []
-        ]
-        let empty = try! CheckoutClientAPIResponse.decode(fromAPIResponse: emptyJSON).makePublicSession()
+    func testSessionDebugDescription_includesEmptyTaxAmountCount() {
+        // Given a session with empty tax amounts
+        let session = CheckoutTestHelpers.makeOpenSession().makePublicSession()
 
-        // Then their debug descriptions preserve the distinction
-        XCTAssertTrue(absent.debugDescription.contains("taxAmountCount: nil"))
-        XCTAssertTrue(empty.debugDescription.contains("taxAmountCount: 0"))
+        // Then its debug description reports zero tax amounts
+        XCTAssertTrue(session.debugDescription.contains("taxAmountCount: 0"))
     }
 
     // MARK: - Requires Shipping Address Tests
@@ -1058,16 +1131,18 @@ final class CheckoutUnitTests: XCTestCase {
         var json = CheckoutTestHelpers.openSessionJSON
         json["billing_address_collection"] = "required"
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "GB"]]
-        json["total_summary"] = [
-            "total_tax_amounts": [
+        json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(
+            subtotal: 20000,
+            taxExclusive: 1000,
+            totalTaxAmounts: [
                 [
                     "amount": 1000,
                     "inclusive": false,
                     "display_name": "Sales Tax",
                     "percentage": 5.0,
                 ],
-            ],
-        ]
+            ]
+        )
         setOneTimePriceAmounts(
             in: &json,
             subtotal: 20000,

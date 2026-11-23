@@ -5,11 +5,13 @@
 //  Created by Nick Porter on 7/19/26.
 //
 
+import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
 
 extension PaymentSheetLoader {
     /// Loads Link and records experiment exposure. Returns whether lookup timed out, or nil when Link is disabled.
+    /// If Link is enabled and the lookup fails or times out, `LinkAccountContext.shared.account` is cleared, so Link treats the email as having no Link account.
     @MainActor
     static func loadLink(
         elementsSession: STPElementsSession,
@@ -21,7 +23,8 @@ extension PaymentSheetLoader {
         prefetchedEmailAndSourceTask: Task<(email: String, source: EmailSource)?, Never>,
         loadTimings: LoadTimings,
         isUpdate: Bool,
-        linkAnalytics: LinkAnalyticsHelper
+        linkAnalytics: LinkAnalyticsHelper,
+        lookupTimeout: TimeInterval = 5.0
     ) async -> Bool? {
         let lookupLinkAccountTask = Task { @MainActor in
             let prefetchedLinkEmailAndSource = await prefetchedEmailAndSourceTask.value
@@ -53,7 +56,7 @@ extension PaymentSheetLoader {
         // Only block on link lookup if it's enabled.
         var didLinkLookupTimeOut: Bool?
         if isLinkEnabled {
-            let result = await withTimeout(5.0) {
+            let result = await withTimeout(lookupTimeout) {
                 await lookupLinkAccountTask.value
             }
             switch result {
@@ -64,6 +67,7 @@ extension PaymentSheetLoader {
                     didLinkLookupTimeOut = true
                     // Since we're using unstructured Tasks, we have to manually cancel it.
                     lookupLinkAccountTask.cancel()
+                    LinkAccountContext.shared.account = nil
                 }
             }
         }

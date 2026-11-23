@@ -6,8 +6,8 @@
 
 @_spi(InternalOnlyAPI) import StripePaymentsUI
 
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 extension ShippingAddressElement {
     /// Configuration for ``ShippingAddressElement``.
     public struct Configuration {

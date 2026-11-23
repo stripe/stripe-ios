@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) @testable import StripeUICore
 import SwiftUI
 import UIKit
@@ -43,7 +43,7 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
     @MainActor
     private func makeCurrencySelectorElement(
         selectedCurrency: String = "usd",
-        appearance: CurrencySelectorElement.Appearance = .init()
+        appearance: CurrencySelectorElement.Configuration.Appearance = .init()
     ) async throws -> CurrencySelectorElement {
         let session = CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
         var configuration = CheckoutElementsController.Configuration(clientSecret: "cs_test_123_secret_abc", returnURL: "stripe-ios-test://checkout-return")

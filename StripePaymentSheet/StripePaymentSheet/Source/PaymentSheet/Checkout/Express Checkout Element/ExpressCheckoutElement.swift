@@ -21,8 +21,8 @@ protocol ExpressCheckoutElementDelegate: AnyObject {
 ///
 /// Obtain an instance from ``CheckoutElementsController/getExpressCheckoutElement()`` and use
 /// ``view`` in SwiftUI or ``uiView`` in UIKit.
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 @MainActor
 public final class ExpressCheckoutElement {
 
@@ -39,6 +39,7 @@ public final class ExpressCheckoutElement {
     init(
         sessionSource: CheckoutSessionSource,
         configuration: ExpressCheckoutElement.Configuration,
+        userInterfaceStyle: CheckoutElementsController.UserInterfaceStyle,
         delegate: ExpressCheckoutElementDelegate,
         apiClient: STPAPIClient
     ) {
@@ -46,6 +47,7 @@ public final class ExpressCheckoutElement {
         let uiView = ExpressCheckoutElementUIView(
             session: sessionSource.initialSession,
             configuration: configuration,
+            userInterfaceStyle: userInterfaceStyle,
             delegate: delegate,
             apiClient: apiClient
         )

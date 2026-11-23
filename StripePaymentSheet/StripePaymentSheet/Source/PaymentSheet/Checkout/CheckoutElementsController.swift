@@ -15,8 +15,8 @@ import UIKit
 
 /// Use this class to build a [Checkout elements](todo) integration.
 /// It manages a CheckoutSession object and UI elements (e.g. PaymentElement, ShippingAddressElement).
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 @MainActor
 public final class CheckoutElementsController: ObservableObject {
     // MARK: - Public Properties
@@ -139,6 +139,7 @@ public final class CheckoutElementsController: ObservableObject {
             // 4. The session is now finalized - do post-session-change stuff
             let handleSessionChangeResult = CheckoutElementsControllerLoader.handleSessionChange(checkout: self)
             confirmationChallenge = handleSessionChangeResult.confirmationChallenge
+            CheckoutElementsControllerLoader.logStripeBalanceUnsupportedIfNeeded(checkout: self)
 
             // 5. Resolve Link before constructing payment elements, reusing the prepared PE configuration.
             await CheckoutElementsControllerLoader.loadLink(
@@ -164,6 +165,7 @@ public final class CheckoutElementsController: ObservableObject {
                 self.expressCheckoutElement = ExpressCheckoutElement(
                     sessionSource: sessionSource,
                     configuration: expressCheckoutElementConfiguration,
+                    userInterfaceStyle: configuration.userInterfaceStyle,
                     delegate: self,
                     apiClient: apiClient
                 )
@@ -174,12 +176,15 @@ public final class CheckoutElementsController: ObservableObject {
                 self.currencySelectorElement = await CurrencySelectorElement(
                     sessionSource: sessionSource,
                     configuration: currencySelectorConfiguration,
+                    userInterfaceStyle: configuration.userInterfaceStyle,
                     delegate: self
                 )
             }
             var params = configurationParams
             params["ordered_lpms"] = paymentElement?.embeddedPaymentElement.loadResult.paymentMethodTypes.map { $0.identifier }.joined(separator: ",")
-                ?? self.session.availableExpressCheckoutPaymentMethods.joined(separator: ",")
+                ?? (configuration.expressCheckoutElement != nil
+                    ? session.availableExpressCheckoutPaymentMethodsOrdered.map(\.rawValue).joined(separator: ",")
+                    : nil)
             analyticsHelper.logSucceeded(startedAction, session: self.session, additionalParams: params)
         } catch {
             analyticsHelper.logFailed(startedAction, error: error, session: analyticsSession, additionalParams: configurationParams)
@@ -226,6 +231,20 @@ public final class CheckoutElementsController: ObservableObject {
         return (shippingAddressElement, normalizedDefaultShippingAddress)
     }
 
+    // MARK: - Customer
+
+    /// Deletes all persisted authentication state associated with a customer.
+    ///
+    /// You must call this method when the user logs out from your app.
+    /// This will ensure that any persisted authentication state in CheckoutElementsController
+    /// is also cleared during logout.
+    nonisolated public static func clearLocalCustomerData() {
+        STPAnalyticsClient.sharedClient.log(
+            analytic: PaymentSheetAnalytic(event: .checkoutElementsClearLocalCustomerData, additionalParams: [:])
+        )
+        LinkAccountContext.shared.resetCustomer()
+    }
+
     // MARK: - Promotion Codes
 
     /// Use this method to apply a promotion code that your customer enters.
@@ -260,7 +279,17 @@ public final class CheckoutElementsController: ObservableObject {
             try await enqueueSessionUpdate {
                 guard self.canSetLocalEmail() else { return }
                 guard self.session.localState.email != email else { return }
-                // TODO: Refresh Link account lookup when the email changes.
+                try self.requireSheetNotPresented()
+                // Look up the new email in Link before the Payment Element is rebuilt, so Link UI and Link flows use
+                // the new email's Link account instead of the one looked up for the previous email.
+                var sessionWithUpdatedEmail = self.session
+                sessionWithUpdatedEmail.localState.email = email
+                await CheckoutElementsControllerLoader.loadLink(
+                    session: sessionWithUpdatedEmail,
+                    configuration: self.configuration,
+                    // Only used to check whether Payment Element uses Link; FlowController and Embedded configurations agree on that.
+                    paymentElementConfiguration: self.paymentElement?.paymentSheetFlowController.configuration
+                )
                 try await self.performUnqueuedUpdate(mutateLocalState: { localState in
                     localState.email = email
                 })

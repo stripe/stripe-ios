@@ -9,7 +9,7 @@
 @import WebKit;
 
 #import "STDSBundleLocator.h"
-#import "STDSLocalizedString.h"
+@import StripeCore;
 #import "STDSChallengeResponseViewController.h"
 #import "STDSImageLoader.h"
 #import "STDSStackView.h"
@@ -181,7 +181,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         self.processingView.hidden = NO;
         
         self.loadingStartDate = [NSDate date];
-        UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, STDSLocalizedString(@"Loading", @"Spoken by VoiceOver when the challenge is loading."));
+        UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, STPThreeDS2Localization.loading);
     } else {
         self.processingView.hidden = YES;
         self.loadingStartDate = nil;

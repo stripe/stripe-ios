@@ -32,7 +32,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 // normally does, if any.
 
                 // In this case, we'll pass it to the playground for test configuration.
-                if url.scheme == "stp-paymentsheet-playground" {
+                if CheckoutPlayground.Settings.isExportURL(url) {
+                    importCheckoutPlaygroundSettings(from: url, windowScene: windowScene)
+                } else if url.scheme == "stp-paymentsheet-playground" {
                     launchWith(base64String: url.query!, windowScene: windowScene)
                 }
             }
@@ -42,6 +44,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func launchWith(base64String: String, windowScene: UIWindowScene) {
         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: PaymentSheetTestPlaygroundSettings.self)!
+        launchWith(settings: settings, windowScene: windowScene)
+    }
+
+    func launchWith(settingsJSON: String, windowScene: UIWindowScene) {
+        let settings: PaymentSheetTestPlaygroundSettings
+        do {
+            settings = try PaymentSheetTestPlaygroundSettings.fromPartialJSON(settingsJSON)
+        } catch {
+            fatalError("Invalid STP_PLAYGROUND_SETTINGS_JSON: \(error)")
+        }
+        launchWith(settings: settings, windowScene: windowScene)
+    }
+
+    func launchWith(settings: PaymentSheetTestPlaygroundSettings, windowScene: UIWindowScene) {
         let paymentSheetPlayground = PaymentSheetTestPlayground(settings: settings, appearance: .default)
         let hvc = UIHostingController(rootView: paymentSheetPlayground)
         let navController = UINavigationController(rootViewController: hvc)
@@ -60,9 +76,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let settings = ProcessInfo.processInfo.environment["STP_CHECKOUT_PLAYGROUND_SETTINGS"]
             .flatMap { Data(base64Encoded: $0) }
             .flatMap { try? JSONDecoder().decode(CheckoutPlayground.Settings.self, from: $0) }
-        let hostingController = UIHostingController(rootView: CheckoutPlaygroundView(settings: settings))
+        launchCheckoutElements(settings: settings, windowScene: windowScene)
+    }
+
+    func launchCheckoutElements(settings: CheckoutPlayground.Settings?, errorMessage: String? = nil, windowScene: UIWindowScene) {
+        let hostingController = UIHostingController(rootView: CheckoutPlaygroundView(settings: settings, errorMessage: errorMessage))
         let navigationController = UINavigationController(rootViewController: hostingController)
         windowScene.windows.first!.rootViewController = navigationController
+    }
+
+    /// Opens the Checkout Playground from a link made by its QR export. Settings the link leaves out, such as
+    /// appearance, keep their current values. Saves the settings first so they persist like settings changed
+    /// in the playground.
+    func importCheckoutPlaygroundSettings(from url: URL, windowScene: UIWindowScene) {
+        let currentSettings = UserDefaults.standard.data(forKey: CheckoutPlayground.Settings.nsUserDefaultsKey)
+            .flatMap { try? JSONDecoder().decode(CheckoutPlayground.Settings.self, from: $0) }
+        guard let settings = CheckoutPlayground.Settings(exportURL: url, base: currentSettings ?? CheckoutPlayground.Settings()),
+              let data = try? JSONEncoder().encode(settings) else {
+            launchCheckoutElements(
+                settings: nil,
+                errorMessage: "Couldn't import Checkout Playground settings from the link.",
+                windowScene: windowScene
+            )
+            return
+        }
+        UserDefaults.standard.set(data, forKey: CheckoutPlayground.Settings.nsUserDefaultsKey)
+        launchCheckoutElements(settings: nil, windowScene: windowScene)
     }
 
     func scene(
@@ -90,6 +129,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let playgroundData = ProcessInfo.processInfo.environment["STP_PLAYGROUND_DATA"] {
             launchWith(base64String: playgroundData, windowScene: windowScene)
+        } else if let settingsJSON = ProcessInfo.processInfo.environment["STP_PLAYGROUND_SETTINGS_JSON"] {
+            // Plain JSON with any subset of PaymentSheetTestPlaygroundSettings' keys, e.g. from
+            // `SIMCTL_CHILD_STP_PLAYGROUND_SETTINGS_JSON='{"uiStyle":"embedded"}' xcrun simctl launch ...`
+            launchWith(settingsJSON: settingsJSON, windowScene: windowScene)
         } else if let playgroundData = ProcessInfo.processInfo.environment["STP_CUSTOMERSHEET_PLAYGROUND_DATA"] {
             launchCustomerSheetWith(base64String: playgroundData, windowScene: windowScene)
         } else if ProcessInfo.processInfo.environment["STP_CHECKOUT_ELEMENTS"] == "true" {

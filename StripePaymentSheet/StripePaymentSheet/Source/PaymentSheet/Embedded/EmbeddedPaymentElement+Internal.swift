@@ -39,8 +39,8 @@ extension EmbeddedPaymentElement {
             isFirstCardCoBranded: loadResult.savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: loadResult.intent.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
-            allowsPaymentMethodUpdate: loadResult.intent.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodRemoval: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
+            allowsPaymentMethodUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: loadResult.elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
         let initialSelection: RowButtonType? = {
@@ -62,9 +62,13 @@ extension EmbeddedPaymentElement {
         }()
         let mandateProvider = VerticalListMandateProvider(
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             elementsSession: loadResult.elementsSession,
             intent: loadResult.intent,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            shouldShowForm: {
+                EmbeddedPaymentElement.shouldShowForm($0, configuration: configuration)
+            }
         )
         return EmbeddedPaymentMethodsView(
             initialSelectedRowType: initialSelection,
@@ -106,11 +110,13 @@ extension EmbeddedPaymentElement {
         selection: RowButtonType?,
         previousPaymentOption: PaymentOption?,
         configuration: Configuration,
+        customerProvider: CustomerProvider,
         intent: Intent,
         elementsSession: STPElementsSession,
         savedPaymentMethods: [STPPaymentMethod],
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
+        stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?,
         checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?,
         formCache: PaymentMethodFormCache,
         delegate: EmbeddedFormViewControllerDelegate
@@ -121,6 +127,7 @@ extension EmbeddedPaymentElement {
 
         let formViewController = EmbeddedFormViewController(
             configuration: configuration,
+            customerProvider: customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
@@ -128,6 +135,7 @@ extension EmbeddedPaymentElement {
             previousPaymentOption: previousPaymentOption,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
             formCache: formCache,
             delegate: delegate
@@ -171,11 +179,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             // Carry the accepted option into the next form so cancel can restore the previous row.
             previousPaymentOption: selectedFormViewController?.paymentOptionToRestoreOnCancellation,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
             delegate: self
@@ -196,10 +206,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         // Present the current selection's form VC
         delegate?.embeddedPaymentElementWillPresent(embeddedPaymentElement: self)
         let bottomSheet = bottomSheetController(with: selectedFormViewController)
-        let presentingViewController = resolvedPresentingViewController
-        assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
-        presentingViewController?.presentAsSheet(bottomSheet)
+        presentSheet(bottomSheet)
     }
 
     private func handleSelectionWithoutForm() {
@@ -297,7 +305,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         case .new, nil:
             return
         }
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             paymentOption,
             forCustomer: loadResult.customerProvider.customerID
         )
@@ -313,8 +321,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                                hostedSurface: .paymentSheet,
                                                                                checkoutSessionID: analyticsHelper.checkoutSessionID,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
-                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-                                                                               canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+                                                                               canUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
@@ -326,14 +334,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
             let bottomSheetVC = bottomSheetController(with: updateViewController)
-            resolvedPresentingViewController?.presentAsSheet(bottomSheetVC)
+            presentSheet(bottomSheetVC)
             return
         }
 
         let verticalSavedPaymentMethodsViewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: loadResult.customerProvider,
-            intent: intent,
             checkout: checkout,
             selectedPaymentMethod: selectedSavedPaymentMethod,
             paymentMethods: savedPaymentMethods,
@@ -343,7 +350,27 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
         verticalSavedPaymentMethodsViewController.delegate = self
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
-        resolvedPresentingViewController?.presentAsSheet(bottomSheetVC)
+        presentSheet(bottomSheetVC)
+    }
+
+    private func presentSheet(_ sheet: any PaymentSheetContainer) {
+        guard let presentingViewController = resolvedPresentingViewController else {
+            if checkout != nil {
+                // Checkout merchants can't set `presentingViewController`, and we only present in response to the customer interacting with `view`, so we should always find one.
+                // Logging an unexpected error also fires an stpAssertionFailure.
+                STPAnalyticsClient.sharedClient.log(
+                    analytic: UnexpectedCheckoutElementsErrorAnalytic(
+                        errorCode: .paymentElementPresentingViewControllerUnavailable,
+                        errorMessage: "Payment Element couldn't find a view controller to present from."
+                    )
+                )
+            } else {
+                assertionFailure("Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
+            }
+            return
+        }
+        presentedSheet = sheet
+        presentingViewController.presentAsSheet(sheet)
     }
 
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {
@@ -352,11 +379,13 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             selection: rowButtonType,
             previousPaymentOption: nil, // This is just to check if there's a form, so this data isn't necessary
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: nil, // This is just to check if there's a form, so this data isn't necessary
+            stripeBalanceFinancialAccounts: nil,
             checkoutBillingAddressUpdater: checkout,
             formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
             delegate: self
@@ -368,7 +397,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: StripePayments.STPPaymentMethod) {
         // Detach the payment method from the customer
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        loadResult.customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // if it's the default pm, unset it
@@ -383,7 +416,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: false,
                                                                accessoryType: accessoryType)
-        presentingViewController?.dismiss(animated: true)
+        presentedSheet?.presentingViewController?.dismiss(animated: true)
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
@@ -420,7 +453,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
-        presentingViewController?.dismiss(animated: true)
+        presentedSheet?.presentingViewController?.dismiss(animated: true)
         return .success
     }
 
@@ -428,7 +461,12 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                             updateParams: StripePayments.STPPaymentMethodUpdateParams,
                             hasOnlyChangedCardBrand: Bool) async -> Result<Void, Error> {
         do {
-            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+            let updatedPaymentMethod = try await loadResult.customerProvider.update(
+                paymentMethod: paymentMethod,
+                with: updateParams,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
 
             // Update savedPaymentMethods
             if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
@@ -442,7 +480,11 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
 
     private func updateDefault(paymentMethod: StripePayments.STPPaymentMethod) async -> Result<Void, Error> {
         do {
-            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            _ = try await loadResult.customerProvider.setAsDefaultPaymentMethod(
+                paymentMethod.stripeId,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             defaultPaymentMethod = paymentMethod
             return .success(())
         } catch {
@@ -451,7 +493,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
-        presentingViewController?.dismiss(animated: true)
+        presentedSheet?.presentingViewController?.dismiss(animated: true)
     }
 
     private func getAccessoryButton(savedPaymentMethods: [STPPaymentMethod]) -> RowButton.RightAccessoryButton.AccessoryType? {
@@ -460,8 +502,8 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
-            allowsPaymentMethodUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+            allowsPaymentMethodRemoval: loadResult.customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession),
+            allowsPaymentMethodUpdate: loadResult.customerProvider.allowsPaymentMethodUpdate(elementsSession: elementsSession),
             omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
     }
@@ -490,7 +532,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
         embeddedPaymentMethodsView.updateSavedPaymentMethodRow(savedPaymentMethods,
                                                                isSelected: isSelected,
                                                                accessoryType: accessoryType)
-        presentingViewController?.dismiss(animated: true)
+        presentedSheet?.presentingViewController?.dismiss(animated: true)
     }
 }
 
@@ -567,11 +609,13 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             selection: selection,
             previousPaymentOption: paymentOption,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: checkout,
             formCache: formCache,
             delegate: self
@@ -700,6 +744,7 @@ extension EmbeddedPaymentElement {
 
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: authContext,
             intent: intent,
@@ -827,9 +872,15 @@ extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthentic
     }
 
     func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        // Initialize the polling view controller and flag it for presentation
-        self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
-                                                      appearance: self.appearance, safariViewController: safariViewController)
+        let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
+                                              appearance: self.appearance, safariViewController: safariViewController)
+        // Without a web view in front (e.g. BLIK, MB WAY, Bizum), present the polling view controller right away
+        guard safariViewController != nil else {
+            self._presentingViewController.present(pollingVC, animated: true)
+            return
+        }
+        // Otherwise, flag it for presentation once the web view is dismissed
+        self.pollingVC = pollingVC
         shouldPresentPollingVC = true
     }
 

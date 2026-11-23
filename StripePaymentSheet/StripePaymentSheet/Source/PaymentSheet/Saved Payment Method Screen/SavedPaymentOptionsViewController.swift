@@ -178,7 +178,6 @@ class SavedPaymentOptionsViewController: UIViewController {
     }
 
     let configuration: Configuration
-    private let intent: Intent
     private let paymentSheetConfiguration: PaymentSheet.Configuration
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let linkBrandProvider: () -> LinkBrand
@@ -349,7 +348,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         savedPaymentMethods: [STPPaymentMethod],
         configuration: Configuration,
         paymentSheetConfiguration: PaymentSheet.Configuration,
-        intent: Intent,
         appearance: PaymentSheet.Appearance,
         elementsSession: STPElementsSession,
         cbcEligible: Bool = false,
@@ -360,7 +358,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.savedPaymentMethods = savedPaymentMethods
         self.configuration = configuration
         self.paymentSheetConfiguration = paymentSheetConfiguration
-        self.intent = intent
         self.appearance = appearance
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod()
@@ -514,7 +511,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         if let selectedIndexPath {
             collectionView.deselectItem(at: selectedIndexPath, animated: true)
         }
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             snapshot.persistedPaymentOption,
             forCustomer: configuration.customerID
         )
@@ -672,11 +669,11 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure()
         case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
         case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
         case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(
                 .stripeId(paymentMethod.stripeId),
                 forCustomer: configuration.customerID
             )
@@ -712,7 +709,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                                            checkoutSessionID: analyticsHelper.checkoutSessionID,
                                                                            cardBrandFilter: paymentSheetConfiguration.cardBrandFilter,
                                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                                                           canUpdate: intent.allowsPaymentMethodUpdate(elementsSession: elementsSession),
+                                                                           canUpdate: configuration.allowsUpdatePaymentMethod,
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible,
                                                                            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                                                                            isDefault: isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId))

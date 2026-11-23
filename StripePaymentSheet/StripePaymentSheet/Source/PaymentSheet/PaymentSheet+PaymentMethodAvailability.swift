@@ -11,7 +11,7 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 @_spi(InternalOnlyAPI) import StripePaymentsUI
 
-extension PaymentSheet {
+nonisolated extension PaymentSheet {
 
     /// An unordered list of paymentMethod types that can be used with PaymentSheet
     /// - Note: This is a var so that we can enable experimental payment methods in PaymentSheetTestPlayground.
@@ -53,6 +53,7 @@ extension PaymentSheet {
         .pix,
         .goPay,
         .mondu,
+        .stripeBalance,
         .ngUSSD,
         .qris,
         .ngWallet,
@@ -99,6 +100,9 @@ extension PaymentSheet {
 
     /// Canonical source of truth for whether Link is enabled
     static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+        if let serverPaymentMethodAvailability = elementsSession.serverPaymentMethodAvailability {
+            return serverPaymentMethodAvailability.linkEnabled
+        }
         return linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
     }
 
@@ -218,17 +222,6 @@ extension Intent: PaymentMethodRequirementProvider {
         switch self {
         case let .paymentIntent(paymentIntent):
             var reqs = [PaymentMethodTypeRequirement]()
-            // Shipping address
-            if let shippingInfo = paymentIntent.shipping {
-                if shippingInfo.name != nil,
-                    shippingInfo.address?.line1 != nil,
-                    shippingInfo.address?.country != nil,
-                    shippingInfo.address?.postalCode != nil
-                {
-                    reqs.append(.shippingAddress)
-                }
-            }
-
             // valid us bank verification method
             if let usBankOptions = paymentIntent.paymentMethodOptions?.usBankAccount,
                 usBankOptions.verificationMethod.isValidForPaymentSheet
@@ -252,12 +245,6 @@ extension Intent: PaymentMethodRequirementProvider {
             return [.validUSBankVerificationMethod]
         case let .checkout(session):
             var reqs = [PaymentMethodTypeRequirement]()
-
-            // The session is configured to collect a shipping address, so payment methods
-            // that require one can be offered.
-            if session.requiresShippingAddress {
-                reqs.append(.shippingAddress)
-            }
 
             // Mirror PaymentIntent/SetupIntent: valid us bank verification method
             if let usBankOptions = session.paymentMethodOptions?.usBankAccount,
@@ -299,9 +286,6 @@ extension PaymentSheet {
         /// Indicates that a payment method requires a return URL
         case returnURL
 
-        /// Indicates that a payment method requires shipping information
-        case shippingAddress
-
         /// Requires that the user declare support for asynchronous payment methods
         case userSupportsDelayedPaymentMethods
 
@@ -317,6 +301,9 @@ extension PaymentSheet {
         /// The Bank payment method is disabled.
         case instantDebitsDisabledForOnboarding
 
+        /// Requires a customer configured with a CustomerSession
+        case customerSession
+
         /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
         var debugDescription: String {
             switch self {
@@ -328,8 +315,6 @@ extension PaymentSheet {
                 return "PaymentSheet does not currently support reusing this saved payment method."
             case .returnURL:
                 return "A return URL must be set, see https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-set-up-return-url"
-            case .shippingAddress:
-                return "A shipping address must be present on the Intent or collected through the Address Element and populated on PaymentSheet.Configuration.shippingDetails. See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping and https://stripe.com/docs/elements/address-element/collect-addresses?platform=ios#ios-pre-fill-billing"
             case .userSupportsDelayedPaymentMethods:
                 return "PaymentSheet.Configuration.allowsDelayedPaymentMethods must be set to true."
             case .financialConnectionsSDK:
@@ -340,6 +325,8 @@ extension PaymentSheet {
                 return "The provided configuration must either collect an email, or a default email must be provided. See https://docs.stripe.com/payments/payment-element/control-billing-details-collection"
             case .instantDebitsDisabledForOnboarding:
                 return "The Bank tab is configured to be hidden for your account."
+            case .customerSession:
+                return "PaymentSheet.Configuration.customer must be configured with a CustomerSession. See https://docs.stripe.com/payments/accept-a-payment?platform=ios&ui=payment-sheet"
             }
         }
     }

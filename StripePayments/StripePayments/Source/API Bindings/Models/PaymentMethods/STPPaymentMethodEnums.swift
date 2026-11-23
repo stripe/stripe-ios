@@ -140,11 +140,13 @@ import Foundation
     case ngWallet
     /// A Mondu payment method
     case mondu
+    /// A Stripe balance payment method
+    case stripeBalance
     /// An unknown type.
     case unknown
 
     /// Localized display name for this payment method type
-    @_spi(InternalOnlyAPI) public var displayName: String {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public var displayName: String {
         switch self {
         case .alipay:
             return STPLocalizedString("Alipay", "Payment Method type brand name")
@@ -276,6 +278,8 @@ import Foundation
             return "Naira Wallet"
         case .mondu:
             return "Mondu"
+        case .stripeBalance:
+            return "Stripe balance"
         case .goPay:
             return "GoPay"
         case .cardPresent,
@@ -417,12 +421,14 @@ import Foundation
             return "ng_wallet"
         case .mondu:
             return "mondu"
+        case .stripeBalance:
+            return "stripe_balance"
         case .goPay:
             return "gopay"
         }
     }
 
-    @_spi(InternalOnlyAPI) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
+    @_spi(InternalOnlyAPI) @_spi(ReactNativeSDK) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
         return allCases.first(where: { $0.identifier == identifier }) ?? .unknown
     }
 

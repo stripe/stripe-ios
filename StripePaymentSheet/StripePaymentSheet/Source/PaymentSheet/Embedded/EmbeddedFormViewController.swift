@@ -83,12 +83,14 @@ class EmbeddedFormViewController: UIViewController {
 
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let configuration: EmbeddedPaymentElement.Configuration
+    private let customerProvider: CustomerProvider
     private let intent: Intent
     private let elementsSession: STPElementsSession
     private let shouldUseNewCardNewCardHeader: Bool
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    private let stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
     private weak var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
@@ -141,10 +143,12 @@ class EmbeddedFormViewController: UIViewController {
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
             configuration: configuration,
+            customerProvider: customerProvider,
             paymentMethodOrientation: .vertical,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
             isLinkUI: false,
             delegate: self
         )
@@ -157,6 +161,7 @@ class EmbeddedFormViewController: UIViewController {
     weak var delegate: EmbeddedFormViewControllerDelegate?
 
     init(configuration: EmbeddedPaymentElement.Configuration,
+         customerProvider: CustomerProvider,
          intent: Intent,
          elementsSession: STPElementsSession,
          shouldUseNewCardNewCardHeader: Bool,
@@ -164,6 +169,7 @@ class EmbeddedFormViewController: UIViewController {
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+         stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
          checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
          formCache: PaymentMethodFormCache = .init(),
          delegate: EmbeddedFormViewControllerDelegate
@@ -172,9 +178,11 @@ class EmbeddedFormViewController: UIViewController {
         self.elementsSession = elementsSession
         self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.paymentOptionToRestoreOnCancellation = previousPaymentOption
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        self.stripeBalanceFinancialAccounts = stripeBalanceFinancialAccounts
         self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
@@ -224,7 +232,16 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     func updateMandate() {
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
+        let mandateProvider = VerticalListMandateProvider(
+            configuration: configuration,
+            customerProvider: customerProvider,
+            elementsSession: elementsSession,
+            intent: intent,
+            analyticsHelper: analyticsHelper,
+            shouldShowForm: {
+                EmbeddedPaymentElement.shouldShowForm($0, configuration: self.configuration)
+            }
+        )
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
@@ -241,7 +258,6 @@ class EmbeddedFormViewController: UIViewController {
         animateHeightChange({ [self] in
             errorLabel.setHiddenIfNecessary(error == nil)
             if error != nil {
-                // TODO(porter) Don't think we need this
                 // Without this, setting `contentOffsetPercentage = 1` uses the height of the scroll view without accounting for the error label
                 errorLabel.setNeedsLayout()
                 errorLabel.layoutIfNeeded()

@@ -6,7 +6,7 @@
 
 import Foundation
 import PassKit
-@_spi(InternalOnlyAPI) import StripePaymentSheet
+@_spi(CheckoutSessionPreview) import StripePaymentSheet
 
 extension ExpressCheckoutElement.Configuration.LinkConfiguration.Display: CaseIterable, Identifiable {
     public static var allCases: [Self] { [.automatic, .never] }
@@ -19,7 +19,23 @@ extension ExpressCheckoutElement.Configuration.Appearance.ButtonTheme: CaseItera
 }
 
 enum CheckoutPlayground {
+    enum PaymentElementApplePayDisplay: String, CaseIterable, Identifiable, Codable {
+        case automatic
+        case never
+
+        var id: String { rawValue }
+
+        var sdkValue: PaymentElement.Configuration.ApplePayConfiguration.Display {
+            switch self {
+            case .automatic: return .automatic
+            case .never: return .never
+            }
+        }
+    }
+
     enum ApplePayButtonType: String, CaseIterable, Identifiable, Codable {
+        /// Leaves `buttonType` as `nil` so the SDK picks its default.
+        case unset
         case plain
         case buy
         case setup
@@ -29,6 +45,7 @@ enum CheckoutPlayground {
 
         var displayName: String {
             switch self {
+            case .unset: return "nil"
             case .plain: return "Plain"
             case .buy: return "Buy"
             case .setup: return "Set Up"
@@ -36,8 +53,9 @@ enum CheckoutPlayground {
             }
         }
 
-        var pkPaymentButtonType: PKPaymentButtonType {
+        var pkPaymentButtonType: PKPaymentButtonType? {
             switch self {
+            case .unset: return nil
             case .plain: return .plain
             case .buy: return .buy
             case .setup: return .setUp
@@ -151,7 +169,6 @@ enum CheckoutPlayground {
     }
 
     enum EmailSource: String, CaseIterable, Identifiable, Codable {
-        case none
         case checkoutSession
         case customer
         case local
@@ -160,8 +177,7 @@ enum CheckoutPlayground {
 
         var displayName: String {
             switch self {
-            case .none: return "None"
-            case .checkoutSession: return "Server — Checkout Session"
+            case .checkoutSession: return "Server — Session"
             case .customer: return "Server — Customer"
             case .local: return "Local"
             }
@@ -176,10 +192,13 @@ enum CheckoutPlayground {
 
         var email: String? {
             let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-            return source == .none || trimmed.isEmpty ? nil : trimmed
+            return trimmed.isEmpty ? nil : trimmed
         }
 
         var localDefaultEmail: String? { source == .local ? email : nil }
+
+        /// The email to create the Customer with, if any.
+        var customerEmail: String? { source == .customer ? email : nil }
     }
 
     enum CustomerType: String, CaseIterable, Identifiable, Codable {
@@ -317,6 +336,29 @@ enum CheckoutPlayground {
         }
     }
 
+    /// How Payment Element is presented when it is shown. `IntegrationType.eceOnly` means Payment Element is hidden.
+    enum PaymentElementPresentation: String, CaseIterable, Identifiable {
+        case sheet
+        case view
+
+        var id: String { rawValue }
+
+        var integrationType: IntegrationType {
+            switch self {
+            case .sheet: return .flowController
+            case .view: return .embedded
+            }
+        }
+
+        init?(integrationType: IntegrationType) {
+            switch integrationType {
+            case .flowController: self = .sheet
+            case .embedded: self = .view
+            case .eceOnly: return nil
+            }
+        }
+    }
+
     struct LineItemConfig: Identifiable, Codable {
 
         let id: UUID
@@ -355,9 +397,9 @@ enum CheckoutPlayground {
         var displayName: String {
             switch self {
             case .standard:
-                return "Standard cart"
+                return "Clothing"
             case .zeroAmount:
-                return "$0 cart"
+                return "Free T-Shirt ($0)"
             }
         }
 
@@ -411,7 +453,7 @@ enum CheckoutPlayground {
 
         init(
             isEnabled: Bool = true,
-            applePayButtonType: ApplePayButtonType = .plain,
+            applePayButtonType: ApplePayButtonType = .unset,
             linkDisplay: ExpressCheckoutElement.Configuration.LinkConfiguration.Display = .automatic,
             appearance: ExpressCheckoutElement.Configuration.Appearance = .init()
         ) {
@@ -442,7 +484,7 @@ enum CheckoutPlayground {
 
             self.init(
                 isEnabled: try container.decodeIfPresent(Bool.self, forKey: .isEnabled) ?? true,
-                applePayButtonType: try container.decodeIfPresent(ApplePayButtonType.self, forKey: .applePayButtonType) ?? .plain,
+                applePayButtonType: try container.decodeIfPresent(ApplePayButtonType.self, forKey: .applePayButtonType) ?? .unset,
                 linkDisplay: try container.decodeIfPresent(String.self, forKey: .linkDisplay)
                     .flatMap(ExpressCheckoutElement.Configuration.LinkConfiguration.Display.init(rawValue:)) ?? .automatic,
                 appearance: appearance
@@ -466,6 +508,8 @@ enum CheckoutPlayground {
         var uiFramework: UIFramework = .swiftUI
         var integrationType: IntegrationType = .flowController
         var expressCheckoutElement = ExpressCheckoutElementSettings()
+        var applePayEnabled = true
+        var paymentElementApplePayDisplay: PaymentElementApplePayDisplay = .automatic
         var linkMode: LinkMode = .native
         var currency: Currency = .usd
         var customerType: CustomerType = .guest
@@ -477,17 +521,77 @@ enum CheckoutPlayground {
         var billingAddressCollection: BillingAddressCollection = .automatic
         var defaultBillingAddressOption: DefaultAddressOption? = DefaultAddressOption.none
         var customDefaultBillingAddress: DefaultAddress? = .usTestAddress
+        var defaultPhone: String?
         var automaticTax = true
         var checkoutSessionPaymentMethodSave = true
         var checkoutSessionPaymentMethodRemove = true
         var adaptivePricingCountry: AdaptivePricingCountry = .none
-        var automaticPaymentMethods = false
+        var automaticPaymentMethods = true
         var paymentMethodTypes: Set<String> = ["card"]
-        var currencySelectorAppearance = CurrencySelectorElement.Appearance()
+        var currencySelectorAppearance = CurrencySelectorElement.Configuration.Appearance()
+        var paymentElementAppearance: PaymentSheet.Appearance?
         var checkoutEndpointOption: EndpointOption = .hosted
         var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
         var delayCheckoutClientRequests = false
 
         static let nsUserDefaultsKey = "CheckoutPlaygroundSettings"
+    }
+
+    /// A Customer created for the New customer type, stored once a checkout with it completes. Like the PaymentSheet
+    /// playground's New customer, it's reused for later sessions so that payment methods saved to it are offered again.
+    struct NewCustomer: Codable {
+
+        let id: String
+        /// The playground backend that created the Customer, since backends can use different Stripe accounts.
+        let backendURL: String
+        /// The email the checkout completed with. Checkout saves it to a Customer without an email, so later
+        /// sessions get it from the Customer as a server email.
+        let email: String?
+
+        static let nsUserDefaultsKey = "CheckoutPlaygroundNewCustomer"
+    }
+}
+
+extension CheckoutPlayground.Settings {
+    /// Checkout Playground links share the PaymentSheet playground's URL scheme and use this host.
+    static let exportURLScheme = "stp-paymentsheet-playground"
+    static let exportURLHost = "checkout"
+
+    /// Appearance settings are left out of links: they would make the QR code too dense to generate or scan.
+    /// The PaymentSheet playground also keeps its appearance out of its QR code.
+    private static let keysExcludedFromExport = ["currencySelectorAppearance", "paymentElementAppearance"]
+
+    /// A link that opens the Checkout Playground with these settings, except appearance. The query is the
+    /// settings JSON, LZFSE-compressed and base64-encoded, like `PaymentSheetTestPlaygroundSettings.base64URL`.
+    var exportURL: URL? {
+        guard var object = try? JSONSerialization.jsonObject(with: JSONEncoder().encode(self)) as? [String: Any] else {
+            return nil
+        }
+        Self.keysExcludedFromExport.forEach { object[$0] = nil }
+        guard let json = try? JSONSerialization.data(withJSONObject: object),
+              let compressed = try? (json as NSData).compressed(using: .lzfse) as Data else {
+            return nil
+        }
+        return URL(string: "\(Self.exportURLScheme)://\(Self.exportURLHost)?\(compressed.base64EncodedString())")
+    }
+
+    static func isExportURL(_ url: URL) -> Bool {
+        url.scheme == exportURLScheme && url.host == exportURLHost
+    }
+
+    /// Decodes settings from an `exportURL`, taking any setting the link doesn't include, such as appearance,
+    /// from `base`. Returns `nil` if the link is malformed.
+    init?(exportURL url: URL, base: Self) {
+        guard Self.isExportURL(url),
+              let query = url.query,
+              let compressed = Data(base64Encoded: query),
+              let json = try? (compressed as NSData).decompressed(using: .lzfse) as Data,
+              let linkObject = try? JSONSerialization.jsonObject(with: json) as? [String: Any],
+              let baseObject = try? JSONSerialization.jsonObject(with: JSONEncoder().encode(base)) as? [String: Any],
+              let merged = try? JSONSerialization.data(withJSONObject: baseObject.merging(linkObject) { _, link in link }),
+              let settings = try? JSONDecoder().decode(Self.self, from: merged) else {
+            return nil
+        }
+        self = settings
     }
 }
