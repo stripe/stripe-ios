@@ -163,6 +163,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
             intent: ._testValue(),
             elementsSession: ._testValue(intent: ._testValue()),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
             analyticsHelper: ._testValue()
         )
