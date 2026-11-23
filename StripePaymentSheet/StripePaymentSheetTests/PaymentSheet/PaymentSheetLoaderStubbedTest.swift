@@ -83,11 +83,11 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let configuration = configuration(apiClient: stubbedAPIClient())
         var config = configuration
         config.applePay = nil
-        CustomerPaymentOption.setDefaultPaymentMethod(lastUsedMethod, forCustomer: "123")
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(lastUsedMethod, forCustomer: "123")
         let previousAccount = LinkAccountContext.shared.account
         LinkAccountContext.shared.account = nil
         defer {
-            CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: "123")
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: "123")
             LinkAccountContext.shared.account = previousAccount
         }
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: savedMethodTypes)
