@@ -32,18 +32,25 @@ protocol CheckoutSessionWalletUpdater: AnyObject {
 
 extension CheckoutSessionWalletUpdater {
     /// Restores the tax region a wallet flow started with, e.g. after the customer cancels it.
+    /// - Returns: Whether the tax region was updated.
+    @discardableResult
     func restoreTaxRegion(
         to initialTaxRegion: CheckoutElementsController.Address?,
         confirmationSource: CheckoutElementsController.ConfirmingElement
-    ) async {
+    ) async -> Bool {
         guard currentTaxRegion != initialTaxRegion else {
-            return
+            return false
         }
-        _ = try? await updateTaxRegionWithoutEnqueueing(
-            address: initialTaxRegion,
-            canUpdateWhileSheetPresented: true,
-            confirmationSource: confirmationSource
-        )
+        do {
+            _ = try await updateTaxRegionWithoutEnqueueing(
+                address: initialTaxRegion,
+                canUpdateWhileSheetPresented: true,
+                confirmationSource: confirmationSource
+            )
+            return true
+        } catch {
+            return false
+        }
     }
 }
 

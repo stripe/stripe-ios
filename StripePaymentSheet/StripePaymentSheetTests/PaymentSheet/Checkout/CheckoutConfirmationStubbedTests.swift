@@ -1056,10 +1056,129 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         }
     }
 
-    private func confirmLinkWalletAttempt(_ wallet: PayWithLinkViewController) async -> PaymentSheetResult {
-        guard case let .withPaymentDetails(_, account, paymentDetails, confirmationExtras, _) = CheckoutTestHelpers.makeLinkConfirmOption() else {
+    func testLinkWalletDeclineThenCloseWithAutomaticTaxRestoresInitialTotal() async throws {
+        try await assertLinkWalletWithAutomaticTaxAfterDecline(switchesCardAfterDecline: false)
+    }
+
+    func testLinkWalletDeclineThenSwitchCardThenCloseWithAutomaticTaxRestoresInitialTotal() async throws {
+        try await assertLinkWalletWithAutomaticTaxAfterDecline(switchesCardAfterDecline: true)
+    }
+
+    private func assertLinkWalletWithAutomaticTaxAfterDecline(switchesCardAfterDecline: Bool) async throws {
+        // Given a native Link wallet opened by Checkout confirmation for a session that calculates tax from the billing address
+        let previousOverride = PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride
+        let previousAccount = LinkAccountContext.shared.account
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
+        LinkAccountContext.shared.account = nil
+        defer {
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = previousOverride
+            LinkAccountContext.shared.account = previousAccount
+        }
+        let automaticTax: [String: Any] = ["enabled": true, "status": "ready", "address_source": "billing"]
+        let sessionJSON = { (taxExclusive: Int) -> [AnyHashable: Any] in
+            var json = CheckoutTestHelpers.openSessionJSON
+            json["automatic_tax"] = automaticTax
+            json["customer"] = ["id": "cus_123"]
+            json["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(taxExclusive: taxExclusive)
+            return json
+        }
+        let initialSession = try CheckoutClientAPIResponse.decode(fromAPIResponse: sessionJSON(0))
+        let checkout = try await makeCheckout(apiResponse: initialSession)
+        let initialAmount = checkout.session.amount
+        // ...and the server calculates tax from the tax region sent with each update
+        stub { request in
+            request.url?.path == "/v1/checkout_client/\(checkout.session.id)/update"
+        } response: { request in
+            let params = RequestBodyTestHelpers.formEncodedBodyParams(from: request)
+            let taxExclusive = switch params["tax_region[country]"] {
+            case "US": 100
+            case "CA": 50
+            default: 0
+            }
+            return HTTPStubsResponse(jsonObject: sessionJSON(taxExclusive), statusCode: 200, headers: nil)
+        }
+        let presenter = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer {
+            presenter.dismiss(animated: false)
+            window.isHidden = true
+        }
+        let flow = try checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: window)
+        var finalCheckoutResult: CheckoutElementsController.ConfirmResult?
+        let confirmation = Task {
+            finalCheckoutResult = await checkout.confirm(flow)
+        }
+        try await waitUntil { presenter.presentedViewController != nil }
+        try await waitUntil { presenter.presentedViewController?.isBeingPresented == false }
+        let sheet = try XCTUnwrap(presenter.presentedViewController as? any PaymentSheetContainer)
+        let content = try XCTUnwrap(sheet.contentStack.first as? PayWithLinkViewController.BaseViewController)
+        let wallet = try XCTUnwrap(content.coordinator as? PayWithLinkViewController)
+        let totalUpdater = try XCTUnwrap(content.context.totalUpdater)
+
+        // When the customer selects a card with a US billing address, the total includes US tax
+        let usBillingAddress = BillingAddress(line1: "1 Main St", city: "South San Francisco", state: "CA", postalCode: "94080", countryCode: "US")
+        try await totalUpdater.sync(billingAddress: STPPaymentMethodBillingDetails(billingAddress: usBillingAddress, email: nil)?.address)
+        XCTAssertEqual(checkout.session.amount, initialAmount + 100)
+
+        // ...and paying with it is declined, so the wallet stays open
+        var declinedResponse = makeConfirmedSessionJSON(paymentResponseStatus: "requires_payment_method", status: "open", paymentStatus: "unpaid")
+        declinedResponse["total_summary"] = CheckoutTestHelpers.makeTotalSummaryJSON(taxExclusive: 100)
+        var paymentResponse = declinedResponse["payment_response"] as! [String: Any]
+        paymentResponse["last_payment_error"] = [
+            "type": "card_error",
+            "code": "card_declined",
+            "message": "Your card was declined.",
+        ]
+        declinedResponse["payment_response"] = paymentResponse
+        stubConfirmation(responseJSON: declinedResponse)
+        let poll = stubPollCheckoutSession(
+            sessionId: checkout.session.id,
+            clientSecret: checkout.clientSecret,
+            confirmationStatus: "failed",
+            status: "open",
+            paymentStatus: "unpaid"
+        )
+        let retrieve = stubRetrieveCheckoutSession(responseJSON: declinedResponse, clientSecret: checkout.clientSecret)
+        let attemptResult = await confirmLinkWalletAttempt(wallet, billingAddress: usBillingAddress)
+        guard case .failed = attemptResult else { return XCTFail("Expected the attempt to fail") }
+        await fulfillment(of: [poll, retrieve], timeout: 5)
+
+        if switchesCardAfterDecline {
+            // ...and the customer then selects a card with a Canadian billing address
+            let caBillingAddress = BillingAddress(postalCode: "M5A 0R8", countryCode: "CA")
+            try await totalUpdater.sync(billingAddress: STPPaymentMethodBillingDetails(billingAddress: caBillingAddress, email: nil)?.address)
+            XCTAssertEqual(checkout.session.amount, initialAmount + 50)
+        }
+
+        // ...and closes the wallet without paying
+        content.navigationBar.closeButtonRight.sendActions(for: .touchUpInside)
+        try await waitUntil { finalCheckoutResult != nil }
+        await confirmation.value
+
+        // Then Checkout reports cancellation and keeps the restored session instead of the declined attempt's
+        let result = try XCTUnwrap(finalCheckoutResult)
+        guard case .canceled = result else { return XCTFail("Expected cancellation, got \(result)") }
+        XCTAssertNil(checkout.currentTaxRegion)
+        XCTAssertEqual(checkout.session.amount, initialAmount)
+    }
+
+    private func confirmLinkWalletAttempt(
+        _ wallet: PayWithLinkViewController,
+        billingAddress: BillingAddress? = nil
+    ) async -> PaymentSheetResult {
+        guard case let .withPaymentDetails(_, account, fixturePaymentDetails, confirmationExtras, _) = CheckoutTestHelpers.makeLinkConfirmOption() else {
             preconditionFailure("Expected Link payment details fixture")
         }
+        let paymentDetails = ConsumerPaymentDetails(
+            stripeID: fixturePaymentDetails.stripeID,
+            details: fixturePaymentDetails.details,
+            billingAddress: billingAddress ?? fixturePaymentDetails.billingAddress,
+            billingEmailAddress: fixturePaymentDetails.billingEmailAddress,
+            nickname: fixturePaymentDetails.nickname,
+            isDefault: fixturePaymentDetails.isDefault
+        )
         return await withCheckedContinuation { continuation in
             wallet.confirm(with: account, paymentDetails: paymentDetails, confirmationExtras: confirmationExtras) { result, _ in
                 continuation.resume(returning: result)
