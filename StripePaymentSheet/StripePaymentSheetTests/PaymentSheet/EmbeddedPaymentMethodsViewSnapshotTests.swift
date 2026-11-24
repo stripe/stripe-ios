@@ -1625,6 +1625,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                 linkPaymentMethodBankAccountDataConsent: "Example, Inc. can access account and ownership details, balances, and transactions. [Learn more](https://stripe.com)"
             ),
             configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
             linkBrand: .link,
             shouldOfferApplePay: false,
             shouldFinishOnClose: false,

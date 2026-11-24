@@ -152,6 +152,7 @@ extension EmbeddedPaymentElement {
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
             shouldOfferApplePay: false,
             shouldFinishOnClose: false,
