@@ -55,10 +55,10 @@ extension STPElementsSession {
         linkSettings?.linkFlags ?? [:]
     }
 
-    /// Whether the server enables inline Link verification in the Embedded Payment Element. Also its kill switch.
+    /// Whether inline Link verification is enabled in the Embedded Payment Element. The server can disable it via a kill switch.
     var linkEmbeddedInlineVerificationEnabled: Bool {
         PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride
-            ?? (linkFlags["link_mobile_enable_embedded_inline_otp"] == true)
+            ?? (linkFlags["link_mobile_disable_embedded_inline_otp"] != true)
     }
 
     /// Whether inline Link verification opens the verification dialog instead of focusing the inline code field.

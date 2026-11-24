@@ -213,17 +213,20 @@ final class EmbeddedLinkInlineVerificationFlagsTests: XCTestCase {
     }
 
     func testFlagsComeFromLinkSettings() throws {
-        let enabled = try makeSession(flags: ["link_mobile_enable_embedded_inline_otp": true, "link_mobile_embedded_inline_otp_force_dialog": true])
-        XCTAssertTrue(enabled.linkEmbeddedInlineVerificationEnabled)
-        XCTAssertTrue(enabled.linkEmbeddedInlineVerificationForcesDialog)
+        let killed = try makeSession(flags: ["link_mobile_disable_embedded_inline_otp": true, "link_mobile_embedded_inline_otp_force_dialog": true])
+        XCTAssertFalse(killed.linkEmbeddedInlineVerificationEnabled)
+        XCTAssertTrue(killed.linkEmbeddedInlineVerificationForcesDialog)
+
+        let notKilled = try makeSession(flags: ["link_mobile_disable_embedded_inline_otp": false])
+        XCTAssertTrue(notKilled.linkEmbeddedInlineVerificationEnabled)
 
         let unset = try makeSession(flags: [:])
-        XCTAssertFalse(unset.linkEmbeddedInlineVerificationEnabled)
+        XCTAssertTrue(unset.linkEmbeddedInlineVerificationEnabled)
         XCTAssertFalse(unset.linkEmbeddedInlineVerificationForcesDialog)
     }
 
     func testOverridesTakePrecedence() throws {
-        let enabled = try makeSession(flags: ["link_mobile_enable_embedded_inline_otp": true])
+        let enabled = try makeSession(flags: [:])
         PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = false
         PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationForcesDialogOverride = true
         XCTAssertFalse(enabled.linkEmbeddedInlineVerificationEnabled)
