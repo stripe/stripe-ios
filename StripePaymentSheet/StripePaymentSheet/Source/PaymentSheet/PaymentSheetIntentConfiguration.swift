@@ -72,11 +72,99 @@ public extension PaymentSheet {
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
+        ///   - allowedPaymentMethodTypes: An allowlist of payment method types for the intent
+        ///   - excludedPaymentMethodTypes: The excluded payment method types for the intent
+        ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
+        ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
+        ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
+        ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
+        /// - Note: If your server uses the parameter `payment_method_types`, use an initializer with `paymentMethodTypes` instead
+        public init(mode: Mode,
+                    allowedPaymentMethodTypes: [String]? = nil,
+                    excludedPaymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
+                    paymentMethodConfigurationId: String? = nil,
+                    confirmHandler: @escaping ConfirmHandler,
+                    requireCVCRecollection: Bool = false) {
+            // `paymentMethodTypes` can't be combined with the allowed or excluded types, so leave it nil
+            self.init(mode: mode,
+                      paymentMethodTypes: nil,
+                      onBehalfOf: onBehalfOf,
+                      paymentMethodConfigurationId: paymentMethodConfigurationId,
+                      confirmHandler: confirmHandler,
+                      requireCVCRecollection: requireCVCRecollection)
+            self.allowedPaymentMethodTypes = allowedPaymentMethodTypes
+            self.excludedPaymentMethodTypes = excludedPaymentMethodTypes
+        }
+
+        /// Creates a `PaymentSheet.IntentConfiguration` for a shared payment token session
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
+        ///   - sellerDetails: Seller details for the shared payment token session
+        ///   - allowedPaymentMethodTypes: An allowlist of payment method types for the intent
+        ///   - excludedPaymentMethodTypes: The excluded payment method types for the intent
+        ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
+        ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
+        ///   - preparePaymentMethodHandler: A handler called with payment and shipping when the user taps the primary button (e.g. the "Pay" or "Continue" button).
+        ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
+        /// - Note: If your server uses the parameter `payment_method_types`, use an initializer with `paymentMethodTypes` instead
+        @_spi(SharedPaymentToken) public init(sharedPaymentTokenSessionWithMode mode: Mode,
+                                              sellerDetails: SellerDetails?,
+                                              allowedPaymentMethodTypes: [String]? = nil,
+                                              excludedPaymentMethodTypes: [String]? = nil,
+                                              onBehalfOf: String? = nil,
+                                              paymentMethodConfigurationId: String? = nil,
+                                              preparePaymentMethodHandler: @escaping PreparePaymentMethodHandler,
+                                              requireCVCRecollection: Bool = false) {
+            // `paymentMethodTypes` can't be combined with the allowed or excluded types, so leave it nil
+            self.init(sharedPaymentTokenSessionWithMode: mode,
+                      sellerDetails: sellerDetails,
+                      paymentMethodTypes: nil,
+                      onBehalfOf: onBehalfOf,
+                      paymentMethodConfigurationId: paymentMethodConfigurationId,
+                      preparePaymentMethodHandler: preparePaymentMethodHandler,
+                      requireCVCRecollection: requireCVCRecollection)
+            self.allowedPaymentMethodTypes = allowedPaymentMethodTypes
+            self.excludedPaymentMethodTypes = excludedPaymentMethodTypes
+        }
+
+        /// Creates a `PaymentSheet.IntentConfiguration` with a confirmation token handler
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
+        ///   - allowedPaymentMethodTypes: An allowlist of payment method types for the intent
+        ///   - excludedPaymentMethodTypes: The excluded payment method types for the intent
+        ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
+        ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
+        ///   - confirmationTokenConfirmHandler: A handler called with a confirmation token when the user taps the primary button. Use this for a more secure and streamlined payment flow.
+        ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
+        /// - Note: If your server uses the parameter `payment_method_types`, use an initializer with `paymentMethodTypes` instead
+        public init(mode: Mode,
+                    allowedPaymentMethodTypes: [String]? = nil,
+                    excludedPaymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
+                    paymentMethodConfigurationId: String? = nil,
+                    confirmationTokenConfirmHandler: @escaping ConfirmationTokenConfirmHandler,
+                    requireCVCRecollection: Bool = false) {
+            // `paymentMethodTypes` can't be combined with the allowed or excluded types, so leave it nil
+            self.init(mode: mode,
+                      paymentMethodTypes: nil,
+                      onBehalfOf: onBehalfOf,
+                      paymentMethodConfigurationId: paymentMethodConfigurationId,
+                      confirmationTokenConfirmHandler: confirmationTokenConfirmHandler,
+                      requireCVCRecollection: requireCVCRecollection)
+            self.allowedPaymentMethodTypes = allowedPaymentMethodTypes
+            self.excludedPaymentMethodTypes = excludedPaymentMethodTypes
+        }
+
+        /// Creates a `PaymentSheet.IntentConfiguration` with the given values
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
         ///   - paymentMethodTypes: The payment method types for the intent
         ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
         ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
         ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
         ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
+        /// - Note: If your server uses the parameter `allowed_payment_method_types` or `excluded_payment_method_types`, use an initializer with `allowedPaymentMethodTypes` or `excludedPaymentMethodTypes` instead
         public init(mode: Mode,
                     paymentMethodTypes: [String]? = nil,
                     onBehalfOf: String? = nil,
@@ -102,6 +190,7 @@ public extension PaymentSheet {
         ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
         ///   - preparePaymentMethodHandler: A handler called with payment and shipping when the user taps the primary button (e.g. the "Pay" or "Continue" button).
         ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
+        /// - Note: If your server uses the parameter `allowed_payment_method_types` or `excluded_payment_method_types`, use an initializer with `allowedPaymentMethodTypes` or `excludedPaymentMethodTypes` instead
         @_spi(SharedPaymentToken) public init(sharedPaymentTokenSessionWithMode mode: Mode,
                                               sellerDetails: SellerDetails?,
                                               paymentMethodTypes: [String]? = nil,
@@ -132,6 +221,7 @@ public extension PaymentSheet {
         ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
         ///   - confirmationTokenConfirmHandler: A handler called with a confirmation token when the user taps the primary button. Use this for a more secure and streamlined payment flow.
         ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
+        /// - Note: If your server uses the parameter `allowed_payment_method_types` or `excluded_payment_method_types`, use an initializer with `allowedPaymentMethodTypes` or `excludedPaymentMethodTypes` instead
         public init(mode: Mode,
                     paymentMethodTypes: [String]? = nil,
                     onBehalfOf: String? = nil,
@@ -159,7 +249,22 @@ public extension PaymentSheet {
         }
 
         /// A list of payment method types to display to the customer. If nil, we dynamically determine the payment methods using your Stripe Dashboard settings.
+        /// Set this to the same list you pass as `payment_method_types`
+        /// when creating the PaymentIntent or SetupIntent on your server.
+        /// If you don't set that parameter on your server, leave this nil.
         public var paymentMethodTypes: [String]?
+
+        /// A list of allowed payment method types to display. Incompatible types are filtered out.
+        /// Set this to the same list you pass as `allowed_payment_method_types`
+        /// when creating the PaymentIntent or SetupIntent on your server.
+        /// If you don't set that parameter on your server, leave this nil.
+        public var allowedPaymentMethodTypes: [String]?
+
+        /// A list of payment method types to exclude from dynamic payment methods.
+        /// Set this to the same list you pass as `excluded_payment_method_types`
+        /// when creating the PaymentIntent or SetupIntent on your server.
+        /// If you don't set that parameter on your server, leave this nil.
+        public var excludedPaymentMethodTypes: [String]?
 
         /// Called when the customer confirms payment.
         /// See the documentation for `ConfirmHandler` for more details.

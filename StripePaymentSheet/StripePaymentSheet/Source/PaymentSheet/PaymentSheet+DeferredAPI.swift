@@ -252,9 +252,10 @@ extension PaymentSheet {
 
     static func makeDeferredPaymentUserAgentValue(intentConfiguration: IntentConfiguration) -> [String] {
         var paymentUserAgentValues = ["deferred-intent"]
-        if intentConfiguration.paymentMethodTypes?.isEmpty ?? true {
+        if (intentConfiguration.paymentMethodTypes?.isEmpty ?? true) && (intentConfiguration.allowedPaymentMethodTypes?.isEmpty ?? true) {
             // Add "autopm" tag when using deferred intents and merchant is using automatic_payment_methods
-            // If paymentMethodTypes is empty, assume they are using automatic_payment_methods.
+            // If paymentMethodTypes and allowedPaymentMethodTypes are empty, assume they are using automatic_payment_methods.
+            // Excluding payment method types still uses automatic_payment_methods.
             paymentUserAgentValues.append("autopm")
         }
         return paymentUserAgentValues

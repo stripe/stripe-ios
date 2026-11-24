@@ -61,6 +61,8 @@ Migrate your application-owned confirmation handler from a method-name string to
 
 `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress` are deprecated. Payment methods that require a shipping address are always allowed.
 
+* **Payment method types**: Set the payment method type properties on `PaymentSheet.IntentConfiguration` to match the parameters your server uses to create the PaymentIntent or SetupIntent: `paymentMethodTypes` for `payment_method_types`, `allowedPaymentMethodTypes` for `allowed_payment_method_types`, and `excludedPaymentMethodTypes` for `excluded_payment_method_types`.
+
 #### CustomerSheet
 ##### MainActor Changes
 `CustomerSheet` is now main-actor isolated. Initialize and access from the main actor.
@@ -74,6 +76,8 @@ Migrate your application-owned confirmation handler from a method-name string to
 
 ##### Other changes
 `CustomerSheetError` is no longer public. Do not identify internal error cases by comparing descriptions or undocumented `NSError` codes.
+
+* **Payment method types**: Create `CustomerSheet.IntentConfiguration` with the parameter that matches how your server creates the SetupIntent: `paymentMethodTypes` for `payment_method_types`, `allowedPaymentMethodTypes` for `allowed_payment_method_types`, or `excludedPaymentMethodTypes` for `excluded_payment_method_types`.
 
 #### Identity
 * If you install with Swift Package Manager and you use `StripeIdentity` or `StripeCryptoOnramp`, enable the `Identity` package trait.

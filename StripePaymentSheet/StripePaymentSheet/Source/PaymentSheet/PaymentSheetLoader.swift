@@ -353,7 +353,15 @@ final class PaymentSheetLoader {
                     throw error
                 }
                 // Fall back to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
-                let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
+                // Leave out any excluded types, because the merchant's intent won't accept them.
+                let excludedPaymentMethodTypes = intentConfig.excludedPaymentMethodTypes ?? []
+                let paymentMethodTypes = (intentConfig.allowedPaymentMethodTypes ?? intentConfig.paymentMethodTypes ?? ["card"])
+                    .filter { !excludedPaymentMethodTypes.contains($0) }
+                    .map { STPPaymentMethod.type(from: $0) }
+                // If nothing is left (e.g. the merchant excluded cards), there's nothing the backup can offer, so report the original error
+                guard !paymentMethodTypes.isEmpty else {
+                    throw error
+                }
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
             }

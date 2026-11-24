@@ -62,6 +62,8 @@ class CustomerSheetDataSource {
                 let elementsSessionTask = Task {
                     try await self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(
                         paymentMethodTypes: customerAdapter.paymentMethodTypes,
+                        allowedPaymentMethodTypes: nil,
+                        excludedPaymentMethodTypes: nil,
                         onBehalfOf: nil,
                         clientDefaultPaymentMethod: nil,
                         customerSessionClientSecret: nil
