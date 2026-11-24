@@ -10,6 +10,7 @@
 
 struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
     /// Identifies a distinct unexpected error. Reuse a case only for the same error, and never rename a shipped case.
+    /// Only add cases for SDK or Stripe backend bugs; see `logUnexpectedCheckoutElementsErrorAndAssert`.
     enum ErrorCode: String {
         /// Confirmation found a Session payment option but no PaymentElement to confirm it with.
         case paymentOptionWithoutPaymentElement =
@@ -91,7 +92,9 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
     }
 }
 
-/// Logs an unexpected Checkout Elements error. `STPAnalyticsClient` asserts when it logs unexpected errors.
+/// Logs an unexpected Checkout Elements error. This asserts (`STPAnalyticsClient` asserts on every unexpected error) and alerts Stripe.
+/// Only use this for SDK or Stripe backend bugs. If merchant configuration, device state, or the network can cause the failure,
+/// throw a specific `CheckoutError` instead, e.g. `CheckoutError.applePayPresentationFailed`.
 func logUnexpectedCheckoutElementsErrorAndAssert(
     _ errorCode: UnexpectedCheckoutElementsErrorAnalytic.ErrorCode,
     message: String,
