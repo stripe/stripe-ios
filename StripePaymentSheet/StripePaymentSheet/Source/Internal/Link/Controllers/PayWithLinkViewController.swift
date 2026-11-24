@@ -108,16 +108,6 @@ final class PayWithLinkViewController: NSObject {
             }
             return .pay(amount: totalUpdater.amount, currency: currency, withLock: withLock)
         }
-
-        /// The billing details to collect for Link payment details.
-        /// When tax is calculated from the billing address, this collects a full address.
-        var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
-            var billingDetailsCollectionConfiguration = configuration.billingDetailsCollectionConfiguration
-            if intent.collectsTaxFromBillingAddress {
-                billingDetailsCollectionConfiguration.address = .full
-            }
-            return billingDetailsCollectionConfiguration
-        }
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
         let linkAppearance: LinkAppearance?

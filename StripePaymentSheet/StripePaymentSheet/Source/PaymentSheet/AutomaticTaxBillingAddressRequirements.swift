@@ -58,6 +58,15 @@ enum AutomaticTaxBillingAddressRequirements {
     /// Per-country collection overrides used when building payment method forms.
     static let minimumFieldsToCollectByCountry = requirementsByCountry.mapValues(\.fieldsToCollect)
 
+    /// Returns country-specific minimums widened to include automatic tax requirements.
+    static func minimumFieldsToCollect(
+        widening minimumFields: [String: AddressSectionElement.FieldsToCollect]
+    ) -> [String: AddressSectionElement.FieldsToCollect] {
+        return minimumFields.merging(minimumFieldsToCollectByCountry) { existing, automaticTax in
+            existing.widened(toMeet: automaticTax)
+        }
+    }
+
     /// Whether a saved payment method address contains the fields required to calculate tax.
     static func areSatisfied(by address: STPPaymentMethodAddress?) -> Bool {
         guard let address,
@@ -77,6 +86,27 @@ enum AutomaticTaxBillingAddressRequirements {
             case .postalCode:
                 return address.postalCode?.nonEmpty != nil
             }
+        }
+    }
+}
+
+private extension AddressSectionElement.FieldsToCollect {
+    func widened(toMeet minimum: Self) -> Self {
+        switch (self, minimum) {
+        case (.all, _):
+            return self
+        case (_, .all):
+            return minimum
+        case (.countryAndPostal, .country):
+            return self
+        case (.country, .countryAndPostal):
+            return minimum
+        case (.countryAndPostal, .countryAndPostal):
+            return self
+        case (.country, .country):
+            return self
+        default:
+            return self
         }
     }
 }

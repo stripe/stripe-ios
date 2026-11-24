@@ -68,6 +68,7 @@ extension PayWithLinkViewController {
             paymentMethod: paymentMethod,
             configuration: makeConfiguration(),
             isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow,
+            collectsTaxFromBillingAddress: intent.collectsTaxFromBillingAddress,
             linkAppearance: linkAppearance
         )
 
@@ -78,7 +79,6 @@ extension PayWithLinkViewController {
 
             var configuration = context.configuration
             configuration.defaultBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
-            configuration.billingDetailsCollectionConfiguration = context.billingDetailsCollectionConfiguration
             return configuration
         }
 
