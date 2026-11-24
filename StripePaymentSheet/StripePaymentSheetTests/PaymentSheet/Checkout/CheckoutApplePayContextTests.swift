@@ -713,29 +713,24 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let (context, controller) = makeContext()
         controller.presentationSucceeds = false
 
-        // When the unexpected-error assertion is captured by the test utility
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        // When presenting Apple Pay
         let result = await context.presentApplePay()
 
         // Then confirmation fails with actionable diagnostics
         guard case .failed(let error) = result.paymentSheetResult,
-              case .unknown(let message) = error as? CheckoutError else {
-            XCTFail("Expected an Apple Pay Checkout error, got \(result.paymentSheetResult)")
+              case .applePayPresentationFailed = error as? CheckoutError else {
+            XCTFail("Expected an Apple Pay presentation error, got \(result.paymentSheetResult)")
             return
         }
-        XCTAssertTrue(message.contains("app is active"))
-        XCTAssertTrue(message.contains("presenting window is visible"))
-        XCTAssertTrue(error.localizedDescription.contains(message))
+        XCTAssertTrue(error.localizedDescription.contains("app is active"))
+        XCTAssertTrue(error.localizedDescription.contains("presenting window is visible"))
+        XCTAssertEqual(error.serializeForV1Analytics()["error_code"] as? String, "applePayPresentationFailed")
 
-        // ...and the failure is logged once and triggers the expected SDK assertion
+        // ...and it isn't logged as an unexpected error, because it's usually caused by the app's Apple Pay setup
         let events = analyticsClient._testLogHistory.filter {
             $0["event"] as? String == "unexpected_error.checkout_elements"
         }
-        XCTAssertEqual(events.count, 1)
-        XCTAssertEqual(events.first?["error_code"] as? String, "unknown")
-        XCTAssertEqual(events.first?["error_type"] as? String, "StripePaymentSheet.CheckoutError")
-        XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
-        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("unexpected_error.checkout_elements"))
+        XCTAssertTrue(events.isEmpty)
     }
 
     // MARK: - presentationWindow
