@@ -236,9 +236,8 @@ extension PayWithLinkViewController {
         }
 
         func setupUI() {
-            if viewModel.shouldShowShippingAddressPicker,
-               let paymentPickerIndex = containerView.arrangedSubviews.firstIndex(of: paymentPickerContainerView) {
-                containerView.insertArrangedSubview(shippingAddressPicker, at: paymentPickerIndex + 1)
+            if viewModel.shouldShowShippingAddressPicker {
+                paymentPicker.shippingAddressPicker = shippingAddressPicker
             }
 
             if viewModel.shouldShowApplePayButton {
@@ -911,7 +910,7 @@ extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPic
         viewModel.shippingAddresses[index]
     }
 
-    func shippingAddressPicker(_ picker: LinkShippingAddressPicker, isShippingAddressSupportedAt index: Int) -> Bool {
+    func isShippingAddressSupported(at index: Int) -> Bool {
         viewModel.isShippingAddressSupported(at: index)
     }
 }
@@ -958,10 +957,7 @@ extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPic
         present(alertController, animated: true)
     }
 
-    func shippingAddressPickerDidTapOnAddShippingAddress(
-        _ picker: LinkShippingAddressPicker,
-        sourceRect: CGRect
-    ) {
+    func shippingAddressPickerDidTapOnAddShippingAddress(_ picker: LinkShippingAddressPicker) {
         let addShippingAddressVC = PayWithLinkViewController.AddShippingAddressViewController(
             linkAccount: linkAccount,
             context: context

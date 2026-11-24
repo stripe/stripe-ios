@@ -269,12 +269,12 @@ extension LinkShippingAddressPicker {
                 UIAccessibilityCustomAction(
                     name: String.Localized.show_menu,
                     target: self,
-                    selector: #selector(onShowMenuAction(_:))
+                    selector: #selector(onShowMenuAction)
                 ),
             ]
         }
 
-        @objc func onShowMenuAction(_ sender: UIAccessibilityCustomAction) {
+        @objc func onShowMenuAction() {
             onMenuButtonTapped(menuButton)
         }
 

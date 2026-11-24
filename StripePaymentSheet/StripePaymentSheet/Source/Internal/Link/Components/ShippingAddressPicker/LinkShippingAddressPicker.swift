@@ -25,10 +25,7 @@ protocol LinkShippingAddressPickerDelegate: AnyObject {
         sourceRect: CGRect
     )
 
-    func shippingAddressPickerDidTapOnAddShippingAddress(
-        _ picker: LinkShippingAddressPicker,
-        sourceRect: CGRect
-    )
+    func shippingAddressPickerDidTapOnAddShippingAddress(_ picker: LinkShippingAddressPicker)
 }
 
 protocol LinkShippingAddressPickerDataSource: AnyObject {
@@ -41,13 +38,14 @@ protocol LinkShippingAddressPickerDataSource: AnyObject {
     ) -> ShippingAddressesResponse.ShippingAddress
 
     /// Whether the shipping address can be used, e.g. because the merchant ships to its country.
-    func shippingAddressPicker(_ picker: LinkShippingAddressPicker, isShippingAddressSupportedAt index: Int) -> Bool
+    func isShippingAddressSupported(at index: Int) -> Bool
 
     /// The index of the selected shipping address, or `nil` if none is selected.
     var selectedShippingAddressIndex: Int? { get }
 }
 
 /// An accordion listing the shipping addresses saved to the Link account.
+/// Embedded in `LinkPaymentMethodPicker`, which provides the surrounding card.
 /// For internal SDK use only
 @objc(STP_Internal_LinkShippingAddressPicker)
 final class LinkShippingAddressPicker: UIView {
@@ -125,16 +123,7 @@ final class LinkShippingAddressPicker: UIView {
     private func setup() {
         clipsToBounds = true
         accessibilityIdentifier = "Stripe.Link.ShippingAddressPicker"
-
-        if let cornerRadius = LinkUI.appearance.cornerRadius {
-            layer.cornerRadius = cornerRadius
-        } else {
-            ios26_applyDefaultCornerConfiguration()
-        }
-
-        layer.borderColor = UIColor.linkBorderDefault.cgColor
         updateTintColors()
-        backgroundColor = .linkSurfaceSecondary
 
         headerView.addTarget(self, action: #selector(onHeaderTapped(_:)), for: .touchUpInside)
         headerView.layer.zPosition = 1
@@ -149,13 +138,6 @@ final class LinkShippingAddressPicker: UIView {
         super.layoutSubviews()
         reloadDataIfNeeded()
     }
-
-#if !os(visionOS)
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        layer.borderColor = UIColor.linkBorderDefault.cgColor
-    }
-#endif
 
     func setExpanded(_ expanded: Bool, animated: Bool) {
         headerView.isExpanded = collapsable ? expanded : true
@@ -194,8 +176,7 @@ private extension LinkShippingAddressPicker {
     }
 
     @objc func onAddShippingAddressButtonTapped(_ sender: LinkPaymentMethodPicker.AddButton) {
-        let sourceRect = sender.convert(sender.bounds, to: self)
-        delegate?.shippingAddressPickerDidTapOnAddShippingAddress(self, sourceRect: sourceRect)
+        delegate?.shippingAddressPickerDidTapOnAddShippingAddress(self)
     }
 
 }
@@ -235,7 +216,7 @@ extension LinkShippingAddressPicker {
 
         cell.shippingAddress = dataSource.shippingAddressPicker(self, shippingAddressAt: index)
         cell.isSelected = dataSource.selectedShippingAddressIndex == index
-        cell.isSupported = dataSource.shippingAddressPicker(self, isShippingAddressSupportedAt: index)
+        cell.isSupported = dataSource.isShippingAddressSupported(at: index)
     }
 
     func showLoader(at index: Int) {

@@ -13,6 +13,13 @@ extension LinkShippingAddressPicker {
     final class Header: UIControl {
         typealias Constants = LinkPaymentMethodPicker.Header.Constants
 
+        enum Strings {
+            static let shipping = STPLocalizedString(
+                "Shipping",
+                "Label for a section displaying the shipping address."
+            )
+        }
+
         /// The selected shipping address.
         private var selectedShippingAddress: ShippingAddressesResponse.ShippingAddress? {
             didSet {
@@ -48,13 +55,9 @@ extension LinkShippingAddressPicker {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
             label.textColor = .linkTextTertiary
-            label.text = STPLocalizedString(
-                "Shipping",
-                "Label for a section displaying the shipping address."
-            )
+            label.text = Strings.shipping
             label.adjustsFontForContentSizeCategory = true
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
-            label.setContentHuggingPriority(.required, for: .horizontal)
             label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
