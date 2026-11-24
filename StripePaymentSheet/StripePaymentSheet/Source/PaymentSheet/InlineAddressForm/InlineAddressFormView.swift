@@ -30,45 +30,24 @@ public struct InlineAddressFormView: View {
             .frame(height: sizing.height)
             // Until the form takes the fields' measured height, they can draw past it.
             .opacity(sizing.height == nil ? 0 : 1)
-            .onChange(of: state.enteredAddress) { _ in
-                // An edit can add or remove fields, such as when the country changes.
-                sizing.updateHeight(of: addressSectionView)
-            }
         }
     }
 }
 
-/// Measures the fields' UIKit view, whose height changes as fields appear and disappear.
+/// The height of the fields' UIKit view, which changes as fields appear, disappear, and show
+/// errors.
 @MainActor
 final class InlineAddressFormSizing: ObservableObject {
     @Published private(set) var height: CGFloat?
 
-    private var width: CGFloat = 0
-
-    func updateHeight(of view: UIView, width: CGFloat? = nil) {
-        if let width, width > 0 {
-            self.width = width
-        }
-
-        // Measure after the current layout pass, once the view has its new fields.
+    func updateHeight(_ newHeight: CGFloat) {
+        // Publish after this layout pass, which can be part of a SwiftUI update.
         Task { @MainActor [weak self] in
-            self?.updateHeightNow(of: view)
+            self?.updateHeightNow(newHeight)
         }
     }
 
-    private func updateHeightNow(of view: UIView) {
-        let fittingWidth = width > 0 ? width : view.bounds.width
-        guard fittingWidth > 0 else { return }
-
-        let newHeight = view.systemLayoutSizeFitting(
-            CGSize(
-                width: fittingWidth,
-                height: UIView.layoutFittingCompressedSize.height
-            ),
-            withHorizontalFittingPriority: .required,
-            verticalFittingPriority: .fittingSizeLevel
-        ).height
-
+    private func updateHeightNow(_ newHeight: CGFloat) {
         if let height, abs(height - newHeight) <= 1 {
             return
         }
@@ -92,17 +71,14 @@ private struct InlineAddressFormRepresentable: UIViewRepresentable {
         InlineAddressFormContainerView(addressSectionView: addressSectionView, sizing: sizing)
     }
 
-    func updateUIView(_ uiView: InlineAddressFormContainerView, context: Context) {
-        // A field can resize without changing the address, such as when it shows an error.
-        sizing.updateHeight(of: addressSectionView)
-    }
+    func updateUIView(_ uiView: InlineAddressFormContainerView, context: Context) {}
 }
 
-/// Holds the fields' view and measures it whenever its width changes.
+/// Holds the fields' view and reports its height whenever its size changes.
 private final class InlineAddressFormContainerView: UIView {
     private let addressSectionView: UIView
     private let sizing: InlineAddressFormSizing
-    private var measuredWidth: CGFloat = 0
+    private var reportedSize: CGSize = .zero
 
     init(addressSectionView: UIView, sizing: InlineAddressFormSizing) {
         self.addressSectionView = addressSectionView
@@ -130,11 +106,12 @@ private final class InlineAddressFormContainerView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        // SwiftUI can create this view before it has a width, and a width change alone doesn't
-        // call `updateUIView`.
-        if bounds.width > 0, bounds.width != measuredWidth {
-            measuredWidth = bounds.width
-            sizing.updateHeight(of: addressSectionView, width: bounds.width)
+        // The fields' height follows this view's width and the fields themselves, such as when one
+        // shows an error. SwiftUI can create this view before it has a width.
+        let fieldsSize = addressSectionView.frame.size
+        if bounds.width > 0, fieldsSize != reportedSize {
+            reportedSize = fieldsSize
+            sizing.updateHeight(fieldsSize.height)
         }
     }
 }

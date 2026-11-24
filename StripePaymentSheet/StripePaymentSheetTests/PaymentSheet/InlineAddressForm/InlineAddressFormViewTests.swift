@@ -61,10 +61,41 @@ final class InlineAddressFormViewTests: XCTestCase {
         XCTAssertNotNil(addressSectionView.window)
     }
 
+    func testFormGrowsWhenAFieldShowsAnError() async throws {
+        // Given a form on screen, with "1" entered in its ZIP code field
+        let state = makeState()
+        let addressSectionView = try XCTUnwrap(state.addressSection?.view)
+        let postalCode = try XCTUnwrap(state.addressSection?.postalCode)
+        let window = await showFormBeforeFirstLayout(state: state)
+        defer { window.isHidden = true }
+        let formView = try XCTUnwrap(addressSectionView.superview)
+        postalCode.beginEditing()
+        postalCode.setText("1")
+        await showUpdates(in: window)
+        let heightWithoutError = formView.bounds.height
+
+        // When the customer leaves the field, which shows that the ZIP code is incomplete
+        postalCode.endEditing(continueToNextField: false)
+        let fieldsHeight = addressSectionView.systemLayoutSizeFitting(
+            CGSize(width: 320, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+        // The form animates to its new height.
+        await showUpdates(in: window, until: { abs(formView.bounds.height - fieldsHeight) <= 1 })
+
+        // Then the form grows to fit the error
+        XCTAssertGreaterThan(fieldsHeight, heightWithoutError)
+        XCTAssertEqual(formView.bounds.height, fieldsHeight, accuracy: 1)
+    }
+
     /// Lays out a form for `state` at zero size, as a page does before its first layout, and then
     /// at the window's width. Returns the window, which the caller hides when done.
     private func showFormBeforeFirstLayout(state: InlineAddressFormState) async -> UIWindow {
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 800))
+        // A window in the app's scene gets the display updates that drive SwiftUI's animations.
+        let windowScene = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
+        let window = windowScene.map { UIWindow(windowScene: $0) } ?? UIWindow()
+        window.frame = CGRect(x: 0, y: 0, width: 320, height: 800)
         let pageViewController = UIViewController()
         window.rootViewController = pageViewController
         window.makeKeyAndVisible()
@@ -81,6 +112,16 @@ final class InlineAddressFormViewTests: XCTestCase {
         await waitForViewUpdate()
         layout(hostingController, in: window)
         return window
+    }
+
+    /// Lays out `window` until the form has measured its fields and SwiftUI has applied their
+    /// height, or until `condition` holds, for up to a second.
+    private func showUpdates(in window: UIWindow, until condition: () -> Bool = { false }) async {
+        let deadline = Date().addingTimeInterval(1)
+        repeat {
+            window.rootViewController?.children.forEach { layout($0, in: window) }
+            await waitForViewUpdate()
+        } while !condition() && Date() < deadline
     }
 
     private func waitForViewUpdate() async {
@@ -117,7 +158,7 @@ final class InlineAddressFormViewTests: XCTestCase {
                 require: "ACSZ",
                 cityNameType: .city,
                 stateNameType: .state,
-                zip: "",
+                zip: "\\d{5}",
                 zipNameType: .zip
             ),
         ]
