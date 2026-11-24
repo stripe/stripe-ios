@@ -6,8 +6,10 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 
 ### PaymentSheet
 * [Deprecated] Deprecated External Payment Methods in favor of Custom Payment Methods. See the [CPM integration guide](https://docs.stripe.com/payments/mobile/custom-payment-methods?platform=ios).
+* [Changed] Added `@MainActor` isolation to `PaymentSheet` and `PaymentSheet.FlowController`. Initialize and access these objects from the main actor.
 * [Removed] Removed public access to `PaymentSheetError`.
 * [Deprecated] Deprecated `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress`. This configuration no longer has an effect. Payment methods that require a shipping address are always allowed.
+* [Changed] Klarna no longer displays a country dropdown with PaymentIntents when `billingDetailsCollectionConfiguration.address` is `.never`.
 * [Added] Added Mobile Checkout Elements (private preview), a new integration powered by the Checkout Sessions API. See https://docs.stripe.com/payments/mobile/checkout-sessions
 * [Added] Added support for Stripe balance (private preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
@@ -15,6 +17,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 * [Fixed] Fixed an issue where adding a bank account in native Link or signing out of Link could fail when the configured API client used a different publishable key from `STPAPIClient.shared`.
 
 ### CustomerSheet
+* [Changed] Added `@MainActor` isolation to `CustomerSheet`. Initialize and access from the main actor.
 * [Removed] Removed public access to `CustomerSheetError`.
 
 ### Payments

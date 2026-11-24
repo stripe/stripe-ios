@@ -14,12 +14,13 @@ import Foundation
 @testable@_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 
+@MainActor
 final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
 
     var apiClient: STPAPIClient!
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
         apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
     }
 

@@ -157,8 +157,12 @@ extension FinancialConnectionsNavigationController {
         appearance: FinancialConnectionsAppearance
     ) {
         let iconHeight: CGFloat = 20
-        let logoView: UIView? = {
-            guard !shouldHideLogo else { return nil }
+        let logoView: UIView = {
+            guard !shouldHideLogo else {
+                // When bar buttons move into the iPhone Duo's side column, a navigation bar without
+                // a title collapses. Keep an empty title so the bar height doesn't change between panes.
+                return UIView(frame: CGRect(x: 0, y: 0, width: 1, height: iconHeight))
+            }
 
             let logoImage = FinancialConnectionsLogoImageView(appearance: appearance)
             logoImage.contentMode = .scaleAspectFit
@@ -172,13 +176,63 @@ extension FinancialConnectionsNavigationController {
                 height: iconHeight
             )
             // Use a container to preserve the logo's size when used as a title view.
-            let containerView = UIView(frame: logoImage.bounds)
-            containerView.addSubview(logoImage)
-            return containerView
+            return SafeAreaCenteredTitleView(contentView: logoImage)
         }()
         navigationItem?.titleView = logoView
         navigationItem?.backButtonTitle = ""
         navigationItem?.rightBarButtonItem = closeItem
+    }
+}
+
+/// Centers its content in the navigation bar's safe area instead of the full bar width, so the
+/// logo stays centered over the pane content when a side column insets it (e.g. on iPhone Duo).
+private final class SafeAreaCenteredTitleView: UIView {
+    private let contentView: UIView
+
+    init(contentView: UIView) {
+        self.contentView = contentView
+        super.init(frame: contentView.bounds)
+        addSubview(contentView)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        var centerX = bounds.midX
+        if let navigationBar = enclosingNavigationBar {
+            let safeAreaFrame = navigationBar.bounds.inset(by: navigationBar.safeAreaInsets)
+            centerX = convert(CGPoint(x: safeAreaFrame.midX, y: 0), from: navigationBar).x
+        }
+        contentView.center = CGPoint(x: centerX, y: bounds.midY)
+    }
+
+    // This view usually lies inside the safe area, so its own insets don't change when the bar's
+    // do. Re-center whenever UIKit moves it or it moves into a bar.
+    override var frame: CGRect {
+        didSet { setNeedsLayout() }
+    }
+
+    override var center: CGPoint {
+        didSet { setNeedsLayout() }
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        setNeedsLayout()
+    }
+
+    private var enclosingNavigationBar: UINavigationBar? {
+        var view = superview
+        while let currentView = view {
+            if let navigationBar = currentView as? UINavigationBar {
+                return navigationBar
+            }
+            view = currentView.superview
+        }
+        return nil
     }
 }
 

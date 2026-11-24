@@ -35,6 +35,8 @@ final class IntentConfirmParams {
     var didDisplayMandate: Bool = false
     /// Hack: Not actually data sent to /confirm. The state of the "Save my info for faster checkout with Link" checkbox. Used to restore the customer's choice when the form is rebuilt.
     var linkInlineSignupCheckboxState: CheckboxState = .hidden
+    /// Whether the customer changed the Link checkbox. Preserved across form rebuilds to report the correct signup consent action.
+    var linkInlineSignupDidInteractWithSaveCheckbox: Bool = false
 
     var financialConnectionsLinkedBank: FinancialConnectionsLinkedBank?
     var instantDebitsLinkedBank: InstantDebitsLinkedBank?
