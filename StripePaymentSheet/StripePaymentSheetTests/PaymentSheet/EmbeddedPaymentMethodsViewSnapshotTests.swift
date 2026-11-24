@@ -578,6 +578,103 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
+    // MARK: Featured bank institution icons snapshot tests
+
+    func testEmbeddedPaymentMethodsView_flatRadio_featuredInstitutions() {
+        verifyFeaturedInstitutions(style: .flatWithRadio)
+    }
+
+    func testEmbeddedPaymentMethodsView_floatingButton_featuredInstitutions() {
+        verifyFeaturedInstitutions(style: .floatingButton)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatWithCheckmark_featuredInstitutions() {
+        verifyFeaturedInstitutions(style: .flatWithCheckmark)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_featuredInstitutions() {
+        verifyFeaturedInstitutions(style: .flatWithDisclosure)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatRadio_featuredInstitutions_selected() {
+        // Given the Bank row is selected, then the icons stay visible
+        verifyFeaturedInstitutions(style: .flatWithRadio, initialSelection: .new(paymentMethodType: .instantDebits))
+    }
+
+    func testEmbeddedPaymentMethodsView_flatRadio_featuredInstitutions_changeButton() {
+        // Given a bank is linked and the Bank row shows the "Change" button, then the icons are hidden
+        verifyFeaturedInstitutions(
+            style: .flatWithRadio,
+            initialSelection: .new(paymentMethodType: .instantDebits),
+            showsChangeButton: true
+        )
+    }
+
+    func testEmbeddedPaymentMethodsView_flatRadio_featuredInstitutions_narrow() {
+        // Given a narrow width, then only the rotating icon is shown
+        verifyFeaturedInstitutions(style: .flatWithRadio, width: 200)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatRadio_featuredInstitutions_promoBadge() {
+        // Given an incentive, then the promo badge is shown instead of the icons
+        verifyFeaturedInstitutions(
+            style: .flatWithRadio,
+            incentive: PaymentMethodIncentive(identifier: "link_instant_debits", displayText: "$5")
+        )
+    }
+
+    func testEmbeddedPaymentMethodsView_flatRadio_featuredInstitutions_rightToLeft() {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.embeddedPaymentElement.row.style = .flatWithRadio
+        let embeddedView = EmbeddedPaymentMethodsView(
+            paymentMethodTypes: [.stripe(.card), .instantDebits, .stripe(.cashApp)],
+            appearance: appearance,
+            savedPaymentMethodAccessoryType: .none,
+            featuredInstitutionsLoader: ._testValue()
+        )
+        // `host` makes the view a window's root, which adds a status bar safe area inset.
+        // Ignore it so the hosted layout matches the measured height.
+        embeddedView.insetsLayoutMarginsFromSafeArea = false
+        embeddedView.autosizeHeight(width: 300)
+        let containerView = UIView()
+        containerView.addAndPinSubview(embeddedView)
+        let traitHost = host(
+            containerView,
+            size: CGSize(width: 300, height: embeddedView.bounds.height),
+            traits: UITraitCollection(layoutDirection: .rightToLeft)
+        )
+
+        withExtendedLifetime(traitHost) {
+            STPSnapshotVerifyView(containerView)
+        }
+    }
+
+    private func verifyFeaturedInstitutions(
+        style: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style,
+        initialSelection: RowButtonType? = nil,
+        incentive: PaymentMethodIncentive? = nil,
+        showsChangeButton: Bool = false,
+        width: CGFloat = 300,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.embeddedPaymentElement.row.style = style
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: initialSelection,
+            paymentMethodTypes: [.stripe(.card), .instantDebits, .stripe(.cashApp)],
+            appearance: appearance,
+            savedPaymentMethodAccessoryType: .none,
+            incentive: incentive,
+            featuredInstitutionsLoader: ._testValue()
+        )
+        if showsChangeButton {
+            embeddedView.selectedRowButton?.addChangeButton(animated: false)
+        }
+        embeddedView.autosizeHeight(width: width)
+        STPSnapshotVerifyView(embeddedView, file: file, line: line)
+    }
+
     // MARK: Flat with checkmark snapshot tests
 
     func testEmbeddedPaymentMethodsView_flatWithCheckmark() {
@@ -895,6 +992,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       shouldShowLink: true,
                                                       savedPaymentMethodAccessoryType: .none,
                                                       mandateProvider: MockMandateProvider())
+        // `host` makes the view a window's root, which adds a status bar safe area inset.
+        // Ignore it so the hosted layout matches the measured height.
+        embeddedView.insetsLayoutMarginsFromSafeArea = false
         embeddedView.autosizeHeight(width: 300)
         let containerView = UIView()
         containerView.addAndPinSubview(embeddedView)
@@ -1450,6 +1550,103 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
+    // MARK: - Inline Link verification
+
+    // @iOS26
+    func testEmbeddedPaymentMethodsView_flatRadio_linkInlineVerification() {
+        verifyLinkInlineVerification(style: .flatWithRadio)
+    }
+
+    // @iOS26
+    func testEmbeddedPaymentMethodsView_floating_linkInlineVerification() {
+        verifyLinkInlineVerification(style: .floatingButton)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatCheckmark_linkInlineVerification() {
+        verifyLinkInlineVerification(style: .flatWithCheckmark)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatDisclosure_linkInlineVerification() {
+        verifyLinkInlineVerification(style: .flatWithDisclosure)
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_sendingCode() {
+        var state = EmbeddedLinkInlineVerificationView.State._testValue
+        state.isCodeEntryEnabled = false
+        state.isActionLoading = true
+        verifyLinkInlineVerification(style: .flatWithRadio, state: state)
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_error() {
+        var state = EmbeddedLinkInlineVerificationView.State._testValue
+        state.errorMessage = "That code is invalid."
+        verifyLinkInlineVerification(style: .flatWithRadio, state: state)
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_resendOnly() {
+        var state = EmbeddedLinkInlineVerificationView.State._testValue
+        state.actions = .resend(title: "Resend code", isEnabled: true)
+        verifyLinkInlineVerification(style: .flatWithRadio, state: state)
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_darkMode() {
+        verifyLinkInlineVerification(style: .flatWithRadio, traits: UITraitCollection(userInterfaceStyle: .dark))
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_rightToLeft() {
+        verifyLinkInlineVerification(style: .floatingButton, traits: UITraitCollection(layoutDirection: .rightToLeft))
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_collapsedKeepsLinkFirst() {
+        let embeddedView = makeLinkInlineVerificationEmbeddedView(style: .flatWithRadio, state: ._testValue)
+        embeddedView.collapseLinkInlineVerification(animated: false)
+        verify(embeddedView)
+    }
+
+    private func makeLinkInlineVerificationEmbeddedView(
+        style: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style,
+        state: EmbeddedLinkInlineVerificationView.State
+    ) -> EmbeddedPaymentMethodsView {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.embeddedPaymentElement.row.style = style
+        let linkInlineVerificationView = EmbeddedLinkInlineVerificationView(appearance: appearance, linkBrand: .link)
+        linkInlineVerificationView.render(state)
+        return EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            appearance: appearance,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            mandateProvider: MockMandateProvider(),
+            placesLinkFirst: true,
+            linkInlineVerificationView: linkInlineVerificationView
+        )
+    }
+
+    private func verifyLinkInlineVerification(
+        style: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style,
+        state: EmbeddedLinkInlineVerificationView.State = ._testValue,
+        traits: UITraitCollection? = nil,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let embeddedView = makeLinkInlineVerificationEmbeddedView(style: style, state: state)
+        guard let traits else {
+            verify(embeddedView, file: file, line: line)
+            return
+        }
+        // The host window's safe area would otherwise push the rows down and squeeze the card.
+        embeddedView.insetsLayoutMarginsFromSafeArea = false
+        embeddedView.autosizeHeight(width: 300)
+        let containerView = UIView()
+        containerView.backgroundColor = .systemBackground
+        containerView.addAndPinSubview(embeddedView)
+        let traitHost = host(containerView, size: CGSize(width: 300, height: embeddedView.bounds.height), traits: traits)
+        withExtendedLifetime(traitHost) {
+            STPSnapshotVerifyView(containerView, file: file, line: line)
+        }
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
@@ -1514,6 +1711,27 @@ extension PaymentSheetLinkAccount {
     }
 }
 
+extension EmbeddedLinkInlineVerificationView.State {
+    static var _testValue: Self {
+        .init(
+            email: "jane.diaz@example.com",
+            recipient: "(•••) ••• ••72",
+            isCodeEntryEnabled: true,
+            errorMessage: nil,
+            actions: .menu(
+                items: [
+                    .init(action: .resend, title: "Resend code", systemImageName: "arrow.clockwise", isEnabled: true),
+                    .init(action: .email, title: "Email code", systemImageName: "envelope", isEnabled: true),
+                ],
+                isEnabled: true
+            ),
+            isActionLoading: false,
+            inputRevision: 0,
+            invalidCodeRevision: 0
+        )
+    }
+}
+
 class MockMandateProvider: MandateTextProvider {
     private let mandateResolver: (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?)
 
@@ -1544,6 +1762,9 @@ extension EmbeddedPaymentMethodsView {
         shouldShowMandate: Bool = true,
         savedPaymentMethods: [STPPaymentMethod] = [],
         incentive: PaymentMethodIncentive? = nil,
+        featuredInstitutionsLoader: FeaturedInstitutionsLoader? = nil,
+        placesLinkFirst: Bool = false,
+        linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
         self.init(
@@ -1554,13 +1775,31 @@ extension EmbeddedPaymentMethodsView {
             appearance: appearance,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
+            placesLinkFirst: placesLinkFirst,
+            linkInlineVerificationView: linkInlineVerificationView,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider ?? MockMandateProvider(),
             shouldShowMandate: shouldShowMandate,
             savedPaymentMethods: savedPaymentMethods,
             incentive: incentive,
+            featuredInstitutionsLoader: featuredInstitutionsLoader,
             analyticsHelper: ._testValue(),
             delegate: nil
         )
+    }
+}
+
+extension FeaturedInstitutionsLoader {
+    /// A loader with 6 solid-color icons, since snapshot tests can't download remote images.
+    @MainActor
+    static func _testValue() -> FeaturedInstitutionsLoader {
+        let colors: [UIColor] = [.systemBlue, .systemGray5, .systemRed, .systemGray4, .systemGreen, .systemOrange]
+        let icons = colors.map { color in
+            UIGraphicsImageRenderer(size: CGSize(width: 24, height: 24)).image { context in
+                color.setFill()
+                context.fill(CGRect(x: 0, y: 0, width: 24, height: 24))
+            }
+        }
+        return FeaturedInstitutionsLoader(icons: icons)
     }
 }

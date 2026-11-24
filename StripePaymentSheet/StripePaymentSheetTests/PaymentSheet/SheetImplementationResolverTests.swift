@@ -103,6 +103,7 @@ final class SheetImplementationResolverTests: XCTestCase {
                 linkAccount: nil,
                 elementsSession: loadResult.elementsSession,
                 configuration: flowController.configuration,
+                customerProvider: loadResult.customerProvider,
                 nativeSheetPresentation: flowController.nativeSheetPresentation,
                 analyticsHelper: analyticsHelper
             )

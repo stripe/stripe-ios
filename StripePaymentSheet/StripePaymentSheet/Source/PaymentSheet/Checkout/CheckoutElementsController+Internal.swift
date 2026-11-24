@@ -17,12 +17,7 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
         presentationWindow: UIWindow?
     ) async -> ConfirmResult {
         return await confirm(source: .expressCheckoutElement) {
-            do {
-                return try makeExpressCheckoutConfirmationFlow(paymentMethod, presentationWindow: presentationWindow)
-            } catch {
-                STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error))
-                throw error
-            }
+            return try makeExpressCheckoutConfirmationFlow(paymentMethod, presentationWindow: presentationWindow)
         }
     }
 
@@ -31,7 +26,9 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
         presentationWindow: UIWindow?
     ) throws -> CheckoutConfirmationFlow {
         guard let expressCheckoutElementConfiguration = configuration.expressCheckoutElement else {
-            throw CheckoutError.unknown(debugDescription: "Express Checkout Element configuration unexpectedly nil.")
+            let message = "Express Checkout Element configuration unexpectedly nil."
+            logUnexpectedCheckoutElementsErrorAndAssert(.expressCheckoutElementConfigurationUnavailable, message: message, apiClient: apiClient)
+            throw CheckoutError.unknown(debugDescription: message)
         }
         let attribution = CheckoutAttributionContext(
             confirmingElement: .expressCheckoutElement,
@@ -40,7 +37,9 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
         switch paymentMethod {
         case .applePay:
             guard let merchantId = configuration.applePayMerchantId else {
-                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Checkout Elements Apple Pay merchant ID unexpectedly nil.")
+                let message = "Could not build a confirmation flow for \(paymentMethod). Checkout Elements Apple Pay merchant ID unexpectedly nil."
+                logUnexpectedCheckoutElementsErrorAndAssert(.expressCheckoutElementApplePayMerchantIdUnavailable, message: message, apiClient: apiClient)
+                throw CheckoutError.unknown(debugDescription: message)
             }
             // TODO: Should next actions use an authentication context tied to `presentationWindow`
             // instead of `WindowAuthenticationContext` to avoid presenting in the wrong scene?
@@ -65,7 +64,9 @@ extension CheckoutElementsController: ExpressCheckoutElementDelegate {
             ))
         case .link:
             guard let presentingViewController = presentationWindow?.findTopMostPresentedViewController() else {
-                throw CheckoutError.unknown(debugDescription: "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller.")
+                let message = "Could not build a confirmation flow for \(paymentMethod). Could not find a presenting view controller."
+                logUnexpectedCheckoutElementsErrorAndAssert(.expressCheckoutElementLinkPresentingViewControllerUnavailable, message: message, apiClient: apiClient)
+                throw CheckoutError.unknown(debugDescription: message)
             }
             // TODO: maybe add Link-specific configuration
             var linkConfirmationConfiguration = PaymentSheet.Configuration()

@@ -43,6 +43,7 @@ final class LinkVerificationView: UIView {
     private let allowLogoutInDialog: Bool
     private let consentViewModel: LinkConsentViewModel?
     private let showsHeader: Bool
+    private let sandboxBannerView: SandboxBannerView?
 
     var recipient: String? {
         didSet { bodyLabel.text = mode.bodyText(redactedPhoneNumber: recipient ?? "") }
@@ -166,6 +167,7 @@ final class LinkVerificationView: UIView {
     required init(
         mode: Mode,
         linkAccount: PaymentSheetLinkAccountInfoProtocol,
+        isTestMode: Bool,
         brand: LinkBrand = .link,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool,
@@ -179,6 +181,7 @@ final class LinkVerificationView: UIView {
         self.allowLogoutInDialog = allowLogoutInDialog
         self.consentViewModel = consentViewModel
         self.showsHeader = showsHeader
+        self.sandboxBannerView = isTestMode ? SandboxBannerView() : nil
         super.init(frame: .zero)
         setupUI()
     }
@@ -221,6 +224,7 @@ private extension LinkVerificationView {
             var views = (showsHeader ? [header] : []) + [
                 headingLabel,
                 bodyLabel,
+            ] + (sandboxBannerView.map { [$0] } ?? []) + [
                 codeFieldContainer,
                 resendCodeButton,
             ]
@@ -238,6 +242,7 @@ private extension LinkVerificationView {
             var views = [
                 headingLabel,
                 bodyLabel,
+            ] + (sandboxBannerView.map { [$0] } ?? []) + [
                 codeFieldContainer,
                 resendCodeButton,
             ]
@@ -267,6 +272,11 @@ private extension LinkVerificationView {
         // Spacing
         stackView.setCustomSpacing(Constants.edgeMargin, after: header)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
+
+        if let sandboxBannerView {
+            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: sandboxBannerView)
+        }
+
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: codeFieldContainer)
         stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: resendCodeButton)
 
@@ -297,6 +307,10 @@ private extension LinkVerificationView {
                 header.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 header.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             ])
+        }
+
+        if let sandboxBannerView {
+            constraints.append(sandboxBannerView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
 
         NSLayoutConstraint.activate(constraints)

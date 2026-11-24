@@ -200,6 +200,11 @@ extension EmbeddedPaymentElement {
         /// Controls whether to filter out wallet payment methods from the saved payment method list.
         @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
 
+        /// Controls whether a returning Link customer can verify inside the view. When allowed, the Link row moves to the top and expands to show
+        /// a verification code field, and the code is sent once the view is visible. Defaults to `false` (for now).
+        /// TODO[mats]: Expose this property and enable by default
+        @_spi(InternalOnlyAPI) public var allowsLinkInlineVerification: Bool = false
+
         internal var linkPaymentMethodsOnly: Bool = false
 
         /// Describes how you handle row selections in EmbeddedPaymentElement

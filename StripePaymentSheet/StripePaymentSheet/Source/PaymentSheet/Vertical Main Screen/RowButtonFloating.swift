@@ -90,7 +90,7 @@ final class RowButtonFloating: RowButton {
         let horizontalStackView = UIStackView(arrangedSubviews: [arrangedLabelAndSubLabel,
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
-                                                                 promoBadge,
+                                                                 trailingBadge,
                                                                  accessoryView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
         [imageView, horizontalStackView].compactMap { $0 }

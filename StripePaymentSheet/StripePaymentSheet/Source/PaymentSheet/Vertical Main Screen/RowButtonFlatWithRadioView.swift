@@ -65,7 +65,7 @@ final class RowButtonFlatWithRadioView: RowButton {
         let horizontalStackView = UIStackView(arrangedSubviews: [arrangedLabelAndSubLabel,
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
-                                                                 promoBadge,
+                                                                 trailingBadge,
                                                                  accessoryView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
 
