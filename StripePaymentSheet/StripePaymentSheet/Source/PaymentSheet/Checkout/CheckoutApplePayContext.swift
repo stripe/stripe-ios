@@ -286,12 +286,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         checkoutWalletUpdater: CheckoutSessionWalletUpdater
     ) throws -> CheckoutApplePayContext {
         guard PKPaymentAuthorizationController.canMakePayments() else {
-            let error = CheckoutError.unknown(debugDescription: "Apple Pay is unavailable on this device. Check device support and payment restrictions.")
-            STPAnalyticsClient.sharedClient.log(
-                analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error),
+            let message = "Apple Pay is unavailable on this device. Check device support and payment restrictions."
+            logUnexpectedCheckoutElementsErrorAndAssert(
+                .applePayCannotMakePayments,
+                message: message,
                 apiClient: applePayConfirmationParameters.apiClient
             )
-            throw error
+            throw CheckoutError.unknown(debugDescription: message)
         }
 
         // TODO: Product Usage
@@ -305,14 +306,15 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and
         // returns nil when the request can't be presented (e.g. bad merchant ID, unsupported network).
         guard PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil else {
-            let error = CheckoutError.unknown(debugDescription: """
+            let message = """
                 Could not set up Apple Pay. The user cannot make payments on any of the payment request's supported networks.
-                """)
-            STPAnalyticsClient.sharedClient.log(
-                analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error),
+                """
+            logUnexpectedCheckoutElementsErrorAndAssert(
+                .applePayPaymentRequestInvalid,
+                message: message,
                 apiClient: applePayConfirmationParameters.apiClient
             )
-            throw error
+            throw CheckoutError.unknown(debugDescription: message)
         }
         let authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         return CheckoutApplePayContext(
@@ -333,16 +335,13 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 guard let self, !presented else { return }
                 Task { @MainActor [weak self] in
                     guard let self else { return }
-                    let error = CheckoutError.unknown(debugDescription: """
+                    let message = """
                         Could not present Apple Pay. Check Apple Pay setup in Wallet and that the merchant ID matches an ID \
                         in the app's Apple Pay entitlements and provisioning profile. Ensure the app is active, \
                         the presenting window is visible, and no other presentation or dismissal is in progress.
-                        """)
-                    STPAnalyticsClient.sharedClient.log(
-                        analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error),
-                        apiClient: self.apiClient
-                    )
-                    self.resume(with: .failed(error))
+                        """
+                    logUnexpectedCheckoutElementsErrorAndAssert(.applePayPresentationFailed, message: message, apiClient: self.apiClient)
+                    self.resume(with: .failed(CheckoutError.unknown(debugDescription: message)))
                     self._end()
                 }
             }

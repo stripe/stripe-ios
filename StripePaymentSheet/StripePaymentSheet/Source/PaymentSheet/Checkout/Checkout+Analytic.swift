@@ -9,9 +9,32 @@
 @_spi(InternalOnlyAPI) import StripePayments
 
 struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
+    /// Identifies a distinct unexpected error. Reuse a case only for the same error, and never rename a shipped case.
     enum ErrorCode: String {
+        case paymentOptionWithoutPaymentElement =
+            "payment_option_without_payment_element"
+        case flowControllerPaymentOptionOutOfSync =
+            "flow_controller_payment_option_out_of_sync"
+        case embeddedPaymentElementPaymentOptionOutOfSync =
+            "embedded_payment_element_payment_option_out_of_sync"
+        case confirmPollNotStarted =
+            "confirm_poll_not_started"
+        case expressCheckoutElementConfigurationUnavailable =
+            "express_checkout_element_configuration_unavailable"
+        case expressCheckoutElementApplePayMerchantIdUnavailable =
+            "express_checkout_element_apple_pay_merchant_id_unavailable"
+        case expressCheckoutElementLinkPresentingViewControllerUnavailable =
+            "express_checkout_element_link_presenting_view_controller_unavailable"
+        case applePayCannotMakePayments =
+            "apple_pay_cannot_make_payments"
+        case applePayPaymentRequestInvalid =
+            "apple_pay_payment_request_invalid"
+        case applePayPresentationFailed =
+            "apple_pay_presentation_failed"
         case paymentElementPresentingViewControllerUnavailable =
             "payment_element_presenting_view_controller_unavailable"
+        case paymentElementViewPresentingViewControllerUnavailable =
+            "payment_element_view_presenting_view_controller_unavailable"
         case shippingAddressElementPresentingViewControllerUnavailable =
             "shipping_address_element_presenting_view_controller_unavailable"
         case checkoutClientResponseParsingFailed =
@@ -33,22 +56,17 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
     }
 }
 
+/// Logs an unexpected Checkout Elements error. `STPAnalyticsClient` asserts when it logs unexpected errors.
 func logUnexpectedCheckoutElementsErrorAndAssert(
-    _ message: String,
+    _ errorCode: UnexpectedCheckoutElementsErrorAnalytic.ErrorCode,
+    message: String,
     apiClient: STPAPIClient,
-    file: StaticString = #file,
-    line: UInt = #line,
     analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
 ) {
     analyticsClient.log(
-        analytic: ErrorAnalytic(
-            event: .unexpectedCheckoutElementsError,
-            error: CheckoutError.unknown(debugDescription: message),
-            additionalNonPIIParams: ["error_message": message]
-        ),
+        analytic: UnexpectedCheckoutElementsErrorAnalytic(errorCode: errorCode, errorMessage: message),
         apiClient: apiClient
     )
-    stpAssertionFailure(message, file: file, line: line)
 }
 
 func reportUnexpectedCheckoutClientParsingError(

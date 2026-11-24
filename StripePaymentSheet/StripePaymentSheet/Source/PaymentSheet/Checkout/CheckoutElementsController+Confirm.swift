@@ -158,7 +158,8 @@ extension CheckoutElementsController {
 
         guard let paymentElement else {
             logUnexpectedCheckoutElementsErrorAndAssert(
-                "Checkout Session has a payment option without a PaymentElement.",
+                .paymentOptionWithoutPaymentElement,
+                message: "Checkout Session has a payment option without a PaymentElement.",
                 apiClient: apiClient
             )
             return nil
@@ -172,7 +173,8 @@ extension CheckoutElementsController {
         if paymentElement.paymentOptionSourceOfTruthIsFlowController {
             guard let resolvedPaymentOption = paymentElement.paymentSheetFlowController.internalPaymentOption else {
                 logUnexpectedCheckoutElementsErrorAndAssert(
-                    "Checkout Session payment option and FlowController payment option are out of sync.",
+                    .flowControllerPaymentOptionOutOfSync,
+                    message: "Checkout Session payment option and FlowController payment option are out of sync.",
                     apiClient: apiClient
                 )
                 return nil
@@ -184,7 +186,8 @@ extension CheckoutElementsController {
         } else {
             guard let resolvedPaymentOption = paymentElement.embeddedPaymentElement._paymentOption else {
                 logUnexpectedCheckoutElementsErrorAndAssert(
-                    "Checkout Session payment option and EmbeddedPaymentElement payment option are out of sync.",
+                    .embeddedPaymentElementPaymentOptionOutOfSync,
+                    message: "Checkout Session payment option and EmbeddedPaymentElement payment option are out of sync.",
                     apiClient: apiClient
                 )
                 return nil
@@ -638,14 +641,7 @@ extension CheckoutElementsController {
             case .notStarted(let pollResponse):
                 let message = "Checkout Session confirmation unexpectedly reported not_started after an accepted /confirm."
                 let error = CheckoutError.unknown(debugDescription: message)
-                STPAnalyticsClient.sharedClient.log(
-                    analytic: ErrorAnalytic(
-                        event: .unexpectedCheckoutElementsError,
-                        error: error,
-                        additionalNonPIIParams: ["error_message": message]
-                    ),
-                    apiClient: apiClient
-                )
+                logUnexpectedCheckoutElementsErrorAndAssert(.confirmPollNotStarted, message: message, apiClient: apiClient)
                 return .failed(error, sessionResponse: applyingPollResponse(pollResponse, to: response))
             }
         case .complete:

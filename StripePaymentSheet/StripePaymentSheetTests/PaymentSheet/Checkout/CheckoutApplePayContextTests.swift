@@ -732,8 +732,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
             $0["event"] as? String == "unexpected_error.checkout_elements"
         }
         XCTAssertEqual(events.count, 1)
-        XCTAssertEqual(events.first?["error_code"] as? String, "unknown")
-        XCTAssertEqual(events.first?["error_type"] as? String, "StripePaymentSheet.CheckoutError")
+        XCTAssertEqual(events.first?["error_code"] as? String, "apple_pay_presentation_failed")
+        XCTAssertNil(events.first?["error_type"])
         XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
         XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("unexpected_error.checkout_elements"))
     }

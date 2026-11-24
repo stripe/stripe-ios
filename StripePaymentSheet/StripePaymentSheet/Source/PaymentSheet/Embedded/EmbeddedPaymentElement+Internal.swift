@@ -360,7 +360,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                 // Logging an unexpected error also fires an stpAssertionFailure.
                 STPAnalyticsClient.sharedClient.log(
                     analytic: UnexpectedCheckoutElementsErrorAnalytic(
-                        errorCode: .paymentElementPresentingViewControllerUnavailable,
+                        errorCode: .paymentElementViewPresentingViewControllerUnavailable,
                         errorMessage: "Payment Element couldn't find a view controller to present from."
                     )
                 )
