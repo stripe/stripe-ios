@@ -630,27 +630,11 @@ extension PaymentSheet {
             returnToPaymentSheet: @escaping () -> Void
         ) {
             let completionCallback: (PaymentSheet.LinkConfirmOption?, Bool, Error?) -> Void = { [weak self] confirmOption, shouldReturnToPaymentSheet, _ in
-                guard let self else { return }
-
-                if let confirmOption {
-                    self.viewController.linkConfirmOption = confirmOption
-                    self.updatePaymentOption()
-                }
-
-                if shouldReturnToPaymentSheet {
-                    self.viewController.linkConfirmOption = nil
-                    if case .link(let option) = self.internalPaymentOption, case .wallet = option {
-                        // The Link row was selected before we launched the Link flow, but the user decided to drop out
-                        // of the Link flow. We clear the selection to avoid having Link stay selected.
-                        self.viewController.clearSelection()
-                    }
-                    self.updatePaymentOption()
-                    returnToPaymentSheet()
-                    return
-                }
-
-                self.presentPaymentOptionsCompletionWithResult?(false)
-                self.isPresented = false
+                self?.handleNativeLinkSelection(
+                    confirmOption: confirmOption,
+                    shouldReturnToPaymentSheet: shouldReturnToPaymentSheet,
+                    returnToPaymentSheet: returnToPaymentSheet
+                )
             }
 
             presentingViewController.presentNativeLink(
@@ -663,6 +647,48 @@ extension PaymentSheet {
                 analyticsHelper: analyticsHelper,
                 callback: completionCallback
             )
+        }
+
+        /// Handles the result of native Link presented in place of FlowController.
+        func handleNativeLinkSelection(
+            confirmOption: PaymentSheet.LinkConfirmOption?,
+            shouldReturnToPaymentSheet: Bool,
+            returnToPaymentSheet: @escaping () -> Void
+        ) {
+            if let confirmOption {
+                viewController.linkConfirmOption = confirmOption
+                updatePaymentOption()
+            }
+
+            if shouldReturnToPaymentSheet {
+                viewController.linkConfirmOption = nil
+                if case .link(let option) = internalPaymentOption, case .wallet = option {
+                    // The Link row was selected before we launched the Link flow, but the user decided to drop out
+                    // of the Link flow. We clear the selection to avoid having Link stay selected.
+                    viewController.clearSelection()
+                }
+                updatePaymentOption()
+                returnToPaymentSheet()
+                return
+            }
+
+            guard let confirmOption, let checkoutBillingAddressUpdater = viewController.checkoutBillingAddressUpdater else {
+                presentPaymentOptionsCompletionWithResult?(false)
+                isPresented = false
+                return
+            }
+            // For Checkout, sync the selected payment details' billing address first so tax reflects it.
+            Task { @MainActor [weak self] in
+                do {
+                    try await checkoutBillingAddressUpdater.syncBillingAddress(from: confirmOption.billingDetails)
+                } catch {
+                    // Keep the selection and show the payment options so the customer can try again.
+                    returnToPaymentSheet()
+                    return
+                }
+                self?.presentPaymentOptionsCompletionWithResult?(false)
+                self?.isPresented = false
+            }
         }
 
         /// Completes the payment or setup.
