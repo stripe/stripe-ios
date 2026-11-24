@@ -120,8 +120,24 @@ final class LinkPaymentMethodPicker: UIView {
         let paymentLabel = Header.Strings.payment
         let paymentLabelSize = sizeOf(string: paymentLabel)
 
-        return max(emailLabelSize.width, paymentLabelSize.width)
+        // LinkShippingAddressPicker.Header.shippingLabel
+        let shippingLabel = LinkShippingAddressPicker.Header.Strings.shipping
+        let shippingLabelSize = sizeOf(string: shippingLabel)
+
+        return max(emailLabelSize.width, paymentLabelSize.width, shippingLabelSize.width)
     }()
+
+    /// A shipping address picker to show below the payment methods, as part of the same card.
+    var shippingAddressPicker: LinkShippingAddressPicker? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            shippingAddressSeparatorView.removeFromSuperview()
+            if let shippingAddressPicker {
+                stackView.addArrangedSubview(shippingAddressSeparatorView)
+                stackView.addArrangedSubview(shippingAddressPicker)
+            }
+        }
+    }
 
     private var needsDataReload: Bool = true
 
@@ -141,6 +157,7 @@ final class LinkPaymentMethodPicker: UIView {
 
     private let emailView: EmailView
     private let separatorView = LinkSeparatorView()
+    private let shippingAddressSeparatorView = LinkSeparatorView()
     private let headerView = Header()
 
     private lazy var listView: UIStackView = {
