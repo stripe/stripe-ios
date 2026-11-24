@@ -86,7 +86,7 @@ final class LinkTotalUpdater {
 
         do {
             let newAmount = try await task.value
-            guard inFlight?.key == key else {
+            guard inFlight?.task == task else {
                 // A newer request superseded this one. Its result will be applied instead.
                 return newAmount != amountBefore
             }
@@ -100,7 +100,7 @@ final class LinkTotalUpdater {
             }
             return newAmount != amountBefore
         } catch {
-            if inFlight?.key == key {
+            if inFlight?.task == task {
                 inFlight = nil
                 syncedKey = nil
                 isUpdating = false

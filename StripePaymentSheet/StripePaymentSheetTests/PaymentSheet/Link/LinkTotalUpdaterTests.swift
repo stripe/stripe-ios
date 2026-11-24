@@ -63,6 +63,39 @@ final class LinkTotalUpdaterTests: XCTestCase {
         XCTAssertFalse(updater.isUpdating)
     }
 
+    func testSync_returningToEarlierAddress_waitsForLatestRequest() async throws {
+        // Given an updater whose first request is held until released
+        var handledCountries: [String?] = []
+        var releaseFirstRequest: CheckedContinuation<Void, Never>?
+        let updater = LinkTotalUpdater(amount: 1000) { address in
+            handledCountries.append(address?.country)
+            if handledCountries.count == 1 {
+                await withCheckedContinuation { releaseFirstRequest = $0 }
+            }
+            return address?.country == "US" ? 1100 : 1200
+        }
+        var requestCount = 0
+        updater.addObserver(self) { _ in requestCount += 1 }
+
+        // When the customer selects US, then CA, then US again before the first request finishes
+        let first = Task { try await updater.sync(address: usAddress) }
+        while releaseFirstRequest == nil { await Task.yield() }
+        let second = Task { try await updater.sync(address: caAddress) }
+        let third = Task { try await updater.sync(address: usAddress) }
+        while requestCount < 3 { await Task.yield() }
+        releaseFirstRequest?.resume()
+        _ = try await first.value
+
+        // Then the updater is still waiting for the newer requests
+        XCTAssertTrue(updater.isUpdating)
+
+        // ...and once they finish, every request ran in order and the latest total is applied
+        _ = try await (second.value, third.value)
+        XCTAssertEqual(handledCountries, ["US", "CA", "US"])
+        XCTAssertEqual(updater.amount, 1100)
+        XCTAssertFalse(updater.isUpdating)
+    }
+
     func testSync_failure_allowsRetry() async {
         // Given an updater that fails once
         var shouldFail = true
