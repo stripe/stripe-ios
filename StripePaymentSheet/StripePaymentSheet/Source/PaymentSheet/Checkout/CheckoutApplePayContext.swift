@@ -230,7 +230,6 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         }
         let update = startBillingTaxUpdate(to: address, using: checkoutWalletUpdater)
         Task { @MainActor in
-            // A failed update is reported at authorization because Apple Pay ignores errors returned from a payment method update
             _ = await update.result
             handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
         }
