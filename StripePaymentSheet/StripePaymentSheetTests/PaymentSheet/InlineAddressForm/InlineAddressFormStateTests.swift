@@ -99,8 +99,8 @@ final class InlineAddressFormStateTests: XCTestCase {
         XCTAssertTrue(line1.validationState.isDisplayingError)
     }
 
-    func testFormHasNoAutocomplete() {
-        // Given an empty form for a country that supports autocomplete elsewhere
+    func testFormWithoutPublishableKeyHasNoAutocomplete() {
+        // Given an empty form without a publishable key
         let state = makeState(defaultValues: .init(address: .init(country: "US")))
 
         // Then the form shows address fields instead of the autocomplete trigger
@@ -108,9 +108,84 @@ final class InlineAddressFormStateTests: XCTestCase {
         XCTAssertNotNil(state.addressSection?.line1)
     }
 
+    func testEmptyFormWithPublishableKeyShowsAutocompleteTrigger() {
+        // Given an empty form with a publishable key
+        let state = makeState(
+            defaultValues: .init(address: .init(country: "US")),
+            publishableKey: "pk_test_123"
+        )
+
+        // Then the form shows the autocomplete trigger instead of address fields
+        XCTAssertNotNil(state.addressSection?.autoCompleteLine)
+        XCTAssertNil(state.addressSection?.line1)
+    }
+
+    func testPrefilledFormWithPublishableKeyShowsAddressFields() {
+        // Given a prefilled form with a publishable key
+        let state = makeState(
+            defaultValues: .init(address: Self.validAddress, name: "Jane Doe"),
+            publishableKey: "pk_test_123"
+        )
+
+        // Then the form shows the prefilled address fields
+        XCTAssertNil(state.addressSection?.autoCompleteLine)
+        XCTAssertEqual(state.addressSection?.line1?.text, "354 Oyster Point Blvd")
+    }
+
+    func testPickingAnAddressFillsTheForm() {
+        // Given an empty form with a publishable key
+        let state = makeState(
+            defaultValues: .init(address: .init(country: "US")),
+            publishableKey: "pk_test_123"
+        )
+
+        // When the customer picks an address in the search
+        state.didSelectAddress(Self.validAddress)
+
+        // Then the form shows the address fields, filled with the address
+        XCTAssertNil(state.addressSection?.autoCompleteLine)
+        XCTAssertEqual(state.addressSection?.line1?.text, "354 Oyster Point Blvd")
+        XCTAssertEqual(state.enteredAddress?.address.city, "South San Francisco")
+        XCTAssertEqual(state.enteredAddress?.address.postalCode, "94080")
+        XCTAssertEqual(state.enteredAddress?.address.state, "CA")
+        XCTAssertTrue(state.hasChanges)
+    }
+
+    func testClosingTheSearchWithoutAnAddressKeepsTheForm() {
+        // Given an empty form with a publishable key
+        let state = makeState(
+            defaultValues: .init(address: .init(country: "US")),
+            publishableKey: "pk_test_123"
+        )
+
+        // When the search closes without an address
+        state.didSelectAddress(nil)
+
+        // Then the form still shows the autocomplete trigger, unchanged
+        XCTAssertNotNil(state.addressSection?.autoCompleteLine)
+        XCTAssertFalse(state.hasChanges)
+    }
+
+    func testEnteringTheAddressManuallyShowsTheFields() {
+        // Given an empty form with a publishable key
+        let state = makeState(
+            defaultValues: .init(address: .init(country: "US")),
+            publishableKey: "pk_test_123"
+        )
+
+        // When the customer chooses to enter the address manually after typing in the search
+        state.didSelectManualEntry("354 Oyster Point")
+
+        // Then the form shows the address fields, starting with what they typed
+        XCTAssertNil(state.addressSection?.autoCompleteLine)
+        XCTAssertEqual(state.addressSection?.line1?.text, "354 Oyster Point")
+        XCTAssertEqual(state.enteredAddress?.address.line1, "354 Oyster Point")
+    }
+
     private func makeState(
         defaultValues: AddressViewController.Configuration.DefaultAddressDetails,
-        nameField: AddressViewController.Configuration.NameField = .auto
+        nameField: AddressViewController.Configuration.NameField = .auto,
+        publishableKey: String? = nil
     ) -> InlineAddressFormState {
         InlineAddressFormState(
             defaultValues: defaultValues,
@@ -118,6 +193,7 @@ final class InlineAddressFormStateTests: XCTestCase {
             nameField: nameField,
             phone: .hidden,
             appearance: .default,
+            publishableKey: publishableKey,
             addressSpecProvider: makeAddressSpecProvider()
         )
     }

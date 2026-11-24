@@ -146,6 +146,7 @@ final class InlineAddressFormViewTests: XCTestCase {
             nameField: .auto,
             phone: .hidden,
             appearance: .default,
+            publishableKey: nil,
             addressSpecProvider: makeAddressSpecProvider()
         )
     }

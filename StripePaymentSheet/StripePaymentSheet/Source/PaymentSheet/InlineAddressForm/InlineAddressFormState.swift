@@ -9,8 +9,9 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeUICore
 import UIKit
 
-/// Holds the input of an `InlineAddressFormView`. Keep one instance for the life of the screen that
-/// shows the form, so input survives SwiftUI view updates.
+/// Holds the input of an `InlineAddressFormView` and, given a publishable key, lets the customer
+/// search for their address with Stripe-hosted autocomplete. Keep one instance for the life of the
+/// screen that shows the form, so input survives SwiftUI view updates.
 @_spi(InternalOnlyAPI)
 @MainActor
 public final class InlineAddressFormState: ObservableObject {
@@ -51,11 +52,14 @@ public final class InlineAddressFormState: ObservableObject {
     private let phone: AddressViewController.Configuration.AdditionalFields.FieldConfiguration
     private let appearance: PaymentSheet.Appearance
     private let addressSpecProvider: AddressSpecProvider
+    private let apiClient: STPAPIClient?
+
+    private weak var autocompleteNavigationController: UINavigationController?
 
     private var initialFormSnapshot: AddressSectionElement.AddressDetails?
     private var initialPhoneCountryCode: String?
 
-    /// Creates the state for an address form without autocomplete.
+    /// Creates the state for an address form.
     /// - Parameters:
     ///   - defaultValues: The values to prefill the fields with.
     ///   - allowedCountries: The countries the customer can select, or every country if empty. A
@@ -63,12 +67,15 @@ public final class InlineAddressFormState: ObservableObject {
     ///   - nameField: Whether the form collects a name. A hidden name is `defaultValues.name`.
     ///   - phone: Whether the form collects a phone number, and whether it is required.
     ///   - appearance: The appearance of the fields. The fields take it when address formats load.
+    ///   - publishableKey: The key that authenticates autocomplete requests, or `nil` to turn
+    ///     autocomplete off.
     public convenience init(
         defaultValues: AddressViewController.Configuration.DefaultAddressDetails,
         allowedCountries: [String],
         nameField: AddressViewController.Configuration.NameField,
         phone: AddressViewController.Configuration.AdditionalFields.FieldConfiguration,
-        appearance: PaymentSheet.Appearance
+        appearance: PaymentSheet.Appearance,
+        publishableKey: String?
     ) {
         self.init(
             defaultValues: defaultValues,
@@ -76,6 +83,7 @@ public final class InlineAddressFormState: ObservableObject {
             nameField: nameField,
             phone: phone,
             appearance: appearance,
+            publishableKey: publishableKey,
             addressSpecProvider: .shared
         )
     }
@@ -86,6 +94,7 @@ public final class InlineAddressFormState: ObservableObject {
         nameField: AddressViewController.Configuration.NameField,
         phone: AddressViewController.Configuration.AdditionalFields.FieldConfiguration,
         appearance: PaymentSheet.Appearance,
+        publishableKey: String?,
         addressSpecProvider: AddressSpecProvider
     ) {
         self.defaultValues = defaultValues
@@ -94,6 +103,7 @@ public final class InlineAddressFormState: ObservableObject {
         self.phone = phone
         self.appearance = appearance
         self.addressSpecProvider = addressSpecProvider
+        self.apiClient = publishableKey.map { STPAPIClient(publishableKey: $0) }
 
         if addressSpecProvider.countries.isEmpty {
             addressSpecProvider.loadAddressSpecs { [weak self] in
@@ -121,11 +131,14 @@ public final class InlineAddressFormState: ObservableObject {
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: prefilledValues),
             defaultFieldsToCollect: .all,
-            disableAutocomplete: true,
+            disableAutocomplete: apiClient == nil,
             additionalFields: .init(from: additionalFields, nameField: nameField),
             theme: appearance.asElementsTheme
         )
         addressSection.delegate = self
+        addressSection.didTapAutocompleteButton = { [weak self] in
+            self?.presentAutocomplete()
+        }
         initialFormSnapshot = addressSection.addressDetails
         initialPhoneCountryCode = addressSection.phone?.selectedCountryCode
         self.addressSection = addressSection
@@ -162,6 +175,45 @@ public final class InlineAddressFormState: ObservableObject {
         )
     }
 
+    /// Presents the address search over the screen that shows the form.
+    private func presentAutocomplete() {
+        guard
+            let apiClient,
+            let addressSection,
+            let hostViewController = findViewController(for: addressSection.view)
+        else { return }
+
+        var configuration = AddressViewController.Configuration()
+        configuration.appearance = appearance
+        configuration.apiClient = apiClient
+        let autocompleteViewController = AutoCompleteViewController(
+            configuration: configuration,
+            initialLine1Text: addressSection.line1?.text,
+            selectedCountry: addressSection.selectedCountryCode,
+            addressSpecProvider: addressSpecProvider,
+            keyboardAlreadyShowing: addressSection.view.firstResponder() != nil
+        )
+        autocompleteViewController.delegate = self
+
+        let navigationController = UINavigationController(
+            rootViewController: autocompleteViewController
+        )
+        // The search screen doesn't have a close button of its own.
+        autocompleteViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            systemItem: .cancel,
+            primaryAction: UIAction { [weak navigationController] _ in
+                navigationController?.dismiss(animated: true)
+            }
+        )
+        autocompleteNavigationController = navigationController
+        let presenter = findViewControllerPresenter(from: hostViewController)
+        presenter.present(navigationController, animated: true)
+    }
+
+    private func dismissAutocomplete() {
+        autocompleteNavigationController?.dismiss(animated: true)
+    }
+
     private func updateIsEditing() {
         let isEditing = addressSection?.view.firstResponder() != nil
         if self.isEditing != isEditing {
@@ -184,5 +236,22 @@ public final class InlineAddressFormState: ObservableObject {
 
     @_spi(InternalOnlyAPI) public func continueToNextField(element: Element) {
         // no-op
+    }
+}
+
+// MARK: - AutoCompleteViewControllerDelegate
+// The search screen calls its delegate on the main thread.
+extension InlineAddressFormState: @preconcurrency AutoCompleteViewControllerDelegate {
+    func didSelectAddress(_ address: PaymentSheet.Address?) {
+        dismissAutocomplete()
+        guard let address else { return }
+        addressSection?.setAddress(address.addressSectionAddress)
+        updateAddresses()
+    }
+
+    func didSelectManualEntry(_ line1: String) {
+        dismissAutocomplete()
+        addressSection?.beginManualEntry(with: line1)
+        updateAddresses()
     }
 }
