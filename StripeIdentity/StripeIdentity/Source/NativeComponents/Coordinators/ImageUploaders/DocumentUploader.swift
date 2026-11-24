@@ -36,6 +36,10 @@ protocol DocumentUploaderProtocol: AnyObject {
     @MainActor func frontUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
     @MainActor func backUploadResult() async -> Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
 
+    /// If the last upload of `side` failed, waits for the files still uploading, then starts again
+    /// only the files that failed.
+    @MainActor func retryFailedUploads(for side: DocumentSide) async
+
     func uploadImages(
         for side: DocumentSide,
         originalImage: CGImage,
@@ -63,11 +67,19 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     private var frontUploadGeneration = 0
 
+    /// The file uploads of the front images. Value is nil if upload has not been requested, or
+    /// after it succeeded.
+    private var frontUpload: SideUpload?
+
     /// Task that is fulfilled when front images are uploaded to the server.
     /// Value is nil if upload has not been requested.
     private var frontUploadTask: Task<StripeAPI.VerificationPageDataDocumentFileData, Error>?
 
     private var backUploadGeneration = 0
+
+    /// The file uploads of the back images. Value is nil if upload has not been requested, or
+    /// after it succeeded.
+    private var backUpload: SideUpload?
 
     /// Task that is fulfilled when back images are uploaded to the server.
     /// Value is nil if upload has not been requested.
@@ -133,88 +145,120 @@ final class DocumentUploader: DocumentUploaderProtocol {
         exifMetadata: CameraExifMetadata?,
         method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
-        let uploadTask = Task {
-            let imageToUpload = self.isTestMode ? try side.testModeImage.makeCGImage() : originalImage
-            return try await self.uploadImages(
-                imageToUpload,
-                documentScannerOutput: documentScannerOutput,
-                exifMetadata: exifMetadata,
-                method: method,
-                fileNamePrefix: "\(self.imageUploader.apiClient.verificationSessionId)_\(side.rawValue)",
-                shouldCrop: !self.isTestMode
-            )
-        }
+        let upload = makeSideUpload(
+            for: side,
+            originalImage: originalImage,
+            documentScannerOutput: documentScannerOutput,
+            exifMetadata: exifMetadata,
+            method: method
+        )
 
         switch side {
         case .front:
-            setFrontUploadTask(uploadTask)
+            frontUpload = upload
+            setFrontUploadTask(Task { try await upload.result() })
         case .back:
-            setBackUploadTask(uploadTask)
+            backUpload = upload
+            setBackUploadTask(Task { try await upload.result() })
         }
     }
 
-    /// Uploads both a high and low resolution image
-    func uploadImages(
-        _ originalImage: CGImage,
-        documentScannerOutput: DocumentScannerOutput?,
-        exifMetadata: CameraExifMetadata?,
-        method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod,
-        fileNamePrefix: String,
-        shouldCrop: Bool = true
-    ) async throws -> StripeAPI.VerificationPageDataDocumentFileData {
-
-        // Only upload a low-res image when document bounds are available.
-        if let documentBounds = documentScannerOutput?.idDetectorOutput.documentBounds {
-            let lowResFile: StripeFile
-            let highResFile: StripeFile
-            if shouldCrop {
-                (lowResFile, highResFile) = try await imageUploader.uploadLowAndHighResImages(
-                    originalImage,
-                    highResRegionOfInterest: documentBounds,
-                    cropPaddingComputationMethod: .maxImageWidthOrHeight,
-                    lowResFileName: "\(fileNamePrefix)_full_frame",
-                    highResFileName: fileNamePrefix
-                )
-            } else {
-                (lowResFile, highResFile) = try await imageUploader.uploadLowAndHighResImagesNoCropping(
-                    highResImage: originalImage,
-                    lowResImage: originalImage,
-                    highResFileName: fileNamePrefix,
-                    lowResFileName: "\(fileNamePrefix)_full_frame"
-                )
+    @MainActor func retryFailedUploads(for side: DocumentSide) async {
+        switch side {
+        case .front:
+            guard case .error = frontUploadStatus, let frontUpload else {
+                return
             }
-            return StripeAPI.VerificationPageDataDocumentFileData(
-                documentScannerOutput: documentScannerOutput,
-                highResImage: highResFile.id,
-                lowResImage: lowResFile.id,
-                exifMetadata: exifMetadata,
-                uploadMethod: method
-            )
-        } else {
-            let highResFile = try await imageUploader.uploadHighResImage(
-                originalImage,
-                regionOfInterest: nil,
-                cropPaddingComputationMethod: .maxImageWidthOrHeight,
-                fileName: fileNamePrefix
-            )
-            return StripeAPI.VerificationPageDataDocumentFileData(
-                documentScannerOutput: documentScannerOutput,
-                highResImage: highResFile.id,
-                lowResImage: nil,
-                exifMetadata: exifMetadata,
-                uploadMethod: method
-            )
+            let generation = frontUploadGeneration
+            let failedFiles = await frontUpload.failedFiles()
+            guard generation == frontUploadGeneration else {
+                return
+            }
+            failedFiles.forEach { $0.restart() }
+            setFrontUploadTask(Task { try await frontUpload.result() })
+        case .back:
+            guard case .error = backUploadStatus, let backUpload else {
+                return
+            }
+            let generation = backUploadGeneration
+            let failedFiles = await backUpload.failedFiles()
+            guard generation == backUploadGeneration else {
+                return
+            }
+            failedFiles.forEach { $0.restart() }
+            setBackUploadTask(Task { try await backUpload.result() })
         }
     }
 
     /// Resets the status of the uploader
     func reset() {
+        frontUpload = nil
+        backUpload = nil
         setFrontUploadTask(nil)
         setBackUploadTask(nil)
     }
 }
 
+/// The file uploads for one side of the document.
+private struct SideUpload {
+    let highRes: RetryableUpload<StripeFile>
+    let lowRes: RetryableUpload<StripeFile>?
+    let makeFileData: (_ highRes: StripeFile, _ lowRes: StripeFile?) -> StripeAPI.VerificationPageDataDocumentFileData
+
+    @MainActor func result() async throws -> StripeAPI.VerificationPageDataDocumentFileData {
+        let highResFile = try await highRes.task.value
+        let lowResFile = try await lowRes?.task.value
+        return makeFileData(highResFile, lowResFile)
+    }
+
+    @MainActor func failedFiles() async -> [RetryableUpload<StripeFile>] {
+        await RetryableUpload.failed([highRes, lowRes])
+    }
+}
+
 private extension DocumentUploader {
+    func makeSideUpload(
+        for side: DocumentSide,
+        originalImage: CGImage,
+        documentScannerOutput: DocumentScannerOutput?,
+        exifMetadata: CameraExifMetadata?,
+        method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
+    ) -> SideUpload {
+        let imageUploader = imageUploader
+        let isTestMode = isTestMode
+        let fileNamePrefix = "\(imageUploader.apiClient.verificationSessionId)_\(side.rawValue)"
+        let documentBounds = documentScannerOutput?.idDetectorOutput.documentBounds
+        let imageToUpload = {
+            isTestMode ? try side.testModeImage.makeCGImage() : originalImage
+        }
+
+        let highRes = RetryableUpload {
+            try await imageUploader.uploadHighResImage(
+                imageToUpload(),
+                regionOfInterest: isTestMode ? nil : documentBounds,
+                cropPaddingComputationMethod: .maxImageWidthOrHeight,
+                fileName: fileNamePrefix
+            )
+        }
+        // Only upload a low-res image when document bounds are available.
+        let lowRes = documentBounds == nil ? nil : RetryableUpload {
+            try await imageUploader.uploadLowResImage(
+                imageToUpload(),
+                fileName: "\(fileNamePrefix)_full_frame"
+            )
+        }
+
+        return SideUpload(highRes: highRes, lowRes: lowRes) { highResFile, lowResFile in
+            StripeAPI.VerificationPageDataDocumentFileData(
+                documentScannerOutput: documentScannerOutput,
+                highResImage: highResFile.id,
+                lowResImage: lowResFile?.id,
+                exifMetadata: exifMetadata,
+                uploadMethod: method
+            )
+        }
+    }
+
     func setFrontUploadTask(
         _ uploadTask: Task<StripeAPI.VerificationPageDataDocumentFileData, Error>?
     ) {
@@ -234,6 +278,8 @@ private extension DocumentUploader {
                 guard generation == self?.frontUploadGeneration else {
                     return value
                 }
+                // Only a failed upload needs its images kept for a retry.
+                self?.frontUpload = nil
                 self?.frontUploadStatus = .complete
                 return value
             } catch {
@@ -265,6 +311,8 @@ private extension DocumentUploader {
                 guard generation == self?.backUploadGeneration else {
                     return value
                 }
+                // Only a failed upload needs its images kept for a retry.
+                self?.backUpload = nil
                 self?.backUploadStatus = .complete
                 return value
             } catch {

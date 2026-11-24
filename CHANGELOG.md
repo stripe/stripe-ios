@@ -32,6 +32,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 ### Identity
 * [Added] Added an async version of `IdentityVerificationSheet.present(from:)`, allowing callers to await the verification result while preserving the existing completion-handler API.
 * [Changed] Migrated StripeIdentity's internal networking, verification flows, image scanning and uploading, and ML model loading from Promise/Future and completion-handler APIs to Swift concurrency.
+* [Fixed] Fixed an issue where Identity asked users to capture their document or selfie again after an image upload failed. The error screen now offers Try again, which uploads again only the images that failed.
 
 ## 26.16.1 2026-11-09
 ### PaymentSheet

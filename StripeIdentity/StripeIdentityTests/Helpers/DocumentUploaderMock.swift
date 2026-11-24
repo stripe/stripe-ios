@@ -31,6 +31,12 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
         backUploadResultValue
     }
 
+    private(set) var retriedSides: [DocumentSide] = []
+
+    func retryFailedUploads(for side: DocumentSide) async {
+        retriedSides.append(side)
+    }
+
     private(set) var uploadImagesExp = XCTestExpectation(description: "Document Images uploaded")
     private(set) var uploadedSide: DocumentSide?
     private(set) var uploadedDocumentScannerOutput: DocumentScannerOutput?

@@ -1179,6 +1179,28 @@ private extension SelfieCaptureViewController {
     }
 }
 
+// MARK: - RetriesSaveAfterError
+
+extension SelfieCaptureViewController: RetriesSaveAfterError {
+    var canRetryFailedUploads: Bool {
+        guard let uploadError = selfieUploader.uploadError else { return false }
+        return !(uploadError is STPCGImageError)
+    }
+
+    func retrySaveAfterError() {
+        guard case .scanned(_, let faceCaptureData) = imageScanningSession.state else { return }
+        // Show the saving state, which hides Continue, while the retry waits for the other uploads.
+        imageScanningSession.setStateSaving(expectedClassification: .empty, capturedData: faceCaptureData)
+        let selfieUploader = selfieUploader
+        Task { @MainActor [weak self] in
+            await selfieUploader.retryFailedUploads()
+            // Going back during the wait resets the screen, so the old capture must not save.
+            guard let self, case .saving = imageScanningSession.state else { return }
+            saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
+        }
+    }
+}
+
 // MARK: - IdentityDataCollecting
 
 extension SelfieCaptureViewController: IdentityDataCollecting {

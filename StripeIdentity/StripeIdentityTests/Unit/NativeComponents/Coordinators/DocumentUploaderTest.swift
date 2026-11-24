@@ -197,18 +197,15 @@ final class DocumentUploaderTest: XCTestCase {
     func testUploadImagesWithROISuccess() async throws {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
         let method = StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod.autoCapture
-        let prefix = "img-prefix"
 
         // Upload images
-        let uploadTask = Task {
-            try await uploader.uploadImages(
-                mockImage,
-                documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutputLegacy,
-                exifMetadata: mockExifData,
-                method: method,
-                fileNamePrefix: prefix
-            )
-        }
+        uploader.uploadImages(
+            for: .front,
+            originalImage: mockImage,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutputLegacy,
+            exifMetadata: mockExifData,
+            method: method
+        )
 
         // Verify a request is made for each of the high & low res uploads
         await fulfillment(of: uploadRequestExpectations, timeout: 1)
@@ -222,8 +219,8 @@ final class DocumentUploaderTest: XCTestCase {
 
         XCTAssertEqual(uploadRequests.count, 2)
 
-        XCTAssertEqual(highResRequest.fileName, prefix)
-        XCTAssertEqual(lowResRequest.fileName, "\(prefix)_full_frame")
+        XCTAssertEqual(highResRequest.fileName, "\(mockVS)_front")
+        XCTAssertEqual(lowResRequest.fileName, "\(mockVS)_front_full_frame")
 
         // Verify high res image was cropped & low res wasn't based on which is
         // in portrait mode
@@ -251,7 +248,8 @@ final class DocumentUploaderTest: XCTestCase {
             )
         )
 
-        let data = try await uploadTask.value
+        let result = await uploader.frontUploadResult()
+        let data = try XCTUnwrap(result).get()
         DocumentUploaderTest.verifyFileData(
             data,
             expectedHighResImage: mockStripeFile.id,
@@ -266,18 +264,14 @@ final class DocumentUploaderTest: XCTestCase {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
 
         // Upload images
-
         let method = StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod.fileUpload
-        let prefix = "img-prefix"
-        let uploadTask = Task {
-            try await uploader.uploadImages(
-                mockImage,
-                documentScannerOutput: nil,
-                exifMetadata: nil,
-                method: method,
-                fileNamePrefix: prefix
-            )
-        }
+        uploader.uploadImages(
+            for: .front,
+            originalImage: mockImage,
+            documentScannerOutput: nil,
+            exifMetadata: nil,
+            method: method
+        )
 
         // Verify a request is made for the high res upload
         await fulfillment(of: uploadRequestExpectations, timeout: 1)
@@ -286,7 +280,7 @@ final class DocumentUploaderTest: XCTestCase {
         guard let uploadRequest = mockAPIClient.imageUpload.requestHistory.first else {
             return XCTFail("Expected an upload request")
         }
-        XCTAssertEqual(uploadRequest.fileName, prefix)
+        XCTAssertEqual(uploadRequest.fileName, "\(mockVS)_front")
         XCTAssertEqual(
             uploadRequest.image.size.height,
             CGFloat(mockConfig.highResImageMaxDimension)
@@ -306,7 +300,8 @@ final class DocumentUploaderTest: XCTestCase {
             )
         )
 
-        let data = try await uploadTask.value
+        let result = await uploader.frontUploadResult()
+        let data = try XCTUnwrap(result).get()
         XCTAssertEqual(data.highResImage, mockStripeFile.id)
         XCTAssertNil(data.lowResImage)
         XCTAssertEqual(data.uploadMethod, method)
@@ -317,29 +312,103 @@ final class DocumentUploaderTest: XCTestCase {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
         let method = StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod.fileUpload
-        let prefix = "img-prefix"
 
-        let uploadTask = Task {
-            try await uploader.uploadImages(
-                mockImage,
-                documentScannerOutput: nil,
-                exifMetadata: mockExifData,
-                method: method,
-                fileNamePrefix: prefix
-            )
-        }
+        uploader.uploadImages(
+            for: .front,
+            originalImage: mockImage,
+            documentScannerOutput: nil,
+            exifMetadata: mockExifData,
+            method: method
+        )
 
         // Verify a request is made for the high res upload
         await fulfillment(of: uploadRequestExpectations, timeout: 1)
 
         // Verify the upload completes after API responds to request
         mockAPIClient.imageUpload.respondToRequests(with: .failure(mockError))
-        do {
-            _ = try await uploadTask.value
-            XCTFail("Expected an error")
-        } catch {
+        let result = await uploader.frontUploadResult()
+        XCTAssertThrowsError(try XCTUnwrap(result).get()) { error in
             XCTAssertTrue((error as NSError).isEqual(mockError))
         }
+    }
+
+    func testRetryFailedUploadsUploadsOnlyFailedFile() async throws {
+        // Given a front upload where the high-res file failed and the low-res file succeeded
+        let mockError = NSError(domain: "", code: 0, userInfo: nil)
+        let highResFileName = "\(mockVS)_front"
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 3)
+        uploader.uploadImages(
+            for: .front,
+            originalImage: mockImage,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutputLegacy,
+            exifMetadata: mockExifData,
+            method: .autoCapture
+        )
+        await fulfillment(of: Array(uploadRequestExpectations.prefix(2)), timeout: 1)
+        let lowResFile = try StripeFile.mock(id: "low_res")
+        mockAPIClient.imageUpload.respondToRequests { request in
+            request.fileName == highResFileName
+                ? .failure(mockError)
+                : .success((file: lowResFile, metrics: mockUploadMetrics))
+        }
+        _ = await uploader.frontUploadResult()
+        XCTAssertEqual(uploader.frontUploadStatus, .error(mockError))
+
+        // When the failed uploads are retried
+        await uploader.retryFailedUploads(for: .front)
+        await fulfillment(of: [uploadRequestExpectations[2]], timeout: 1)
+        let highResFile = try StripeFile.mock(id: "high_res")
+        mockAPIClient.imageUpload.respondToRequests(
+            with: .success((file: highResFile, metrics: mockUploadMetrics))
+        )
+
+        // Then only the high-res file is uploaded again, and the low-res file is kept
+        let result = await uploader.frontUploadResult()
+        let fileData = try XCTUnwrap(result).get()
+        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.last?.fileName, highResFileName)
+        XCTAssertEqual(fileData.highResImage, "high_res")
+        XCTAssertEqual(fileData.lowResImage, "low_res")
+        XCTAssertEqual(uploader.frontUploadStatus, .complete)
+    }
+
+    @MainActor
+    func testResetDuringRetryDoesNotUploadOldImagesAgain() async throws {
+        // Given a front upload where the high-res file failed and the low-res file is still uploading
+        let mockError = NSError(domain: "", code: 0, userInfo: nil)
+        let highResFileName = "\(mockVS)_front"
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 3)
+        let unexpectedUpload = uploadRequestExpectations[2]
+        unexpectedUpload.isInverted = true
+        uploader.uploadImages(
+            for: .front,
+            originalImage: mockImage,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutputLegacy,
+            exifMetadata: mockExifData,
+            method: .autoCapture
+        )
+        await fulfillment(of: Array(uploadRequestExpectations.prefix(2)), timeout: 1)
+        mockAPIClient.imageUpload.respondToRequests { request in
+            request.fileName == highResFileName ? .failure(mockError) : nil
+        }
+        _ = await uploader.frontUploadResult()
+
+        // When a retry waits for the low-res file, the uploader resets, and the low-res file fails
+        let retryProgress = RetryProgress()
+        let retryTask = Task {
+            await uploader.retryFailedUploads(for: .front)
+            retryProgress.didReturn = true
+        }
+        // Let the retry run until it waits for the low-res file.
+        await Task.yield()
+        uploader.reset()
+        await Task.yield()
+        XCTAssertFalse(retryProgress.didReturn, "The retry must wait for the low-res file")
+        mockAPIClient.imageUpload.respondToRequests(with: .failure(mockError))
+        await retryTask.value
+
+        // Then neither file of the old capture is uploaded again
+        await fulfillment(of: [unexpectedUpload], timeout: 0.1)
+        XCTAssertEqual(uploader.frontUploadStatus, .notStarted)
     }
 
     // Test that both images for the front side of the doc are uploaded
@@ -616,6 +685,10 @@ private extension DocumentUploaderTest {
         XCTAssertEqual(getThisSideUploadStatus(), .complete)
         XCTAssertEqual(delegateCallCount, 2)
     }
+}
+
+private final class RetryProgress {
+    var didReturn = false
 }
 
 private class MockDocumentUploaderDelegate: DocumentUploaderDelegate {

@@ -433,6 +433,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
         if isDecidingBack {
             // if True, the VC has just been popped due to user force confirmed front, continue scanning back
+            // Clear it, so a later appearance, such as after Try again, keeps the scanned back.
+            isDecidingBack = false
             imageScanningSession.startScanning(expectedClassification: .back)
         } else {
             imageScanningSession.startIfNeeded(expectedClassification: .front)
@@ -832,6 +834,34 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
                     capturedData: UIImage(cgImage: best.cgImage)
                 )
             }
+        }
+    }
+}
+
+// MARK: - RetriesSaveAfterError
+
+extension DocumentCaptureViewController: RetriesSaveAfterError {
+    var canRetryFailedUploads: Bool {
+        // Only the side being captured can have a failed upload: the back is scanned only after
+        // the front uploaded, and going back resets both.
+        switch (documentUploader.frontUploadStatus, documentUploader.backUploadStatus) {
+        case (.error(let error), _), (_, .error(let error)):
+            return !(error is STPCGImageError)
+        default:
+            return false
+        }
+    }
+
+    func retrySaveAfterError() {
+        guard case .scanned(let side, let image) = imageScanningSession.state else { return }
+        // Show the saving state, which also disables Continue, while the retry waits for the other uploads.
+        imageScanningSession.setStateSaving(expectedClassification: side, capturedData: image)
+        let documentUploader = documentUploader
+        Task { @MainActor [weak self] in
+            await documentUploader.retryFailedUploads(for: side)
+            // Going back during the wait resets the screen, so the old capture must not save.
+            guard let self, case .saving = imageScanningSession.state else { return }
+            saveOrFlipDocument(scannedImage: image, documentSide: side)
         }
     }
 }

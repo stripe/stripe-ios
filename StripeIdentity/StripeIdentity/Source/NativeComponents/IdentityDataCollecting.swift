@@ -32,3 +32,15 @@ extension IdentityDataCollecting where Self: IdentityFlowViewController {
         clearCollectedFields()
     }
 }
+
+/// A capture screen that can save its capture again after an image upload failed.
+protocol RetriesSaveAfterError: UIViewController {
+    /// Whether uploading the failed images of the current capture again can succeed. Preparing an
+    /// image (`STPCGImageError`) fails the same way every time, so only a failed request can.
+    var canRetryFailedUploads: Bool { get }
+
+    /// Uploads again only the images that failed, then saves the capture again. Call it after the
+    /// capture screen appears again: `DocumentCaptureViewController.viewWillAppear` reads a running
+    /// save as a force-confirmed front.
+    func retrySaveAfterError()
+}

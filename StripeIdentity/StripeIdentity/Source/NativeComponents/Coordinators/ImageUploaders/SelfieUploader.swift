@@ -16,6 +16,13 @@ protocol SelfieUploaderProtocol: AnyObject {
     // Main actor, because `uploadImages` and `reset` replace the upload task on the main thread.
     @MainActor func uploadResult() async -> Result<SelfieUploader.FileData, Error>?
 
+    /// The error of the last upload, if it failed.
+    var uploadError: Error? { get }
+
+    /// If the last upload failed, waits for the files still uploading, then starts again only the
+    /// files that failed.
+    @MainActor func retryFailedUploads() async
+
     func uploadImages(
         _ capturedImages: FaceCaptureData
     )
@@ -59,7 +66,15 @@ final class SelfieUploader: SelfieUploaderProtocol {
     let imageUploader: IdentityImageUploader
     let isTestMode: Bool
 
+    private var uploadGeneration = 0
+
+    /// The file uploads of the selfie images. Value is nil if upload has not been requested, or
+    /// after it succeeded.
+    private var upload: SelfieUpload?
+
     private var uploadTask: Task<SelfieUploader.FileData, Error>?
+
+    private(set) var uploadError: Error?
 
     init(
         imageUploader: IdentityImageUploader,
@@ -83,86 +98,150 @@ final class SelfieUploader: SelfieUploaderProtocol {
         _ capturedImages: FaceCaptureData
     ) {
         // Start uploading all images in parallel
-        uploadTask = Task {
-            let bestTask = Task {
-                try await uploadImages(capturedImages.bestMiddle, ofType: .best)
-            }
-            let firstTask = Task {
-                try await uploadImages(capturedImages.first, ofType: .first)
-            }
-            let lastTask = Task {
-                try await uploadImages(capturedImages.last, ofType: .last)
-            }
-            let leftTask = capturedImages.leftSide.map { image in
-                Task { try await uploadFullFrameImage(image, ofType: .left) }
-            }
-            let rightTask = capturedImages.rightSide.map { image in
-                Task { try await uploadFullFrameImage(image, ofType: .right) }
-            }
+        let upload = SelfieUpload(
+            bestHighRes: highResUpload(capturedImages.bestMiddle, ofType: .best),
+            bestLowRes: lowResUpload(capturedImages.bestMiddle, ofType: .best),
+            firstHighRes: highResUpload(capturedImages.first, ofType: .first),
+            firstLowRes: lowResUpload(capturedImages.first, ofType: .first),
+            lastHighRes: highResUpload(capturedImages.last, ofType: .last),
+            lastLowRes: lowResUpload(capturedImages.last, ofType: .last),
+            leftFullFrame: capturedImages.leftSide.map { fullFrameUpload($0, ofType: .left) },
+            rightFullFrame: capturedImages.rightSide.map { fullFrameUpload($0, ofType: .right) }
+        )
+        self.upload = upload
+        setUploadTask(Task { try await upload.result() })
+    }
 
-            return try await FileData(
-                bestHighResFile: bestTask.value.highRes,
-                bestLowResFile: bestTask.value.lowRes,
-                firstHighResFile: firstTask.value.highRes,
-                firstLowResFile: firstTask.value.lowRes,
-                lastHighResFile: lastTask.value.highRes,
-                lastLowResFile: lastTask.value.lowRes,
-                leftFullFrameFile: leftTask?.value,
-                rightFullFrameFile: rightTask?.value
-            )
+    @MainActor func retryFailedUploads() async {
+        guard uploadError != nil, let upload else {
+            return
+        }
+        let generation = uploadGeneration
+        let failedFiles = await upload.failedFiles()
+        guard generation == uploadGeneration else {
+            return
+        }
+        failedFiles.forEach { $0.restart() }
+        setUploadTask(Task { try await upload.result() })
+    }
+
+    func reset() {
+        upload = nil
+        setUploadTask(nil)
+    }
+
+    private func setUploadTask(_ uploadTask: Task<SelfieUploader.FileData, Error>?) {
+        uploadGeneration += 1
+        let generation = uploadGeneration
+        uploadError = nil
+
+        guard let uploadTask else {
+            self.uploadTask = nil
+            return
+        }
+
+        self.uploadTask = Task { @MainActor [weak self] in
+            do {
+                let value = try await uploadTask.value
+                if generation == self?.uploadGeneration {
+                    // Only a failed upload needs its images kept for a retry.
+                    self?.upload = nil
+                }
+                return value
+            } catch {
+                if generation == self?.uploadGeneration {
+                    self?.uploadError = error
+                }
+                throw error
+            }
         }
     }
 
-    func uploadImages(
+    private func highResUpload(
         _ capturedImage: FaceScannerInputOutput,
         ofType type: ImageType
-    ) async throws -> IdentityImageUploader.LowHighResFiles {
-        let lowResFileName = SelfieUploader.fileName(
-            with: imageUploader.apiClient.verificationSessionId,
-            for: type,
-            resolution: .low
-        )
-        let highResFileName = SelfieUploader.fileName(
+    ) -> RetryableUpload<StripeFile> {
+        let imageUploader = imageUploader
+        let isTestMode = isTestMode
+        let fileName = SelfieUploader.fileName(
             with: imageUploader.apiClient.verificationSessionId,
             for: type,
             resolution: .high
         )
-
-        if isTestMode {
-            let image = try TestModeImage.selfie.makeCGImage()
-            return try await imageUploader.uploadLowAndHighResImagesNoCropping(
-                highResImage: image,
-                lowResImage: image,
-                highResFileName: highResFileName,
-                lowResFileName: lowResFileName
+        return RetryableUpload {
+            try await imageUploader.uploadHighResImage(
+                isTestMode ? TestModeImage.selfie.makeCGImage() : capturedImage.image,
+                regionOfInterest: isTestMode ? nil : capturedImage.scannerOutput.faceRect,
+                cropPaddingComputationMethod: .regionWidth,
+                fileName: fileName
             )
         }
-
-        return try await imageUploader.uploadLowAndHighResImages(
-            capturedImage.image,
-            highResRegionOfInterest: capturedImage.scannerOutput.faceRect,
-            cropPaddingComputationMethod: .regionWidth,
-            lowResFileName: lowResFileName,
-            highResFileName: highResFileName
-        )
     }
 
-    private func uploadFullFrameImage(
+    private func lowResUpload(
         _ capturedImage: FaceScannerInputOutput,
         ofType type: ImageType
-    ) async throws -> StripeFile {
-        try await imageUploader.uploadLowResImage(
-            capturedImage.image,
-            fileName: SelfieUploader.fileName(
-                with: imageUploader.apiClient.verificationSessionId,
-                for: type,
-                resolution: .low
+    ) -> RetryableUpload<StripeFile> {
+        let imageUploader = imageUploader
+        let isTestMode = isTestMode
+        let fileName = SelfieUploader.fileName(
+            with: imageUploader.apiClient.verificationSessionId,
+            for: type,
+            resolution: .low
+        )
+        return RetryableUpload {
+            try await imageUploader.uploadLowResImage(
+                isTestMode ? TestModeImage.selfie.makeCGImage() : capturedImage.image,
+                fileName: fileName
             )
+        }
+    }
+
+    private func fullFrameUpload(
+        _ capturedImage: FaceScannerInputOutput,
+        ofType type: ImageType
+    ) -> RetryableUpload<StripeFile> {
+        let imageUploader = imageUploader
+        let fileName = SelfieUploader.fileName(
+            with: imageUploader.apiClient.verificationSessionId,
+            for: type,
+            resolution: .low
+        )
+        return RetryableUpload {
+            try await imageUploader.uploadLowResImage(capturedImage.image, fileName: fileName)
+        }
+    }
+}
+
+/// The file uploads for one selfie capture.
+private struct SelfieUpload {
+    let bestHighRes: RetryableUpload<StripeFile>
+    let bestLowRes: RetryableUpload<StripeFile>
+    let firstHighRes: RetryableUpload<StripeFile>
+    let firstLowRes: RetryableUpload<StripeFile>
+    let lastHighRes: RetryableUpload<StripeFile>
+    let lastLowRes: RetryableUpload<StripeFile>
+    let leftFullFrame: RetryableUpload<StripeFile>?
+    let rightFullFrame: RetryableUpload<StripeFile>?
+
+    @MainActor func result() async throws -> SelfieUploader.FileData {
+        try await SelfieUploader.FileData(
+            bestHighResFile: bestHighRes.task.value,
+            bestLowResFile: bestLowRes.task.value,
+            firstHighResFile: firstHighRes.task.value,
+            firstLowResFile: firstLowRes.task.value,
+            lastHighResFile: lastHighRes.task.value,
+            lastLowResFile: lastLowRes.task.value,
+            leftFullFrameFile: leftFullFrame?.task.value,
+            rightFullFrameFile: rightFullFrame?.task.value
         )
     }
 
-    func reset() {
-        uploadTask = nil
+    @MainActor func failedFiles() async -> [RetryableUpload<StripeFile>] {
+        await RetryableUpload.failed([
+            bestHighRes, bestLowRes, firstHighRes, firstLowRes, lastHighRes, lastLowRes,
+            leftFullFrame, rightFullFrame,
+        ])
     }
 }
 

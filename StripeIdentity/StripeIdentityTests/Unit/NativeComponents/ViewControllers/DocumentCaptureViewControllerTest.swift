@@ -446,6 +446,62 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedState: .saving(.front, mockFrontImage),
             expectedButtonState: .loading
         )
+        // ...and when the screen appears after the force-confirm, it scans the back
+        vc.viewWillAppear(false)
+        guard case .scanning(.back, _) = vc.imageScanningSession.state else {
+            return XCTFail("Expected to scan the back, got \(vc.imageScanningSession.state)")
+        }
+        // ...and a later appearance, such as after Try again, keeps the scanned back
+        vc.imageScanningSession.setStateScanned(expectedClassification: .back, capturedData: UIImage())
+        vc.viewWillAppear(false)
+        guard case .scanned(.back, _) = vc.imageScanningSession.state else {
+            return XCTFail("Expected to keep the scanned back, got \(vc.imageScanningSession.state)")
+        }
+    }
+
+    @MainActor
+    func testRetrySaveAfterErrorUploadsFrontAgainThenSaves() async {
+        // Given a scanned front
+        let vc = makeViewController(state: .scanned(.front, UIImage()))
+        let saveExp = expectation(description: "Saved document front again")
+        var retriedSidesAtSave: [DocumentSide]?
+        mockSheetController.saveDocumentFrontAndDecideBackCallback = {
+            retriedSidesAtSave = self.mockDocumentUploader.retriedSides
+            saveExp.fulfill()
+        }
+
+        // When the user taps Try again on the error screen
+        vc.retrySaveAfterError()
+
+        // Then the screen uploads the failed front images again before it saves the same front
+        await fulfillment(of: [saveExp], timeout: 1)
+        XCTAssertEqual(retriedSidesAtSave, [.front])
+    }
+
+    @MainActor
+    func testCanRetryFailedUploadsOnlyWhenAnUploadFailed() {
+        // Given a capture screen whose front uploaded
+        let vc = makeViewController(state: .scanned(.back, UIImage()))
+        mockDocumentUploader.frontUploadStatus = .complete
+        XCTAssertFalse(vc.canRetryFailedUploads)
+
+        // When the back upload fails
+        mockDocumentUploader.backUploadStatus = .error(mockError)
+
+        // Then the screen can upload the failed images again
+        XCTAssertTrue(vc.canRetryFailedUploads)
+    }
+
+    @MainActor
+    func testCannotRetryFailedUploadsWhenPreparingTheImageFailed() {
+        // Given a capture screen
+        let vc = makeViewController(state: .scanned(.front, UIImage()))
+
+        // When cropping the front image fails, which fails the same way when uploaded again
+        mockDocumentUploader.frontUploadStatus = .error(STPCGImageError.unableToCrop)
+
+        // Then the screen cannot upload the failed images again
+        XCTAssertFalse(vc.canRetryFailedUploads)
     }
 
     @MainActor
