@@ -144,9 +144,16 @@ extension PayWithLinkViewController {
             fatalError("init(coder:) has not been implemented")
         }
 
+        private var isConfirming = false
+
         override func viewDidLoad() {
             super.viewDidLoad()
             addChild(addPaymentMethodVC)
+
+            context.totalUpdater?.addObserver(self) { viewController in
+                guard !viewController.isConfirming else { return }
+                viewController.updateConfirmButton()
+            }
 
             view.backgroundColor = .linkSurfacePrimary
 
@@ -225,6 +232,7 @@ extension PayWithLinkViewController {
             #endif
             confirmButton.update(status: .processing)
             setUserInteractionEnabled(false)
+            isConfirming = true
 
             confirmParams.paymentMethodParams.clientAttributionMetadata = context.analyticsHelper.shouldIncludeClientAttributionMetadata
                 ? STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -264,6 +272,8 @@ extension PayWithLinkViewController {
                         confirmationExtras: confirmationExtras
                     ) { [weak self] result, deferredIntentConfirmationType in
                         let status: ConfirmButton.Status
+                        var callToAction: ConfirmButton.CallToActionType?
+                        self?.isConfirming = false
 
                         switch result {
                         case .completed:
@@ -273,12 +283,14 @@ extension PayWithLinkViewController {
                         case .failed(let error):
                             status = .enabled
                             self?.updateErrorLabel(for: error)
+                            // The total may have changed while confirming. Refresh the button's call to action.
+                            callToAction = self?.context.callToAction
                         }
 
                         #if !os(visionOS)
                         self?.feedbackGenerator.notificationOccurred(.success)
                         #endif
-                        self?.confirmButton.update(status: status, animated: true) {
+                        self?.confirmButton.update(status: status, callToAction: callToAction, animated: true) {
                             self?.setUserInteractionEnabled(true)
                             if status == .succeeded {
                                 self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
@@ -286,6 +298,7 @@ extension PayWithLinkViewController {
                         }
                     }
                 case .failure(let error):
+                    self.isConfirming = false
                     #if !os(visionOS)
                     self.feedbackGenerator.notificationOccurred(.error)
                     #endif
@@ -345,12 +358,32 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
         if viewController.selectedPaymentMethodType == .instantDebits {
             confirmButton.update(status: .enabled, callToAction: .add(paymentMethodType: .instantDebits))
         } else {
-            confirmButton.update(
-                status: viewController.paymentOption != nil ? .enabled : .disabled,
-                callToAction: context.callToAction
-            )
+            updateConfirmButton()
+            syncTotalForEnteredBillingAddress()
         }
         updateErrorLabel(for: nil)
+    }
+
+    private func updateConfirmButton() {
+        let status: ConfirmButton.Status = if context.totalUpdater?.isUpdating == true {
+            // Keep showing the current total with a spinner until it reflects the entered billing address.
+            .spinnerWithInteractionDisabled
+        } else {
+            addPaymentMethodVC.paymentOption != nil ? .enabled : .disabled
+        }
+        confirmButton.update(status: status, callToAction: context.callToAction)
+    }
+
+    private func syncTotalForEnteredBillingAddress() {
+        guard let totalUpdater = context.totalUpdater,
+              !isConfirming,
+              case .new(let confirmParams)? = addPaymentMethodVC.paymentOption,
+              let billingAddress = confirmParams.paymentMethodParams.billingDetails?.address else {
+            return
+        }
+        totalUpdater.syncInBackground(billingAddress: billingAddress) { [weak self] error in
+            self?.updateErrorLabel(for: error)
+        }
     }
 
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {

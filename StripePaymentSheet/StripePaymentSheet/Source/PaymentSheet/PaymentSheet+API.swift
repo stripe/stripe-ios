@@ -675,6 +675,7 @@ extension PaymentSheet {
         confirmationChallenge: ConfirmationChallenge?,
         canContinueWithoutLink: Bool = true,
         clientAttributionMetadata: STPClientAttributionMetadata,
+        linkTotalUpdater: LinkTotalUpdater? = nil,
         isSettingUp: @escaping (STPPaymentMethodType) -> Bool,
         setAllowRedisplay: @escaping (IntentConfirmParams, STPPaymentMethodType) -> Void,
         confirmWithPaymentMethodParams: @escaping (STPPaymentMethodParams, PaymentSheetLinkAccount?, IntentConfirmParams.CheckboxState) -> Void,
@@ -778,6 +779,7 @@ extension PaymentSheet {
                     logPayment: false,
                     analyticsHelper: analyticsHelper,
                     confirmationChallenge: confirmationChallenge,
+                    totalUpdater: linkTotalUpdater,
                     confirmHandler: confirmHandler
                 )
                 linkController.presentAsSheet(

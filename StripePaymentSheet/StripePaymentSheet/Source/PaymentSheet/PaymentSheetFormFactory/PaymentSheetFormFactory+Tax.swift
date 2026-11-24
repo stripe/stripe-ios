@@ -38,6 +38,13 @@ extension PaymentSheetFormFactory {
         guard collectsTaxFromBillingAddress else {
             return minimumFields
         }
+        return Self.minimumFieldsIncludingAutomaticTax(minimumFields)
+    }
+
+    /// Returns country-specific minimums widened to include automatic tax requirements, regardless of whether the intent collects tax.
+    nonisolated static func minimumFieldsIncludingAutomaticTax(
+        _ minimumFields: [String: AddressSectionElement.FieldsToCollect]
+    ) -> [String: AddressSectionElement.FieldsToCollect] {
         return minimumFields.merging(
             AutomaticTaxBillingAddressRequirements.minimumFieldsToCollectByCountry
         ) { existing, automaticTax in

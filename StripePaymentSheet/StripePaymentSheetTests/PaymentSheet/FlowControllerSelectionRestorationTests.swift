@@ -252,6 +252,91 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         XCTAssertEqual(viewController.selectedPaymentOption?.paymentMethodType, .stripe(.card))
     }
 
+    func testNativeLinkSelectionInPlaceOfFlowControllerSyncsCheckoutBillingAddressBeforeCompleting() async throws {
+        // Given a Checkout FlowController presenting its payment options
+        let flowController = makeFlowController(savedPaymentMethods: [])
+        let updater = RecordingCheckoutSessionBillingAddressUpdater(suspendsUpdate: true)
+        flowController.viewController.checkoutBillingAddressUpdater = updater
+        var didComplete = false
+        let completed = expectation(description: "presentPaymentOptions completion")
+        flowController.presentPaymentOptions(from: UIViewController()) { didCancel in
+            XCTAssertFalse(didCancel)
+            didComplete = true
+            completed.fulfill()
+        }
+
+        // When native Link, presented in place of the payment options, returns payment details with a US billing address
+        let confirmOption = makeLinkConfirmOption(billingAddress: BillingAddress(postalCode: "94080", countryCode: "US"))
+        flowController.handleNativeLinkSelection(
+            confirmOption: confirmOption,
+            shouldReturnToPaymentSheet: false,
+            returnToPaymentSheet: { XCTFail("Expected the selection to complete") }
+        )
+
+        // Then the billing address is synced to Checkout before the selection is reported
+        await fulfillment(of: [updater.updateStarted], timeout: 1)
+        XCTAssertEqual(updater.addresses.map(\.country), ["US"])
+        XCTAssertEqual(updater.addresses.map(\.postalCode), ["94080"])
+        XCTAssertFalse(didComplete)
+        updater.resumeUpdate()
+        await fulfillment(of: [completed], timeout: 1)
+        XCTAssertIdentical(selectedLinkPaymentDetails(flowController), linkPaymentDetails(confirmOption))
+    }
+
+    func testNativeLinkSelectionInPlaceOfFlowControllerReturnsToPaymentOptionsWhenCheckoutBillingSyncFails() async throws {
+        // Given a Checkout FlowController presenting its payment options, whose billing address sync fails
+        let flowController = makeFlowController(savedPaymentMethods: [])
+        let updater = FailingCheckoutSessionBillingAddressUpdater()
+        flowController.viewController.checkoutBillingAddressUpdater = updater
+        flowController.presentPaymentOptions(from: UIViewController()) { _ in
+            XCTFail("Expected payment options to stay open")
+        }
+
+        // When native Link, presented in place of the payment options, returns payment details with a billing address
+        let confirmOption = makeLinkConfirmOption(billingAddress: BillingAddress(postalCode: "94080", countryCode: "US"))
+        let returnedToPaymentOptions = expectation(description: "Returned to payment options")
+        flowController.handleNativeLinkSelection(
+            confirmOption: confirmOption,
+            shouldReturnToPaymentSheet: false,
+            returnToPaymentSheet: { returnedToPaymentOptions.fulfill() }
+        )
+
+        // Then the payment options are shown again with the Link selection kept, so the customer can try again
+        await fulfillment(of: [updater.updateStarted, returnedToPaymentOptions], timeout: 1)
+        XCTAssertIdentical(selectedLinkPaymentDetails(flowController), linkPaymentDetails(confirmOption))
+    }
+
+    private func selectedLinkPaymentDetails(_ flowController: PaymentSheet.FlowController) -> ConsumerPaymentDetails? {
+        flowController.viewController.linkConfirmOption.flatMap(linkPaymentDetails)
+    }
+
+    private func linkPaymentDetails(_ confirmOption: PaymentSheet.LinkConfirmOption) -> ConsumerPaymentDetails? {
+        guard case let .withPaymentDetails(_, _, paymentDetails, _, _) = confirmOption else {
+            return nil
+        }
+        return paymentDetails
+    }
+
+    private func makeLinkConfirmOption(billingAddress: BillingAddress) -> PaymentSheet.LinkConfirmOption {
+        guard case let .withPaymentDetails(brand, account, paymentDetails, confirmationExtras, shippingAddress) = CheckoutTestHelpers.makeLinkConfirmOption() else {
+            preconditionFailure("Expected Link payment details fixture")
+        }
+        return .withPaymentDetails(
+            brand: brand,
+            account: account,
+            paymentDetails: ConsumerPaymentDetails(
+                stripeID: paymentDetails.stripeID,
+                details: paymentDetails.details,
+                billingAddress: billingAddress,
+                billingEmailAddress: paymentDetails.billingEmailAddress,
+                nickname: paymentDetails.nickname,
+                isDefault: paymentDetails.isDefault
+            ),
+            confirmationExtras: confirmationExtras,
+            shippingAddress: shippingAddress
+        )
+    }
+
     private func makeFlowController(
         savedPaymentMethods: [STPPaymentMethod],
         orientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical
@@ -372,6 +457,43 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             "No row button of type \(type)"
         )
         viewController.paymentMethodListViewController?.didTap(rowButton: row, selection: row.type)
+    }
+}
+
+@MainActor
+private final class RecordingCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
+    let updateStarted = XCTestExpectation(description: "Billing tax region update started")
+    private(set) var addresses: [CheckoutElementsController.Address] = []
+
+    private let suspendsUpdate: Bool
+    private var updateContinuation: CheckedContinuation<Void, Never>?
+
+    init(suspendsUpdate: Bool) {
+        self.suspendsUpdate = suspendsUpdate
+    }
+
+    func updateBillingTaxRegionIfNecessaryForPaymentSheet(
+        address: CheckoutElementsController.Address,
+        canUpdateWhileSheetPresented: Bool
+    ) async throws -> CheckoutElementsController.Session {
+        addresses.append(address)
+        if suspendsUpdate {
+            await withCheckedContinuation { continuation in
+                updateContinuation = continuation
+                updateStarted.fulfill()
+            }
+        } else {
+            updateStarted.fulfill()
+        }
+        guard case .checkout(let session) = Intent._testCheckoutSession(automaticTaxEnabled: true, automaticTaxAddressSource: "billing") else {
+            preconditionFailure("Expected a Checkout Session")
+        }
+        return session
+    }
+
+    func resumeUpdate() {
+        updateContinuation?.resume()
+        updateContinuation = nil
     }
 }
 

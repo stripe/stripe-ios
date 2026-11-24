@@ -625,6 +625,9 @@ the heading the screen itself. */
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
 
+/* Error shown when the total changes after the customer taps the pay button, because tax depends on the billing address. */
+"Your total was updated based on your billing address. Review it and try again." = "Your total was updated based on your billing address. Review it and try again.";
+
 /* Title of a Link verification banner shown when using a sandbox or test mode. */
 "You’re in sandbox mode" = "You’re in sandbox mode";
 

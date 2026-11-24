@@ -591,8 +591,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 self.linkConfirmOption = confirmOption
 
                 // A Link payment method was selected — report it and close the FlowController sheet.
+                // For Checkout, sync its billing address first so tax reflects it.
                 guard confirmOption == nil else {
-                    self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                    self.syncCheckoutBillingThenClose()
                     return
                 }
 

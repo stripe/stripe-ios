@@ -117,6 +117,29 @@ final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(element.view, identifier: identifier, file: file, line: line)
     }
 
+    func testBillingDetailsUpdateWithAutomaticTaxCollectsOnlyFieldsTaxRequiresForCountry() throws {
+        let cases: [(country: String, collectsPostalCode: Bool, collectsFullAddress: Bool)] = [
+            ("DE", false, false),
+            ("CA", true, false),
+            ("US", true, true),
+        ]
+        for testCase in cases {
+            // Given a Link card whose billing address only has a country, and tax calculated from the billing address
+            // When the customer is asked to complete its billing details
+            let sut = makeSUT(
+                isDefault: false,
+                isBillingDetailsUpdateFlow: true,
+                collectsTaxFromBillingAddress: true,
+                billingAddress: BillingAddress(countryCode: testCase.country)
+            )
+
+            // Then the form collects the fields tax requires for that country, without the merchant requesting a full address
+            let addressSection = try XCTUnwrap(sut.billingAddressSection, testCase.country)
+            XCTAssertEqual(addressSection.postalCode != nil, testCase.collectsPostalCode, testCase.country)
+            XCTAssertEqual(addressSection.line1 != nil, testCase.collectsFullAddress, testCase.country)
+            XCTAssertEqual(addressSection.city != nil, testCase.collectsFullAddress, testCase.country)
+        }
+    }
 }
 
 extension LinkPaymentMethodFormElementSnapshotTests {
@@ -128,6 +151,7 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         requestPhone: Bool = false,
         requestEmail: Bool = false,
         requestFullAddress: Bool = false,
+        collectsTaxFromBillingAddress: Bool = false,
         billingAddress: BillingAddress? = nil,
         networks: [String] = ["visa"]
     ) -> LinkPaymentMethodFormElement {
@@ -166,7 +190,8 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: configuration,
-            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow
+            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow,
+            collectsTaxFromBillingAddress: collectsTaxFromBillingAddress
         )
     }
 

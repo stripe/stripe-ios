@@ -19,6 +19,15 @@ class LinkBillingDetailsValidator {
     private let linkAccount: PaymentSheetLinkAccount
     private let context: PayWithLinkViewController.Context
 
+    /// The billing details to fill in from defaults. When tax is calculated from the billing address, this includes the address.
+    private var prefillConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
+        var configuration = context.configuration.billingDetailsCollectionConfiguration
+        if context.intent.collectsTaxFromBillingAddress {
+            configuration.address = .full
+        }
+        return configuration
+    }
+
     init(
         linkAccount: PaymentSheetLinkAccount,
         context: PayWithLinkViewController.Context
@@ -44,13 +53,13 @@ class LinkBillingDetailsValidator {
 
         let effectivePaymentDetails = consumerPaymentDetails.update(
             with: effectiveBillingDetails,
-            basedOn: context.configuration.billingDetailsCollectionConfiguration
+            basedOn: prefillConfiguration
         )
 
         let hasRequiredBillingDetailsNow = effectivePaymentDetails.supports(
             context.configuration.billingDetailsCollectionConfiguration,
             in: linkAccount.currentSession
-        )
+        ) && satisfiesAutomaticTaxRequirements(effectivePaymentDetails)
 
         if hasRequiredBillingDetailsNow {
             // We have filled in all the missing fields. Now, update the payment details and confirm the intent.
@@ -77,6 +86,11 @@ class LinkBillingDetailsValidator {
     }
 
     private func isMissingRequestedBillingDetails(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+        if !satisfiesAutomaticTaxRequirements(paymentDetails) {
+            // Tax can't be calculated without these, so recollect them regardless of the merchant's setting.
+            return true
+        }
+
         guard context.configuration.link.collectMissingBillingDetailsForExistingPaymentMethods else {
             // Don't recollect even if details are missing
             return false
@@ -88,6 +102,13 @@ class LinkBillingDetailsValidator {
         )
 
         return !paymentDetailsAreSupported
+    }
+
+    private func satisfiesAutomaticTaxRequirements(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+        guard context.intent.collectsTaxFromBillingAddress else {
+            return true
+        }
+        return AutomaticTaxBillingAddressRequirements.areSatisfied(by: paymentDetails.billingDetails?.address)
     }
 
     private func updateBillingDetails(

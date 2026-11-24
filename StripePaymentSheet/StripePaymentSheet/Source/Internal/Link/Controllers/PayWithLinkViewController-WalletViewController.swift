@@ -176,6 +176,8 @@ extension PayWithLinkViewController {
         /// The portion of the keyboard overlapping the view, or `nil` while the keyboard is hidden.
         private var keyboardInViewHeight: CGFloat?
 
+        private var isConfirming = false
+
         private var containerViewBottomPadding: CGFloat {
             if let keyboardInViewHeight {
                 return keyboardInViewHeight + LinkUI.contentSpacing
@@ -260,6 +262,24 @@ extension PayWithLinkViewController {
                 // Automatically expand, since the user is likely here to change the payment method
                 paymentPicker.setExpanded(true, animated: false)
             }
+
+            context.totalUpdater?.addObserver(self) { viewController in
+                guard !viewController.isConfirming else { return }
+                viewController.updateConfirmButton()
+            }
+            syncTotalForSelectedPaymentMethod()
+        }
+
+        private func syncTotalForSelectedPaymentMethod() {
+            guard let totalUpdater = context.totalUpdater,
+                  !isConfirming,
+                  let paymentDetails = viewModel.selectedPaymentMethod,
+                  paymentDetails.billingAddress != nil else {
+                return
+            }
+            totalUpdater.syncInBackground(billingAddress: paymentDetails.billingDetails?.address) { [weak self] error in
+                self?.updateErrorLabel(for: error)
+            }
         }
 
         func updateUI(animated: Bool) {
@@ -301,6 +321,10 @@ extension PayWithLinkViewController {
                 cardDetailsRecollectionSection.view.layoutIfNeeded()
             }
 
+            updateConfirmButton()
+        }
+
+        private func updateConfirmButton() {
             confirmButton.update(
                 status: viewModel.confirmButtonStatus,
                 callToAction: viewModel.confirmButtonCallToAction
@@ -407,12 +431,14 @@ extension PayWithLinkViewController {
             #endif
             updateErrorLabel(for: nil)
             confirmButton.update(status: .processing)
+            isConfirming = true
 
             coordinator?.confirm(
                 with: linkAccount,
                 paymentDetails: paymentDetails,
                 confirmationExtras: confirmationExtras
             ) { [weak self] result, deferredIntentConfirmationType in
+                self?.isConfirming = false
                 switch result {
                 case .completed:
                     #if !os(visionOS)
@@ -430,7 +456,8 @@ extension PayWithLinkViewController {
                     self?.feedbackGenerator.notificationOccurred(.error)
                     #endif
                     self?.updateErrorLabel(for: error)
-                    self?.confirmButton.update(status: .enabled)
+                    // The total may have changed while confirming. Refresh the button's call to action.
+                    self?.confirmButton.update(status: .enabled, callToAction: self?.viewModel.confirmButtonCallToAction)
                     self?.setUserInteractionEnabled(true)
                 }
             }
@@ -692,6 +719,7 @@ extension PayWithLinkViewController.WalletViewController: PayWithLinkWalletViewM
 
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.WalletViewModel) {
         updateUI(animated: true)
+        syncTotalForSelectedPaymentMethod()
     }
 
 }

@@ -49,6 +49,7 @@ final class LinkPaymentMethodFormElement: Element {
     let paymentMethod: ConsumerPaymentDetails
     let isBillingDetailsUpdateFlow: Bool
     private let linkAppearance: LinkAppearance?
+    private let collectsTaxFromBillingAddress: Bool
 
     let configuration: PaymentElementConfiguration
 
@@ -230,10 +231,12 @@ final class LinkPaymentMethodFormElement: Element {
         )
     }()
 
-    private lazy var billingAddressSection: AddressSectionElement? = {
+    lazy var billingAddressSection: AddressSectionElement? = {
         let collectPhone = configuration.billingDetailsCollectionConfiguration.phone == .always && isBillingDetailsUpdateFlow
         let collectEmail = configuration.billingDetailsCollectionConfiguration.email == .always
-        let collectAddress = configuration.billingDetailsCollectionConfiguration.address != .never || paymentMethod.type == .card
+        let collectAddress = configuration.billingDetailsCollectionConfiguration.address != .never
+            || paymentMethod.type == .card
+            || collectsTaxFromBillingAddress
 
         guard collectPhone || collectEmail || collectAddress else {
             return nil
@@ -273,17 +276,26 @@ final class LinkPaymentMethodFormElement: Element {
             defaultFieldsToCollect: configuration.billingDetailsCollectionConfiguration.address == .full
                 ? .all
                 : .country,
-            minimumFieldsToCollectByCountry: PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry,
+            minimumFieldsToCollectByCountry: collectsTaxFromBillingAddress
+                ? PaymentSheetFormFactory.minimumFieldsIncludingAutomaticTax(PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry)
+                : PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry,
             disableAutocomplete: true,
             additionalFields: additionalFields,
             theme: theme
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool, linkAppearance: LinkAppearance? = nil) {
+    init(
+        paymentMethod: ConsumerPaymentDetails,
+        configuration: PaymentElementConfiguration,
+        isBillingDetailsUpdateFlow: Bool,
+        collectsTaxFromBillingAddress: Bool = false,
+        linkAppearance: LinkAppearance? = nil
+    ) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
         self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
+        self.collectsTaxFromBillingAddress = collectsTaxFromBillingAddress
         self.linkAppearance = linkAppearance
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {
