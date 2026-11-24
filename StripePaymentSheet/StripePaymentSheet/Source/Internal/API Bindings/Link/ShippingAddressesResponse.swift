@@ -83,3 +83,48 @@ extension ShippingAddressesResponse.ShippingAddress {
             .joined(separator: ", ")
     }
 }
+
+extension ShippingAddressesResponse.ShippingAddress {
+    /// The ID of a Checkout Session's shipping address, which isn't saved to the Link account.
+    static let checkoutShippingAddressID = "checkout_session_shipping_address"
+
+    /// Creates an entry for a Checkout Session's shipping address, which isn't saved to the Link account.
+    init(checkoutShippingAddress: CheckoutElementsController.Session.ShippingAddress) {
+        let address = checkoutShippingAddress.address
+        self.init(
+            id: Self.checkoutShippingAddressID,
+            address: .init(
+                administrativeArea: address.state,
+                countryCode: address.country,
+                dependentLocality: nil,
+                line1: address.line1,
+                line2: address.line2,
+                locality: address.city,
+                name: checkoutShippingAddress.name,
+                postalCode: address.postalCode,
+                sortingCode: nil
+            ),
+            isDefault: false,
+            nickname: nil
+        )
+    }
+
+    /// Whether this is the same name and address as the Checkout Session's shipping address, ignoring case and empty fields.
+    func matches(_ checkoutShippingAddress: CheckoutElementsController.Session.ShippingAddress) -> Bool {
+        let checkoutAddress = checkoutShippingAddress.address
+        let pairs: [(String?, String?)] = [
+            (address.name, checkoutShippingAddress.name),
+            (address.line1, checkoutAddress.line1),
+            (address.line2, checkoutAddress.line2),
+            (address.locality, checkoutAddress.city),
+            (address.administrativeArea, checkoutAddress.state),
+            (address.postalCode, checkoutAddress.postalCode),
+            (address.countryCode, checkoutAddress.country),
+        ]
+        return pairs.allSatisfy { normalized($0) == normalized($1) }
+    }
+
+    private func normalized(_ value: String?) -> String {
+        value?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
+    }
+}

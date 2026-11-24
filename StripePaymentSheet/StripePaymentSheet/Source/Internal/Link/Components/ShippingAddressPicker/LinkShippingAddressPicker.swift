@@ -37,6 +37,9 @@ protocol LinkShippingAddressPickerDataSource: AnyObject {
     /// Whether the shipping address can be used, e.g. because the merchant ships to its country.
     func isShippingAddressSupported(at index: Int) -> Bool
 
+    /// Whether the shipping address can be removed, e.g. because it's saved to the Link account.
+    func canRemoveShippingAddress(at index: Int) -> Bool
+
     /// The index of the selected shipping address, or `nil` if none is selected.
     var selectedShippingAddressIndex: Int? { get }
 }
@@ -214,6 +217,7 @@ extension LinkShippingAddressPicker {
         cell.shippingAddress = dataSource.shippingAddress(at: index)
         cell.isSelected = dataSource.selectedShippingAddressIndex == index
         cell.isSupported = dataSource.isShippingAddressSupported(at: index)
+        cell.isRemovable = dataSource.canRemoveShippingAddress(at: index)
     }
 
     func showLoader(at index: Int) {

@@ -114,8 +114,39 @@ final class PayWithLinkViewController: NSObject {
             intent.requiresShippingAddress
         }
 
-        /// The shipping addresses saved to the Link account.
+        /// The shipping addresses the customer can pick from: the ones saved to the Link account, plus the Checkout Session's
+        /// shipping address if none of them match it. See `setSavedShippingAddresses(_:)`.
         var shippingAddresses: [ShippingAddressesResponse.ShippingAddress] = []
+
+        /// The ID of the entry in `shippingAddresses` for the Checkout Session's shipping address (e.g. the merchant's default).
+        /// Like Apple Pay, Link selects this address first.
+        private(set) var checkoutShippingAddressID: String?
+
+        /// Sets the shipping addresses saved to the Link account. If the session collects a shipping address and already has one
+        /// that doesn't match a saved address, offers it first, without saving it to the Link account.
+        func setSavedShippingAddresses(_ savedShippingAddresses: [ShippingAddressesResponse.ShippingAddress]) {
+            guard requiresShippingAddress,
+                  case .checkout(let checkout) = intent,
+                  let checkoutShippingAddress = checkout.shippingAddress else {
+                checkoutShippingAddressID = nil
+                shippingAddresses = savedShippingAddresses
+                return
+            }
+
+            if let matchingShippingAddress = savedShippingAddresses.first(where: { $0.matches(checkoutShippingAddress) }) {
+                checkoutShippingAddressID = matchingShippingAddress.id
+                shippingAddresses = savedShippingAddresses
+            } else {
+                let shippingAddress = ShippingAddressesResponse.ShippingAddress(checkoutShippingAddress: checkoutShippingAddress)
+                checkoutShippingAddressID = shippingAddress.id
+                shippingAddresses = [shippingAddress] + savedShippingAddresses
+            }
+        }
+
+        /// Whether the shipping address is saved to the Link account, as opposed to only provided by the Checkout Session.
+        func isShippingAddressSaved(_ shippingAddress: ShippingAddressesResponse.ShippingAddress) -> Bool {
+            shippingAddress.id != ShippingAddressesResponse.ShippingAddress.checkoutShippingAddressID
+        }
 
         /// The ID of the shipping address to use. Defaults to the account's default shipping address.
         var selectedShippingAddressID: String?
@@ -153,12 +184,17 @@ final class PayWithLinkViewController: NSObject {
         }
 
         /// Selects the default supported shipping address, unless a supported one is already selected.
+        /// Like Apple Pay, prefers the Checkout Session's shipping address over the Link account's default.
         func selectDefaultShippingAddressIfNeeded() {
             if let selectedShippingAddress, isShippingAddressSupported(selectedShippingAddress) {
                 return
             }
             let supportedShippingAddresses = shippingAddresses.filter(isShippingAddressSupported)
-            selectedShippingAddressID = (supportedShippingAddresses.first { $0.isDefault ?? false } ?? supportedShippingAddresses.first)?.id
+            selectedShippingAddressID = (
+                supportedShippingAddresses.first { $0.id == checkoutShippingAddressID }
+                    ?? supportedShippingAddresses.first { $0.isDefault ?? false }
+                    ?? supportedShippingAddresses.first
+            )?.id
         }
 
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
@@ -514,7 +550,7 @@ private extension PayWithLinkViewController {
 
                 // Ignore any errors that might happen here.
                 let shippingAddresses = await shippingAddressTask.value?.shippingAddresses ?? []
-                context.shippingAddresses = shippingAddresses
+                context.setSavedShippingAddresses(shippingAddresses)
                 context.selectDefaultShippingAddressIfNeeded()
 
                 presentAppropriateViewController(
@@ -593,6 +629,7 @@ private extension PayWithLinkViewController {
         } else if paymentDetails.isEmpty && context.requiresShippingAddress && context.shippingAddresses.isEmpty {
             // New customers enter their shipping address before adding a payment method,
             // since adding their first payment method immediately confirms.
+            // They skip this if the Checkout Session already has a shipping address.
             let addShippingAddressViewController = AddShippingAddressViewController(
                 linkAccount: linkAccount,
                 context: context

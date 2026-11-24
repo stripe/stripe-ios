@@ -300,6 +300,11 @@ extension PayWithLinkViewController {
             context.isShippingAddressSupported(shippingAddresses[index])
         }
 
+        /// Only addresses saved to the Link account can be removed, not the Checkout Session's shipping address.
+        func canRemoveShippingAddress(at index: Int) -> Bool {
+            context.isShippingAddressSaved(shippingAddresses[index])
+        }
+
         func selectShippingAddress(at index: Int) {
             guard isShippingAddressSupported(at: index) else {
                 return
