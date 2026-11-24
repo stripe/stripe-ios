@@ -667,6 +667,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let poller = TestCheckoutSessionPoller(outcome: .succeeded(CheckoutConfirmationStubbedTests.pollResponse()))
         var responseJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
         responseJSON["payment_response"] = ["status": "requires_action"]
+        let previousHistory = STPAnalyticsClient.sharedClient._testLogHistory
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        defer { STPAnalyticsClient.sharedClient._testLogHistory = previousHistory }
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
@@ -683,6 +687,42 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(response?.status, .open)
         XCTAssertEqual(response?.paymentStatus, .unpaid)
         XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
+
+        // ...and logs the unexpected error once
+        let events = STPAnalyticsClient.sharedClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.checkout_elements" }
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events.first?["error_code"] as? String, "confirm_requires_action_without_intent")
+        XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
+    }
+
+    func testExpiredSessionAfterConfirmFailsAndLogsUnexpectedError() async throws {
+        // Given /confirm returns an expired Checkout Session
+        let checkout = try await makeCheckout()
+        let poller = TestCheckoutSessionPoller(outcome: .succeeded(CheckoutConfirmationStubbedTests.pollResponse()))
+        let previousHistory = STPAnalyticsClient.sharedClient._testLogHistory
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        defer { STPAnalyticsClient.sharedClient._testLogHistory = previousHistory }
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+
+        // When the Checkout Session is confirmed
+        let result = await confirmCheckoutSession(
+            checkout,
+            responseJSON: makeConfirmedSessionJSON(status: "expired", paymentStatus: "unpaid"),
+            poller: poller
+        )
+
+        // Then confirmation fails without polling
+        guard case .failed(let error, _) = result else {
+            return XCTFail("Expected confirmation to fail, got \(result)")
+        }
+        XCTAssertTrue(error.nonGenericDescription.contains("expired after confirmation"))
+        XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
+
+        // ...and logs the unexpected error once
+        let events = STPAnalyticsClient.sharedClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.checkout_elements" }
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events.first?["error_code"] as? String, "confirm_session_expired")
+        XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
     }
 
     // MARK: - Payment Method

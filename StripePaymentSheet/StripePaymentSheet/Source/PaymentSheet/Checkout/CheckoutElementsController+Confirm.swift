@@ -208,6 +208,12 @@ extension CheckoutElementsController {
             guard let paymentElementConfiguration = self.configuration.paymentElement,
                   paymentElementConfiguration.applePayConfiguration.display != .never,
                   let merchantId = self.configuration.applePayMerchantId else {
+                // PaymentElement only offers Apple Pay when its configuration allows it.
+                logUnexpectedCheckoutElementsErrorAndAssert(
+                    .paymentElementApplePayUnavailable,
+                    message: "Checkout Session payment option is Apple Pay, but Payment Element's configuration doesn't allow Apple Pay.",
+                    apiClient: apiClient
+                )
                 return nil
             }
             return .applePay(.init(
@@ -587,7 +593,9 @@ extension CheckoutElementsController {
                 let error: Error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
-                let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a PaymentIntent.")
+                let message = "PaymentHandler returned an unknown action status for a PaymentIntent."
+                logUnexpectedCheckoutElementsErrorAndAssert(.paymentHandlerUnknownActionStatus, message: message, apiClient: apiClient)
+                let error = CheckoutError.unknown(debugDescription: message)
                 return .failed(error, sessionResponse: response)
             }
         } else if let setupIntent = response.paymentResponse?.setupIntent {
@@ -605,11 +613,15 @@ extension CheckoutElementsController {
                 let error: Error = result.2 ?? PaymentSheetError.errorHandlingNextAction
                 return .failed(error, sessionResponse: response)
             @unknown default:
-                let error = CheckoutError.unknown(debugDescription: "PaymentHandler returned an unknown action status for a SetupIntent.")
+                let message = "PaymentHandler returned an unknown action status for a SetupIntent."
+                logUnexpectedCheckoutElementsErrorAndAssert(.paymentHandlerUnknownActionStatus, message: message, apiClient: apiClient)
+                let error = CheckoutError.unknown(debugDescription: message)
                 return .failed(error, sessionResponse: response)
             }
         } else {
-            let error = CheckoutError.unknown(debugDescription: "CheckoutClient requires an action without a supported Intent.")
+            let message = "CheckoutClient requires an action without a supported Intent."
+            logUnexpectedCheckoutElementsErrorAndAssert(.confirmRequiresActionWithoutIntent, message: message, apiClient: apiClient)
+            let error = CheckoutError.unknown(debugDescription: message)
             return .failed(error, sessionResponse: response)
         }
 
@@ -647,7 +659,9 @@ extension CheckoutElementsController {
         case .complete:
             return .completed(response)
         case .expired:
-            return .failed(CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly expired after confirmation."), sessionResponse: response)
+            let message = "Checkout Session unexpectedly expired after confirmation."
+            logUnexpectedCheckoutElementsErrorAndAssert(.confirmSessionExpired, message: message, apiClient: apiClient)
+            return .failed(CheckoutError.unknown(debugDescription: message), sessionResponse: response)
         }
     }
 
