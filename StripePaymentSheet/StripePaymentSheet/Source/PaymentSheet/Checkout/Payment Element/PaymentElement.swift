@@ -135,13 +135,10 @@ public final class PaymentElement {
         } else {
             false
         }
-        if paymentSheetFlowController.paymentOption?.label != embeddedPaymentElement.paymentOption?.label && !flowControllerDefaultsToApplePay {
-            logUnexpectedCheckoutElementsErrorAndAssert(
-                .paymentElementInitialPaymentOptionMismatch,
-                message: "Payment Element assumes that the FlowController's payment option is the same as the Embedded's on first load!",
-                apiClient: checkout.apiClient
-            )
-        }
+        stpAssert(
+            paymentSheetFlowController.paymentOption?.label == embeddedPaymentElement.paymentOption?.label || flowControllerDefaultsToApplePay,
+            "Payment Element assumes that the FlowController's payment option is the same as the Embedded's on first load!"
+        )
         checkout.dangerouslySetPaymentOptionDirectly(
             embeddedPaymentElement.paymentOption.map(CheckoutElementsController.Session.PaymentOptionDisplayData.init)
         )

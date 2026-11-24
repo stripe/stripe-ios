@@ -659,9 +659,7 @@ extension CheckoutElementsController {
         case .complete:
             return .completed(response)
         case .expired:
-            let message = "Checkout Session unexpectedly expired after confirmation."
-            logUnexpectedCheckoutElementsErrorAndAssert(.confirmSessionExpired, message: message, apiClient: apiClient)
-            return .failed(CheckoutError.unknown(debugDescription: message), sessionResponse: response)
+            return .failed(CheckoutError.unknown(debugDescription: "Checkout Session unexpectedly expired after confirmation."), sessionResponse: response)
         }
     }
 

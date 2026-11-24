@@ -24,18 +24,12 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
         /// The Session's payment option is Apple Pay, but Payment Element's configuration doesn't allow Apple Pay.
         case paymentElementApplePayUnavailable =
             "payment_element_apple_pay_unavailable"
-        /// Payment Element's FlowController and EmbeddedPaymentElement had different default payment options on first load.
-        case paymentElementInitialPaymentOptionMismatch =
-            "payment_element_initial_payment_option_mismatch"
         /// PaymentHandler returned an action status this SDK doesn't handle.
         case paymentHandlerUnknownActionStatus =
             "payment_handler_unknown_action_status"
         /// /confirm returned `requires_action` without a PaymentIntent or SetupIntent.
         case confirmRequiresActionWithoutIntent =
             "confirm_requires_action_without_intent"
-        /// /confirm returned an expired Session.
-        case confirmSessionExpired =
-            "confirm_session_expired"
         /// /poll reported `not_started` after /confirm was accepted.
         case confirmPollNotStarted =
             "confirm_poll_not_started"
