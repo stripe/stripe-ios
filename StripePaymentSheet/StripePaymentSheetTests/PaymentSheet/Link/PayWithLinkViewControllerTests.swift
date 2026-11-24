@@ -177,7 +177,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
         await fulfillment(of: [presented], timeout: 3)
 
         // When the wallet reports a selection
-        let wallet = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: configuration, analyticsHelper: ._testValue())
+        let wallet = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), analyticsHelper: ._testValue())
         controller?.payWithLinkViewControllerDidFinish(wallet, confirmOption: .wallet(brand: .link))
         await fulfillment(of: [selected], timeout: 3)
 
