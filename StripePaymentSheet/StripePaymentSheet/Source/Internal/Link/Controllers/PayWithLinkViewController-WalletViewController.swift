@@ -728,6 +728,28 @@ extension PayWithLinkViewController.WalletViewController: ElementDelegate {
 
 }
 
+// MARK: - Action sheets
+
+extension PayWithLinkViewController.WalletViewController {
+    func presentActionSheet(_ actions: [Action], sourceView: UIView, sourceRect: CGRect) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.popoverPresentationController?.sourceView = sourceView
+        alertController.popoverPresentationController?.sourceRect = sourceRect
+
+        for action in actions {
+            alertController.addAction(
+                UIAlertAction(
+                    title: action.title,
+                    style: action.style,
+                    handler: { _ in action.action() }
+                )
+            )
+        }
+
+        present(alertController, animated: true)
+    }
+}
+
 // MARK: - PayWithLinkWalletViewModelDelegate
 
 extension PayWithLinkViewController.WalletViewController: PayWithLinkWalletViewModelDelegate {
@@ -776,22 +798,11 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         showMenuForItemAt index: Int,
         sourceRect: CGRect
     ) {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alertController.popoverPresentationController?.sourceView = pickerView
-        alertController.popoverPresentationController?.sourceRect = sourceRect
-
-        let actions = actions(for: index, includeCancelAction: true)
-        for action in actions {
-            alertController.addAction(
-                UIAlertAction(
-                    title: action.title,
-                    style: action.style,
-                    handler: { _ in action.action() }
-                )
-            )
-        }
-
-        present(alertController, animated: true)
+        presentActionSheet(
+            actions(for: index, includeCancelAction: true),
+            sourceView: pickerView,
+            sourceRect: sourceRect
+        )
     }
 
     func paymentDetailsPickerDidTapOnAddPayment(
@@ -917,12 +928,9 @@ extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPic
 extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPickerDelegate {
 
     func shippingAddressPicker(_ picker: LinkShippingAddressPicker, didSelectIndex index: Int) {
-        guard viewModel.isShippingAddressSupported(at: index) else {
-            return
-        }
+        // Selecting reloads the picker via `viewModelDidChange`.
         viewModel.selectShippingAddress(at: index)
         picker.setExpanded(false, animated: true)
-        picker.reloadData()
     }
 
     func shippingAddressPicker(
@@ -937,21 +945,11 @@ extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPic
         showMenuForItemAt index: Int,
         sourceRect: CGRect
     ) {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alertController.popoverPresentationController?.sourceView = picker
-        alertController.popoverPresentationController?.sourceRect = sourceRect
-
-        for action in shippingAddressActions(for: index, includeCancelAction: true) {
-            alertController.addAction(
-                UIAlertAction(
-                    title: action.title,
-                    style: action.style,
-                    handler: { _ in action.action() }
-                )
-            )
-        }
-
-        present(alertController, animated: true)
+        presentActionSheet(
+            shippingAddressActions(for: index, includeCancelAction: true),
+            sourceView: picker,
+            sourceRect: sourceRect
+        )
     }
 
     func shippingAddressPickerDidTapOnAddShippingAddress(_ picker: LinkShippingAddressPicker) {

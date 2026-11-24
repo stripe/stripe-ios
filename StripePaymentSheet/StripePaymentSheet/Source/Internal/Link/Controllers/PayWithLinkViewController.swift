@@ -111,10 +111,7 @@ final class PayWithLinkViewController: NSObject {
 
         /// Whether the customer must provide a shipping address in Link (e.g. for a Checkout Session that collects shipping).
         var requiresShippingAddress: Bool {
-            guard case .checkout(let session) = intent else {
-                return false
-            }
-            return session.requiresShippingAddress
+            intent.requiresShippingAddress
         }
 
         /// The shipping addresses saved to the Link account.
@@ -129,8 +126,7 @@ final class PayWithLinkViewController: NSObject {
 
         /// The countries the session ships to, or `nil` if it ships anywhere.
         var allowedShippingCountries: [String]? {
-            guard case .checkout(let session) = intent,
-                  let allowedCountries = session.allowedShippingCountries,
+            guard let allowedCountries = intent.allowedShippingCountries,
                   !allowedCountries.isEmpty else {
                 return nil
             }

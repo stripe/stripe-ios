@@ -264,7 +264,7 @@ extension LinkShippingAddressPicker {
             subview.layer.zPosition = CGFloat(-index)
         }
 
-        headerView.setSelectedShippingAddress(selectedShippingAddress)
+        headerView.selectedShippingAddress = selectedShippingAddress
     }
 
     private func index(for cell: Cell) -> Int? {

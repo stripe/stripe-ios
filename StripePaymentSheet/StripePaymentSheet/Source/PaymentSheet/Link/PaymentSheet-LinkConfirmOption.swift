@@ -109,6 +109,15 @@ extension PaymentSheet.LinkConfirmOption {
         }
     }
 
+    /// The shipping address the customer selected in native Link, as a Checkout Session shipping address.
+    var checkoutShippingAddress: CheckoutElementsController.Session.ShippingAddress? {
+        guard let shippingAddress,
+              let address = STPPaymentMethodAddress(address: shippingAddress.address).checkoutAddress else {
+            return nil
+        }
+        return .init(name: shippingAddress.name?.nonEmpty, address: address)
+    }
+
     var billingDetails: STPPaymentMethodBillingDetails? {
         switch self {
         case .wallet:
