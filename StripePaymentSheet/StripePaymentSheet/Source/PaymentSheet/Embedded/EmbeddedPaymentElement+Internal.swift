@@ -25,6 +25,8 @@ extension EmbeddedPaymentElement {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         previousSelection: RowButtonType? = nil,
         previousSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)? = nil,
+        placesLinkFirst: Bool = false,
+        linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
         // Restore the customer's previous payment method.
@@ -60,8 +62,11 @@ extension EmbeddedPaymentElement {
                 return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
             }
         }()
+        // The Link row is hidden while it's expanded for verification, so it can't start out selected.
+        let resolvedInitialSelection = linkInlineVerificationView != nil && initialSelection == .link ? nil : initialSelection
         let mandateProvider = VerticalListMandateProvider(
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             elementsSession: loadResult.elementsSession,
             intent: loadResult.intent,
             analyticsHelper: analyticsHelper,
@@ -70,7 +75,7 @@ extension EmbeddedPaymentElement {
             }
         )
         return EmbeddedPaymentMethodsView(
-            initialSelectedRowType: initialSelection,
+            initialSelectedRowType: resolvedInitialSelection,
             initialSelectedRowChangeButtonState: previousSelectedRowChangeButtonState,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
@@ -81,6 +86,8 @@ extension EmbeddedPaymentElement {
             linkBrandProvider: { [configuration, elementsSession = loadResult.elementsSession] in
                 configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
             },
+            placesLinkFirst: placesLinkFirst,
+            linkInlineVerificationView: linkInlineVerificationView,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
@@ -88,6 +95,7 @@ extension EmbeddedPaymentElement {
             currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            featuredInstitutionsLoader: loadResult.featuredInstitutionsLoader,
             analyticsHelper: analyticsHelper,
             delegate: delegate
         )
@@ -109,6 +117,7 @@ extension EmbeddedPaymentElement {
         selection: RowButtonType?,
         previousPaymentOption: PaymentOption?,
         configuration: Configuration,
+        customerProvider: CustomerProvider,
         intent: Intent,
         elementsSession: STPElementsSession,
         savedPaymentMethods: [STPPaymentMethod],
@@ -125,6 +134,7 @@ extension EmbeddedPaymentElement {
 
         let formViewController = EmbeddedFormViewController(
             configuration: configuration,
+            customerProvider: customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
@@ -176,6 +186,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             // Carry the accepted option into the next form so cancel can restore the previous row.
             previousPaymentOption: selectedFormViewController?.paymentOptionToRestoreOnCancellation,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
@@ -356,7 +367,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
                 // Logging an unexpected error also fires an stpAssertionFailure.
                 STPAnalyticsClient.sharedClient.log(
                     analytic: UnexpectedCheckoutElementsErrorAnalytic(
-                        errorCode: .paymentElementPresentingViewControllerUnavailable,
+                        errorCode: .paymentElementViewPresentingViewControllerUnavailable,
                         errorMessage: "Payment Element couldn't find a view controller to present from."
                     )
                 )
@@ -375,6 +386,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             selection: rowButtonType,
             previousPaymentOption: nil, // This is just to check if there's a form, so this data isn't necessary
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
@@ -604,6 +616,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             selection: selection,
             previousPaymentOption: paymentOption,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,

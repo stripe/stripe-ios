@@ -29,6 +29,12 @@ enum CheckoutError: Error, LocalizedError, Sendable {
     /// The provided shipping country is not in the session's list of allowed shipping countries.
     case invalidShippingCountry(countryCode: String)
 
+    /// The device can't currently make Apple Pay payments, for example because its cards or payment restrictions changed.
+    case applePayUnavailable
+
+    /// PassKit didn't present the Apple Pay sheet, usually because of the app's Apple Pay setup.
+    case applePayPresentationFailed
+
     /// The Stripe API returned an error with the given message.
     case apiError(message: String, underlyingError: Error? = nil)
 
@@ -51,6 +57,14 @@ enum CheckoutError: Error, LocalizedError, Sendable {
             return NSError.stp_unexpectedErrorMessage()
         case .invalidShippingCountry(let countryCode):
             return "Country code '\(countryCode)' is not in allowedShippingCountries"
+        case .applePayUnavailable:
+            return "Apple Pay is unavailable on this device. Check device support and payment restrictions."
+        case .applePayPresentationFailed:
+            return """
+                Could not present Apple Pay. Check Apple Pay setup in Wallet and that the merchant ID matches an ID \
+                in the app's Apple Pay entitlements and provisioning profile. Ensure the app is active, \
+                the presenting window is visible, and no other presentation or dismissal is in progress.
+                """
         case .apiError(let message, _):
             return message
         case .unknown(let debugDescription):
