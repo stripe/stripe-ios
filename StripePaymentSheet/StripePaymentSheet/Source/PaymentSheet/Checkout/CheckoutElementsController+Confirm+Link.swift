@@ -72,7 +72,8 @@ extension CheckoutElementsController {
         }
     }
 
-    /// Creates an updater that recalculates tax while native Link is open, if the session's tax depends on the billing address.
+    /// Creates an updater that recalculates tax while native Link is open, if the session's tax depends on the billing or
+    /// shipping address.
     @MainActor
     private static func makeLinkTotalUpdater(
         checkoutSession: Session,
@@ -83,16 +84,16 @@ extension CheckoutElementsController {
     ) -> LinkTotalUpdater? {
         guard let checkoutWalletUpdater,
               case .wallet = parameters.confirmOption,
-              checkoutSession.collectsTaxFromBillingAddress,
+              checkoutSession.collectsTaxFromBillingAddress || checkoutSession.collectsTaxFromShippingAddress,
               deviceCanUseNativeLink(elementsSession: checkoutSession.elementsSession, configuration: parameters.configuration) else {
             return nil
         }
         let confirmationSource = parameters.attribution.confirmingElement
-        return LinkTotalUpdater(amount: checkoutSession.amount) { [weak checkoutWalletUpdater] billingAddress in
+        return LinkTotalUpdater(amount: checkoutSession.amount) { [weak checkoutWalletUpdater] linkAddress in
             guard let checkoutWalletUpdater else {
                 throw CheckoutError.unknown(debugDescription: "Checkout was deallocated while Link was open.")
             }
-            guard let address = Address(taxRegionFrom: billingAddress) else {
+            guard let address = Address(taxRegionFrom: linkAddress) else {
                 return latestSession().amount
             }
             guard address != checkoutWalletUpdater.currentTaxRegion else {

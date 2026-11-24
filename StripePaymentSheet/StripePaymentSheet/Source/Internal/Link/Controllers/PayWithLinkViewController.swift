@@ -99,7 +99,7 @@ final class PayWithLinkViewController: NSObject {
         let initiallySelectedPaymentDetailsID: String?
         private let originalCallToAction: ConfirmButton.CallToActionType
         let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
-        /// Updates the displayed total when it depends on the billing address (e.g. automatic tax). Only used in full mode.
+        /// Updates the displayed total when it depends on the billing or shipping address (e.g. automatic tax). Only used in full mode.
         let totalUpdater: LinkTotalUpdater?
 
         var callToAction: ConfirmButton.CallToActionType {
@@ -138,6 +138,14 @@ final class PayWithLinkViewController: NSObject {
                 return false
             }
             return allowedCountries.contains(countryCode.uppercased())
+        }
+
+        /// The address the total is calculated from when paying with the given payment details.
+        func totalAddress(for paymentDetails: ConsumerPaymentDetails?) -> STPPaymentMethodAddress? {
+            if intent.collectsTaxFromShippingAddress {
+                return selectedShippingAddress.map { STPPaymentMethodAddress(address: $0.toPaymentSheetAddress()) }
+            }
+            return paymentDetails?.billingDetails?.address
         }
 
         /// Selects the default supported shipping address, unless a supported one is already selected.
@@ -840,12 +848,12 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             )
             return
         }
-        // Make sure the total reflects the billing address we're about to pay with. If it changed,
+        // Make sure the total reflects the address we're about to pay with. If it changed,
         // stop so the customer can review the new total before paying.
         Task { @MainActor in
             do {
                 let totalChanged = try await totalUpdater.sync(
-                    billingAddress: paymentDetails.billingDetails?.address,
+                    address: context.totalAddress(for: paymentDetails),
                     showsProgress: false
                 )
                 guard !totalChanged else {
@@ -945,9 +953,9 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: .wallet(brand: context.linkBrand))
             return
         }
-        guard !context.intent.collectsTaxFromBillingAddress else {
-            // Web Link can't update its total while it's open, so it can't support a billing-address-dependent total.
-            let error = PaymentSheetError.unknown(debugDescription: "Native Link failed, and web Link doesn't support a total that depends on the billing address.")
+        guard !context.intent.collectsTaxFromBillingAddress && !context.intent.collectsTaxFromShippingAddress else {
+            // Web Link can't update its total while it's open, so it can't support a total that depends on an address selected in Link.
+            let error = PaymentSheetError.unknown(debugDescription: "Native Link failed, and web Link doesn't support a total that depends on an address selected in Link.")
             finish(withResult: .failed(error: error), deferredIntentConfirmationType: nil)
             return
         }

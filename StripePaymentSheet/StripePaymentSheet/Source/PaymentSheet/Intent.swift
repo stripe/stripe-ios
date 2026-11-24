@@ -75,6 +75,13 @@ enum Intent {
         return checkout.collectsTaxFromBillingAddress
     }
 
+    var collectsTaxFromShippingAddress: Bool {
+        guard case .checkout(let checkout) = self else {
+            return false
+        }
+        return checkout.collectsTaxFromShippingAddress
+    }
+
     var intentConfig: PaymentSheet.IntentConfiguration? {
         switch self {
         case .deferredIntent(let intentConfig):
