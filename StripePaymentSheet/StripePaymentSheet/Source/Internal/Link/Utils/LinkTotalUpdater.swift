@@ -20,8 +20,10 @@ final class LinkTotalUpdater {
         case totalChanged
 
         var errorDescription: String? {
-            // TODO: Localize before shipping.
-            return "Your total was updated based on your billing address. Review it and try again."
+            return STPLocalizedString(
+                "Your total was updated based on your billing address. Review it and try again.",
+                "Error shown when the total changes after the customer taps the pay button, because tax depends on the billing address."
+            )
         }
     }
 
