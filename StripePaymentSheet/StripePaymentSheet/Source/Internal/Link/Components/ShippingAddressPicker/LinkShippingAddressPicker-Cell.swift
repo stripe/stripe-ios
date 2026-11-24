@@ -110,6 +110,15 @@ extension LinkShippingAddressPicker {
             }
         }
 
+        /// Whether to show the menu for removing the shipping address.
+        var isRemovable: Bool = true {
+            didSet {
+                if isRemovable != oldValue {
+                    update()
+                }
+            }
+        }
+
         weak var delegate: LinkShippingAddressPickerCellDelegate?
 
         private let radioButton = LinkPaymentMethodPicker.RadioButton()
@@ -241,7 +250,7 @@ extension LinkShippingAddressPicker {
             }
 
             defaultBadge.isHidden = isLoading || !(shippingAddress.isDefault ?? false)
-            menuButton.isHidden = isLoading
+            menuButton.isHidden = isLoading || !isRemovable
             contentView.alpha = isSupported ? 1 : Constants.disabledContentAlpha
             unavailableBadge.isHidden = isSupported
 
@@ -265,13 +274,13 @@ extension LinkShippingAddressPicker {
 
             accessibilityIdentifier = "Stripe.Link.ShippingAddressPickerCell"
             accessibilityLabel = shippingAddress.accessibilityDescription
-            accessibilityCustomActions = [
+            accessibilityCustomActions = isRemovable ? [
                 UIAccessibilityCustomAction(
                     name: String.Localized.show_menu,
                     target: self,
                     selector: #selector(onShowMenuAction)
                 ),
-            ]
+            ] : nil
         }
 
         @objc func onShowMenuAction() {
@@ -311,7 +320,8 @@ extension LinkShippingAddressPicker.Cell {
         _ interaction: UIContextMenuInteraction,
         configurationForMenuAtLocation location: CGPoint
     ) -> UIContextMenuConfiguration? {
-        guard let actions = delegate?.shippingAddressPickerCellMenuActions(for: self) else { return nil }
+        guard isRemovable,
+              let actions = delegate?.shippingAddressPickerCellMenuActions(for: self) else { return nil }
 
         let actionsProvider: UIContextMenuActionProvider = { _ in
             let menuActions = actions.map { action in

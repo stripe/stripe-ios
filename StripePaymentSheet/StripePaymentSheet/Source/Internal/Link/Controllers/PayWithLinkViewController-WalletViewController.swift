@@ -921,6 +921,10 @@ extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPic
     func isShippingAddressSupported(at index: Int) -> Bool {
         viewModel.isShippingAddressSupported(at: index)
     }
+
+    func canRemoveShippingAddress(at index: Int) -> Bool {
+        viewModel.canRemoveShippingAddress(at: index)
+    }
 }
 
 // MARK: - LinkShippingAddressPickerDelegate

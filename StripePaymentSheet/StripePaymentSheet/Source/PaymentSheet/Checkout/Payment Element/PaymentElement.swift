@@ -242,7 +242,9 @@ extension PaymentElement {
         guard let checkout,
               checkout.session.requiresShippingAddress,
               case .link(let confirmOption)? = paymentOption,
-              let shippingAddress = confirmOption.checkoutShippingAddress else {
+              let shippingAddress = confirmOption.checkoutShippingAddress,
+              // e.g. the customer kept the session's shipping address
+              shippingAddress != checkout.session.shippingAddress else {
             return
         }
         Task { @MainActor in
