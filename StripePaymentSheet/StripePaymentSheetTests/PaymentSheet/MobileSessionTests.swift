@@ -608,7 +608,7 @@ class MobileSessionTests: XCTestCase {
 
     private func filteredPaymentMethodTypes(elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration, logAvailability: Bool = false) -> [PaymentSheet.PaymentMethodType] {
         let intent = Intent.deferredIntent(
-            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
+            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic), confirmHandler: { _, _ in return "" })
         )
         return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: logAvailability)
     }

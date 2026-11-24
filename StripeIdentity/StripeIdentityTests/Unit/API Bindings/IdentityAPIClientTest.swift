@@ -282,7 +282,7 @@ private func verifyHeaders(
     )
     XCTAssertEqual(
         urlRequest.allHTTPHeaderFields?["Stripe-Version"],
-        "2020-08-27; identity_client_api=v8",
+        "2026-09-30.endive; identity_client_api=v8",
         file: file,
         line: line
     )

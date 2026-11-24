@@ -23,7 +23,7 @@ class STPSetupIntentFunctionalTests: STPNetworkStubbingTestCase {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         let clientSecret = try await STPTestingAPIClient.shared.createSetupIntent(
-            withParams: ["payment_method_types": ["us_bank_account"]],
+            withParams: ["allowed_payment_method_types": ["us_bank_account"]],
             account: nil
         )
 
@@ -235,7 +235,7 @@ extension STPSetupIntentFunctionalTests {
         let createExpectation = self.expectation(description: "Create PaymentIntent.")
         STPTestingAPIClient.shared.createSetupIntent(
             withParams: [
-                "payment_method_types": ["au_becs_debit"],
+                "allowed_payment_method_types": ["au_becs_debit"],
             ],
             account: "au") { createdClientSecret, creationError in
                 XCTAssertNotNil(createdClientSecret)

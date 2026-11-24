@@ -81,6 +81,14 @@ class MyCustomBackendModel: ObservableObject {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
+        // Create the PaymentIntent and ephemeral key with the SDK's API version, which doesn't accept
+        // `payment_method_types`
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        let body: [String: Any] = [
+            "stripe_version": STPAPIClient.apiVersion,
+            "use_allowed_payment_method_types": true,
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
         let task = URLSession.shared.dataTask(
             with: request,
             completionHandler: { (data, _, error) in
