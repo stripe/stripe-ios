@@ -450,6 +450,29 @@ final class ConnectBridgeSourceValidationTests: XCTestCase {
         XCTAssertEqual(event.result, .resolved("stripe-connect://trusted-return"))
         XCTAssertEqual(sessionFactory.createdURLs, [URL(string: "https://example.test/auth")!])
     }
+
+    // MARK: - Inline sheets
+
+    func testSheetWebViewCannotFetchClientSecret() async throws {
+        // Given a sheet web view opened by an inline component
+        let secretProvider = SecretProvider(secret: "sheet-test-secret")
+        let controller = makeController(secretProvider: secretProvider, componentType: .notificationBanner)
+        let sheetWebView = try await openSheet(from: controller)
+
+        // When the sheet's document on the trusted origin fetches a client secret
+        let event = try await loadDocumentAndFetchClientSecret(
+            in: sheetWebView,
+            baseURL: InlineSheetTestURLs.accessoryLayer,
+            expectedComponentWebView: controller.webView
+        )
+
+        // Then the bridge rejects it because it didn't come from the component web view
+        XCTAssertFalse(event.wasSentByExpectedWebView)
+        assertExpectedHTTPSOrigin(event.document, host: "connect-js.stripe.com", isExpectedSource: false)
+        XCTAssertEqual(event.result, .rejected("Invalid message origin"))
+        let fetchCount = await secretProvider.fetchCount
+        XCTAssertEqual(fetchCount, 0)
+    }
 }
 
 private extension ConnectBridgeSourceValidationTests {
@@ -457,7 +480,8 @@ private extension ConnectBridgeSourceValidationTests {
         secretProvider: SecretProvider,
         authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
         analyticsTransport: AnalyticsTransport = .init(),
-        baseURL: URL = StripeConnectConstants.connectJSBaseURL
+        baseURL: URL = StripeConnectConstants.connectJSBaseURL,
+        componentType: ComponentType = .payouts
     ) -> BridgePresentationComponentController {
         let componentManager = EmbeddedComponentManager(
             apiClient: .init(publishableKey: "test"),
@@ -468,7 +492,7 @@ private extension ConnectBridgeSourceValidationTests {
         componentManager.baseURL = baseURL
         return BridgePresentationComponentController(
             componentManager: componentManager,
-            componentType: .payouts,
+            componentType: componentType,
             loadContent: false,
             analyticsClientFactory: { commonFields in
                 ComponentAnalyticsClient(
@@ -480,6 +504,19 @@ private extension ConnectBridgeSourceValidationTests {
             didFailLoadWithError: { _ in },
             authenticatedWebViewManager: authenticatedWebViewManager
         )
+    }
+
+    /// Opens a sheet the way WebKit does for a `window.open` from the component's Connect.js frame
+    func openSheet(from controller: BridgePresentationComponentController) async throws -> WKWebView {
+        let componentOrigin = try await inlineSheetSecurityOrigin(for: StripeConnectConstants.connectJSBaseURL)
+        let action = InlineSheetMockNavigationAction(
+            url: InlineSheetTestURLs.accessoryLayer,
+            sourceFrame: InlineSheetMockFrameInfo(isMainFrame: false, securityOrigin: componentOrigin)
+        )
+        return try XCTUnwrap(controller.webView(controller.webView,
+                                                createWebViewWith: controller.webView.configuration,
+                                                for: action,
+                                                windowFeatures: WKWindowFeatures()))
     }
 
     func withFixturePhase<Value>(_ phase: String, operation: () async throws -> Value) async throws -> Value {

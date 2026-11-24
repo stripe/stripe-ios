@@ -9,7 +9,7 @@ import OHHTTPStubs
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) @_spi(ReactNativeSDK) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
@@ -831,11 +831,11 @@ final class PaymentElementTest: XCTestCase {
 
         // Then nothing is presented, and it asserts and reports the unexpected error
         XCTAssertNil(embeddedPaymentElement.presentedSheet)
-        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("payment_element_presenting_view_controller_unavailable"))
+        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("payment_element_view_presenting_view_controller_unavailable"))
         let errorPayload = try XCTUnwrap(analyticsClient._testLogHistory.last {
             $0["event"] as? String == STPAnalyticEvent.unexpectedCheckoutElementsError.rawValue
         })
-        XCTAssertEqual(errorPayload["error_code"] as? String, "payment_element_presenting_view_controller_unavailable")
+        XCTAssertEqual(errorPayload["error_code"] as? String, "payment_element_view_presenting_view_controller_unavailable")
     }
 
     func testConfirmPresentsFromHostWhileFormIsDismissing() async throws {

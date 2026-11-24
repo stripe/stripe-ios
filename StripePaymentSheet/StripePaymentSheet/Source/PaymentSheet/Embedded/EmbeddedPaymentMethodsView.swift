@@ -43,6 +43,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
     private let currency: String?
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    private let featuredInstitutionsLoader: FeaturedInstitutionsLoader?
     private(set) var previousSelectedRowButton: RowButton? {
         didSet {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
@@ -114,6 +115,11 @@ class EmbeddedPaymentMethodsView: UIView {
         return view
     }()
     private var savedPaymentMethodButton: RowButton?
+    /// The expanded Link row, shown in place of the Link row while a returning Link customer can verify inline.
+    private(set) var linkInlineVerificationView: EmbeddedLinkInlineVerificationView?
+    private var linkInlineVerificationContainer: UIView?
+    /// The separators around the expanded Link row, hidden while it shows since it has its own border.
+    private(set) var linkInlineVerificationHiddenSeparators: [UIView] = []
     private(set) var rowButtons: [RowButton]
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
     /// Keeps track of whether we're showing a change button/sublabel on the selected row
@@ -130,6 +136,8 @@ class EmbeddedPaymentMethodsView: UIView {
         shouldShowLink: Bool,
         linkBrand: LinkBrand = .link,
         linkBrandProvider: (() -> LinkBrand)? = nil,
+        placesLinkFirst: Bool = false,
+        linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
@@ -137,6 +145,7 @@ class EmbeddedPaymentMethodsView: UIView {
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        featuredInstitutionsLoader: FeaturedInstitutionsLoader? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
@@ -145,6 +154,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.shouldShowMandate = shouldShowMandate
         self.currency = currency
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        self.featuredInstitutionsLoader = featuredInstitutionsLoader
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
         self.linkBrand = linkBrand
@@ -152,6 +162,17 @@ class EmbeddedPaymentMethodsView: UIView {
         self.delegate = delegate
         self.rowButtons = []
         super.init(frame: .zero)
+
+        let makeLinkRowButton = { [weak self] in
+            RowButton.makeForLink(appearance: appearance, linkBrand: linkBrand, isEmbedded: true) { rowButton in
+                self?.didTap(rowButton: rowButton)
+            }
+        }
+
+        // Link leads for returning Link customers who can verify inline, and keeps its place afterwards.
+        if shouldShowLink, placesLinkFirst {
+            rowButtons.append(makeLinkRowButton())
+        }
 
         if let savedPaymentMethod {
             let savedPaymentMethodButton = makeSavedPaymentMethodButton(
@@ -180,11 +201,8 @@ class EmbeddedPaymentMethodsView: UIView {
             rowButtons.append(applePayRowButton)
         }
 
-        if shouldShowLink {
-            let linkRowButton = RowButton.makeForLink(appearance: appearance, linkBrand: linkBrand, isEmbedded: true) { [weak self] rowButton in
-                self?.didTap(rowButton: rowButton)
-            }
-            rowButtons.append(linkRowButton)
+        if shouldShowLink, !placesLinkFirst {
+            rowButtons.append(makeLinkRowButton())
         }
 
         // Add all non-card PMs (card is added above)
@@ -207,6 +225,24 @@ class EmbeddedPaymentMethodsView: UIView {
                                     inset: appearance.embeddedPaymentElement.row.flat.separatorInsets ?? appearance.embeddedPaymentElement.row.style.defaultInsets,
                                     addTopSeparator: appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled,
                                     addBottomSeparator: appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
+        }
+
+        // Inserted after the separators so they stay between rows.
+        if let linkInlineVerificationView, let linkRowButton, let linkRowIndex = stackView.arrangedSubviews.firstIndex(of: linkRowButton) {
+            let container = UIView()
+            // Flat rows sit flush against their separators, so give the card room around it.
+            let verticalInset: CGFloat = appearance.embeddedPaymentElement.row.style == .floatingButton ? 0 : 8
+            container.addAndPinSubview(linkInlineVerificationView, insets: .insets(top: verticalInset, bottom: verticalInset))
+            stackView.insertArrangedSubview(container, at: linkRowIndex + 1)
+            linkRowButton.setHiddenIfNecessary(true)
+            // The separator before the hidden Link row and the one after the card.
+            linkInlineVerificationHiddenSeparators = [linkRowIndex - 1, linkRowIndex + 2]
+                .filter { stackView.arrangedSubviews.indices.contains($0) }
+                .map { stackView.arrangedSubviews[$0] }
+                .filter { !($0 is RowButton) }
+            linkInlineVerificationHiddenSeparators.forEach { $0.setHiddenIfNecessary(true) }
+            self.linkInlineVerificationView = linkInlineVerificationView
+            self.linkInlineVerificationContainer = container
         }
 
         // If we have a row button that matches the initial selection, make it selected
@@ -307,6 +343,36 @@ class EmbeddedPaymentMethodsView: UIView {
 
     func resetSelection() {
         selectedRowButton = nil
+    }
+
+    /// Replaces the expanded Link row with the regular Link row, which keeps its position.
+    func collapseLinkInlineVerification(animated: Bool = true) {
+        guard let container = linkInlineVerificationContainer else { return }
+        linkInlineVerificationContainer = nil
+        linkInlineVerificationView = nil
+        let linkRowButton = linkRowButton
+        let separators = linkInlineVerificationHiddenSeparators
+        linkInlineVerificationHiddenSeparators = []
+        let updates = {
+            container.setHiddenIfNecessary(true)
+            container.alpha = 0
+            separators.forEach { $0.setHiddenIfNecessary(false) }
+            linkRowButton?.setHiddenIfNecessary(false)
+            linkRowButton?.alpha = 1
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+        let completion: (Bool) -> Void = { _ in
+            container.removeFromSuperview()
+        }
+        if animated, window != nil, !UIAccessibility.isReduceMotionEnabled {
+            linkRowButton?.alpha = 0
+            UIView.animate(withDuration: 0.25, animations: updates, completion: completion)
+        } else {
+            updates()
+            completion(true)
+        }
+        UIAccessibility.post(notification: .layoutChanged, argument: linkRowButton)
     }
 
     /// Displays an error below the payment method rows, or clears it when `error` is nil.
@@ -570,6 +636,7 @@ class EmbeddedPaymentMethodsView: UIView {
             accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
             promotionsHelper: paymentMethodMessagingPromotionsHelper,
+            featuredInstitutionsLoader: featuredInstitutionsLoader,
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
             shouldAnimateOnPress: delegate?.willDisplayForm(for: .new(paymentMethodType: paymentMethodType)) == true,
@@ -603,6 +670,8 @@ extension RowButton {
     func addChangeButton(animated: Bool = true) {
         // Hack: We assume the accessory view is "Change >"
         self.accessoryView?.isHidden = false
+        // The "Change" button replaces the featured bank icons once a bank is linked
+        bankInstitutionIconsView?.isSuppressed = true
         makeSameHeightAsOtherRowButtonsIfNecessary()
         guard animated else {
             self.accessoryView?.alpha = 1
@@ -619,6 +688,7 @@ extension RowButton {
     func removeChangeButton(shouldClearSublabel: Bool) {
         // Hack: We assume the accessory view is "Change >"
         self.accessoryView?.isHidden = true
+        bankInstitutionIconsView?.isSuppressed = false
         self.setNeedsLayout()
         self.layoutIfNeeded()
         if shouldClearSublabel {

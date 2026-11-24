@@ -123,6 +123,44 @@ class SheetViewController: UIViewController {
         }
     }
 
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateHorizontalSafeAreaInsets()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateHorizontalSafeAreaInsets()
+    }
+
+    /// Sheets cover the iPhone Duo's side column, so their content can ignore its horizontal safe area inset.
+    private func updateHorizontalSafeAreaInsets() {
+        let ignoredEdges: UIRectEdge = panePresentationStyle == .sheet ? sideColumnEdges : []
+        // `safeAreaInsets` already includes `additionalSafeAreaInsets`, so remove them to get the system insets.
+        // A view controller's root view doesn't clamp its safe area at 0, so this works even while they're negated.
+        let systemLeftInset = view.safeAreaInsets.left - additionalSafeAreaInsets.left
+        let systemRightInset = view.safeAreaInsets.right - additionalSafeAreaInsets.right
+        let insets = UIEdgeInsets(
+            top: 0,
+            left: ignoredEdges.contains(.left) ? -systemLeftInset : 0,
+            bottom: 0,
+            right: ignoredEdges.contains(.right) ? -systemRightInset : 0
+        )
+        if additionalSafeAreaInsets != insets {
+            additionalSafeAreaInsets = insets
+        }
+    }
+
+    /// The physical edges where the system can place the iPhone Duo's side column.
+    private var sideColumnEdges: UIRectEdge {
+        if let verticalBarEdges = view.stp_verticalBarEdges {
+            return verticalBarEdges
+        }
+        // Without the trait, assume portrait insets come from the side column. In landscape,
+        // horizontal insets come from the sensor housing instead, which the sheet doesn't cover.
+        return traitCollection.verticalSizeClass == .regular ? [.left, .right] : []
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if isBeingDismissed {

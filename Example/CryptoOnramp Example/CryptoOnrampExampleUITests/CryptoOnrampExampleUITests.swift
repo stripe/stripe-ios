@@ -199,8 +199,8 @@ final class CryptoOnrampNewUserCardUITests: CryptoOnrampExampleUITestCase {
         addPaymentMethodButton.tap()
 
         let cardNumberField = app.textFields["Card number"].firstMatch
-        enterText("4242424242424242", in: cardNumberField)
-        enterText("1249", inTextField: "expiration date")
+        enterText("4242424242424242", in: cardNumberField, ignoringFormatting: true)
+        enterText("1249", inTextField: "expiration date", ignoringFormatting: true)
         enterText("123", inTextField: "CVC")
 
         let zipField = app.textFields["ZIP"].firstMatch
@@ -493,7 +493,7 @@ final class CryptoOnrampNewEUUserUITests: CryptoOnrampExampleUITestCase {
         let verifyWalletNavigationBar = app.navigationBars["Verify Wallet"].firstMatch
         XCTAssertTrue(verifyWalletNavigationBar.waitForExistence(timeout: .networkTimeout), "Wallet verification sheet should appear")
 
-        let signatureField = app.textViews["wallet_signature"].firstMatch
+        let signatureField = app.descendants(matching: .any)["wallet_signature"].firstMatch
         XCTAssertTrue(signatureField.waitForExistence(timeout: .animationTimeout), "Wallet signature field should appear")
         XCTAssertEqual(signatureField.value as? String, "abcd", "The test-mode signature should be pre-populated")
 

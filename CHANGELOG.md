@@ -10,6 +10,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 * [Changed] Added `@MainActor` isolation to `PaymentSheet` and `PaymentSheet.FlowController`. Initialize and access these objects from the main actor.
 * [Removed] Removed public access to `PaymentSheetError`.
 * [Deprecated] Deprecated `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress`. This configuration no longer has an effect. Payment methods that require a shipping address are always allowed.
+* [Changed] Klarna no longer displays a country dropdown with PaymentIntents when `billingDetailsCollectionConfiguration.address` is `.never`.
 * [Added] Added Mobile Checkout Elements (private preview), a new integration powered by the Checkout Sessions API. See https://docs.stripe.com/payments/mobile/checkout-sessions
 * [Added] Added support for Stripe balance (private preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
@@ -26,9 +27,13 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 
 ### CryptoOnramp (Alpha)
 * [Added] Added the optional `linkCardBrandAcceptance` parameter to `CryptoOnrampCoordinator.create(...)` to allow or block card brands in the Link UI. Defaults to accepting all supported brands.
+* [Changed] If you install with Swift Package Manager, enable the `Identity` package trait. CryptoOnramp depends on StripeIdentity, which requires it. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700).
 
 ### Financial Connections
 * [Changed] Updated Link-branded Financial Connections flows, including Instant Debits, to the new Link design system.
+
+### Identity
+* [Changed] If you install with Swift Package Manager, StripeIdentity now requires the `Identity` package trait. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700).
 
 ## 26.16.1 2026-11-09
 ### PaymentSheet

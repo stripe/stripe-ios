@@ -15,6 +15,7 @@ struct CustomThemeSettingsView: View {
 
     private func updateComponentManager() {
         componentManager?.update(appearance: AppSettings.shared.appearanceInfo.appearance)
+        NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
     }
 
     // Binding to a custom theme field in UserDefaults. Updates theme when value changes.

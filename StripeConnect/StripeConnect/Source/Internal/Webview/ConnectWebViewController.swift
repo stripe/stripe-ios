@@ -114,6 +114,10 @@ class ConnectWebViewController: UIViewController {
         // Override from subclass
     }
 
+    func webViewDidCommitNavigation() {
+        // Override from subclass
+    }
+
     func reload() {
         self.webView.reload()
     }
@@ -169,7 +173,8 @@ class ConnectWebViewController: UIViewController {
 private extension ConnectWebViewController {
     // Opens the given navigation in a PopupWebViewController
     func openInPopup(configuration: WKWebViewConfiguration,
-                     navigationAction: WKNavigationAction) -> WKWebView? {
+                     navigationAction: WKNavigationAction,
+                     from presenter: UIViewController) -> WKWebView? {
         let popupVC = PopupWebViewController(configuration: configuration,
                                              analyticsClient: analyticsClient,
                                              navigationAction: navigationAction,
@@ -181,16 +186,16 @@ private extension ConnectWebViewController {
             popupVC?.dismiss(animated: true)
         }))
 
-        present(navController, animated: true)
+        presenter.present(navController, animated: true)
         return popupVC.webView
     }
 
     // Opens the given URL in an SFSafariViewController
-    func openInAppSafari(url: URL) {
+    func openInAppSafari(url: URL, from presenter: UIViewController) {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .done
         safariVC.modalPresentationStyle = .pageSheet
-        present(safariVC, animated: true)
+        presenter.present(safariVC, animated: true)
     }
 
     // Opens with UIApplication.open, if supported
@@ -237,6 +242,13 @@ extension ConnectWebViewController: WKUIDelegate {
                  createWebViewWith configuration: WKWebViewConfiguration,
                  for navigationAction: WKNavigationAction,
                  windowFeatures: WKWindowFeatures) -> WKWebView? {
+        openWindow(configuration: configuration, navigationAction: navigationAction, from: self)
+    }
+
+    /// Opens a window the page asked for the way the component opens links, presenting from `presenter`
+    func openWindow(configuration: WKWebViewConfiguration,
+                    navigationAction: WKNavigationAction,
+                    from presenter: UIViewController) -> WKWebView? {
         // If targetFrame is nil, this is a popup
         guard navigationAction.targetFrame == nil else { return nil }
 
@@ -261,12 +273,12 @@ extension ConnectWebViewController: WKUIDelegate {
             // otherwise use an SFSafariViewController
             guard let host = url.host,
                     allowedHosts.contains(host) else {
-                openInAppSafari(url: url)
+                openInAppSafari(url: url, from: presenter)
                 return nil
             }
         }
 
-        return openInPopup(configuration: configuration, navigationAction: navigationAction)
+        return openInPopup(configuration: configuration, navigationAction: navigationAction, from: presenter)
     }
 
     func webView(_ webView: WKWebView,
@@ -303,6 +315,10 @@ extension ConnectWebViewController: WKNavigationDelegate {
          */
         webView.setNeedsLayout()
         webViewDidFinishNavigation(to: webView.url)
+    }
+
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        webViewDidCommitNavigation()
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error) {

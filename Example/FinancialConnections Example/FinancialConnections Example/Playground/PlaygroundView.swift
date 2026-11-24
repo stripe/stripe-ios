@@ -282,6 +282,7 @@ struct PlaygroundView: View {
                     ProgressView()
                         .scaleEffect(2.0)
                 }
+                .ignoresSafeArea()
             } else {
                 EmptyView()
             }

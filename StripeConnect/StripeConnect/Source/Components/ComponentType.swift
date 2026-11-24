@@ -20,4 +20,9 @@ enum ComponentType: String, Encodable {
     case paymentDetails = "payment-details"
     case notificationBanner = "notification-banner"
     case checkScanning = "check-scanning"
+
+    /// Inline components size themselves to their content and open their dialogs in native sheets
+    var isInline: Bool {
+        self == .notificationBanner
+    }
 }

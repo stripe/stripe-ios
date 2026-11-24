@@ -99,6 +99,34 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         verify(rowButton)
     }
 
+    func testPaymentMethodRowButton_newPaymentMethod_withFeaturedInstitutions_unselected() {
+        let rowButton = RowButton.makeForPaymentMethodType(
+            paymentMethodType: .instantDebits,
+            hasSavedCard: false,
+            promotionsHelper: nil,
+            featuredInstitutionsLoader: ._testValue(),
+            appearance: .default,
+            shouldAnimateOnPress: false,
+            didTap: { _ in }
+        )
+        verify(rowButton)
+    }
+
+    func testPaymentMethodRowButton_newPaymentMethod_withFeaturedInstitutions_selected() {
+        // Given the row is selected, then the icons stay visible
+        let rowButton = RowButton.makeForPaymentMethodType(
+            paymentMethodType: .instantDebits,
+            hasSavedCard: false,
+            promotionsHelper: nil,
+            featuredInstitutionsLoader: ._testValue(),
+            appearance: .default,
+            shouldAnimateOnPress: false,
+            didTap: { _ in }
+        )
+        rowButton.updateSelectedState(true, willDisplayForm: false)
+        verify(rowButton)
+    }
+
     func testPaymentMethodRowButton_paymentMethodMessaging_unselected() {
         let rowButton = makePaymentMethodMessagingRowButton(isEmbedded: false)
         verify(rowButton, identifier: "payment_method_messaging_unselected")

@@ -82,7 +82,15 @@ final class InstitutionNoResultsView: UIView {
         }
         verticalStackView.addArrangedSubview(subtitleLabel)
 
-        addAndPinSubview(verticalStackView)
+        // Table footers aren't inset to the safe area like cell content views are.
+        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(verticalStackView)
+        NSLayoutConstraint.activate([
+            verticalStackView.topAnchor.constraint(equalTo: topAnchor),
+            verticalStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            verticalStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            verticalStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+        ])
 
         accessibilityIdentifier = "institution_no_results_footer_view"
     }

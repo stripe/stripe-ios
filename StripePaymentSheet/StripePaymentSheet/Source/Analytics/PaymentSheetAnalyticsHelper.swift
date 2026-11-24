@@ -501,6 +501,18 @@ final class PaymentSheetAnalyticsHelper {
         )
     }
 
+    func logFeaturedInstitutionsShown() {
+        log(event: .paymentSheetFeaturedInstitutionsShown)
+    }
+
+    func logFeaturedInstitutionsInsufficient(count: Int) {
+        log(event: .paymentSheetFeaturedInstitutionsInsufficient, params: ["count": count])
+    }
+
+    func logFeaturedInstitutionsLoadFailed(error: Error) {
+        log(event: .paymentSheetFeaturedInstitutionsLoadFailed, error: error)
+    }
+
     func log(
         event: STPAnalyticEvent,
         duration: TimeInterval? = nil,

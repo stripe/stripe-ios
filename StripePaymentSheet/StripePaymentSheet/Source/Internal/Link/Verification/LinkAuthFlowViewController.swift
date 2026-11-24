@@ -9,10 +9,14 @@ final class LinkAuthFlowViewController: UIViewController {
     let coordinator: LinkAuthFlowCoordinator
     var onFinish: ((LinkVerificationResult) -> Void)?
     var onNavigationUpdate: (() -> Void)?
+    /// Called instead of canceling when the customer closes a flow attached to a shared coordinator.
+    var onDetachRequested: (() -> Void)?
     private(set) var didPresentWebFallback = false
 
     private let mode: LinkVerificationView.Mode
     private let account: PaymentSheetLinkAccount
+    /// False when another host owns the coordinator's callbacks and forwards them to this controller.
+    private let ownsCoordinator: Bool
     private let appearance: LinkAppearance?
     private let otpController: LinkVerificationViewController
     private lazy var phoneController = LinkPhoneMatchViewController(
@@ -33,7 +37,7 @@ final class LinkAuthFlowViewController: UIViewController {
     /// Set while the incoming screen is laid out ahead of the resize animation, so the dialog frame isn't updated early.
     private var isPreparingTransition = false
 
-    init(
+    convenience init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
         brand: LinkBrand,
@@ -42,15 +46,65 @@ final class LinkAuthFlowViewController: UIViewController {
         consentViewModel: LinkConsentViewModel? = nil,
         analyticsHelper: LinkAnalyticsHelper
     ) {
-        self.mode = mode
-        self.account = linkAccount
-        self.appearance = appearance
         let consentGranted: Bool? = if case .inline = consentViewModel { true } else { nil }
-        coordinator = LinkAuthFlowCoordinator(
+        let coordinator = LinkAuthFlowCoordinator(
             account: linkAccount,
             analyticsHelper: analyticsHelper,
             consentGranted: consentGranted
         )
+        self.init(
+            mode: mode,
+            linkAccount: linkAccount,
+            brand: brand,
+            appearance: appearance,
+            allowLogoutInDialog: allowLogoutInDialog,
+            consentViewModel: consentViewModel,
+            coordinator: coordinator,
+            ownsCoordinator: true
+        )
+        coordinator.onUpdate = { [weak self] in self?.coordinatorDidUpdate() }
+        coordinator.onFinish = { [weak self] result in self?.coordinatorDidFinish(result) }
+        coordinator.onWebHandoff = { [weak self] url in self?.coordinatorDidRequestWebHandoff(url) }
+    }
+
+    /// Shows an attempt another host owns, such as one that started inline. The host keeps the coordinator's
+    /// callbacks and forwards them through the `coordinatorDid…` methods. Closing calls `onDetachRequested`
+    /// instead of canceling, so the attempt and any code already sent stay valid.
+    convenience init(
+        mode: LinkVerificationView.Mode = .modal,
+        sharedCoordinator coordinator: LinkAuthFlowCoordinator,
+        linkAccount: PaymentSheetLinkAccount,
+        brand: LinkBrand,
+        appearance: LinkAppearance? = nil,
+        allowLogoutInDialog: Bool = false
+    ) {
+        self.init(
+            mode: mode,
+            linkAccount: linkAccount,
+            brand: brand,
+            appearance: appearance,
+            allowLogoutInDialog: allowLogoutInDialog,
+            consentViewModel: nil,
+            coordinator: coordinator,
+            ownsCoordinator: false
+        )
+    }
+
+    private init(
+        mode: LinkVerificationView.Mode,
+        linkAccount: PaymentSheetLinkAccount,
+        brand: LinkBrand,
+        appearance: LinkAppearance?,
+        allowLogoutInDialog: Bool,
+        consentViewModel: LinkConsentViewModel?,
+        coordinator: LinkAuthFlowCoordinator,
+        ownsCoordinator: Bool
+    ) {
+        self.mode = mode
+        self.account = linkAccount
+        self.appearance = appearance
+        self.coordinator = coordinator
+        self.ownsCoordinator = ownsCoordinator
         header = LinkVerificationView.Header(brand: brand)
         otpController = LinkVerificationViewController(
             mode: mode,
@@ -66,14 +120,6 @@ final class LinkAuthFlowViewController: UIViewController {
             modalPresentationStyle = .custom
             transitioningDelegate = TransitioningDelegate.shared
         }
-        coordinator.onUpdate = { [weak self] in self?.render() }
-        coordinator.onFinish = { [weak self] result in
-            self?.timer?.invalidate()
-            self?.webController?.cancel()
-            self?.webController = nil
-            self?.onFinish?(result)
-        }
-        coordinator.onWebHandoff = { [weak self] url in self?.presentWeb(url) }
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -176,7 +222,31 @@ final class LinkAuthFlowViewController: UIViewController {
     }
 
     @objc func close() {
+        guard ownsCoordinator else {
+            timer?.invalidate()
+            timer = nil
+            view.endEditing(true)
+            onDetachRequested?()
+            return
+        }
         coordinator.cancel()
+    }
+
+    // MARK: Coordinator events
+
+    func coordinatorDidUpdate() {
+        render()
+    }
+
+    func coordinatorDidFinish(_ result: LinkVerificationResult) {
+        timer?.invalidate()
+        webController?.cancel()
+        webController = nil
+        onFinish?(result)
+    }
+
+    func coordinatorDidRequestWebHandoff(_ url: URL) {
+        presentWeb(url)
     }
 
     @objc func back() {
