@@ -9,6 +9,11 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeConnect
 import UIKit
 
+extension Notification.Name {
+    /// Posted after the app applies a new appearance to its embedded component manager
+    static let appearanceDidChange = Notification.Name("StripeConnectExampleAppearanceDidChange")
+}
+
 extension AppSettings {
     var appearanceOptions: [AppearanceInfo] {
         [

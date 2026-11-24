@@ -163,7 +163,12 @@ class MainViewController: UITableViewController {
             checkScanning.present(from: self, animated: true)
             return
         case .notificationBanner:
-            viewControllerToPresent = NotificationBannerExampleViewController(embeddedComponentManager: embeddedComponentManager)
+            // An inline component sits inside the app's own screen, so it ignores the presentation settings
+            let bannerExample = NotificationBannerExampleViewController(embeddedComponentManager: embeddedComponentManager)
+            bannerExample.title = "Home"
+            addChangeAppearanceButtonNavigationItem(to: bannerExample)
+            navigationController?.pushViewController(bannerExample, animated: true)
+            return
         }
 
         // Fetch ViewController presentation settings
