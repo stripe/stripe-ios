@@ -12,8 +12,6 @@ import Foundation
 import UIKit
 
 final class IdentityImageUploader {
-    typealias LowHighResFiles = (lowRes: StripeFile, highRes: StripeFile)
-
     struct Configuration {
         /// The `purpose` to use when uploading the files
         let filePurpose: String
@@ -46,66 +44,6 @@ final class IdentityImageUploader {
         self.apiClient = sheetController.apiClient
         self.analyticsClient = sheetController.analyticsClient
         self.sheetController = sheetController
-    }
-
-    func uploadLowAndHighResImagesNoCropping(
-        highResImage: CGImage,
-        lowResImage: CGImage,
-        highResFileName: String,
-        lowResFileName: String
-    ) async throws -> LowHighResFiles {
-        let lowResTask = Task {
-            try await uploadLowResImage(
-                lowResImage,
-                fileName: lowResFileName
-            )
-        }
-
-        let highResTask = Task {
-            try await uploadJPEGResize(
-                image: highResImage,
-                fileName: highResFileName,
-                jpegCompressionQuality: configuration.highResImageCompressionQuality,
-                newSize: CGSize(
-                    width: configuration.highResImageMaxDimension,
-                    height: configuration.highResImageMaxDimension
-                )
-            )
-        }
-
-        return try await (
-            lowRes: lowResTask.value,
-            highRes: highResTask.value
-        )
-    }
-
-    func uploadLowAndHighResImages(
-        _ image: CGImage,
-        highResRegionOfInterest: CGRect,
-        cropPaddingComputationMethod: CGImage.CropPaddingComputationMethod,
-        lowResFileName: String,
-        highResFileName: String
-    ) async throws -> LowHighResFiles {
-        let lowResTask = Task {
-            try await uploadLowResImage(
-                image,
-                fileName: lowResFileName
-            )
-        }
-
-        let highResTask = Task {
-            try await uploadHighResImage(
-                image,
-                regionOfInterest: highResRegionOfInterest,
-                cropPaddingComputationMethod: cropPaddingComputationMethod,
-                fileName: highResFileName
-            )
-        }
-
-        return try await (
-            lowRes: lowResTask.value,
-            highRes: highResTask.value
-        )
     }
 
     /// Crops, resizes, and uploads the high resolution image to the server

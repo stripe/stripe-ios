@@ -127,7 +127,7 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
 
 class AsyncMockAPIRequests<ParamsType, ResponseType> {
     private let lock = NSLock()
-    private var requests: [CheckedContinuation<ResponseType, Error>] = []
+    private var requests: [(params: ParamsType, continuation: CheckedContinuation<ResponseType, Error>)] = []
     private var _requestHistory: [ParamsType] = []
     private var requestCallbacks: [(() -> Void)] = []
 
@@ -144,7 +144,7 @@ class AsyncMockAPIRequests<ParamsType, ResponseType> {
             let callbacks: [() -> Void]
             lock.lock()
             _requestHistory.append(params)
-            requests.append(continuation)
+            requests.append((params: params, continuation: continuation))
             callbacks = requestCallbacks
             lock.unlock()
 
@@ -153,15 +153,22 @@ class AsyncMockAPIRequests<ParamsType, ResponseType> {
     }
 
     func respondToRequests(with result: Result<ResponseType, Error>) {
-        let continuations: [CheckedContinuation<ResponseType, Error>]
+        respondToRequests { _ in result }
+    }
+
+    /// Responds to each pending request with the result for its parameters. A nil result leaves the
+    /// request pending.
+    func respondToRequests(with result: (ParamsType) -> Result<ResponseType, Error>?) {
+        var responses: [(continuation: CheckedContinuation<ResponseType, Error>, result: Result<ResponseType, Error>)] = []
         lock.lock()
-        continuations = requests
-        requests = []
+        requests.removeAll { request in
+            guard let requestResult = result(request.params) else { return false }
+            responses.append((continuation: request.continuation, result: requestResult))
+            return true
+        }
         lock.unlock()
 
-        continuations.forEach { continuation in
-            continuation.resume(with: result)
-        }
+        responses.forEach { $0.continuation.resume(with: $0.result) }
     }
 
     func callBackOnRequest(_ block: @escaping () -> Void) {

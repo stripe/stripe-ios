@@ -1381,14 +1381,14 @@ private extension VerificationSheetControllerTest {
 
     func makeUploadedSelfieFiles(includeSideFrames: Bool = false) throws -> SelfieUploader.FileData {
         return .init(
-            bestHighResFile: try makeStripeFile(id: "best_high"),
-            bestLowResFile: try makeStripeFile(id: "best_low"),
-            firstHighResFile: try makeStripeFile(id: "first_high"),
-            firstLowResFile: try makeStripeFile(id: "first_low"),
-            lastHighResFile: try makeStripeFile(id: "last_high"),
-            lastLowResFile: try makeStripeFile(id: "last_low"),
-            leftFullFrameFile: includeSideFrames ? try makeStripeFile(id: "left_low") : nil,
-            rightFullFrameFile: includeSideFrames ? try makeStripeFile(id: "right_low") : nil
+            bestHighResFile: try StripeFile.mock(id: "best_high"),
+            bestLowResFile: try StripeFile.mock(id: "best_low"),
+            firstHighResFile: try StripeFile.mock(id: "first_high"),
+            firstLowResFile: try StripeFile.mock(id: "first_low"),
+            lastHighResFile: try StripeFile.mock(id: "last_high"),
+            lastLowResFile: try StripeFile.mock(id: "last_low"),
+            leftFullFrameFile: includeSideFrames ? try StripeFile.mock(id: "left_low") : nil,
+            rightFullFrameFile: includeSideFrames ? try StripeFile.mock(id: "right_low") : nil
         )
     }
 
@@ -1439,19 +1439,6 @@ private extension VerificationSheetControllerTest {
         let data = try JSONSerialization.data(withJSONObject: payload)
         return data.base64EncodedString()
     }
-
-    func makeStripeFile(id: String) throws -> StripeFile {
-        let data = Data("""
-        {
-          "created": 0,
-          "id": "\(id)",
-          "purpose": "identity_private",
-          "size": 1,
-          "type": "jpg"
-        }
-        """.utf8)
-        return try JSONDecoder().decode(StripeFile.self, from: data)
-    }
 }
 
 private final class MockDelegate: VerificationSheetControllerDelegate {
@@ -1470,6 +1457,12 @@ private final class SelfieUploaderMock: SelfieUploaderProtocol {
 
     func uploadResult() async -> Result<SelfieUploader.FileData, Error>? {
         uploadResultValue
+    }
+
+    var uploadError: Error?
+
+    func retryFailedUploads() async {
+        // no-op
     }
 
     func uploadImages(_ capturedImages: FaceCaptureData) {

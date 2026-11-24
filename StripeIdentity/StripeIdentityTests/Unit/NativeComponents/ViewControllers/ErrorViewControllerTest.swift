@@ -7,7 +7,9 @@
 //
 
 import Foundation
+@_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripeCoreTestUtils
+import UIKit
 import XCTest
 
 @testable import StripeIdentity
@@ -122,5 +124,97 @@ final class ErrorViewControllerTest: XCTestCase {
             timeout: 4
         )
         XCTAssertEqual(vc.buttonViewModels[1].state, .enabled)
+    }
+
+    func testTryAgainReturnsToCaptureScreenAndSavesAgain() throws {
+        // Given a capture screen with a failed upload, under a generic error
+        let captureViewController = MockCaptureViewController()
+        let navigationController = SpyNavigationController(
+            rootViewController: UIViewController(nibName: nil, bundle: nil)
+        )
+        let errorViewController = pushError(above: captureViewController, in: navigationController)
+        let tryAgainButton = try XCTUnwrap(errorViewController.buttonViewModels.first)
+        XCTAssertEqual(tryAgainButton.text, String.Localized.tryAgain)
+
+        // When the user taps Try again
+        tryAgainButton.didTap()
+
+        // Then the flow returns to the capture screen without resetting it, and saves the capture again
+        XCTAssertTrue(navigationController.poppedToViewController === captureViewController)
+        XCTAssertEqual(navigationController.popViewControllerCount, 0)
+        XCTAssertEqual(captureViewController.retrySaveCount, 1)
+    }
+
+    func testGenericErrorWithoutFailedUploadDoesNotOfferTryAgain() {
+        // Given a capture screen whose uploads did not fail, under a generic error
+        let captureViewController = MockCaptureViewController()
+        captureViewController.canRetryFailedUploads = false
+        let navigationController = makeNavigationController()
+        let errorViewController = pushError(above: captureViewController, in: navigationController)
+
+        // Then it offers only Go Back
+        XCTAssertEqual(errorViewController.buttonViewModels.map(\.text), ["Go Back"])
+    }
+
+    func testGenericErrorWithoutCaptureScreenDoesNotOfferTryAgain() {
+        // Given a generic error above a screen that has no capture
+        let navigationController = makeNavigationController()
+        let errorViewController = pushError(
+            above: UIViewController(nibName: nil, bundle: nil),
+            in: navigationController
+        )
+
+        // Then it offers only Go Back
+        XCTAssertEqual(errorViewController.buttonViewModels.map(\.text), ["Go Back"])
+    }
+}
+
+private extension ErrorViewControllerTest {
+    func makeNavigationController() -> UINavigationController {
+        UINavigationController(rootViewController: UIViewController(nibName: nil, bundle: nil))
+    }
+
+    /// The test keeps `navigationController`, because the error screen holds it weakly.
+    func pushError(
+        above viewController: UIViewController,
+        in navigationController: UINavigationController
+    ) -> ErrorViewController {
+        let errorViewController = ErrorViewController(
+            sheetController: mockSheetController,
+            error: .error(NSError(domain: "mock_error", code: 0))
+        )
+        navigationController.setViewControllers(
+            navigationController.viewControllers + [viewController, errorViewController],
+            animated: false
+        )
+        return errorViewController
+    }
+}
+
+private final class MockCaptureViewController: UIViewController, RetriesSaveAfterError {
+    var canRetryFailedUploads = true
+    private(set) var retrySaveCount = 0
+
+    func retrySaveAfterError() {
+        retrySaveCount += 1
+    }
+}
+
+/// Records pops, because without a window an animated pop does not finish, so the stack does not change.
+private final class SpyNavigationController: UINavigationController {
+    private(set) var poppedToViewController: UIViewController?
+    private(set) var popViewControllerCount = 0
+
+    override func popToViewController(
+        _ viewController: UIViewController,
+        animated: Bool
+    ) -> [UIViewController]? {
+        poppedToViewController = viewController
+        return super.popToViewController(viewController, animated: animated)
+    }
+
+    override func popViewController(animated: Bool) -> UIViewController? {
+        popViewControllerCount += 1
+        return super.popViewController(animated: animated)
     }
 }

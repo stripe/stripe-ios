@@ -53,6 +53,16 @@ final class ErrorViewController: IdentityFlowViewController {
                 )
             )
         case .error:
+            if captureViewControllerToRetry != nil {
+                buttons.append(
+                    .init(
+                        text: String.Localized.tryAgain,
+                        state: .enabled,
+                        isPrimary: false,
+                        didTap: self.didTapTryAgainButton
+                    )
+                )
+            }
             buttons.append(
                 .init(
                     text: isFirstViewController ? String.Localized.close : STPLocalizedString(
@@ -118,6 +128,34 @@ final class ErrorViewController: IdentityFlowViewController {
 }
 
 extension ErrorViewController {
+    /// The capture screen under this error, when uploading its failed images again can succeed.
+    fileprivate var captureViewControllerToRetry: RetriesSaveAfterError? {
+        guard let viewControllers = navigationController?.viewControllers,
+            viewControllers.last === self,
+            let captureViewController = viewControllers.dropLast().last as? RetriesSaveAfterError,
+            captureViewController.canRetryFailedUploads
+        else {
+            return nil
+        }
+        return captureViewController
+    }
+
+    fileprivate func didTapTryAgainButton() {
+        guard let navigationController, let captureViewController = captureViewControllerToRetry else {
+            return
+        }
+        // Not popViewController: IdentityFlowNavigationController's version resets the capture.
+        navigationController.popToViewController(captureViewController, animated: true)
+        // Retry after the pop finishes, as retrySaveAfterError() requires.
+        guard let transitionCoordinator = navigationController.transitionCoordinator else {
+            captureViewController.retrySaveAfterError()
+            return
+        }
+        transitionCoordinator.animate(alongsideTransition: nil) { _ in
+            captureViewController.retrySaveAfterError()
+        }
+    }
+
     fileprivate func didTapBackButton() {
         // If this is the only view in the stack, dismiss the nav controller
         guard navigationController?.viewControllers.first !== self else {

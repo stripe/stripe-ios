@@ -171,6 +171,26 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.buttonViewModels.count, 1)
     }
 
+    func testRetrySaveAfterErrorUploadsAgainThenSaves() async {
+        // Given a scanned selfie
+        let selfieUploader = SelfieUploaderMock()
+        mockSelfieUploader = selfieUploader
+        let vc = makeViewController(initialState: .scanned(.empty, makeFaceCaptureData()))
+        let saveExp = expectation(description: "Saved selfie again")
+        var retryCountAtSave: Int?
+        mockSheetController.saveSelfieFileDataAndTransitionCallback = {
+            retryCountAtSave = selfieUploader.retryCount
+            saveExp.fulfill()
+        }
+
+        // When the user taps Try again on the error screen
+        vc.retrySaveAfterError()
+
+        // Then the screen uploads the failed images again before it saves the same selfie
+        await fulfillment(of: [saveExp], timeout: 1)
+        XCTAssertEqual(retryCountAtSave, 1)
+    }
+
     func testStopScanningLogsMetricsRecordedBeforeTrackersReset() async {
         // Given a scan whose trackers recorded metrics
         mockConcurrencyManager.mockAverageFPSMetric = 30
@@ -259,6 +279,13 @@ private final class SelfieUploaderMock: SelfieUploaderProtocol {
 
     func uploadResult() async -> Result<SelfieUploader.FileData, Error>? {
         uploadResultValue
+    }
+
+    var uploadError: Error?
+    private(set) var retryCount = 0
+
+    func retryFailedUploads() async {
+        retryCount += 1
     }
 
     func uploadImages(_ capturedImages: FaceCaptureData) {
