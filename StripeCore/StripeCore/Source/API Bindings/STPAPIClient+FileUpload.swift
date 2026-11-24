@@ -299,7 +299,7 @@ extension STPAPIClient {
         }
         guard !Task.isCancelled else { throw FileUploadError.cancelled }
         do {
-            return try Self.decodeResponse(data: data, error: nil, response: response, request: request, includeRequestIDInDescription: includeRequestIDInDescription).get()
+            return try decodeResponse(data: data, error: nil, response: response, request: request, includeRequestIDInDescription: includeRequestIDInDescription).get()
         } catch StripeError.apiError(let apiError) {
             throw FileUploadError.apiError(apiError)
         } catch {

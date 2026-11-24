@@ -55,7 +55,7 @@ class AnalyticLoggableErrorTest: XCTestCase {
             withJSONObject: stripeAPIErrorJSON,
             options: [.prettyPrinted]
         )
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+        let result: Result<EmptyResponse, Error> = STPAPIClient().decodeResponse(
             data: stripeAPIErrorJSONData, error: nil, response: stripeAPIErrorHTTPResponse
         )
         guard case .failure(let stripeCoreStripeError) = result else {

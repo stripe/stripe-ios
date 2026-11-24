@@ -35,26 +35,7 @@ extension PaymentMethodMessagingElement {
         }
         return try await withCheckedThrowingContinuation { continuation in
             configuration.apiClient.get(url: pmmeApiEndpoint, parameters: parameters) { (result: Result<APIResponse, Error>) in
-                switch result {
-                case .success(let apiResponse):
-                    continuation.resume(returning: apiResponse)
-                case .failure(let error):
-                    if let decodingError = error as? DecodingError {
-                        switch decodingError {
-                        case .keyNotFound(_, let context),
-                                .dataCorrupted(let context),
-                                .valueNotFound(_, let context),
-                                .typeMismatch(_, let context):
-                            stpAssertionFailure(context.debugDescription)
-                            let problemPath = context.codingPath.reduce("") { $0 + $1.stringValue + "." }
-                            let error = PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
-                            let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error, additionalNonPIIParams: ["failed_decoding_path": problemPath])
-                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: configuration.apiClient)
-                        default: break
-                        }
-                    }
-                    continuation.resume(throwing: error)
-                }
+                continuation.resume(with: result)
             }
         }
     }
