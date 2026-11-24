@@ -25,6 +25,8 @@ final class PaymentSheetLoader {
         var stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
         let customerProvider: CustomerProvider
+        /// Loads the featured bank icons shown on the instant debits "Bank" row; nil if there is no such row.
+        var featuredInstitutionsLoader: FeaturedInstitutionsLoader?
     }
 
     enum IntegrationShape {
@@ -175,14 +177,25 @@ final class PaymentSheetLoader {
             )
             paymentMethodMessagingPromotionsHelper?.fetchData()
 
-            // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
-            let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
-            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, customerProvider: customerProvider, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
-
             let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,
                 paymentMethodTypes: paymentMethodTypes
             )
+
+            // Also fire-and-forget; the "Bank" row shows the icons once they load.
+            var featuredInstitutionsLoader: FeaturedInstitutionsLoader?
+            if FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes, layout: paymentMethodOrientation) {
+                featuredInstitutionsLoader = FeaturedInstitutionsLoader(
+                    apiClient: configuration.apiClient,
+                    country: elementsSession.countryCode,
+                    analyticsHelper: analyticsHelper
+                )
+                featuredInstitutionsLoader?.fetch()
+            }
+
+            // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
+            let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
+            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, customerProvider: customerProvider, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
             // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
             loadTimings.logStart("makeViewModels")
@@ -212,7 +225,8 @@ final class PaymentSheetLoader {
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                 stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
                 paymentMethodOrientation: paymentMethodOrientation,
-                customerProvider: customerProvider
+                customerProvider: customerProvider,
+                featuredInstitutionsLoader: featuredInstitutionsLoader
             )
             let confirmationChallenge = ConfirmationChallenge(
                 elementsSession: elementsSession,

@@ -89,6 +89,7 @@ extension EmbeddedPaymentElement {
             currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            featuredInstitutionsLoader: loadResult.featuredInstitutionsLoader,
             analyticsHelper: analyticsHelper,
             delegate: delegate
         )
