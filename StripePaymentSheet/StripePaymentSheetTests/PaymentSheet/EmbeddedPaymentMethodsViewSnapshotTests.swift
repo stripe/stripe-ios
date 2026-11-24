@@ -1550,6 +1550,103 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
+    // MARK: - Inline Link verification
+
+    // @iOS26
+    func testEmbeddedPaymentMethodsView_flatRadio_linkInlineVerification() {
+        verifyLinkInlineVerification(style: .flatWithRadio)
+    }
+
+    // @iOS26
+    func testEmbeddedPaymentMethodsView_floating_linkInlineVerification() {
+        verifyLinkInlineVerification(style: .floatingButton)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatCheckmark_linkInlineVerification() {
+        verifyLinkInlineVerification(style: .flatWithCheckmark)
+    }
+
+    func testEmbeddedPaymentMethodsView_flatDisclosure_linkInlineVerification() {
+        verifyLinkInlineVerification(style: .flatWithDisclosure)
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_sendingCode() {
+        var state = EmbeddedLinkInlineVerificationView.State._testValue
+        state.isCodeEntryEnabled = false
+        state.isActionLoading = true
+        verifyLinkInlineVerification(style: .flatWithRadio, state: state)
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_error() {
+        var state = EmbeddedLinkInlineVerificationView.State._testValue
+        state.errorMessage = "That code is invalid."
+        verifyLinkInlineVerification(style: .flatWithRadio, state: state)
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_resendOnly() {
+        var state = EmbeddedLinkInlineVerificationView.State._testValue
+        state.actions = .resend(title: "Resend code", isEnabled: true)
+        verifyLinkInlineVerification(style: .flatWithRadio, state: state)
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_darkMode() {
+        verifyLinkInlineVerification(style: .flatWithRadio, traits: UITraitCollection(userInterfaceStyle: .dark))
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_rightToLeft() {
+        verifyLinkInlineVerification(style: .floatingButton, traits: UITraitCollection(layoutDirection: .rightToLeft))
+    }
+
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_collapsedKeepsLinkFirst() {
+        let embeddedView = makeLinkInlineVerificationEmbeddedView(style: .flatWithRadio, state: ._testValue)
+        embeddedView.collapseLinkInlineVerification(animated: false)
+        verify(embeddedView)
+    }
+
+    private func makeLinkInlineVerificationEmbeddedView(
+        style: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style,
+        state: EmbeddedLinkInlineVerificationView.State
+    ) -> EmbeddedPaymentMethodsView {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.embeddedPaymentElement.row.style = style
+        let linkInlineVerificationView = EmbeddedLinkInlineVerificationView(appearance: appearance, linkBrand: .link)
+        linkInlineVerificationView.render(state)
+        return EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            appearance: appearance,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            mandateProvider: MockMandateProvider(),
+            placesLinkFirst: true,
+            linkInlineVerificationView: linkInlineVerificationView
+        )
+    }
+
+    private func verifyLinkInlineVerification(
+        style: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style,
+        state: EmbeddedLinkInlineVerificationView.State = ._testValue,
+        traits: UITraitCollection? = nil,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let embeddedView = makeLinkInlineVerificationEmbeddedView(style: style, state: state)
+        guard let traits else {
+            verify(embeddedView, file: file, line: line)
+            return
+        }
+        // The host window's safe area would otherwise push the rows down and squeeze the card.
+        embeddedView.insetsLayoutMarginsFromSafeArea = false
+        embeddedView.autosizeHeight(width: 300)
+        let containerView = UIView()
+        containerView.backgroundColor = .systemBackground
+        containerView.addAndPinSubview(embeddedView)
+        let traitHost = host(containerView, size: CGSize(width: 300, height: embeddedView.bounds.height), traits: traits)
+        withExtendedLifetime(traitHost) {
+            STPSnapshotVerifyView(containerView, file: file, line: line)
+        }
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
@@ -1614,6 +1711,27 @@ extension PaymentSheetLinkAccount {
     }
 }
 
+extension EmbeddedLinkInlineVerificationView.State {
+    static var _testValue: Self {
+        .init(
+            email: "jane.diaz@example.com",
+            recipient: "(•••) ••• ••72",
+            isCodeEntryEnabled: true,
+            errorMessage: nil,
+            actions: .menu(
+                items: [
+                    .init(action: .resend, title: "Resend code", systemImageName: "arrow.clockwise", isEnabled: true),
+                    .init(action: .email, title: "Email code", systemImageName: "envelope", isEnabled: true),
+                ],
+                isEnabled: true
+            ),
+            isActionLoading: false,
+            inputRevision: 0,
+            invalidCodeRevision: 0
+        )
+    }
+}
+
 class MockMandateProvider: MandateTextProvider {
     private let mandateResolver: (PaymentSheet.PaymentMethodType?) -> (NSAttributedString?)
 
@@ -1645,6 +1763,8 @@ extension EmbeddedPaymentMethodsView {
         savedPaymentMethods: [STPPaymentMethod] = [],
         incentive: PaymentMethodIncentive? = nil,
         featuredInstitutionsLoader: FeaturedInstitutionsLoader? = nil,
+        placesLinkFirst: Bool = false,
+        linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
         self.init(
@@ -1655,6 +1775,8 @@ extension EmbeddedPaymentMethodsView {
             appearance: appearance,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
+            placesLinkFirst: placesLinkFirst,
+            linkInlineVerificationView: linkInlineVerificationView,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider ?? MockMandateProvider(),
             shouldShowMandate: shouldShowMandate,
