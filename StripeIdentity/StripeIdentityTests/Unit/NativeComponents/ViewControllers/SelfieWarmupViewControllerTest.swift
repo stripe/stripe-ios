@@ -9,6 +9,7 @@ import XCTest
 
 @testable import StripeIdentity
 
+@MainActor
 final class SelfieWarmupViewControllerTest: XCTestCase {
     private static let mockVerificationPage = try! VerificationPageMock.response200.make()
 

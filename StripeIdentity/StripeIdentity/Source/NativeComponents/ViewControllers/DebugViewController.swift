@@ -42,15 +42,17 @@ final class DebugViewController: IdentityFlowViewController {
     func didTapButton(_ type: DebugView.DebugButton) {
         switch type {
         case .submit(let completeOption):
-            switch completeOption {
-            case .success:
-                self.sheetController?.verifyAndTransition(simulateDelay: false, completion: {})
-            case .failure:
-                self.sheetController?.unverifyAndTransition(simulateDelay: false, completion: {})
-            case .successAsync:
-                self.sheetController?.verifyAndTransition(simulateDelay: true, completion: {})
-            case .failureAsync:
-                self.sheetController?.unverifyAndTransition(simulateDelay: true, completion: {})
+            Task {
+                switch completeOption {
+                case .success:
+                    await self.sheetController?.verifyAndTransition(simulateDelay: false)
+                case .failure:
+                    await self.sheetController?.unverifyAndTransition(simulateDelay: false)
+                case .successAsync:
+                    await self.sheetController?.verifyAndTransition(simulateDelay: true)
+                case .failureAsync:
+                    await self.sheetController?.unverifyAndTransition(simulateDelay: true)
+                }
             }
         case .cancelled:
             finishWithResult(result: .flowCanceled)
