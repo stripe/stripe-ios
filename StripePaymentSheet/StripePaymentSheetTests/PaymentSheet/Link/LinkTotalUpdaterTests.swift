@@ -18,7 +18,7 @@ final class LinkTotalUpdaterTests: XCTestCase {
         let updater = LinkTotalUpdater(amount: 1000) { _ in 1100 }
 
         // When syncing a billing address
-        let changed = try await updater.sync(billingAddress: usAddress)
+        let changed = try await updater.sync(address: usAddress)
 
         // Then the new total is applied and reported as a change
         XCTAssertTrue(changed)
@@ -35,8 +35,8 @@ final class LinkTotalUpdaterTests: XCTestCase {
         }
 
         // When syncing the same address twice
-        try await updater.sync(billingAddress: usAddress)
-        let changed = try await updater.sync(billingAddress: usAddress)
+        try await updater.sync(address: usAddress)
+        let changed = try await updater.sync(address: usAddress)
 
         // Then the second sync is a no-op
         XCTAssertFalse(changed)
@@ -53,8 +53,8 @@ final class LinkTotalUpdaterTests: XCTestCase {
         }
 
         // When two addresses are synced back to back
-        let first = Task { try await updater.sync(billingAddress: usAddress) }
-        let second = Task { try await updater.sync(billingAddress: caAddress) }
+        let first = Task { try await updater.sync(address: usAddress) }
+        let second = Task { try await updater.sync(address: caAddress) }
         _ = try await (first.value, second.value)
 
         // Then requests ran in order and only the latest total is applied
@@ -76,14 +76,14 @@ final class LinkTotalUpdaterTests: XCTestCase {
 
         // When the first sync fails
         do {
-            try await updater.sync(billingAddress: usAddress)
+            try await updater.sync(address: usAddress)
             XCTFail("Expected an error")
         } catch {}
         XCTAssertEqual(updater.amount, 1000)
         XCTAssertFalse(updater.isUpdating)
 
         // Then syncing the same address again retries
-        let changed = try? await updater.sync(billingAddress: usAddress)
+        let changed = try? await updater.sync(address: usAddress)
         XCTAssertEqual(changed, true)
         XCTAssertEqual(updater.amount, 1100)
     }
@@ -95,7 +95,7 @@ final class LinkTotalUpdaterTests: XCTestCase {
         updater.addObserver(self) { _ in notificationCount += 1 }
 
         // When syncing without showing progress
-        let changed = try await updater.sync(billingAddress: usAddress, showsProgress: false)
+        let changed = try await updater.sync(address: usAddress, showsProgress: false)
 
         // Then observers aren't notified, since nothing visible changed
         XCTAssertFalse(changed)
@@ -111,7 +111,7 @@ final class LinkTotalUpdaterTests: XCTestCase {
         owner = nil
 
         // When the total changes
-        try await updater.sync(billingAddress: usAddress)
+        try await updater.sync(address: usAddress)
 
         // Then the observer isn't called
         XCTAssertEqual(notificationCount, 0)

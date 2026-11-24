@@ -372,10 +372,15 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertFalse(reasons.contains(.shippingAddressRequired))
     }
 
-    func testNativeLinkHiddenWhenShippingAddressIsRequiredAndAutomaticTaxUsesShippingAddress() {
+    func testNativeLinkShownWhenShippingAddressIsRequiredAndAutomaticTaxUsesShippingAddress() {
         // Given a session that requires shipping and calculates automatic tax from the shipping address
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
-        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"]).makePublicSession()
+        let apiResponse = CheckoutTestHelpers.makeSessionWithWalletTypes(
+            ["link"],
+            automaticTaxAddressSource: "shipping",
+            customerEmail: "jenny@example.com"
+        )
+        let session = apiResponse.makePublicSession(expressCheckoutConfiguration: configuration)
 
         // When native Link is used
         let reasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
@@ -383,12 +388,11 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
             configuration: configuration,
             usesWebLink: false,
             requiresShippingAddress: true,
-            collectsTaxFromShippingAddress: true,
             billingDetailsCollectionRequired: false
         )
 
-        // Then Link is hidden, since native Link can't update its total when the shipping address changes
-        XCTAssertTrue(reasons.contains(.shippingAddressRequired))
+        // Then Link is shown, since native Link updates its total when the shipping address changes
+        XCTAssertTrue(reasons.isEmpty)
     }
 
     func testLinkButtonShownWhenAutomaticTaxUsesShippingAddress() {

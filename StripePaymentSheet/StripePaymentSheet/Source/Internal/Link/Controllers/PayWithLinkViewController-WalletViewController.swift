@@ -280,17 +280,17 @@ extension PayWithLinkViewController {
                 guard !viewController.isConfirming else { return }
                 viewController.updateConfirmButton()
             }
-            syncTotalForSelectedPaymentMethod()
+            syncTotal()
         }
 
-        private func syncTotalForSelectedPaymentMethod() {
+        /// Updates the displayed total for the selected billing or shipping address, if the total depends on it.
+        private func syncTotal() {
             guard let totalUpdater = context.totalUpdater,
                   !isConfirming,
-                  let paymentDetails = viewModel.selectedPaymentMethod,
-                  paymentDetails.billingAddress != nil else {
+                  let address = context.totalAddress(for: viewModel.selectedPaymentMethod) else {
                 return
             }
-            totalUpdater.syncInBackground(billingAddress: paymentDetails.billingDetails?.address) { [weak self] error in
+            totalUpdater.syncInBackground(address: address) { [weak self] error in
                 self?.updateErrorLabel(for: error)
             }
         }
@@ -735,7 +735,7 @@ extension PayWithLinkViewController.WalletViewController: PayWithLinkWalletViewM
 
     func viewModelDidChange(_ viewModel: PayWithLinkViewController.WalletViewModel) {
         updateUI(animated: true)
-        syncTotalForSelectedPaymentMethod()
+        syncTotal()
     }
 
 }
@@ -1021,8 +1021,10 @@ extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPic
                     switch result {
                     case .success:
                         self.shippingAddressPicker.removeShippingAddress(at: index, animated: true)
-                        // The selected shipping address may have changed, which affects whether the customer can pay.
+                        // The selected shipping address may have changed, which affects whether the customer can pay
+                        // and, if tax is calculated from it, the total.
                         self.confirmButton.update(status: self.viewModel.confirmButtonStatus)
+                        self.syncTotal()
                     case .failure(let error):
                         self.updateErrorLabel(for: error)
                     }

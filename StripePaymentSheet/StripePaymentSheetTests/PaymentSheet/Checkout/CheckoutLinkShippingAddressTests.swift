@@ -48,6 +48,36 @@ final class CheckoutLinkShippingAddressTests: XCTestCase {
         XCTAssertNil(CheckoutElementsController.linkShippingDetailsParams(for: confirmOption, checkoutSession: session))
     }
 
+    func testTotalUsesSelectedShippingAddressWhenTaxUsesShippingAddress() {
+        // Given a session whose tax is calculated from the shipping address, and a selected Link shipping address
+        let context = makeLinkContext(taxAddressSource: "shipping")
+        context.shippingAddresses = [makeShippingAddress()]
+        context.selectedShippingAddressID = "csmrshpad_123"
+
+        // When
+        let address = context.totalAddress(for: makePaymentDetails(billingCountry: "CA"))
+
+        // Then the total is calculated from the shipping address, not the billing address
+        XCTAssertEqual(address?.line1, "510 Townsend St")
+        XCTAssertEqual(address?.city, "San Francisco")
+        XCTAssertEqual(address?.state, "CA")
+        XCTAssertEqual(address?.postalCode, "94103")
+        XCTAssertEqual(address?.country, "US")
+    }
+
+    func testTotalUsesBillingAddressWhenTaxUsesBillingAddress() {
+        // Given a session whose tax is calculated from the billing address, and a selected Link shipping address
+        let context = makeLinkContext(taxAddressSource: "billing")
+        context.shippingAddresses = [makeShippingAddress()]
+        context.selectedShippingAddressID = "csmrshpad_123"
+
+        // When
+        let address = context.totalAddress(for: makePaymentDetails(billingCountry: "CA"))
+
+        // Then the total is calculated from the payment method's billing address
+        XCTAssertEqual(address?.country, "CA")
+    }
+
     // MARK: - Helpers
 
     private func makeSession(requiresShipping: Bool) -> CheckoutElementsController.Session {
@@ -56,6 +86,38 @@ final class CheckoutLinkShippingAddressTests: XCTestCase {
             overrides["shipping_address_collection"] = ["allowed_countries": ["US"]]
         }
         return CheckoutTestHelpers.makeSession(overrides).makePublicSession()
+    }
+
+    private func makeLinkContext(taxAddressSource: String) -> PayWithLinkViewController.Context {
+        let session = CheckoutTestHelpers.makeSession([
+            "shipping_address_collection": ["allowed_countries": ["US"]],
+            "automatic_tax": ["enabled": true, "status": "requires_address", "address_source": taxAddressSource],
+        ]).makePublicSession()
+        let configuration = PaymentSheet.Configuration()
+        return PayWithLinkViewController.Context(
+            intent: .checkout(session),
+            elementsSession: session.elementsSession,
+            configuration: configuration,
+            customerProvider: CustomerProvider(checkoutSession: session),
+            linkBrand: .link,
+            shouldOfferApplePay: false,
+            shouldFinishOnClose: false,
+            initiallySelectedPaymentDetailsID: nil,
+            callToAction: nil,
+            analyticsHelper: PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration, analyticsClient: STPAnalyticsClient())
+        )
+    }
+
+    private func makePaymentDetails(billingCountry: String) -> ConsumerPaymentDetails {
+        let paymentDetails = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card]
+        return ConsumerPaymentDetails(
+            stripeID: paymentDetails.stripeID,
+            details: paymentDetails.details,
+            billingAddress: BillingAddress(postalCode: "M5V 3L9", countryCode: billingCountry),
+            billingEmailAddress: nil,
+            nickname: nil,
+            isDefault: true
+        )
     }
 
     private func makeLinkAccountWithPhoneNumber() -> PaymentSheetLinkAccount {

@@ -33,7 +33,6 @@ enum ExpressCheckoutElementUtilities {
             applePayMerchantId: configuration.applePayMerchantId,
             usesWebLink: usesWebLink,
             requiresShippingAddress: apiResponse.shippingAddressCollection != nil,
-            collectsTaxFromShippingAddress: apiResponse.automaticTax?.enabled == true && apiResponse.automaticTax?.addressSource == "shipping",
             billingDetailsCollectionRequired: apiResponse.billingAddressCollection == "required"
         )
     }
@@ -44,7 +43,6 @@ enum ExpressCheckoutElementUtilities {
         applePayMerchantId: String?,
         usesWebLink: Bool,
         requiresShippingAddress: Bool,
-        collectsTaxFromShippingAddress: Bool = false,
         billingDetailsCollectionRequired: Bool
     ) -> [ExpressCheckoutElement.PaymentMethod] {
         var paymentMethods: [ExpressCheckoutElement.PaymentMethod] = []
@@ -61,7 +59,6 @@ enum ExpressCheckoutElementUtilities {
                     configuration: configuration,
                     usesWebLink: usesWebLink,
                     requiresShippingAddress: requiresShippingAddress,
-                    collectsTaxFromShippingAddress: collectsTaxFromShippingAddress,
                     billingDetailsCollectionRequired: billingDetailsCollectionRequired
                 ).isEmpty {
                     paymentMethods.append(paymentMethod)
@@ -88,7 +85,6 @@ enum ExpressCheckoutElementUtilities {
         configuration: ExpressCheckoutElement.Configuration,
         usesWebLink: Bool,
         requiresShippingAddress: Bool,
-        collectsTaxFromShippingAddress: Bool = false,
         billingDetailsCollectionRequired: Bool
     ) -> [LinkDisabledReason] {
         var reasons: [LinkDisabledReason] = []
@@ -103,8 +99,8 @@ enum ExpressCheckoutElementUtilities {
         if elementsSession.disableLinkForAutomaticTaxBilling && usesWebLink {
             reasons.append(.automaticTaxAddress)
         }
-        // Native Link collects a shipping address, but can't yet update its total when that address changes.
-        if requiresShippingAddress && (usesWebLink || collectsTaxFromShippingAddress) {
+        // Native Link collects the shipping address and updates its total when it changes, but web Link can't.
+        if requiresShippingAddress && usesWebLink {
             reasons.append(.shippingAddressRequired)
         }
         if usesWebLink && billingDetailsCollectionRequired {
