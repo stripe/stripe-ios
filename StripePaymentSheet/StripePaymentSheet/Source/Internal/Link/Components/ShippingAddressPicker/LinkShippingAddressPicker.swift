@@ -32,10 +32,7 @@ protocol LinkShippingAddressPickerDataSource: AnyObject {
 
     func numberOfShippingAddresses(in picker: LinkShippingAddressPicker) -> Int
 
-    func shippingAddressPicker(
-        _ picker: LinkShippingAddressPicker,
-        shippingAddressAt index: Int
-    ) -> ShippingAddressesResponse.ShippingAddress
+    func shippingAddress(at index: Int) -> ShippingAddressesResponse.ShippingAddress
 
     /// Whether the shipping address can be used, e.g. because the merchant ships to its country.
     func isShippingAddressSupported(at index: Int) -> Bool
@@ -63,7 +60,7 @@ final class LinkShippingAddressPicker: UIView {
               selectedIndex >= 0 && selectedIndex < dataSource.numberOfShippingAddresses(in: self) else {
             return nil
         }
-        return dataSource.shippingAddressPicker(self, shippingAddressAt: selectedIndex)
+        return dataSource.shippingAddress(at: selectedIndex)
     }
 
     /// The picker can only collapse once a shipping address is selected.
@@ -131,7 +128,7 @@ final class LinkShippingAddressPicker: UIView {
         listView.isHidden = true
         listView.layer.zPosition = 0
 
-        addShippingAddressButton.addTarget(self, action: #selector(onAddShippingAddressButtonTapped(_:)), for: .touchUpInside)
+        addShippingAddressButton.addTarget(self, action: #selector(onAddShippingAddressButtonTapped), for: .touchUpInside)
     }
 
     override func layoutSubviews() {
@@ -175,7 +172,7 @@ private extension LinkShippingAddressPicker {
 #endif
     }
 
-    @objc func onAddShippingAddressButtonTapped(_ sender: LinkPaymentMethodPicker.AddButton) {
+    @objc func onAddShippingAddressButtonTapped() {
         delegate?.shippingAddressPickerDidTapOnAddShippingAddress(self)
     }
 
@@ -214,7 +211,7 @@ extension LinkShippingAddressPicker {
             return
         }
 
-        cell.shippingAddress = dataSource.shippingAddressPicker(self, shippingAddressAt: index)
+        cell.shippingAddress = dataSource.shippingAddress(at: index)
         cell.isSelected = dataSource.selectedShippingAddressIndex == index
         cell.isSupported = dataSource.isShippingAddressSupported(at: index)
     }

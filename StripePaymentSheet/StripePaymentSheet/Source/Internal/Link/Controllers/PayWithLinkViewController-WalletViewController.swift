@@ -903,10 +903,7 @@ extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPic
         viewModel.shippingAddresses.count
     }
 
-    func shippingAddressPicker(
-        _ picker: LinkShippingAddressPicker,
-        shippingAddressAt index: Int
-    ) -> ShippingAddressesResponse.ShippingAddress {
+    func shippingAddress(at index: Int) -> ShippingAddressesResponse.ShippingAddress {
         viewModel.shippingAddresses[index]
     }
 
@@ -1042,9 +1039,13 @@ extension PayWithLinkViewController.WalletViewController: LinkShippingAddressPic
 
 extension PayWithLinkViewController.WalletViewController: AddShippingAddressViewControllerDelegate {
 
-    func didAdd(shippingAddress: ShippingAddressesResponse.ShippingAddress) {
+    func addShippingAddressViewController(
+        _ viewController: PayWithLinkViewController.AddShippingAddressViewController,
+        didAdd shippingAddress: ShippingAddressesResponse.ShippingAddress
+    ) {
         viewModel.addShippingAddress(shippingAddress)
         shippingAddressPicker.setExpanded(false, animated: false)
+        _ = viewController.bottomSheetController?.popContentViewController()
     }
 }
 

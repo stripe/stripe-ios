@@ -594,13 +594,21 @@ private extension PayWithLinkViewController {
             }
             // Show a loading view while Financial Connections is being prepared
             viewController = LoaderViewController(context: context)
+        } else if paymentDetails.isEmpty && context.requiresShippingAddress && context.shippingAddresses.isEmpty {
+            // New customers enter their shipping address before adding a payment method,
+            // since adding their first payment method immediately confirms.
+            let addShippingAddressViewController = AddShippingAddressViewController(
+                linkAccount: linkAccount,
+                context: context
+            )
+            addShippingAddressViewController.delegate = self
+            viewController = addShippingAddressViewController
         } else {
-            let walletViewController = WalletViewController(
+            viewController = WalletViewController(
                 linkAccount: linkAccount,
                 context: context,
                 paymentMethods: paymentDetails
             )
-            viewController = walletViewController
         }
         setViewControllers([viewController])
     }
@@ -610,6 +618,26 @@ private extension PayWithLinkViewController {
             linkAccount?.supportedPaymentMethodTypes(for: context.elementsSession) ?? []
     }
 
+}
+
+// MARK: - AddShippingAddressViewControllerDelegate
+
+extension PayWithLinkViewController: AddShippingAddressViewControllerDelegate {
+    func addShippingAddressViewController(
+        _ viewController: AddShippingAddressViewController,
+        didAdd shippingAddress: ShippingAddressesResponse.ShippingAddress
+    ) {
+        guard let linkAccount else {
+            stpAssertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
+            return
+        }
+
+        context.shippingAddresses.append(shippingAddress)
+        context.selectDefaultShippingAddressIfNeeded()
+        setViewControllers([
+            WalletViewController(linkAccount: linkAccount, context: context, paymentMethods: [])
+        ])
+    }
 }
 
 // MARK: - Navigation
