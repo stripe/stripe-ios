@@ -523,6 +523,45 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loaded2], timeout: 2)
     }
 
+    func testPaymentSheetLoadDeferredFallbackFailsWhenCardIsExcluded() {
+        // Given v1/elements/sessions fails with a server error...
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
+        } response: { _ in
+            return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
+        }
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
+
+        // ...and a deferred intent that excludes cards, the only payment method the backup ElementsSession offers
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 100, currency: "usd", captureMethod: .automatic),
+            excludedPaymentMethodTypes: ["card"],
+            confirmHandler: { _, _ in return "" }
+        )
+
+        // When PaymentSheet loads
+        let loaded = expectation(description: "Loaded")
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
+        PaymentSheetLoader.load(
+            mode: .deferredIntent(intentConfig),
+            configuration: configuration,
+            analyticsHelper: ._testValue(configuration: configuration),
+            integrationShape: .paymentSheet
+        ) { result in
+            loaded.fulfill()
+            switch result {
+            case .success:
+                XCTFail("Expected the load to fail instead of falling back to excluded payment methods")
+            case .failure(let error):
+                // Then it fails with the original server error
+                XCTAssertEqual((error as NSError).userInfo[STPError.httpStatusCodeKey] as? Int, 500)
+            }
+        }
+        wait(for: [loaded], timeout: 2)
+    }
+
     func testSendsErrorAnalytic() {
         // If v1/elements/session and the fallback fail to load...
         let analyticsClient = STPAnalyticsClient()
