@@ -93,7 +93,6 @@ extension CheckoutElementsController {
                 throw CheckoutError.unknown(debugDescription: "Checkout was deallocated while Link was open.")
             }
             guard let address = Address(taxRegionFrom: billingAddress) else {
-                // Without a country there's nothing to calculate tax from.
                 return latestSession().amount
             }
             guard address != checkoutWalletUpdater.currentTaxRegion else {

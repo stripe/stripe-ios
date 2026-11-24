@@ -110,7 +110,6 @@ final class LinkTotalUpdater {
         }
     }
 
-    /// Syncs the total for the given billing address without waiting for the result.
     func syncInBackground(billingAddress: STPPaymentMethodAddress?, onError: @escaping @MainActor (Swift.Error) -> Void) {
         Task { @MainActor in
             do {
@@ -121,7 +120,6 @@ final class LinkTotalUpdater {
         }
     }
 
-    /// Waits for any in-flight update to finish.
     func waitUntilIdle() async {
         var awaitedTask: Task<Int, Swift.Error>?
         while let task = inFlight?.task, task != awaitedTask {

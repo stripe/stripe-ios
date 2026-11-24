@@ -97,14 +97,14 @@ final class PayWithLinkViewController: NSObject {
         let canContinueWithoutLink: Bool
         let launchedFromFlowController: Bool
         let initiallySelectedPaymentDetailsID: String?
-        private let baseCallToAction: ConfirmButton.CallToActionType
+        private let originalCallToAction: ConfirmButton.CallToActionType
         let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
         /// Updates the displayed total when it depends on the billing address (e.g. automatic tax). Only used in full mode.
         let totalUpdater: LinkTotalUpdater?
 
         var callToAction: ConfirmButton.CallToActionType {
-            guard let totalUpdater, case .pay(_, let currency, let withLock) = baseCallToAction else {
-                return baseCallToAction
+            guard let totalUpdater, case .pay(_, let currency, let withLock) = originalCallToAction else {
+                return originalCallToAction
             }
             return .pay(amount: totalUpdater.amount, currency: currency, withLock: withLock)
         }
@@ -187,7 +187,7 @@ final class PayWithLinkViewController: NSObject {
             self.canContinueWithoutLink = canContinueWithoutLink
             self.launchedFromFlowController = launchedFromFlowController
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
-            self.baseCallToAction = callToAction ?? .makeDefaultType(intent: intent, withLock: false)
+            self.originalCallToAction = callToAction ?? .makeDefaultType(intent: intent, withLock: false)
             self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
             self.analyticsHelper = analyticsHelper
             self.linkAppearance = linkAppearance

@@ -176,6 +176,8 @@ extension PayWithLinkViewController {
         /// The portion of the keyboard overlapping the view, or `nil` while the keyboard is hidden.
         private var keyboardInViewHeight: CGFloat?
 
+        private var isConfirming = false
+
         private var containerViewBottomPadding: CGFloat {
             if let keyboardInViewHeight {
                 return keyboardInViewHeight + LinkUI.contentSpacing
@@ -268,10 +270,6 @@ extension PayWithLinkViewController {
             syncTotalForSelectedPaymentMethod()
         }
 
-        /// Whether a confirmation is in progress. While confirming, total updates don't touch the UI.
-        private var isConfirming = false
-
-        /// Updates the displayed total for the selected payment method's billing address, if the total depends on it.
         private func syncTotalForSelectedPaymentMethod() {
             guard let totalUpdater = context.totalUpdater,
                   !isConfirming,

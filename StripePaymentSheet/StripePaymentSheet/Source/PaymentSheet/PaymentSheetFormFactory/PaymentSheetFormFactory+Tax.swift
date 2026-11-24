@@ -38,7 +38,18 @@ extension PaymentSheetFormFactory {
         guard collectsTaxFromBillingAddress else {
             return minimumFields
         }
-        return AutomaticTaxBillingAddressRequirements.minimumFieldsToCollect(widening: minimumFields)
+        return Self.minimumFieldsIncludingAutomaticTax(minimumFields)
+    }
+
+    /// Returns country-specific minimums widened to include automatic tax requirements, regardless of whether the intent collects tax.
+    nonisolated static func minimumFieldsIncludingAutomaticTax(
+        _ minimumFields: [String: AddressSectionElement.FieldsToCollect]
+    ) -> [String: AddressSectionElement.FieldsToCollect] {
+        return minimumFields.merging(
+            AutomaticTaxBillingAddressRequirements.minimumFieldsToCollectByCountry
+        ) { existing, automaticTax in
+            existing.widened(toMeet: automaticTax)
+        }
     }
 
     private func appendingAutomaticTaxAddress(to form: PaymentMethodElement) -> PaymentMethodElement {
@@ -49,5 +60,26 @@ extension PaymentSheetFormFactory {
         )
 
         return FormElement(elements: [form, billingAddress], theme: theme)
+    }
+}
+
+private extension AddressSectionElement.FieldsToCollect {
+    func widened(toMeet minimum: Self) -> Self {
+        switch (self, minimum) {
+        case (.all, _):
+            return self
+        case (_, .all):
+            return minimum
+        case (.countryAndPostal, .country):
+            return self
+        case (.country, .countryAndPostal):
+            return minimum
+        case (.countryAndPostal, .countryAndPostal):
+            return self
+        case (.country, .country):
+            return self
+        default:
+            return self
+        }
     }
 }

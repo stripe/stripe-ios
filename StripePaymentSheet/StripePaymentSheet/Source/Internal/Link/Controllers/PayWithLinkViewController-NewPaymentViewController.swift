@@ -144,7 +144,6 @@ extension PayWithLinkViewController {
             fatalError("init(coder:) has not been implemented")
         }
 
-        /// Whether a confirmation is in progress. While confirming, total updates don't touch the UI.
         private var isConfirming = false
 
         override func viewDidLoad() {
@@ -366,9 +365,6 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
     }
 
     private func updateConfirmButton() {
-        guard addPaymentMethodVC.selectedPaymentMethodType != .instantDebits else {
-            return
-        }
         let status: ConfirmButton.Status = if context.totalUpdater?.isUpdating == true {
             // Keep showing the current total with a spinner until it reflects the entered billing address.
             .spinnerWithInteractionDisabled
@@ -378,7 +374,6 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
         confirmButton.update(status: status, callToAction: context.callToAction)
     }
 
-    /// Updates the displayed total for the entered billing address once the form is complete, if the total depends on it.
     private func syncTotalForEnteredBillingAddress() {
         guard let totalUpdater = context.totalUpdater,
               !isConfirming,

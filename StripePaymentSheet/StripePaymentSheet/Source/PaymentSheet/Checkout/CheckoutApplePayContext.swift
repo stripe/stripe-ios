@@ -554,7 +554,15 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
     }
 
     private func restoreInitialTaxRegionIfNecessary() async {
-        await checkoutWalletUpdater?.restoreTaxRegion(to: initialTaxRegion, confirmationSource: attribution.confirmingElement)
+        guard let checkoutWalletUpdater,
+              checkoutWalletUpdater.currentTaxRegion != initialTaxRegion else {
+            return
+        }
+        _ = try? await checkoutWalletUpdater.updateTaxRegionWithoutEnqueueing(
+            address: initialTaxRegion,
+            canUpdateWhileSheetPresented: true,
+            confirmationSource: attribution.confirmingElement
+        )
     }
 
     private func resume(with result: CheckoutElementsController.InternalConfirmResult) {

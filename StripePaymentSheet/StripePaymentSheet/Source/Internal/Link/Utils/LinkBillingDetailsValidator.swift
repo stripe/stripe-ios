@@ -19,6 +19,15 @@ class LinkBillingDetailsValidator {
     private let linkAccount: PaymentSheetLinkAccount
     private let context: PayWithLinkViewController.Context
 
+    /// The billing details to fill in from defaults. When tax is calculated from the billing address, this includes the address.
+    private var prefillConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
+        var configuration = context.configuration.billingDetailsCollectionConfiguration
+        if context.intent.collectsTaxFromBillingAddress {
+            configuration.address = .full
+        }
+        return configuration
+    }
+
     init(
         linkAccount: PaymentSheetLinkAccount,
         context: PayWithLinkViewController.Context
@@ -95,16 +104,6 @@ class LinkBillingDetailsValidator {
         return !paymentDetailsAreSupported
     }
 
-    /// The billing details to fill in from defaults. When tax is calculated from the billing address, this includes the address.
-    private var prefillConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
-        var configuration = context.configuration.billingDetailsCollectionConfiguration
-        if context.intent.collectsTaxFromBillingAddress {
-            configuration.address = .full
-        }
-        return configuration
-    }
-
-    /// Whether the payment details' billing address is enough to calculate automatic tax, if the total depends on it.
     private func satisfiesAutomaticTaxRequirements(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
         guard context.intent.collectsTaxFromBillingAddress else {
             return true

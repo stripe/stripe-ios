@@ -49,7 +49,6 @@ final class LinkPaymentMethodFormElement: Element {
     let paymentMethod: ConsumerPaymentDetails
     let isBillingDetailsUpdateFlow: Bool
     private let linkAppearance: LinkAppearance?
-    /// Whether tax is calculated from the billing address, so the address must contain the fields tax requires.
     private let collectsTaxFromBillingAddress: Bool
 
     let configuration: PaymentElementConfiguration
@@ -278,7 +277,7 @@ final class LinkPaymentMethodFormElement: Element {
                 ? .all
                 : .country,
             minimumFieldsToCollectByCountry: collectsTaxFromBillingAddress
-                ? AutomaticTaxBillingAddressRequirements.minimumFieldsToCollect(widening: PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry)
+                ? PaymentSheetFormFactory.minimumFieldsIncludingAutomaticTax(PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry)
                 : PaymentSheetFormFactory.cardMinimumFieldsToCollectByCountry,
             disableAutocomplete: true,
             additionalFields: additionalFields,
