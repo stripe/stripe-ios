@@ -65,11 +65,6 @@ final class InlineSheetCoordinator {
         dismissAll()
     }
 
-    /// The web view of the sheet with this id, if its window is open
-    func sheetWebView(for sheetId: String) -> WKWebView? {
-        sheets[sheetId]?.controller.webView
-    }
-
     /// Returns a web view to show a window in as a sheet, or nil to refuse the window
     func openSheet(from webView: WKWebView,
                    configuration: WKWebViewConfiguration,
@@ -155,8 +150,7 @@ private extension InlineSheetCoordinator {
         guard let host else { return }
         unstage(sheet.controller)
         sheet.state = .showing
-        sheet.controller.prepareForPresentation()
-        Self.topmostPresenter(from: host).present(sheet.controller, animated: true)
+        sheet.controller.present(from: Self.topmostPresenter(from: host))
     }
 
     func sheetDidDismiss(_ controller: InlineSheetViewController) {

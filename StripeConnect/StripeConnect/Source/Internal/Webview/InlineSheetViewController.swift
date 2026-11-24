@@ -12,6 +12,9 @@ import WebKit
 final class InlineSheetViewController: UIViewController {
     static let minimumHeight: CGFloat = 120
 
+    // The system draws the grabber over the sheet's top edge, so the content starts below it.
+    private static let grabberAreaHeight: CGFloat = 20
+
     private static let detentIdentifier = UISheetPresentationController.Detent.Identifier("stripe-connect-inline-sheet")
 
     let sheetId: String
@@ -22,6 +25,8 @@ final class InlineSheetViewController: UIViewController {
 
     /// The content height from Connect.js, in points
     private(set) var contentHeight: CGFloat = 0
+
+    private var didFinishPresenting = false
 
     var sheetBackgroundColor: UIColor {
         didSet {
@@ -80,7 +85,7 @@ final class InlineSheetViewController: UIViewController {
         webView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(webView)
         NSLayoutConstraint.activate([
-            webView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            webView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: Self.grabberAreaHeight),
             webView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.bottomAnchor),
@@ -90,14 +95,23 @@ final class InlineSheetViewController: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        // Moving the staged view into the sheet also reports a disappearance, before the sheet has appeared.
+        guard didFinishPresenting else { return }
         // Also covers the screen behind the sheet going away, which dismisses it without asking its presentation controller.
         if isBeingDismissed || presentingViewController == nil {
             didDismiss?(self)
         }
     }
 
-    /// Sizes the sheet to its content before each presentation
-    func prepareForPresentation() {
+    /// Presents the sheet sized to its content
+    func present(from presenter: UIViewController) {
+        prepareForPresentation()
+        presenter.present(self, animated: true) { [weak self] in
+            self?.didFinishPresenting = true
+        }
+    }
+
+    private func prepareForPresentation() {
         presentationController?.delegate = self
         guard let sheet = sheetPresentationController else { return }
         sheet.prefersGrabberVisible = true
@@ -105,7 +119,7 @@ final class InlineSheetViewController: UIViewController {
         if #available(iOS 16.0, *) {
             sheet.detents = [
                 .custom(identifier: Self.detentIdentifier) { [weak self] context in
-                    min(max(self?.contentHeight ?? 0, Self.minimumHeight), context.maximumDetentValue)
+                    min(max(self?.contentHeight ?? 0, Self.minimumHeight) + Self.grabberAreaHeight, context.maximumDetentValue)
                 },
             ]
             sheet.selectedDetentIdentifier = Self.detentIdentifier

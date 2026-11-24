@@ -23,7 +23,7 @@ enum InlineContract {
     }
 
     /// Sheet ids match `^[A-Za-z0-9-]{1,64}$`
-    static func isValidSheetId(_ sheetId: String) -> Bool {
+    private static func isValidSheetId(_ sheetId: String) -> Bool {
         (1...maxSheetIdLength).contains(sheetId.utf8.count)
             && sheetId.utf8.allSatisfy { isASCIIAlphanumeric($0) || $0 == UInt8(ascii: "-") }
     }
@@ -58,29 +58,9 @@ enum InlineContract {
     }
 
     private static func isOrigin(scheme: String, host: String, port: Int?, of componentURL: URL) -> Bool {
-        guard let componentScheme = componentURL.scheme?.lowercased(),
-              let componentHost = componentURL.host?.lowercased(),
-              let componentPort = effectivePort(componentURL.port, scheme: componentScheme) else {
-            return false
-        }
-        let scheme = scheme.lowercased()
-        return scheme == componentScheme
-            && host.lowercased() == componentHost
-            && effectivePort(port, scheme: scheme) == componentPort
-    }
-
-    private static func effectivePort(_ port: Int?, scheme: String) -> Int? {
-        if let port {
-            return port
-        }
-        switch scheme {
-        case "https":
-            return 443
-        case "http":
-            return 80
-        default:
-            return nil
-        }
+        scheme.caseInsensitiveCompare(componentURL.scheme ?? "") == .orderedSame
+            && host.caseInsensitiveCompare(componentURL.host ?? "") == .orderedSame
+            && port == componentURL.port
     }
 
     // Connect.js serves accessory layers from its origin root, not the SDK page's versioned folder.
@@ -124,7 +104,7 @@ enum InlineContract {
     }
 
     private static func decodeHashParam(_ value: Substring) -> String? {
-        value.replacingOccurrences(of: "+", with: " ").removingPercentEncoding
+        value.removingPercentEncoding
     }
 
     private static func isASCIIAlphanumeric(_ byte: UInt8) -> Bool {

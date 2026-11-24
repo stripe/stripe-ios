@@ -26,8 +26,6 @@ public class NotificationBannerViewController: UIViewController {
 
     private let contentView = InlineComponentView()
 
-    private var contentHeight: CGFloat?
-
     init(componentManager: EmbeddedComponentManager,
          collectionOptions: AccountCollectionOptions,
          loadContent: Bool,
@@ -65,8 +63,7 @@ public class NotificationBannerViewController: UIViewController {
     }
 
     private func contentHeightDidChange(_ height: CGFloat) {
-        guard height != contentHeight else { return }
-        contentHeight = height
+        guard height != contentView.contentHeight else { return }
         contentView.contentHeight = height
         delegate?.notificationBanner(self, didChangeContentHeight: height)
     }

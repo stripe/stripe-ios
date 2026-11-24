@@ -7,7 +7,8 @@ import UIKit
 
 /// Sizes an inline component to its content height with Auto Layout
 final class InlineComponentView: UIView {
-    var contentHeight: CGFloat = 0 {
+    /// Nil until the component first reports its height
+    var contentHeight: CGFloat? {
         didSet {
             invalidateIntrinsicContentSize()
         }
@@ -24,6 +25,6 @@ final class InlineComponentView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        CGSize(width: UIView.noIntrinsicMetric, height: contentHeight)
+        CGSize(width: UIView.noIntrinsicMetric, height: contentHeight ?? 0)
     }
 }

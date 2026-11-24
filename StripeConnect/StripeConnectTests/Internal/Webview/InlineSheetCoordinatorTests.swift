@@ -43,17 +43,14 @@ final class InlineSheetCoordinatorTests: XCTestCase {
     }
 
     func testOpensSheetForComponentWindowOnAccessoryLayerPage() {
-        let sheetWebView = openSheet()
-
-        XCTAssertNotNil(sheetWebView)
-        XCTAssertTrue(controller.inlineSheets?.sheetWebView(for: "sheet-1") === sheetWebView)
+        XCTAssertNotNil(openSheet())
+        XCTAssertNil(openSheet(), "A second window can't take over an open sheet's id")
     }
 
     func testRefusesSheetFromAnotherOrigin() async throws {
         let foreignOrigin = try await inlineSheetSecurityOrigin(for: URL(string: "https://foreign.example/frame.html")!)
 
         XCTAssertNil(openSheet(sourceOrigin: foreignOrigin))
-        XCTAssertNil(controller.inlineSheets?.sheetWebView(for: "sheet-1"))
         XCTAssertTrue(controller.presentedControllers.isEmpty)
     }
 
@@ -61,7 +58,6 @@ final class InlineSheetCoordinatorTests: XCTestCase {
         let url = URL(string: "https://connect-js.stripe.com/v1.0/accessory_layer_abc.html#os_sheet=true&os_sheet_id=sheet-1")!
 
         XCTAssertNil(openSheet(url: url))
-        XCTAssertNil(controller.inlineSheets?.sheetWebView(for: "sheet-1"))
         XCTAssertTrue(controller.presentedControllers.isEmpty)
     }
 
@@ -84,7 +80,7 @@ final class InlineSheetCoordinatorTests: XCTestCase {
 
         try await sheetClosedRecorder.waitForSheetIds(count: 1)
         XCTAssertEqual(sheetClosedRecorder.sheetIds, ["sheet-1"])
-        XCTAssertNil(controller.inlineSheets?.sheetWebView(for: "sheet-1"))
+        XCTAssertNotNil(openSheet(), "The dismissed sheet's id is free again")
     }
 
     func testNonDismissibleSheetSendsSheetCloseRequestedAndStays() async throws {
@@ -97,7 +93,7 @@ final class InlineSheetCoordinatorTests: XCTestCase {
         try await sheetCloseRequestedRecorder.waitForSheetIds(count: 1)
         XCTAssertEqual(sheetCloseRequestedRecorder.sheetIds, ["sheet-1"])
         XCTAssertEqual(sheetClosedRecorder.sheetIds, [])
-        XCTAssertNotNil(controller.inlineSheets?.sheetWebView(for: "sheet-1"))
+        XCTAssertNil(openSheet(), "The sheet is still open")
     }
 
     func testWindowCloseSendsSheetClosedAndReleasesSheet() async throws {
@@ -124,7 +120,7 @@ final class InlineSheetCoordinatorTests: XCTestCase {
 
         try await controller.webView.loadTrustedDocumentPreservingDelegate()
 
-        XCTAssertNil(controller.inlineSheets?.sheetWebView(for: "sheet-1"))
+        XCTAssertNotNil(openSheet(), "The previous document's sheet is gone")
     }
 }
 

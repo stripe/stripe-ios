@@ -508,10 +508,7 @@ private extension ConnectComponentWebViewController {
             self?.didChangeContentHeight?(height)
         })
         addMessageHandler(SheetChangedMessageHandler(sourcePolicy: messageSourcePolicy, analyticsClient: analyticsClient) { [weak self] payload in
-            guard InlineContract.isValidSheetId(payload.sheetId),
-                  let height = InlineContract.clampedHeight(payload.height) else {
-                return
-            }
+            guard let height = InlineContract.clampedHeight(payload.height) else { return }
             self?.inlineSheets?.sheetDidChange(sheetId: payload.sheetId, height: height, dismissible: payload.dismissible ?? true)
         })
     }
@@ -533,8 +530,10 @@ private extension ConnectComponentWebViewController {
         let font = appearance.typography.font?.withSize(17) ?? UIFont.systemFont(ofSize: 17, weight: .semibold)
         let textColor = appearance.colors.text ?? .black
 
-        self.view.backgroundColor = backgroundColor
-        webView.backgroundColor = backgroundColor
+        // An inline component shows the app's screen around what Connect.js draws, like its rounded corners.
+        let viewBackgroundColor = componentType.isInline ? .clear : backgroundColor
+        self.view.backgroundColor = viewBackgroundColor
+        webView.backgroundColor = viewBackgroundColor
         inlineSheets?.backgroundColor = backgroundColor
         webView.isOpaque = false
         activityIndicator.tintColor = appearance.colors.loadingIndicatorColor
