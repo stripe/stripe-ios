@@ -378,7 +378,7 @@ extension PaymentSheet {
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
-                checkoutBillingAddressUpdater: nil
+                checkout: nil
             )
             self.viewController.flowControllerDelegate = self
             self.confirmationChallenge = confirmationChallenge
@@ -810,7 +810,7 @@ extension PaymentSheet {
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: walletButtonsViewState,
-                checkoutBillingAddressUpdater: self.checkout,
+                checkout: self.checkout,
                 initialState: .preservingFormInput(from: self.internalPaymentOption)
             )
             self.viewController.flowControllerDelegate = self
@@ -823,14 +823,13 @@ extension PaymentSheet {
 
         func updateForWalletButtonsView() {
             // Rebuild with the current saved methods so deleted methods don't reappear.
-            let checkoutBillingAddressUpdater = viewController.checkoutBillingAddressUpdater
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
                 nativeSheetPresentation: nativeSheetPresentation,
                 loadResult: makeLoadResultWithCurrentSavedPaymentMethods(),
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
-                checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
+                checkout: viewController.checkout,
                 initialState: .preservingFormInput(from: internalPaymentOption)
             )
             self.viewController.flowControllerDelegate = self
@@ -875,7 +874,6 @@ extension PaymentSheet {
                 return
             }
 
-            let checkoutBillingAddressUpdater = viewController.checkoutBillingAddressUpdater
             self.viewController = Self.makeViewController(
                 configuration: configuration,
                 nativeSheetPresentation: nativeSheetPresentation,
@@ -884,7 +882,7 @@ extension PaymentSheet {
                 ),
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: walletButtonsViewState,
-                checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
+                checkout: viewController.checkout,
                 initialState: .restoringAfterCancellation(selection)
             )
             self.viewController.flowControllerDelegate = self
@@ -940,7 +938,7 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            checkoutBillingAddressUpdater: CheckoutSessionPaymentElementUpdater?,
+            checkout: CheckoutSessionUpdater?,
             initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
@@ -951,7 +949,7 @@ extension PaymentSheet {
                     nativeSheetPresentation: nativeSheetPresentation,
                     loadResult: loadResult,
                     analyticsHelper: analyticsHelper,
-                    checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
+                    checkout: checkout,
                     initialState: initialState
                 )
             case .vertical:
@@ -962,7 +960,7 @@ extension PaymentSheet {
                     isFlowController: true,
                     analyticsHelper: analyticsHelper,
                     walletButtonsViewState: walletButtonsViewState,
-                    checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
+                    checkout: checkout,
                     previousPaymentOption: initialState.paymentOption
                 )
             }
@@ -1104,7 +1102,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
-    var checkoutBillingAddressUpdater: CheckoutSessionPaymentElementUpdater? { get set }
+    var checkout: CheckoutSessionUpdater? { get set }
     func clearSelection()
     func clearErrorForReuseAfterCancellation()
 }

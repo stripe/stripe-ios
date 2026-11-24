@@ -100,6 +100,7 @@ private extension SavedPaymentMethodBillingSyncTests {
             configuration: EmbeddedPaymentElement.Configuration(),
             customerProvider: CustomerProvider(customer: EmbeddedPaymentElement.Configuration().customer),
             checkout: updater,
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: paymentMethods[0],
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -128,7 +129,7 @@ private extension SavedPaymentMethodBillingSyncTests {
             configuration: PaymentSheet.Configuration(),
             loadResult: loadResult,
             analyticsHelper: ._testValue(),
-            checkoutBillingAddressUpdater: checkout
+            checkout: checkout
         )
     }
 
@@ -155,7 +156,7 @@ private extension SavedPaymentMethodBillingSyncTests {
 }
 
 @MainActor
-private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionPaymentElementUpdater {
+private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
     let updateStarted = XCTestExpectation(description: "Billing tax region update started")
 
     private let session: CheckoutElementsController.Session
@@ -190,20 +191,6 @@ private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionPay
     func resumeUpdate() {
         updateContinuation?.resume()
         updateContinuation = nil
-    }
-
-    // These tests only sync billing tax, so saved payment method changes are unexpected.
-    func detachSavedPaymentMethod(_ paymentMethodID: String) async throws {
-        XCTFail("Unexpected saved payment method removal")
-    }
-
-    func updateSavedPaymentMethod(
-        _ paymentMethodID: String,
-        billingDetails: CheckoutElementsController.PaymentMethodBillingDetails?,
-        expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails?
-    ) async throws -> CheckoutElementsController.Session {
-        XCTFail("Unexpected saved payment method update")
-        return session
     }
 }
 

@@ -37,7 +37,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     // MARK: Private properties
     private let configuration: PaymentElementConfiguration
     private let customerProvider: CustomerProvider
-    private weak var checkout: CheckoutSessionPaymentElementUpdater?
+    private weak var checkout: CheckoutSessionBillingAddressUpdater?
+    /// Removes and edits Checkout Session payment methods. Separate from `checkout` because FlowController's sheet
+    /// syncs billing tax on Continue, so its saved payment method list shouldn't also sync on selection.
+    private weak var checkoutSavedPaymentMethodUpdater: CheckoutSessionSavedPaymentMethodUpdater?
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let paymentMethodRemoveLast: Bool
@@ -179,7 +182,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     init(
         configuration: PaymentElementConfiguration,
         customerProvider: CustomerProvider,
-        checkout: CheckoutSessionPaymentElementUpdater? = nil,
+        checkout: CheckoutSessionBillingAddressUpdater? = nil,
+        checkoutSavedPaymentMethodUpdater: CheckoutSessionSavedPaymentMethodUpdater?,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
@@ -189,6 +193,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.configuration = configuration
         self.customerProvider = customerProvider
         self.checkout = checkout
+        self.checkoutSavedPaymentMethodUpdater = checkoutSavedPaymentMethodUpdater
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = defaultPaymentMethod
         self.paymentMethodRemove = customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession)
@@ -271,7 +276,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             paymentMethod: paymentMethod,
             elementsSession: elementsSession,
             apiClient: configuration.apiClient,
-            checkoutSavedPaymentMethodUpdater: checkout
+            checkoutSavedPaymentMethodUpdater: checkoutSavedPaymentMethodUpdater
         )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
@@ -534,7 +539,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
                 with: updateParams,
                 elementsSession: elementsSession,
                 apiClient: configuration.apiClient,
-                checkoutSavedPaymentMethodUpdater: checkout
+                checkoutSavedPaymentMethodUpdater: checkoutSavedPaymentMethodUpdater
             )
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())

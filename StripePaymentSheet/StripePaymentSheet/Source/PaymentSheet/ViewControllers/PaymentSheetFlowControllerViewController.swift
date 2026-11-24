@@ -24,7 +24,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
-    weak var checkoutBillingAddressUpdater: CheckoutSessionPaymentElementUpdater?
+    weak var checkout: CheckoutSessionUpdater?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -181,7 +181,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         nativeSheetPresentation: SheetImplementationResolver? = nil,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        checkoutBillingAddressUpdater: CheckoutSessionPaymentElementUpdater? = nil,
+        checkout: CheckoutSessionUpdater? = nil,
         initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
     ) {
         let previousConfirmParams = initialState.previousCustomerInputForHorizontalController
@@ -189,7 +189,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
-        self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
+        self.checkout = checkout
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
         self.isLinkEnabled = PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
         self.couldShowLinkInHeader = isLinkEnabled && !isApplePayEnabled
@@ -572,7 +572,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     /// Syncs billing address to the checkout session, then closes the sheet.
     /// If the sync fails, stays on the sheet and shows the error instead.
     private func syncCheckoutBillingThenClose() {
-        guard let checkoutBillingAddressUpdater,
+        guard let checkout,
               let paymentOption = selectedPaymentOption else {
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
@@ -586,7 +586,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkoutBillingAddressUpdater.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
+                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
             } catch {
                 self.error = error
             }
@@ -661,7 +661,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             with: updateParams,
             elementsSession: elementsSession,
             apiClient: configuration.apiClient,
-            checkoutSavedPaymentMethodUpdater: checkoutBillingAddressUpdater
+            checkoutSavedPaymentMethodUpdater: checkout
         )
     }
 
@@ -704,9 +704,9 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
                 updateUI()
                 return
             }
-            if let checkoutBillingAddressUpdater {
+            if let checkout {
                 syncCheckoutBillingThenClose(
-                    checkoutBillingAddressUpdater: checkoutBillingAddressUpdater,
+                    checkoutBillingAddressUpdater: checkout,
                     billingDetails: paymentMethod.billingDetails,
                     previousSelection: previousSelection
                 )
@@ -781,7 +781,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             paymentMethod: paymentMethod,
             elementsSession: elementsSession,
             apiClient: configuration.apiClient,
-            checkoutSavedPaymentMethodUpdater: checkoutBillingAddressUpdater
+            checkoutSavedPaymentMethodUpdater: checkout
         )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 

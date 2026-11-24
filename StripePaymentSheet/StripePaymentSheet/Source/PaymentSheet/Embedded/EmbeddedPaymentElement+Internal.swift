@@ -349,6 +349,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             configuration: configuration,
             customerProvider: loadResult.customerProvider,
             checkout: checkout,
+            checkoutSavedPaymentMethodUpdater: checkout,
             selectedPaymentMethod: selectedSavedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
