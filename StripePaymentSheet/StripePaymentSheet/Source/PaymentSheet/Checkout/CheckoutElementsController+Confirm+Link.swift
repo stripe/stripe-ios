@@ -27,7 +27,8 @@ extension CheckoutElementsController {
     ) async -> InternalConfirmResult {
         let elementsSession = checkoutSession.elementsSession
         // Derive the customer from the same session snapshot as the rest of this confirmation.
-        let customerProvider = CustomerProvider(checkoutSession: checkoutSession)
+        // Confirmation doesn't remove or edit saved payment methods, so this provider doesn't need an updater.
+        let customerProvider = CustomerProvider(checkoutSession: checkoutSession, savedPaymentMethodUpdater: nil)
         let configuration = parameters.configuration
         let confirmationChallenge = parameters.confirmationChallenge
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(

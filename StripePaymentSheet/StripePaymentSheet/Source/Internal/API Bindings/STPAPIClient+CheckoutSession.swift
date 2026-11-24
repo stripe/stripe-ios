@@ -281,14 +281,16 @@ extension STPAPIClient {
         )
     }
 
+    /// Detaches a saved payment method from a Checkout Session's Customer.
+    /// - Returns: The updated Checkout response.
     func detachPaymentMethod(
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String,
         clientSecret: String
-    ) async throws {
+    ) async throws -> CheckoutClientAPIResponse {
         var params = Self.checkoutClientParameters(clientSecret: clientSecret)
         params["payment_method_to_detach"] = paymentMethodId
-        let _: CheckoutClientAPIResponse = try await post(
+        return try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
