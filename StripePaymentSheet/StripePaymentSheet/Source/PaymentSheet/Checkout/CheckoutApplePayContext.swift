@@ -285,14 +285,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         applePayConfirmationParameters: CheckoutElementsController.ApplePayConfirmationParameters,
         checkoutWalletUpdater: CheckoutSessionWalletUpdater
     ) throws -> CheckoutApplePayContext {
+        // Apple Pay is only offered when `StripeAPI.deviceSupportsApplePay()` is true, but that value is cached per process.
         guard PKPaymentAuthorizationController.canMakePayments() else {
-            let message = "Apple Pay is unavailable on this device. Check device support and payment restrictions."
-            logUnexpectedCheckoutElementsErrorAndAssert(
-                .applePayCannotMakePayments,
-                message: message,
-                apiClient: applePayConfirmationParameters.apiClient
-            )
-            throw CheckoutError.unknown(debugDescription: message)
+            throw CheckoutError.applePayUnavailable
         }
 
         // TODO: Product Usage
@@ -335,13 +330,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 guard let self, !presented else { return }
                 Task { @MainActor [weak self] in
                     guard let self else { return }
-                    let message = """
-                        Could not present Apple Pay. Check Apple Pay setup in Wallet and that the merchant ID matches an ID \
-                        in the app's Apple Pay entitlements and provisioning profile. Ensure the app is active, \
-                        the presenting window is visible, and no other presentation or dismissal is in progress.
-                        """
-                    logUnexpectedCheckoutElementsErrorAndAssert(.applePayPresentationFailed, message: message, apiClient: self.apiClient)
-                    self.resume(with: .failed(CheckoutError.unknown(debugDescription: message)))
+                    self.resume(with: .failed(CheckoutError.applePayPresentationFailed))
                     self._end()
                 }
             }

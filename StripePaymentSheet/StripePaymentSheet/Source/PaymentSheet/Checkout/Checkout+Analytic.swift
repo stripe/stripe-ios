@@ -32,15 +32,9 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
         /// Express Checkout Element asked to confirm with Link, but no view controller could present Link.
         case expressCheckoutElementLinkPresentingViewControllerUnavailable =
             "express_checkout_element_link_presenting_view_controller_unavailable"
-        /// `PKPaymentAuthorizationController.canMakePayments()` returned false when starting Apple Pay.
-        case applePayCannotMakePayments =
-            "apple_pay_cannot_make_payments"
         /// PassKit rejected the Apple Pay payment request built from the Session.
         case applePayPaymentRequestInvalid =
             "apple_pay_payment_request_invalid"
-        /// PassKit failed to present the Apple Pay sheet.
-        case applePayPresentationFailed =
-            "apple_pay_presentation_failed"
         /// `PaymentElement.present(from:)` could not find a view controller to present from.
         case paymentElementPresentingViewControllerUnavailable =
             "payment_element_presenting_view_controller_unavailable"
