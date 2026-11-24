@@ -21,7 +21,7 @@ extension LinkShippingAddressPicker {
         }
 
         /// The selected shipping address.
-        private var selectedShippingAddress: ShippingAddressesResponse.ShippingAddress? {
+        var selectedShippingAddress: ShippingAddressesResponse.ShippingAddress? {
             didSet {
                 contentView.shippingAddress = selectedShippingAddress
                 updateChevron()
@@ -135,10 +135,6 @@ extension LinkShippingAddressPicker {
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
-        }
-
-        func setSelectedShippingAddress(_ selectedShippingAddress: ShippingAddressesResponse.ShippingAddress?) {
-            self.selectedShippingAddress = selectedShippingAddress
         }
 
         private func updateChevron() {

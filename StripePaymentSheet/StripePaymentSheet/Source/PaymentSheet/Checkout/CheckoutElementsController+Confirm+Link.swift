@@ -327,22 +327,11 @@ extension CheckoutElementsController {
         for confirmOption: PaymentSheet.LinkConfirmOption,
         checkoutSession: Session
     ) -> STPPaymentIntentShippingDetailsParams? {
-        guard checkoutSession.requiresShippingAddress,
-              let shippingAddress = confirmOption.shippingAddress,
-              let line1 = shippingAddress.address.line1?.nonEmpty,
-              let name = shippingAddress.name?.nonEmpty else {
+        guard checkoutSession.requiresShippingAddress else {
             return nil
         }
-        let address = shippingAddress.address
-        let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
-        addressParams.line2 = address.line2
-        addressParams.city = address.city
-        addressParams.state = address.state
-        addressParams.postalCode = address.postalCode
-        addressParams.country = address.country
-
         // Checkout Session confirmation doesn't accept a shipping phone number.
-        return STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
+        return confirmOption.checkoutShippingAddress?.shippingDetailsParams
     }
 
 }

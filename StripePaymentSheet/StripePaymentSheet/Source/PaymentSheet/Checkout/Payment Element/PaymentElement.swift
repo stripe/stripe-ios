@@ -242,23 +242,14 @@ extension PaymentElement {
         guard let checkout,
               checkout.session.requiresShippingAddress,
               case .link(let confirmOption)? = paymentOption,
-              let shippingAddress = confirmOption.shippingAddress,
-              let country = shippingAddress.address.country?.nonEmpty else {
+              let shippingAddress = confirmOption.checkoutShippingAddress else {
             return
         }
-        let address = CheckoutElementsController.Address(
-            country: country,
-            line1: shippingAddress.address.line1?.nonEmpty,
-            line2: shippingAddress.address.line2?.nonEmpty,
-            city: shippingAddress.address.city?.nonEmpty,
-            state: shippingAddress.address.state?.nonEmpty,
-            postalCode: shippingAddress.address.postalCode?.nonEmpty
-        )
         Task { @MainActor in
             // Best effort: if this fails, the customer can still enter a shipping address in the integration.
             try? await checkout.updateShippingAddress(
                 name: shippingAddress.name,
-                address: address,
+                address: shippingAddress.address,
                 source: .paymentElement,
                 canUpdateWhileSheetPresented: true
             )

@@ -14,10 +14,7 @@ protocol LinkShippingAddressPickerDelegate: AnyObject {
 
     func shippingAddressPicker(_ picker: LinkShippingAddressPicker, didSelectIndex index: Int)
 
-    func shippingAddressPicker(
-        _ picker: LinkShippingAddressPicker,
-        menuActionsForItemAt index: Int
-    ) -> [PayWithLinkViewController.WalletViewController.Action]
+    func shippingAddressPickerMenuActions(forItemAt index: Int) -> [PayWithLinkViewController.WalletViewController.Action]
 
     func shippingAddressPicker(
         _ picker: LinkShippingAddressPicker,
@@ -25,7 +22,7 @@ protocol LinkShippingAddressPickerDelegate: AnyObject {
         sourceRect: CGRect
     )
 
-    func shippingAddressPickerDidTapOnAddShippingAddress(_ picker: LinkShippingAddressPicker)
+    func shippingAddressPickerDidTapOnAddShippingAddress()
 }
 
 protocol LinkShippingAddressPickerDataSource: AnyObject {
@@ -173,7 +170,7 @@ private extension LinkShippingAddressPicker {
     }
 
     @objc func onAddShippingAddressButtonTapped() {
-        delegate?.shippingAddressPickerDidTapOnAddShippingAddress(self)
+        delegate?.shippingAddressPickerDidTapOnAddShippingAddress()
     }
 
 }
@@ -264,7 +261,7 @@ extension LinkShippingAddressPicker {
             subview.layer.zPosition = CGFloat(-index)
         }
 
-        headerView.setSelectedShippingAddress(selectedShippingAddress)
+        headerView.selectedShippingAddress = selectedShippingAddress
     }
 
     private func index(for cell: Cell) -> Int? {
@@ -303,6 +300,6 @@ extension LinkShippingAddressPicker: LinkShippingAddressPickerCellDelegate {
 
     func shippingAddressPickerCellMenuActions(for cell: Cell) -> [PayWithLinkViewController.WalletViewController.Action]? {
         guard let index = index(for: cell) else { return nil }
-        return delegate?.shippingAddressPicker(self, menuActionsForItemAt: index)
+        return delegate?.shippingAddressPickerMenuActions(forItemAt: index)
     }
 }
