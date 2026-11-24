@@ -216,11 +216,15 @@ extension STPAPIClient {
     }
 
     func retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: [String]?,
+                                                         allowedPaymentMethodTypes: [String]?,
+                                                         excludedPaymentMethodTypes: [String]?,
                                                          onBehalfOf: String?,
                                                          clientDefaultPaymentMethod: String?,
                                                          customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
 
         let parameters = makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: paymentMethodTypes,
+                                                                            allowedPaymentMethodTypes: allowedPaymentMethodTypes,
+                                                                            excludedPaymentMethodTypes: excludedPaymentMethodTypes,
                                                                             onBehalfOf: onBehalfOf,
                                                                             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                             customerSessionClientSecret: customerSessionClientSecret)
@@ -234,6 +238,8 @@ extension STPAPIClient {
     }
 
     func makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: [String]?,
+                                                            allowedPaymentMethodTypes: [String]?,
+                                                            excludedPaymentMethodTypes: [String]?,
                                                             onBehalfOf: String?,
                                                             clientDefaultPaymentMethod: String?,
                                                             customerSessionClientSecret: CustomerSessionClientSecret?) -> [String: Any] {
@@ -258,6 +264,8 @@ extension STPAPIClient {
         if let paymentMethodTypes {
             deferredIntent["payment_method_types"] = paymentMethodTypes
         }
+        deferredIntent["allowed_payment_method_types"] = allowedPaymentMethodTypes
+        deferredIntent["excluded_payment_method_types"] = excludedPaymentMethodTypes
         deferredIntent["on_behalf_of"] = onBehalfOf
         parameters["deferred_intent"] = deferredIntent
         return parameters
