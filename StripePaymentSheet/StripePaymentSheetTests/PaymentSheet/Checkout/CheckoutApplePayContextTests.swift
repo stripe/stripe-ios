@@ -956,6 +956,47 @@ final class CheckoutApplePayContextTests: XCTestCase {
         }
     }
 
+    func testCancelDuringAuthorizationRetryWaitsForItAndRestoresTaxRegion() async {
+        // Given a billing tax update that failed while the sheet was up, and a retry at authorization that is still in flight
+        let initialTaxRegion = CheckoutElementsController.Address(country: "US", postalCode: "10001")
+        let updater = MockCheckoutSessionWalletUpdater(
+            sessionToReturn: makeBillingTaxSession(taxExclusive: 200),
+            errorsToThrowFirst: [makeNetworkError()],
+            currentTaxRegion: initialTaxRegion,
+            suspendsFirstUpdate: true
+        )
+        let (context, controller) = makeContext(collectsTaxFromBillingAddress: true, checkoutWalletUpdater: updater) { _ in
+            XCTFail("Should not confirm after Apple Pay is canceled")
+            return .canceled()
+        }
+        var didReturnResult = false
+        let resultTask = Task {
+            let result = await context.presentApplePay()
+            didReturnResult = true
+            return result
+        }
+        await Task.yield()
+        await selectBillingPaymentMethod(context, controller)
+        let authorizationTask = Task { await authorize(context, controller, payment: makePaymentWithBillingAddress()) }
+        while !updater.isWaiting {
+            await Task.yield()
+        }
+
+        // When Apple Pay is dismissed before the retry completes
+        context.paymentAuthorizationControllerDidFinish(controller)
+        await Task.yield()
+
+        // Then cancellation waits for the retry and restores the initial tax region
+        XCTAssertFalse(didReturnResult)
+        updater.resume()
+        let result = await resultTask.value
+        _ = await authorizationTask.value
+        XCTAssertEqual(result.paymentSheetResult, .canceled)
+        XCTAssertEqual(updater.updateCallCount, 3)
+        XCTAssertEqual(updater.lastAddress, initialTaxRegion)
+        XCTAssertEqual(updater.currentTaxRegion, initialTaxRegion)
+    }
+
     func testAuthorizationConfirmsWithPaymentElementSource() async throws {
         try await assertAuthorizationConfirmsWithSource(.paymentElement)
     }

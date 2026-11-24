@@ -228,10 +228,11 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
             return
         }
-        paymentMethodUpdateTask = Task { @MainActor in
+        let update = startBillingTaxUpdate(to: address, using: checkoutWalletUpdater)
+        Task { @MainActor in
             // If the update throws, the totals are stale and authorization handles the failure.
-            defer { handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems())) }
-            try await updateTaxRegion(to: address, using: checkoutWalletUpdater)
+            _ = await update.result
+            handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: summaryItems()))
         }
     }
 
@@ -386,6 +387,19 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         )
     }
 
+    /// Starts a billing tax update and tracks it as `paymentMethodUpdateTask`.
+    /// Authorization awaits it, and cancelling waits for it before restoring the initial tax region.
+    private func startBillingTaxUpdate(
+        to address: CheckoutElementsController.Address,
+        using checkoutWalletUpdater: CheckoutSessionWalletUpdater
+    ) -> Task<Void, Error> {
+        let task = Task { @MainActor in
+            try await updateTaxRegion(to: address, using: checkoutWalletUpdater)
+        }
+        paymentMethodUpdateTask = task
+        return task
+    }
+
     /// Retries a billing tax update that failed while the Apple Pay sheet was presented, using the billing address Apple Pay
     /// provides at authorization.
     /// - Returns: The authorization result to report, or `nil` if confirmation can continue.
@@ -397,8 +411,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
             return Self.makeRetryableFailureResult()
         }
         do {
-            try await updateTaxRegion(to: address, using: checkoutWalletUpdater)
-            paymentMethodUpdateTask = nil
+            try await startBillingTaxUpdate(to: address, using: checkoutWalletUpdater).value
         } catch {
             return Self.makeRetryableFailureResult()
         }
