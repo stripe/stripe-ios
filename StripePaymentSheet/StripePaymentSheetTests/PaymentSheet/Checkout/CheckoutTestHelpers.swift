@@ -42,40 +42,6 @@ extension CheckoutClientAPIResponse {
     }
 }
 
-extension CustomerProvider {
-
-    /// Builds a Checkout Session customer provider for tests that don't remove or edit saved payment methods.
-    init(checkoutSession: CheckoutElementsController.Session) {
-        self.init(
-            checkoutSession: checkoutSession,
-            savedPaymentMethodUpdater: UnusedCheckoutSessionSavedPaymentMethodUpdater.shared
-        )
-    }
-}
-
-/// Fails the test if a saved payment method change reaches it.
-final class UnusedCheckoutSessionSavedPaymentMethodUpdater {
-
-    // Customer providers hold their updater weakly, so keep one instance alive for every test.
-    static let shared = UnusedCheckoutSessionSavedPaymentMethodUpdater()
-}
-
-extension UnusedCheckoutSessionSavedPaymentMethodUpdater: CheckoutSessionSavedPaymentMethodUpdater {
-
-    func detachSavedPaymentMethod(_ paymentMethodID: String) async throws {
-        XCTFail("Unexpected saved payment method removal. Build the customer provider with a savedPaymentMethodUpdater.")
-    }
-
-    func updateSavedPaymentMethod(
-        _ paymentMethodID: String,
-        billingDetails: CheckoutElementsController.PaymentMethodBillingDetails?,
-        expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails?
-    ) async throws -> CheckoutElementsController.Session {
-        XCTFail("Unexpected saved payment method update. Build the customer provider with a savedPaymentMethodUpdater.")
-        throw CheckoutError.unknown(debugDescription: "Unexpected saved payment method update in test.")
-    }
-}
-
 extension ExpressCheckoutElementUtilities {
     static func availablePaymentMethodsWithoutCheckoutRequirements(
         for elementsSession: STPElementsSession,

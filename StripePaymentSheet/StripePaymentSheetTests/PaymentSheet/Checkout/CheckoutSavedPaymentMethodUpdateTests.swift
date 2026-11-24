@@ -28,13 +28,21 @@ final class CheckoutSavedPaymentMethodUpdateTests: XCTestCase {
         )
         let embedded = try XCTUnwrap(checkout.paymentElement).embeddedPaymentElement
         let card = try XCTUnwrap(embedded.savedPaymentMethods.first)
-
-        // When the customer removes the card in Payment Element and the server finishes removing it
-        embedded.loadResult.customerProvider.detach(
-            paymentMethod: card,
-            elementsSession: embedded.elementsSession,
-            apiClient: embedded.configuration.apiClient
+        let editor = UpdatePaymentMethodViewController(
+            removeSavedPaymentMethodMessage: nil,
+            configuration: .init(
+                paymentMethod: card,
+                appearance: embedded.configuration.appearance,
+                billingDetailsCollectionConfiguration: embedded.configuration.billingDetailsCollectionConfiguration,
+                hostedSurface: .paymentSheet,
+                canRemove: true,
+                canUpdate: true,
+                isCBCEligible: false
+            )
         )
+
+        // When the customer removes the card in Payment Element's editor and the server finishes removing it
+        embedded.didRemove(viewController: editor, paymentMethod: card)
         try await waitUntil {
             recorder.requests.contains { $0.params["payment_method_to_detach"] == card.stripeId }
         }
@@ -63,12 +71,14 @@ final class CheckoutSavedPaymentMethodUpdateTests: XCTestCase {
         cardParams.expMonth = 11
         cardParams.expYear = 2041
 
-        // When the customer changes the card's expiry in Payment Element
+        // When the customer changes the card's expiry in Payment Element. This calls the customer provider directly the
+        // way Embedded does, since the editor only produces an update from what the customer types into its form.
         let updatedCard = try await embedded.loadResult.customerProvider.update(
             paymentMethod: card,
             with: STPPaymentMethodUpdateParams(card: cardParams, billingDetails: nil),
             elementsSession: embedded.elementsSession,
-            apiClient: embedded.configuration.apiClient
+            apiClient: embedded.configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkout
         )
         XCTAssertEqual(updatedCard.card?.expMonth, 11)
         // ...and the merchant then makes an update that doesn't call the server, which rebuilds Payment Element

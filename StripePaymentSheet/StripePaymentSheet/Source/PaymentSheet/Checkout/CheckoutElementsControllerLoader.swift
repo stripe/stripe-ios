@@ -141,7 +141,7 @@ enum CheckoutElementsControllerLoader {
         )
 
         let intent = Intent.checkout(session)
-        let customerProvider = CustomerProvider(checkoutSession: session, savedPaymentMethodUpdater: checkout)
+        let customerProvider = CustomerProvider(checkoutSession: session)
         PaymentSheetLoader.logAvailabilityMessages(elementsSession: elementsSession)
         // Filter PMs
         let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(

@@ -940,7 +940,7 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?,
+            checkoutBillingAddressUpdater: CheckoutSessionPaymentElementUpdater?,
             initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
@@ -1104,7 +1104,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
-    var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? { get set }
+    var checkoutBillingAddressUpdater: CheckoutSessionPaymentElementUpdater? { get set }
     func clearSelection()
     func clearErrorForReuseAfterCancellation()
 }

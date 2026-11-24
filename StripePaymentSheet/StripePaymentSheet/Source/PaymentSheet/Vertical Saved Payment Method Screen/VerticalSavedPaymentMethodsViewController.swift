@@ -37,7 +37,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     // MARK: Private properties
     private let configuration: PaymentElementConfiguration
     private let customerProvider: CustomerProvider
-    private weak var checkout: CheckoutSessionBillingAddressUpdater?
+    private weak var checkout: CheckoutSessionPaymentElementUpdater?
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let paymentMethodRemoveLast: Bool
@@ -179,7 +179,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     init(
         configuration: PaymentElementConfiguration,
         customerProvider: CustomerProvider,
-        checkout: CheckoutSessionBillingAddressUpdater? = nil,
+        checkout: CheckoutSessionPaymentElementUpdater? = nil,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
@@ -270,7 +270,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         customerProvider.detach(
             paymentMethod: paymentMethod,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkout
         )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
@@ -532,7 +533,8 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
                 paymentMethod: paymentMethod,
                 with: updateParams,
                 elementsSession: elementsSession,
-                apiClient: configuration.apiClient
+                apiClient: configuration.apiClient,
+                checkoutSavedPaymentMethodUpdater: checkout
             )
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())

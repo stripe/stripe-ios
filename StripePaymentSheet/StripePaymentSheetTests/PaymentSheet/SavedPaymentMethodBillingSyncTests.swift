@@ -155,7 +155,7 @@ private extension SavedPaymentMethodBillingSyncTests {
 }
 
 @MainActor
-private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
+private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionPaymentElementUpdater {
     let updateStarted = XCTestExpectation(description: "Billing tax region update started")
 
     private let session: CheckoutElementsController.Session
@@ -190,6 +190,20 @@ private final class MockCheckoutSessionBillingAddressUpdater: CheckoutSessionBil
     func resumeUpdate() {
         updateContinuation?.resume()
         updateContinuation = nil
+    }
+
+    // These tests only sync billing tax, so saved payment method changes are unexpected.
+    func detachSavedPaymentMethod(_ paymentMethodID: String) async throws {
+        XCTFail("Unexpected saved payment method removal")
+    }
+
+    func updateSavedPaymentMethod(
+        _ paymentMethodID: String,
+        billingDetails: CheckoutElementsController.PaymentMethodBillingDetails?,
+        expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails?
+    ) async throws -> CheckoutElementsController.Session {
+        XCTFail("Unexpected saved payment method update")
+        return session
     }
 }
 

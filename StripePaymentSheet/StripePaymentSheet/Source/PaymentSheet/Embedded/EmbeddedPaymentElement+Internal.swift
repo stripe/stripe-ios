@@ -400,7 +400,8 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
         loadResult.customerProvider.detach(
             paymentMethod: paymentMethod,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkout
         )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
@@ -465,7 +466,8 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
                 paymentMethod: paymentMethod,
                 with: updateParams,
                 elementsSession: elementsSession,
-                apiClient: configuration.apiClient
+                apiClient: configuration.apiClient,
+                checkoutSavedPaymentMethodUpdater: checkout
             )
 
             // Update savedPaymentMethods

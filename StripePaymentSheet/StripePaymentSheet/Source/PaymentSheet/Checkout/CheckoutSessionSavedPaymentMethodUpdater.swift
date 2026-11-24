@@ -27,6 +27,9 @@ protocol CheckoutSessionSavedPaymentMethodUpdater: AnyObject {
     ) async throws -> CheckoutElementsController.Session
 }
 
+/// The Checkout interfaces that Payment Element's screens use to sync billing tax and to remove or edit saved payment methods.
+typealias CheckoutSessionPaymentElementUpdater = CheckoutSessionBillingAddressUpdater & CheckoutSessionSavedPaymentMethodUpdater
+
 // These run while Payment Element's UI is usually presented, so unlike merchant updates they don't
 // require the sheet to be dismissed. They also don't call `updateForSessionChange()`: the presented UI
 // already shows the change, and rebuilding Payment Element underneath it would disconnect that UI from

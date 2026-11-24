@@ -80,7 +80,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
-    weak var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?
+    weak var checkoutBillingAddressUpdater: CheckoutSessionPaymentElementUpdater?
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let walletButtonsShownExternally: Bool
     var error: Swift.Error?
@@ -161,7 +161,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         walletButtonsViewState: PaymentSheet.WalletButtonsViewState = .hidden,
-        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
+        checkoutBillingAddressUpdater: CheckoutSessionPaymentElementUpdater? = nil,
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -1111,7 +1111,8 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
         loadResult.customerProvider.detach(
             paymentMethod: paymentMethod,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkoutBillingAddressUpdater
         )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
@@ -1170,7 +1171,8 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
                 paymentMethod: paymentMethod,
                 with: updateParams,
                 elementsSession: elementsSession,
-                apiClient: configuration.apiClient
+                apiClient: configuration.apiClient,
+                checkoutSavedPaymentMethodUpdater: checkoutBillingAddressUpdater
             )
 
             // Update savedPaymentMethods

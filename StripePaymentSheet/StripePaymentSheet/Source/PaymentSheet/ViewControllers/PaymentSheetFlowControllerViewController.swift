@@ -24,7 +24,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
-    weak var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?
+    weak var checkoutBillingAddressUpdater: CheckoutSessionPaymentElementUpdater?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -181,7 +181,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         nativeSheetPresentation: SheetImplementationResolver? = nil,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
+        checkoutBillingAddressUpdater: CheckoutSessionPaymentElementUpdater? = nil,
         initialState: FlowControllerViewControllerInitialState = .preservingFormInput(from: nil)
     ) {
         let previousConfirmParams = initialState.previousCustomerInputForHorizontalController
@@ -660,7 +660,8 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             paymentMethod: paymentMethod,
             with: updateParams,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkoutBillingAddressUpdater
         )
     }
 
@@ -779,7 +780,8 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
         loadResult.customerProvider.detach(
             paymentMethod: paymentMethod,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkoutBillingAddressUpdater
         )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
