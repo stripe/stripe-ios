@@ -262,7 +262,8 @@ extension STPAPIClient {
             parameters: Self.checkoutClientParameters(clientSecret: clientSecret),
             timeout: timeout,
             retriesEnabled: retriesEnabled,
-            useServerErrorMessage: true
+            useServerErrorMessage: true,
+            parsingErrorCode: .checkoutClientResponseParsingFailed
         )
     }
 
@@ -277,7 +278,8 @@ extension STPAPIClient {
             endpoint: "checkout_client/\(checkoutSessionId)/poll",
             parameters: ["client_secret": clientSecret],
             timeout: timeout,
-            retriesEnabled: false
+            retriesEnabled: false,
+            parsingErrorCode: .checkoutClientPollResponseParsingFailed
         )
     }
 
@@ -404,7 +406,7 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
+                reportUnexpectedCheckoutClientParsingError(error, errorCode: .checkoutClientResponseParsingFailed, apiClient: self)
             }
             throw error
         }
@@ -430,7 +432,8 @@ extension STPAPIClient {
         parameters: [String: Any],
         timeout: TimeInterval? = nil,
         retriesEnabled: Bool = true,
-        useServerErrorMessage: Bool = false
+        useServerErrorMessage: Bool = false,
+        parsingErrorCode: UnexpectedCheckoutElementsErrorAnalytic.ErrorCode
     ) async throws -> T {
         do {
             return try await withCheckedThrowingContinuation { continuation in
@@ -447,7 +450,7 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
+                reportUnexpectedCheckoutClientParsingError(error, errorCode: parsingErrorCode, apiClient: self)
             }
             throw error
         }

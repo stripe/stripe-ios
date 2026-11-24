@@ -566,6 +566,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(response?.paymentStatus, .noPaymentRequired)
         let events = STPAnalyticsClient.sharedClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.checkout_elements" }
         XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events.first?["error_code"] as? String, "confirm_poll_not_started")
         XCTAssertTrue((events.first?["error_message"] as? String)?.contains("not_started") == true)
         XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
         XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("not_started"))
@@ -950,6 +951,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
     func testExpressCheckoutLinkRequiresPresentingViewController() async throws {
         // Given an initialized Checkout controller
         let checkout = try await makeCheckout()
+        let previousHistory = STPAnalyticsClient.sharedClient._testLogHistory
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        defer { STPAnalyticsClient.sharedClient._testLogHistory = previousHistory }
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
 
         // When ECE cannot resolve a view controller from its presentation window
         // Then constructing the Link confirmation flow throws
@@ -958,6 +963,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         ) { error in
             XCTAssertTrue(error.nonGenericDescription.contains("Could not find a presenting view controller"))
         }
+
+        // ...and logs the unexpected error once
+        let events = STPAnalyticsClient.sharedClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.checkout_elements" }
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events.first?["error_code"] as? String, "express_checkout_element_link_presenting_view_controller_unavailable")
+        XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
     }
 
     func testLinkWalletDeclineThenCloseReturnsCanceledAndCommitsSession() async throws {
