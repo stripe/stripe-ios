@@ -37,6 +37,53 @@ enum DocumentScannerOutput: Equatable {
         }
     }
 
+    /// A check that stops the automatic capture of a frame.
+    enum CaptureBlocker: Equatable {
+        case wrongDocument
+        case tooClose
+        case tooFar
+        case blurry
+        case motionBlur
+        case adjustingFocus
+    }
+
+    /// Returns the first check that stops the automatic capture of this frame,
+    /// or `nil` if the frame can be captured. The scanning hint is built from
+    /// the same result, so the hint and the capture decision agree.
+    /// - Parameters:
+    ///   - side: Side of the desired document.
+    func captureBlocker(side: DocumentSide) -> CaptureBlocker? {
+        switch self {
+        case let .legacy(idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult):
+            guard idDetectorOutput.classification.matchesDocument(side: side) else {
+                return .wrongDocument
+            }
+            switch idDetectorOutput.computeZoomLevel() {
+            case .tooClose:
+                return .tooClose
+            case .tooFar:
+                return .tooFar
+            case .ok:
+                break
+            }
+            if blurResult.isBlurry {
+                return .blurry
+            }
+            // A barcode that is clear enough to decode is good enough, even
+            // while the camera moves or focuses.
+            if barcode?.hasBarcode == true {
+                return nil
+            }
+            if motionBlur.hasMotionBlur {
+                return .motionBlur
+            }
+            if cameraProperties?.isAdjustingFocus == true {
+                return .adjustingFocus
+            }
+            return nil
+        }
+    }
+
     /// Determines if the document is high quality and matches the desired
     /// document type and side.
     /// - Parameters:
@@ -44,34 +91,7 @@ enum DocumentScannerOutput: Equatable {
     func isHighQuality(
         side: DocumentSide
     ) -> Bool {
-        switch self {
-        case let .legacy(idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult):
-            return checkWithDetectorResults(side, idDetectorOutput, barcode, motionBlur, cameraProperties, blurResult)
-        }
-
-    }
-
-    private func checkWithDetectorResults(
-        _ side: DocumentSide,
-        _ idDetectorOutput: IDDetectorOutput,
-        _ barcode: BarcodeDetectorOutput?,
-        _ motionBlur: MotionBlurDetector.Output,
-        _ cameraProperties: CameraSession.DeviceProperties?,
-        _ blurResult: LaplacianBlurDetector.Output
-    ) -> Bool {
-        if barcode?.hasBarcode == true {
-            // If the barcode is clear enough to decode, then that's good enough and
-            // it doesn't matter if the MotionBlurDetector believes there's motion blur
-            // just need to make sure the zoom level is ok
-            return blurResult.isBlurry != true
-                && idDetectorOutput.computeZoomLevel() == .ok
-        } else {
-            return idDetectorOutput.classification.matchesDocument(side: side)
-                && cameraProperties?.isAdjustingFocus != true
-                && !motionBlur.hasMotionBlur
-                && blurResult.isBlurry != true
-                && idDetectorOutput.computeZoomLevel() == .ok
-        }
+        return captureBlocker(side: side) == nil
     }
 
     func matchesDocument(

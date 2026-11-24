@@ -29,6 +29,9 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 ### Financial Connections
 * [Changed] Updated Link-branded Financial Connections flows, including Instant Debits, to the new Link design system.
 
+### Identity
+* [Fixed] Fixed an issue where Identity document scanning could capture the back of an ID as the front. Scanning hints now tell users when the image is blurry.
+
 ## 26.16.1 2026-11-09
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".
