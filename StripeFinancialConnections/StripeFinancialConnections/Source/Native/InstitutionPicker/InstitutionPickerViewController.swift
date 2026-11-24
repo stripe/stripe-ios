@@ -152,19 +152,19 @@ class InstitutionPickerViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
 
-        if dataSource.manifest.appearance.colors == .link {
-            view.addAndPinSubview(
-                institutionTableView,
-                insets: NSDirectionalEdgeInsets(
-                    top: 0,
-                    leading: Constants.Layout.navigationBarAlignedHorizontalMargin,
-                    bottom: 0,
-                    trailing: Constants.Layout.navigationBarAlignedHorizontalMargin
-                )
-            )
-        } else {
-            view.addAndPinSubview(institutionTableView)
-        }
+        let horizontalMargin = dataSource.manifest.appearance.colors == .link
+            ? Constants.Layout.navigationBarAlignedHorizontalMargin
+            : 0
+        institutionTableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(institutionTableView)
+        NSLayoutConstraint.activate([
+            // Pin to the safe area so rows can't scroll into the area above the sticky search bar,
+            // where the navigation bar doesn't cover them (e.g. on iPhone Duo).
+            institutionTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            institutionTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            institutionTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalMargin),
+            institutionTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalMargin),
+        ])
         institutionTableView.setTableHeaderView(headerView)
         if !dataSource.manifest.institutionSearchDisabled {
             institutionTableView.searchBarContainerView = searchBarContainerView
