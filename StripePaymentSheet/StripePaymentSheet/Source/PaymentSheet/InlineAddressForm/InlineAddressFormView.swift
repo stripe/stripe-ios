@@ -28,6 +28,8 @@ public struct InlineAddressFormView: View {
             )
             .frame(maxWidth: .infinity)
             .frame(height: sizing.height)
+            // Until the form takes the fields' measured height, they can draw past it.
+            .opacity(sizing.height == nil ? 0 : 1)
             .onChange(of: state.enteredAddress) { _ in
                 // An edit can add or remove fields, such as when the country changes.
                 sizing.updateHeight(of: addressSectionView)
@@ -106,7 +108,19 @@ private final class InlineAddressFormContainerView: UIView {
         self.addressSectionView = addressSectionView
         self.sizing = sizing
         super.init(frame: .zero)
+
+        // SwiftUI can make this view narrower or shorter than the fields, such as before they're
+        // measured. Leaving their height to their own constraints, and their width optional, keeps
+        // UIKit from breaking those constraints.
+        addressSectionView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(addressSectionView)
+        let widthConstraint = addressSectionView.widthAnchor.constraint(equalTo: widthAnchor)
+        widthConstraint.priority = .required - 1
+        NSLayoutConstraint.activate([
+            addressSectionView.topAnchor.constraint(equalTo: topAnchor),
+            addressSectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            widthConstraint,
+        ])
     }
 
     required init?(coder: NSCoder) {
@@ -115,7 +129,6 @@ private final class InlineAddressFormContainerView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        addressSectionView.frame = bounds
 
         // SwiftUI can create this view before it has a width, and a width change alone doesn't
         // call `updateUIView`.
