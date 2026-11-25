@@ -28,6 +28,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 ### CryptoOnramp (Alpha)
 * [Added] Added the optional `linkCardBrandAcceptance` parameter to `CryptoOnrampCoordinator.create(...)` to allow or block card brands in the Link UI. Defaults to accepting all supported brands.
 * [Changed] If you install with Swift Package Manager, enable the `Identity` package trait. CryptoOnramp depends on StripeIdentity, which requires it. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700).
+* [Fixed] Fixed a build failure with Xcode 27.0 when linking StripeCryptoOnramp.
 
 ### Financial Connections
 * [Changed] Updated Link-branded Financial Connections flows, including Instant Debits, to the new Link design system.
@@ -38,9 +39,6 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 ## 26.16.1 2026-11-09
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".
-
-### CryptoOnramp (Alpha)
-* [Fixed] Fixed a build failure with Xcode 27.0 when linking StripeCryptoOnramp.
 
 ## 26.16.0 2026-11-02
 ### PaymentSheet
