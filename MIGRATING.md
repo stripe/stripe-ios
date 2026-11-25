@@ -92,11 +92,16 @@ Migrate your application-owned confirmation handler from a method-name string to
 
 #### Payments
 ##### Error codes for failed bank redirect and Klarna payments
-If your integration handles failed Bancontact, EPS, iDEAL, Klarna, or Przelewy24 payments, or failed Bancontact or iDEAL setups, update how you identify them:
-* If you check for `STPPaymentHandlerErrorCode.notAuthenticatedErrorCode`, also handle `.paymentErrorCode`, which `STPPaymentHandler` now reports for these failures.
-* If you check `STPPaymentIntentLastPaymentError.code` or `STPSetupIntentLastSetupError.code` for `payment_intent_authentication_failure` or `setup_intent_authentication_failure`, also handle `payment_method_customer_decline`, `payment_method_not_available`, `payment_method_provider_decline`, `payment_method_provider_timeout`, `payment_intent_payment_attempt_expired`, and `setup_intent_setup_attempt_expired`. Do the same for errors from confirming TWINT and Zip payments.
-* If you check for `payment_intent_payment_attempt_failed` when a Klarna payment expires, check for `payment_intent_payment_attempt_expired` instead.
-* If you show the error's `localizedDescription` to customers for these failures, show your own message instead. The description is now a generic error message.
+Failed Bancontact, EPS, iDEAL, Klarna, and Przelewy24 payments, and failed Bancontact and iDEAL setups, now report different error codes. If you check for the old values, also check for the new ones:
+
+| Where you check | Old value | New values |
+|---|---|---|
+| `STPPaymentHandler` error code | `STPPaymentHandlerErrorCode.notAuthenticatedErrorCode` | `STPPaymentHandlerErrorCode.paymentErrorCode` |
+| `STPPaymentIntentLastPaymentError.code` | `payment_intent_authentication_failure` | `payment_method_customer_decline`, `payment_method_not_available`, `payment_method_provider_decline`, `payment_method_provider_timeout`, `payment_intent_payment_attempt_expired` |
+| `STPSetupIntentLastSetupError.code` | `setup_intent_authentication_failure` | `payment_method_customer_decline`, `payment_method_not_available`, `payment_method_provider_decline`, `payment_method_provider_timeout`, `setup_intent_setup_attempt_expired` |
+| `STPPaymentIntentLastPaymentError.code` for an expired Klarna payment | `payment_intent_payment_attempt_failed` | `payment_intent_payment_attempt_expired` |
+
+Errors from confirming TWINT and Zip payments can also have the new codes instead of `payment_intent_authentication_failure`. If you show these `STPPaymentHandler` errors' `localizedDescription` to customers, show your own message instead, because it's now a generic error message.
 
 ##### Parameters that the SDK sends
 If you pass parameters in `additionalAPIParameters`, remove any that API version `2026-09-30.endive` no longer accepts. For example, remove `payment_method_types` when confirming a PaymentIntent.
