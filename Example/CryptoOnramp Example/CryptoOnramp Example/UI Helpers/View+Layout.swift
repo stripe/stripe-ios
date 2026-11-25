@@ -26,7 +26,7 @@ extension View {
     /// - Returns: The view with fold-aware padding when enabled and supported. Otherwise, the original view.
     @ViewBuilder
     func avoidingActiveFold(_ isEnabled: Bool = true) -> some View {
-        #if compiler(>=6.4)
+        #if canImport(SwiftUI, _version: 8.0.85)
         if #available(iOS 27.1, *), isEnabled {
             modifier(FoldAvoidingActionsModifier())
         } else {
@@ -38,7 +38,7 @@ extension View {
     }
 }
 
-#if compiler(>=6.4)
+#if canImport(SwiftUI, _version: 8.0.85)
 @available(iOS 27.1, *)
 private struct FoldAvoidingActionsModifier: ViewModifier {
     @Environment(\.displayScale) private var displayScale
