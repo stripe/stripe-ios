@@ -305,12 +305,7 @@ final class PaymentSheetLoader {
                                                                                                              sendsMobileSessionConfig: true)
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)
-                guard shouldFallback(for: error) else {
-                    throw error
-                }
-                // Fallback to regular retrieve PI when retrieve PI with preferences fails
-                paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
-                elementsSession = .makeBackupElementsSession(with: paymentIntent)
+                throw error
             }
             guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
                 // Error if the PaymentIntent is in a terminal state
@@ -327,12 +322,7 @@ final class PaymentSheetLoader {
                                                                                                            sendsMobileSessionConfig: true)
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)
-                guard shouldFallback(for: error) else {
-                    throw error
-                }
-                // Fallback to regular retrieve SI when retrieve SI with preferences fails
-                setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
-                elementsSession = .makeBackupElementsSession(with: setupIntent)
+                throw error
             }
             guard ![.succeeded, .canceled].contains(setupIntent.status) else {
                 // Error if the SetupIntent is in a terminal state
@@ -349,21 +339,7 @@ final class PaymentSheetLoader {
                 intent = .deferredIntent(intentConfig: intentConfig)
             } catch {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)
-                guard shouldFallback(for: error) else {
-                    throw error
-                }
-                // Fall back to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
-                // Leave out any excluded types, because the merchant's intent won't accept them.
-                let excludedPaymentMethodTypes = intentConfig.excludedPaymentMethodTypes ?? []
-                let paymentMethodTypes = (intentConfig.allowedPaymentMethodTypes ?? intentConfig.paymentMethodTypes ?? ["card"])
-                    .filter { !excludedPaymentMethodTypes.contains($0) }
-                    .map { STPPaymentMethod.type(from: $0) }
-                // If nothing is left (e.g. the merchant excluded cards), there's nothing the backup can offer, so report the original error
-                guard !paymentMethodTypes.isEmpty else {
-                    throw error
-                }
-                elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
-                intent = .deferredIntent(intentConfig: intentConfig)
+                throw error
             }
         }
 
@@ -389,21 +365,6 @@ final class PaymentSheetLoader {
             """
             availabilityLogger(message)
         }
-    }
-
-    static func shouldFallback(for error: Error) -> Bool {
-        let error = error as NSError
-        // Show fallback for unknown server errors (500s).
-        // Otherwise, don't fall back in order to
-        // 1. avoid loading a potentially degraded UX instead of prompting the customer to retry loading (e.g. bad network).
-        // 2. let the merchant see potential integration errors (e.g. bad publishable key, invalid intent configuration)
-        if
-            let httpStatusCode = error.userInfo[STPError.httpStatusCodeKey] as? Int,
-            httpStatusCode >= 500
-        {
-            return true
-        }
-        return false
     }
 
     static func defaultStripePaymentMethodId(forCustomerID customerID: String) -> String? {
