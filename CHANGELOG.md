@@ -6,7 +6,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 
 ### General
 * [Changed] The SDK now uses Stripe API version `2026-09-30.endive` instead of `2020-08-27`. Your server can keep using its current API version. Parameters that you pass in `additionalAPIParameters` must be valid for `2026-09-30.endive`.
-* [Changed] `allResponseFields` on API objects, such as `STPPaymentIntent`, now reflects API version `2026-09-30.endive`. Compared to `2020-08-27`, some fields are removed or renamed, and some values are different. For example, `cancellation_reason` is `expired` instead of `automatic` when an authorization expires.
+* [Changed] `allResponseFields` on API objects, such as `STPPaymentIntent`, now reflects API version `2026-09-30.endive`. Compared to `2020-08-27`, some fields are removed or renamed, and some values are different. For example, `cancellation_reason` is `expired` instead of `automatic` when an authorization expires. If you read values from `allResponseFields`, review the [API changelog](https://docs.stripe.com/changelog).
 
 ### PaymentSheet
 * [Added] Added `allowedPaymentMethodTypes` and `excludedPaymentMethodTypes` to `PaymentSheet.IntentConfiguration`. If your server creates the PaymentIntent or SetupIntent with `allowed_payment_method_types` or `excluded_payment_method_types`, set the matching property to the same list.
@@ -46,6 +46,9 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 
 ### PaymentsUI
 * [Fixed] Fixed `STPPaymentCardTextField.cornerRadius` returning the previous value after it was set.
+
+### StripeIssuing
+* [Changed] `STPIssuingCardEphemeralKeyProvider` now receives `2026-09-30.endive` as the `apiVersion` to use when creating an ephemeral key.
 
 ## 26.16.1 2026-11-09
 ### PaymentSheet

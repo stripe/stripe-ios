@@ -3,22 +3,6 @@
 Read our migration guide in [MIGRATING-COCOAPODS.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING-COCOAPODS.md).
 
 ### Migrating from versions < 27.0.0
-The SDK now uses Stripe API version `2026-09-30.endive` instead of `2020-08-27`. Your server's API version is independent of the SDK's, so you don't need to upgrade your server. The following changes might require updates to your integration.
-
-#### Values returned by the API
-API objects that the SDK retrieves now reflect API version `2026-09-30.endive`:
-* `allResponseFields` on objects such as `STPPaymentIntent` no longer includes fields that were removed or renamed after `2020-08-27`, and some values changed. For example, `cancellation_reason` is `expired` instead of `automatic` when an authorization expires. If you read values from `allResponseFields`, review the [API changelog](https://docs.stripe.com/changelog).
-* For failed Bancontact, EPS, iDEAL, Klarna, and Przelewy24 payments, `STPPaymentIntentLastPaymentError.code` returns specific codes, such as `payment_method_customer_decline`, instead of `payment_intent_authentication_failure`. For failed Bancontact and iDEAL setups, `STPSetupIntentLastSetupError.code` returns the specific codes instead of `setup_intent_authentication_failure`. As a result, `STPPaymentHandler` reports these failures with `STPPaymentHandlerErrorCode.paymentErrorCode` instead of `.notAuthenticatedErrorCode`, and the error's `localizedDescription` is a generic error message. PaymentSheet also shows customers a different error message. Errors from confirming some TWINT and Zip payments also have the specific codes instead of `payment_intent_authentication_failure`. If you handle `.notAuthenticatedErrorCode` or the authentication failure codes for these payment methods, also handle `.paymentErrorCode` or the specific codes. Expired Klarna payments return `payment_intent_payment_attempt_expired` instead of `payment_intent_payment_attempt_failed`.
-* For failed BLIK payments, `declineCode` returns specific values, such as `code_invalid` or `code_expired`, instead of `generic_decline`.
-* If you set `STPAPIClient.stripeAccount` and use a platform's publishable key, `fingerprint` on US bank account, SEPA Direct Debit, Bacs Direct Debit, BECS Direct Debit, and Canadian pre-authorized debit PaymentMethods is scoped to the platform instead of the connected account.
-
-#### Parameters that the SDK sends
-Parameters that you add with `additionalAPIParameters` are validated against API version `2026-09-30.endive`. For example, confirming a PaymentIntent no longer accepts `payment_method_types`.
-
-#### Your server
-If your server uses the SDK's API version, or you upgrade your server's API version, note these changes that affect the objects your server creates for the SDK:
-* **Legacy ephemeral keys**: We recommend creating ephemeral keys for `PaymentSheet.CustomerConfiguration` and `CustomerEphemeralKey` with API version `2026-09-30.endive`, the version that the SDK uses (`STPAPIClient.apiVersion`). Keys created with other API versions continue to work. If your `STPIssuingCardEphemeralKeyProvider` passes its `apiVersion` to your server, your server now receives `2026-09-30.endive`. For customer access, we recommend [CustomerSessions](https://docs.stripe.com/api/customer_sessions) instead of ephemeral keys.
-
 #### PaymentSheet
 ##### IntentConfiguration
 `PaymentSheet.IntentConfiguration.Mode.payment` no longer defaults `captureMethod` to `.automatic`. Supply the value matching the PaymentIntent created by your backend. If you previously did not set `captureMethod`, you should now set it to `.automatic`.
@@ -105,6 +89,13 @@ Migrate your application-owned confirmation handler from a method-name string to
 `CustomerSheetError` is no longer public. Do not identify internal error cases by comparing descriptions or undocumented `NSError` codes.
 
 * **Payment method types**: Create `CustomerSheet.IntentConfiguration` with the parameter that matches how your server creates the SetupIntent: `paymentMethodTypes` for `payment_method_types`, `allowedPaymentMethodTypes` for `allowed_payment_method_types`, or `excludedPaymentMethodTypes` for `excluded_payment_method_types`.
+
+#### Payments
+##### Error codes for failed bank redirect and Klarna payments
+For failed Bancontact, EPS, iDEAL, Klarna, and Przelewy24 payments, `STPPaymentIntentLastPaymentError.code` returns specific codes, such as `payment_method_customer_decline`, instead of `payment_intent_authentication_failure`. For failed Bancontact and iDEAL setups, `STPSetupIntentLastSetupError.code` returns the specific codes instead of `setup_intent_authentication_failure`. As a result, `STPPaymentHandler` reports these failures with `STPPaymentHandlerErrorCode.paymentErrorCode` instead of `.notAuthenticatedErrorCode`, and the error's `localizedDescription` is a generic error message. PaymentSheet also shows customers a different error message. Errors from confirming some TWINT and Zip payments also have the specific codes instead of `payment_intent_authentication_failure`. If you handle `.notAuthenticatedErrorCode` or the authentication failure codes for these payment methods, also handle `.paymentErrorCode` or the specific codes. Expired Klarna payments return `payment_intent_payment_attempt_expired` instead of `payment_intent_payment_attempt_failed`.
+
+##### Parameters that the SDK sends
+Parameters that you add with `additionalAPIParameters` are validated against API version `2026-09-30.endive`. For example, confirming a PaymentIntent no longer accepts `payment_method_types`.
 
 #### Identity
 * If you install with Swift Package Manager and you use `StripeIdentity` or `StripeCryptoOnramp`, enable the `Identity` package trait.
