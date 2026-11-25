@@ -127,6 +127,92 @@ final class MLModelLoaderTest: XCTestCase {
         }
     }
 
+    func testCacheDirectoryAliasesShareDownloadAndCompilation() throws {
+        // Given two paths to the same cache directory and a download held in flight
+        let alias = temporaryDirectory.appendingPathComponent("cache-alias")
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: cacheDirectory)
+        let download = Promise<URL>()
+        let downloadStarted = expectation(description: "Download started")
+        let downloadCount = InvocationCounter()
+        let compileCount = InvocationCounter()
+        let source = try makeDownloadedFile()
+        let compiled = try makeCompiledModel()
+        let makeLoader = { (directory: URL) in
+            self.makeLoader(
+                cacheDirectory: directory,
+                download: { _ in
+                    downloadCount.increment()
+                    downloadStarted.fulfill()
+                    return download
+                },
+                compile: { _ in
+                    compileCount.increment()
+                    return compiled
+                }
+            )
+        }
+
+        // When loaders using the real path and its alias request the same model
+        let first = makeLoader(cacheDirectory).loadModel(fromRemote: remoteURL)
+        let second = makeLoader(alias).loadModel(fromRemote: remoteURL)
+        wait(for: [downloadStarted], timeout: 5)
+        download.resolve(with: source)
+
+        // Then they share the artifact's download and compilation
+        _ = try result(of: first)
+        _ = try result(of: second)
+        XCTAssertEqual(downloadCount.value, 1)
+        XCTAssertEqual(compileCount.value, 1)
+    }
+
+    func testCompilationAllowsOtherModelsToFinishAndJoinsMatchingRequests() throws {
+        // Given a model whose compiler is held in flight
+        let secondURL = URL(string: "https://models.example.com/other.mlmodel")!
+        let firstSource = try makeDownloadedFile()
+        let secondSource = try makeDownloadedFile()
+        let compilationStarted = expectation(description: "First model compilation started")
+        let finishCompilation = DispatchSemaphore(value: 0)
+        defer { finishCompilation.signal() }
+        let firstDownloadCount = InvocationCounter()
+        let firstCompileCount = InvocationCounter()
+        let loader = makeLoader(
+            download: { url in
+                if url == self.remoteURL {
+                    firstDownloadCount.increment()
+                    return Promise(value: firstSource)
+                }
+                XCTAssertEqual(url, secondURL)
+                return Promise(value: secondSource)
+            },
+            compile: { url in
+                if url == firstSource {
+                    firstCompileCount.increment()
+                    compilationStarted.fulfill()
+                    XCTAssertEqual(finishCompilation.wait(timeout: .now() + 10), .success)
+                }
+                return try self.makeCompiledModel()
+            }
+        )
+        let first = loader.loadModel(fromRemote: remoteURL)
+        wait(for: [compilationStarted], timeout: 5)
+
+        // When another caller joins that model and an unrelated model is requested
+        let joined = loader.loadModel(fromRemote: remoteURL)
+        let other = loader.loadModel(fromRemote: secondURL)
+        let otherCompleted = expectation(description: "Other model finishes while first compiler is blocked")
+        other.observe { _ in otherCompleted.fulfill() }
+        wait(for: [otherCompleted], timeout: 5)
+        finishCompilation.signal()
+
+        // Then the unrelated model completes independently and the joined request reuses the work
+        _ = try result(of: other)
+        let firstModel = try result(of: first)
+        let joinedModel = try result(of: joined)
+        XCTAssertFalse(firstModel === joinedModel)
+        XCTAssertEqual(firstDownloadCount.value, 1)
+        XCTAssertEqual(firstCompileCount.value, 1)
+    }
+
     func testDownloadFailureIsSharedAndCanBeRetried() throws {
         let pendingDownload = Promise<URL>()
         let downloadStarted = expectation(description: "First download started")
@@ -341,15 +427,7 @@ final class MLModelLoaderTest: XCTestCase {
 
     func testRealModelCompilesCachesAndPredictsAfterTemporaryDownloadIsRemoved() throws {
         // Given a Core ML v1 scaler with double input x and output y, using scale 1 and shift 0
-        // The bytes encode Model, ModelDescription, FeatureType, and Scaler from Core ML's protobuf format.
-        let modelData = Data([
-            0x08, 0x01,
-            0x12, 0x12,
-            0x0A, 0x07, 0x0A, 0x01, 0x78, 0x1A, 0x02, 0x12, 0x00,
-            0x52, 0x07, 0x0A, 0x01, 0x79, 0x1A, 0x02, 0x12, 0x00,
-            0xE2, 0x25, 0x00,
-        ])
-        let source = try makeDownloadedFile(data: modelData)
+        let source = try makeDownloadedFile(data: makeScalerModelData())
         let loader = MLModelLoader(cacheDirectory: cacheDirectory, download: { _ in Promise(value: source) })
 
         // When real Core ML compilation and loading publish the model
@@ -366,6 +444,51 @@ final class MLModelLoaderTest: XCTestCase {
         let cachedModel = try result(of: cachedLoader.loadModel(fromRemote: remoteURL))
         XCTAssertFalse(model === cachedModel)
         XCTAssertEqual(try cachedModel.prediction(from: input).featureValue(for: "y")?.doubleValue, 42)
+    }
+
+    func testRealModelPredictsFromTemporaryArtifactWhenCachingFails() throws {
+        // Given a real model and a file blocking creation of its cache directory
+        let blockedCacheDirectory = temporaryDirectory.appendingPathComponent("blocked-cache")
+        try Data("occupied".utf8).write(to: blockedCacheDirectory)
+        let source = try makeDownloadedFile(data: makeScalerModelData())
+        var compiledURL: URL?
+        defer {
+            if let compiledURL {
+                try? FileManager.default.removeItem(at: compiledURL)
+            }
+        }
+        let loader = MLModelLoader(
+            cacheDirectory: blockedCacheDirectory,
+            download: { _ in Promise(value: source) },
+            compile: { url in
+                let compiled = try MLModel.compileModel(at: url)
+                compiledURL = compiled
+                return compiled
+            }
+        )
+
+        // When compilation succeeds but publication fails
+        let model = try result(of: loader.loadModel(fromRemote: remoteURL))
+
+        // Then the retained temporary artifact supports real inference after download cleanup
+        let compiled = try XCTUnwrap(compiledURL)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: compiled.path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: source.path))
+        XCTAssertEqual(try String(contentsOf: blockedCacheDirectory, encoding: .utf8), "occupied")
+        let input = try MLDictionaryFeatureProvider(dictionary: ["x": 42.0])
+        XCTAssertEqual(try model.prediction(from: input).featureValue(for: "y")?.doubleValue, 42)
+    }
+
+    private func makeScalerModelData() -> Data {
+        // Core ML v1 scaler with double input x and output y, using scale 1 and shift 0.
+        // The bytes encode Model, ModelDescription, FeatureType, and Scaler from Core ML's protobuf format.
+        Data([
+            0x08, 0x01,
+            0x12, 0x12,
+            0x0A, 0x07, 0x0A, 0x01, 0x78, 0x1A, 0x02, 0x12, 0x00,
+            0x52, 0x07, 0x0A, 0x01, 0x79, 0x1A, 0x02, 0x12, 0x00,
+            0xE2, 0x25, 0x00,
+        ])
     }
 
     private func makeLoader(
