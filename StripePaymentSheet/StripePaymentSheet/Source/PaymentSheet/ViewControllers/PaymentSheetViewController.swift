@@ -562,7 +562,9 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             paymentMethod: paymentMethod,
             with: updateParams,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            // PaymentSheet doesn't support Checkout Sessions
+            checkoutSavedPaymentMethodUpdater: nil
         )
     }
 
@@ -603,7 +605,9 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         loadResult.customerProvider.detach(
             paymentMethod: paymentMethod,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            // PaymentSheet doesn't support Checkout Sessions
+            checkoutSavedPaymentMethodUpdater: nil
         )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 

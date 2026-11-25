@@ -47,7 +47,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
             flowController.viewController as? PaymentSheetFlowControllerViewController
         )
         let updater = FailingCheckoutSessionBillingAddressUpdater()
-        viewController.checkoutBillingAddressUpdater = updater
+        viewController.checkout = updater
         viewController.loadViewIfNeeded()
         let completion = present(flowController, expectedDidCancel: true)
 
@@ -87,7 +87,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         )
         XCTAssertIdentical(flowController.viewController, viewController)
         XCTAssertNil(viewController.error)
-        XCTAssertIdentical(flowController.viewController.checkoutBillingAddressUpdater, updater)
+        XCTAssertIdentical(flowController.viewController.checkout, updater)
     }
 
     func testExternalRestorationParamsPreserveBillingDetails() throws {
@@ -288,6 +288,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
         let manageViewController = VerticalSavedPaymentMethodsViewController(
             configuration: viewController.configuration,
             customerProvider: CustomerProvider(customer: viewController.configuration.customer),
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: paymentMethod,
             paymentMethods: reorderedPaymentMethods,
             elementsSession: viewController.elementsSession,
@@ -376,7 +377,7 @@ final class FlowControllerSelectionRestorationTests: XCTestCase {
 }
 
 @MainActor
-private final class FailingCheckoutSessionBillingAddressUpdater: CheckoutSessionBillingAddressUpdater {
+private final class FailingCheckoutSessionBillingAddressUpdater: CheckoutSessionUpdater {
     let updateStarted = XCTestExpectation(description: "Billing tax region update started")
 
     func updateBillingTaxRegionIfNecessaryForPaymentSheet(
@@ -384,6 +385,22 @@ private final class FailingCheckoutSessionBillingAddressUpdater: CheckoutSession
         canUpdateWhileSheetPresented: Bool
     ) async throws -> CheckoutElementsController.Session {
         updateStarted.fulfill()
+        throw CheckoutError.apiError(
+            message: NSError.stp_genericErrorOccurredMessage()
+        )
+    }
+
+    // These tests only sync billing tax, so saved payment method changes are unexpected.
+    func detachSavedPaymentMethod(_ paymentMethodID: String) async throws {
+        XCTFail("Unexpected saved payment method removal")
+    }
+
+    func updateSavedPaymentMethod(
+        _ paymentMethodID: String,
+        billingDetails: CheckoutElementsController.PaymentMethodBillingDetails?,
+        expiryDetails: CheckoutElementsController.PaymentMethodExpiryDetails?
+    ) async throws -> CheckoutElementsController.Session {
+        XCTFail("Unexpected saved payment method update")
         throw CheckoutError.apiError(
             message: NSError.stp_genericErrorOccurredMessage()
         )

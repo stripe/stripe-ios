@@ -29,6 +29,12 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
         return configuration
     }
 
+    override func tearDown() {
+        // Checkout controllers stub every outgoing request, so don't leak those stubs into other tests
+        HTTPStubs.removeAllStubs()
+        super.tearDown()
+    }
+
     // MARK: Update tests
     func testUpdatePaymentMethod_legacy() async throws {
         let paymentMethod = STPPaymentMethod.stubbedPaymentMethod()
@@ -42,7 +48,8 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
             paymentMethod: paymentMethod,
             with: STPPaymentMethodUpdateParams(),
             elementsSession: ._testCardValue(),
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: nil
         )
 
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
@@ -73,7 +80,8 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
             paymentMethod: paymentMethod,
             with: STPPaymentMethodUpdateParams(),
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: nil
         )
 
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
@@ -180,7 +188,8 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
             paymentMethod: paymentMethod,
             with: STPPaymentMethodUpdateParams(),
             elementsSession: ._testCardValue(),
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: nil
         )
 
         XCTAssertTrue(updatedPaymentMethod.isLinkOrigin)
@@ -190,13 +199,13 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
 
     func testUpdatePaymentMethod_checkoutSession() async throws {
         let checkoutSessionId = "cs_test_checkout_session"
+        let checkout = try await makeCheckout(sessionID: checkoutSessionId)
         let (expectation, capturedBody) = stubCheckoutSessionUpdatePaymentMethod(
             checkoutSessionId: checkoutSessionId,
             paymentMethodId: paymentMethod.stripeId
         )
 
-        let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
-        let sut = CustomerProvider(checkoutSession: checkoutSession.makePublicSession())
+        let sut = CustomerProvider(checkoutSession: checkout.session)
 
         let card = STPPaymentMethodCardParams()
         card.expMonth = 12
@@ -210,7 +219,8 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
             paymentMethod: paymentMethod,
             with: updateParams,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkout
         )
 
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
@@ -227,13 +237,13 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
 
     func testUpdatePaymentMethod_checkoutSession_expiryOnly() async throws {
         let checkoutSessionId = "cs_test_checkout_session"
+        let checkout = try await makeCheckout(sessionID: checkoutSessionId)
         let (expectation, capturedBody) = stubCheckoutSessionUpdatePaymentMethod(
             checkoutSessionId: checkoutSessionId,
             paymentMethodId: paymentMethod.stripeId
         )
 
-        let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
-        let sut = CustomerProvider(checkoutSession: checkoutSession.makePublicSession())
+        let sut = CustomerProvider(checkoutSession: checkout.session)
 
         let card = STPPaymentMethodCardParams()
         card.expMonth = 1
@@ -244,7 +254,8 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
             paymentMethod: paymentMethod,
             with: updateParams,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkout
         )
 
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
@@ -266,7 +277,8 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
                 paymentMethod: paymentMethod,
                 with: STPPaymentMethodUpdateParams(),
                 elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-                apiClient: configuration.apiClient
+                apiClient: configuration.apiClient,
+                checkoutSavedPaymentMethodUpdater: nil
             )
             XCTFail("Expected error")
         } catch PaymentSheetError.unknown(let description) {
@@ -291,7 +303,8 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
                 paymentMethod: paymentMethod,
                 with: STPPaymentMethodUpdateParams(),
                 elementsSession: elementsSession,
-                apiClient: apiClient
+                apiClient: apiClient,
+                checkoutSavedPaymentMethodUpdater: nil
             )
             XCTFail("Expected the update to fail without credentials")
         } catch PaymentSheetError.unknown(let description) {
@@ -316,7 +329,7 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
 
         // ...and removal still returns immediately, with the same diagnostic as the throwing operations.
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
-        sut.detach(paymentMethod: paymentMethod, elementsSession: elementsSession, apiClient: apiClient)
+        sut.detach(paymentMethod: paymentMethod, elementsSession: elementsSession, apiClient: apiClient, checkoutSavedPaymentMethodUpdater: nil)
 
         // Then all three operations retain their existing analytics identity and customer context.
         let events = analyticsClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.paymentsheet" }
@@ -331,7 +344,8 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
     func testCheckoutUpdateMissingPaymentMethodPreservesErrorAndAnalytics() async throws {
         // Given a successful Checkout update response that omits the requested payment method
         let checkoutSessionID = "cs_test_missing_updated_method"
-        let sut = CustomerProvider(checkoutSession: makeCheckoutSession(id: checkoutSessionID).makePublicSession())
+        let checkout = try await makeCheckout(sessionID: checkoutSessionID)
+        let sut = CustomerProvider(checkoutSession: checkout.session)
         let requestStub = stub { request in
             request.url?.path == "/v1/checkout_client/\(checkoutSessionID)/update" && request.httpMethod == "POST"
         } response: { _ in
@@ -355,7 +369,8 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
                 paymentMethod: paymentMethod,
                 with: STPPaymentMethodUpdateParams(card: card, billingDetails: nil),
                 elementsSession: ._testCardValue(),
-                apiClient: configuration.apiClient
+                apiClient: configuration.apiClient,
+                checkoutSavedPaymentMethodUpdater: checkout
             )
             XCTFail("Expected an error when the updated payment method is missing")
         } catch PaymentSheetError.unknown(let description) {
@@ -383,7 +398,8 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
         sut.detach(
             paymentMethod: paymentMethod,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: nil
         )
 
         wait(for: [expectation], timeout: 5.0)
@@ -429,30 +445,31 @@ final class CustomerProviderPaymentMethodTests: XCTestCase {
         sut.detach(
             paymentMethod: paymentMethod,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: nil
         )
 
         // Then cards are listed for the CustomerSession's Customer, and the card is detached
         wait(for: [listPaymentMethodsExpectation, detachExpectation], timeout: 5.0)
     }
 
-    func testDetachPaymentMethod_checkoutSession() {
+    func testDetachPaymentMethod_checkoutSession() async throws {
         let checkoutSessionId = "cs_test_checkout_session"
+        let checkout = try await makeCheckout(sessionID: checkoutSessionId)
         let detachExpectation = stubCheckoutSessionDetachPaymentMethod(
             checkoutSessionId: checkoutSessionId,
             paymentMethodId: paymentMethod.stripeId
         )
 
-        let checkoutSession = makeCheckoutSession(id: checkoutSessionId)
-
-        let sut = CustomerProvider(checkoutSession: checkoutSession.makePublicSession())
+        let sut = CustomerProvider(checkoutSession: checkout.session)
         sut.detach(
             paymentMethod: paymentMethod,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkout
         )
 
-        wait(for: [detachExpectation], timeout: 5.0)
+        await fulfillment(of: [detachExpectation], timeout: 5.0)
     }
 }
 
@@ -505,6 +522,16 @@ extension CustomerProviderPaymentMethodTests {
 
     func makeCheckoutSession(id: String) -> CheckoutClientAPIResponse {
         CheckoutTestHelpers.makeSession().withSessionId(id)
+    }
+
+    /// Loads a Checkout controller that customer providers can send saved payment method changes through.
+    /// Stub those requests after this returns so the stubs take precedence over the controller's default stubs.
+    func makeCheckout(sessionID: String) async throws -> CheckoutElementsController {
+        try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: makeCheckoutSession(id: sessionID),
+            paymentElementConfiguration: nil,
+            expressCheckoutElementConfiguration: nil
+        ))
     }
 
     func stubCheckoutSessionUpdatePaymentMethod(

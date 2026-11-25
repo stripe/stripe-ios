@@ -30,6 +30,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -43,6 +44,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(
@@ -69,6 +71,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -83,6 +86,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -98,6 +102,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -110,6 +115,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     // MARK: canEdit tests
     func testCanEdit_multiplePaymentMethods_returnsTrue() {
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
+                                                                       checkoutSavedPaymentMethodUpdater: nil,
                                                                        selectedPaymentMethod: paymentMethods.first,
                                                                        paymentMethods: paymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -123,6 +129,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         var noRemovalConfiguration = PaymentSheet.Configuration()
         noRemovalConfiguration.allowsRemovalOfLastSavedPaymentMethod = false
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: noRemovalConfiguration, customerProvider: CustomerProvider(customer: noRemovalConfiguration.customer),
+                                                                       checkoutSavedPaymentMethodUpdater: nil,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -134,6 +141,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
     func testCanEdit_singleRemovableCoBrandedCard_returnsFalse() {
         let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
+                                                                       checkoutSavedPaymentMethodUpdater: nil,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -146,6 +154,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         configuration.allowsRemovalOfLastSavedPaymentMethod = false
         let singlePaymentMethods = [STPPaymentMethod._testCard()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
+                                                                       checkoutSavedPaymentMethodUpdater: nil,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -158,6 +167,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         configuration.allowsRemovalOfLastSavedPaymentMethod = false
         let singlePaymentMethods = [STPPaymentMethod._testCardCoBranded()]
         let viewController = VerticalSavedPaymentMethodsViewController(configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer),
+                                                                       checkoutSavedPaymentMethodUpdater: nil,
                                                                        selectedPaymentMethod: singlePaymentMethods.first,
                                                                        paymentMethods: singlePaymentMethods,
                                                                        elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -172,6 +182,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: CustomerProvider(customer: configuration.customer),
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: singlePaymentMethods.first,
             paymentMethods: singlePaymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
@@ -187,6 +198,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: makeCheckoutSessionCustomerProvider(canDetachPaymentMethod: false),
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -201,6 +213,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: makeCheckoutSessionCustomerProvider(canDetachPaymentMethod: true),
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: paymentMethods.first,
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
