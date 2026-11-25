@@ -11,6 +11,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 * [Removed] Removed public access to `PaymentSheetError`.
 * [Deprecated] Deprecated `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress`. This configuration no longer has an effect. Payment methods that require a shipping address are always allowed.
 * [Changed] Klarna no longer displays a country dropdown with PaymentIntents when `billingDetailsCollectionConfiguration.address` is `.never`.
+* [Changed] PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement now fail to load when Stripe returns a server error, instead of loading with a limited set of payment methods.
 * [Added] Added Mobile Checkout Elements (private preview), a new integration powered by the Checkout Sessions API. See https://docs.stripe.com/payments/mobile/checkout-sessions
 * [Added] Added support for Stripe balance (private preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.

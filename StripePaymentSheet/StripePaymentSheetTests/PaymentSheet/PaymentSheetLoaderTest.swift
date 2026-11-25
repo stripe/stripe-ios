@@ -911,8 +911,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             loadExpectation.fulfill()
             switch result {
             case .success(let (loadResult, _)):
-                // Ensure the v1/elements/sessions endpoint returns successfully and didn't fallback
-                // fallback would mean pm types is only cards
+                // Ensure the v1/elements/sessions endpoint returns successfully with more than just cards
                 XCTAssertTrue(loadResult.paymentMethodTypes.count > 1)
             case .failure(let error):
                 // If this test fails with "received unknown parameter" we may have added a new PM type (eg "foopay") without updating the v1/elements/sessions endpoint to parse it

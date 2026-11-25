@@ -172,9 +172,9 @@ final class StripeBalanceTests: XCTestCase {
         // ...or the merchant didn't use a CustomerSession
         let withoutCustomerSession = await didFetch(configuration: PaymentSheet.Configuration())
         XCTAssertFalse(withoutCustomerSession)
-        // ...or ElementsSession didn't return one, e.g. a fallback ElementsSession
-        let fallbackElementsSession = await didFetch(elementsSession: ._testValue(paymentMethodTypes: ["stripe_balance"]))
-        XCTAssertFalse(fallbackElementsSession)
+        // ...or ElementsSession didn't return one
+        let withoutReturnedCustomerSession = await didFetch(elementsSession: ._testValue(paymentMethodTypes: ["stripe_balance"]))
+        XCTAssertFalse(withoutReturnedCustomerSession)
     }
 
     // MARK: - Element

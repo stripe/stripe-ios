@@ -1117,7 +1117,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                         paymentMethod: .USBankAccount,
                         configuration: configuration,
                         intent: .paymentIntent(pi),
-                        elementsSession: .makeBackupElementsSession(with: pi),
+                        elementsSession: ._testValue(orderedPaymentMethodTypes: [.USBankAccount]),
                         supportedPaymentMethods: [.USBankAccount]
                     ),
                     .supported
@@ -1129,7 +1129,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                         paymentMethod: .USBankAccount,
                         configuration: configuration,
                         intent: .paymentIntent(pi),
-                        elementsSession: .makeBackupElementsSession(with: pi),
+                        elementsSession: ._testValue(orderedPaymentMethodTypes: [.USBankAccount]),
                         supportedPaymentMethods: [.USBankAccount]
                     ),
                     .missingRequirements([.validUSBankVerificationMethod])
