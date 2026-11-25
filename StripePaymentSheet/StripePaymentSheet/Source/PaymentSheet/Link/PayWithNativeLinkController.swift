@@ -126,6 +126,7 @@ final class PayWithNativeLinkController {
         from presentingController: UIViewController,
         initiallySelectedPaymentDetailsID: String?,
         canContinueWithoutLink: Bool = true,
+        prefersPayAnotherWay: Bool = false,
         completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool, _ error: Error?) -> Void
     ) {
         presentAsSheetInternal(
@@ -133,6 +134,7 @@ final class PayWithNativeLinkController {
             shouldOfferApplePay: false,
             hidingUnderlyingBottomSheet: true,
             launchedFromFlowController: true,
+            prefersPayAnotherWay: prefersPayAnotherWay,
             initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
             callToAction: .continue,
             shouldFinishOnClose: false,
@@ -164,6 +166,7 @@ final class PayWithNativeLinkController {
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
         launchedFromFlowController: Bool = false,
+        prefersPayAnotherWay: Bool = false,
         initiallySelectedPaymentDetailsID: String? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
         shouldFinishOnClose: Bool,
@@ -188,6 +191,7 @@ final class PayWithNativeLinkController {
                 shouldFinishOnClose: shouldFinishOnClose,
                 canContinueWithoutLink: canContinueWithoutLink,
                 launchedFromFlowController: launchedFromFlowController,
+                prefersPayAnotherWay: prefersPayAnotherWay,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
                 analyticsHelper: self.analyticsHelper,

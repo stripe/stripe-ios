@@ -38,14 +38,13 @@ extension LinkPaymentMethodPicker {
                     cardBrandView.setCardBrand(STPCard.brand(from: card.brand))
                     showIconView(cardBrandView)
                     primaryLabel.text = paymentMethod?.paymentSheetLabel
-                    let hasDisplayName = card.displayName(with: paymentMethod?.nickname) != nil
-                    secondaryLabel.text = hasDisplayName ? card.secondaryName : nil
-                    secondaryLabel.isHidden = !hasDisplayName
+                    secondaryLabel.text = paymentMethod?.paymentSheetSublabel
+                    secondaryLabel.isHidden = secondaryLabel.text == nil
                 case .bankAccount(let bankAccount):
                     bankIconView.image = makeBankIcon(for: bankAccount.iconCode)
                     showIconView(bankIconView)
-                    primaryLabel.text = bankAccount.displayName(with: paymentMethod?.nickname)
-                    secondaryLabel.text = "•••• \(bankAccount.last4)"
+                    primaryLabel.text = paymentMethod?.paymentSheetLabel
+                    secondaryLabel.text = paymentMethod?.paymentSheetSublabel
                     secondaryLabel.isHidden = false
                 case .generic:
                     guard let display = paymentMethod?.display else {
@@ -58,8 +57,8 @@ extension LinkPaymentMethodPicker {
                     genericIconView.image = createGenericPaymentMethodIcon()
                     showIconView(genericIconView)
                     primaryLabel.text = display.label
-                    secondaryLabel.text = display.sublabel
-                    secondaryLabel.isHidden = display.sublabel == nil || display.sublabel?.isEmpty == true
+                    secondaryLabel.text = paymentMethod?.paymentSheetSublabel
+                    secondaryLabel.isHidden = secondaryLabel.text == nil
                 case .none:
                     showIconView(nil)
                     primaryLabel.text = nil

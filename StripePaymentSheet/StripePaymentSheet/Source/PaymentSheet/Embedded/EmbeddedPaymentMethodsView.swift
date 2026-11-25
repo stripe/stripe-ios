@@ -132,6 +132,8 @@ class EmbeddedPaymentMethodsView: UIView {
     /// The separators around the expanded Link row, hidden while it shows since it has its own border.
     private(set) var linkInlineVerificationHiddenSeparators: [UIView] = []
     private(set) var rowButtons: [RowButton]
+    /// Whether the Link row, showing the Link payment details it pays with, is the only row.
+    let showsOnlyLink: Bool
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
     /// Keeps track of whether we're showing a change button/sublabel on the selected row
     /// Hacky - ideally we have a RowButtonViewModel type of object that keeps track of this state.
@@ -149,6 +151,7 @@ class EmbeddedPaymentMethodsView: UIView {
         linkBrandProvider: (() -> LinkBrand)? = nil,
         placesLinkFirst: Bool = false,
         linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
+        linkOnlyPaymentDetails: ConsumerPaymentDetails? = nil,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
@@ -172,6 +175,9 @@ class EmbeddedPaymentMethodsView: UIView {
         self.linkBrandProvider = linkBrandProvider ?? { linkBrand }
         self.delegate = delegate
         self.rowButtons = []
+        // After inline verification selects Link payment details, Link is the only row until the customer pays another way.
+        let showsOnlyLink = shouldShowLink && linkOnlyPaymentDetails != nil
+        self.showsOnlyLink = showsOnlyLink
         super.init(frame: .zero)
 
         let makeLinkRowButton = { [weak self] in
@@ -186,12 +192,24 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         }
 
+        if showsOnlyLink, let linkOnlyPaymentDetails {
+            rowButtons.append(RowButton.makeForLinkPaymentDetails(
+                linkOnlyPaymentDetails,
+                appearance: appearance,
+                linkBrand: linkBrand,
+                isEmbedded: true,
+                accessoryView: makeLinkOnlyAccessoryButton(linkBrand: linkBrand)
+            ) { [weak self] rowButton in
+                self?.didTap(rowButton: rowButton)
+            })
+        }
+
         // Link leads for returning Link customers who can verify inline, and keeps its place afterwards.
-        if shouldShowLink, placesLinkFirst {
+        if shouldShowLink, placesLinkFirst, !showsOnlyLink {
             rowButtons.append(makeLinkRowButton())
         }
 
-        if let savedPaymentMethod {
+        if let savedPaymentMethod, !showsOnlyLink {
             let savedPaymentMethodButton = makeSavedPaymentMethodButton(
                 savedPaymentMethod: savedPaymentMethod,
                 savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType
@@ -201,7 +219,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         // Add card before Apple Pay and Link if present and before any other LPMs
-        if paymentMethodTypes.contains(.stripe(.card)) {
+        if paymentMethodTypes.contains(.stripe(.card)), !showsOnlyLink {
             let cardRowButton = makePaymentMethodRowButton(
                 paymentMethodType: .stripe(.card),
                 savedPaymentMethods: savedPaymentMethods
@@ -209,7 +227,7 @@ class EmbeddedPaymentMethodsView: UIView {
             rowButtons.append(cardRowButton)
         }
 
-        if shouldShowApplePay {
+        if shouldShowApplePay, !showsOnlyLink {
             let applePayRowButton = RowButton.makeForApplePay(appearance: appearance,
                                                               isEmbedded: true,
                                                               didTap: { [weak self] rowButton in
@@ -218,12 +236,12 @@ class EmbeddedPaymentMethodsView: UIView {
             rowButtons.append(applePayRowButton)
         }
 
-        if shouldShowLink, !placesLinkFirst {
+        if shouldShowLink, !placesLinkFirst, !showsOnlyLink {
             rowButtons.append(makeLinkRowButton())
         }
 
         // Add all non-card PMs (card is added above)
-        for paymentMethodType in paymentMethodTypes where paymentMethodType != .stripe(.card) {
+        for paymentMethodType in paymentMethodTypes where paymentMethodType != .stripe(.card) && !showsOnlyLink {
             let rowButton = makePaymentMethodRowButton(
                 paymentMethodType: paymentMethodType,
                 savedPaymentMethods: savedPaymentMethods
@@ -265,7 +283,8 @@ class EmbeddedPaymentMethodsView: UIView {
         // If we have a row button that matches the initial selection, make it selected
         if let initialSelectedRowType, let rowButtonMatchingInitialSelection = rowButtons.filter({ $0.type == initialSelectedRowType }).first {
             rowButtonMatchingInitialSelection.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(for: rowButtonMatchingInitialSelection.type) == true)
-            if let initialSelectedRowChangeButtonState {
+            // The Link-only row already shows its payment details.
+            if let initialSelectedRowChangeButtonState, !showsOnlyLink {
                 selectedRowChangeButtonState = initialSelectedRowChangeButtonState
                 if initialSelectedRowChangeButtonState.shouldShowChangeButton {
                     rowButtonMatchingInitialSelection.addChangeButton(animated: false)
@@ -306,8 +325,8 @@ class EmbeddedPaymentMethodsView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        // Only log this once
-        if !didLogRenderLPMs {
+        // Only log this once, and not for the Link-only list, which isn't the list of payment methods the customer can pick from.
+        if !didLogRenderLPMs, !showsOnlyLink {
             logInitialDisplayedPaymentMethods()
             didLogRenderLPMs = true
         }
@@ -459,7 +478,8 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?, animated: Bool = true) {
-        guard let linkRowButton else {
+        // The Link-only row shows its payment details instead of the account.
+        guard let linkRowButton, !showsOnlyLink else {
             return
         }
 
@@ -670,6 +690,18 @@ class EmbeddedPaymentMethodsView: UIView {
         )
         accessoryButton.isHidden = true
         return accessoryButton
+    }
+
+    /// The Link logo and a chevron on the Link-only row. Tapping it changes the Link payment details, like tapping the row.
+    private func makeLinkOnlyAccessoryButton(linkBrand: LinkBrand) -> RowButton.RightAccessoryButton {
+        RowButton.RightAccessoryButton(
+            accessoryType: .link(brand: linkBrand),
+            appearance: appearance,
+            didTap: { [weak self] in
+                guard let self, let linkRowButton else { return }
+                didTap(rowButton: linkRowButton)
+            }
+        )
     }
 
     func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {

@@ -1223,10 +1223,33 @@ extension EmbeddedUITests {
         XCTAssertFalse(app.otherElements["Stripe.Link.PayWithLinkViewController"].exists)
         XCTAssertFalse(app.otherElements["embedded_link_inline_verification"].exists)
 
+        // ...and it's the only row
+        XCTAssertFalse(app.buttons["Card"].exists)
+
         // ...and the merchant's button pays without more UI
         app.swipeUp()
         app.buttons["Checkout"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+
+    func testLinkInlineVerification_payingAnotherWayShowsEveryPaymentMethod() {
+        // Given a returning Link customer who verified in the card, so Link is the only row
+        loadPlayground(app, linkInlineVerificationSettings(.on))
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        linkInlineVerificationCodeButton().tap()
+        app.typeText("000000")
+        XCTAssertTrue(app.buttons["Change"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Card"].exists)
+
+        // When they open the Link wallet from the row and tap "Pay another way"
+        app.buttons["Change"].tap()
+        app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Pay another way"].waitForExistenceAndTap(timeout: 10)
+
+        // Then every payment method shows again, with none selected
+        XCTAssertTrue(app.buttons["Card"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Link"].exists)
+        XCTAssertFalse(app.buttons["Link"].isSelected)
+        XCTAssertFalse(app.staticTexts["Payment method"].exists)
     }
 
     func testLinkInlineVerification_forcedDialog() {

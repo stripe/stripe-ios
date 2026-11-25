@@ -1643,6 +1643,52 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
+    func testEmbeddedPaymentMethodsView_linkOnly_card() {
+        // After verifying, Link is the only row, showing the customer's default card and the Link logo
+        let card = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card]
+        for style in [PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.floatingButton, .flatWithRadio] {
+            var appearance = PaymentSheet.Appearance.default
+            appearance.embeddedPaymentElement.row.style = style
+            let embeddedView = EmbeddedPaymentMethodsView(
+                initialSelection: .link,
+                appearance: appearance,
+                placesLinkFirst: true,
+                linkOnlyPaymentDetails: card
+            )
+            verify(embeddedView, identifier: "\(style)")
+        }
+    }
+
+    func testEmbeddedPaymentMethodsView_linkOnly_bankAccountWithMandate() {
+        // After verifying, Link is the only row, showing the customer's default bank account, with its mandate and data-sharing consent below
+        let bankAccount = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.bankAccount]
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example, Inc."
+        let context = PayWithLinkViewController.Context(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(
+                paymentMethodTypes: ["card", "link"],
+                linkPaymentMethodBankAccountDataConsent: "Example, Inc. can access account and ownership details, balances, and transactions. [Learn more](https://stripe.com)"
+            ),
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: nil),
+            linkBrand: .link,
+            shouldOfferApplePay: false,
+            shouldFinishOnClose: false,
+            initiallySelectedPaymentDetailsID: nil,
+            callToAction: nil,
+            analyticsHelper: ._testValue()
+        )
+        let delegate = LinkMandateDelegate(linkMandateText: EmbeddedPaymentElement.linkMandateText(for: bankAccount, context: context))
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .link,
+            placesLinkFirst: true,
+            linkOnlyPaymentDetails: bankAccount,
+            delegate: delegate
+        )
+        verify(embeddedView)
+    }
+
     private func makeLinkInlineVerificationEmbeddedView(
         style: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style,
         state: EmbeddedLinkInlineVerificationView.State
@@ -1806,6 +1852,7 @@ extension EmbeddedPaymentMethodsView {
         featuredInstitutionsLoader: FeaturedInstitutionsLoader? = nil,
         placesLinkFirst: Bool = false,
         linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
+        linkOnlyPaymentDetails: ConsumerPaymentDetails? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
         self.init(
@@ -1818,6 +1865,7 @@ extension EmbeddedPaymentMethodsView {
             shouldShowLink: shouldShowLink,
             placesLinkFirst: placesLinkFirst,
             linkInlineVerificationView: linkInlineVerificationView,
+            linkOnlyPaymentDetails: linkOnlyPaymentDetails,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider ?? MockMandateProvider(),
             shouldShowMandate: shouldShowMandate,

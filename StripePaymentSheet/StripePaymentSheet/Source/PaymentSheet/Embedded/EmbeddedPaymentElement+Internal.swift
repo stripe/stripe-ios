@@ -27,6 +27,7 @@ extension EmbeddedPaymentElement {
         previousSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)? = nil,
         placesLinkFirst: Bool = false,
         linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
+        linkOnlyPaymentDetails: ConsumerPaymentDetails? = nil,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) -> EmbeddedPaymentMethodsView {
         // Restore the customer's previous payment method.
@@ -88,6 +89,7 @@ extension EmbeddedPaymentElement {
             },
             placesLinkFirst: placesLinkFirst,
             linkInlineVerificationView: linkInlineVerificationView,
+            linkOnlyPaymentDetails: linkOnlyPaymentDetails,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
@@ -750,6 +752,12 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     /// The selected Link row shows the payment details picked in the Link wallet, e.g. "Visa •••• 4242", and a "Change" button.
     private func updateLinkChangeButtonAndSublabelState() {
         guard let linkRowButton = embeddedPaymentMethodsView.selectedRowButton, linkRowButton.type == .link else { return }
+        // The Link-only row shows its payment details itself.
+        guard !embeddedPaymentMethodsView.showsOnlyLink else {
+            embeddedPaymentMethodsView.selectedRowChangeButtonState = nil
+            embeddedPaymentMethodsView.updateMandate()
+            return
+        }
         // The mandate depends on the payment details too.
         defer { embeddedPaymentMethodsView.updateMandate() }
         let linkBrand = configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)

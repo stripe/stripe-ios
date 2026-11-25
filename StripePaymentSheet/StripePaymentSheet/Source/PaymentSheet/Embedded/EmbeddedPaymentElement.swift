@@ -276,6 +276,8 @@ public final class EmbeddedPaymentElement {
             linkConfirmOption = nil
         }
         refreshLinkInlineAuth(loadResult: loadResult)
+        // Link stays the only row while it's still selected with payment details the customer can pay with.
+        let linkOnlyPaymentDetails = showsOnlyLink && shouldSelectPreviousRow && previousSelectedRowType == .link && linkRowOpensWallet ? linkPaymentDetails : nil
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,
@@ -283,9 +285,11 @@ public final class EmbeddedPaymentElement {
             previousSelection: shouldSelectPreviousRow ? previousSelectedRowType : nil,
             previousSelectedRowChangeButtonState: shouldSelectPreviousRow ? previousSelectedRowChangeButtonState : nil,
             placesLinkFirst: placesLinkFirst,
-            linkInlineVerificationView: linkInlineAuth?.makeCardView(appearance: configuration.appearance),
+            linkInlineVerificationView: linkOnlyPaymentDetails == nil ? linkInlineAuth?.makeCardView(appearance: configuration.appearance) : nil,
+            linkOnlyPaymentDetails: linkOnlyPaymentDetails,
             delegate: self
         )
+        showsOnlyLink = embeddedPaymentMethodsView.showsOnlyLink
         // Keep the rebuilt view loading while the billing sync finishes.
         if self.pendingBillingAddressSyncSelection != nil {
             self.embeddedPaymentMethodsView.isUserInteractionEnabled = false
@@ -297,6 +301,33 @@ public final class EmbeddedPaymentElement {
         }
         self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
         informDelegateIfPaymentOptionUpdated()
+    }
+
+    /// Replaces the list, e.g. to show only Link or every payment method again, without loading anything.
+    /// - Parameters:
+    ///   - selection: The row to select, if any.
+    ///   - linkOnlyPaymentDetails: The Link payment details the Link-only row shows, or nil to show every payment method.
+    func remakeEmbeddedPaymentMethodsView(selection: RowButtonType?, linkOnlyPaymentDetails: ConsumerPaymentDetails?) {
+        let embeddedPaymentMethodsView = Self.makeView(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper,
+            previousSelection: selection,
+            placesLinkFirst: placesLinkFirst,
+            linkInlineVerificationView: linkOnlyPaymentDetails == nil ? linkInlineAuth?.makeCardView(appearance: configuration.appearance) : nil,
+            linkOnlyPaymentDetails: linkOnlyPaymentDetails,
+            delegate: self
+        )
+        self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
+        if selection == nil {
+            // Otherwise the list selects the customer's default, which is Link by now.
+            embeddedPaymentMethodsView.resetSelection()
+        }
+        showsOnlyLink = embeddedPaymentMethodsView.showsOnlyLink
+        if linkPreselectionTask != nil {
+            embeddedPaymentMethodsView.setLinkRowLoading(true, animated: false)
+        }
+        containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
     }
 
     /// Completes the payment or setup.
@@ -348,7 +379,12 @@ public final class EmbeddedPaymentElement {
         linkConfirmOption = nil
 
         // Reset the selection on the `embeddedPaymentMethodsView`
-        embeddedPaymentMethodsView.resetSelection()
+        if showsOnlyLink {
+            // An unselected Link row on its own isn't useful, so show every payment method again.
+            remakeEmbeddedPaymentMethodsView(selection: nil, linkOnlyPaymentDetails: nil)
+        } else {
+            embeddedPaymentMethodsView.resetSelection()
+        }
 
 #if DEBUG
         // Clear the testable payment option (only populated during unit testing)
@@ -469,6 +505,8 @@ public final class EmbeddedPaymentElement {
     internal var linkPreselectionTask: Task<Void, Never>?
     /// The Link payment details last preselected after inline verification rather than picked in the Link wallet.
     internal var preselectedLinkPaymentDetailsID: String?
+    /// Whether Link, with the payment details picked after inline verification, is the only row until the customer pays another way.
+    internal var showsOnlyLink = false
     var notifiesDelegateOnInitialHeight: Bool {
         get {
             return embeddedPaymentMethodsView.notifiesDelegateOnInitialHeight

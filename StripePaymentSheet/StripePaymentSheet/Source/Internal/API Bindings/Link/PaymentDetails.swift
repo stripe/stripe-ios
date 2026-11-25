@@ -421,6 +421,20 @@ extension ConsumerPaymentDetails {
         }
     }
 
+    /// The line shown below `paymentSheetLabel`, e.g. "•••• 4242", if any.
+    var paymentSheetSublabel: String? {
+        switch details {
+        case .card(let card):
+            // Without a display name, the label is already "•••• 4242".
+            return card.displayName(with: nickname) != nil ? card.secondaryName : nil
+        case .bankAccount(let bankAccount):
+            return "•••• \(bankAccount.last4)"
+        case .generic:
+            guard let sublabel = display?.sublabel, !sublabel.isEmpty else { return nil }
+            return sublabel
+        }
+    }
+
     var linkPaymentDetailsFormattedString: String? {
         switch details {
         case .card(let card):

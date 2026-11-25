@@ -20,6 +20,8 @@ extension RowButton {
             case update
             case change
             case changeWithChevron
+            /// The Link logo and a chevron, read as "Change" by VoiceOver.
+            case link(brand: LinkBrand)
 
             var text: String? {
                 switch self {
@@ -29,16 +31,29 @@ extension RowButton {
                     return .Localized.view_more
                 case .update:
                     return nil
-                case .change, .changeWithChevron:
+                case .change, .changeWithChevron, .link:
                     return .Localized.change
                 }
+            }
+
+            /// Whether `text` is displayed, rather than only read by VoiceOver.
+            var showsText: Bool {
+                if case .link = self {
+                    return false
+                }
+                return text != nil
+            }
+
+            var logoImage: UIImage? {
+                guard case .link(let brand) = self else { return nil }
+                return brand.paymentSheetLogoImage
             }
 
             var accessoryImage: UIImage? {
                 switch self {
                 case .edit, .viewMore, .change:
                     return nil
-                case .viewMoreChevron, .update, .changeWithChevron:
+                case .viewMoreChevron, .update, .changeWithChevron, .link:
                     return Image.icon_chevron_right.makeImage(template: true)
                         .imageFlippedForRightToLeftLayoutDirection()
                         .withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
@@ -72,10 +87,26 @@ extension RowButton {
             return imageView
         }
 
+        private var logoImageView: UIImageView? {
+            guard let logoImage = accessoryType.logoImage else { return nil }
+            let imageView = UIImageView(image: logoImage)
+            imageView.contentMode = .scaleAspectFit
+            imageView.isAccessibilityElement = false
+            // Matches the height of the text it replaces.
+            let height = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20).lineHeight
+            let aspectRatio = logoImage.size.height > 0 ? logoImage.size.width / logoImage.size.height : 1
+            NSLayoutConstraint.activate([
+                imageView.heightAnchor.constraint(equalToConstant: height),
+                imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: aspectRatio),
+            ])
+            return imageView
+        }
+
         private var stackView: UIStackView {
-            let views: [UIView] = [label, imageView].compactMap { $0 }
+            let views: [UIView] = [accessoryType.showsText ? label : nil, logoImageView, imageView].compactMap { $0 }
             let stackView = UIStackView(arrangedSubviews: views)
             stackView.spacing = 4
+            stackView.alignment = .center
             return stackView
         }
 

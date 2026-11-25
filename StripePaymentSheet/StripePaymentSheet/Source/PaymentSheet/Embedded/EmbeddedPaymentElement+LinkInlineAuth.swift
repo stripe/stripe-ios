@@ -179,8 +179,10 @@ extension EmbeddedPaymentElement {
     }
 
     /// Opens the Link wallet so the customer can pick a payment method, then selects the Link row with it.
-    /// - Parameter revertsSelectionOnClose: Whether closing the wallet without picking anything restores the previously selected row.
-    func presentLinkWallet(revertsSelectionOnClose: Bool) {
+    /// - Parameters:
+    ///   - revertsSelectionOnClose: Whether closing the wallet without picking anything restores the previously selected row.
+    ///   - showsOnlyLinkAfterSelecting: Whether Link becomes the only row once something is picked.
+    func presentLinkWallet(revertsSelectionOnClose: Bool, showsOnlyLinkAfterSelecting: Bool = false) {
         guard let presenter = linkInlineAuthPresentingViewController() else {
             if revertsSelectionOnClose {
                 restoreSelectionBeforeLink()
@@ -195,32 +197,56 @@ extension EmbeddedPaymentElement {
             nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
-        ) { [weak self] confirmOption, _, _ in
+            analyticsHelper: analyticsHelper,
+            // From the Link-only list, the secondary button shows the other payment methods to pay with.
+            prefersPayAnotherWay: showsOnlyLink || showsOnlyLinkAfterSelecting
+        ) { [weak self] confirmOption, shouldReturnToPaymentSheet, _ in
             guard let self else { return }
-            if confirmOption != nil {
-                self.analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletSelected()
-            } else {
-                self.analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletClosed()
-            }
-            self.linkWalletDidFinish(with: confirmOption, revertsSelectionOnClose: revertsSelectionOnClose)
+            self.linkWalletDidFinish(
+                with: confirmOption,
+                shouldReturnToPaymentSheet: shouldReturnToPaymentSheet,
+                revertsSelectionOnClose: revertsSelectionOnClose,
+                showsOnlyLinkAfterSelecting: showsOnlyLinkAfterSelecting
+            )
         }
     }
 
-    func linkWalletDidFinish(with confirmOption: PaymentSheet.LinkConfirmOption?, revertsSelectionOnClose: Bool) {
+    /// - Parameter shouldReturnToPaymentSheet: Whether the customer chose to pay another way, rather than closing the wallet.
+    func linkWalletDidFinish(
+        with confirmOption: PaymentSheet.LinkConfirmOption?,
+        shouldReturnToPaymentSheet: Bool = false,
+        revertsSelectionOnClose: Bool,
+        showsOnlyLinkAfterSelecting: Bool = false
+    ) {
         guard let confirmOption else {
+            if shouldReturnToPaymentSheet, showsOnlyLink {
+                analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPaidAnotherWay()
+                payAnotherWay()
+                return
+            }
+            analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletClosed()
             if revertsSelectionOnClose, embeddedPaymentMethodsView.selectedRowButton?.type == .link {
                 restoreSelectionBeforeLink()
             }
             return
         }
+        analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletSelected()
         // The wallet showed its mandate and records its bank data-sharing consent itself.
         preselectedLinkPaymentDetailsID = nil
-        selectLink(with: confirmOption)
+        selectLink(with: confirmOption, showsOnlyLinkAfterSelecting: showsOnlyLinkAfterSelecting)
+    }
+
+    /// Shows every payment method again, with none selected, so the customer can pick something other than Link.
+    private func payAnotherWay() {
+        linkConfirmOption = nil
+        preselectedLinkPaymentDetailsID = nil
+        remakeEmbeddedPaymentMethodsView(selection: nil, linkOnlyPaymentDetails: nil)
+        informDelegateIfPaymentOptionUpdated()
     }
 
     /// Selects the Link row to pay with `confirmOption`.
-    private func selectLink(with confirmOption: PaymentSheet.LinkConfirmOption) {
+    /// - Parameter showsOnlyLinkAfterSelecting: Whether Link becomes the only row, if it isn't already.
+    private func selectLink(with confirmOption: PaymentSheet.LinkConfirmOption, showsOnlyLinkAfterSelecting: Bool = false) {
         // `.wallet` means the wallet couldn't hand back payment details, so Link pays through the wallet at confirm time.
         if case .wallet = confirmOption {
             linkConfirmOption = nil
@@ -230,6 +256,10 @@ extension EmbeddedPaymentElement {
         guard embeddedPaymentMethodsView.selectedRowButton?.type == .link || embeddedPaymentMethodsView.selectLinkRow() else {
             linkConfirmOption = nil
             return
+        }
+        if showsOnlyLink || showsOnlyLinkAfterSelecting {
+            // Shows the new payment details on the Link-only row. Without any, e.g. for `.wallet`, the list shows every payment method instead.
+            remakeEmbeddedPaymentMethodsView(selection: .link, linkOnlyPaymentDetails: linkPaymentDetails)
         }
         updateChangeButtonAndSublabelState(for: .link)
         persistDefaultPaymentMethodSelection(.link)
@@ -343,12 +373,12 @@ extension EmbeddedPaymentElement {
                 preselectedLinkPaymentDetailsID = paymentDetails.stripeID
                 analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPreselected(paymentDetailsType: paymentDetails.type.rawValue)
             }
-            selectLink(with: confirmOption)
+            selectLink(with: confirmOption, showsOnlyLinkAfterSelecting: true)
         case .failure(let reason):
             analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPreselectionFellBack(reason: reason.rawValue)
             switch configuration.formSheetAction {
             case .continue:
-                presentLinkWallet(revertsSelectionOnClose: false)
+                presentLinkWallet(revertsSelectionOnClose: false, showsOnlyLinkAfterSelecting: true)
             case .confirm(let completion):
                 payInLinkWallet(completion: completion)
             }

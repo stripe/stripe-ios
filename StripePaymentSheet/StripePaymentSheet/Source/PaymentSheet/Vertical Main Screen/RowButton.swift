@@ -613,6 +613,50 @@ extension RowButton {
         return button
     }
 
+    /// The Link row when it's the only row, showing the Link payment details it pays with, e.g. "Chase Sapphire •••• 4242", and the Link logo.
+    static func makeForLinkPaymentDetails(
+        _ paymentDetails: ConsumerPaymentDetails,
+        appearance: PaymentSheet.Appearance,
+        linkBrand: LinkBrand,
+        isEmbedded: Bool = false,
+        accessoryView: UIView? = nil,
+        didTap: @escaping DidTapClosure
+    ) -> RowButton {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        let icon = paymentDetails.display?.icon
+        switch paymentDetails.details {
+        case .card(let card):
+            imageView.setImage(
+                with: icon?.type == .cardArt ? icon?.main : nil,
+                processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
+                fallbackImage: STPImageLibrary.cardBrandImage(for: card.stpBrand),
+                shimmeringImage: STPImageLibrary.cardBrandChoiceImage()
+            )
+        case .bankAccount(let bankAccount):
+            imageView.setImage(
+                with: icon?.main,
+                fallbackImage: PaymentSheetImageLibrary.bankIcon(for: bankAccount.iconCode, iconStyle: appearance.iconStyle),
+                shimmeringImage: nil
+            )
+        case .generic:
+            imageView.setImage(with: icon?.main, fallbackImage: PaymentSheetImageLibrary.linkBankIcon(), shimmeringImage: nil)
+        }
+        let sublabel = PlainSublabelView(text: paymentDetails.paymentSheetSublabel, appearance: appearance, isEmbedded: isEmbedded)
+        let button = RowButton.create(
+            appearance: appearance,
+            type: .link,
+            imageView: imageView,
+            text: paymentDetails.paymentSheetLabel,
+            sublabel: sublabel,
+            accessoryView: accessoryView,
+            isEmbedded: isEmbedded,
+            didTap: didTap
+        )
+        button.accessibilityHelperView.accessibilityLabel = [String.Localized.pay_with_link(brand: linkBrand), paymentDetails.accessibilityDescription].joined(separator: ", ")
+        return button
+    }
+
     static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, linkBrand: LinkBrand = .link, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
