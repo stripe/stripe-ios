@@ -561,7 +561,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         guard case .failed(let error, let response) = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
-        XCTAssertTrue(error.nonGenericDescription.contains("not_started"))
+        XCTAssertTrue(String(reflecting: error).contains("not_started"))
         XCTAssertEqual(response?.status, .open)
         XCTAssertEqual(response?.paymentStatus, .noPaymentRequired)
         let events = STPAnalyticsClient.sharedClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.checkout_elements" }
@@ -961,7 +961,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertThrowsError(
             try checkout.makeExpressCheckoutConfirmationFlow(.link, presentationWindow: nil)
         ) { error in
-            XCTAssertTrue(error.nonGenericDescription.contains("Could not find a presenting view controller"))
+            XCTAssertTrue(String(reflecting: error).contains("Could not find a presenting view controller"))
         }
 
         // ...and logs the unexpected error once
