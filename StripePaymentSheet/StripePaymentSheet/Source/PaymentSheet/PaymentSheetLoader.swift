@@ -25,6 +25,8 @@ final class PaymentSheetLoader {
         var stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
         let customerProvider: CustomerProvider
+        /// Loads the featured bank icons shown on the instant debits "Bank" row; nil if there is no such row.
+        var featuredInstitutionsLoader: FeaturedInstitutionsLoader?
     }
 
     enum IntegrationShape {
@@ -62,13 +64,16 @@ final class PaymentSheetLoader {
 
     /// Loads everything needed to render and use all MPE variants (PaymentSheet, FlowController, EmbeddedPaymentElement).
     /// ⚠️ Everything that takes time to load (eg fetched from network or disk) should be in this method so that `logLoadSucceeded` accurately captures the amount of time it took to load.
+    /// - Parameter preservingLinkAccount: A Link account mid-verification to keep instead of looking it up again, which would replace its session
+    ///   and invalidate a code the customer was sent. Only kept if it's still `LinkAccountContext.shared.account`.
     @MainActor
     static func load(
         mode: PaymentSheet.InitializationMode,
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
-        isUpdate: Bool = false
+        isUpdate: Bool = false,
+        preservingLinkAccount: PaymentSheetLinkAccount? = nil
     ) async throws -> (LoadResult, ConfirmationChallenge) {
         let customerProvider = CustomerProvider(customer: configuration.customer)
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
@@ -124,9 +129,11 @@ final class PaymentSheetLoader {
                 prefetchedEmailAndSourceTask: prefetchedLinkEmailAndSourceTask,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate,
-                linkAnalytics: analyticsHelper.linkAnalytics
+                linkAnalytics: analyticsHelper.linkAnalytics,
+                preservingLinkAccount: preservingLinkAccount
             )
 
+            PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: elementsSession, configuration: configuration))
             let stripeBalanceFinancialAccounts = await stripeBalanceFinancialAccountsTask.value
 
             loadTimings.logStart("computePaymentMethodTypes")
@@ -174,14 +181,25 @@ final class PaymentSheetLoader {
             )
             paymentMethodMessagingPromotionsHelper?.fetchData()
 
-            // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
-            let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
-            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, customerProvider: customerProvider, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
-
             let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,
                 paymentMethodTypes: paymentMethodTypes
             )
+
+            // Also fire-and-forget; the "Bank" row shows the icons once they load.
+            var featuredInstitutionsLoader: FeaturedInstitutionsLoader?
+            if FeaturedInstitutionsLoader.shouldFetch(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes, layout: paymentMethodOrientation) {
+                featuredInstitutionsLoader = FeaturedInstitutionsLoader(
+                    apiClient: configuration.apiClient,
+                    country: elementsSession.countryCode,
+                    analyticsHelper: analyticsHelper
+                )
+                featuredInstitutionsLoader?.fetch()
+            }
+
+            // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
+            let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
+            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, customerProvider: customerProvider, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
             // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
             loadTimings.logStart("makeViewModels")
@@ -211,7 +229,8 @@ final class PaymentSheetLoader {
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                 stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
                 paymentMethodOrientation: paymentMethodOrientation,
-                customerProvider: customerProvider
+                customerProvider: customerProvider,
+                featuredInstitutionsLoader: featuredInstitutionsLoader
             )
             let confirmationChallenge = ConfirmationChallenge(
                 elementsSession: elementsSession,
@@ -334,7 +353,15 @@ final class PaymentSheetLoader {
                     throw error
                 }
                 // Fall back to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
-                let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
+                // Leave out any excluded types, because the merchant's intent won't accept them.
+                let excludedPaymentMethodTypes = intentConfig.excludedPaymentMethodTypes ?? []
+                let paymentMethodTypes = (intentConfig.allowedPaymentMethodTypes ?? intentConfig.paymentMethodTypes ?? ["card"])
+                    .filter { !excludedPaymentMethodTypes.contains($0) }
+                    .map { STPPaymentMethod.type(from: $0) }
+                // If nothing is left (e.g. the merchant excluded cards), there's nothing the backup can offer, so report the original error
+                guard !paymentMethodTypes.isEmpty else {
+                    throw error
+                }
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
             }

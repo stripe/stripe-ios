@@ -60,7 +60,7 @@ let package = Package(
     traits: [
         .trait(
             name: "Identity",
-            description: "Enables 3D face capture in StripeIdentity."
+            description: "Enables StripeIdentity."
         )
     ],
     dependencies: [

@@ -3,7 +3,7 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -23,6 +23,30 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         config.allowsDelayedPaymentMethods = true
         config.applePay = .init(merchantId: "foo", merchantCountryCode: "US")
         return config
+    }
+
+    func testLoadLogsLinkAvailability() async throws {
+        // Given a session that does not support Link
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
+        StubbedBackend.stubSessions(paymentMethods: "\"card\"")
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
+        let previousLogger = PaymentSheetLoader.availabilityLogger
+        var logs: [String] = []
+        PaymentSheetLoader.availabilityLogger = { logs.append($0) }
+        defer { PaymentSheetLoader.availabilityLogger = previousLogger }
+
+        // When PaymentSheet loads
+        _ = try await PaymentSheetLoader.load(
+            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+            configuration: configuration,
+            analyticsHelper: ._testValue(configuration: configuration),
+            integrationShape: .paymentSheet
+        )
+
+        // Then the developer sees why Link is missing
+        XCTAssertEqual(logs, ["[Stripe SDK]: PaymentSheet could not offer Link:\n\t* Link is not supported by this Elements Session."])
     }
 
     func testReturningCustomerWithNoSavedCards() throws {
@@ -405,7 +429,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         }
 
         // ...and we're using a deferred intent without PM types specified...
-        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _ in return "" })
+        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd", captureMethod: .automatic), confirmHandler: { _, _ in return "" })
 
         // ...and the customer has payment methods...
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
@@ -499,6 +523,45 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loaded2], timeout: 2)
     }
 
+    func testPaymentSheetLoadDeferredFallbackFailsWhenCardIsExcluded() {
+        // Given v1/elements/sessions fails with a server error...
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
+        } response: { _ in
+            return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
+        }
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
+        StubbedBackend.stubCustomers()
+        StubbedBackend.stubLookup()
+
+        // ...and a deferred intent that excludes cards, the only payment method the backup ElementsSession offers
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 100, currency: "usd", captureMethod: .automatic),
+            excludedPaymentMethodTypes: ["card"],
+            confirmHandler: { _, _ in return "" }
+        )
+
+        // When PaymentSheet loads
+        let loaded = expectation(description: "Loaded")
+        let configuration = self.configuration(apiClient: stubbedAPIClient())
+        PaymentSheetLoader.load(
+            mode: .deferredIntent(intentConfig),
+            configuration: configuration,
+            analyticsHelper: ._testValue(configuration: configuration),
+            integrationShape: .paymentSheet
+        ) { result in
+            loaded.fulfill()
+            switch result {
+            case .success:
+                XCTFail("Expected the load to fail instead of falling back to excluded payment methods")
+            case .failure(let error):
+                // Then it fails with the original server error
+                XCTAssertEqual((error as NSError).userInfo[STPError.httpStatusCodeKey] as? Int, 500)
+            }
+        }
+        wait(for: [loaded], timeout: 2)
+    }
+
     func testSendsErrorAnalytic() {
         // If v1/elements/session and the fallback fail to load...
         let analyticsClient = STPAnalyticsClient()
@@ -515,7 +578,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             XCTFail("Confirm handler shouldn't be called.")
             return ""
         }
-        let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
+        let intentConfig = PaymentSheet.IntentConfiguration.init(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfig),
             configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
@@ -803,6 +866,92 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         XCTAssertNil(LinkAccountContext.shared.account)
     }
 
+    @MainActor
+    func testLoadLink_preservesAccountMidVerificationWithoutLookingUpAgain() async throws {
+        // Given a Link account whose verification is in progress, and a customer email prefetch that never finishes
+        var didCallLookup = false
+        stub { urlRequest in
+            if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
+                didCallLookup = true
+                return true
+            }
+            return false
+        } response: { _ in
+            HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+        }
+        let accountMidVerification = makeLinkAccountRequiringVerification(email: "user-a@example.com")
+        XCTAssertEqual(accountMidVerification.sessionState, .requiresVerification)
+        LinkAccountContext.shared.account = accountMidVerification
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+        let slowPrefetch = Task<(email: String, source: EmailSource)?, Never> {
+            try? await Task.sleep(nanoseconds: 10_000_000_000)
+            return nil
+        }
+        defer { slowPrefetch.cancel() }
+
+        // When an update reloads Link while preserving that account
+        let didLinkLookupTimeOut = await PaymentSheetLoader.loadLink(
+            elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
+            apiClient: stubbedAPIClient(),
+            isLinkEnabled: true,
+            email: "user-a@example.com",
+            defaultBillingDetails: .init(),
+            analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .embedded),
+            prefetchedEmailAndSourceTask: slowPrefetch,
+            loadTimings: .init(),
+            isUpdate: true,
+            linkAnalytics: .init(),
+            lookupTimeout: 0.5,
+            preservingLinkAccount: accountMidVerification
+        )
+
+        // Then the same account is kept without a lookup or waiting on the prefetch
+        XCTAssertEqual(didLinkLookupTimeOut, false)
+        XCTAssertFalse(didCallLookup)
+        XCTAssertTrue(LinkAccountContext.shared.account === accountMidVerification)
+    }
+
+    @MainActor
+    func testLoadLink_looksUpAgainWhenPreservedAccountIsNoLongerCurrent() async throws {
+        // Given another surface replaced the Link account the update wanted to keep
+        var didCallLookup = false
+        stub { urlRequest in
+            if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
+                didCallLookup = true
+                return true
+            }
+            return false
+        } response: { _ in
+            HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+        }
+        let staleAccount = makeLinkAccountRequiringVerification(email: "user-a@example.com")
+        LinkAccountContext.shared.account = makeLinkAccountRequiringVerification(email: "user-b@example.com")
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        // When an update reloads Link
+        _ = await PaymentSheetLoader.loadLink(
+            elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
+            apiClient: stubbedAPIClient(),
+            isLinkEnabled: true,
+            email: "foo@bar.com",
+            defaultBillingDetails: .init(),
+            analyticsHelper: ExperimentAnalyticsHelper(integrationShape: .embedded),
+            prefetchedEmailAndSourceTask: Task { nil },
+            loadTimings: .init(),
+            isUpdate: true,
+            linkAnalytics: .init(),
+            preservingLinkAccount: staleAccount
+        )
+
+        // Then it looks the account up as usual
+        XCTAssertTrue(didCallLookup)
+        XCTAssertFalse(LinkAccountContext.shared.account === staleAccount)
+    }
+
     // MARK: - Link Lookup Holdback Tests
 
     @MainActor
@@ -850,6 +999,30 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         } else {
             XCTAssertFalse(didCallLookup, message)
         }
+    }
+
+    private func makeLinkAccountRequiringVerification(email: String) -> PaymentSheetLinkAccount {
+        let session = ConsumerSession.make(
+            clientSecret: "pscs_mid_verification",
+            emailAddress: email,
+            redactedFormattedPhoneNumber: "(***) *** **12",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [.init(type: .sms, state: .started)],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil,
+            currentAuthenticationLevel: .notAuthenticated,
+            minimumAuthenticationLevel: .oneFactorAuth
+        )
+        return PaymentSheetLinkAccount(
+            email: email,
+            session: session,
+            publishableKey: "pk_test_persisted",
+            displayablePaymentDetails: nil,
+            apiClient: stubbedAPIClient(),
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
+        )
     }
 
     private func makeVerifiedLinkAccount(

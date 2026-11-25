@@ -156,7 +156,7 @@ extension CryptoOnrampExampleUITestCase {
         )
         addWalletButton.tap()
 
-        enterText(address, in: app.textViews["Enter wallet address"].firstMatch, file: file, line: line)
+        enterText(address, in: app.descendants(matching: .any)["wallet_address"].firstMatch, file: file, line: line)
         let submitButton = app.buttons["Submit"].firstMatch
         XCTAssertTrue(submitButton.isEnabled, "Wallet Submit button should be enabled", file: file, line: line)
         submitButton.tap()
@@ -174,10 +174,19 @@ extension CryptoOnrampExampleUITestCase {
         inTextField identifier: String,
         replacingExistingText: Bool = false,
         advancingToNextField: Bool = false,
+        ignoringFormatting: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        enterText(text, in: app.textFields[identifier].firstMatch, replacingExistingText: replacingExistingText, advancingToNextField: advancingToNextField, file: file, line: line)
+        enterText(
+            text,
+            in: app.textFields[identifier].firstMatch,
+            replacingExistingText: replacingExistingText,
+            advancingToNextField: advancingToNextField,
+            ignoringFormatting: ignoringFormatting,
+            file: file,
+            line: line
+        )
     }
 
     func enterText(
@@ -185,6 +194,7 @@ extension CryptoOnrampExampleUITestCase {
         in element: XCUIElement,
         replacingExistingText: Bool = false,
         advancingToNextField: Bool = false,
+        ignoringFormatting: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -203,7 +213,7 @@ extension CryptoOnrampExampleUITestCase {
                 element.typeText(text)
             }
 
-            valueMatches = !shouldVerifyValue || textFieldValueMatches(element, expectedText: text)
+            valueMatches = !shouldVerifyValue || textFieldValueMatches(element, expectedText: text, ignoringFormatting: ignoringFormatting)
             if valueMatches {
                 break
             }
@@ -242,12 +252,16 @@ extension CryptoOnrampExampleUITestCase {
         element.typeText(text)
     }
 
-    private func textFieldValueMatches(_ element: XCUIElement, expectedText: String) -> Bool {
+    private func textFieldValueMatches(_ element: XCUIElement, expectedText: String, ignoringFormatting: Bool) -> Bool {
         guard let actualText = element.value as? String else {
             return false
         }
 
-        return normalizedText(actualText) == normalizedText(expectedText)
+        if ignoringFormatting {
+            return normalizedText(actualText) == normalizedText(expectedText)
+        }
+
+        return actualText == expectedText
     }
 
     private func normalizedText(_ text: String) -> String {
@@ -268,20 +282,21 @@ extension CryptoOnrampExampleUITestCase {
     }
 
     @MainActor
-    func dismissSavePasswordPromptIfPresent() {
-        // The prompt is owned by AuthenticationServicesAgent, so it must be handled as a system interruption.
-        let interruptionMonitor = addUIInterruptionMonitor(withDescription: "Save Password") { alert in
-            let notNowButton = alert.buttons["Not Now"].firstMatch
-            guard notNowButton.exists else {
+    private func dismissSavePasswordPromptIfPresent() {
+        let safariViewService = XCUIApplication(bundleIdentifier: "com.apple.SafariViewService")
+        let notNowButton = safariViewService.sheets["Save Password?"].buttons["Not Now"].firstMatch
+        // The service may start late or have no accessible window when iOS doesn't offer to save the password.
+        let prompt = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            switch safariViewService.state {
+            case .runningForeground, .runningBackground:
+                return (try? notNowButton.snapshot()) != nil
+            default:
                 return false
             }
-
+        }, object: nil)
+        if XCTWaiter.wait(for: [prompt], timeout: .animationTimeout) == .completed {
             notNowButton.tap()
-            return true
         }
-
-        app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
-        removeUIInterruptionMonitor(interruptionMonitor)
     }
 
     func dismissKeyboard() {

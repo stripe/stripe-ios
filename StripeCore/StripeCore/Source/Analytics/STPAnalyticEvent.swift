@@ -247,6 +247,12 @@ import Foundation
 
     // MARK: - Stripe balance
     case paymentSheetStripeBalanceFinancialAccountsLoadFailed = "mc_stripe_balance_financial_accounts_load_failed"
+    case paymentSheetStripeBalanceCheckoutSessionUnsupported = "mc_stripe_balance_checkout_session_unsupported"
+
+    // MARK: - PaymentSheet instant debits featured institutions
+    case paymentSheetFeaturedInstitutionsShown = "mc_instant_debits_featured_institutions_shown"
+    case paymentSheetFeaturedInstitutionsInsufficient = "mc_instant_debits_featured_institutions_insufficient"
+    case paymentSheetFeaturedInstitutionsLoadFailed = "mc_instant_debits_featured_institutions_load_failed"
 
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"

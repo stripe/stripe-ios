@@ -20,7 +20,7 @@ class FlowControllerStateTests: XCTestCase {
         let exp = expectation(description: "No delegate methods should be called during init but before viewDidLoad")
         exp.isInverted = true
         let config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", captureMethod: .automatic)) { _, _ in
             // Nothing
             return ""
         }
@@ -31,6 +31,7 @@ class FlowControllerStateTests: XCTestCase {
             intent: intent,
             elementsSession: .emptyElementsSession,
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             paymentMethodTypes: [.stripe(.card)],
             formCache: .init(),
             analyticsHelper: ._testValue(),

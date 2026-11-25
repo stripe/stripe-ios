@@ -49,12 +49,12 @@ final class RowButtonFlatWithDisclosure: RowButton {
         let horizontalStackView = UIStackView(arrangedSubviews: [stackView,
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
-                                                                 promoBadge,
+                                                                 trailingBadge,
                                                                  disclosureImageView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
         horizontalStackView.alignment = .center
-        if let promoBadge {
-            horizontalStackView.setCustomSpacing(12, after: promoBadge)
+        if let trailingBadge {
+            horizontalStackView.setCustomSpacing(12, after: trailingBadge)
         }
 
         [imageView, horizontalStackView].compactMap { $0 }

@@ -54,7 +54,6 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
 
     let apiClient: STPAPIClient
     let verificationSessionId: String
-    private let mediaPipeAvailable = FaceGeometryDetectorFactory.isAvailable
 
     /// The VerificationPages API version used to make all API requests.
     ///
@@ -90,7 +89,8 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
             resource: APIEndpointVerificationPage(id: verificationSessionId),
             parameters: [
                 "app_identifier": Bundle.main.bundleIdentifier ?? "",
-                "media_pipe_available": mediaPipeAvailable,
+                // StripeIdentity doesn't build without MediaPipe. The backend still gates 3D face capture on this flag.
+                "media_pipe_available": true,
             ]
         )
     }
@@ -99,7 +99,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         updating verificationData: StripeAPI.VerificationPageDataUpdate
     ) -> Promise<StripeAPI.VerificationPageData> {
         var verificationData = verificationData
-        verificationData.mediaPipeAvailable = verificationData.collectedData?.face == nil ? nil : mediaPipeAvailable
+        verificationData.mediaPipeAvailable = verificationData.collectedData?.face == nil ? nil : true
         return apiClient.post(
             resource: APIEndpointVerificationPageData(id: verificationSessionId),
             object: verificationData

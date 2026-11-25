@@ -13,9 +13,10 @@ import UIKit
 import XCTest
 
 @_spi(InternalOnlyAPI)@testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @testable @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI)@testable import StripeUICore
 
+@MainActor
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
@@ -29,8 +30,8 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     // Change this to true to hit the real glitch backend. This may be required
     // to capture data for new use cases
     var runAgainstLiveService: Bool = false
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
 //        recordMode = true
 
         configuration = PaymentSheet.Configuration()
@@ -493,7 +494,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     func testPaymentSheetCVCRecollection() {
         stubReturningCustomerResponse()
 
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic),
                                                             confirmHandler: confirmHandler,
                                                             requireCVCRecollection: true)
 
@@ -648,6 +649,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()
+        stubFeaturedInstitutions()
 
         // Instant debits includes unqiue labels. Test with custom font to ensure it renders correctly.
         var appearance = PaymentSheet.Appearance()
@@ -723,7 +725,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     func testPaymentSheet_deferredIntent() {
         stubNewCustomerResponse()
 
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic),
                                                             confirmHandler: confirmHandler)
 
         preparePaymentSheet(intentConfig: intentConfig)
@@ -734,7 +736,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     func testPaymentSheet_disableTerms_deferredIntent() {
         stubNewCustomerResponse()
 
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession, captureMethod: .automatic),
                                                             confirmHandler: confirmHandler)
         self.configuration.termsDisplay = [.card: .never]
         preparePaymentSheet(intentConfig: intentConfig)
@@ -748,7 +750,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubCustomers()
         stubConsumerSession()
 
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession, captureMethod: .automatic),
                                                             confirmHandler: confirmHandler)
 
         preparePaymentSheet(
@@ -995,6 +997,18 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         } response: { _ in
             let mockResponseData = try! FileMock.consumers_lookup_200.data()
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
+
+    /// The instant debits "Bank" row fetches featured institutions. An empty list keeps the row's icons hidden.
+    func stubFeaturedInstitutions() {
+        guard !runAgainstLiveService else {
+            return
+        }
+        stub { urlRequest in
+            return urlRequest.url?.path.hasSuffix("/connections/featured_institutions") ?? false
+        } response: { _ in
+            return HTTPStubsResponse(jsonObject: ["object": "list", "data": [], "has_more": false], statusCode: 200, headers: nil)
         }
     }
 

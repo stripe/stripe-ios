@@ -52,6 +52,7 @@ class PaymentSheetFormFactory {
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
     let cardFundingFilter: CardFundingFilter
     let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    let stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts?
     let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
     var shouldDisplaySaveCheckbox: Bool {
@@ -98,13 +99,14 @@ class PaymentSheetFormFactory {
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
         linkAppearance: LinkAppearance? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
         let showLinkInlineCardSignup: Bool = {
-            guard case .paymentElement(let configuration, _) = configuration else {
+            guard case .paymentElement(let configuration, _, _) = configuration else {
                 return false
             }
 
@@ -128,7 +130,7 @@ class PaymentSheetFormFactory {
         }()
         let linkBrand: LinkBrand = {
             switch configuration {
-            case .paymentElement(let configuration, _):
+            case .paymentElement(let configuration, _, _):
                 return configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount)
             case .customerSheet:
                 return .link
@@ -148,15 +150,21 @@ class PaymentSheetFormFactory {
                   isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType),
                   countryCode: elementsSession.countryCode,
                   currency: intent.currency,
-                  savePaymentMethodConsentBehavior: Self.makeSavePaymentMethodConsentBehavior(intent: intent, elementsSession: elementsSession),
+                  savePaymentMethodConsentBehavior: Self.makeSavePaymentMethodConsentBehavior(
+                    configuration: configuration,
+                    elementsSession: elementsSession
+                  ),
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   allowsLinkDefaultOptIn: elementsSession.allowsLinkDefaultOptIn,
                   forceSaveFutureUseBehavior: elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
                   signupOptInFeatureEnabled: elementsSession.linkSignupOptInFeatureEnabled,
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
-                  isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
+                  isFirstSavedPaymentMethod: configuration.savedPaymentMethods(
+                    elementsSession: elementsSession
+                  ).isEmpty,
                   analyticsHelper: analyticsHelper,
                   paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+                  stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
                   linkBrand: linkBrand,
@@ -190,6 +198,7 @@ class PaymentSheetFormFactory {
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
         linkBrand: LinkBrand = .link,
@@ -225,6 +234,7 @@ class PaymentSheetFormFactory {
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        self.stripeBalanceFinancialAccounts = stripeBalanceFinancialAccounts
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
         self.linkBrand = linkBrand
@@ -310,6 +320,8 @@ class PaymentSheetFormFactory {
                 )
             case .mondu:
                 return makeMondu()
+            case .stripeBalance:
+                return makeStripeBalance()
             case .momo, .goPay, .grabPay, .paynow, .payPay, .mobilePay, .vipps, .zip, .crypto,
                  .billie, .sunbit, .alma, .payByBank, .payco, .sequra, .scalapay:
                 return makeContactInformationAndBillingAddressForm()
@@ -344,7 +356,7 @@ class PaymentSheetFormFactory {
                 return makeAUBECSDebit()
             case .FPX:
                 return makeFPX()
-            case .netBanking, .weChatPay, .link, .cardPresent, .unknown, .stripeBalance:
+            case .netBanking, .weChatPay, .link, .cardPresent, .unknown:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
             @unknown default:
                 return makeUnexpectedEmptyForm(for: paymentMethod)
@@ -926,6 +938,25 @@ extension PaymentSheetFormFactory {
             additionalElements: [description]
         )
     }
+    func makeStripeBalance() -> PaymentMethodElement {
+        let financialAccounts = StripeBalanceFinancialAccountsElement(
+            financialAccounts: stripeBalanceFinancialAccounts,
+            defaultFinancialAccountID: getPreviousCustomerInput(for: StripeBalanceFinancialAccountsElement.apiPath),
+            appearance: configuration.appearance
+        )
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        // The account picker goes first since it's the one thing the buyer has to choose
+        let elements = ([financialAccounts, contactInfoSection, billingDetails] as [Element?]).compactMap { $0 }
+        return makeDefaultsApplierWrapper(
+            for: FormElement(autoSectioningElements: elements, theme: theme)
+        )
+    }
+
     func makeNaverPay() -> PaymentMethodElement {
         let funding = makeDropdown(
             label: String.Localized.naver_pay_funding_label,
@@ -1090,12 +1121,9 @@ extension PaymentSheetFormFactory {
             sellerName: sellerName,
             isSettingUp: isSettingUp || forceSaveFutureUseBehavior,
             linkBrand: linkBrand,
+            initialLinkedBank: previousCustomerInput?.instantDebitsLinkedBank,
             appearance: configuration.appearance
         )
-
-        if let linkedBank = previousCustomerInput?.instantDebitsLinkedBank {
-            element.setLinkedBank(linkedBank)
-        }
 
         return element
     }
@@ -1270,21 +1298,15 @@ extension PaymentSheetFormFactory {
     }
 
     static func makeSavePaymentMethodConsentBehavior(
-        intent: Intent,
+        configuration: PaymentSheetFormFactoryConfig,
         elementsSession: STPElementsSession
     ) -> SavePaymentMethodConsentBehavior {
-        guard case .checkout(let session) = intent else {
+        guard case .paymentElement(_, let customerProvider, _) = configuration else {
             return elementsSession.savePaymentMethodConsentBehavior
         }
-
-        guard session.customerId != nil,
-              let offerSave = session.savedPaymentMethodsOfferSave,
-              offerSave.enabled
-        else {
-            return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
-        }
-
-        return .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
+        return customerProvider.savePaymentMethodConsentBehavior(
+            elementsSession: elementsSession
+        )
     }
 }
 

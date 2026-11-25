@@ -22,7 +22,9 @@ final class PaneLayoutView {
     let scrollView: UIScrollView
 
     private var footerView: UIView?
-    private var footerViewBottomConstraint: NSLayoutConstraint?
+    /// Pins `paneLayoutView` to the bottom of the presenting view's safe area.
+    /// Its constant moves the footer above the keyboard.
+    private var paneLayoutViewBottomConstraint: NSLayoutConstraint?
     private weak var presentingView: UIView?
     private let keepFooterAboveKeyboard: Bool
 
@@ -76,7 +78,19 @@ final class PaneLayoutView {
         // must add `paneLayoutView` (and all it's subviews) to the `view`
         // BEFORE we can add a constraint for `UIScrollView` content
         self.presentingView = view
-        view.addAndPinSubviewToSafeArea(paneLayoutView)
+        // Extend under the top safe area, so the scroll view reaches the sheet's top edge when the
+        // navigation bar collapses (e.g. on iPhone Duo), while the content stays inside the safe area.
+        paneLayoutView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(paneLayoutView)
+        // Keep the bottom constraint so the whole pane, including its footer, can move above the keyboard
+        let paneLayoutViewBottomConstraint = paneLayoutView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        self.paneLayoutViewBottomConstraint = paneLayoutViewBottomConstraint
+        NSLayoutConstraint.activate([
+            paneLayoutView.topAnchor.constraint(equalTo: view.topAnchor),
+            paneLayoutView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            paneLayoutView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            paneLayoutViewBottomConstraint,
+        ])
         scrollViewContentView?.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
 
         // Fit the scroll view height to be the size of the
@@ -137,7 +151,7 @@ final class PaneLayoutView {
     }
 
     private func updateFooterViewConstraints(keyboardHeight: CGFloat) {
-        guard let presentingView, let footerView else { return }
+        guard let presentingView, footerView != nil, let paneLayoutViewBottomConstraint else { return }
         let adjustedKeyboardHeight: CGFloat
         if keyboardHeight > 0 {
             // Removes additional padding applied to footer view when showing above the keyboard.
@@ -146,16 +160,11 @@ final class PaneLayoutView {
             adjustedKeyboardHeight = keyboardHeight
         }
 
-        if let existingConstraint = footerViewBottomConstraint {
-            existingConstraint.constant = -adjustedKeyboardHeight
-        } else {
-            footerViewBottomConstraint = footerView.bottomAnchor.constraint(
-                equalTo: presentingView.safeAreaLayoutGuide.bottomAnchor,
-                constant: -adjustedKeyboardHeight
-            )
-            footerViewBottomConstraint?.isActive = true
-        }
-        paneLayoutView.layoutIfNeeded()
+        // Raise the bottom of the whole pane instead of constraining the footer directly.
+        // The footer is the last arranged subview of `paneLayoutView`, which already pins it to the stack's bottom,
+        // so a separate footer constraint would conflict with that and break a constraint.
+        paneLayoutViewBottomConstraint.constant = -adjustedKeyboardHeight
+        presentingView.layoutIfNeeded()
     }
 
     private func animateAlongsideKeyboard(
@@ -190,6 +199,28 @@ final class PaneLayoutView {
 private class AutomaticShadowScrollView: UIScrollView {
 
     private var shadowView: UIView?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        // The content is inset horizontally through constraints, so only inset it from the top safe area,
+        // in `safeAreaInsetsDidChange`.
+        contentInsetAdjustmentBehavior = .never
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        let topInset = safeAreaInsets.top
+        guard contentInset.top != topInset else { return }
+        let isScrolledToTop = contentOffset.y <= -contentInset.top
+        contentInset.top = topInset
+        if isScrolledToTop {
+            contentOffset.y = -topInset
+        }
+    }
 
     override func layoutSubviews() {
         super.layoutSubviews()

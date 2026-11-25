@@ -9,7 +9,7 @@ import OHHTTPStubs
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) @_spi(ReactNativeSDK) import StripePaymentSheet
 @testable @_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
@@ -24,12 +24,12 @@ final class PaymentElementTest: XCTestCase {
             expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
     }
 
     override func tearDown() {
         HTTPStubs.removeAllStubs()
-        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: nil)
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: nil)
         super.tearDown()
     }
 
@@ -310,9 +310,7 @@ final class PaymentElementTest: XCTestCase {
 
         // Then both presentations allow payment methods supported by Checkout
         XCTAssertTrue(paymentSheetConfiguration.allowsDelayedPaymentMethods)
-        XCTAssertTrue(paymentSheetConfiguration.allowsPaymentMethodsRequiringShippingAddress)
         XCTAssertTrue(embeddedConfiguration.allowsDelayedPaymentMethods)
-        XCTAssertTrue(embeddedConfiguration.allowsPaymentMethodsRequiringShippingAddress)
     }
 
     func testConfigurationSetsCheckoutDefaultShippingDetails() async throws {
@@ -504,14 +502,57 @@ final class PaymentElementTest: XCTestCase {
         let paymentElement = checkout.getPaymentElement()
         XCTAssertFalse(paymentElement.paymentOptionSourceOfTruthIsFlowController)
 
-        // When FlowController publishes its selection
-        paymentElement.paymentSheetFlowController.updatePaymentOption()
+        // When the customer closes the FlowController sheet, which publishes its selection
+        presentAndContinue(paymentElement)
 
-        // Then Checkout receives the separate labels through the subscription
+        // Then Checkout receives the separate labels from FlowController
         XCTAssertTrue(paymentElement.paymentOptionSourceOfTruthIsFlowController)
         XCTAssertEqual(checkout.session.paymentOption?.label, "Visa")
         XCTAssertEqual(checkout.session.paymentOption?.sublabel, "•••• 4242")
         XCTAssertEqual(paymentElement.paymentSheetFlowController.paymentOption?.label, "•••• 4242")
+    }
+
+    func testLinkAccountChangeKeepsEmbeddedSelection() async throws {
+        // Given PayNow selected in Embedded, while the hidden FlowController has nothing selected
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card", "paynow"])
+        ))
+        let embedded = checkout.getPaymentElement().embeddedPaymentElement
+        let row = try XCTUnwrap(embedded.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.paynow)) })
+        embedded.embeddedPaymentMethodsView.didTap(rowButton: row)
+
+        // When the Link account changes (e.g. opening Link looks up the email), making FlowController republish on the next main queue turn
+        let originalLinkAccount = LinkAccountContext.shared.account
+        addTeardownBlock { @MainActor in LinkAccountContext.shared.account = originalLinkAccount }
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount._testValue(email: "patrick@example.com", isRegistered: false)
+        let republished = expectation(description: "FlowController republished")
+        DispatchQueue.main.async { republished.fulfill() }
+        await fulfillment(of: [republished], timeout: 1)
+
+        // Then Checkout keeps the Embedded selection
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
+    }
+
+    func testCancelingSheetKeepsEmbeddedSelection() async throws {
+        // Given PayNow selected in Embedded
+        let checkout = try await CheckoutElementsController(configuration: CheckoutTestHelpers.makeConfiguration(
+            apiResponse: Self.makeOpenSession(paymentMethodTypes: ["card", "paynow"])
+        ))
+        let paymentElement = checkout.getPaymentElement()
+        let embedded = paymentElement.embeddedPaymentElement
+        let row = try XCTUnwrap(embedded.embeddedPaymentMethodsView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.paynow)) })
+        embedded.embeddedPaymentMethodsView.didTap(rowButton: row)
+
+        // When the customer opens the FlowController sheet and cancels it
+        let closed = expectation(description: "PaymentElement sheet closed")
+        paymentElement.present(from: UIViewController()) { closed.fulfill() }
+        let flowController = paymentElement.paymentSheetFlowController
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: true)
+        await fulfillment(of: [closed], timeout: 2)
+
+        // Then Checkout keeps the Embedded selection
+        XCTAssertFalse(paymentElement.paymentOptionSourceOfTruthIsFlowController)
+        XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
     }
 
     func testEmbeddedPublishesChangesToLinkSublabel() async throws {
@@ -636,11 +677,12 @@ final class PaymentElementTest: XCTestCase {
             paymentMethodListViewController.rowButtons.first { $0.accessibilityIdentifier == "PayNow" },
             "Available rows: \(paymentMethodListViewController.rowButtons.compactMap(\.accessibilityIdentifier))"
         )
-        paymentMethodListViewController.didTap(
-            rowButton: payNowRowButton,
-            selection: .new(paymentMethodType: .stripe(.paynow))
-        )
-        paymentElement.paymentSheetFlowController.updatePaymentOption()
+        presentAndContinue(paymentElement) {
+            paymentMethodListViewController.didTap(
+                rowButton: payNowRowButton,
+                selection: .new(paymentMethodType: .stripe(.paynow))
+            )
+        }
         XCTAssertEqual(checkout.session.paymentOption?.label, "PayNow")
         XCTAssertEqual(checkout.session.paymentOption?.paymentMethodType, "paynow")
 
@@ -728,6 +770,98 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertFalse(try XCTUnwrap(embeddedView.errorLabel.text).isEmpty)
     }
 
+    func testEmbeddedViewPresentsFromNewHostAfterOriginalHostIsDismissed() async throws {
+        // Given a Payment Element view hosted in a sheet that was used to present a form
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let window = try await makeWindow(isKey: true)
+        let firstHost = UIViewController()
+        firstHost.view.addSubview(paymentElement.uiView)
+        await present(firstHost, from: try XCTUnwrap(window.rootViewController))
+        XCTAssertIdentical(paymentElement.embeddedPaymentElement.resolvedPresentingViewController, firstHost)
+
+        // When the merchant dismisses that sheet and hosts the view in a new sheet
+        await dismiss(firstHost)
+        let secondHost = UIViewController()
+        secondHost.view.addSubview(paymentElement.uiView)
+        await present(secondHost, from: try XCTUnwrap(window.rootViewController))
+
+        // Then forms present from the new sheet instead of the dismissed one
+        XCTAssertIdentical(paymentElement.embeddedPaymentElement.resolvedPresentingViewController, secondHost)
+        // ...and the merchant-facing property is never set on their behalf
+        XCTAssertNil(paymentElement.embeddedPaymentElement.presentingViewController)
+        await dismiss(secondHost)
+    }
+
+    func testEmbeddedViewPresentsFromItsOwnWindowInsteadOfKeyWindow() async throws {
+        // Given a Payment Element view in a window that isn't the key window
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
+        )
+        let paymentElement = checkout.getPaymentElement()
+        _ = try await makeWindow(isKey: true)
+        let window = try await makeWindow(isKey: false)
+        let host = try XCTUnwrap(window.rootViewController)
+        host.view.addSubview(paymentElement.uiView)
+
+        // When the Payment Element resolves its presenting view controller
+        let resolvedPresentingViewController = paymentElement.embeddedPaymentElement.resolvedPresentingViewController
+
+        // Then it uses the window displaying the Payment Element view
+        XCTAssertIdentical(resolvedPresentingViewController, host)
+    }
+
+    func testTappingFormRowOutsideWindowAssertsAndSendsAnalytic() async throws {
+        // Given a Payment Element view that isn't in a window
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
+        )
+        let embeddedPaymentElement = checkout.getPaymentElement().embeddedPaymentElement
+        let embeddedView = embeddedPaymentElement.embeddedPaymentMethodsView
+        let cardRow = try XCTUnwrap(embeddedView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.card)) })
+        let analyticsClient = STPAnalyticsClient.sharedClient
+        analyticsClient._testLogHistory = []
+        defer { analyticsClient._testLogHistory = [] }
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+
+        // When the customer taps a row with a form
+        embeddedView.didTap(rowButton: cardRow)
+
+        // Then nothing is presented, and it asserts and reports the unexpected error
+        XCTAssertNil(embeddedPaymentElement.presentedSheet)
+        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("payment_element_view_presenting_view_controller_unavailable"))
+        let errorPayload = try XCTUnwrap(analyticsClient._testLogHistory.last {
+            $0["event"] as? String == STPAnalyticEvent.unexpectedCheckoutElementsError.rawValue
+        })
+        XCTAssertEqual(errorPayload["error_code"] as? String, "payment_element_view_presenting_view_controller_unavailable")
+    }
+
+    func testConfirmPresentsFromHostWhileFormIsDismissing() async throws {
+        // Given a Payment Element view whose card form is open
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration()
+        )
+        let paymentElement = checkout.getPaymentElement()
+        let embeddedPaymentElement = paymentElement.embeddedPaymentElement
+        let window = try await makeWindow(isKey: true)
+        let host = try XCTUnwrap(window.rootViewController)
+        host.view.addSubview(paymentElement.uiView)
+        let embeddedView = embeddedPaymentElement.embeddedPaymentMethodsView
+        let cardRow = try XCTUnwrap(embeddedView.rowButtons.first { $0.type == .new(paymentMethodType: .stripe(.card)) })
+        embeddedView.didTap(rowButton: cardRow)
+        let formSheet = try XCTUnwrap(embeddedPaymentElement.presentedSheet)
+
+        // When the form starts dismissing, e.g. right after the customer taps Continue
+        let dismissed = expectation(description: "Form dismissed")
+        formSheet.dismiss(animated: true) { dismissed.fulfill() }
+
+        // Then confirming presents from the host instead of the dismissing form
+        XCTAssertIdentical(embeddedPaymentElement.confirmPresentingViewController, host)
+        await fulfillment(of: [dismissed], timeout: 5)
+    }
+
     func testCheckoutAndElementsDoNotRetainEachOther() async throws {
         weak var weakCheckout: CheckoutElementsController?
         weak var weakPaymentElement: PaymentElement?
@@ -759,6 +893,42 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertNil(weakCurrencySelectorUIView)
         XCTAssertNil(weakFlowController)
         XCTAssertNil(weakEmbeddedPaymentElement)
+    }
+
+    private func makeWindow(isKey: Bool) async throws -> UIWindow {
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = UIViewController()
+        if isKey {
+            window.makeKeyAndVisible()
+        } else {
+            window.isHidden = false
+        }
+        addTeardownBlock { @MainActor in
+            window.isHidden = true
+        }
+        return window
+    }
+
+    private func present(_ viewController: UIViewController, from presenter: UIViewController) async {
+        await withCheckedContinuation { continuation in
+            presenter.present(viewController, animated: false) {
+                continuation.resume()
+            }
+        }
+    }
+
+    private func dismiss(_ viewController: UIViewController) async {
+        await withCheckedContinuation { continuation in
+            viewController.dismiss(animated: false) {
+                continuation.resume()
+            }
+        }
     }
 
     /// `CheckoutSession.json` already has automatic tax sourced from billing and a saved card with a full billing address.

@@ -80,7 +80,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
-    weak var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?
+    weak var checkout: CheckoutSessionUpdater?
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let walletButtonsShownExternally: Bool
     var error: Swift.Error?
@@ -114,10 +114,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var isCVCRecollectionEnabled: Bool
 
     var defaultPaymentMethod: STPPaymentMethod?
-
-    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
-    }()
 
     // MARK: - UI properties
 
@@ -165,7 +161,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         walletButtonsViewState: PaymentSheet.WalletButtonsViewState = .hidden,
-        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
+        checkout: CheckoutSessionUpdater? = nil,
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -179,7 +175,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.nativeSheetPresentation = nativeSheetPresentation
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
-        self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
+        self.checkout = checkout
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.paymentMethodTypes = loadResult.paymentMethodTypes
         self.walletButtonsShownExternally = walletButtonsViewState.isVisible
@@ -337,7 +333,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func updateMandate(animated: Bool = true) {
         let hadLabelInStackView = mandateView.attributedText != nil || errorLabel.text != nil
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, customerProvider: loadResult.customerProvider, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
@@ -498,6 +494,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             amount: loadResult.intent.amount,
             incentive: loadResult.elementsSession.incentive,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            featuredInstitutionsLoader: loadResult.featuredInstitutionsLoader,
             delegate: self
         )
     }
@@ -584,6 +581,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         presentNativeLink(
             selectedPaymentDetailsID: nil,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
@@ -817,7 +815,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     /// Syncs billing address to the checkout session, then closes the sheet.
     /// If the sync fails, stays on the sheet and shows the error instead.
     private func syncCheckoutBillingThenClose() {
-        guard let checkoutBillingAddressUpdater,
+        guard let checkout,
               let paymentOption = selectedPaymentOption else {
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
@@ -832,7 +830,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkoutBillingAddressUpdater.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
+                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
             } catch {
                 self.error = error
             }
@@ -877,7 +875,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         let vc = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: loadResult.customerProvider,
-            intent: intent,
+            // Don't pass `checkout:`, since this sheet syncs billing tax on Continue rather than on selection
+            checkoutSavedPaymentMethodUpdater: checkout,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
@@ -960,11 +959,11 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 #endif
         switch selection {
         case .applePay:
-            CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: loadResult.customerProvider.customerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.applePay, forCustomer: loadResult.customerProvider.customerID)
         case .link:
-            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: loadResult.customerProvider.customerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: loadResult.customerProvider.customerID)
         case .saved(let paymentMethod):
-            CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: loadResult.customerProvider.customerID)
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: loadResult.customerProvider.customerID)
         case let .new(paymentMethodType: paymentMethodType):
             let pmFormVC = makeFormVC(paymentMethodType: paymentMethodType)
             if pmFormVC.form.collectsUserInput || paymentMethodType.isBankPayment {
@@ -1043,10 +1042,12 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             previousCustomerInput: previousFormConfirmParams,
             formCache: formCache,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             isLinkUI: false,
             delegate: self,
             previousLinkInlineSignupAction: previousLinkInlineSignupAction
@@ -1062,7 +1063,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         return PaymentSheetFormFactory(
             intent: intent,
             elementsSession: elementsSession,
-            configuration: .paymentElement(configuration),
+            configuration: .paymentElement(configuration, customerProvider: loadResult.customerProvider),
             paymentMethod: paymentMethodType,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
             previousCustomerInput: nil,
@@ -1110,7 +1111,12 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
 extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerDelegate {
     func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
         // Detach the payment method from the customer
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        loadResult.customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkout
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // if it's the default pm, unset the default
@@ -1168,7 +1174,8 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
                 paymentMethod: paymentMethod,
                 with: updateParams,
                 elementsSession: elementsSession,
-                apiClient: configuration.apiClient
+                apiClient: configuration.apiClient,
+                checkoutSavedPaymentMethodUpdater: checkout
             )
 
             // Update savedPaymentMethods
@@ -1184,7 +1191,11 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
     private func updateDefault(paymentMethod: STPPaymentMethod) async -> Result<Void, Swift.Error> {
         do {
             // Update the payment method
-            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            _ = try await loadResult.customerProvider.setAsDefaultPaymentMethod(
+                paymentMethod.stripeId,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             defaultPaymentMethod = paymentMethod
             return .success(())
         } catch {

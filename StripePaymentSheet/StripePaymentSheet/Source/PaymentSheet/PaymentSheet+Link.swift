@@ -68,11 +68,12 @@ extension PaymentSheet {
         from presentingController: UIViewController,
         intent: Intent,
         elementsSession: STPElementsSession,
+        customerProvider: CustomerProvider,
         shouldOfferApplePay: Bool,
         shouldFinishOnClose: Bool,
         onClose: (() -> Void)? = nil
     ) {
-        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, paymentHandler: paymentHandler, nativeSheetPresentation: nativeSheetPresentation, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
+        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, customerProvider: customerProvider, paymentHandler: paymentHandler, nativeSheetPresentation: nativeSheetPresentation, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
 
         payWithNativeLink.presentAsSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
             if case let .failed(error) = result {
@@ -131,6 +132,12 @@ extension PaymentSheet {
 
         /// Overrides whether native Link is available. Intended for test playgrounds only.
         @_spi(InternalOnlyAPI) public static var nativeLinkEnabledOverride: Bool?
+
+        /// Overrides the server flag that enables inline Link verification in Embedded. Intended for test playgrounds only.
+        @_spi(InternalOnlyAPI) public static var embeddedInlineVerificationEnabledOverride: Bool?
+
+        /// Overrides the server flag that sends inline Link verification to the dialog. Intended for test playgrounds only.
+        @_spi(InternalOnlyAPI) public static var embeddedInlineVerificationForcesDialogOverride: Bool?
     }
 }
 

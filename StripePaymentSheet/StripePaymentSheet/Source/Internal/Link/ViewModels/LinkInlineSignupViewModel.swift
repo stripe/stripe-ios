@@ -65,7 +65,7 @@ final class LinkInlineSignupViewModel {
         }
     }
 
-    private var didInteractWithSaveCheckbox = false
+    private(set) var didInteractWithSaveCheckbox = false
 
     var emailAddress: String? {
         didSet {
@@ -398,6 +398,8 @@ final class LinkInlineSignupViewModel {
         allowsDefaultOptIn: Bool,
         signupOptInFeatureEnabled: Bool,
         signupOptInInitialValue: Bool,
+        restoredCheckboxState: IntentConfirmParams.CheckboxState = .hidden,
+        restoredDidInteractWithSaveCheckbox: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil,
         country: String? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper? = nil
@@ -425,7 +427,17 @@ final class LinkInlineSignupViewModel {
         self.legalName = configuration.defaultBillingDetails.name
         self.country = country
 
+        self.didInteractWithSaveCheckbox = restoredDidInteractWithSaveCheckbox
         self.saveCheckboxChecked = {
+            // Restore the customer's choice if the form was rebuilt, e.g. if they unchecked a checkbox that defaults to checked.
+            switch restoredCheckboxState {
+            case .selected:
+                return true
+            case .deselected:
+                return false
+            case .hidden:
+                break
+            }
             switch mode {
             case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
                 return false

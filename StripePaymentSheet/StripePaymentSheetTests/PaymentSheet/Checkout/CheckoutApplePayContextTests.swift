@@ -13,7 +13,7 @@ import PassKit
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
 import UIKit
 import XCTest
@@ -713,29 +713,24 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let (context, controller) = makeContext()
         controller.presentationSucceeds = false
 
-        // When the unexpected-error assertion is captured by the test utility
-        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        // When presenting Apple Pay
         let result = await context.presentApplePay()
 
         // Then confirmation fails with actionable diagnostics
         guard case .failed(let error) = result.paymentSheetResult,
-              case .unknown(let message) = error as? CheckoutError else {
-            XCTFail("Expected an Apple Pay Checkout error, got \(result.paymentSheetResult)")
+              case .applePayPresentationFailed = error as? CheckoutError else {
+            XCTFail("Expected an Apple Pay presentation error, got \(result.paymentSheetResult)")
             return
         }
-        XCTAssertTrue(message.contains("app is active"))
-        XCTAssertTrue(message.contains("presenting window is visible"))
-        XCTAssertTrue(error.localizedDescription.contains(message))
+        XCTAssertTrue(error.localizedDescription.contains("app is active"))
+        XCTAssertTrue(error.localizedDescription.contains("presenting window is visible"))
+        XCTAssertEqual(error.serializeForV1Analytics()["error_code"] as? String, "applePayPresentationFailed")
 
-        // ...and the failure is logged once and triggers the expected SDK assertion
+        // ...and it isn't logged as an unexpected error, because it's usually caused by the app's Apple Pay setup
         let events = analyticsClient._testLogHistory.filter {
             $0["event"] as? String == "unexpected_error.checkout_elements"
         }
-        XCTAssertEqual(events.count, 1)
-        XCTAssertEqual(events.first?["error_code"] as? String, "unknown")
-        XCTAssertEqual(events.first?["error_type"] as? String, "StripePaymentSheet.CheckoutError")
-        XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
-        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("unexpected_error.checkout_elements"))
+        XCTAssertTrue(events.isEmpty)
     }
 
     // MARK: - presentationWindow
@@ -823,15 +818,17 @@ final class CheckoutApplePayContextTests: XCTestCase {
             let inputParameters = parameters.inputParameters
             XCTAssertNil(inputParameters["payment_method"])
             XCTAssertNil((inputParameters["collected_information"] as? [String: Any])?["save_payment_method"])
-            XCTAssertEqual(parameters.paymentMethodData?.card?.token, "tok_apple_pay")
+            let paymentMethodData = inputParameters["payment_method_data"] as? [String: Any]
+            let billingDetails = paymentMethodData?["billing_details"] as? [String: Any]
+            XCTAssertEqual((paymentMethodData?["card"] as? [String: Any])?["token"] as? String, "tok_apple_pay")
             XCTAssertEqual(inputParameters["expected_payment_method_type"] as? String, "card")
             XCTAssertEqual(parameters.expectedAmount, 1000)
-            XCTAssertEqual(parameters.paymentMethodData?.billingDetails?.name, "Jane Doe")
-            XCTAssertEqual(parameters.paymentMethodData?.billingDetails?.address?.line1, "123 Main St")
-            XCTAssertEqual(parameters.paymentMethodData?.billingDetails?.email, "wallet@example.com")
-            XCTAssertEqual(parameters.paymentMethodData?.billingDetails?.phone, "14155551234")
+            XCTAssertEqual(billingDetails?["name"] as? String, "Jane Doe")
+            XCTAssertEqual((billingDetails?["address"] as? [String: Any])?["line1"] as? String, "123 Main St")
+            XCTAssertEqual(billingDetails?["email"] as? String, "wallet@example.com")
+            XCTAssertEqual(billingDetails?["phone"] as? String, "14155551234")
             XCTAssertEqual(parameters.shipping?.address.line1, "510 Townsend St")
-            XCTAssertNotNil(parameters.paymentMethodData?.clientAttributionMetadata)
+            XCTAssertNotNil(paymentMethodData?["client_attribution_metadata"])
             XCTAssertNotNil(parameters.clientAttributionMetadata)
             confirmed.fulfill()
             return .completed(response)
@@ -876,11 +873,15 @@ final class CheckoutApplePayContextTests: XCTestCase {
             // Then the /confirm request parameters are tagged with that same component, so
             // payment_method_data[payment_user_agent] can be built for the right one downstream
             XCTAssertEqual(parameters.confirmationSource, confirmationSource, file: file, line: line)
-            for metadata in [parameters.clientAttributionMetadata, parameters.paymentMethodData?.clientAttributionMetadata] {
-                XCTAssertEqual(metadata?.merchantIntegrationSource, "mobile-checkout", file: file, line: line)
-                XCTAssertEqual(metadata?.merchantIntegrationSubtype, confirmationSource.rawValue, file: file, line: line)
-                XCTAssertEqual(metadata?.merchantIntegrationAdditionalElements, ["mobile-payment-element", "mobile-express-checkout-element"], file: file, line: line)
-            }
+            let topLevelMetadata = parameters.clientAttributionMetadata
+            XCTAssertEqual(topLevelMetadata.merchantIntegrationSource, "mobile-checkout", file: file, line: line)
+            XCTAssertEqual(topLevelMetadata.merchantIntegrationSubtype, confirmationSource.rawValue, file: file, line: line)
+            XCTAssertEqual(topLevelMetadata.merchantIntegrationAdditionalElements, ["mobile-payment-element", "mobile-express-checkout-element"], file: file, line: line)
+            let paymentMethodData = parameters.inputParameters["payment_method_data"] as? [String: Any]
+            let nestedMetadata = paymentMethodData?["client_attribution_metadata"] as? [String: Any]
+            XCTAssertEqual(nestedMetadata?["merchant_integration_source"] as? String, "mobile-checkout", file: file, line: line)
+            XCTAssertEqual(nestedMetadata?["merchant_integration_subtype"] as? String, confirmationSource.rawValue, file: file, line: line)
+            XCTAssertEqual(nestedMetadata?["merchant_integration_additional_elements"] as? [String], ["mobile-payment-element", "mobile-express-checkout-element"], file: file, line: line)
             confirmed.fulfill()
             return .completed(response)
         }
@@ -907,7 +908,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
         let response = try CheckoutClientAPIResponse.decode(fromAPIResponse: makeConfirmResponseJSON())
         var confirmedTokens: [String?] = []
         let (context, controller) = makeContext { parameters in
-            confirmedTokens.append(parameters.paymentMethodData?.card?.token)
+            let paymentMethodData = parameters.inputParameters["payment_method_data"] as? [String: Any]
+            confirmedTokens.append((paymentMethodData?["card"] as? [String: Any])?["token"] as? String)
             if confirmedTokens.count == 1 {
                 return .failed(CheckoutError.unknown(debugDescription: "Declined"))
             }

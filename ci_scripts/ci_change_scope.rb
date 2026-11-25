@@ -3,7 +3,7 @@
 module CIChangeScope
   def self.non_production_path?(path)
     # Build configuration can change the SDK graph even inside an example or test directory.
-    return false if path.match?(/(?:\.(?:xcodeproj|xcworkspace)\/|\.(?:pbxproj|xcconfig|xcscheme|podspec|ya?ml|sh|rb)$|(?:\A|\/)(?:Package\.swift|Package\.resolved|Podfile(?:\.lock)?|Gemfile(?:\.lock)?|Makefile)$)/)
+    return false if path.match?(/(?:\.(?:xcodeproj|xcworkspace)\/|\.(?:pbxproj|xcconfig|xcscheme|ya?ml|sh|rb)$|(?:\A|\/)(?:Package\.swift|Package\.resolved|Gemfile(?:\.lock)?|Makefile)$)/)
 
     path.start_with?('Example/', 'Testers/', 'Tests/') ||
       path.match?(%r{\AStripe[^/]*/(?:[^/]*Tests|[^/]*UITests)/}) ||

@@ -68,12 +68,6 @@ struct CheckoutSessionConfirmationRequestParameters {
 
     private let input: ConfirmationInput
 
-    /// The data used to create a new PaymentMethod during confirmation, instead of a PaymentMethod ID.
-    var paymentMethodData: STPPaymentMethodParams? {
-        guard case .withPaymentMethodData(let data, _) = input else { return nil }
-        return data
-    }
-
     var inputParameters: [String: Any] {
         switch input {
         case .withoutPaymentMethod(let customerData):
@@ -113,6 +107,15 @@ struct CheckoutSessionConfirmationRequestParameters {
     /// The client attribution metadata for analytics.
     let clientAttributionMetadata: STPClientAttributionMetadata
 
+    /// The passive hCaptcha token. CheckoutClient's captcha check reads only this top-level field,
+    /// not `payment_method_data[radar_options][hcaptcha_token]`.
+    ///
+    /// Matching Android Checkout and PaymentSheet, this is only sent when the session has passive captcha
+    /// enabled and the confirm uses a card or Link PaymentMethod that is either new or was just created by
+    /// Link for this confirm (e.g. Link inline signup in passthrough mode, or web Link). Previously saved
+    /// PaymentMethods, Apple Pay, and confirms without a PaymentMethod don't send it.
+    let passiveCaptchaToken: String?
+
     static func createWithoutPaymentMethod(
         sessionId: String,
         clientSecret: String,
@@ -131,7 +134,8 @@ struct CheckoutSessionConfirmationRequestParameters {
             expectedAmount: expectedAmount,
             returnURL: returnURL,
             shipping: shipping,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: nil
         )
     }
 
@@ -147,7 +151,8 @@ struct CheckoutSessionConfirmationRequestParameters {
         shipping: STPPaymentIntentShippingDetailsParams?,
         paymentMethodOptions: STPConfirmPaymentMethodOptions?,
         clientAttributionMetadata: STPClientAttributionMetadata,
-        collectedInformation: CollectedInformation
+        collectedInformation: CollectedInformation,
+        passiveCaptchaToken: String?
     ) -> Self {
         Self(
             sessionId: sessionId,
@@ -165,7 +170,8 @@ struct CheckoutSessionConfirmationRequestParameters {
             expectedAmount: expectedAmount,
             returnURL: returnURL,
             shipping: shipping,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: passiveCaptchaToken
         )
     }
 
@@ -180,7 +186,8 @@ struct CheckoutSessionConfirmationRequestParameters {
         shipping: STPPaymentIntentShippingDetailsParams?,
         paymentMethodOptions: STPConfirmPaymentMethodOptions?,
         clientAttributionMetadata: STPClientAttributionMetadata,
-        collectedInformation: CollectedInformation
+        collectedInformation: CollectedInformation,
+        passiveCaptchaToken: String?
     ) -> Self {
         Self(
             sessionId: sessionId,
@@ -197,7 +204,8 @@ struct CheckoutSessionConfirmationRequestParameters {
             expectedAmount: expectedAmount,
             returnURL: returnURL,
             shipping: shipping,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            passiveCaptchaToken: passiveCaptchaToken
         )
     }
 }
@@ -254,7 +262,8 @@ extension STPAPIClient {
             parameters: Self.checkoutClientParameters(clientSecret: clientSecret),
             timeout: timeout,
             retriesEnabled: retriesEnabled,
-            useServerErrorMessage: true
+            useServerErrorMessage: true,
+            parsingErrorCode: .checkoutClientResponseParsingFailed
         )
     }
 
@@ -269,18 +278,21 @@ extension STPAPIClient {
             endpoint: "checkout_client/\(checkoutSessionId)/poll",
             parameters: ["client_secret": clientSecret],
             timeout: timeout,
-            retriesEnabled: false
+            retriesEnabled: false,
+            parsingErrorCode: .checkoutClientPollResponseParsingFailed
         )
     }
 
+    /// Detaches a saved payment method from a Checkout Session's Customer.
+    /// - Returns: The updated Checkout response.
     func detachPaymentMethod(
         _ paymentMethodId: String,
         fromCheckoutSession checkoutSessionId: String,
         clientSecret: String
-    ) async throws {
+    ) async throws -> CheckoutClientAPIResponse {
         var params = Self.checkoutClientParameters(clientSecret: clientSecret)
         params["payment_method_to_detach"] = paymentMethodId
-        let _: CheckoutClientAPIResponse = try await post(
+        return try await post(
             endpoint: "checkout_client/\(checkoutSessionId)/update",
             parameters: params
         )
@@ -359,6 +371,10 @@ extension STPAPIClient {
 
         parameters["return_url"] = requestParameters.returnURL
 
+        if let passiveCaptchaToken = requestParameters.passiveCaptchaToken {
+            parameters["passive_captcha_token"] = passiveCaptchaToken
+        }
+
         if let shipping = requestParameters.shipping {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
         }
@@ -390,7 +406,7 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
+                reportUnexpectedCheckoutClientParsingError(error, errorCode: .checkoutClientResponseParsingFailed, apiClient: self)
             }
             throw error
         }
@@ -416,7 +432,8 @@ extension STPAPIClient {
         parameters: [String: Any],
         timeout: TimeInterval? = nil,
         retriesEnabled: Bool = true,
-        useServerErrorMessage: Bool = false
+        useServerErrorMessage: Bool = false,
+        parsingErrorCode: UnexpectedCheckoutElementsErrorAnalytic.ErrorCode
     ) async throws -> T {
         do {
             return try await withCheckedThrowingContinuation { continuation in
@@ -433,7 +450,7 @@ extension STPAPIClient {
             throw checkoutSessionError(from: apiError)
         } catch {
             if error is DecodingError {
-                reportUnexpectedCheckoutClientParsingError(error, apiClient: self)
+                reportUnexpectedCheckoutClientParsingError(error, errorCode: parsingErrorCode, apiClient: self)
             }
             throw error
         }

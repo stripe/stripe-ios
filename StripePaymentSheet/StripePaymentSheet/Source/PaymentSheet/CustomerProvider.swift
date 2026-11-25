@@ -144,16 +144,19 @@ struct CustomerProvider {
         return customer?.ephemeralKeySecret(basedOn: elementsSession)
     }
 
+    /// - Parameter checkoutSavedPaymentMethodUpdater: Updates Checkout Session payment methods, keeping the controller's
+    ///   session up to date. Required for Checkout Sessions; ignored otherwise.
     @MainActor
     func update(
         paymentMethod: STPPaymentMethod,
         with updateParams: STPPaymentMethodUpdateParams,
         elementsSession: STPElementsSession,
-        apiClient: STPAPIClient
+        apiClient: STPAPIClient,
+        checkoutSavedPaymentMethodUpdater: CheckoutSessionSavedPaymentMethodUpdater?
     ) async throws -> STPPaymentMethod {
         let updatedPaymentMethod: STPPaymentMethod
         switch backing {
-        case .checkoutSession(let session):
+        case .checkoutSession:
             let billing = CheckoutElementsController.PaymentMethodBillingDetails(updateParams.billingDetails)
             let expiry = CheckoutElementsController.PaymentMethodExpiryDetails(updateParams.card)
             guard billing != nil || expiry != nil else {
@@ -161,10 +164,14 @@ struct CustomerProvider {
                     debugDescription: "Tried to update a payment method without billing details or expiry details."
                 )
             }
-            let updatedSession = try await apiClient.updatePaymentMethod(
+            guard let checkoutSavedPaymentMethodUpdater else {
+                throw PaymentSheetError.unknown(
+                    debugDescription: "Tried to update a Checkout Session payment method without its CheckoutElementsController."
+                )
+            }
+            // Update through the controller so its session keeps the edit when Payment Element is next rebuilt
+            let updatedSession = try await checkoutSavedPaymentMethodUpdater.updateSavedPaymentMethod(
                 paymentMethod.stripeId,
-                inCheckoutSession: session.id,
-                clientSecret: session.clientSecret,
                 billingDetails: billing,
                 expiryDetails: expiry
             )
@@ -200,6 +207,83 @@ struct CustomerProvider {
         return updatedPaymentMethod
     }
 
+    /// - Parameter checkoutSavedPaymentMethodUpdater: Detaches Checkout Session payment methods, keeping the controller's
+    ///   session up to date. Required for Checkout Sessions; ignored otherwise.
+    @MainActor
+    func detach(
+        paymentMethod: STPPaymentMethod,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient,
+        checkoutSavedPaymentMethodUpdater: CheckoutSessionSavedPaymentMethodUpdater?
+    ) {
+        // Removal is optimistic; callers update their UI without waiting for the network response.
+        switch backing {
+        case .checkoutSession:
+            guard let checkoutSavedPaymentMethodUpdater else {
+                stpAssertionFailure("Tried to detach a Checkout Session payment method without its CheckoutElementsController.")
+                return
+            }
+            // Detach through the controller so its session drops the removed payment method when Payment Element is next rebuilt
+            Task {
+                try? await checkoutSavedPaymentMethodUpdater.detachSavedPaymentMethod(paymentMethod.stripeId)
+            }
+        case .customer(let customer):
+            guard let customer,
+                  let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+                logMissingEphemeralKey()
+                return
+            }
+            switch customer.customerAccessProvider {
+            case .customerSession(let clientSecret):
+                if paymentMethod.type == .card {
+                    // The Customer the CustomerSession is scoped to. For a CustomerSession created with a customer-configured
+                    // Account, this is the Account's backing Customer, which v1 endpoints require instead of the merchant's `acct_` ID.
+                    apiClient.detachPaymentMethodRemoveDuplicates(
+                        paymentMethod.stripeId,
+                        customerId: elementsSession.customer?.customerSession.customer ?? customer.id,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                } else {
+                    apiClient.detachPaymentMethod(
+                        paymentMethod.stripeId,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: clientSecret
+                    ) { _ in }
+                }
+            case .legacyCustomerEphemeralKey:
+                apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCustomerUsing: ephemeralKey
+                ) { _ in }
+            }
+        }
+    }
+
+    @MainActor
+    func setAsDefaultPaymentMethod(
+        _ paymentMethodID: String,
+        elementsSession: STPElementsSession,
+        apiClient: STPAPIClient
+    ) async throws -> STPCustomer {
+        guard let ephemeralKey = ephemeralKeySecret(basedOn: elementsSession) else {
+            logMissingEphemeralKey()
+            throw PaymentSheetError.unknown(
+                debugDescription: "Failed to read ephemeral key while setting a payment method as default."
+            )
+        }
+        guard let customerID else {
+            throw PaymentSheetError.unknown(
+                debugDescription: "Failed to read customerId while setting a payment method as default."
+            )
+        }
+        return try await apiClient.setAsDefaultPaymentMethod(
+            paymentMethodID,
+            for: customerID,
+            using: ephemeralKey
+        )
+    }
+
     private func logMissingEphemeralKey() {
         let errorAnalytic = ErrorAnalytic(
             event: .unexpectedPaymentSheetError,
@@ -207,5 +291,23 @@ struct CustomerProvider {
             additionalNonPIIParams: ["customer_access_provider": analyticValue ?? "unknown"]
         )
         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+    }
+
+    var supportsLinkSetupFutureUsage: Bool {
+        return usesCustomerSession
+    }
+
+    func savePaymentMethodConsentBehavior(
+        elementsSession: STPElementsSession
+    ) -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        switch backing {
+        case .checkoutSession(let session):
+            guard hasCustomer, session.savedPaymentMethodsOfferSave?.enabled == true else {
+                return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+            }
+            return .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
+        case .customer:
+            return elementsSession.savePaymentMethodConsentBehavior
+        }
     }
 }

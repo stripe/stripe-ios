@@ -38,7 +38,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: config.externalPaymentMethodConfiguration,
+            externalPaymentMethods: config.externalPaymentMethodConfiguration?.externalPaymentMethods ?? [],
             cpmConfiguration: config.customPaymentMethodConfiguration,
             clientDefaultPaymentMethod: "pm_12345",
             customerProvider: CustomerProvider(
@@ -68,6 +68,37 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertEqual((deferredIntent["payment_method_configuration"] as? [String: Any])?["id"] as? String, "pmc_234")
     }
 
+    func testElementsSessionParameters_DeferredIntent_AllowedAndExcludedPaymentMethodTypes() throws {
+        // Given IntentConfigurations that use allowed and excluded payment method types
+        let allowedIntentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 2000, currency: "USD", captureMethod: .automaticAsync),
+                                                                   allowedPaymentMethodTypes: ["card", "cashapp"],
+                                                                   confirmHandler: { _, _ in return "" })
+        let excludedIntentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD"),
+                                                                    excludedPaymentMethodTypes: ["us_bank_account"],
+                                                                    confirmationTokenConfirmHandler: { _ in return "" })
+
+        // When making elements/sessions parameters for each
+        let deferredIntents = try [allowedIntentConfig, excludedIntentConfig].map { intentConfig in
+            let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+                mode: .deferredIntent(intentConfig),
+                externalPaymentMethods: [],
+                cpmConfiguration: nil,
+                clientDefaultPaymentMethod: nil,
+                customerProvider: CustomerProvider(customer: nil),
+                linkDisallowFundingSourceCreation: []
+            )
+            return try XCTUnwrap(parameters["deferred_intent"] as? [String: Any])
+        }
+
+        // Then each sends only the payment method type parameter it was configured with
+        XCTAssertEqual(deferredIntents[0]["allowed_payment_method_types"] as? [String], ["card", "cashapp"])
+        XCTAssertNil(deferredIntents[0]["excluded_payment_method_types"])
+        XCTAssertNil(deferredIntents[0]["payment_method_types"])
+        XCTAssertEqual(deferredIntents[1]["excluded_payment_method_types"] as? [String], ["us_bank_account"])
+        XCTAssertNil(deferredIntents[1]["allowed_payment_method_types"])
+        XCTAssertNil(deferredIntents[1]["payment_method_types"])
+    }
+
     func testElementsSessionParameters_DeferredSetup() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "USD",
                                                                            setupFutureUsage: .offSession),
@@ -79,7 +110,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerProvider: CustomerProvider(
@@ -114,7 +145,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerProvider: CustomerProvider(customer: nil),
@@ -140,7 +171,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerProvider: CustomerProvider(customer: nil),
@@ -154,6 +185,8 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testMakeDeferredElementsSessionsParamsForCustomerSheet() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeDeferredElementsSessionsParamsForCustomerSheet(
             paymentMethodTypes: ["card"],
+            allowedPaymentMethodTypes: nil,
+            excludedPaymentMethodTypes: nil,
             onBehalfOf: nil,
             clientDefaultPaymentMethod: "pm_12345",
             customerSessionClientSecret: CustomerSessionClientSecret(customerId: "cus_12345", clientSecret: "cuss_54321"))
@@ -171,6 +204,8 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testMakeDeferredElementsSessionsParamsForCustomerSheet_nilable() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeDeferredElementsSessionsParamsForCustomerSheet(
             paymentMethodTypes: nil,
+            allowedPaymentMethodTypes: nil,
+            excludedPaymentMethodTypes: nil,
             onBehalfOf: nil,
             clientDefaultPaymentMethod: nil,
             customerSessionClientSecret: nil)
@@ -188,6 +223,8 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testMakeDeferredElementsSessionsParamsForCustomerSheet_withOnBehalfOf() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeDeferredElementsSessionsParamsForCustomerSheet(
             paymentMethodTypes: ["card"],
+            allowedPaymentMethodTypes: nil,
+            excludedPaymentMethodTypes: nil,
             onBehalfOf: "acct_connect",
             clientDefaultPaymentMethod: "pm_12345",
             customerSessionClientSecret: CustomerSessionClientSecret(customerId: "cus_12345", clientSecret: "cuss_54321"))
@@ -201,6 +238,34 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(deferredIntent["mode"] as? String, "setup")
         XCTAssertEqual(deferredIntent["payment_method_types"] as? [String], ["card"])
         XCTAssertEqual(deferredIntent["on_behalf_of"] as? String, "acct_connect")
+    }
+
+    func testMakeDeferredElementsSessionsParamsForCustomerSheet_AllowedAndExcludedPaymentMethodTypes() throws {
+        // Given CustomerSheet IntentConfigurations that use allowed and excluded payment method types
+        let allowedIntentConfig = CustomerSheet.IntentConfiguration(allowedPaymentMethodTypes: ["card", "us_bank_account"],
+                                                                    setupIntentClientSecretProvider: { return "" })
+        let excludedIntentConfig = CustomerSheet.IntentConfiguration(excludedPaymentMethodTypes: ["sepa_debit"],
+                                                                     setupIntentClientSecretProvider: { return "" })
+
+        // When making elements/sessions parameters for each
+        let deferredIntents = try [allowedIntentConfig, excludedIntentConfig].map { intentConfig in
+            let parameters = STPAPIClient(publishableKey: "pk_test").makeDeferredElementsSessionsParamsForCustomerSheet(
+                paymentMethodTypes: intentConfig.paymentMethodTypes,
+                allowedPaymentMethodTypes: intentConfig.allowedPaymentMethodTypes,
+                excludedPaymentMethodTypes: intentConfig.excludedPaymentMethodTypes,
+                onBehalfOf: intentConfig.onBehalfOf,
+                clientDefaultPaymentMethod: nil,
+                customerSessionClientSecret: nil)
+            return try XCTUnwrap(parameters["deferred_intent"] as? [String: Any])
+        }
+
+        // Then each sends only the payment method type parameter it was configured with
+        XCTAssertEqual(deferredIntents[0]["allowed_payment_method_types"] as? [String], ["card", "us_bank_account"])
+        XCTAssertNil(deferredIntents[0]["excluded_payment_method_types"])
+        XCTAssertNil(deferredIntents[0]["payment_method_types"])
+        XCTAssertEqual(deferredIntents[1]["excluded_payment_method_types"] as? [String], ["sepa_debit"])
+        XCTAssertNil(deferredIntents[1]["allowed_payment_method_types"])
+        XCTAssertNil(deferredIntents[1]["payment_method_types"])
     }
 
     func testMakeElementsSessionsParamsForCustomerSheet() throws {
@@ -233,7 +298,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_sendsLegacyCustomerEphemeralKey() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .paymentIntentClientSecret("pi_123_secret_456"),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerProvider: CustomerProvider(
@@ -248,7 +313,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_sendsNoLegacyCustomerEphemeralKey() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .paymentIntentClientSecret("pi_123_secret_456"),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerProvider: CustomerProvider(customer: nil),
@@ -261,7 +326,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_sendsLinkDisallowFundingSourceCreation() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .paymentIntentClientSecret("pi_123_secret_456"),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerProvider: CustomerProvider(customer: nil),
@@ -274,7 +339,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_doesntSendLinkDisallowFundingSourceCreationIfEmpty() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .paymentIntentClientSecret("pi_123_secret_456"),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerProvider: CustomerProvider(customer: nil),
@@ -286,7 +351,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_DeferredPayment_WithSellerDetails() throws {
         let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(networkId: "network_123", externalId: "external_456", businessName: "Till's Pills")
         let intentConfig = PaymentSheet.IntentConfiguration(
-            sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD"),
+            sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD", captureMethod: .automatic),
             sellerDetails: sellerDetails,
             paymentMethodTypes: ["card"],
             preparePaymentMethodHandler: { _, _ in }
@@ -294,7 +359,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerProvider: CustomerProvider(customer: nil),
@@ -309,14 +374,14 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
     func testElementsSessionParameters_DeferredPayment_WithoutSellerDetails() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 2000, currency: "USD"),
+            mode: .payment(amount: 2000, currency: "USD", captureMethod: .automatic),
             paymentMethodTypes: ["card"],
             confirmHandler: { _, _ in return "" }
         )
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
             mode: .deferredIntent(intentConfig),
-            epmConfiguration: nil,
+            externalPaymentMethods: [],
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
             customerProvider: CustomerProvider(customer: nil),

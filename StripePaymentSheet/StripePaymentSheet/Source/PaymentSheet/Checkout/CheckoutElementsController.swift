@@ -15,8 +15,8 @@ import UIKit
 
 /// Use this class to build a [Checkout elements](todo) integration.
 /// It manages a CheckoutSession object and UI elements (e.g. PaymentElement, ShippingAddressElement).
-@_spi(InternalOnlyAPI)
 @_spi(ReactNativeSDK)
+@_spi(CheckoutSessionPreview)
 @MainActor
 public final class CheckoutElementsController: ObservableObject {
     // MARK: - Public Properties
@@ -139,9 +139,15 @@ public final class CheckoutElementsController: ObservableObject {
             // 4. The session is now finalized - do post-session-change stuff
             let handleSessionChangeResult = CheckoutElementsControllerLoader.handleSessionChange(checkout: self)
             confirmationChallenge = handleSessionChangeResult.confirmationChallenge
+            CheckoutElementsControllerLoader.logStripeBalanceUnsupportedIfNeeded(checkout: self)
 
             // 5. Resolve Link before constructing payment elements, reusing the prepared PE configuration.
             await CheckoutElementsControllerLoader.loadLink(
+                session: self.session,
+                configuration: configuration,
+                paymentElementConfiguration: handleSessionChangeResult.paymentElement?.flowController.configuration
+            )
+            CheckoutElementsControllerLoader.logLinkAvailability(
                 session: self.session,
                 configuration: configuration,
                 paymentElementConfiguration: handleSessionChangeResult.paymentElement?.flowController.configuration
@@ -244,22 +250,6 @@ public final class CheckoutElementsController: ObservableObject {
         LinkAccountContext.shared.resetCustomer()
     }
 
-    // MARK: - Promotion Codes
-
-    /// Use this method to apply a promotion code that your customer enters.
-    public func applyPromotionCode(_ promotionCode: String) async throws {
-        try await analyticsHelper.track(.applyPromotionCode, checkout: self) {
-            try await performQueuedUpdate(.setPromotionCode(promotionCode))
-        }
-    }
-
-    /// Use this method to remove the currently applied promotion code, if applicable.
-    public func removePromotionCode() async throws {
-        try await analyticsHelper.track(.removePromotionCode, checkout: self) {
-            try await performQueuedUpdate(.setPromotionCode(""))
-        }
-    }
-
     // MARK: - Payment Option
 
     /// Clears the currently selected payment option.
@@ -278,7 +268,17 @@ public final class CheckoutElementsController: ObservableObject {
             try await enqueueSessionUpdate {
                 guard self.canSetLocalEmail() else { return }
                 guard self.session.localState.email != email else { return }
-                // TODO: Refresh Link account lookup when the email changes.
+                try self.requireSheetNotPresented()
+                // Look up the new email in Link before the Payment Element is rebuilt, so Link UI and Link flows use
+                // the new email's Link account instead of the one looked up for the previous email.
+                var sessionWithUpdatedEmail = self.session
+                sessionWithUpdatedEmail.localState.email = email
+                await CheckoutElementsControllerLoader.loadLink(
+                    session: sessionWithUpdatedEmail,
+                    configuration: self.configuration,
+                    // Only used to check whether Payment Element uses Link; FlowController and Embedded configurations agree on that.
+                    paymentElementConfiguration: self.paymentElement?.paymentSheetFlowController.configuration
+                )
                 try await self.performUnqueuedUpdate(mutateLocalState: { localState in
                     localState.email = email
                 })
@@ -495,6 +495,26 @@ public final class CheckoutElementsController: ObservableObject {
     }
 }
 
+// MARK: - Promotion Codes
+
+// Not yet supported in CheckoutSessionPreview; exposed only to the React Native SDK.
+@_spi(ReactNativeSDK)
+extension CheckoutElementsController {
+    /// Use this method to apply a promotion code that your customer enters.
+    public func applyPromotionCode(_ promotionCode: String) async throws {
+        try await analyticsHelper.track(.applyPromotionCode, checkout: self) {
+            try await performQueuedUpdate(.setPromotionCode(promotionCode))
+        }
+    }
+
+    /// Use this method to remove the currently applied promotion code, if applicable.
+    public func removePromotionCode() async throws {
+        try await analyticsHelper.track(.removePromotionCode, checkout: self) {
+            try await performQueuedUpdate(.setPromotionCode(""))
+        }
+    }
+}
+
 // MARK: - Defaults
 
 extension CheckoutElementsController {
@@ -612,6 +632,11 @@ extension CheckoutElementsController {
     func updateForSessionChange() {
         guard sessionIsOpen else { return }
         let result = CheckoutElementsControllerLoader.handleSessionChange(checkout: self)
+        CheckoutElementsControllerLoader.logLinkAvailability(
+            session: session,
+            configuration: configuration,
+            paymentElementConfiguration: result.paymentElement?.flowController.configuration
+        )
         // Update confirmation challenge. I'm not sure if this is necessary, but the intents integration does it too on `update`
         confirmationChallenge = result.confirmationChallenge
         // Update PE

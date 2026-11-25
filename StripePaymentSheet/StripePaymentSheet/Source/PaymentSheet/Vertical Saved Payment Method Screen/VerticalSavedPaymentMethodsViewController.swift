@@ -37,8 +37,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     // MARK: Private properties
     private let configuration: PaymentElementConfiguration
     private let customerProvider: CustomerProvider
-    private let intent: Intent
     private weak var checkout: CheckoutSessionBillingAddressUpdater?
+    /// Removes and edits Checkout Session payment methods. Separate from `checkout` because FlowController's sheet
+    /// syncs billing tax on Continue, so its saved payment method list shouldn't also sync on selection.
+    private weak var checkoutSavedPaymentMethodUpdater: CheckoutSessionSavedPaymentMethodUpdater?
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let paymentMethodRemoveLast: Bool
@@ -129,10 +131,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return !paymentMethods.filter { $0.isCoBrandedCard }.isEmpty
     }
 
-    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
-    }()
-
     // MARK: Internal properties
     weak var delegate: VerticalSavedPaymentMethodsViewControllerDelegate?
 
@@ -184,8 +182,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     init(
         configuration: PaymentElementConfiguration,
         customerProvider: CustomerProvider,
-        intent: Intent,
         checkout: CheckoutSessionBillingAddressUpdater? = nil,
+        checkoutSavedPaymentMethodUpdater: CheckoutSessionSavedPaymentMethodUpdater?,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
@@ -194,8 +192,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     ) {
         self.configuration = configuration
         self.customerProvider = customerProvider
-        self.intent = intent
         self.checkout = checkout
+        self.checkoutSavedPaymentMethodUpdater = checkoutSavedPaymentMethodUpdater
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = defaultPaymentMethod
         self.paymentMethodRemove = customerProvider.allowsPaymentMethodRemoval(elementsSession: elementsSession)
@@ -274,7 +272,12 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         guard let button = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }) else { return }
 
         // Detach the payment method from the customer
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkoutSavedPaymentMethodUpdater
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // Remove the payment method row button
@@ -446,7 +449,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         guard !elementsSession.paymentMethodSetAsDefaultForPaymentSheet else {
             return
         }
-        CustomerPaymentOption.setDefaultPaymentMethod(
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(
             .stripeId(paymentMethod.stripeId),
             forCustomer: customerProvider.customerID
         )
@@ -535,7 +538,8 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
                 paymentMethod: paymentMethod,
                 with: updateParams,
                 elementsSession: elementsSession,
-                apiClient: configuration.apiClient
+                apiClient: configuration.apiClient,
+                checkoutSavedPaymentMethodUpdater: checkoutSavedPaymentMethodUpdater
             )
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())
@@ -547,7 +551,11 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
     private func updateDefault(paymentMethod: STPPaymentMethod) async -> Result<Void, Error> {
         do {
             let previousDefaultPaymentMethod = defaultPaymentMethod
-            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            _ = try await customerProvider.setAsDefaultPaymentMethod(
+                paymentMethod.stripeId,
+                elementsSession: elementsSession,
+                apiClient: configuration.apiClient
+            )
             defaultPaymentMethod = paymentMethod
             // we just set a new default, so we replace it to add the badge and select it
             replace(paymentMethod: paymentMethod, with: paymentMethod, selectedState: .selected)

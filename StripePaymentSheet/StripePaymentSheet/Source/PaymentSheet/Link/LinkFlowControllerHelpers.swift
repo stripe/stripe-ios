@@ -22,6 +22,7 @@ extension UIViewController {
     func presentNativeLink(
         selectedPaymentDetailsID: String?,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         nativeSheetPresentation: SheetImplementationResolver? = nil,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -37,6 +38,7 @@ extension UIViewController {
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
+            customerProvider: customerProvider,
             paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
             nativeSheetPresentation: nativeSheetPresentation,
             logPayment: false,

@@ -15,7 +15,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
 
     func testCreateClientContextFromPaymentModeMinimal() {
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" }
         )
 
@@ -24,7 +24,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
         XCTAssertEqual(clientContext.mode, "payment")
         XCTAssertEqual(clientContext.currency, "usd")
         XCTAssertNil(clientContext.setupFutureUsage)
-        XCTAssertEqual(clientContext.captureMethod, "automatic") // default
+        XCTAssertEqual(clientContext.captureMethod, "automatic")
         XCTAssertNil(clientContext.paymentMethodOptions)
         XCTAssertNil(clientContext.paymentMethodTypes)
         XCTAssertNil(clientContext.onBehalfOf)
@@ -122,6 +122,34 @@ class IntentConfigurationClientContextTest: XCTestCase {
         XCTAssertEqual(clientContext.paymentMethodConfiguration, "pmc_789")
     }
 
+    // MARK: - Allowed and Excluded Payment Method Types Tests
+
+    func testCreateClientContextWithAllowedAndExcludedPaymentMethodTypes() {
+        // Given IntentConfigurations that use allowed and excluded payment method types
+        let allowedIntentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
+            allowedPaymentMethodTypes: ["card", "klarna"],
+            confirmationTokenConfirmHandler: { _ in return "" }
+        )
+        let excludedIntentConfig = PaymentSheet.IntentConfiguration(
+            mode: .setup(currency: "usd"),
+            excludedPaymentMethodTypes: ["us_bank_account"],
+            confirmationTokenConfirmHandler: { _ in return "" }
+        )
+
+        // When
+        let allowedClientContext = allowedIntentConfig.createClientContext(customerId: nil)
+        let excludedClientContext = excludedIntentConfig.createClientContext(customerId: nil)
+
+        // Then each client context mirrors the payment method type parameter it was configured with
+        XCTAssertEqual(allowedClientContext.allowedPaymentMethodTypes, ["card", "klarna"])
+        XCTAssertNil(allowedClientContext.excludedPaymentMethodTypes)
+        XCTAssertNil(allowedClientContext.paymentMethodTypes)
+        XCTAssertEqual(excludedClientContext.excludedPaymentMethodTypes, ["us_bank_account"])
+        XCTAssertNil(excludedClientContext.allowedPaymentMethodTypes)
+        XCTAssertNil(excludedClientContext.paymentMethodTypes)
+    }
+
     // MARK: - PaymentMethodOptions Conversion Tests
 
     func testPaymentMethodOptionsConversionWithSetupFutureUsage() {
@@ -136,6 +164,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
             mode: .payment(
                 amount: 1000,
                 currency: "usd",
+                captureMethod: .automatic,
                 paymentMethodOptions: paymentMethodOptions
             ),
             confirmHandler: { _, _ in return "" }
@@ -152,7 +181,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
 
     func testCreateClientContextWithCVCRecollectionEnabled() {
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" },
             requireCVCRecollection: true
         )
@@ -167,7 +196,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
 
     func testCreateClientContextWithCVCRecollectionDisabled() {
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "usd"),
+            mode: .payment(amount: 1000, currency: "usd", captureMethod: .automatic),
             confirmHandler: { _, _ in return "" },
             requireCVCRecollection: false
         )
@@ -187,6 +216,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
             mode: .payment(
                 amount: 1000,
                 currency: "usd",
+                captureMethod: .automatic,
                 paymentMethodOptions: paymentMethodOptions
             ),
             confirmHandler: { _, _ in return "" },
@@ -214,6 +244,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
             mode: .payment(
                 amount: 1000,
                 currency: "usd",
+                captureMethod: .automatic,
                 paymentMethodOptions: paymentMethodOptions
             ),
             confirmHandler: { _, _ in return "" },

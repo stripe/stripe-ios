@@ -63,10 +63,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private var isBusy: Bool { isPaymentInFlight || isReloading }
     private(set) var isDismissable: Bool = true
 
-    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
-    }()
-
     // MARK: - Views
 
     private let addPaymentMethodViewController: AddPaymentMethodViewController
@@ -199,12 +195,14 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             intent: loadResult.intent,
             elementsSession: loadResult.elementsSession,
             configuration: configuration,
+            customerProvider: loadResult.customerProvider,
             paymentMethodOrientation: loadResult.paymentMethodOrientation,
             previousCustomerInput: previousConfirmParams,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,
             analyticsHelper: analyticsHelper,
-            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts
         )
         self.analyticsHelper = analyticsHelper
 
@@ -564,7 +562,9 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             paymentMethod: paymentMethod,
             with: updateParams,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            // PaymentSheet doesn't support Checkout Sessions
+            checkoutSavedPaymentMethodUpdater: nil
         )
     }
 
@@ -574,7 +574,11 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             throw PaymentSheetError.unknown(debugDescription: "Failed to read payment method from payment method selection")
         }
 
-        return try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+        return try await loadResult.customerProvider.setAsDefaultPaymentMethod(
+            paymentMethod.stripeId,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient
+        )
     }
 
     func didUpdateSelection(
@@ -598,7 +602,13 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             return
         }
 
-        savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        loadResult.customerProvider.detach(
+            paymentMethod: paymentMethod,
+            elementsSession: elementsSession,
+            apiClient: configuration.apiClient,
+            // PaymentSheet doesn't support Checkout Sessions
+            checkoutSavedPaymentMethodUpdater: nil
+        )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {

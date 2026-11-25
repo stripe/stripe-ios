@@ -16,6 +16,7 @@ protocol PaymentMethodFormViewControllerDelegate: AnyObject {
 }
 
 class PaymentMethodFormViewController: UIViewController {
+
     let form: PaymentMethodElement
     let intent: Intent
     let elementsSession: STPElementsSession
@@ -101,10 +102,12 @@ class PaymentMethodFormViewController: UIViewController {
         previousCustomerInput: IntentConfirmParams?,
         formCache: PaymentMethodFormCache,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         headerView: UIView?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        stripeBalanceFinancialAccounts: StripeBalanceFinancialAccounts? = nil,
         isLinkUI: Bool = false,
         delegate: PaymentMethodFormViewControllerDelegate,
         linkAppearance: LinkAppearance? = nil,
@@ -124,7 +127,7 @@ class PaymentMethodFormViewController: UIViewController {
             self.form = PaymentSheetFormFactory(
                 intent: intent,
                 elementsSession: elementsSession,
-                configuration: .paymentElement(configuration, isLinkUI: isLinkUI),
+                configuration: .paymentElement(configuration, customerProvider: customerProvider, isLinkUI: isLinkUI),
                 paymentMethod: paymentMethodType,
                 paymentMethodOrientation: paymentMethodOrientation,
                 previousCustomerInput: previousCustomerInput,
@@ -132,6 +135,7 @@ class PaymentMethodFormViewController: UIViewController {
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession, analyticsHelper: analyticsHelper.linkAnalytics),
                 analyticsHelper: analyticsHelper,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+                stripeBalanceFinancialAccounts: stripeBalanceFinancialAccounts,
                 linkAppearance: linkAppearance,
                 previousLinkInlineSignupAction: previousLinkInlineSignupAction
             ).make()

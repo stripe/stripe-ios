@@ -5,7 +5,7 @@
 
 import OHHTTPStubs
 import StripeCoreTestUtils
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import UIKit
 import XCTest
 
@@ -99,8 +99,8 @@ private extension SavedPaymentMethodBillingSyncTests {
         let viewController = VerticalSavedPaymentMethodsViewController(
             configuration: EmbeddedPaymentElement.Configuration(),
             customerProvider: CustomerProvider(customer: EmbeddedPaymentElement.Configuration().customer),
-            intent: intent,
             checkout: updater,
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: paymentMethods[0],
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -129,7 +129,7 @@ private extension SavedPaymentMethodBillingSyncTests {
             configuration: PaymentSheet.Configuration(),
             loadResult: loadResult,
             analyticsHelper: ._testValue(),
-            checkoutBillingAddressUpdater: checkout
+            checkout: checkout
         )
     }
 

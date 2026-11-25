@@ -215,9 +215,19 @@ public final class EmbeddedPaymentElement {
                 return true
             case .applePay:
                 return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
-            case .link:
+            case .link(let confirmOption):
+                // If `signupConfirmParams` exists, `confirmOption` is `PaymentSheet.LinkConfirmOption.signUp`: a card the customer
+                // entered in the card form while opting in to Link signup. It's shown in the card row, so check that row, not the Link button.
+                if let signupConfirmParams = confirmOption.signupConfirmParams {
+                    return loadResult.paymentMethodTypes.contains(signupConfirmParams.paymentMethodType)
+                }
                 return PaymentSheet.shouldShowLinkButton(elementsSession: loadResult.elementsSession, configuration: configuration)
-            case .saved(paymentMethod: let paymentMethod, confirmParams: _):
+            case .saved(paymentMethod: let paymentMethod, confirmParams: let confirmParams):
+                // If `instantDebitsLinkedBank` exists, this is a bank the customer linked in the Instant Debits or Link Card Brand
+                // form, not a saved payment method. It's shown in that form's row, so check that row, not the saved payment methods.
+                if let confirmParams, confirmParams.instantDebitsLinkedBank != nil {
+                    return loadResult.paymentMethodTypes.contains(confirmParams.paymentMethodType)
+                }
                 return loadResult.savedPaymentMethods.contains(paymentMethod)
             case .new(confirmParams: let confirmParams):
                 return loadResult.paymentMethodTypes.contains(confirmParams.paymentMethodType)
@@ -232,11 +242,13 @@ public final class EmbeddedPaymentElement {
             selection: isPreviousPaymentOptionStillDisplayed ? previousSelectedRowType : nil,
             previousPaymentOption: previousPaymentOption,
             configuration: self.configuration,
+            customerProvider: loadResult.customerProvider,
             intent: loadResult.intent,
             elementsSession: loadResult.elementsSession,
             savedPaymentMethods: loadResult.savedPaymentMethods,
             analyticsHelper: self.analyticsHelper,
             paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            stripeBalanceFinancialAccounts: loadResult.stripeBalanceFinancialAccounts,
             checkoutBillingAddressUpdater: self.checkout,
             formCache: self.formCache,
             delegate: self
@@ -274,8 +286,7 @@ public final class EmbeddedPaymentElement {
     /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
         analyticsHelper.log(event: .mcConfirmEmbedded)
-        // TODO: stpAssert + log error if resolvedPresentingViewController == nil when this is called from Checkout SDK.
-        guard let presentingViewController = resolvedPresentingViewController else {
+        guard let presentingViewController = confirmPresentingViewController else {
             let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
             assertionFailure(errorMessage)
             return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
@@ -357,6 +368,8 @@ public final class EmbeddedPaymentElement {
     /// Tracks info about the currently in-flight or most recent update attempt.
     internal var latestUpdateContext: EmbeddedUpdateContext?
     internal weak var checkout: CheckoutElementsController?
+    /// The sheet we last presented, e.g. a form.
+    internal weak var presentedSheet: (any PaymentSheetContainer)?
 #if DEBUG
     internal var _test_paymentOption: PaymentOption? // for testing only
 #endif
@@ -399,10 +412,6 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
-    internal var savedPaymentMethodManager: SavedPaymentMethodManager {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
-    }
-
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     internal var confirmationChallenge: ConfirmationChallenge?
@@ -459,16 +468,25 @@ public final class EmbeddedPaymentElement {
 extension EmbeddedPaymentElement {
 
     var isPresentingPaymentUI: Bool {
-        return presentingViewController?.presentedViewController?.bottomSheetController != nil
+        return presentedSheet?.presentingViewController != nil
     }
 
-    /// Returns the explicitly configured presenting view controller or tries to find one if nil.
+    /// The view controller `confirm()` presents authentication screens from.
+    var confirmPresentingViewController: UIViewController? {
+        // While our sheet is presented or dismissing, e.g. if the merchant confirms right after the customer taps Continue, present from whatever presented it.
+        // Otherwise fall back to the key window: confirming isn't tied to `view`, e.g. the merchant can confirm from a later screen.
+        return presentingViewController ?? presentedSheet?.presentingViewController ?? UIWindow.visibleViewController
+    }
+
+    /// Returns the merchant's `presentingViewController`, or the topmost view controller of the window displaying `view`.
+    /// - Note: Don't store the result. The merchant can move `view` to a new screen, e.g. by dismissing and re-presenting the sheet holding it.
     var resolvedPresentingViewController: UIViewController? {
-        guard presentingViewController == nil else {
+        if let presentingViewController {
             return presentingViewController
         }
 
-        guard let visibleViewController = UIWindow.visibleViewController else {
+        // `presentingViewController` isn't set, e.g. in Checkout, where merchants can't set it. Present from the window displaying `view`.
+        guard let visibleViewController = view.window?.rootViewController?.findTopMostPresentedViewController() else {
             return nil
         }
 
@@ -482,7 +500,6 @@ extension EmbeddedPaymentElement {
             return nil
         }
 
-        presentingViewController = visibleViewController
         return visibleViewController
     }
 }
@@ -569,6 +586,11 @@ extension EmbeddedPaymentElement {
     public typealias BillingDetails = PaymentSheet.BillingDetails
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
+    @available(
+        *,
+        deprecated,
+        message: "External payment methods are deprecated. Use [custom payment methods](https://docs.stripe.com/payments/mobile/custom-payment-methods) instead."
+    )
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
     public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
     @_spi(CardFundingFilteringPrivatePreview) public typealias CardFundingType = PaymentSheet.CardFundingType

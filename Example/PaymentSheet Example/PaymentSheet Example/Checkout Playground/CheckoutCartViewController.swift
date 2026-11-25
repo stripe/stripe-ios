@@ -6,8 +6,8 @@
 //
 
 import Combine
-@_spi(InternalOnlyAPI) import StripePayments
-@_spi(InternalOnlyAPI) import StripePaymentSheet
+import StripePayments
+@_spi(CheckoutSessionPreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -29,6 +29,8 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
     let currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance
     let paymentElementAppearance: PaymentSheet.Appearance
     let delayCheckoutClientRequests: Bool
+    /// Called with the session's email when a checkout completes.
+    let onCheckoutCompleted: (String?) -> Void
 
     func makeUIViewController(context: Context) -> UINavigationController {
         let viewController = CheckoutCartViewController(
@@ -46,6 +48,7 @@ struct CheckoutCartUIKitView: UIViewControllerRepresentable {
             currencySelectorAppearance: currencySelectorAppearance,
             paymentElementAppearance: paymentElementAppearance,
             delayCheckoutClientRequests: delayCheckoutClientRequests,
+            onCheckoutCompleted: onCheckoutCompleted,
             closeAction: { dismiss() }
         )
         return UINavigationController(rootViewController: viewController)
@@ -71,6 +74,7 @@ final class CheckoutCartViewController: UIViewController {
     private let currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance
     private let paymentElementAppearance: PaymentSheet.Appearance
     private let delayCheckoutClientRequests: Bool
+    private let onCheckoutCompleted: (String?) -> Void
     private let closeAction: () -> Void
     private let diagnostics = CheckoutSessionDiagnostics()
 
@@ -110,6 +114,7 @@ final class CheckoutCartViewController: UIViewController {
         currencySelectorAppearance: CurrencySelectorElement.Configuration.Appearance,
         paymentElementAppearance: PaymentSheet.Appearance,
         delayCheckoutClientRequests: Bool,
+        onCheckoutCompleted: @escaping (String?) -> Void,
         closeAction: @escaping () -> Void
     ) {
         self.clientSecret = clientSecret
@@ -126,6 +131,7 @@ final class CheckoutCartViewController: UIViewController {
         self.currencySelectorAppearance = currencySelectorAppearance
         self.paymentElementAppearance = paymentElementAppearance
         self.delayCheckoutClientRequests = delayCheckoutClientRequests
+        self.onCheckoutCompleted = onCheckoutCompleted
         self.closeAction = closeAction
         super.init(nibName: nil, bundle: nil)
     }
@@ -1026,6 +1032,7 @@ final class CheckoutCartViewController: UIViewController {
         )
         alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
             if dismissOnAcknowledgment {
+                self?.onCheckoutCompleted(self?.checkout?.session.email)
                 self?.closeAction()
             }
         })

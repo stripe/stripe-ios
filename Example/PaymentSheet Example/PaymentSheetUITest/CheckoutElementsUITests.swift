@@ -273,7 +273,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
         settings.automaticPaymentMethods = false
         settings.linkMode = .native
         settings.currency = .eur
-        settings.email = .init(source: .none)
+        settings.email = .init(source: .local, value: "")
         settings.shippingAddressCollection = false
         settings.automaticTax = false
         loadCheckoutPlayground(app, settings)
@@ -307,7 +307,10 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
 
         let wallet = app.otherElements["Stripe.Link.PayWithLinkViewController"]
         let payButton = wallet.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Pay €")).firstMatch
-        XCTAssertTrue(payButton.waitForExistenceAndTap(timeout: 10))
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10))
+        XCTAssertFalse(wallet.buttons["Pay another way"].exists)
+        XCTAssertFalse(wallet.buttons["Continue another way"].exists)
+        payButton.tap()
         let challengeCode = app.textFields["STDSTextField"]
         XCTAssertTrue(challengeCode.waitForExistence(timeout: 20))
 

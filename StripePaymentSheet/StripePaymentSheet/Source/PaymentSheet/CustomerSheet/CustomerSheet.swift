@@ -16,6 +16,7 @@ internal enum InternalCustomerSheetResult {
     case failed(error: Error)
 }
 
+@MainActor @preconcurrency
 public class CustomerSheet {
     private enum IntegrationType {
         case customerAdapter
@@ -121,10 +122,8 @@ public class CustomerSheet {
 
     public func present(from presentingViewController: UIViewController) async -> CustomerSheetResult {
         await withCheckedContinuation { continuation in
-            Task { @MainActor in
-                present(from: presentingViewController) { result in
-                    continuation.resume(returning: result)
-                }
+            present(from: presentingViewController) { result in
+                continuation.resume(returning: result)
             }
         }
     }
@@ -329,7 +328,7 @@ extension CustomerSheet: LoadingViewControllerDelegate {
 }
 
 @_spi(InternalOnlyAPI) extension CustomerSheet: STPAnalyticsProtocol {
-    @_spi(InternalOnlyAPI) public static var stp_analyticsIdentifier = "CustomerSheet"
+    @_spi(InternalOnlyAPI) public nonisolated static let stp_analyticsIdentifier = "CustomerSheet"
 }
 
 extension StripeCustomerAdapter {
@@ -403,8 +402,36 @@ extension CustomerSheet {
 public extension CustomerSheet {
     struct IntentConfiguration {
         internal var paymentMethodTypes: [String]?
+        internal var allowedPaymentMethodTypes: [String]?
+        internal var excludedPaymentMethodTypes: [String]?
         internal var onBehalfOf: String?
         internal let setupIntentClientSecretProvider: () async throws -> String
+
+        /// - Parameter allowedPaymentMethodTypes: An allowlist of payment method types for the SetupIntent. Incompatible types are filtered out.
+        ///             Set this to the same list you pass as `allowed_payment_method_types` when creating the SetupIntent on your server.
+        ///             If you don't set that parameter on your server, leave this nil.
+        /// - Parameter excludedPaymentMethodTypes: Payment method types to exclude from dynamic payment methods.
+        ///             Set this to the same list you pass as `excluded_payment_method_types` when creating the SetupIntent on your server.
+        ///             If you don't set that parameter on your server, leave this nil.
+        /// - Parameter onBehalfOf: The account (if any) whose payment method configurations will apply to the CustomerSheet session.
+        ///             Affects the allowed payment methods and whether card brand choice is enabled.
+        ///             When provided, the payment method will be saved to your platform account.
+        ///             See our [SetupIntent docs](https://docs.stripe.com/api/setup_intents/object#setup_intent_object-on_behalf_of) for more information.
+        /// - Parameter setupIntentClientSecretProvider: Creates a SetupIntent configured to attach a new
+        ///             payment method to a customer. Returns the client secret for the created SetupIntent.
+        ///             This will be used to confirm a new payment method.
+        /// - Note: If your server uses the parameter `payment_method_types`, use an initializer with `paymentMethodTypes` instead
+        public init(allowedPaymentMethodTypes: [String]? = nil,
+                    excludedPaymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
+                    setupIntentClientSecretProvider: @escaping (() async throws -> String)) {
+            // `paymentMethodTypes` can't be combined with the allowed or excluded types, so leave it nil
+            self.init(paymentMethodTypes: nil,
+                      onBehalfOf: onBehalfOf,
+                      setupIntentClientSecretProvider: setupIntentClientSecretProvider)
+            self.allowedPaymentMethodTypes = allowedPaymentMethodTypes
+            self.excludedPaymentMethodTypes = excludedPaymentMethodTypes
+        }
 
         /// - Parameter paymentMethodTypes: A list of payment method types to display to the customers
         ///             Valid values include: "card", "us_bank_account", "sepa_debit"
@@ -417,6 +444,7 @@ public extension CustomerSheet {
         /// - Parameter setupIntentClientSecretProvider: Creates a SetupIntent configured to attach a new
         ///             payment method to a customer. Returns the client secret for the created SetupIntent.
         ///             This will be used to confirm a new payment method.
+        /// - Note: If your server uses the parameter `allowed_payment_method_types` or `excluded_payment_method_types`, use an initializer with `allowedPaymentMethodTypes` or `excludedPaymentMethodTypes` instead
         public init(paymentMethodTypes: [String]? = nil,
                     onBehalfOf: String? = nil,
                     setupIntentClientSecretProvider: @escaping (() async throws -> String)) {

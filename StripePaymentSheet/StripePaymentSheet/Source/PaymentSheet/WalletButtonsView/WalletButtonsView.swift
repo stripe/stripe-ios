@@ -135,6 +135,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             // Launch directly into Apple Pay and confirm the payment
             PaymentSheet.confirm(
                 configuration: flowController.configuration,
+                customerProvider: flowController.viewController.loadResult.customerProvider,
                 nativeSheetPresentation: flowController.nativeSheetPresentation,
                 authenticationContext: WindowAuthenticationContext(),
                 intent: flowController.intent,
@@ -145,7 +146,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             ) { result, _ in
                 if case .completed = result {
                     // Remember Apple Pay as default payment method for returning users
-                    CustomerPaymentOption.setDefaultPaymentMethod(
+                    CustomerPaymentOption.setLocalDefaultPaymentMethod(
                         .applePay,
                         forCustomer: flowController.viewController.loadResult.customerProvider.customerID
                     )
@@ -158,6 +159,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
                 configuration: flowController.configuration,
+                customerProvider: flowController.viewController.loadResult.customerProvider,
                 paymentHandler: flowController.paymentHandler,
                 nativeSheetPresentation: flowController.nativeSheetPresentation,
                 analyticsHelper: flowController.analyticsHelper

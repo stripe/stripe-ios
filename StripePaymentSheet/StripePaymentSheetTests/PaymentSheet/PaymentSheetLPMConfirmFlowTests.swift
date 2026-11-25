@@ -10,7 +10,7 @@ import SafariServices
 @testable@_spi(InternalOnlyAPI) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @testable@_spi(InternalOnlyAPI) import StripePaymentsTestUtils
 @testable@_spi(InternalOnlyAPI) import StripeUICore
 import SwiftUI
@@ -166,7 +166,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
             address: PaymentSheet.Address(
                 city: "South San Francisco",
@@ -240,7 +239,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
             address: PaymentSheet.Address(
                 city: "South San Francisco",
@@ -395,7 +393,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
             address: PaymentSheet.Address(
                 city: "São Paulo",
@@ -938,7 +935,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         configuration.billingDetailsCollectionConfiguration.name = .never
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.customer = PaymentSheet.CustomerConfiguration(
             id: customerAndCustomerSession.customer,
             customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
@@ -1346,7 +1342,6 @@ extension PaymentSheetLPMConfirmFlowTests {
             var config = PaymentSheet.Configuration()
             config.allowsDelayedPaymentMethods = true
             config.returnURL = "https://foo.com"
-            config.allowsPaymentMethodsRequiringShippingAddress = true
             return config
         }()
         configuration.apiClient = apiClient
@@ -1362,9 +1357,15 @@ extension PaymentSheetLPMConfirmFlowTests {
             var configuration = configuration
             let apiClient = testIntent.checkoutAPIClient ?? apiClient
             configuration.apiClient = apiClient
+            let customerProvider: CustomerProvider
+            if case .checkout(let session) = intent {
+                customerProvider = CustomerProvider(checkoutSession: session)
+            } else {
+                customerProvider = CustomerProvider(customer: configuration.customer)
+            }
 
             func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
-                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, customerProvider: customerProvider, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
             }
             // Make the form
             let formVC = makeFormVC(previousCustomerInput: nil)
@@ -1541,7 +1542,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 // Blik doesn't support server-side confirmation
                 return intents
             }
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency)) { paymentMethod, _ in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, captureMethod: .automatic)) { paymentMethod, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -1561,7 +1562,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             intents.append(TestIntent("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)))
 
             // Confirmation token variations
-            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, captureMethod: .automatic), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -1571,7 +1572,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
             })
 
-            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, captureMethod: .automatic), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -1604,7 +1605,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
-            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession)) { _, _ in
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession, captureMethod: .automatic)) { _, _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -1614,7 +1615,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     otherParams: ["setup_future_usage": "off_session"]
                 )
             }
-            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession)) { paymentMethod, _ in
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession, captureMethod: .automatic)) { paymentMethod, _ in
                 let otherParams = [
                     "setup_future_usage": "off_session",
                 ].merging(paramsForServerSideConfirmation) { _, b in b }
@@ -1630,7 +1631,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
             }
             // Confirmation token variations
-            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession, captureMethod: .automatic), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -1640,7 +1641,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
             })
 
-            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession, captureMethod: .automatic), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
                 return try await STPTestingAPIClient.shared.fetchPaymentIntent(
                     types: paymentMethodTypes,
                     currency: currency,
@@ -1716,6 +1717,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             let mode = PaymentSheet.IntentConfiguration.Mode.payment(
                 amount: amount ?? 1099,
                 currency: currency,
+                captureMethod: .automatic,
                 paymentMethodOptions: .init(setupFutureUsageValues: [paymentMethod: .offSession])
             )
 
@@ -1903,7 +1905,6 @@ extension PaymentSheetLPMConfirmFlowTests {
         configuration.apiClient = apiClient
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
         configuration.customer = PaymentSheet.CustomerConfiguration(
             id: customerAndEphemeralKey.customer,
             ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret
@@ -1995,7 +1996,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         noFieldsConfig.billingDetailsCollectionConfiguration.email = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.phone = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.address = .never
-        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(noFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(noFieldsConfig, customerProvider: CustomerProvider(customer: noFieldsConfig.customer)), paymentMethod: .stripe(paymentMethodType)).make()
 
         XCTAssertNil(getName(from: form))
         XCTAssertNil(form.getTextFieldElement("Email"))
@@ -2004,11 +2005,9 @@ extension PaymentSheetLPMConfirmFlowTests {
         XCTAssertNil(form.getTextFieldElement("Address line 2"))
         XCTAssertNil(form.getTextFieldElement(addressSpec.cityNameType.localizedLabel))
         XCTAssertNil(getState(from: form))
-        // Klarna has a bug where the country is still shown; rather than change this and potentially break integrations,
-        // we'll preserve existing behavior until the next major version.
         // Wero's country dropdown is a required payment method field (selects which country's banking system to redirect to),
         // not a billing detail, so it's always shown regardless of billing details collection configuration.
-        if ![.klarna, .wero].contains(paymentMethodType) {
+        if paymentMethodType != .wero {
             XCTAssertNil(form.getDropdownFieldElement("Country or region"))
         }
         XCTAssertNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
@@ -2028,7 +2027,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 state: "CA"
             )
         )
-        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
+        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(allFieldsConfig, customerProvider: CustomerProvider(customer: allFieldsConfig.customer)), paymentMethod: .stripe(paymentMethodType)).make()
         XCTAssertNotNil(getName(from: form))
         XCTAssertNotNil(form.getTextFieldElement("Email"))
         XCTAssertNotNil(form.getPhoneNumberElement())
@@ -2058,6 +2057,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         guard case .checkout(let checkoutSession) = testIntent.intent else {
             PaymentSheet.confirm(
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 authenticationContext: self,
                 intent: testIntent.intent,
                 elementsSession: elementsSession,
@@ -2147,6 +2147,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             case .link(let confirmOption):
                 let parameters = CheckoutElementsController.LinkConfirmationParameters(
                     confirmOption: confirmOption,
+                    canContinueWithoutLink: true,
                     configuration: configuration,
                     returnURL: returnURL,
                     nativeSheetPresentation: nil,
@@ -2213,11 +2214,26 @@ private class STPTestPKPaymentAuthorizationController: PKPaymentAuthorizationCon
 // MARK: - IntentConfirmParams
 
 extension PaymentSheetLPMConfirmFlowTests {
+    func testIntentConfirmParamsEquatable_linkSignupInteraction() {
+        // Given params with matching checkbox interaction history
+        let lhs = IntentConfirmParams(type: .stripe(.card))
+        let rhs = IntentConfirmParams(type: .stripe(.card))
+        XCTAssertEqual(lhs, rhs)
+
+        // When only one records customer interaction
+        lhs.linkInlineSignupDidInteractWithSaveCheckbox = true
+
+        // Then they differ until both record that interaction
+        XCTAssertNotEqual(lhs, rhs)
+        rhs.linkInlineSignupDidInteractWithSaveCheckbox = true
+        XCTAssertEqual(lhs, rhs)
+    }
+
     func testIntentConfirmParamsEquatable() {
         let lhs = IntentConfirmParams(type: .stripe(.card))
         let rhs = IntentConfirmParams(type: .stripe(.card))
         // When lhs has an obscure difference w/ rhs...
-        lhs.confirmPaymentMethodOptions.setSetupFutureUsageIfNecessary(true, paymentMethodType: .card, customer: .init(id: "", ephemeralKeySecret: ""))
+        lhs.confirmPaymentMethodOptions.setSetupFutureUsageIfNecessary(true, paymentMethodType: .card, customerProvider: CustomerProvider(customer: .init(id: "", ephemeralKeySecret: "")))
         // ...they should not be equal
         XCTAssertNotEqual(lhs, rhs)
     }
@@ -2254,6 +2270,16 @@ extension IntentConfirmParams: Equatable {
             return false
         }
 
+        if lhs.linkInlineSignupCheckboxState != rhs.linkInlineSignupCheckboxState {
+            print("Link inline signup checkbox states not equal: \(lhs.linkInlineSignupCheckboxState) vs \(rhs.linkInlineSignupCheckboxState)")
+            return false
+        }
+
+        if lhs.linkInlineSignupDidInteractWithSaveCheckbox != rhs.linkInlineSignupDidInteractWithSaveCheckbox {
+            print("Link inline signup checkbox interaction states not equal: \(lhs.linkInlineSignupDidInteractWithSaveCheckbox) vs \(rhs.linkInlineSignupDidInteractWithSaveCheckbox)")
+            return false
+        }
+
         if lhs.financialConnectionsLinkedBank != rhs.financialConnectionsLinkedBank {
             print("Financial connections linked banks not equal: \(lhs.financialConnectionsLinkedBank.debugDescription) vs \(rhs.financialConnectionsLinkedBank.debugDescription)")
             return false
@@ -2267,7 +2293,7 @@ extension IntentConfirmParams: Equatable {
         // Sanity check to make sure when we add new properties, we check them here
         let mirror = Mirror(reflecting: lhs)
         let propertyCount = mirror.children.count
-        XCTAssertEqual(propertyCount, 8)
+        XCTAssertEqual(propertyCount, 10)
 
         return true
     }

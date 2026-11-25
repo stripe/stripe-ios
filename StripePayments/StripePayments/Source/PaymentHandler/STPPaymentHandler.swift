@@ -17,6 +17,7 @@ import Stripe3DS2
 #endif
 
 /// `STPPaymentHandlerActionStatus` represents the possible outcomes of requesting an action by `STPPaymentHandler`. An action could be confirming and/or handling the next action for a PaymentIntent.
+@frozen
 @objc public enum STPPaymentHandlerActionStatus: Int {
     /// The action succeeded.
     case succeeded

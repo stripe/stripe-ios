@@ -69,6 +69,7 @@ struct AppearanceSettings: View {
                     Button {
                         AppSettings.shared.appearanceInfo = selectedAppearance
                         componentManager.update(appearance: AppSettings.shared.appearanceInfo.appearance)
+                        NotificationCenter.default.post(name: .appearanceDidChange, object: nil)
                         dismiss()
                     } label: {
                         Text("Save")

@@ -22,10 +22,12 @@ extension PaymentSheetFormFactory {
             $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
         }.first
 
-        // Klarna requires a country; collect the full address only if the config requires it
-        let addressElement = makeCountryOrAddressSection(
-            countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
-        )
+        // Payments don't need a billing country, but setting up Klarna does: the API requires a country or a currency
+        let addressElement: PaymentMethodElementWrapper<AddressSectionElement>? = configuration.billingDetailsCollectionConfiguration.address == .never && isPaymentIntent
+            ? nil
+            : makeCountryOrAddressSection(
+                countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
+            )
 
         connectBillingDetailsFields(
             addressElement: addressElement,

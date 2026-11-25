@@ -5,7 +5,7 @@
 
 import Foundation
 
-@testable import StripePaymentSheet
+@testable @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import StripePaymentsTestUtils
 import XCTest
 

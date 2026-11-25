@@ -146,7 +146,8 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                         ?? checkoutSession.shippingAddress?.shippingDetailsParams,
                     paymentMethodOptions: nil,
                     clientAttributionMetadata: clientAttributionMetadata,
-                    collectedInformation: .init(email: checkoutSession.localState.email)
+                    collectedInformation: .init(email: checkoutSession.localState.email),
+                    passiveCaptchaToken: nil
                 )
                 let result = await self.confirmationHandler(requestParameters)
                 switch result {
@@ -284,13 +285,9 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         applePayConfirmationParameters: CheckoutElementsController.ApplePayConfirmationParameters,
         checkoutWalletUpdater: CheckoutSessionWalletUpdater
     ) throws -> CheckoutApplePayContext {
+        // Apple Pay is only offered when `StripeAPI.deviceSupportsApplePay()` is true, but that value is cached per process.
         guard PKPaymentAuthorizationController.canMakePayments() else {
-            let error = CheckoutError.unknown(debugDescription: "Apple Pay is unavailable on this device. Check device support and payment restrictions.")
-            STPAnalyticsClient.sharedClient.log(
-                analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error),
-                apiClient: applePayConfirmationParameters.apiClient
-            )
-            throw error
+            throw CheckoutError.applePayUnavailable
         }
 
         // TODO: Product Usage
@@ -304,14 +301,15 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         // Use PKPaymentAuthorizationViewController.init as a proxy — it IS nullable and
         // returns nil when the request can't be presented (e.g. bad merchant ID, unsupported network).
         guard PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil else {
-            let error = CheckoutError.unknown(debugDescription: """
+            let message = """
                 Could not set up Apple Pay. The user cannot make payments on any of the payment request's supported networks.
-                """)
-            STPAnalyticsClient.sharedClient.log(
-                analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error),
+                """
+            logUnexpectedCheckoutElementsErrorAndAssert(
+                .applePayPaymentRequestInvalid,
+                message: message,
                 apiClient: applePayConfirmationParameters.apiClient
             )
-            throw error
+            throw CheckoutError.unknown(debugDescription: message)
         }
         let authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         return CheckoutApplePayContext(
@@ -332,16 +330,7 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
                 guard let self, !presented else { return }
                 Task { @MainActor [weak self] in
                     guard let self else { return }
-                    let error = CheckoutError.unknown(debugDescription: """
-                        Could not present Apple Pay. Check Apple Pay setup in Wallet and that the merchant ID matches an ID \
-                        in the app's Apple Pay entitlements and provisioning profile. Ensure the app is active, \
-                        the presenting window is visible, and no other presentation or dismissal is in progress.
-                        """)
-                    STPAnalyticsClient.sharedClient.log(
-                        analytic: ErrorAnalytic(event: .unexpectedCheckoutElementsError, error: error),
-                        apiClient: self.apiClient
-                    )
-                    self.resume(with: .failed(error))
+                    self.resume(with: .failed(CheckoutError.applePayPresentationFailed))
                     self._end()
                 }
             }

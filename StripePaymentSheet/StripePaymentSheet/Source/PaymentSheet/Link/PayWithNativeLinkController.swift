@@ -55,6 +55,7 @@ final class PayWithNativeLinkController {
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentElementConfiguration
+    private let customerProvider: CustomerProvider
     private let nativeSheetPresentation: SheetImplementationResolver?
     let logPayment: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -71,6 +72,7 @@ final class PayWithNativeLinkController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         paymentHandler: STPPaymentHandler,
         nativeSheetPresentation: SheetImplementationResolver? = nil,
         logPayment: Bool = true,
@@ -86,6 +88,7 @@ final class PayWithNativeLinkController {
         self.logPayment = logPayment
         self.elementsSession = elementsSession
         self.configuration = configuration
+        self.customerProvider = customerProvider
         self.nativeSheetPresentation = nativeSheetPresentation
         self.analyticsHelper = analyticsHelper
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
@@ -101,13 +104,15 @@ final class PayWithNativeLinkController {
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
         shouldFinishOnClose: Bool,
+        canContinueWithoutLink: Bool = true,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?, _ didFinish: Bool) -> Void
     ) {
         presentAsSheetInternal(
             from: presentingController,
             shouldOfferApplePay: shouldOfferApplePay,
             hidingUnderlyingBottomSheet: hidingUnderlyingBottomSheet,
-            shouldFinishOnClose: shouldFinishOnClose
+            shouldFinishOnClose: shouldFinishOnClose,
+            canContinueWithoutLink: canContinueWithoutLink
         ) { completionResult in
             guard case .full(let result, let deferredIntentConfirmationType, let didFinish) = completionResult else {
                 return
@@ -133,14 +138,24 @@ final class PayWithNativeLinkController {
             shouldFinishOnClose: false,
             canContinueWithoutLink: canContinueWithoutLink
         ) { completionResult in
-            switch completionResult {
-            case .paymentMethodSelection(let confirmOption, let shouldReturnToPaymentSheet):
-                completion(confirmOption, shouldReturnToPaymentSheet, nil)
-            case .full(let result, _, _):
-                if case .failed(let error) = result {
-                    completion(nil, false, error)
-                }
+            let values = Self.paymentMethodSelectionValues(for: completionResult)
+            completion(values.confirmOption, values.shouldReturnToPaymentSheet, values.error)
+        }
+    }
+
+    /// Maps a payment method selection's completion to its callback values. Selection mode only finishes with
+    /// `.full` when the web fallback ends it; anything other than a failure is treated like closing Link.
+    static func paymentMethodSelectionValues(
+        for completionResult: CompletionResult
+    ) -> (confirmOption: PaymentSheet.LinkConfirmOption?, shouldReturnToPaymentSheet: Bool, error: Error?) {
+        switch completionResult {
+        case .paymentMethodSelection(let confirmOption, let shouldReturnToPaymentSheet):
+            return (confirmOption, shouldReturnToPaymentSheet, nil)
+        case .full(let result, _, _):
+            if case .failed(let error) = result {
+                return (nil, false, error)
             }
+            return (nil, false, nil)
         }
     }
 
@@ -167,6 +182,7 @@ final class PayWithNativeLinkController {
                 linkAccount: LinkAccountContext.shared.account,
                 elementsSession: self.elementsSession,
                 configuration: self.configuration,
+                customerProvider: self.customerProvider,
                 nativeSheetPresentation: self.nativeSheetPresentation,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
@@ -211,6 +227,15 @@ final class PayWithNativeLinkController {
         }
     }
 
+    /// Reports only the first result, since a sheet's dismissal can follow a result it already reported,
+    /// then stops keeping the controller alive.
+    private func finish(with completionResult: CompletionResult) {
+        let completion = self.completion
+        self.completion = nil
+        completion?(completionResult)
+        selfRetainer = nil
+    }
+
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -221,7 +246,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
         confirmOption: PaymentSheet.LinkConfirmOption
     ) {
         payWithLinkViewController.dismiss(animated: true) {
-            self.completion?(.paymentMethodSelection(confirmOption: confirmOption))
+            self.finish(with: .paymentMethodSelection(confirmOption: confirmOption))
         }
     }
 
@@ -247,6 +272,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
 
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: payWithLinkViewController.sheetContainer,
             intent: intent,
@@ -275,15 +301,13 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
                 }
             }()
 
-            self.completion?(completionResult)
-            self.selfRetainer = nil
+            self.finish(with: completionResult)
         }
     }
 
     func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         payWithLinkViewController.dismiss(animated: true) {
-            self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
-            self.selfRetainer = nil
+            self.finish(with: .full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
         }
     }
 
@@ -305,14 +329,14 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
         // If you pass a confirmHandler, it's used to confirm the payment. Otherwise, PaymentSheet.confirm is used.
         if let confirmHandler {
             confirmHandler(payWithLinkWebController, intent, elementsSession, paymentOption) { result, deferredIntentConfirmationType in
-                self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
-                self.selfRetainer = nil
+                self.finish(with: .full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
             }
             return
         }
 
         PaymentSheet.confirm(
             configuration: configuration,
+            customerProvider: customerProvider,
             nativeSheetPresentation: nativeSheetPresentation,
             authenticationContext: payWithLinkWebController,
             intent: intent,
@@ -323,13 +347,11 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
             confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
         ) { result, deferredIntentConfirmationType in
-            self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
-            self.selfRetainer = nil
+            self.finish(with: .full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
         }
     }
 
     func payWithLinkWebControllerDidCancel() {
-        completion?(.full(result: .canceled, deferredIntentConfirmationType: nil, didFinish: false))
-        selfRetainer = nil
+        finish(with: .full(result: .canceled, deferredIntentConfirmationType: nil, didFinish: false))
     }
 }

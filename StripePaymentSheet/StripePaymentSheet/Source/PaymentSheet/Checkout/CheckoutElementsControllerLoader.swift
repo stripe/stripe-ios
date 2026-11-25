@@ -74,6 +74,36 @@ enum CheckoutElementsControllerLoader {
         )
     }
 
+    static func logLinkAvailability(
+        session: CheckoutElementsController.Session,
+        configuration: CheckoutElementsController.Configuration,
+        paymentElementConfiguration: PaymentSheet.Configuration?
+    ) {
+        if let paymentElementConfiguration {
+            PaymentSheet.PaymentMethodType.logLinkAvailability(.paymentElementButton(elementsSession: session.elementsSession, configuration: paymentElementConfiguration, elementName: "Payment Element"))
+        }
+        if let expressCheckoutConfiguration = configuration.expressCheckoutElement {
+            PaymentSheet.PaymentMethodType.logLinkAvailability(.expressCheckout(session: session, configuration: expressCheckoutConfiguration, apiClient: configuration.apiClient))
+        }
+    }
+
+    /// Reports that the session offers Stripe balance to the Payment Element, which Checkout Sessions don't support yet.
+    /// Call once when the session loads, so it counts sessions rather than session updates.
+    static func logStripeBalanceUnsupportedIfNeeded(checkout: CheckoutElementsController) {
+        // TODO(porter) Stripe balance: Support Checkout Sessions once CheckoutClient can list the buyer's financial accounts.
+        // `v1/elements/stripe_balance/customer_session/financial_accounts` requires a CustomerSession, so until then Stripe
+        // balance isn't offered here. Report it so we know how many merchants offer Stripe balance with Checkout Sessions.
+        guard checkout.configuration.paymentElement != nil,
+              checkout.session.elementsSession.orderedPaymentMethodTypes.contains(.stripeBalance) else {
+            return
+        }
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+            event: .paymentSheetStripeBalanceCheckoutSessionUnsupported,
+            checkoutSessionID: checkout.session.id,
+            apiClient: checkout.apiClient
+        )
+    }
+
     /// This method contains all the stuff we have to do after (1) init and (2) updates i.e. when the session+elements session changes:
     ///
     /// - Apply Financial Connections settings

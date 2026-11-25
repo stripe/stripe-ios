@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable @_spi(InternalOnlyAPI) import StripeCore
 @testable @_spi(InternalOnlyAPI) import StripeCoreTestUtils
 @testable @_spi(InternalOnlyAPI) import StripePayments
-@testable @_spi(InternalOnlyAPI) import StripePaymentSheet
+@testable @_spi(InternalOnlyAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(InternalOnlyAPI) import StripeUICore
 import XCTest
 #if !os(visionOS)
@@ -27,6 +29,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
             intent: .checkout(session),
             elementsSession: session.elementsSession,
             configuration: configuration,
+            customerProvider: CustomerProvider(checkoutSession: session),
             linkBrand: .link,
             shouldOfferApplePay: false,
             shouldFinishOnClose: false,
@@ -50,6 +53,137 @@ class PayWithLinkViewControllerTests: XCTestCase {
         // Then the existing signup event reaches that client with the Checkout session ID
         let event = try XCTUnwrap(analyticsClient._testLogHistory.first { $0["event"] as? String == "link.signup.flow_presented" })
         XCTAssertEqual(event["checkout_session_id"] as? String, session.id)
+    }
+
+    @MainActor
+    func testAddingBankSendsTheRightIntentTokenForEachIntentType() async throws {
+        let previousAccount = LinkAccountContext.shared.account
+        defer { LinkAccountContext.shared.account = previousAccount }
+        let checkoutSession = CheckoutTestHelpers.makeSession().makePublicSession()
+        let cases: [(intent: Intent, elementsSession: STPElementsSession, expectedIntentToken: String)] = [
+            // A Checkout Session sends its elements session ID, since the backend rejects its cs_ ID without a merchant token
+            (.checkout(checkoutSession), checkoutSession.elementsSession, "es_test"),
+            // A PaymentIntent sends its own ID
+            (Intent._testPaymentIntent(paymentMethodTypes: [.card]), ._testValue(), "123"),
+            // A deferred intent sends the elements session ID
+            (Intent._testDeferredIntent(paymentMethodTypes: [.card]), ._testValue(), "test_123"),
+        ]
+
+        for (intent, elementsSession, expectedIntentToken) in cases {
+            // Given a Link wallet coordinator for the intent, with a stubbed link account session request
+            var sentIntentToken: String?
+            let stubDescriptor = stub { request in
+                request.url?.absoluteString.contains("consumers/link_account_sessions") ?? false
+            } response: { request in
+                let body = String(data: request.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+                sentIntentToken = URLComponents(string: "?" + body)?.queryItems?.first { $0.name == "intent_token" }?.value
+                // Reject the request so the flow ends before Financial Connections opens
+                return HTTPStubsResponse(
+                    jsonObject: ["error": ["type": "invalid_request_error", "message": "Rejected by the test"]],
+                    statusCode: 400,
+                    headers: nil
+                )
+            }
+            defer { HTTPStubs.removeStub(stubDescriptor) }
+            let apiClient = STPAPIClient(publishableKey: "pk_test_abc123")
+            apiClient.stripeAttest = StripeAttest(
+                appAttestService: MockAppAttestService(),
+                appAttestBackend: MockAttestBackend(),
+                apiClient: apiClient
+            )
+            var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+            configuration.apiClient = apiClient
+            let coordinator = PayWithLinkViewController(
+                intent: intent,
+                linkAccount: nil,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
+                analyticsHelper: ._testValue()
+            )
+            // ...and a logged-in Link account. The coordinator reads it from the shared context, so setting it
+            // after init skips the verification screen and the requests it would make.
+            LinkAccountContext.shared.account = LinkStubs.account()
+
+            // When the customer starts adding a bank
+            let finished = expectation(description: "Add bank flow finished")
+            coordinator.startFinancialConnections { _ in finished.fulfill() }
+            await fulfillment(of: [finished], timeout: 3)
+
+            // Then the link account session request sends the expected intent token
+            XCTAssertEqual(sentIntentToken, expectedIntentToken)
+        }
+    }
+
+    @MainActor
+    func testPaymentMethodSelectionTreatsWebFallbackEndingsAsClosingLink() throws {
+        // Given each way the web fallback can end a payment method selection
+        let error = NSError(domain: "test", code: 1)
+        let failed = PayWithNativeLinkController.paymentMethodSelectionValues(
+            for: .full(result: .failed(error: error), deferredIntentConfirmationType: nil, didFinish: true)
+        )
+        let canceled = PayWithNativeLinkController.paymentMethodSelectionValues(
+            for: .full(result: .canceled, deferredIntentConfirmationType: nil, didFinish: false)
+        )
+        let completed = PayWithNativeLinkController.paymentMethodSelectionValues(
+            for: .full(result: .completed, deferredIntentConfirmationType: nil, didFinish: true)
+        )
+        let selected = PayWithNativeLinkController.paymentMethodSelectionValues(
+            for: .paymentMethodSelection(confirmOption: .wallet(brand: .link), shouldReturnToPaymentSheet: false)
+        )
+
+        // Then failures report the error, other endings behave like closing Link, and selections pass through
+        XCTAssertEqual(try XCTUnwrap(failed.error) as NSError, error)
+        XCTAssertNil(failed.confirmOption)
+        XCTAssertNil(canceled.confirmOption)
+        XCTAssertNil(canceled.error)
+        XCTAssertFalse(canceled.shouldReturnToPaymentSheet)
+        XCTAssertNil(completed.confirmOption)
+        XCTAssertNil(completed.error)
+        XCTAssertNotNil(selected.confirmOption)
+    }
+
+    @MainActor
+    func testPaymentMethodSelectionReleasesControllerAfterSelecting() async throws {
+        // Given a payment method selection presented from a window
+        let sceneConnected = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            UIApplication.shared.connectedScenes.contains { $0 is UIWindowScene }
+        }, object: nil)
+        await fulfillment(of: [sceneConnected], timeout: 5)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let presenter = UIViewController()
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = presenter
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        let configuration = PaymentSheet.Configuration()
+        var controller: PayWithNativeLinkController? = PayWithNativeLinkController(
+            mode: .paymentMethodSelection,
+            intent: ._testValue(),
+            elementsSession: ._testValue(intent: ._testValue()),
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
+            paymentHandler: STPPaymentHandler(apiClient: configuration.apiClient),
+            analyticsHelper: ._testValue()
+        )
+        weak var weakController = controller
+        let selected = expectation(description: "selection reported")
+        controller?.presentForPaymentMethodSelection(from: presenter, initiallySelectedPaymentDetailsID: nil) { confirmOption, _, _ in
+            XCTAssertNotNil(confirmOption)
+            selected.fulfill()
+        }
+        let presented = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in presenter.presentedViewController != nil }, object: nil)
+        await fulfillment(of: [presented], timeout: 3)
+
+        // When the wallet reports a selection
+        let wallet = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: configuration, customerProvider: CustomerProvider(customer: configuration.customer), analyticsHelper: ._testValue())
+        controller?.payWithLinkViewControllerDidFinish(wallet, confirmOption: .wallet(brand: .link))
+        await fulfillment(of: [selected], timeout: 3)
+
+        // Then the controller no longer keeps itself alive
+        controller = nil
+        XCTAssertNil(weakController)
     }
 
     @MainActor
@@ -123,6 +257,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: PaymentSheet.Configuration(),
+                customerProvider: CustomerProvider(customer: nil),
                 linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
@@ -202,6 +337,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
                     linkAccount: nil,
                     elementsSession: elementsSession,
                     configuration: configuration,
+                    customerProvider: CustomerProvider(customer: configuration.customer),
                     nativeSheetPresentation: SheetImplementationResolver(elementsSession: elementsSession),
                     analyticsHelper: ._testValue(),
                     supportedPaymentMethodTypes: [.card]
@@ -296,6 +432,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
                 linkAccount: nil,
                 elementsSession: elementsSession,
                 configuration: configuration,
+                customerProvider: CustomerProvider(customer: configuration.customer),
                 nativeSheetPresentation: SheetImplementationResolver(elementsSession: elementsSession),
                 analyticsHelper: ._testValue(),
                 supportedPaymentMethodTypes: [.card]
@@ -385,12 +522,13 @@ class PayWithLinkViewControllerTests: XCTestCase {
             intent: ._testValue(),
             elementsSession: ._testValue(intent: ._testValue()),
             configuration: config,
+            customerProvider: CustomerProvider(customer: config.customer),
             paymentHandler: STPPaymentHandler(apiClient: config.apiClient),
             analyticsHelper: ._testValue()
         )
 
         // Now make the fake PayWithLinkViewController and present it
-        let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
+        let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, customerProvider: CustomerProvider(customer: config.customer), analyticsHelper: ._testValue())
         vc.payWithLinkDelegate = paymentSheet
         hostVC.present(vc.sheetContainer, animated: true, completion: {})
 
