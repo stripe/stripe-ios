@@ -1,0 +1,13 @@
+GET
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/publishable_key\?merchant=MX$
+200
+application/json
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json
+Content-Length: 130
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:21:26 GMT
+
+{
+  "publishable_key" : "pk_test_51NnSH9FAuts2AnGl15kIvSBIqIEPtAPAGntLwW7uih6XuEbc2P1bTCSQhkJDgnetaTqbLMU9KYvIMgv2GeNu5Idg00k22SjRUn"
+}

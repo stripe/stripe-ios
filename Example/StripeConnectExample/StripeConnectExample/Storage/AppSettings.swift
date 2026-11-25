@@ -11,7 +11,7 @@ import Foundation
 class AppSettings {
     enum  Constants {
         // View and fork the backend code here: https://codesandbox.io/p/devbox/dvmfpc
-        static let defaultServerBaseURL = "https://stripe-connect-mobile-example-v1.stripedemos.com/"
+        static let defaultServerBaseURL = "https://stp-mobile-test-backends-764603794666.us-central1.run.app/connect-example/"
         static let serverBaseURLKey = "ServerBaseURL"
         static let appearanceIdKey = "AppearanceId"
 

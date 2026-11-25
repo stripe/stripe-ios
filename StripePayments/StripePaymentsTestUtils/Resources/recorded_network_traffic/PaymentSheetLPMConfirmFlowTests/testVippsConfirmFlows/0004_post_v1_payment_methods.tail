@@ -3,24 +3,24 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=A2MhgrwA55U1HsVIpa6nM2ySXmsL0FHk54NV6BfJfVlLp4FkA0VdC9RpDmsTUDMNKrleY-s2WDDn7GCJ; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=mxBmSEVZSBhcAVUa6LdGCBvyjxKl70RNspbb20jW961HKzNBpVSq4P7Zt0DKhUYSmoE7ENnJ_PGpnOLo; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=A2MhgrwA55U1HsVIpa6nM2ySXmsL0FHk54NV6BfJfVlLp4FkA0VdC9RpDmsTUDMNKrleY-s2WDDn7GCJ&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=mxBmSEVZSBhcAVUa6LdGCBvyjxKl70RNspbb20jW961HKzNBpVSq4P7Zt0DKhUYSmoE7ENnJ_PGpnOLo&t=1"
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=A2MhgrwA55U1HsVIpa6nM2ySXmsL0FHk54NV6BfJfVlLp4FkA0VdC9RpDmsTUDMNKrleY-s2WDDn7GCJ&t=1"}],"include_subdomains":true}
-request-id: req_FKXTmsnogChrEZ
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=mxBmSEVZSBhcAVUa6LdGCBvyjxKl70RNspbb20jW961HKzNBpVSq4P7Zt0DKhUYSmoE7ENnJ_PGpnOLo&t=1"}],"include_subdomains":true}
+request-id: req_t9R37P7I9iL2Ih
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 534
 Vary: Origin
-Date: Wed, 28 Oct 2026 21:03:53 GMT
-original-request: req_FKXTmsnogChrEZ
+Date: Sat, 21 Nov 2026 03:32:39 GMT
+original-request: req_t9R37P7I9iL2Ih
 stripe-version: 2020-08-27; vipps_preview=v1
-idempotency-key: 29324e4f-09fa-4964-b157-2ca0ced1c87d
+idempotency-key: e193986b-297a-4265-b3de-24e6f8e18f14
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -29,7 +29,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
 
 {
   "object" : "payment_method",
-  "id" : "pm_1UVe0jKG6vc7r7YCoT7Q39qB",
+  "id" : "pm_1Ue52ZKG6vc7r7YCcTXDq4ZA",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -48,7 +48,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "vipps" : {
 
   },
-  "created" : 1793221433,
+  "created" : 1795231959,
   "allow_redisplay" : "unspecified",
   "shared_payment_granted_token" : null,
   "customer" : null,

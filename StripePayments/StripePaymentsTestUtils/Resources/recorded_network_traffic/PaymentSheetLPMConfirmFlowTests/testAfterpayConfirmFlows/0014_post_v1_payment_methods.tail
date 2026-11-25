@@ -3,25 +3,25 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=nXyBR0KQjcZNrOJ9cQbjzmyKY2-sjXQBifwQrBzS7iQb6wCpFikF_3Wh-ejO3m34lI8YfonEm7VA7OI8; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=5LrnhLJLQIhvBZU6VLfHcO6GLGjoJ9GwrifqmlVjoSUxGQl0Lzb76ze04uXGPiRPKPVBLYXsdKoXYi8o; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=nXyBR0KQjcZNrOJ9cQbjzmyKY2-sjXQBifwQrBzS7iQb6wCpFikF_3Wh-ejO3m34lI8YfonEm7VA7OI8&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=5LrnhLJLQIhvBZU6VLfHcO6GLGjoJ9GwrifqmlVjoSUxGQl0Lzb76ze04uXGPiRPKPVBLYXsdKoXYi8o&t=1"
 stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=nXyBR0KQjcZNrOJ9cQbjzmyKY2-sjXQBifwQrBzS7iQb6wCpFikF_3Wh-ejO3m34lI8YfonEm7VA7OI8&t=1"}],"include_subdomains":true}
-request-id: req_qOOKXEIoeEdhf7
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=5LrnhLJLQIhvBZU6VLfHcO6GLGjoJ9GwrifqmlVjoSUxGQl0Lzb76ze04uXGPiRPKPVBLYXsdKoXYi8o&t=1"}],"include_subdomains":true}
+request-id: req_cOJWEOd4RkRQFA
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 568
 Vary: Origin
-Date: Tue, 10 Nov 2026 19:05:19 GMT
-original-request: req_qOOKXEIoeEdhf7
+Date: Sat, 21 Nov 2026 03:06:54 GMT
+original-request: req_cOJWEOd4RkRQFA
 stripe-version: 2020-08-27
-idempotency-key: 1f307f0c-7acb-4a0f-ab47-d12e3947831d
+idempotency-key: 423ddbc4-e433-4c11-918b-516d95baea5b
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=foo%4
 
 {
   "object" : "payment_method",
-  "id" : "pm_1UaKM7FY0qyl6XeW5GnxZgkC",
+  "id" : "pm_1Ue4deFY0qyl6XeWIsZmPnB1",
   "billing_details" : {
     "email" : "foo@bar.com",
     "phone" : null,
@@ -49,7 +49,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=foo%4
   "afterpay_clearpay" : {
 
   },
-  "created" : 1794337519,
+  "created" : 1795230414,
   "allow_redisplay" : "unspecified",
   "shared_payment_granted_token" : null,
   "customer" : null,

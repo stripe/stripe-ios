@@ -1,0 +1,44 @@
+POST
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/create_customer$
+200
+application/json
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json
+Content-Length: 592
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:01:27 GMT
+
+{
+  "description" : null,
+  "test_clock" : null,
+  "metadata" : {
+
+  },
+  "default_source" : null,
+  "livemode" : false,
+  "invoice_settings" : {
+    "custom_fields" : null,
+    "default_payment_method" : null,
+    "rendering_options" : null,
+    "footer" : null
+  },
+  "object" : "customer",
+  "currency" : null,
+  "shipping" : null,
+  "discount" : null,
+  "customer_account" : null,
+  "balance" : 0,
+  "name" : null,
+  "tax_exempt" : "none",
+  "id" : "cus_VfPNWHUfiL3zHE",
+  "delinquent" : false,
+  "email" : "customer@example.com",
+  "preferred_locales" : [
+
+  ],
+  "phone" : null,
+  "next_invoice_sequence" : 1,
+  "invoice_prefix" : "LNOMP8ZG",
+  "address" : null,
+  "created" : 1795230087
+}

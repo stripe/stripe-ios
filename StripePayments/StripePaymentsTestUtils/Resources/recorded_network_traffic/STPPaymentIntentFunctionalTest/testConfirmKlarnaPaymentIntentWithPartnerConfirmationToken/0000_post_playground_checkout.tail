@@ -1,0 +1,16 @@
+POST
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/playground\/checkout$
+200
+application/json
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json
+Content-Length: 265
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 02:59:36 GMT
+
+{
+  "publishableKey" : "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C",
+  "amount" : "1000",
+  "intentClientSecret" : "pi_3Ue4WaLu5o3P18Zp0HGSWCoa_secret_Bkrp4vfwE3cQIOG2WFVlM3vCs",
+  "paymentMethodTypes" : "klarna"
+}

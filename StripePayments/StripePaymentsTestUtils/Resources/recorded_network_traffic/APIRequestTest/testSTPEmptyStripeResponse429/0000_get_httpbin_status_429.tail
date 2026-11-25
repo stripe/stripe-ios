@@ -1,0 +1,10 @@
+GET
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/httpbin\/status\/429\?$
+429
+text/html
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: text/html;charset=utf-8
+Content-Length: 0
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 02:58:59 GMT
+

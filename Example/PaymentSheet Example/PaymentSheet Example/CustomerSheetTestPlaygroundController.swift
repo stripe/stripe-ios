@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
-    static let defaultEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
+    static let defaultEndpoint = "https://stp-mobile-test-backends-764603794666.us-central1.run.app/playground"
 
     @Published var settings: CustomerSheetTestPlaygroundSettings
     @Published var currentlyRenderedSettings: CustomerSheetTestPlaygroundSettings

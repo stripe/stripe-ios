@@ -45,6 +45,14 @@ NSString * const SWHttpTrafficRecorderErrorDomain           = @"RECORDER_ERROR_D
 
 @interface SWRecordingProtocol : NSURLProtocol @end
 
+// Headers that the test backends' hosting adds (Cloud Run's trace context, Vercel's IDs) aren't the
+// backends' response, and can carry request metadata, so recordings leave them out.
+static BOOL STPShouldRecordResponseHeader(NSString *key) {
+    NSString *name = key.lowercaseString;
+    return !([name hasPrefix:@"x-vercel-"] || [name hasPrefix:@"x-cloud-trace"]
+             || [name hasPrefix:@"x-goog-"] || [name isEqualToString:@"traceparent"]);
+}
+
 @implementation SWHttpTrafficRecorder
 
 + (instancetype)sharedRecorder
@@ -407,6 +415,9 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     [tail appendFormat:@"%@%@\n", response.MIMEType, [self toBase64Body:request andResponse:response] ? @";base64": @""];
     NSEnumerator *headerKeys = [response.allHeaderFields keyEnumerator];
     for (NSString *key in headerKeys) {
+        if (!STPShouldRecordResponseHeader(key)) {
+            continue;
+        }
         [tail appendFormat:@"%@: %@\n", key, (NSString*)[response.allHeaderFields objectForKey:key]];
     }
     
@@ -501,6 +512,9 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
      
     NSDictionary *headers = response.allHeaderFields;
     for(NSString *key in headers){
+        if (!STPShouldRecordResponseHeader(key)) {
+            continue;
+        }
         [dataString appendFormat:@"%@: %@\n", key, headers[key]];
     }
     

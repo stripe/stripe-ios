@@ -9,7 +9,7 @@
 #import "STPTestingAPIClient.h"
 @import StripeCore;
 
-static NSString * const STPTestingBackendURL = @"https://stp-mobile-ci-test-backend-e1b3.stripedemos.com/";
+static NSString * const STPTestingBackendURL = @"https://stp-mobile-test-backends-764603794666.us-central1.run.app/ci-test-backend/";
 
 NS_ASSUME_NONNULL_BEGIN
 

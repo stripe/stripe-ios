@@ -20,7 +20,7 @@ class ExampleVerificationViewControllerNativeUI: UIViewController {
 
     // Constants
     // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
-    let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
+    let baseURL = "https://stp-mobile-test-backends-764603794666.us-central1.run.app/identity-playground"
     let verifyEndpoint = "/verification-sessions"
     private var is3DFaceCaptureEnabled: Bool {
         return faceCaptureEnabledSwitch.isOn

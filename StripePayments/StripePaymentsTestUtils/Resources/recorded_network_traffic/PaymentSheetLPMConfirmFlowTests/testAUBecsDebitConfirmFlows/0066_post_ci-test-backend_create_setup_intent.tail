@@ -1,0 +1,16 @@
+POST
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/ci-test-backend\/create_setup_intent$
+200
+application/json
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json
+Content-Length: 227
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 03:11:15 GMT
+
+{
+  "secret" : "seti_1Ue4hrF7QokQdxByc1GsAqBR_secret_VfPW5CykzwVMCCLYT9JBIapJqTKg8w1",
+  "status" : "requires_payment_method",
+  "publishable_key" : "pk_test_GNmlCJ6AFgWXm4mJYiyWSOWN00KIIiri7F",
+  "intent" : "seti_1Ue4hrF7QokQdxByc1GsAqBR"
+}

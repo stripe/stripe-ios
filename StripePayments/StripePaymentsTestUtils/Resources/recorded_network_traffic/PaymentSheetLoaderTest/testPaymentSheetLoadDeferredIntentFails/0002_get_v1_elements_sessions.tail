@@ -1,30 +1,35 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&deferred_intent%5Bpayment_method_types%5D%5B1%5D=foo&deferred_intent%5Bsetup_future_usage%5D=off_session&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bon_behalf_of%5D=foo&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&deferred_intent%5Bsetup_future_usage%5D=off_session&locale=.*&mobile_app_id=.*&type=deferred_intent$
 400
 application/json
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=yZb-xuaKGhPuiqiNjHIVAOq5zmePD2sJx00U1xbv7KfS005ZMMTE-ZqoAj15rKc2yxaXS_6TvxrZPnfd
-x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=w9dq7L9kpopUEy5LurZT4ZSeptwbLWvf_KnmL-OWtSy0cUBMQ3z_GBQH_LTg_-kqfjjMagfxt5mxgONt; report-to csp
 Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=w9dq7L9kpopUEy5LurZT4ZSeptwbLWvf_KnmL-OWtSy0cUBMQ3z_GBQH_LTg_-kqfjjMagfxt5mxgONt&t=1"
+stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=w9dq7L9kpopUEy5LurZT4ZSeptwbLWvf_KnmL-OWtSy0cUBMQ3z_GBQH_LTg_-kqfjjMagfxt5mxgONt&t=1"}],"include_subdomains":true}
+request-id: req_KUyydSX7DTl1tQ
+Content-Length: 252
+Vary: Origin
+Date: Sat, 21 Nov 2026 03:33:05 GMT
+stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
-Cache-Control: no-cache, no-store
-Date: Thu, 26 Feb 2026 00:23:21 GMT
-stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 204
-x-stripe-routing-context-priority-tier: api-testmode
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Vary: Origin
-request-id: req_6uOYWv4gh2V3j7
+Content-Type: application/json
 
 {
   "error" : {
-    "message" : "The payment method type `foo` is not supported when creating a SetupIntent.",
-    "param" : "deferred_intent.payment_method_types",
-    "type" : "invalid_request_error"
+    "code" : "resource_missing",
+    "message" : "No such on_behalf_of: 'foo'",
+    "param" : "deferred_intent[on_behalf_of]",
+    "type" : "invalid_request_error",
+    "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/resource-missing"
   }
 }

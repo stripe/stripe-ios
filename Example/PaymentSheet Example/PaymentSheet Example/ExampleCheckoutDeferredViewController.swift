@@ -10,7 +10,7 @@ import StripePaymentSheet
 import UIKit
 
 // View and fork the backend code  here: https://codesandbox.io/p/devbox/dr4lkg
-private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.stripedemos.com"
+private let baseUrl = "https://stp-mobile-test-backends-764603794666.us-central1.run.app/payment-sheet-custom-deferred"
 
 class ExampleDeferredCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!

@@ -12,7 +12,7 @@ final class APIClient {
     static let shared = APIClient()
 
     private let session: URLSession
-    private let baseURL = URL(string: "https://crypto-onramp-example.stripedemos.com")
+    private let baseURL = URL(string: "https://stp-mobile-test-backends-764603794666.us-central1.run.app/crypto-onramp")
     private let jsonDecoder: JSONDecoder
     private let jsonEncoder: JSONEncoder
     private(set) var authToken: String?

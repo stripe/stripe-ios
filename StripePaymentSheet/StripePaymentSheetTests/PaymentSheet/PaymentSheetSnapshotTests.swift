@@ -20,7 +20,7 @@ import XCTest
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
-        string: "https://stripe-mobile-test-playground-v6.stripedemos.com/checkout"
+        string: "https://stp-mobile-test-backends-764603794666.us-central1.run.app/playground/checkout"
     )!
 
     var paymentSheet: PaymentSheet!
@@ -1090,8 +1090,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 error == nil,
                 let data = data,
                 let json = try? JSONDecoder().decode([String: String].self, from: data),
-                let customerId = json["customerId"],
-                let customerEphemeralKeySecret = json["customerEphemeralKeySecret"],
                 let paymentIntentClientSecret = json["intentClientSecret"],
                 let publishableKey = json["publishableKey"]
             else {
@@ -1101,7 +1099,14 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
             var config = self.configuration
             config.apiClient = STPAPIClient(publishableKey: publishableKey)
+            // The playground creates no customer for guests.
             if customer != "guest" {
+                guard let customerId = json["customerId"],
+                      let customerEphemeralKeySecret = json["customerEphemeralKeySecret"]
+                else {
+                    XCTFail("Failed to parse response")
+                    return
+                }
                 config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
             }
             config.appearance = appearance

@@ -1,0 +1,26 @@
+GET
+https:\/\/stp-mobile-test-backends-764603794666\.us-central1\.run\.app\/httpbin\/get\?$
+200
+application/json
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Content-Type: application/json
+Content-Length: 618
+Server: Google Frontend
+Date: Sat, 21 Nov 2026 02:58:59 GMT
+
+{
+  "args" : {
+
+  },
+  "headers" : {
+    "Accept" : "*\/*",
+    "Accept-Encoding" : "gzip, deflate, br",
+    "Host" : "stp-mobile-test-backends-764603794666.us-central1.run.app",
+    "User-Agent" : "xctest\/25435 CFNetwork\/3860.500.112 Darwin\/27.2.0",
+    "X-Stripe-User-Agent" : "{\"vendor_identifier\":\"4F70A834-ED86-460E-9887-CDA4917E5D6E\",\"lang\":\"objective-c\",\"bindings_version\":\"26.16.1\",\"type\":\"arm64\",\"os_version\":\"26.4.1\",\"model\":\"iPhone\"}",
+    "Accept-Language" : "en-US,en;q=0.9",
+    "Stripe-Version" : "2020-08-27"
+  },
+  "origin" : "169.254.169.126",
+  "url" : "http:\/\/stp-mobile-test-backends-764603794666.us-central1.run.app\/httpbin\/get"
+}

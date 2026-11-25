@@ -366,7 +366,7 @@ struct LinkPayoutsResult {
 // MARK: - API Client
 
 enum LinkPayoutsAPIClient {
-    private static let baseURL = URL(string: "https://link-payouts-demo.stripedemos.com")!
+    private static let baseURL = URL(string: "https://stp-mobile-test-backends-764603794666.us-central1.run.app/link-payouts-demo")!
 
     static func getConnectionSession(liveMode: Bool = false) async throws -> ConnectionSession {
         let url = baseURL.appendingPathComponent("connection_session")

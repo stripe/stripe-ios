@@ -6,6 +6,8 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 import StripeCoreTestUtils
 import XCTest
 
@@ -23,6 +25,12 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     override func setUp() async throws {
         try await super.setUp()
         self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        if !disableMocking {
+            // Saved cards come with card art, which DownloadManager loads outside the recorded session.
+            stub(condition: { $0.url?.absoluteString.contains("/cardart/") ?? false }) { _ in
+                HTTPStubsResponse(data: Data(), statusCode: 404, headers: nil)
+            }
+        }
     }
     lazy var paymentHandler: STPPaymentHandler = {
         return STPPaymentHandler(
