@@ -100,6 +100,7 @@ private extension SavedPaymentMethodBillingSyncTests {
             configuration: EmbeddedPaymentElement.Configuration(),
             customerProvider: CustomerProvider(customer: EmbeddedPaymentElement.Configuration().customer),
             checkout: updater,
+            checkoutSavedPaymentMethodUpdater: nil,
             selectedPaymentMethod: paymentMethods[0],
             paymentMethods: paymentMethods,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
@@ -128,7 +129,7 @@ private extension SavedPaymentMethodBillingSyncTests {
             configuration: PaymentSheet.Configuration(),
             loadResult: loadResult,
             analyticsHelper: ._testValue(),
-            checkoutBillingAddressUpdater: checkout
+            checkout: checkout
         )
     }
 

@@ -77,7 +77,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
     func testUpdateVerificationPageData() throws {
         try testUpdateVerificationPageData(
             with: VerificationPageDataUpdateMock.default,
-            expectedMediaPipeAvailable: FaceGeometryDetectorFactory.isAvailable
+            expectedMediaPipeAvailable: true
         )
     }
 
@@ -209,7 +209,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         stub { urlRequest in
             XCTAssertEqual(
                 urlRequest.url?.absoluteString.hasSuffix(
-                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)?app_identifier=\(Bundle.main.bundleIdentifier ?? "")&media_pipe_available=\(FaceGeometryDetectorFactory.isAvailable)"
+                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)?app_identifier=\(Bundle.main.bundleIdentifier ?? "")&media_pipe_available=true"
                 ),
                 true
             )

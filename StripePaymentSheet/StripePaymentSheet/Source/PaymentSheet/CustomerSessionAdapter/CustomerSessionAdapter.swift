@@ -107,6 +107,8 @@ class CustomerSessionAdapter {
                                                                                                   customerSessionClientSecret: customerSessionClientSecret)
         } else {
             return try await self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: intentConfiguration.paymentMethodTypes,
+                                                                                                          allowedPaymentMethodTypes: intentConfiguration.allowedPaymentMethodTypes,
+                                                                                                          excludedPaymentMethodTypes: intentConfiguration.excludedPaymentMethodTypes,
                                                                                                           onBehalfOf: intentConfiguration.onBehalfOf,
                                                                                                           clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                           customerSessionClientSecret: customerSessionClientSecret)

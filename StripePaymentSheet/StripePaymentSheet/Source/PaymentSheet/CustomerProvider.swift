@@ -144,16 +144,19 @@ struct CustomerProvider {
         return customer?.ephemeralKeySecret(basedOn: elementsSession)
     }
 
+    /// - Parameter checkoutSavedPaymentMethodUpdater: Updates Checkout Session payment methods, keeping the controller's
+    ///   session up to date. Required for Checkout Sessions; ignored otherwise.
     @MainActor
     func update(
         paymentMethod: STPPaymentMethod,
         with updateParams: STPPaymentMethodUpdateParams,
         elementsSession: STPElementsSession,
-        apiClient: STPAPIClient
+        apiClient: STPAPIClient,
+        checkoutSavedPaymentMethodUpdater: CheckoutSessionSavedPaymentMethodUpdater?
     ) async throws -> STPPaymentMethod {
         let updatedPaymentMethod: STPPaymentMethod
         switch backing {
-        case .checkoutSession(let session):
+        case .checkoutSession:
             let billing = CheckoutElementsController.PaymentMethodBillingDetails(updateParams.billingDetails)
             let expiry = CheckoutElementsController.PaymentMethodExpiryDetails(updateParams.card)
             guard billing != nil || expiry != nil else {
@@ -161,10 +164,14 @@ struct CustomerProvider {
                     debugDescription: "Tried to update a payment method without billing details or expiry details."
                 )
             }
-            let updatedSession = try await apiClient.updatePaymentMethod(
+            guard let checkoutSavedPaymentMethodUpdater else {
+                throw PaymentSheetError.unknown(
+                    debugDescription: "Tried to update a Checkout Session payment method without its CheckoutElementsController."
+                )
+            }
+            // Update through the controller so its session keeps the edit when Payment Element is next rebuilt
+            let updatedSession = try await checkoutSavedPaymentMethodUpdater.updateSavedPaymentMethod(
                 paymentMethod.stripeId,
-                inCheckoutSession: session.id,
-                clientSecret: session.clientSecret,
                 billingDetails: billing,
                 expiryDetails: expiry
             )
@@ -200,21 +207,25 @@ struct CustomerProvider {
         return updatedPaymentMethod
     }
 
+    /// - Parameter checkoutSavedPaymentMethodUpdater: Detaches Checkout Session payment methods, keeping the controller's
+    ///   session up to date. Required for Checkout Sessions; ignored otherwise.
     @MainActor
     func detach(
         paymentMethod: STPPaymentMethod,
         elementsSession: STPElementsSession,
-        apiClient: STPAPIClient
+        apiClient: STPAPIClient,
+        checkoutSavedPaymentMethodUpdater: CheckoutSessionSavedPaymentMethodUpdater?
     ) {
         // Removal is optimistic; callers update their UI without waiting for the network response.
         switch backing {
-        case .checkoutSession(let session):
+        case .checkoutSession:
+            guard let checkoutSavedPaymentMethodUpdater else {
+                stpAssertionFailure("Tried to detach a Checkout Session payment method without its CheckoutElementsController.")
+                return
+            }
+            // Detach through the controller so its session drops the removed payment method when Payment Element is next rebuilt
             Task {
-                try? await apiClient.detachPaymentMethod(
-                    paymentMethod.stripeId,
-                    fromCheckoutSession: session.id,
-                    clientSecret: session.clientSecret
-                )
+                try? await checkoutSavedPaymentMethodUpdater.detachSavedPaymentMethod(paymentMethod.stripeId)
             }
         case .customer(let customer):
             guard let customer,

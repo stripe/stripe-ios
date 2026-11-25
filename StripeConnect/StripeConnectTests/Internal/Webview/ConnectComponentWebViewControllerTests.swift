@@ -854,3 +854,42 @@ private class MockFinancialConnectionsPresenter: FinancialConnectionsPresenter {
         await overridePresentForToken(componentManager, clientSecret, connectedAccountId, presentingViewController)
     }
 }
+
+// MARK: - Inline components
+
+extension ConnectComponentWebViewControllerTests {
+    @MainActor
+    func testNonInlineComponentHasNoInlineBehavior() async throws {
+        // Given a payouts component, which isn't inline
+        let webVC = InlineSheetHostController(
+            componentManager: EmbeddedComponentManager(apiClient: .init(publishableKey: "test"), fetchClientSecret: { nil }),
+            componentType: .payouts,
+            loadContent: false,
+            analyticsClientFactory: MockComponentAnalyticsClient.init,
+            didFailLoadWithError: { _ in }
+        )
+        try await webVC.webView.loadTrustedDocumentPreservingDelegate()
+        let componentOrigin = try await inlineSheetSecurityOrigin(for: StripeConnectConstants.connectJSBaseURL)
+
+        // When its page has the inline message handlers and opens a sheet window
+        let handlerTypes = try await webVC.webView.evaluateJavaScriptAndWait("""
+        [typeof window.webkit.messageHandlers.componentHeightChanged, typeof window.webkit.messageHandlers.sheetChanged].join(",");
+        """) as? String
+        let windowWebView = webVC.webView(webVC.webView,
+                                          createWebViewWith: webVC.webView.configuration,
+                                          for: InlineSheetMockNavigationAction(
+                                            url: InlineSheetTestURLs.accessoryLayer,
+                                            sourceFrame: InlineSheetMockFrameInfo(isMainFrame: false, securityOrigin: componentOrigin)
+                                          ),
+                                          windowFeatures: WKWindowFeatures())
+
+        // Then nothing inline is set up, and the window opens in a popup as before
+        let popup = (webVC.lastPresentedController as? UINavigationController)?.topViewController as? PopupWebViewController
+        popup?.webView.stopLoading()
+        XCTAssertEqual(handlerTypes, "undefined,undefined")
+        XCTAssertNil(webVC.inlineSheets)
+        XCTAssertFalse(webVC.webView.configuration.preferences.javaScriptCanOpenWindowsAutomatically)
+        XCTAssertTrue(webVC.webView.scrollView.isScrollEnabled)
+        XCTAssertTrue(popup?.webView === windowWebView)
+    }
+}

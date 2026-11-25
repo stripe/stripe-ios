@@ -136,7 +136,9 @@ public final class EmbeddedComponentManager {
               analyticsClientFactory: analyticsClientFactory)
     }
 
-    @_spi(DashboardOnly)
+    /// Creates a `NotificationBannerViewController`.
+    /// - Seealso: [Notification banner component documentation](https://docs.stripe.com/connect/supported-embedded-components/notification-banner?platform=ios)
+    @_spi(PrivatePreviewConnect) @_spi(DashboardOnly)
     public func createNotificationBannerViewController(
         collectionOptions: AccountCollectionOptions = .init()
     ) -> NotificationBannerViewController {

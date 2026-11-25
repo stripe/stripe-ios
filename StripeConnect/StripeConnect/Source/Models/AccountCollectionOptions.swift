@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Collection options for account onboarding
+/// Collection options for account onboarding and the notification banner
 public struct AccountCollectionOptions: Equatable, Codable {
 
     public enum FieldOption: String, Codable {

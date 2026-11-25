@@ -5,6 +5,7 @@ MAJOR
 This major version introduces several breaking changes. Please see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) to help you migrate.
 
 ### PaymentSheet
+* [Added] Added `allowedPaymentMethodTypes` and `excludedPaymentMethodTypes` to `PaymentSheet.IntentConfiguration`. If your server creates the PaymentIntent or SetupIntent with `allowed_payment_method_types` or `excluded_payment_method_types`, set the matching property to the same list.
 * [Deprecated] Deprecated External Payment Methods in favor of Custom Payment Methods. See the [CPM integration guide](https://docs.stripe.com/payments/mobile/custom-payment-methods?platform=ios).
 * [Changed] Added `@MainActor` isolation to `PaymentSheet` and `PaymentSheet.FlowController`. Initialize and access these objects from the main actor.
 * [Removed] Removed public access to `PaymentSheetError`.
@@ -17,6 +18,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 * [Fixed] Fixed an issue where adding a bank account in native Link or signing out of Link could fail when the configured API client used a different publishable key from `STPAPIClient.shared`.
 
 ### CustomerSheet
+* [Added] Added `allowedPaymentMethodTypes` and `excludedPaymentMethodTypes` to `CustomerSheet.IntentConfiguration`. If your server creates the SetupIntent with `allowed_payment_method_types` or `excluded_payment_method_types`, pass the same list.
 * [Changed] Added `@MainActor` isolation to `CustomerSheet`. Initialize and access from the main actor.
 * [Removed] Removed public access to `CustomerSheetError`.
 
@@ -25,9 +27,13 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 
 ### CryptoOnramp (Alpha)
 * [Added] Added the optional `linkCardBrandAcceptance` parameter to `CryptoOnrampCoordinator.create(...)` to allow or block card brands in the Link UI. Defaults to accepting all supported brands.
+* [Changed] If you install with Swift Package Manager, enable the `Identity` package trait. CryptoOnramp depends on StripeIdentity, which requires it. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700).
 
 ### Financial Connections
 * [Changed] Updated Link-branded Financial Connections flows, including Instant Debits, to the new Link design system.
+
+### Identity
+* [Changed] If you install with Swift Package Manager, StripeIdentity now requires the `Identity` package trait. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700).
 
 ## 26.16.1 2026-11-09
 ### PaymentSheet

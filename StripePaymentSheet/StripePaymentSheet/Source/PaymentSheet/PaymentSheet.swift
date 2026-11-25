@@ -326,7 +326,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 isFlowController: false,
                 analyticsHelper: analyticsHelper,
-                checkoutBillingAddressUpdater: nil,
+                checkout: nil,
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self
