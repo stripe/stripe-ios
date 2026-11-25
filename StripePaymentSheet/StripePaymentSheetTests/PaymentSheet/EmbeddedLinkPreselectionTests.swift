@@ -260,7 +260,7 @@ final class EmbeddedLinkPreselectionTests: XCTestCase {
 
         // When they pick a card in it
         let card = paymentMethod(LinkStubs.PaymentMethodIndices.card)
-        element.linkWalletDidFinish(with: confirmOption(card, linkAccount: linkAccount), revertsSelectionOnClose: false, showsOnlyLinkAfterSelecting: true)
+        element.linkWalletDidFinish(with: confirmOption(card, linkAccount: linkAccount), revertsSelectionOnClose: false)
 
         // Then Link is the only row, selected with that card
         XCTAssertTrue(element.showsOnlyLink)
@@ -268,7 +268,7 @@ final class EmbeddedLinkPreselectionTests: XCTestCase {
         XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, card.stripeID)
     }
 
-    func testPickingLinkFromTheFullListKeepsEveryPaymentMethod() async throws {
+    func testPickingLinkFromTheFullListShowsOnlyLinkAgain() async throws {
         // Given a customer who paid another way after Link was preselected
         let (element, linkAccount) = makeVerifiedElement()
         await preselect(element, linkAccount: linkAccount, from: [paymentMethod(LinkStubs.PaymentMethodIndices.card)])
@@ -278,10 +278,11 @@ final class EmbeddedLinkPreselectionTests: XCTestCase {
         let card = paymentMethod(LinkStubs.PaymentMethodIndices.card)
         element.linkWalletDidFinish(with: confirmOption(card, linkAccount: linkAccount), revertsSelectionOnClose: true)
 
-        // Then Link is selected with it, and the other payment methods stay
-        XCTAssertFalse(element.showsOnlyLink)
-        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link, .new(paymentMethodType: .stripe(.card))])
-        XCTAssertEqual(element.embeddedPaymentMethodsView.selectedRowButton?.type, .link)
+        // Then Link is the only row again, selected with that card and showing it
+        XCTAssertTrue(element.showsOnlyLink)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.rowButtons.map(\.type), [.link])
+        let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.selectedRowButton)
+        XCTAssertEqual(linkRow.label.text, card.paymentSheetLabel)
         XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, card.stripeID)
     }
 

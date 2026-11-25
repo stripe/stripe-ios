@@ -1250,6 +1250,15 @@ extension EmbeddedUITests {
         XCTAssertTrue(app.buttons["Link"].exists)
         XCTAssertFalse(app.buttons["Link"].isSelected)
         XCTAssertFalse(app.staticTexts["Payment method"].exists)
+
+        // When they pick Link again, and something to pay with in the wallet
+        app.buttons["Link"].tap()
+        app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Continue"].waitForExistenceAndTap(timeout: 10)
+
+        // Then Link is the only row again
+        XCTAssertTrue(app.buttons["Change"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Link")
+        XCTAssertFalse(app.buttons["Card"].exists)
     }
 
     func testLinkInlineVerification_forcedDialog() {

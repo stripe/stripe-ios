@@ -179,10 +179,8 @@ extension EmbeddedPaymentElement {
     }
 
     /// Opens the Link wallet so the customer can pick a payment method, then selects the Link row with it.
-    /// - Parameters:
-    ///   - revertsSelectionOnClose: Whether closing the wallet without picking anything restores the previously selected row.
-    ///   - showsOnlyLinkAfterSelecting: Whether Link becomes the only row once something is picked.
-    func presentLinkWallet(revertsSelectionOnClose: Bool, showsOnlyLinkAfterSelecting: Bool = false) {
+    /// - Parameter revertsSelectionOnClose: Whether closing the wallet without picking anything restores the previously selected row.
+    func presentLinkWallet(revertsSelectionOnClose: Bool) {
         guard let presenter = linkInlineAuthPresentingViewController() else {
             if revertsSelectionOnClose {
                 restoreSelectionBeforeLink()
@@ -203,8 +201,7 @@ extension EmbeddedPaymentElement {
             self.linkWalletDidFinish(
                 with: confirmOption,
                 shouldReturnToPaymentSheet: shouldReturnToPaymentSheet,
-                revertsSelectionOnClose: revertsSelectionOnClose,
-                showsOnlyLinkAfterSelecting: showsOnlyLinkAfterSelecting
+                revertsSelectionOnClose: revertsSelectionOnClose
             )
         }
     }
@@ -213,8 +210,7 @@ extension EmbeddedPaymentElement {
     func linkWalletDidFinish(
         with confirmOption: PaymentSheet.LinkConfirmOption?,
         shouldReturnToPaymentSheet: Bool = false,
-        revertsSelectionOnClose: Bool,
-        showsOnlyLinkAfterSelecting: Bool = false
+        revertsSelectionOnClose: Bool
     ) {
         guard let confirmOption else {
             if shouldReturnToPaymentSheet, showsOnlyLink {
@@ -231,7 +227,7 @@ extension EmbeddedPaymentElement {
         analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletSelected()
         // The wallet showed its mandate and records its bank data-sharing consent itself.
         preselectedLinkPaymentDetailsID = nil
-        selectLink(with: confirmOption, showsOnlyLinkAfterSelecting: showsOnlyLinkAfterSelecting)
+        selectLink(with: confirmOption)
     }
 
     /// Shows every payment method again, with none selected, so the customer can pick something other than Link.
@@ -242,9 +238,8 @@ extension EmbeddedPaymentElement {
         informDelegateIfPaymentOptionUpdated()
     }
 
-    /// Selects the Link row to pay with `confirmOption`.
-    /// - Parameter showsOnlyLinkAfterSelecting: Whether Link becomes the only row, if it isn't already.
-    private func selectLink(with confirmOption: PaymentSheet.LinkConfirmOption, showsOnlyLinkAfterSelecting: Bool = false) {
+    /// Selects the Link row to pay with `confirmOption`. With payment details, Link becomes the only row.
+    private func selectLink(with confirmOption: PaymentSheet.LinkConfirmOption) {
         // `.wallet` means the wallet couldn't hand back payment details, so Link pays through the wallet at confirm time.
         if case .wallet = confirmOption {
             linkConfirmOption = nil
@@ -255,8 +250,8 @@ extension EmbeddedPaymentElement {
             linkConfirmOption = nil
             return
         }
-        if showsOnlyLink || showsOnlyLinkAfterSelecting {
-            // Shows the new payment details on the Link-only row. Without any, e.g. for `.wallet`, the list shows every payment method instead.
+        if showsOnlyLink || linkPaymentDetails != nil {
+            // Shows the payment details on the Link-only row. Without any, e.g. for `.wallet`, the list shows every payment method instead.
             remakeEmbeddedPaymentMethodsView(selection: .link, linkOnlyPaymentDetails: linkPaymentDetails)
         }
         updateChangeButtonAndSublabelState(for: .link)
@@ -371,12 +366,12 @@ extension EmbeddedPaymentElement {
                 preselectedLinkPaymentDetailsID = paymentDetails.stripeID
                 analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPreselected(paymentDetailsType: paymentDetails.type.rawValue)
             }
-            selectLink(with: confirmOption, showsOnlyLinkAfterSelecting: true)
+            selectLink(with: confirmOption)
         case .failure(let reason):
             analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPreselectionFellBack(reason: reason.rawValue)
             switch configuration.formSheetAction {
             case .continue:
-                presentLinkWallet(revertsSelectionOnClose: false, showsOnlyLinkAfterSelecting: true)
+                presentLinkWallet(revertsSelectionOnClose: false)
             case .confirm(let completion):
                 payInLinkWallet(completion: completion)
             }
