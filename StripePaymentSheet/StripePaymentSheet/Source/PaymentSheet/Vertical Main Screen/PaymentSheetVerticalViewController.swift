@@ -80,7 +80,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let intent: Intent
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
-    weak var checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater?
+    weak var checkout: CheckoutSessionUpdater?
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let walletButtonsShownExternally: Bool
     var error: Swift.Error?
@@ -161,7 +161,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         walletButtonsViewState: PaymentSheet.WalletButtonsViewState = .hidden,
-        checkoutBillingAddressUpdater: CheckoutSessionBillingAddressUpdater? = nil,
+        checkout: CheckoutSessionUpdater? = nil,
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -175,7 +175,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.nativeSheetPresentation = nativeSheetPresentation
         self.previousPaymentOption = previousPaymentOption
         self.isFlowController = isFlowController
-        self.checkoutBillingAddressUpdater = checkoutBillingAddressUpdater
+        self.checkout = checkout
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.paymentMethodTypes = loadResult.paymentMethodTypes
         self.walletButtonsShownExternally = walletButtonsViewState.isVisible
@@ -815,7 +815,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     /// Syncs billing address to the checkout session, then closes the sheet.
     /// If the sync fails, stays on the sheet and shows the error instead.
     private func syncCheckoutBillingThenClose() {
-        guard let checkoutBillingAddressUpdater,
+        guard let checkout,
               let paymentOption = selectedPaymentOption else {
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
@@ -830,7 +830,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         Task { @MainActor [weak self] in
             guard let self else { return }
             do {
-                try await checkoutBillingAddressUpdater.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
+                try await checkout.syncBillingAddress(from: paymentOption.checkoutBillingDetails)
             } catch {
                 self.error = error
             }
@@ -875,6 +875,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         let vc = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
             customerProvider: loadResult.customerProvider,
+            // Don't pass `checkout:`, since this sheet syncs billing tax on Continue rather than on selection
+            checkoutSavedPaymentMethodUpdater: checkout,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
@@ -1112,7 +1114,8 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
         loadResult.customerProvider.detach(
             paymentMethod: paymentMethod,
             elementsSession: elementsSession,
-            apiClient: configuration.apiClient
+            apiClient: configuration.apiClient,
+            checkoutSavedPaymentMethodUpdater: checkout
         )
         analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
@@ -1171,7 +1174,8 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
                 paymentMethod: paymentMethod,
                 with: updateParams,
                 elementsSession: elementsSession,
-                apiClient: configuration.apiClient
+                apiClient: configuration.apiClient,
+                checkoutSavedPaymentMethodUpdater: checkout
             )
 
             // Update savedPaymentMethods

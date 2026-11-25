@@ -92,7 +92,7 @@ public final class PaymentElement {
             analyticsHelper: flowControllerInitParameters.analyticsHelper
         )
         self.paymentSheetFlowController.checkout = checkout
-        self.paymentSheetFlowController.viewController.checkoutBillingAddressUpdater = checkout
+        self.paymentSheetFlowController.viewController.checkout = checkout
         // Reading paymentOption preloads its image into the cache before initialization completes.
         _ = self.paymentSheetFlowController.paymentOption
 

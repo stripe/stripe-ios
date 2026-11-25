@@ -571,6 +571,8 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     private(set) var lastCanUpdateWhileSheetPresented: Bool?
     private let sessionToReturn: CheckoutElementsController.Session?
     private let errorToThrow: Error?
+    /// Errors thrown by the first updates, in order, before the mock returns `sessionToReturn`.
+    private var errorsToThrowFirst: [Error]
     private let suspendsFirstUpdate: Bool
     private var continuation: CheckedContinuation<CheckoutElementsController.Session, Error>?
     private var didSuspend = false
@@ -582,11 +584,13 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
     init(
         sessionToReturn: CheckoutElementsController.Session? = nil,
         errorToThrow: Error? = nil,
+        errorsToThrowFirst: [Error] = [],
         currentTaxRegion: CheckoutElementsController.Address? = nil,
         suspendsFirstUpdate: Bool = false
     ) {
         self.sessionToReturn = sessionToReturn
         self.errorToThrow = errorToThrow
+        self.errorsToThrowFirst = errorsToThrowFirst
         self.currentTaxRegion = currentTaxRegion
         self.suspendsFirstUpdate = suspendsFirstUpdate
     }
@@ -599,6 +603,9 @@ class MockCheckoutSessionWalletUpdater: CheckoutSessionWalletUpdater {
         updateCallCount += 1
         lastAddress = address
         lastCanUpdateWhileSheetPresented = canUpdateWhileSheetPresented
+        if !errorsToThrowFirst.isEmpty {
+            throw errorsToThrowFirst.removeFirst()
+        }
         if let errorToThrow {
             throw errorToThrow
         }

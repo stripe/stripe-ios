@@ -16,6 +16,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 * [Removed] Removed public access to `PaymentSheetError`.
 * [Deprecated] Deprecated `PaymentSheet.Configuration.allowsPaymentMethodsRequiringShippingAddress` and `EmbeddedPaymentElement.Configuration.allowsPaymentMethodsRequiringShippingAddress`. This configuration no longer has an effect. Payment methods that require a shipping address are always allowed.
 * [Changed] Klarna no longer displays a country dropdown with PaymentIntents when `billingDetailsCollectionConfiguration.address` is `.never`.
+* [Changed] In some rare cases where PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement fail to load properly, they will now fully fail instead of initializing with a limited set of payment methods.
 * [Added] Added Mobile Checkout Elements (private preview), a new integration powered by the Checkout Sessions API. See https://docs.stripe.com/payments/mobile/checkout-sessions
 * [Added] Added support for Stripe balance (private preview) in PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement, for payments and setting up future payments. Customers choose which of their financial accounts to pay from. Requires `PaymentSheet.Configuration.customer` to use a CustomerSession.
 * [Fixed] Fixed an issue where closing the Pix instructions page canceled the payment while the customer was still completing it.
@@ -42,6 +43,9 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 
 ### Identity
 * [Changed] If you install with Swift Package Manager, StripeIdentity now requires the `Identity` package trait. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700).
+
+### PaymentsUI
+* [Fixed] Fixed `STPPaymentCardTextField.cornerRadius` returning the previous value after it was set.
 
 ## 26.16.1 2026-11-09
 ### PaymentSheet

@@ -16,6 +16,20 @@ import XCTest
 
 class STPPaymentCardTextFieldTestsSwift: XCTestCase {
 
+    func testCornerRadiusSetterUpdatesStoredValueAndLayer() {
+        let textField = STPPaymentCardTextField()
+
+        // Given
+        XCTAssertEqual(5.0, textField.cornerRadius, accuracy: 0.001)
+
+        // When
+        textField.cornerRadius = 12
+
+        // Then
+        XCTAssertEqual(12, textField.cornerRadius, accuracy: 0.001)
+        XCTAssertEqual(12, textField.layer.cornerRadius, accuracy: 0.001)
+    }
+
     func testClearMaintainsPostalCodeEntryEnabled() {
         let textField = STPPaymentCardTextField()
         let postalCodeEntryDefaultEnabled = textField.postalCodeEntryEnabled

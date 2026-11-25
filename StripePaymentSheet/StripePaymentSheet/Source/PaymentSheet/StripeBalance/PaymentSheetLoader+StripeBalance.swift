@@ -38,7 +38,7 @@ extension PaymentSheetLoader {
                   elementsSession: elementsSession
               ) == .supported,
               case .customerSession(let customerSessionClientSecret) = configuration.customer?.customerAccessProvider,
-              // A fallback ElementsSession has no CustomerSession
+              // ElementsSession may not have returned a CustomerSession
               let ephemeralKeySecret = elementsSession.customer?.customerSession.apiKey else {
             return nil
         }
