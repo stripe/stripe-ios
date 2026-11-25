@@ -518,6 +518,56 @@ extension STPAPIClient {
         }
     }
 
+    func createShippingAddress(
+        for consumerSessionClientSecret: String,
+        name: String?,
+        address: STPPaymentMethodAddress,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/shipping_addresses"
+
+        var addressParams = address.consumersAPIParams
+        if let name, !name.isEmpty {
+            addressParams["name"] = name
+        }
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": requestSurface.rawValue,
+            "address": addressParams,
+        ]
+
+        post(
+            resource: endpoint,
+            parameters: parameters
+        ) { (result: Result<CreateShippingAddressResponse, Error>) in
+            completion(result.map(\.shippingAddress))
+        }
+    }
+
+    func deleteShippingAddress(
+        for consumerSessionClientSecret: String,
+        id: String,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/shipping_addresses/\(id)"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": requestSurface.rawValue,
+        ]
+
+        APIRequest<STPEmptyStripeResponse>.delete(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(),
+            parameters: parameters
+        ) { result in
+            completion(result.map { _ in () } )
+        }
+    }
+
     func deletePaymentDetails(
         for consumerSessionClientSecret: String,
         id: String,

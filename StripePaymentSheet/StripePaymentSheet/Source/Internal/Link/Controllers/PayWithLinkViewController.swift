@@ -99,7 +99,7 @@ final class PayWithLinkViewController: NSObject {
         let initiallySelectedPaymentDetailsID: String?
         private let originalCallToAction: ConfirmButton.CallToActionType
         let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
-        /// Updates the displayed total when it depends on the billing address (e.g. automatic tax). Only used in full mode.
+        /// Updates the displayed total when it depends on the billing or shipping address (e.g. automatic tax). Only used in full mode.
         let totalUpdater: LinkTotalUpdater?
 
         var callToAction: ConfirmButton.CallToActionType {
@@ -108,6 +108,59 @@ final class PayWithLinkViewController: NSObject {
             }
             return .pay(amount: totalUpdater.amount, currency: currency, withLock: withLock)
         }
+
+        /// Whether the customer must provide a shipping address in Link (e.g. for a Checkout Session that collects shipping).
+        var requiresShippingAddress: Bool {
+            intent.requiresShippingAddress
+        }
+
+        /// The shipping addresses saved to the Link account.
+        var shippingAddresses: [ShippingAddressesResponse.ShippingAddress] = []
+
+        /// The ID of the shipping address to use. Defaults to the account's default shipping address.
+        var selectedShippingAddressID: String?
+
+        var selectedShippingAddress: ShippingAddressesResponse.ShippingAddress? {
+            shippingAddresses.first { $0.id == selectedShippingAddressID }
+        }
+
+        /// The countries the session ships to, or `nil` if it ships anywhere.
+        var allowedShippingCountries: [String]? {
+            guard let allowedCountries = intent.allowedShippingCountries,
+                  !allowedCountries.isEmpty else {
+                return nil
+            }
+            return allowedCountries
+        }
+
+        /// Whether the shipping address is in a country the session ships to.
+        func isShippingAddressSupported(_ shippingAddress: ShippingAddressesResponse.ShippingAddress) -> Bool {
+            guard let allowedCountries = allowedShippingCountries else {
+                return true
+            }
+            guard let countryCode = shippingAddress.address.countryCode else {
+                return false
+            }
+            return allowedCountries.contains(countryCode.uppercased())
+        }
+
+        /// The address the total is calculated from when paying with the given payment details.
+        func totalAddress(for paymentDetails: ConsumerPaymentDetails?) -> STPPaymentMethodAddress? {
+            if intent.collectsTaxFromShippingAddress {
+                return selectedShippingAddress.map { STPPaymentMethodAddress(address: $0.toPaymentSheetAddress()) }
+            }
+            return paymentDetails?.billingDetails?.address
+        }
+
+        /// Selects the default supported shipping address, unless a supported one is already selected.
+        func selectDefaultShippingAddressIfNeeded() {
+            if let selectedShippingAddress, isShippingAddressSupported(selectedShippingAddress) {
+                return
+            }
+            let supportedShippingAddresses = shippingAddresses.filter(isShippingAddressSupported)
+            selectedShippingAddressID = (supportedShippingAddresses.first { $0.isDefault ?? false } ?? supportedShippingAddresses.first)?.id
+        }
+
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
         let linkAppearance: LinkAppearance?
@@ -207,14 +260,6 @@ final class PayWithLinkViewController: NSObject {
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
 
     let sheetContainer: any PaymentSheetContainer
-
-    var shippingAddressResponse: ShippingAddressesResponse?
-
-    var defaultShippingAddress: ShippingAddressesResponse.ShippingAddress? {
-        shippingAddressResponse?.shippingAddresses.first {
-            $0.isDefault ?? false
-        } ?? shippingAddressResponse?.shippingAddresses.first
-    }
 
     private var isBailingToWebFlow: Bool = false
 
@@ -456,7 +501,7 @@ private extension PayWithLinkViewController {
             let shippingAddressTask = Task {
                 try? await self.fetchShippingAddress(
                     using: linkAccount,
-                    shouldFetch: context.launchedFromFlowController
+                    shouldFetch: context.launchedFromFlowController || context.requiresShippingAddress
                 )
             }
             defer {
@@ -468,7 +513,9 @@ private extension PayWithLinkViewController {
                 let paymentDetails = try await paymentDetailsTask.value
 
                 // Ignore any errors that might happen here.
-                shippingAddressResponse = await shippingAddressTask.value
+                let shippingAddresses = await shippingAddressTask.value?.shippingAddresses ?? []
+                context.shippingAddresses = shippingAddresses
+                context.selectDefaultShippingAddressIfNeeded()
 
                 presentAppropriateViewController(
                     with: linkAccount,
@@ -543,13 +590,21 @@ private extension PayWithLinkViewController {
             }
             // Show a loading view while Financial Connections is being prepared
             viewController = LoaderViewController(context: context)
+        } else if paymentDetails.isEmpty && context.requiresShippingAddress && context.shippingAddresses.isEmpty {
+            // New customers enter their shipping address before adding a payment method,
+            // since adding their first payment method immediately confirms.
+            let addShippingAddressViewController = AddShippingAddressViewController(
+                linkAccount: linkAccount,
+                context: context
+            )
+            addShippingAddressViewController.delegate = self
+            viewController = addShippingAddressViewController
         } else {
-            let walletViewController = WalletViewController(
+            viewController = WalletViewController(
                 linkAccount: linkAccount,
                 context: context,
                 paymentMethods: paymentDetails
             )
-            viewController = walletViewController
         }
         setViewControllers([viewController])
     }
@@ -559,6 +614,26 @@ private extension PayWithLinkViewController {
             linkAccount?.supportedPaymentMethodTypes(for: context.elementsSession) ?? []
     }
 
+}
+
+// MARK: - AddShippingAddressViewControllerDelegate
+
+extension PayWithLinkViewController: AddShippingAddressViewControllerDelegate {
+    func addShippingAddressViewController(
+        _ viewController: AddShippingAddressViewController,
+        didAdd shippingAddress: ShippingAddressesResponse.ShippingAddress
+    ) {
+        guard let linkAccount else {
+            stpAssertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
+            return
+        }
+
+        context.shippingAddresses.append(shippingAddress)
+        context.selectDefaultShippingAddressIfNeeded()
+        setViewControllers([
+            WalletViewController(linkAccount: linkAccount, context: context, paymentMethods: [])
+        ])
+    }
 }
 
 // MARK: - Navigation
@@ -605,7 +680,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             account: linkAccount,
             paymentDetails: paymentDetails,
             confirmationExtras: confirmationExtras,
-            shippingAddress: defaultShippingAddress
+            shippingAddress: context.selectedShippingAddress
         )
 
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: confirmOption)
@@ -805,12 +880,12 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             )
             return
         }
-        // Make sure the total reflects the billing address we're about to pay with. If it changed,
+        // Make sure the total reflects the address we're about to pay with. If it changed,
         // stop so the customer can review the new total before paying.
         Task { @MainActor in
             do {
                 let totalChanged = try await totalUpdater.sync(
-                    billingAddress: paymentDetails.billingDetails?.address,
+                    address: context.totalAddress(for: paymentDetails),
                     showsProgress: false
                 )
                 guard !totalChanged else {
@@ -846,7 +921,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                     account: linkAccount,
                     paymentDetails: paymentDetails,
                     confirmationExtras: confirmationExtras,
-                    shippingAddress: defaultShippingAddress
+                    shippingAddress: context.selectedShippingAddress
                 )
             ),
             completion: completion
@@ -910,9 +985,9 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: .wallet(brand: context.linkBrand))
             return
         }
-        guard !context.intent.collectsTaxFromBillingAddress else {
-            // Web Link can't update its total while it's open, so it can't support a billing-address-dependent total.
-            let error = PaymentSheetError.unknown(debugDescription: "Native Link failed, and web Link doesn't support a total that depends on the billing address.")
+        guard !context.intent.collectsTaxFromBillingAddress && !context.intent.collectsTaxFromShippingAddress else {
+            // Web Link can't update its total while it's open, so it can't support a total that depends on an address selected in Link.
+            let error = PaymentSheetError.unknown(debugDescription: "Native Link failed, and web Link doesn't support a total that depends on an address selected in Link.")
             finish(withResult: .failed(error: error), deferredIntentConfirmationType: nil)
             return
         }

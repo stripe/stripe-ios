@@ -25,7 +25,7 @@ extension CheckoutSessionBillingAddressUpdater {
 }
 
 extension CheckoutElementsController.Address {
-    /// Creates a tax region from a payment method billing address.
+    /// Creates a tax region from a payment method address, e.g. a billing or shipping address.
     /// Returns nil without a country, since there's nothing to calculate tax from.
     init?(taxRegionFrom address: STPPaymentMethodAddress?) {
         guard let country = address?.country?.nonEmpty else {

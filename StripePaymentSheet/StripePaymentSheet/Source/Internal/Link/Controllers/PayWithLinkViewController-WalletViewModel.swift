@@ -199,7 +199,7 @@ extension PayWithLinkViewController {
 
         var confirmButtonStatus: ConfirmButton.Status {
             if context.totalUpdater?.isUpdating == true {
-                // Keep showing the current total with a spinner until it reflects the selected payment method's billing address.
+                // Keep showing the current total with a spinner until it reflects the selected billing or shipping address.
                 return .spinnerWithInteractionDisabled
             }
 
@@ -213,6 +213,10 @@ extension PayWithLinkViewController {
             }
 
             if shouldRecollectCardExpiryDate && expiryDate == nil {
+                return .disabled
+            }
+
+            if shouldShowShippingAddressPicker && context.selectedShippingAddress == nil {
                 return .disabled
             }
 
@@ -271,6 +275,55 @@ extension PayWithLinkViewController {
                     delegate?.viewModelDidChange(self)
                 case .failure:
                     break
+                }
+
+                completion(result)
+            }
+        }
+
+        // MARK: Shipping addresses
+
+        /// Whether to let the customer pick a shipping address.
+        var shouldShowShippingAddressPicker: Bool {
+            context.requiresShippingAddress
+        }
+
+        var shippingAddresses: [ShippingAddressesResponse.ShippingAddress] {
+            context.shippingAddresses
+        }
+
+        var selectedShippingAddressIndex: Int? {
+            shippingAddresses.firstIndex { $0.id == context.selectedShippingAddressID }
+        }
+
+        func isShippingAddressSupported(at index: Int) -> Bool {
+            context.isShippingAddressSupported(shippingAddresses[index])
+        }
+
+        func selectShippingAddress(at index: Int) {
+            guard isShippingAddressSupported(at: index) else {
+                return
+            }
+            context.selectedShippingAddressID = shippingAddresses[index].id
+            delegate?.viewModelDidChange(self)
+        }
+
+        /// Adds a shipping address the customer just saved to their Link account, and selects it if the session ships to it.
+        func addShippingAddress(_ shippingAddress: ShippingAddressesResponse.ShippingAddress) {
+            context.shippingAddresses.append(shippingAddress)
+            if context.isShippingAddressSupported(shippingAddress) {
+                context.selectedShippingAddressID = shippingAddress.id
+            }
+            delegate?.viewModelDidChange(self)
+        }
+
+        func deleteShippingAddress(at index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
+            let shippingAddress = shippingAddresses[index]
+
+            linkAccount.deleteShippingAddress(id: shippingAddress.id) { [self] result in
+                if case .success = result {
+                    context.shippingAddresses.removeAll { $0.id == shippingAddress.id }
+                    context.selectDefaultShippingAddressIfNeeded()
                 }
 
                 completion(result)

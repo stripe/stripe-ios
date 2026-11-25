@@ -377,11 +377,13 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
     private func syncTotalForEnteredBillingAddress() {
         guard let totalUpdater = context.totalUpdater,
               !isConfirming,
+              // When the total depends on the shipping address, the billing address doesn't affect it.
+              !context.intent.collectsTaxFromShippingAddress,
               case .new(let confirmParams)? = addPaymentMethodVC.paymentOption,
               let billingAddress = confirmParams.paymentMethodParams.billingDetails?.address else {
             return
         }
-        totalUpdater.syncInBackground(billingAddress: billingAddress) { [weak self] error in
+        totalUpdater.syncInBackground(address: billingAddress) { [weak self] error in
             self?.updateErrorLabel(for: error)
         }
     }

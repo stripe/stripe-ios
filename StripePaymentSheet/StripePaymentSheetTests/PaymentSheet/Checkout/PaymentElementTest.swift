@@ -583,6 +583,54 @@ final class PaymentElementTest: XCTestCase {
         XCTAssertNotEqual(checkout.session.paymentOption?.sublabel, previousSublabel)
     }
 
+    func testLinkSelectionSetsSessionShippingAddress() async throws {
+        // Given Checkout with a session that requires a shipping address
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeConfiguration(apiResponse: CheckoutTestHelpers.makeOpenSession(allowedCountries: ["US"]))
+        )
+        let embedded = checkout.getPaymentElement().embeddedPaymentElement
+        XCTAssertNil(checkout.session.shippingAddress)
+
+        // When the customer selects a Link card and shipping address
+        let shippingAddress = ShippingAddressesResponse.ShippingAddress(
+            id: "csmrshpad_123",
+            address: .init(
+                administrativeArea: "CA",
+                countryCode: "US",
+                dependentLocality: nil,
+                line1: "510 Townsend St",
+                line2: nil,
+                locality: "San Francisco",
+                name: "Jane Doe",
+                postalCode: "94103",
+                sortingCode: nil
+            ),
+            isDefault: true,
+            nickname: nil
+        )
+        embedded._test_paymentOption = .link(option: .withPaymentDetails(
+            brand: .link,
+            account: PaymentSheetLinkAccount._testValue(email: "jane@example.com", isRegistered: true),
+            paymentDetails: LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card],
+            confirmationExtras: nil,
+            shippingAddress: shippingAddress
+        ))
+        embedded.informDelegateIfPaymentOptionUpdated()
+
+        // Then the session's shipping address is set to the Link shipping address
+        let shippingAddressSet = expectation(for: NSPredicate { _, _ in
+            MainActor.assumeIsolated { checkout.session.shippingAddress != nil }
+        }, evaluatedWith: nil)
+        await fulfillment(of: [shippingAddressSet], timeout: 2)
+        XCTAssertEqual(
+            checkout.session.shippingAddress,
+            .init(
+                name: "Jane Doe",
+                address: .init(country: "US", line1: "510 Townsend St", city: "San Francisco", state: "CA", postalCode: "94103")
+            )
+        )
+    }
+
     func testPaymentOptionBillingDetailsOmitsEmptyAddress() {
         // Given a payment option whose PaymentSheet billing details have no address fields
         let paymentOption = EmbeddedPaymentElement.PaymentOptionDisplayData(

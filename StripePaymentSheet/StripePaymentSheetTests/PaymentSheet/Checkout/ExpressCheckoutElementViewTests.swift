@@ -354,6 +354,47 @@ final class ExpressCheckoutElementViewTests: XCTestCase {
         XCTAssertFalse(session.availableExpressCheckoutPaymentMethods.contains(.link))
     }
 
+    func testNativeLinkShownWhenShippingAddressIsRequired() {
+        // Given a session that requires shipping
+        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
+        let session = CheckoutTestHelpers.makeSessionWithWalletTypes(["link"]).makePublicSession()
+
+        // When native Link is used
+        let reasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
+            for: session.elementsSession,
+            configuration: configuration,
+            usesWebLink: false,
+            requiresShippingAddress: true,
+            billingDetailsCollectionRequired: false
+        )
+
+        // Then Link is shown, since native Link collects the shipping address
+        XCTAssertFalse(reasons.contains(.shippingAddressRequired))
+    }
+
+    func testNativeLinkShownWhenShippingAddressIsRequiredAndAutomaticTaxUsesShippingAddress() {
+        // Given a session that requires shipping and calculates automatic tax from the shipping address
+        let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })
+        let apiResponse = CheckoutTestHelpers.makeSessionWithWalletTypes(
+            ["link"],
+            automaticTaxAddressSource: "shipping",
+            customerEmail: "jenny@example.com"
+        )
+        let session = apiResponse.makePublicSession(expressCheckoutConfiguration: configuration)
+
+        // When native Link is used
+        let reasons = ExpressCheckoutElementUtilities.linkDisabledReasons(
+            for: session.elementsSession,
+            configuration: configuration,
+            usesWebLink: false,
+            requiresShippingAddress: true,
+            billingDetailsCollectionRequired: false
+        )
+
+        // Then Link is shown, since native Link updates its total when the shipping address changes
+        XCTAssertTrue(reasons.isEmpty)
+    }
+
     func testLinkButtonShownWhenAutomaticTaxUsesShippingAddress() {
         // Given automatic tax uses shipping but Checkout does not require a shipping address
         let configuration = ExpressCheckoutElement.Configuration(completion: { _ in })

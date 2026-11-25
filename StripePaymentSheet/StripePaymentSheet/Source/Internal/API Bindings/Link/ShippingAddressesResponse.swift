@@ -51,6 +51,14 @@ struct ShippingAddressesResponse: Decodable {
     }
 }
 
+struct CreateShippingAddressResponse: Decodable {
+    let shippingAddress: ShippingAddressesResponse.ShippingAddress
+
+    private enum CodingKeys: String, CodingKey {
+        case shippingAddress = "shipping_address"
+    }
+}
+
 extension ShippingAddressesResponse.ShippingAddress {
     func toPaymentSheetAddress() -> PaymentSheet.Address {
         .init(
@@ -61,5 +69,17 @@ extension ShippingAddressesResponse.ShippingAddress {
             postalCode: address.postalCode,
             state: address.administrativeArea
         )
+    }
+
+    /// The address on a single line, without the name, e.g. "123 Main St, San Francisco, CA 94111, US".
+    var formattedAddress: String {
+        let stateAndPostalCode = [address.administrativeArea, address.postalCode]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+        return [address.line1, address.line2, address.locality, stateAndPostalCode, address.countryCode]
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .joined(separator: ", ")
     }
 }

@@ -138,7 +138,7 @@ final class CheckoutElementsUITests: PaymentSheetUITestCase {
             NSPredicate(format: "label BEGINSWITH %@", "Buy with Apple")
         ).firstMatch
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 10))
-        XCTAssertFalse(app.buttons["Pay with Link"].exists)
+        XCTAssertTrue(app.buttons["Pay with Link"].exists)
         XCTAssertTrue(app.buttons["Select payment method"].exists)
 
         // When the customer selects the integration currency in Currency Selector Element

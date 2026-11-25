@@ -124,6 +124,7 @@ public final class PaymentElement {
                     return
                 }
                 self.checkout?.dangerouslySetPaymentOptionDirectly(paymentOption.map(CheckoutElementsController.Session.PaymentOptionDisplayData.init))
+                self.syncShippingAddressFromLink(self.paymentSheetFlowController.internalPaymentOption)
             }
             .store(in: &cancellables)
 
@@ -228,6 +229,31 @@ extension PaymentElement {
         }
         paymentOptionSourceOfTruthIsFlowController = false
         checkout?.dangerouslySetPaymentOptionDirectly(embeddedPaymentElement.paymentOption.map(CheckoutElementsController.Session.PaymentOptionDisplayData.init))
+        syncShippingAddressFromLink(embeddedPaymentElement._paymentOption)
+    }
+}
+
+// MARK: - Link shipping address
+
+extension PaymentElement {
+    /// Sets the session's shipping address to the one the customer selected in native Link, if the session collects one,
+    /// so the integration and Shipping Address Element show it.
+    func syncShippingAddressFromLink(_ paymentOption: PaymentOption?) {
+        guard let checkout,
+              checkout.session.requiresShippingAddress,
+              case .link(let confirmOption)? = paymentOption,
+              let shippingAddress = confirmOption.checkoutShippingAddress else {
+            return
+        }
+        Task { @MainActor in
+            // Best effort: if this fails, the customer can still enter a shipping address in the integration.
+            try? await checkout.updateShippingAddress(
+                name: shippingAddress.name,
+                address: shippingAddress.address,
+                source: .paymentElement,
+                canUpdateWhileSheetPresented: true
+            )
+        }
     }
 }
 

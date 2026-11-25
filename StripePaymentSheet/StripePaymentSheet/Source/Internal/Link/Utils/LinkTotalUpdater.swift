@@ -7,10 +7,10 @@ import Foundation
 @_spi(InternalOnlyAPI) import StripeCore
 @_spi(InternalOnlyAPI) import StripePayments
 
-/// Keeps the total shown in native Link in sync when it depends on the selected payment details' billing address,
-/// e.g. for automatic tax calculated from the billing address.
+/// Keeps the total shown in native Link in sync when it depends on an address the customer selects in Link,
+/// e.g. for automatic tax calculated from the billing or shipping address.
 ///
-/// The owner provides a handler that receives the billing address and returns the updated total in minor units.
+/// The owner provides a handler that receives the address and returns the updated total in minor units.
 /// Updates run one at a time in the order they were requested, and only the latest request's result is applied.
 @MainActor
 final class LinkTotalUpdater {
@@ -21,8 +21,8 @@ final class LinkTotalUpdater {
 
         var errorDescription: String? {
             return STPLocalizedString(
-                "Your total was updated based on your billing address. Review it and try again.",
-                "Error shown when the total changes after the customer taps the pay button, because tax depends on the billing address."
+                "Your total was updated based on your address. Review it and try again.",
+                "Error shown when the total changes after the customer taps the pay button, because tax depends on the billing or shipping address."
             )
         }
     }
@@ -55,12 +55,12 @@ final class LinkTotalUpdater {
         ))
     }
 
-    /// Syncs the total for the given billing address.
+    /// Syncs the total for the given address.
     /// - Parameter showsProgress: Whether to set `isUpdating` while the request is in flight.
     /// - Returns: Whether the total changed from the one displayed when this method was called.
     @discardableResult
-    func sync(billingAddress: STPPaymentMethodAddress?, showsProgress: Bool = true) async throws -> Bool {
-        let key = Self.key(for: billingAddress)
+    func sync(address: STPPaymentMethodAddress?, showsProgress: Bool = true) async throws -> Bool {
+        let key = Self.key(for: address)
         let amountBefore = amount
 
         let task: Task<Int, Swift.Error>
@@ -75,7 +75,7 @@ final class LinkTotalUpdater {
             task = Task { @MainActor in
                 // Wait for the previous request so the server applies updates in order.
                 _ = try? await previousTask?.value
-                return try await handler(billingAddress)
+                return try await handler(address)
             }
             inFlight = (key, task)
             if showsProgress {
@@ -86,7 +86,7 @@ final class LinkTotalUpdater {
 
         do {
             let newAmount = try await task.value
-            guard inFlight?.key == key else {
+            guard inFlight?.task == task else {
                 // A newer request superseded this one. Its result will be applied instead.
                 return newAmount != amountBefore
             }
@@ -100,7 +100,7 @@ final class LinkTotalUpdater {
             }
             return newAmount != amountBefore
         } catch {
-            if inFlight?.key == key {
+            if inFlight?.task == task {
                 inFlight = nil
                 syncedKey = nil
                 isUpdating = false
@@ -110,10 +110,10 @@ final class LinkTotalUpdater {
         }
     }
 
-    func syncInBackground(billingAddress: STPPaymentMethodAddress?, onError: @escaping @MainActor (Swift.Error) -> Void) {
+    func syncInBackground(address: STPPaymentMethodAddress?, onError: @escaping @MainActor (Swift.Error) -> Void) {
         Task { @MainActor in
             do {
-                try await sync(billingAddress: billingAddress)
+                try await sync(address: address)
             } catch {
                 onError(error)
             }
@@ -133,14 +133,14 @@ final class LinkTotalUpdater {
         observers.forEach { $0.notify() }
     }
 
-    private static func key(for billingAddress: STPPaymentMethodAddress?) -> String {
+    private static func key(for address: STPPaymentMethodAddress?) -> String {
         return [
-            billingAddress?.line1,
-            billingAddress?.line2,
-            billingAddress?.city,
-            billingAddress?.state,
-            billingAddress?.postalCode,
-            billingAddress?.country,
+            address?.line1,
+            address?.line2,
+            address?.city,
+            address?.state,
+            address?.postalCode,
+            address?.country,
         ].map { $0 ?? "" }.joined(separator: "|")
     }
 }

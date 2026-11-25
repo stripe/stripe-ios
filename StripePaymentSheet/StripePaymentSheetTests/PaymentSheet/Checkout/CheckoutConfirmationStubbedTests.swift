@@ -1119,7 +1119,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
 
         // When the customer selects a card with a US billing address, the total includes US tax
         let usBillingAddress = BillingAddress(line1: "1 Main St", city: "South San Francisco", state: "CA", postalCode: "94080", countryCode: "US")
-        try await totalUpdater.sync(billingAddress: STPPaymentMethodBillingDetails(billingAddress: usBillingAddress, email: nil)?.address)
+        try await totalUpdater.sync(address: STPPaymentMethodBillingDetails(billingAddress: usBillingAddress, email: nil)?.address)
         XCTAssertEqual(checkout.session.amount, initialAmount + 100)
 
         // ...and paying with it is declined, so the wallet stays open
@@ -1148,7 +1148,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         if switchesCardAfterDecline {
             // ...and the customer then selects a card with a Canadian billing address
             let caBillingAddress = BillingAddress(postalCode: "M5A 0R8", countryCode: "CA")
-            try await totalUpdater.sync(billingAddress: STPPaymentMethodBillingDetails(billingAddress: caBillingAddress, email: nil)?.address)
+            try await totalUpdater.sync(address: STPPaymentMethodBillingDetails(billingAddress: caBillingAddress, email: nil)?.address)
             XCTAssertEqual(checkout.session.amount, initialAmount + 50)
         }
 

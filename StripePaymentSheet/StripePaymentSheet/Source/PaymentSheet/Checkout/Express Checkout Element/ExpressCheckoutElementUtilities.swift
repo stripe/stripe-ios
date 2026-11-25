@@ -99,7 +99,8 @@ enum ExpressCheckoutElementUtilities {
         if elementsSession.disableLinkForAutomaticTaxBilling && usesWebLink {
             reasons.append(.automaticTaxAddress)
         }
-        if requiresShippingAddress {
+        // Native Link collects the shipping address and updates its total when it changes, but web Link can't.
+        if requiresShippingAddress && usesWebLink {
             reasons.append(.shippingAddressRequired)
         }
         if usesWebLink && billingDetailsCollectionRequired {
