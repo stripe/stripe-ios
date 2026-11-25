@@ -4,6 +4,17 @@ Read our migration guide in [MIGRATING-COCOAPODS.md](https://github.com/stripe/s
 
 ### Migrating from versions < 27.0.0
 #### PaymentSheet
+##### IntentConfiguration
+Pass a `captureMethod` to `PaymentSheet.IntentConfiguration.Mode.payment`, which no longer defaults to `.automatic`. Use the capture method of the PaymentIntent your server creates. If you didn't set `captureMethod` before, pass `.automatic`.
+
+```diff
+let intentConfiguration = PaymentSheet.IntentConfiguration(
+-    mode: .payment(amount: 1099, currency: "usd"),
++    mode: .payment(amount: 1099, currency: "usd", captureMethod: .automatic),
+     confirmHandler: confirmHandler
+ )
+```
+
 ##### Migrating from External Payment Methods to Custom Payment Methods
 `PaymentSheet.ExternalPaymentMethodConfiguration` is deprecated in favor of `PaymentSheet.CustomPaymentMethodConfiguration`.
 Create the custom payment method in the Dashboard and complete the accompanying backend/provider integration using the [CPM guide](https://docs.stripe.com/payments/mobile/custom-payment-methods?platform=ios). Then update your configuration using its `cpmt_...` identifier:
@@ -78,6 +89,22 @@ Migrate your application-owned confirmation handler from a method-name string to
 `CustomerSheetError` is no longer public. Do not identify internal error cases by comparing descriptions or undocumented `NSError` codes.
 
 * **Payment method types**: Create `CustomerSheet.IntentConfiguration` with the parameter that matches how your server creates the SetupIntent: `paymentMethodTypes` for `payment_method_types`, `allowedPaymentMethodTypes` for `allowed_payment_method_types`, or `excludedPaymentMethodTypes` for `excluded_payment_method_types`.
+
+#### Payments
+##### Error codes for failed bank redirect and Klarna payments
+Failed Bancontact, EPS, iDEAL, Klarna, and Przelewy24 payments, and failed Bancontact and iDEAL setups, now report different error codes. If you check for the old values, also check for the new ones:
+
+| Where you check | Old value | New values |
+|---|---|---|
+| `STPPaymentHandler` error code | `STPPaymentHandlerErrorCode.notAuthenticatedErrorCode` | `STPPaymentHandlerErrorCode.paymentErrorCode` |
+| `STPPaymentIntentLastPaymentError.code` | `payment_intent_authentication_failure` | `payment_method_customer_decline`, `payment_method_not_available`, `payment_method_provider_decline`, `payment_method_provider_timeout`, `payment_intent_payment_attempt_expired` |
+| `STPSetupIntentLastSetupError.code` | `setup_intent_authentication_failure` | `payment_method_customer_decline`, `payment_method_not_available`, `payment_method_provider_decline`, `payment_method_provider_timeout`, `setup_intent_setup_attempt_expired` |
+| `STPPaymentIntentLastPaymentError.code` for an expired Klarna payment | `payment_intent_payment_attempt_failed` | `payment_intent_payment_attempt_expired` |
+
+Errors from confirming TWINT and Zip payments can also have the new codes instead of `payment_intent_authentication_failure`. If you show these `STPPaymentHandler` errors' `localizedDescription` to customers, show your own message instead, because it's now a generic error message.
+
+##### Parameters that the SDK sends
+If you pass parameters in `additionalAPIParameters`, remove any that API version `2026-09-30.endive` no longer accepts. For example, remove `payment_method_types` when confirming a PaymentIntent.
 
 #### Identity
 * If you install with Swift Package Manager and you use `StripeIdentity` or `StripeCryptoOnramp`, enable the `Identity` package trait.

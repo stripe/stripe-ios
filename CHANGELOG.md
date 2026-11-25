@@ -4,8 +4,13 @@ MAJOR
 ## X.Y.Z - changes pending release
 This major version introduces several breaking changes. Please see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) to help you migrate.
 
+### General
+* [Changed] The SDK now uses Stripe API version `2026-09-30.endive` instead of `2020-08-27`. Your server can keep using its current API version. Parameters that you pass in `additionalAPIParameters` must be valid for `2026-09-30.endive`.
+* [Changed] `allResponseFields` on API objects, such as `STPPaymentIntent`, now reflects API version `2026-09-30.endive`. Compared to `2020-08-27`, some fields are removed or renamed, and some values are different. For example, `cancellation_reason` is `expired` instead of `automatic` when an authorization expires. If you read values from `allResponseFields`, review the [API changelog](https://docs.stripe.com/changelog).
+
 ### PaymentSheet
 * [Added] Added `allowedPaymentMethodTypes` and `excludedPaymentMethodTypes` to `PaymentSheet.IntentConfiguration`. If your server creates the PaymentIntent or SetupIntent with `allowed_payment_method_types` or `excluded_payment_method_types`, set the matching property to the same list.
+* [Changed] `PaymentSheet.IntentConfiguration.Mode.payment` now requires an explicit `captureMethod`. Pass the capture method of the PaymentIntent your server creates. If you didn't previously set `captureMethod`, pass `.automatic`.
 * [Deprecated] Deprecated External Payment Methods in favor of Custom Payment Methods. See the [CPM integration guide](https://docs.stripe.com/payments/mobile/custom-payment-methods?platform=ios).
 * [Changed] Added `@MainActor` isolation to `PaymentSheet` and `PaymentSheet.FlowController`. Initialize and access these objects from the main actor.
 * [Removed] Removed public access to `PaymentSheetError`.
@@ -24,6 +29,9 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 * [Removed] Removed public access to `CustomerSheetError`.
 
 ### Payments
+* [Changed] For failed Bancontact, EPS, iDEAL, Klarna, and Przelewy24 payments, `STPPaymentIntentLastPaymentError.code` now returns specific codes, such as `payment_method_customer_decline`, instead of `payment_intent_authentication_failure`. For failed Bancontact and iDEAL setups, `STPSetupIntentLastSetupError.code` returns the specific codes instead of `setup_intent_authentication_failure`. `STPPaymentHandler` now reports these failures with `STPPaymentHandlerErrorCode.paymentErrorCode` instead of `.notAuthenticatedErrorCode`, and PaymentSheet shows customers a different error message. Errors from confirming some TWINT and Zip payments also have the specific codes instead of `payment_intent_authentication_failure`. Expired Klarna payments return `payment_intent_payment_attempt_expired` instead of `payment_intent_payment_attempt_failed`.
+* [Changed] For failed BLIK payments, `declineCode` on `STPPaymentIntentLastPaymentError` and `STPSetupIntentLastSetupError` now returns specific values, such as `code_invalid`, instead of `generic_decline`.
+* [Changed] When you set `STPAPIClient.stripeAccount` and use a platform's publishable key, `fingerprint` on `STPPaymentMethodUSBankAccount`, `STPPaymentMethodSEPADebit`, `STPPaymentMethodBacsDebit`, and `STPPaymentMethodAUBECSDebit`, and in the `acss_debit` hash of `STPPaymentMethod.allResponseFields`, is now scoped to the platform instead of the connected account.
 * [Changed] Marked `STPPaymentHandlerActionStatus` as `@frozen`, allowing exhaustive switches over `.succeeded`, `.canceled`, and `.failed`.
 
 ### CryptoOnramp (Alpha)
@@ -38,6 +46,9 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 
 ### PaymentsUI
 * [Fixed] Fixed `STPPaymentCardTextField.cornerRadius` returning the previous value after it was set.
+
+### StripeIssuing
+* [Changed] `STPIssuingCardEphemeralKeyProvider` now receives `2026-09-30.endive` as the `apiVersion` to use when creating an ephemeral key.
 
 ## 26.16.1 2026-11-09
 ### PaymentSheet

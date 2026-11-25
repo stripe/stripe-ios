@@ -31,7 +31,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
             }
             STPTestingAPIClient.shared().createPaymentIntent(withParams: [
                 "confirm": "true",
-                "payment_method_types": ["card"],
+                "allowed_payment_method_types": ["card"],
                 "currency": "usd",
                 "payment_method": paymentMethod.stripeId,
                 "return_url": "foo://z",
@@ -75,7 +75,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
             }
             STPTestingAPIClient.shared().createPaymentIntent(withParams: [
                 "confirm": "true",
-                "payment_method_types": ["sepa_debit"],
+                "allowed_payment_method_types": ["sepa_debit"],
                 "currency": "eur",
                 "payment_method": paymentMethod.stripeId,
                 "return_url": "foo://z",
@@ -111,7 +111,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
         let apiClient = STPAPIClient(publishableKey: STPTestingPaymentsOrchestrationPublishableKey)
         let clientSecret = try await STPTestingAPIClient.shared().createPaymentIntent(
             withParams: [
-                "payment_method_types": ["card"],
+                "allowed_payment_method_types": ["card"],
                 "currency": "usd",
                 "payments_orchestration": [
                     "enabled": true,
@@ -132,7 +132,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
         let apiClient = STPAPIClient(publishableKey: STPTestingPaymentsOrchestrationPublishableKey)
         let clientSecret = try await STPTestingAPIClient.shared().createPaymentIntent(
             withParams: [
-                "payment_method_types": ["card"],
+                "allowed_payment_method_types": ["card"],
                 "currency": "usd",
                 "payments_orchestration": [
                     "enabled": true,
@@ -161,7 +161,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
             }
             STPTestingAPIClient.shared().createSetupIntent(withParams: [
                 "confirm": "true",
-                "payment_method_types": ["card"],
+                "allowed_payment_method_types": ["card"],
                 "payment_method": paymentMethod.stripeId,
                 "return_url": "foo://z",
             ]) { clientSecret, error in
@@ -204,7 +204,7 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
             }
             STPTestingAPIClient.shared().createSetupIntent(withParams: [
                 "confirm": "true",
-                "payment_method_types": ["sepa_debit"],
+                "allowed_payment_method_types": ["sepa_debit"],
                 "payment_method": paymentMethod.stripeId,
                 "return_url": "foo://z",
                 "mandate_data": [

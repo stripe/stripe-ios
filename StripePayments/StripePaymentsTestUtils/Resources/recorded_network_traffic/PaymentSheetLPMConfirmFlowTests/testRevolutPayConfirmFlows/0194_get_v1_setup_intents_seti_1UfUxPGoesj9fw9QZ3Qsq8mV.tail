@@ -1,0 +1,81 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1UfUxPGoesj9fw9QZ3Qsq8mV\?client_secret=seti_1UfUxPGoesj9fw9QZ3Qsq8mV_secret_VgsiE7JnkI7WaeVnOubsWiK5rIhawR1&expand%5B0%5D=payment_method$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=knUSanpA4-uOk07vQ-XTlh7t_l_TASfRzA5KnKtA7ibcZEMfdjbxQ22QoCmTOT6srhdF325aB4RhrKxD; report-to csp
+Server: nginx
+x-wc: 3c3
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=knUSanpA4-uOk07vQ-XTlh7t_l_TASfRzA5KnKtA7ibcZEMfdjbxQ22QoCmTOT6srhdF325aB4RhrKxD&t=1"
+Cache-Control: no-cache, no-store
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=knUSanpA4-uOk07vQ-XTlh7t_l_TASfRzA5KnKtA7ibcZEMfdjbxQ22QoCmTOT6srhdF325aB4RhrKxD&t=1"}],"include_subdomains":true}
+request-id: req_brJSr7LDxLPSPM
+Content-Length: 1446
+Vary: Origin
+Date: Wed, 25 Nov 2026 01:25:14 GMT
+stripe-version: 2026-09-30.endive
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "id" : "seti_1UfUxPGoesj9fw9QZ3Qsq8mV",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1KmkHbGoesj9fw9Q\/sa_nonce_VgsiPiama2Z439qkKRKIIzWuOeGTMPp"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "revolut_pay" : {
+
+    },
+    "id" : "pm_1UfUxPGoesj9fw9QWC1Q9QFs",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1795569911,
+    "allow_redisplay" : "unspecified",
+    "shared_payment_granted_token" : null,
+    "customer" : null,
+    "type" : "revolut_pay",
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "allowed_payment_method_types" : [
+    "revolut_pay"
+  ],
+  "payment_method_types" : [
+    "revolut_pay"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1795569911,
+  "client_secret" : "seti_1UfUxPGoesj9fw9QZ3Qsq8mV_secret_VgsiE7JnkI7WaeVnOubsWiK5rIhawR1",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

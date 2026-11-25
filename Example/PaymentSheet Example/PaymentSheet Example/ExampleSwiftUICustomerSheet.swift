@@ -66,7 +66,9 @@ class MyBackendCustomerSheetModel: ObservableObject {
     func prepareCustomerSheet() {
         let customer_type = shouldUseNewCustomer ? "new" : "returning"
         let body = [
-            "customer_type": customer_type
+            "customer_type": customer_type,
+            // Create the legacy ephemeral key with the SDK's API version
+            "stripe_version": STPAPIClient.apiVersion,
         ] as [String: Any]
 
         let url = URL(string: "\(backendCheckoutUrl)/customer_ephemeral_key")!
@@ -108,6 +110,9 @@ class MyBackendCustomerSheetModel: ObservableObject {
 
     func createSetupIntent(customerId: String) async throws -> String {
         let body = [ "customer_id": customerId,
+                     // Create the SetupIntent with the SDK's API version, which doesn't accept `payment_method_types`
+                     "stripe_version": STPAPIClient.apiVersion,
+                     "use_allowed_payment_method_types": true,
         ] as [String: Any]
         let url = URL(string: "\(backendCheckoutUrl)/create_setup_intent")!
         let session = URLSession.shared

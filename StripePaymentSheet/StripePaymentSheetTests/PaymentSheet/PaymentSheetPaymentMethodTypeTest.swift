@@ -110,7 +110,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let intents: [Intent] = [
             .paymentIntent(paymentIntent),
             .deferredIntent(intentConfig: .init(
-                mode: .payment(amount: 1010, currency: "USD"),
+                mode: .payment(amount: 1010, currency: "USD", captureMethod: .automatic),
                 paymentMethodTypes: paymentMethodTypes.compactMap { STPPaymentMethod.string(from: $0) },
                 confirmHandler: { _, _ in return "" }
             )),

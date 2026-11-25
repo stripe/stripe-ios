@@ -307,10 +307,6 @@ final class PaymentSheetLoader {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)
                 throw error
             }
-            guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
-                // Error if the PaymentIntent is in a terminal state
-                throw PaymentSheetError.paymentIntentInTerminalState(status: paymentIntent.status)
-            }
             intent = .paymentIntent(paymentIntent)
         case .setupIntentClientSecret(let clientSecret):
             let setupIntent: STPSetupIntent
@@ -323,10 +319,6 @@ final class PaymentSheetLoader {
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error, customerProvider: customerProvider)
                 throw error
-            }
-            guard ![.succeeded, .canceled].contains(setupIntent.status) else {
-                // Error if the SetupIntent is in a terminal state
-                throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
             }
             intent = .setupIntent(setupIntent)
         case .deferredIntent(let intentConfig):
