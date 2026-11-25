@@ -5,17 +5,17 @@ application/json
 Server: Google Frontend
 Content-Type: application/json; charset=utf-8
 x-powered-by: Express
-x-cloud-trace-context: da7cdabefc59bd4ed357579f89a173d9;o=1
+x-cloud-trace-context: ef4cc4fc33b4bee8e0a123ce87c2ad60;o=1
 Via: 1.1 google
-Date: Tue, 10 Nov 2026 19:13:14 GMT
-Content-Length: 2570
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Etag: W/"a0a-KofjkKsF6O6rP3+tbgMQykxCBxw"
+Date: Wed, 25 Nov 2026 01:12:25 GMT
+Content-Length: 2613
+Alt-Svc: h3=":443"; ma=2592000
+Etag: W/"a35-wZ/zlVCb72bicHujG7xwh2oTQ80"
 
 {
   "billing_address_collection" : null,
-  "id" : "cs_test_a0C775o7TOsLIMMedB4aP0ZDtmk0wv5bDNafllPKsxsTAcRdO3h6lZeDyv",
-  "client_secret" : "cs_test_a0C775o7TOsLIMMedB4aP0ZDtmk0wv5bDNafllPKsxsTAcRdO3h6lZeDyv_secret_ngefkGOhRKUtijQ5pwPckwhfq",
+  "id" : "cs_test_a0OvipemUsw9k0Rv8MkYzi4e6EL2zRup4adPKR26lAFZpcktjaaoDYolLp",
+  "client_secret" : "cs_test_a0OvipemUsw9k0Rv8MkYzi4e6EL2zRup4adPKR26lAFZpcktjaaoDYolLp_secret_KK8GFib6RdUtIBkhkgcSJEAtn",
   "discounts" : [
 
   ],
@@ -32,7 +32,7 @@ Etag: W/"a0a-KofjkKsF6O6rP3+tbgMQykxCBxw"
   "payment_method_configuration_details" : null,
   "payment_method_options" : null,
   "ui_mode" : "mobile_elements",
-  "created" : 1794337994,
+  "created" : 1795569145,
   "client_reference_id" : null,
   "allowed_payment_method_types" : [
     "crypto"
@@ -41,19 +41,20 @@ Etag: W/"a0a-KofjkKsF6O6rP3+tbgMQykxCBxw"
   "allow_promotion_codes" : null,
   "items" : [
     {
-      "key" : "checkout_item_VbXY4jWH",
+      "key" : "checkout_item_VgsW2RG5",
       "one_time_price" : {
         "items" : [
           {
             "quantity" : 1,
             "adjustable_quantity" : null,
-            "price" : "price_1UaKTmLu5o3P18ZpoSPkUJId",
+            "price" : "price_1UfUl3Lu5o3P18ZpDNiIiNAI",
             "tax_rates" : null
           }
         ],
         "metadata" : {
 
-        }
+        },
+        "description" : null
       },
       "type" : "one_time_price"
     }
@@ -89,6 +90,7 @@ Etag: W/"a0a-KofjkKsF6O6rP3+tbgMQykxCBxw"
 
   ],
   "amount_subtotal" : 2000,
+  "on_behalf_of" : null,
   "submit_type" : null,
   "locale" : null,
   "permissions" : null,
@@ -112,12 +114,11 @@ Etag: W/"a0a-KofjkKsF6O6rP3+tbgMQykxCBxw"
   "customer_creation" : "always",
   "payment_record" : null,
   "object" : "checkout.session",
-  "checkout_items" : [
-
-  ],
   "invoice" : null,
   "customer_account" : null,
-  "managed_payments" : null,
+  "managed_payments" : {
+    "enabled" : false
+  },
   "shipping_cost" : null,
   "cancel_url" : null,
   "automatic_tax" : {
@@ -136,7 +137,9 @@ Etag: W/"a0a-KofjkKsF6O6rP3+tbgMQykxCBxw"
     "enabled" : false,
     "invoice_data" : {
       "footer" : null,
-      "issuer" : null,
+      "issuer" : {
+        "type" : "self"
+      },
       "custom_fields" : null,
       "rendering_options" : null,
       "account_tax_ids" : null,
@@ -157,6 +160,6 @@ Etag: W/"a0a-KofjkKsF6O6rP3+tbgMQykxCBxw"
   },
   "livemode" : false,
   "customer_email" : null,
-  "expires_at" : 1794424394,
+  "expires_at" : 1795655545,
   "marketing_attributions" : null
 }

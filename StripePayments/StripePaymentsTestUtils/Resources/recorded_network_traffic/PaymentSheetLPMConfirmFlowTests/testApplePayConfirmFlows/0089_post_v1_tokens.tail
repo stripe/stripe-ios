@@ -3,25 +3,24 @@ https:\/\/api\.stripe\.com\/v1\/tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=T100hgHb5wUv6JwlTteO5mkPmpSsHB6VNZIpXv4_IQrK_IzhLhgchQHPogNIkrZ7RiBKseWhYatkyf_8; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=_w9tyrLQz-J3Sa5gFJThshvgcY8qv6KOGdY47Ji5-To7m0PWj91zuXnEw3UtCR_Br5HSxbKdBS_nX7tx; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=T100hgHb5wUv6JwlTteO5mkPmpSsHB6VNZIpXv4_IQrK_IzhLhgchQHPogNIkrZ7RiBKseWhYatkyf_8&t=1"
-stripe-notice: You are using an outdated API version (2020-08-27). We recommend upgrading to the latest API version, 2026-10-28.endive. See https://docs.stripe.com/upgrades
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=_w9tyrLQz-J3Sa5gFJThshvgcY8qv6KOGdY47Ji5-To7m0PWj91zuXnEw3UtCR_Br5HSxbKdBS_nX7tx&t=1"
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=T100hgHb5wUv6JwlTteO5mkPmpSsHB6VNZIpXv4_IQrK_IzhLhgchQHPogNIkrZ7RiBKseWhYatkyf_8&t=1"}],"include_subdomains":true}
-request-id: req_JpHzVzwcInMlsc
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=_w9tyrLQz-J3Sa5gFJThshvgcY8qv6KOGdY47Ji5-To7m0PWj91zuXnEw3UtCR_Br5HSxbKdBS_nX7tx&t=1"}],"include_subdomains":true}
+request-id: req_ZgEfD6BoEQxTfK
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 961
 Vary: Origin
-Date: Tue, 10 Nov 2026 19:09:29 GMT
-original-request: req_JpHzVzwcInMlsc
-stripe-version: 2020-08-27
-idempotency-key: 0ab63102-8810-4b00-b66b-6de528ddcc76
+Date: Wed, 25 Nov 2026 01:07:36 GMT
+original-request: req_ZgEfD6BoEQxTfK
+stripe-version: 2026-09-30.endive
+idempotency-key: a6d9741d-aa40-4f49-82ce-352971dd47ee
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +29,7 @@ X-Stripe-Mock-Request: card\[name]=Jane%20Doe&guid=.*&muid=.*&payment_user_agent
 
 {
   "object" : "token",
-  "id" : "tok_1UaKQ9FY0qyl6XeWJj60ADPD",
+  "id" : "tok_1UfUgOFY0qyl6XeWGLRMkr7h",
   "card" : {
     "address_line1_check" : null,
     "dynamic_last4" : "4242",
@@ -51,7 +50,7 @@ X-Stripe-Mock-Request: card\[name]=Jane%20Doe&guid=.*&muid=.*&payment_user_agent
     },
     "name" : "Jane Doe",
     "funding" : "credit",
-    "id" : "card_1UaKQ9FY0qyl6XeW1YtnC5zs",
+    "id" : "card_1UfUgOFY0qyl6XeWat6Medsv",
     "email" : null,
     "tokenization_method" : "apple_pay",
     "phone" : null,
@@ -65,9 +64,9 @@ X-Stripe-Mock-Request: card\[name]=Jane%20Doe&guid=.*&muid=.*&payment_user_agent
     },
     "exp_year" : 2027
   },
-  "client_ip" : "139.45.173.9",
+  "client_ip" : "76.22.93.165",
   "livemode" : false,
-  "created" : 1794337769,
+  "created" : 1795568856,
   "used" : false,
   "type" : "card"
 }

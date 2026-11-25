@@ -1,0 +1,51 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1UfUgSFY0qyl6XeWevR3l5qr\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=orNnKMhF6EtbSl10GXT5LYUCOzR5CosCbMxX3G3weIwfsVwlFiQ5R3taKtSOHJfw7kYM96lNn9cpD4Lp; report-to csp
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=orNnKMhF6EtbSl10GXT5LYUCOzR5CosCbMxX3G3weIwfsVwlFiQ5R3taKtSOHJfw7kYM96lNn9cpD4Lp&t=1"
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=orNnKMhF6EtbSl10GXT5LYUCOzR5CosCbMxX3G3weIwfsVwlFiQ5R3taKtSOHJfw7kYM96lNn9cpD4Lp&t=1"}],"include_subdomains":true}
+request-id: req_hJ9g1cLHdwdAHw
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 637
+Vary: Origin
+Date: Wed, 25 Nov 2026 01:07:41 GMT
+original-request: req_hJ9g1cLHdwdAHw
+stripe-version: 2026-09-30.endive
+idempotency-key: 2a9f198b-e597-4181-bdfc-396eefaabbe4
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "id" : "seti_1UfUgSFY0qyl6XeWevR3l5qr",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : "pm_1UfUgSFY0qyl6XeWLmApYEDV",
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "allowed_payment_method_types" : [
+    "card"
+  ],
+  "payment_method_types" : [
+    "card"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1795568860,
+  "client_secret" : "seti_1UfUgSFY0qyl6XeWevR3l5qr_secret_VgsR8YVpg93xKvUd3rOCeUR8GXeomHG",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "succeeded"
+}
