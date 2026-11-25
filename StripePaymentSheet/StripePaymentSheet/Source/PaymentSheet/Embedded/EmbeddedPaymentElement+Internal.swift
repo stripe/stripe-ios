@@ -24,6 +24,7 @@ extension EmbeddedPaymentElement {
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         previousSelection: RowButtonType? = nil,
+        selectsCustomerDefault: Bool = true,
         previousSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)? = nil,
         placesLinkFirst: Bool = false,
         linkInlineVerificationView: EmbeddedLinkInlineVerificationView? = nil,
@@ -51,6 +52,7 @@ extension EmbeddedPaymentElement {
             if let previousSelection {
                 return previousSelection
             }
+            guard selectsCustomerDefault else { return nil }
 
             // If there's no previous customer input, default to the customer's default or the first saved payment method, if any
             let customerDefault = CustomerPaymentOption.selectedPaymentMethod(for: loadResult.customerProvider.customerID, elementsSession: loadResult.elementsSession, surface: .paymentSheet)

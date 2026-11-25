@@ -1241,9 +1241,9 @@ extension EmbeddedUITests {
         XCTAssertTrue(app.buttons["Change"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["Card"].exists)
 
-        // When they open the Link wallet from the row and tap "Pay another way"
+        // When they open the Link wallet from the row and tap "Continue another way"
         app.buttons["Change"].tap()
-        app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Pay another way"].waitForExistenceAndTap(timeout: 10)
+        app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Continue another way"].waitForExistenceAndTap(timeout: 10)
 
         // Then every payment method shows again, with none selected
         XCTAssertTrue(app.buttons["Card"].waitForExistence(timeout: 10))

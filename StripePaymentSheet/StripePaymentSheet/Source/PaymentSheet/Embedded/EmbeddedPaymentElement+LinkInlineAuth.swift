@@ -197,9 +197,7 @@ extension EmbeddedPaymentElement {
             nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper,
-            // From the Link-only list, the secondary button shows the other payment methods to pay with.
-            prefersPayAnotherWay: showsOnlyLink || showsOnlyLinkAfterSelecting
+            analyticsHelper: analyticsHelper
         ) { [weak self] confirmOption, shouldReturnToPaymentSheet, _ in
             guard let self else { return }
             self.linkWalletDidFinish(

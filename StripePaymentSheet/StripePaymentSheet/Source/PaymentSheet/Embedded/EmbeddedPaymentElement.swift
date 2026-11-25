@@ -313,16 +313,14 @@ public final class EmbeddedPaymentElement {
             loadResult: loadResult,
             analyticsHelper: analyticsHelper,
             previousSelection: selection,
+            // The customer's default is Link by now, and the list shows exactly `selection`.
+            selectsCustomerDefault: false,
             placesLinkFirst: placesLinkFirst,
             linkInlineVerificationView: linkOnlyPaymentDetails == nil ? linkInlineAuth?.makeCardView(appearance: configuration.appearance) : nil,
             linkOnlyPaymentDetails: linkOnlyPaymentDetails,
             delegate: self
         )
         self.embeddedPaymentMethodsView = embeddedPaymentMethodsView
-        if selection == nil {
-            // Otherwise the list selects the customer's default, which is Link by now.
-            embeddedPaymentMethodsView.resetSelection()
-        }
         showsOnlyLink = embeddedPaymentMethodsView.showsOnlyLink
         if linkPreselectionTask != nil {
             embeddedPaymentMethodsView.setLinkRowLoading(true, animated: false)

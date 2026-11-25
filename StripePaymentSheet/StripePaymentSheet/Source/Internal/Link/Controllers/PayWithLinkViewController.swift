@@ -96,8 +96,6 @@ final class PayWithLinkViewController: NSObject {
         let shouldFinishOnClose: Bool
         let canContinueWithoutLink: Bool
         let launchedFromFlowController: Bool
-        /// Whether the secondary button offers to pay another way, even when Link was launched to pick payment details.
-        let prefersPayAnotherWay: Bool
         let initiallySelectedPaymentDetailsID: String?
         let callToAction: ConfirmButton.CallToActionType
         let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
@@ -109,7 +107,7 @@ final class PayWithLinkViewController: NSObject {
         var isDismissible: Bool = true
 
         var secondaryButtonLabel: String {
-            if intent.isPaymentIntent && (!launchedFromFlowController || prefersPayAnotherWay) {
+            if intent.isPaymentIntent && !launchedFromFlowController {
                 String.Localized.pay_another_way
             } else {
                 String.Localized.continue_another_way
@@ -146,7 +144,6 @@ final class PayWithLinkViewController: NSObject {
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
         ///   - canContinueWithoutLink: Whether the user can exit Link and pay with a different method (e.g. via PaymentSheet).
         ///   - launchedFromFlowController: Whether the flow was opened from `FlowController`.
-        ///   - prefersPayAnotherWay: Whether the secondary button says "Pay another way" for payments even if `launchedFromFlowController` is true.
         ///   - initiallySelectedPaymentDetailsID: The ID of an initially selected payment method. This is set when opened instead of FlowController.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
         ///   - supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil` or empty, all available types are supported.
@@ -163,7 +160,6 @@ final class PayWithLinkViewController: NSObject {
             shouldFinishOnClose: Bool,
             canContinueWithoutLink: Bool = true,
             launchedFromFlowController: Bool = false,
-            prefersPayAnotherWay: Bool = false,
             initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
             supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
@@ -180,7 +176,6 @@ final class PayWithLinkViewController: NSObject {
             self.shouldFinishOnClose = shouldFinishOnClose
             self.canContinueWithoutLink = canContinueWithoutLink
             self.launchedFromFlowController = launchedFromFlowController
-            self.prefersPayAnotherWay = prefersPayAnotherWay
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
             self.callToAction = callToAction ?? .makeDefaultType(intent: intent, withLock: false)
             self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
@@ -223,7 +218,6 @@ final class PayWithLinkViewController: NSObject {
         shouldFinishOnClose: Bool = false,
         canContinueWithoutLink: Bool = true,
         launchedFromFlowController: Bool = false,
-        prefersPayAnotherWay: Bool = false,
         initiallySelectedPaymentDetailsID: String? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
@@ -244,7 +238,6 @@ final class PayWithLinkViewController: NSObject {
                 shouldFinishOnClose: shouldFinishOnClose,
                 canContinueWithoutLink: canContinueWithoutLink,
                 launchedFromFlowController: launchedFromFlowController,
-                prefersPayAnotherWay: prefersPayAnotherWay,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,

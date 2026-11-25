@@ -56,39 +56,6 @@ class PayWithLinkViewControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testSecondaryButtonOffersToPayAnotherWayForPaymentsWhenPreferred() {
-        let cases: [(intent: Intent, launchedFromFlowController: Bool, prefersPayAnotherWay: Bool, expectedLabel: String)] = [
-            (Intent._testPaymentIntent(paymentMethodTypes: [.card]), false, false, String.Localized.pay_another_way),
-            // Picking payment details for another surface continues there
-            (Intent._testPaymentIntent(paymentMethodTypes: [.card]), true, false, String.Localized.continue_another_way),
-            // ...unless that surface asks for "Pay another way", e.g. Embedded's Link-only list
-            (Intent._testPaymentIntent(paymentMethodTypes: [.card]), true, true, String.Localized.pay_another_way),
-            // A SetupIntent never pays
-            (Intent._testSetupIntent(), true, true, String.Localized.continue_another_way),
-        ]
-        for testCase in cases {
-            // Given a Link wallet context
-            let context = PayWithLinkViewController.Context(
-                intent: testCase.intent,
-                elementsSession: ._testValue(),
-                configuration: PaymentSheet.Configuration(),
-                customerProvider: CustomerProvider(customer: nil),
-                linkBrand: .link,
-                shouldOfferApplePay: false,
-                shouldFinishOnClose: false,
-                launchedFromFlowController: testCase.launchedFromFlowController,
-                prefersPayAnotherWay: testCase.prefersPayAnotherWay,
-                initiallySelectedPaymentDetailsID: nil,
-                callToAction: nil,
-                analyticsHelper: ._testValue()
-            )
-
-            // Then its secondary button reads as expected
-            XCTAssertEqual(context.secondaryButtonLabel, testCase.expectedLabel, "\(testCase)")
-        }
-    }
-
-    @MainActor
     func testAddingBankSendsTheRightIntentTokenForEachIntentType() async throws {
         let previousAccount = LinkAccountContext.shared.account
         defer { LinkAccountContext.shared.account = previousAccount }

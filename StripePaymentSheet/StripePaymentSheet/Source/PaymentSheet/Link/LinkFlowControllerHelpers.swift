@@ -31,7 +31,6 @@ extension UIViewController {
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         canContinueWithoutLink: Bool = true,
-        prefersPayAnotherWay: Bool = false,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool, _ error: Error?) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
@@ -52,8 +51,7 @@ extension UIViewController {
         payWithLinkController.presentForPaymentMethodSelection(
             from: self,
             initiallySelectedPaymentDetailsID: selectedPaymentDetailsID,
-            canContinueWithoutLink: canContinueWithoutLink,
-            prefersPayAnotherWay: prefersPayAnotherWay
+            canContinueWithoutLink: canContinueWithoutLink
         ) { confirmOption, shouldReturnToPaymentSheet, error in
             callback(confirmOption, shouldReturnToPaymentSheet, error)
         }
