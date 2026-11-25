@@ -6,7 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-import AVFoundation
+import AudioToolbox
 import UIKit
 
 protocol SelfieCaptureFeedbackGeneratorProtocol {
@@ -21,31 +21,38 @@ final class SelfieCaptureFeedbackGenerator: SelfieCaptureFeedbackGeneratorProtoc
 
     private let notificationFeedbackGenerator = UINotificationFeedbackGenerator()
 
-    private lazy var audioPlayer: AVAudioPlayer? = {
-        guard let url = resourceURL() else {
-            return nil
-        }
+    // Capture is accepted on the main thread, where AVAudioPlayer.play() starts the audio hardware
+    // synchronously and can block for seconds. A system sound plays asynchronously.
+    let confirmationSoundID: SystemSoundID?
 
-        let audioPlayer = try? AVAudioPlayer(contentsOf: url)
-        audioPlayer?.prepareToPlay()
-        return audioPlayer
-    }()
+    init() {
+        var soundID: SystemSoundID = 0
+        if let url = Self.resourceURL(),
+            AudioServicesCreateSystemSoundID(url as CFURL, &soundID) == kAudioServicesNoError
+        {
+            confirmationSoundID = soundID
+        } else {
+            confirmationSoundID = nil
+        }
+    }
+
+    deinit {
+        if let confirmationSoundID {
+            AudioServicesDisposeSystemSoundID(confirmationSoundID)
+        }
+    }
 
     func notifyCaptureAccepted() {
         notificationFeedbackGenerator.notificationOccurred(.success)
 
-        guard let audioPlayer else {
+        guard let confirmationSoundID else {
             return
         }
 
-        if audioPlayer.isPlaying {
-            audioPlayer.stop()
-        }
-        audioPlayer.currentTime = 0
-        audioPlayer.play()
+        AudioServicesPlaySystemSoundWithCompletion(confirmationSoundID, nil)
     }
 
-    private func resourceURL() -> URL? {
+    private static func resourceURL() -> URL? {
         let bundle = StripeIdentityBundleLocator.resourcesBundle
 
         return bundle.url(
