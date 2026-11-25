@@ -151,6 +151,34 @@ final class CheckoutErrorHandlingTests: APIStubbedTestCase {
         }
     }
 
+    func testSDKErrorsUseGenericMessage() {
+        // Given errors raised by the Checkout SDK rather than returned by the Stripe API
+        let sdkErrors: [(error: CheckoutError, errorCode: String)] = [
+            (.invalidClientSecret, "invalidClientSecret"),
+            (.sheetCurrentlyPresented, "sheetCurrentlyPresented"),
+            (.timedOut, "timedOut"),
+            (.pollFailedAndSessionRetrievalFailed, "pollFailedAndSessionRetrievalFailed"),
+            (.totalChanged, "totalChanged"),
+            (.invalidShippingCountry(countryCode: "CA"), "invalidShippingCountry"),
+            (.applePayUnavailable, "applePayUnavailable"),
+            (.applePayPresentationFailed, "applePayPresentationFailed"),
+            (.unknown(debugDescription: "Debug details"), "unknown"),
+        ]
+        for (error, errorCode) in sdkErrors {
+            // Then merchants receiving a plain Error see the generic message
+            XCTAssertEqual((error as Error).localizedDescription, NSError.stp_unexpectedErrorMessage())
+            // ...and developers still see what went wrong
+            XCTAssertNotEqual(String(reflecting: error), NSError.stp_unexpectedErrorMessage())
+            // ...and analytics still identify the error by its case name
+            XCTAssertEqual(error.serializeForV1Analytics()["error_code"] as? String, errorCode)
+        }
+
+        // Given an error with the Stripe API's message
+        let apiError = CheckoutError.apiError(message: "Server message")
+        // Then merchants see that message
+        XCTAssertEqual((apiError as Error).localizedDescription, "Server message")
+    }
+
     private static var errorCases: [(response: [String: Any], expectedMessage: String)] {
         let serverMessage = "Ce code promotionnel n’est pas valide."
         let errorTypes = ["invalid_request_error", "api_error", "card_error", "idempotency_error", "future_error_type"]

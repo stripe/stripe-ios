@@ -679,7 +679,7 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         guard case .failed(let error, let response) = result else {
             return XCTFail("Expected confirmation to fail, got \(result)")
         }
-        XCTAssertTrue(error.nonGenericDescription.contains("without a supported Intent"))
+        XCTAssertTrue(String(reflecting: error).contains("without a supported Intent"))
         XCTAssertEqual(response?.status, .open)
         XCTAssertEqual(response?.paymentStatus, .unpaid)
         XCTAssertTrue(poller.checkoutSessionIds.isEmpty)

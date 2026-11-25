@@ -748,8 +748,8 @@ final class CheckoutApplePayContextTests: XCTestCase {
             XCTFail("Expected an Apple Pay presentation error, got \(result.paymentSheetResult)")
             return
         }
-        XCTAssertTrue(error.localizedDescription.contains("app is active"))
-        XCTAssertTrue(error.localizedDescription.contains("presenting window is visible"))
+        XCTAssertTrue(String(reflecting: error).contains("app is active"))
+        XCTAssertTrue(String(reflecting: error).contains("presenting window is visible"))
         XCTAssertEqual(error.serializeForV1Analytics()["error_code"] as? String, "applePayPresentationFailed")
 
         // ...and it isn't logged as an unexpected error, because it's usually caused by the app's Apple Pay setup

@@ -43,7 +43,25 @@ enum CheckoutError: Error, LocalizedError, Sendable {
 
     // MARK: - LocalizedError
 
+    /// The message merchants display to customers.
     var errorDescription: String? {
+        switch self {
+        case .apiError(let message, _):
+            return message
+        default:
+            // Errors that don't come from the Stripe API use a generic message, because their details are only meaningful
+            // to developers. `debugDescription` explains what went wrong.
+            return NSError.stp_unexpectedErrorMessage()
+        }
+    }
+}
+
+// MARK: - CustomDebugStringConvertible
+
+extension CheckoutError: CustomDebugStringConvertible {
+
+    /// A description of what went wrong, for developers. Don't display it to customers.
+    var debugDescription: String {
         switch self {
         case .invalidClientSecret:
             return "Checkout was initialized with an empty client secret."
@@ -52,9 +70,9 @@ enum CheckoutError: Error, LocalizedError, Sendable {
         case .timedOut:
             return "Timed out waiting for a Checkout operation to complete."
         case .pollFailedAndSessionRetrievalFailed:
-            return NSError.stp_unexpectedErrorMessage()
+            return "Polling reported failed confirmation, and retrieving the Checkout Session for error details failed."
         case .totalChanged:
-            return NSError.stp_unexpectedErrorMessage()
+            return "The total changed while the Apple Pay sheet was presented, after the customer could no longer see it."
         case .invalidShippingCountry(let countryCode):
             return "Country code '\(countryCode)' is not in allowedShippingCountries"
         case .applePayUnavailable:
@@ -65,11 +83,52 @@ enum CheckoutError: Error, LocalizedError, Sendable {
                 in the app's Apple Pay entitlements and provisioning profile. Ensure the app is active, \
                 the presenting window is visible, and no other presentation or dismissal is in progress.
                 """
-        case .apiError(let message, _):
-            return message
+        case .apiError(let message, let underlyingError):
+            guard let underlyingError else { return message }
+            return "\(message) Underlying error: \(String(reflecting: underlyingError))"
         case .unknown(let debugDescription):
             return debugDescription
         }
+    }
+}
+
+// MARK: - AnalyticLoggableError
+
+extension CheckoutError: AnalyticLoggableError {
+
+    /// The qualified type name, which is what analytics logged before this conformance.
+    var analyticsErrorType: String {
+        return String(reflecting: Self.self)
+    }
+
+    /// The case name. The default would log `debugDescription` for cases without associated values.
+    var analyticsErrorCode: String {
+        switch self {
+        case .invalidClientSecret:
+            return "invalidClientSecret"
+        case .sheetCurrentlyPresented:
+            return "sheetCurrentlyPresented"
+        case .timedOut:
+            return "timedOut"
+        case .pollFailedAndSessionRetrievalFailed:
+            return "pollFailedAndSessionRetrievalFailed"
+        case .totalChanged:
+            return "totalChanged"
+        case .invalidShippingCountry:
+            return "invalidShippingCountry"
+        case .applePayUnavailable:
+            return "applePayUnavailable"
+        case .applePayPresentationFailed:
+            return "applePayPresentationFailed"
+        case .apiError:
+            return "apiError"
+        case .unknown:
+            return "unknown"
+        }
+    }
+
+    var additionalNonPIIErrorDetails: [String: Any] {
+        return [:]
     }
 }
 
