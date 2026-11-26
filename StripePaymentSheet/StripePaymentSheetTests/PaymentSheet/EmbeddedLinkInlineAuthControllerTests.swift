@@ -618,6 +618,38 @@ final class EmbeddedPaymentElementLinkInlineAuthTests: XCTestCase {
         XCTAssertEqual(delegate.paymentOptionUpdates, 0)
     }
 
+    func testCancelingCardEditsAfterClosingTheLinkWalletRestoresTheAcceptedCard() throws {
+        // Given a customer who verified from the card and continued with a card from the card form
+        var configuration = makeConfiguration()
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        let (element, _) = makeElementVerifiedFromTheCard(configuration: configuration)
+        element.presentingViewController = UIViewController()
+        let cardRow = try XCTUnwrap(element.embeddedPaymentMethodsView.rowButtons.first(where: { $0.type == .new(paymentMethodType: .stripe(.card)) }))
+        element.embeddedPaymentMethodsView.didTap(rowButton: cardRow)
+        let cardForm = try XCTUnwrap(element.formCache[.stripe(.card)])
+        cardForm.getTextFieldElement("Card number").setText("4242424242424242")
+        cardForm.getTextFieldElement("MM / YY").setText("1232")
+        cardForm.getTextFieldElement("CVC").setText("123")
+        element.embeddedFormViewControllerDidContinue(try XCTUnwrap(element.selectedFormViewController))
+        XCTAssertEqual(element.embeddedPaymentMethodsView.selectedRowChangeButtonState?.sublabel, "Visa •••• 4242")
+
+        // When they tap the Link row and the wallet closes without a pick
+        // (it can't be shown here, which takes the same path as closing it)
+        let linkRow = try XCTUnwrap(element.embeddedPaymentMethodsView.rowButtons.first(where: { $0.type == .link }))
+        element.embeddedPaymentMethodsView.didTap(rowButton: linkRow)
+        XCTAssertTrue(element.embeddedPaymentMethodsView.selectedRowButton === cardRow)
+
+        // ...and they tap Change, clear the card number, and close the form
+        element.embeddedPaymentMethodsView.didTap(rowButton: cardRow)
+        try XCTUnwrap(element.formCache[.stripe(.card)]).getTextFieldElement("Card number").setText("")
+        element.embeddedFormViewControllerDidCancel(try XCTUnwrap(element.selectedFormViewController))
+
+        // Then the card row stays selected with the card they continued with
+        XCTAssertTrue(element.embeddedPaymentMethodsView.selectedRowButton === cardRow)
+        XCTAssertEqual(element.embeddedPaymentMethodsView.selectedRowChangeButtonState?.sublabel, "Visa •••• 4242")
+        XCTAssertEqual(element.paymentOption?.paymentMethodType, "card")
+    }
+
     func testTappingTheLinkRowAfterClosingTheCardOnlySelectsIt() throws {
         // Given a returning customer who closed the card without verifying
         LinkAccountContext.shared.account = makeLinkAccountRequiringVerification()

@@ -391,6 +391,8 @@ public final class EmbeddedPaymentElement {
     internal var selectedFormViewController: EmbeddedFormViewController?
     /// The saved payment method waiting for its billing address to sync to CheckoutElementsController.
     internal var pendingBillingAddressSyncSelection: PendingBillingAddressSyncSelection?
+    /// The accepted option of the form that was selected before the Link row, restored if the customer closes the Link wallet.
+    internal var paymentOptionToRestoreAfterLinkWallet: PaymentOption?
     /// Indicates if a payment has been successfully completed.
     internal var hasConfirmedIntent = false
     /// Tracks info about the currently in-flight or most recent update attempt.

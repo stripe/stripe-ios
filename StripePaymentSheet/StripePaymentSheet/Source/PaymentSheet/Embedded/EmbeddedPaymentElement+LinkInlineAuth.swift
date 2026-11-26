@@ -153,6 +153,11 @@ extension EmbeddedPaymentElement {
 
     private func restoreSelectionBeforeLink() {
         embeddedPaymentMethodsView.resetSelectionToLastSelection()
+        _ = restoreAcceptedForm(
+            from: paymentOptionToRestoreAfterLinkWallet,
+            for: embeddedPaymentMethodsView.selectedRowButton?.type
+        )
+        paymentOptionToRestoreAfterLinkWallet = nil
         if let restoredSelection = embeddedPaymentMethodsView.selectedRowButton?.type {
             updateChangeButtonAndSublabelState(for: restoredSelection)
         }

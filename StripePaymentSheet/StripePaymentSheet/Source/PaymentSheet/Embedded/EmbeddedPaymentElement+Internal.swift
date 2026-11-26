@@ -183,6 +183,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
     func embeddedPaymentMethodsViewDidUpdateSelection() {
         let selection = embeddedPaymentMethodsView.selectedRowButton?.type
+        if selection == .link && linkRowOpensWallet {
+            // Link has no form, so keep the previous form's accepted option in case the wallet is closed.
+            paymentOptionToRestoreAfterLinkWallet = selectedFormViewController?.paymentOptionToRestoreOnCancellation
+        }
 
         // 1. Update the currently selection's form VC to match the selection.
         // Note `paymentOption` derives from this property
@@ -614,7 +618,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         }
     }
 
-    private func restoreAcceptedForm(
+    func restoreAcceptedForm(
         from paymentOption: PaymentOption?,
         for selection: RowButtonType?
     ) -> Bool {
