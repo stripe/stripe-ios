@@ -251,10 +251,15 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // Add the row buttons to our stack view
         rowButtons.forEach { rowButton in
-            stackView.addArrangedSubview(rowButton)
+            if showsOnlyLink, appearance.embeddedPaymentElement.row.style != .floatingButton {
+                // Like the inline verification card it replaces, the Link-only row sits in its own container instead of between separators.
+                stackView.addArrangedSubview(LinkOnlyRowContainerView(rowButton: rowButton, appearance: appearance))
+            } else {
+                stackView.addArrangedSubview(rowButton)
+            }
         }
 
-        if appearance.embeddedPaymentElement.row.style != .floatingButton {
+        if appearance.embeddedPaymentElement.row.style != .floatingButton, !showsOnlyLink {
             stackView.addSeparators(color: appearance.embeddedPaymentElement.row.flat.separatorColor ?? appearance.colors.componentBorder,
                                     thickness: appearance.embeddedPaymentElement.row.flat.separatorThickness,
                                     inset: appearance.embeddedPaymentElement.row.flat.separatorInsets ?? appearance.embeddedPaymentElement.row.style.defaultInsets,
@@ -771,5 +776,31 @@ extension RowButton {
         if shouldClearSublabel {
             setSublabel(text: nil)
         }
+    }
+}
+
+/// Borders the Link-only row in flat styles, the same way as the inline verification card. Floating rows draw their own.
+private final class LinkOnlyRowContainerView: UIView {
+    private let appearance: PaymentSheet.Appearance
+
+    init(rowButton: RowButton, appearance: PaymentSheet.Appearance) {
+        self.appearance = appearance
+        super.init(frame: .zero)
+        layer.borderWidth = max(appearance.borderWidth, 1)
+        layer.borderColor = appearance.colors.componentBorder.cgColor
+        applyCornerRadiusOrConfiguration(for: appearance)
+        // Lines the row's icon and accessory up with the card's 16pt padding. Radio rows have no trailing padding of their own.
+        let trailingInset: CGFloat = appearance.embeddedPaymentElement.row.style == .flatWithRadio ? 16 : 4
+        addAndPinSubview(rowButton, insets: .insets(leading: 4, trailing: trailingInset))
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        // `CGColor` doesn't follow light and dark mode on its own.
+        layer.borderColor = appearance.colors.componentBorder.cgColor
     }
 }
