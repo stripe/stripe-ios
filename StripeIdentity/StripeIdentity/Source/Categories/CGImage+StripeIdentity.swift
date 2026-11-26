@@ -24,7 +24,8 @@ extension CGImage {
         case maxImageWidthOrHeight
         /// The pixel crop padding is a function of the width of the region of interest
         case regionWidth
-        /// Add a fraction of face width on every edge, plus fractions of face height above and below.
+        /// Expands the face box by fixed factors, then adds a fraction of its width on every edge,
+        /// plus fractions of its height above and below.
         case faceLandmarks(side: CGFloat, top: CGFloat, bottom: CGFloat)
     }
 
@@ -43,18 +44,36 @@ extension CGImage {
         withPadding cropPadding: CGFloat,
         computationMethod: CropPaddingComputationMethod
     ) throws -> CGImage {
-        let pixelPadding = computePixelPadding(
-            padding: cropPadding,
-            normalizedRegion: normalizedRegion,
-            computationMethod: computationMethod
-        )
-        var cropArea = computePixelCropArea(normalizedRegion: normalizedRegion, pixelPadding: pixelPadding)
-        if case .faceLandmarks(_, let top, let bottom) = computationMethod {
-            let faceHeight = normalizedRegion.height * CGFloat(height)
-            cropArea.origin.y -= top * faceHeight
-            cropArea.size.height += top * faceHeight + bottom * faceHeight
+        let cropArea: CGRect
+        if case .faceLandmarks(let side, let top, let bottom) = computationMethod {
+            let area = computeFaceLandmarksCropArea(
+                normalizedFaceRegion: normalizedRegion,
+                sidePadding: side,
+                topPadding: top,
+                bottomPadding: bottom
+            )
+            let minX = area.minX.rounded()
+            let minY = area.minY.rounded()
+            cropArea = CGRect(
+                x: minX,
+                y: minY,
+                width: area.maxX.rounded() - minX,
+                height: area.maxY.rounded() - minY
+            )
+            guard !cropArea.isEmpty,
+                CGRect(x: 0, y: 0, width: width, height: height).contains(cropArea)
+            else {
+                throw STPCGImageError.unableToCrop
+            }
+        } else {
+            let pixelPadding = computePixelPadding(
+                padding: cropPadding,
+                normalizedRegion: normalizedRegion,
+                computationMethod: computationMethod
+            )
+            // CGImage clips the final pixel rectangle to the source image.
+            cropArea = computePixelCropArea(normalizedRegion: normalizedRegion, pixelPadding: pixelPadding)
         }
-        // CGImage clips the final pixel rectangle to the source image.
         guard let image = cropping(to: cropArea) else {
             throw STPCGImageError.unableToCrop
         }
@@ -71,9 +90,46 @@ extension CGImage {
             return padding * CGFloat(max(width, height))
         case .regionWidth:
             return padding * normalizedRegion.width * CGFloat(width)
-        case .faceLandmarks(let side, _, _):
-            return side * normalizedRegion.width * CGFloat(width)
+        case .faceLandmarks:
+            stpAssertionFailure("Face landmark crops use computeFaceLandmarksCropArea")
+            return 0
         }
+    }
+
+    /// Returns web's MediaPipe selfie crop, in unrounded pixels, without leaving the image.
+    func computeFaceLandmarksCropArea(
+        normalizedFaceRegion face: CGRect,
+        sidePadding: CGFloat,
+        topPadding: CGFloat,
+        bottomPadding: CGFloat
+    ) -> CGRect {
+        let frameWidth = CGFloat(width)
+        let frameHeight = CGFloat(height)
+
+        // Web scales the pixel coordinates of the face box's edges, not its size.
+        let expandedLeft = face.minX * frameWidth * 0.98
+        let expandedTop = face.minY * frameHeight * 0.80
+        let expandedRight = min(face.maxX * frameWidth * 1.02, frameWidth)
+        let expandedBottom = min(face.maxY * frameHeight * 1.025, frameHeight)
+        let expandedWidth = expandedRight - expandedLeft
+        let expandedHeight = expandedBottom - expandedTop
+
+        let widthBasedPadding = expandedWidth * sidePadding
+        // Web clamps the origin before sizing the crop, so an edge clamp moves
+        // the crop toward the image center instead of shrinking it.
+        let cropLeft = max(0, expandedLeft - widthBasedPadding)
+        let topAfterHeightPadding = max(0, expandedTop - expandedHeight * topPadding)
+        let cropTop = max(0, topAfterHeightPadding - widthBasedPadding)
+        let heightWithVerticalPadding = min(
+            expandedHeight + expandedHeight * (topPadding + bottomPadding),
+            frameHeight
+        )
+        return CGRect(
+            x: cropLeft,
+            y: cropTop,
+            width: min(expandedWidth + 2 * widthBasedPadding, frameWidth - cropLeft),
+            height: min(heightWithVerticalPadding + 2 * widthBasedPadding, frameHeight - cropTop)
+        )
     }
 
     func computePixelCropArea(

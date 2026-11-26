@@ -94,8 +94,9 @@ final class SelfieUploaderTest: XCTestCase {
     }
 
     func testMediaPipeDefaultsExpandAllFrontCropsAndPreserveFullFrames() throws {
-        // Given distinct front and side images with an 80-by-160-pixel face at (120, 240)
-        uploader = makeUploader(isTestMode: false)
+        // Given distinct front and side images with an 80-by-160-pixel face at (120, 200)
+        // ...and a legacy crop padding that MediaPipe crops don't use
+        uploader = makeUploader(isTestMode: false, legacyCropPadding: 0.125)
         let first = makePatternedCapture(colorOffset: 0)
         let best = makePatternedCapture(colorOffset: 1)
         let last = makePatternedCapture(colorOffset: 2)
@@ -110,8 +111,8 @@ final class SelfieUploaderTest: XCTestCase {
         uploader.uploadImages(captures)
         wait(for: uploadRequestExpectations, timeout: 1)
 
-        // Then each front crop adds 40 pixels on the sides, 112 above, and 96 below
-        let expectedCrop = CGRect(x: 80, y: 128, width: 160, height: 368)
+        // Then each front crop expands the face box and pads it as web does
+        let expectedCrop = CGRect(x: 74, y: 65, width: 173, height: 420)
         for (capture, name) in [
             (best, "VS_123_face"),
             (first, "VS_123_face_first_crop_frame"),
@@ -151,25 +152,25 @@ final class SelfieUploaderTest: XCTestCase {
         _ = uploader.uploadImages(legacyCapture, ofType: .first)
         wait(for: uploadRequestExpectations, timeout: 1)
 
-        // Then MediaPipe adds 20 pixels on the sides, 100 above, and 40 below
+        // Then MediaPipe pads the expanded face box with the configured fractions
         try assertUploadedImage(
             named: "VS_123_face",
             matches: mediaPipeCapture.image,
-            croppedTo: CGRect(x: 100, y: 140, width: 120, height: 300)
+            croppedTo: CGRect(x: 96, y: 34, width: 130, height: 383)
         )
 
         // ...and legacy retains its configured 10 pixels of padding on every side
         try assertUploadedImage(
             named: "VS_123_face_first_crop_frame",
             matches: legacyCapture.image,
-            croppedTo: CGRect(x: 110, y: 230, width: 100, height: 180)
+            croppedTo: CGRect(x: 110, y: 190, width: 100, height: 180)
         )
         try assertUploadedImage(named: "VS_123_face_full_frame", matches: mediaPipeCapture.image)
         try assertUploadedImage(named: "VS_123_face_first_full_frame", matches: legacyCapture.image)
         XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 4)
     }
 
-    func testMediaPipeZeroPaddingOverridesDefaultsAndLegacyPadding() throws {
+    func testMediaPipeZeroPaddingCropsToTheExpandedFaceBox() throws {
         // Given explicit zero MediaPipe padding and nonzero legacy padding
         uploader = makeUploader(
             isTestMode: false,
@@ -185,33 +186,15 @@ final class SelfieUploaderTest: XCTestCase {
         _ = uploader.uploadImages(capture, ofType: .best)
         wait(for: uploadRequestExpectations, timeout: 1)
 
-        // Then the crop contains exactly the original face rect
+        // Then the crop still contains the fixed face box expansion
         try assertUploadedImage(
             named: "VS_123_face",
             matches: capture.image,
-            croppedTo: CGRect(x: 120, y: 240, width: 80, height: 160)
+            croppedTo: CGRect(x: 118, y: 160, width: 86, height: 209)
         )
     }
 
-    func testMediaPipeDefaultsPreserveConfiguredWidthPadding() throws {
-        // Given a server-configured width margin and no MediaPipe overrides
-        uploader = makeUploader(isTestMode: false, legacyCropPadding: 0.125)
-        let capture = makePatternedCapture()
-        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
-
-        // When the MediaPipe image is uploaded
-        _ = uploader.uploadImages(capture, ofType: .best)
-        wait(for: uploadRequestExpectations, timeout: 1)
-
-        // Then the 10-pixel width margin is preserved and the default height margins are added
-        try assertUploadedImage(
-            named: "VS_123_face",
-            matches: capture.image,
-            croppedTo: CGRect(x: 110, y: 158, width: 100, height: 308)
-        )
-    }
-
-    func testMediaPipeCropsClipToImageEdges() throws {
+    func testMediaPipeCropsStayInsideImageEdges() throws {
         // Given faces whose padded crops extend beyond opposite image corners
         uploader = makeUploader(isTestMode: false)
         let topLeft = makePatternedCapture(
@@ -227,16 +210,16 @@ final class SelfieUploaderTest: XCTestCase {
         _ = uploader.uploadImages(bottomRight, ofType: .last)
         wait(for: uploadRequestExpectations, timeout: 1)
 
-        // Then the crops retain the available pixels without adding a border or shifting the face
+        // Then the crops contain only image pixels, without a border
         try assertUploadedImage(
             named: "VS_123_face_first_crop_frame",
             matches: topLeft.image,
-            croppedTo: CGRect(x: 0, y: 0, width: 140, height: 296)
+            croppedTo: CGRect(x: 0, y: 0, width: 165, height: 359)
         )
         try assertUploadedImage(
             named: "VS_123_face_last_crop_frame",
             matches: bottomRight.image,
-            croppedTo: CGRect(x: 180, y: 328, width: 140, height: 312)
+            croppedTo: CGRect(x: 170, y: 241, width: 150, height: 399)
         )
         XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 4)
     }
@@ -281,7 +264,7 @@ private extension SelfieUploaderTest {
 
     func makePatternedCapture(
         colorOffset: Int = 0,
-        faceRect: CGRect = CGRect(x: 0.375, y: 0.375, width: 0.25, height: 0.25),
+        faceRect: CGRect = CGRect(x: 0.375, y: 0.3125, width: 0.25, height: 0.25),
         isFromMediaPipe: Bool = true
     ) -> FaceScannerInputOutput {
         let format = UIGraphicsImageRendererFormat()

@@ -71,8 +71,8 @@ final class SelfieUploader: SelfieUploaderProtocol {
         self.imageUploader = imageUploader
         self.isTestMode = isTestMode
         self.mediaPipeCropPadding = .faceLandmarks(
-            side: mediaPipeCropSidePadding ?? imageUploader.configuration.highResImageCropPadding,
-            top: mediaPipeCropTopPadding ?? 0.45,
+            side: mediaPipeCropSidePadding ?? 0.5,
+            top: mediaPipeCropTopPadding ?? 0.25,
             bottom: mediaPipeCropBottomPadding ?? 0.35
         )
     }

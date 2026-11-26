@@ -330,7 +330,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         let page = try VerificationPageMock.response200NoExp.make()
         let uploader = try makeImageUploaders(staticContent: page).selfie
 
-        XCTAssertEqual(uploader.mediaPipeCropPadding, .faceLandmarks(side: 0.05, top: 0.45, bottom: 0.35))
+        XCTAssertEqual(uploader.mediaPipeCropPadding, .faceLandmarks(side: 0.5, top: 0.25, bottom: 0.35))
     }
 
     func testNextViewControllerSuccess() throws {

@@ -105,6 +105,49 @@ final class CGImage_StripeIdentityUnitTest: XCTestCase {
         XCTAssertEqual(round(actualCropArea.height), expectedCropArea.height)
     }
 
+    func testFaceLandmarksCropAreaMatchesWebForCenteredFace() {
+        // Given a face at pixel edges (337.5, 600, 562.5, 1000) in the 900x1600 image
+        let face = CGRect(x: 0.375, y: 0.375, width: 0.25, height: 0.25)
+
+        // When the crop uses the default MediaPipe padding
+        let cropArea = cgImagePortrait.computeFaceLandmarksCropArea(
+            normalizedFaceRegion: face,
+            sidePadding: 0.5,
+            topPadding: 0.25,
+            bottomPadding: 0.35
+        )
+
+        // Then it matches web: the expanded box (330.75, 480, 573.75, 1025) gets
+        // 121.5 pixels on each side, plus 136.25 above and 190.75 below
+        assertEqual(cropArea, CGRect(x: 209.25, y: 222.25, width: 486, height: 1115))
+    }
+
+    func testFaceLandmarksCropAreaMatchesWebForFacesNearEdges() {
+        // Given faces near the top-left and bottom-right corners of the 900x1600 image
+        let topLeftFace = CGRect(x: 0.0625, y: 0.0625, width: 0.25, height: 0.25)
+        let bottomRightFace = CGRect(x: 0.75, y: 0.75, width: 0.25, height: 0.25)
+
+        // When the crops use the default MediaPipe padding
+        let topLeftCrop = cgImagePortrait.computeFaceLandmarksCropArea(
+            normalizedFaceRegion: topLeftFace,
+            sidePadding: 0.5,
+            topPadding: 0.25,
+            bottomPadding: 0.35
+        )
+        let bottomRightCrop = cgImagePortrait.computeFaceLandmarksCropArea(
+            normalizedFaceRegion: bottomRightFace,
+            sidePadding: 0.5,
+            topPadding: 0.25,
+            bottomPadding: 0.35
+        )
+
+        // Then the clamped origin keeps the full padded size, as on web
+        assertEqual(topLeftCrop, CGRect(x: 0, y: 0, width: 463.5, height: 923.75))
+
+        // ...and the size is limited to the remaining image pixels
+        assertEqual(bottomRightCrop, CGRect(x: 542.25, y: 680.75, width: 357.75, height: 919.25))
+    }
+
     // Tests when an image's width and height are bigger than the max dimensions
     func testComputeScaleTooBigAllDimensions() {
         let maxDimension = CGSize(width: 800, height: 800)
@@ -197,6 +240,18 @@ final class CGImage_StripeIdentityUnitTest: XCTestCase {
 }
 
 extension CGImage_StripeIdentityUnitTest {
+    fileprivate func assertEqual(
+        _ actual: CGRect,
+        _ expected: CGRect,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(actual.minX, expected.minX, accuracy: 1e-9, file: file, line: line)
+        XCTAssertEqual(actual.minY, expected.minY, accuracy: 1e-9, file: file, line: line)
+        XCTAssertEqual(actual.width, expected.width, accuracy: 1e-9, file: file, line: line)
+        XCTAssertEqual(actual.height, expected.height, accuracy: 1e-9, file: file, line: line)
+    }
+
     fileprivate func makeImage(ofSize size: CGSize) -> CGImage {
         let format = UIGraphicsImageRendererFormat()
         format.scale = 1
