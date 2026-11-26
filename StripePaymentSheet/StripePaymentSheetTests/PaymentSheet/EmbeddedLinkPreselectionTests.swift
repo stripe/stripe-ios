@@ -165,6 +165,24 @@ final class EmbeddedLinkPreselectionTests: XCTestCase {
         }
     }
 
+    func testABankAccountPickedInTheWalletDoesNotShowItsMandateAgain() async throws {
+        // Given a customer who verified inline, whose default bank account was preselected, so its mandate shows below the list
+        let (element, linkAccount) = makeVerifiedElement()
+        let bankAccount = paymentMethod(LinkStubs.PaymentMethodIndices.bankAccount)
+        bankAccount.isDefault = true
+        await preselect(element, linkAccount: linkAccount, from: [bankAccount])
+        XCTAssertNotNil(element.paymentOption?.mandateText)
+
+        // When they open the wallet, which shows the mandate itself, and pick the same bank account
+        let confirmOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(brand: .link, account: linkAccount, paymentDetails: bankAccount, confirmationExtras: nil, shippingAddress: nil)
+        element.linkWalletDidFinish(with: confirmOption, revertsSelectionOnClose: false)
+
+        // Then the mandate doesn't show again below the list
+        XCTAssertEqual(element._paymentOption?.currentLinkPaymentMethod, bankAccount.stripeID)
+        XCTAssertNil(element.paymentOption?.mandateText)
+        XCTAssertNil(element.preselectedLinkPaymentDetailsID)
+    }
+
     func testReselectingLinkKeepsThePreselectedPaymentDetails() async throws {
         // Given Link is preselected with the customer's default card
         let (element, linkAccount) = makeVerifiedElement(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)])

@@ -214,6 +214,8 @@ extension EmbeddedPaymentElement {
             }
             return
         }
+        // The wallet showed its mandate and records its bank data-sharing consent itself.
+        preselectedLinkPaymentDetailsID = nil
         selectLink(with: confirmOption)
     }
 

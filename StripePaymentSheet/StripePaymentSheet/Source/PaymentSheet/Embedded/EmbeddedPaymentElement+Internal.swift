@@ -217,7 +217,8 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewLinkMandateText() -> NSAttributedString? {
-        guard let linkPaymentDetails else { return nil }
+        // The Link wallet already showed the mandate for payment details picked there.
+        guard let linkPaymentDetails, linkPaymentDetails.stripeID == preselectedLinkPaymentDetailsID else { return nil }
         return Self.linkMandateText(for: linkPaymentDetails, context: makeLinkContext(linkAccount: LinkAccountContext.shared.account))
     }
 
