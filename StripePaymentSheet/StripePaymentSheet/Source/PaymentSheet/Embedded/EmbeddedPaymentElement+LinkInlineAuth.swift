@@ -125,6 +125,12 @@ extension EmbeddedPaymentElement {
     /// Whether selecting the Link row opens the Link wallet, rather than only selecting Link.
     /// - Parameter linkWasSelected: Whether the Link row was already selected, i.e. the customer tapped it again or tapped "Change".
     func linkRowSelectionOpensWallet(linkWasSelected: Bool) -> Bool {
+        // The Link-only row always opens Link, which asks the customer to verify again first if their session expired.
+        if showsOnlyLink,
+           LinkAccountContext.shared.account?.isRegistered == true,
+           deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
+            return linkWasSelected
+        }
         guard linkRowOpensWallet else { return false }
         // Selecting Link again keeps the payment details it showed. Tapping it while selected changes them.
         if linkPaymentDetails != nil {

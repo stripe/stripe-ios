@@ -195,6 +195,21 @@ final class EmbeddedLinkPreselectionTests: XCTestCase {
         XCTAssertTrue(element.linkRowSelectionOpensWallet(linkWasSelected: true))
     }
 
+    func testTappingTheLinkOnlyRowOpensTheWalletAfterTheSessionExpires() async throws {
+        // Given Link is the only row, preselected with the customer's default card
+        let (element, linkAccount) = makeVerifiedElement()
+        await preselect(element, linkAccount: linkAccount, from: [paymentMethod(LinkStubs.PaymentMethodIndices.card)])
+
+        // When their Link session expires, so they need to verify again
+        linkAccount.applyAuthResponse(.init(consumerSession: LinkAuthStubs.session()))
+        XCTAssertEqual(linkAccount.sessionState, .requiresVerification)
+
+        // Then tapping the row still opens Link, which asks them to verify before showing the wallet
+        XCTAssertTrue(element.linkRowSelectionOpensWallet(linkWasSelected: true))
+        // ...while Link pays through the wallet until they pick something again
+        XCTAssertNil(element.linkPaymentDetails)
+    }
+
     func testPayingAnotherWayShowsEveryPaymentMethod() async throws {
         // Given Link is the only row, preselected with the customer's default card
         let (element, linkAccount) = makeVerifiedElement(paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)])
