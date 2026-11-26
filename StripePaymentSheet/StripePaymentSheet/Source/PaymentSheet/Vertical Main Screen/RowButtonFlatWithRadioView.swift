@@ -68,6 +68,7 @@ final class RowButtonFlatWithRadioView: RowButton {
                                                                  trailingBadge,
                                                                  accessoryView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
+        radioButton.isHidden = !showsSelectionIndicator
 
         [radioButton, imageView, horizontalStackView].compactMap { $0 }
             .forEach { view in
@@ -93,7 +94,10 @@ final class RowButtonFlatWithRadioView: RowButton {
             radioButton.heightAnchor.constraint(equalToConstant: 18),
 
             // Image view constraints
-            imageView.leadingAnchor.constraint(equalTo: radioButton.trailingAnchor, constant: appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading),
+            imageView.leadingAnchor.constraint(
+                equalTo: showsSelectionIndicator ? radioButton.trailingAnchor : leadingAnchor,
+                constant: appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading
+            ),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
             imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
             imageView.heightAnchor.constraint(equalToConstant: imageViewSize.height),

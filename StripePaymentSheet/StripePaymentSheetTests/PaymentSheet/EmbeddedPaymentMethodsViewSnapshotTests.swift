@@ -1644,9 +1644,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testEmbeddedPaymentMethodsView_linkOnly_card() {
-        // After verifying, Link is the only row, showing the customer's default card and the Link logo
+        // After verifying, Link is the only row, showing the customer's default card and the Link logo in place of any selection indicator
         let card = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card]
-        for style in [PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.floatingButton, .flatWithRadio] {
+        for style in [PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.floatingButton, .flatWithRadio, .flatWithCheckmark, .flatWithDisclosure] {
             var appearance = PaymentSheet.Appearance.default
             appearance.embeddedPaymentElement.row.style = style
             let embeddedView = EmbeddedPaymentMethodsView(

@@ -31,7 +31,8 @@ final class RowButtonFlatWithCheckmark: RowButton {
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
-        let stackView = UIStackView(arrangedSubviews: [labelsStackView, accessoryView].compactMap { $0 })
+        // Without a selection indicator, the accessory view takes its place instead of going below the labels.
+        let stackView = UIStackView(arrangedSubviews: [labelsStackView, showsSelectionIndicator ? accessoryView : nil].compactMap { $0 })
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.setCustomSpacing(8, after: labelsStackView)
@@ -40,7 +41,7 @@ final class RowButtonFlatWithCheckmark: RowButton {
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  trailingBadge,
-                                                                 checkmarkImageView, ].compactMap { $0 })
+                                                                 showsSelectionIndicator ? checkmarkImageView : accessoryView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
         if let trailingBadge {
             horizontalStackView.setCustomSpacing(12, after: trailingBadge)
@@ -63,7 +64,7 @@ final class RowButtonFlatWithCheckmark: RowButton {
 
         let imageViewCenterYConstraint: NSLayoutConstraint
         // If we have an accessory view align the image with the top label
-        if let accessoryView, !accessoryView.isHidden {
+        if let accessoryView, !accessoryView.isHidden, showsSelectionIndicator {
             imageViewCenterYConstraint = imageView.centerYAnchor.constraint(equalTo: label.centerYAnchor)
         } else {
             imageViewCenterYConstraint = imageView.centerYAnchor.constraint(equalTo: centerYAnchor)

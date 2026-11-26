@@ -88,6 +88,8 @@ class RowButton: UIView, EventHandler {
     let didTap: DidTapClosure
     // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
     let isEmbedded: Bool
+    /// Whether the row shows its radio button, checkmark, or disclosure chevron. Without it, flat rows show `accessoryView` where it would be.
+    let showsSelectionIndicator: Bool
 
     // MARK: Initializers
 
@@ -102,8 +104,10 @@ class RowButton: UIView, EventHandler {
         accessoryView: UIView? = nil,
         shouldAnimateOnPress: Bool = false,
         isEmbedded: Bool = false,
+        showsSelectionIndicator: Bool = true,
         didTap: @escaping DidTapClosure
     ) {
+        self.showsSelectionIndicator = showsSelectionIndicator
         self.appearance = appearance
         self.type = type
         self.shouldAnimateOnPress = shouldAnimateOnPress
@@ -367,6 +371,7 @@ extension RowButton {
                        accessoryView: UIView? = nil,
                        shouldAnimateOnPress: Bool = false,
                        isEmbedded: Bool = false,
+                       showsSelectionIndicator: Bool = true,
                        didTap: @escaping DidTapClosure) -> RowButton {
         if !isEmbedded {
             return RowButtonFloating(
@@ -380,6 +385,7 @@ extension RowButton {
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
+                showsSelectionIndicator: showsSelectionIndicator,
                 didTap: didTap
             )
         }
@@ -397,6 +403,7 @@ extension RowButton {
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
+                showsSelectionIndicator: showsSelectionIndicator,
                 didTap: didTap
             )
         case .floatingButton:
@@ -411,6 +418,7 @@ extension RowButton {
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
+                showsSelectionIndicator: showsSelectionIndicator,
                 didTap: didTap
             )
         case .flatWithCheckmark:
@@ -425,6 +433,7 @@ extension RowButton {
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
+                showsSelectionIndicator: showsSelectionIndicator,
                 didTap: didTap
             )
         case .flatWithDisclosure:
@@ -439,6 +448,7 @@ extension RowButton {
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
                 isEmbedded: isEmbedded,
+                showsSelectionIndicator: showsSelectionIndicator,
                 didTap: didTap
             )
         }
@@ -651,6 +661,8 @@ extension RowButton {
             sublabel: sublabel,
             accessoryView: accessoryView,
             isEmbedded: isEmbedded,
+            // It's the only row and always selected, so the Link logo takes the place of the selection indicator.
+            showsSelectionIndicator: false,
             didTap: didTap
         )
         button.accessibilityHelperView.accessibilityLabel = [String.Localized.pay_with_link(brand: linkBrand), paymentDetails.accessibilityDescription].joined(separator: ", ")
