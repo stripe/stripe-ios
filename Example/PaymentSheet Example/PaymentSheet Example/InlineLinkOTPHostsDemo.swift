@@ -167,7 +167,7 @@ enum InlineLinkOTPDemoBackend {
     /// Card and Link only, so the list stays short and the card's position depends on the host layout.
     static var intentConfiguration: PaymentSheet.IntentConfiguration {
         PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 5099, currency: "USD"),
+            mode: .payment(amount: 5099, currency: "USD", captureMethod: .automaticAsync),
             paymentMethodTypes: ["card", "link"]
         ) { _, _ in
             throw DemoError(errorDescription: "This demo doesn't take payments.")
