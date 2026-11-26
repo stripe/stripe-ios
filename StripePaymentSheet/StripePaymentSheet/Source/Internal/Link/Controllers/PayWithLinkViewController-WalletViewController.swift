@@ -298,7 +298,10 @@ extension PayWithLinkViewController {
                 expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
                 cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
                 cardDetailsRecollectionRow.updateDividerVisibility()
-                cardDetailsRecollectionSection.view.layoutIfNeeded()
+                // Off screen, e.g. as the wallet loads, laying out would size the wallet to its default frame before its sheet does, which breaks constraints when the list is taller.
+                if view.window != nil {
+                    cardDetailsRecollectionSection.view.layoutIfNeeded()
+                }
             }
 
             confirmButton.update(

@@ -245,7 +245,49 @@ class PayWithLinkViewControllerTests: XCTestCase {
     }
 
     @MainActor
-    private func presentNativeWallet() async throws -> (
+    func testOpeningTheNativeWalletToChangeThePaymentMethodDoesNotBreakConstraints() async throws {
+        // Fail on any constraint UIKit breaks, using the callback behind the example app's broken-constraint alerts
+        let selector = NSSelectorFromString("engine:willBreakConstraint:dueToMutuallyExclusiveConstraints:")
+        let method = try XCTUnwrap(class_getInstanceMethod(UIView.self, selector))
+        let originalImplementation = method_getImplementation(method)
+        typealias ConstraintCallback = @convention(c) (UIView, Selector, AnyObject, NSLayoutConstraint, NSArray) -> Void
+        let originalCallback = unsafeBitCast(originalImplementation, to: ConstraintCallback.self)
+        let callback: @convention(block) (UIView, AnyObject, NSLayoutConstraint, NSArray) -> Void = { view, engine, constraint, conflicts in
+            XCTFail("Broken constraint: \(constraint)\nConflicting constraints: \(conflicts)")
+            originalCallback(view, selector, engine, constraint, conflicts)
+        }
+        let implementation = imp_implementationWithBlock(callback)
+        method_setImplementation(method, implementation)
+        defer {
+            method_setImplementation(method, originalImplementation)
+            imp_removeBlock(implementation)
+        }
+
+        // Given a customer with more saved cards than fit on screen
+        let cards = (0..<12).map { _ in LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card] }
+
+        // When the wallet opens to change the selected one, which expands the list as it loads
+        let (window, _, sheet, _) = try await presentNativeWallet(
+            paymentMethods: cards,
+            initiallySelectedPaymentDetailsID: cards[0].stripeID,
+            waitsForContentToFit: false
+        )
+        // The list is taller than the sheet can be, so it scrolls instead of fitting
+        sheet.view.layoutIfNeeded()
+        defer {
+            window.rootViewController?.dismiss(animated: false)
+            window.isHidden = true
+        }
+
+        // Then no constraint breaks (checked by the callback above)
+    }
+
+    @MainActor
+    private func presentNativeWallet(
+        paymentMethods: [ConsumerPaymentDetails] = Array(LinkStubs.paymentMethods().prefix(2)),
+        initiallySelectedPaymentDetailsID: String? = nil,
+        waitsForContentToFit: Bool = true
+    ) async throws -> (
         UIWindow, PayWithLinkViewController.WalletViewController,
         NativeSheetContainerViewController, LinkPaymentMethodPicker
     ) {
@@ -262,12 +304,12 @@ class PayWithLinkViewControllerTests: XCTestCase {
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
                 canContinueWithoutLink: false,
-                initiallySelectedPaymentDetailsID: nil,
+                initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: nil,
                 supportedPaymentMethodTypes: [.card],
                 analyticsHelper: ._testValue()
             ),
-            paymentMethods: Array(LinkStubs.paymentMethods().prefix(2))
+            paymentMethods: paymentMethods
         )
         let sheet = LinkNativeSheetContainerViewController(
             contentViewController: wallet,
@@ -288,7 +330,9 @@ class PayWithLinkViewControllerTests: XCTestCase {
         let presented = expectation(description: "Native Link wallet presented")
         presenter.presentAsSheet(sheet) { presented.fulfill() }
         await fulfillment(of: [presented], timeout: 3)
-        try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: wallet.view)
+        if waitsForContentToFit {
+            try await NativeSheetLayoutTestHelper.waitForContentToFit(in: sheet, content: wallet.view)
+        }
 
         // Find the actual wallet picker without adding a production accessor for the test.
         var pending = [wallet.view!]
