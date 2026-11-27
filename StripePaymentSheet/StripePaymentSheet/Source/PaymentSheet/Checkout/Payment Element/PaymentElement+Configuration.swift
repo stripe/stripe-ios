@@ -137,6 +137,8 @@ extension PaymentElement {
         private var embeddedConfiguration: EmbeddedPaymentElement.Configuration = {
             var configuration = EmbeddedPaymentElement.Configuration()
             configuration.embeddedViewDisplaysMandateText = true
+            // Checkout Elements doesn't support inline Link verification yet.
+            configuration.allowsLinkInlineVerification = false
             return configuration
         }()
 

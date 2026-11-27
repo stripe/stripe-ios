@@ -14,11 +14,13 @@ final class EmbeddedLinkInlineVerificationEligibilityTests: XCTestCase {
         super.setUp()
         PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = true
         PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = true
+        EmbeddedLinkInlineAuthRegistry.reset()
     }
 
     override func tearDown() {
         PaymentSheet.LinkFeatureFlags.embeddedInlineVerificationEnabledOverride = nil
         PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = nil
+        EmbeddedLinkInlineAuthRegistry.reset()
         super.tearDown()
     }
 
@@ -52,8 +54,37 @@ final class EmbeddedLinkInlineVerificationEligibilityTests: XCTestCase {
         assertIneligible(evaluate(configuration: .init(), linkAccount: makeLinkAccount()), .disabledByMerchant)
     }
 
-    func testCheckoutElements() {
-        assertIneligible(evaluate(linkAccount: makeLinkAccount(), isCheckoutElements: true), .checkoutElements)
+    func testCheckoutElementsOptsOut() {
+        // Checkout Elements builds its Embedded configuration with inline verification turned off.
+        var configuration = EmbeddedPaymentElement.Configuration()
+        configuration.allowsLinkInlineVerification = false
+        assertIneligible(evaluate(configuration: configuration, linkAccount: makeLinkAccount()), .disabledByMerchant)
+    }
+
+    func testEarlierInThisAppSession() {
+        // Given the customer closed the card before
+        EmbeddedLinkInlineAuthRegistry.recordDismissal(email: "Jane.Diaz@example.com")
+        assertIneligible(evaluate(linkAccount: makeLinkAccount()), .dismissedThisSession)
+
+        // Given another instance sent a code a moment ago
+        EmbeddedLinkInlineAuthRegistry.reset()
+        EmbeddedLinkInlineAuthRegistry.recordAutoSend(email: "jane.diaz@example.com")
+        assertIneligible(evaluate(linkAccount: makeLinkAccount()), .codeRecentlySent)
+
+        // Given another instance is showing the card
+        EmbeddedLinkInlineAuthRegistry.reset()
+        let owner = NSObject()
+        EmbeddedLinkInlineAuthRegistry.claim(owner)
+        assertIneligible(evaluate(linkAccount: makeLinkAccount()), .shownElsewhere)
+        EmbeddedLinkInlineAuthRegistry.release(owner)
+        XCTAssertNoThrow(try evaluate(linkAccount: makeLinkAccount()).get())
+    }
+
+    func testAutoSendCooldownExpires() {
+        let sentDate = Date(timeIntervalSince1970: 1_000)
+        EmbeddedLinkInlineAuthRegistry.recordAutoSend(email: "jane.diaz@example.com", now: sentDate)
+        XCTAssertEqual(EmbeddedLinkInlineAuthRegistry.ineligibleReason(email: "jane.diaz@example.com", now: sentDate.addingTimeInterval(60)), .codeRecentlySent)
+        XCTAssertNil(EmbeddedLinkInlineAuthRegistry.ineligibleReason(email: "jane.diaz@example.com", now: sentDate.addingTimeInterval(EmbeddedLinkInlineAuthRegistry.autoSendCooldown + 1)))
     }
 
     func testLinkNotDisplayed() {
@@ -109,15 +140,13 @@ final class EmbeddedLinkInlineVerificationEligibilityTests: XCTestCase {
             return configuration
         }(),
         linkAccount: PaymentSheetLinkAccount?,
-        savedPaymentMethods: [STPPaymentMethod] = [],
-        isCheckoutElements: Bool = false
+        savedPaymentMethods: [STPPaymentMethod] = []
     ) -> Result<EmbeddedLinkInlineVerificationEligibility.Eligible, EmbeddedLinkInlineVerificationEligibility.IneligibleReason> {
         EmbeddedLinkInlineVerificationEligibility.evaluate(
             elementsSession: elementsSession,
             configuration: configuration,
             linkAccount: linkAccount,
             savedPaymentMethods: savedPaymentMethods,
-            isCheckoutElements: isCheckoutElements,
             analyticsHelper: .init(analyticsClient: STPAnalyticsClient())
         )
     }

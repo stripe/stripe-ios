@@ -109,6 +109,8 @@ extension LinkAuthFlowViewController {
             containerView.insertSubview(dimmingView, at: 0)
             dimmingView.frame = containerView.bounds
             dimmingView.alpha = 0
+            // Keep VoiceOver in the dialog instead of the content behind it.
+            containerView.accessibilityViewIsModal = true
 
             transitionCoordinator.animate { _ in
                 self.dimmingView.alpha = 1

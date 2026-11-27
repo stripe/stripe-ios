@@ -598,6 +598,7 @@ extension RowButton {
         appearance: PaymentSheet.Appearance,
         linkBrand: LinkBrand,
         isEmbedded: Bool = false,
+        accessoryView: UIView? = nil,
         didTap: @escaping DidTapClosure
     ) -> RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
@@ -607,7 +608,7 @@ extension RowButton {
             subtext = linkAccount.email
         }
         let sublabel = PlainSublabelView(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
-        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: linkBrand.displayName, sublabel: sublabel, isEmbedded: isEmbedded, didTap: didTap)
+        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: linkBrand.displayName, sublabel: sublabel, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link(brand: linkBrand)
         return button
     }
