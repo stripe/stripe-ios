@@ -56,9 +56,9 @@ extension EmbeddedPaymentElement {
             switch customerDefault {
             case .applePay:
                 return .applePay
-            case .link:
+            case .link where shouldShowLink:
                 return .link
-            case .stripeId, nil:
+            case .link, .stripeId, nil:
                 return loadResult.savedPaymentMethods.first.map { .saved(paymentMethod: $0) }
             }
         }()
