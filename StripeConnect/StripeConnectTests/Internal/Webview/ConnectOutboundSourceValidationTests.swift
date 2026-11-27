@@ -154,7 +154,6 @@ final class ConnectOutboundSourceValidationTests: XCTestCase {
         try await assertAuthenticationResultReachesOriginalDocument(html: html)
     }
 
-    // @iOS26
     func testAuthenticationRequestAfterGarbageCollectionReachesOriginalDocument() async throws {
         // Given a trusted document that requests authentication only after garbage collection, as Connect.js does
         // when the user taps a button, looking the handler up again at that point.
