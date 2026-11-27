@@ -39,7 +39,6 @@ struct FaceCaptureData: Equatable {
     let leftSide: FaceScannerInputOutput?
     let rightSide: FaceScannerInputOutput?
 
-    let numSamples: Int
     let faceScoreVariance: Float
 
     var toArray: [FaceScannerInputOutput] {
@@ -74,7 +73,6 @@ extension FaceCaptureData {
             bestMiddle: bestMiddle,
             leftSide: leftSide,
             rightSide: rightSide,
-            numSamples: samples.count,
             faceScoreVariance: samples.standardDeviation(with: { $0.scannerOutput.faceScore })
         )
     }

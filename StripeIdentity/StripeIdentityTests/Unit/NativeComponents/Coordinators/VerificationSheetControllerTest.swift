@@ -374,6 +374,24 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertEqual(face.rightHighResImage, "right_low")
         XCTAssertNotNil(face.leftFrameData)
         XCTAssertNotNil(face.rightFrameData)
+        XCTAssertEqual(face.numFrames, 8)
+    }
+
+    func testFaceDataFramesCountsOnlySubmittedImagesWithout3DSubmission() throws {
+        // Given side frames were captured and uploaded
+        // When the session does not submit 3D face capture data
+        let face = StripeAPI.VerificationPageDataFace(
+            uploadedFiles: try makeUploadedSelfieFiles(includeSideFrames: true),
+            capturedImages: makeFaceCaptureData(includeSideFrames: true),
+            bestFrameExifMetadata: nil,
+            trainingConsent: true,
+            shouldSubmit3DFaceCaptureData: false
+        )
+
+        // Then frames counts only the front images that the request references
+        XCTAssertNil(face.leftHighResImage)
+        XCTAssertNil(face.rightHighResImage)
+        XCTAssertEqual(face.numFrames, 6)
     }
 
     func testFrameDataCompactsFaceLandmarkResultToFitServerLimit() throws {
