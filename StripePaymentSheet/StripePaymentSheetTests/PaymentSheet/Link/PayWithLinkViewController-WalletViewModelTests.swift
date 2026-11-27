@@ -18,6 +18,40 @@ import StripePaymentsTestUtils
 @MainActor
 class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
+    func testIndiaCardMandateChangesWithSelection() throws {
+        var json = try XCTUnwrap(STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
+        json["setup_future_usage"] = NSNull()
+        json["payment_method_options"] = [
+            "card": ["setup_future_usage": "on_session"],
+            "link": ["setup_future_usage": "none"],
+        ]
+        let intent = Intent.paymentIntent(try XCTUnwrap(STPPaymentIntent.decodedObject(fromAPIResponse: json)))
+        let baseline = try makeSUT()
+        let india = ConsumerPaymentDetails(
+            stripeID: "pd_india", details: .card(card: .init(
+                expiryYear: 2055, expiryMonth: 12, brand: "visa", networks: ["visa"],
+                last4: "4242", funding: .credit, checks: nil, country: "IN"
+            )), billingAddress: nil, billingEmailAddress: nil, nickname: nil, isDefault: true
+        )
+        let session = STPElementsSession.indiaCardElementsSession()
+        let sut = PayWithLinkViewController.WalletViewModel(
+            linkAccount: baseline.linkAccount,
+            context: .init(
+                intent: intent, elementsSession: session, configuration: PaymentSheet.Configuration(),
+                linkBrand: .link, shouldOfferApplePay: false, shouldFinishOnClose: false,
+                canContinueWithoutLink: true, initiallySelectedPaymentDetailsID: "pd_india",
+                callToAction: nil, supportedPaymentMethodTypes: nil, analyticsHelper: ._testValue()
+            ),
+            paymentMethods: [india, LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.card]]
+        )
+        XCTAssertNotNil(sut.mandate)
+        sut.selectedPaymentMethodIndex = 1
+        XCTAssertNil(sut.mandate)
+        sut.selectedPaymentMethodIndex = 0
+        XCTAssertNotNil(sut.mandate)
+        XCTAssertFalse(session.linkPassthroughModeEnabled)
+    }
+
     func test_shouldRecollectCardCVC() throws {
         let sut = try makeSUT()
 

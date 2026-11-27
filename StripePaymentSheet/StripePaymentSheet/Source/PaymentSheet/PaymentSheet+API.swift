@@ -731,8 +731,15 @@ extension PaymentSheet {
                         // since it's not part of the consumer payment details.
                         let billingPhoneNumber = paymentMethodParams.billingDetails?.phone
 
-                        if elementsSession.linkPassthroughModeEnabled {
-                            // If passthrough mode, share payment details
+                        let isIndiaOverride = paymentDetails.isIndiaCardOverride(elementsSession)
+                        if isIndiaOverride {
+                            // Issuer country is only available after creation. Reapply card consent now.
+                            let cardConfirmParams = IntentConfirmParams(params: paymentMethodParams, type: .stripe(.card))
+                            cardConfirmParams.saveForFutureUseCheckboxState = saveForFutureUseCheckboxState
+                            setAllowRedisplay(cardConfirmParams, .card)
+                        }
+                        if paymentDetails.shouldSharePaymentDetails(elementsSession) {
+                            // Share using the effective per-card route, without changing the session mode.
                             linkAccount.sharePaymentDetails(
                                 id: paymentDetails.stripeID,
                                 cvc: paymentMethodParams.card?.cvc,
@@ -746,8 +753,12 @@ extension PaymentSheet {
                                     confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata)
                                 case .failure(let error):
                                     analyticsHelper.linkAnalytics.logSharePaymentDetailsFailure(error: error)
-                                    // If this fails, confirm directly
-                                    confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
+                                    if isIndiaOverride {
+                                        paymentHandlerCompletion(.failed, error as NSError)
+                                    } else {
+                                        // Preserve ordinary passthrough's raw-card fallback.
+                                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
+                                    }
                                 }
                             }
                         } else {
@@ -843,7 +854,7 @@ extension PaymentSheet {
                 isSettingUp: isSettingUp
             )
 
-            if elementsSession.linkPassthroughModeEnabled {
+            if paymentDetails.shouldSharePaymentDetails(elementsSession) {
                 linkAccount.sharePaymentDetails(
                     id: paymentDetails.stripeID,
                     cvc: paymentDetails.cvc,
@@ -1060,15 +1071,31 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
     return rhs == lhsConverted
 }
 
-private extension ConsumerPaymentDetails {
+extension ConsumerPaymentDetails {
 
-    var bankAccountDetails: ConsumerPaymentDetails.Details.BankAccount? {
+    private var bankAccountDetails: ConsumerPaymentDetails.Details.BankAccount? {
         switch details {
         case .bankAccount(let bankAccount):
             return bankAccount
         case .card, .generic:
             return nil
         }
+    }
+
+    func isIndiaCardOverride(_ elementsSession: STPElementsSession) -> Bool {
+        let mode = elementsSession.linkSettings?.linkMode
+        guard !elementsSession.linkPassthroughModeEnabled,
+              mode == nil || mode == .linkPaymentMethod,
+              elementsSession.linkFlags["link_route_india_card_to_passthrough"] == true,
+              case .card(let card) = details else {
+            return false
+        }
+        let country = card.country?.uppercased()
+        return country == "IN" || country == "COUNTRY_IN"
+    }
+
+    func shouldSharePaymentDetails(_ elementsSession: STPElementsSession) -> Bool {
+        elementsSession.linkPassthroughModeEnabled || isIndiaCardOverride(elementsSession)
     }
 
     func expectedPaymentMethodTypeForPassthroughMode(
@@ -1089,7 +1116,7 @@ private extension ConsumerPaymentDetails {
         isSettingUp: (STPPaymentMethodType) -> Bool
     ) -> STPPaymentMethodAllowRedisplay? {
         let paymentMethodType: STPPaymentMethodType = {
-            if elementsSession.linkPassthroughModeEnabled {
+            if shouldSharePaymentDetails(elementsSession) {
                 let expectedPaymentMethodType = expectedPaymentMethodTypeForPassthroughMode(elementsSession)
 
                 if expectedPaymentMethodType == "bank_account" {
