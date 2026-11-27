@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+import CoreGraphics
 import CoreVideo
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCameraCore
@@ -20,7 +21,12 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
     var mockNumFramesScannedMetric: Int = 0
 
     private(set) var didReset = false
+    private(set) var resetCallCount = 0
+    private(set) var scanCallCount = 0
     private var completion: ((Any?) -> Void)?
+    var automaticallyCompletesReset = true
+    private var resetCompletions: [() -> Void] = []
+    private var readinessCompletions: [() -> Void] = []
 
     func scanImage<ScannerOutput>(
         with scanner: AnyImageScanner<ScannerOutput>,
@@ -28,13 +34,19 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
         sampleBuffer: CMSampleBuffer,
         cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
-        completion: @escaping (ScannerOutput) -> Void
+        shouldScan: @escaping () -> Bool,
+        completion: @escaping (ScannerOutput, CGImage, CameraExifMetadata?) -> Void
     ) {
+        guard shouldScan(), let image = pixelBuffer.cgImage() else {
+            return
+        }
+        scanCallCount += 1
+        let exifMetadata = CameraExifMetadata(sampleBuffer: sampleBuffer)
         self.completion = { output in
             guard let output = output as? ScannerOutput else {
                 return
             }
-            completion(output)
+            completion(output, image, exifMetadata)
         }
     }
 
@@ -42,8 +54,45 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
         completion?(output)
     }
 
-    func reset() {
+    func reset<ScannerOutput>(
+        with scanner: AnyImageScanner<ScannerOutput>,
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    ) {
         didReset = true
+        resetCallCount += 1
+        let reset = {
+            scanner.reset()
+            completion()
+        }
+        if automaticallyCompletesReset {
+            reset()
+        } else {
+            resetCompletions.append(reset)
+        }
+    }
+
+    func completePendingResets() {
+        let completions = resetCompletions
+        resetCompletions.removeAll()
+        completions.forEach { $0() }
+        if resetCompletions.isEmpty {
+            let ready = readinessCompletions
+            readinessCompletions.removeAll()
+            ready.forEach { $0() }
+        }
+    }
+
+    func whenReady<ScannerOutput>(
+        with scanner: AnyImageScanner<ScannerOutput>,
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    ) {
+        if resetCompletions.isEmpty {
+            completion()
+        } else {
+            readinessCompletions.append(completion)
+        }
     }
 
     func getPerformanceMetrics(

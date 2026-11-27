@@ -21,6 +21,7 @@ final class ImageScannerMock<Output>: ImageScanner {
     var scanResult: Result<Output, Error>
 
     private(set) var didReset = false
+    private(set) var scanCallCount = 0
 
     init(
         scanResult: Result<Output, Error> = .failure(NSError(domain: "", code: 0))
@@ -33,6 +34,7 @@ final class ImageScannerMock<Output>: ImageScanner {
         sampleBuffer: CMSampleBuffer,
         cameraProperties: StripeCameraCore.CameraSession.DeviceProperties?
     ) -> StripeCore.Future<Output> {
+        scanCallCount += 1
         do {
             return Promise(value: try scanResult.get())
         } catch {

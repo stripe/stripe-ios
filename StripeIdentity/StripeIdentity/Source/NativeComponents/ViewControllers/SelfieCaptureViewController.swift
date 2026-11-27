@@ -813,6 +813,15 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     }
 
     func imageScanningSessionWillStopScanning(_ scanningSession: SelfieImageScanningSession) {
+        // Cancel callbacks immediately; draining an accepted scan can take longer
+        // than a timer, and the next attempt may begin before draining finishes.
+        stopSampleTimer()
+        stopCaptureAcknowledgementTimer()
+        stopPoseInstructionTimer()
+        clearPoseCaptureFallbackState()
+        clearPoseBestFrameState()
+        moveCloserFeedbackState.reset()
+
         scanningSession.concurrencyManager.getPerformanceMetrics(completeOn: .main) {
             [weak sheetController] averageFPS, numFramesScanned in
             guard let averageFPS = averageFPS else { return }
@@ -834,12 +843,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     }
 
     func imageScanningSessionDidStopScanning(_ scanningSession: SelfieImageScanningSession) {
-        stopSampleTimer()
-        stopCaptureAcknowledgementTimer()
-        stopPoseInstructionTimer()
-        clearPoseCaptureFallbackState()
-        clearPoseBestFrameState()
-        moveCloserFeedbackState.reset()
+        // Cleanup happens when stopping begins, before another attempt can start.
     }
 
     func imageScanningSessionDidScanImage(

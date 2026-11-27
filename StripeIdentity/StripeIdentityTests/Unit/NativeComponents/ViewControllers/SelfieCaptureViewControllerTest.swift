@@ -6,6 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
+import AVKit
 import Foundation
 @_spi(InternalOnlyAPI) import StripeCameraCoreTestUtils
 @_spi(InternalOnlyAPI) import StripeCore
@@ -145,15 +146,94 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
             ).buttonViewModels.isEmpty
         )
     }
+
+    func testRestartAcceptsFramesBeforePreviousCameraStopCompletes() throws {
+        // Given a sample timer that temporarily prevents collecting another frame
+        let vc = makeViewController(initialState: .scanning(.empty, .initialValue()))
+        let session = vc.imageScanningSession
+        let sample = makeFaceCaptureData().first
+        vc.imageScanningSessionDidScanImage(
+            session,
+            image: sample.image,
+            scannerOutput: sample.scannerOutput,
+            exifMetadata: nil,
+            expectedClassification: .empty
+        )
+        XCTAssertFalse(vc.imageScanningSessionShouldScanCameraOutput(session))
+
+        // When scanning stops and restarts without waiting for the camera to stop
+        session.stopScanning()
+        XCTAssertTrue(vc.imageScanningSessionShouldScanCameraOutput(session))
+        session.startScanning()
+
+        let sampleBuffer = try XCTUnwrap(
+            CapturedImageMock.frontDriversLicense.image.convertToSampleBuffer()
+        )
+        let output = AVCaptureVideoDataOutput()
+        session.captureOutput(
+            output,
+            didOutput: sampleBuffer,
+            from: AVCaptureConnection(inputPorts: [], output: output)
+        )
+        mockConcurrencyManager.respondToScan(output: sample.scannerOutput)
+
+        // Then the previous attempt's timer does not suppress the new frame
+        XCTAssertEqual(mockConcurrencyManager.scanCallCount, 1)
+        guard case .scanning(_, let scanningState) = session.state else {
+            return XCTFail("Expected the new attempt to be scanning")
+        }
+        XCTAssertEqual(scanningState.frontSamples.count, 1)
+        session.stopScanning()
+    }
+
+    func testStopCancelsPoseAcknowledgementWhileScannerIsDraining() {
+        // Given a completed front capture waiting to advance to the next pose
+        let sample = makeFaceCaptureData().first
+        let frontSamples = Array(
+            repeating: sample,
+            count: Self.mockVerificationPage.selfie!.numSamples - 1
+        )
+        let vc = makeViewController(
+            initialState: .scanning(.empty, .init(frontSamples: frontSamples)),
+            enable3DFaceCapture: true
+        )
+        let session = vc.imageScanningSession
+        vc.imageScanningSessionDidScanImage(
+            session,
+            image: sample.image,
+            scannerOutput: sample.scannerOutput,
+            exifMetadata: nil,
+            expectedClassification: .empty
+        )
+        XCTAssertFalse(vc.imageScanningSessionShouldScanCameraOutput(session))
+        let stoppedState = session.state
+
+        // When stopping cannot complete before the acknowledgement timer's deadline
+        mockConcurrencyManager.automaticallyCompletesReset = false
+        session.stopScanning()
+        XCTAssertTrue(vc.imageScanningSessionShouldScanCameraOutput(session))
+        let acknowledgementDeadlinePassed = expectation(description: "Acknowledgement deadline passed")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
+            acknowledgementDeadlinePassed.fulfill()
+        }
+        wait(for: [acknowledgementDeadlinePassed], timeout: 3)
+
+        // Then the old callback cannot advance the pose or restart the timeout
+        XCTAssertEqual(session.state, stoppedState)
+        XCTAssertNotEqual(session.timeoutTimer?.isValid, true)
+        mockConcurrencyManager.completePendingResets()
+    }
 }
 
 private extension SelfieCaptureViewControllerTest {
     func makeViewController(
-        initialState: SelfieCaptureViewController.State = .initial
+        initialState: SelfieCaptureViewController.State = .initial,
+        enable3DFaceCapture: Bool = false
     ) -> SelfieCaptureViewController {
         return SelfieCaptureViewController(
             initialState: initialState,
             apiConfig: Self.mockVerificationPage.selfie!,
+            enable3DFaceCapture: enable3DFaceCapture,
             sheetController: mockSheetController,
             cameraSession: mockCameraSession,
             selfieUploader: mockSelfieUploader,
