@@ -1613,6 +1613,36 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
+    func testEmbeddedPaymentMethodsView_linkInlineVerification_preselectedBankAccountWithMandate() {
+        // After verifying, Link is preselected with the customer's default bank account, with its mandate and data-sharing consent below the list
+        let bankAccount = LinkStubs.paymentMethods()[LinkStubs.PaymentMethodIndices.bankAccount]
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example, Inc."
+        let context = PayWithLinkViewController.Context(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(
+                paymentMethodTypes: ["card", "link"],
+                linkPaymentMethodBankAccountDataConsent: "Example, Inc. can access account and ownership details, balances, and transactions. [Learn more](https://stripe.com)"
+            ),
+            configuration: configuration,
+            customerProvider: CustomerProvider(customer: configuration.customer),
+            linkBrand: .link,
+            shouldOfferApplePay: false,
+            shouldFinishOnClose: false,
+            initiallySelectedPaymentDetailsID: nil,
+            callToAction: nil,
+            analyticsHelper: ._testValue()
+        )
+        let delegate = LinkMandateDelegate(linkMandateText: EmbeddedPaymentElement.linkMandateText(for: bankAccount, context: context))
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: .link,
+            initialSelectedRowChangeButtonState: (shouldShowChangeButton: true, sublabel: bankAccount.linkPaymentDetailsFormattedString),
+            placesLinkFirst: true,
+            delegate: delegate
+        )
+        verify(embeddedView)
+    }
+
     private func makeLinkInlineVerificationEmbeddedView(
         style: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style,
         state: EmbeddedLinkInlineVerificationView.State
@@ -1795,7 +1825,7 @@ extension EmbeddedPaymentMethodsView {
             incentive: incentive,
             featuredInstitutionsLoader: featuredInstitutionsLoader,
             analyticsHelper: ._testValue(),
-            delegate: nil
+            delegate: delegate
         )
     }
 }
@@ -1813,4 +1843,21 @@ extension FeaturedInstitutionsLoader {
         }
         return FeaturedInstitutionsLoader(icons: icons)
     }
+}
+
+/// Supplies the mandate for the Link payment details the selected Link row shows.
+private final class LinkMandateDelegate: EmbeddedPaymentMethodsViewDelegate {
+    let linkMandateText: NSAttributedString?
+
+    init(linkMandateText: NSAttributedString?) {
+        self.linkMandateText = linkMandateText
+    }
+
+    func embeddedPaymentMethodsViewDidUpdateHeight() {}
+    func embeddedPaymentMethodsViewWillSelect(_ rowButtonType: RowButtonType) {}
+    func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {}
+    func embeddedPaymentMethodsViewDidUpdateSelection() {}
+    func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {}
+    func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool { false }
+    func embeddedPaymentMethodsViewLinkMandateText() -> NSAttributedString? { linkMandateText }
 }

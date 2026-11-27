@@ -313,15 +313,11 @@ extension PayWithLinkViewController {
         }
 
         func recordBankAccountConsentIfNeeded(for paymentDetails: ConsumerPaymentDetails) async {
-            guard case .bankAccount = paymentDetails.details,
-                  let consentText = context.elementsSession.linkPaymentMethodBankAccountDataConsent,
-                  !consentText.isEmpty
-            else {
-                return
-            }
-
-            // Fire and forget; consent recording must never block or fail payment confirmation.
-            _ = try? await linkAccount.recordConnectionsConsentAcquired(localizedConsentText: consentText)
+            await WalletViewModel.recordBankAccountConsentIfNeeded(
+                for: paymentDetails,
+                linkAccount: linkAccount,
+                elementsSession: context.elementsSession
+            )
         }
 
         func reloadPaymentDetails(completion: (() -> Void)?) {

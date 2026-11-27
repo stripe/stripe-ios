@@ -1206,7 +1206,7 @@ extension EmbeddedUITests {
 // MARK: - Inline Link verification
 
 extension EmbeddedUITests {
-    func testLinkInlineVerification_typesTheCodeInTheCard_thenPaysWithTheWalletPick() {
+    func testLinkInlineVerification_typesTheCodeInTheCard_thenPaysWithTheDefaultPaymentMethod() {
         // Given a returning Link customer
         loadPlayground(app, linkInlineVerificationSettings(.on))
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
@@ -1216,10 +1216,11 @@ extension EmbeddedUITests {
         codeButton.tap()
         app.typeText("000000")
 
-        // Then the Link wallet opens to pick what to pay with, and Link is selected afterwards
-        app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Continue"].waitForExistenceAndTap(timeout: 10)
+        // Then Link is selected with their default payment method, without opening the Link wallet
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Link")
+        XCTAssertTrue(app.buttons["Change"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.otherElements["Stripe.Link.PayWithLinkViewController"].exists)
         XCTAssertFalse(app.otherElements["embedded_link_inline_verification"].exists)
 
         // ...and the merchant's button pays without more UI
@@ -1240,9 +1241,11 @@ extension EmbeddedUITests {
         let dialogCodeField = app.textViews.matching(NSPredicate(format: "label == %@ AND hasKeyboardFocus == true", "Code field")).firstMatch
         XCTAssertTrue(dialogCodeField.waitForExistence(timeout: 10))
         dialogCodeField.typeText("000000")
-        app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Continue"].waitForExistenceAndTap(timeout: 10)
+
+        // ...and Link is selected with their default payment method, without opening the Link wallet
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Link")
+        XCTAssertFalse(app.otherElements["Stripe.Link.PayWithLinkViewController"].exists)
     }
 
     func testLinkInlineVerification_closingTheCard_thenPayingWithLinkVerifiesInTheDialog() {

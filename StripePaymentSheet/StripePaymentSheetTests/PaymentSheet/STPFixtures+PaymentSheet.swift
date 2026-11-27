@@ -138,7 +138,8 @@ extension STPElementsSession {
         linkSuppress2FA: Bool? = nil,
         linkEnableMFAAuthFlow: Bool? = nil,
         hasLinkConsumerIncentive: Bool = false,
-        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
+        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"],
+        linkPaymentMethodBankAccountDataConsent: String? = nil
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -212,6 +213,12 @@ extension STPElementsSession {
         }
 
         json[jsonDict: "link_settings"]!["link_supported_payment_methods_onboarding_enabled"] = linkSupportedPaymentMethodsOnboardingEnabled
+
+        if let linkPaymentMethodBankAccountDataConsent {
+            var linkPaymentSessionContext = json[jsonDict: "link_settings"]?["link_payment_session_context"] as? [String: Any] ?? [:]
+            linkPaymentSessionContext["link_payment_method_bank_account_data_consent"] = linkPaymentMethodBankAccountDataConsent
+            json[jsonDict: "link_settings"]!["link_payment_session_context"] = linkPaymentSessionContext
+        }
 
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
