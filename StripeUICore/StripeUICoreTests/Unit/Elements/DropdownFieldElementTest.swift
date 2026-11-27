@@ -216,4 +216,58 @@ final class DropdownFieldElementTest: XCTestCase {
         XCTAssertTrue(actions.allSatisfy { $0.state == .off })
     }
 
+    func testMenuFocusDoesNotOpenMenu() {
+        // Given a dropdown presented as a menu, shown after a text field that's being edited
+        let element = DropdownFieldElement(items: items, label: "", presentsAsMenu: true)
+        let textField = UITextField()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 600))
+        window.addSubview(textField)
+        window.addSubview(element.view)
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true }
+        XCTAssertTrue(textField.becomeFirstResponder())
+
+        // When focus moves to the dropdown
+        XCTAssertTrue(element.beginEditing())
+
+        // Then the menu button is focused and the text field stops editing
+        XCTAssertTrue(element.menuButton.isFirstResponder)
+        XCTAssertFalse(textField.isFirstResponder)
+        // ...but the dropdown isn't editing, since the menu isn't open
+        XCTAssertFalse(element.isEditing)
+
+        // When the dropdown resigns
+        XCTAssertTrue(element.pickerFieldView.resignFirstResponder())
+
+        // Then the menu button is no longer focused
+        XCTAssertFalse(element.menuButton.isFirstResponder)
+    }
+
+    func testMenuButtonDisabledWithField() {
+        // Given a dropdown presented as a menu
+        let element = DropdownFieldElement(items: items, label: "", presentsAsMenu: true)
+        XCTAssertTrue(element.menuButton.isEnabled)
+
+        // When the field is disabled
+        element.pickerFieldView.isUserInteractionEnabled = false
+
+        // Then the menu button is disabled and can't be focused
+        XCTAssertFalse(element.menuButton.isEnabled)
+        XCTAssertFalse(element.beginEditing())
+
+        // When the field is enabled again
+        element.pickerFieldView.isUserInteractionEnabled = true
+
+        // Then the menu button is enabled
+        XCTAssertTrue(element.menuButton.isEnabled)
+    }
+
+    func testMenuButtonDisabledWithSingleElement() {
+        // Given a dropdown presented as a menu that's disabled because it has a single item
+        let element = DropdownFieldElement(items: [items[0]], label: "", disableDropdownWithSingleElement: true, presentsAsMenu: true)
+
+        // Then the menu button is disabled
+        XCTAssertFalse(element.menuButton.isEnabled)
+    }
+
 }

@@ -112,14 +112,14 @@ import UIKit
     }()
 
     /// Presents `items` in a pop-up menu. Only used when `usesMenu` is true.
-    private(set) lazy var menuButton: UIButton = {
+    private(set) lazy var menuButton: PickerFieldView.MenuButton = {
         var configuration = UIButton.Configuration.plain()
         // We don't need to show this button's title or indicator, we're just using it to accept hits and present the menu.
         configuration.baseForegroundColor = .clear
         if #available(iOS 16.0, *) {
             configuration.indicator = .none
         }
-        let button = UIButton(configuration: configuration)
+        let button = PickerFieldView.MenuButton(configuration: configuration)
         button.showsMenuAsPrimaryAction = true
         button.accessibilityLabel = label
         return button

@@ -24,6 +24,23 @@ protocol PickerFieldViewDelegate: AnyObject {
 @objc(STP_Internal_PickerFieldView)
 final class PickerFieldView: UIView {
 
+    /// A button that presents a menu, for use as `pickerView` when `presentsMenu` is true.
+    final class MenuButton: UIButton {
+        // Allows programmatic navigation to focus the button without opening its menu
+        override var canBecomeFirstResponder: Bool { true }
+
+        override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+            // Dismiss the keyboard of the previously focused field so it doesn't stay up behind the menu
+            window?.endEditing(true)
+            return super.beginTracking(touch, with: event)
+        }
+
+        override func accessibilityActivate() -> Bool {
+            window?.endEditing(true)
+            return super.accessibilityActivate()
+        }
+    }
+
     // MARK: - Views
     private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: true, theme: theme)
     private lazy var textField: PickerTextField = {
@@ -122,7 +139,7 @@ final class PickerFieldView: UIView {
     /**
      - Parameter label: The label of this picker
      - Parameter shouldShowChevron: Whether a downward chevron should be displayed in this field
-     - Parameter pickerView: A `UIPicker` or `UIDatePicker` view that opens when this field becomes first responder, or a `UIButton` that presents a menu if `presentsMenu` is true
+     - Parameter pickerView: A `UIPicker` or `UIDatePicker` view that opens when this field becomes first responder, or a `UIButton` (a `MenuButton` on iOS) that presents a menu if `presentsMenu` is true
      - Parameter presentsMenu: Whether `pickerView` is a `UIButton` that presents a menu when tapped
      - Parameter delegate: Delegate for this view
      - Parameter theme: Theme for the picker field
@@ -180,6 +197,9 @@ final class PickerFieldView: UIView {
 
     override var isUserInteractionEnabled: Bool {
         didSet {
+            if presentsMenu {
+                (pickerView as? UIButton)?.isEnabled = isUserInteractionEnabled
+            }
             textField.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
             if frame.size != .zero {
                 textField.layoutIfNeeded()  // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.
@@ -221,6 +241,17 @@ final class PickerFieldView: UIView {
             return false
         }
 
+        #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
+        if presentsMenu {
+            // Focus the menu button without opening the menu, and dismiss the keyboard of the previously focused field
+            window?.endEditing(true)
+            guard pickerView.becomeFirstResponder() else {
+                return false
+            }
+            UIAccessibility.post(notification: .layoutChanged, argument: pickerView)
+            return true
+        }
+        #endif
         if super.becomeFirstResponder() {
             return true
         }
@@ -232,6 +263,11 @@ final class PickerFieldView: UIView {
     }
 
     override func resignFirstResponder() -> Bool {
+        #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
+        if presentsMenu {
+            return pickerView.resignFirstResponder()
+        }
+        #endif
         return textField.resignFirstResponder()
     }
 }
