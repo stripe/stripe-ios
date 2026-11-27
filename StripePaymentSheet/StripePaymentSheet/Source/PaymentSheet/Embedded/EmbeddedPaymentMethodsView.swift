@@ -408,26 +408,66 @@ class EmbeddedPaymentMethodsView: UIView {
         let linkRowButton = linkRowButton
         let separators = linkInlineVerificationHiddenSeparators
         linkInlineVerificationHiddenSeparators = []
-        let updates = {
-            container.setHiddenIfNecessary(true)
-            container.alpha = 0
+        defer { UIAccessibility.post(notification: .layoutChanged, argument: linkRowButton) }
+
+        guard animated, window != nil, !UIAccessibility.isReduceMotionEnabled, let linkRowButton else {
+            container.removeFromSuperview()
             separators.forEach { $0.setHiddenIfNecessary(false) }
             linkRowButton?.setHiddenIfNecessary(false)
-            linkRowButton?.alpha = 1
+            return
+        }
+
+        // Shrinking the card inside the stack view squashes its content over the rows below, so the card leaves the
+        // stack view and is clipped from its top edge down to the Link row, fading out over the Link row as it fades in.
+        layoutIfNeeded()
+        let containerFrame = container.frame
+        let linkRowIndex = stackView.arrangedSubviews.firstIndex(of: linkRowButton) ?? 0
+        let separatorBefore = separators.first { (stackView.arrangedSubviews.firstIndex(of: $0) ?? 0) < linkRowIndex }
+        let separatorAfter = separators.first { (stackView.arrangedSubviews.firstIndex(of: $0) ?? 0) > linkRowIndex }
+        let clipView = UIView(frame: container.convert(container.bounds, to: self))
+        clipView.clipsToBounds = true
+        clipView.isUserInteractionEnabled = false
+        container.removeFromSuperview()
+        container.translatesAutoresizingMaskIntoConstraints = true
+        container.autoresizingMask = []
+        container.frame = clipView.bounds
+        clipView.addSubview(container)
+        addSubview(clipView)
+
+        separators.forEach { $0.setHiddenIfNecessary(false) }
+        linkRowButton.setHiddenIfNecessary(false)
+        linkRowButton.alpha = 0
+        // Hidden views keep stale frames, so start them where they'd be now instead of animating from there.
+        UIView.performWithoutAnimation {
+            let width = stackView.bounds.width
+            var y = containerFrame.minY
+            if let separatorBefore {
+                separatorBefore.frame = CGRect(x: 0, y: y, width: width, height: separatorBefore.intrinsicHeight(width: width))
+                separatorBefore.layoutIfNeeded()
+                y = separatorBefore.frame.maxY
+            }
+            linkRowButton.frame = CGRect(x: 0, y: y, width: width, height: linkRowButton.intrinsicHeight(width: width))
+            linkRowButton.layoutIfNeeded()
+            if let separatorAfter {
+                separatorAfter.frame = CGRect(x: 0, y: containerFrame.maxY, width: width, height: separatorAfter.intrinsicHeight(width: width))
+                separatorAfter.layoutIfNeeded()
+            }
+        }
+
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
             self.setNeedsLayout()
             self.layoutIfNeeded()
+            let linkRowFrame = linkRowButton.convert(linkRowButton.bounds, to: self)
+            clipView.frame.size.height = max(0, linkRowFrame.maxY - clipView.frame.minY)
+        } completion: { _ in
+            clipView.removeFromSuperview()
         }
-        let completion: (Bool) -> Void = { _ in
-            container.removeFromSuperview()
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
+            clipView.alpha = 0
         }
-        if animated, window != nil, !UIAccessibility.isReduceMotionEnabled {
-            linkRowButton?.alpha = 0
-            UIView.animate(withDuration: 0.25, animations: updates, completion: completion)
-        } else {
-            updates()
-            completion(true)
+        UIView.animate(withDuration: 0.2, delay: 0.1, options: .curveEaseIn) {
+            linkRowButton.alpha = 1
         }
-        UIAccessibility.post(notification: .layoutChanged, argument: linkRowButton)
     }
 
     /// Displays an error below the payment method rows, or clears it when `error` is nil.
@@ -802,5 +842,15 @@ private final class LinkOnlyRowContainerView: UIView {
         super.traitCollectionDidChange(previousTraitCollection)
         // `CGColor` doesn't follow light and dark mode on its own.
         layer.borderColor = appearance.colors.componentBorder.cgColor
+    }
+}
+
+private extension UIView {
+    func intrinsicHeight(width: CGFloat) -> CGFloat {
+        systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
     }
 }

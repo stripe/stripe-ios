@@ -10,7 +10,7 @@ import Foundation
 @MainActor
 enum EmbeddedLinkInlineAuthRegistry {
     /// How long after an automatic code another instance won't send one, which is about as long as the code is valid.
-    static let autoSendCooldown: TimeInterval = 10 * 60
+    static let autoSendCooldown: TimeInterval = 1 * 60
 
     private static var dismissedEmails: Set<String> = []
     private static var autoSendDates: [String: Date] = [:]

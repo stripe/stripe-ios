@@ -428,8 +428,9 @@ extension EmbeddedPaymentElement: EmbeddedLinkInlineAuthControllerHost {
     }
 
     func linkInlineAuthDidCollapse() {
-        embeddedPaymentMethodsView.collapseLinkInlineVerification(animated: true)
+        // Updated first so the collapse animates to the Link row's final height.
         embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: false)
+        embeddedPaymentMethodsView.collapseLinkInlineVerification(animated: true)
         informDelegateIfPaymentOptionUpdated()
     }
 
