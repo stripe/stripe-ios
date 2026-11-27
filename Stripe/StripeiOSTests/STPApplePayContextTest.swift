@@ -68,6 +68,42 @@ class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
 }
 
 class STPApplePayContextTest: XCTestCase {
+    func testInitAddsEMVToMerchantBuiltChinaUnionPayRequest() {
+        // Given a merchant-built request without the required EMV capability
+        let request = PKPaymentRequest()
+        request.merchantIdentifier = "merchant_id"
+        request.countryCode = "CN"
+        request.currencyCode = "CNY"
+        request.supportedNetworks = [.visa, .chinaUnionPay]
+        request.merchantCapabilities = [.capability3DS, .capabilityDebit]
+        request.paymentSummaryItems = [PKPaymentSummaryItem(label: "Test", amount: NSDecimalNumber(value: 1))]
+
+        // When handing the final request to Stripe's Apple Pay context
+        _ = STPApplePayContext(paymentRequest: request, delegate: nil)
+
+        // Then EMV is added while preserving the merchant's funding restriction
+        XCTAssertEqual(request.merchantCapabilities, [.capability3DS, .capabilityEMV, .capabilityDebit])
+    }
+
+    func testInitRemovesEMVAfterMerchantRemovesChinaUnionPay() {
+        // Given a Stripe-built request with UnionPay enabled
+        let originalNetworks = StripeAPI.additionalEnabledApplePayNetworks
+        StripeAPI.additionalEnabledApplePayNetworks = [.chinaUnionPay]
+        defer { StripeAPI.additionalEnabledApplePayNetworks = originalNetworks }
+        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "merchant_id", country: "CN", currency: "CNY")
+        XCTAssertTrue(request.merchantCapabilities.contains(.capabilityEMV))
+
+        // When the merchant removes UnionPay before handing the request to Stripe
+        request.supportedNetworks = [.visa]
+        request.merchantCapabilities.insert(.capabilityCredit)
+        request.paymentSummaryItems = [PKPaymentSummaryItem(label: "Test", amount: NSDecimalNumber(value: 1))]
+        _ = STPApplePayContext(paymentRequest: request, delegate: nil)
+
+        // Then the stale EMV capability is removed and the funding restriction remains
+        XCTAssertEqual(request.supportedNetworks, [.visa])
+        XCTAssertEqual(request.merchantCapabilities, [.capability3DS, .capabilityCredit])
+    }
+
     func testInvalidPaymentRequest() {
         // An invalid request (missing payment summary items)...
         let request = StripeAPI.paymentRequest(
