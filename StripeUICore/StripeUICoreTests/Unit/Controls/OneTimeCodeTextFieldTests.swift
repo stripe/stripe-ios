@@ -58,6 +58,29 @@ final class OneTimeCodeTextFieldTests: XCTestCase {
         XCTAssertLessThan(frames.first?.width ?? .infinity, 48)
     }
 
+    func testCustomInputAccessoryView() {
+        let field = makeField(configuration: .init())
+        XCTAssertNil(field.inputAccessoryView)
+        let toolbar = UIToolbar()
+        field.customInputAccessoryView = toolbar
+        XCTAssertTrue(field.inputAccessoryView === toolbar)
+    }
+
+    func testSettingValueMovesCaretToEndOfValue() {
+        // Given a field with a complete code typed in
+        let field = makeField(configuration: .init())
+        field.insertText("123456")
+
+        // When the value is cleared and a digit is typed
+        field.value = ""
+        field.insertText("1")
+
+        // Then the caret sits right after that digit
+        let caret = field.selectedTextRange as? OneTimeCodeTextField.TextRange
+        XCTAssertEqual(caret?._start.index, 1)
+        XCTAssertEqual(caret?._end.index, 1)
+    }
+
     private func makeField(configuration: OneTimeCodeTextField.Configuration) -> OneTimeCodeTextField {
         return OneTimeCodeTextField(configuration: configuration, theme: .default)
     }

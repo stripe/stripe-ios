@@ -1202,3 +1202,91 @@ extension EmbeddedUITests {
     var webviewAuthorizePaymentButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT") }
     var webviewAuthorizeSetupButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST SETUP") }
 }
+
+// MARK: - Inline Link verification
+
+extension EmbeddedUITests {
+    func testLinkInlineVerification_typesTheCodeInTheCard_thenPaysWithTheWalletPick() {
+        // Given a returning Link customer
+        loadPlayground(app, linkInlineVerificationSettings(.on))
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+
+        // When they tap the code once it's sent and type it in the card
+        let codeButton = linkInlineVerificationCodeButton()
+        codeButton.tap()
+        app.typeText("000000")
+
+        // Then the Link wallet opens to pick what to pay with, and Link is selected afterwards
+        app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Continue"].waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Link")
+        XCTAssertFalse(app.otherElements["embedded_link_inline_verification"].exists)
+
+        // ...and the merchant's button pays without more UI
+        app.swipeUp()
+        app.buttons["Checkout"].waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+
+    func testLinkInlineVerification_forcedDialog() {
+        // Given the server sends every code entry to the dialog
+        loadPlayground(app, linkInlineVerificationSettings(.forceDialog))
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+
+        // When the customer taps the code in the card
+        linkInlineVerificationCodeButton().tap()
+
+        // Then they enter it in the Link dialog, which reuses the code already sent. The card's field stays behind it.
+        let dialogCodeField = app.textViews.matching(NSPredicate(format: "label == %@ AND hasKeyboardFocus == true", "Code field")).firstMatch
+        XCTAssertTrue(dialogCodeField.waitForExistence(timeout: 10))
+        dialogCodeField.typeText("000000")
+        app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Continue"].waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Link")
+    }
+
+    func testLinkInlineVerification_closingTheCard_thenPayingWithLinkVerifiesInTheDialog() {
+        // Given a returning Link customer who closes the card
+        loadPlayground(app, linkInlineVerificationSettings(.on))
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        _ = linkInlineVerificationCodeButton()
+        app.otherElements["embedded_link_inline_verification"].buttons["Close"].waitForExistenceAndTap()
+
+        // When they select the Link row, which stays on top, and check out
+        app.buttons["Link"].waitForExistenceAndTap()
+        XCTAssertEqual(app.staticTexts["Payment method"].label, "Link")
+        app.swipeUp()
+        app.buttons["Checkout"].waitForExistenceAndTap()
+
+        // Then they verify in the Link dialog with the code already sent, and pay in the Link wallet
+        let codeField = app.textViews["Code field"]
+        XCTAssertTrue(codeField.waitForExistence(timeout: 10))
+        codeField.typeText("000000")
+        app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Pay $50.99"].waitForExistenceAndTap(timeout: 10)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+
+    private func linkInlineVerificationSettings(_ inlineVerification: PaymentSheetTestPlaygroundSettings.EmbeddedLinkInlineVerification) -> PaymentSheetTestPlaygroundSettings {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.uiStyle = .embedded
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .new
+        settings.linkPassthroughMode = .pm
+        settings.defaultBillingAddress = .on // the email on the default billing details is signed up for Link
+        settings.formSheetAction = .continue
+        settings.embeddedLinkInlineVerification = inlineVerification
+        return settings
+    }
+
+    /// The card's code area, once the code is sent and it can be tapped.
+    private func linkInlineVerificationCodeButton() -> XCUIElement {
+        let card = app.otherElements["embedded_link_inline_verification"]
+        XCTAssertTrue(card.waitForExistence(timeout: 10))
+        XCTAssertTrue(card.staticTexts["Use your saved information"].exists)
+        let codeButton = card.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Enter the code sent to")).firstMatch
+        let isEnabled = expectation(for: NSPredicate(format: "exists == true AND isEnabled == true"), evaluatedWith: codeButton)
+        wait(for: [isEnabled], timeout: 15)
+        return codeButton
+    }
+}
