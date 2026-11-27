@@ -54,6 +54,27 @@ final class SelfieUploaderTest: XCTestCase {
         )
     }
 
+    func testUploadImagesInTestModeUsesPlaceholderForSideFrames() throws {
+        // Given a captured selfie with left and right side frames
+        let capturedImage = try makeCapturedImage()
+        let faceCaptureData = try XCTUnwrap(
+            FaceCaptureData(samples: Array(repeating: capturedImage, count: 3), leftSide: capturedImage, rightSide: capturedImage)
+        )
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 8)
+
+        // When the images are uploaded in test mode
+        uploader.uploadImages(faceCaptureData)
+        wait(for: uploadRequestExpectations, timeout: 1)
+
+        // Then the side frames use the bundled selfie placeholder
+        let placeholderData = try resizedPNGData(
+            for: try TestModeImage.selfie.makeCGImage(),
+            maxDimension: IdentityImageUploaderTest.mockConfig.lowResImageMaxDimension
+        )
+        XCTAssertEqual(uploadRequest(named: "VS_123_face_left_full_frame")?.image.pngData(), placeholderData)
+        XCTAssertEqual(uploadRequest(named: "VS_123_face_right_full_frame")?.image.pngData(), placeholderData)
+    }
+
     func testUploadImagesInLiveModeUsesCapturedImage() throws {
         // Given a live mode uploader and captured selfie
         uploader = makeUploader(isTestMode: false)

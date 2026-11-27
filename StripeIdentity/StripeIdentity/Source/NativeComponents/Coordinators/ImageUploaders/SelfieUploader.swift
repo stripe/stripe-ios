@@ -158,8 +158,14 @@ final class SelfieUploader: SelfieUploaderProtocol {
         _ capturedImage: FaceScannerInputOutput,
         ofType type: ImageType
     ) -> Future<StripeFile> {
+        let image: CGImage
+        do {
+            image = isTestMode ? try TestModeImage.selfie.makeCGImage() : capturedImage.image
+        } catch {
+            return Promise(error: error)
+        }
         return imageUploader.uploadLowResImage(
-            capturedImage.image,
+            image,
             fileName: SelfieUploader.fileName(
                 with: imageUploader.apiClient.verificationSessionId,
                 for: type,
