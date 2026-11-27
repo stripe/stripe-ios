@@ -59,10 +59,9 @@ extension CheckoutElementsController {
                     if let latestSessionResponse {
                         return .completed(latestSessionResponse)
                     }
-                    let error = CheckoutError.unknown(
-                        debugDescription: "Link completed Checkout confirmation without returning the confirmed session."
-                    )
-                    stpAssertionFailure(error.nonGenericDescription)
+                    let message = "Link completed Checkout confirmation without returning the confirmed session."
+                    logUnexpectedCheckoutElementsErrorAndAssert(.linkCompletedWithoutSession, message: message, apiClient: configuration.apiClient)
+                    let error = CheckoutError.unknown(debugDescription: message)
                     return .failed(error)
                 case .canceled:
                     return .canceled(sessionResponse: latestSessionResponse)
@@ -147,7 +146,11 @@ extension CheckoutElementsController {
                 Task { @MainActor in
                     guard case .link(let confirmOption) = linkPaymentOption else {
                         let error = PaymentSheetError.confirmingWithInvalidPaymentOption
-                        stpAssertionFailure("Link returned an unsupported Checkout confirmation option.")
+                        logUnexpectedCheckoutElementsErrorAndAssert(
+                            .linkUnsupportedPaymentOption,
+                            message: "Link returned an unsupported Checkout confirmation option.",
+                            apiClient: configuration.apiClient
+                        )
                         linkCompletion(.failed(error: error), nil)
                         return
                     }

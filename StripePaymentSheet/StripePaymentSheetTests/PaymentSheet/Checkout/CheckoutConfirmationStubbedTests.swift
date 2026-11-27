@@ -667,6 +667,10 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         let poller = TestCheckoutSessionPoller(outcome: .succeeded(CheckoutConfirmationStubbedTests.pollResponse()))
         var responseJSON = makeConfirmedSessionJSON(status: "open", paymentStatus: "unpaid")
         responseJSON["payment_response"] = ["status": "requires_action"]
+        let previousHistory = STPAnalyticsClient.sharedClient._testLogHistory
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        defer { STPAnalyticsClient.sharedClient._testLogHistory = previousHistory }
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
 
         // When the Checkout Session is confirmed
         let result = await confirmCheckoutSession(
@@ -683,6 +687,12 @@ final class CheckoutConfirmationStubbedTests: APIStubbedTestCase {
         XCTAssertEqual(response?.status, .open)
         XCTAssertEqual(response?.paymentStatus, .unpaid)
         XCTAssertTrue(poller.checkoutSessionIds.isEmpty)
+
+        // ...and logs the unexpected error once
+        let events = STPAnalyticsClient.sharedClient._testLogHistory.filter { $0["event"] as? String == "unexpected_error.checkout_elements" }
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events.first?["error_code"] as? String, "confirm_requires_action_without_intent")
+        XCTAssertFalse(STPAssertTestUtil.shouldSuppressNextSTPAlert)
     }
 
     // MARK: - Payment Method

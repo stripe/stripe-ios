@@ -10,6 +10,7 @@
 
 struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
     /// Identifies a distinct unexpected error. Reuse a case only for the same error, and never rename a shipped case.
+    /// Only add cases for SDK or Stripe backend bugs; see `logUnexpectedCheckoutElementsErrorAndAssert`.
     enum ErrorCode: String {
         /// Confirmation found a Session payment option but no PaymentElement to confirm it with.
         case paymentOptionWithoutPaymentElement =
@@ -20,6 +21,18 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
         /// Confirmation found the embedded PaymentElement has no payment option, but the Session has one.
         case embeddedPaymentElementPaymentOptionOutOfSync =
             "embedded_payment_element_payment_option_out_of_sync"
+        /// The Session's payment option is Apple Pay, but Payment Element's configuration doesn't allow Apple Pay.
+        case paymentElementApplePayUnavailable =
+            "payment_element_apple_pay_unavailable"
+        /// Payment Element's FlowController and EmbeddedPaymentElement had different default payment options on first load.
+        case paymentElementInitialPaymentOptionMismatch =
+            "payment_element_initial_payment_option_mismatch"
+        /// PaymentHandler returned an action status this SDK doesn't handle.
+        case paymentHandlerUnknownActionStatus =
+            "payment_handler_unknown_action_status"
+        /// /confirm returned `requires_action` without a PaymentIntent or SetupIntent.
+        case confirmRequiresActionWithoutIntent =
+            "confirm_requires_action_without_intent"
         /// /poll reported `not_started` after /confirm was accepted.
         case confirmPollNotStarted =
             "confirm_poll_not_started"
@@ -32,6 +45,15 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
         /// Express Checkout Element asked to confirm with Link, but no view controller could present Link.
         case expressCheckoutElementLinkPresentingViewControllerUnavailable =
             "express_checkout_element_link_presenting_view_controller_unavailable"
+        /// Link reported a completed Checkout confirmation without the confirmed Session.
+        case linkCompletedWithoutSession =
+            "link_completed_without_session"
+        /// Link asked Checkout to confirm a payment option other than Link.
+        case linkUnsupportedPaymentOption =
+            "link_unsupported_payment_option"
+        /// The Apple Pay sheet finished in an error state without a result.
+        case applePayErrorStateWithoutResult =
+            "apple_pay_error_state_without_result"
         /// PassKit rejected the Apple Pay payment request built from the Session.
         case applePayPaymentRequestInvalid =
             "apple_pay_payment_request_invalid"
@@ -67,7 +89,9 @@ struct UnexpectedCheckoutElementsErrorAnalytic: Analytic {
     }
 }
 
-/// Logs an unexpected Checkout Elements error. `STPAnalyticsClient` asserts when it logs unexpected errors.
+/// Logs an unexpected Checkout Elements error. This asserts (`STPAnalyticsClient` asserts on every unexpected error) and alerts Stripe.
+/// Only use this for SDK or Stripe backend bugs. If merchant configuration, device state, or the network can cause the failure,
+/// throw a specific `CheckoutError` instead, e.g. `CheckoutError.applePayPresentationFailed`.
 func logUnexpectedCheckoutElementsErrorAndAssert(
     _ errorCode: UnexpectedCheckoutElementsErrorAnalytic.ErrorCode,
     message: String,

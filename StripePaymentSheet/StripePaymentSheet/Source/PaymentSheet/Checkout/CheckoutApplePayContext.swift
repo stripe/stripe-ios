@@ -198,7 +198,14 @@ final class CheckoutApplePayContext: NSObject, PKPaymentAuthorizationControllerD
         case .error:
             Task {
                 await controller.dismiss()
-                self.resume(with: self.result ?? .failed(CheckoutError.unknown(debugDescription: "Apple Pay finished in error state without a result.")))
+                if let result = self.result {
+                    self.resume(with: result)
+                } else {
+                    // `.error` is always set together with a result.
+                    let message = "Apple Pay finished in error state without a result."
+                    logUnexpectedCheckoutElementsErrorAndAssert(.applePayErrorStateWithoutResult, message: message, apiClient: self.apiClient)
+                    self.resume(with: .failed(CheckoutError.unknown(debugDescription: message)))
+                }
                 self._end()
             }
         case .success:
