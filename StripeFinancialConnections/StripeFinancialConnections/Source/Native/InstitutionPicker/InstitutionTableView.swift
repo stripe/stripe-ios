@@ -132,14 +132,6 @@ final class InstitutionTableView: UIView {
         super.init(frame: frame)
         if appearance.colors == .link {
             tableView.backgroundColor = .clear
-            // Cells and the footer own the card rounding. Leaving the table view unclipped lets
-            // the scroll indicator escape the card inset and render at the screen edge.
-            tableView.verticalScrollIndicatorInsets = UIEdgeInsets(
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: -Constants.Layout.navigationBarAlignedHorizontalMargin
-            )
             tableView.separatorStyle = .none
         } else {
             tableView.backgroundColor = FinancialConnectionsAppearance.Colors.surfacePrimary
@@ -177,6 +169,7 @@ final class InstitutionTableView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        updateScrollIndicatorInsets()
         // `UITableView` does not automatically resize `tableHeaderView`
         // so here we do it manually
         if let tableHeaderView = tableView.tableHeaderView {
@@ -227,6 +220,19 @@ final class InstitutionTableView: UIView {
             width: bounds.width,
             height: bounds.height - loadingViewY
         )
+    }
+
+    private func updateScrollIndicatorInsets() {
+        // UIKit insets the scroll indicator by the safe area, which keeps it clear of the sensor housing
+        // and rounded corners. Only cancel that on the edge with the side column (e.g. on iPhone Duo),
+        // so the indicator sits past it instead of next to the list.
+        let verticalBarEdges = tableView.stp_verticalBarEdges ?? []
+        var insets = tableView.verticalScrollIndicatorInsets
+        insets.left = verticalBarEdges.contains(.left) ? -tableView.safeAreaInsets.left : 0
+        insets.right = verticalBarEdges.contains(.right) ? -tableView.safeAreaInsets.right : 0
+        if tableView.verticalScrollIndicatorInsets != insets {
+            tableView.verticalScrollIndicatorInsets = insets
+        }
     }
 
     func load(
