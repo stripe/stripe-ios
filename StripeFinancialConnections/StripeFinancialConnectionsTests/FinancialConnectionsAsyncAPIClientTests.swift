@@ -375,61 +375,38 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         }
     }
 
-    func testPollWithInProgressPolicyRetriesOnAcceptedResponse() async throws {
-        // Given an HTTP 202 response with an error object
-        let inProgressError = try MakeStripeAPIError(statusCode: 202)
+    func testPollWithInProgressPolicyRetriesWhileInProgress() async throws {
+        // Given either in-progress response shape: an HTTP 202 API error or a decoding error
+        let inProgressErrors: [(String, Error)] = [
+            ("HTTP 202", try MakeStripeAPIError(statusCode: 202)),
+            ("Decoding error", DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Still in progress"))),
+        ]
         let maxRetries = 3
 
-        do {
-            // When polling with the attach retry policy
-            _ = try await apiClient.poll(
-                maxNumberOfRetries: maxRetries,
-                shouldRetry: { $0.isPollingInProgress },
-                sleepAction: { _ in
-                    self.tracker.sleepCallCount += 1
-                },
-                apiCall: {
-                    self.tracker.apiCallCount += 1
-                    throw inProgressError
-                }
-            )
-            XCTFail("Should throw an error")
-        } catch let error as FinancialConnectionsAsyncAPIClient.PollingError {
-            // Then polling continues until the retry limit
-            XCTAssertEqual(error, .maxRetriesReached)
-            XCTAssertEqual(tracker.apiCallCount, maxRetries)
-            XCTAssertEqual(tracker.sleepCallCount, maxRetries)
-        } catch {
-            XCTFail("Wrong error type: \(error)")
-        }
-    }
-
-    func testPollWithInProgressPolicyRetriesOnDecodingError() async {
-        // Given a decoding error from an in-progress response without an error object
-        let inProgressError = DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Still in progress"))
-        let maxRetries = 3
-
-        do {
-            // When polling with the attach retry policy
-            _ = try await apiClient.poll(
-                maxNumberOfRetries: maxRetries,
-                shouldRetry: { $0.isPollingInProgress },
-                sleepAction: { _ in
-                    self.tracker.sleepCallCount += 1
-                },
-                apiCall: {
-                    self.tracker.apiCallCount += 1
-                    throw inProgressError
-                }
-            )
-            XCTFail("Should throw an error")
-        } catch let error as FinancialConnectionsAsyncAPIClient.PollingError {
-            // Then polling continues until the retry limit
-            XCTAssertEqual(error, .maxRetriesReached)
-            XCTAssertEqual(tracker.apiCallCount, maxRetries)
-            XCTAssertEqual(tracker.sleepCallCount, maxRetries)
-        } catch {
-            XCTFail("Wrong error type: \(error)")
+        for (description, inProgressError) in inProgressErrors {
+            tracker = CallTracker()
+            do {
+                // When polling with the attach retry policy
+                _ = try await apiClient.poll(
+                    maxNumberOfRetries: maxRetries,
+                    shouldRetry: { $0.isPollingInProgress },
+                    sleepAction: { _ in
+                        self.tracker.sleepCallCount += 1
+                    },
+                    apiCall: {
+                        self.tracker.apiCallCount += 1
+                        throw inProgressError
+                    }
+                )
+                XCTFail("Should throw an error: \(description)")
+            } catch let error as FinancialConnectionsAsyncAPIClient.PollingError {
+                // Then polling continues until the retry limit
+                XCTAssertEqual(error, .maxRetriesReached, description)
+                XCTAssertEqual(tracker.apiCallCount, maxRetries, description)
+                XCTAssertEqual(tracker.sleepCallCount, maxRetries, description)
+            } catch {
+                XCTFail("Wrong error type for \(description): \(error)")
+            }
         }
     }
 
