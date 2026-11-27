@@ -936,6 +936,26 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertTrue(mockDocumentUploader.didReset)
     }
 
+    func testResetIgnoresFrameFromPreviousScan() {
+        // Given a front frame that is still being scanned
+        let vc = makeViewController(
+            state: .scanning(.front, nil)
+        )
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
+        waitForCameraSessionToStart()
+        mockCameraFrameCaptured(vc)
+
+        // When the user restarts the front scan before the frame finishes
+        vc.reset()
+        mockConcurrencyManager.respondToScan(
+            output: makeDocumentScannerOutputLegacy(with: .idCardFront)
+        )
+
+        // Then the old frame is not used for the new scan
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
+        XCTAssertNil(mockDocumentUploader.uploadedSide)
+    }
+
     func testModelPerformanceLogged() {
         // Mock metrics
         mockConcurrencyManager.mockAverageFPSMetric = 30
