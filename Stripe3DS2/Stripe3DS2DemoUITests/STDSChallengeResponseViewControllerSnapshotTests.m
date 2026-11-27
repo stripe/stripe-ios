@@ -38,11 +38,11 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
 
 - (void)setUp {
     [super setUp];
-    self.recordMode = YES;
+    self.recordMode = NSProcessInfo.processInfo.environment[@"STRIPE_SNAPSHOT_REFERENCE_DIR"] == nil;
 }
 
 - (NSString *)getReferenceImageDirectoryWithDefault:(NSString *)dir {
-    NSString *envDir = NSProcessInfo.processInfo.environment[@"SNAPSHOT_RECORD_DIR"];
+    NSString *envDir = NSProcessInfo.processInfo.environment[@"STRIPE_SNAPSHOT_REFERENCE_DIR"] ?: NSProcessInfo.processInfo.environment[@"SNAPSHOT_RECORD_DIR"];
     return envDir ?: @"/tmp/snapshot-records";
 }
 
