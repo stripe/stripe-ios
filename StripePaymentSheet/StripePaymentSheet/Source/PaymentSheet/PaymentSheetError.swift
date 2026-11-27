@@ -35,10 +35,6 @@ import StripePayments
     case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
     case embeddedPaymentElementUpdateWithFormPresented
 
-    // MARK: Loading errors
-    case paymentIntentInTerminalState(status: STPPaymentIntentStatus)
-    case setupIntentInTerminalState(status: STPSetupIntentStatus)
-
     // MARK: Deferred intent errors
     case intentConfigurationValidationFailed(message: String)
     case deferredIntentValidationFailed(message: String)
@@ -102,10 +98,6 @@ import StripePayments
                     "Something went wrong when linking your account.\nPlease try again later.",
                     "Error message when an error case happens when linking your account"
                 )
-            case .paymentIntentInTerminalState(status: let status):
-                return "PaymentSheet received a PaymentIntent in a terminal state: \(status)"
-            case .setupIntentInTerminalState(status: let status):
-                return "PaymentSheet received a SetupIntent in a terminal state: \(status)"
             case .linkSignUpNotRequired:
                 return "Don't call sign up if not needed"
             case .noPaymentMethodTypesAvailable(intentPaymentMethods: let intentPaymentMethods):
