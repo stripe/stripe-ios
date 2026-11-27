@@ -154,6 +154,21 @@ final class ConnectOutboundSourceValidationTests: XCTestCase {
         try await assertAuthenticationResultReachesOriginalDocument(html: html)
     }
 
+    func testAuthenticationRequestAfterGarbageCollectionReachesOriginalDocument() async throws {
+        // Given a trusted document that requests authentication only after garbage collection, as Connect.js does
+        // when the user taps a button, looking the handler up again at that point.
+        let html = Self.trustedAuthenticationCallbackHTML + """
+        <script>
+        \(HandlerGarbageCollectionFixture.script(then: """
+        window.webkit.messageHandlers.openAuthenticatedWebView.postMessage({url: "https://example.test/auth", id: "outbound-test"});
+        """))
+        </script>
+        """
+
+        // When authentication completes, then its result reaches the original document's callback.
+        try await assertAuthenticationResultReachesOriginalDocument(html: html)
+    }
+
     private func assertAuthenticationResultReachesOriginalDocument(html: String) async throws {
         let factory = HeldAuthenticationSessionFactory()
         let controller = makeController(authenticationManager: .init(sessionFactory: factory.makeSession))
@@ -562,6 +577,24 @@ private final class CallbackObserver: NSObject, WKScriptMessageHandler {
             callback.fulfill()
         default: XCTFail("Unexpected outbound fixture acknowledgement")
         }
+    }
+}
+
+/// Runs page script after a garbage collection that frees unreferenced objects, such as handler wrappers.
+private enum HandlerGarbageCollectionFixture {
+    static func script(then body: String) -> String {
+        """
+        (() => {
+          const sentinel = new WeakRef({});
+          let garbage = null;
+          const collect = () => {
+            for (let index = 0; index < 200000; index += 1) { garbage = [index, { index }]; }
+            if (sentinel.deref() !== undefined) { setTimeout(collect, 0); return; }
+            \(body)
+          };
+          setTimeout(collect, 0);
+        })();
+        """
     }
 }
 

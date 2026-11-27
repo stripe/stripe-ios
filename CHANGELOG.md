@@ -51,6 +51,9 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 ### StripeIssuing
 * [Changed] `STPIssuingCardEphemeralKeyProvider` now receives `2026-09-30.endive` as the `apiVersion` to use when creating an ephemeral key.
 
+### StripeConnect
+* [Fixed] Fixed an issue where `AccountOnboardingController` didn't continue after the user finished or canceled the authentication web view. The primary button kept loading, and `AccountOnboardingControllerDelegate.accountOnboardingDidExit(_:)` wasn't called until the user closed onboarding.
+
 ## 26.16.1 2026-11-09
 ### PaymentSheet
 * [Changed] Changed the title shown above the card entry form from "Add card" to "Add a card".
