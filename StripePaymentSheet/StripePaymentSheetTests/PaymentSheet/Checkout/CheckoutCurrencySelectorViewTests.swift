@@ -79,6 +79,50 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         XCTAssertEqual(selector.selectedItemId, checkout.session.presentmentDetails?.presentmentCurrency)
     }
 
+    func testSelectorDisablesWhenSessionCompletes() async throws {
+        // Given an open Checkout Session with a currency selector
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: makeSession())
+        )
+        let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
+        XCTAssertTrue(view.isUserInteractionEnabled)
+
+        // When the Checkout Session completes
+        var completedSession = makeSession()
+        completedSession.status = .complete(.paid)
+        checkout.commitSession(completedSession)
+        await waitForViewUpdate()
+
+        // Then the selector cannot accept another currency selection
+        XCTAssertFalse(view.isUserInteractionEnabled)
+
+        // ...and a SwiftUI environment update cannot enable it again
+        view.setEnabled(true)
+        XCTAssertFalse(view.isUserInteractionEnabled)
+
+        // ...and a completed Session without Adaptive Pricing data keeps it disabled
+        checkout.commitSession(CheckoutTestHelpers.makeClosedSession())
+        await waitForViewUpdate()
+        XCTAssertFalse(view.isUserInteractionEnabled)
+    }
+
+    func testSelectorDisablesWhenSessionExpires() async throws {
+        // Given an open Checkout Session with a currency selector
+        let checkout = try await CheckoutElementsController(
+            configuration: CheckoutTestHelpers.makeCurrencySelectorConfiguration(apiResponse: makeSession())
+        )
+        let view = try XCTUnwrap(checkout.getCurrencySelectorElement()).uiView
+
+        // When the Checkout Session expires
+        var expiredSession = makeSession()
+        expiredSession.status = .expired
+        checkout.commitSession(expiredSession)
+        await waitForViewUpdate()
+
+        // Then the selector is disabled
+        XCTAssertFalse(view.isUserInteractionEnabled)
+    }
+
     // MARK: - Height update tests
 
     func testNotifiesDelegateInsideAnimationWhenDetailsChangeHeight() async throws {
