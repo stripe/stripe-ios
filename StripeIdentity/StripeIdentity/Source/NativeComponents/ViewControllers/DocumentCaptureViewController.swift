@@ -401,7 +401,10 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             imageScanningSession: DocumentImageScanningSession(
                 initialState: initialState,
                 initialCameraPosition: .back,
-                autocaptureTimeout: TimeInterval(milliseconds: apiConfig.autocaptureTimeout),
+                autocaptureTimeout: { side in
+                    let backTimeout = side == .back ? apiConfig.autocaptureTimeoutBack : nil
+                    return TimeInterval(milliseconds: backTimeout ?? apiConfig.autocaptureTimeout)
+                },
                 cameraSession: cameraSession,
                 scanner: anyDocumentScanner,
                 concurrencyManager: concurrencyManager

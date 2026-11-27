@@ -71,7 +71,7 @@ final class ImageScanningSession<
     // MARK: Configuration Properties
 
     let initialCameraPosition: CameraSession.CameraPosition
-    let autocaptureTimeout: TimeInterval
+    let autocaptureTimeout: (ExpectedClassificationType) -> TimeInterval
 
     // MARK: Instance Properties
 
@@ -90,7 +90,7 @@ final class ImageScanningSession<
     init(
         initialState: State,
         initialCameraPosition: CameraSession.CameraPosition,
-        autocaptureTimeout: TimeInterval,
+        autocaptureTimeout: @escaping (ExpectedClassificationType) -> TimeInterval,
         cameraSession: CameraSessionProtocol,
         scanner: ScannerType,
         concurrencyManager: ImageScanningConcurrencyManagerProtocol,
@@ -212,7 +212,7 @@ final class ImageScanningSession<
         timeoutTimer?.invalidate()
 
         timeoutTimer = Timer.scheduledTimer(
-            withTimeInterval: autocaptureTimeout,
+            withTimeInterval: autocaptureTimeout(expectedClassification),
             repeats: false
         ) { [weak self] _ in
             self?.handleTimeout(expectedClassification: expectedClassification)
