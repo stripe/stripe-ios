@@ -341,6 +341,75 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         }
     }
 
+    func testPollWithInProgressPolicyDoesNotRetryOnServerError() async throws {
+        // Given a server error carrying response details
+        let serverError = try MakeStripeAPIError(statusCode: 500, extraFields: ["reason": "server_error"])
+
+        do {
+            // When polling with the attach retry policy
+            _ = try await apiClient.poll(
+                maxNumberOfRetries: 3,
+                shouldRetry: { $0.isPollingInProgress },
+                sleepAction: { _ in
+                    self.tracker.sleepCallCount += 1
+                },
+                apiCall: {
+                    self.tracker.apiCallCount += 1
+                    throw serverError
+                }
+            )
+            XCTFail("Should throw an error")
+        } catch {
+            // Then the original API error surfaces after one attempt and no retry delay
+            guard let stripeError = error as? StripeError,
+                  case .apiError(let apiError) = stripeError,
+                  let expectedStripeError = serverError as? StripeError,
+                  case .apiError(let expectedAPIError) = expectedStripeError else {
+                XCTFail("Wrong error type: \(error)")
+                return
+            }
+            XCTAssertEqual(apiError, expectedAPIError)
+            XCTAssertEqual(error.extraFields?["reason"] as? String, "server_error")
+            XCTAssertEqual(tracker.apiCallCount, 1)
+            XCTAssertEqual(tracker.sleepCallCount, 1)
+        }
+    }
+
+    func testPollWithInProgressPolicyRetriesWhileInProgress() async throws {
+        // Given either in-progress response shape: an HTTP 202 API error or a decoding error
+        let inProgressErrors: [(String, Error)] = [
+            ("HTTP 202", try MakeStripeAPIError(statusCode: 202)),
+            ("Decoding error", DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Still in progress"))),
+        ]
+        let maxRetries = 3
+
+        for (description, inProgressError) in inProgressErrors {
+            tracker = CallTracker()
+            do {
+                // When polling with the attach retry policy
+                _ = try await apiClient.poll(
+                    maxNumberOfRetries: maxRetries,
+                    shouldRetry: { $0.isPollingInProgress },
+                    sleepAction: { _ in
+                        self.tracker.sleepCallCount += 1
+                    },
+                    apiCall: {
+                        self.tracker.apiCallCount += 1
+                        throw inProgressError
+                    }
+                )
+                XCTFail("Should throw an error: \(description)")
+            } catch let error as FinancialConnectionsAsyncAPIClient.PollingError {
+                // Then polling continues until the retry limit
+                XCTAssertEqual(error, .maxRetriesReached, description)
+                XCTAssertEqual(tracker.apiCallCount, maxRetries, description)
+                XCTAssertEqual(tracker.sleepCallCount, maxRetries, description)
+            } catch {
+                XCTFail("Wrong error type for \(description): \(error)")
+            }
+        }
+    }
+
     func testDefaultParameters() async throws {
         var callCount = 0
 
