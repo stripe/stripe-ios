@@ -154,7 +154,7 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         XCTAssertEqual(host.collapses, 1)
     }
 
-    func testEnteringTheRightCodeCollapsesAndReportsVerification() async throws {
+    func testEnteringTheRightCodeReportsVerificationWithoutCollapsing() async throws {
         // Given a card whose code was sent
         let account = LinkAuthAccountStub()
         let (controller, _) = makeController(account: account)
@@ -167,10 +167,10 @@ final class EmbeddedLinkInlineAuthControllerTests: XCTestCase {
         card.onCodeEntered?("123456")
         await settle()
 
-        // Then verification finishes and the host shows the Link row again, knowing it came from the card
+        // Then verification finishes, and the host, knowing it came from the card, decides what replaces the card
         XCTAssertEqual(account.confirms, [.sms])
         XCTAssertEqual(controller.phase, .finished)
-        XCTAssertEqual(host.collapses, 1)
+        XCTAssertEqual(host.collapses, 0)
         XCTAssertEqual(host.verifications, [true])
     }
 

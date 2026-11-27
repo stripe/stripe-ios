@@ -364,6 +364,7 @@ extension EmbeddedPaymentElement {
               LinkAccountContext.shared.account === linkAccount,
               linkAccount.sessionState == .verified,
               embeddedPaymentMethodsView.selectedRowButton?.type == selectionBeforePreselecting else {
+            collapseLinkInlineVerification()
             return
         }
         switch result {
@@ -373,7 +374,10 @@ extension EmbeddedPaymentElement {
                 analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPreselected(paymentDetailsType: paymentDetails.type.rawValue)
             }
             selectLink(with: confirmOption)
+            // Usually the Link-only row replaced the list, card and all, but not when Link pays through the wallet.
+            collapseLinkInlineVerification()
         case .failure(let reason):
+            collapseLinkInlineVerification()
             analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPreselectionFellBack(reason: reason.rawValue)
             switch configuration.formSheetAction {
             case .continue:
@@ -428,9 +432,7 @@ extension EmbeddedPaymentElement: EmbeddedLinkInlineAuthControllerHost {
     }
 
     func linkInlineAuthDidCollapse() {
-        // Updated first so the collapse animates to the Link row's final height.
-        embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: false)
-        embeddedPaymentMethodsView.collapseLinkInlineVerification(animated: true)
+        collapseLinkInlineVerification()
         informDelegateIfPaymentOptionUpdated()
     }
 
@@ -439,6 +441,17 @@ extension EmbeddedPaymentElement: EmbeddedLinkInlineAuthControllerHost {
         embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: true)
         informDelegateIfPaymentOptionUpdated()
         guard fromCard else { return }
+        // The card stays, loading, until preselection replaces it with the Link-only row, rather than collapsing into the Link row first.
         preselectDefaultLinkPaymentMethod()
+        if linkPreselectionTask == nil {
+            collapseLinkInlineVerification()
+        }
+    }
+
+    /// Replaces the card with the Link row. Does nothing once the list no longer shows the card, e.g. after it became the Link-only row.
+    func collapseLinkInlineVerification() {
+        // Updated first so the collapse animates to the Link row's final height.
+        embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: false)
+        embeddedPaymentMethodsView.collapseLinkInlineVerification(animated: true)
     }
 }

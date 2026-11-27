@@ -216,7 +216,6 @@ final class LinkPaymentMethodPicker: UIView {
         // would size the wallet to its default frame before its sheet does, which breaks constraints when the list is taller.
         if window != nil {
             if headerView.isExpanded {
-                // TODO(link): revise layout margin placement and remove conditional
                 setNeedsLayout()
                 layoutIfNeeded()
             } else {
