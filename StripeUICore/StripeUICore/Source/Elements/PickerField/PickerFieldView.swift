@@ -9,14 +9,8 @@
 @_spi(InternalOnlyAPI) import StripeCore
 import UIKit
 
-protocol PickerFieldViewDelegate: AnyObject {
-    func didBeginEditing(_ pickerFieldView: PickerFieldView)
-    func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool)
-    func didCancel(_ pickerFieldView: PickerFieldView)
-}
-
 /**
- An input field that looks like TextFieldView but whose input is another view.
+ An input field that looks like TextFieldView but presents a menu when tapped.
 
  - Note: This view has padding according to `directionalLayoutMargins`.
  For internal SDK use only
@@ -24,7 +18,7 @@ protocol PickerFieldViewDelegate: AnyObject {
 @objc(STP_Internal_PickerFieldView)
 final class PickerFieldView: UIView {
 
-    /// A button that presents a menu, for use as `pickerView` when `presentsMenu` is true.
+    /// A button overlaid on the field that presents its menu
     final class MenuButton: UIButton {
         // Allows programmatic navigation to focus the button without opening its menu
         override var canBecomeFirstResponder: Bool { true }
@@ -42,18 +36,8 @@ final class PickerFieldView: UIView {
     }
 
     // MARK: - Views
-    private lazy var toolbar = DoneButtonToolbar(delegate: self, showCancelButton: true, theme: theme)
     private lazy var textField: PickerTextField = {
         let textField = PickerTextField()
-        // Input views are not supported on Catalyst (and are non-optimal on visionOS)
-#if !targetEnvironment(macCatalyst) && !canImport(visionOS)
-        if !presentsMenu {
-            textField.inputView = pickerView
-            textField.inputAccessoryView = toolbar
-        }
-#elseif !os(visionOS)
-        textField.inputAccessoryView = toolbar
-#endif
         textField.adjustsFontForContentSizeCategory = true
         textField.font = theme.fonts.subheadline
         textField.delegate = self
@@ -91,15 +75,11 @@ final class PickerFieldView: UIView {
         }
         return hStackView
     }()
-    private let pickerView: UIView
-    /// When true, `pickerView` is a button that presents a menu and is overlaid on this view, rather than the text field's input view.
-    /// Always true on Catalyst and visionOS.
-    private let presentsMenu: Bool
+    private let menuButton: MenuButton
 
     // MARK: - Other private properties
     private let label: String?
     private let shouldShowChevron: Bool
-    private weak var delegate: PickerFieldViewDelegate?
     private let theme: ElementsAppearance
     // When a PickerFieldView is optional it's chevron is smaller and takes the color of placeholder text
     private let isOptional: Bool
@@ -139,42 +119,27 @@ final class PickerFieldView: UIView {
     /**
      - Parameter label: The label of this picker
      - Parameter shouldShowChevron: Whether a downward chevron should be displayed in this field
-     - Parameter pickerView: A `UIPicker` or `UIDatePicker` view that opens when this field becomes first responder, or a `UIButton` (a `MenuButton` on iOS) that presents a menu if `presentsMenu` is true
-     - Parameter presentsMenu: Whether `pickerView` is a `UIButton` that presents a menu when tapped
-     - Parameter delegate: Delegate for this view
+     - Parameter menuButton: The button that presents the menu when this field is tapped
      - Parameter theme: Theme for the picker field
      */
     init(
         label: String?,
         shouldShowChevron: Bool,
-        pickerView: UIView,
-        presentsMenu: Bool = false,
-        delegate: PickerFieldViewDelegate,
+        menuButton: MenuButton,
         theme: ElementsAppearance,
         hasPadding: Bool = true,
         isOptional: Bool = false
     ) {
         self.label = label
         self.shouldShowChevron = shouldShowChevron
-        self.pickerView = pickerView
-        #if targetEnvironment(macCatalyst) || canImport(visionOS)
-        self.presentsMenu = true
-        #else
-        self.presentsMenu = presentsMenu
-        #endif
-        self.delegate = delegate
+        self.menuButton = menuButton
         self.theme = theme
         self.isOptional = isOptional
         super.init(frame: .zero)
         addAndPinSubview(hStackView, directionalLayoutMargins: hasPadding ? theme.textFieldInsets : .zero)
-        // When presenting a menu, add the picker view as a subview instead of an input view.
-        if self.presentsMenu {
-            addAndPinSubview(pickerView, directionalLayoutMargins: theme.textFieldInsets)
-            // The menu button is the accessibility element, so VoiceOver activation presents the menu
-            #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
-            hStackView.accessibilityElementsHidden = true
-            #endif
-        }
+        addAndPinSubview(menuButton, directionalLayoutMargins: theme.textFieldInsets)
+        // The menu button is the accessibility element, so VoiceOver activation presents the menu
+        hStackView.accessibilityElementsHidden = true
         layer.borderColor = theme.colors.border.cgColor
         isUserInteractionEnabled = true
     }
@@ -197,9 +162,7 @@ final class PickerFieldView: UIView {
 
     override var isUserInteractionEnabled: Bool {
         didSet {
-            if presentsMenu {
-                (pickerView as? UIButton)?.isEnabled = isUserInteractionEnabled
-            }
+            menuButton.isEnabled = isUserInteractionEnabled
             textField.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
             if frame.size != .zero {
                 textField.layoutIfNeeded()  // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.
@@ -220,8 +183,8 @@ final class PickerFieldView: UIView {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
         }
-        // Forward all events within our bounds to the menu button or the text field
-        return presentsMenu ? pickerView : textField
+        // Forward all events within our bounds to the menu button
+        return menuButton
     }
 
     override var intrinsicContentSize: CGSize {
@@ -236,26 +199,18 @@ final class PickerFieldView: UIView {
     override func becomeFirstResponder() -> Bool {
         // Prevents unwanted invocation of the picker's `becomeFirstResponder` method.
         // Sometimes, when the picker is added as a subview or when its `isUserInteractionEnabled` is toggled,
-        // the operating system mistakenly calls `becomeFirstResponder`, causing the drop-down to display unintentionally.
+        // the operating system mistakenly calls `becomeFirstResponder`, which would end editing in the focused field.
         guard _canBecomeFirstResponder, isUserInteractionEnabled else {
             return false
         }
 
-        #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
-        if presentsMenu {
-            // Focus the menu button without opening the menu, and dismiss the keyboard of the previously focused field
-            window?.endEditing(true)
-            guard pickerView.becomeFirstResponder() else {
-                return false
-            }
-            UIAccessibility.post(notification: .layoutChanged, argument: pickerView)
-            return true
+        // Focus the menu button without opening the menu, and dismiss the keyboard of the previously focused field
+        window?.endEditing(true)
+        guard menuButton.becomeFirstResponder() else {
+            return false
         }
-        #endif
-        if super.becomeFirstResponder() {
-            return true
-        }
-        return textField.becomeFirstResponder()
+        UIAccessibility.post(notification: .layoutChanged, argument: menuButton)
+        return true
     }
 
     func setCanBecomeFirstResponder(_ value: Bool) {
@@ -263,12 +218,7 @@ final class PickerFieldView: UIView {
     }
 
     override func resignFirstResponder() -> Bool {
-        #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
-        if presentsMenu {
-            return pickerView.resignFirstResponder()
-        }
-        #endif
-        return textField.resignFirstResponder()
+        return menuButton.resignFirstResponder()
     }
 }
 
@@ -290,46 +240,8 @@ extension PickerFieldView: EventHandler {
 // MARK: - UITextFieldDelegate
 
 extension PickerFieldView: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        UIAccessibility.post(notification: .layoutChanged, argument: pickerView)
-        floatingPlaceholderTextFieldView?.updatePlaceholder()
-        delegate?.didBeginEditing(self)
-    }
-
-    func textField(
-        _ textField: UITextField,
-        shouldChangeCharactersIn range: NSRange,
-        replacementString string: String
-    ) -> Bool {
-        return false
-    }
-
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        floatingPlaceholderTextFieldView?.updatePlaceholder()
-        delegate?.didFinish(self, shouldAutoAdvance: false)
-    }
-
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        #if !targetEnvironment(macCatalyst) && !canImport(visionOS)
-        // The text field has no input view when presenting a menu, so editing would show the keyboard
-        if presentsMenu {
-            return false
-        }
-        #endif
-        return _canBecomeFirstResponder
-    }
-}
-
-// MARK: - DoneButtonToolbarDelegate
-
-extension PickerFieldView: DoneButtonToolbarDelegate {
-    func didTapDone(_ toolbar: DoneButtonToolbar) {
-        // Switch to the next field. Our delegate will tell us to resign if needed in didFinish.
-        delegate?.didFinish(self, shouldAutoAdvance: true)
-    }
-
-    func didTapCancel(_ toolbar: DoneButtonToolbar) {
-        delegate?.didCancel(self)
-        _ = textField.resignFirstResponder()
+        // The text field only displays the selection; the menu button handles input
+        return false
     }
 }

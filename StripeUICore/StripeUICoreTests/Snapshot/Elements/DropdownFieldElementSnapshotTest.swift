@@ -31,8 +31,8 @@ final class DropdownFieldElementSnapshotTest: STPSnapshotTestCase {
         let dropdownFieldElement = makeDropdownFieldElement(
             defaultIndex: 0
         )
-        // Emulate a user changing the picker
-        dropdownFieldElement.pickerView(dropdownFieldElement.pickerView, didSelectRow: 3, inComponent: 0)
+        // Emulate a user selecting an item from the menu
+        dropdownFieldElement.select(index: 3, shouldAutoAdvance: false)
         verify(dropdownFieldElement)
     }
 }
