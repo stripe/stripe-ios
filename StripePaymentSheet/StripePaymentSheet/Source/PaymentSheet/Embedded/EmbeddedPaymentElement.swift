@@ -277,7 +277,8 @@ public final class EmbeddedPaymentElement {
         }
         refreshLinkInlineAuth(loadResult: loadResult)
         // Link stays the only row while it's still selected with payment details the customer can pay with.
-        let linkOnlyPaymentDetails = showsOnlyLink && shouldSelectPreviousRow && previousSelectedRowType == .link && linkRowOpensWallet ? linkPaymentDetails : nil
+        let linkOnlyPaymentDetails = showsOnlyLink && shouldSelectPreviousRow && previousSelectedRowType == .link
+            && deviceCanUseNativeLink(elementsSession: loadResult.elementsSession, configuration: configuration) ? linkPaymentDetails : nil
         self.embeddedPaymentMethodsView = Self.makeView(
             configuration: configuration,
             loadResult: loadResult,

@@ -136,6 +136,11 @@ extension EmbeddedPaymentElement {
             return nil
         }
 
+        // The Bank row opens the Link wallet instead.
+        if paymentMethodType.isLinkBankPayment && bankRowOpensLinkWallet(elementsSession: elementsSession, configuration: configuration) {
+            return nil
+        }
+
         let formViewController = EmbeddedFormViewController(
             configuration: configuration,
             customerProvider: customerProvider,
@@ -188,7 +193,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
     func embeddedPaymentMethodsViewDidUpdateSelection() {
         let selection = embeddedPaymentMethodsView.selectedRowButton?.type
-        if selection == .link && linkRowOpensWallet {
+        if (selection == .link && linkRowOpensWallet) || isBankRowOpeningLinkWallet(selection) {
             // Link has no form, so keep the previous form's accepted option in case the wallet is closed.
             paymentOptionToRestoreAfterLinkWallet = selectedFormViewController?.paymentOptionToRestoreOnCancellation
         }
@@ -213,9 +218,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         )
 
         // 2. Inform the delegate of the updated payment option if there is no form. If there is a form, we don't want to inform the delegate b/c the paymentOption is in an indeterminate state until the customer completes or cancels out of the form.
-        // The same goes for a Link row that opens the Link wallet.
+        // The same goes for a Link or Bank row that opens the Link wallet.
         if self.selectedFormViewController == nil,
-           !(selection == .link && linkRowSelectionOpensWallet(linkWasSelected: embeddedPaymentMethodsView.previousSelectedRowButton?.type == .link)) {
+           !(selection == .link && linkRowSelectionOpensWallet(linkWasSelected: embeddedPaymentMethodsView.previousSelectedRowButton?.type == .link)),
+           !isBankRowOpeningLinkWallet(selection) {
             informDelegateIfPaymentOptionUpdated()
         }
     }
@@ -244,6 +250,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         guard let pendingSelection = pendingBillingAddressSyncSelection,
               let checkout else {
             pendingBillingAddressSyncSelection = nil
+            if isBankRowOpeningLinkWallet(embeddedPaymentMethodsView.selectedRowButton?.type) {
+                // The bank account picked in the wallet replaces the list with the Link-only row. Closing the wallet undoes the tap.
+                presentLinkWallet(revertsSelectionOnClose: true, opensFromBankRow: true)
+                return
+            }
             if embeddedPaymentMethodsView.selectedRowButton?.type == .link {
                 let linkWasSelected = embeddedPaymentMethodsView.previousSelectedRowButton?.type == .link
                 if linkRowSelectionOpensWallet(linkWasSelected: linkWasSelected) {
