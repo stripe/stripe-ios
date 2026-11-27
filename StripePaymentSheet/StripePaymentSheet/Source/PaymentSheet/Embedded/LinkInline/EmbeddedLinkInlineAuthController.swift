@@ -241,6 +241,12 @@ final class EmbeddedLinkInlineAuthController {
         invalidate()
     }
 
+    /// Call when the customer may have verified somewhere else, e.g. in the Link wallet. Ends this attempt if so, since there's nothing left to verify.
+    func linkAccountMayHaveBeenVerifiedElsewhere() {
+        guard phase != .finished, linkAccount.sessionState == .verified else { return }
+        invalidate()
+    }
+
     // MARK: - Customer actions
 
     private func sendFirstCode() async {

@@ -4,6 +4,7 @@
 //
 
 @_spi(InternalOnlyAPI) import StripeCore
+@_spi(InternalOnlyAPI) import StripePayments
 import UIKit
 
 extension EmbeddedPaymentElement {
@@ -122,6 +123,20 @@ extension EmbeddedPaymentElement {
             && deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
     }
 
+    /// Whether the Bank row opens the Link wallet, showing only bank accounts, instead of the bank form.
+    /// The Link row must be displayed, since the bank account picked in the wallet is shown on the Link-only row.
+    static func bankRowOpensLinkWallet(elementsSession: STPElementsSession, configuration: Configuration) -> Bool {
+        return deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+            && elementsSession.linkFundingSources?.contains(ParsedEnum(.bankAccount)) == true
+            && PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration)
+    }
+
+    /// Whether `rowButtonType` is the Bank row, and it opens the Link wallet instead of the bank form.
+    func isBankRowOpeningLinkWallet(_ rowButtonType: RowButtonType?) -> Bool {
+        guard case .new(let paymentMethodType) = rowButtonType, paymentMethodType.isLinkBankPayment else { return false }
+        return Self.bankRowOpensLinkWallet(elementsSession: elementsSession, configuration: configuration)
+    }
+
     /// Whether selecting the Link row opens the Link wallet, rather than only selecting Link.
     /// - Parameter linkWasSelected: Whether the Link row was already selected, i.e. the customer tapped it again or tapped "Change".
     func linkRowSelectionOpensWallet(linkWasSelected: Bool) -> Bool {
@@ -185,8 +200,10 @@ extension EmbeddedPaymentElement {
     }
 
     /// Opens the Link wallet so the customer can pick a payment method, then selects the Link row with it.
-    /// - Parameter revertsSelectionOnClose: Whether closing the wallet without picking anything restores the previously selected row.
-    func presentLinkWallet(revertsSelectionOnClose: Bool) {
+    /// - Parameters:
+    ///   - revertsSelectionOnClose: Whether closing the wallet without picking anything restores the previously selected row.
+    ///   - opensFromBankRow: Whether the Bank row opened the wallet, which then only shows bank accounts.
+    func presentLinkWallet(revertsSelectionOnClose: Bool, opensFromBankRow: Bool = false) {
         guard let presenter = linkInlineAuthPresentingViewController() else {
             if revertsSelectionOnClose {
                 restoreSelectionBeforeLink()
@@ -201,36 +218,49 @@ extension EmbeddedPaymentElement {
             nativeSheetPresentation: nativeSheetPresentation,
             intent: intent,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            supportedPaymentMethodTypes: opensFromBankRow ? [.bankAccount] : nil
         ) { [weak self] confirmOption, shouldReturnToPaymentSheet, _ in
             guard let self else { return }
             self.linkWalletDidFinish(
                 with: confirmOption,
                 shouldReturnToPaymentSheet: shouldReturnToPaymentSheet,
-                revertsSelectionOnClose: revertsSelectionOnClose
+                revertsSelectionOnClose: revertsSelectionOnClose,
+                opensFromBankRow: opensFromBankRow
             )
         }
     }
 
-    /// - Parameter shouldReturnToPaymentSheet: Whether the customer chose to pay another way, rather than closing the wallet.
+    /// - Parameters:
+    ///   - shouldReturnToPaymentSheet: Whether the customer chose to pay another way, rather than closing the wallet.
+    ///   - opensFromBankRow: Whether the Bank row opened the wallet, rather than the Link row.
     func linkWalletDidFinish(
         with confirmOption: PaymentSheet.LinkConfirmOption?,
         shouldReturnToPaymentSheet: Bool = false,
-        revertsSelectionOnClose: Bool
+        revertsSelectionOnClose: Bool,
+        opensFromBankRow: Bool = false
     ) {
+        // A customer who verified in the wallet sees the regular Link row from now on, rather than the inline verification card.
+        linkInlineAuth?.linkAccountMayHaveBeenVerifiedElsewhere()
         guard let confirmOption else {
             if shouldReturnToPaymentSheet, showsOnlyLink {
                 analyticsHelper.linkAnalytics.logEmbeddedInlineAuthPaidAnotherWay()
                 payAnotherWay()
                 return
             }
-            analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletClosed()
-            if revertsSelectionOnClose, embeddedPaymentMethodsView.selectedRowButton?.type == .link {
+            if !opensFromBankRow {
+                analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletClosed()
+            }
+            // Undo the tap that opened the wallet, if that row is still selected.
+            let selection = embeddedPaymentMethodsView.selectedRowButton?.type
+            if revertsSelectionOnClose, opensFromBankRow ? isBankRowOpeningLinkWallet(selection) : selection == .link {
                 restoreSelectionBeforeLink()
             }
             return
         }
-        analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletSelected()
+        if !opensFromBankRow {
+            analyticsHelper.linkAnalytics.logEmbeddedInlineAuthWalletSelected()
+        }
         // The wallet showed its mandate and records its bank data-sharing consent itself.
         preselectedLinkPaymentDetailsID = nil
         selectLink(with: confirmOption)
