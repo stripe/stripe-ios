@@ -100,6 +100,7 @@ extension FaceScanner: ImageScanner {
             return Promise(
                 value: .init(
                     faceDetectorOutput: faceDetectorOutput,
+                    isFromMediaPipe: faceGeometryDetector != nil,
                     cameraProperties: cameraProperties,
                     configuration: configuration,
                     motionBlurResult: motionBlurResult(

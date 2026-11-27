@@ -57,15 +57,24 @@ final class SelfieUploader: SelfieUploaderProtocol {
 
     let imageUploader: IdentityImageUploader
     let isTestMode: Bool
+    let mediaPipeCropPadding: CGImage.CropPaddingComputationMethod
 
     private(set) var uploadFuture: Future<FileData>?
 
     init(
         imageUploader: IdentityImageUploader,
-        isTestMode: Bool = false
+        isTestMode: Bool = false,
+        mediaPipeCropSidePadding: CGFloat? = nil,
+        mediaPipeCropTopPadding: CGFloat? = nil,
+        mediaPipeCropBottomPadding: CGFloat? = nil
     ) {
         self.imageUploader = imageUploader
         self.isTestMode = isTestMode
+        self.mediaPipeCropPadding = .faceLandmarks(
+            side: mediaPipeCropSidePadding ?? 0.5,
+            top: mediaPipeCropTopPadding ?? 0.25,
+            bottom: mediaPipeCropBottomPadding ?? 0.35
+        )
     }
 
     /// Uploads high- and low-resolution front frames and full-frame side captures.
@@ -145,10 +154,11 @@ final class SelfieUploader: SelfieUploaderProtocol {
             }
         }
 
+        let output = capturedImage.scannerOutput
         return imageUploader.uploadLowAndHighResImages(
             capturedImage.image,
-            highResRegionOfInterest: capturedImage.scannerOutput.faceRect,
-            cropPaddingComputationMethod: .regionWidth,
+            highResRegionOfInterest: output.faceRect,
+            cropPaddingComputationMethod: output.isFromMediaPipe ? mediaPipeCropPadding : .regionWidth,
             lowResFileName: lowResFileName,
             highResFileName: highResFileName
         )

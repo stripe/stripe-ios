@@ -767,7 +767,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                         configuration: .init(from: selfiePageConfig),
                         sheetController: sheetController
                     ),
-                    isTestMode: !staticContent.livemode
+                    isTestMode: !staticContent.livemode,
+                    mediaPipeCropSidePadding: selfiePageConfig.mediaPipeCropSidePadding,
+                    mediaPipeCropTopPadding: selfiePageConfig.mediaPipeCropTopPadding,
+                    mediaPipeCropBottomPadding: selfiePageConfig.mediaPipeCropBottomPadding
                 ),
                 anyFaceScanner: anyFaceScanner,
                 trainingConsent: trainingConsent
