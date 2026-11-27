@@ -41,6 +41,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 
 ### Financial Connections
 * [Changed] Updated Link-branded Financial Connections flows, including Instant Debits, to the new Link design system.
+* [Fixed] No longer retries `attach_payment_account` on server errors.
 
 ### Identity
 * [Changed] If you install with Swift Package Manager, StripeIdentity now requires the `Identity` package trait. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700).

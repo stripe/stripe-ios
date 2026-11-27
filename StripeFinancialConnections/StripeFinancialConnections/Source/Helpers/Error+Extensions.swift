@@ -23,6 +23,16 @@ extension Error {
         return apiError.allResponseFields["extra_fields"] as? [String: Any]
     }
 
+    /// Whether a polled request is still being processed (HTTP 202) and should be retried.
+    /// A response without an error object is surfaced as a decoding error.
+    var isPollingInProgress: Bool {
+        if let error = self as? StripeError,
+           case .apiError(let apiError) = error {
+            return apiError.httpStatusCode == 202
+        }
+        return self is DecodingError
+    }
+
     /// Whether this is a Stripe API error with a `4xx` status code, excluding ones that are
     /// transient by design (408 Request Timeout, 429 Too Many Requests) and can succeed on retry.
     ///
