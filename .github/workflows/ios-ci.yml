@@ -1,0 +1,121 @@
+name: iOS CI
+# Reduced PR gate while Bitrise is unavailable. It runs the SOX payment
+# confirmation test (control LOG.04.01c) and the framework unit tests.
+# UI, snapshot, integration, installation, legacy-runtime and release suites
+# still run on Bitrise only.
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  tests:
+    name: ${{ matrix.name }}
+    runs-on: macos-26
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # STPE2ETest creates a PaymentIntent on the public mobile CI test
+          # backend, confirms it with the SDK and verifies amount, currency and
+          # merchant. It must not be network mocked.
+          - name: sox-e2e
+            scheme: StripeiOS
+            test: StripeiOSTests/STPE2ETest
+          - name: unit-tests
+            scheme: FrameworkTests-CI
+            skip_snapshots: true
+            # The CardScan and Connect tests fail on the iOS 26.4 runtime and have
+            # only been verified on iOS 16.4 (none are selected in
+            # AllStripeFrameworks-iOS26). The hCaptcha tests time out waiting
+            # 5 seconds for a web view on the standard runner.
+            skip_tests: >-
+              StripePaymentsTests/HCaptchaWebViewManager__HTML__Tests/test__Orientation_Is_Mapped_Into_HTML
+              StripePaymentsTests/HCaptchaWebViewManager__HTML__Tests/test__Size_Is_Mapped_Into_HTML
+              StripeCardScanTests/STPAPIClient_CardImageVerificationTest/testSubmitVerificationFrames_Expanded
+              StripeConnectTests/ConnectWebViewControllerTests/testJavascriptPopupHandling
+              StripeConnectTests/ConnectWebViewControllerTests/testResponsePolicyForAttachments
+              StripeConnectTests/ConnectComponentWebViewControllerTests/testDidReceiveNon200StatusTriggersLoadError
+              StripeConnectTests/ConnectComponentWebViewControllerTests/testFetchInitParamsTraitCollection
+              StripeConnectTests/ConnectComponentWebViewControllerTests/testUpdateTraitCollection
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Setup Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.4.1.app/Contents/Developer
+
+      # The runner image has no iOS 16.4 runtime, so use the preinstalled iOS 26.4 one.
+      - name: Create simulator
+        run: |
+          set -euo pipefail
+          runtime="$(xcrun simctl list runtimes --json | ruby -rjson -e '
+            runtimes = JSON.parse(STDIN.read)["runtimes"].select do |r|
+              r["isAvailable"] && r["platform"] == "iOS" && r["version"].start_with?("26.4")
+            end
+            abort "No iOS 26.4 runtime available" if runtimes.empty?
+            puts runtimes.max_by { |r| Gem::Version.new(r["version"]) }["identifier"]
+          ')"
+          device_id="$(xcrun simctl create "iPhone 12 mini (Stripe)" com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini "$runtime")"
+          echo "Created $device_id on $runtime"
+          echo "DEVICE_ID_FROM_USER_SETTINGS=$device_id" >> "$GITHUB_ENV"
+
+      - name: Run tests
+        env:
+          SCHEME: ${{ matrix.scheme }}
+          TEST: ${{ matrix.test }}
+          SKIP_SNAPSHOTS: ${{ matrix.skip_snapshots }}
+          SKIP_TESTS: ${{ matrix.skip_tests }}
+          CI_SNAPSHOTS_IN_DEDICATED_WORKFLOW: ${{ matrix.skip_snapshots }}
+        run: |
+          set -euo pipefail
+          args=(--scheme "$SCHEME" --retry --result-bundle-path "$RUNNER_TEMP/results.xcresult")
+          if [ -n "$TEST" ]; then
+            args+=(--test "$TEST")
+          fi
+          if [ "$SKIP_SNAPSHOTS" = "true" ]; then
+            for option in $(ruby ci_scripts/framework_test_options.rb); do
+              args+=(--skip-test "${option#-skip-testing:}")
+            done
+          fi
+          for test in $SKIP_TESTS; do
+            args+=(--skip-test "$test")
+          done
+          ci_scripts/run_tests.rb "${args[@]}"
+
+      - name: Summarize failures
+        if: failure()
+        run: ci_scripts/run_tests.rb --failures "$RUNNER_TEMP/results.xcresult" || true
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ matrix.name }}-xcresult-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/results.xcresult
+          if-no-files-found: ignore
+          retention-days: 7
+
+  ios-ci-gate:
+    name: ios-ci-gate
+    if: always()
+    needs: [tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        env:
+          RESULT: ${{ needs.tests.result }}
+        run: |
+          echo "tests: $RESULT"
+          [ "$RESULT" = "success" ]
