@@ -655,8 +655,10 @@ private extension ConnectComponentWebViewController {
         // Same-origin child requests belong to the containing component document.
         try { documentID = global.top.__stripeConnectDocumentID; } catch (_) {}
       }
+      const sensitiveHandlers = [];
       for (const name of ["openAuthenticatedWebView", "openFinancialConnections", "callSupplementalFunction"]) {
         const handler = global.webkit.messageHandlers[name];
+        sensitiveHandlers.push(handler);
         const postMessage = handler.postMessage;
         defineProperty(handler, "postMessage", {
           configurable: false, enumerable: false, writable: false,
@@ -674,6 +676,11 @@ private extension ConnectComponentWebViewController {
           }
         });
       }
+      // WebKit discards an unreferenced handler wrapper, and the postMessage defined on it, during garbage
+      // collection. Later lookups would then reach the native method without the document identity.
+      defineProperty(global, Symbol(), {
+        configurable: false, enumerable: false, writable: false, value: Object.freeze(sensitiveHandlers)
+      });
       if (global !== global.top) { return; }
       let authority = null;
       let authoritySettled = false;
