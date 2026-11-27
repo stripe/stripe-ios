@@ -127,6 +127,7 @@ import UIKit
     public let sameAsCheckbox: CheckboxElement
 
     // MARK: Other properties
+    private var isRebuildingCountryFromMenu = false
     public var defaultFieldsToCollect: FieldsToCollect {
         didSet {
             if oldValue != defaultFieldsToCollect {
@@ -257,7 +258,9 @@ import UIKit
         )
         country.didUpdate = { [weak self] index in
             guard let self else { return }
+            self.isRebuildingCountryFromMenu = self.country.menuButton != nil
             self.selectCountry(index: index)
+            self.isRebuildingCountryFromMenu = false
         }
         sameAsCheckbox.didToggle = { [weak self] isToggled in
             guard let self else { return }
@@ -551,6 +554,8 @@ extension AddressSectionElement: Element {
 // MARK: - ElementDelegate
 extension AddressSectionElement: ElementDelegate {
     public func didUpdate(element: Element) {
+        // The menu commit notifies consumers after all country-dependent fields have been rebuilt.
+        guard !isRebuildingCountryFromMenu else { return }
         if !sameAsCheckbox.view.isHidden, sameAsCheckbox.isSelected, !displayedAddressEqualTo(address: defaults.address) {
             // Deselect checkbox if the address != the shipping address (our `defaults`)
             sameAsCheckbox.isSelected = false
