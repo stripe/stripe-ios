@@ -68,3 +68,52 @@ final class BestFramePicker {
         return deadlineCheck()
     }
 }
+
+/// Retains a fallback for each document side until the capture session is reset.
+/// Unlike the successful capture window, this includes frames rejected for blur.
+final class DocumentFrameCache {
+    private static let minimumScoreImprovement: Float = 0.02
+    private var candidates: [DocumentSide: BestFramePicker.Candidate] = [:]
+
+    func consider(
+        cgImage: CGImage,
+        output: DocumentScannerOutput,
+        exif: CameraExifMetadata?,
+        side: DocumentSide
+    ) {
+        let bounds = output.getDocumentBounds()
+        guard output.matchesDocument(side: side),
+            bounds.origin.x.isFinite,
+            bounds.origin.y.isFinite,
+            bounds.size.width.isFinite,
+            bounds.size.height.isFinite,
+            bounds.size.width > 0,
+            bounds.size.height > 0,
+            CGRect.normalizedBounds.contains(bounds)
+        else {
+            return
+        }
+
+        let score = output.timeoutQualityScore(side: side)
+        guard score.isFinite else {
+            return
+        }
+        if let current = candidates[side] {
+            // Allow one rounding step when comparing an improvement of exactly 0.02.
+            let minimumScore = (current.score + Self.minimumScoreImprovement).nextDown
+            guard score >= minimumScore else {
+                return
+            }
+        }
+
+        candidates[side] = .init(cgImage: cgImage, output: output, exif: exif, score: score)
+    }
+
+    func bestCandidate(for side: DocumentSide) -> BestFramePicker.Candidate? {
+        return candidates[side]
+    }
+
+    func reset() {
+        candidates.removeAll()
+    }
+}
