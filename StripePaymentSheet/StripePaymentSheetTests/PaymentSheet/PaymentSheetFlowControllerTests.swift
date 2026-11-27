@@ -101,6 +101,80 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         XCTAssertNil(sut.paymentOption)
     }
 
+    // MARK: - Link verification on present
+
+    @MainActor
+    func testPresentsLinkVerificationForExistingLinkUserWhenNothingIsSelected() {
+        // Given native Link is available and an existing Link user needs to verify
+        setUpNativeLink(linkAccount: makeLinkAccountRequiringVerification())
+
+        // When horizontal FlowController is initialized with no selected payment option
+        let sut = makeHorizontalFlowController(customerID: "cus_test_link_verification")
+        XCTAssertNil(sut.paymentOption)
+
+        // Then presenting payment options prompts the user to verify with Link
+        XCTAssertTrue(sut.shouldPresentLinkVerification)
+    }
+
+    @MainActor
+    func testPresentsLinkVerificationWhenLinkIsCustomerDefault() {
+        // Given an existing Link user needs to verify and Link is their default payment option
+        setUpNativeLink(linkAccount: makeLinkAccountRequiringVerification())
+        let customerID = "cus_test_link_verification_link_default"
+        defer {
+            CustomerPaymentOption.setLocalDefaultPaymentMethod(nil, forCustomer: customerID)
+        }
+        CustomerPaymentOption.setLocalDefaultPaymentMethod(.link, forCustomer: customerID)
+
+        // When horizontal FlowController is initialized with Link selected
+        let sut = makeHorizontalFlowController(customerID: customerID)
+        XCTAssertEqual(sut.paymentOption?.paymentMethodType, "link")
+
+        // Then presenting payment options prompts the user to verify with Link
+        XCTAssertTrue(sut.shouldPresentLinkVerification)
+    }
+
+    @MainActor
+    func testDoesNotPresentLinkVerificationWithoutLinkAccount() {
+        // Given native Link is available but there is no Link account
+        setUpNativeLink(linkAccount: nil)
+
+        // When horizontal FlowController is initialized
+        let sut = makeHorizontalFlowController(customerID: "cus_test_link_verification")
+
+        // Then presenting payment options doesn't prompt for Link verification
+        XCTAssertFalse(sut.shouldPresentLinkVerification)
+    }
+
+    @MainActor
+    func testDoesNotPresentLinkVerificationWhenNativeLinkIsUnavailable() {
+        // Given an existing Link user needs to verify but native Link is unavailable
+        setUpNativeLink(linkAccount: makeLinkAccountRequiringVerification(), isNativeLinkEnabled: false)
+
+        // When horizontal FlowController is initialized
+        let sut = makeHorizontalFlowController(customerID: "cus_test_link_verification")
+
+        // Then presenting payment options doesn't prompt for Link verification
+        XCTAssertFalse(sut.shouldPresentLinkVerification)
+    }
+
+    @MainActor
+    func testDoesNotPresentLinkVerificationForWalletButtonsViewIntegrations() {
+        // Given an existing Link user needs to verify
+        setUpNativeLink(linkAccount: makeLinkAccountRequiringVerification())
+        let sut = makeHorizontalFlowController(customerID: "cus_test_link_verification")
+
+        // When the merchant shows a WalletButtonsView, even one without Link
+        sut.walletButtonsViewState = .visible(allowedWallets: ["apple_pay"])
+
+        // Then presenting payment options doesn't prompt for Link verification
+        XCTAssertFalse(sut.shouldPresentLinkVerification)
+
+        // ...and still doesn't after the WalletButtonsView disappears
+        sut.walletButtonsViewState = .hidden
+        XCTAssertFalse(sut.shouldPresentLinkVerification)
+    }
+
     // MARK: - PaymentOptionDisplayData Labels Tests
 
     func testPaymentOptionDisplayData_CardLabels() {
@@ -491,6 +565,38 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // ...confirmParams billing wins over the saved PM's billing.
         XCTAssertEqual(option.checkoutBillingDetails?.address?.country, "CA")
+    }
+
+    private func setUpNativeLink(linkAccount: PaymentSheetLinkAccount?, isNativeLinkEnabled: Bool = true) {
+        let previousOverride = PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride
+        let previousLinkAccount = LinkAccountContext.shared.account
+        PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = isNativeLinkEnabled
+        LinkAccountContext.shared.account = linkAccount
+        addTeardownBlock {
+            PaymentSheet.LinkFeatureFlags.nativeLinkEnabledOverride = previousOverride
+            LinkAccountContext.shared.account = previousLinkAccount
+        }
+    }
+
+    private func makeLinkAccountRequiringVerification() -> PaymentSheetLinkAccount {
+        let consumerSession = ConsumerSession.make(
+            clientSecret: "client_secret",
+            emailAddress: "test@example.com",
+            redactedFormattedPhoneNumber: "+1********55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil
+        )
+        return PaymentSheetLinkAccount(
+            email: consumerSession.emailAddress,
+            session: consumerSession,
+            publishableKey: "pk_123",
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
+        )
     }
 
     @MainActor

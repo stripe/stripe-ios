@@ -285,10 +285,16 @@ extension PaymentSheet {
         // If a WalletButtonsView is currently visible
         var walletButtonsViewState: WalletButtonsViewState = .hidden {
             didSet {
+                if walletButtonsViewState.isVisible {
+                    hasShownWalletButtonsView = true
+                }
                 // Update payment method options
                 self.updateForWalletButtonsView()
             }
         }
+
+        // Whether a WalletButtonsView has ever been shown for this FlowController
+        private var hasShownWalletButtonsView: Bool = false
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
         var internalPaymentOption: PaymentOption? {
@@ -567,7 +573,11 @@ extension PaymentSheet {
                 )
 
                 self.isPresented = true
-                presentingViewController.presentAsSheet(bottomSheetVC)
+                presentingViewController.presentAsSheet(bottomSheetVC) { [weak self] in
+                    MainActor.assumeIsolated {
+                        self?.presentLinkVerificationIfNeeded(from: bottomSheetVC)
+                    }
+                }
             }
 
             if canPresentLinkInPlaceOfFlowController {
@@ -581,6 +591,57 @@ extension PaymentSheet {
             }
 
             showPaymentOptions()
+        }
+
+        var shouldPresentLinkVerification: Bool {
+            guard !didDismissLinkVerificationDialog,
+                  // Leave WalletButtonsView integrations unchanged.
+                  !hasShownWalletButtonsView,
+                  elementsSession.enableFlowControllerRUX(for: configuration),
+                  PaymentSheet.shouldShowLinkButton(elementsSession: elementsSession, configuration: configuration),
+                  let linkAccount = LinkAccountContext.shared.account,
+                  elementsSession.shouldShowLink2FABeforePaymentSheet(
+                      for: linkAccount,
+                      savedPaymentMethods: viewController.savedPaymentMethods
+                  )
+            else {
+                return false
+            }
+
+            // Don't interrupt a customer who already chose something other than Link.
+            switch internalPaymentOption {
+            case nil, .link(.wallet):
+                return true
+            default:
+                return false
+            }
+        }
+
+        /// Prompts an existing Link user to verify over the FlowController sheet, like PaymentSheet does on present.
+        @MainActor
+        private func presentLinkVerificationIfNeeded(from presentingViewController: UIViewController) {
+            guard shouldPresentLinkVerification, let linkAccount = LinkAccountContext.shared.account else {
+                return
+            }
+
+            let verificationController = LinkVerificationController(
+                mode: .inlineLogin,
+                linkAccount: linkAccount,
+                brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
+                configuration: configuration,
+                analyticsHelper: analyticsHelper.linkAnalytics
+            )
+            verificationController.present(from: presentingViewController) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .completed:
+                    self.viewController.presentLinkForPaymentMethodSelection()
+                case .canceled, .switchAccount, .failed:
+                    // Errors are logged within LinkVerificationViewController.
+                    // Don't prompt again after the customer declines.
+                    self.didDismissLinkVerificationDialog = true
+                }
+            }
         }
 
         /// Presents a loading sheet while awaiting in-flight Checkout mutations,
@@ -1105,6 +1166,8 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var checkout: CheckoutSessionUpdater? { get set }
     func clearSelection()
     func clearErrorForReuseAfterCancellation()
+    /// Presents native Link to select a payment method, then closes FlowController if one is selected.
+    func presentLinkForPaymentMethodSelection()
 }
 
 extension PaymentOption {

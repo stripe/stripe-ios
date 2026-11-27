@@ -46,7 +46,6 @@ extension STPElementsSession {
         linkAccount.sessionState == .requiresVerification &&
         linkAccount.currentSession?.hasStartedOTPVerification != true &&
         linkAccount.useMobileEndpoints &&
-        self.linkSettings?.suppress2FAModal != true &&
         linkAccount.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType != .required &&
         savedPaymentMethods.isEmpty // prefer MPE checkout when SPMs are present 
     }

@@ -542,7 +542,6 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
         additionalParams["link_session_type"] = elementsSession?.linkPopupWebviewOption.rawValue
         additionalParams["link_use_attestation"] = elementsSession?.linkSettings?.useAttestationEndpoints
-        additionalParams["link_mobile_suppress_2fa_modal"] = elementsSession?.linkSettings?.suppress2FAModal
         var configurationPayload = configuration.analyticPayload
         // Customer fields come from the load's CustomerProvider rather than the configuration,
         // since the customer may be provided by a source other than `configuration.customer`, like a Checkout Session.

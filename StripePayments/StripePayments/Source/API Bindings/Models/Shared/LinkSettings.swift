@@ -33,7 +33,6 @@ import Foundation
     @_spi(InternalOnlyAPI) public let popupWebviewOption: PopupWebviewOption?
     @_spi(InternalOnlyAPI) public let passthroughModeEnabled: Bool?
     @_spi(InternalOnlyAPI) public let disableSignup: Bool?
-    @_spi(InternalOnlyAPI) public let suppress2FAModal: Bool?
     @_spi(InternalOnlyAPI) public let disableFlowControllerRUX: Bool?
     @_spi(InternalOnlyAPI) public let useAttestationEndpoints: Bool?
     @_spi(InternalOnlyAPI) public let linkMode: LinkMode?
@@ -59,7 +58,6 @@ import Foundation
         popupWebviewOption: PopupWebviewOption?,
         passthroughModeEnabled: Bool?,
         disableSignup: Bool?,
-        suppress2FAModal: Bool?,
         disableFlowControllerRUX: Bool?,
         useAttestationEndpoints: Bool?,
         linkMode: LinkMode?,
@@ -79,7 +77,6 @@ import Foundation
         self.popupWebviewOption = popupWebviewOption
         self.passthroughModeEnabled = passthroughModeEnabled
         self.disableSignup = disableSignup
-        self.suppress2FAModal = suppress2FAModal
         self.disableFlowControllerRUX = disableFlowControllerRUX
         self.useAttestationEndpoints = useAttestationEndpoints
         self.linkMode = linkMode
@@ -115,7 +112,6 @@ import Foundation
         let disableSignup = response["link_mobile_disable_signup"] as? Bool ?? false
         let disableFlowControllerRUX = response["link_mobile_disable_rux_in_flow_controller"] as? Bool ?? false
         let useAttestationEndpoints = response["link_mobile_use_attestation_endpoints"] as? Bool ?? false
-        let suppress2FAModal = response["link_mobile_suppress_2fa_modal"] as? Bool ?? false
         let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
         let linkDefaultOptIn = (response["link_default_opt_in"] as? String).flatMap { LinkDefaultOptIn(rawValue: $0) }
         let linkEnableDisplayableDefaultValuesInECE = response["link_enable_displayable_default_values_in_ece"] as? Bool ?? false
@@ -150,7 +146,6 @@ import Foundation
             popupWebviewOption: webviewOption,
             passthroughModeEnabled: passthroughModeEnabled,
             disableSignup: disableSignup,
-            suppress2FAModal: suppress2FAModal,
             disableFlowControllerRUX: disableFlowControllerRUX,
             useAttestationEndpoints: useAttestationEndpoints,
             linkMode: linkMode,

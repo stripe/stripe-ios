@@ -750,6 +750,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         updateUI()
     }
 
+    func presentLinkForPaymentMethodSelection() {
+        presentLinkInFlowController()
+    }
+
     @objc func didTapPrimaryButton() {
         // If the form has overridden the primary buy button, hand control over to the form
         guard paymentMethodFormViewController?.overridePrimaryButtonState == nil else {
