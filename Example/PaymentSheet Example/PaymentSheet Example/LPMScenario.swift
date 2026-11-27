@@ -6,7 +6,7 @@
 import Foundation
 @_spi(InternalOnlyAPI) import StripePayments
 
-/// A playground configuration that makes a single payment method type available in PaymentSheet.
+/// A playground configuration that makes a single payment method type (or a small set of them) available in PaymentSheet.
 /// Each scenario sets a merchant, currency, and amount the payment method supports, and turns off automatic payment methods so it's the only one offered.
 struct LPMScenario: Identifiable {
     typealias Settings = PaymentSheetTestPlaygroundSettings
@@ -18,14 +18,17 @@ struct LPMScenario: Identifiable {
         case returningWithCustomerSession
     }
 
-    let paymentMethodType: STPPaymentMethodType
+    let id: String
+    let displayName: String
+    /// Comma-separated payment method types to offer
+    let supportedPaymentMethods: String
     let merchantCountry: Settings.MerchantCountry
     let currency: Settings.Currency
     var amount: Settings.Amount = ._5099
     var customer: Customer = .guest
+    var linkPassthroughMode: Settings.LinkPassthroughMode = .passthrough
 
-    var id: String { paymentMethodType.identifier }
-    var displayName: String { paymentMethodType.displayName }
+    var paymentMethodTypes: [String] { supportedPaymentMethods.split(separator: ",").map(String.init) }
     var summary: String {
         let summary = "\(merchantCountry.displayName) merchant · \(amount.customDisplayName(currency: currency)) \(currency.rawValue.uppercased())"
         switch customer {
@@ -42,12 +45,12 @@ struct LPMScenario: Identifiable {
         settings.amount = amount
         settings.mode = .payment
         settings.apmsEnabled = .off
-        settings.supportedPaymentMethods = paymentMethodType.identifier
+        settings.supportedPaymentMethods = supportedPaymentMethods
         settings.allowsDelayedPMs = .on
         // Many payment methods don't support manual capture
         settings.manualCapture = .off
-        // PaymentMethod mode adds Link as a payment method type
-        settings.linkPassthroughMode = .passthrough
+        // PaymentMethod mode adds Link as a payment method type, so only the Link scenario uses it
+        settings.linkPassthroughMode = linkPassthroughMode
         // Offer only this payment method: no EPMs, CPMs, or payment method configuration
         settings.externalPaymentMethods = .off
         settings.customPaymentMethods = .off
@@ -70,12 +73,42 @@ struct LPMScenario: Identifiable {
 
     func isApplied(to settings: Settings) -> Bool {
         settings.apmsEnabled == .off
-            && settings.supportedPaymentMethods == paymentMethodType.identifier
+            && settings.supportedPaymentMethods == supportedPaymentMethods
             && settings.merchantCountryCode == merchantCountry
             && settings.currency == currency
+            && settings.linkPassthroughMode == linkPassthroughMode
+    }
+
+    /// Link in PaymentMethod mode, offered alongside cards
+    static let link = LPMScenario(
+        id: "link",
+        displayName: "Link",
+        supportedPaymentMethods: "card,link",
+        merchantCountry: .US,
+        currency: .usd,
+        linkPassthroughMode: .pm
+    )
+
+    /// Offers the given comma-separated payment method types, keeping the merchant, currency, and amount in `settings`.
+    /// Returns nil if there are no payment method types.
+    static func custom(paymentMethodTypes: String, settings: Settings) -> LPMScenario? {
+        let types = paymentMethodTypes
+            .split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        guard !types.isEmpty else { return nil }
+        return LPMScenario(
+            id: "custom",
+            displayName: "Custom",
+            supportedPaymentMethods: types.joined(separator: ","),
+            merchantCountry: settings.merchantCountryCode,
+            currency: settings.currency,
+            amount: settings.amount
+        )
     }
 
     static let all: [LPMScenario] = [
+        .link,
         .init(paymentMethodType: .affirm, merchantCountry: .US, currency: .usd),
         .init(paymentMethodType: .afterpayClearpay, merchantCountry: .US, currency: .usd),
         .init(paymentMethodType: .alipay, merchantCountry: .US, currency: .usd),
@@ -140,4 +173,24 @@ struct LPMScenario: Identifiable {
         .init(paymentMethodType: .wero, merchantCountry: .DE, currency: .eur),
         .init(paymentMethodType: .zip, merchantCountry: .AU, currency: .aud),
     ]
+}
+
+extension LPMScenario {
+    init(
+        paymentMethodType: STPPaymentMethodType,
+        merchantCountry: Settings.MerchantCountry,
+        currency: Settings.Currency,
+        amount: Settings.Amount = ._5099,
+        customer: Customer = .guest
+    ) {
+        self.init(
+            id: paymentMethodType.identifier,
+            displayName: paymentMethodType.displayName,
+            supportedPaymentMethods: paymentMethodType.identifier,
+            merchantCountry: merchantCountry,
+            currency: currency,
+            amount: amount,
+            customer: customer
+        )
+    }
 }

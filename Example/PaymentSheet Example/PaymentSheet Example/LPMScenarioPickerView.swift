@@ -13,6 +13,18 @@ struct LPMScenarioPickerView: View {
     let onSelect: (LPMScenario) -> Void
     let onCancel: () -> Void
     @State private var searchText = ""
+    @State private var customPaymentMethodTypes: String
+
+    init(settings: PaymentSheetTestPlaygroundSettings, onSelect: @escaping (LPMScenario) -> Void, onCancel: @escaping () -> Void) {
+        self.settings = settings
+        self.onSelect = onSelect
+        self.onCancel = onCancel
+        _customPaymentMethodTypes = State(initialValue: settings.supportedPaymentMethods ?? "")
+    }
+
+    private var customScenario: LPMScenario? {
+        LPMScenario.custom(paymentMethodTypes: customPaymentMethodTypes, settings: settings)
+    }
 
     private static let sortedScenarios = LPMScenario.all.sorted {
         $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending
@@ -20,8 +32,8 @@ struct LPMScenarioPickerView: View {
 
     /// Payment methods PaymentSheet supports that don't have a scenario yet
     private static let missingPaymentMethodTypes: [String] = {
-        let covered = Set(LPMScenario.all.map(\.paymentMethodType))
-        return PaymentSheet.supportedPaymentMethods.filter { !covered.contains($0) }.map(\.identifier)
+        let covered = Set(LPMScenario.all.flatMap(\.paymentMethodTypes))
+        return PaymentSheet.supportedPaymentMethods.map(\.identifier).filter { !covered.contains($0) }
     }()
 
     private var filteredScenarios: [LPMScenario] {
@@ -35,6 +47,25 @@ struct LPMScenarioPickerView: View {
     var body: some View {
         NavigationView {
             List {
+                if searchText.isEmpty {
+                    Section {
+                        TextField("card, link, klarna", text: $customPaymentMethodTypes)
+                            .font(.body.monospaced())
+                            .textInputAutocapitalization(.never)
+                            .accessibilityIdentifier("lpm_scenario_custom_text_field")
+                        Button("Apply") {
+                            if let customScenario {
+                                onSelect(customScenario)
+                            }
+                        }
+                        .disabled(customScenario == nil)
+                        .accessibilityIdentifier("lpm_scenario_custom")
+                    } header: {
+                        Text("Custom")
+                    } footer: {
+                        Text("Comma-separated payment method types. Keeps the current merchant, currency, and amount.")
+                    }
+                }
                 Section {
                     ForEach(filteredScenarios) { scenario in
                         Button {
