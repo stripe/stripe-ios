@@ -1243,7 +1243,10 @@ extension EmbeddedUITests {
 
         // When they open the Link wallet from the row and tap "Continue another way"
         app.buttons["Change"].tap()
-        app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Continue another way"].waitForExistenceAndTap(timeout: 10)
+        // The wallet expands its payment method list to change the selection, which can push the button below the fold.
+        let continueAnotherWay = app.otherElements["Stripe.Link.PayWithLinkViewController"].buttons["Continue another way"]
+        XCTAssertTrue(continueAnotherWay.waitForExistence(timeout: 10))
+        continueAnotherWay.scrollToAndTap(in: app)
 
         // Then every payment method shows again, with none selected
         XCTAssertTrue(app.buttons["Card"].waitForExistence(timeout: 10))
