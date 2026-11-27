@@ -44,6 +44,7 @@ This major version introduces several breaking changes. Please see [MIGRATING.md
 
 ### Identity
 * [Changed] If you install with Swift Package Manager, StripeIdentity now requires the `Identity` package trait. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2700).
+* [Fixed] Fixed an issue where the selfie capture confirmation sound could cause the app to hang. ([#7737](https://github.com/stripe/stripe-ios/issues/7737))
 
 ### PaymentsUI
 * [Fixed] Fixed `STPPaymentCardTextField.cornerRadius` returning the previous value after it was set.
